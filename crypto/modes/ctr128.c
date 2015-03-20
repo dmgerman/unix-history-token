@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2008 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  */
+comment|/* ====================================================================  * Copyright (c) 2008 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  */
 end_comment
 
 begin_include
@@ -56,7 +56,7 @@ file|<assert.h>
 end_include
 
 begin_comment
-comment|/* NOTE: the IV/counter CTR mode is big-endian.  The code itself  * is endian-neutral. */
+comment|/*  * NOTE: the IV/counter CTR mode is big-endian.  The code itself is  * endian-neutral.  */
 end_comment
 
 begin_comment
@@ -236,7 +236,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* The input encrypted as though 128bit counter mode is being  * used.  The extra state information to record how much of the  * 128bit block we have used is contained in *num, and the  * encrypted counter is kept in ecount_buf.  Both *num and  * ecount_buf must be initialised with zeros before the first  * call to CRYPTO_ctr128_encrypt().  *  * This algorithm assumes that the counter is in the x lower bits  * of the IV (ivec), and that the application has full control over  * overflow and the rest of the IV.  This implementation takes NO  * responsability for checking that the counter doesn't overflow  * into the rest of the IV when incremented.  */
+comment|/*  * The input encrypted as though 128bit counter mode is being used.  The  * extra state information to record how much of the 128bit block we have  * used is contained in *num, and the encrypted counter is kept in  * ecount_buf.  Both *num and ecount_buf must be initialised with zeros  * before the first call to CRYPTO_ctr128_encrypt(). This algorithm assumes  * that the counter is in the x lower bits of the IV (ivec), and that the  * application has full control over overflow and the rest of the IV.  This  * implementation takes NO responsability for checking that the counter  * doesn't overflow into the rest of the IV when incremented.  */
 end_comment
 
 begin_function
@@ -338,9 +338,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-do|do
 block|{
 comment|/* always true actually */
+do|do
+block|{
 while|while
 condition|(
 name|n
@@ -562,6 +563,7 @@ condition|(
 literal|0
 condition|)
 do|;
+block|}
 comment|/* the rest would be commonly eliminated by x86* compiler */
 endif|#
 directive|endif
@@ -832,7 +834,7 @@ name|len
 operator|/
 literal|16
 decl_stmt|;
-comment|/* 		 * 1<<28 is just a not-so-small yet not-so-large number... 		 * Below condition is practically never met, but it has to 		 * be checked for code correctness. 		 */
+comment|/*          * 1<<28 is just a not-so-small yet not-so-large number...          * Below condition is practically never met, but it has to          * be checked for code correctness.          */
 if|if
 condition|(
 sizeof|sizeof
@@ -862,7 +864,7 @@ operator|<<
 literal|28
 operator|)
 expr_stmt|;
-comment|/* 		 * As (*func) operates on 32-bit counter, caller 		 * has to handle overflow. 'if' below detects the 		 * overflow, which is then handled by limiting the 		 * amount of blocks to the exact overflow point... 		 */
+comment|/*          * As (*func) operates on 32-bit counter, caller          * has to handle overflow. 'if' below detects the          * overflow, which is then handled by limiting the          * amount of blocks to the exact overflow point...          */
 name|ctr32
 operator|+=
 operator|(

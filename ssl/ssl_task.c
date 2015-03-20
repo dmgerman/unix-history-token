@@ -4,7 +4,7 @@ comment|/* ssl/ssl_task.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|/* VMS */
 end_comment
 
 begin_comment
-comment|/*  * DECnet object for servicing SSL.  We accept the inbound and speak a  * simple protocol for multiplexing the 2 data streams (application and  * ssl data) over this logical link.  *  * Logical names:  *    SSL_CIPHER	Defines a list of cipher specifications the server  *			will support in order of preference.  *    SSL_SERVER_CERTIFICATE  *			Points to PEM (privacy enhanced mail) file that  *			contains the server certificate and private password.  *    SYS$NET		Logical created by netserver.exe as hook for completing  *			DECnet logical link.  *  * Each NSP message sent over the DECnet link has the following structure:  *    struct rpc_msg {   *      char channel;  *      char function;  *      short length;  *      char data[MAX_DATA];  *    } msg;  *  * The channel field designates the virtual data stream this message applies  * to and is one of:  *   A - Application data (payload).  *   R - Remote client connection that initiated the SSL connection.  Encrypted  *       data is sent over this connection.  *   G - General data, reserved for future use.  *  * The data streams are half-duplex read/write and have following functions:  *   G - Get, requests that up to msg.length bytes of data be returned.  The  *       data is returned in the next 'C' function response that matches the  *       requesting channel.  *   P - Put, requests that the first msg.length bytes of msg.data be appended  *       to the designated stream.  *   C - Confirms a get or put.  Every get and put will get a confirm response,  *       you cannot initiate another function on a channel until the previous  *       operation has been confirmed.  *  *  The 2 channels may interleave their operations, for example:  *        Server msg           Client msg  *         A, Get, 4092          ---->  *<----  R, get, 4092  *         R, Confirm, {hello}   ---->  *<----  R, put, {srv hello}  *         R, Confirm, 0         ---->  *                               .		(SSL handshake completed)  *                               .              (read first app data).  *<----  A, confirm, {http data}  *         A, Put, {http data}   ---->  *<----  A, confirm, 0  *  *  The length field is not permitted to be larger that 4092 bytes.  *  * Author: Dave Jones  * Date:   22-JUL-1996  */
+comment|/*-  * DECnet object for servicing SSL.  We accept the inbound and speak a  * simple protocol for multiplexing the 2 data streams (application and  * ssl data) over this logical link.  *  * Logical names:  *    SSL_CIPHER        Defines a list of cipher specifications the server  *                      will support in order of preference.  *    SSL_SERVER_CERTIFICATE  *                      Points to PEM (privacy enhanced mail) file that  *                      contains the server certificate and private password.  *    SYS$NET           Logical created by netserver.exe as hook for completing  *                      DECnet logical link.  *  * Each NSP message sent over the DECnet link has the following structure:  *    struct rpc_msg {  *      char channel;  *      char function;  *      short length;  *      char data[MAX_DATA];  *    } msg;  *  * The channel field designates the virtual data stream this message applies  * to and is one of:  *   A - Application data (payload).  *   R - Remote client connection that initiated the SSL connection.  Encrypted  *       data is sent over this connection.  *   G - General data, reserved for future use.  *  * The data streams are half-duplex read/write and have following functions:  *   G - Get, requests that up to msg.length bytes of data be returned.  The  *       data is returned in the next 'C' function response that matches the  *       requesting channel.  *   P - Put, requests that the first msg.length bytes of msg.data be appended  *       to the designated stream.  *   C - Confirms a get or put.  Every get and put will get a confirm response,  *       you cannot initiate another function on a channel until the previous  *       operation has been confirmed.  *  *  The 2 channels may interleave their operations, for example:  *        Server msg           Client msg  *         A, Get, 4092          ---->  *<----  R, get, 4092  *         R, Confirm, {hello}   ---->  *<----  R, put, {srv hello}  *         R, Confirm, 0         ---->  *                               .              (SSL handshake completed)  *                               .              (read first app data).  *<----  A, confirm, {http data}  *         A, Put, {http data}   ---->  *<----  A, confirm, 0  *  *  The length field is not permitted to be larger that 4092 bytes.  *  * Author: Dave Jones  * Date:   22-JUL-1996  */
 end_comment
 
 begin_include
@@ -214,32 +214,35 @@ begin_comment
 comment|/*************************************************************************/
 end_comment
 
+begin_comment
+comment|/* Should have member alignment inhibited */
+end_comment
+
 begin_struct
 struct|struct
 name|rpc_msg
 block|{
-comment|/* Should have member alignment inhibited */
+comment|/* 'A'-app data. 'R'-remote client 'G'-global */
 name|char
 name|channel
 decl_stmt|;
-comment|/* 'A'-app data. 'R'-remote client 'G'-global */
+comment|/* 'G'-get, 'P'-put, 'C'-confirm, 'X'-close */
 name|char
 name|function
 decl_stmt|;
-comment|/* 'G'-get, 'P'-put, 'C'-confirm, 'X'-close */
+comment|/* Amount of data returned or max to return */
 name|unsigned
 name|short
 name|int
 name|length
 decl_stmt|;
-comment|/* Amount of data returned or max to return */
+comment|/* variable data */
 name|char
 name|data
 index|[
 literal|4092
 index|]
 decl_stmt|;
-comment|/* variable data */
 block|}
 struct|;
 end_struct
@@ -309,7 +312,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Decnet I/O routines.  */
+comment|/*  * Decnet I/O routines.  */
 end_comment
 
 begin_function
@@ -488,7 +491,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/* Handle operations on the 'G' channel.  */
+comment|/*  * Handle operations on the 'G' channel.  */
 end_comment
 
 begin_function
@@ -698,7 +701,7 @@ expr_stmt|;
 name|OpenSSL_add_all_algorithms
 argument_list|()
 expr_stmt|;
-comment|/* DRM, this was the original, but there is no such thing as SSLv2() 	s_ctx=SSL_CTX_new(SSLv2()); */
+comment|/*      * DRM, this was the original, but there is no such thing as SSLv2()      * s_ctx=SSL_CTX_new(SSLv2());      */
 name|s_ctx
 operator|=
 name|SSL_CTX_new
@@ -890,7 +893,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* original, DRM 24-SEP-1997 	BIO_set_fd ( c_to_s, "", chan ); 	BIO_set_fd ( s_to_c, "", chan ); */
+comment|/*- original, DRM 24-SEP-1997     BIO_set_fd ( c_to_s, "", chan );     BIO_set_fd ( s_to_c, "", chan ); */
 name|BIO_set_fd
 argument_list|(
 name|c_to_s
@@ -971,7 +974,7 @@ argument_list|(
 literal|"Begin doit main loop\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Link states: 0-idle, 1-read pending, 2-write pending, 3-closed. 	 */
+comment|/*      * Link states: 0-idle, 1-read pending, 2-write pending, 3-closed.      */
 for|for
 control|(
 name|link_state
@@ -984,7 +987,7 @@ literal|3
 condition|;
 control|)
 block|{
-comment|/* 	     * Wait for remote end to request data action on A channel. 	     */
+comment|/*          * Wait for remote end to request data action on A channel.          */
 while|while
 condition|(
 name|link_state
@@ -1320,7 +1323,7 @@ argument_list|)
 expr_stmt|;
 name|err
 label|:
-comment|/* We have to set the BIO's to NULL otherwise they will be 	 * free()ed twice.  Once when th s_ssl is SSL_free()ed and 	 * again when c_ssl is SSL_free()ed. 	 * This is a hack required because s_ssl and c_ssl are sharing the same 	 * BIO structure and SSL_set_bio() and SSL_free() automatically 	 * BIO_free non NULL entries. 	 * You should not normally do this or be required to do this */
+comment|/*      * We have to set the BIO's to NULL otherwise they will be free()ed      * twice.  Once when th s_ssl is SSL_free()ed and again when c_ssl is      * SSL_free()ed. This is a hack required because s_ssl and c_ssl are      * sharing the same BIO structure and SSL_set_bio() and SSL_free()      * automatically BIO_free non NULL entries. You should not normally do      * this or be required to do this      */
 name|s_ssl
 operator|->
 name|rbio

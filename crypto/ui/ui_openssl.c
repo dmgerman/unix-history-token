@@ -4,15 +4,15 @@ comment|/* crypto/ui/ui_openssl.c -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Written by Richard Levitte (richard@levitte.org) and others  * for the OpenSSL project 2001.  */
+comment|/*  * Written by Richard Levitte (richard@levitte.org) and others for the  * OpenSSL project 2001.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* The lowest level part of this file was previously in crypto/des/read_pwd.c,  * Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/*-  * The lowest level part of this file was previously in crypto/des/read_pwd.c,  * Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -22,7 +22,7 @@ file|<openssl/e_os2.h>
 end_include
 
 begin_comment
-comment|/* need for #define _POSIX_C_SOURCE arises whenever you pass -ansi to gcc  * [maybe others?], because it masks interfaces not discussed in standard,  * sigaction and fileno included. -pedantic would be more appropriate for  * the intended purposes, but we can't prevent users from adding -ansi.  */
+comment|/*  * need for #define _POSIX_C_SOURCE arises whenever you pass -ansi to gcc  * [maybe others?], because it masks interfaces not discussed in standard,  * sigaction and fileno included. -pedantic would be more appropriate for the  * intended purposes, but we can't prevent users from adding -ansi.  */
 end_comment
 
 begin_if
@@ -152,7 +152,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* If unistd.h defines _POSIX_VERSION, we conclude that we  * are on a POSIX system and have sigaction and termios. */
+comment|/*  * If unistd.h defines _POSIX_VERSION, we conclude that we are on a POSIX  * system and have sigaction and termios.  */
 end_comment
 
 begin_if
@@ -339,90 +339,39 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* There are 5 types of terminal interface supported,  * TERMIO, TERMIOS, VMS, MSDOS and SGTTY  */
+comment|/*  * There are 5 types of terminal interface supported, TERMIO, TERMIOS, VMS,  * MSDOS and SGTTY.  *  * If someone defines one of the macros TERMIO, TERMIOS or SGTTY, it will  * remain respected.  Otherwise, we default to TERMIOS except for a few  * systems that require something different.  *  * Note: we do not use SGTTY unless it's defined by the configuration.  We  * may eventually opt to remove it's use entirely.  */
 end_comment
 
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__sgi
-argument_list|)
-operator|&&
 operator|!
 name|defined
 argument_list|(
 name|TERMIOS
 argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|TERMIOS
-end_define
-
-begin_undef
-undef|#
-directive|undef
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|TERMIO
-end_undef
-
-begin_undef
-undef|#
-directive|undef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
 name|SGTTY
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+end_if
 
 begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
-name|linux
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|TERMIO
-argument_list|)
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|TERMIOS
-end_undef
-
-begin_define
-define|#
-directive|define
-name|TERMIO
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|SGTTY
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|_LIBC
-end_ifdef
+argument_list|)
+end_if
 
 begin_undef
 undef|#
@@ -442,88 +391,60 @@ directive|undef
 name|SGTTY
 end_undef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_comment
+comment|/*  * We know that VMS, MSDOS, VXWORKS, NETWARE use entirely other mechanisms.  * MAC_OS_GUSI_SOURCE should probably go away, but that needs to be confirmed.  */
+end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|TERMIO
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|TERMIOS
-argument_list|)
-operator|&&
+begin_elif
+elif|#
+directive|elif
 operator|!
 name|defined
 argument_list|(
 name|OPENSSL_SYS_VMS
 argument_list|)
+expr|\
 operator|&&
 operator|!
 name|defined
 argument_list|(
 name|OPENSSL_SYS_MSDOS
 argument_list|)
+expr|\
 operator|&&
 operator|!
 name|defined
 argument_list|(
 name|OPENSSL_SYS_MACINTOSH_CLASSIC
 argument_list|)
+expr|\
 operator|&&
 operator|!
 name|defined
 argument_list|(
 name|MAC_OS_GUSI_SOURCE
 argument_list|)
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|TERMIOS
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|TERMIO
-end_undef
-
-begin_define
-define|#
-directive|define
-name|SGTTY
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
+expr|\
+operator|&&
+operator|!
 name|defined
 argument_list|(
 name|OPENSSL_SYS_VXWORKS
 argument_list|)
-end_if
+expr|\
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|OPENSSL_SYS_NETWARE
+argument_list|)
+end_elif
 
-begin_undef
-undef|#
-directive|undef
+begin_define
+define|#
+directive|define
 name|TERMIOS
-end_undef
+end_define
 
 begin_undef
 undef|#
@@ -541,33 +462,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|OPENSSL_SYS_NETWARE
-argument_list|)
-end_if
-
-begin_undef
-undef|#
-directive|undef
-name|TERMIOS
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|TERMIO
-end_undef
-
-begin_undef
-undef|#
-directive|undef
-name|SGTTY
-end_undef
 
 begin_endif
 endif|#
@@ -1012,7 +906,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* XXX   Is there any guarantee that this will always suffice for the actual structures? */
+comment|/* XXX Is there any guarantee that this                                       * will always suffice for the actual                                       * structures? */
 end_comment
 
 begin_decl_stmt
@@ -1340,7 +1234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* The following function makes sure that info and error strings are printed    before any prompt. */
+comment|/*  * The following function makes sure that info and error strings are printed  * before any prompt.  */
 end_comment
 
 begin_function
@@ -2155,7 +2049,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|EINVAL
-comment|/* Ariel Glenn ariel@columbia.edu reports that solaris 		 * can return EINVAL instead.  This should be ok */
+comment|/*              * Ariel Glenn ariel@columbia.edu reports that solaris can return              * EINVAL instead.  This should be ok              */
 if|if
 condition|(
 name|errno
@@ -3213,7 +3107,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|WIN_CONSOLE_BUG
-comment|/* Win95 has several evil console bugs: one of these is that the  * last character read using getch() is passed to the next read: this is  * usually a CR so this can be trouble. No STDIO fix seems to work but  * flushing the console appears to do the trick.  */
+comment|/*      * Win95 has several evil console bugs: one of these is that the last      * character read using getch() is passed to the next read: this is      * usually a CR so this can be trouble. No STDIO fix seems to work but      * flushing the console appears to do the trick.      */
 block|{
 name|HANDLE
 name|inh

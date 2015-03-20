@@ -4,11 +4,11 @@ comment|/* crypto/x509/x509.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECDH support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECDH support in OpenSSL originally developed by  * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
 end_comment
 
 begin_ifndef
@@ -479,7 +479,7 @@ name|bytes
 decl_stmt|;
 endif|#
 directive|endif
-comment|/*	unsigned long hash; Keep the hash around for lookups */
+comment|/*      unsigned long hash; Keep the hash around for lookups */
 name|unsigned
 name|char
 modifier|*
@@ -548,14 +548,14 @@ decl_stmt|;
 name|int
 name|single
 decl_stmt|;
-comment|/* 0 for a set, 1 for a single item (which is wrong) */
+comment|/* 0 for a set, 1 for a single item (which is                                  * wrong) */
 union|union
 block|{
 name|char
 modifier|*
 name|ptr
 decl_stmt|;
-comment|/* 0 */
+comment|/*          * 0          */
 name|STACK_OF
 argument_list|(
 name|ASN1_TYPE
@@ -563,7 +563,7 @@ argument_list|)
 operator|*
 name|set
 expr_stmt|;
-comment|/* 1 */
+comment|/*          * 1          */
 name|ASN1_TYPE
 modifier|*
 name|single
@@ -692,7 +692,7 @@ decl_stmt|;
 block|}
 name|X509_CINF
 typedef|;
-comment|/* This stuff is certificate "auxiliary info"  * it contains details which are useful in certificate  * stores and databases. When used this is tagged onto  * the end of the certificate itself  */
+comment|/*  * This stuff is certificate "auxiliary info" it contains details which are  * useful in certificate stores and databases. When used this is tagged onto  * the end of the certificate itself  */
 typedef|typedef
 struct|struct
 name|x509_cert_aux_st
@@ -1051,7 +1051,7 @@ define|#
 directive|define
 name|XN_FLAG_COMPAT
 value|0
-comment|/* Traditional SSLeay: use old X509_NAME_print */
+comment|/* Traditional SSLeay: use old                                    * X509_NAME_print */
 define|#
 directive|define
 name|XN_FLAG_SEP_COMMA_PLUS
@@ -1107,7 +1107,7 @@ directive|define
 name|XN_FLAG_SPC_EQ
 value|(1<< 23)
 comment|/* Put spaces round '=' */
-comment|/* This determines if we dump fields we don't recognise:  * RFC2253 requires this.  */
+comment|/*  * This determines if we dump fields we don't recognise: RFC2253 requires  * this.  */
 define|#
 directive|define
 name|XN_FLAG_DUMP_UNKNOWN_FIELDS
@@ -1116,22 +1116,22 @@ define|#
 directive|define
 name|XN_FLAG_FN_ALIGN
 value|(1<< 25)
-comment|/* Align field names to 20 characters */
+comment|/* Align field names to 20                                            * characters */
 comment|/* Complete set of RFC2253 flags */
 define|#
 directive|define
 name|XN_FLAG_RFC2253
-value|(ASN1_STRFLGS_RFC2253 | \ 			XN_FLAG_SEP_COMMA_PLUS | \ 			XN_FLAG_DN_REV | \ 			XN_FLAG_FN_SN | \ 			XN_FLAG_DUMP_UNKNOWN_FIELDS)
+value|(ASN1_STRFLGS_RFC2253 | \                         XN_FLAG_SEP_COMMA_PLUS | \                         XN_FLAG_DN_REV | \                         XN_FLAG_FN_SN | \                         XN_FLAG_DUMP_UNKNOWN_FIELDS)
 comment|/* readable oneline form */
 define|#
 directive|define
 name|XN_FLAG_ONELINE
-value|(ASN1_STRFLGS_RFC2253 | \ 			ASN1_STRFLGS_ESC_QUOTE | \ 			XN_FLAG_SEP_CPLUS_SPC | \ 			XN_FLAG_SPC_EQ | \ 			XN_FLAG_FN_SN)
+value|(ASN1_STRFLGS_RFC2253 | \                         ASN1_STRFLGS_ESC_QUOTE | \                         XN_FLAG_SEP_CPLUS_SPC | \                         XN_FLAG_SPC_EQ | \                         XN_FLAG_FN_SN)
 comment|/* readable multiline form */
 define|#
 directive|define
 name|XN_FLAG_MULTILINE
-value|(ASN1_STRFLGS_ESC_CTRL | \ 			ASN1_STRFLGS_ESC_MSB | \ 			XN_FLAG_SEP_MULTILINE | \ 			XN_FLAG_SPC_EQ | \ 			XN_FLAG_FN_LN | \ 			XN_FLAG_FN_ALIGN)
+value|(ASN1_STRFLGS_ESC_CTRL | \                         ASN1_STRFLGS_ESC_MSB | \                         XN_FLAG_SEP_MULTILINE | \                         XN_FLAG_SPC_EQ | \                         XN_FLAG_FN_LN | \                         XN_FLAG_FN_ALIGN)
 struct|struct
 name|x509_revoked_st
 block|{
@@ -1393,7 +1393,7 @@ argument|X509_INFO
 argument_list|)
 endif|#
 directive|endif
-comment|/* The next 2 structures and their 8 routines were sent to me by  * Pat Richard<patr@x509.com> and are used to manipulate  * Netscapes spki structures - useful if you are writing a CA web page  */
+comment|/*  * The next 2 structures and their 8 routines were sent to me by Pat Richard  *<patr@x509.com> and are used to manipulate Netscapes spki structures -  * useful if you are writing a CA web page  */
 typedef|typedef
 struct|struct
 name|Netscape_spkac_st
@@ -1449,7 +1449,7 @@ expr_stmt|;
 block|}
 name|NETSCAPE_CERT_SEQUENCE
 typedef|;
-comment|/* Unused (and iv length is wrong) typedef struct CBCParameter_st 	{ 	unsigned char iv[8]; 	} CBC_PARAM; */
+comment|/*- Unused (and iv length is wrong) typedef struct CBCParameter_st         {         unsigned char iv[8];         } CBC_PARAM; */
 comment|/* Password based encryption structure */
 typedef|typedef
 struct|struct
@@ -1486,11 +1486,11 @@ typedef|typedef
 struct|struct
 name|PBKDF2PARAM_st
 block|{
+comment|/* Usually OCTET STRING but could be anything */
 name|ASN1_TYPE
 modifier|*
 name|salt
 decl_stmt|;
-comment|/* Usually OCTET STRING but could be anything */
 name|ASN1_INTEGER
 modifier|*
 name|iter
@@ -1510,10 +1510,10 @@ comment|/* PKCS#8 private key info structure */
 struct|struct
 name|pkcs8_priv_key_info_st
 block|{
+comment|/* Flag for various broken formats */
 name|int
 name|broken
 decl_stmt|;
-comment|/* Flag for various broken formats */
 define|#
 directive|define
 name|PKCS8_OK
@@ -1542,11 +1542,11 @@ name|X509_ALGOR
 modifier|*
 name|pkeyalg
 decl_stmt|;
+comment|/* Should be OCTET STRING but some are broken */
 name|ASN1_TYPE
 modifier|*
 name|pkey
 decl_stmt|;
-comment|/* Should be OCTET STRING but some are broken */
 name|STACK_OF
 argument_list|(
 name|X509_ATTRIBUTE
@@ -1606,7 +1606,7 @@ parameter_list|(
 name|x
 parameter_list|)
 value|ASN1_INTEGER_get((x)->cert_info->version)
-comment|/* #define	X509_get_serialNumber(x) ((x)->cert_info->serialNumber) */
+comment|/* #define      X509_get_serialNumber(x) ((x)->cert_info->serialNumber) */
 define|#
 directive|define
 name|X509_get_notBefore
@@ -1805,7 +1805,7 @@ modifier|*
 name|crl
 parameter_list|)
 function_decl|;
-comment|/* This one is only used so that a binary form can output, as in  * i2d_X509_NAME(X509_get_X509_PUBKEY(x),&buf) */
+comment|/*  * This one is only used so that a binary form can output, as in  * i2d_X509_NAME(X509_get_X509_PUBKEY(x),&buf)  */
 define|#
 directive|define
 name|X509_get_X509_PUBKEY
@@ -5079,7 +5079,7 @@ name|int
 name|len
 parameter_list|)
 function_decl|;
-comment|/* NOTE: you should be passsing -1, not 0 as lastpos.  The functions that use  * lastpos, search after that position on. */
+comment|/*  * NOTE: you should be passsing -1, not 0 as lastpos.  The functions that use  * lastpos, search after that position on.  */
 name|int
 name|X509_NAME_get_index_by_NID
 parameter_list|(
@@ -6083,7 +6083,7 @@ argument_list|)
 operator|*
 name|X509at_add1_attr_by_OBJ
 argument_list|(
-argument|STACK_OF(X509_ATTRIBUTE) **x
+argument|STACK_OF(X509_ATTRIBUTE)                                                   **x
 argument_list|,
 argument|const ASN1_OBJECT *obj
 argument_list|,
@@ -6101,7 +6101,7 @@ argument_list|)
 operator|*
 name|X509at_add1_attr_by_NID
 argument_list|(
-argument|STACK_OF(X509_ATTRIBUTE) **x
+argument|STACK_OF(X509_ATTRIBUTE)                                                   **x
 argument_list|,
 argument|int nid
 argument_list|,
@@ -6119,7 +6119,7 @@ argument_list|)
 operator|*
 name|X509at_add1_attr_by_txt
 argument_list|(
-argument|STACK_OF(X509_ATTRIBUTE) **x
+argument|STACK_OF(X509_ATTRIBUTE)                                                   **x
 argument_list|,
 argument|const char *attrname
 argument_list|,
@@ -6896,7 +6896,7 @@ name|xp
 parameter_list|)
 function_decl|;
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_X509_strings
 parameter_list|(

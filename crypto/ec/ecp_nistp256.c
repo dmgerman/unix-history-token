@@ -110,7 +110,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* nonstandard; implemented by gcc on 64-bit platforms */
+comment|/* nonstandard; implemented by gcc on 64-bit                                  * platforms */
 end_comment
 
 begin_typedef
@@ -165,7 +165,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* The underlying field.  *  * P256 operates over GF(2^256-2^224+2^192+2^96-1). We can serialise an element  * of this field into 32 bytes. We call this an felem_bytearray. */
+comment|/*  * The underlying field. P256 operates over GF(2^256-2^224+2^192+2^96-1). We  * can serialise an element of this field into 32 bytes. We call this an  * felem_bytearray.  */
 end_comment
 
 begin_typedef
@@ -179,7 +179,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* These are the parameters of P256, taken from FIPS 186-3, page 86. These  * values are big-endian. */
+comment|/*  * These are the parameters of P256, taken from FIPS 186-3, page 86. These  * values are big-endian.  */
 end_comment
 
 begin_decl_stmt
@@ -531,7 +531,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The representation of field elements.  * ------------------------------------  *  * We represent field elements with either four 128-bit values, eight 128-bit  * values, or four 64-bit values. The field element represented is:  *   v[0]*2^0 + v[1]*2^64 + v[2]*2^128 + v[3]*2^192  (mod p)  * or:  *   v[0]*2^0 + v[1]*2^64 + v[2]*2^128 + ... + v[8]*2^512  (mod p)  *  * 128-bit values are called 'limbs'. Since the limbs are spaced only 64 bits  * apart, but are 128-bits wide, the most significant bits of each limb overlap  * with the least significant bits of the next.  *  * A field element with four limbs is an 'felem'. One with eight limbs is a  * 'longfelem'  *  * A field element with four, 64-bit values is called a 'smallfelem'. Small  * values are used as intermediate values before multiplication.  */
+comment|/*-  * The representation of field elements.  * ------------------------------------  *  * We represent field elements with either four 128-bit values, eight 128-bit  * values, or four 64-bit values. The field element represented is:  *   v[0]*2^0 + v[1]*2^64 + v[2]*2^128 + v[3]*2^192  (mod p)  * or:  *   v[0]*2^0 + v[1]*2^64 + v[2]*2^128 + ... + v[8]*2^512  (mod p)  *  * 128-bit values are called 'limbs'. Since the limbs are spaced only 64 bits  * apart, but are 128-bits wide, the most significant bits of each limb overlap  * with the least significant bits of the next.  *  * A field element with four limbs is an 'felem'. One with eight limbs is a  * 'longfelem'  *  * A field element with four, 64-bit values is called a 'smallfelem'. Small  * values are used as intermediate values before multiplication.  */
 end_comment
 
 begin_define
@@ -616,7 +616,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* bin32_to_felem takes a little-endian byte array and converts it into felem  * form. This assumes that the CPU is little-endian. */
+comment|/*  * bin32_to_felem takes a little-endian byte array and converts it into felem  * form. This assumes that the CPU is little-endian.  */
 end_comment
 
 begin_function
@@ -711,7 +711,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* smallfelem_to_bin32 takes a smallfelem and serialises into a little endian,  * 32 byte array. This assumes that the CPU is little-endian. */
+comment|/*  * smallfelem_to_bin32 takes a smallfelem and serialises into a little  * endian, 32 byte array. This assumes that the CPU is little-endian.  */
 end_comment
 
 begin_function
@@ -1030,7 +1030,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Field operations  * ---------------- */
+comment|/*-  * Field operations  * ----------------  */
 end_comment
 
 begin_function
@@ -1473,7 +1473,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* smallfelem_neg sets |out| to |-small|  * On exit:  *   out[i]< out[i] + 2^105  */
+comment|/*-  * smallfelem_neg sets |out| to |-small|  * On exit:  *   out[i]< out[i] + 2^105  */
 end_comment
 
 begin_function
@@ -1554,7 +1554,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* felem_diff subtracts |in| from |out|  * On entry:  *   in[i]< 2^104  * On exit:  *   out[i]< out[i] + 2^105  */
+comment|/*-  * felem_diff subtracts |in| from |out|  * On entry:  *   in[i]< 2^104  * On exit:  *   out[i]< out[i] + 2^105  */
 end_comment
 
 begin_function
@@ -1570,7 +1570,7 @@ name|felem
 name|in
 parameter_list|)
 block|{
-comment|/* In order to prevent underflow, we add 0 mod p before subtracting. */
+comment|/*      * In order to prevent underflow, we add 0 mod p before subtracting.      */
 name|out
 index|[
 literal|0
@@ -1698,7 +1698,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* An alternative felem_diff for larger inputs |in|  * felem_diff_zero107 subtracts |in| from |out|  * On entry:  *   in[i]< 2^106  * On exit:  *   out[i]< out[i] + 2^107  */
+comment|/*-  * An alternative felem_diff for larger inputs |in|  * felem_diff_zero107 subtracts |in| from |out|  * On entry:  *   in[i]< 2^106  * On exit:  *   out[i]< out[i] + 2^107  */
 end_comment
 
 begin_function
@@ -1714,7 +1714,7 @@ name|felem
 name|in
 parameter_list|)
 block|{
-comment|/* In order to prevent underflow, we add 0 mod p before subtracting. */
+comment|/*      * In order to prevent underflow, we add 0 mod p before subtracting.      */
 name|out
 index|[
 literal|0
@@ -1799,7 +1799,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* longfelem_diff subtracts |in| from |out|  * On entry:  *   in[i]< 7*2^67  * On exit:  *   out[i]< out[i] + 2^70 + 2^40  */
+comment|/*-  * longfelem_diff subtracts |in| from |out|  * On entry:  *   in[i]< 7*2^67  * On exit:  *   out[i]< out[i] + 2^70 + 2^40  */
 end_comment
 
 begin_function
@@ -2164,7 +2164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* felem_shrink converts an felem into a smallfelem. The result isn't quite  * minimal as the value may be greater than p.  *  * On entry:  *   in[i]< 2^109  * On exit:  *   out[i]< 2^64  */
+comment|/*-  * felem_shrink converts an felem into a smallfelem. The result isn't quite  * minimal as the value may be greater than p.  *  * On entry:  *   in[i]< 2^109  * On exit:  *   out[i]< 2^64  */
 end_comment
 
 begin_function
@@ -2283,7 +2283,7 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* tmp[0]< 2**110, tmp[1]< 2^111, tmp[2]< 2**65 */
-comment|/* We perform two partial reductions where we eliminate the 	 * high-word of tmp[3]. We don't update the other words till the end. 	 */
+comment|/*      * We perform two partial reductions where we eliminate the high-word of      * tmp[3]. We don't update the other words till the end.      */
 name|a
 operator|=
 name|tmp
@@ -2383,7 +2383,7 @@ operator|<<
 literal|32
 expr_stmt|;
 comment|/* tmp[3]< 2^64 + 2^47 */
-comment|/* This adjusts the other two words to complete the two partial 	 * reductions. */
+comment|/*      * This adjusts the other two words to complete the two partial      * reductions.      */
 name|tmp
 index|[
 literal|0
@@ -2407,7 +2407,7 @@ operator|<<
 literal|32
 operator|)
 expr_stmt|;
-comment|/* In order to make space in tmp[3] for the carry from 2 -> 3, we 	 * conditionally subtract kPrime if tmp[3] is large enough. */
+comment|/*      * In order to make space in tmp[3] for the carry from 2 -> 3, we      * conditionally subtract kPrime if tmp[3] is large enough.      */
 name|high
 operator|=
 name|tmp
@@ -2426,7 +2426,7 @@ name|high
 operator|>>=
 literal|63
 expr_stmt|;
-comment|/* high is: 	 *   all ones   if the high word of tmp[3] is 1 	 *   all zeros  if the high word of tmp[3] if 0 */
+comment|/*-      * high is:      *   all ones   if the high word of tmp[3] is 1      *   all zeros  if the high word of tmp[3] if 0 */
 name|low
 operator|=
 name|tmp
@@ -2440,7 +2440,7 @@ name|low
 operator|>>
 literal|63
 expr_stmt|;
-comment|/* mask is: 	 *   all ones   if the MSB of low is 1 	 *   all zeros  if the MSB of low if 0 */
+comment|/*-      * mask is:      *   all ones   if the MSB of low is 1      *   all zeros  if the MSB of low if 0 */
 name|low
 operator|&=
 name|bottom63bits
@@ -2459,7 +2459,7 @@ name|low
 operator|>>=
 literal|63
 expr_stmt|;
-comment|/* low is: 	 *   all ones   if low was> kPrime3Test 	 *   all zeros  if low was<= kPrime3Test */
+comment|/*-      * low is:      *   all ones   if low was> kPrime3Test      *   all zeros  if low was<= kPrime3Test */
 name|mask
 operator|=
 operator|(
@@ -2709,7 +2709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* smallfelem_square sets |out| = |small|^2  * On entry:  *   small[i]< 2^64  * On exit:  *   out[i]< 7 * 2^64< 2^67  */
+comment|/*-  * smallfelem_square sets |out| = |small|^2  * On entry:  *   small[i]< 2^64  * On exit:  *   out[i]< 7 * 2^64< 2^67  */
 end_comment
 
 begin_function
@@ -3189,7 +3189,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* felem_square sets |out| = |in|^2  * On entry:  *   in[i]< 2^109  * On exit:  *   out[i]< 7 * 2^64< 2^67  */
+comment|/*-  * felem_square sets |out| = |in|^2  * On entry:  *   in[i]< 2^109  * On exit:  *   out[i]< 7 * 2^64< 2^67  */
 end_comment
 
 begin_function
@@ -3229,7 +3229,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* smallfelem_mul sets |out| = |small1| * |small2|  * On entry:  *   small1[i]< 2^64  *   small2[i]< 2^64  * On exit:  *   out[i]< 7 * 2^64< 2^67  */
+comment|/*-  * smallfelem_mul sets |out| = |small1| * |small2|  * On entry:  *   small1[i]< 2^64  *   small2[i]< 2^64  * On exit:  *   out[i]< 7 * 2^64< 2^67  */
 end_comment
 
 begin_function
@@ -3917,7 +3917,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* felem_mul sets |out| = |in1| * |in2|  * On entry:  *   in1[i]< 2^109  *   in2[i]< 2^109  * On exit:  *   out[i]< 7 * 2^64< 2^67  */
+comment|/*-  * felem_mul sets |out| = |in1| * |in2|  * On entry:  *   in1[i]< 2^109  *   in2[i]< 2^109  * On exit:  *   out[i]< 7 * 2^64< 2^67  */
 end_comment
 
 begin_function
@@ -3969,7 +3969,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* felem_small_mul sets |out| = |small1| * |in2|  * On entry:  *   small1[i]< 2^64  *   in2[i]< 2^109  * On exit:  *   out[i]< 7 * 2^64< 2^67  */
+comment|/*-  * felem_small_mul sets |out| = |small1| * |in2|  * On entry:  *   small1[i]< 2^64  *   in2[i]< 2^109  * On exit:  *   out[i]< 7 * 2^64< 2^67  */
 end_comment
 
 begin_function
@@ -4055,7 +4055,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Internal function for the different flavours of felem_reduce.  * felem_reduce_ reduces the higher coefficients in[4]-in[7].  * On entry:  *   out[0]>= in[6] + 2^32*in[6] + in[7] + 2^32*in[7]   *   out[1]>= in[7] + 2^32*in[4]  *   out[2]>= in[5] + 2^32*in[5]  *   out[3]>= in[4] + 2^32*in[5] + 2^32*in[6]  * On exit:  *   out[0]<= out[0] + in[4] + 2^32*in[5]  *   out[1]<= out[1] + in[5] + 2^33*in[6]  *   out[2]<= out[2] + in[7] + 2*in[6] + 2^33*in[7]  *   out[3]<= out[3] + 2^32*in[4] + 3*in[7]  */
+comment|/*-  * Internal function for the different flavours of felem_reduce.  * felem_reduce_ reduces the higher coefficients in[4]-in[7].  * On entry:  *   out[0]>= in[6] + 2^32*in[6] + in[7] + 2^32*in[7]  *   out[1]>= in[7] + 2^32*in[4]  *   out[2]>= in[5] + 2^32*in[5]  *   out[3]>= in[4] + 2^32*in[5] + 2^32*in[6]  * On exit:  *   out[0]<= out[0] + in[4] + 2^32*in[5]  *   out[1]<= out[1] + in[5] + 2^33*in[6]  *   out[2]<= out[2] + in[7] + 2*in[6] + 2^33*in[7]  *   out[3]<= out[3] + 2^32*in[4] + 3*in[7]  */
 end_comment
 
 begin_function
@@ -4300,7 +4300,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* felem_reduce converts a longfelem into an felem.  * To be called directly after felem_square or felem_mul.  * On entry:  *   in[0]< 2^64, in[1]< 3*2^64, in[2]< 5*2^64, in[3]< 7*2^64  *   in[4]< 7*2^64, in[5]< 5*2^64, in[6]< 3*2^64, in[7]< 2*64  * On exit:  *   out[i]< 2^101  */
+comment|/*-  * felem_reduce converts a longfelem into an felem.  * To be called directly after felem_square or felem_mul.  * On entry:  *   in[0]< 2^64, in[1]< 3*2^64, in[2]< 5*2^64, in[3]< 7*2^64  *   in[4]< 7*2^64, in[5]< 5*2^64, in[6]< 3*2^64, in[7]< 2*64  * On exit:  *   out[i]< 2^101  */
 end_comment
 
 begin_function
@@ -4383,12 +4383,12 @@ argument_list|,
 name|in
 argument_list|)
 expr_stmt|;
-comment|/* out[0]> 2^100 - 2^36 - 2^4 - 3*2^64 - 3*2^96 - 2^64 - 2^96> 0 	 * out[1]> 2^100 - 2^64 - 7*2^96> 0 	 * out[2]> 2^100 - 2^36 + 2^4 - 5*2^64 - 5*2^96> 0 	 * out[3]> 2^100 - 2^36 + 2^4 - 7*2^64 - 5*2^96 - 3*2^96> 0 	 * 	 * out[0]< 2^100 + 2^64 + 7*2^64 + 5*2^96< 2^101 	 * out[1]< 2^100 + 3*2^64 + 5*2^64 + 3*2^97< 2^101 	 * out[2]< 2^100 + 5*2^64 + 2^64 + 3*2^65 + 2^97< 2^101 	 * out[3]< 2^100 + 7*2^64 + 7*2^96 + 3*2^64< 2^101 	 */
+comment|/*-      * out[0]> 2^100 - 2^36 - 2^4 - 3*2^64 - 3*2^96 - 2^64 - 2^96> 0      * out[1]> 2^100 - 2^64 - 7*2^96> 0      * out[2]> 2^100 - 2^36 + 2^4 - 5*2^64 - 5*2^96> 0      * out[3]> 2^100 - 2^36 + 2^4 - 7*2^64 - 5*2^96 - 3*2^96> 0      *      * out[0]< 2^100 + 2^64 + 7*2^64 + 5*2^96< 2^101      * out[1]< 2^100 + 3*2^64 + 5*2^64 + 3*2^97< 2^101      * out[2]< 2^100 + 5*2^64 + 2^64 + 3*2^65 + 2^97< 2^101      * out[3]< 2^100 + 7*2^64 + 7*2^96 + 3*2^64< 2^101      */
 block|}
 end_function
 
 begin_comment
-comment|/* felem_reduce_zero105 converts a larger longfelem into an felem.  * On entry:  *   in[0]< 2^71  * On exit:  *   out[i]< 2^106  */
+comment|/*-  * felem_reduce_zero105 converts a larger longfelem into an felem.  * On entry:  *   in[0]< 2^71  * On exit:  *   out[i]< 2^106  */
 end_comment
 
 begin_function
@@ -4471,12 +4471,12 @@ argument_list|,
 name|in
 argument_list|)
 expr_stmt|;
-comment|/* out[0]> 2^105 - 2^41 - 2^9 - 2^71 - 2^103 - 2^71 - 2^103> 0 	 * out[1]> 2^105 - 2^71 - 2^103> 0 	 * out[2]> 2^105 - 2^41 + 2^9 - 2^71 - 2^103> 0 	 * out[3]> 2^105 - 2^41 + 2^9 - 2^71 - 2^103 - 2^103> 0 	 * 	 * out[0]< 2^105 + 2^71 + 2^71 + 2^103< 2^106 	 * out[1]< 2^105 + 2^71 + 2^71 + 2^103< 2^106 	 * out[2]< 2^105 + 2^71 + 2^71 + 2^71 + 2^103< 2^106 	 * out[3]< 2^105 + 2^71 + 2^103 + 2^71< 2^106 	 */
+comment|/*-      * out[0]> 2^105 - 2^41 - 2^9 - 2^71 - 2^103 - 2^71 - 2^103> 0      * out[1]> 2^105 - 2^71 - 2^103> 0      * out[2]> 2^105 - 2^41 + 2^9 - 2^71 - 2^103> 0      * out[3]> 2^105 - 2^41 + 2^9 - 2^71 - 2^103 - 2^103> 0      *      * out[0]< 2^105 + 2^71 + 2^71 + 2^103< 2^106      * out[1]< 2^105 + 2^71 + 2^71 + 2^103< 2^106      * out[2]< 2^105 + 2^71 + 2^71 + 2^71 + 2^103< 2^106      * out[3]< 2^105 + 2^71 + 2^103 + 2^71< 2^106      */
 block|}
 end_function
 
 begin_comment
-comment|/* subtract_u64 sets *result = *result - v and *carry to one if the subtraction  * underflowed. */
+comment|/*  * subtract_u64 sets *result = *result - v and *carry to one if the  * subtraction underflowed.  */
 end_comment
 
 begin_function
@@ -4529,7 +4529,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* felem_contract converts |in| to its unique, minimal representation.  * On entry:  *   in[i]< 2^109  */
+comment|/*  * felem_contract converts |in| to its unique, minimal representation. On  * entry: in[i]< 2^109  */
 end_comment
 
 begin_function
@@ -4570,7 +4570,7 @@ comment|/* small is minimal except that the value might be> p */
 name|all_equal_so_far
 operator|--
 expr_stmt|;
-comment|/* We are doing a constant time test if out>= kPrime. We need to 	 * compare each u64, from most-significant to least significant. For 	 * each one, if all words so far have been equal (m is all ones) then a 	 * non-equal result is the answer. Otherwise we continue. */
+comment|/*      * We are doing a constant time test if out>= kPrime. We need to compare      * each u64, from most-significant to least significant. For each one, if      * all words so far have been equal (m is all ones) then a non-equal      * result is the answer. Otherwise we continue.      */
 for|for
 control|(
 name|i
@@ -4606,7 +4606,7 @@ index|[
 name|i
 index|]
 decl_stmt|;
-comment|/* if out[i]> kPrime[i] then a will underflow and the high 		 * 64-bits will all be set. */
+comment|/*          * if out[i]> kPrime[i] then a will underflow and the high 64-bits          * will all be set.          */
 name|result
 operator||=
 name|all_equal_so_far
@@ -4622,7 +4622,7 @@ literal|64
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* if kPrime[i] == out[i] then |equal| will be all zeros and 		 * the decrement will make it all ones. */
+comment|/*          * if kPrime[i] == out[i] then |equal| will be all zeros and the          * decrement will make it all ones.          */
 name|equal
 operator|=
 name|kPrime
@@ -4690,7 +4690,7 @@ operator|&=
 name|equal
 expr_stmt|;
 block|}
-comment|/* if all_equal_so_far is still all ones then the two values are equal 	 * and so out>= kPrime is true. */
+comment|/*      * if all_equal_so_far is still all ones then the two values are equal      * and so out>= kPrime is true.      */
 name|result
 operator||=
 name|all_equal_so_far
@@ -4952,7 +4952,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* felem_is_zero returns a limb with all bits set if |in| == 0 (mod p) and 0  * otherwise.  * On entry:  *   small[i]< 2^64  */
+comment|/*-  * felem_is_zero returns a limb with all bits set if |in| == 0 (mod p) and 0  * otherwise.  * On entry:  *   small[i]< 2^64  */
 end_comment
 
 begin_function
@@ -5201,7 +5201,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* felem_inv calculates |out| = |in|^{-1}  *  * Based on Fermat's Little Theorem:  *   a^p = a (mod p)  *   a^{p-1} = 1 (mod p)  *   a^{p-2} = a^{-1} (mod p)  */
+comment|/*-  * felem_inv calculates |out| = |in|^{-1}  *  * Based on Fermat's Little Theorem:  *   a^p = a (mod p)  *   a^{p-1} = 1 (mod p)  *   a^{p-2} = a^{-1} (mod p)  */
 end_comment
 
 begin_function
@@ -5924,11 +5924,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* Group operations  * ----------------  *  * Building on top of the field operations we have the operations on the  * elliptic curve group itself. Points on the curve are represented in Jacobian  * coordinates */
+comment|/*-  * Group operations  * ----------------  *  * Building on top of the field operations we have the operations on the  * elliptic curve group itself. Points on the curve are represented in Jacobian  * coordinates  */
 end_comment
 
 begin_comment
-comment|/* point_double calculates 2*(x_in, y_in, z_in)  *  * The method is taken from:  *   http://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-3.html#doubling-dbl-2001-b  *  * Outputs can equal corresponding inputs, i.e., x_out == x_in is allowed.  * while x_out == y_in is not (maybe this works, but it's not tested). */
+comment|/*-  * point_double calculates 2*(x_in, y_in, z_in)  *  * The method is taken from:  *   http://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-3.html#doubling-dbl-2001-b  *  * Outputs can equal corresponding inputs, i.e., x_out == x_in is allowed.  * while x_out == y_in is not (maybe this works, but it's not tested).  */
 end_comment
 
 begin_function
@@ -6250,7 +6250,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* point_double_small is the same as point_double, except that it operates on  * smallfelems */
+comment|/*  * point_double_small is the same as point_double, except that it operates on  * smallfelems  */
 end_comment
 
 begin_function
@@ -6497,7 +6497,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* point_add calcuates (x1, y1, z1) + (x2, y2, z2)  *  * The method is taken from:  *   http://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-3.html#addition-add-2007-bl,  * adapted for mixed addition (z2 = 1, or z2 = 0 for the point at infinity).  *  * This function includes a branch for checking whether the two input points  * are equal, (while not equal to the point at infinity). This case never  * happens during single point multiplication, so there is no timing leak for  * ECDH or ECDSA signing. */
+comment|/*-  * point_add calcuates (x1, y1, z1) + (x2, y2, z2)  *  * The method is taken from:  *   http://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian-3.html#addition-add-2007-bl,  * adapted for mixed addition (z2 = 1, or z2 = 0 for the point at infinity).  *  * This function includes a branch for checking whether the two input points  * are equal, (while not equal to the point at infinity). This case never  * happens during single point multiplication, so there is no timing leak for  * ECDH or ECDSA signing.  */
 end_comment
 
 begin_function
@@ -6771,7 +6771,7 @@ comment|/* ftmp6[i]< 2^101 */
 block|}
 else|else
 block|{
-comment|/* We'll assume z2 = 1 (special case z2 = 0 is handled later) */
+comment|/*          * We'll assume z2 = 1 (special case z2 = 0 is handled later)          */
 comment|/* u1 = ftmp3 = x1*z2z2 */
 name|felem_assign
 argument_list|(
@@ -6907,7 +6907,7 @@ argument_list|,
 name|ftmp6
 argument_list|)
 expr_stmt|;
-comment|/* ftmp5[i]< 2^107 + 2^107 = 2^108*/
+comment|/* ftmp5[i]< 2^107 + 2^107 = 2^108 */
 name|felem_scalar
 argument_list|(
 name|ftmp5
@@ -7199,7 +7199,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* point_add_small is the same as point_add, except that it operates on  * smallfelems */
+comment|/*  * point_add_small is the same as point_add, except that it operates on  * smallfelems  */
 end_comment
 
 begin_function
@@ -7318,7 +7318,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Base point pre computation  * --------------------------  *  * Two different sorts of precomputed tables are used in the following code.  * Each contain various points on the curve, where each point is three field  * elements (x, y, z).  *  * For the base point table, z is usually 1 (0 for the point at infinity).  * This table has 2 * 16 elements, starting with the following:  * index | bits    | point  * ------+---------+------------------------------  *     0 | 0 0 0 0 | 0G  *     1 | 0 0 0 1 | 1G  *     2 | 0 0 1 0 | 2^64G  *     3 | 0 0 1 1 | (2^64 + 1)G  *     4 | 0 1 0 0 | 2^128G  *     5 | 0 1 0 1 | (2^128 + 1)G  *     6 | 0 1 1 0 | (2^128 + 2^64)G  *     7 | 0 1 1 1 | (2^128 + 2^64 + 1)G  *     8 | 1 0 0 0 | 2^192G  *     9 | 1 0 0 1 | (2^192 + 1)G  *    10 | 1 0 1 0 | (2^192 + 2^64)G  *    11 | 1 0 1 1 | (2^192 + 2^64 + 1)G  *    12 | 1 1 0 0 | (2^192 + 2^128)G  *    13 | 1 1 0 1 | (2^192 + 2^128 + 1)G  *    14 | 1 1 1 0 | (2^192 + 2^128 + 2^64)G  *    15 | 1 1 1 1 | (2^192 + 2^128 + 2^64 + 1)G  * followed by a copy of this with each element multiplied by 2^32.  *  * The reason for this is so that we can clock bits into four different  * locations when doing simple scalar multiplies against the base point,  * and then another four locations using the second 16 elements.  *  * Tables for other points have table[i] = iG for i in 0 .. 16. */
+comment|/*-  * Base point pre computation  * --------------------------  *  * Two different sorts of precomputed tables are used in the following code.  * Each contain various points on the curve, where each point is three field  * elements (x, y, z).  *  * For the base point table, z is usually 1 (0 for the point at infinity).  * This table has 2 * 16 elements, starting with the following:  * index | bits    | point  * ------+---------+------------------------------  *     0 | 0 0 0 0 | 0G  *     1 | 0 0 0 1 | 1G  *     2 | 0 0 1 0 | 2^64G  *     3 | 0 0 1 1 | (2^64 + 1)G  *     4 | 0 1 0 0 | 2^128G  *     5 | 0 1 0 1 | (2^128 + 1)G  *     6 | 0 1 1 0 | (2^128 + 2^64)G  *     7 | 0 1 1 1 | (2^128 + 2^64 + 1)G  *     8 | 1 0 0 0 | 2^192G  *     9 | 1 0 0 1 | (2^192 + 1)G  *    10 | 1 0 1 0 | (2^192 + 2^64)G  *    11 | 1 0 1 1 | (2^192 + 2^64 + 1)G  *    12 | 1 1 0 0 | (2^192 + 2^128)G  *    13 | 1 1 0 1 | (2^192 + 2^128 + 1)G  *    14 | 1 1 1 0 | (2^192 + 2^128 + 2^64)G  *    15 | 1 1 1 1 | (2^192 + 2^128 + 2^64 + 1)G  * followed by a copy of this with each element multiplied by 2^32.  *  * The reason for this is so that we can clock bits into four different  * locations when doing simple scalar multiplies against the base point,  * and then another four locations using the second 16 elements.  *  * Tables for other points have table[i] = iG for i in 0 .. 16. */
 end_comment
 
 begin_comment
@@ -8373,7 +8373,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* select_point selects the |idx|th point from a precomputation table and  * copies it to out. */
+comment|/*  * select_point selects the |idx|th point from a precomputation table and  * copies it to out.  */
 end_comment
 
 begin_function
@@ -8592,7 +8592,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Interleaved point multiplication using precomputed point multiples:  * The small point multiples 0*P, 1*P, ..., 17*P are in pre_comp[],  * the scalars in scalars[]. If g_scalar is non-NULL, we also add this multiple  * of the generator, using certain (large) precomputed multiples in g_pre_comp.  * Output point (X, Y, Z) is stored in x_out, y_out, z_out */
+comment|/*  * Interleaved point multiplication using precomputed point multiples: The  * small point multiples 0*P, 1*P, ..., 17*P are in pre_comp[], the scalars  * in scalars[]. If g_scalar is non-NULL, we also add this multiple of the  * generator, using certain (large) precomputed multiples in g_pre_comp.  * Output point (X, Y, Z) is stored in x_out, y_out, z_out  */
 end_comment
 
 begin_function
@@ -8705,12 +8705,12 @@ name|felem
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Loop over all scalars msb-to-lsb, interleaving additions 	 * of multiples of the generator (two in each of the last 32 rounds) 	 * and additions of other points multiples (every 5th round). 	 */
+comment|/*      * Loop over all scalars msb-to-lsb, interleaving additions of multiples      * of the generator (two in each of the last 32 rounds) and additions of      * other points multiples (every 5th round).      */
 name|skip
 operator|=
 literal|1
 expr_stmt|;
-comment|/* save two point operations in the first round */
+comment|/* save two point operations in the first                                  * round */
 for|for
 control|(
 name|i
@@ -8854,6 +8854,7 @@ operator|!
 name|skip
 condition|)
 block|{
+comment|/* Arg 1 below is for "mixed" */
 name|point_add
 argument_list|(
 name|nq
@@ -8887,7 +8888,6 @@ literal|2
 index|]
 argument_list|,
 literal|1
-comment|/* mixed */
 argument_list|,
 name|tmp
 index|[
@@ -9016,6 +9016,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
+comment|/* Arg 1 below is for "mixed" */
 name|point_add
 argument_list|(
 name|nq
@@ -9049,7 +9050,6 @@ literal|2
 index|]
 argument_list|,
 literal|1
-comment|/* mixed */
 argument_list|,
 name|tmp
 index|[
@@ -9200,7 +9200,7 @@ argument_list|,
 name|bits
 argument_list|)
 expr_stmt|;
-comment|/* select the point to add or subtract, in constant time */
+comment|/*                  * select the point to add or subtract, in constant time                  */
 name|select_point
 argument_list|(
 name|digit
@@ -9225,7 +9225,7 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* (X, -Y, Z) is the negative point */
+comment|/* (X, -Y, Z) is the negative                                                * point */
 name|copy_small_conditional
 argument_list|(
 name|ftmp
@@ -9537,7 +9537,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*		       FUNCTIONS TO MANAGE PRECOMPUTATION  */
+comment|/*  * FUNCTIONS TO MANAGE PRECOMPUTATION  */
 end_comment
 
 begin_function
@@ -9771,7 +9771,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*			   OPENSSL EC_METHOD FUNCTIONS  */
+comment|/*  * OPENSSL EC_METHOD FUNCTIONS  */
 end_comment
 
 begin_function
@@ -10057,7 +10057,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Takes the Jacobian coordinates (X, Y, Z) of a point and returns  * (X', Y') = (X/Z^2, Y/Z^3) */
+comment|/*  * Takes the Jacobian coordinates (X, Y, Z) of a point and returns (X', Y') =  * (X/Z^2, Y/Z^3)  */
 end_comment
 
 begin_function
@@ -10318,6 +10318,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* points below is of size |num|, and tmp_smallfelems is of size |num+1| */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -10328,21 +10332,17 @@ name|num
 parameter_list|,
 name|smallfelem
 name|points
-index|[
-comment|/* num */
-index|]
+index|[]
 index|[
 literal|3
 index|]
 parameter_list|,
 name|smallfelem
 name|tmp_smallfelems
-index|[
-comment|/* num+1 */
-index|]
+index|[]
 parameter_list|)
 block|{
-comment|/* Runs in constant time, unless an input is the point at infinity 	 * (which normally shouldn't happen). */
+comment|/*      * Runs in constant time, unless an input is the point at infinity (which      * normally shouldn't happen).      */
 name|ec_GFp_nistp_points_make_affine_internal
 argument_list|(
 name|num
@@ -10449,6 +10449,7 @@ argument_list|)
 operator|)
 name|smallfelem_inv_contract
 argument_list|,
+comment|/* nothing to contract */
 operator|(
 name|void
 argument_list|(
@@ -10464,14 +10465,13 @@ operator|*
 argument_list|)
 operator|)
 name|smallfelem_assign
-comment|/* nothing to contract */
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/* Computes scalar*generator + \sum scalars[i]*points[i], ignoring NULL values  * Result is stored in r (r can equal one of the inputs). */
+comment|/*  * Computes scalar*generator + \sum scalars[i]*points[i], ignoring NULL  * values Result is stored in r (r can equal one of the inputs).  */
 end_comment
 
 begin_function
@@ -10912,7 +10912,7 @@ operator|=
 literal|1
 expr_stmt|;
 else|else
-comment|/* we don't have valid precomputation: 			 * treat the generator as a random point */
+comment|/*              * we don't have valid precomputation: treat the generator as a              * random point              */
 name|num_points
 operator|++
 expr_stmt|;
@@ -10931,7 +10931,7 @@ operator|>=
 literal|3
 condition|)
 block|{
-comment|/* unless we precompute multiples for just one or two points, 			 * converting those into affine form is time well spent  */
+comment|/*              * unless we precompute multiples for just one or two points,              * converting those into affine form is time well spent              */
 name|mixed
 operator|=
 literal|1
@@ -11023,7 +11023,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* we treat NULL scalars as 0, and NULL points as points at infinity, 		 * i.e., they contribute nothing to the linear combination */
+comment|/*          * we treat NULL scalars as 0, and NULL points as points at infinity,          * i.e., they contribute nothing to the linear combination          */
 name|memset
 argument_list|(
 name|secrets
@@ -11076,7 +11076,7 @@ name|i
 operator|==
 name|num
 condition|)
-comment|/* we didn't have a valid precomputation, so we pick 				 * the generator */
+comment|/*                  * we didn't have a valid precomputation, so we pick the                  * generator                  */
 block|{
 name|p
 operator|=
@@ -11143,7 +11143,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* this is an unusual input, and we don't guarantee 					 * constant-timeness */
+comment|/*                      * this is an unusual input, and we don't guarantee                      * constant-timeness                      */
 if|if
 condition|(
 operator|!
@@ -11574,7 +11574,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* this is an unusual input, and we don't guarantee 			 * constant-timeness */
+comment|/*              * this is an unusual input, and we don't guarantee              * constant-timeness              */
 if|if
 condition|(
 operator|!
@@ -11633,7 +11633,7 @@ argument_list|,
 name|num_bytes
 argument_list|)
 expr_stmt|;
-comment|/* do the multiplication with generator precomputation*/
+comment|/* do the multiplication with generator precomputation */
 name|batch_mul
 argument_list|(
 name|x_out
@@ -12095,7 +12095,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* if the generator is the standard one, use built-in precomputation */
+comment|/*      * if the generator is the standard one, use built-in precomputation      */
 if|if
 condition|(
 literal|0
@@ -12242,7 +12242,7 @@ argument_list|,
 name|z_tmp
 argument_list|)
 expr_stmt|;
-comment|/* compute 2^64*G, 2^128*G, 2^192*G for the first table, 	 * 2^32*G, 2^96*G, 2^160*G, 2^224*G for the second one 	 */
+comment|/*      * compute 2^64*G, 2^128*G, 2^192*G for the first table, 2^32*G, 2^96*G,      * 2^160*G, 2^224*G for the second one      */
 for|for
 control|(
 name|i
@@ -13045,7 +13045,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 2^64*G + 2^128*G + 2^192*G resp. 2^96*G + 2^160*G + 2^224*G */
+comment|/*          * 2^64*G + 2^128*G + 2^192*G resp. 2^96*G + 2^160*G + 2^224*G          */
 name|point_add_small
 argument_list|(
 name|pre

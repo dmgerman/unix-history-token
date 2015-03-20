@@ -784,7 +784,7 @@ name|iv
 init|=
 literal|0
 decl_stmt|,
-comment|/* explicit IV in TLS 1.1 and later */
+comment|/* explicit IV in TLS 1.1 and                                                 * later */
 name|sha_off
 init|=
 literal|0

@@ -371,7 +371,7 @@ do|do
 block|{
 do|do
 block|{
-comment|/*Generate random number k less than q*/
+comment|/*              * Generate random number k less than q              */
 name|BN_rand_range
 argument_list|(
 name|k
@@ -546,7 +546,7 @@ comment|/*  * Packs signature according to Cryptocom rules  * and frees up DSA_S
 end_comment
 
 begin_comment
-comment|/* int pack_sign_cc(DSA_SIG *s,int order,unsigned char *sig, size_t *siglen) 	{ 	*siglen = 2*order; 	memset(sig,0,*siglen); 	store_bignum(s->r, sig,order); 	store_bignum(s->s, sig + order,order); 	dump_signature("serialized",sig,*siglen); 	DSA_SIG_free(s); 	return 1; 	} */
+comment|/*- int pack_sign_cc(DSA_SIG *s,int order,unsigned char *sig, size_t *siglen)         {         *siglen = 2*order;         memset(sig,0,*siglen);         store_bignum(s->r, sig,order);         store_bignum(s->s, sig + order,order);         dump_signature("serialized",sig,*siglen);         DSA_SIG_free(s);         return 1;         } */
 end_comment
 
 begin_comment
@@ -1348,7 +1348,7 @@ comment|/* Unpack signature according to cryptocom rules  */
 end_comment
 
 begin_comment
-comment|/* DSA_SIG *unpack_cc_signature(const unsigned char *sig,size_t siglen) 	{ 	DSA_SIG *s; 	s = DSA_SIG_new(); 	if (s == NULL) 		{ 		GOSTerr(GOST_F_UNPACK_CC_SIGNATURE,GOST_R_NO_MEMORY); 		return(NULL); 		} 	s->r = getbnfrombuf(sig, siglen/2); 	s->s = getbnfrombuf(sig + siglen/2, siglen/2); 	return s; 	} */
+comment|/*- DSA_SIG *unpack_cc_signature(const unsigned char *sig,size_t siglen)         {         DSA_SIG *s;         s = DSA_SIG_new();         if (s == NULL)                 {                 GOSTerr(GOST_F_UNPACK_CC_SIGNATURE,GOST_R_NO_MEMORY);                 return(NULL);                 }         s->r = getbnfrombuf(sig, siglen/2);         s->s = getbnfrombuf(sig + siglen/2, siglen/2);         return s;         } */
 end_comment
 
 begin_comment
@@ -1573,7 +1573,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Pack bignum into byte buffer of given size, filling all leading bytes  * by zeros */
+comment|/*  * Pack bignum into byte buffer of given size, filling all leading bytes by  * zeros  */
 end_comment
 
 begin_function

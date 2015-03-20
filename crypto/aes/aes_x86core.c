@@ -390,7 +390,7 @@ name|a
 parameter_list|,
 name|n
 parameter_list|)
-value|({ register unsigned int ret;	\ 				asm (			\ 				"roll %1,%0"		\ 				: "=r"(ret)		\ 				: "I"(n), "0"(a)	\ 				: "cc");		\ 			   ret;				\ 			})
+value|({ register unsigned int ret;   \                 asm (           \                 "roll %1,%0"        \                 : "=r"(ret)     \                 : "I"(n), "0"(a)    \                 : "cc");        \                ret;             \             })
 end_define
 
 begin_endif
@@ -404,7 +404,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Te [x] = S [x].[02, 01, 01, 03, 02, 01, 01, 03]; Te0[x] = S [x].[02, 01, 01, 03]; Te1[x] = S [x].[03, 02, 01, 01]; Te2[x] = S [x].[01, 03, 02, 01]; Te3[x] = S [x].[01, 01, 03, 02]; */
+comment|/*- Te [x] = S [x].[02, 01, 01, 03, 02, 01, 01, 03]; Te0[x] = S [x].[02, 01, 01, 03]; Te1[x] = S [x].[03, 02, 01, 01]; Te2[x] = S [x].[01, 03, 02, 01]; Te3[x] = S [x].[01, 01, 03, 02]; */
 end_comment
 
 begin_define
@@ -436,7 +436,7 @@ value|(u32)((u64*)((u8*)Te+1))
 end_define
 
 begin_comment
-comment|/* Td [x] = Si[x].[0e, 09, 0d, 0b, 0e, 09, 0d, 0b]; Td0[x] = Si[x].[0e, 09, 0d, 0b]; Td1[x] = Si[x].[0b, 0e, 09, 0d]; Td2[x] = Si[x].[0d, 0b, 0e, 09]; Td3[x] = Si[x].[09, 0d, 0b, 0e]; Td4[x] = Si[x].[01]; */
+comment|/*- Td [x] = Si[x].[0e, 09, 0d, 0b, 0e, 09, 0d, 0b]; Td0[x] = Si[x].[0e, 09, 0d, 0b]; Td1[x] = Si[x].[0b, 0e, 09, 0d]; Td2[x] = Si[x].[0d, 0b, 0e, 09]; Td3[x] = Si[x].[09, 0d, 0b, 0e]; Td4[x] = Si[x].[01]; */
 end_comment
 
 begin_define
@@ -4315,6 +4315,9 @@ literal|0
 index|]
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4328,6 +4331,9 @@ index|]
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4343,6 +4349,9 @@ literal|8
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4356,6 +4365,9 @@ literal|16
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4490,6 +4502,9 @@ literal|0
 index|]
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4503,6 +4518,9 @@ index|]
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4518,6 +4536,9 @@ literal|8
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4531,6 +4552,9 @@ literal|16
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4695,6 +4719,9 @@ literal|0
 index|]
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4708,6 +4735,9 @@ index|]
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4723,6 +4753,9 @@ literal|8
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4736,6 +4769,9 @@ literal|16
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4828,6 +4864,9 @@ literal|4
 index|]
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4839,6 +4878,9 @@ index|]
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4854,6 +4896,9 @@ literal|8
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -4869,6 +4914,9 @@ literal|16
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -5804,7 +5852,7 @@ name|key
 operator|->
 name|rd_key
 expr_stmt|;
-comment|/* 	 * map byte array block to cipher state 	 * and add initial round key: 	 */
+comment|/*      * map byte array block to cipher state      * and add initial round key:      */
 name|s0
 operator|=
 name|GETU32
@@ -5875,6 +5923,9 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -5884,6 +5935,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -5897,6 +5951,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -5910,6 +5967,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -5926,6 +5986,9 @@ index|[
 literal|1
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -5935,6 +5998,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -5948,6 +6014,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -5961,6 +6030,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -5977,6 +6049,9 @@ index|[
 literal|2
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -5986,6 +6061,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -5999,6 +6077,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6012,6 +6093,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6028,6 +6112,9 @@ index|[
 literal|3
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6037,6 +6124,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6050,6 +6140,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6063,6 +6156,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6519,6 +6615,9 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6528,6 +6627,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6541,6 +6643,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6554,6 +6659,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6570,6 +6678,9 @@ index|[
 literal|1
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6579,6 +6690,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6592,6 +6706,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6605,6 +6722,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6621,6 +6741,9 @@ index|[
 literal|2
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6630,6 +6753,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6643,6 +6769,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6656,6 +6785,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6672,6 +6804,9 @@ index|[
 literal|3
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6681,6 +6816,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6694,6 +6832,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -6707,6 +6848,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7124,7 +7268,7 @@ literal|3
 index|]
 expr_stmt|;
 block|}
-comment|/* 	 * apply last round and 	 * map cipher state to byte array block: 	 */
+comment|/*      * apply last round and      * map cipher state to byte array block:      */
 if|#
 directive|if
 name|defined
@@ -7147,6 +7291,9 @@ operator|+
 literal|0
 operator|)
 operator|=
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7156,6 +7303,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7169,6 +7319,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7182,6 +7335,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7209,6 +7365,9 @@ operator|+
 literal|4
 operator|)
 operator|=
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7218,6 +7377,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7231,6 +7393,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7244,6 +7409,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7271,6 +7439,9 @@ operator|+
 literal|8
 operator|)
 operator|=
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7280,6 +7451,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7293,6 +7467,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7306,6 +7483,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7333,6 +7513,9 @@ operator|+
 literal|12
 operator|)
 operator|=
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7342,6 +7525,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7355,6 +7541,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7368,6 +7557,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Te4
 index|[
 operator|(
@@ -7741,7 +7933,7 @@ name|key
 operator|->
 name|rd_key
 expr_stmt|;
-comment|/* 	 * map byte array block to cipher state 	 * and add initial round key: 	 */
+comment|/*      * map byte array block to cipher state      * and add initial round key:      */
 name|s0
 operator|=
 name|GETU32
@@ -7812,6 +8004,9 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7821,6 +8016,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7834,6 +8032,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7847,6 +8048,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7863,6 +8067,9 @@ index|[
 literal|1
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7872,6 +8079,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7885,6 +8095,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7898,6 +8111,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7914,6 +8130,9 @@ index|[
 literal|2
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7923,6 +8142,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7936,6 +8158,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7949,6 +8174,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7965,6 +8193,9 @@ index|[
 literal|3
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7974,6 +8205,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -7987,6 +8221,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8000,6 +8237,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8543,6 +8783,9 @@ index|[
 literal|0
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8552,6 +8795,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8565,6 +8811,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8578,6 +8827,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8594,6 +8846,9 @@ index|[
 literal|1
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8603,6 +8858,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8616,6 +8874,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8629,6 +8890,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8645,6 +8909,9 @@ index|[
 literal|2
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8654,6 +8921,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8667,6 +8937,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8680,6 +8953,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8696,6 +8972,9 @@ index|[
 literal|3
 index|]
 operator|=
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8705,6 +8984,9 @@ operator|&
 literal|0xff
 index|]
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8718,6 +9000,9 @@ index|]
 operator|<<
 literal|8
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -8731,6 +9016,9 @@ index|]
 operator|<<
 literal|16
 operator|^
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9235,7 +9523,7 @@ literal|3
 index|]
 expr_stmt|;
 block|}
-comment|/* 	 * apply last round and 	 * map cipher state to byte array block: 	 */
+comment|/*      * apply last round and      * map cipher state to byte array block:      */
 name|prefetch256
 argument_list|(
 name|Td4
@@ -9253,6 +9541,9 @@ literal|0
 operator|)
 operator|=
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9264,6 +9555,9 @@ index|]
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9279,6 +9573,9 @@ literal|8
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9294,6 +9591,9 @@ literal|16
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9323,6 +9623,9 @@ literal|4
 operator|)
 operator|=
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9334,6 +9637,9 @@ index|]
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9349,6 +9655,9 @@ literal|8
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9364,6 +9673,9 @@ literal|16
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9393,6 +9705,9 @@ literal|8
 operator|)
 operator|=
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9404,6 +9719,9 @@ index|]
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9419,6 +9737,9 @@ literal|8
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9434,6 +9755,9 @@ literal|16
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9463,6 +9787,9 @@ literal|12
 operator|)
 operator|=
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9474,6 +9801,9 @@ index|]
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9489,6 +9819,9 @@ literal|8
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
@@ -9504,6 +9837,9 @@ literal|16
 operator|)
 operator|^
 operator|(
+operator|(
+name|u32
+operator|)
 name|Td4
 index|[
 operator|(
