@@ -196,6 +196,15 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pktmp
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|err
+goto|;
 name|i
 operator|=
 name|X509_REQ_set_pubkey
