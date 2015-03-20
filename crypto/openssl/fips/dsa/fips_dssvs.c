@@ -994,7 +994,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Keypair verification routine. NB: this isn't part of the standard FIPS140-2  * algorithm tests. It is an additional test to perform sanity checks on the  * output of the KeyPair test.  */
+comment|/*  * Keypair verification routine. NB: this isn't part of the standard  * FIPS140-2 algorithm tests. It is an additional test to perform sanity  * checks on the output of the KeyPair test.  */
 end_comment
 
 begin_function

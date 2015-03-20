@@ -6,7 +6,7 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/* This is a cc optimiser bug for ultrix 4.3, mips CPU.  * What happens is that the compiler, due to the (a)&7,  * does  * i=a&7;  * i--;  * i*=4;  * Then uses i as the offset into a jump table.  * The problem is that a value of 0 generates an offset of  * 0xfffffffc.  */
+comment|/*-  * This is a cc optimiser bug for ultrix 4.3, mips CPU.  * What happens is that the compiler, due to the (a)&7,  * does  * i=a&7;  * i--;  * i*=4;  * Then uses i as the offset into a jump table.  * The problem is that a value of 0 generates an offset of  * 0xfffffffc.  */
 end_comment
 
 begin_function

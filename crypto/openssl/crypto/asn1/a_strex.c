@@ -4,11 +4,11 @@ comment|/* a_strex.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -54,7 +54,7 @@ file|"charmap.h"
 end_include
 
 begin_comment
-comment|/* ASN1_STRING_print_ex() and X509_NAME_print_ex().  * Enhanced string and name printing routines handling  * multibyte characters, RFC2253 and a host of other  * options.  */
+comment|/*  * ASN1_STRING_print_ex() and X509_NAME_print_ex(). Enhanced string and name  * printing routines handling multibyte characters, RFC2253 and a host of  * other options.  */
 end_comment
 
 begin_define
@@ -68,11 +68,11 @@ begin_define
 define|#
 directive|define
 name|ESC_FLAGS
-value|(ASN1_STRFLGS_ESC_2253 | \ 		  ASN1_STRFLGS_ESC_QUOTE | \ 		  ASN1_STRFLGS_ESC_CTRL | \ 		  ASN1_STRFLGS_ESC_MSB)
+value|(ASN1_STRFLGS_ESC_2253 | \                   ASN1_STRFLGS_ESC_QUOTE | \                   ASN1_STRFLGS_ESC_CTRL | \                   ASN1_STRFLGS_ESC_MSB)
 end_define
 
 begin_comment
-comment|/* Three IO functions for sending data to memory, a BIO and  * and a FILE pointer.  */
+comment|/*  * Three IO functions for sending data to memory, a BIO and and a FILE  * pointer.  */
 end_comment
 
 begin_if
@@ -86,7 +86,7 @@ comment|/* never used */
 end_comment
 
 begin_endif
-unit|static int send_mem_chars(void *arg, const void *buf, int len) { 	unsigned char **out = arg; 	if(!out) return 1; 	memcpy(*out, buf, len); 	*out += len; 	return 1; }
+unit|static int send_mem_chars(void *arg, const void *buf, int len) {     unsigned char **out = arg;     if (!out)         return 1;     memcpy(*out, buf, len);     *out += len;     return 1; }
 endif|#
 directive|endif
 end_endif
@@ -214,7 +214,7 @@ function_decl|;
 end_typedef
 
 begin_comment
-comment|/* This function handles display of  * strings, one character at a time.  * It is passed an unsigned long for each  * character because it could come from 2 or even  * 4 byte forms.  */
+comment|/*  * This function handles display of strings, one character at a time. It is  * passed an unsigned long for each character because it could come from 2 or  * even 4 byte forms.  */
 end_comment
 
 begin_function
@@ -502,7 +502,7 @@ return|return
 literal|3
 return|;
 block|}
-comment|/* If we get this far and do any escaping at all must escape  	 * the escape character itself: backslash. 	 */
+comment|/*      * If we get this far and do any escaping at all must escape the escape      * character itself: backslash.      */
 if|if
 condition|(
 name|chtmp
@@ -572,7 +572,7 @@ value|0x8
 end_define
 
 begin_comment
-comment|/* This function sends each character in a buffer to  * do_esc_char(). It interprets the content formats  * and converts to or from UTF8 as appropriate.  */
+comment|/*  * This function sends each character in a buffer to do_esc_char(). It  * interprets the content formats and converts to or from UTF8 as  * appropriate.  */
 end_comment
 
 begin_function
@@ -857,7 +857,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* We don't need to worry about setting orflags correctly 				 * because if utflen==1 its value will be correct anyway  				 * otherwise each character will be> 0x7f and so the  				 * character will never be escaped on first and last. 				 */
+comment|/*                  * We don't need to worry about setting orflags correctly                  * because if utflen==1 its value will be correct anyway                  * otherwise each character will be> 0x7f and so the                  * character will never be escaped on first and last.                  */
 name|len
 operator|=
 name|do_esc_char
@@ -1073,7 +1073,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* "dump" a string. This is done when the type is unknown,  * or the flags request it. We can either dump the content  * octets or the entire DER encoding. This uses the RFC2253  * #01234 format.  */
+comment|/*  * "dump" a string. This is done when the type is unknown, or the flags  * request it. We can either dump the content octets or the entire DER  * encoding. This uses the RFC2253 #01234 format.  */
 end_comment
 
 begin_function
@@ -1098,7 +1098,7 @@ modifier|*
 name|str
 parameter_list|)
 block|{
-comment|/* Placing the ASN1_STRING in a temp ASN1_TYPE allows 	 * the DER encoding to readily obtained 	 */
+comment|/*      * Placing the ASN1_STRING in a temp ASN1_TYPE allows the DER encoding to      * readily obtained      */
 name|ASN1_TYPE
 name|t
 decl_stmt|;
@@ -1271,7 +1271,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Lookup table to convert tags to character widths,  * 0 = UTF8 encoded, -1 is used for non string types  * otherwise it is the number of bytes per character  */
+comment|/*  * Lookup table to convert tags to character widths, 0 = UTF8 encoded, -1 is  * used for non string types otherwise it is the number of bytes per  * character  */
 end_comment
 
 begin_decl_stmt
@@ -1379,7 +1379,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This is the main function, print out an  * ASN1_STRING taking note of various escape  * and display options. Returns number of  * characters written or -1 if an error  * occurred.  */
+comment|/*  * This is the main function, print out an ASN1_STRING taking note of various  * escape and display options. Returns number of characters written or -1 if  * an error occurred.  */
 end_comment
 
 begin_function
@@ -1624,7 +1624,7 @@ operator|&
 name|ASN1_STRFLGS_UTF8_CONVERT
 condition|)
 block|{
-comment|/* Note: if string is UTF8 and we want 		 * to convert to UTF8 then we just interpret 		 * it as 1 byte per character to avoid converting 		 * twice. 		 */
+comment|/*          * Note: if string is UTF8 and we want to convert to UTF8 then we          * just interpret it as 1 byte per character to avoid converting          * twice.          */
 if|if
 condition|(
 operator|!
@@ -2440,7 +2440,7 @@ operator|+
 name|sep_eq_len
 expr_stmt|;
 block|}
-comment|/* If the field name is unknown then fix up the DER dump 		 * flag. We might want to limit this further so it will  		 * DER dump on anything other than a few 'standard' fields. 		 */
+comment|/*          * If the field name is unknown then fix up the DER dump flag. We          * might want to limit this further so it will DER dump on anything          * other than a few 'standard' fields.          */
 if|if
 condition|(
 operator|(
@@ -2733,7 +2733,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Utility function: convert any string type to UTF8, returns number of bytes  * in output string or a negative error code  */
+comment|/*  * Utility function: convert any string type to UTF8, returns number of bytes  * in output string or a negative error code  */
 end_comment
 
 begin_function

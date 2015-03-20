@@ -4,15 +4,15 @@ comment|/* crypto/crypto.h */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECDH support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECDH support in OpenSSL originally developed by  * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
 end_comment
 
 begin_ifndef
@@ -98,7 +98,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Resolve problems on some operating systems with symbol names that clash    one way or another */
+comment|/*  * Resolve problems on some operating systems with symbol names that clash  * one way or another  */
 end_comment
 
 begin_include
@@ -120,7 +120,7 @@ block|{
 endif|#
 directive|endif
 comment|/* Backward compatibility to SSLeay */
-comment|/* This is more to be used to check the correct DLL is being used  * in the MS world. */
+comment|/*  * This is more to be used to check the correct DLL is being used in the MS  * world.  */
 define|#
 directive|define
 name|SSLEAY_VERSION_NUMBER
@@ -129,7 +129,7 @@ define|#
 directive|define
 name|SSLEAY_VERSION
 value|0
-comment|/* #define SSLEAY_OPTIONS	1 no longer supported */
+comment|/* #define SSLEAY_OPTIONS       1 no longer supported */
 define|#
 directive|define
 name|SSLEAY_CFLAGS
@@ -152,11 +152,11 @@ directive|if
 literal|0
 block|typedef struct crypto_ex_data_st CRYPTO_EX_DATA;
 comment|/* Called when a new object is created */
-block|typedef int CRYPTO_EX_new(void *parent, void *ptr, CRYPTO_EX_DATA *ad, 					int idx, long argl, void *argp);
+block|typedef int CRYPTO_EX_new (void *parent, void *ptr, CRYPTO_EX_DATA *ad,                            int idx, long argl, void *argp);
 comment|/* Called when an object is free()ed */
-block|typedef void CRYPTO_EX_free(void *parent, void *ptr, CRYPTO_EX_DATA *ad, 					int idx, long argl, void *argp);
+block|typedef void CRYPTO_EX_free (void *parent, void *ptr, CRYPTO_EX_DATA *ad,                              int idx, long argl, void *argp);
 comment|/* Called when we need to dup an object */
-block|typedef int CRYPTO_EX_dup(CRYPTO_EX_DATA *to, CRYPTO_EX_DATA *from, void *from_d,  					int idx, long argl, void *argp);
+block|typedef int CRYPTO_EX_dup (CRYPTO_EX_DATA *to, CRYPTO_EX_DATA *from,                            void *from_d, int idx, long argl, void *argp);
 endif|#
 directive|endif
 comment|/* A generic structure to pass assorted data in a expandable way */
@@ -175,7 +175,7 @@ comment|/* Not used for flag attributes */
 name|size_t
 name|value_size
 decl_stmt|;
-comment|/* Max size of value for output, length for input */
+comment|/* Max size of value for output, length for                                  * input */
 name|size_t
 modifier|*
 name|value_length
@@ -184,7 +184,7 @@ comment|/* Returned length of value for output */
 block|}
 name|OPENSSL_ITEM
 typedef|;
-comment|/* When changing the CRYPTO_LOCK_* list, be sure to maintin the text lock  * names in cryptlib.c  */
+comment|/*  * When changing the CRYPTO_LOCK_* list, be sure to maintin the text lock  * names in cryptlib.c  */
 define|#
 directive|define
 name|CRYPTO_LOCK_ERR
@@ -467,7 +467,7 @@ parameter_list|)
 value|((*(a))+=(b))
 endif|#
 directive|endif
-comment|/* Some applications as well as some parts of OpenSSL need to allocate    and deallocate locks in a dynamic fashion.  The following typedef    makes this possible in a type-safe manner.  */
+comment|/*  * Some applications as well as some parts of OpenSSL need to allocate and  * deallocate locks in a dynamic fashion.  The following typedef makes this  * possible in a type-safe manner.  */
 comment|/* struct CRYPTO_dynlock_value has to be defined by the application. */
 typedef|typedef
 struct|struct
@@ -483,7 +483,7 @@ decl_stmt|;
 block|}
 name|CRYPTO_dynlock
 typedef|;
-comment|/* The following can be used to detect memory leaks in the SSLeay library.  * It used, it turns on malloc checking */
+comment|/*  * The following can be used to detect memory leaks in the SSLeay library. It  * used, it turns on malloc checking  */
 define|#
 directive|define
 name|CRYPTO_MEM_CHECK_OFF
@@ -504,7 +504,7 @@ directive|define
 name|CRYPTO_MEM_CHECK_DISABLE
 value|0x3
 comment|/* an enume */
-comment|/* The following are bit values to turn on or off options connected to the  * malloc checking functionality */
+comment|/*  * The following are bit values to turn on or off options connected to the  * malloc checking functionality  */
 comment|/* Adds time to the memory checking information */
 define|#
 directive|define
@@ -534,13 +534,13 @@ name|STACK
 modifier|*
 name|sk
 decl_stmt|;
+comment|/* gcc is screwing up this data structure :-( */
 name|int
 name|dummy
 decl_stmt|;
-comment|/* gcc is screwing up this data structure :-( */
 block|}
 struct|;
-comment|/* This stuff is basically class callback functions  * The current classes are SSL_CTX, SSL, SSL_SESSION, and a few more */
+comment|/*  * This stuff is basically class callback functions The current classes are  * SSL_CTX, SSL, SSL_SESSION, and a few more  */
 typedef|typedef
 struct|struct
 name|crypto_ex_data_func_st
@@ -573,7 +573,7 @@ name|DECLARE_STACK_OF
 argument_list|(
 argument|CRYPTO_EX_DATA_FUNCS
 argument_list|)
-comment|/* Per class, we have a STACK of CRYPTO_EX_DATA_FUNCS for each CRYPTO_EX_DATA  * entry.  */
+comment|/*  * Per class, we have a STACK of CRYPTO_EX_DATA_FUNCS for each CRYPTO_EX_DATA  * entry.  */
 define|#
 directive|define
 name|CRYPTO_EX_INDEX_BIO
@@ -638,17 +638,17 @@ define|#
 directive|define
 name|CRYPTO_EX_INDEX_STORE
 value|15
-comment|/* Dynamically assigned indexes start from this value (don't use directly, use  * via CRYPTO_ex_data_new_class). */
+comment|/*  * Dynamically assigned indexes start from this value (don't use directly,  * use via CRYPTO_ex_data_new_class).  */
 define|#
 directive|define
 name|CRYPTO_EX_INDEX_USER
 value|100
-comment|/* This is the default callbacks, but we can have others as well:  * this is needed in Win32 where the application malloc and the  * library malloc may not be the same.  */
+comment|/*  * This is the default callbacks, but we can have others as well: this is  * needed in Win32 where the application malloc and the library malloc may  * not be the same.  */
 define|#
 directive|define
 name|CRYPTO_malloc_init
 parameter_list|()
-value|CRYPTO_set_mem_functions(\ 	malloc, realloc, free)
+value|CRYPTO_set_mem_functions(\         malloc, realloc, free)
 if|#
 directive|if
 name|defined
@@ -670,7 +670,7 @@ endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* Set standard debugging functions (not done by default  * unless CRYPTO_MDEBUG is defined) */
+comment|/*  * Set standard debugging functions (not done by default unless CRYPTO_MDEBUG  * is defined)  */
 name|void
 name|CRYPTO_malloc_debug_init
 parameter_list|(
@@ -870,7 +870,7 @@ modifier|*
 name|free_func
 parameter_list|)
 function_decl|;
-comment|/* Initialise/duplicate/free CRYPTO_EX_DATA variables corresponding to a given  * class (invokes whatever per-class callbacks are applicable) */
+comment|/*  * Initialise/duplicate/free CRYPTO_EX_DATA variables corresponding to a  * given class (invokes whatever per-class callbacks are applicable)  */
 name|int
 name|CRYPTO_new_ex_data
 parameter_list|(
@@ -916,7 +916,7 @@ modifier|*
 name|ad
 parameter_list|)
 function_decl|;
-comment|/* Get/set data in a CRYPTO_EX_DATA variable corresponding to a particular index  * (relative to the class type involved) */
+comment|/*  * Get/set data in a CRYPTO_EX_DATA variable corresponding to a particular  * index (relative to the class type involved)  */
 name|int
 name|CRYPTO_set_ex_data
 parameter_list|(
@@ -945,7 +945,7 @@ name|int
 name|idx
 parameter_list|)
 function_decl|;
-comment|/* This function cleans up all "ex_data" state. It mustn't be called under  * potential race-conditions. */
+comment|/*  * This function cleans up all "ex_data" state. It mustn't be called under  * potential race-conditions.  */
 name|void
 name|CRYPTO_cleanup_all_ex_data
 parameter_list|(
@@ -1328,7 +1328,7 @@ name|int
 name|line
 operator|)
 expr_stmt|;
-comment|/* CRYPTO_set_mem_functions includes CRYPTO_set_locked_mem_functions --  * call the latter last if you need different functions */
+comment|/*  * CRYPTO_set_mem_functions includes CRYPTO_set_locked_mem_functions -- call  * the latter last if you need different functions  */
 name|int
 name|CRYPTO_set_mem_functions
 parameter_list|(
@@ -2008,8 +2008,8 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* Default debugging functions (enabled by CRYPTO_malloc_debug_init() macro;  * used as default in CRYPTO_MDEBUG compilations): */
-comment|/* The last argument has the following significance:  *  * 0:	called before the actual memory allocation has taken place  * 1:	called after the actual memory allocation has taken place  */
+comment|/*  * Default debugging functions (enabled by CRYPTO_malloc_debug_init() macro;  * used as default in CRYPTO_MDEBUG compilations):  */
+comment|/*-  * The last argument has the following significance:  *  * 0:   called before the actual memory allocation has taken place  * 1:   called after the actual memory allocation has taken place  */
 name|void
 name|CRYPTO_dbg_malloc
 parameter_list|(
@@ -2069,7 +2069,7 @@ name|int
 name|before_p
 parameter_list|)
 function_decl|;
-comment|/* Tell the debugging code about options.  By default, the following values  * apply:  *  * 0:                           Clear all options.  * V_CRYPTO_MDEBUG_TIME (1):    Set the "Show Time" option.  * V_CRYPTO_MDEBUG_THREAD (2):  Set the "Show Thread Number" option.  * V_CRYPTO_MDEBUG_ALL (3):     1 + 2  */
+comment|/*-  * Tell the debugging code about options.  By default, the following values  * apply:  *  * 0:                           Clear all options.  * V_CRYPTO_MDEBUG_TIME (1):    Set the "Show Time" option.  * V_CRYPTO_MDEBUG_THREAD (2):  Set the "Show Thread Number" option.  * V_CRYPTO_MDEBUG_ALL (3):     1 + 2  */
 name|void
 name|CRYPTO_dbg_set_options
 parameter_list|(
@@ -2214,14 +2214,14 @@ name|FIPS_ERROR_IGNORED
 parameter_list|(
 name|alg
 parameter_list|)
-value|OpenSSLDie(__FILE__, __LINE__, \ 		alg " previous FIPS forbidden algorithm error ignored");
+value|OpenSSLDie(__FILE__, __LINE__, \                 alg " previous FIPS forbidden algorithm error ignored");
 define|#
 directive|define
 name|FIPS_BAD_ABORT
 parameter_list|(
 name|alg
 parameter_list|)
-value|OpenSSLDie(__FILE__, __LINE__, \ 		#alg " Algorithm forbidden in FIPS mode");
+value|OpenSSLDie(__FILE__, __LINE__, \                 #alg " Algorithm forbidden in FIPS mode");
 ifdef|#
 directive|ifdef
 name|OPENSSL_FIPS_STRICT
@@ -2241,7 +2241,7 @@ parameter_list|(
 name|alg
 parameter_list|)
 define|\
-value|{ \ 	FIPSerr(FIPS_F_HASH_FINAL,FIPS_R_NON_FIPS_METHOD); \ 	ERR_add_error_data(2, "Algorithm=", #alg); \ 	return 0; \ 	}
+value|{ \         FIPSerr(FIPS_F_HASH_FINAL,FIPS_R_NON_FIPS_METHOD); \         ERR_add_error_data(2, "Algorithm=", #alg); \         return 0; \         }
 endif|#
 directive|endif
 comment|/* Low level digest API blocking macro */
@@ -2252,8 +2252,8 @@ parameter_list|(
 name|alg
 parameter_list|)
 define|\
-value|int alg##_Init(alg##_CTX *c) \ 		{ \ 		if (FIPS_mode()) \ 			FIPS_BAD_ALGORITHM(alg) \ 		return private_##alg##_Init(c); \ 		} \ 	int private_##alg##_Init(alg##_CTX *c)
-comment|/* For ciphers the API often varies from cipher to cipher and each needs to  * be treated as a special case. Variable key length ciphers (Blowfish, RC4,  * CAST) however are very similar and can use a blocking macro.  */
+value|int alg##_Init(alg##_CTX *c) \                 { \                 if (FIPS_mode()) \                         FIPS_BAD_ALGORITHM(alg) \                 return private_##alg##_Init(c); \                 } \         int private_##alg##_Init(alg##_CTX *c)
+comment|/*  * For ciphers the API often varies from cipher to cipher and each needs to  * be treated as a special case. Variable key length ciphers (Blowfish, RC4,  * CAST) however are very similar and can use a blocking macro.  */
 define|#
 directive|define
 name|FIPS_NON_FIPS_VCIPHER_Init
@@ -2261,7 +2261,7 @@ parameter_list|(
 name|alg
 parameter_list|)
 define|\
-value|void alg##_set_key(alg##_KEY *key, int len, const unsigned char *data) \ 		{ \ 		if (FIPS_mode()) \ 			FIPS_BAD_ABORT(alg) \ 		private_##alg##_set_key(key, len, data); \ 		} \ 	void private_##alg##_set_key(alg##_KEY *key, int len, \ 					const unsigned char *data)
+value|void alg##_set_key(alg##_KEY *key, int len, const unsigned char *data) \                 { \                 if (FIPS_mode()) \                         FIPS_BAD_ABORT(alg) \                 private_##alg##_set_key(key, len, data); \                 } \         void private_##alg##_set_key(alg##_KEY *key, int len, \                                         const unsigned char *data)
 else|#
 directive|else
 define|#
@@ -2293,7 +2293,7 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/* CRYPTO_memcmp returns zero iff the |len| bytes at |a| and |b| are equal. It  * takes an amount of time dependent on |len|, but independent of the contents  * of |a| and |b|. Unlike memcmp, it cannot be used to put elements into a  * defined order as the return value when a != b is undefined, other than to be  * non-zero. */
+comment|/*  * CRYPTO_memcmp returns zero iff the |len| bytes at |a| and |b| are equal.  * It takes an amount of time dependent on |len|, but independent of the  * contents of |a| and |b|. Unlike memcmp, it cannot be used to put elements  * into a defined order as the return value when a != b is undefined, other  * than to be non-zero.  */
 name|int
 name|CRYPTO_memcmp
 parameter_list|(
@@ -2312,7 +2312,7 @@ name|len
 parameter_list|)
 function_decl|;
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_CRYPTO_strings
 parameter_list|(

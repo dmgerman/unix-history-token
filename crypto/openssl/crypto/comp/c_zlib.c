@@ -66,7 +66,7 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -263,7 +263,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int zlib_compress_block(COMP_CTX *ctx, unsigned char *out, 	unsigned int olen, unsigned char *in, unsigned int ilen); static int zlib_expand_block(COMP_CTX *ctx, unsigned char *out, 	unsigned int olen, unsigned char *in, unsigned int ilen);  static int zz_uncompress(Bytef *dest, uLongf *destLen, const Bytef *source, 	uLong sourceLen);  static COMP_METHOD zlib_stateless_method={ 	NID_zlib_compression, 	LN_zlib_compression, 	NULL, 	NULL, 	zlib_compress_block, 	zlib_expand_block, 	NULL, 	NULL, 	};
+unit|static int zlib_compress_block(COMP_CTX *ctx, unsigned char *out,                                unsigned int olen, unsigned char *in,                                unsigned int ilen); static int zlib_expand_block(COMP_CTX *ctx, unsigned char *out,                              unsigned int olen, unsigned char *in,                              unsigned int ilen);  static int zz_uncompress(Bytef *dest, uLongf * destLen, const Bytef *source,                          uLong sourceLen);  static COMP_METHOD zlib_stateless_method = {     NID_zlib_compression,     LN_zlib_compression,     NULL,     NULL,     zlib_compress_block,     zlib_expand_block,     NULL,     NULL, };
 endif|#
 directive|endif
 end_endif
@@ -289,12 +289,12 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*   * When OpenSSL is built on Windows, we do not want to require that  * the ZLIB.DLL be available in order for the OpenSSL DLLs to  * work.  Therefore, all ZLIB routines are loaded at run time  * and we do not link to a .LIB file when ZLIB_SHARED is set.  */
+comment|/*  * When OpenSSL is built on Windows, we do not want to require that  * the ZLIB.DLL be available in order for the OpenSSL DLLs to  * work.  Therefore, all ZLIB routines are loaded at run time  * and we do not link to a .LIB file when ZLIB_SHARED is set.  */
 end_comment
 
 begin_if
@@ -323,7 +323,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !(OPENSSL_SYS_WINDOWS || OPENSSL_SYS_WIN32) */
+comment|/* !(OPENSSL_SYS_WINDOWS ||                                  * OPENSSL_SYS_WIN32) */
 end_comment
 
 begin_ifdef
@@ -1347,38 +1347,38 @@ literal|0
 end_if
 
 begin_ifdef
-unit|static int zlib_compress_block(COMP_CTX *ctx, unsigned char *out, 	unsigned int olen, unsigned char *in, unsigned int ilen) 	{ 	unsigned long l; 	int i; 	int clear=1;  	if (ilen> 128) 		{ 		out[0]=1; 		l=olen-1; 		i=compress(&(out[1]),&l,in,(unsigned long)ilen); 		if (i != Z_OK) 			return(-1); 		if (ilen> l) 			{ 			clear=0; 			l++; 			} 		} 	if (clear) 		{ 		out[0]=0; 		memcpy(&(out[1]),in,ilen); 		l=ilen+1; 		}
+unit|static int zlib_compress_block(COMP_CTX *ctx, unsigned char *out,                                unsigned int olen, unsigned char *in,                                unsigned int ilen) {     unsigned long l;     int i;     int clear = 1;      if (ilen> 128) {         out[0] = 1;         l = olen - 1;         i = compress(&(out[1]),&l, in, (unsigned long)ilen);         if (i != Z_OK)             return (-1);         if (ilen> l) {             clear = 0;             l++;         }     }     if (clear) {         out[0] = 0;         memcpy(&(out[1]), in, ilen);         l = ilen + 1;     }
 ifdef|#
 directive|ifdef
 name|DEBUG_ZLIB
 end_ifdef
 
 begin_endif
-unit|fprintf(stderr,"compress(%4d)->%4d %s\n", 		ilen,(int)l,(clear)?"clear":"zlib");
+unit|fprintf(stderr, "compress(%4d)->%4d %s\n",             ilen, (int)l, (clear) ? "clear" : "zlib");
 endif|#
 directive|endif
 end_endif
 
 begin_ifdef
-unit|return((int)l); 	}  static int zlib_expand_block(COMP_CTX *ctx, unsigned char *out, 	unsigned int olen, unsigned char *in, unsigned int ilen) 	{ 	unsigned long l; 	int i;  	if (in[0]) 		{ 		l=olen; 		i=zz_uncompress(out,&l,&(in[1]),(unsigned long)ilen-1); 		if (i != Z_OK) 			return(-1); 		} 	else 		{ 		memcpy(out,&(in[1]),ilen-1); 		l=ilen-1; 		}
+unit|return ((int)l); }  static int zlib_expand_block(COMP_CTX *ctx, unsigned char *out,                              unsigned int olen, unsigned char *in,                              unsigned int ilen) {     unsigned long l;     int i;      if (in[0]) {         l = olen;         i = zz_uncompress(out,&l,&(in[1]), (unsigned long)ilen - 1);         if (i != Z_OK)             return (-1);     } else {         memcpy(out,&(in[1]), ilen - 1);         l = ilen - 1;     }
 ifdef|#
 directive|ifdef
 name|DEBUG_ZLIB
 end_ifdef
 
 begin_endif
-unit|fprintf(stderr,"expand  (%4d)->%4d %s\n", 		ilen,(int)l,in[0]?"zlib":"clear");
+unit|fprintf(stderr, "expand  (%4d)->%4d %s\n",             ilen, (int)l, in[0] ? "zlib" : "clear");
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-unit|return((int)l); 	}  static int zz_uncompress (Bytef *dest, uLongf *destLen, const Bytef *source, 	     uLong sourceLen) {     z_stream stream;     int err;      stream.next_in = (Bytef*)source;     stream.avail_in = (uInt)sourceLen;
+unit|return ((int)l); }  static int zz_uncompress(Bytef *dest, uLongf * destLen, const Bytef *source,                          uLong sourceLen) {     z_stream stream;     int err;      stream.next_in = (Bytef *)source;     stream.avail_in = (uInt) sourceLen;
 comment|/* Check for source> 64K on 16-bit machine: */
 end_comment
 
 begin_endif
-unit|if ((uLong)stream.avail_in != sourceLen) return Z_BUF_ERROR;      stream.next_out = dest;     stream.avail_out = (uInt)*destLen;     if ((uLong)stream.avail_out != *destLen) return Z_BUF_ERROR;      stream.zalloc = (alloc_func)0;     stream.zfree = (free_func)0;      err = inflateInit_(&stream, 	    ZLIB_VERSION, sizeof(z_stream));     if (err != Z_OK) return err;      err = inflate(&stream, Z_FINISH);     if (err != Z_STREAM_END) {         inflateEnd(&stream);         return err;     }     *destLen = stream.total_out;      err = inflateEnd(&stream);     return err; }
+unit|if ((uLong) stream.avail_in != sourceLen)         return Z_BUF_ERROR;      stream.next_out = dest;     stream.avail_out = (uInt) * destLen;     if ((uLong) stream.avail_out != *destLen)         return Z_BUF_ERROR;      stream.zalloc = (alloc_func) 0;     stream.zfree = (free_func) 0;      err = inflateInit_(&stream, ZLIB_VERSION, sizeof(z_stream));     if (err != Z_OK)         return err;      err = inflate(&stream, Z_FINISH);     if (err != Z_STREAM_END) {         inflateEnd(&stream);         return err;     }     *destLen = stream.total_out;      err = inflateEnd(&stream);     return err; }
 endif|#
 directive|endif
 end_endif
@@ -1602,7 +1602,7 @@ argument_list|(
 name|ZLIB_SHARED
 argument_list|)
 block|{
-comment|/* init zlib_stateful_ex_idx here so that in a multi-process 		 * application it's enough to intialize openssl before forking 		 * (idx will be inherited in all the children) */
+comment|/*          * init zlib_stateful_ex_idx here so that in a multi-process          * application it's enough to intialize openssl before forking (idx          * will be inherited in all the children)          */
 if|if
 condition|(
 name|zlib_stateful_ex_idx
@@ -2480,7 +2480,7 @@ operator|->
 name|avail_out
 return|;
 block|}
-comment|/* No data in input buffer try to read some in, 		 * if an error then return the total data read. 		 */
+comment|/*          * No data in input buffer try to read some in, if an error then          * return the total data read.          */
 name|ret
 operator|=
 name|BIO_read

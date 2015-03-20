@@ -4,15 +4,15 @@ comment|/* ocsp.h */
 end_comment
 
 begin_comment
-comment|/* Written by Tom Titchener<Tom_Titchener@groove.net> for the OpenSSL  * project. */
+comment|/*  * Written by Tom Titchener<Tom_Titchener@groove.net> for the OpenSSL  * project.  */
 end_comment
 
 begin_comment
-comment|/* History:    This file was transfered to Richard Levitte from CertCo by Kathy    Weinhold in mid-spring 2000 to be included in OpenSSL or released    as a patch kit. */
+comment|/*  * History: This file was transfered to Richard Levitte from CertCo by Kathy  * Weinhold in mid-spring 2000 to be included in OpenSSL or released as a  * patch kit.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_ifndef
@@ -110,7 +110,7 @@ define|#
 directive|define
 name|OCSP_NOTIME
 value|0x800
-comment|/*   CertID ::= SEQUENCE {  *       hashAlgorithm            AlgorithmIdentifier,  *       issuerNameHash     OCTET STRING, -- Hash of Issuer's DN  *       issuerKeyHash      OCTET STRING, -- Hash of Issuers public key (excluding the tag& length fields)  *       serialNumber       CertificateSerialNumber }  */
+comment|/*-  CertID ::= SEQUENCE {  *       hashAlgorithm            AlgorithmIdentifier,  *       issuerNameHash     OCTET STRING, -- Hash of Issuer's DN  *       issuerKeyHash      OCTET STRING, -- Hash of Issuers public key (excluding the tag& length fields)  *       serialNumber       CertificateSerialNumber }  */
 typedef|typedef
 struct|struct
 name|ocsp_cert_id_st
@@ -138,7 +138,7 @@ name|DECLARE_STACK_OF
 argument_list|(
 argument|OCSP_CERTID
 argument_list|)
-comment|/*   Request ::=     SEQUENCE {  *       reqCert                    CertID,  *       singleRequestExtensions    [0] EXPLICIT Extensions OPTIONAL }  */
+comment|/*-  Request ::=     SEQUENCE {  *       reqCert                    CertID,  *       singleRequestExtensions    [0] EXPLICIT Extensions OPTIONAL }  */
 typedef|typedef
 struct|struct
 name|ocsp_one_request_st
@@ -165,7 +165,7 @@ name|DECLARE_ASN1_SET_OF
 argument_list|(
 argument|OCSP_ONEREQ
 argument_list|)
-comment|/*   TBSRequest      ::=     SEQUENCE {  *       version             [0] EXPLICIT Version DEFAULT v1,  *       requestorName       [1] EXPLICIT GeneralName OPTIONAL,  *       requestList             SEQUENCE OF Request,  *       requestExtensions   [2] EXPLICIT Extensions OPTIONAL }  */
+comment|/*-  TBSRequest      ::=     SEQUENCE {  *       version             [0] EXPLICIT Version DEFAULT v1,  *       requestorName       [1] EXPLICIT GeneralName OPTIONAL,  *       requestList             SEQUENCE OF Request,  *       requestExtensions   [2] EXPLICIT Extensions OPTIONAL }  */
 typedef|typedef
 struct|struct
 name|ocsp_req_info_st
@@ -195,7 +195,7 @@ expr_stmt|;
 block|}
 name|OCSP_REQINFO
 typedef|;
-comment|/*   Signature       ::=     SEQUENCE {  *       signatureAlgorithm   AlgorithmIdentifier,  *       signature            BIT STRING,  *       certs                [0] EXPLICIT SEQUENCE OF Certificate OPTIONAL }  */
+comment|/*-  Signature       ::=     SEQUENCE {  *       signatureAlgorithm   AlgorithmIdentifier,  *       signature            BIT STRING,  *       certs                [0] EXPLICIT SEQUENCE OF Certificate OPTIONAL }  */
 typedef|typedef
 struct|struct
 name|ocsp_signature_st
@@ -218,7 +218,7 @@ expr_stmt|;
 block|}
 name|OCSP_SIGNATURE
 typedef|;
-comment|/*   OCSPRequest     ::=     SEQUENCE {  *       tbsRequest                  TBSRequest,  *       optionalSignature   [0]     EXPLICIT Signature OPTIONAL }  */
+comment|/*-  OCSPRequest     ::=     SEQUENCE {  *       tbsRequest                  TBSRequest,  *       optionalSignature   [0]     EXPLICIT Signature OPTIONAL }  */
 typedef|typedef
 struct|struct
 name|ocsp_request_st
@@ -235,7 +235,7 @@ comment|/* OPTIONAL */
 block|}
 name|OCSP_REQUEST
 typedef|;
-comment|/*   OCSPResponseStatus ::= ENUMERATED {  *       successful            (0),      --Response has valid confirmations  *       malformedRequest      (1),      --Illegal confirmation request  *       internalError         (2),      --Internal error in issuer  *       tryLater              (3),      --Try again later  *                                       --(4) is not used  *       sigRequired           (5),      --Must sign the request  *       unauthorized          (6)       --Request unauthorized  *   }  */
+comment|/*-  OCSPResponseStatus ::= ENUMERATED {  *       successful            (0),      --Response has valid confirmations  *       malformedRequest      (1),      --Illegal confirmation request  *       internalError         (2),      --Internal error in issuer  *       tryLater              (3),      --Try again later  *                                       --(4) is not used  *       sigRequired           (5),      --Must sign the request  *       unauthorized          (6)       --Request unauthorized  *   }  */
 define|#
 directive|define
 name|OCSP_RESPONSE_STATUS_SUCCESSFUL
@@ -260,7 +260,7 @@ define|#
 directive|define
 name|OCSP_RESPONSE_STATUS_UNAUTHORIZED
 value|6
-comment|/*   ResponseBytes ::=       SEQUENCE {  *       responseType   OBJECT IDENTIFIER,  *       response       OCTET STRING }  */
+comment|/*-  ResponseBytes ::=       SEQUENCE {  *       responseType   OBJECT IDENTIFIER,  *       response       OCTET STRING }  */
 typedef|typedef
 struct|struct
 name|ocsp_resp_bytes_st
@@ -276,7 +276,7 @@ decl_stmt|;
 block|}
 name|OCSP_RESPBYTES
 typedef|;
-comment|/*   OCSPResponse ::= SEQUENCE {  *      responseStatus         OCSPResponseStatus,  *      responseBytes          [0] EXPLICIT ResponseBytes OPTIONAL }  */
+comment|/*-  OCSPResponse ::= SEQUENCE {  *      responseStatus         OCSPResponseStatus,  *      responseBytes          [0] EXPLICIT ResponseBytes OPTIONAL }  */
 struct|struct
 name|ocsp_response_st
 block|{
@@ -290,7 +290,7 @@ name|responseBytes
 decl_stmt|;
 block|}
 struct|;
-comment|/*   ResponderID ::= CHOICE {  *      byName   [1] Name,  *      byKey    [2] KeyHash }  */
+comment|/*-  ResponderID ::= CHOICE {  *      byName   [1] Name,  *      byKey    [2] KeyHash }  */
 define|#
 directive|define
 name|V_OCSP_RESPID_NAME
@@ -328,8 +328,8 @@ name|DECLARE_ASN1_FUNCTIONS
 argument_list|(
 argument|OCSP_RESPID
 argument_list|)
-comment|/*   KeyHash ::= OCTET STRING --SHA-1 hash of responder's public key  *                            --(excluding the tag and length fields)  */
-comment|/*   RevokedInfo ::= SEQUENCE {  *       revocationTime              GeneralizedTime,  *       revocationReason    [0]     EXPLICIT CRLReason OPTIONAL }  */
+comment|/*-  KeyHash ::= OCTET STRING --SHA-1 hash of responder's public key  *                            --(excluding the tag and length fields)  */
+comment|/*-  RevokedInfo ::= SEQUENCE {  *       revocationTime              GeneralizedTime,  *       revocationReason    [0]     EXPLICIT CRLReason OPTIONAL }  */
 typedef|typedef
 struct|struct
 name|ocsp_revoked_info_st
@@ -345,7 +345,7 @@ decl_stmt|;
 block|}
 name|OCSP_REVOKEDINFO
 typedef|;
-comment|/*   CertStatus ::= CHOICE {  *       good                [0]     IMPLICIT NULL,  *       revoked             [1]     IMPLICIT RevokedInfo,  *       unknown             [2]     IMPLICIT UnknownInfo }  */
+comment|/*-  CertStatus ::= CHOICE {  *       good                [0]     IMPLICIT NULL,  *       revoked             [1]     IMPLICIT RevokedInfo,  *       unknown             [2]     IMPLICIT UnknownInfo }  */
 define|#
 directive|define
 name|V_OCSP_CERTSTATUS_GOOD
@@ -385,7 +385,7 @@ union|;
 block|}
 name|OCSP_CERTSTATUS
 typedef|;
-comment|/*   SingleResponse ::= SEQUENCE {  *      certID                       CertID,  *      certStatus                   CertStatus,  *      thisUpdate                   GeneralizedTime,  *      nextUpdate           [0]     EXPLICIT GeneralizedTime OPTIONAL,  *      singleExtensions     [1]     EXPLICIT Extensions OPTIONAL }  */
+comment|/*-  SingleResponse ::= SEQUENCE {  *      certID                       CertID,  *      certStatus                   CertStatus,  *      thisUpdate                   GeneralizedTime,  *      nextUpdate           [0]     EXPLICIT GeneralizedTime OPTIONAL,  *      singleExtensions     [1]     EXPLICIT Extensions OPTIONAL }  */
 typedef|typedef
 struct|struct
 name|ocsp_single_response_st
@@ -424,7 +424,7 @@ name|DECLARE_ASN1_SET_OF
 argument_list|(
 argument|OCSP_SINGLERESP
 argument_list|)
-comment|/*   ResponseData ::= SEQUENCE {  *      version              [0] EXPLICIT Version DEFAULT v1,  *      responderID              ResponderID,  *      producedAt               GeneralizedTime,  *      responses                SEQUENCE OF SingleResponse,  *      responseExtensions   [1] EXPLICIT Extensions OPTIONAL }  */
+comment|/*-  ResponseData ::= SEQUENCE {  *      version              [0] EXPLICIT Version DEFAULT v1,  *      responderID              ResponderID,  *      producedAt               GeneralizedTime,  *      responses                SEQUENCE OF SingleResponse,  *      responseExtensions   [1] EXPLICIT Extensions OPTIONAL }  */
 typedef|typedef
 struct|struct
 name|ocsp_response_data_st
@@ -458,9 +458,9 @@ expr_stmt|;
 block|}
 name|OCSP_RESPDATA
 typedef|;
-comment|/*   BasicOCSPResponse       ::= SEQUENCE {  *      tbsResponseData      ResponseData,  *      signatureAlgorithm   AlgorithmIdentifier,  *      signature            BIT STRING,  *      certs                [0] EXPLICIT SEQUENCE OF Certificate OPTIONAL }  */
-comment|/* Note 1:      The value for "signature" is specified in the OCSP rfc2560 as follows:      "The value for the signature SHALL be computed on the hash of the DER      encoding ResponseData."  This means that you must hash the DER-encoded      tbsResponseData, and then run it through a crypto-signing function, which      will (at least w/RSA) do a hash-'n'-private-encrypt operation.  This seems      a bit odd, but that's the spec.  Also note that the data structures do not      leave anywhere to independently specify the algorithm used for the initial      hash. So, we look at the signature-specification algorithm, and try to do      something intelligent.	-- Kathy Weinhold, CertCo */
-comment|/* Note 2:      It seems that the mentioned passage from RFC 2560 (section 4.2.1) is open      for interpretation.  I've done tests against another responder, and found      that it doesn't do the double hashing that the RFC seems to say one      should.  Therefore, all relevant functions take a flag saying which      variant should be used.	-- Richard Levitte, OpenSSL team and CeloCom */
+comment|/*-  BasicOCSPResponse       ::= SEQUENCE {  *      tbsResponseData      ResponseData,  *      signatureAlgorithm   AlgorithmIdentifier,  *      signature            BIT STRING,  *      certs                [0] EXPLICIT SEQUENCE OF Certificate OPTIONAL }  */
+comment|/*    * Note 1: The value for "signature" is specified in the OCSP rfc2560 as    * follows: "The value for the signature SHALL be computed on the hash of    * the DER encoding ResponseData." This means that you must hash the    * DER-encoded tbsResponseData, and then run it through a crypto-signing    * function, which will (at least w/RSA) do a hash-'n'-private-encrypt    * operation.  This seems a bit odd, but that's the spec.  Also note that    * the data structures do not leave anywhere to independently specify the    * algorithm used for the initial hash. So, we look at the    * signature-specification algorithm, and try to do something intelligent.    * -- Kathy Weinhold, CertCo    */
+comment|/*    * Note 2: It seems that the mentioned passage from RFC 2560 (section    * 4.2.1) is open for interpretation.  I've done tests against another    * responder, and found that it doesn't do the double hashing that the RFC    * seems to say one should.  Therefore, all relevant functions take a flag    * saying which variant should be used.  -- Richard Levitte, OpenSSL team    * and CeloCom    */
 typedef|typedef
 struct|struct
 name|ocsp_basic_response_st
@@ -487,7 +487,7 @@ expr_stmt|;
 block|}
 name|OCSP_BASICRESP
 typedef|;
-comment|/*  *   CRLReason ::= ENUMERATED {  *        unspecified             (0),  *        keyCompromise           (1),  *        cACompromise            (2),  *        affiliationChanged      (3),  *        superseded              (4),  *        cessationOfOperation    (5),  *        certificateHold         (6),  *        removeFromCRL           (8) }  */
+comment|/*-  *   CRLReason ::= ENUMERATED {  *        unspecified             (0),  *        keyCompromise           (1),  *        cACompromise            (2),  *        affiliationChanged      (3),  *        superseded              (4),  *        cessationOfOperation    (5),  *        certificateHold         (6),  *        removeFromCRL           (8) }  */
 define|#
 directive|define
 name|OCSP_REVOKED_STATUS_NOSTATUS
@@ -524,7 +524,7 @@ define|#
 directive|define
 name|OCSP_REVOKED_STATUS_REMOVEFROMCRL
 value|8
-comment|/* CrlID ::= SEQUENCE {  *     crlUrl               [0]     EXPLICIT IA5String OPTIONAL,  *     crlNum               [1]     EXPLICIT INTEGER OPTIONAL,  *     crlTime              [2]     EXPLICIT GeneralizedTime OPTIONAL }  */
+comment|/*-  * CrlID ::= SEQUENCE {  *     crlUrl               [0]     EXPLICIT IA5String OPTIONAL,  *     crlNum               [1]     EXPLICIT INTEGER OPTIONAL,  *     crlTime              [2]     EXPLICIT GeneralizedTime OPTIONAL }  */
 typedef|typedef
 struct|struct
 name|ocsp_crl_id_st
@@ -544,7 +544,7 @@ decl_stmt|;
 block|}
 name|OCSP_CRLID
 typedef|;
-comment|/* ServiceLocator ::= SEQUENCE {  *      issuer    Name,  *      locator   AuthorityInfoAccessSyntax OPTIONAL }  */
+comment|/*-  * ServiceLocator ::= SEQUENCE {  *      issuer    Name,  *      locator   AuthorityInfoAccessSyntax OPTIONAL }  */
 typedef|typedef
 struct|struct
 name|ocsp_service_locator_st
@@ -620,7 +620,7 @@ parameter_list|,
 name|o
 parameter_list|)
 define|\
-value|PEM_ASN1_write_bio((int (*)())i2d_OCSP_REQUEST,PEM_STRING_OCSP_REQUEST,\ 			bp,(char *)o, NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write_bio((int (*)())i2d_OCSP_REQUEST,PEM_STRING_OCSP_REQUEST,\                         bp,(char *)o, NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_bio_OCSP_RESPONSE
@@ -630,7 +630,7 @@ parameter_list|,
 name|o
 parameter_list|)
 define|\
-value|PEM_ASN1_write_bio((int (*)())i2d_OCSP_RESPONSE,PEM_STRING_OCSP_RESPONSE,\ 			bp,(char *)o, NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write_bio((int (*)())i2d_OCSP_RESPONSE,PEM_STRING_OCSP_RESPONSE,\                         bp,(char *)o, NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|i2d_OCSP_RESPONSE_bio
@@ -660,7 +660,7 @@ parameter_list|,
 name|md
 parameter_list|)
 define|\
-value|ASN1_item_sign(ASN1_ITEM_rptr(OCSP_REQINFO),\ 		o->optionalSignature->signatureAlgorithm,NULL,\ 	        o->optionalSignature->signature,o->tbsRequest,pkey,md)
+value|ASN1_item_sign(ASN1_ITEM_rptr(OCSP_REQINFO),\                 o->optionalSignature->signatureAlgorithm,NULL,\                 o->optionalSignature->signature,o->tbsRequest,pkey,md)
 define|#
 directive|define
 name|OCSP_BASICRESP_sign
@@ -674,7 +674,7 @@ parameter_list|,
 name|d
 parameter_list|)
 define|\
-value|ASN1_item_sign(ASN1_ITEM_rptr(OCSP_RESPDATA),o->signatureAlgorithm,NULL,\ 		o->signature,o->tbsResponseData,pkey,md)
+value|ASN1_item_sign(ASN1_ITEM_rptr(OCSP_RESPDATA),o->signatureAlgorithm,NULL,\                 o->signature,o->tbsResponseData,pkey,md)
 define|#
 directive|define
 name|OCSP_REQUEST_verify
@@ -683,7 +683,7 @@ name|a
 parameter_list|,
 name|r
 parameter_list|)
-value|ASN1_item_verify(ASN1_ITEM_rptr(OCSP_REQINFO),\         a->optionalSignature->signatureAlgorithm,\ 	a->optionalSignature->signature,a->tbsRequest,r)
+value|ASN1_item_verify(ASN1_ITEM_rptr(OCSP_REQINFO),\         a->optionalSignature->signatureAlgorithm,\         a->optionalSignature->signature,a->tbsRequest,r)
 define|#
 directive|define
 name|OCSP_BASICRESP_verify
@@ -694,7 +694,7 @@ name|r
 parameter_list|,
 name|d
 parameter_list|)
-value|ASN1_item_verify(ASN1_ITEM_rptr(OCSP_RESPDATA),\ 	a->signatureAlgorithm,a->signature,a->tbsResponseData,r)
+value|ASN1_item_verify(ASN1_ITEM_rptr(OCSP_RESPDATA),\         a->signatureAlgorithm,a->signature,a->tbsResponseData,r)
 define|#
 directive|define
 name|ASN1_BIT_STRING_digest
@@ -723,7 +723,7 @@ parameter_list|(
 name|cs
 parameter_list|)
 define|\
-value|(OCSP_CERTSTATUS*)ASN1_dup((int(*)())i2d_OCSP_CERTSTATUS,\ 		(char *(*)())d2i_OCSP_CERTSTATUS,(char *)(cs))
+value|(OCSP_CERTSTATUS*)ASN1_dup((int(*)())i2d_OCSP_CERTSTATUS,\                 (char *(*)())d2i_OCSP_CERTSTATUS,(char *)(cs))
 name|OCSP_RESPONSE
 modifier|*
 name|OCSP_sendreq_bio
@@ -2063,7 +2063,7 @@ name|flags
 argument_list|)
 decl_stmt|;
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_OCSP_strings
 parameter_list|(

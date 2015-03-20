@@ -4,19 +4,19 @@ comment|/* ssl/ssl.h */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by  * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
 end_comment
 
 begin_ifndef
@@ -160,7 +160,7 @@ block|{
 endif|#
 directive|endif
 comment|/* SSLeay version number for ASN.1 encoding of the session information */
-comment|/* Version 0 - initial version  * Version 1 - added the optional peer certificate  */
+comment|/*-  * Version 0 - initial version  * Version 1 - added the optional peer certificate  */
 define|#
 directive|define
 name|SSL_SESSION_ASN1_VERSION
@@ -206,7 +206,7 @@ define|#
 directive|define
 name|SSL_TXT_DES_192_EDE3_CBC_WITH_SHA
 value|SSL2_TXT_DES_192_EDE3_CBC_WITH_SHA
-comment|/*    VRS Additional Kerberos5 entries  */
+comment|/*  * VRS Additional Kerberos5 entries  */
 define|#
 directive|define
 name|SSL_TXT_KRB5_DES_64_CBC_SHA
@@ -496,8 +496,8 @@ define|#
 directive|define
 name|SSL_TXT_ECC
 value|"ECCdraft"
-comment|/* ECC ciphersuites are not yet official */
-comment|/*  * COMPLEMENTOF* definitions. These identifiers are used to (de-select)  * ciphers normally not being used.  * Example: "RC4" will activate all ciphers using RC4 including ciphers  * without authentication, which would normally disabled by DEFAULT (due  * the "!ADH" being part of default). Therefore "RC4:!COMPLEMENTOFDEFAULT"  * will make sure that it is also disabled in the specific selection.  * COMPLEMENTOF* identifiers are portable between version, as adjustments  * to the default cipher setup will also be included here.  *  * COMPLEMENTOFDEFAULT does not experience the same special treatment that  * DEFAULT gets, as only selection is being done and no sorting as needed  * for DEFAULT.  */
+comment|/* ECC ciphersuites are not yet                                             * official */
+comment|/*-  * COMPLEMENTOF* definitions. These identifiers are used to (de-select)  * ciphers normally not being used.  * Example: "RC4" will activate all ciphers using RC4 including ciphers  * without authentication, which would normally disabled by DEFAULT (due  * the "!ADH" being part of default). Therefore "RC4:!COMPLEMENTOFDEFAULT"  * will make sure that it is also disabled in the specific selection.  * COMPLEMENTOF* identifiers are portable between version, as adjustments  * to the default cipher setup will also be included here.  *  * COMPLEMENTOFDEFAULT does not experience the same special treatment that  * DEFAULT gets, as only selection is being done and no sorting as needed  * for DEFAULT.  */
 define|#
 directive|define
 name|SSL_TXT_CMPALL
@@ -506,12 +506,11 @@ define|#
 directive|define
 name|SSL_TXT_CMPDEF
 value|"COMPLEMENTOFDEFAULT"
-comment|/* The following cipher list is used by default.  * It also is substituted when an application-defined cipher list string  * starts with 'DEFAULT'. */
+comment|/*  * The following cipher list is used by default. It also is substituted when  * an application-defined cipher list string starts with 'DEFAULT'.  */
 define|#
 directive|define
 name|SSL_DEFAULT_CIPHER_LIST
-value|"AES:ALL:!aNULL:!eNULL:+RC4:@STRENGTH"
-comment|/* low priority for RC4 */
+value|"ALL:!EXPORT:!aNULL:!eNULL:!SSLv2:@STRENGTH"
 comment|/* Used in SSL_set_shutdown()/SSL_get_shutdown(); */
 define|#
 directive|define
@@ -576,7 +575,7 @@ define|#
 directive|define
 name|SSL_FILETYPE_PEM
 value|X509_FILETYPE_PEM
-comment|/* This is needed to stop compilers complaining about the  * 'struct ssl_st *' function parameters used to prototype callbacks  * in SSL_CTX. */
+comment|/*  * This is needed to stop compilers complaining about the 'struct ssl_st *'  * function parameters used to prototype callbacks in SSL_CTX.  */
 typedef|typedef
 name|struct
 name|ssl_st
@@ -1068,7 +1067,7 @@ function_decl|;
 block|}
 name|SSL_METHOD
 typedef|;
-comment|/* Lets make this into an ASN.1 type structure as follows  * SSL_SESSION_ID ::= SEQUENCE {  *	version 		INTEGER,	-- structure version number  *	SSLversion 		INTEGER,	-- SSL version number  *	Cipher 			OCTET_STRING,	-- the 3 byte cipher ID  *	Session_ID 		OCTET_STRING,	-- the Session ID  *	Master_key 		OCTET_STRING,	-- the master key  *	KRB5_principal		OCTET_STRING	-- optional Kerberos principal  *	Key_Arg [ 0 ] IMPLICIT	OCTET_STRING,	-- the optional Key argument  *	Time [ 1 ] EXPLICIT	INTEGER,	-- optional Start Time  *	Timeout [ 2 ] EXPLICIT	INTEGER,	-- optional Timeout ins seconds  *	Peer [ 3 ] EXPLICIT	X509,		-- optional Peer Certificate  *	Session_ID_context [ 4 ] EXPLICIT OCTET_STRING,   -- the Session ID context  *	Verify_result [ 5 ] EXPLICIT INTEGER    -- X509_V_... code for `Peer'  *	Compression [6] IMPLICIT ASN1_OBJECT	-- compression OID XXXXX  *	}  * Look in ssl/ssl_asn1.c for more details  * I'm using EXPLICIT tags so I can read the damn things using asn1parse :-).  */
+comment|/*-  * Lets make this into an ASN.1 type structure as follows  * SSL_SESSION_ID ::= SEQUENCE {  *      version                 INTEGER,        -- structure version number  *      SSLversion              INTEGER,        -- SSL version number  *      Cipher                  OCTET_STRING,   -- the 3 byte cipher ID  *      Session_ID              OCTET_STRING,   -- the Session ID  *      Master_key              OCTET_STRING,   -- the master key  *      KRB5_principal          OCTET_STRING    -- optional Kerberos principal  *      Key_Arg [ 0 ] IMPLICIT  OCTET_STRING,   -- the optional Key argument  *      Time [ 1 ] EXPLICIT     INTEGER,        -- optional Start Time  *      Timeout [ 2 ] EXPLICIT  INTEGER,        -- optional Timeout ins seconds  *      Peer [ 3 ] EXPLICIT     X509,           -- optional Peer Certificate  *      Session_ID_context [ 4 ] EXPLICIT OCTET_STRING,   -- the Session ID context  *      Verify_result [ 5 ] EXPLICIT INTEGER    -- X509_V_... code for `Peer'  *      Compression [6] IMPLICIT ASN1_OBJECT    -- compression OID XXXXX  *      }  * Look in ssl/ssl_asn1.c for more details  * I'm using EXPLICIT tags so I can read the damn things using asn1parse :-).  */
 typedef|typedef
 struct|struct
 name|ssl_session_st
@@ -1076,7 +1075,7 @@ block|{
 name|int
 name|ssl_version
 decl_stmt|;
-comment|/* what ssl version session info is 				 * being kept in here? */
+comment|/* what ssl version session info is being                                  * kept in here? */
 comment|/* only really used in SSLv2 */
 name|unsigned
 name|int
@@ -1111,7 +1110,7 @@ index|[
 name|SSL_MAX_SSL_SESSION_ID_LENGTH
 index|]
 decl_stmt|;
-comment|/* this is used to determine whether the session is being reused in 	 * the appropriate context. It is up to the application to set this, 	 * via SSL_new */
+comment|/*      * this is used to determine whether the session is being reused in the      * appropriate context. It is up to the application to set this, via      * SSL_new      */
 name|unsigned
 name|int
 name|sid_ctx_length
@@ -1150,12 +1149,12 @@ comment|/* SESS_CERT */
 modifier|*
 name|sess_cert
 decl_stmt|;
-comment|/* This is the cert for the other end. 	 * On clients, it will be the same as sess_cert->peer_key->x509 	 * (the latter is not enough as sess_cert is not retained 	 * in the external representation of sessions, see ssl_asn1.c). */
+comment|/*      * This is the cert for the other end. On clients, it will be the same as      * sess_cert->peer_key->x509 (the latter is not enough as sess_cert is      * not retained in the external representation of sessions, see      * ssl_asn1.c).      */
 name|X509
 modifier|*
 name|peer
 decl_stmt|;
-comment|/* when app_verify_callback accepts a session where the peer's certificate 	 * is not ok, we must remember the error for session reuse: */
+comment|/*      * when app_verify_callback accepts a session where the peer's      * certificate is not ok, we must remember the error for session reuse:      */
 name|long
 name|verify_result
 decl_stmt|;
@@ -1181,7 +1180,7 @@ name|unsigned
 name|long
 name|cipher_id
 decl_stmt|;
-comment|/* when ASN.1 loaded, this 					 * needs to be used to load 					 * the 'cipher' structure */
+comment|/* when ASN.1 loaded, this needs to be used                                  * to load the 'cipher' structure */
 name|STACK_OF
 argument_list|(
 name|SSL_CIPHER
@@ -1194,7 +1193,7 @@ name|CRYPTO_EX_DATA
 name|ex_data
 decl_stmt|;
 comment|/* application specific data */
-comment|/* These are used to make removal of session-ids more 	 * efficient and to implement a maximum cache size. */
+comment|/*      * These are used to make removal of session-ids more efficient and to      * implement a maximum cache size.      */
 name|struct
 name|ssl_session_st
 modifier|*
@@ -1276,13 +1275,13 @@ define|#
 directive|define
 name|SSL_OP_MSIE_SSLV2_RSA_PADDING
 value|0x0
-comment|/* Disable SSL 3.0/TLS 1.0 CBC vulnerability workaround that was added  * in OpenSSL 0.9.6d.  Usually (depending on the application protocol)  * the workaround is not needed.  Unfortunately some broken SSL/TLS  * implementations cannot handle it at all, which is why we include  * it in SSL_OP_ALL. */
+comment|/*  * Disable SSL 3.0/TLS 1.0 CBC vulnerability workaround that was added in  * OpenSSL 0.9.6d.  Usually (depending on the application protocol) the  * workaround is not needed.  Unfortunately some broken SSL/TLS  * implementations cannot handle it at all, which is why we include it in  * SSL_OP_ALL.  */
+comment|/* added in 0.9.6e */
 define|#
 directive|define
 name|SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS
 value|0x00000800L
-comment|/* added in 0.9.6e */
-comment|/* SSL_OP_ALL: various bug workarounds that should be rather harmless.  *             This used to be 0x000FFFFFL before 0.9.7. */
+comment|/*  * SSL_OP_ALL: various bug workarounds that should be rather harmless.  This  * used to be 0x000FFFFFL before 0.9.7.  */
 define|#
 directive|define
 name|SSL_OP_ALL
@@ -1332,12 +1331,12 @@ define|#
 directive|define
 name|SSL_OP_EPHEMERAL_RSA
 value|0x0
-comment|/* Set on servers to choose the cipher according to the server's  * preferences */
+comment|/*  * Set on servers to choose the cipher according to the server's preferences  */
 define|#
 directive|define
 name|SSL_OP_CIPHER_SERVER_PREFERENCE
 value|0x00400000L
-comment|/* If set, a server will allow a client to issue a SSLv3.0 version number  * as latest version supported in the premaster secret, even when TLSv1.0  * (version 3.1) was announced in the client hello. Normally this is  * forbidden to prevent version rollback attacks. */
+comment|/*  * If set, a server will allow a client to issue a SSLv3.0 version number as  * latest version supported in the premaster secret, even when TLSv1.0  * (version 3.1) was announced in the client hello. Normally this is  * forbidden to prevent version rollback attacks.  */
 define|#
 directive|define
 name|SSL_OP_TLS_ROLLBACK_BUG
@@ -1354,7 +1353,7 @@ define|#
 directive|define
 name|SSL_OP_NO_TLSv1
 value|0x04000000L
-comment|/* The next flag deliberately changes the ciphertest, this is a check  * for the PKCS#1 attack */
+comment|/*  * The next flag deliberately changes the ciphertest, this is a check for the  * PKCS#1 attack  */
 define|#
 directive|define
 name|SSL_OP_PKCS1_CHECK_1
@@ -1371,17 +1370,17 @@ define|#
 directive|define
 name|SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG
 value|0x40000000L
-comment|/* Allow SSL_write(..., n) to return r with 0< r< n (i.e. report success  * when just a single record has been written): */
+comment|/*  * Allow SSL_write(..., n) to return r with 0< r< n (i.e. report success  * when just a single record has been written):  */
 define|#
 directive|define
 name|SSL_MODE_ENABLE_PARTIAL_WRITE
 value|0x00000001L
-comment|/* Make it possible to retry SSL_write() with changed buffer location  * (buffer contents must stay the same!); this is not the default to avoid  * the misconception that non-blocking SSL_write() behaves like  * non-blocking write(): */
+comment|/*  * Make it possible to retry SSL_write() with changed buffer location (buffer  * contents must stay the same!); this is not the default to avoid the  * misconception that non-blocking SSL_write() behaves like non-blocking  * write():  */
 define|#
 directive|define
 name|SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER
 value|0x00000002L
-comment|/* Never bother the application with retries if the transport  * is blocking: */
+comment|/*  * Never bother the application with retries if the transport is blocking:  */
 define|#
 directive|define
 name|SSL_MODE_AUTO_RETRY
@@ -1391,12 +1390,12 @@ define|#
 directive|define
 name|SSL_MODE_NO_AUTO_CHAIN
 value|0x00000008L
-comment|/* Send TLS_FALLBACK_SCSV in the ClientHello.  * To be set only by applications that reconnect with a downgraded protocol  * version; see draft-ietf-tls-downgrade-scsv-00 for details.  *  * DO NOT ENABLE THIS if your application attempts a normal handshake.  * Only use this in explicit fallback retries, following the guidance  * in draft-ietf-tls-downgrade-scsv-00.  */
+comment|/*  * Send TLS_FALLBACK_SCSV in the ClientHello. To be set only by applications  * that reconnect with a downgraded protocol version; see  * draft-ietf-tls-downgrade-scsv-00 for details. DO NOT ENABLE THIS if your  * application attempts a normal handshake. Only use this in explicit  * fallback retries, following the guidance in  * draft-ietf-tls-downgrade-scsv-00.  */
 define|#
 directive|define
 name|SSL_MODE_SEND_FALLBACK_SCSV
 value|0x00000080L
-comment|/* Note: SSL[_CTX]_set_{options,mode} use |= op on the previous value,  * they cannot be used to clear bits. */
+comment|/*  * Note: SSL[_CTX]_set_{options,mode} use |= op on the previous value, they  * cannot be used to clear bits.  */
 define|#
 directive|define
 name|SSL_CTX_set_options
@@ -1655,7 +1654,7 @@ define|#
 directive|define
 name|SSL_SESSION_CACHE_MAX_SIZE_DEFAULT
 value|(1024*20)
-comment|/* This callback type is used inside SSL_CTX, SSL, and in the functions that set  * them. It is used to override the generation of SSL/TLS session IDs in a  * server. Return value should be zero on an error, non-zero to proceed. Also,  * callbacks should themselves check if the id they generate is unique otherwise  * the SSL handshake will fail with an error - callbacks can do this using the  * 'ssl' value they're passed by;  *      SSL_has_matching_session_id(ssl, id, *id_len)  * The length value passed in is set at the maximum size the session ID can be.  * In SSLv2 this is 16 bytes, whereas SSLv3/TLSv1 it is 32 bytes. The callback  * can alter this length to be less if desired, but under SSLv2 session IDs are  * supposed to be fixed at 16 bytes so the id will be padded after the callback  * returns in this case. It is also an error for the callback to set the size to  * zero. */
+comment|/*  * This callback type is used inside SSL_CTX, SSL, and in the functions that  * set them. It is used to override the generation of SSL/TLS session IDs in  * a server. Return value should be zero on an error, non-zero to proceed.  * Also, callbacks should themselves check if the id they generate is unique  * otherwise the SSL handshake will fail with an error - callbacks can do  * this using the 'ssl' value they're passed by;  * SSL_has_matching_session_id(ssl, id, *id_len) The length value passed in  * is set at the maximum size the session ID can be. In SSLv2 this is 16  * bytes, whereas SSLv3/TLSv1 it is 32 bytes. The callback can alter this  * length to be less if desired, but under SSLv2 session IDs are supposed to  * be fixed at 16 bytes so the id will be padded after the callback returns  * in this case. It is also an error for the callback to set the size to  * zero.  */
 typedef|typedef
 name|int
 function_decl|(
@@ -1748,7 +1747,7 @@ modifier|*
 name|sessions
 decl_stmt|;
 comment|/* a set of SSL_SESSIONs */
-comment|/* Most session-ids that will be cached, default is 	 * SSL_SESSION_CACHE_MAX_SIZE_DEFAULT. 0 is unlimited. */
+comment|/*      * Most session-ids that will be cached, default is      * SSL_SESSION_CACHE_MAX_SIZE_DEFAULT. 0 is unlimited.      */
 name|unsigned
 name|long
 name|session_cache_size
@@ -1763,15 +1762,15 @@ name|ssl_session_st
 modifier|*
 name|session_cache_tail
 decl_stmt|;
-comment|/* This can have one of 2 values, ored together, 	 * SSL_SESS_CACHE_CLIENT, 	 * SSL_SESS_CACHE_SERVER, 	 * Default is SSL_SESSION_CACHE_SERVER, which means only 	 * SSL_accept which cache SSL_SESSIONS. */
+comment|/*      * This can have one of 2 values, ored together, SSL_SESS_CACHE_CLIENT,      * SSL_SESS_CACHE_SERVER, Default is SSL_SESSION_CACHE_SERVER, which      * means only SSL_accept which cache SSL_SESSIONS.      */
 name|int
 name|session_cache_mode
 decl_stmt|;
-comment|/* If timeout is not 0, it is the default timeout value set 	 * when SSL_new() is called.  This has been put in to make 	 * life easier to set things up */
+comment|/*      * If timeout is not 0, it is the default timeout value set when      * SSL_new() is called.  This has been put in to make life easier to set      * things up      */
 name|long
 name|session_timeout
 decl_stmt|;
-comment|/* If this callback is not null, it will be called each 	 * time a session id is added to the cache.  If this function 	 * returns 1, it means that the callback will do a 	 * SSL_SESSION_free() when it has finished using it.  Otherwise, 	 * on 0, it means the callback has finished with it. 	 * If remove_session_cb is not null, it will be called when 	 * a session-id is removed from the cache.  After the call, 	 * OpenSSL will SSL_SESSION_free() it. */
+comment|/*      * If this callback is not null, it will be called each time a session id      * is added to the cache.  If this function returns 1, it means that the      * callback will do a SSL_SESSION_free() when it has finished using it.      * Otherwise, on 0, it means the callback has finished with it. If      * remove_session_cb is not null, it will be called when a session-id is      * removed from the cache.  After the call, OpenSSL will      * SSL_SESSION_free() it.      */
 name|int
 function_decl|(
 modifier|*
@@ -1858,7 +1857,7 @@ comment|/* SSL accept/reneg - finished */
 name|int
 name|sess_miss
 decl_stmt|;
-comment|/* session lookup misses  */
+comment|/* session lookup misses */
 name|int
 name|sess_timeout
 decl_stmt|;
@@ -1874,7 +1873,7 @@ comment|/* session reuse actually done */
 name|int
 name|sess_cb_hit
 decl_stmt|;
-comment|/* session-id that was not 					 * in the cache was 					 * passed back via the callback.  This 					 * indicates that the application is 					 * supplying session-id's from other 					 * processes - spooky :-) */
+comment|/* session-id that was not in the cache was                                  * passed back via the callback.  This                                  * indicates that the application is                                  * supplying session-id's from other                                  * processes - spooky :-) */
 block|}
 name|stats
 struct|;
@@ -1899,7 +1898,7 @@ name|void
 modifier|*
 name|app_verify_arg
 decl_stmt|;
-comment|/* before OpenSSL 0.9.7, 'app_verify_arg' was ignored 	 * ('app_verify_callback' was called with just one argument) */
+comment|/*      * before OpenSSL 0.9.7, 'app_verify_arg' was ignored      * ('app_verify_callback' was called with just one argument)      */
 comment|/* Default password callback. */
 name|pem_password_cb
 modifier|*
@@ -2012,6 +2011,7 @@ name|comp_methods
 expr_stmt|;
 comment|/* stack of SSL_COMP, SSLv3/TLSv1 */
 comment|/* Default values used when no per-SSL value is defined follow */
+comment|/* used if SSL's info_callback is NULL */
 name|void
 function_decl|(
 modifier|*
@@ -2030,7 +2030,6 @@ name|int
 name|val
 parameter_list|)
 function_decl|;
-comment|/* used if SSL's info_callback is NULL */
 comment|/* what we put in client cert requests */
 name|STACK_OF
 argument_list|(
@@ -2039,7 +2038,7 @@ argument_list|)
 operator|*
 name|client_CA
 expr_stmt|;
-comment|/* Default values to use in SSL structures follow (these are copied by SSL_new) */
+comment|/*      * Default values to use in SSL structures follow (these are copied by      * SSL_new)      */
 name|unsigned
 name|long
 name|options
@@ -2111,6 +2110,7 @@ index|[
 name|SSL_MAX_SID_CTX_LENGTH
 index|]
 decl_stmt|;
+comment|/* called 'verify_callback' in the SSL */
 name|int
 function_decl|(
 modifier|*
@@ -2125,7 +2125,6 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* called 'verify_callback' in the SSL */
 comment|/* Default generate session ID callback. */
 name|GEN_SESSION_CB
 name|generate_session_id
@@ -2149,7 +2148,7 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_ENGINE
-comment|/* Engine to pass requests for client certs to 	 */
+comment|/*      * Engine to pass requests for client certs to      */
 name|ENGINE
 modifier|*
 name|client_cert_engine
@@ -2773,57 +2772,57 @@ value|(SSL_want(s) == SSL_X509_LOOKUP)
 struct|struct
 name|ssl_st
 block|{
-comment|/* protocol version 	 * (one of SSL2_VERSION, SSL3_VERSION, TLS1_VERSION, DTLS1_VERSION) 	 */
+comment|/*      * protocol version (one of SSL2_VERSION, SSL3_VERSION, TLS1_VERSION,      * DTLS1_VERSION)      */
 name|int
 name|version
 decl_stmt|;
+comment|/* SSL_ST_CONNECT or SSL_ST_ACCEPT */
 name|int
 name|type
 decl_stmt|;
-comment|/* SSL_ST_CONNECT or SSL_ST_ACCEPT */
+comment|/* SSLv3 */
 name|SSL_METHOD
 modifier|*
 name|method
 decl_stmt|;
-comment|/* SSLv3 */
-comment|/* There are 2 BIO's even though they are normally both the 	 * same.  This is so data can be read and written to different 	 * handlers */
+comment|/*      * There are 2 BIO's even though they are normally both the same.  This      * is so data can be read and written to different handlers      */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_BIO
+comment|/* used by SSL_read */
 name|BIO
 modifier|*
 name|rbio
 decl_stmt|;
-comment|/* used by SSL_read */
+comment|/* used by SSL_write */
 name|BIO
 modifier|*
 name|wbio
 decl_stmt|;
-comment|/* used by SSL_write */
+comment|/* used during session-id reuse to concatenate messages */
 name|BIO
 modifier|*
 name|bbio
 decl_stmt|;
-comment|/* used during session-id reuse to concatenate 		    * messages */
 else|#
 directive|else
+comment|/* used by SSL_read */
 name|char
 modifier|*
 name|rbio
 decl_stmt|;
-comment|/* used by SSL_read */
+comment|/* used by SSL_write */
 name|char
 modifier|*
 name|wbio
 decl_stmt|;
-comment|/* used by SSL_write */
 name|char
 modifier|*
 name|bbio
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* This holds a variable that indicates what we were doing 	 * when a 0 or -1 is returned.  This is needed for 	 * non-blocking IO so we know what request needs re-doing when 	 * in SSL_accept or SSL_connect */
+comment|/*      * This holds a variable that indicates what we were doing when a 0 or -1      * is returned.  This is needed for non-blocking IO so we know what      * request needs re-doing when in SSL_accept or SSL_connect      */
 name|int
 name|rwstate
 decl_stmt|;
@@ -2841,31 +2840,31 @@ name|SSL
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Imagine that here's a boolean member "init" that is 	 * switched as soon as SSL_set_{accept/connect}_state 	 * is called for the first time, so that "state" and 	 * "handshake_func" are properly initialized.  But as 	 * handshake_func is == 0 until then, we use this 	 * test instead of an "init" member. 	 */
+comment|/*      * Imagine that here's a boolean member "init" that is switched as soon      * as SSL_set_{accept/connect}_state is called for the first time, so      * that "state" and "handshake_func" are properly initialized.  But as      * handshake_func is == 0 until then, we use this test instead of an      * "init" member.      */
+comment|/* are we the server side? - mostly used by SSL_clear */
 name|int
 name|server
 decl_stmt|;
-comment|/* are we the server side? - mostly used by SSL_clear*/
+comment|/*      * 1 if we are to use a new session.      * 2 if we are a server and are inside a handshake      *   (i.e. not just sending a HelloRequest)      * NB: For servers, the 'new' session may actually be a previously      * cached session or even the previous session unless      * SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION is set      */
 name|int
 name|new_session
 decl_stmt|;
-comment|/* 1 if we are to use a new session. 	                 * 2 if we are a server and are inside a handshake 	                 *   (i.e. not just sending a HelloRequest) 	                 * NB: For servers, the 'new' session may actually be a previously 	                 * cached session or even the previous session unless 	                 * SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION is set */
+comment|/* don't send shutdown packets */
 name|int
 name|quiet_shutdown
 decl_stmt|;
-comment|/* don't send shutdown packets */
+comment|/* we have shut things down, 0x01 sent, 0x02 for received */
 name|int
 name|shutdown
 decl_stmt|;
-comment|/* we have shut things down, 0x01 sent, 0x02 			 * for received */
+comment|/* where we are */
 name|int
 name|state
 decl_stmt|;
-comment|/* where we are */
+comment|/* where we are when reading */
 name|int
 name|rstate
 decl_stmt|;
-comment|/* where we are when reading */
 name|BUF_MEM
 modifier|*
 name|init_buf
@@ -2875,7 +2874,7 @@ name|void
 modifier|*
 name|init_msg
 decl_stmt|;
-comment|/* pointer to handshake message body, set by ssl3_get_message() */
+comment|/* pointer to handshake message body, set by                                  * ssl3_get_message() */
 name|int
 name|init_num
 decl_stmt|;
@@ -2915,7 +2914,7 @@ comment|/* DTLSv1 variables */
 name|int
 name|read_ahead
 decl_stmt|;
-comment|/* Read as many input bytes as possible 	               	 	 * (for non-blocking reads) */
+comment|/* Read as many input bytes as possible (for                                  * non-blocking reads) */
 comment|/* callback that allows applications to peek at protocol messages */
 name|void
 function_decl|(
@@ -2985,7 +2984,7 @@ argument_list|)
 operator|*
 name|cipher_list_by_id
 expr_stmt|;
-comment|/* These are the ones being used, the ones in SSL_SESSION are 	 * the ones to be 'copied' into these ones */
+comment|/*      * These are the ones being used, the ones in SSL_SESSION are the ones to      * be 'copied' into these ones      */
 name|EVP_CIPHER_CTX
 modifier|*
 name|enc_read_ctx
@@ -3049,7 +3048,7 @@ comment|/* CERT */
 modifier|*
 name|cert
 decl_stmt|;
-comment|/* the session_id_context is used to ensure sessions are only reused 	 * in the appropriate context */
+comment|/*      * the session_id_context is used to ensure sessions are only reused in      * the appropriate context      */
 name|unsigned
 name|int
 name|sid_ctx_length
@@ -3071,10 +3070,11 @@ name|GEN_SESSION_CB
 name|generate_session_id
 decl_stmt|;
 comment|/* Used in SSL2 and SSL3 */
+comment|/*      * 0 don't care about verify failure.      * 1 fail if verify fails      */
 name|int
 name|verify_mode
 decl_stmt|;
-comment|/* 0 don't care about verify failure. 				 * 1 fail if verify fails */
+comment|/* fail if callback returns 0 */
 name|int
 function_decl|(
 modifier|*
@@ -3089,7 +3089,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* fail if callback returns 0 */
+comment|/* optional informational callback */
 name|void
 function_decl|(
 modifier|*
@@ -3108,23 +3108,22 @@ name|int
 name|val
 parameter_list|)
 function_decl|;
-comment|/* optional informational callback */
+comment|/* error bytes to be written */
 name|int
 name|error
 decl_stmt|;
-comment|/* error bytes to be written */
+comment|/* actual code */
 name|int
 name|error_code
 decl_stmt|;
-comment|/* actual code */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_KRB5
+comment|/* Kerberos 5 context */
 name|KSSL_CTX
 modifier|*
 name|kssl_ctx
 decl_stmt|;
-comment|/* Kerberos 5 context */
 endif|#
 directive|endif
 comment|/* OPENSSL_NO_KRB5 */
@@ -3132,7 +3131,7 @@ name|SSL_CTX
 modifier|*
 name|ctx
 decl_stmt|;
-comment|/* set this flag to 1 and a sleep(1) is put into all SSL_read() 	 * and SSL_write() calls, good for nbio debuging :-) */
+comment|/*      * set this flag to 1 and a sleep(1) is put into all SSL_read() and      * SSL_write() calls, good for nbio debuging :-)      */
 name|int
 name|debug
 decl_stmt|;
@@ -3154,26 +3153,26 @@ expr_stmt|;
 name|int
 name|references
 decl_stmt|;
+comment|/* protocol behaviour */
 name|unsigned
 name|long
 name|options
 decl_stmt|;
-comment|/* protocol behaviour */
+comment|/* API behaviour */
 name|unsigned
 name|long
 name|mode
 decl_stmt|;
-comment|/* API behaviour */
 name|long
 name|max_cert_list
 decl_stmt|;
 name|int
 name|first_packet
 decl_stmt|;
+comment|/* what was passed, used for SSLv3/TLS rollback check */
 name|int
 name|client_version
 decl_stmt|;
-comment|/* what was passed, used for 				 * SSLv3/TLS rollback check */
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_TLSEXT
@@ -3215,10 +3214,10 @@ name|char
 modifier|*
 name|tlsext_hostname
 decl_stmt|;
+comment|/*-      * no further mod of servername      * 0 : call the servername extension callback.      * 1 : prepare 2, allow last ack just after in server callback.      * 2 : don't call servername callback, no ack in server hello      */
 name|int
 name|servername_done
 decl_stmt|;
-comment|/* no further mod of servername  	                          0 : call the servername extension callback. 	                          1 : prepare 2, allow last ack just after in server callback. 	                          2 : don't call servername callback, no ack in server hello 	                       */
 comment|/* certificate status request info */
 comment|/* Status type or -1 if no status type */
 name|int
@@ -3382,7 +3381,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 value|(SSL_CTX_set_ex_data(ctx,0,(char *)arg))
-comment|/* The following are the possible values for ssl->state are are  * used to indicate where we are up to in the SSL connection establishment.  * The macros that follow are about the only things you should need to use  * and even then, only when using non-blocking IO.  * It can also be useful to work out where you were when the connection  * failed */
+comment|/*  * The following are the possible values for ssl->state are are used to  * indicate where we are up to in the SSL connection establishment. The  * macros that follow are about the only things you should need to use and  * even then, only when using non-blocking IO. It can also be useful to work  * out where you were when the connection failed  */
 define|#
 directive|define
 name|SSL_ST_CONNECT
@@ -3507,7 +3506,7 @@ parameter_list|(
 name|a
 parameter_list|)
 value|(SSL_state(a)&SSL_ST_ACCEPT)
-comment|/* The following 2 states are kept in ssl->rstate when reads fail,  * you should not need these */
+comment|/*  * The following 2 states are kept in ssl->rstate when reads fail, you should  * not need these  */
 define|#
 directive|define
 name|SSL_ST_READ_HEADER
@@ -3520,7 +3519,7 @@ define|#
 directive|define
 name|SSL_ST_READ_DONE
 value|0xF2
-comment|/* Obtain latest Finished message  *   -- that we sent (SSL_get_finished)  *   -- that we expected from peer (SSL_get_peer_finished).  * Returns length (0 == no Finished so far), copies up to 'count' bytes. */
+comment|/*-  * Obtain latest Finished message  *   -- that we sent (SSL_get_finished)  *   -- that we expected from peer (SSL_get_peer_finished).  * Returns length (0 == no Finished so far), copies up to 'count' bytes.  */
 name|size_t
 name|SSL_get_finished
 parameter_list|(
@@ -3553,7 +3552,7 @@ name|size_t
 name|count
 parameter_list|)
 function_decl|;
-comment|/* use either SSL_VERIFY_NONE or SSL_VERIFY_PEER, the last 2 options  * are 'ored' with SSL_VERIFY_PEER if they are desired */
+comment|/*  * use either SSL_VERIFY_NONE or SSL_VERIFY_PEER, the last 2 options are  * 'ored' with SSL_VERIFY_PEER if they are desired  */
 define|#
 directive|define
 name|SSL_VERIFY_NONE
@@ -3704,7 +3703,7 @@ value|SSL_SESSION_set_timeout((a),(b))
 if|#
 directive|if
 literal|1
-comment|/*SSLEAY_MACROS*/
+comment|/* SSLEAY_MACROS */
 define|#
 directive|define
 name|d2i_SSL_SESSION_bio
@@ -3735,7 +3734,7 @@ name|cb
 parameter_list|,
 name|u
 parameter_list|)
-value|(SSL_SESSION *)PEM_ASN1_read( \ 	(char *(*)())d2i_SSL_SESSION,PEM_STRING_SSL_SESSION,fp,(char **)x,cb,u)
+value|(SSL_SESSION *)PEM_ASN1_read( \         (char *(*)())d2i_SSL_SESSION,PEM_STRING_SSL_SESSION,fp,(char **)x,cb,u)
 define|#
 directive|define
 name|PEM_read_bio_SSL_SESSION
@@ -3758,7 +3757,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write((int (*)())i2d_SSL_SESSION, \ 		PEM_STRING_SSL_SESSION,fp, (char *)x, NULL,NULL,0,NULL,NULL)
+value|PEM_ASN1_write((int (*)())i2d_SSL_SESSION, \                 PEM_STRING_SSL_SESSION,fp, (char *)x, NULL,NULL,0,NULL,NULL)
 define|#
 directive|define
 name|PEM_write_bio_SSL_SESSION
@@ -3780,6 +3779,7 @@ define|#
 directive|define
 name|SSL_AD_CLOSE_NOTIFY
 value|SSL3_AD_CLOSE_NOTIFY
+comment|/* fatal */
 define|#
 directive|define
 name|SSL_AD_UNEXPECTED_MESSAGE
@@ -3789,7 +3789,6 @@ define|#
 directive|define
 name|SSL_AD_BAD_RECORD_MAC
 value|SSL3_AD_BAD_RECORD_MAC
-comment|/* fatal */
 define|#
 directive|define
 name|SSL_AD_DECRYPTION_FAILED
@@ -3798,6 +3797,7 @@ define|#
 directive|define
 name|SSL_AD_RECORD_OVERFLOW
 value|TLS1_AD_RECORD_OVERFLOW
+comment|/* fatal */
 define|#
 directive|define
 name|SSL_AD_DECOMPRESSION_FAILURE
@@ -3807,12 +3807,11 @@ define|#
 directive|define
 name|SSL_AD_HANDSHAKE_FAILURE
 value|SSL3_AD_HANDSHAKE_FAILURE
-comment|/* fatal */
+comment|/* Not for TLS */
 define|#
 directive|define
 name|SSL_AD_NO_CERTIFICATE
 value|SSL3_AD_NO_CERTIFICATE
-comment|/* Not for TLS */
 define|#
 directive|define
 name|SSL_AD_BAD_CERTIFICATE
@@ -3833,6 +3832,7 @@ define|#
 directive|define
 name|SSL_AD_CERTIFICATE_UNKNOWN
 value|SSL3_AD_CERTIFICATE_UNKNOWN
+comment|/* fatal */
 define|#
 directive|define
 name|SSL_AD_ILLEGAL_PARAMETER
@@ -3852,11 +3852,11 @@ define|#
 directive|define
 name|SSL_AD_DECODE_ERROR
 value|TLS1_AD_DECODE_ERROR
-comment|/* fatal */
 define|#
 directive|define
 name|SSL_AD_DECRYPT_ERROR
 value|TLS1_AD_DECRYPT_ERROR
+comment|/* fatal */
 define|#
 directive|define
 name|SSL_AD_EXPORT_RESTRICTION
@@ -3876,7 +3876,6 @@ define|#
 directive|define
 name|SSL_AD_INTERNAL_ERROR
 value|TLS1_AD_INTERNAL_ERROR
-comment|/* fatal */
 define|#
 directive|define
 name|SSL_AD_USER_CANCELLED
@@ -3905,6 +3904,7 @@ define|#
 directive|define
 name|SSL_AD_BAD_CERTIFICATE_HASH_VALUE
 value|TLS1_AD_BAD_CERTIFICATE_HASH_VALUE
+comment|/* fatal */
 define|#
 directive|define
 name|SSL_AD_UNKNOWN_PSK_IDENTITY
@@ -3914,7 +3914,6 @@ define|#
 directive|define
 name|SSL_AD_INAPPROPRIATE_FALLBACK
 value|TLS1_AD_INAPPROPRIATE_FALLBACK
-comment|/* fatal */
 define|#
 directive|define
 name|SSL_ERROR_NONE
@@ -3939,7 +3938,7 @@ define|#
 directive|define
 name|SSL_ERROR_SYSCALL
 value|5
-comment|/* look at error stack/return value/errno */
+comment|/* look at error stack/return                                            * value/errno */
 define|#
 directive|define
 name|SSL_ERROR_ZERO_RETURN
@@ -5003,6 +5002,7 @@ name|int
 name|type
 parameter_list|)
 function_decl|;
+comment|/* PEM type */
 name|int
 name|SSL_CTX_use_certificate_chain_file
 parameter_list|(
@@ -5016,7 +5016,6 @@ modifier|*
 name|file
 parameter_list|)
 function_decl|;
-comment|/* PEM type */
 name|STACK_OF
 argument_list|(
 name|X509_NAME
@@ -5049,10 +5048,10 @@ decl_stmt|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_SYS_VMS
+comment|/* XXXXX: Better scheme needed! [was: #ifndef MAC_OS_pre_X] */
 ifndef|#
 directive|ifndef
 name|OPENSSL_SYS_MACINTOSH_CLASSIC
-comment|/* XXXXX: Better scheme needed! [was: #ifndef MAC_OS_pre_X] */
 name|int
 name|SSL_add_dir_cert_subjects_to_stack
 argument_list|(
@@ -6284,7 +6283,7 @@ modifier|*
 name|ssl
 parameter_list|)
 function_decl|;
-comment|/* EVP_PKEY */
+comment|/*  * EVP_PKEY  */
 name|struct
 name|evp_pkey_st
 modifier|*
@@ -7056,7 +7055,7 @@ function_decl|;
 endif|#
 directive|endif
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_SSL_strings
 parameter_list|(

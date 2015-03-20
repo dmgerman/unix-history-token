@@ -4,11 +4,11 @@ comment|/* ssl/s3_enc.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -342,7 +342,7 @@ index|[
 name|c
 index|]
 expr_stmt|;
-comment|/*'A' in ASCII */
+comment|/* 'A' in ASCII */
 endif|#
 directive|endif
 name|k
@@ -832,7 +832,7 @@ goto|goto
 name|err
 goto|;
 else|else
-comment|/* make sure it's intialized in case we exit later with an error */
+comment|/*              * make sure it's intialized in case we exit later with an error              */
 name|EVP_CIPHER_CTX_init
 argument_list|(
 name|s
@@ -1034,7 +1034,7 @@ goto|goto
 name|err
 goto|;
 else|else
-comment|/* make sure it's intialized in case we exit later with an error */
+comment|/*              * make sure it's intialized in case we exit later with an error              */
 name|EVP_CIPHER_CTX_init
 argument_list|(
 name|s
@@ -1446,7 +1446,7 @@ condition|(
 name|is_exp
 condition|)
 block|{
-comment|/* In here I set both the read and write key/iv to the 		 * same value since only the correct one will be used :-). 		 */
+comment|/*          * In here I set both the read and write key/iv to the same value          * since only the correct one will be used :-).          */
 name|EVP_DigestInit_ex
 argument_list|(
 operator|&
@@ -1887,7 +1887,7 @@ name|SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS
 operator|)
 condition|)
 block|{
-comment|/* enable vulnerability countermeasure for CBC ciphers with 		 * known-IV problem (http://www.openssl.org/~bodo/tls-cbc.txt) 		 */
+comment|/*          * enable vulnerability countermeasure for CBC ciphers with known-IV          * problem (http://www.openssl.org/~bodo/tls-cbc.txt)          */
 name|s
 operator|->
 name|s3
@@ -2059,7 +2059,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* ssl3_enc encrypts/decrypts the record in |s->wrec| / |s->rrec|, respectively.  *  * Returns:  *   0: (in non-constant time) if the record is publically invalid (i.e. too  *       short etc).  *   1: if the record's padding is valid / the encryption was successful.  *   -1: if the record's padding is invalid or, if sending, an internal error  *       occured.  */
+comment|/*-  * ssl3_enc encrypts/decrypts the record in |s->wrec| / |s->rrec|, respectively.  *  * Returns:  *   0: (in non-constant time) if the record is publically invalid (i.e. too  *       short etc).  *   1: if the record's padding is valid / the encryption was successful.  *   -1: if the record's padding is invalid or, if sending, an internal error  *       occured.  */
 end_comment
 
 begin_function
@@ -2281,7 +2281,7 @@ name|l
 operator|+=
 name|i
 expr_stmt|;
-comment|/* the last of these zero bytes will be overwritten 			 * with the padding length. */
+comment|/*              * the last of these zero bytes will be overwritten with the              * padding length.              */
 name|memset
 argument_list|(
 operator|&
@@ -3032,7 +3032,7 @@ operator|)
 operator|*
 name|md_size
 expr_stmt|;
-comment|/* kludge: ssl3_cbc_remove_padding passes padding length in rec->type */
+comment|/*      * kludge: ssl3_cbc_remove_padding passes padding length in rec->type      */
 name|orig_len
 operator|=
 name|rec
@@ -3079,8 +3079,8 @@ name|hash
 argument_list|)
 condition|)
 block|{
-comment|/* This is a CBC-encrypted record. We must avoid leaking any 		 * timing-side channel information about how many blocks of 		 * data we are hashing because that gives an attacker a 		 * timing-oracle. */
-comment|/* npad is, at most, 48 bytes and that's with MD5: 		 *   16 + 48 + 8 (sequence bytes) + 1 + 2 = 75. 		 * 		 * With SHA-1 (the largest hash speced for SSLv3) the hash size 		 * goes up 4, but npad goes down by 8, resulting in a smaller 		 * total size. */
+comment|/*          * This is a CBC-encrypted record. We must avoid leaking any          * timing-side channel information about how many blocks of data we          * are hashing because that gives an attacker a timing-oracle.          */
+comment|/*-          * npad is, at most, 48 bytes and that's with MD5:          *   16 + 48 + 8 (sequence bytes) + 1 + 2 = 75.          *          * With SHA-1 (the largest hash speced for SSLv3) the hash size          * goes up 4, but npad goes down by 8, resulting in a smaller          * total size.          */
 name|unsigned
 name|char
 name|header
@@ -3172,6 +3172,7 @@ name|length
 operator|&
 literal|0xff
 expr_stmt|;
+comment|/* Final param == is SSLv3 */
 name|ssl3_cbc_digest_record
 argument_list|(
 name|hash
@@ -3200,7 +3201,6 @@ argument_list|,
 name|md_size
 argument_list|,
 literal|1
-comment|/* is SSLv3 */
 argument_list|)
 expr_stmt|;
 block|}
@@ -3731,6 +3731,14 @@ name|EVP_MD_CTX_cleanup
 argument_list|(
 operator|&
 name|ctx
+argument_list|)
+expr_stmt|;
+name|OPENSSL_cleanse
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+name|buf
 argument_list|)
 expr_stmt|;
 return|return

@@ -4,7 +4,7 @@ comment|/* crypto/asn1/a_utctm.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -44,14 +44,14 @@ literal|0
 end_if
 
 begin_ifndef
-unit|int i2d_ASN1_UTCTIME(ASN1_UTCTIME *a, unsigned char **pp) 	{
+unit|int i2d_ASN1_UTCTIME(ASN1_UTCTIME *a, unsigned char **pp) {
 ifndef|#
 directive|ifndef
 name|CHARSET_EBCDIC
 end_ifndef
 
 begin_else
-unit|return(i2d_ASN1_bytes((ASN1_STRING *)a,pp, 		V_ASN1_UTCTIME,V_ASN1_UNIVERSAL));
+unit|return (i2d_ASN1_bytes((ASN1_STRING *)a, pp,                            V_ASN1_UTCTIME, V_ASN1_UNIVERSAL));
 else|#
 directive|else
 end_else
@@ -61,13 +61,13 @@ comment|/* KLUDGE! We convert to ascii before writing DER */
 end_comment
 
 begin_endif
-unit|int len; 	char tmp[24]; 	ASN1_STRING x = *(ASN1_STRING *)a;  	len = x.length; 	ebcdic2ascii(tmp, x.data, (len>= sizeof tmp) ? sizeof tmp : len); 	x.data = tmp; 	return i2d_ASN1_bytes(&x, pp, V_ASN1_UTCTIME,V_ASN1_UNIVERSAL);
+unit|int len;     char tmp[24];     ASN1_STRING x = *(ASN1_STRING *)a;      len = x.length;     ebcdic2ascii(tmp, x.data, (len>= sizeof tmp) ? sizeof tmp : len);     x.data = tmp;     return i2d_ASN1_bytes(&x, pp, V_ASN1_UTCTIME, V_ASN1_UNIVERSAL);
 endif|#
 directive|endif
 end_endif
 
 begin_ifdef
-unit|}   ASN1_UTCTIME *d2i_ASN1_UTCTIME(ASN1_UTCTIME **a, unsigned char **pp, 	     long length) 	{ 	ASN1_UTCTIME *ret=NULL;  	ret=(ASN1_UTCTIME *)d2i_ASN1_bytes((ASN1_STRING **)a,pp,length, 		V_ASN1_UTCTIME,V_ASN1_UNIVERSAL); 	if (ret == NULL) 		{ 		ASN1err(ASN1_F_D2I_ASN1_UTCTIME,ERR_R_NESTED_ASN1_ERROR); 		return(NULL); 		}
+unit|}  ASN1_UTCTIME *d2i_ASN1_UTCTIME(ASN1_UTCTIME **a, unsigned char **pp,                                long length) {     ASN1_UTCTIME *ret = NULL;      ret = (ASN1_UTCTIME *)d2i_ASN1_bytes((ASN1_STRING **)a, pp, length,                                          V_ASN1_UTCTIME, V_ASN1_UNIVERSAL);     if (ret == NULL) {         ASN1err(ASN1_F_D2I_ASN1_UTCTIME, ERR_R_NESTED_ASN1_ERROR);         return (NULL);     }
 ifdef|#
 directive|ifdef
 name|CHARSET_EBCDIC
@@ -80,7 +80,7 @@ directive|endif
 end_endif
 
 begin_endif
-unit|if (!ASN1_UTCTIME_check(ret)) 		{ 		ASN1err(ASN1_F_D2I_ASN1_UTCTIME,ASN1_R_INVALID_TIME_FORMAT); 		goto err; 		}  	return(ret); err: 	if ((ret != NULL)&& ((a == NULL) || (*a != ret))) 		M_ASN1_UTCTIME_free(ret); 	return(NULL); 	}
+unit|if (!ASN1_UTCTIME_check(ret)) {         ASN1err(ASN1_F_D2I_ASN1_UTCTIME, ASN1_R_INVALID_TIME_FORMAT);         goto err;     }      return (ret);  err:     if ((ret != NULL)&& ((a == NULL) || (*a != ret)))         M_ASN1_UTCTIME_free(ret);     return (NULL); }
 endif|#
 directive|endif
 end_endif
@@ -1143,7 +1143,7 @@ literal|0
 end_if
 
 begin_define
-unit|time_t ASN1_UTCTIME_get(const ASN1_UTCTIME *s) 	{ 	struct tm tm; 	int offset;  	memset(&tm,'\0',sizeof tm);
+unit|time_t ASN1_UTCTIME_get(const ASN1_UTCTIME *s) {     struct tm tm;     int offset;      memset(&tm, '\0', sizeof tm);
 define|#
 directive|define
 name|g2
@@ -1154,19 +1154,18 @@ value|(((p)[0]-'0')*10+(p)[1]-'0')
 end_define
 
 begin_undef
-unit|tm.tm_year=g2(s->data); 	if(tm.tm_year< 50) 		tm.tm_year+=100; 	tm.tm_mon=g2(s->data+2)-1; 	tm.tm_mday=g2(s->data+4); 	tm.tm_hour=g2(s->data+6); 	tm.tm_min=g2(s->data+8); 	tm.tm_sec=g2(s->data+10); 	if(s->data[12] == 'Z') 		offset=0; 	else 		{ 		offset=g2(s->data+13)*60+g2(s->data+15); 		if(s->data[12] == '-') 			offset= -offset; 		}
+unit|tm.tm_year = g2(s->data);     if (tm.tm_year< 50)         tm.tm_year += 100;     tm.tm_mon = g2(s->data + 2) - 1;     tm.tm_mday = g2(s->data + 4);     tm.tm_hour = g2(s->data + 6);     tm.tm_min = g2(s->data + 8);     tm.tm_sec = g2(s->data + 10);     if (s->data[12] == 'Z')         offset = 0;     else {         offset = g2(s->data + 13) * 60 + g2(s->data + 15);         if (s->data[12] == '-')             offset = -offset;     }
 undef|#
 directive|undef
 name|g2
 end_undef
 
 begin_comment
-unit|return mktime(&tm)-offset*60;
-comment|/* FIXME: mktime assumes the current timezone 	                               * instead of UTC, and unless we rewrite OpenSSL 				       * in Lisp we cannot locally change the timezone 				       * without possibly interfering with other parts 	                               * of the program. timegm, which uses UTC, is 				       * non-standard. 	                               * Also time_t is inappropriate for general 	                               * UTC times because it may a 32 bit type. */
+comment|/*      * FIXME: mktime assumes the current timezone      * instead of UTC, and unless we rewrite OpenSSL      * in Lisp we cannot locally change the timezone      * without possibly interfering with other parts      * of the program. timegm, which uses UTC, is      * non-standard.      * Also time_t is inappropriate for general      * UTC times because it may a 32 bit type.      */
 end_comment
 
 begin_endif
-unit|}
+unit|return mktime(&tm) - offset * 60; }
 endif|#
 directive|endif
 end_endif

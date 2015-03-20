@@ -4,15 +4,15 @@ comment|/* ssl/ssl_ciph.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by  * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
 end_comment
 
 begin_include
@@ -163,7 +163,7 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -236,7 +236,7 @@ block|{
 name|NULL
 block|,
 name|NULL
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -312,7 +312,8 @@ index|[]
 init|=
 block|{
 comment|/* Don't include eNULL unless specifically enabled. */
-comment|/* Don't include ECC in ALL because these ciphers are not yet official. */
+comment|/*      * Don't include ECC in ALL because these ciphers are not yet official.      */
+comment|/* must be first */
 block|{
 literal|0
 block|,
@@ -344,8 +345,8 @@ block|,
 name|SSL_ALL
 block|}
 block|,
-comment|/* must be first */
-comment|/* TODO: COMPLEMENT OF ALL and COMPLEMENT OF DEFAULT do not have ECC cipher suites handled properly. */
+comment|/*      * TODO: COMPLEMENT OF ALL do not have ECC cipher suites handled properly.      */
+comment|/* COMPLEMENT OF ALL */
 block|{
 literal|0
 block|,
@@ -368,7 +369,6 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* COMPLEMENT OF ALL */
 block|{
 literal|0
 block|,
@@ -378,7 +378,7 @@ literal|0
 block|,
 name|SSL_ADH
 block|,
-literal|0
+name|SSL_EXP_MASK
 block|,
 literal|0
 block|,
@@ -391,6 +391,7 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* VRS Kerberos5 */
 block|{
 literal|0
 block|,
@@ -413,7 +414,6 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* VRS Kerberos5 */
 block|{
 literal|0
 block|,
@@ -596,6 +596,7 @@ block|,
 literal|0
 block|}
 block|,
+comment|/* VRS Kerberos5 */
 block|{
 literal|0
 block|,
@@ -618,7 +619,6 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* VRS Kerberos5 */
 block|{
 literal|0
 block|,
@@ -1405,7 +1405,7 @@ name|SSL_FIPS
 operator||
 name|SSL_STRONG_NONE
 block|}
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2319,7 +2319,7 @@ begin_struct
 struct|struct
 name|disabled_masks
 block|{
-comment|/* This is a kludge no longer needed with OpenSSL 0.9.9,                          * where 128-bit and 256-bit algorithms simply will get                          * separate bits. */
+comment|/* This is a kludge no longer needed with                                  * OpenSSL 0.9.9, where 128-bit and 256-bit                                  * algorithms simply will get separate bits. */
 name|unsigned
 name|long
 name|mask
@@ -2688,7 +2688,7 @@ name|SSL_CIPHER
 modifier|*
 name|c
 decl_stmt|;
-comment|/* 	 * We have num_of_ciphers descriptions compiled in, depending on the 	 * method selected (SSLv2 and/or SSLv3, TLSv1 etc). 	 * These will later be sorted in a linked list with at most num 	 * entries. 	 */
+comment|/*      * We have num_of_ciphers descriptions compiled in, depending on the      * method selected (SSLv2 and/or SSLv3, TLSv1 etc).      * These will later be sorted in a linked list with at most num      * entries.      */
 comment|/* Get the initial list of ciphers */
 name|co_list_num
 operator|=
@@ -2848,10 +2848,10 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* KSSL_DEBUG */
-comment|/* 			if (!sk_push(ca_list,(char *)c)) goto err; 			*/
+comment|/*              * if (!sk_push(ca_list,(char *)c)) goto err;              */
 block|}
 block|}
-comment|/* 	 * Prepare linked list from list entries 	 */
+comment|/*      * Prepare linked list from list entries      */
 for|for
 control|(
 name|i
@@ -3026,7 +3026,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * First, add the real ciphers as already collected 	 */
+comment|/*      * First, add the real ciphers as already collected      */
 name|ciph_curr
 operator|=
 name|head
@@ -3059,7 +3059,7 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-comment|/* 	 * Now we add the available ones from the cipher_aliases[] table. 	 * They represent either an algorithm, that must be fully 	 * supported (not match any bit in mask) or represent a cipher 	 * strength value (will be added in any case because algorithms=0). 	 */
+comment|/*      * Now we add the available ones from the cipher_aliases[] table.      * They represent either an algorithm, that must be fully      * supported (not match any bit in mask) or represent a cipher      * strength value (will be added in any case because algorithms=0).      */
 for|for
 control|(
 name|i
@@ -3276,7 +3276,55 @@ name|curr
 operator|->
 name|cipher
 expr_stmt|;
-comment|/* If explicit cipher suite, match only that one for its own protocol version. 		 * Usual selection criteria will be used for similar ciphersuites from other version! */
+comment|/* Special case: only satisfied by COMPLEMENTOFDEFAULT */
+if|if
+condition|(
+name|algo_strength
+operator|==
+name|SSL_EXP_MASK
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|SSL_C_IS_EXPORT
+argument_list|(
+name|cp
+argument_list|)
+operator|||
+name|cp
+operator|->
+name|algorithms
+operator|&
+name|SSL_SSLV2
+operator|||
+name|cp
+operator|->
+name|algorithms
+operator|&
+name|SSL_aNULL
+operator|)
+operator|&&
+operator|!
+operator|(
+name|cp
+operator|->
+name|algorithms
+operator|&
+operator|(
+name|SSL_kECDHE
+operator||
+name|SSL_kECDH
+operator|)
+operator|)
+condition|)
+goto|goto
+name|ok
+goto|;
+else|else
+continue|continue;
+block|}
+comment|/*          * If explicit cipher suite, match only that one for its own protocol          * version. Usual selection criteria will be used for similar          * ciphersuites from other version!          */
 if|if
 condition|(
 name|cipher_id
@@ -3302,7 +3350,7 @@ name|cipher_id
 condition|)
 continue|continue;
 block|}
-comment|/* 		 * Selection criteria is either the number of strength_bits 		 * or the algorithm used. 		 */
+comment|/*          * Selection criteria is either the number of strength_bits          * or the algorithm used.          */
 elseif|else
 if|if
 condition|(
@@ -3371,7 +3419,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 			 * Select: if none of the mask bit was met from the 			 * cipher or not all of the bits were met, the 			 * selection does not apply. 			 */
+comment|/*              * Select: if none of the mask bit was met from the              * cipher or not all of the bits were met, the              * selection does not apply.              */
 if|if
 condition|(
 operator|(
@@ -3422,6 +3470,8 @@ name|strength_bits
 condition|)
 continue|continue;
 comment|/* does not apply */
+name|ok
+label|:
 ifdef|#
 directive|ifdef
 name|CIPHER_DEBUG
@@ -3476,7 +3526,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* Make sure "ECCdraft" ciphersuites are activated only if 					 * *explicitly* requested, but not implicitly (such as 					 * as part of the "AES" alias). */
+comment|/*                      * Make sure "ECCdraft" ciphersuites are activated only                      * if *explicitly* requested, but not implicitly (such as                      * as part of the "AES" alias).                      */
 name|add_this_cipher
 operator|=
 operator|(
@@ -3709,7 +3759,7 @@ name|CIPHER_ORDER
 modifier|*
 name|curr
 decl_stmt|;
-comment|/* 	 * This routine sorts the ciphers with descending strength. The sorting 	 * must keep the pre-sorted sequence, so we apply the normal sorting 	 * routine as '+' movement to the end of the list. 	 */
+comment|/*      * This routine sorts the ciphers with descending strength. The sorting      * must keep the pre-sorted sequence, so we apply the normal sorting      * routine as '+' movement to the end of the list.      */
 name|max_strength_bits
 operator|=
 literal|0
@@ -3810,7 +3860,7 @@ name|int
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Now find the strength_bits values actually used 	 */
+comment|/*      * Now find the strength_bits values actually used      */
 name|curr
 operator|=
 operator|*
@@ -3846,7 +3896,7 @@ operator|->
 name|next
 expr_stmt|;
 block|}
-comment|/* 	 * Go through the list of used strength_bits values in descending 	 * order. 	 */
+comment|/*      * Go through the list of used strength_bits values in descending      * order.      */
 for|for
 control|(
 name|i
@@ -4212,7 +4262,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 				 * We hit something we cannot deal with, 				 * it is no command or separator nor 				 * alphanumeric, so we call this an error. 				 */
+comment|/*                  * We hit something we cannot deal with,                  * it is no command or separator nor                  * alphanumeric, so we call this an error.                  */
 name|SSLerr
 argument_list|(
 name|SSL_F_SSL_CIPHER_PROCESS_RULESTR
@@ -4267,7 +4317,7 @@ name|multi
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * Now search for the cipher alias in the ca_list. Be careful 			 * with the strncmp, because the "buflen" limitation 			 * will make the rule "ADH:SOME" and the cipher 			 * "ADH-MY-CIPHER" look like a match for buflen=3. 			 * So additionally check whether the cipher name found 			 * has the correct length. We can save a strlen() call: 			 * just checking for the '\0' at the right place is 			 * sufficient, we have to strncmp() anyway. (We cannot 			 * use strcmp(), because buf is not '\0' terminated.) 			 */
+comment|/*              * Now search for the cipher alias in the ca_list. Be careful              * with the strncmp, because the "buflen" limitation              * will make the rule "ADH:SOME" and the cipher              * "ADH-MY-CIPHER" look like a match for buflen=3.              * So additionally check whether the cipher name found              * has the correct length. We can save a strlen() call:              * just checking for the '\0' at the right place is              * sufficient, we have to strncmp() anyway. (We cannot              * use strcmp(), because buf is not '\0' terminated.)              */
 name|j
 operator|=
 name|found
@@ -4340,7 +4390,7 @@ name|found
 condition|)
 break|break;
 comment|/* ignore this entry */
-comment|/* New algorithms: 			 *  1 - any old restrictions apply outside new mask 			 *  2 - any new restrictions apply outside old mask 			 *  3 - enforce old& new where masks intersect 			 */
+comment|/*-              * New algorithms:              *  1 - any old restrictions apply outside new mask              *  2 - any new restrictions apply outside old mask              *  3 - enforce old& new where masks intersect              */
 name|algorithms
 operator|=
 operator|(
@@ -4476,7 +4526,7 @@ name|multi
 condition|)
 break|break;
 block|}
-comment|/* 		 * Ok, we have the rule, now apply it 		 */
+comment|/*          * Ok, we have the rule, now apply it          */
 if|if
 condition|(
 name|rule
@@ -4536,7 +4586,7 @@ name|retval
 operator|=
 literal|0
 expr_stmt|;
-comment|/* 			 * We do not support any "multi" options 			 * together with "@", so throw away the 			 * rest of the command, if any left, until 			 * end or ':' is found. 			 */
+comment|/*              * We do not support any "multi" options              * together with "@", so throw away the              * rest of the command, if any left, until              * end or ':' is found.              */
 while|while
 condition|(
 operator|(
@@ -4640,9 +4690,9 @@ name|ssl_create_cipher_list
 argument_list|(
 argument|const SSL_METHOD *ssl_method
 argument_list|,
-argument|STACK_OF(SSL_CIPHER) **cipher_list
+argument|STACK_OF(SSL_CIPHER)                                              **cipher_list
 argument_list|,
-argument|STACK_OF(SSL_CIPHER) **cipher_list_by_id
+argument|STACK_OF(SSL_CIPHER)                                              **cipher_list_by_id
 argument_list|,
 argument|const char *rule_str
 argument_list|)
@@ -4705,7 +4755,7 @@ name|ca_list
 operator|=
 name|NULL
 block|;
-comment|/* 	 * Return with error if nothing to do. 	 */
+comment|/*      * Return with error if nothing to do.      */
 if|if
 condition|(
 name|rule_str
@@ -4723,8 +4773,8 @@ condition|)
 return|return
 name|NULL
 return|;
-comment|/* 	 * To reduce the work to do we only want to process the compiled 	 * in algorithms, so we first get the mask of disabled ciphers. 	 */
-block|{ 		struct
+comment|/*      * To reduce the work to do we only want to process the compiled      * in algorithms, so we first get the mask of disabled ciphers.      */
+block|{         struct
 name|disabled_masks
 name|d
 block|;
@@ -4744,8 +4794,8 @@ operator|=
 name|d
 operator|.
 name|m256
-block|; 	}
-comment|/* 	 * Now we have to collect the available ciphers from the compiled 	 * in ciphers. We cannot get more than the number compiled in, so 	 * it is used for allocation. 	 */
+block|;     }
+comment|/*      * Now we have to collect the available ciphers from the compiled      * in ciphers. We cannot get more than the number compiled in, so      * it is used for allocation.      */
 name|num_of_ciphers
 operator|=
 name|ssl_method
@@ -4846,7 +4896,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	 * We also need cipher aliases for selecting based on the rule_str. 	 * There might be two types of entries in the rule_str: 1) names 	 * of ciphers themselves 2) aliases for groups of ciphers. 	 * For 1) we need the available ciphers and for 2) the cipher 	 * groups of cipher_aliases added together in one list (otherwise 	 * we would be happy with just the cipher_aliases table). 	 */
+comment|/*      * We also need cipher aliases for selecting based on the rule_str.      * There might be two types of entries in the rule_str: 1) names      * of ciphers themselves 2) aliases for groups of ciphers.      * For 1) we need the available ciphers and for 2) the cipher      * groups of cipher_aliases added together in one list (otherwise      * we would be happy with just the cipher_aliases table).      */
 end_comment
 
 begin_expr_stmt
@@ -4944,7 +4994,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* 	 * If the rule_string begins with DEFAULT, apply the default rule 	 * before using the (possibly available) additional rules. 	 */
+comment|/*      * If the rule_string begins with DEFAULT, apply the default rule      * before using the (possibly available) additional rules.      */
 end_comment
 
 begin_expr_stmt
@@ -5077,7 +5127,7 @@ block|}
 end_if
 
 begin_comment
-comment|/* 	 * Allocate new "cipherstack" for the result, return with error 	 * if we cannot get one. 	 */
+comment|/*      * Allocate new "cipherstack" for the result, return with error      * if we cannot get one.      */
 end_comment
 
 begin_if
@@ -5107,7 +5157,7 @@ block|}
 end_if
 
 begin_comment
-comment|/* 	 * The cipher selection for the list is done. The ciphers are added 	 * to the resulting precedence to the STACK_OF(SSL_CIPHER). 	 */
+comment|/*      * The cipher selection for the list is done. The ciphers are added      * to the resulting precedence to the STACK_OF(SSL_CIPHER).      */
 end_comment
 
 begin_for
@@ -6376,7 +6426,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* According to draft-ietf-tls-compression-04.txt, the 	   compression number ranges should be the following:  	   0 to 63:    methods defined by the IETF 	   64 to 192:  external party methods assigned by IANA 	   193 to 255: reserved for private use */
+comment|/*-      * According to draft-ietf-tls-compression-04.txt, the      * compression number ranges should be the following:      *      *   0 to  63:  methods defined by the IETF      *  64 to 192:  external party methods assigned by IANA      * 193 to 255:  reserved for private use      */
 if|if
 condition|(
 name|id

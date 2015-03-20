@@ -8,11 +8,11 @@ comment|/*  * Written by Nils Larsch for the OpenSSL project.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by   * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * The elliptic curve binary polynomial software is originally written by   * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by  * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * The elliptic curve binary polynomial software is originally written by  * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
 end_comment
 
 begin_include
@@ -41,7 +41,7 @@ block|{
 name|int
 name|field_type
 decl_stmt|;
-comment|/* either NID_X9_62_prime_field or 				 * NID_X9_62_characteristic_two_field */
+comment|/* either NID_X9_62_prime_field or                                  * NID_X9_62_characteristic_two_field */
 specifier|const
 name|char
 modifier|*
@@ -75,7 +75,7 @@ name|char
 modifier|*
 name|order
 decl_stmt|;
-comment|/* the order of the group generated by the 				 * generator */
+comment|/* the order of the group generated by the                                  * generator */
 specifier|const
 name|BN_ULONG
 name|cofactor
@@ -2145,7 +2145,7 @@ literal|"03FFFFFFFFFFFFFFFFFFFF48AAB689C29CA710279B"
 block|,
 literal|2
 block|,
-comment|/* The algorithm used to derive the curve parameters from  * the seed used here is slightly different than the  * algorithm described in X9.62 .  */
+comment|/*      * The algorithm used to derive the curve parameters from the seed used      * here is slightly different than the algorithm described in X9.62 .      */
 if|#
 directive|if
 literal|0
@@ -2238,7 +2238,7 @@ literal|"040000000000000000000292FE77E70C12A4234C33"
 block|,
 literal|2
 block|,
-comment|/* The seed here was used to created the curve parameters in normal  * basis representation (and not the polynomial representation used here)   */
+comment|/*      * The seed here was used to created the curve parameters in normal basis      * representation (and not the polynomial representation used here)      */
 if|#
 directive|if
 literal|0
@@ -4054,7 +4054,7 @@ comment|/* IPSec curves */
 end_comment
 
 begin_comment
-comment|/* NOTE: The of curves over a extension field of non prime degree  * is not recommended (Weil-descent).  * As the group order is not a prime this curve is not suitable  * for ECDSA.  */
+comment|/*  * NOTE: The of curves over a extension field of non prime degree is not  * recommended (Weil-descent). As the group order is not a prime this curve  * is not suitable for ECDSA.  */
 end_comment
 
 begin_decl_stmt
@@ -4091,7 +4091,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* NOTE: The of curves over a extension field of non prime degree  * is not recommended (Weil-descent).  * As the group order is not a prime this curve is not suitable  * for ECDSA.  */
+comment|/*  * NOTE: The of curves over a extension field of non prime degree is not  * recommended (Weil-descent). As the group order is not a prime this curve  * is not suitable for ECDSA.  */
 end_comment
 
 begin_decl_stmt
@@ -4539,7 +4539,7 @@ operator|&
 name|_EC_X9_62_CHAR2_431R1
 block|}
 block|,
-comment|/* the WAP/WTLS curves 	 * [unlike SECG, spec has its own OIDs for curves from X9.62] */
+comment|/*      * the WAP/WTLS curves [unlike SECG, spec has its own OIDs for curves      * from X9.62]      */
 block|{
 name|NID_wap_wsg_idm_ecid_wtls1
 block|,
@@ -4899,7 +4899,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* field_type == NID_X9_62_characteristic_two_field */
+comment|/* field_type ==                                  * NID_X9_62_characteristic_two_field */
 if|if
 condition|(
 operator|(

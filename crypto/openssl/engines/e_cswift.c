@@ -4,11 +4,11 @@ comment|/* crypto/engine/hw_cswift.c */
 end_comment
 
 begin_comment
-comment|/* Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -123,7 +123,7 @@ name|OPENSSL_NO_HW_CSWIFT
 end_ifndef
 
 begin_comment
-comment|/* Attribution notice: Rainbow have generously allowed me to reproduce  * the necessary definitions here from their API. This means the support  * can build independently of whether application builders have the  * API or hardware. This will allow developers to easily produce software  * that has latent hardware support for any users that have accelerators  * installed, without the developers themselves needing anything extra.  *  * I have only clipped the parts from the CryptoSwift header files that  * are (or seem) relevant to the CryptoSwift support code. This is  * simply to keep the file sizes reasonable.  * [Geoff]  */
+comment|/*  * Attribution notice: Rainbow have generously allowed me to reproduce the  * necessary definitions here from their API. This means the support can  * build independently of whether application builders have the API or  * hardware. This will allow developers to easily produce software that has  * latent hardware support for any users that have accelerators installed,  * without the developers themselves needing anything extra. I have only  * clipped the parts from the CryptoSwift header files that are (or seem)  * relevant to the CryptoSwift support code. This is simply to keep the file  * sizes reasonable. [Geoff]  */
 end_comment
 
 begin_ifdef
@@ -805,7 +805,7 @@ block|,
 name|cswift_rand_bytes
 block|,
 name|cswift_rand_status
-block|,     }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -836,7 +836,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This internal function is used by ENGINE_cswift() and possibly by the  * "dynamic" ENGINE support too */
+comment|/*  * This internal function is used by ENGINE_cswift() and possibly by the  * "dynamic" ENGINE support too  */
 end_comment
 
 begin_function
@@ -984,7 +984,7 @@ return|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_RSA
-comment|/* We know that the "PKCS1_SSLeay()" functions hook properly 	 * to the cswift-specific mod_exp and mod_exp_crt so we use 	 * those functions. NB: We don't use ENGINE_openssl() or 	 * anything "more generic" because something like the RSAref 	 * code may not hook properly, and if you own one of these 	 * cards then you have the right to do RSA operations on it 	 * anyway! */
+comment|/*      * We know that the "PKCS1_SSLeay()" functions hook properly to the      * cswift-specific mod_exp and mod_exp_crt so we use those functions. NB:      * We don't use ENGINE_openssl() or anything "more generic" because      * something like the RSAref code may not hook properly, and if you own      * one of these cards then you have the right to do RSA operations on it      * anyway!      */
 name|meth1
 operator|=
 name|RSA_PKCS1_SSLeay
@@ -1158,7 +1158,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is a process-global DSO handle used for loading and unloading  * the CryptoSwift library. NB: This is only set (or unset) during an  * init() or finish() call (reference counts permitting) and they're  * operating with global locks, so this should be thread-safe  * implicitly. */
+comment|/*  * This is a process-global DSO handle used for loading and unloading the  * CryptoSwift library. NB: This is only set (or unset) during an init() or  * finish() call (reference counts permitting) and they're operating with  * global locks, so this should be thread-safe implicitly.  */
 end_comment
 
 begin_decl_stmt
@@ -1172,7 +1172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These are the function pointers that are (un)set when the library has  * successfully (un)loaded. */
+comment|/*  * These are the function pointers that are (un)set when the library has  * successfully (un)loaded.  */
 end_comment
 
 begin_decl_stmt
@@ -1359,7 +1359,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* CryptoSwift library functions and mechanics - these are used by the  * higher-level functions further down. NB: As and where there's no  * error checking, take a look lower down where these functions are  * called, the checking and error handling is probably down there. */
+comment|/*  * CryptoSwift library functions and mechanics - these are used by the  * higher-level functions further down. NB: As and where there's no error  * checking, take a look lower down where these functions are called, the  * checking and error handling is probably down there.  */
 end_comment
 
 begin_comment
@@ -1627,7 +1627,7 @@ name|p_CSwift_ReleaseAccContext
 operator|=
 name|p4
 expr_stmt|;
-comment|/* Try and get a context - if not, we may have a DSO but no 	 * accelerator! */
+comment|/*      * Try and get a context - if not, we may have a DSO but no accelerator!      */
 if|if
 condition|(
 operator|!
@@ -1920,7 +1920,7 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
-comment|/* I need somewhere to store temporary serialised values for 	 * use with the CryptoSwift API calls. A neat cheat - I'll use 	 * BIGNUMs from the BN_CTX but access their arrays directly as 	 * byte arrays<grin>. This way I don't have to clean anything 	 * up. */
+comment|/*      * I need somewhere to store temporary serialised values for use with the      * CryptoSwift API calls. A neat cheat - I'll use BIGNUMs from the BN_CTX      * but access their arrays directly as byte arrays<grin>. This way I      * don't have to clean anything up.      */
 name|BIGNUM
 modifier|*
 name|modulus
@@ -2791,9 +2791,9 @@ operator|=
 name|SW_ALG_CRT
 expr_stmt|;
 comment|/************************************************************************/
-comment|/* 04/02/2003                                                           */
-comment|/* Modified by Frederic Giudicelli (deny-all.com) to overcome the       */
-comment|/* limitation of cswift with values not a multiple of 32                */
+comment|/*      * 04/02/2003      */
+comment|/*      * Modified by Frederic Giudicelli (deny-all.com) to overcome the      */
+comment|/*      * limitation of cswift with values not a multiple of 32      */
 comment|/************************************************************************/
 if|if
 condition|(
@@ -3518,7 +3518,7 @@ directive|else
 if|#
 directive|if
 literal|0
-block|def_rsa_method=RSA_PKCS1_RSAref();
+block|def_rsa_method = RSA_PKCS1_RSAref();
 else|#
 directive|else
 name|def_rsa_method
@@ -3668,7 +3668,7 @@ directive|else
 if|#
 directive|if
 literal|0
-block|def_rsa_method=RSA_PKCS1_RSAref();
+block|def_rsa_method = RSA_PKCS1_RSAref();
 else|#
 directive|else
 name|def_rsa_method
@@ -5367,9 +5367,9 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/************************************************************************/
-comment|/* 04/02/2003                                                           */
-comment|/* Modified by Frederic Giudicelli (deny-all.com) to overcome the       */
-comment|/* limitation of cswift with values not a multiple of 32                */
+comment|/*      * 04/02/2003      */
+comment|/*      * Modified by Frederic Giudicelli (deny-all.com) to overcome the      */
+comment|/*      * limitation of cswift with values not a multiple of 32      */
 comment|/************************************************************************/
 while|while
 condition|(
@@ -5399,7 +5399,7 @@ argument_list|(
 name|buf32
 argument_list|)
 expr_stmt|;
-comment|/* tell CryptoSwift how many bytes we want and where we want it. 		 * Note: - CryptoSwift cannot do more than 4096 bytes at a time. 		 *       - CryptoSwift can only do multiple of 32-bits. */
+comment|/*-          * tell CryptoSwift how many bytes we want and where we want it.          * Note: - CryptoSwift cannot do more than 4096 bytes at a time.          *       - CryptoSwift can only do multiple of 32-bits.          */
 name|swrc
 operator|=
 name|p_CSwift_SimpleRequest
@@ -5604,7 +5604,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This stuff is needed if this ENGINE is being compiled into a self-contained  * shared-library. */
+comment|/*  * This stuff is needed if this ENGINE is being compiled into a  * self-contained shared-library.  */
 end_comment
 
 begin_ifndef

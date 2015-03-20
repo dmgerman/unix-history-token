@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $LP: LPlib/source/LPdir_win.c,v 1.1 2004/06/14 10:07:56 _cvs_levitte Exp $ */
+comment|/*  * $LP: LPlib/source/LPdir_win.c,v 1.1 2004/06/14 10:07:56 _cvs_levitte Exp $  */
 end_comment
 
 begin_comment

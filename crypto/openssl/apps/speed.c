@@ -4,11 +4,11 @@ comment|/* apps/speed.c -*- mode:C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by   * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * The ECDH and ECDSA speed test software is originally written by   * Sumit Gupta of Sun Microsystems Laboratories.  *  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by  * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * The ECDH and ECDSA speed test software is originally written by  * Sumit Gupta of Sun Microsystems Laboratories.  *  */
 end_comment
 
 begin_comment
@@ -268,6 +268,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* FIXME */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -332,10 +336,6 @@ argument_list|(
 name|OPENSSL_SYS_VXWORKS
 argument_list|)
 end_if
-
-begin_comment
-comment|/* FIXME */
-end_comment
 
 begin_define
 define|#
@@ -444,7 +444,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Depending on the VMS version, the tms structure is perhaps defined.    The __TMS macro will show if it was.  If it wasn't defined, we should    undefine TIMES, since that tells the rest of the program how things    should be handled.				-- Richard Levitte */
+comment|/*  * Depending on the VMS version, the tms structure is perhaps defined. The  * __TMS macro will show if it was.  If it wasn't defined, we should undefine  * TIMES, since that tells the rest of the program how things should be  * handled.  -- Richard Levitte  */
 end_comment
 
 begin_if
@@ -960,7 +960,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The following "HZ" timing stuff should be sync'd up with the code in  * crypto/tmdiff.[ch]. That appears to try to do the same job, though I think  * this code is more up to date than libcrypto's so there may be features to  * migrate over first. This is used in two places further down AFAICS.   * The point is that nothing in openssl actually *uses* that tmdiff stuff, so  * either speed.c should be using it or it should go because it's obviously not  * useful enough. Anyone want to do a janitorial job on this?  */
+comment|/*  * The following "HZ" timing stuff should be sync'd up with the code in  * crypto/tmdiff.[ch]. That appears to try to do the same job, though I think  * this code is more up to date than libcrypto's so there may be features to  * migrate over first. This is used in two places further down AFAICS.  * The point is that nothing in openssl actually *uses* that tmdiff stuff, so  * either speed.c should be using it or it should go because it's obviously not  * useful enough. Anyone want to do a janitorial job on this?  */
 end_comment
 
 begin_comment
@@ -1746,7 +1746,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* for NetWare the best we can do is use clock() which returns the     * time, in hundredths of a second, since the NLM began executing    */
+comment|/*     * for NetWare the best we can do is use clock() which returns the time,     * in hundredths of a second, since the NLM began executing     */
 end_comment
 
 begin_function
@@ -3500,7 +3500,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_EC
-comment|/* We only test over the following curves as they are representative,  	 * To add tests over more curves, simply add the curve NID 	 * and curve name to the following arrays and increase the  	 * EC_NUM value accordingly.  	 */
+comment|/*      * We only test over the following curves as they are representative, To      * add tests over more curves, simply add the curve NID and curve name to      * the following arrays and increase the EC_NUM value accordingly.      */
 specifier|static
 name|unsigned
 name|int
@@ -4230,7 +4230,7 @@ expr_stmt|;
 name|j
 operator|--
 expr_stmt|;
-comment|/* Otherwise, -elapsed gets confused with 				   an algorithm. */
+comment|/* Otherwise, -elapsed gets confused with an                                  * algorithm. */
 block|}
 elseif|else
 if|if
@@ -4356,7 +4356,7 @@ expr_stmt|;
 name|j
 operator|--
 expr_stmt|;
-comment|/* Otherwise, -elapsed gets confused with 				   an algorithm. */
+comment|/* Otherwise, -elapsed gets confused with an                                  * algorithm. */
 block|}
 ifndef|#
 directive|ifndef
@@ -4417,7 +4417,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* j will be increased again further down.  We just 			   don't want speed to confuse an engine with an 			   algorithm, especially when none is given (which 			   means all of them should be run) */
+comment|/*              * j will be increased again further down.  We just don't want              * speed to confuse an engine with an algorithm, especially when              * none is given (which means all of them should be run)              */
 name|j
 operator|--
 expr_stmt|;
@@ -4504,7 +4504,7 @@ block|}
 name|j
 operator|--
 expr_stmt|;
-comment|/* Otherwise, -mr gets confused with 				   an algorithm. */
+comment|/* Otherwise, -mr gets confused with an                                  * algorithm. */
 block|}
 endif|#
 directive|endif
@@ -4532,7 +4532,7 @@ expr_stmt|;
 name|j
 operator|--
 expr_stmt|;
-comment|/* Otherwise, -mr gets confused with 				   an algorithm. */
+comment|/* Otherwise, -mr gets confused with an                                  * algorithm. */
 block|}
 elseif|else
 ifndef|#
@@ -5101,7 +5101,7 @@ if|#
 directive|if
 literal|0
 comment|/* was: #ifdef RSAref */
-elseif|if (strcmp(*argv,"rsaref") == 0)  			{ 			RSA_set_default_openssl_method(RSA_PKCS1_RSAref()); 			j--; 			} 		else
+elseif|if (strcmp(*argv, "rsaref") == 0) {             RSA_set_default_openssl_method(RSA_PKCS1_RSAref());             j--;         } else
 endif|#
 directive|endif
 ifndef|#
@@ -6890,7 +6890,8 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"ecdsap160 ecdsap192 ecdsap224 ecdsap256 ecdsap384 ecdsap521\n"
+literal|"ecdsap160 ecdsap192 ecdsap224 "
+literal|"ecdsap256 ecdsap384 ecdsap521\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -6923,7 +6924,8 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"ecdhp160  ecdhp192  ecdhp224  ecdhp256  ecdhp384  ecdhp521\n"
+literal|"ecdhp160  ecdhp192  ecdhp224 "
+literal|"ecdhp256  ecdhp384  ecdhp521\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -7135,7 +7137,8 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-elapsed        measure time in real time instead of CPU user time.\n"
+literal|"-elapsed        "
+literal|"measure time in real time instead of CPU user time.\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7147,7 +7150,8 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-engine e       use engine e, possibly a hardware device.\n"
+literal|"-engine e       "
+literal|"use engine e, possibly a hardware device.\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7156,21 +7160,24 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-evp e          use EVP e.\n"
+literal|"-evp e          "
+literal|"use EVP e.\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-decrypt        time decryption instead of encryption (only EVP).\n"
+literal|"-decrypt        "
+literal|"time decryption instead of encryption (only EVP).\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-mr             produce machine readable output.\n"
+literal|"-mr             "
+literal|"produce machine readable output.\n"
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -7180,7 +7187,8 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-multi n        run n benchmarks in parallel.\n"
+literal|"-multi n        "
+literal|"run n benchmarks in parallel.\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -7328,7 +7336,8 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"You have chosen to measure elapsed time instead of user CPU time.\n"
+literal|"You have chosen to measure elapsed time "
+literal|"instead of user CPU time.\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -7430,7 +7439,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|else 			{ 			BIO_printf(bio_err,mr ? "+RK:%d:" 				   : "Loaded RSA key, %d bit modulus and e= 0x", 				   BN_num_bits(rsa_key[i]->n)); 			BN_print(bio_err,rsa_key[i]->e); 			BIO_printf(bio_err,"\n"); 			}
+block|else {             BIO_printf(bio_err,                        mr ? "+RK:%d:"                        : "Loaded RSA key, %d bit modulus and e= 0x",                        BN_num_bits(rsa_key[i]->n));             BN_print(bio_err, rsa_key[i]->e);             BIO_printf(bio_err, "\n");         }
 endif|#
 directive|endif
 block|}
@@ -13313,7 +13322,7 @@ operator|->
 name|nid
 argument_list|)
 expr_stmt|;
-comment|/* -O3 -fschedule-insns messes up an 				 * optimization here!  names[D_EVP] 				 * somehow becomes NULL */
+comment|/*                  * -O3 -fschedule-insns messes up an optimization here!                  * names[D_EVP] somehow becomes NULL                  */
 name|print_message
 argument_list|(
 name|names
@@ -13740,7 +13749,7 @@ argument_list|,
 name|RSA_SECONDS
 argument_list|)
 expr_stmt|;
-comment|/*			RSA_blinding_on(rsa_key[j],NULL); */
+comment|/* RSA_blinding_on(rsa_key[j],NULL); */
 name|Time_F
 argument_list|(
 name|START
@@ -14152,8 +14161,8 @@ name|j
 index|]
 condition|)
 continue|continue;
-comment|/*		DSA_generate_key(dsa_key[j]); */
-comment|/*		DSA_sign_setup(dsa_key[j],NULL); */
+comment|/* DSA_generate_key(dsa_key[j]); */
+comment|/* DSA_sign_setup(dsa_key[j],NULL); */
 name|ret
 operator|=
 name|DSA_sign
@@ -15269,7 +15278,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* If field size is not more than 24 octets, then use SHA-1 hash of result; 				 * otherwise, use result (see section 4.8 of draft-ietf-tls-ecc-03.txt). 				 */
+comment|/*                  * If field size is not more than 24 octets, then use SHA-1                  * hash of result; otherwise, use result (see section 4.8 of                  * draft-ietf-tls-ecc-03.txt).                  */
 name|int
 name|field_size
 decl_stmt|,
@@ -18380,7 +18389,7 @@ argument_list|,
 literal|3
 argument_list|)
 condition|)
-block|{ 				}
+block|{             }
 else|else
 name|fprintf
 argument_list|(

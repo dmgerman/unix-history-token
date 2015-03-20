@@ -4,15 +4,15 @@ comment|/* ssl/s3_lib.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by   * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * ECC cipher suite support in OpenSSL originally written by  * Vipul Gupta and Sumit Gupta of Sun Microsystems Laboratories.  *  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by  * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * ECC cipher suite support in OpenSSL originally written by  * Vipul Gupta and Sumit Gupta of Sun Microsystems Laboratories.  *  */
 end_comment
 
 begin_include
@@ -129,7 +129,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 02 */
 block|{
@@ -164,7 +164,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 03 */
 block|{
@@ -197,7 +197,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 04 */
 block|{
@@ -230,7 +230,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 05 */
 block|{
@@ -263,7 +263,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 06 */
 block|{
@@ -296,7 +296,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 07 */
 ifndef|#
@@ -332,7 +332,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 endif|#
 directive|endif
@@ -367,7 +367,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 09 */
 block|{
@@ -400,7 +400,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 0A */
 block|{
@@ -435,7 +435,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* The DH ciphers */
 comment|/* Cipher 0B */
@@ -469,7 +469,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 0C */
 block|{
@@ -502,7 +502,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 0D */
 block|{
@@ -537,7 +537,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 0E */
 block|{
@@ -570,7 +570,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 0F */
 block|{
@@ -603,7 +603,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 10 */
 block|{
@@ -638,7 +638,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* The Ephemeral DH ciphers */
 comment|/* Cipher 11 */
@@ -672,7 +672,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 12 */
 block|{
@@ -705,7 +705,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 13 */
 block|{
@@ -740,7 +740,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 14 */
 block|{
@@ -773,7 +773,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 15 */
 block|{
@@ -806,7 +806,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 16 */
 block|{
@@ -841,7 +841,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 17 */
 block|{
@@ -874,7 +874,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 18 */
 block|{
@@ -907,7 +907,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 19 */
 block|{
@@ -940,7 +940,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 1A */
 block|{
@@ -973,7 +973,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 1B */
 block|{
@@ -1008,7 +1008,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Fortezza */
 comment|/* Cipher 1C */
@@ -1042,7 +1042,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 1D */
 block|{
@@ -1075,13 +1075,13 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 if|#
 directive|if
 literal|0
 comment|/* Cipher 1E */
-block|{ 	0, 	SSL3_TXT_FZA_DMS_RC4_SHA, 	SSL3_CK_FZA_DMS_RC4_SHA, 	SSL_kFZA|SSL_aFZA |SSL_RC4  |SSL_SHA1|SSL_SSLV3, 	SSL_NOT_EXP|SSL_MEDIUM, 	0, 	128, 	128, 	SSL_ALL_CIPHERS, 	SSL_ALL_STRENGTHS, 	},
+block|{      0,      SSL3_TXT_FZA_DMS_RC4_SHA,      SSL3_CK_FZA_DMS_RC4_SHA,      SSL_kFZA | SSL_aFZA | SSL_RC4 | SSL_SHA1 | SSL_SSLV3,      SSL_NOT_EXP | SSL_MEDIUM,      0,      128,      128,      SSL_ALL_CIPHERS,      SSL_ALL_STRENGTHS,      },
 endif|#
 directive|endif
 ifndef|#
@@ -1119,7 +1119,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 1F */
 block|{
@@ -1154,7 +1154,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 20 */
 block|{
@@ -1187,7 +1187,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 21 */
 block|{
@@ -1220,7 +1220,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 22 */
 block|{
@@ -1253,7 +1253,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 23 */
 block|{
@@ -1286,7 +1286,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 24 */
 block|{
@@ -1319,7 +1319,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 25 */
 block|{
@@ -1352,7 +1352,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 26 */
 block|{
@@ -1385,7 +1385,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 27 */
 block|{
@@ -1418,7 +1418,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 28 */
 block|{
@@ -1451,7 +1451,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 29 */
 block|{
@@ -1484,7 +1484,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 2A */
 block|{
@@ -1517,7 +1517,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 2B */
 block|{
@@ -1550,7 +1550,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 endif|#
 directive|endif
@@ -1589,7 +1589,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 30 */
 block|{
@@ -1624,7 +1624,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 31 */
 block|{
@@ -1659,7 +1659,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 32 */
 block|{
@@ -1694,7 +1694,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 33 */
 block|{
@@ -1729,7 +1729,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 34 */
 block|{
@@ -1764,7 +1764,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 35 */
 block|{
@@ -1799,7 +1799,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 36 */
 block|{
@@ -1834,7 +1834,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 37 */
 block|{
@@ -1869,7 +1869,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 38 */
 block|{
@@ -1904,7 +1904,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 39 */
 block|{
@@ -1939,7 +1939,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 3A */
 block|{
@@ -1974,7 +1974,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 ifndef|#
 directive|ifndef
@@ -2191,9 +2191,9 @@ if|#
 directive|if
 literal|0
 comment|/* Cipher 60 */
-block|{ 	    1, 	    TLS1_TXT_RSA_EXPORT1024_WITH_RC4_56_MD5, 	    TLS1_CK_RSA_EXPORT1024_WITH_RC4_56_MD5, 	    SSL_kRSA|SSL_aRSA|SSL_RC4|SSL_MD5|SSL_TLSV1, 	    SSL_EXPORT|SSL_EXP56, 	    0, 	    56, 	    128, 	    SSL_ALL_CIPHERS, 	    SSL_ALL_STRENGTHS, 	    },
+block|{      1,      TLS1_TXT_RSA_EXPORT1024_WITH_RC4_56_MD5,      TLS1_CK_RSA_EXPORT1024_WITH_RC4_56_MD5,      SSL_kRSA | SSL_aRSA | SSL_RC4 | SSL_MD5 | SSL_TLSV1,      SSL_EXPORT | SSL_EXP56,      0,      56,      128,      SSL_ALL_CIPHERS,      SSL_ALL_STRENGTHS,      },
 comment|/* Cipher 61 */
-block|{ 	    1, 	    TLS1_TXT_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5, 	    TLS1_CK_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5, 	    SSL_kRSA|SSL_aRSA|SSL_RC2|SSL_MD5|SSL_TLSV1, 	    SSL_EXPORT|SSL_EXP56, 	    0, 	    56, 	    128, 	    SSL_ALL_CIPHERS, 	    SSL_ALL_STRENGTHS, 	    },
+block|{      1,      TLS1_TXT_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5,      TLS1_CK_RSA_EXPORT1024_WITH_RC2_CBC_56_MD5,      SSL_kRSA | SSL_aRSA | SSL_RC2 | SSL_MD5 | SSL_TLSV1,      SSL_EXPORT | SSL_EXP56,      0,      56,      128,      SSL_ALL_CIPHERS,      SSL_ALL_STRENGTHS,      },
 endif|#
 directive|endif
 comment|/* Cipher 62 */
@@ -2227,7 +2227,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	    }
+block|,      }
 block|,
 comment|/* Cipher 63 */
 block|{
@@ -2260,7 +2260,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	    }
+block|,      }
 block|,
 comment|/* Cipher 64 */
 block|{
@@ -2293,7 +2293,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	    }
+block|,      }
 block|,
 comment|/* Cipher 65 */
 block|{
@@ -2326,7 +2326,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	    }
+block|,      }
 block|,
 comment|/* Cipher 66 */
 block|{
@@ -2605,7 +2605,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 97 */
 block|{
@@ -2639,7 +2639,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 98 */
 block|{
@@ -2673,7 +2673,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 99 */
 block|{
@@ -2706,7 +2706,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 9A */
 block|{
@@ -2739,7 +2739,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 comment|/* Cipher 9B */
 block|{
@@ -2772,7 +2772,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	}
+block|,      }
 block|,
 endif|#
 directive|endif
@@ -2809,7 +2809,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C002 */
 block|{
@@ -2840,7 +2840,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C003 */
 block|{
@@ -2873,7 +2873,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C004 */
 block|{
@@ -2906,7 +2906,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C005 */
 block|{
@@ -2939,7 +2939,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C006 */
 block|{
@@ -2970,7 +2970,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C007 */
 block|{
@@ -3001,7 +3001,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C008 */
 block|{
@@ -3034,7 +3034,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C009 */
 block|{
@@ -3067,7 +3067,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C00A */
 block|{
@@ -3100,7 +3100,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C00B */
 block|{
@@ -3131,7 +3131,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C00C */
 block|{
@@ -3162,7 +3162,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C00D */
 block|{
@@ -3195,7 +3195,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C00E */
 block|{
@@ -3228,7 +3228,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C00F */
 block|{
@@ -3261,7 +3261,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C010 */
 block|{
@@ -3292,7 +3292,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C011 */
 block|{
@@ -3323,7 +3323,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C012 */
 block|{
@@ -3356,7 +3356,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C013 */
 block|{
@@ -3389,7 +3389,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C014 */
 block|{
@@ -3422,7 +3422,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C015 */
 block|{
@@ -3453,7 +3453,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	    }
+block|,      }
 block|,
 comment|/* Cipher C016 */
 block|{
@@ -3484,7 +3484,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|, 	    }
+block|,      }
 block|,
 comment|/* Cipher C017 */
 block|{
@@ -3517,7 +3517,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C018 */
 block|{
@@ -3550,7 +3550,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 comment|/* Cipher C019 */
 block|{
@@ -3583,7 +3583,7 @@ block|,
 name|SSL_ALL_CIPHERS
 block|,
 name|SSL_ALL_STRENGTHS
-block|,             }
+block|,      }
 block|,
 endif|#
 directive|endif
@@ -3625,7 +3625,7 @@ block|,
 literal|4
 block|,
 name|ssl3_alert_code
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -3636,7 +3636,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 2 hours, the 24 hours mentioned in the SSLv3 spec 	 * is way too long for http, the cache would over fill */
+comment|/*      * 2 hours, the 24 hours mentioned in the SSLv3 spec is way too long for      * http, the cache would over fill      */
 return|return
 operator|(
 literal|60
@@ -5434,7 +5434,7 @@ comment|/* !OPENSSL_NO_TLSEXT */
 case|case
 name|SSL_CTRL_CHECK_PROTO_VERSION
 case|:
-comment|/* For library-internal use; checks that the current protocol 		 * is the highest enabled version (according to s->ctx->method, 		 * as version negotiation may have changed s->method). */
+comment|/*          * For library-internal use; checks that the current protocol is the          * highest enabled version (according to s->ctx->method, as version          * negotiation may have changed s->method).          */
 if|if
 condition|(
 name|s
@@ -5452,7 +5452,7 @@ condition|)
 return|return
 literal|1
 return|;
-comment|/* Apparently we're using a version-flexible SSL_METHOD 		 * (not at its highest protocol version). */
+comment|/*          * Apparently we're using a version-flexible SSL_METHOD (not at its          * highest protocol version).          */
 if|if
 condition|(
 name|s
@@ -6127,7 +6127,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/*break; */
+comment|/*          * break;          */
 case|case
 name|SSL_CTRL_SET_TMP_DH_CB
 case|:
@@ -6752,7 +6752,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function needs to check if the ciphers required are actually  * available */
+comment|/*  * This function needs to check if the ciphers required are actually  * available  */
 end_comment
 
 begin_function
@@ -7013,8 +7013,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* Do not set the compare functions, because this may lead to a 	 * reordering by "id". We want to keep the original ordering. 	 * We may pay a price in performance during sk_SSL_CIPHER_find(), 	 * but would have to pay with the price of sk_SSL_CIPHER_dup(). 	 */
-block|sk_SSL_CIPHER_set_cmp_func(srvr, ssl_cipher_ptr_id_cmp); 	sk_SSL_CIPHER_set_cmp_func(clnt, ssl_cipher_ptr_id_cmp);
+comment|/*      * Do not set the compare functions, because this may lead to a      * reordering by "id". We want to keep the original ordering. We may pay      * a price in performance during sk_SSL_CIPHER_find(), but would have to      * pay with the price of sk_SSL_CIPHER_dup().      */
+block|sk_SSL_CIPHER_set_cmp_func(srvr, ssl_cipher_ptr_id_cmp);     sk_SSL_CIPHER_set_cmp_func(clnt, ssl_cipher_ptr_id_cmp);
 endif|#
 directive|endif
 ifdef|#
@@ -7590,7 +7590,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ECDH
-comment|/* We should ask for fixed ECDH certificates only 	 * for SSL_kECDH (and not SSL_kECDHE) 	 */
+comment|/*      * We should ask for fixed ECDH certificates only for SSL_kECDH (and not      * SSL_kECDHE)      */
 if|if
 condition|(
 operator|(
@@ -7630,7 +7630,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ECDSA
-comment|/* ECDSA certs can be used with RSA cipher suites as well  	 * so we don't need to check for SSL_kECDH or SSL_kECDHE 	 */
+comment|/*      * ECDSA certs can be used with RSA cipher suites as well so we don't      * need to check for SSL_kECDH or SSL_kECDHE      */
 if|if
 condition|(
 name|s
@@ -7671,7 +7671,7 @@ block|{
 name|int
 name|ret
 decl_stmt|;
-comment|/* Don't do anything much if we have not done the handshake or 	 * we don't want to send messages :-) */
+comment|/*      * Don't do anything much if we have not done the handshake or we don't      * want to send messages :-)      */
 if|if
 condition|(
 operator|(
@@ -7737,7 +7737,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* our shutdown alert has been sent now, and if it still needs 	 	 * to be written, s->s3->alert_dispatch will be true */
+comment|/*          * our shutdown alert has been sent now, and if it still needs to be          * written, s->s3->alert_dispatch will be true          */
 if|if
 condition|(
 name|s
@@ -7787,7 +7787,7 @@ operator|-
 literal|1
 condition|)
 block|{
-comment|/* we only get to return -1 here the 2nd/Nth 			 * invocation, we must  have already signalled 			 * return 0 upon a previous invoation, 			 * return WANT_WRITE */
+comment|/*              * we only get to return -1 here the 2nd/Nth invocation, we must              * have already signalled return 0 upon a previous invoation,              * return WANT_WRITE              */
 return|return
 operator|(
 name|ret
@@ -7810,7 +7810,7 @@ name|SSL_RECEIVED_SHUTDOWN
 operator|)
 condition|)
 block|{
-comment|/* If we are waiting for a close from our peer, we are closed */
+comment|/*          * If we are waiting for a close from our peer, we are closed          */
 name|s
 operator|->
 name|method
@@ -7909,7 +7909,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|if (s->shutdown& SSL_SEND_SHUTDOWN) 		{ 		s->rwstate=SSL_NOTHING; 		return(0); 		}
+block|if (s->shutdown& SSL_SEND_SHUTDOWN) {         s->rwstate = SSL_NOTHING;         return (0);     }
 endif|#
 directive|endif
 name|clear_sys_error
@@ -7928,7 +7928,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/* This is an experimental flag that sends the 	 * last handshake message in the same packet as the first 	 * use data - used to see if it helps the TCP protocol during 	 * session-id reuse */
+comment|/*      * This is an experimental flag that sends the last handshake message in      * the same packet as the first use data - used to see if it helps the      * TCP protocol during session-id reuse      */
 comment|/* The second test is because the buffer may have been removed */
 if|if
 condition|(
@@ -8187,7 +8187,7 @@ literal|2
 operator|)
 condition|)
 block|{
-comment|/* ssl3_read_bytes decided to call s->handshake_func, which 		 * called ssl3_read_bytes to read handshake data. 		 * However, ssl3_read_bytes actually found application data 		 * and thinks that application data makes sense here; so disable 		 * handshake processing and try to read application data again. */
+comment|/*          * ssl3_read_bytes decided to call s->handshake_func, which called          * ssl3_read_bytes to read handshake data. However, ssl3_read_bytes          * actually found application data and thinks that application data          * makes sense here; so disable handshake processing and try to read          * application data again.          */
 name|s
 operator|->
 name|in_handshake
@@ -8406,7 +8406,7 @@ name|s
 argument_list|)
 condition|)
 block|{
-comment|/* if we are the server, and we have sent a 'RENEGOTIATE' message, we need to go to SSL_ST_ACCEPT. */
+comment|/*              * if we are the server, and we have sent a 'RENEGOTIATE'              * message, we need to go to SSL_ST_ACCEPT.              */
 comment|/* SSL_ST_ACCEPT */
 name|s
 operator|->

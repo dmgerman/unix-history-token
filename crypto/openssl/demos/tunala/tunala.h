@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Tunala ("Tunneler with a New Zealand accent")  *  * Written by Geoff Thorpe, but endorsed/supported by noone. Please use this is  * if it's useful or informative to you, but it's only here as a scratchpad for  * ideas about how you might (or might not) program with OpenSSL. If you deploy  * this is in a mission-critical environment, and have not read, understood,  * audited, and modified this code to your satisfaction, and the result is that  * all hell breaks loose and you are looking for a new employer, then it proves  * nothing except perhaps that Darwinism is alive and well. Let's just say, *I*  * don't use this in a mission-critical environment, so it would be stupid for  * anyone to assume that it is solid and/or tested enough when even its author  * doesn't place that much trust in it. You have been warned.  *  * With thanks to Cryptographic Appliances, Inc.  */
+comment|/*  * Tunala ("Tunneler with a New Zealand accent") Written by Geoff Thorpe,  * but endorsed/supported by noone. Please use this is if it's useful or  * informative to you, but it's only here as a scratchpad for ideas about how  * you might (or might not) program with OpenSSL. If you deploy this is in a  * mission-critical environment, and have not read, understood, audited, and  * modified this code to your satisfaction, and the result is that all hell  * breaks loose and you are looking for a new employer, then it proves  * nothing except perhaps that Darwinism is alive and well. Let's just say,  * *I* don't use this in a mission-critical environment, so it would be  * stupid for anyone to assume that it is solid and/or tested enough when  * even its author doesn't place that much trust in it. You have been warned.  * With thanks to Cryptographic Appliances, Inc.  */
 end_comment
 
 begin_ifndef
@@ -37,7 +37,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* We don't have autoconf, we have to set all of these unless a tweaked Makefile  * tells us not to ... */
+comment|/*  * We don't have autoconf, we have to set all of these unless a tweaked  * Makefile tells us not to ...  */
 end_comment
 
 begin_comment
@@ -347,7 +347,7 @@ name|OPENSSL_NO_BUFFER
 end_ifndef
 
 begin_comment
-comment|/* This is the generic "buffer" type that is used when feeding the  * state-machine. It's basically a FIFO with respect to the "adddata"&  * "takedata" type functions that operate on it. */
+comment|/*  * This is the generic "buffer" type that is used when feeding the  * state-machine. It's basically a FIFO with respect to the "adddata"&  * "takedata" type functions that operate on it.  */
 end_comment
 
 begin_define
@@ -373,7 +373,7 @@ name|unsigned
 name|int
 name|used
 decl_stmt|;
-comment|/* Statistical values - counts the total number of bytes read in and 	 * read out (respectively) since "buffer_init()" */
+comment|/*      * Statistical values - counts the total number of bytes read in and read      * out (respectively) since "buffer_init()"      */
 name|unsigned
 name|long
 name|total_in
@@ -401,7 +401,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Cleanup a buffer structure - presently not needed, but if buffer_t is  * converted to using dynamic allocation, this would be required - so should be  * called to protect against an explosion of memory leaks later if the change is  * made. */
+comment|/*  * Cleanup a buffer structure - presently not needed, but if buffer_t is  * converted to using dynamic allocation, this would be required - so should  * be called to protect against an explosion of memory leaks later if the  * change is made.  */
 end_comment
 
 begin_function_decl
@@ -524,7 +524,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Total bytes written to buffer */
+comment|/* Total bytes written to                                                 * buffer */
 end_comment
 
 begin_function_decl
@@ -540,7 +540,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Total bytes read from buffer */
+comment|/* Total bytes read from                                                  * buffer */
 end_comment
 
 begin_if
@@ -550,25 +550,25 @@ literal|0
 end_if
 
 begin_comment
-comment|/* Currently used only within buffer.c - better to expose only        * higher-level functions anyway */
+comment|/* Currently used only within buffer.c -                                  * better to expose only higher-level                                  * functions anyway */
 end_comment
 
 begin_comment
-comment|/* Add data to the tail of the buffer, returns the amount that was actually  * added (so, you need to check if return value is less than size) */
+comment|/*  * Add data to the tail of the buffer, returns the amount that was actually  * added (so, you need to check if return value is less than size)  */
 end_comment
 
 begin_comment
-unit|unsigned int buffer_adddata(buffer_t *buf, const unsigned char *ptr, 		unsigned int size);
-comment|/* Take data from the front of the buffer (and scroll the rest forward). If  * "ptr" is NULL, this just removes data off the front of the buffer. Return  * value is the amount actually removed (can be less than size if the buffer has  * too little data). */
+unit|unsigned int buffer_adddata(buffer_t * buf, const unsigned char *ptr,                             unsigned int size);
+comment|/*  * Take data from the front of the buffer (and scroll the rest forward). If  * "ptr" is NULL, this just removes data off the front of the buffer. Return  * value is the amount actually removed (can be less than size if the buffer  * has too little data).  */
 end_comment
 
 begin_comment
-unit|unsigned int buffer_takedata(buffer_t *buf, unsigned char *ptr, 		unsigned int size);
-comment|/* Flushes as much data as possible out of the "from" buffer into the "to"  * buffer. Return value is the amount moved. The amount moved can be restricted  * to a maximum by specifying "cap" - setting it to -1 means no limit. */
+unit|unsigned int buffer_takedata(buffer_t * buf, unsigned char *ptr,                              unsigned int size);
+comment|/*  * Flushes as much data as possible out of the "from" buffer into the "to"  * buffer. Return value is the amount moved. The amount moved can be  * restricted to a maximum by specifying "cap" - setting it to -1 means no  * limit.  */
 end_comment
 
 begin_endif
-unit|unsigned int buffer_tobuffer(buffer_t *to, buffer_t *from, int cap);
+unit|unsigned int buffer_tobuffer(buffer_t * to, buffer_t * from, int cap);
 endif|#
 directive|endif
 end_endif
@@ -712,6 +712,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Called if output should be sent too */
+end_comment
+
 begin_function_decl
 name|void
 name|cb_ssl_info_set_output
@@ -722,10 +726,6 @@ name|fp
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/* Called if output should be sent too */
-end_comment
 
 begin_function_decl
 name|int
@@ -964,7 +964,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Is used to handle closing conditions - namely when one side of the tunnel has  * closed but the other should finish flushing. */
+comment|/*  * Is used to handle closing conditions - namely when one side of the tunnel  * has closed but the other should finish flushing.  */
 end_comment
 
 begin_function_decl
@@ -1005,7 +1005,7 @@ name|NO_IP
 end_ifndef
 
 begin_comment
-comment|/* Initialise anything related to the networking. This includes blocking pesky  * SIGPIPE signals. */
+comment|/*  * Initialise anything related to the networking. This includes blocking  * pesky SIGPIPE signals.  */
 end_comment
 
 begin_function_decl
@@ -1018,7 +1018,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* ip is the 4-byte ip address (eg. 127.0.0.1 is {0x7F,0x00,0x00,0x01}), port is  * the port to listen on (host byte order), and the return value is the  * file-descriptor or -1 on error. */
+comment|/*  * ip is the 4-byte ip address (eg. 127.0.0.1 is {0x7F,0x00,0x00,0x01}), port  * is the port to listen on (host byte order), and the return value is the  * file-descriptor or -1 on error.  */
 end_comment
 
 begin_function_decl
@@ -1086,7 +1086,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Just does a string conversion on its own. NB: If accept_all_ip is non-zero,  * then the address string could be just a port. Ie. it's suitable for a  * listening address but not a connecting address. */
+comment|/*  * Just does a string conversion on its own. NB: If accept_all_ip is  * non-zero, then the address string could be just a port. Ie. it's suitable  * for a listening address but not a connecting address.  */
 end_comment
 
 begin_function_decl
@@ -1116,7 +1116,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Accepts an incoming connection through the listener. Assumes selects and  * what-not have deemed it an appropriate thing to do. */
+comment|/*  * Accepts an incoming connection through the listener. Assumes selects and  * what-not have deemed it an appropriate thing to do.  */
 end_comment
 
 begin_function_decl

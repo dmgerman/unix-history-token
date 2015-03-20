@@ -4,7 +4,7 @@ comment|/* NOCW */
 end_comment
 
 begin_comment
-comment|/* demos/spkigen.c  * 18-Mar-1997 - eay - A quick hack :-)   * 		version 1.1, it would probably help to save or load the  *		private key :-)  */
+comment|/*-  * demos/spkigen.c  * 18-Mar-1997 - eay - A quick hack :-)  *              version 1.1, it would probably help to save or load the  *              private key :-)  */
 end_comment
 
 begin_include
@@ -56,7 +56,7 @@ file|<openssl/pem.h>
 end_include
 
 begin_comment
-comment|/* The following two don't exist in SSLeay but they are in here as  * examples */
+comment|/*  * The following two don't exist in SSLeay but they are in here as examples  */
 end_comment
 
 begin_define
@@ -69,7 +69,7 @@ parameter_list|,
 name|x
 parameter_list|)
 define|\
-value|PEM_ASN1_write((int (*)())i2d_NETSCAPE_SPKI,"SPKI",fp,\ 			(char *)x,NULL,NULL,0,NULL)
+value|PEM_ASN1_write((int (*)())i2d_NETSCAPE_SPKI,"SPKI",fp,\                         (char *)x,NULL,NULL,0,NULL)
 end_define
 
 begin_function_decl
@@ -125,7 +125,7 @@ name|pkey
 parameter_list|,
 name|rsa
 parameter_list|)
-value|EVP_PKEY_assign((pkey),EVP_PKEY_RSA,\ 					(char *)(rsa))
+value|EVP_PKEY_assign((pkey),EVP_PKEY_RSA,\                                         (char *)(rsa))
 end_define
 
 begin_function
@@ -192,7 +192,7 @@ operator|<
 literal|2
 condition|)
 block|{
-comment|/* Generate an RSA key, the random state should have been seeded 		 * with lots of calls to RAND_seed(....) */
+comment|/*          * Generate an RSA key, the random state should have been seeded with          * lots of calls to RAND_seed(....)          */
 name|fprintf
 argument_list|(
 name|stderr
@@ -580,7 +580,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* While I have a   * X509_set_pubkey() and X509_REQ_set_pubkey(), SPKI_set_pubkey() does  * not currently exist so here is a version of it.  * The next SSLeay release will probably have  * X509_set_pubkey(),  * X509_REQ_set_pubkey() and  * NETSCAPE_SPKI_set_pubkey()  * as macros calling the same function */
+comment|/*  * While I have a X509_set_pubkey() and X509_REQ_set_pubkey(),  * SPKI_set_pubkey() does not currently exist so here is a version of it. The  * next SSLeay release will probably have X509_set_pubkey(),  * X509_REQ_set_pubkey() and NETSCAPE_SPKI_set_pubkey() as macros calling the  * same function  */
 end_comment
 
 begin_function

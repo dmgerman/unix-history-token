@@ -4,11 +4,11 @@ comment|/* crypto/bn/bn_exp.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -352,7 +352,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* For even modulus  m = 2^k*m_odd,  it might make sense to compute 	 * a^p mod m_odd  and  a^p mod 2^k  separately (with Montgomery 	 * exponentiation for the odd part), using appropriate exponent 	 * reductions, and combine the results using the CRT. 	 * 	 * For now, we use Montgomery only if the modulus is odd; otherwise, 	 * exponentiation using the reciprocal-based quick remaindering 	 * algorithm is used. 	 * 	 * (Timing obtained with expspeed.c [computations  a^p mod m 	 * where  a, p, m  are of the same length: 256, 512, 1024, 2048, 	 * 4096, 8192 bits], compared to the running time of the 	 * standard algorithm: 	 * 	 *   BN_mod_exp_mont   33 .. 40 %  [AMD K6-2, Linux, debug configuration]          *                     55 .. 77 %  [UltraSparc processor, but 	 *                                  debug-solaris-sparcv8-gcc conf.] 	 *  	 *   BN_mod_exp_recp   50 .. 70 %  [AMD K6-2, Linux, debug configuration] 	 *                     62 .. 118 % [UltraSparc, debug-solaris-sparcv8-gcc] 	 * 	 * On the Sparc, BN_mod_exp_recp was faster than BN_mod_exp_mont 	 * at 2048 and more bits, but at 512 and 1024 bits, it was 	 * slower even than the standard algorithm! 	 * 	 * "Real" timings [linux-elf, solaris-sparcv9-gcc configurations] 	 * should be obtained when the new Montgomery reduction code 	 * has been integrated into OpenSSL.) 	 */
+comment|/*-      * For even modulus  m = 2^k*m_odd,  it might make sense to compute      * a^p mod m_odd  and  a^p mod 2^k  separately (with Montgomery      * exponentiation for the odd part), using appropriate exponent      * reductions, and combine the results using the CRT.      *      * For now, we use Montgomery only if the modulus is odd; otherwise,      * exponentiation using the reciprocal-based quick remaindering      * algorithm is used.      *      * (Timing obtained with expspeed.c [computations  a^p mod m      * where  a, p, m  are of the same length: 256, 512, 1024, 2048,      * 4096, 8192 bits], compared to the running time of the      * standard algorithm:      *      *   BN_mod_exp_mont   33 .. 40 %  [AMD K6-2, Linux, debug configuration]      *                     55 .. 77 %  [UltraSparc processor, but      *                                  debug-solaris-sparcv8-gcc conf.]      *      *   BN_mod_exp_recp   50 .. 70 %  [AMD K6-2, Linux, debug configuration]      *                     62 .. 118 % [UltraSparc, debug-solaris-sparcv8-gcc]      *      * On the Sparc, BN_mod_exp_recp was faster than BN_mod_exp_mont      * at 2048 and more bits, but at 512 and 1024 bits, it was      * slower even than the standard algorithm!      *      * "Real" timings [linux-elf, solaris-sparcv9-gcc configurations]      * should be obtained when the new Montgomery reduction code      * has been integrated into OpenSSL.)      */
 define|#
 directive|define
 name|MONT_MUL_MOD
@@ -365,8 +365,8 @@ name|RECP_MUL_MOD
 ifdef|#
 directive|ifdef
 name|MONT_MUL_MOD
-comment|/* I have finally been able to take out this pre-condition of 	 * the top bit being set.  It was caused by an error in BN_div 	 * with negatives.  There was also another problem when for a^b%m 	 * a>= m.  eay 07-May-97 */
-comment|/*	if ((m->d[m->top-1]&BN_TBIT)&& BN_is_odd(m)) */
+comment|/*      * I have finally been able to take out this pre-condition of the top bit      * being set.  It was caused by an error in BN_div with negatives.  There      * was also another problem when for a^b%m a>= m.  eay 07-May-97      */
+comment|/* if ((m->d[m->top-1]&BN_TBIT)&& BN_is_odd(m)) */
 if|if
 condition|(
 name|BN_is_odd
@@ -893,7 +893,7 @@ name|start
 operator|=
 literal|1
 expr_stmt|;
-comment|/* This is used to avoid multiplication etc 			 * when there is only the value '1' in the 			 * buffer. */
+comment|/* This is used to avoid multiplication etc                                  * when there is only the value '1' in the                                  * buffer. */
 name|wvalue
 operator|=
 literal|0
@@ -977,7 +977,7 @@ operator|--
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* We now have wstart on a 'set' bit, we now need to work out 		 * how bit a window to do.  To do this we need to scan 		 * forward until the last set bit before the end of the 		 * window */
+comment|/*          * We now have wstart on a 'set' bit, we now need to work out how bit          * a window to do.  To do this we need to scan forward until the last          * set bit before the end of the window          */
 name|j
 operator|=
 name|wstart
@@ -1389,7 +1389,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* If this is not done, things will break in the montgomery 	 * part */
+comment|/*      * If this is not done, things will break in the montgomery part      */
 if|if
 condition|(
 name|in_mont
@@ -1636,7 +1636,7 @@ name|start
 operator|=
 literal|1
 expr_stmt|;
-comment|/* This is used to avoid multiplication etc 			 * when there is only the value '1' in the 			 * buffer. */
+comment|/* This is used to avoid multiplication etc                                  * when there is only the value '1' in the                                  * buffer. */
 name|wvalue
 operator|=
 literal|0
@@ -1728,7 +1728,7 @@ operator|--
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* We now have wstart on a 'set' bit, we now need to work out 		 * how bit a window to do.  To do this we need to scan 		 * forward until the last set bit before the end of the 		 * window */
+comment|/*          * We now have wstart on a 'set' bit, we now need to work out how bit          * a window to do.  To do this we need to scan forward until the last          * set bit before the end of the window          */
 name|j
 operator|=
 name|wstart
@@ -1950,7 +1950,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* BN_mod_exp_mont_consttime() stores the precomputed powers in a specific layout  * so that accessing any of these table values shows the same access pattern as far  * as cache lines are concerned.  The following functions are used to transfer a BIGNUM  * from/to that table. */
+comment|/*  * BN_mod_exp_mont_consttime() stores the precomputed powers in a specific  * layout so that accessing any of these table values shows the same access  * pattern as far as cache lines are concerned.  The following functions are  * used to transfer a BIGNUM from/to that table.  */
 end_comment
 
 begin_function
@@ -2190,7 +2190,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given a pointer value, compute the next address that is a cache line multiple. */
+comment|/*  * Given a pointer value, compute the next address that is a cache line  * multiple.  */
 end_comment
 
 begin_define
@@ -2205,7 +2205,7 @@ value|((unsigned char*)(x_) + (MOD_EXP_CTIME_MIN_CACHE_LINE_WIDTH - (((BN_ULONG)
 end_define
 
 begin_comment
-comment|/* This variant of BN_mod_exp_mont() uses fixed windows and the special  * precomputation memory layout to limit data-dependency to a minimum  * to protect secret exponents (cf. the hyper-threading timing attacks  * pointed out by Colin Percival,  * http://www.daemonology.net/hyperthreading-considered-harmful/)  */
+comment|/*  * This variant of BN_mod_exp_mont() uses fixed windows and the special  * precomputation memory layout to limit data-dependency to a minimum to  * protect secret exponents (cf. the hyper-threading timing attacks pointed  * out by Colin Percival,  * http://www.daemong-consideredperthreading-considered-harmful/)  */
 end_comment
 
 begin_function
@@ -2402,7 +2402,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* Allocate a montgomery context if it was not supplied by the caller. 	 * If this is not done, things will break in the montgomery part.  	 */
+comment|/*      * Allocate a montgomery context if it was not supplied by the caller. If      * this is not done, things will break in the montgomery part.      */
 if|if
 condition|(
 name|in_mont
@@ -2453,7 +2453,7 @@ argument_list|(
 name|bits
 argument_list|)
 expr_stmt|;
-comment|/* Allocate a buffer large enough to hold all of the pre-computed 	 * powers of a. 	 */
+comment|/*      * Allocate a buffer large enough to hold all of the pre-computed powers      * of a.      */
 name|numPowers
 operator|=
 literal|1
@@ -2515,7 +2515,7 @@ argument_list|,
 name|powerbufLen
 argument_list|)
 expr_stmt|;
-comment|/* Initialize the intermediate result. Do this early to save double conversion, 	 * once each for a^0 and intermediate result. 	 */
+comment|/*      * Initialize the intermediate result. Do this early to save double      * conversion, once each for a^0 and intermediate result.      */
 if|if
 condition|(
 operator|!
@@ -2673,7 +2673,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* If the window size is greater than 1, then calculate 	 * val[i=2..2^winsize-1]. Powers are computed as a*a^(i-1) 	 * (even powers could instead be computed as (a^(i/2))^2 	 * to use the slight performance advantage of sqr over mul). 	 */
+comment|/*      * If the window size is greater than 1, then calculate      * val[i=2..2^winsize-1]. Powers are computed as a*a^(i-1) (even powers      * could instead be computed as (a^(i/2))^2 to use the slight performance      * advantage of sqr over mul).      */
 if|if
 condition|(
 name|window
@@ -2736,7 +2736,7 @@ name|err
 goto|;
 block|}
 block|}
-comment|/* Adjust the number of bits up to a multiple of the window size.  	 * If the exponent length is not a multiple of the window size, then  	 * this pads the most significant bits with zeros to normalize the  	 * scanning loop to there's no special cases.  	 *  	 * * NOTE: Making the window size a power of two less than the native 	 * * word size ensures that the padded bits won't go past the last  	 * * word in the internal BIGNUM structure. Going past the end will  	 * * still produce the correct result, but causes a different branch  	 * * to be taken in the BN_is_bit_set function.  	 */
+comment|/*      * Adjust the number of bits up to a multiple of the window size. If the      * exponent length is not a multiple of the window size, then this pads      * the most significant bits with zeros to normalize the scanning loop to      * there's no special cases. * NOTE: Making the window size a power of      * two less than the native * word size ensures that the padded bits      * won't go past the last * word in the internal BIGNUM structure. Going      * past the end will * still produce the correct result, but causes a      * different branch * to be taken in the BN_is_bit_set function.      */
 name|bits
 operator|=
 operator|(
@@ -2760,7 +2760,7 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* The top bit of the window */
-comment|/* Scan the exponent one window at a time starting from the most  	 * significant bits.  	 */
+comment|/*      * Scan the exponent one window at a time starting from the most      * significant bits.      */
 while|while
 condition|(
 name|idx
@@ -2826,7 +2826,7 @@ name|idx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Fetch the appropriate pre-computed value from the pre-buf */
+comment|/*          * Fetch the appropriate pre-computed value from the pre-buf          */
 if|if
 condition|(
 operator|!
@@ -3043,11 +3043,11 @@ parameter_list|,
 name|m
 parameter_list|)
 define|\
-value|(BN_mul_word(r, (w))&& \ 		(
+value|(BN_mul_word(r, (w))&& \                 (
 comment|/* BN_ucmp(r, (m))< 0 ? 1 :*/
-value|\ 			(BN_mod(t, r, m, ctx)&& (swap_tmp = r, r = t, t = swap_tmp, 1))))
-comment|/* BN_MOD_MUL_WORD is only used with 'w' large, 		 * so the BN_ucmp test is probably more overhead 		 * than always using BN_mod (which uses BN_copy if 		 * a similar test returns true). */
-comment|/* We can use BN_mod and do not need BN_nnmod because our 		 * accumulator is never negative (the result of BN_mod does 		 * not depend on the sign of the modulus). 		 */
+value|\                         (BN_mod(t, r, m, ctx)&& (swap_tmp = r, r = t, t = swap_tmp, 1))))
+comment|/*      * BN_MOD_MUL_WORD is only used with 'w' large, so the BN_ucmp test is      * probably more overhead than always using BN_mod (which uses BN_copy if      * a similar test returns true).      */
+comment|/*      * We can use BN_mod and do not need BN_nnmod because our accumulator is      * never negative (the result of BN_mod does not depend on the sign of      * the modulus).      */
 define|#
 directive|define
 name|BN_TO_MONTGOMERY_WORD
@@ -3330,8 +3330,8 @@ operator|)
 operator|!=
 name|w
 condition|)
-comment|/* overflow */
 block|{
+comment|/* overflow */
 if|if
 condition|(
 name|r_is_one
@@ -3437,8 +3437,8 @@ operator|)
 operator|!=
 name|w
 condition|)
-comment|/* overflow */
 block|{
+comment|/* overflow */
 if|if
 condition|(
 name|r_is_one
@@ -3549,8 +3549,8 @@ if|if
 condition|(
 name|r_is_one
 condition|)
-comment|/* can happen only if a == 1*/
 block|{
+comment|/* can happen only if a == 1 */
 if|if
 condition|(
 operator|!
@@ -3938,7 +3938,7 @@ name|start
 operator|=
 literal|1
 expr_stmt|;
-comment|/* This is used to avoid multiplication etc 			 * when there is only the value '1' in the 			 * buffer. */
+comment|/* This is used to avoid multiplication etc                                  * when there is only the value '1' in the                                  * buffer. */
 name|wvalue
 operator|=
 literal|0
@@ -4021,7 +4021,7 @@ operator|--
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* We now have wstart on a 'set' bit, we now need to work out 		 * how bit a window to do.  To do this we need to scan 		 * forward until the last set bit before the end of the 		 * window */
+comment|/*          * We now have wstart on a 'set' bit, we now need to work out how bit          * a window to do.  To do this we need to scan forward until the last          * set bit before the end of the window          */
 name|j
 operator|=
 name|wstart

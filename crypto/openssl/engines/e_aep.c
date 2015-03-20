@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -868,42 +868,42 @@ literal|"Aep RSA method"
 block|,
 name|NULL
 block|,
-comment|/*rsa_pub_encrypt*/
+comment|/* rsa_pub_encrypt */
 name|NULL
 block|,
-comment|/*rsa_pub_decrypt*/
+comment|/* rsa_pub_decrypt */
 name|NULL
 block|,
-comment|/*rsa_priv_encrypt*/
+comment|/* rsa_priv_encrypt */
 name|NULL
 block|,
-comment|/*rsa_priv_encrypt*/
+comment|/* rsa_priv_encrypt */
 name|aep_rsa_mod_exp
 block|,
-comment|/*rsa_mod_exp*/
+comment|/* rsa_mod_exp */
 name|aep_mod_exp_mont
 block|,
-comment|/*bn_mod_exp*/
+comment|/* bn_mod_exp */
 name|NULL
 block|,
-comment|/*init*/
+comment|/* init */
 name|NULL
 block|,
-comment|/*finish*/
+comment|/* finish */
 literal|0
 block|,
-comment|/*flags*/
+comment|/* flags */
 name|NULL
 block|,
-comment|/*app_data*/
+comment|/* app_data */
 name|NULL
 block|,
-comment|/*rsa_sign*/
+comment|/* rsa_sign */
 name|NULL
 block|,
-comment|/*rsa_verify*/
+comment|/* rsa_verify */
 name|NULL
-comment|/*rsa_keygen*/
+comment|/* rsa_keygen */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1030,7 +1030,7 @@ name|RAND_METHOD
 name|aep_random
 init|=
 block|{
-comment|/*"AEP RAND method", */
+comment|/*      * "AEP RAND method",      */
 name|NULL
 block|,
 name|aep_rand
@@ -1042,7 +1042,7 @@ block|,
 name|aep_rand
 block|,
 name|aep_rand_status
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1052,7 +1052,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*Define an array of structures to hold connections*/
+comment|/*  * Define an array of structures to hold connections  */
 end_comment
 
 begin_decl_stmt
@@ -1066,7 +1066,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*Used to determine if this is a new process*/
+comment|/*  * Used to determine if this is a new process  */
 end_comment
 
 begin_decl_stmt
@@ -1144,7 +1144,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* This internal function is used by ENGINE_aep() and possibly by the  * "dynamic" ENGINE support too */
+comment|/*  * This internal function is used by ENGINE_aep() and possibly by the  * "dynamic" ENGINE support too  */
 end_comment
 
 begin_function
@@ -1307,7 +1307,7 @@ return|;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_RSA
-comment|/* We know that the "PKCS1_SSLeay()" functions hook properly 	 * to the aep-specific mod_exp and mod_exp_crt so we use 	 * those functions. NB: We don't use ENGINE_openssl() or 	 * anything "more generic" because something like the RSAref 	 * code may not hook properly, and if you own one of these 	 * cards then you have the right to do RSA operations on it 	 * anyway! */
+comment|/*      * We know that the "PKCS1_SSLeay()" functions hook properly to the      * aep-specific mod_exp and mod_exp_crt so we use those functions. NB: We      * don't use ENGINE_openssl() or anything "more generic" because      * something like the RSAref code may not hook properly, and if you own      * one of these cards then you have the right to do RSA operations on it      * anyway!      */
 name|meth1
 operator|=
 name|RSA_PKCS1_SSLeay
@@ -1350,7 +1350,7 @@ directive|endif
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DSA
-comment|/* Use the DSA_OpenSSL() method and just hook the mod_exp-ish 	 * bits. */
+comment|/*      * Use the DSA_OpenSSL() method and just hook the mod_exp-ish bits.      */
 name|meth2
 operator|=
 name|DSA_OpenSSL
@@ -1609,7 +1609,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* This is a process-global DSO handle used for loading and unloading  * the Aep library. NB: This is only set (or unset) during an  * init() or finish() call (reference counts permitting) and they're  * operating with global locks, so this should be thread-safe  * implicitly. */
+comment|/*  * This is a process-global DSO handle used for loading and unloading the Aep  * library. NB: This is only set (or unset) during an init() or finish() call  * (reference counts permitting) and they're operating with global locks, so  * this should be thread-safe implicitly.  */
 end_comment
 
 begin_decl_stmt
@@ -1623,7 +1623,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These are the static string constants for the DSO file name and the function  * symbol names to bind to.  */
+comment|/*  * These are the static string constants for the DSO file name and the  * function symbol names to bind to.  */
 end_comment
 
 begin_decl_stmt
@@ -1823,7 +1823,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* These are the function pointers that are (un)set when the library has  * successfully (un)loaded. */
+comment|/*  * These are the function pointers that are (un)set when the library has  * successfully (un)loaded.  */
 end_comment
 
 begin_decl_stmt
@@ -2673,7 +2673,7 @@ name|ctx
 argument_list|)
 return|;
 block|}
-comment|/*Grab a connection from the pool*/
+comment|/*      * Grab a connection from the pool      */
 name|rv
 operator|=
 name|aep_get_connection
@@ -2711,7 +2711,7 @@ name|ctx
 argument_list|)
 return|;
 block|}
-comment|/*To the card with the mod exp*/
+comment|/*      * To the card with the mod exp      */
 name|rv
 operator|=
 name|p_AEP_ModExp
@@ -2781,7 +2781,7 @@ name|ctx
 argument_list|)
 return|;
 block|}
-comment|/*Return the connection to the pool*/
+comment|/*      * Return the connection to the pool      */
 name|rv
 operator|=
 name|aep_return_connection
@@ -2877,7 +2877,7 @@ decl_stmt|;
 name|AEP_CONNECTION_HNDL
 name|hConnection
 decl_stmt|;
-comment|/*Grab a connection from the pool*/
+comment|/*      * Grab a connection from the pool      */
 name|rv
 operator|=
 name|aep_get_connection
@@ -2904,7 +2904,7 @@ return|return
 name|FAIL_TO_SW
 return|;
 block|}
-comment|/*To the card with the mod exp*/
+comment|/*      * To the card with the mod exp      */
 name|rv
 operator|=
 name|p_AEP_ModExpCrt
@@ -2981,7 +2981,7 @@ return|return
 name|FAIL_TO_SW
 return|;
 block|}
-comment|/*Return the connection to the pool*/
+comment|/*      * Return the connection to the pool      */
 name|rv
 operator|=
 name|aep_return_connection
@@ -3053,7 +3053,7 @@ argument_list|(
 name|CRYPTO_LOCK_RAND
 argument_list|)
 expr_stmt|;
-comment|/*Can the request be serviced with what's already in the buffer?*/
+comment|/*      * Can the request be serviced with what's already in the buffer?      */
 if|if
 condition|(
 name|len
@@ -3087,7 +3087,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/*If not the get another block of random bytes*/
+comment|/*          * If not the get another block of random bytes          */
 block|{
 name|CRYPTO_w_unlock
 argument_list|(
@@ -3353,7 +3353,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/*See if we have all the necessary bits for a crt*/
+comment|/*      * See if we have all the necessary bits for a crt      */
 if|if
 condition|(
 name|rsa
@@ -3876,7 +3876,7 @@ name|rv
 init|=
 name|AEP_R_OK
 decl_stmt|;
-comment|/*Get the current process id*/
+comment|/*      * Get the current process id      */
 name|pid_t
 name|curr_pid
 decl_stmt|;
@@ -3913,7 +3913,7 @@ argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*Check if this is the first time this is being called from the current 	  process*/
+comment|/*      * Check if this is the first time this is being called from the current      * process      */
 if|if
 condition|(
 name|recorded_pid
@@ -3921,16 +3921,16 @@ operator|!=
 name|curr_pid
 condition|)
 block|{
-comment|/*Remember our pid so we can check if we're in a new process*/
+comment|/*          * Remember our pid so we can check if we're in a new process          */
 name|recorded_pid
 operator|=
 name|curr_pid
 expr_stmt|;
-comment|/*Call Finalize to make sure we have not inherited some data 		  from a parent process*/
+comment|/*          * Call Finalize to make sure we have not inherited some data from a          * parent process          */
 name|p_AEP_Finalize
 argument_list|()
 expr_stmt|;
-comment|/*Initialise the AEP API*/
+comment|/*          * Initialise the AEP API          */
 name|rv
 operator|=
 name|p_AEP_Initialize
@@ -3960,7 +3960,7 @@ goto|goto
 name|end
 goto|;
 block|}
-comment|/*Set the AEP big num call back functions*/
+comment|/*          * Set the AEP big num call back functions          */
 name|rv
 operator|=
 name|p_AEP_SetBNCallBacks
@@ -4000,14 +4000,14 @@ block|}
 ifdef|#
 directive|ifdef
 name|AEPRAND
-comment|/*Reset the rand byte count*/
+comment|/*          * Reset the rand byte count          */
 name|rand_block_bytes
 operator|=
 literal|0
 expr_stmt|;
 endif|#
 directive|endif
-comment|/*Init the structures*/
+comment|/*          * Init the structures          */
 for|for
 control|(
 name|count
@@ -4041,7 +4041,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/*Open a connection*/
+comment|/*          * Open a connection          */
 name|rv
 operator|=
 name|p_AEP_OpenConnection
@@ -4094,7 +4094,7 @@ goto|goto
 name|end
 goto|;
 block|}
-comment|/*Check the existing connections to see if we can find a free one*/
+comment|/*      * Check the existing connections to see if we can find a free one      */
 for|for
 control|(
 name|count
@@ -4145,7 +4145,7 @@ name|end
 goto|;
 block|}
 block|}
-comment|/*If no connections available, we're going to have to try 	  to open a new one*/
+comment|/*      * If no connections available, we're going to have to try to open a new      * one      */
 for|for
 control|(
 name|count
@@ -4172,7 +4172,7 @@ operator|==
 name|NotConnected
 condition|)
 block|{
-comment|/*Open a connection*/
+comment|/*              * Open a connection              */
 name|rv
 operator|=
 name|p_AEP_OpenConnection
@@ -4256,7 +4256,7 @@ argument_list|(
 name|CRYPTO_LOCK_ENGINE
 argument_list|)
 expr_stmt|;
-comment|/*Find the connection item that matches this connection handle*/
+comment|/*      * Find the connection item that matches this connection handle      */
 for|for
 control|(
 name|count
@@ -4328,7 +4328,7 @@ argument_list|(
 name|CRYPTO_LOCK_ENGINE
 argument_list|)
 expr_stmt|;
-comment|/*Find the connection item that matches this connection handle*/
+comment|/*      * Find the connection item that matches this connection handle      */
 for|for
 control|(
 name|count
@@ -4546,7 +4546,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*BigNum call back functions, used to convert OpenSSL bignums into AEP bignums.   Note only 32bit Openssl build support*/
+comment|/*  * BigNum call back functions, used to convert OpenSSL bignums into AEP  * bignums. Note only 32bit Openssl build support  */
 end_comment
 
 begin_function
@@ -4566,7 +4566,7 @@ name|BIGNUM
 modifier|*
 name|bn
 decl_stmt|;
-comment|/*Cast the ArbBigNum pointer to our BIGNUM struct*/
+comment|/*      * Cast the ArbBigNum pointer to our BIGNUM struct      */
 name|bn
 operator|=
 operator|(
@@ -4589,7 +4589,7 @@ literal|3
 expr_stmt|;
 else|#
 directive|else
-comment|/*Size of the bignum in bytes is equal to the bn->top (no of 32 bit 	  words) multiplies by 4*/
+comment|/*      * Size of the bignum in bytes is equal to the bn->top (no of 32 bit      * words) multiplies by 4      */
 operator|*
 name|BigNumSize
 operator|=
@@ -4641,7 +4641,7 @@ name|i
 decl_stmt|;
 endif|#
 directive|endif
-comment|/*Cast the ArbBigNum pointer to our BIGNUM struct*/
+comment|/*      * Cast the ArbBigNum pointer to our BIGNUM struct      */
 name|bn
 operator|=
 operator|(
@@ -4666,7 +4666,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/*Must copy data into a (monotone) least significant byte first format 	  performing endian conversion if necessary*/
+comment|/*      * Must copy data into a (monotone) least significant byte first format      * performing endian conversion if necessary      */
 for|for
 control|(
 name|i
@@ -4760,7 +4760,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*Turn an AEP Big Num back to a user big num*/
+comment|/*  * Turn an AEP Big Num back to a user big num  */
 end_comment
 
 begin_function
@@ -4801,7 +4801,7 @@ operator|*
 operator|)
 name|ArbBigNum
 expr_stmt|;
-comment|/*Expand the result bn so that it can hold our big num. 	  Size is in bits*/
+comment|/*      * Expand the result bn so that it can hold our big num. Size is in bits      */
 name|bn_expand
 argument_list|(
 name|bn

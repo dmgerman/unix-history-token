@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
+comment|/* ====================================================================  * Copyright (c) 2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
-comment|/*---------------------------------------------   NIST AES Algorithm Validation Suite   Test Program    Donated to OpenSSL by:   V-ONE Corporation   20250 Century Blvd, Suite 300   Germantown, MD 20874   U.S.A.   ----------------------------------------------*/
+comment|/* --------------------------------------------   NIST AES Algorithm Validation Suite   Test Program    Donated to OpenSSL by:   V-ONE Corporation   20250 Century Blvd, Suite 300   Germantown, MD 20874   U.S.A.   ----------------------------------------------*/
 end_comment
 
 begin_include
@@ -137,7 +137,7 @@ value|0
 end_define
 
 begin_comment
-comment|/*-----------------------------------------------*/
+comment|/* ---------------------------------------------*/
 end_comment
 
 begin_function
@@ -166,10 +166,10 @@ name|char
 modifier|*
 name|iVec
 parameter_list|,
+comment|/* 0 = decrypt, 1 = encrypt */
 name|int
 name|dir
 parameter_list|,
-comment|/* 0 = decrypt, 1 = encrypt */
 name|unsigned
 name|char
 modifier|*
@@ -575,7 +575,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-----------------------------------------------*/
+comment|/* ---------------------------------------------*/
 end_comment
 
 begin_decl_stmt
@@ -657,15 +657,15 @@ comment|/*  Monte Carlo Tests          */
 end_comment
 
 begin_comment
-comment|/*-----------------------------*/
+comment|/* ---------------------------*/
 end_comment
 
 begin_comment
-comment|/*#define gb(a,b) (((a)[(b)/8]>> ((b)%8))&1)*/
+comment|/*  * #define gb(a,b) (((a)[(b)/8]>> ((b)%8))&1)  */
 end_comment
 
 begin_comment
-comment|/*#define sb(a,b,v) ((a)[(b)/8]=((a)[(b)/8]&~(1<< ((b)%8)))|(!!(v)<< ((b)%8)))*/
+comment|/*  * #define sb(a,b,v) ((a)[(b)/8]=((a)[(b)/8]&~(1<< ((b)%8)))|(!!(v)<<  * ((b)%8)))  */
 end_comment
 
 begin_define
@@ -1094,9 +1094,9 @@ index|]
 argument_list|,
 name|NULL
 argument_list|,
+comment|/* 0 = decrypt, 1 = encrypt */
 name|dir
 argument_list|,
-comment|/* 0 = decrypt, 1 = encrypt */
 name|ptext
 index|[
 name|j
@@ -1274,9 +1274,9 @@ index|[
 name|i
 index|]
 argument_list|,
+comment|/* 0 = decrypt, 1 = encrypt */
 name|dir
 argument_list|,
-comment|/* 0 = decrypt, 1 = encrypt */
 name|ptext
 index|[
 name|j
@@ -1452,9 +1452,9 @@ index|[
 name|i
 index|]
 argument_list|,
+comment|/* 0 = decrypt, 1 = encrypt */
 name|dir
 argument_list|,
-comment|/* 0 = decrypt, 1 = encrypt */
 name|ptext
 index|[
 name|j
@@ -1635,7 +1635,7 @@ if|#
 directive|if
 literal|0
 comment|/* compensate for wrong endianness of input file */
-block|if(i == 0) 			ptext[0][0]<<=7;
+block|if (i == 0)                         ptext[0][0]<<= 7;
 endif|#
 directive|endif
 name|ret
@@ -2724,7 +2724,7 @@ comment|/*================================================*/
 end_comment
 
 begin_comment
-comment|/*----------------------------   # Config info for v-one   # AESVS MMT test data for ECB   # State : Encrypt and Decrypt   # Key Length : 256   # Fri Aug 30 04:07:22 PM   ----------------------------*/
+comment|/* ---------------------------   # Config info for v-one   # AESVS MMT test data for ECB   # State : Encrypt and Decrypt   # Key Length : 256   # Fri Aug 30 04:07:22 PM   ----------------------------*/
 end_comment
 
 begin_function
@@ -3869,8 +3869,8 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* Monte Carlo Test */
 block|{
+comment|/* Monte Carlo Test */
 if|if
 condition|(
 name|do_mct
@@ -3922,9 +3922,9 @@ name|aKey
 argument_list|,
 name|iVec
 argument_list|,
+comment|/* 0 = decrypt, 1 = encrypt */
 name|dir
 argument_list|,
-comment|/* 0 = decrypt, 1 = encrypt */
 name|plaintext
 argument_list|,
 name|ciphertext
@@ -4075,8 +4075,8 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-comment|/* Monte Carlo Test */
 block|{
+comment|/* Monte Carlo Test */
 name|do_mct
 argument_list|(
 name|amode
@@ -4114,9 +4114,9 @@ name|aKey
 argument_list|,
 name|iVec
 argument_list|,
+comment|/* 0 = decrypt, 1 = encrypt */
 name|dir
 argument_list|,
-comment|/* 0 = decrypt, 1 = encrypt */
 name|plaintext
 argument_list|,
 name|ciphertext
@@ -4191,7 +4191,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* MCT already added terminating nl */
+comment|/* MCT already added                                                      * terminating nl */
 name|fputs
 argument_list|(
 name|ibuf
@@ -4232,7 +4232,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*--------------------------------------------------   Processes either a single file or    a set of files whose names are passed in a file.   A single file is specified as:     aes_test -f xxx.req   A set of files is specified as:     aes_test -d xxxxx.xxx   The default is: -d req.txt --------------------------------------------------*/
+comment|/* -------------------------------------------------   Processes either a single file or   a set of files whose names are passed in a file.   A single file is specified as:     aes_test -f xxx.req   A set of files is specified as:     aes_test -d xxxxx.xxx   The default is: -d req.txt --------------------------------------------------*/
 end_comment
 
 begin_function
@@ -4530,8 +4530,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* single file */
 block|{
+comment|/* single file */
 if|if
 condition|(
 name|VERBOSE

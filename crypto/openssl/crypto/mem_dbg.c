@@ -4,7 +4,7 @@ comment|/* crypto/mem_dbg.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -65,7 +65,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* The state changes to CRYPTO_MEM_CHECK_ON | CRYPTO_MEM_CHECK_ENABLE  * when the application asks for it (usually after library initialisation  * for which no book-keeping is desired).  *  * State CRYPTO_MEM_CHECK_ON exists only temporarily when the library  * thinks that certain allocations should not be checked (e.g. the data  * structures used for memory checking).  It is not suitable as an initial  * state: the library will unexpectedly enable memory checking when it  * executes one of those sections that want to disable checking  * temporarily.  *  * State CRYPTO_MEM_CHECK_ENABLE without ..._ON makes no sense whatsoever.  */
+comment|/*  * The state changes to CRYPTO_MEM_CHECK_ON | CRYPTO_MEM_CHECK_ENABLE when  * the application asks for it (usually after library initialisation for  * which no book-keeping is desired). State CRYPTO_MEM_CHECK_ON exists only  * temporarily when the library thinks that certain allocations should not be  * checked (e.g. the data structures used for memory checking).  It is not  * suitable as an initial state: the library will unexpectedly enable memory  * checking when it executes one of those sections that want to disable  * checking temporarily. State CRYPTO_MEM_CHECK_ENABLE without ..._ON makes  * no sense whatsoever.  */
 end_comment
 
 begin_decl_stmt
@@ -93,14 +93,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* hash-table of memory requests (address as key);                         * access requires MALLOC2 lock */
+comment|/* hash-table of memory requests (address as                                  * key); access requires MALLOC2 lock */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
 name|app_mem_info_st
-comment|/* For application-defined information (static C-string `info')  * to be displayed in memory leak list.  * Each thread has its own stack.  For applications, there is  *   CRYPTO_push_info("...")     to push an entry,  *   CRYPTO_pop_info()           to pop an entry,  *   CRYPTO_remove_all_info()    to pop all entries.  */
+comment|/*-  * For application-defined information (static C-string `info')  * to be displayed in memory leak list.  * Each thread has its own stack.  For applications, there is  *   CRYPTO_push_info("...")     to push an entry,  *   CRYPTO_pop_info()           to pop an entry,  *   CRYPTO_remove_all_info()    to pop all entries.  */
 block|{
 name|unsigned
 name|long
@@ -155,7 +155,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* hash-table with those app_mem_info_st's                           * that are at the top of their thread's stack                           * (with `thread' as key);                           * access requires MALLOC2 lock */
+comment|/* hash-table with those app_mem_info_st's                                  * that are at the top of their thread's                                  * stack (with `thread' as key); access                                  * requires MALLOC2 lock */
 end_comment
 
 begin_typedef
@@ -250,7 +250,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* num_disable> 0                                       *     iff                                       * mh_mode == CRYPTO_MEM_CHECK_ON (w/o ..._ENABLE)                                       */
+comment|/* num_disable> 0 iff mh_mode ==                                       * CRYPTO_MEM_CHECK_ON (w/o ..._ENABLE) */
 end_comment
 
 begin_decl_stmt
@@ -264,7 +264,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Valid iff num_disable> 0.                                             * CRYPTO_LOCK_MALLOC2 is locked                                             * exactly in this case (by the                                             * thread named in disabling_thread).                                             */
+comment|/* Valid iff num_disable> 0.                                             * CRYPTO_LOCK_MALLOC2 is locked                                             * exactly in this case (by the                                             * thread named in                                             * disabling_thread). */
 end_comment
 
 begin_function
@@ -338,7 +338,7 @@ condition|(
 name|mode
 condition|)
 block|{
-comment|/* for applications (not to be called while multiple threads 	 * use the library): */
+comment|/*          * for applications (not to be called while multiple threads use the          * library):          */
 case|case
 name|CRYPTO_MEM_CHECK_ON
 case|:
@@ -366,7 +366,7 @@ name|num_disable
 operator|=
 literal|0
 expr_stmt|;
-comment|/* should be true *before* MemCheck_stop is used, 		                    or there'll be a lot of confusion */
+comment|/* should be true *before* MemCheck_stop is                                  * used, or there'll be a lot of confusion */
 break|break;
 comment|/* switch off temporarily (for library-internal use): */
 case|case
@@ -380,6 +380,7 @@ operator|&
 name|CRYPTO_MEM_CHECK_ON
 condition|)
 block|{
+comment|/* otherwise we already have the MALLOC2 lock */
 if|if
 condition|(
 operator|!
@@ -392,15 +393,14 @@ name|CRYPTO_thread_id
 argument_list|()
 operator|)
 condition|)
-comment|/* otherwise we already have the MALLOC2 lock */
 block|{
-comment|/* Long-time lock CRYPTO_LOCK_MALLOC2 must not be claimed while 				 * we're holding CRYPTO_LOCK_MALLOC, or we'll deadlock if 				 * somebody else holds CRYPTO_LOCK_MALLOC2 (and cannot release 				 * it because we block entry to this function). 				 * Give them a chance, first, and then claim the locks in 				 * appropriate order (long-time lock first). 				 */
+comment|/*                  * Long-time lock CRYPTO_LOCK_MALLOC2 must not be claimed                  * while we're holding CRYPTO_LOCK_MALLOC, or we'll deadlock                  * if somebody else holds CRYPTO_LOCK_MALLOC2 (and cannot                  * release it because we block entry to this function). Give                  * them a chance, first, and then claim the locks in                  * appropriate order (long-time lock first).                  */
 name|CRYPTO_w_unlock
 argument_list|(
 name|CRYPTO_LOCK_MALLOC
 argument_list|)
 expr_stmt|;
-comment|/* Note that after we have waited for CRYPTO_LOCK_MALLOC2 				 * and CRYPTO_LOCK_MALLOC, we'll still be in the right 				 * "case" and "if" branch because MemCheck_start and 				 * MemCheck_stop may never be used while there are multiple 				 * OpenSSL threads. */
+comment|/*                  * Note that after we have waited for CRYPTO_LOCK_MALLOC2 and                  * CRYPTO_LOCK_MALLOC, we'll still be in the right "case" and                  * "if" branch because MemCheck_start and MemCheck_stop may                  * never be used while there are multiple OpenSSL threads.                  */
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_MALLOC2
@@ -442,8 +442,8 @@ if|if
 condition|(
 name|num_disable
 condition|)
-comment|/* always true, or something is going wrong */
 block|{
+comment|/* always true, or something is going wrong */
 name|num_disable
 operator|--
 expr_stmt|;
@@ -1281,8 +1281,8 @@ condition|(
 name|is_MemCheck_on
 argument_list|()
 condition|)
-comment|/* _must_ be true, or something went severely wrong */
 block|{
+comment|/* _must_ be true, or something went severely                                  * wrong */
 name|MemCheck_off
 argument_list|()
 expr_stmt|;
@@ -1326,8 +1326,8 @@ condition|(
 name|is_MemCheck_on
 argument_list|()
 condition|)
-comment|/* _must_ be true */
 block|{
+comment|/* _must_ be true */
 name|MemCheck_off
 argument_list|()
 expr_stmt|;
@@ -1461,7 +1461,7 @@ expr_stmt|;
 name|MemCheck_on
 argument_list|()
 expr_stmt|;
-comment|/* release MALLOC2 lock 				                * if num_disabled drops to 0 */
+comment|/* release MALLOC2 lock if num_disabled drops                                  * to 0 */
 return|return;
 block|}
 if|if
@@ -1735,7 +1735,7 @@ label|:
 name|MemCheck_on
 argument_list|()
 expr_stmt|;
-comment|/* release MALLOC2 lock 			                * if num_disabled drops to 0 */
+comment|/* release MALLOC2 lock if num_disabled drops                                  * to 0 */
 block|}
 break|break;
 block|}
@@ -1871,7 +1871,7 @@ block|}
 name|MemCheck_on
 argument_list|()
 expr_stmt|;
-comment|/* release MALLOC2 lock 			                * if num_disabled drops to 0 */
+comment|/* release MALLOC2 lock if num_disabled drops                                  * to 0 */
 block|}
 break|break;
 case|case
@@ -2078,7 +2078,7 @@ block|}
 name|MemCheck_on
 argument_list|()
 expr_stmt|;
-comment|/* release MALLOC2 lock 			                * if num_disabled drops to 0 */
+comment|/* release MALLOC2 lock if num_disabled drops                                  * to 0 */
 block|}
 break|break;
 block|}
@@ -2652,7 +2652,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Make sure that, if we found no leaks, memory-leak debugging itself 		 * does not introduce memory leaks (which might irritate 		 * external debugging tools). 		 * (When someone enables leak checking, but does not call 		 * this function, we declare it to be their fault.) 		 * 		 * XXX    This should be in CRYPTO_mem_leaks_cb, 		 * and CRYPTO_mem_leaks should be implemented by 		 * using CRYPTO_mem_leaks_cb. 		 * (Also their should be a variant of lh_doall_arg 		 * that takes a function pointer instead of a void *; 		 * this would obviate the ugly and illegal 		 * void_fn_to_char kludge in CRYPTO_mem_leaks_cb. 		 * Otherwise the code police will come and get us.) 		 */
+comment|/*          * Make sure that, if we found no leaks, memory-leak debugging itself          * does not introduce memory leaks (which might irritate external          * debugging tools). (When someone enables leak checking, but does not          * call this function, we declare it to be their fault.) XXX This          * should be in CRYPTO_mem_leaks_cb, and CRYPTO_mem_leaks should be          * implemented by using CRYPTO_mem_leaks_cb. (Also their should be a          * variant of lh_doall_arg that takes a function pointer instead of a          * void *; this would obviate the ugly and illegal void_fn_to_char          * kludge in CRYPTO_mem_leaks_cb. Otherwise the code police will come          * and get us.)          */
 name|int
 name|old_mh_mode
 decl_stmt|;
@@ -2661,7 +2661,7 @@ argument_list|(
 name|CRYPTO_LOCK_MALLOC
 argument_list|)
 expr_stmt|;
-comment|/* avoid deadlock when lh_free() uses CRYPTO_dbg_free(), 		 * which uses CRYPTO_is_mem_check_on */
+comment|/*          * avoid deadlock when lh_free() uses CRYPTO_dbg_free(), which uses          * CRYPTO_is_mem_check_on          */
 name|old_mh_mode
 operator|=
 name|mh_mode
@@ -2765,7 +2765,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-comment|/* Need to turn off memory checking when allocated BIOs ... especially 	 * as we're creating them at a time when we're trying to check we've not 	 * left anything un-free()'d!! */
+comment|/*      * Need to turn off memory checking when allocated BIOs ... especially as      * we're creating them at a time when we're trying to check we've not      * left anything un-free()'d!!      */
 name|MemCheck_off
 argument_list|()
 expr_stmt|;
@@ -2814,11 +2814,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* FIXME: We really don't allow much to the callback.  For example, it has    no chance of reaching the info stack for the item it processes.  Should    it really be this way?  -- Richard Levitte */
+comment|/*  * FIXME: We really don't allow much to the callback.  For example, it has no  * chance of reaching the info stack for the item it processes.  Should it  * really be this way? -- Richard Levitte  */
 end_comment
 
 begin_comment
-comment|/* NB: The prototypes have been typedef'd to CRYPTO_MEM_LEAK_CB inside crypto.h  * If this code is restructured, remove the callback type if it is no longer  * needed. -- Geoff Thorpe */
+comment|/*  * NB: The prototypes have been typedef'd to CRYPTO_MEM_LEAK_CB inside  * crypto.h If this code is restructured, remove the callback type if it is  * no longer needed. -- Geoff Thorpe  */
 end_comment
 
 begin_function

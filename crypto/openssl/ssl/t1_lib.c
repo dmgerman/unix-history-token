@@ -4,7 +4,7 @@ comment|/* ssl/t1_lib.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -130,7 +130,7 @@ block|,
 name|TLS_MD_SERVER_FINISH_CONST_SIZE
 block|,
 name|tls1_alert_code
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -141,7 +141,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|/* 2 hours, the 24 hours mentioned in the TLSv1 spec 	 * is way too long for http, the cache would over fill */
+comment|/*      * 2 hours, the 24 hours mentioned in the TLSv1 spec is way too long for      * http, the cache would over fill      */
 return|return
 operator|(
 literal|60
@@ -253,7 +253,7 @@ literal|0
 end_if
 
 begin_endif
-unit|long tls1_ctrl(SSL *s, int cmd, long larg, char *parg) 	{ 	return(0); 	}  long tls1_callback_ctrl(SSL *s, int cmd, void *(*fp)()) 	{ 	return(0); 	}
+unit|long tls1_ctrl(SSL *s, int cmd, long larg, char *parg) {     return (0); }  long tls1_callback_ctrl(SSL *s, int cmd, void *(*fp) ()) {     return (0); }
 endif|#
 directive|endif
 end_endif
@@ -347,7 +347,7 @@ decl_stmt|;
 name|long
 name|lenmax
 decl_stmt|;
-comment|/* check for enough space. 		   4 for the servername type and entension length 		   2 for servernamelist length 		   1 for the hostname type 		   2 for hostname length 		   + hostname length  		*/
+comment|/*-          * check for enough space.          * 4 for the servername type and entension length          * 2 for servernamelist length          * 1 for the hostname type          * 2 for hostname length          * + hostname length          */
 if|if
 condition|(
 operator|(
@@ -592,7 +592,7 @@ name|ticklen
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Check for enough room 2 for extension type, 2 for len  		 * rest for ticket   		 */
+comment|/*          * Check for enough room 2 for extension type, 2 for len rest for          * ticket          */
 if|if
 condition|(
 name|limit
@@ -982,7 +982,7 @@ name|ret
 init|=
 name|p
 decl_stmt|;
-comment|/* don't add extensions for SSLv3, unless doing secure renegotiation */
+comment|/*      * don't add extensions for SSLv3, unless doing secure renegotiation      */
 if|if
 condition|(
 name|s
@@ -1289,7 +1289,7 @@ name|OPENSSL_NO_EC
 end_ifndef
 
 begin_comment
-comment|/* ssl_check_for_safari attempts to fingerprint Safari using OS X  * SecureTransport using the TLS extension block in |d|, of length |n|.  * Safari, since 10.6, sends exactly these extensions, in this order:  *   SNI,  *   elliptic_curves  *   ec_point_formats  *  * We wish to fingerprint Safari because they broke ECDHE-ECDSA support in 10.8,  * but they advertise support. So enabling ECDHE-ECDSA ciphers breaks them.  * Sadly we cannot differentiate 10.6, 10.7 and 10.8.4 (which work), from  * 10.8..10.8.3 (which don't work).  */
+comment|/*-  * ssl_check_for_safari attempts to fingerprint Safari using OS X  * SecureTransport using the TLS extension block in |d|, of length |n|.  * Safari, since 10.6, sends exactly these extensions, in this order:  *   SNI,  *   elliptic_curves  *   ec_point_formats  *  * We wish to fingerprint Safari because they broke ECDHE-ECDSA support in 10.8,  * but they advertise support. So enabling ECDHE-ECDSA ciphers breaks them.  * Sadly we cannot differentiate 10.6, 10.7 and 10.8.4 (which work), from  * 10.8..10.8.3 (which don't work).  */
 end_comment
 
 begin_function
@@ -1819,7 +1819,7 @@ operator|->
 name|tlsext_debug_arg
 argument_list|)
 expr_stmt|;
-comment|/* The servername extension is treated as follows:     - Only the hostname type is supported with a maximum length of 255.    - The servername is rejected if too long or if it contains zeros,      in which case an fatal alert is generated.    - The servername field is maintained together with the session cache.    - When a session is resumed, the servername call back invoked in order      to allow the application to position itself to the right context.     - The servername is acknowledged if it is new for a session or when       it is identical to a previously used for the same session.       Applications can control the behaviour.  They can at any time      set a 'desirable' servername for a new SSL object. This can be the      case for example with HTTPS when a Host: header field is received and      a renegotiation is requested. In this case, a possible servername      presented in the new client hello is only acknowledged if it matches      the value of the Host: field.     - Applications must  use SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION      if they provide for changing an explicit servername context for the session,      i.e. when the session has been established with a servername extension.     - On session reconnect, the servername extension may be absent.   */
+comment|/*-  * The servername extension is treated as follows:  *  * - Only the hostname type is supported with a maximum length of 255.  * - The servername is rejected if too long or if it contains zeros,  *   in which case an fatal alert is generated.  * - The servername field is maintained together with the session cache.  * - When a session is resumed, the servername call back invoked in order  *   to allow the application to position itself to the right context.  * - The servername is acknowledged if it is new for a session or when  *   it is identical to a previously used for the same session.  *   Applications can control the behaviour.  They can at any time  *   set a 'desirable' servername for a new SSL object. This can be the  *   case for example with HTTPS when a Host: header field is received and  *   a renegotiation is requested. In this case, a possible servername  *   presented in the new client hello is only acknowledged if it matches  *   the value of the Host: field.  * - Applications must  use SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION  *   if they provide for changing an explicit servername context for the  *   session, i.e. when the session has been established with a servername  *   extension.  * - On session reconnect, the servername extension may be absent.  *  */
 if|if
 condition|(
 name|type
@@ -2569,7 +2569,7 @@ return|;
 block|}
 block|}
 block|}
-comment|/* We don't know what to do with any other type  			 	* so ignore it.  			 	*/
+comment|/*              * We don't know what to do with any other type * so ignore it.              */
 else|else
 name|s
 operator|->
@@ -2890,7 +2890,7 @@ operator|!=
 name|DTLS1_VERSION
 condition|)
 block|{
-comment|/* MUST be empty and only sent if we've requested 			 * a status request message. 			 */
+comment|/*              * MUST be empty and only sent if we've requested a status              * request message.              */
 if|if
 condition|(
 operator|(
@@ -3062,7 +3062,7 @@ name|data
 expr_stmt|;
 name|ri_check
 label|:
-comment|/* Determine if we need to see RI. Strictly speaking if we want to 	 * avoid an attack we should *always* see RI even on initial server 	 * hello because the client doesn't see any renegotiation during an 	 * attack. However this would mean we could not connect to any server 	 * which doesn't support RI so for the immediate future tolerate RI 	 * absence on initial connect only. 	 */
+comment|/*      * Determine if we need to see RI. Strictly speaking if we want to avoid      * an attack we should *always* see RI even on initial server hello      * because the client doesn't see any renegotiation during an attack.      * However this would mean we could not connect to any server which      * doesn't support RI so for the immediate future tolerate RI absence on      * initial connect only.      */
 if|if
 condition|(
 operator|!
@@ -3271,7 +3271,7 @@ decl_stmt|;
 name|int
 name|al
 decl_stmt|;
-comment|/* If status request then ask callback what to do.  	 * Note: this must be called after servername callbacks in case   	 * the certificate has changed, and must be called after the cipher 	 * has been chosen because this may influence which certificate is sent  	 */
+comment|/*      * If status request then ask callback what to do. Note: this must be      * called after servername callbacks in case the certificate has      * changed, and must be called after the cipher has been chosen because      * this may influence which certificate is sent      */
 if|if
 condition|(
 name|s
@@ -3324,7 +3324,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* Set current certificate to one we will use so 		 * SSL_get_certificate et al can pick it up. 		 */
+comment|/*          * Set current certificate to one we will use so SSL_get_certificate          * et al can pick it up.          */
 name|s
 operator|->
 name|cert
@@ -3552,7 +3552,7 @@ operator|->
 name|tlsext_servername_arg
 argument_list|)
 expr_stmt|;
-comment|/* If we've requested certificate status and we wont get one  	 * tell the callback  	 */
+comment|/*      * If we've requested certificate status and we wont get one tell the      * callback      */
 if|if
 condition|(
 operator|(
@@ -3581,7 +3581,7 @@ block|{
 name|int
 name|r
 decl_stmt|;
-comment|/* Set resp to NULL, resplen to -1 so callback knows  		 * there is no response.  		 */
+comment|/*          * Set resp to NULL, resplen to -1 so callback knows there is no          * response.          */
 if|if
 condition|(
 name|s
@@ -3714,7 +3714,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Since the server cache lookup is done early on in the processing of client  * hello and other operations depend on the result we need to handle any TLS  * session ticket extension at the same time.  */
+comment|/*  * Since the server cache lookup is done early on in the processing of client  * hello and other operations depend on the result we need to handle any TLS  * session ticket extension at the same time.  */
 end_comment
 
 begin_function
@@ -3760,7 +3760,7 @@ name|unsigned
 name|short
 name|i
 decl_stmt|;
-comment|/* If tickets disabled behave as if no ticket present  	 * to permit stateful resumption.  	 */
+comment|/*      * If tickets disabled behave as if no ticket present to permit stateful      * resumption.      */
 if|if
 condition|(
 name|SSL_get_options
@@ -3953,7 +3953,7 @@ operator|==
 name|TLSEXT_TYPE_session_ticket
 condition|)
 block|{
-comment|/* If zero length note client will accept a ticket  			 * and indicate cache miss to trigger full handshake  			 */
+comment|/*              * If zero length note client will accept a ticket and indicate              * cache miss to trigger full handshake              */
 if|if
 condition|(
 name|size
@@ -4230,7 +4230,7 @@ literal|16
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Attempt to process session ticket, first conduct sanity and  	 * integrity checks on ticket.  	 */
+comment|/*      * Attempt to process session ticket, first conduct sanity and integrity      * checks on ticket.      */
 name|mlen
 operator|=
 name|HMAC_size
@@ -4426,7 +4426,7 @@ condition|(
 name|sess
 condition|)
 block|{
-comment|/* The session ID if non-empty is used by some clients to  		 * detect that the ticket has been accepted. So we copy it to  		 * the session structure. If it is empty set length to zero  		 * as required by standard.  		 */
+comment|/*          * The session ID if non-empty is used by some clients to detect that          * the ticket has been accepted. So we copy it to the session          * structure. If it is empty set length to zero as required by          * standard.          */
 if|if
 condition|(
 name|sesslen
@@ -4463,7 +4463,7 @@ return|return
 literal|1
 return|;
 block|}
-comment|/* If session decrypt failure indicate a cache miss and set state to  	 * send a new ticket  	 */
+comment|/*      * If session decrypt failure indicate a cache miss and set state to send      * a new ticket      */
 name|tickerr
 label|:
 name|s

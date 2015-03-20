@@ -4,19 +4,19 @@ comment|/* apps/s_server.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by   * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  * ECC cipher suite support in OpenSSL originally developed by  * SUN MICROSYSTEMS, INC., and contributed to the OpenSSL project.  */
 end_comment
 
 begin_comment
-comment|/* Until the key-gen callbacks are modified to use newer prototypes, we allow  * deprecated functions for openssl-internal code */
+comment|/*  * Until the key-gen callbacks are modified to use newer prototypes, we allow  * deprecated functions for openssl-internal code  */
 end_comment
 
 begin_ifdef
@@ -89,6 +89,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* conflicts with winsock2 stuff on netware */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -98,10 +102,6 @@ argument_list|(
 name|OPENSSL_SYS_NETWARE
 argument_list|)
 end_if
-
-begin_comment
-comment|/* conflicts with winsock2 stuff on netware */
-end_comment
 
 begin_include
 include|#
@@ -115,7 +115,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* With IPv6, it looks like Digital has mixed up the proper order of    recursive header file inclusion, resulting in the compiler complaining    that u_int isn't defined, but only if _POSIX_C_SOURCE is defined, which    is needed to have fileno() declared correctly...  So let's define u_int */
+comment|/*  * With IPv6, it looks like Digital has mixed up the proper order of  * recursive header file inclusion, resulting in the compiler complaining  * that u_int isn't defined, but only if _POSIX_C_SOURCE is defined, which is  * needed to have fileno() declared correctly...  So let's define u_int  */
 end_comment
 
 begin_if
@@ -265,7 +265,7 @@ name|OPENSSL_SYS_WINCE
 end_ifdef
 
 begin_comment
-comment|/* Windows CE incorrectly defines fileno as returning void*, so to avoid problems below... */
+comment|/*  * Windows CE incorrectly defines fileno as returning void*, so to avoid  * problems below...  */
 end_comment
 
 begin_ifdef
@@ -725,7 +725,7 @@ block|,
 literal|0xE8
 block|,
 literal|0x33
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -738,7 +738,7 @@ index|[]
 init|=
 block|{
 literal|0x02
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1439,7 +1439,6 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|" -crl_check    - check the peer certificate has not been revoked by its CA.\n"
-expr|\
 literal|"                 The CRL(s) are appended to the certificate file\n"
 argument_list|)
 expr_stmt|;
@@ -1448,9 +1447,7 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|" -crl_check_all - check the peer certificate has not been revoked by its CA\n"
-expr|\
 literal|"                 or any other CRL in the CA chain. CRL(s) are appened to the\n"
-expr|\
 literal|"                 the certificate file.\n"
 argument_list|)
 expr_stmt|;
@@ -1548,9 +1545,7 @@ argument_list|(
 name|bio_err
 argument_list|,
 literal|" -named_curve arg  - Elliptic curve name to use for ephemeral ECDH keys.\n"
-expr|\
 literal|"                 Use \"openssl ecparam -list_curves\" for all names\n"
-expr|\
 literal|"                 (default is sect163r2).\n"
 argument_list|)
 expr_stmt|;
@@ -2061,7 +2056,7 @@ block|,
 name|ebcdic_new
 block|,
 name|ebcdic_free
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2620,7 +2615,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/*	return(BIO_gets(bp->next_bio,buf,size));*/
+comment|/*      return(BIO_gets(bp->next_bio,buf,size));*/
 for|for
 control|(
 name|i
@@ -2970,7 +2965,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Certificate Status callback. This is called when a client includes a  * certificate status request extension.  *  * This is a simplified version. It examines certificates each time and  * makes one OCSP responder query for each request.  *  * A full version would store details such as the OCSP certificate IDs and  * minimise the number of OCSP responses by caching them until they were  * considered "expired".  */
+comment|/*  * Certificate Status callback. This is called when a client includes a  * certificate status request extension. This is a simplified version. It  * examines certificates each time and makes one OCSP responder query for  * each request. A full version would store details such as the OCSP  * certificate IDs and minimise the number of OCSP responses by caching them  * until they were considered "expired".  */
 end_comment
 
 begin_function
@@ -3078,7 +3073,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|STACK_OF(OCSP_RESPID) *ids; SSL_get_tlsext_status_ids(s,&ids); BIO_printf(err, "cert_status: received %d ids\n", sk_OCSP_RESPID_num(ids));
+block|STACK_OF(OCSP_RESPID) *ids;     SSL_get_tlsext_status_ids(s,&ids);     BIO_printf(err, "cert_status: received %d ids\n",                sk_OCSP_RESPID_num(ids));
 endif|#
 directive|endif
 if|if
@@ -6409,7 +6404,7 @@ argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
-comment|/* DTLS: partial reads end up discarding unread UDP bytes :-(  	 * Setting read ahead solves this problem. 	 */
+comment|/*      * DTLS: partial reads end up discarding unread UDP bytes :-( Setting      * read ahead solves this problem.      */
 if|if
 condition|(
 name|socket_type
@@ -6456,13 +6451,13 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (cipher == NULL) cipher=getenv("SSL_CIPHER");
+block|if (cipher == NULL)         cipher = getenv("SSL_CIPHER");
 endif|#
 directive|endif
 if|#
 directive|if
 literal|0
-block|if (s_cert_file == NULL) 		{ 		BIO_printf(bio_err,"You must specify a certificate file for the server to use\n"); 		goto end; 		}
+block|if (s_cert_file == NULL) {         BIO_printf(bio_err,                    "You must specify a certificate file for the server to use\n");         goto end;     }
 endif|#
 directive|endif
 if|if
@@ -6665,7 +6660,7 @@ argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
-comment|/* DTLS: partial reads end up discarding unread UDP bytes :-(  		 * Setting read ahead solves this problem. 		 */
+comment|/*          * DTLS: partial reads end up discarding unread UDP bytes :-(          * Setting read ahead solves this problem.          */
 if|if
 condition|(
 name|socket_type
@@ -8525,7 +8520,7 @@ operator|&
 name|readfds
 argument_list|)
 expr_stmt|;
-comment|/* Note: under VMS with SOCKETSHR the second parameter is 			 * currently of type (int *) whereas under other systems 			 * it is (void *) if you don't have a cast it will choke 			 * the compiler: if you do have a cast then you can either 			 * go for (int *) or (void *). 			 */
+comment|/*              * Note: under VMS with SOCKETSHR the second parameter is              * currently of type (int *) whereas under other systems it is              * (void *) if you don't have a cast it will choke the compiler:              * if you do have a cast then you can either go for (int *) or              * (void *).              */
 if|#
 directive|if
 name|defined
@@ -8542,7 +8537,7 @@ name|defined
 argument_list|(
 name|OPENSSL_SYS_NETWARE
 argument_list|)
-comment|/* Under DOS (non-djgpp) and Windows we can't select on stdin: only 			 * on sockets. As a workaround we timeout the select every 			 * second and check for any keypress. In a proper Windows 			 * application we wouldn't do this because it is inefficient. 			 */
+comment|/*              * Under DOS (non-djgpp) and Windows we can't select on stdin:              * only on sockets. As a workaround we timeout the select every              * second and check for any keypress. In a proper Windows              * application we wouldn't do this because it is inefficient.              */
 name|tv
 operator|.
 name|tv_sec
@@ -8948,7 +8943,7 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
-comment|/*				close_accept_socket(); 					ret= -11;*/
+comment|/*                      * close_accept_socket(); ret= -11;                      */
 goto|goto
 name|err
 goto|;
@@ -9008,9 +9003,9 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
-comment|/*13; */
+comment|/* 13; */
 continue|continue;
-comment|/* strcpy(buf,"server side RE-NEGOTIATE\n"); */
+comment|/*                      * strcpy(buf,"server side RE-NEGOTIATE\n");                      */
 block|}
 if|if
 condition|(
@@ -9080,7 +9075,7 @@ literal|0
 expr_stmt|;
 comment|/* 13; */
 continue|continue;
-comment|/* strcpy(buf,"server side RE-NEGOTIATE asking for client cert\n"); */
+comment|/*                      * strcpy(buf,"server side RE-NEGOTIATE asking for client                      * cert\n");                      */
 block|}
 if|if
 condition|(
@@ -10057,7 +10052,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static int load_CA(SSL_CTX *ctx, char *file) 	{ 	FILE *in; 	X509 *x=NULL;  	if ((in=fopen(file,"r")) == NULL) 		return(0);  	for (;;) 		{ 		if (PEM_read_X509(in,&x,NULL) == NULL) 			break; 		SSL_CTX_add_client_CA(ctx,x); 		} 	if (x != NULL) X509_free(x); 	fclose(in); 	return(1); 	}
+unit|static int load_CA(SSL_CTX *ctx, char *file) {     FILE *in;     X509 *x = NULL;      if ((in = fopen(file, "r")) == NULL)         return (0);      for (;;) {         if (PEM_read_X509(in,&x, NULL) == NULL)             break;         SSL_CTX_add_client_CA(ctx, x);     }     if (x != NULL)         X509_free(x);     fclose(in);     return (1); }
 endif|#
 directive|endif
 end_endif
@@ -10582,8 +10577,8 @@ name|i
 operator|<
 literal|0
 condition|)
-comment|/* error */
 block|{
+comment|/* error */
 if|if
 condition|(
 operator|!
@@ -10657,8 +10652,8 @@ name|i
 operator|==
 literal|0
 condition|)
-comment|/* end of input */
 block|{
+comment|/* end of input */
 name|ret
 operator|=
 literal|1
@@ -10757,7 +10752,7 @@ argument_list|,
 literal|"<pre>\n"
 argument_list|)
 expr_stmt|;
-comment|/*			BIO_puts(io,SSLeay_version(SSLEAY_VERSION));*/
+comment|/*                      BIO_puts(io,SSLeay_version(SSLEAY_VERSION));*/
 name|BIO_puts
 argument_list|(
 name|io
@@ -10806,7 +10801,7 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-comment|/* The following is evil and should not really 			 * be done */
+comment|/*              * The following is evil and should not really be done              */
 name|BIO_printf
 argument_list|(
 name|io
@@ -11332,7 +11327,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/* filename contains ".." component */
+comment|/* filename contains ".."                                               * component */
 if|if
 condition|(
 operator|*
@@ -11417,7 +11412,7 @@ if|#
 directive|if
 literal|0
 comment|/* append if a directory lookup */
-block|if (e[-1] == '/') 				strcat(p,"index.html");
+block|if (e[-1] == '/')                 strcat(p, "index.html");
 endif|#
 directive|endif
 comment|/* if a directory, do the index thang */
@@ -11471,7 +11466,7 @@ if|#
 directive|if
 literal|0
 comment|/* must check buffer size */
-block|strcat(p,"/index.html");
+block|strcat(p, "/index.html");
 else|#
 directive|else
 name|BIO_puts
@@ -11897,7 +11892,7 @@ expr_stmt|;
 else|#
 directive|else
 comment|/* This kills performance */
-comment|/*	SSL_shutdown(con); A shutdown gets sent in the  *	BIO_free_all(io) procession */
+comment|/*      * SSL_shutdown(con); A shutdown gets sent in the BIO_free_all(io)      * procession      */
 endif|#
 directive|endif
 name|err
@@ -11937,7 +11932,7 @@ argument_list|(
 name|io
 argument_list|)
 expr_stmt|;
-comment|/*	if (ssl_bio != NULL) BIO_free(ssl_bio);*/
+comment|/*      if (ssl_bio != NULL) BIO_free(ssl_bio);*/
 return|return
 operator|(
 name|ret
@@ -12171,7 +12166,7 @@ operator|*
 name|id_len
 argument_list|)
 expr_stmt|;
-comment|/* Prefix the session_id with the required prefix. NB: If our 		 * prefix is too long, clip it - but there will be worse effects 		 * anyway, eg. the server could only possibly create 1 session 		 * ID (ie. the prefix!) so all future session negotiations will 		 * fail due to conflicts. */
+comment|/*          * Prefix the session_id with the required prefix. NB: If our prefix          * is too long, clip it - but there will be worse effects anyway, eg.          * the server could only possibly create 1 session ID (ie. the          * prefix!) so all future session negotiations will fail due to          * conflicts.          */
 name|memcpy
 argument_list|(
 name|id

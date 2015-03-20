@@ -4,11 +4,11 @@ comment|/* crypto/dh/dh_gen.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* NB: These functions have been upgraded - the previous prototypes are in  * dh_depr.c as wrappers to these ones.  *  - Geoff  */
+comment|/*  * NB: These functions have been upgraded - the previous prototypes are in  * dh_depr.c as wrappers to these ones.  - Geoff  */
 end_comment
 
 begin_include
@@ -128,11 +128,11 @@ block|}
 end_function
 
 begin_comment
-comment|/* We generate DH parameters as follows  * find a prime q which is prime_len/2 bits long.  * p=(2*q)+1 or (p-1)/2 = q  * For this case, g is a generator if  * g^((p-1)/q) mod p != 1 for values of q which are the factors of p-1.  * Since the factors of p-1 are q and 2, we just need to check  * g^2 mod p != 1 and g^q mod p != 1.  *  * Having said all that,  * there is another special case method for the generators 2, 3 and 5.  * for 2, p mod 24 == 11  * for 3, p mod 12 == 5<<<<< does not work for safe primes.  * for 5, p mod 10 == 3 or 7  *  * Thanks to Phil Karn<karn@qualcomm.com> for the pointers about the  * special generators and for answering some of my questions.  *  * I've implemented the second simple method :-).  * Since DH should be using a safe prime (both p and q are prime),  * this generator function can take a very very long time to run.  */
+comment|/*-  * We generate DH parameters as follows  * find a prime q which is prime_len/2 bits long.  * p=(2*q)+1 or (p-1)/2 = q  * For this case, g is a generator if  * g^((p-1)/q) mod p != 1 for values of q which are the factors of p-1.  * Since the factors of p-1 are q and 2, we just need to check  * g^2 mod p != 1 and g^q mod p != 1.  *  * Having said all that,  * there is another special case method for the generators 2, 3 and 5.  * for 2, p mod 24 == 11  * for 3, p mod 12 == 5<<<<< does not work for safe primes.  * for 5, p mod 10 == 3 or 7  *  * Thanks to Phil Karn<karn@qualcomm.com> for the pointers about the  * special generators and for answering some of my questions.  *  * I've implemented the second simple method :-).  * Since DH should be using a safe prime (both p and q are prime),  * this generator function can take a very very long time to run.  */
 end_comment
 
 begin_comment
-comment|/* Actually there is no reason to insist that 'generator' be a generator.  * It's just as OK (and in some sense better) to use a generator of the  * order-q subgroup.  */
+comment|/*  * Actually there is no reason to insist that 'generator' be a generator.  * It's just as OK (and in some sense better) to use a generator of the  * order-q subgroup.  */
 end_comment
 
 begin_function
@@ -369,7 +369,7 @@ if|#
 directive|if
 literal|0
 comment|/* does not work for safe primes */
-if|else if (generator == DH_GENERATOR_3) 		{ 		if (!BN_set_word(t1,12)) goto err; 		if (!BN_set_word(t2,5)) goto err; 		g=3; 		}
+if|else if (generator == DH_GENERATOR_3) {         if (!BN_set_word(t1, 12))             goto err;         if (!BN_set_word(t2, 5))             goto err;         g = 3;     }
 endif|#
 directive|endif
 elseif|else
@@ -406,7 +406,7 @@ condition|)
 goto|goto
 name|err
 goto|;
-comment|/* BN_set_word(t3,7); just have to miss 		 * out on these ones :-( */
+comment|/*          * BN_set_word(t3,7); just have to miss out on these ones :-(          */
 name|g
 operator|=
 literal|5
@@ -414,7 +414,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* in the general case, don't worry if 'generator' is a 		 * generator or not: since we are using safe primes, 		 * it will generate either an order-q or an order-2q group, 		 * which both is OK */
+comment|/*          * in the general case, don't worry if 'generator' is a generator or          * not: since we are using safe primes, it will generate either an          * order-q or an order-2q group, which both is OK          */
 if|if
 condition|(
 operator|!

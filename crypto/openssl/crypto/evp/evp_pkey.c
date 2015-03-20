@@ -4,11 +4,11 @@ comment|/* evp_pkey.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 1999.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 1999.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2002 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -444,7 +444,7 @@ name|OPENSSL_NO_DSA
 case|case
 name|NID_dsa
 case|:
-comment|/* PKCS#8 DSA is weird: you just get a private key integer 	         * and parameters in the AlgorithmIdentifier the pubkey must 		 * be recalculated. 		 */
+comment|/*          * PKCS#8 DSA is weird: you just get a private key integer and          * parameters in the AlgorithmIdentifier the pubkey must be          * recalculated.          */
 comment|/* Check for broken DSA PKCS#8, UGH! */
 if|if
 condition|(
@@ -509,7 +509,7 @@ goto|goto
 name|dsaerr
 goto|;
 block|}
-comment|/* Handle Two broken types: 		     * SEQUENCE {parameters, priv_key} 		     * SEQUENCE {pub_key, priv_key} 		     */
+comment|/*              * Handle Two broken types: SEQUENCE {parameters, priv_key}              * SEQUENCE {pub_key, priv_key}              */
 name|t1
 operator|=
 name|sk_ASN1_TYPE_value
@@ -1046,7 +1046,7 @@ name|object
 operator|->
 name|length
 expr_stmt|;
-comment|/* type == V_ASN1_OBJECT => the parameters are given 			 * by an asn1 OID 			 */
+comment|/*              * type == V_ASN1_OBJECT => the parameters are given by an asn1              * OID              */
 if|if
 condition|(
 operator|(
@@ -1174,7 +1174,7 @@ name|EC_POINT
 modifier|*
 name|pub_key
 decl_stmt|;
-comment|/* the public key was not included in the SEC1 private 			 * key => calculate the public key */
+comment|/*              * the public key was not included in the SEC1 private key =>              * calculate the public key              */
 name|group
 operator|=
 name|EC_KEY_get0_group
@@ -2944,8 +2944,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* explicit parameters */
 block|{
+comment|/* explicit parameters */
 if|if
 condition|(
 operator|(
@@ -3105,7 +3105,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* set the private key */
-comment|/* do not include the parameters in the SEC1 private key 	 * see PKCS#11 12.11 */
+comment|/*      * do not include the parameters in the SEC1 private key see PKCS#11      * 12.11      */
 name|old_flags
 operator|=
 name|EC_KEY_get_enc_flags

@@ -74,11 +74,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*------------------------------------------------*  | RSA defines and typedefs                       |  *------------------------------------------------*/
+comment|/* -----------------------------------------------*  | RSA defines and typedefs                       |  *------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*  * All data elements of the RSA key are in big-endian format  * Modulus-Exponent form of key  *  */
+comment|/*   * All data elements of the RSA key are in big-endian format   * Modulus-Exponent form of key   *   */
 end_comment
 
 begin_define
@@ -121,7 +121,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * All data elements of the RSA key are in big-endian format  * Chinese Remainder Thereom(CRT) form of key  * Used only for Decrypt, the encrypt form is typically Modulus-Exponent  *  */
+comment|/*   * All data elements of the RSA key are in big-endian format   * Chinese Remainder Thereom(CRT) form of key   * Used only for Decrypt, the encrypt form is typically Modulus-Exponent   *   */
 end_comment
 
 begin_define
@@ -189,7 +189,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*------------------------------------------------*  | RSA key token types                            |  *------------------------------------------------*/
+comment|/* -----------------------------------------------*  | RSA key token types                            |  *------------------------------------------------*/
 end_comment
 
 begin_define
@@ -221,11 +221,11 @@ value|2
 end_define
 
 begin_comment
-comment|/*------------------------------------------------*  | RSA Key Token format                           |  *------------------------------------------------*/
+comment|/* -----------------------------------------------*  | RSA Key Token format                           |  *------------------------------------------------*/
 end_comment
 
 begin_comment
-comment|/*  * NOTE:  All the fields in the ICA_KEY_RSA_MODEXPO structure  *        (lengths, offsets, exponents, modulus, etc.) are  *        stored in big-endian format  */
+comment|/*-  * NOTE:  All the fields in the ICA_KEY_RSA_MODEXPO structure  *        (lengths, offsets, exponents, modulus, etc.) are  *        stored in big-endian format  */
 end_comment
 
 begin_typedef
@@ -237,7 +237,7 @@ name|unsigned
 name|int
 name|keyType
 decl_stmt|;
-comment|/* RSA key type.               */
+comment|/* RSA key type.  */
 name|unsigned
 name|int
 name|keyLength
@@ -247,30 +247,30 @@ name|unsigned
 name|int
 name|modulusBitLength
 decl_stmt|;
-comment|/* Modulus n bit length.       */
-comment|/* -- Start of the data length.*/
+comment|/* Modulus n bit length.  */
+comment|/* -- Start of the data length. */
 name|unsigned
 name|int
 name|nLength
 decl_stmt|;
-comment|/* Modulus n = p * q           */
+comment|/* Modulus n = p * q */
 name|unsigned
 name|int
 name|expLength
 decl_stmt|;
-comment|/* exponent (public or private)*/
+comment|/* exponent (public or private) */
 comment|/*   e = 1/d * mod(p-1)(q-1)   */
-comment|/* -- Start of the data offsets*/
+comment|/* -- Start of the data offsets */
 name|unsigned
 name|int
 name|nOffset
 decl_stmt|;
-comment|/* Modulus n .                 */
+comment|/* Modulus n .  */
 name|unsigned
 name|int
 name|expOffset
 decl_stmt|;
-comment|/* exponent (public or private)*/
+comment|/* exponent (public or private) */
 name|unsigned
 name|char
 name|reserved
@@ -278,7 +278,7 @@ index|[
 literal|112
 index|]
 decl_stmt|;
-comment|/* reserved area               */
+comment|/* reserved area */
 comment|/* -- Start of the variable -- */
 comment|/* -- length token data.    -- */
 name|ICA_KEY_RSA_MODEXPO_REC
@@ -297,7 +297,7 @@ value|(sizeof(ICA_KEY_RSA_MODEXPO) - sizeof(ICA_KEY_RSA_MODEXPO_REC))
 end_define
 
 begin_comment
-comment|/*  * NOTE:  All the fields in the ICA_KEY_RSA_CRT structure  *        (lengths, offsets, exponents, modulus, etc.) are  *        stored in big-endian format  */
+comment|/*-  * NOTE:  All the fields in the ICA_KEY_RSA_CRT structure  *        (lengths, offsets, exponents, modulus, etc.) are  *        stored in big-endian format  */
 end_comment
 
 begin_typedef
@@ -309,7 +309,7 @@ name|unsigned
 name|int
 name|keyType
 decl_stmt|;
-comment|/* RSA key type.               */
+comment|/* RSA key type.  */
 name|unsigned
 name|int
 name|keyLength
@@ -319,8 +319,8 @@ name|unsigned
 name|int
 name|modulusBitLength
 decl_stmt|;
-comment|/* Modulus n bit length.       */
-comment|/* -- Start of the data length.*/
+comment|/* Modulus n bit length.  */
+comment|/* -- Start of the data length. */
 if|#
 directive|if
 name|_AIX
@@ -328,35 +328,35 @@ name|unsigned
 name|int
 name|nLength
 decl_stmt|;
-comment|/* Modulus n = p * q           */
+comment|/* Modulus n = p * q */
 endif|#
 directive|endif
 name|unsigned
 name|int
 name|pLength
 decl_stmt|;
-comment|/* Prime number p .            */
+comment|/* Prime number p .  */
 name|unsigned
 name|int
 name|qLength
 decl_stmt|;
-comment|/* Prime number q .            */
+comment|/* Prime number q .  */
 name|unsigned
 name|int
 name|dpLength
 decl_stmt|;
-comment|/* dp = d * mod(p-1) .         */
+comment|/* dp = d * mod(p-1) .  */
 name|unsigned
 name|int
 name|dqLength
 decl_stmt|;
-comment|/* dq = d * mod(q-1) .         */
+comment|/* dq = d * mod(q-1) .  */
 name|unsigned
 name|int
 name|qInvLength
 decl_stmt|;
-comment|/* PKCS: qInv = Ap/q           */
-comment|/* -- Start of the data offsets*/
+comment|/* PKCS: qInv = Ap/q */
+comment|/* -- Start of the data offsets */
 if|#
 directive|if
 name|_AIX
@@ -364,34 +364,34 @@ name|unsigned
 name|int
 name|nOffset
 decl_stmt|;
-comment|/* Modulus n .                 */
+comment|/* Modulus n .  */
 endif|#
 directive|endif
 name|unsigned
 name|int
 name|pOffset
 decl_stmt|;
-comment|/* Prime number p .            */
+comment|/* Prime number p .  */
 name|unsigned
 name|int
 name|qOffset
 decl_stmt|;
-comment|/* Prime number q .            */
+comment|/* Prime number q .  */
 name|unsigned
 name|int
 name|dpOffset
 decl_stmt|;
-comment|/* dp .                        */
+comment|/* dp .  */
 name|unsigned
 name|int
 name|dqOffset
 decl_stmt|;
-comment|/* dq .                        */
+comment|/* dq .  */
 name|unsigned
 name|int
 name|qInvOffset
 decl_stmt|;
-comment|/* qInv for PKCS               */
+comment|/* qInv for PKCS */
 if|#
 directive|if
 name|_AIX
@@ -402,7 +402,7 @@ index|[
 literal|80
 index|]
 decl_stmt|;
-comment|/* reserved area               */
+comment|/* reserved area */
 else|#
 directive|else
 name|unsigned
@@ -412,7 +412,7 @@ index|[
 literal|88
 index|]
 decl_stmt|;
-comment|/* reserved area               */
+comment|/* reserved area */
 endif|#
 directive|endif
 comment|/* -- Start of the variable -- */
@@ -548,7 +548,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Specific macros and definitions to not have IFDEF;s all over the    main code */
+comment|/*  * Specific macros and definitions to not have IFDEF;s all over the main code  */
 end_comment
 
 begin_if
@@ -619,7 +619,7 @@ operator|)
 end_if
 
 begin_comment
-comment|/*  The ICA_KEY_RSA_MODEXPO& ICA_KEY_RSA_CRT lengths and  offsets must be in big-endian format.  */
+comment|/*  * The ICA_KEY_RSA_MODEXPO& ICA_KEY_RSA_CRT lengths and offsets must be in  * big-endian format.  *  */
 end_comment
 
 begin_define
