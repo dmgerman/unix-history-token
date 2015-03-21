@@ -1352,20 +1352,6 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|p
-operator|->
-name|p_mtx
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|mtx
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -1380,6 +1366,8 @@ argument_list|,
 name|MTX_DEF
 operator||
 name|MTX_DUPOK
+operator||
+name|MTX_NEW
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -1394,6 +1382,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_SPIN
+operator||
+name|MTX_NEW
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -1408,6 +1398,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_SPIN
+operator||
+name|MTX_NEW
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -1422,6 +1414,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_SPIN
+operator||
+name|MTX_NEW
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -1436,6 +1430,8 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_SPIN
+operator||
+name|MTX_NEW
 argument_list|)
 expr_stmt|;
 name|cv_init
