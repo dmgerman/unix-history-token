@@ -28,6 +28,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_vm.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -980,6 +986,20 @@ operator|->
 name|ref_count
 operator|++
 expr_stmt|;
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+name|vm_object_color
+argument_list|(
+name|object
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|object
