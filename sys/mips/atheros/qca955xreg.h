@@ -946,6 +946,59 @@ name|QCA955X_DDR_REG_FLUSH_WMAC
 value|(AR71XX_APB_BASE + 0xac)
 end_define
 
+begin_comment
+comment|/* PCIe control block - relative to PCI_CTRL_BASE0/PCI_CTRL_BASE1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|QCA955X_PCI_APP
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_PCI_APP_LTSSM_ENABLE
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_PCI_RESET
+value|0x18
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_PCI_RESET_LINK_UP
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_PCI_INTR_STATUS
+value|0x4c
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_PCI_INTR_MASK
+value|0x50
+end_define
+
+begin_define
+define|#
+directive|define
+name|QCA955X_PCI_INTR_DEV0
+value|(1<< 14)
+end_define
+
 begin_endif
 endif|#
 directive|endif
