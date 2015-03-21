@@ -2114,7 +2114,7 @@ literal|"umtx lock"
 argument_list|,
 name|NULL
 argument_list|,
-name|MTX_SPIN
+name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|EVENTHANDLER_REGISTER
@@ -8563,7 +8563,7 @@ name|owner
 operator|->
 name|td_umtxq
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -8578,7 +8578,7 @@ operator|==
 name|owner
 condition|)
 block|{
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -8600,7 +8600,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * userland may have already messed the mutex, sigh. 		 */
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -8675,7 +8675,7 @@ name|owner
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -8722,7 +8722,7 @@ name|td
 operator|->
 name|td_umtxq
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -8755,7 +8755,7 @@ name|pi
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -8873,7 +8873,7 @@ argument_list|(
 name|uq
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -8888,7 +8888,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -8906,7 +8906,7 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -9027,7 +9027,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -9057,7 +9057,7 @@ argument_list|(
 name|uq
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -9103,7 +9103,7 @@ argument_list|(
 name|pi
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -9226,7 +9226,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -9279,7 +9279,7 @@ literal|"blocked queue not empty"
 operator|)
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -10319,7 +10319,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -10351,7 +10351,7 @@ operator|!=
 name|curthread
 condition|)
 block|{
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -10500,7 +10500,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -10535,7 +10535,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * The umtx_pi can be unowned, such as when a thread 			 * has just entered do_lock_pi(), allocated the 			 * umtx_pi, and unlocked the umtxq. 			 * If the current thread owns it, it must disown it. 			 */
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -10554,7 +10554,7 @@ argument_list|(
 name|pi
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -10860,7 +10860,7 @@ goto|goto
 name|out
 goto|;
 block|}
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -10878,7 +10878,7 @@ operator|+
 name|ceiling
 condition|)
 block|{
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -10944,7 +10944,7 @@ name|td
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -11096,7 +11096,7 @@ operator|->
 name|uq_key
 argument_list|)
 expr_stmt|;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -11191,7 +11191,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -11205,7 +11205,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -11300,7 +11300,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -11630,7 +11630,7 @@ name|EFAULT
 expr_stmt|;
 else|else
 block|{
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -11731,7 +11731,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -19834,7 +19834,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|mtx_lock_spin
+name|mtx_lock
 argument_list|(
 operator|&
 name|umtx_lock
@@ -19882,7 +19882,7 @@ name|pi_link
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_unlock_spin
+name|mtx_unlock
 argument_list|(
 operator|&
 name|umtx_lock
