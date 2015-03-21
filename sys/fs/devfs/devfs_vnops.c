@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/time.h>
 end_include
 
@@ -246,6 +252,42 @@ argument_list|,
 literal|"cdevpriv lock"
 argument_list|,
 name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_devfs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|devfs_dotimes
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_devfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dotimes
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|devfs_dotimes
+argument_list|,
+literal|0
+argument_list|,
+literal|"Update timestamps on DEVFS"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6185,6 +6227,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|devfs_dotimes
+operator|&&
+operator|(
 name|uio
 operator|->
 name|uio_resid
@@ -6199,6 +6244,7 @@ operator|&&
 name|resid
 operator|!=
 literal|0
+operator|)
 operator|)
 condition|)
 name|vfs_timestamp
@@ -8814,6 +8860,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|devfs_dotimes
+operator|&&
+operator|(
 name|uio
 operator|->
 name|uio_resid
@@ -8828,6 +8877,7 @@ operator|&&
 name|resid
 operator|!=
 literal|0
+operator|)
 operator|)
 condition|)
 block|{
