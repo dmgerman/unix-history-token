@@ -3097,9 +3097,14 @@ name|shmid_kernel
 modifier|*
 name|shmseg
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|MAC
 name|int
 name|error
 decl_stmt|;
+endif|#
+directive|endif
 name|SYSVSHM_ASSERT_LOCKED
 argument_list|()
 expr_stmt|;
