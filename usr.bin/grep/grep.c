@@ -1811,7 +1811,10 @@ literal|'\n'
 condition|?
 literal|0
 else|:
-name|len
+operator|(
+name|size_t
+operator|)
+name|rlen
 argument_list|)
 expr_stmt|;
 name|free
