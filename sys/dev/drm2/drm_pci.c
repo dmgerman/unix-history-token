@@ -213,13 +213,19 @@ name|ret
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+operator|->
+name|device
+argument_list|)
 argument_list|,
+comment|/* parent */
 name|align
 argument_list|,
 literal|0
 argument_list|,
-comment|/* tag, align, boundary */
+comment|/* align, boundary */
 name|maxaddr
 argument_list|,
 name|BUS_SPACE_MAXADDR
