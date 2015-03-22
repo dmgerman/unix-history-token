@@ -2019,11 +2019,12 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-name|MLY_MAX_SGENTRIES
+comment|/* maxsize */
+name|BUS_SPACE_UNRESTRICTED
 argument_list|,
-comment|/* maxsize, nsegments */
+comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
@@ -2080,11 +2081,12 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+name|DFLTPHYS
 argument_list|,
+comment|/* maxsize */
 name|MLY_MAX_SGENTRIES
 argument_list|,
-comment|/* maxsize, nsegments */
+comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */

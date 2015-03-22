@@ -1659,7 +1659,7 @@ comment|/*maxsize*/
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/*nsegments*/
-name|GDT_MAXSG
+name|BUS_SPACE_UNRESTRICTED
 argument_list|,
 comment|/*maxsegsz*/
 name|BUS_SPACE_MAXSIZE_32BIT

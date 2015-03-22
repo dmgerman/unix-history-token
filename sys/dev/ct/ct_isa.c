@@ -999,7 +999,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|MAXBSIZE
+name|DFLTPHYS
 argument_list|,
 literal|1
 argument_list|,
@@ -1095,7 +1095,7 @@ name|sc_dmamapt
 argument_list|,
 name|vaddr
 argument_list|,
-name|MAXBSIZE
+name|DFLTPHYS
 argument_list|,
 name|ct_dmamap
 argument_list|,
@@ -1138,7 +1138,7 @@ name|bs
 operator|->
 name|sc_bounce_size
 operator|=
-name|MAXBSIZE
+name|DFLTPHYS
 expr_stmt|;
 name|bs
 operator|->

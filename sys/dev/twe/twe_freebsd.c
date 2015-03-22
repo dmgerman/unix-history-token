@@ -927,11 +927,12 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-name|TWE_MAX_SGL_LENGTH
+comment|/* maxsize */
+name|BUS_SPACE_UNRESTRICTED
 argument_list|,
-comment|/* maxsize, nsegments */
+comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
@@ -1250,11 +1251,18 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+operator|(
+name|TWE_MAX_SGL_LENGTH
+operator|-
+literal|1
+operator|)
+operator|*
+name|PAGE_SIZE
 argument_list|,
+comment|/* maxsize */
 name|TWE_MAX_SGL_LENGTH
 argument_list|,
-comment|/* maxsize, nsegments */
+comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
@@ -1321,7 +1329,7 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+name|DFLTPHYS
 argument_list|,
 literal|1
 argument_list|,
