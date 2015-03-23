@@ -935,7 +935,6 @@ name|drm_encoder
 modifier|*
 name|encoder
 parameter_list|,
-specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -1884,7 +1883,7 @@ modifier|*
 name|id
 parameter_list|)
 block|{
-name|DRM_DEBUG_KMS
+name|DRM_INFO
 argument_list|(
 literal|"Skipping forced modeset for %s\n"
 argument_list|,
@@ -2449,7 +2448,7 @@ modifier|*
 name|id
 parameter_list|)
 block|{
-name|DRM_DEBUG_KMS
+name|DRM_INFO
 argument_list|(
 literal|"Skipping LVDS initialization for %s\n"
 argument_list|,
@@ -3273,9 +3272,12 @@ condition|)
 continue|continue;
 if|if
 condition|(
+name|intel_gmbus_is_port_valid
+argument_list|(
 name|child
 operator|->
 name|i2c_pin
+argument_list|)
 condition|)
 operator|*
 name|i2c_pin
@@ -3751,12 +3753,12 @@ name|drm_get_edid
 argument_list|(
 name|connector
 argument_list|,
+name|intel_gmbus_get_adapter
+argument_list|(
 name|dev_priv
-operator|->
-name|gmbus
-index|[
+argument_list|,
 name|pin
-index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

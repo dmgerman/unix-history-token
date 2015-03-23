@@ -261,7 +261,7 @@ name|dev
 argument_list|,
 name|obj
 argument_list|,
-name|false
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

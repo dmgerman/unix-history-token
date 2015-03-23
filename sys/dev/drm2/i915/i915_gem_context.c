@@ -1344,6 +1344,12 @@ argument_list|(
 name|to
 operator|->
 name|obj
+argument_list|,
+name|to
+operator|->
+name|obj
+operator|->
+name|cache_level
 argument_list|)
 expr_stmt|;
 if|if

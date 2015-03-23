@@ -1029,6 +1029,32 @@ name|prefer_shadow
 expr_stmt|;
 break|break;
 case|case
+name|DRM_CAP_PRIME
+case|:
+name|req
+operator|->
+name|value
+operator||=
+name|false
+comment|/* XXXKIB dev->driver->prime_fd_to_handle */
+condition|?
+name|DRM_PRIME_CAP_IMPORT
+else|:
+literal|0
+expr_stmt|;
+name|req
+operator|->
+name|value
+operator||=
+name|false
+comment|/* XXXKIB dev->driver->prime_handle_to_fd */
+condition|?
+name|DRM_PRIME_CAP_EXPORT
+else|:
+literal|0
+expr_stmt|;
+break|break;
+case|case
 name|DRM_CAP_TIMESTAMP_MONOTONIC
 case|:
 name|req

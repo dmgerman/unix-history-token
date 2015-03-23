@@ -164,12 +164,12 @@ return|return
 operator|(
 name|iicbus_transfer
 argument_list|(
+name|intel_gmbus_get_adapter
+argument_list|(
 name|dev_priv
-operator|->
-name|gmbus
-index|[
+argument_list|,
 name|ddc_bus
-index|]
+argument_list|)
 argument_list|,
 name|msgs
 argument_list|,

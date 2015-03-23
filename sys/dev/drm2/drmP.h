@@ -6143,6 +6143,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|drm_clflush_virt_range
+parameter_list|(
+name|char
+modifier|*
+name|addr
+parameter_list|,
+name|unsigned
+name|long
+name|length
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Locking IOCTL support (drm_drv.c) */
 end_comment
