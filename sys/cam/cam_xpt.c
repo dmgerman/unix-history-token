@@ -21028,6 +21028,8 @@ argument_list|)
 argument_list|,
 name|M_CAMCCB
 argument_list|,
+name|M_ZERO
+operator||
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
@@ -21102,6 +21104,8 @@ argument_list|)
 argument_list|,
 name|M_CAMCCB
 argument_list|,
+name|M_ZERO
+operator||
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
