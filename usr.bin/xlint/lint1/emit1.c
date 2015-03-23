@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: emit1.c,v 1.11 2002/01/31 19:36:54 tv Exp $ */
+comment|/* $NetBSD: emit1.c,v 1.14 2004/06/20 22:20:16 jmc Exp $ */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: emit1.c,v 1.11 2002/01/31 19:36:54 tv Exp $"
+literal|"$NetBSD: emit1.c,v 1.14 2004/06/20 22:20:16 jmc Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -398,9 +398,9 @@ literal|'u'
 expr_stmt|;
 break|break;
 default|default:
-name|lerror
+name|LERROR
 argument_list|(
-literal|"outtyp() 1"
+literal|"outtyp()"
 argument_list|)
 expr_stmt|;
 block|}
@@ -951,9 +951,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|lerror
+name|LERROR
 argument_list|(
-literal|"outsym() 2"
+literal|"outsym()"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1798,9 +1798,9 @@ name|st_tspec
 operator|!=
 name|CHAR
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"outfstrg() 1"
+literal|"outfstrg()"
 argument_list|)
 expr_stmt|;
 name|cp

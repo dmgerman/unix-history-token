@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: err.c,v 1.17 2002/01/31 19:36:54 tv Exp $	*/
+comment|/*	$NetBSD: err.c,v 1.40 2009/04/15 01:20:57 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: err.c,v 1.17 2002/01/31 19:36:54 tv Exp $"
+literal|"$NetBSD: err.c,v 1.40 2009/04/15 01:20:57 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -199,7 +199,7 @@ comment|/* 18 */
 literal|"void type for %s"
 block|,
 comment|/* 19 */
-literal|"zero or negative array dimension"
+literal|"negative array dimension (%d)"
 block|,
 comment|/* 20 */
 literal|"redeclaration of formal parameter %s"
@@ -256,7 +256,7 @@ comment|/* 37 */
 literal|"function illegal in structure or union"
 block|,
 comment|/* 38 */
-literal|"illegal zero sized structure member: %s"
+literal|"zero sized array in struct is a C99 extension: %s"
 block|,
 comment|/* 39 */
 literal|"unknown size: %s"
@@ -280,7 +280,7 @@ comment|/* 45 */
 literal|"(%s) tag redeclared"
 block|,
 comment|/* 46 */
-literal|"zero sized %s"
+literal|"zero sized %s is a C9X feature"
 block|,
 comment|/* 47 */
 literal|"overflow in enumeration values: %s"
@@ -535,7 +535,7 @@ comment|/* 130 */
 literal|"conversion to '%s' may sign-extend incorrectly"
 block|,
 comment|/* 131 */
-literal|"conversion from '%s' may lose accuracy"
+literal|"conversion from '%s' to '%s' may lose accuracy"
 block|,
 comment|/* 132 */
 literal|"conversion of pointer to '%s' loses bits"
@@ -667,7 +667,7 @@ comment|/* 174 */
 literal|"initialisation of an incomplete type"
 block|,
 comment|/* 175 */
-literal|"invalid initializer"
+literal|"invalid initializer type %s"
 block|,
 comment|/* 176 */
 literal|"non-constant initializer"
@@ -1033,7 +1033,7 @@ comment|/* 296 */
 literal|"conversion to '%s' may sign-extend incorrectly, arg #%d"
 block|,
 comment|/* 297 */
-literal|"conversion from '%s' may lose accuracy, arg #%d"
+literal|"conversion from '%s' to '%s' may lose accuracy, arg #%d"
 block|,
 comment|/* 298 */
 literal|"prototype does not match old style definition, arg #%d"
@@ -1078,6 +1078,36 @@ comment|/* 311 */
 literal|"%s C does not support // comments"
 block|,
 comment|/* 312 */
+literal|"struct or union member name in initializer is a C9X feature"
+block|,
+comment|/* 313 */
+literal|"%s is not a structure or a union"
+block|,
+comment|/* 314 */
+literal|"GCC style struct or union member name in initializer"
+block|,
+comment|/* 315 */
+literal|"__FUNCTION__ is a GCC extension"
+block|,
+comment|/* 316 */
+literal|"__func__ is a C9X feature"
+block|,
+comment|/* 317 */
+literal|"variable array dimension is a C99/GCC extension"
+block|,
+comment|/* 318 */
+literal|"compound literals are a C9X/GCC extension"
+block|,
+comment|/* 319 */
+literal|"({ }) is a GCC extension"
+block|,
+comment|/* 320 */
+literal|"array initializer with designators is a C9X feature"
+block|,
+comment|/* 321 */
+literal|"zero sized array is a C99 extension"
+block|,
+comment|/* 322 */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1093,7 +1123,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -1122,7 +1152,7 @@ operator|++
 control|)
 name|printf
 argument_list|(
-literal|"%d\t%s\n"
+literal|"%zu\t%s\n"
 argument_list|,
 name|i
 argument_list|,
@@ -1434,6 +1464,14 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|msg
 parameter_list|,
 modifier|...
@@ -1470,13 +1508,17 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s(%d): lint error: "
+literal|"%s(%d): lint error: %s, %d"
 argument_list|,
 name|fn
 argument_list|,
 name|curr_pos
 operator|.
 name|p_line
+argument_list|,
+name|file
+argument_list|,
+name|line
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1636,6 +1678,102 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * XXX I think the logic is possibly somewhat screwed up here. The  * question is, how do we want to interpret the -s and -S flags going  * forward? We need to answer that and then we can fix this to be  * "right"... [perry, 2 Nov 2002] */
+end_comment
+
+begin_function
+name|int
+name|c99ism
+parameter_list|(
+name|int
+name|n
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+name|int
+name|msg
+decl_stmt|;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|n
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sflag
+operator|&&
+operator|!
+operator|(
+name|Sflag
+operator|||
+name|gflag
+operator|)
+condition|)
+block|{
+name|verror
+argument_list|(
+name|n
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|msg
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|sflag
+operator|&&
+operator|(
+name|Sflag
+operator|||
+name|gflag
+operator|)
+condition|)
+block|{
+name|msg
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
+name|vwarning
+argument_list|(
+name|n
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|msg
+operator|=
+literal|1
+expr_stmt|;
+block|}
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|msg
+operator|)
+return|;
 block|}
 end_function
 

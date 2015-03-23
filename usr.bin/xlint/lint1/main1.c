@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main1.c,v 1.11 2002/01/29 02:43:38 tv Exp $	*/
+comment|/*	$NetBSD: main1.c,v 1.17 2006/11/08 18:31:15 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: main1.c,v 1.11 2002/01/29 02:43:38 tv Exp $"
+literal|"$NetBSD: main1.c,v 1.17 2006/11/08 18:31:15 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -114,7 +114,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Print warnings if an assignment of an integertype to another integertype  * causes an implizit narrowing conversion. If aflag is 1, these warnings  * are printed only if the source type is at least as wide as long. If aflag  * is greater than 1, they are always printed.  */
+comment|/*  * Print warnings if an assignment of an integertype to another integertype  * causes an implicit narrowing conversion. If aflag is 1, these warnings  * are printed only if the source type is at least as wide as long. If aflag  * is greater than 1, they are always printed.  */
 end_comment
 
 begin_decl_stmt
@@ -244,6 +244,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Enable C9X extensions */
+end_comment
+
+begin_decl_stmt
+name|int
+name|Sflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Complain about functions and external variables used and not defined,  * or defined and not used.  */
 end_comment
 
@@ -345,7 +355,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abcdeghmprstuvwyzFX:"
+literal|"abcdeghmprstuvwyzFSX:"
 argument_list|)
 operator|)
 operator|!=
@@ -446,6 +456,14 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+literal|'S'
+case|:
+name|Sflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'t'
 case|:
 name|tflag
@@ -536,7 +554,13 @@ name|eptr
 decl_stmt|;
 name|long
 name|msg
-init|=
+decl_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+name|msg
+operator|=
 name|strtol
 argument_list|(
 name|ptr
@@ -546,7 +570,7 @@ name|eptr
 argument_list|,
 literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -703,6 +727,24 @@ name|nowarn
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEBUG
+name|printf
+argument_list|(
+literal|"%s, %d: nowarn = 0\n"
+argument_list|,
+name|curr_pos
+operator|.
+name|p_file
+argument_list|,
+name|curr_pos
+operator|.
+name|p_line
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|chkglsyms
 argument_list|()
 expr_stmt|;
@@ -734,7 +776,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lint1 [-abcdeghmprstuvwyzF] [-X<id>[,<id>]... src dest\n"
+literal|"usage: lint1 [-abcdeghmprstuvwyzFS] [-X<id>[,<id>]... src dest\n"
 argument_list|)
 expr_stmt|;
 name|exit
