@@ -764,7 +764,7 @@ break|break;
 block|}
 return|return
 operator|(
-name|BUS_PROBE_DEFAULT
+name|BUS_PROBE_LOW_PRIORITY
 operator|)
 return|;
 block|}
