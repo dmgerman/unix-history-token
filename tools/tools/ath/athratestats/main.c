@@ -336,7 +336,7 @@ modifier|*
 name|sn
 parameter_list|)
 block|{
-name|uint32_t
+name|uint64_t
 name|mask
 decl_stmt|;
 name|int
