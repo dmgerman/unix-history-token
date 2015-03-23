@@ -1766,15 +1766,11 @@ name|st_mtim
 expr_stmt|;
 if|if
 condition|(
-name|utimensat
+name|futimens
 argument_list|(
-name|AT_FDCWD
-argument_list|,
-name|to
+name|to_fd
 argument_list|,
 name|ts
-argument_list|,
-literal|0
 argument_list|)
 condition|)
 name|warn

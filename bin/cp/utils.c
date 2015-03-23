@@ -1602,6 +1602,15 @@ name|st_mtim
 expr_stmt|;
 if|if
 condition|(
+name|fdval
+condition|?
+name|futimens
+argument_list|(
+name|fd
+argument_list|,
+name|tspec
+argument_list|)
+else|:
 name|utimensat
 argument_list|(
 name|AT_FDCWD
