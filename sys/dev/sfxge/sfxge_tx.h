@@ -273,42 +273,6 @@ name|SFXGE_TX_BATCH
 value|64
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SFXGE_HAVE_MQ
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SFXGE_TX_LOCK
-parameter_list|(
-name|txq
-parameter_list|)
-value|(&(txq)->lock)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SFXGE_TX_LOCK
-parameter_list|(
-name|txq
-parameter_list|)
-value|(&(txq)->sc->tx_lock)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -343,7 +307,7 @@ parameter_list|(
 name|_txq
 parameter_list|)
 define|\
-value|mtx_lock(SFXGE_TX_LOCK(_txq))
+value|mtx_lock(&(_txq)->lock)
 end_define
 
 begin_define
@@ -354,7 +318,7 @@ parameter_list|(
 name|_txq
 parameter_list|)
 define|\
-value|mtx_trylock(SFXGE_TX_LOCK(_txq))
+value|mtx_trylock(&(_txq)->lock)
 end_define
 
 begin_define
@@ -365,7 +329,7 @@ parameter_list|(
 name|_txq
 parameter_list|)
 define|\
-value|mtx_unlock(SFXGE_TX_LOCK(_txq))
+value|mtx_unlock(&(_txq)->lock)
 end_define
 
 begin_define
@@ -376,7 +340,7 @@ parameter_list|(
 name|_txq
 parameter_list|)
 define|\
-value|mtx_assert(SFXGE_TX_LOCK(_txq), MA_OWNED)
+value|mtx_assert(&(_txq)->lock, MA_OWNED)
 end_define
 
 begin_struct
@@ -460,9 +424,6 @@ name|CACHE_LINE_SIZE
 parameter_list|)
 function_decl|;
 comment|/* The following fields change more often, and are used mostly 	 * on the initiation path 	 */
-ifdef|#
-directive|ifdef
-name|SFXGE_HAVE_MQ
 name|struct
 name|mtx
 name|lock
@@ -480,18 +441,6 @@ name|unsigned
 name|int
 name|n_pend_desc
 decl_stmt|;
-else|#
-directive|else
-name|unsigned
-name|int
-name|n_pend_desc
-name|__aligned
-parameter_list|(
-name|CACHE_LINE_SIZE
-parameter_list|)
-function_decl|;
-endif|#
-directive|endif
 name|unsigned
 name|int
 name|added
@@ -685,12 +634,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SFXGE_HAVE_MQ
-end_ifdef
-
 begin_function_decl
 specifier|extern
 name|void
@@ -721,29 +664,6 @@ name|m
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|void
-name|sfxge_if_start
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
