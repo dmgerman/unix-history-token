@@ -211,6 +211,14 @@ name|defined
 argument_list|(
 name|__x86_64__
 argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|1000000
+define|#
+directive|define
+name|SFXGE_USE_BUS_SPACE_8
+value|1
 if|#
 directive|if
 operator|!
@@ -1512,7 +1520,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__x86_64__
+name|SFXGE_USE_BUS_SPACE_8
 argument_list|)
 define|#
 directive|define
@@ -1590,7 +1598,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__x86_64__
+name|SFXGE_USE_BUS_SPACE_8
 argument_list|)
 define|#
 directive|define
@@ -1630,7 +1638,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__x86_64__
+name|SFXGE_USE_BUS_SPACE_8
 argument_list|)
 define|#
 directive|define
