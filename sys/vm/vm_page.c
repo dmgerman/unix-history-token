@@ -283,6 +283,8 @@ argument_list|,
 name|boot_pages
 argument_list|,
 name|CTLFLAG_RDTUN
+operator||
+name|CTLFLAG_NOFETCH
 argument_list|,
 operator|&
 name|boot_pages
@@ -1346,6 +1348,14 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate memory for use when boot strapping the kernel memory 	 * allocator. 	 */
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"vm.boot_pages"
+argument_list|,
+operator|&
+name|boot_pages
+argument_list|)
+expr_stmt|;
 name|new_end
 operator|=
 name|end
