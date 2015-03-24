@@ -562,9 +562,31 @@ literal|3
 expr_stmt|;
 break|break;
 case|case
+literal|0x3F
+case|:
+comment|/* Per Intel document 325462-045US 09/2014. */
+case|case
+literal|0x46
+case|:
+comment|/* Per Intel document 325462-045US 09/2014. */
+comment|/* Should 46 be XEON. probably its own? */
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_HASWELL_XEON
+expr_stmt|;
+name|nclasses
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+case|case
 literal|0x3C
 case|:
 comment|/* Per Intel document 325462-045US 01/2013. */
+case|case
+literal|0x45
+case|:
+comment|/* Per Intel document 325462-045US 09/2014. */
 name|cputype
 operator|=
 name|PMC_CPU_INTEL_HASWELL
@@ -750,6 +772,9 @@ name|PMC_CPU_INTEL_IVYBRIDGE_XEON
 case|:
 case|case
 name|PMC_CPU_INTEL_HASWELL
+case|:
+case|case
+name|PMC_CPU_INTEL_HASWELL_XEON
 case|:
 name|error
 operator|=
@@ -978,6 +1003,9 @@ name|PMC_CPU_INTEL_NEHALEM_EX
 case|:
 case|case
 name|PMC_CPU_INTEL_HASWELL
+case|:
+case|case
+name|PMC_CPU_INTEL_HASWELL_XEON
 case|:
 case|case
 name|PMC_CPU_INTEL_IVYBRIDGE

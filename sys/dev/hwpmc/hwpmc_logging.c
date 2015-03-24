@@ -27,11 +27,37 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|1100000
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<sys/capsicum.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -155,18 +181,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-name|PMC_SYSCTL_NAME_PREFIX
-literal|"logbuffersize"
-argument_list|,
-operator|&
-name|pmclog_buffer_size
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_hwpmc
@@ -175,9 +189,7 @@ name|OID_AUTO
 argument_list|,
 name|logbuffersize
 argument_list|,
-name|CTLFLAG_TUN
-operator||
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pmclog_buffer_size
@@ -203,18 +215,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-name|PMC_SYSCTL_NAME_PREFIX
-literal|"nbuffers"
-argument_list|,
-operator|&
-name|pmc_nlogbuffers
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_hwpmc
@@ -223,9 +223,7 @@ name|OID_AUTO
 argument_list|,
 name|nbuffers
 argument_list|,
-name|CTLFLAG_TUN
-operator||
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|pmc_nlogbuffers
