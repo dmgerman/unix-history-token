@@ -10545,6 +10545,27 @@ operator|)
 name|sample_rate
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Use feedback value as fallback when there is no 		 * recording channel: 		 */
+if|if
+condition|(
+name|ch
+operator|->
+name|priv_sc
+operator|->
+name|sc_rec_chan
+operator|.
+name|num_alt
+operator|==
+literal|0
+condition|)
+name|ch
+operator|->
+name|jitter_curr
+operator|=
+name|temp
+operator|-
+name|sample_rate
+expr_stmt|;
 name|ch
 operator|->
 name|feedback_rate
