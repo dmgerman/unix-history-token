@@ -3941,7 +3941,13 @@ name|entry
 operator|->
 name|start
 argument_list|,
-name|size
+name|entry
+operator|->
+name|end
+operator|-
+name|entry
+operator|->
+name|start
 argument_list|,
 name|ma
 argument_list|,
