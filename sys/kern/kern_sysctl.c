@@ -1208,6 +1208,8 @@ argument_list|(
 literal|"Setting sysctl %s failed: %d\n"
 argument_list|,
 name|path
+operator|+
+name|rem
 argument_list|,
 name|error
 argument_list|)
