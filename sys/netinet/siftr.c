@@ -1655,7 +1655,7 @@ name|MAX_LOG_MSG_LEN
 argument_list|,
 literal|"%c,0x%08x,%zd.%06ld,%x:%x:%x:%x:%x:%x:%x:%x,%u,%x:%x:%x:"
 literal|"%x:%x:%x:%x:%x,%u,%ld,%ld,%ld,%ld,%ld,%u,%u,%u,%u,%u,%u,"
-literal|"%u,%d,%u,%u,%u,%u,%u,%u\n"
+literal|"%u,%d,%u,%u,%u,%u,%u,%u,%u,%u\n"
 argument_list|,
 name|direction
 index|[
