@@ -331,8 +331,15 @@ parameter_list|(
 name|sigset_t
 modifier|*
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -360,8 +367,15 @@ specifier|const
 name|sigset_t
 modifier|*
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -376,8 +390,17 @@ name|int
 modifier|*
 name|__restrict
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_endif
 endif|#
