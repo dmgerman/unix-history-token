@@ -2917,6 +2917,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+name|ip6_sprintf
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|in6_ifaddr
 modifier|*
