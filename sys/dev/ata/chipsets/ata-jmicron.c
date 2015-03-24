@@ -485,20 +485,7 @@ operator|&
 literal|0x40
 condition|)
 block|{
-comment|/* are we on the AHCI part ? */
-if|if
-condition|(
-name|ata_ahci_chipinit
-argument_list|(
-name|dev
-argument_list|)
-operator|!=
-name|ENXIO
-condition|)
-return|return
-literal|0
-return|;
-comment|/* otherwise we are on the PATA part */
+comment|/* If this was not claimed by AHCI, then we are on the PATA part */
 name|ctlr
 operator|->
 name|ch_attach
@@ -781,22 +768,6 @@ begin_expr_stmt
 name|ATA_DECLARE_DRIVER
 argument_list|(
 name|ata_jmicron
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MODULE_DEPEND
-argument_list|(
-name|ata_jmicron
-argument_list|,
-name|ata_ahci
-argument_list|,
-literal|1
-argument_list|,
-literal|1
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
