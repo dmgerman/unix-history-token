@@ -1457,6 +1457,14 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* only fetch value once */
+name|oidp
+operator|->
+name|oid_kind
+operator||=
+name|CTLFLAG_NOFETCH
+expr_stmt|;
+comment|/* try to fetch value from kernel environment */
 name|sysctl_load_tunable_by_oid_locked
 argument_list|(
 name|oidp
