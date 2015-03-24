@@ -4546,7 +4546,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	Convert all of the given object's cached pages that have a  *	pindex within the given range into free pages.  If the value  *	zero is given for "end", then the range's upper bound is  *	infinity.  If the given object is backed by a vnode and it  *	transitions from having one or more cached pages to none, the  *	vnode's hold count is reduced.   */
+comment|/*  *	Convert all of the given object's cached pages that have a  *	pindex within the given range into free pages.  If the value  *	zero is given for "end", then the range's upper bound is  *	infinity.  If the given object is backed by a vnode and it  *	transitions from having one or more cached pages to none, the  *	vnode's hold count is reduced.  */
 end_comment
 
 begin_function
@@ -5000,7 +5000,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_alloc:  *  *	Allocate and return a page that is associated with the specified  *	object and offset pair.  By default, this page is exclusive busied.  *  *	The caller must always specify an allocation class.  *  *	allocation classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *  *	optional allocation flags:  *	VM_ALLOC_COUNT(number)	the number of additional pages that the caller  *				intends to allocate  *	VM_ALLOC_IFCACHED	return page only if it is cached  *	VM_ALLOC_IFNOTCACHED	return NULL, do not reactivate if the page  *				is cached  *	VM_ALLOC_NOBUSY		do not exclusive busy the page  *	VM_ALLOC_NODUMP		do not include the page in a kernel core dump  *	VM_ALLOC_NOOBJ		page is not associated with an object and  *				should not be exclusive busy   *	VM_ALLOC_SBUSY		shared busy the allocated page  *	VM_ALLOC_WIRED		wire the allocated page  *	VM_ALLOC_ZERO		prefer a zeroed page  *  *	This routine may not sleep.  */
+comment|/*  *	vm_page_alloc:  *  *	Allocate and return a page that is associated with the specified  *	object and offset pair.  By default, this page is exclusive busied.  *  *	The caller must always specify an allocation class.  *  *	allocation classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *  *	optional allocation flags:  *	VM_ALLOC_COUNT(number)	the number of additional pages that the caller  *				intends to allocate  *	VM_ALLOC_IFCACHED	return page only if it is cached  *	VM_ALLOC_IFNOTCACHED	return NULL, do not reactivate if the page  *				is cached  *	VM_ALLOC_NOBUSY		do not exclusive busy the page  *	VM_ALLOC_NODUMP		do not include the page in a kernel core dump  *	VM_ALLOC_NOOBJ		page is not associated with an object and  *				should not be exclusive busy  *	VM_ALLOC_SBUSY		shared busy the allocated page  *	VM_ALLOC_WIRED		wire the allocated page  *	VM_ALLOC_ZERO		prefer a zeroed page  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -6090,7 +6090,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_alloc_contig:  *  *	Allocate a contiguous set of physical pages of the given size "npages"  *	from the free lists.  All of the physical pages must be at or above  *	the given physical address "low" and below the given physical address  *	"high".  The given value "alignment" determines the alignment of the  *	first physical page in the set.  If the given value "boundary" is  *	non-zero, then the set of physical pages cannot cross any physical  *	address boundary that is a multiple of that value.  Both "alignment"  *	and "boundary" must be a power of two.  *  *	If the specified memory attribute, "memattr", is VM_MEMATTR_DEFAULT,  *	then the memory attribute setting for the physical pages is configured  *	to the object's memory attribute setting.  Otherwise, the memory  *	attribute setting for the physical pages is configured to "memattr",  *	overriding the object's memory attribute setting.  However, if the  *	object's memory attribute setting is not VM_MEMATTR_DEFAULT, then the  *	memory attribute setting for the physical pages cannot be configured  *	to VM_MEMATTR_DEFAULT.  *  *	The caller must always specify an allocation class.  *  *	allocation classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *  *	optional allocation flags:  *	VM_ALLOC_NOBUSY		do not exclusive busy the page  *	VM_ALLOC_NOOBJ		page is not associated with an object and  *				should not be exclusive busy   *	VM_ALLOC_SBUSY		shared busy the allocated page  *	VM_ALLOC_WIRED		wire the allocated page  *	VM_ALLOC_ZERO		prefer a zeroed page  *  *	This routine may not sleep.  */
+comment|/*  *	vm_page_alloc_contig:  *  *	Allocate a contiguous set of physical pages of the given size "npages"  *	from the free lists.  All of the physical pages must be at or above  *	the given physical address "low" and below the given physical address  *	"high".  The given value "alignment" determines the alignment of the  *	first physical page in the set.  If the given value "boundary" is  *	non-zero, then the set of physical pages cannot cross any physical  *	address boundary that is a multiple of that value.  Both "alignment"  *	and "boundary" must be a power of two.  *  *	If the specified memory attribute, "memattr", is VM_MEMATTR_DEFAULT,  *	then the memory attribute setting for the physical pages is configured  *	to the object's memory attribute setting.  Otherwise, the memory  *	attribute setting for the physical pages is configured to "memattr",  *	overriding the object's memory attribute setting.  However, if the  *	object's memory attribute setting is not VM_MEMATTR_DEFAULT, then the  *	memory attribute setting for the physical pages cannot be configured  *	to VM_MEMATTR_DEFAULT.  *  *	The caller must always specify an allocation class.  *  *	allocation classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *  *	optional allocation flags:  *	VM_ALLOC_NOBUSY		do not exclusive busy the page  *	VM_ALLOC_NOOBJ		page is not associated with an object and  *				should not be exclusive busy  *	VM_ALLOC_SBUSY		shared busy the allocated page  *	VM_ALLOC_WIRED		wire the allocated page  *	VM_ALLOC_ZERO		prefer a zeroed page  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -8829,7 +8829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Move the specified page to the inactive queue.  *  * Many pages placed on the inactive queue should actually go  * into the cache, but it is difficult to figure out which.  What  * we do instead, if the inactive target is well met, is to put  * clean pages at the head of the inactive queue instead of the tail.  * This will cause them to be moved to the cache more quickly and  * if not actively re-referenced, reclaimed more quickly.  If we just  * stick these pages at the end of the inactive queue, heavy filesystem  * meta-data accesses can cause an unnecessary paging load on memory bound   * processes.  This optimization causes one-time-use metadata to be  * reused more quickly.  *  * Normally athead is 0 resulting in LRU operation.  athead is set  * to 1 if we want this page to be 'as if it were placed in the cache',  * except without unmapping it from the process address space.  *  * The page must be locked.  */
+comment|/*  * Move the specified page to the inactive queue.  *  * Many pages placed on the inactive queue should actually go  * into the cache, but it is difficult to figure out which.  What  * we do instead, if the inactive target is well met, is to put  * clean pages at the head of the inactive queue instead of the tail.  * This will cause them to be moved to the cache more quickly and  * if not actively re-referenced, reclaimed more quickly.  If we just  * stick these pages at the end of the inactive queue, heavy filesystem  * meta-data accesses can cause an unnecessary paging load on memory bound  * processes.  This optimization causes one-time-use metadata to be  * reused more quickly.  *  * Normally athead is 0 resulting in LRU operation.  athead is set  * to 1 if we want this page to be 'as if it were placed in the cache',  * except without unmapping it from the process address space.  *  * The page must be locked.  */
 end_comment
 
 begin_function
@@ -9354,7 +9354,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Remove the page from the object's collection of resident 	 * pages.  	 */
+comment|/* 	 * Remove the page from the object's collection of resident 	 * pages. 	 */
 name|vm_radix_remove
 argument_list|(
 operator|&
@@ -9603,7 +9603,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*  * vm_page_advise  *  *	Cache, deactivate, or do nothing as appropriate.  This routine  *	is used by madvise().  *  *	Generally speaking we want to move the page into the cache so  *	it gets reused quickly.  However, this can result in a silly syndrome  *	due to the page recycling too quickly.  Small objects will not be  *	fully cached.  On the other hand, if we move the page to the inactive  *	queue we wind up with a problem whereby very large objects   *	unnecessarily blow away our inactive and cache queues.  *  *	The solution is to move the pages based on a fixed weighting.  We  *	either leave them alone, deactivate them, or move them to the cache,  *	where moving them to the cache has the highest weighting.  *	By forcing some pages into other queues we eventually force the  *	system to balance the queues, potentially recovering other unrelated  *	space from active.  The idea is to not force this to happen too  *	often.  *  *	The object and page must be locked.  */
+comment|/*  * vm_page_advise  *  *	Cache, deactivate, or do nothing as appropriate.  This routine  *	is used by madvise().  *  *	Generally speaking we want to move the page into the cache so  *	it gets reused quickly.  However, this can result in a silly syndrome  *	due to the page recycling too quickly.  Small objects will not be  *	fully cached.  On the other hand, if we move the page to the inactive  *	queue we wind up with a problem whereby very large objects  *	unnecessarily blow away our inactive and cache queues.  *  *	The solution is to move the pages based on a fixed weighting.  We  *	either leave them alone, deactivate them, or move them to the cache,  *	where moving them to the cache has the highest weighting.  *	By forcing some pages into other queues we eventually force the  *	system to balance the queues, potentially recovering other unrelated  *	space from active.  The idea is to not force this to happen too  *	often.  *  *	The object and page must be locked.  */
 name|void
 name|vm_page_advise
 parameter_list|(
@@ -10239,7 +10239,7 @@ operator|-
 name|frag
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the ending offset is not DEV_BSIZE aligned and the  	 * valid bit is clear, we have to zero out a portion of 	 * the last block. 	 */
+comment|/* 	 * If the ending offset is not DEV_BSIZE aligned and the 	 * valid bit is clear, we have to zero out a portion of 	 * the last block. 	 */
 name|endoff
 operator|=
 name|base
@@ -10300,7 +10300,7 @@ operator|)
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Assert that no previously invalid block that is now being validated 	 * is already dirty.  	 */
+comment|/* 	 * Assert that no previously invalid block that is now being validated 	 * is already dirty. 	 */
 name|KASSERT
 argument_list|(
 operator|(
@@ -10612,7 +10612,7 @@ operator|-
 name|frag
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the ending offset is not DEV_BSIZE aligned and the  	 * valid bit is clear, we have to zero out a portion of 	 * the last block. 	 */
+comment|/* 	 * If the ending offset is not DEV_BSIZE aligned and the 	 * valid bit is clear, we have to zero out a portion of 	 * the last block. 	 */
 name|endoff
 operator|=
 name|base
@@ -10925,7 +10925,7 @@ operator|~
 name|bits
 expr_stmt|;
 block|}
-comment|/*  * vm_page_zero_invalid()  *  *	The kernel assumes that the invalid portions of a page contain   *	garbage, but such pages can be mapped into memory by user code.  *	When this occurs, we must zero out the non-valid portions of the  *	page so user code sees what it expects.  *  *	Pages are most often semi-valid when the end of a file is mapped   *	into memory and the file's size is not page aligned.  */
+comment|/*  * vm_page_zero_invalid()  *  *	The kernel assumes that the invalid portions of a page contain  *	garbage, but such pages can be mapped into memory by user code.  *	When this occurs, we must zero out the non-valid portions of the  *	page so user code sees what it expects.  *  *	Pages are most often semi-valid when the end of a file is mapped  *	into memory and the file's size is not page aligned.  */
 name|void
 name|vm_page_zero_invalid
 parameter_list|(
