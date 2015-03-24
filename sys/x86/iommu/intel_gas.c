@@ -1932,6 +1932,21 @@ operator|->
 name|size
 operator|<=
 name|end
+operator|&&
+name|dmar_test_boundary
+argument_list|(
+name|start
+argument_list|,
+name|a
+operator|->
+name|size
+argument_list|,
+name|a
+operator|->
+name|common
+operator|->
+name|boundary
+argument_list|)
 condition|)
 block|{
 name|a
@@ -1948,7 +1963,7 @@ name|true
 operator|)
 return|;
 block|}
-comment|/* 	 * Not enough space to align at boundary, but allowed to split. 	 * We already checked that start + size does not overlap end. 	 * 	 * XXXKIB. It is possible that bs is exactly at the start of 	 * the next entry, then we do not have gap.  Ignore for now. 	 */
+comment|/* 	 * Not enough space to align at the requested boundary, or 	 * boundary is smaller than the size, but allowed to split. 	 * We already checked that start + size does not overlap end. 	 * 	 * XXXKIB. It is possible that bs is exactly at the start of 	 * the next entry, then we do not have gap.  Ignore for now. 	 */
 if|if
 condition|(
 operator|(
