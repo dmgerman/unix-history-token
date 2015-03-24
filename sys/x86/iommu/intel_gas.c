@@ -2070,6 +2070,16 @@ operator|>=
 name|a
 operator|->
 name|size
+operator|&&
+name|prev
+operator|->
+name|end
+operator|<=
+name|a
+operator|->
+name|entry
+operator|->
+name|end
 argument_list|,
 operator|(
 literal|"dmar_gas_match_insert hole failed %p prev (%jx, %jx) "
