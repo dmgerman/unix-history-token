@@ -2034,6 +2034,19 @@ name|pg_sz
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pg_sz
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"pg_sz 0 lvl %d"
+operator|,
+name|lvl
+operator|)
+argument_list|)
+expr_stmt|;
 name|pte
 operator|=
 name|ctx_pgtbl_map_pte
