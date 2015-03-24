@@ -74,7 +74,7 @@ argument_list|,
 operator|&
 name|report_soft_formats
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"report software-emulated formats"
 argument_list|)
@@ -103,7 +103,7 @@ argument_list|,
 operator|&
 name|report_soft_matrix
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"report software-emulated channel matrixing"
 argument_list|)
@@ -117,17 +117,6 @@ init|=
 name|CHN_LATENCY_DEFAULT
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.snd.latency"
-argument_list|,
-operator|&
-name|chn_latency
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -211,7 +200,7 @@ name|latency
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 literal|0
 argument_list|,
@@ -236,17 +225,6 @@ init|=
 name|CHN_LATENCY_PROFILE_DEFAULT
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.snd.latency_profile"
-argument_list|,
-operator|&
-name|chn_latency_profile
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -330,7 +308,7 @@ name|latency_profile
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 literal|0
 argument_list|,
@@ -356,23 +334,6 @@ init|=
 name|CHN_TIMEOUT
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.snd.timeout"
-argument_list|,
-operator|&
-name|chn_timeout
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SND_DEBUG
-end_ifdef
 
 begin_function
 specifier|static
@@ -456,7 +417,7 @@ name|timeout
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 literal|0
 argument_list|,
@@ -473,11 +434,6 @@ literal|"interrupt timeout (1 - 10) seconds"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -517,17 +473,6 @@ init|=
 name|SND_VOL_0DB_PCM
 decl_stmt|;
 end_decl_stmt
-
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.snd.vpc_0db"
-argument_list|,
-operator|&
-name|chn_vol_0db_pcm
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -761,7 +706,7 @@ name|vpc_0db
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 literal|0
 argument_list|,
@@ -888,17 +833,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.snd.usefrags"
-argument_list|,
-operator|&
-name|chn_usefrags
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -910,23 +844,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.snd.syncdelay"
-argument_list|,
-operator|&
-name|chn_syncdelay
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SND_DEBUG
-end_ifdef
-
-begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_hw_snd
@@ -935,12 +852,12 @@ name|OID_AUTO
 argument_list|,
 name|usefrags
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|chn_usefrags
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"prefer setfragments() over setblocksize()"
 argument_list|)
@@ -956,22 +873,17 @@ name|OID_AUTO
 argument_list|,
 name|syncdelay
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|chn_syncdelay
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"append (0-1000) millisecond trailing buffer delay on each sync"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/**  * @brief Channel sync group lock  *  * Clients should acquire this lock @b without holding any channel locks  * before touching syncgroups or the main syncgroup list.  */
