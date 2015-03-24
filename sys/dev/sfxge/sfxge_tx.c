@@ -2660,6 +2660,7 @@ name|sfxge_softc
 modifier|*
 name|sc
 decl_stmt|;
+name|unsigned
 name|int
 name|i
 decl_stmt|;
