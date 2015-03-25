@@ -106,7 +106,7 @@ value|0x1ff
 end_define
 
 begin_comment
-comment|/* A reboot/assertion causes the MCDI status word to be set after the  * command word is set or a REBOOT event is sent. If we notice a reboot  * via these mechanisms then wait 10ms for the status word to be set.  */
+comment|/*  * A reboot/assertion causes the MCDI status word to be set after the  * command word is set or a REBOOT event is sent. If we notice a reboot  * via these mechanisms then wait 10ms for the status word to be set.  */
 end_comment
 
 begin_define
@@ -1979,7 +1979,7 @@ operator|->
 name|emi_aborted
 expr_stmt|;
 block|}
-comment|/* Since we're running in parallel with a request, consume the 	 * status word before dropping the lock. 	 */
+comment|/* 	 * Since we're running in parallel with a request, consume the 	 * status word before dropping the lock. 	 */
 if|if
 condition|(
 name|rc
