@@ -822,6 +822,21 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|EFX_GRACEFUL_MC_REBOOT
+comment|/* 	 * This function is not being used properly. 	 * Until its callers are fixed, it should always return 0. 	 */
+name|_NOTE
+argument_list|(
+argument|ARGUNUSED(enp)
+argument_list|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|#
+directive|else
 name|efx_mcdi_iface_t
 modifier|*
 name|emip
@@ -952,6 +967,8 @@ operator|(
 name|EIO
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
