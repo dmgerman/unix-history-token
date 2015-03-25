@@ -110,6 +110,13 @@ begin_define
 define|#
 directive|define
 name|SFXGE_TX_DPL_GET_PKT_LIMIT_DEFAULT
+value|(64 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TX_DPL_GET_NON_TCP_PKT_LIMIT_DEFAULT
 value|1024
 end_define
 
@@ -132,7 +139,12 @@ name|unsigned
 name|int
 name|std_get_max
 decl_stmt|;
-comment|/* Maximum number of packets 						 * in get list */
+comment|/* Maximum number  of packets 						 * in get list */
+name|unsigned
+name|int
+name|std_get_non_tcp_max
+decl_stmt|;
+comment|/* Maximum number 						 * of non-TCP packets 						 * in get list */
 name|unsigned
 name|int
 name|std_put_max
@@ -160,6 +172,16 @@ name|int
 name|std_get_count
 decl_stmt|;
 comment|/* Packets in get list. */
+name|unsigned
+name|int
+name|std_get_non_tcp_count
+decl_stmt|;
+comment|/* Non-TCP packets 						 * in get list */
+name|unsigned
+name|int
+name|std_get_hiwat
+decl_stmt|;
+comment|/* Packets in get list 						 * high watermark */
 block|}
 struct|;
 end_struct
@@ -428,7 +450,19 @@ name|drops
 decl_stmt|;
 name|unsigned
 name|long
-name|early_drops
+name|get_overflow
+decl_stmt|;
+name|unsigned
+name|long
+name|get_non_tcp_overflow
+decl_stmt|;
+name|unsigned
+name|long
+name|put_overflow
+decl_stmt|;
+name|unsigned
+name|long
+name|netdown_drops
 decl_stmt|;
 comment|/* The following fields change more often, and are used mostly 	 * on the completion path 	 */
 name|unsigned
