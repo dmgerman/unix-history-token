@@ -319,11 +319,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|rxq
 operator|->
 name|init_state
 operator|!=
 name|SFXGE_RXQ_STARTED
+argument_list|)
 condition|)
 goto|goto
 name|done
@@ -1027,11 +1030,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|txq
 operator|->
 name|init_state
 operator|!=
 name|SFXGE_TXQ_STARTED
+argument_list|)
 condition|)
 goto|goto
 name|done
@@ -1767,6 +1773,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|sc
 operator|->
 name|evq
@@ -1777,6 +1785,7 @@ operator|->
 name|init_state
 operator|!=
 name|SFXGE_EVQ_STARTED
+argument_list|)
 condition|)
 goto|goto
 name|out
@@ -2485,6 +2494,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|evq
 operator|->
 name|init_state
@@ -2496,6 +2507,7 @@ operator|->
 name|init_state
 operator|!=
 name|SFXGE_EVQ_STARTED
+argument_list|)
 condition|)
 block|{
 name|rc
