@@ -2664,13 +2664,24 @@ name|ifp
 operator|->
 name|if_softc
 expr_stmt|;
+comment|/* 	 * Transmit may be called when interface is up from the kernel 	 * point of view, but not yet up (in progress) from the driver 	 * point of view. I.e. link aggregation bring up. 	 * Transmit may be called when interface is up from the driver 	 * point of view, but already down from the kernel point of 	 * view. I.e. Rx when interface shutdown is in progress. 	 */
 name|KASSERT
 argument_list|(
+operator|(
 name|ifp
 operator|->
 name|if_flags
 operator|&
 name|IFF_UP
+operator|)
+operator|||
+operator|(
+name|sc
+operator|->
+name|if_flags
+operator|&
+name|IFF_UP
+operator|)
 argument_list|,
 operator|(
 literal|"interface not up"
