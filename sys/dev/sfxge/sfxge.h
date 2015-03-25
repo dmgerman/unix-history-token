@@ -718,6 +718,9 @@ name|unsigned
 name|int
 name|ev_moderation
 decl_stmt|;
+if|#
+directive|if
+name|EFSYS_OPT_QSTATS
 name|clock_t
 name|ev_stats_update_time
 decl_stmt|;
@@ -727,6 +730,8 @@ index|[
 name|EV_NQSTATS
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|uma_zone_t
 name|rxq_cache
 decl_stmt|;
