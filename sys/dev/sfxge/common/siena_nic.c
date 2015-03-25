@@ -3753,7 +3753,7 @@ literal|0x00000E7F
 block|,
 literal|0x00000000
 block|,
-literal|0xFFFFFFFF
+literal|0xFFFFFFFE
 block|,
 literal|0x0FFFFFFF
 block|,
