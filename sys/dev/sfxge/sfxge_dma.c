@@ -628,9 +628,7 @@ name|esmp
 operator|->
 name|esm_tag
 argument_list|,
-name|esmp
-operator|->
-name|esm_base
+name|vaddr
 argument_list|,
 name|esmp
 operator|->
