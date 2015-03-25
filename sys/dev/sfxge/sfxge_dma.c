@@ -78,6 +78,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 operator|*
@@ -227,6 +229,8 @@ argument_list|)
 while|while
 condition|(
 name|m
+operator|!=
+name|NULL
 operator|&&
 name|seg_count
 operator|<
@@ -753,6 +757,8 @@ name|sc
 operator|->
 name|parent_dma_tag
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|device_printf

@@ -1336,7 +1336,9 @@ name|txq
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|reject_mapped
 label|:
@@ -1364,7 +1366,9 @@ operator|->
 name|drops
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -1917,6 +1921,8 @@ expr_stmt|;
 if|if
 condition|(
 name|old
+operator|!=
+literal|0
 condition|)
 block|{
 name|struct
@@ -3227,13 +3233,17 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|fail
 goto|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|fail
 label|:
@@ -3271,7 +3281,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -3295,6 +3307,8 @@ condition|(
 name|txq
 operator|->
 name|tsoh_buffer
+operator|!=
+name|NULL
 condition|)
 block|{
 for|for
@@ -4021,7 +4035,9 @@ name|header
 argument_list|)
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 name|rc
 operator|=
@@ -4091,7 +4107,9 @@ name|M_SFXGE
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 name|map
@@ -4371,7 +4389,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -4655,7 +4675,9 @@ name|tso_bursts
 operator|++
 expr_stmt|;
 return|return
+operator|(
 name|id
+operator|)
 return|;
 block|}
 end_function
@@ -5669,6 +5691,8 @@ while|while
 condition|(
 name|nmaps
 operator|--
+operator|!=
+literal|0
 condition|)
 name|bus_dmamap_destroy
 argument_list|(
@@ -6151,6 +6175,8 @@ while|while
 condition|(
 name|nmaps
 operator|--
+operator|!=
+literal|0
 condition|)
 name|bus_dmamap_destroy
 argument_list|(
@@ -6352,6 +6378,7 @@ name|offset
 operator|)
 expr_stmt|;
 return|return
+operator|(
 name|SYSCTL_OUT
 argument_list|(
 name|req
@@ -6364,6 +6391,7 @@ argument_list|(
 name|sum
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 end_function

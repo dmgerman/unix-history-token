@@ -224,7 +224,9 @@ operator|==
 name|SFXGE_STARTED
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -820,6 +822,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|ifp
@@ -1287,7 +1291,9 @@ goto|goto
 name|fail
 goto|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|fail
 label|:
@@ -1299,7 +1305,9 @@ name|ifnet
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -1593,10 +1601,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sc
 operator|->
 name|stats_node
+operator|==
+name|NULL
 condition|)
 block|{
 name|error
@@ -2264,9 +2273,12 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 return|return
+operator|(
 name|SYSCTL_OUT
 argument_list|(
 name|req
@@ -2279,6 +2291,7 @@ name|value
 operator|.
 name|evv_length
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2736,7 +2749,9 @@ name|keyword
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 name|fail2
 label|:
@@ -2752,7 +2767,9 @@ expr_stmt|;
 name|fail
 label|:
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -3171,9 +3188,13 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|!=
+literal|0
 condition|)
 return|return
+operator|(
 name|ENXIO
+operator|)
 return|;
 name|KASSERT
 argument_list|(
@@ -3194,7 +3215,9 @@ literal|"Solarflare SFC9000 family"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

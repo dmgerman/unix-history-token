@@ -179,7 +179,9 @@ operator|!=
 name|SFXGE_INTR_STARTED
 condition|)
 return|return
+operator|(
 name|FILTER_STRAY
+operator|)
 return|;
 operator|(
 name|void
@@ -217,7 +219,9 @@ name|enp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FILTER_HANDLED
+operator|)
 return|;
 block|}
 if|if
@@ -234,7 +238,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 name|FILTER_SCHEDULE_THREAD
+operator|)
 return|;
 block|}
 comment|/* SF bug 15783: If the function is not asserting its IRQ and 	 * we read the queue mask on the cycle before a flag is added 	 * to the mask, this inhibits the function from asserting the 	 * IRQ even though we don't see the flag set.  To work around 	 * this, we must re-prime all event queues and report the IRQ 	 * as handled when we see a mask of zero.  To allow for shared 	 * IRQs, we don't repeat this if we see a mask of zero twice 	 * or more in a row. 	 */
@@ -271,7 +277,9 @@ name|read_ptr
 argument_list|)
 condition|)
 return|return
+operator|(
 name|FILTER_SCHEDULE_THREAD
+operator|)
 return|;
 name|efx_ev_qprime
 argument_list|(
@@ -285,12 +293,16 @@ name|read_ptr
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|FILTER_HANDLED
+operator|)
 return|;
 block|}
 block|}
 return|return
+operator|(
 name|FILTER_STRAY
+operator|)
 return|;
 block|}
 end_function
@@ -577,7 +589,9 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 comment|/* Try to add the handlers */
@@ -985,6 +999,8 @@ block|}
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|count

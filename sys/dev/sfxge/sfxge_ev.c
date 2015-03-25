@@ -903,6 +903,7 @@ name|SFXGE_TXQ_NTYPES
 operator|)
 expr_stmt|;
 return|return
+operator|(
 name|evq
 operator|->
 name|sc
@@ -911,6 +912,7 @@ name|txq
 index|[
 name|index
 index|]
+operator|)
 return|;
 block|}
 end_function
@@ -1855,6 +1857,7 @@ name|sc
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|SYSCTL_OUT
 argument_list|(
 name|req
@@ -1877,6 +1880,7 @@ name|id
 index|]
 argument_list|)
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -2109,6 +2113,8 @@ condition|(
 name|req
 operator|->
 name|newptr
+operator|!=
+name|NULL
 condition|)
 block|{
 if|if
@@ -2232,7 +2238,9 @@ name|softc_lock
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -3202,7 +3210,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 comment|/* Start the event queues */
 for|for
