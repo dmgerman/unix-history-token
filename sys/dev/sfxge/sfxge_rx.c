@@ -1556,9 +1556,6 @@ name|CSUM_DATA_VALID
 operator||
 name|CSUM_PSEUDO_HDR
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SFXGE_HAVE_MQ
 comment|/* The hash covers a 4-tuple for TCP only */
 if|if
 condition|(
@@ -1595,8 +1592,6 @@ operator||=
 name|M_FLOWID
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|m
 operator|->
 name|m_data
@@ -1894,9 +1889,6 @@ name|optlen
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SFXGE_HAVE_MQ
 name|m
 operator|->
 name|m_pkthdr
@@ -1913,8 +1905,6 @@ name|m_flags
 operator||=
 name|M_FLOWID
 expr_stmt|;
-endif|#
-directive|endif
 name|m
 operator|->
 name|m_pkthdr
