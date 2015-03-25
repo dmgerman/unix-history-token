@@ -2601,6 +2601,14 @@ name|EFX_NVRAM_PHY
 block|,
 name|EFX_NVRAM_NULLPHY
 block|,
+name|EFX_NVRAM_FPGA
+block|,
+name|EFX_NVRAM_FCFW
+block|,
+name|EFX_NVRAM_CPLD
+block|,
+name|EFX_NVRAM_FPGA_BACKUP
+block|,
 name|EFX_NVRAM_NTYPES
 block|, }
 name|efx_nvram_type_t
