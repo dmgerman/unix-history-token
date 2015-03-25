@@ -246,11 +246,6 @@ name|PIO_MODE
 value|0
 end_define
 
-begin_error
-error|#
-directive|error
-end_error
-
 begin_endif
 endif|#
 directive|endif
