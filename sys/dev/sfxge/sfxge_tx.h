@@ -136,7 +136,7 @@ begin_define
 define|#
 directive|define
 name|SFXGE_TX_DPL_PUT_PKT_LIMIT_DEFAULT
-value|64
+value|1024
 end_define
 
 begin_comment
