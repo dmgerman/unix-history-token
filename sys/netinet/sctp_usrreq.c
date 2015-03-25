@@ -35810,7 +35810,7 @@ condition|)
 block|{
 name|SCTP_INP_DECR_REF
 argument_list|(
-name|inp
+name|tinp
 argument_list|)
 expr_stmt|;
 block|}
