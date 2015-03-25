@@ -452,6 +452,12 @@ block|}
 struct|;
 end_struct
 
+begin_struct_decl
+struct_decl|struct
+name|sfxge_evq
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|int
@@ -529,6 +535,11 @@ name|struct
 name|sfxge_txq
 modifier|*
 name|txq
+parameter_list|,
+name|struct
+name|sfxge_evq
+modifier|*
+name|evq
 parameter_list|)
 function_decl|;
 end_function_decl
