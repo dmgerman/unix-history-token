@@ -1669,6 +1669,18 @@ name|txq
 operator|->
 name|added
 expr_stmt|;
+if|if
+condition|(
+name|__predict_true
+argument_list|(
+name|txq
+operator|->
+name|init_state
+operator|==
+name|SFXGE_TXQ_STARTED
+argument_list|)
+condition|)
+block|{
 name|prefetch_read_many
 argument_list|(
 name|sc
@@ -1683,6 +1695,7 @@ operator|->
 name|common
 argument_list|)
 expr_stmt|;
+block|}
 name|mbuf
 operator|=
 name|stdp
