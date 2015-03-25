@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TARGET_ARM_H
+name|LLVM_LIB_TARGET_ARM_ARM_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TARGET_ARM_H
+name|LLVM_LIB_TARGET_ARM_ARM_H
 end_define
 
 begin_include
@@ -84,9 +84,6 @@ name|FunctionPass
 decl_stmt|;
 name|class
 name|ImmutablePass
-decl_stmt|;
-name|class
-name|JITCodeEmitter
 decl_stmt|;
 name|class
 name|MachineInstr
@@ -114,19 +111,6 @@ name|Level
 name|OptLevel
 argument_list|)
 decl_stmt|;
-name|FunctionPass
-modifier|*
-name|createARMJITCodeEmitterPass
-parameter_list|(
-name|ARMBaseTargetMachine
-modifier|&
-name|TM
-parameter_list|,
-name|JITCodeEmitter
-modifier|&
-name|JCE
-parameter_list|)
-function_decl|;
 name|FunctionPass
 modifier|*
 name|createA15SDOptimizerPass

@@ -222,6 +222,9 @@ comment|///
 comment|/// @param[in] full
 comment|///     Should FileSpec::Equal be called with "full" true or false.
 comment|///
+comment|/// @param[in] remove_backup_dots
+comment|///     Should FileSpec::Equal be called with "remove_backup_dots" true or false.
+comment|///
 comment|/// @return
 comment|///     The index of the file that matches \a file if it is found,
 comment|///     else UINT32_MAX is returned.
@@ -239,6 +242,11 @@ name|file
 argument_list|,
 name|bool
 name|full
+argument_list|,
+name|bool
+name|remove_backup_dots
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;

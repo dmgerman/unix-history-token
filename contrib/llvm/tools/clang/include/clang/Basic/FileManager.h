@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FILEMANAGER_H
+name|LLVM_CLANG_BASIC_FILEMANAGER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FILEMANAGER_H
+name|LLVM_CLANG_BASIC_FILEMANAGER_H
 end_define
 
 begin_include
@@ -230,11 +230,11 @@ comment|/// descriptor for the file.
 name|class
 name|FileEntry
 block|{
-name|std
-operator|::
-name|string
+specifier|const
+name|char
+modifier|*
 name|Name
-expr_stmt|;
+decl_stmt|;
 comment|// Name of the file.
 name|off_t
 name|Size
@@ -394,9 +394,6 @@ specifier|const
 block|{
 return|return
 name|Name
-operator|.
-name|c_str
-argument_list|()
 return|;
 block|}
 name|bool
@@ -734,7 +731,7 @@ comment|/// the end of the chain.
 name|void
 name|addStatCache
 argument_list|(
-argument|FileSystemStatCache *statCache
+argument|std::unique_ptr<FileSystemStatCache> statCache
 argument_list|,
 argument|bool AtBeginning = false
 argument_list|)
@@ -836,13 +833,19 @@ comment|/// \brief Open the specified file as a MemoryBuffer, returning a new
 comment|/// MemoryBuffer if successful, otherwise returning null.
 name|llvm
 operator|::
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
 name|MemoryBuffer
-operator|*
+operator|>>
 name|getBufferForFile
 argument_list|(
 argument|const FileEntry *Entry
-argument_list|,
-argument|std::string *ErrorStr = nullptr
 argument_list|,
 argument|bool isVolatile = false
 argument_list|,
@@ -851,13 +854,19 @@ argument_list|)
 block|;
 name|llvm
 operator|::
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|llvm
+operator|::
 name|MemoryBuffer
-operator|*
+operator|>>
 name|getBufferForFile
 argument_list|(
 argument|StringRef Filename
-argument_list|,
-argument|std::string *ErrorStr = nullptr
 argument_list|)
 block|;
 comment|/// \brief Get the 'stat' information for the given \p Path.
@@ -914,6 +923,19 @@ argument_list|,
 argument|off_t Size
 argument_list|,
 argument|time_t ModificationTime
+argument_list|)
+block|;
+comment|/// \brief Remove any './' components from a path.
+specifier|static
+name|bool
+name|removeDotPaths
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Path
 argument_list|)
 block|;
 comment|/// \brief Retrieve the canonical name for a given directory.

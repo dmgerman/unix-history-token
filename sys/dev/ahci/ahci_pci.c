@@ -2489,9 +2489,23 @@ literal|0xa01c177d
 block|,
 literal|0x00
 block|,
-literal|"ThunderX SATA"
+literal|"ThunderX"
 block|,
 name|AHCI_Q_ABAR0
+operator||
+name|AHCI_Q_1MSI
+block|}
+block|,
+block|{
+literal|0x00311c36
+block|,
+literal|0x00
+block|,
+literal|"Annapurna"
+block|,
+name|AHCI_Q_FORCE_PI
+operator||
+name|AHCI_Q_RESTORE_CAP
 block|}
 block|,
 block|{
@@ -2766,7 +2780,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2790,7 +2804,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2916,7 +2930,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2930,7 +2944,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}

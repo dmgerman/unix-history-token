@@ -389,6 +389,9 @@ name|char
 operator|*
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|chain
 operator|->
 name|optv

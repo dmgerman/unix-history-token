@@ -129,7 +129,7 @@ value|(4ULL*1024*1024*1024)
 end_define
 
 begin_comment
-comment|/*  * Returns the current RTC time as number of seconds since 00:00:00 Jan 1, 1970  *  * XXX this always returns localtime to maintain compatibility with the  * original device model.  */
+comment|/*  * Returns the current RTC time as number of seconds since 00:00:00 Jan 1, 1970  */
 end_comment
 
 begin_function
@@ -141,6 +141,9 @@ name|struct
 name|vmctx
 modifier|*
 name|ctx
+parameter_list|,
+name|int
+name|use_localtime
 parameter_list|)
 block|{
 name|struct
@@ -156,6 +159,11 @@ operator|&
 name|t
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|use_localtime
+condition|)
+block|{
 name|localtime_r
 argument_list|(
 operator|&
@@ -165,13 +173,18 @@ operator|&
 name|tm
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|t
+operator|=
 name|timegm
 argument_list|(
 operator|&
 name|tm
 argument_list|)
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|t
 operator|)
 return|;
 block|}
@@ -185,6 +198,9 @@ name|struct
 name|vmctx
 modifier|*
 name|ctx
+parameter_list|,
+name|int
+name|use_localtime
 parameter_list|)
 block|{
 name|size_t
@@ -325,6 +341,8 @@ argument_list|,
 name|rtc_time
 argument_list|(
 name|ctx
+argument_list|,
+name|use_localtime
 argument_list|)
 argument_list|)
 expr_stmt|;

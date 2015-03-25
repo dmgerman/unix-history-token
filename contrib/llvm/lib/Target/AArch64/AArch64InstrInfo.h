@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_AArch64INSTRINFO_H
+name|LLVM_LIB_TARGET_AARCH64_AARCH64INSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_AArch64INSTRINFO_H
+name|LLVM_LIB_TARGET_AARCH64_AARCH64INSTRINFO_H
 end_define
 
 begin_include
@@ -69,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|"AArch64RegisterInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/MachineCombinerPattern.h"
 end_include
 
 begin_include
@@ -157,6 +163,14 @@ argument_list|)
 specifier|const
 block|;
 name|bool
+name|isAsCheapAsAMove
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
 name|isCoalescableExtInstr
 argument_list|(
 argument|const MachineInstr&MI
@@ -166,6 +180,18 @@ argument_list|,
 argument|unsigned&DstReg
 argument_list|,
 argument|unsigned&SubIdx
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|areMemAccessesTriviallyDisjoint
+argument_list|(
+argument|MachineInstr *MIa
+argument_list|,
+argument|MachineInstr *MIb
+argument_list|,
+argument|AliasAnalysis *AA = nullptr
 argument_list|)
 specifier|const
 name|override
@@ -274,6 +300,21 @@ specifier|const
 name|override
 block|;
 name|bool
+name|getLdStBaseRegImmOfsWidth
+argument_list|(
+argument|MachineInstr *LdSt
+argument_list|,
+argument|unsigned&BaseReg
+argument_list|,
+argument|int&Offset
+argument_list|,
+argument|int&Width
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|enableClusterLoads
 argument_list|()
 specifier|const
@@ -315,7 +356,9 @@ argument|int FrameIx
 argument_list|,
 argument|uint64_t Offset
 argument_list|,
-argument|const MDNode *MDPtr
+argument|const MDNode *Var
+argument_list|,
+argument|const MDNode *Expr
 argument_list|,
 argument|DebugLoc DL
 argument_list|)
@@ -397,6 +440,11 @@ argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 name|override
+block|;
+name|using
+name|TargetInstrInfo
+operator|::
+name|foldMemoryOperandImpl
 block|;
 name|MachineInstr
 operator|*
@@ -544,6 +592,64 @@ argument_list|,
 argument|int CmpValue
 argument_list|,
 argument|const MachineRegisterInfo *MRI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|optimizeCondBranch
+argument_list|(
+argument|MachineInstr *MI
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// hasPattern - return true when there is potentially a faster code sequence
+comment|/// for an instruction chain ending in<Root>. All potential patterns are
+comment|/// listed
+comment|/// in the<Pattern> array.
+name|bool
+name|hasPattern
+argument_list|(
+argument|MachineInstr&Root
+argument_list|,
+argument|SmallVectorImpl<MachineCombinerPattern::MC_PATTERN>&Pattern
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// genAlternativeCodeSequence - when hasPattern() finds a pattern
+comment|/// this function generates the instructions that could replace the
+comment|/// original code sequence
+name|void
+name|genAlternativeCodeSequence
+argument_list|(
+argument|MachineInstr&Root
+argument_list|,
+argument|MachineCombinerPattern::MC_PATTERN P
+argument_list|,
+argument|SmallVectorImpl<MachineInstr *>&InsInstrs
+argument_list|,
+argument|SmallVectorImpl<MachineInstr *>&DelInstrs
+argument_list|,
+argument|DenseMap<unsigned
+argument_list|,
+argument|unsigned>&InstrIdxForVirtReg
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// useMachineCombiner - AArch64 supports MachineCombiner
+name|bool
+name|useMachineCombiner
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|expandPostRAPseudo
+argument_list|(
+argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
 name|override

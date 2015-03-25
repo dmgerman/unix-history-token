@@ -158,7 +158,7 @@ name|state_
 decl_stmt|;
 if|#
 directive|if
-name|TSAN_DEBUG
+name|SANITIZER_DEBUG
 name|MutexType
 name|type_
 decl_stmt|;

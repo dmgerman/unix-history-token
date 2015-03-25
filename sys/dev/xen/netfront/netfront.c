@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -308,12 +314,6 @@ begin_include
 include|#
 directive|include
 file|<machine/xen/xenvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/xen/netfront/mbufq.h>
 end_include
 
 begin_include
@@ -1256,10 +1256,10 @@ name|xn_cdata
 decl_stmt|;
 comment|/* mbufs */
 name|struct
-name|mbuf_head
+name|mbufq
 name|xn_rx_batch
 decl_stmt|;
-comment|/* head of the batch queue */
+comment|/* batch queue */
 name|int
 name|xn_if_flags
 decl_stmt|;
@@ -3481,61 +3481,26 @@ name|i
 operator|++
 control|)
 block|{
-name|MGETHDR
-argument_list|(
 name|m_new
-argument_list|,
+operator|=
+name|m_getjcl
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m_new
-operator|==
-name|NULL
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: MGETHDR failed\n"
 argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-goto|goto
-name|no_mbuf
-goto|;
-block|}
-if|if
-condition|(
-name|m_cljget
-argument_list|(
-name|m_new
-argument_list|,
-name|M_NOWAIT
+name|M_PKTHDR
 argument_list|,
 name|MJUMPAGESIZE
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m_new
 operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: m_cljget failed\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m_new
-argument_list|)
-expr_stmt|;
-name|no_mbuf
-label|:
 if|if
 condition|(
 name|i
@@ -3561,7 +3526,10 @@ operator|=
 name|MJUMPAGESIZE
 expr_stmt|;
 comment|/* queue the mbufs allocated */
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|sc
@@ -4262,7 +4230,7 @@ modifier|*
 name|m
 decl_stmt|;
 name|struct
-name|mbuf_head
+name|mbufq
 name|rxq
 decl_stmt|,
 name|errq
@@ -4292,16 +4260,21 @@ name|np
 argument_list|)
 condition|)
 return|return;
+comment|/* XXX: there should be some sane limit. */
 name|mbufq_init
 argument_list|(
 operator|&
 name|errq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 name|mbufq_init
 argument_list|(
 operator|&
 name|rxq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -4413,7 +4386,10 @@ if|if
 condition|(
 name|m
 condition|)
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|errq
@@ -4493,7 +4469,10 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|rxq
@@ -4609,21 +4588,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-while|while
-condition|(
-operator|(
-name|m
-operator|=
-name|mbufq_dequeue
+name|mbufq_drain
 argument_list|(
 operator|&
 name|errq
-argument_list|)
-operator|)
-condition|)
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 comment|/*  		 * Process all the mbufs after the remapping is complete. 		 * Break the mbuf chain first though. 		 */
@@ -8905,6 +8873,16 @@ operator|=
 name|GRANT_REF_INVALID
 expr_stmt|;
 block|}
+name|mbufq_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|xn_rx_batch
+argument_list|,
+name|INT_MAX
+argument_list|)
+expr_stmt|;
 comment|/* A grant for every tx ring slot */
 if|if
 condition|(

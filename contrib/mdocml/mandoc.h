@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mandoc.h,v 1.176 2014/12/01 08:05:52 schwarze Exp $ */
+comment|/*	$Id: mandoc.h,v 1.201 2015/02/23 13:31:04 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, 2011, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2014 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2010, 2011, 2014 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2010-2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_define
@@ -60,9 +60,9 @@ comment|/* warnings: syntax, whitespace, etc. */
 name|MANDOCLEVEL_ERROR
 block|,
 comment|/* input has been thrown away */
-name|MANDOCLEVEL_FATAL
+name|MANDOCLEVEL_UNSUPP
 block|,
-comment|/* input is borked */
+comment|/* input needs unimplemented features */
 name|MANDOCLEVEL_BADARG
 block|,
 comment|/* bad argument in invocation */
@@ -137,9 +137,21 @@ comment|/* content before first section header: macro */
 name|MANDOCERR_NAMESEC_FIRST
 block|,
 comment|/* first section is not NAME: Sh title */
+name|MANDOCERR_NAMESEC_NONM
+block|,
+comment|/* NAME section without name */
+name|MANDOCERR_NAMESEC_NOND
+block|,
+comment|/* NAME section without description */
+name|MANDOCERR_NAMESEC_ND
+block|,
+comment|/* description not at the end of NAME */
 name|MANDOCERR_NAMESEC_BAD
 block|,
-comment|/* bad NAME section contents: macro */
+comment|/* bad NAME section content: macro */
+name|MANDOCERR_ND_EMPTY
+block|,
+comment|/* missing description line, using "" */
 name|MANDOCERR_SEC_ORDER
 block|,
 comment|/* sections out of conventional order: Sh title */
@@ -205,12 +217,12 @@ comment|/* conditional request controls empty scope */
 name|MANDOCERR_MACRO_EMPTY
 block|,
 comment|/* skipping empty macro: macro */
+name|MANDOCERR_BLK_EMPTY
+block|,
+comment|/* empty block: macro */
 name|MANDOCERR_ARG_EMPTY
 block|,
 comment|/* empty argument, using 0n: macro arg */
-name|MANDOCERR_ARGCWARN
-block|,
-comment|/* argument count wrong */
 name|MANDOCERR_BD_NOTYPE
 block|,
 comment|/* missing display type, using -ragged: Bd */
@@ -223,6 +235,9 @@ comment|/* missing -width in -tag list, using 8n */
 name|MANDOCERR_EX_NONAME
 block|,
 comment|/* missing utility name, using "": Ex */
+name|MANDOCERR_FO_NOHEAD
+block|,
+comment|/* missing function name, using "": Fo */
 name|MANDOCERR_IT_NOHEAD
 block|,
 comment|/* empty head in list item: Bl -type It */
@@ -238,9 +253,18 @@ comment|/* unknown font type, using \fR: Bf font */
 name|MANDOCERR_PF_SKIP
 block|,
 comment|/* nothing follows prefix: Pf arg */
+name|MANDOCERR_RS_EMPTY
+block|,
+comment|/* empty reference block: Rs */
 name|MANDOCERR_ARG_STD
 block|,
 comment|/* missing -std argument, adding it: macro */
+name|MANDOCERR_OP_EMPTY
+block|,
+comment|/* missing option string, using "": OP */
+name|MANDOCERR_UR_NOHEAD
+block|,
+comment|/* missing resource identifier, using "": UR */
 name|MANDOCERR_EQN_NOBOX
 block|,
 comment|/* missing eqn box, using "": op */
@@ -263,6 +287,9 @@ comment|/* skipping duplicate list type: Bl -type */
 name|MANDOCERR_BL_SKIPW
 block|,
 comment|/* skipping -width argument: Bl -type */
+name|MANDOCERR_BL_COL
+block|,
+comment|/* wrong number of cells */
 name|MANDOCERR_AT_BAD
 block|,
 comment|/* unknown AT&T UNIX version: At version */
@@ -281,6 +308,9 @@ comment|/* invalid Boolean argument: macro arg */
 name|MANDOCERR_FT_BAD
 block|,
 comment|/* unknown font, skipping request: ft font */
+name|MANDOCERR_TR_ODD
+block|,
+comment|/* odd number of characters in request: tr char */
 comment|/* related to plain text */
 name|MANDOCERR_FI_BLANK
 block|,
@@ -300,57 +330,69 @@ comment|/* invalid escape sequence: esc */
 name|MANDOCERR_STR_UNDEF
 block|,
 comment|/* undefined string, using "": name */
+comment|/* related to tables */
+name|MANDOCERR_TBLLAYOUT_SPAN
+block|,
+comment|/* tbl line starts with span */
+name|MANDOCERR_TBLLAYOUT_DOWN
+block|,
+comment|/* tbl column starts with span */
+name|MANDOCERR_TBLLAYOUT_VERT
+block|,
+comment|/* skipping vertical bar in tbl layout */
 name|MANDOCERR_ERROR
 block|,
 comment|/* ===== start of errors ===== */
-comment|/* related to equations */
-name|MANDOCERR_EQNNSCOPE
-block|,
-comment|/* unexpected equation scope closure*/
-name|MANDOCERR_EQNSCOPE
-block|,
-comment|/* equation scope open on exit */
-name|MANDOCERR_EQNBADSCOPE
-block|,
-comment|/* overlapping equation scopes */
-name|MANDOCERR_EQNEOF
-block|,
-comment|/* unexpected end of equation */
 comment|/* related to tables */
-name|MANDOCERR_TBL
+name|MANDOCERR_TBLOPT_ALPHA
 block|,
-comment|/* bad table syntax */
-name|MANDOCERR_TBLOPT
+comment|/* non-alphabetic character in tbl options */
+name|MANDOCERR_TBLOPT_BAD
 block|,
-comment|/* bad table option */
-name|MANDOCERR_TBLLAYOUT
+comment|/* skipping unknown tbl option: option */
+name|MANDOCERR_TBLOPT_NOARG
 block|,
-comment|/* bad table layout */
-name|MANDOCERR_TBLNOLAYOUT
+comment|/* missing tbl option argument: option */
+name|MANDOCERR_TBLOPT_ARGSZ
 block|,
-comment|/* no table layout cells specified */
-name|MANDOCERR_TBLNODATA
+comment|/* wrong tbl option argument size: option */
+name|MANDOCERR_TBLLAYOUT_NONE
 block|,
-comment|/* no table data cells specified */
-name|MANDOCERR_TBLIGNDATA
+comment|/* empty tbl layout */
+name|MANDOCERR_TBLLAYOUT_CHAR
 block|,
-comment|/* ignore data in cell */
-name|MANDOCERR_TBLBLOCK
+comment|/* invalid character in tbl layout: char */
+name|MANDOCERR_TBLLAYOUT_PAR
 block|,
-comment|/* data block still open */
-name|MANDOCERR_TBLEXTRADAT
+comment|/* unmatched parenthesis in tbl layout */
+name|MANDOCERR_TBLDATA_NONE
 block|,
-comment|/* ignoring extra data cells */
+comment|/* tbl without any data cells */
+name|MANDOCERR_TBLDATA_SPAN
+block|,
+comment|/* ignoring data in spanned tbl cell: data */
+name|MANDOCERR_TBLDATA_EXTRA
+block|,
+comment|/* ignoring extra tbl data cells: data */
+name|MANDOCERR_TBLDATA_BLK
+block|,
+comment|/* data block open at end of tbl: macro */
 comment|/* related to document structure and macros */
+name|MANDOCERR_FILE
+block|,
+comment|/* cannot open file */
 name|MANDOCERR_ROFFLOOP
 block|,
 comment|/* input stack limit exceeded, infinite loop? */
-name|MANDOCERR_BADCHAR
+name|MANDOCERR_CHAR_BAD
 block|,
 comment|/* skipping bad character: number */
 name|MANDOCERR_MACRO
 block|,
 comment|/* skipping unknown macro: macro */
+name|MANDOCERR_REQ_INSEC
+block|,
+comment|/* skipping insecure request: request */
 name|MANDOCERR_IT_STRAY
 block|,
 comment|/* skipping item outside list: It ... */
@@ -360,6 +402,9 @@ comment|/* skipping column outside column list: Ta */
 name|MANDOCERR_BLK_NOTOPEN
 block|,
 comment|/* skipping end of block that is not open */
+name|MANDOCERR_RE_NOTOPEN
+block|,
+comment|/* fewer RS blocks open, skipping: RE arg */
 name|MANDOCERR_BLK_BROKEN
 block|,
 comment|/* inserting missing end of block: macro ... */
@@ -370,9 +415,6 @@ comment|/* related to request and macro arguments */
 name|MANDOCERR_NAMESC
 block|,
 comment|/* escaped character not allowed in a name: name */
-name|MANDOCERR_ARGCOUNT
-block|,
-comment|/* argument count wrong */
 name|MANDOCERR_BD_FILE
 block|,
 comment|/* NOT IMPLEMENTED: Bd -file */
@@ -391,6 +433,12 @@ comment|/* unknown standard specifier: St standard */
 name|MANDOCERR_IT_NONUM
 block|,
 comment|/* skipping request without numeric argument */
+name|MANDOCERR_SO_PATH
+block|,
+comment|/* NOT IMPLEMENTED: .so with absolute path or ".." */
+name|MANDOCERR_SO_FAIL
+block|,
+comment|/* .so request failed */
 name|MANDOCERR_ARG_SKIP
 block|,
 comment|/* skipping all arguments: macro args */
@@ -400,49 +448,27 @@ comment|/* skipping excess arguments: macro ... args */
 name|MANDOCERR_DIVZERO
 block|,
 comment|/* divide by zero */
-name|MANDOCERR_FATAL
+name|MANDOCERR_UNSUPP
 block|,
-comment|/* ===== start of fatal errors ===== */
+comment|/* ===== start of unsupported features ===== */
 name|MANDOCERR_TOOLARGE
 block|,
 comment|/* input too large */
-name|MANDOCERR_SO_PATH
+name|MANDOCERR_CHAR_UNSUPP
 block|,
-comment|/* NOT IMPLEMENTED: .so with absolute path or ".." */
-name|MANDOCERR_SO_FAIL
+comment|/* unsupported control character: number */
+name|MANDOCERR_REQ_UNSUPP
 block|,
-comment|/* .so request failed */
-comment|/* ===== system errors ===== */
-name|MANDOCERR_SYSDUP
+comment|/* unsupported roff request: request */
+name|MANDOCERR_TBLOPT_EQN
 block|,
-comment|/* cannot dup file descriptor */
-name|MANDOCERR_SYSEXEC
+comment|/* eqn delim option in tbl: arg */
+name|MANDOCERR_TBLLAYOUT_MOD
 block|,
-comment|/* cannot exec */
-name|MANDOCERR_SYSEXIT
+comment|/* unsupported tbl layout modifier: m */
+name|MANDOCERR_TBLMACRO
 block|,
-comment|/* gunzip failed with code */
-name|MANDOCERR_SYSFORK
-block|,
-comment|/* cannot fork */
-name|MANDOCERR_SYSOPEN
-block|,
-comment|/* cannot open file */
-name|MANDOCERR_SYSPIPE
-block|,
-comment|/* cannot open pipe */
-name|MANDOCERR_SYSREAD
-block|,
-comment|/* cannot read file */
-name|MANDOCERR_SYSSIG
-block|,
-comment|/* gunzip died from signal */
-name|MANDOCERR_SYSSTAT
-block|,
-comment|/* cannot stat file */
-name|MANDOCERR_SYSWAIT
-block|,
-comment|/* wait failed */
+comment|/* ignoring macro in table: macro */
 name|MANDOCERR_MAX
 block|}
 enum|;
@@ -460,9 +486,6 @@ name|char
 name|decimal
 decl_stmt|;
 comment|/* decimal point */
-name|int
-name|linesize
-decl_stmt|;
 name|int
 name|opts
 decl_stmt|;
@@ -494,40 +517,22 @@ define|#
 directive|define
 name|TBL_OPT_NOSPACE
 value|(1<< 6)
+define|#
+directive|define
+name|TBL_OPT_NOWARN
+value|(1<< 7)
 name|int
 name|cols
 decl_stmt|;
 comment|/* number of columns */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * The head of a table specifies all of its columns.  When formatting a  * tbl_span, iterate over these and plug in data from the tbl_span when  * appropriate, using tbl_cell as a guide to placement.  */
-end_comment
-
-begin_struct
-struct|struct
-name|tbl_head
-block|{
 name|int
-name|ident
+name|lvert
 decl_stmt|;
-comment|/* 0<= unique id< cols */
+comment|/* width of left vertical line */
 name|int
-name|vert
+name|rvert
 decl_stmt|;
-comment|/* width of preceding vertical line */
-name|struct
-name|tbl_head
-modifier|*
-name|next
-decl_stmt|;
-name|struct
-name|tbl_head
-modifier|*
-name|prev
-decl_stmt|;
+comment|/* width of right vertical line */
 block|}
 struct|;
 end_struct
@@ -584,7 +589,7 @@ decl_stmt|;
 name|int
 name|vert
 decl_stmt|;
-comment|/* width of preceding vertical line */
+comment|/* width of subsequent vertical line */
 name|enum
 name|tbl_cellt
 name|pos
@@ -592,6 +597,10 @@ decl_stmt|;
 name|size_t
 name|spacing
 decl_stmt|;
+name|int
+name|col
+decl_stmt|;
+comment|/* column number, starting from 0 */
 name|int
 name|flags
 decl_stmt|;
@@ -635,11 +644,6 @@ directive|define
 name|TBL_CELL_WMAX
 value|(1<< 7)
 comment|/* x, X */
-name|struct
-name|tbl_head
-modifier|*
-name|head
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -670,7 +674,7 @@ decl_stmt|;
 name|int
 name|vert
 decl_stmt|;
-comment|/* trailing vertical line */
+comment|/* width of left vertical line */
 block|}
 struct|;
 end_struct
@@ -766,11 +770,6 @@ modifier|*
 name|opts
 decl_stmt|;
 name|struct
-name|tbl_head
-modifier|*
-name|head
-decl_stmt|;
-name|struct
 name|tbl_row
 modifier|*
 name|layout
@@ -786,29 +785,23 @@ name|tbl_dat
 modifier|*
 name|last
 decl_stmt|;
-name|int
-name|line
-decl_stmt|;
-comment|/* parse line */
-name|int
-name|flags
-decl_stmt|;
-define|#
-directive|define
-name|TBL_SPAN_FIRST
-value|(1<< 0)
-define|#
-directive|define
-name|TBL_SPAN_LAST
-value|(1<< 1)
-name|enum
-name|tbl_spant
-name|pos
+name|struct
+name|tbl_span
+modifier|*
+name|prev
 decl_stmt|;
 name|struct
 name|tbl_span
 modifier|*
 name|next
+decl_stmt|;
+name|int
+name|line
+decl_stmt|;
+comment|/* parse line */
+name|enum
+name|tbl_spant
+name|pos
 decl_stmt|;
 block|}
 struct|;
@@ -1168,7 +1161,10 @@ name|ESCAPE_NOSPACE
 block|,
 comment|/* suppress space if the last on a line */
 name|ESCAPE_SKIPCHAR
+block|,
 comment|/* skip the next character */
+name|ESCAPE_OVERSTRIKE
+comment|/* overstrike all chars in the argument */
 block|}
 enum|;
 end_enum

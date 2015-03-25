@@ -182,13 +182,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_THREAD_SAFETY_TIL_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_THREADSAFETYTIL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_THREAD_SAFETY_TIL_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_THREADSAFETYTIL_H
 end_define
 
 begin_comment
@@ -203,12 +203,6 @@ begin_include
 include|#
 directive|include
 file|"ThreadSafetyUtil.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
 end_include
 
 begin_include
@@ -232,6 +226,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -245,6 +245,7 @@ block|{
 name|namespace
 name|til
 block|{
+comment|/// Enum for the different distinct classes of SExpr
 enum|enum
 name|TIL_Opcode
 block|{
@@ -263,6 +264,7 @@ directive|undef
 name|TIL_OPCODE_DEF
 block|}
 enum|;
+comment|/// Opcode for unary arithmetic operations.
 enum|enum
 name|TIL_UnaryOpcode
 enum|:
@@ -279,12 +281,19 @@ name|UOP_LogicNot
 comment|//  !
 block|}
 enum|;
+comment|/// Opcode for binary arithmetic operations.
 enum|enum
 name|TIL_BinaryOpcode
 enum|:
 name|unsigned
 name|char
 block|{
+name|BOP_Add
+block|,
+comment|//  +
+name|BOP_Sub
+block|,
+comment|//  -
 name|BOP_Mul
 block|,
 comment|//  *
@@ -294,12 +303,6 @@ comment|//  /
 name|BOP_Rem
 block|,
 comment|//  %
-name|BOP_Add
-block|,
-comment|//  +
-name|BOP_Sub
-block|,
-comment|//  -
 name|BOP_Shl
 block|,
 comment|//<<
@@ -329,11 +332,12 @@ block|,
 comment|//<=
 name|BOP_LogicAnd
 block|,
-comment|//&&
+comment|//&&  (no short-circuit)
 name|BOP_LogicOr
-comment|//  ||
+comment|//  ||  (no short-circuit)
 block|}
 enum|;
+comment|/// Opcode for cast operations.
 enum|enum
 name|TIL_CastOpcode
 enum|:
@@ -356,6 +360,8 @@ comment|// convert to floating point type
 name|CAST_toInt
 block|,
 comment|// convert to integer type
+name|CAST_objToPtr
+comment|// convert smart pointer to pointer  (C++ only)
 block|}
 enum|;
 specifier|const
@@ -386,7 +392,7 @@ specifier|const
 name|TIL_BinaryOpcode
 name|BOP_Min
 init|=
-name|BOP_Mul
+name|BOP_Add
 decl_stmt|;
 specifier|const
 name|TIL_BinaryOpcode
@@ -406,6 +412,7 @@ name|CAST_Max
 init|=
 name|CAST_toInt
 decl_stmt|;
+comment|/// Return the name of a unary opcode.
 name|StringRef
 name|getUnaryOpcodeString
 parameter_list|(
@@ -413,6 +420,7 @@ name|TIL_UnaryOpcode
 name|Op
 parameter_list|)
 function_decl|;
+comment|/// Return the name of a binary opcode.
 name|StringRef
 name|getBinaryOpcodeString
 parameter_list|(
@@ -420,12 +428,12 @@ name|TIL_BinaryOpcode
 name|Op
 parameter_list|)
 function_decl|;
-comment|// ValueTypes are data types that can actually be held in registers.
-comment|// All variables and expressions must have a vBNF_Nonealue type.
-comment|// Pointer types are further subdivided into the various heap-allocated
-comment|// types, such as functions, records, etc.
-comment|// Structured types that are passed by value (e.g. complex numbers)
-comment|// require special handling; they use BT_ValueRef, and size ST_0.
+comment|/// ValueTypes are data types that can actually be held in registers.
+comment|/// All variables and expressions must have a value type.
+comment|/// Pointer types are further subdivided into the various heap-allocated
+comment|/// types, such as functions, records, etc.
+comment|/// Structured types that are passed by value (e.g. complex numbers)
+comment|/// require special handling; they use BT_ValueRef, and size ST_0.
 struct|struct
 name|ValueType
 block|{
@@ -1015,7 +1023,10 @@ literal|0
 argument_list|)
 return|;
 block|}
-comment|// Base class for AST nodes in the typed intermediate language.
+name|class
+name|BasicBlock
+decl_stmt|;
+comment|/// Base class for AST nodes in the typed intermediate language.
 name|class
 name|SExpr
 block|{
@@ -1074,7 +1085,7 @@ name|R
 argument_list|)
 return|;
 block|}
-comment|// SExpr objects cannot be deleted.
+comment|/// SExpr objects cannot be deleted.
 comment|// This declaration is public to workaround a gcc bug that breaks building
 comment|// with REQUIRES_EH=1.
 name|void
@@ -1086,6 +1097,50 @@ operator|*
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 decl_stmt|;
+comment|/// Returns the instruction ID for this expression.
+comment|/// All basic block instructions have a unique ID (i.e. virtual register).
+name|unsigned
+name|id
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SExprID
+return|;
+block|}
+comment|/// Returns the block, if this is an instruction in a basic block,
+comment|/// otherwise returns null.
+name|BasicBlock
+operator|*
+name|block
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Block
+return|;
+block|}
+comment|/// Set the basic block and instruction ID for this expression.
+name|void
+name|setID
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|B
+parameter_list|,
+name|unsigned
+name|id
+parameter_list|)
+block|{
+name|Block
+operator|=
+name|B
+expr_stmt|;
+name|SExprID
+operator|=
+name|id
+expr_stmt|;
+block|}
 name|protected
 label|:
 name|SExpr
@@ -1107,6 +1162,16 @@ name|Flags
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|SExprID
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Block
+argument_list|(
+argument|nullptr
+argument_list|)
 block|{}
 name|SExpr
 argument_list|(
@@ -1130,7 +1195,19 @@ argument_list|)
 operator|,
 name|Flags
 argument_list|(
-argument|E.Flags
+name|E
+operator|.
+name|Flags
+argument_list|)
+operator|,
+name|SExprID
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Block
+argument_list|(
+argument|nullptr
 argument_list|)
 block|{}
 specifier|const
@@ -1146,13 +1223,20 @@ name|unsigned
 name|short
 name|Flags
 decl_stmt|;
+name|unsigned
+name|SExprID
+decl_stmt|;
+name|BasicBlock
+modifier|*
+name|Block
+decl_stmt|;
 name|private
 label|:
 name|SExpr
 argument_list|()
 name|LLVM_DELETED_FUNCTION
 expr_stmt|;
-comment|// SExpr objects must be created in an arena.
+comment|/// SExpr objects must be created in an arena.
 name|void
 modifier|*
 name|operator
@@ -1161,270 +1245,6 @@ argument_list|(
 name|size_t
 argument_list|)
 name|LLVM_DELETED_FUNCTION
-decl_stmt|;
-block|}
-empty_stmt|;
-comment|// Class for owning references to SExprs.
-comment|// Includes attach/detach logic for counting variable references and lazy
-comment|// rewriting strategies.
-name|class
-name|SExprRef
-block|{
-name|public
-label|:
-name|SExprRef
-argument_list|()
-operator|:
-name|Ptr
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{ }
-name|SExprRef
-argument_list|(
-argument|std::nullptr_t P
-argument_list|)
-operator|:
-name|Ptr
-argument_list|(
-argument|nullptr
-argument_list|)
-block|{ }
-name|SExprRef
-argument_list|(
-name|SExprRef
-operator|&&
-name|R
-argument_list|)
-operator|:
-name|Ptr
-argument_list|(
-argument|R.Ptr
-argument_list|)
-block|{
-name|R
-operator|.
-name|Ptr
-operator|=
-name|nullptr
-block|; }
-comment|// Defined after Variable and Future, below.
-specifier|inline
-name|SExprRef
-argument_list|(
-name|SExpr
-operator|*
-name|P
-argument_list|)
-expr_stmt|;
-specifier|inline
-operator|~
-name|SExprRef
-argument_list|()
-expr_stmt|;
-name|SExpr
-modifier|*
-name|get
-parameter_list|()
-block|{
-return|return
-name|Ptr
-return|;
-block|}
-specifier|const
-name|SExpr
-operator|*
-name|get
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Ptr
-return|;
-block|}
-name|SExpr
-operator|*
-name|operator
-operator|->
-expr|(
-block|)
-block|{
-return|return
-name|get
-argument_list|()
-return|;
-block|}
-specifier|const
-name|SExpr
-operator|*
-name|operator
-operator|->
-expr|(
-block|)
-decl|const
-block|{
-return|return
-name|get
-argument_list|()
-return|;
-block|}
-name|SExpr
-modifier|&
-name|operator
-modifier|*
-parameter_list|()
-block|{
-return|return
-operator|*
-name|Ptr
-return|;
-block|}
-specifier|const
-name|SExpr
-operator|&
-name|operator
-operator|*
-operator|(
-operator|)
-specifier|const
-block|{
-return|return
-operator|*
-name|Ptr
-return|;
-block|}
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|SExprRef
-operator|&
-name|R
-operator|)
-specifier|const
-block|{
-return|return
-name|Ptr
-operator|==
-name|R
-operator|.
-name|Ptr
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|SExprRef
-operator|&
-name|R
-operator|)
-specifier|const
-block|{
-return|return
-operator|!
-name|operator
-operator|==
-operator|(
-name|R
-operator|)
-return|;
-block|}
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|SExpr
-operator|*
-name|P
-operator|)
-specifier|const
-block|{
-return|return
-name|Ptr
-operator|==
-name|P
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|SExpr
-operator|*
-name|P
-operator|)
-specifier|const
-block|{
-return|return
-operator|!
-name|operator
-operator|==
-operator|(
-name|P
-operator|)
-return|;
-block|}
-name|bool
-name|operator
-operator|==
-operator|(
-name|std
-operator|::
-name|nullptr_t
-operator|)
-specifier|const
-block|{
-return|return
-name|Ptr
-operator|==
-name|nullptr
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-name|std
-operator|::
-name|nullptr_t
-operator|)
-specifier|const
-block|{
-return|return
-name|Ptr
-operator|!=
-name|nullptr
-return|;
-block|}
-specifier|inline
-name|void
-name|reset
-parameter_list|(
-name|SExpr
-modifier|*
-name|E
-parameter_list|)
-function_decl|;
-name|private
-label|:
-specifier|inline
-name|void
-name|attach
-parameter_list|()
-function_decl|;
-specifier|inline
-name|void
-name|detach
-parameter_list|()
-function_decl|;
-name|SExpr
-modifier|*
-name|Ptr
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -1473,23 +1293,20 @@ name|class
 name|SFunction
 decl_stmt|;
 name|class
-name|BasicBlock
-decl_stmt|;
-name|class
 name|Let
 decl_stmt|;
-comment|// A named variable, e.g. "x".
-comment|//
-comment|// There are two distinct places in which a Variable can appear in the AST.
-comment|// A variable declaration introduces a new variable, and can occur in 3 places:
-comment|//   Let-expressions:           (Let (x = t) u)
-comment|//   Functions:                 (Function (x : t) u)
-comment|//   Self-applicable functions  (SFunction (x) t)
-comment|//
-comment|// If a variable occurs in any other location, it is a reference to an existing
-comment|// variable declaration -- e.g. 'x' in (x * y + z). To save space, we don't
-comment|// allocate a separate AST node for variable references; a reference is just a
-comment|// pointer to the original declaration.
+comment|/// A named variable, e.g. "x".
+comment|///
+comment|/// There are two distinct places in which a Variable can appear in the AST.
+comment|/// A variable declaration introduces a new variable, and can occur in 3 places:
+comment|///   Let-expressions:           (Let (x = t) u)
+comment|///   Functions:                 (Function (x : t) u)
+comment|///   Self-applicable functions  (SFunction (x) t)
+comment|///
+comment|/// If a variable occurs in any other location, it is a reference to an existing
+comment|/// variable declaration -- e.g. 'x' in (x * y + z). To save space, we don't
+comment|/// allocate a separate AST node for variable references; a reference is just a
+comment|/// pointer to the original declaration.
 name|class
 name|Variable
 range|:
@@ -1514,21 +1331,50 @@ operator|==
 name|COP_Variable
 return|;
 block|}
-comment|// Let-variable, function parameter, or self-variable
 expr|enum
 name|VariableKind
 block|{
 name|VK_Let
 block|,
-name|VK_LetBB
-block|,
+comment|///< Let-variable
 name|VK_Fun
 block|,
+comment|///< Function parameter
 name|VK_SFun
+comment|///< SFunction (self) parameter
 block|}
 block|;
-comment|// These are defined after SExprRef contructor, below
-specifier|inline
+name|Variable
+argument_list|(
+argument|StringRef s
+argument_list|,
+argument|SExpr *D = nullptr
+argument_list|)
+operator|:
+name|SExpr
+argument_list|(
+name|COP_Variable
+argument_list|)
+block|,
+name|Name
+argument_list|(
+name|s
+argument_list|)
+block|,
+name|Definition
+argument_list|(
+name|D
+argument_list|)
+block|,
+name|Cvdecl
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{
+name|Flags
+operator|=
+name|VK_Let
+block|;   }
 name|Variable
 argument_list|(
 name|SExpr
@@ -1544,16 +1390,38 @@ name|Cvd
 operator|=
 name|nullptr
 argument_list|)
-block|;
-specifier|inline
-name|Variable
+operator|:
+name|SExpr
 argument_list|(
-argument|StringRef s
-argument_list|,
-argument|SExpr *D = nullptr
+name|COP_Variable
 argument_list|)
-block|;
-specifier|inline
+block|,
+name|Name
+argument_list|(
+name|Cvd
+condition|?
+name|Cvd
+operator|->
+name|getName
+argument_list|()
+else|:
+literal|"_x"
+argument_list|)
+block|,
+name|Definition
+argument_list|(
+name|D
+argument_list|)
+block|,
+name|Cvdecl
+argument_list|(
+argument|Cvd
+argument_list|)
+block|{
+name|Flags
+operator|=
+name|VK_Let
+block|;   }
 name|Variable
 argument_list|(
 specifier|const
@@ -1565,7 +1433,38 @@ name|SExpr
 operator|*
 name|D
 argument_list|)
-block|;
+comment|// rewrite constructor
+operator|:
+name|SExpr
+argument_list|(
+name|Vd
+argument_list|)
+block|,
+name|Name
+argument_list|(
+name|Vd
+operator|.
+name|Name
+argument_list|)
+block|,
+name|Definition
+argument_list|(
+name|D
+argument_list|)
+block|,
+name|Cvdecl
+argument_list|(
+argument|Vd.Cvdecl
+argument_list|)
+block|{
+name|Flags
+operator|=
+name|Vd
+operator|.
+name|kind
+argument_list|()
+block|;   }
+comment|/// Return the kind of variable (let, function param, or self)
 name|VariableKind
 name|kind
 argument_list|()
@@ -1581,7 +1480,7 @@ name|Flags
 operator|)
 return|;
 block|}
-specifier|const
+comment|/// Return the name of the variable, if any.
 name|StringRef
 name|name
 argument_list|()
@@ -1591,6 +1490,7 @@ return|return
 name|Name
 return|;
 block|}
+comment|/// Return the clang declaration for this variable, if any.
 specifier|const
 name|clang
 operator|::
@@ -1604,7 +1504,9 @@ return|return
 name|Cvdecl
 return|;
 block|}
-comment|// Returns the definition (for let vars) or type (for parameter& self vars)
+comment|/// Return the definition of the variable.
+comment|/// For let-vars, this is the setting expression.
+comment|/// For function and self parameters, it is the type of the variable.
 name|SExpr
 operator|*
 name|definition
@@ -1612,9 +1514,6 @@ argument_list|()
 block|{
 return|return
 name|Definition
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -1626,50 +1525,6 @@ specifier|const
 block|{
 return|return
 name|Definition
-operator|.
-name|get
-argument_list|()
-return|;
-block|}
-name|void
-name|attachVar
-argument_list|()
-specifier|const
-block|{
-operator|++
-name|NumUses
-block|; }
-name|void
-name|detachVar
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|NumUses
-operator|>
-literal|0
-argument_list|)
-block|;
-operator|--
-name|NumUses
-block|; }
-name|unsigned
-name|getID
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Id
-return|;
-block|}
-name|unsigned
-name|getBlockID
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BlockID
 return|;
 block|}
 name|void
@@ -1681,55 +1536,7 @@ block|{
 name|Name
 operator|=
 name|S
-block|; }
-name|void
-name|setID
-argument_list|(
-argument|unsigned Bid
-argument_list|,
-argument|unsigned I
-argument_list|)
-block|{
-name|BlockID
-operator|=
-name|static_cast
-operator|<
-name|unsigned
-name|short
-operator|>
-operator|(
-name|Bid
-operator|)
-block|;
-name|Id
-operator|=
-name|static_cast
-operator|<
-name|unsigned
-name|short
-operator|>
-operator|(
-name|I
-operator|)
-block|;   }
-name|void
-name|setClangDecl
-argument_list|(
-argument|const clang::ValueDecl *VD
-argument_list|)
-block|{
-name|Cvdecl
-operator|=
-name|VD
-block|; }
-name|void
-name|setDefinition
-argument_list|(
-name|SExpr
-operator|*
-name|E
-argument_list|)
-block|;
+block|;  }
 name|void
 name|setKind
 argument_list|(
@@ -1739,6 +1546,26 @@ block|{
 name|Flags
 operator|=
 name|K
+block|; }
+name|void
+name|setDefinition
+argument_list|(
+argument|SExpr *E
+argument_list|)
+block|{
+name|Definition
+operator|=
+name|E
+block|; }
+name|void
+name|setClangDecl
+argument_list|(
+argument|const clang::ValueDecl *VD
+argument_list|)
+block|{
+name|Cvdecl
+operator|=
+name|VD
 block|; }
 name|template
 operator|<
@@ -1777,10 +1604,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Variable* E
+argument|const Variable* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 return|return
 name|Cmp
@@ -1815,7 +1643,8 @@ name|StringRef
 name|Name
 block|;
 comment|// The name of the variable.
-name|SExprRef
+name|SExpr
+operator|*
 name|Definition
 block|;
 comment|// The TIL type or definition
@@ -1827,21 +1656,10 @@ operator|*
 name|Cvdecl
 block|;
 comment|// The clang declaration for this variable.
-name|unsigned
-name|short
-name|BlockID
-block|;
-name|unsigned
-name|short
-name|Id
-block|;
-name|mutable
-name|unsigned
-name|NumUses
-block|; }
+block|}
 decl_stmt|;
-comment|// Placeholder for an expression that has not yet been created.
-comment|// Used to implement lazy copy and rewriting strategies.
+comment|/// Placeholder for an expression that has not yet been created.
+comment|/// Used to implement lazy copy and rewriting strategies.
 name|class
 name|Future
 range|:
@@ -1891,11 +1709,6 @@ argument_list|)
 block|,
 name|Result
 argument_list|(
-name|nullptr
-argument_list|)
-block|,
-name|Location
-argument_list|(
 argument|nullptr
 argument_list|)
 block|{}
@@ -1909,45 +1722,11 @@ name|LLVM_DELETED_FUNCTION
 block|;
 name|public
 operator|:
-comment|// Registers the location in the AST where this future is stored.
-comment|// Forcing the future will automatically update the AST.
-specifier|static
-specifier|inline
-name|void
-name|registerLocation
-argument_list|(
-argument|SExprRef *Member
-argument_list|)
-block|{
-if|if
-condition|(
-name|Future
-modifier|*
-name|F
-init|=
-name|dyn_cast_or_null
-operator|<
-name|Future
-operator|>
-operator|(
-name|Member
-operator|->
-name|get
-argument_list|()
-operator|)
-condition|)
-name|F
-operator|->
-name|Location
-operator|=
-name|Member
-expr_stmt|;
-block|}
 comment|// A lazy rewriting strategy should subclass Future and override this method.
 name|virtual
 name|SExpr
 operator|*
-name|create
+name|compute
 argument_list|()
 block|{
 return|return
@@ -1959,6 +1738,7 @@ name|SExpr
 operator|*
 name|maybeGetResult
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Result
@@ -1978,11 +1758,9 @@ block|{
 case|case
 name|FS_pending
 case|:
+return|return
 name|force
 argument_list|()
-expr_stmt|;
-return|return
-name|Result
 return|;
 case|case
 name|FS_evaluating
@@ -2044,10 +1822,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Future* E
+argument|const Future* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 if|if
 condition|(
@@ -2084,9 +1863,8 @@ return|;
 block|}
 name|private
 label|:
-comment|// Force the future.
-specifier|inline
-name|void
+name|SExpr
+modifier|*
 name|force
 parameter_list|()
 function_decl|;
@@ -2097,421 +1875,23 @@ name|SExpr
 modifier|*
 name|Result
 decl_stmt|;
-name|SExprRef
-modifier|*
-name|Location
-decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
-specifier|inline
-name|void
-name|SExprRef
-operator|::
-name|attach
-argument_list|()
-block|{
-if|if
-condition|(
-operator|!
-name|Ptr
-condition|)
-return|return;
-name|TIL_Opcode
-name|Op
-operator|=
-name|Ptr
-operator|->
-name|opcode
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|Op
-operator|==
-name|COP_Variable
-condition|)
-block|{
-name|cast
-operator|<
-name|Variable
-operator|>
-operator|(
-name|Ptr
-operator|)
-operator|->
-name|attachVar
-argument_list|()
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|Op
-operator|==
-name|COP_Future
-condition|)
-block|{
-name|cast
-operator|<
-name|Future
-operator|>
-operator|(
-name|Ptr
-operator|)
-operator|->
-name|registerLocation
-argument_list|(
-name|this
-argument_list|)
-expr_stmt|;
-block|}
-end_if
-
-begin_expr_stmt
-unit|}  inline
-name|void
-name|SExprRef
-operator|::
-name|detach
-argument_list|()
-block|{
-if|if
-condition|(
-name|Ptr
-operator|&&
-name|Ptr
-operator|->
-name|opcode
-argument_list|()
-operator|==
-name|COP_Variable
-condition|)
-block|{
-name|cast
-operator|<
-name|Variable
-operator|>
-operator|(
-name|Ptr
-operator|)
-operator|->
-name|detachVar
-argument_list|()
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|}  inline
-name|SExprRef
-operator|::
-name|SExprRef
-argument_list|(
-name|SExpr
-operator|*
-name|P
-argument_list|)
-operator|:
-name|Ptr
-argument_list|(
-argument|P
-argument_list|)
-block|{
-name|attach
-argument_list|()
-block|; }
-specifier|inline
-name|SExprRef
-operator|::
-operator|~
-name|SExprRef
-argument_list|()
-block|{
-name|detach
-argument_list|()
-block|; }
-specifier|inline
-name|void
-name|SExprRef
-operator|::
-name|reset
-argument_list|(
-argument|SExpr *P
-argument_list|)
-block|{
-name|detach
-argument_list|()
-block|;
-name|Ptr
-operator|=
-name|P
-block|;
-name|attach
-argument_list|()
-block|; }
-specifier|inline
-name|Variable
-operator|::
-name|Variable
-argument_list|(
-argument|StringRef s
-argument_list|,
-argument|SExpr *D
-argument_list|)
-operator|:
-name|SExpr
-argument_list|(
-name|COP_Variable
-argument_list|)
-operator|,
-name|Name
-argument_list|(
-name|s
-argument_list|)
-operator|,
-name|Definition
-argument_list|(
-name|D
-argument_list|)
-operator|,
-name|Cvdecl
-argument_list|(
-name|nullptr
-argument_list|)
-operator|,
-name|BlockID
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Id
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumUses
-argument_list|(
-literal|0
-argument_list|)
-block|{
-name|Flags
-operator|=
-name|VK_Let
-block|; }
-specifier|inline
-name|Variable
-operator|::
-name|Variable
-argument_list|(
-name|SExpr
-operator|*
-name|D
-argument_list|,
-specifier|const
-name|clang
-operator|::
-name|ValueDecl
-operator|*
-name|Cvd
-argument_list|)
-operator|:
-name|SExpr
-argument_list|(
-name|COP_Variable
-argument_list|)
-operator|,
-name|Name
-argument_list|(
-name|Cvd
-condition|?
-name|Cvd
-operator|->
-name|getName
-argument_list|()
-else|:
-literal|"_x"
-argument_list|)
-operator|,
-name|Definition
-argument_list|(
-name|D
-argument_list|)
-operator|,
-name|Cvdecl
-argument_list|(
-name|Cvd
-argument_list|)
-operator|,
-name|BlockID
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Id
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumUses
-argument_list|(
-literal|0
-argument_list|)
-block|{
-name|Flags
-operator|=
-name|VK_Let
-block|; }
-specifier|inline
-name|Variable
-operator|::
-name|Variable
-argument_list|(
-specifier|const
-name|Variable
-operator|&
-name|Vd
-argument_list|,
-name|SExpr
-operator|*
-name|D
-argument_list|)
-comment|// rewrite constructor
-operator|:
-name|SExpr
-argument_list|(
-name|Vd
-argument_list|)
-operator|,
-name|Name
-argument_list|(
-name|Vd
-operator|.
-name|Name
-argument_list|)
-operator|,
-name|Definition
-argument_list|(
-name|D
-argument_list|)
-operator|,
-name|Cvdecl
-argument_list|(
-name|Vd
-operator|.
-name|Cvdecl
-argument_list|)
-operator|,
-name|BlockID
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|Id
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NumUses
-argument_list|(
-literal|0
-argument_list|)
-block|{
-name|Flags
-operator|=
-name|Vd
-operator|.
-name|kind
-argument_list|()
-block|; }
-specifier|inline
-name|void
-name|Variable
-operator|::
-name|setDefinition
-argument_list|(
-argument|SExpr *E
-argument_list|)
-block|{
-name|Definition
-operator|.
-name|reset
-argument_list|(
-name|E
-argument_list|)
-block|; }
-name|void
-name|Future
-operator|::
-name|force
-argument_list|()
-block|{
-name|Status
-operator|=
-name|FS_evaluating
-block|;
-name|SExpr
-operator|*
-name|R
-operator|=
-name|create
-argument_list|()
-block|;
-name|Result
-operator|=
-name|R
-block|;
-if|if
-condition|(
-name|Location
-condition|)
-name|Location
-operator|->
-name|reset
-argument_list|(
-name|R
-argument_list|)
-expr_stmt|;
-name|Status
-operator|=
-name|FS_done
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|}
-comment|// Placeholder for C++ expressions that cannot be represented in the TIL.
-end_comment
-
-begin_label
-unit|class
+comment|/// Placeholder for expressions that cannot be represented in the TIL.
+name|class
 name|Undefined
-label|:
-end_label
-
-begin_decl_stmt
+range|:
 name|public
 name|SExpr
 block|{
 name|public
-label|:
+operator|:
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|SExpr
-modifier|*
-name|E
-parameter_list|)
+argument_list|(
+argument|const SExpr *E
+argument_list|)
 block|{
 return|return
 name|E
@@ -2538,7 +1918,7 @@ name|SExpr
 argument_list|(
 name|COP_Undefined
 argument_list|)
-operator|,
+block|,
 name|Cstmt
 argument_list|(
 argument|S
@@ -2556,7 +1936,7 @@ name|SExpr
 argument_list|(
 name|U
 argument_list|)
-operator|,
+block|,
 name|Cstmt
 argument_list|(
 argument|U.Cstmt
@@ -2599,45 +1979,30 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Undefined* E
+argument|const Undefined* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 return|return
 name|Cmp
 operator|.
-name|comparePointers
-argument_list|(
-name|Cstmt
-argument_list|,
-name|E
-operator|->
-name|Cstmt
-argument_list|)
+name|trueResult
+argument_list|()
 return|;
 block|}
 name|private
-label|:
+operator|:
 specifier|const
 name|clang
 operator|::
 name|Stmt
 operator|*
 name|Cstmt
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|// Placeholder for a wildcard that matches any other expression.
-end_comment
-
-begin_decl_stmt
+block|; }
+decl_stmt|;
+comment|/// Placeholder for a wildcard that matches any other expression.
 name|class
 name|Wildcard
 range|:
@@ -2720,10 +2085,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Wildcard* E
+argument|const Wildcard* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 return|return
 name|Cmp
@@ -2953,23 +2319,18 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Literal* E
+argument|const Literal* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
-comment|// TODO -- use value, not pointer equality
+comment|// TODO: defer actual comparison to LiteralT
 return|return
 name|Cmp
 operator|.
-name|comparePointers
-argument_list|(
-name|Cexpr
-argument_list|,
-name|E
-operator|->
-name|Cexpr
-argument_list|)
+name|trueResult
+argument_list|()
 return|;
 block|}
 name|private
@@ -3388,22 +2749,14 @@ operator|(
 operator|)
 argument_list|)
 return|;
-end_decl_stmt
-
-begin_case
 case|case
 name|ValueType
 operator|::
 name|BT_ValueRef
 case|:
-end_case
-
-begin_break
 break|break;
-end_break
-
-begin_expr_stmt
-unit|}   return
+block|}
+return|return
 name|Vs
 operator|.
 name|reduceLiteral
@@ -3411,39 +2764,33 @@ argument_list|(
 operator|*
 name|this
 argument_list|)
-expr_stmt|;
-end_expr_stmt
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
-comment|// Literal pointer to an object allocated in memory.
+comment|/// A Literal pointer to an object allocated in memory.
 end_comment
 
 begin_comment
-comment|// At compile time, pointer literals are represented by symbolic names.
+comment|/// At compile time, pointer literals are represented by symbolic names.
 end_comment
-
-begin_label
-unit|class
-name|LiteralPtr
-label|:
-end_label
 
 begin_decl_stmt
+name|class
+name|LiteralPtr
+range|:
 name|public
 name|SExpr
 block|{
 name|public
-label|:
+operator|:
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|SExpr
-modifier|*
-name|E
-parameter_list|)
+argument_list|(
+argument|const SExpr *E
+argument_list|)
 block|{
 return|return
 name|E
@@ -3468,7 +2815,7 @@ name|SExpr
 argument_list|(
 name|COP_LiteralPtr
 argument_list|)
-operator|,
+block|,
 name|Cvdecl
 argument_list|(
 argument|D
@@ -3486,7 +2833,7 @@ name|SExpr
 argument_list|(
 name|R
 argument_list|)
-operator|,
+block|,
 name|Cvdecl
 argument_list|(
 argument|R.Cvdecl
@@ -3543,10 +2890,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|LiteralPtr* E
+argument|const LiteralPtr* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 return|return
 name|Cmp
@@ -3562,31 +2910,27 @@ argument_list|)
 return|;
 block|}
 name|private
-label|:
+operator|:
 specifier|const
 name|clang
 operator|::
 name|ValueDecl
 operator|*
 name|Cvdecl
-expr_stmt|;
-block|}
+block|; }
+decl_stmt|;
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-comment|// A function -- a.k.a. lambda abstraction.
+comment|/// A function -- a.k.a. lambda abstraction.
 end_comment
 
 begin_comment
-comment|// Functions with multiple arguments are created by currying,
+comment|/// Functions with multiple arguments are created by currying,
 end_comment
 
 begin_comment
-comment|// e.g. (function (x: Int) (function (y: Int) (add x y)))
+comment|/// e.g. (Function (x: Int) (Function (y: Int) (Code { return x + y })))
 end_comment
 
 begin_decl_stmt
@@ -3717,9 +3061,6 @@ argument_list|()
 block|{
 return|return
 name|Body
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -3731,9 +3072,6 @@ specifier|const
 block|{
 return|return
 name|Body
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -3837,10 +3175,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Function* E
+argument|const Function* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -3929,22 +3268,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Body
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 unit|};
-comment|// A self-applicable function.
+comment|/// A self-applicable function.
 end_comment
 
 begin_comment
-comment|// A self-applicable function can be applied to itself.  It's useful for
+comment|/// A self-applicable function can be applied to itself.  It's useful for
 end_comment
 
 begin_comment
-comment|// implementing objects and late binding
+comment|/// implementing objects and late binding.
 end_comment
 
 begin_decl_stmt
@@ -4019,11 +3359,8 @@ block|;
 name|Vd
 operator|->
 name|Definition
-operator|.
-name|reset
-argument_list|(
+operator|=
 name|this
-argument_list|)
 block|;   }
 name|SFunction
 argument_list|(
@@ -4078,11 +3415,8 @@ block|;
 name|Vd
 operator|->
 name|Definition
-operator|.
-name|reset
-argument_list|(
+operator|=
 name|this
-argument_list|)
 block|;   }
 name|Variable
 operator|*
@@ -4111,9 +3445,6 @@ argument_list|()
 block|{
 return|return
 name|Body
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -4125,9 +3456,6 @@ specifier|const
 block|{
 return|return
 name|Body
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -4214,10 +3542,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|SFunction* E
+argument|const SFunction* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|Cmp
 operator|.
@@ -4266,14 +3595,15 @@ name|Variable
 operator|*
 name|VarDecl
 block|;
-name|SExprRef
+name|SExpr
+operator|*
 name|Body
 block|; }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// A block of code -- e.g. the body of a function.
+comment|/// A block of code -- e.g. the body of a function.
 end_comment
 
 begin_decl_stmt
@@ -4366,9 +3696,6 @@ argument_list|()
 block|{
 return|return
 name|ReturnType
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -4380,9 +3707,6 @@ specifier|const
 block|{
 return|return
 name|ReturnType
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|SExpr
@@ -4392,9 +3716,6 @@ argument_list|()
 block|{
 return|return
 name|Body
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -4406,9 +3727,6 @@ specifier|const
 block|{
 return|return
 name|Body
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -4486,10 +3804,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Code* E
+argument|const Code* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -4545,20 +3864,22 @@ label|:
 end_label
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|ReturnType
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Body
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 unit|};
-comment|// A typed, writable location in memory
+comment|/// A typed, writable location in memory
 end_comment
 
 begin_decl_stmt
@@ -4651,9 +3972,6 @@ argument_list|()
 block|{
 return|return
 name|Range
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -4665,9 +3983,6 @@ specifier|const
 block|{
 return|return
 name|Range
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|SExpr
@@ -4677,9 +3992,6 @@ argument_list|()
 block|{
 return|return
 name|Body
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -4691,9 +4003,6 @@ specifier|const
 block|{
 return|return
 name|Body
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -4771,10 +4080,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Field* E
+argument|const Field* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -4830,20 +4140,38 @@ label|:
 end_label
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Range
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Body
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 unit|};
-comment|// Apply an argument to a function
+comment|/// Apply an argument to a function.
+end_comment
+
+begin_comment
+comment|/// Note that this does not actually call the function.  Functions are curried,
+end_comment
+
+begin_comment
+comment|/// so this returns a closure in which the first parameter has been applied.
+end_comment
+
+begin_comment
+comment|/// Once all parameters have been applied, Call can be used to invoke the
+end_comment
+
+begin_comment
+comment|/// function.
 end_comment
 
 begin_decl_stmt
@@ -4936,9 +4264,6 @@ argument_list|()
 block|{
 return|return
 name|Fun
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -4950,9 +4275,6 @@ specifier|const
 block|{
 return|return
 name|Fun
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|SExpr
@@ -4962,9 +4284,6 @@ argument_list|()
 block|{
 return|return
 name|Arg
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -4976,9 +4295,6 @@ specifier|const
 block|{
 return|return
 name|Arg
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -5056,10 +4372,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Apply* E
+argument|const Apply* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -5115,20 +4432,22 @@ label|:
 end_label
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Fun
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Arg
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 unit|};
-comment|// Apply a self-argument to a self-applicable function
+comment|/// Apply a self-argument to a self-applicable function.
 end_comment
 
 begin_decl_stmt
@@ -5224,9 +4543,6 @@ argument_list|()
 block|{
 return|return
 name|Sfun
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -5238,9 +4554,6 @@ specifier|const
 block|{
 return|return
 name|Sfun
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|SExpr
@@ -5250,19 +4563,10 @@ argument_list|()
 block|{
 return|return
 name|Arg
-operator|.
-name|get
-argument_list|()
 operator|?
 name|Arg
-operator|.
-name|get
-argument_list|()
 operator|:
 name|Sfun
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -5274,19 +4578,10 @@ specifier|const
 block|{
 return|return
 name|Arg
-operator|.
-name|get
-argument_list|()
 condition|?
 name|Arg
-operator|.
-name|get
-argument_list|()
 else|:
 name|Sfun
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|bool
@@ -5296,7 +4591,7 @@ specifier|const
 block|{
 return|return
 name|Arg
-operator|==
+operator|!=
 name|nullptr
 return|;
 block|}
@@ -5340,9 +4635,6 @@ name|R_SExpr
 name|Na
 operator|=
 name|Arg
-operator|.
-name|get
-argument_list|()
 condition|?
 name|Vs
 operator|.
@@ -5385,10 +4677,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|SApply* E
+argument|const SApply* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -5456,20 +4749,22 @@ label|:
 end_label
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Sfun
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Arg
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 unit|};
-comment|// Project a named slot from a C++ struct or class.
+comment|/// Project a named slot from a C++ struct or class.
 end_comment
 
 begin_decl_stmt
@@ -5530,6 +4825,7 @@ name|SExpr
 operator|*
 name|R
 argument_list|,
+specifier|const
 name|clang
 operator|::
 name|ValueDecl
@@ -5601,9 +4897,6 @@ argument_list|()
 block|{
 return|return
 name|Rec
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -5615,9 +4908,6 @@ specifier|const
 block|{
 return|return
 name|Rec
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -5625,13 +4915,48 @@ name|clang
 operator|::
 name|ValueDecl
 operator|*
-name|clangValueDecl
+name|clangDecl
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Cvdecl
 return|;
+block|}
+name|bool
+name|isArrow
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+literal|0x01
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|void
+name|setArrow
+argument_list|(
+argument|bool b
+argument_list|)
+block|{
+if|if
+condition|(
+name|b
+condition|)
+name|Flags
+operator||=
+literal|0x01
+expr_stmt|;
+else|else
+name|Flags
+operator|&=
+literal|0xFFFE
+expr_stmt|;
 block|}
 name|StringRef
 name|slotName
@@ -5709,10 +5034,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Project* E
+argument|const Project* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -5766,7 +5092,8 @@ label|:
 end_label
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Rec
 decl_stmt|;
 end_decl_stmt
@@ -5778,6 +5105,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|const
 name|clang
 operator|::
 name|ValueDecl
@@ -5788,7 +5116,7 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|// Call a function (after all arguments have been applied).
+comment|/// Call a function (after all arguments have been applied).
 end_comment
 
 begin_decl_stmt
@@ -5881,9 +5209,6 @@ argument_list|()
 block|{
 return|return
 name|Target
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -5895,9 +5220,6 @@ specifier|const
 block|{
 return|return
 name|Target
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -5969,10 +5291,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Call* E
+argument|const Call* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 return|return
 name|Cmp
@@ -5991,7 +5314,8 @@ return|;
 block|}
 name|private
 operator|:
-name|SExprRef
+name|SExpr
+operator|*
 name|Target
 block|;
 specifier|const
@@ -6005,7 +5329,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Allocate memory for a new value on the heap or stack.
+comment|/// Allocate memory for a new value on the heap or stack.
 end_comment
 
 begin_decl_stmt
@@ -6113,9 +5437,6 @@ argument_list|()
 block|{
 return|return
 name|Dtype
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -6127,9 +5448,6 @@ specifier|const
 block|{
 return|return
 name|Dtype
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -6188,10 +5506,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Alloc* E
+argument|const Alloc* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -6247,14 +5566,15 @@ label|:
 end_label
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Dtype
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 unit|};
-comment|// Load a value from memory.
+comment|/// Load a value from memory.
 end_comment
 
 begin_decl_stmt
@@ -6328,9 +5648,6 @@ argument_list|()
 block|{
 return|return
 name|Ptr
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -6342,9 +5659,6 @@ specifier|const
 block|{
 return|return
 name|Ptr
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -6403,10 +5717,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Load* E
+argument|const Load* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 return|return
 name|Cmp
@@ -6425,18 +5740,19 @@ return|;
 block|}
 name|private
 operator|:
-name|SExprRef
+name|SExpr
+operator|*
 name|Ptr
 block|; }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Store a value to memory.
+comment|/// Store a value to memory.
 end_comment
 
 begin_comment
-comment|// Source is a pointer, destination is the value to store.
+comment|/// The destination is a pointer to a field, the source is the value to store.
 end_comment
 
 begin_decl_stmt
@@ -6528,9 +5844,6 @@ argument_list|()
 block|{
 return|return
 name|Dest
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 comment|// Address to store to
@@ -6543,9 +5856,6 @@ specifier|const
 block|{
 return|return
 name|Dest
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|SExpr
@@ -6555,9 +5865,6 @@ argument_list|()
 block|{
 return|return
 name|Source
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 comment|// Value to store
@@ -6570,9 +5877,6 @@ specifier|const
 block|{
 return|return
 name|Source
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -6650,10 +5954,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Store* E
+argument|const Store* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -6709,24 +6014,26 @@ label|:
 end_label
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Dest
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Source
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 unit|};
-comment|// If p is a reference to an array, then first(p) is a reference to the first
+comment|/// If p is a reference to an array, then p[i] is a reference to the i'th
 end_comment
 
 begin_comment
-comment|// element.  The usual array notation p[i]  becomes first(p + i).
+comment|/// element of the array.
 end_comment
 
 begin_decl_stmt
@@ -6818,9 +6125,6 @@ argument_list|()
 block|{
 return|return
 name|Array
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -6832,9 +6136,6 @@ specifier|const
 block|{
 return|return
 name|Array
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|SExpr
@@ -6844,9 +6145,6 @@ argument_list|()
 block|{
 return|return
 name|Index
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -6858,9 +6156,6 @@ specifier|const
 block|{
 return|return
 name|Index
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -6938,10 +6233,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|ArrayIndex* E
+argument|const ArrayIndex* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -6997,28 +6293,30 @@ label|:
 end_label
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Array
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Index
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 unit|};
-comment|// Pointer arithmetic, restricted to arrays only.
+comment|/// Pointer arithmetic, restricted to arrays only.
 end_comment
 
 begin_comment
-comment|// If p is a reference to an array, then p + n, where n is an integer, is
+comment|/// If p is a reference to an array, then p + n, where n is an integer, is
 end_comment
 
 begin_comment
-comment|// a reference to a subarray.
+comment|/// a reference to a subarray.
 end_comment
 
 begin_decl_stmt
@@ -7110,9 +6408,6 @@ argument_list|()
 block|{
 return|return
 name|Array
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -7124,9 +6419,6 @@ specifier|const
 block|{
 return|return
 name|Array
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|SExpr
@@ -7136,9 +6428,6 @@ argument_list|()
 block|{
 return|return
 name|Index
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -7150,9 +6439,6 @@ specifier|const
 block|{
 return|return
 name|Index
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -7230,10 +6516,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|ArrayAdd* E
+argument|const ArrayAdd* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -7289,20 +6576,26 @@ label|:
 end_label
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Array
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Index
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 unit|};
-comment|// Simple unary operation -- e.g. !, ~, etc.
+comment|/// Simple arithmetic unary operations, e.g. negate and not.
+end_comment
+
+begin_comment
+comment|/// These operations have no side-effects.
 end_comment
 
 begin_decl_stmt
@@ -7401,9 +6694,6 @@ argument_list|()
 block|{
 return|return
 name|Expr0
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -7415,9 +6705,6 @@ specifier|const
 block|{
 return|return
 name|Expr0
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -7476,10 +6763,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|UnaryOp* E
+argument|const UnaryOp* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -7535,14 +6823,19 @@ label|:
 end_label
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Expr0
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 unit|};
-comment|// Simple binary operation -- e.g. +, -, etc.
+comment|/// Simple arithmetic binary operations, e.g. +, -, etc.
+end_comment
+
+begin_comment
+comment|/// These operations have no side effects.
 end_comment
 
 begin_decl_stmt
@@ -7657,9 +6950,6 @@ argument_list|()
 block|{
 return|return
 name|Expr0
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -7671,9 +6961,6 @@ specifier|const
 block|{
 return|return
 name|Expr0
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|SExpr
@@ -7683,9 +6970,6 @@ argument_list|()
 block|{
 return|return
 name|Expr1
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -7697,9 +6981,6 @@ specifier|const
 block|{
 return|return
 name|Expr1
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -7777,10 +7058,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|BinaryOp* E
+argument|const BinaryOp* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -7861,20 +7143,30 @@ end_return
 
 begin_decl_stmt
 unit|}  private:
-name|SExprRef
+name|SExpr
+modifier|*
 name|Expr0
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Expr1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 unit|};
-comment|// Cast expression
+comment|/// Cast expressions.
+end_comment
+
+begin_comment
+comment|/// Cast expressions are essentially unary operations, but we treat them
+end_comment
+
+begin_comment
+comment|/// as a distinct AST node because they only change the type of the result.
 end_comment
 
 begin_decl_stmt
@@ -7973,9 +7265,6 @@ argument_list|()
 block|{
 return|return
 name|Expr0
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -7987,9 +7276,6 @@ specifier|const
 block|{
 return|return
 name|Expr0
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -8048,10 +7334,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Cast* E
+argument|const Cast* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -8107,7 +7394,8 @@ label|:
 end_label
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Expr0
 decl_stmt|;
 end_decl_stmt
@@ -8119,6 +7407,18 @@ name|SCFG
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// Phi Node, for code in SSA form.
+end_comment
+
+begin_comment
+comment|/// Each Phi node has an array of possible values that it can take,
+end_comment
+
+begin_comment
+comment|/// depending on where control flow comes from.
+end_comment
+
 begin_decl_stmt
 name|class
 name|Phi
@@ -8128,7 +7428,6 @@ name|SExpr
 block|{
 name|public
 operator|:
-comment|// TODO: change to SExprRef
 typedef|typedef
 name|SimpleArray
 operator|<
@@ -8185,7 +7484,12 @@ argument_list|()
 operator|:
 name|SExpr
 argument_list|(
-argument|COP_Phi
+name|COP_Phi
+argument_list|)
+operator|,
+name|Cvdecl
+argument_list|(
+argument|nullptr
 argument_list|)
 block|{}
 name|Phi
@@ -8202,9 +7506,14 @@ argument_list|)
 operator|,
 name|Values
 argument_list|(
-argument|A
+name|A
 argument_list|,
-argument|Nvals
+name|Nvals
+argument_list|)
+operator|,
+name|Cvdecl
+argument_list|(
+argument|nullptr
 argument_list|)
 block|{}
 name|Phi
@@ -8226,7 +7535,17 @@ argument_list|)
 operator|,
 name|Values
 argument_list|(
-argument|std::move(Vs)
+name|std
+operator|::
+name|move
+argument_list|(
+name|Vs
+argument_list|)
+argument_list|)
+operator|,
+name|Cvdecl
+argument_list|(
+argument|nullptr
 argument_list|)
 block|{}
 specifier|const
@@ -8286,6 +7605,49 @@ name|s
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// Return the clang declaration of the variable for this Phi node, if any.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|clang
+operator|::
+name|ValueDecl
+operator|*
+name|clangDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Cvdecl
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Set the clang variable associated with this Phi node.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setClangDecl
+argument_list|(
+specifier|const
+name|clang
+operator|::
+name|ValueDecl
+operator|*
+name|Cvd
+argument_list|)
+block|{
+name|Cvdecl
+operator|=
+name|Cvd
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_expr_stmt
 name|template
@@ -8382,10 +7744,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Phi *E
+argument|const Phi *E
 argument_list|,
 argument|C&Cmp
 argument_list|)
+specifier|const
 block|{
 comment|// TODO: implement CFG comparisons
 return|return
@@ -8412,31 +7775,912 @@ name|Values
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+specifier|const
+name|clang
+operator|::
+name|ValueDecl
+operator|*
+name|Cvdecl
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 unit|};
-comment|// A basic block is part of an SCFG, and can be treated as a function in
-end_comment
-
-begin_comment
-comment|// continuation passing style.  It consists of a sequence of phi nodes, which
-end_comment
-
-begin_comment
-comment|// are "arguments" to the function, followed by a sequence of instructions.
-end_comment
-
-begin_comment
-comment|// Both arguments and instructions define new variables.  It ends with a
-end_comment
-
-begin_comment
-comment|// branch or goto to another basic block in the same SCFG.
+comment|/// Base class for basic block terminators:  Branch, Goto, and Return.
 end_comment
 
 begin_decl_stmt
 name|class
-name|BasicBlock
+name|Terminator
 range|:
+name|public
+name|SExpr
+block|{
+name|public
+operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SExpr *E
+argument_list|)
+block|{
+return|return
+name|E
+operator|->
+name|opcode
+argument_list|()
+operator|>=
+name|COP_Goto
+operator|&&
+name|E
+operator|->
+name|opcode
+argument_list|()
+operator|<=
+name|COP_Return
+return|;
+block|}
+name|protected
+operator|:
+name|Terminator
+argument_list|(
+argument|TIL_Opcode Op
+argument_list|)
+operator|:
+name|SExpr
+argument_list|(
+argument|Op
+argument_list|)
+block|{}
+name|Terminator
+argument_list|(
+specifier|const
+name|SExpr
+operator|&
+name|E
+argument_list|)
+operator|:
+name|SExpr
+argument_list|(
+argument|E
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Return the list of basic blocks that this terminator can branch to.
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+name|successors
+argument_list|()
+block|;
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+name|successors
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Terminator
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|successors
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// Jump to another basic block.
+comment|/// A goto instruction is essentially a tail-recursive call into another
+comment|/// block.  In addition to the block pointer, it specifies an index into the
+comment|/// phi nodes of that block.  The index can be used to retrieve the "arguments"
+comment|/// of the call.
+name|class
+name|Goto
+operator|:
+name|public
+name|Terminator
+block|{
+name|public
+operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SExpr *E
+argument_list|)
+block|{
+return|return
+name|E
+operator|->
+name|opcode
+argument_list|()
+operator|==
+name|COP_Goto
+return|;
+block|}
+name|Goto
+argument_list|(
+argument|BasicBlock *B
+argument_list|,
+argument|unsigned I
+argument_list|)
+operator|:
+name|Terminator
+argument_list|(
+name|COP_Goto
+argument_list|)
+block|,
+name|TargetBlock
+argument_list|(
+name|B
+argument_list|)
+block|,
+name|Index
+argument_list|(
+argument|I
+argument_list|)
+block|{}
+name|Goto
+argument_list|(
+argument|const Goto&G
+argument_list|,
+argument|BasicBlock *B
+argument_list|,
+argument|unsigned I
+argument_list|)
+operator|:
+name|Terminator
+argument_list|(
+name|COP_Goto
+argument_list|)
+block|,
+name|TargetBlock
+argument_list|(
+name|B
+argument_list|)
+block|,
+name|Index
+argument_list|(
+argument|I
+argument_list|)
+block|{}
+specifier|const
+name|BasicBlock
+operator|*
+name|targetBlock
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetBlock
+return|;
+block|}
+name|BasicBlock
+operator|*
+name|targetBlock
+argument_list|()
+block|{
+return|return
+name|TargetBlock
+return|;
+block|}
+comment|/// Returns the index into the
+name|unsigned
+name|index
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Index
+return|;
+block|}
+comment|/// Return the list of basic blocks that this terminator can branch to.
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+name|successors
+argument_list|()
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+operator|&
+name|TargetBlock
+expr|,
+literal|1
+operator|)
+return|;
+block|}
+name|template
+operator|<
+name|class
+name|V
+operator|>
+name|typename
+name|V
+operator|::
+name|R_SExpr
+name|traverse
+argument_list|(
+argument|V&Vs
+argument_list|,
+argument|typename V::R_Ctx Ctx
+argument_list|)
+block|{
+name|BasicBlock
+operator|*
+name|Ntb
+operator|=
+name|Vs
+operator|.
+name|reduceBasicBlockRef
+argument_list|(
+name|TargetBlock
+argument_list|)
+block|;
+return|return
+name|Vs
+operator|.
+name|reduceGoto
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|Ntb
+argument_list|)
+return|;
+block|}
+name|template
+operator|<
+name|class
+name|C
+operator|>
+name|typename
+name|C
+operator|::
+name|CType
+name|compare
+argument_list|(
+argument|const Goto *E
+argument_list|,
+argument|C&Cmp
+argument_list|)
+specifier|const
+block|{
+comment|// TODO: implement CFG comparisons
+return|return
+name|Cmp
+operator|.
+name|comparePointers
+argument_list|(
+name|this
+argument_list|,
+name|E
+argument_list|)
+return|;
+block|}
+name|private
+operator|:
+name|BasicBlock
+operator|*
+name|TargetBlock
+block|;
+name|unsigned
+name|Index
+block|; }
+block|;
+comment|/// A conditional branch to two other blocks.
+comment|/// Note that unlike Goto, Branch does not have an index.  The target blocks
+comment|/// must be child-blocks, and cannot have Phi nodes.
+name|class
+name|Branch
+operator|:
+name|public
+name|Terminator
+block|{
+name|public
+operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SExpr *E
+argument_list|)
+block|{
+return|return
+name|E
+operator|->
+name|opcode
+argument_list|()
+operator|==
+name|COP_Branch
+return|;
+block|}
+name|Branch
+argument_list|(
+name|SExpr
+operator|*
+name|C
+argument_list|,
+name|BasicBlock
+operator|*
+name|T
+argument_list|,
+name|BasicBlock
+operator|*
+name|E
+argument_list|)
+operator|:
+name|Terminator
+argument_list|(
+name|COP_Branch
+argument_list|)
+block|,
+name|Condition
+argument_list|(
+argument|C
+argument_list|)
+block|{
+name|Branches
+index|[
+literal|0
+index|]
+operator|=
+name|T
+block|;
+name|Branches
+index|[
+literal|1
+index|]
+operator|=
+name|E
+block|;   }
+name|Branch
+argument_list|(
+specifier|const
+name|Branch
+operator|&
+name|Br
+argument_list|,
+name|SExpr
+operator|*
+name|C
+argument_list|,
+name|BasicBlock
+operator|*
+name|T
+argument_list|,
+name|BasicBlock
+operator|*
+name|E
+argument_list|)
+operator|:
+name|Terminator
+argument_list|(
+name|Br
+argument_list|)
+block|,
+name|Condition
+argument_list|(
+argument|C
+argument_list|)
+block|{
+name|Branches
+index|[
+literal|0
+index|]
+operator|=
+name|T
+block|;
+name|Branches
+index|[
+literal|1
+index|]
+operator|=
+name|E
+block|;   }
+specifier|const
+name|SExpr
+operator|*
+name|condition
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Condition
+return|;
+block|}
+name|SExpr
+operator|*
+name|condition
+argument_list|()
+block|{
+return|return
+name|Condition
+return|;
+block|}
+specifier|const
+name|BasicBlock
+operator|*
+name|thenBlock
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Branches
+index|[
+literal|0
+index|]
+return|;
+block|}
+name|BasicBlock
+operator|*
+name|thenBlock
+argument_list|()
+block|{
+return|return
+name|Branches
+index|[
+literal|0
+index|]
+return|;
+block|}
+specifier|const
+name|BasicBlock
+operator|*
+name|elseBlock
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Branches
+index|[
+literal|1
+index|]
+return|;
+block|}
+name|BasicBlock
+operator|*
+name|elseBlock
+argument_list|()
+block|{
+return|return
+name|Branches
+index|[
+literal|1
+index|]
+return|;
+block|}
+comment|/// Return the list of basic blocks that this terminator can branch to.
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+name|successors
+argument_list|()
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|Branches
+expr|,
+literal|2
+operator|)
+return|;
+block|}
+name|template
+operator|<
+name|class
+name|V
+operator|>
+name|typename
+name|V
+operator|::
+name|R_SExpr
+name|traverse
+argument_list|(
+argument|V&Vs
+argument_list|,
+argument|typename V::R_Ctx Ctx
+argument_list|)
+block|{
+name|auto
+name|Nc
+operator|=
+name|Vs
+operator|.
+name|traverse
+argument_list|(
+name|Condition
+argument_list|,
+name|Vs
+operator|.
+name|subExprCtx
+argument_list|(
+name|Ctx
+argument_list|)
+argument_list|)
+block|;
+name|BasicBlock
+operator|*
+name|Ntb
+operator|=
+name|Vs
+operator|.
+name|reduceBasicBlockRef
+argument_list|(
+name|Branches
+index|[
+literal|0
+index|]
+argument_list|)
+block|;
+name|BasicBlock
+operator|*
+name|Nte
+operator|=
+name|Vs
+operator|.
+name|reduceBasicBlockRef
+argument_list|(
+name|Branches
+index|[
+literal|1
+index|]
+argument_list|)
+block|;
+return|return
+name|Vs
+operator|.
+name|reduceBranch
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|Nc
+argument_list|,
+name|Ntb
+argument_list|,
+name|Nte
+argument_list|)
+return|;
+block|}
+name|template
+operator|<
+name|class
+name|C
+operator|>
+name|typename
+name|C
+operator|::
+name|CType
+name|compare
+argument_list|(
+argument|const Branch *E
+argument_list|,
+argument|C&Cmp
+argument_list|)
+specifier|const
+block|{
+comment|// TODO: implement CFG comparisons
+return|return
+name|Cmp
+operator|.
+name|comparePointers
+argument_list|(
+name|this
+argument_list|,
+name|E
+argument_list|)
+return|;
+block|}
+name|private
+operator|:
+name|SExpr
+operator|*
+name|Condition
+block|;
+name|BasicBlock
+operator|*
+name|Branches
+index|[
+literal|2
+index|]
+block|; }
+block|;
+comment|/// Return from the enclosing function, passing the return value to the caller.
+comment|/// Only the exit block should end with a return statement.
+name|class
+name|Return
+operator|:
+name|public
+name|Terminator
+block|{
+name|public
+operator|:
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const SExpr *E
+argument_list|)
+block|{
+return|return
+name|E
+operator|->
+name|opcode
+argument_list|()
+operator|==
+name|COP_Return
+return|;
+block|}
+name|Return
+argument_list|(
+name|SExpr
+operator|*
+name|Rval
+argument_list|)
+operator|:
+name|Terminator
+argument_list|(
+name|COP_Return
+argument_list|)
+block|,
+name|Retval
+argument_list|(
+argument|Rval
+argument_list|)
+block|{}
+name|Return
+argument_list|(
+specifier|const
+name|Return
+operator|&
+name|R
+argument_list|,
+name|SExpr
+operator|*
+name|Rval
+argument_list|)
+operator|:
+name|Terminator
+argument_list|(
+name|R
+argument_list|)
+block|,
+name|Retval
+argument_list|(
+argument|Rval
+argument_list|)
+block|{}
+comment|/// Return an empty list.
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+name|successors
+argument_list|()
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+name|SExpr
+operator|*
+name|returnValue
+argument_list|()
+block|{
+return|return
+name|Retval
+return|;
+block|}
+specifier|const
+name|SExpr
+operator|*
+name|returnValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Retval
+return|;
+block|}
+name|template
+operator|<
+name|class
+name|V
+operator|>
+name|typename
+name|V
+operator|::
+name|R_SExpr
+name|traverse
+argument_list|(
+argument|V&Vs
+argument_list|,
+argument|typename V::R_Ctx Ctx
+argument_list|)
+block|{
+name|auto
+name|Ne
+operator|=
+name|Vs
+operator|.
+name|traverse
+argument_list|(
+name|Retval
+argument_list|,
+name|Vs
+operator|.
+name|subExprCtx
+argument_list|(
+name|Ctx
+argument_list|)
+argument_list|)
+block|;
+return|return
+name|Vs
+operator|.
+name|reduceReturn
+argument_list|(
+operator|*
+name|this
+argument_list|,
+name|Ne
+argument_list|)
+return|;
+block|}
+name|template
+operator|<
+name|class
+name|C
+operator|>
+name|typename
+name|C
+operator|::
+name|CType
+name|compare
+argument_list|(
+argument|const Return *E
+argument_list|,
+argument|C&Cmp
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Cmp
+operator|.
+name|compare
+argument_list|(
+name|Retval
+argument_list|,
+name|E
+operator|->
+name|Retval
+argument_list|)
+return|;
+block|}
+name|private
+operator|:
+name|SExpr
+operator|*
+name|Retval
+block|; }
+block|;
+specifier|inline
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+name|Terminator
+operator|::
+name|successors
+argument_list|()
+block|{
+switch|switch
+condition|(
+name|opcode
+argument_list|()
+condition|)
+block|{
+case|case
+name|COP_Goto
+case|:
+return|return
+name|cast
+operator|<
+name|Goto
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|successors
+argument_list|()
+return|;
+case|case
+name|COP_Branch
+case|:
+return|return
+name|cast
+operator|<
+name|Branch
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|successors
+argument_list|()
+return|;
+case|case
+name|COP_Return
+case|:
+return|return
+name|cast
+operator|<
+name|Return
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|successors
+argument_list|()
+return|;
+default|default:
+return|return
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+block|}
+comment|/// A basic block is part of an SCFG.  It can be treated as a function in
+comment|/// continuation passing style.  A block consists of a sequence of phi nodes,
+comment|/// which are "arguments" to the function, followed by a sequence of
+comment|/// instructions.  It ends with a Terminator, which is a Branch or Goto to
+comment|/// another basic block in the same SCFG.
+name|class
+name|BasicBlock
+operator|:
 name|public
 name|SExpr
 block|{
@@ -8445,14 +8689,11 @@ operator|:
 typedef|typedef
 name|SimpleArray
 operator|<
-name|Variable
+name|SExpr
 operator|*
 operator|>
-name|VarArray
+name|InstrArray
 expr_stmt|;
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 name|SimpleArray
 operator|<
@@ -8461,7 +8702,90 @@ operator|*
 operator|>
 name|BlockArray
 expr_stmt|;
-end_typedef
+comment|// TopologyNodes are used to overlay tree structures on top of the CFG,
+comment|// such as dominator and postdominator trees.  Each block is assigned an
+comment|// ID in the tree according to a depth-first search.  Tree traversals are
+comment|// always up, towards the parents.
+block|struct
+name|TopologyNode
+block|{
+name|TopologyNode
+argument_list|()
+operator|:
+name|NodeID
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|SizeOfSubTree
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|Parent
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{}
+name|bool
+name|isParentOf
+argument_list|(
+argument|const TopologyNode& OtherNode
+argument_list|)
+block|{
+return|return
+name|OtherNode
+operator|.
+name|NodeID
+operator|>
+name|NodeID
+operator|&&
+name|OtherNode
+operator|.
+name|NodeID
+operator|<
+name|NodeID
+operator|+
+name|SizeOfSubTree
+return|;
+block|}
+name|bool
+name|isParentOfOrEqual
+argument_list|(
+argument|const TopologyNode& OtherNode
+argument_list|)
+block|{
+return|return
+name|OtherNode
+operator|.
+name|NodeID
+operator|>=
+name|NodeID
+operator|&&
+name|OtherNode
+operator|.
+name|NodeID
+operator|<
+name|NodeID
+operator|+
+name|SizeOfSubTree
+return|;
+block|}
+name|int
+name|NodeID
+block|;
+name|int
+name|SizeOfSubTree
+block|;
+comment|// Includes this node, so must be> 1.
+name|BasicBlock
+operator|*
+name|Parent
+block|;
+comment|// Pointer to parent.
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -8493,8 +8817,6 @@ begin_macro
 name|BasicBlock
 argument_list|(
 argument|MemRegionRef A
-argument_list|,
-argument|BasicBlock* P = nullptr
 argument_list|)
 end_macro
 
@@ -8520,33 +8842,27 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|Parent
+name|Visited
 argument_list|(
-name|P
+literal|0
 argument_list|)
 operator|,
-name|Terminator
+name|TermInstr
 argument_list|(
 argument|nullptr
 argument_list|)
-block|{ }
+block|{}
 name|BasicBlock
 argument_list|(
-name|BasicBlock
-operator|&
-name|B
+argument|BasicBlock&B
 argument_list|,
-name|VarArray
-operator|&&
-name|As
+argument|MemRegionRef A
 argument_list|,
-name|VarArray
-operator|&&
-name|Is
+argument|InstrArray&&As
 argument_list|,
-name|SExpr
-operator|*
-name|T
+argument|InstrArray&&Is
+argument_list|,
+argument|Terminator *T
 argument_list|)
 operator|:
 name|SExpr
@@ -8556,9 +8872,7 @@ argument_list|)
 operator|,
 name|Arena
 argument_list|(
-name|B
-operator|.
-name|Arena
+name|A
 argument_list|)
 operator|,
 name|CFGPtr
@@ -8571,9 +8885,9 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|Parent
+name|Visited
 argument_list|(
-name|nullptr
+literal|0
 argument_list|)
 operator|,
 name|Args
@@ -8596,12 +8910,13 @@ name|Is
 argument_list|)
 argument_list|)
 operator|,
-name|Terminator
+name|TermInstr
 argument_list|(
 argument|T
 argument_list|)
-block|{ }
-name|unsigned
+block|{}
+comment|/// Returns the block ID.  Every block has a unique ID in the CFG.
+name|int
 name|blockID
 argument_list|()
 specifier|const
@@ -8612,14 +8927,34 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Returns the number of predecessors.
+end_comment
+
 begin_expr_stmt
-name|unsigned
+name|size_t
 name|numPredecessors
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Predecessors
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|size_t
+name|numSuccessors
+argument_list|()
+specifier|const
+block|{
+return|return
+name|successors
+argument_list|()
 operator|.
 name|size
 argument_list|()
@@ -8662,6 +8997,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|DominatorNode
+operator|.
 name|Parent
 return|;
 block|}
@@ -8674,6 +9011,8 @@ name|parent
 parameter_list|()
 block|{
 return|return
+name|DominatorNode
+operator|.
 name|Parent
 return|;
 block|}
@@ -8681,7 +9020,7 @@ end_function
 
 begin_expr_stmt
 specifier|const
-name|VarArray
+name|InstrArray
 operator|&
 name|arguments
 argument_list|()
@@ -8694,7 +9033,7 @@ block|}
 end_expr_stmt
 
 begin_function
-name|VarArray
+name|InstrArray
 modifier|&
 name|arguments
 parameter_list|()
@@ -8705,9 +9044,21 @@ return|;
 block|}
 end_function
 
+begin_function
+name|InstrArray
+modifier|&
+name|instructions
+parameter_list|()
+block|{
+return|return
+name|Instrs
+return|;
+block|}
+end_function
+
 begin_expr_stmt
 specifier|const
-name|VarArray
+name|InstrArray
 operator|&
 name|instructions
 argument_list|()
@@ -8719,14 +9070,26 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// Returns a list of predecessors.
+end_comment
+
+begin_comment
+comment|/// The order of predecessors in the list is important; each phi node has
+end_comment
+
+begin_comment
+comment|/// exactly one argument for each precessor, in the same order.
+end_comment
+
 begin_function
-name|VarArray
+name|BlockArray
 modifier|&
-name|instructions
+name|predecessors
 parameter_list|()
 block|{
 return|return
-name|Instrs
+name|Predecessors
 return|;
 block|}
 end_function
@@ -8745,78 +9108,66 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function
-name|BlockArray
-modifier|&
-name|predecessors
-parameter_list|()
+begin_expr_stmt
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+name|successors
+argument_list|()
 block|{
 return|return
-name|Predecessors
+name|TermInstr
+operator|->
+name|successors
+argument_list|()
 return|;
 block|}
-end_function
+end_expr_stmt
+
+begin_expr_stmt
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+name|successors
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TermInstr
+operator|->
+name|successors
+argument_list|()
+return|;
+block|}
+end_expr_stmt
 
 begin_expr_stmt
 specifier|const
-name|SExpr
+name|Terminator
 operator|*
 name|terminator
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Terminator
-operator|.
-name|get
-argument_list|()
+name|TermInstr
 return|;
 block|}
 end_expr_stmt
 
 begin_function
-name|SExpr
+name|Terminator
 modifier|*
 name|terminator
 parameter_list|()
 block|{
 return|return
-name|Terminator
-operator|.
-name|get
-argument_list|()
+name|TermInstr
 return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|setBlockID
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|)
-block|{
-name|BlockID
-operator|=
-name|i
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|setParent
-parameter_list|(
-name|BasicBlock
-modifier|*
-name|P
-parameter_list|)
-block|{
-name|Parent
-operator|=
-name|P
-expr_stmt|;
 block|}
 end_function
 
@@ -8824,43 +9175,77 @@ begin_function
 name|void
 name|setTerminator
 parameter_list|(
-name|SExpr
+name|Terminator
 modifier|*
 name|E
 parameter_list|)
 block|{
-name|Terminator
-operator|.
-name|reset
-argument_list|(
+name|TermInstr
+operator|=
 name|E
-argument_list|)
 expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|bool
+name|Dominates
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|&
+name|Other
+parameter_list|)
+block|{
+return|return
+name|DominatorNode
+operator|.
+name|isParentOfOrEqual
+argument_list|(
+name|Other
+operator|.
+name|DominatorNode
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|bool
+name|PostDominates
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|&
+name|Other
+parameter_list|)
+block|{
+return|return
+name|PostDominatorNode
+operator|.
+name|isParentOfOrEqual
+argument_list|(
+name|Other
+operator|.
+name|PostDominatorNode
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
-comment|// Add a new argument.  V must define a phi-node.
+comment|/// Add a new argument.
 end_comment
 
 begin_function
 name|void
 name|addArgument
 parameter_list|(
-name|Variable
+name|Phi
 modifier|*
 name|V
 parameter_list|)
 block|{
-name|V
-operator|->
-name|setKind
-argument_list|(
-name|Variable
-operator|::
-name|VK_LetBB
-argument_list|)
-expr_stmt|;
 name|Args
 operator|.
 name|reserveCheck
@@ -8881,27 +9266,18 @@ block|}
 end_function
 
 begin_comment
-comment|// Add a new instruction.
+comment|/// Add a new instruction.
 end_comment
 
 begin_function
 name|void
 name|addInstruction
 parameter_list|(
-name|Variable
+name|SExpr
 modifier|*
 name|V
 parameter_list|)
 block|{
-name|V
-operator|->
-name|setKind
-argument_list|(
-name|Variable
-operator|::
-name|VK_LetBB
-argument_list|)
-expr_stmt|;
 name|Instrs
 operator|.
 name|reserveCheck
@@ -9003,7 +9379,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// Return the index of BB, or Predecessors.size if BB is not a predecessor.
+comment|/// Return the index of BB, or Predecessors.size if BB is not a predecessor.
 end_comment
 
 begin_decl_stmt
@@ -9053,17 +9429,6 @@ return|;
 block|}
 end_decl_stmt
 
-begin_comment
-comment|// Set id numbers for variables.
-end_comment
-
-begin_function_decl
-name|void
-name|renumberVars
-parameter_list|()
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 name|template
 operator|<
@@ -9087,7 +9452,7 @@ operator|::
 name|template
 name|Container
 operator|<
-name|Variable
+name|SExpr
 operator|*
 operator|>
 name|Nas
@@ -9106,7 +9471,7 @@ operator|::
 name|template
 name|Container
 operator|<
-name|Variable
+name|SExpr
 operator|*
 operator|>
 name|Nis
@@ -9132,7 +9497,7 @@ for|for
 control|(
 name|auto
 operator|*
-name|A
+name|E
 operator|:
 name|Args
 control|)
@@ -9144,9 +9509,7 @@ name|Vs
 operator|.
 name|traverse
 argument_list|(
-name|A
-operator|->
-name|Definition
+name|E
 argument_list|,
 name|Vs
 operator|.
@@ -9156,25 +9519,11 @@ name|Ctx
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|Variable
-modifier|*
-name|Nvd
-init|=
-name|Vs
-operator|.
-name|enterScope
-argument_list|(
-operator|*
-name|A
-argument_list|,
-name|Ne
-argument_list|)
-decl_stmt|;
 name|Nas
 operator|.
 name|push_back
 argument_list|(
-name|Nvd
+name|Ne
 argument_list|)
 expr_stmt|;
 block|}
@@ -9185,7 +9534,7 @@ for|for
 control|(
 name|auto
 operator|*
-name|I
+name|E
 operator|:
 name|Instrs
 control|)
@@ -9197,9 +9546,7 @@ name|Vs
 operator|.
 name|traverse
 argument_list|(
-name|I
-operator|->
-name|Definition
+name|E
 argument_list|,
 name|Vs
 operator|.
@@ -9209,25 +9556,11 @@ name|Ctx
 argument_list|)
 argument_list|)
 decl_stmt|;
-name|Variable
-modifier|*
-name|Nvd
-init|=
-name|Vs
-operator|.
-name|enterScope
-argument_list|(
-operator|*
-name|I
-argument_list|,
-name|Ne
-argument_list|)
-decl_stmt|;
 name|Nis
 operator|.
 name|push_back
 argument_list|(
-name|Nvd
+name|Ne
 argument_list|)
 expr_stmt|;
 block|}
@@ -9241,7 +9574,7 @@ name|Vs
 operator|.
 name|traverse
 argument_list|(
-name|Terminator
+name|TermInstr
 argument_list|,
 name|Ctx
 argument_list|)
@@ -9293,10 +9626,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|BasicBlock *E
+argument|const BasicBlock *E
 argument_list|,
 argument|C&Cmp
 argument_list|)
+specifier|const
 block|{
 comment|// TODO: implement CFG comparisons
 return|return
@@ -9324,11 +9658,84 @@ name|SCFG
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|renumberInstrs
+parameter_list|(
+name|int
+name|id
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// assign unique ids to all instructions
+end_comment
+
+begin_decl_stmt
+name|int
+name|topologicalSort
+argument_list|(
+name|SimpleArray
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|&
+name|Blocks
+argument_list|,
+name|int
+name|ID
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|topologicalFinalSort
+argument_list|(
+name|SimpleArray
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|&
+name|Blocks
+argument_list|,
+name|int
+name|ID
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|computeDominator
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|computePostDominator
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_label
+name|private
+label|:
+end_label
+
 begin_decl_stmt
 name|MemRegionRef
 name|Arena
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// The arena used to allocate this block.
+end_comment
 
 begin_decl_stmt
 name|SCFG
@@ -9342,28 +9749,35 @@ comment|// The CFG that contains this block.
 end_comment
 
 begin_decl_stmt
-name|unsigned
+name|int
 name|BlockID
+range|:
+literal|31
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// unique id for this BB in the containing CFG
+comment|// unique id for this BB in the containing CFG.
+end_comment
+
+begin_comment
+comment|// IDs are in topological order.
 end_comment
 
 begin_decl_stmt
-name|BasicBlock
-modifier|*
-name|Parent
+name|bool
+name|Visited
+range|:
+literal|1
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// The parent block is the enclosing lexical scope.
+comment|// Bit to determine if a block has been visited
 end_comment
 
 begin_comment
-comment|// The parent dominates this block.
+comment|// during a traversal.
 end_comment
 
 begin_decl_stmt
@@ -9377,7 +9791,7 @@ comment|// Predecessor blocks in the CFG.
 end_comment
 
 begin_decl_stmt
-name|VarArray
+name|InstrArray
 name|Args
 decl_stmt|;
 end_decl_stmt
@@ -9387,7 +9801,7 @@ comment|// Phi nodes.  One argument per predecessor.
 end_comment
 
 begin_decl_stmt
-name|VarArray
+name|InstrArray
 name|Instrs
 decl_stmt|;
 end_decl_stmt
@@ -9397,26 +9811,47 @@ comment|// Instructions.
 end_comment
 
 begin_decl_stmt
-name|SExprRef
 name|Terminator
+modifier|*
+name|TermInstr
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// Branch or Goto
+comment|// Terminating instruction
+end_comment
+
+begin_decl_stmt
+name|TopologyNode
+name|DominatorNode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// The dominator tree
+end_comment
+
+begin_decl_stmt
+name|TopologyNode
+name|PostDominatorNode
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// The post-dominator tree
 end_comment
 
 begin_comment
 unit|};
-comment|// An SCFG is a control-flow graph.  It consists of a set of basic blocks, each
+comment|/// An SCFG is a control-flow graph.  It consists of a set of basic blocks,
 end_comment
 
 begin_comment
-comment|// of which terminates in a branch to another basic block.  There is one
+comment|/// each of which terminates in a branch to another basic block.  There is one
 end_comment
 
 begin_comment
-comment|// entry point, and one exit point.
+comment|/// entry point, and one exit point.
 end_comment
 
 begin_decl_stmt
@@ -9513,7 +9948,17 @@ argument_list|)
 operator|,
 name|Exit
 argument_list|(
-argument|nullptr
+name|nullptr
+argument_list|)
+operator|,
+name|NumInstructions
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Normal
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|Entry
@@ -9525,8 +9970,6 @@ argument_list|)
 name|BasicBlock
 argument_list|(
 name|A
-argument_list|,
-name|nullptr
 argument_list|)
 block|;
 name|Exit
@@ -9538,8 +9981,6 @@ argument_list|)
 name|BasicBlock
 argument_list|(
 name|A
-argument_list|,
-name|Entry
 argument_list|)
 block|;
 name|auto
@@ -9550,21 +9991,28 @@ name|new
 argument_list|(
 argument|A
 argument_list|)
-name|Variable
-argument_list|(
-name|new
-argument_list|(
-argument|A
-argument_list|)
 name|Phi
 argument_list|()
-argument_list|)
 block|;
 name|Exit
 operator|->
 name|addArgument
 argument_list|(
 name|V
+argument_list|)
+block|;
+name|Exit
+operator|->
+name|setTerminator
+argument_list|(
+name|new
+argument_list|(
+argument|A
+argument_list|)
+name|Return
+argument_list|(
+name|V
+argument_list|)
 argument_list|)
 block|;
 name|add
@@ -9619,14 +10067,70 @@ argument_list|)
 operator|,
 name|Exit
 argument_list|(
-argument|nullptr
+name|nullptr
+argument_list|)
+operator|,
+name|NumInstructions
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Normal
+argument_list|(
+argument|false
 argument_list|)
 block|{
 comment|// TODO: set entry and exit!
 block|}
+comment|/// Return true if this CFG is valid.
+name|bool
+name|valid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Entry
+operator|&&
+name|Exit
+operator|&&
+name|Blocks
+operator|.
+name|size
+argument_list|()
+operator|>
+literal|0
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Return true if this CFG has been normalized.
+end_comment
+
+begin_comment
+comment|/// After normalization, blocks are in topological order, and block and
+end_comment
+
+begin_comment
+comment|/// instruction IDs have been assigned.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|normal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Normal
+return|;
+block|}
+end_expr_stmt
+
+begin_function
 name|iterator
 name|begin
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Blocks
@@ -9635,7 +10139,7 @@ name|begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_function
 name|iterator
@@ -9755,6 +10259,52 @@ parameter_list|()
 block|{
 return|return
 name|Exit
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Return the number of blocks in the CFG.
+end_comment
+
+begin_comment
+comment|/// Block::blockID() will return a number less than numBlocks();
+end_comment
+
+begin_expr_stmt
+name|size_t
+name|numBlocks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Blocks
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Return the total number of instructions in the CFG.
+end_comment
+
+begin_comment
+comment|/// This is useful for building instruction side-tables;
+end_comment
+
+begin_comment
+comment|/// A call to SExpr::id() will return a number less than numInstructions().
+end_comment
+
+begin_function
+name|unsigned
+name|numInstructions
+parameter_list|()
+block|{
+return|return
+name|NumInstructions
 return|;
 block|}
 end_function
@@ -9776,22 +10326,6 @@ operator|->
 name|CFGPtr
 operator|==
 name|nullptr
-operator|||
-name|BB
-operator|->
-name|CFGPtr
-operator|==
-name|this
-argument_list|)
-expr_stmt|;
-name|BB
-operator|->
-name|setBlockID
-argument_list|(
-name|Blocks
-operator|.
-name|size
-argument_list|()
 argument_list|)
 expr_stmt|;
 name|BB
@@ -9851,13 +10385,9 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|// Set varable ids in all blocks.
-end_comment
-
 begin_function_decl
 name|void
-name|renumberVars
+name|computeNormalForm
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -9971,12 +10501,13 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|SCFG *E
+argument|const SCFG *E
 argument_list|,
 argument|C&Cmp
 argument_list|)
+specifier|const
 block|{
-comment|// TODO -- implement CFG comparisons
+comment|// TODO: implement CFG comparisons
 return|return
 name|Cmp
 operator|.
@@ -9989,6 +10520,22 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_label
+name|private
+label|:
+end_label
+
+begin_function_decl
+name|void
+name|renumberInstrs
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// assign unique ids to all instructions
+end_comment
 
 begin_label
 name|private
@@ -10022,506 +10569,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-unit|};
-name|class
-name|Goto
-range|:
-name|public
-name|SExpr
-block|{
-name|public
-operator|:
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const SExpr *E
-argument_list|)
-block|{
-return|return
-name|E
-operator|->
-name|opcode
-argument_list|()
-operator|==
-name|COP_Goto
-return|;
-block|}
-name|Goto
-argument_list|(
-argument|BasicBlock *B
-argument_list|,
-argument|unsigned I
-argument_list|)
-operator|:
-name|SExpr
-argument_list|(
-name|COP_Goto
-argument_list|)
-block|,
-name|TargetBlock
-argument_list|(
-name|B
-argument_list|)
-block|,
-name|Index
-argument_list|(
-argument|I
-argument_list|)
-block|{}
-name|Goto
-argument_list|(
-argument|const Goto&G
-argument_list|,
-argument|BasicBlock *B
-argument_list|,
-argument|unsigned I
-argument_list|)
-operator|:
-name|SExpr
-argument_list|(
-name|COP_Goto
-argument_list|)
-block|,
-name|TargetBlock
-argument_list|(
-name|B
-argument_list|)
-block|,
-name|Index
-argument_list|(
-argument|I
-argument_list|)
-block|{}
-specifier|const
-name|BasicBlock
-operator|*
-name|targetBlock
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TargetBlock
-return|;
-block|}
-name|BasicBlock
-operator|*
-name|targetBlock
-argument_list|()
-block|{
-return|return
-name|TargetBlock
-return|;
-block|}
 name|unsigned
-name|index
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Index
-return|;
-block|}
-name|template
-operator|<
-name|class
-name|V
-operator|>
-name|typename
-name|V
-operator|::
-name|R_SExpr
-name|traverse
-argument_list|(
-argument|V&Vs
-argument_list|,
-argument|typename V::R_Ctx Ctx
-argument_list|)
-block|{
-name|BasicBlock
-operator|*
-name|Ntb
-operator|=
-name|Vs
-operator|.
-name|reduceBasicBlockRef
-argument_list|(
-name|TargetBlock
-argument_list|)
-block|;
-return|return
-name|Vs
-operator|.
-name|reduceGoto
-argument_list|(
-operator|*
-name|this
-argument_list|,
-name|Ntb
-argument_list|)
-return|;
-block|}
-name|template
-operator|<
-name|class
-name|C
-operator|>
-name|typename
-name|C
-operator|::
-name|CType
-name|compare
-argument_list|(
-argument|Goto *E
-argument_list|,
-argument|C&Cmp
-argument_list|)
-block|{
-comment|// TODO -- implement CFG comparisons
-return|return
-name|Cmp
-operator|.
-name|comparePointers
-argument_list|(
-name|this
-argument_list|,
-name|E
-argument_list|)
-return|;
-block|}
-name|private
-operator|:
-name|BasicBlock
-operator|*
-name|TargetBlock
-block|;
-name|unsigned
-name|Index
-block|;
-comment|// Index into Phi nodes of target block.
-block|}
+name|NumInstructions
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|class
-name|Branch
-range|:
-name|public
-name|SExpr
-block|{
-name|public
-operator|:
-specifier|static
 name|bool
-name|classof
-argument_list|(
-argument|const SExpr *E
-argument_list|)
-block|{
-return|return
-name|E
-operator|->
-name|opcode
-argument_list|()
-operator|==
-name|COP_Branch
-return|;
-block|}
-name|Branch
-argument_list|(
-argument|SExpr *C
-argument_list|,
-argument|BasicBlock *T
-argument_list|,
-argument|BasicBlock *E
-argument_list|,
-argument|unsigned TI
-argument_list|,
-argument|unsigned EI
-argument_list|)
-operator|:
-name|SExpr
-argument_list|(
-name|COP_Branch
-argument_list|)
-block|,
-name|Condition
-argument_list|(
-name|C
-argument_list|)
-block|,
-name|ThenBlock
-argument_list|(
-name|T
-argument_list|)
-block|,
-name|ElseBlock
-argument_list|(
-name|E
-argument_list|)
-block|,
-name|ThenIndex
-argument_list|(
-name|TI
-argument_list|)
-block|,
-name|ElseIndex
-argument_list|(
-argument|EI
-argument_list|)
-block|{}
-name|Branch
-argument_list|(
-argument|const Branch&Br
-argument_list|,
-argument|SExpr *C
-argument_list|,
-argument|BasicBlock *T
-argument_list|,
-argument|BasicBlock *E
-argument_list|,
-argument|unsigned TI
-argument_list|,
-argument|unsigned EI
-argument_list|)
-operator|:
-name|SExpr
-argument_list|(
-name|COP_Branch
-argument_list|)
-block|,
-name|Condition
-argument_list|(
-name|C
-argument_list|)
-block|,
-name|ThenBlock
-argument_list|(
-name|T
-argument_list|)
-block|,
-name|ElseBlock
-argument_list|(
-name|E
-argument_list|)
-block|,
-name|ThenIndex
-argument_list|(
-name|TI
-argument_list|)
-block|,
-name|ElseIndex
-argument_list|(
-argument|EI
-argument_list|)
-block|{}
-specifier|const
-name|SExpr
-operator|*
-name|condition
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Condition
-return|;
-block|}
-name|SExpr
-operator|*
-name|condition
-argument_list|()
-block|{
-return|return
-name|Condition
-return|;
-block|}
-specifier|const
-name|BasicBlock
-operator|*
-name|thenBlock
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ThenBlock
-return|;
-block|}
-name|BasicBlock
-operator|*
-name|thenBlock
-argument_list|()
-block|{
-return|return
-name|ThenBlock
-return|;
-block|}
-specifier|const
-name|BasicBlock
-operator|*
-name|elseBlock
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ElseBlock
-return|;
-block|}
-name|BasicBlock
-operator|*
-name|elseBlock
-argument_list|()
-block|{
-return|return
-name|ElseBlock
-return|;
-block|}
-name|unsigned
-name|thenIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ThenIndex
-return|;
-block|}
-name|unsigned
-name|elseIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ElseIndex
-return|;
-block|}
-name|template
-operator|<
-name|class
-name|V
-operator|>
-name|typename
-name|V
-operator|::
-name|R_SExpr
-name|traverse
-argument_list|(
-argument|V&Vs
-argument_list|,
-argument|typename V::R_Ctx Ctx
-argument_list|)
-block|{
-name|auto
-name|Nc
-operator|=
-name|Vs
-operator|.
-name|traverse
-argument_list|(
-name|Condition
-argument_list|,
-name|Vs
-operator|.
-name|subExprCtx
-argument_list|(
-name|Ctx
-argument_list|)
-argument_list|)
-block|;
-name|BasicBlock
-operator|*
-name|Ntb
-operator|=
-name|Vs
-operator|.
-name|reduceBasicBlockRef
-argument_list|(
-name|ThenBlock
-argument_list|)
-block|;
-name|BasicBlock
-operator|*
-name|Nte
-operator|=
-name|Vs
-operator|.
-name|reduceBasicBlockRef
-argument_list|(
-name|ElseBlock
-argument_list|)
-block|;
-return|return
-name|Vs
-operator|.
-name|reduceBranch
-argument_list|(
-operator|*
-name|this
-argument_list|,
-name|Nc
-argument_list|,
-name|Ntb
-argument_list|,
-name|Nte
-argument_list|)
-return|;
-block|}
-name|template
-operator|<
-name|class
-name|C
-operator|>
-name|typename
-name|C
-operator|::
-name|CType
-name|compare
-argument_list|(
-argument|Branch *E
-argument_list|,
-argument|C&Cmp
-argument_list|)
-block|{
-comment|// TODO -- implement CFG comparisons
-return|return
-name|Cmp
-operator|.
-name|comparePointers
-argument_list|(
-name|this
-argument_list|,
-name|E
-argument_list|)
-return|;
-block|}
-name|private
-operator|:
-name|SExpr
-operator|*
-name|Condition
-block|;
-name|BasicBlock
-operator|*
-name|ThenBlock
-block|;
-name|BasicBlock
-operator|*
-name|ElseBlock
-block|;
-name|unsigned
-name|ThenIndex
-block|;
-name|unsigned
-name|ElseIndex
-block|; }
+name|Normal
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// An identifier, e.g. 'foo' or 'x'.
+unit|};
+comment|/// An identifier, e.g. 'foo' or 'x'.
 end_comment
 
 begin_comment
-comment|// This is a pseduo-term; it will be lowered to a variable or projection.
+comment|/// This is a pseduo-term; it will be lowered to a variable or projection.
 end_comment
 
 begin_decl_stmt
@@ -10628,10 +10693,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Identifier* E
+argument|const Identifier* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 return|return
 name|Cmp
@@ -10657,11 +10723,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// An if-then-else expression.
+comment|/// An if-then-else expression.
 end_comment
 
 begin_comment
-comment|// This is a pseduo-term; it will be lowered to a branch in a CFG.
+comment|/// This is a pseduo-term; it will be lowered to a branch in a CFG.
 end_comment
 
 begin_decl_stmt
@@ -10771,9 +10837,6 @@ argument_list|()
 block|{
 return|return
 name|Condition
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 comment|// Address to store to
@@ -10786,9 +10849,6 @@ specifier|const
 block|{
 return|return
 name|Condition
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|SExpr
@@ -10798,9 +10858,6 @@ argument_list|()
 block|{
 return|return
 name|ThenExpr
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 comment|// Value to store
@@ -10813,9 +10870,6 @@ specifier|const
 block|{
 return|return
 name|ThenExpr
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|SExpr
@@ -10825,9 +10879,6 @@ argument_list|()
 block|{
 return|return
 name|ElseExpr
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 comment|// Value to store
@@ -10840,9 +10891,6 @@ specifier|const
 block|{
 return|return
 name|ElseExpr
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -10939,10 +10987,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|IfThenElse* E
+argument|const IfThenElse* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -11023,30 +11072,33 @@ end_return
 
 begin_decl_stmt
 unit|}  private:
-name|SExprRef
+name|SExpr
+modifier|*
 name|Condition
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|ThenExpr
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|ElseExpr
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
 unit|};
-comment|// A let-expression,  e.g.  let x=t; u.
+comment|/// A let-expression,  e.g.  let x=t; u.
 end_comment
 
 begin_comment
-comment|// This is a pseduo-term; it will be lowered to instructions in a CFG.
+comment|/// This is a pseduo-term; it will be lowered to instructions in a CFG.
 end_comment
 
 begin_decl_stmt
@@ -11176,9 +11228,6 @@ argument_list|()
 block|{
 return|return
 name|Body
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -11190,9 +11239,6 @@ specifier|const
 block|{
 return|return
 name|Body
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|template
@@ -11291,10 +11337,11 @@ operator|::
 name|CType
 name|compare
 argument_list|(
-argument|Let* E
+argument|const Let* E
 argument_list|,
 argument|C& Cmp
 argument_list|)
+specifier|const
 block|{
 name|typename
 name|C
@@ -11383,16 +11430,31 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|SExprRef
+name|SExpr
+modifier|*
 name|Body
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
 unit|};
+specifier|const
 name|SExpr
 modifier|*
 name|getCanonicalVal
+parameter_list|(
+specifier|const
+name|SExpr
+modifier|*
+name|E
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|SExpr
+modifier|*
+name|simplifyToCanonicalVal
 parameter_list|(
 name|SExpr
 modifier|*
@@ -11405,10 +11467,6 @@ begin_decl_stmt
 name|void
 name|simplifyIncompleteArg
 argument_list|(
-name|Variable
-operator|*
-name|V
-argument_list|,
 name|til
 operator|::
 name|Phi
@@ -11437,10 +11495,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_THREAD_SAFETY_TIL_H
-end_comment
 
 end_unit
 

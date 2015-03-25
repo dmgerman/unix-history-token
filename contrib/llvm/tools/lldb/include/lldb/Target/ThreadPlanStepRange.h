@@ -114,6 +114,8 @@ argument_list|,
 argument|const SymbolContext&addr_context
 argument_list|,
 argument|lldb::RunMode stop_others
+argument_list|,
+argument|bool given_ranges_only = false
 argument_list|)
 block|;
 name|virtual
@@ -299,6 +301,9 @@ name|m_next_branch_bp_sp
 block|;
 name|bool
 name|m_use_fast_step
+block|;
+name|bool
+name|m_given_ranges_only
 block|;
 name|private
 operator|:

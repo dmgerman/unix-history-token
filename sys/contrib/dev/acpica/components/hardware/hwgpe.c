@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -72,6 +72,21 @@ parameter_list|,
 name|void
 modifier|*
 name|Context
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|AcpiHwGpeEnableWrite
+parameter_list|(
+name|UINT8
+name|EnableMask
+parameter_list|,
+name|ACPI_GPE_REGISTER_INFO
+modifier|*
+name|GpeRegisterInfo
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -202,12 +217,15 @@ expr_stmt|;
 switch|switch
 condition|(
 name|Action
+operator|&
+operator|~
+name|ACPI_GPE_SAVE_MASK
 condition|)
 block|{
 case|case
 name|ACPI_GPE_CONDITIONAL_ENABLE
 case|:
-comment|/* Only enable if the EnableForRun bit is set */
+comment|/* Only enable if the corresponding EnableMask bit is set */
 if|if
 condition|(
 operator|!
@@ -216,7 +234,7 @@ name|RegisterBit
 operator|&
 name|GpeRegisterInfo
 operator|->
-name|EnableForRun
+name|EnableMask
 operator|)
 condition|)
 block|{
@@ -280,6 +298,30 @@ operator|->
 name|EnableAddress
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+operator|&&
+operator|(
+name|Action
+operator|&
+name|ACPI_GPE_SAVE_MASK
+operator|)
+condition|)
+block|{
+name|GpeRegisterInfo
+operator|->
+name|EnableMask
+operator|=
+operator|(
+name|UINT8
+operator|)
+name|EnableMask
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|Status
@@ -414,13 +456,12 @@ block|}
 comment|/* GPE currently handled? */
 if|if
 condition|(
-operator|(
+name|ACPI_GPE_DISPATCH_TYPE
+argument_list|(
 name|GpeEventInfo
 operator|->
 name|Flags
-operator|&
-name|ACPI_GPE_DISPATCH_MASK
-operator|)
+argument_list|)
 operator|!=
 name|ACPI_GPE_DISPATCH_NONE
 condition|)
@@ -532,6 +573,61 @@ block|}
 end_function
 
 begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiHwGpeEnableWrite  *  * PARAMETERS:  EnableMask          - Bit mask to write to the GPE register  *              GpeRegisterInfo     - Gpe Register info  *  * RETURN:      Status  *  * DESCRIPTION: Write the enable mask byte to the given GPE register.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|ACPI_STATUS
+name|AcpiHwGpeEnableWrite
+parameter_list|(
+name|UINT8
+name|EnableMask
+parameter_list|,
+name|ACPI_GPE_REGISTER_INFO
+modifier|*
+name|GpeRegisterInfo
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|Status
+operator|=
+name|AcpiHwWrite
+argument_list|(
+name|EnableMask
+argument_list|,
+operator|&
+name|GpeRegisterInfo
+operator|->
+name|EnableAddress
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|GpeRegisterInfo
+operator|->
+name|EnableMask
+operator|=
+name|EnableMask
+expr_stmt|;
+block|}
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiHwDisableGpeBlock  *  * PARAMETERS:  GpeXruptInfo        - GPE Interrupt info  *              GpeBlock            - Gpe Block info  *  * RETURN:      Status  *  * DESCRIPTION: Disable all GPEs within a single GPE block  *  ******************************************************************************/
 end_comment
 
@@ -578,7 +674,7 @@ block|{
 comment|/* Disable all GPEs in this register */
 name|Status
 operator|=
-name|AcpiHwWrite
+name|AcpiHwGpeEnableWrite
 argument_list|(
 literal|0x00
 argument_list|,
@@ -589,8 +685,6 @@ name|RegisterInfo
 index|[
 name|i
 index|]
-operator|.
-name|EnableAddress
 argument_list|)
 expr_stmt|;
 if|if
@@ -728,6 +822,10 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_GPE_REGISTER_INFO
+modifier|*
+name|GpeRegisterInfo
+decl_stmt|;
 comment|/* NOTE: assumes that all GPEs are currently disabled */
 comment|/* Examine each GPE Register within the block */
 for|for
@@ -746,16 +844,21 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|!
+name|GpeRegisterInfo
+operator|=
+operator|&
 name|GpeBlock
 operator|->
 name|RegisterInfo
 index|[
 name|i
 index|]
-operator|.
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|GpeRegisterInfo
+operator|->
 name|EnableForRun
 condition|)
 block|{
@@ -764,26 +867,13 @@ block|}
 comment|/* Enable all "runtime" GPEs in this register */
 name|Status
 operator|=
-name|AcpiHwWrite
+name|AcpiHwGpeEnableWrite
 argument_list|(
-name|GpeBlock
+name|GpeRegisterInfo
 operator|->
-name|RegisterInfo
-index|[
-name|i
-index|]
-operator|.
 name|EnableForRun
 argument_list|,
-operator|&
-name|GpeBlock
-operator|->
-name|RegisterInfo
-index|[
-name|i
-index|]
-operator|.
-name|EnableAddress
+name|GpeRegisterInfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -837,6 +927,10 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_GPE_REGISTER_INFO
+modifier|*
+name|GpeRegisterInfo
+decl_stmt|;
 comment|/* Examine each GPE Register within the block */
 for|for
 control|(
@@ -854,35 +948,8 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|!
-name|GpeBlock
-operator|->
-name|RegisterInfo
-index|[
-name|i
-index|]
-operator|.
-name|EnableForWake
-condition|)
-block|{
-continue|continue;
-block|}
-comment|/* Enable all "wake" GPEs in this register */
-name|Status
+name|GpeRegisterInfo
 operator|=
-name|AcpiHwWrite
-argument_list|(
-name|GpeBlock
-operator|->
-name|RegisterInfo
-index|[
-name|i
-index|]
-operator|.
-name|EnableForWake
-argument_list|,
 operator|&
 name|GpeBlock
 operator|->
@@ -890,8 +957,17 @@ name|RegisterInfo
 index|[
 name|i
 index|]
-operator|.
-name|EnableAddress
+expr_stmt|;
+comment|/*          * Enable all "wake" GPEs in this register and disable the          * remaining ones.          */
+name|Status
+operator|=
+name|AcpiHwGpeEnableWrite
+argument_list|(
+name|GpeRegisterInfo
+operator|->
+name|EnableForWake
+argument_list|,
+name|GpeRegisterInfo
 argument_list|)
 expr_stmt|;
 if|if

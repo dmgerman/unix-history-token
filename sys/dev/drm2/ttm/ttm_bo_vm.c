@@ -521,7 +521,7 @@ name|EBUSY
 case|:
 case|case
 operator|-
-name|ERESTART
+name|ERESTARTSYS
 case|:
 case|case
 operator|-
@@ -1291,6 +1291,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 name|EINVAL
 operator|)
 return|;
@@ -1316,6 +1317,7 @@ condition|)
 block|{
 name|ret
 operator|=
+operator|-
 name|EPERM
 expr_stmt|;
 goto|goto
@@ -1324,7 +1326,6 @@ goto|;
 block|}
 name|ret
 operator|=
-operator|-
 name|driver
 operator|->
 name|verify_access
@@ -1375,6 +1376,7 @@ condition|)
 block|{
 name|ret
 operator|=
+operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto

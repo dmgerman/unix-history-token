@@ -158,12 +158,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vmm_ipi.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vmm_ktr.h"
 end_include
 
@@ -285,7 +279,7 @@ define|#
 directive|define
 name|VM_EXIT_CTLS_ONE_SETTING
 define|\
-value|(VM_EXIT_HOST_LMA			|			\ 	VM_EXIT_SAVE_EFER			|			\ 	VM_EXIT_LOAD_EFER			|			\ 	VM_EXIT_ACKNOWLEDGE_INTERRUPT		|			\ 	VM_EXIT_SAVE_PAT			|			\ 	VM_EXIT_LOAD_PAT)
+value|(VM_EXIT_HOST_LMA			|			\ 	VM_EXIT_SAVE_EFER			|			\ 	VM_EXIT_LOAD_EFER			|			\ 	VM_EXIT_ACKNOWLEDGE_INTERRUPT)
 end_define
 
 begin_define
@@ -299,7 +293,7 @@ begin_define
 define|#
 directive|define
 name|VM_ENTRY_CTLS_ONE_SETTING
-value|(VM_ENTRY_LOAD_EFER | VM_ENTRY_LOAD_PAT)
+value|(VM_ENTRY_LOAD_EFER)
 end_define
 
 begin_define
@@ -775,6 +769,9 @@ begin_decl_stmt
 specifier|static
 name|int
 name|pirvec
+init|=
+operator|-
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -1915,10 +1912,10 @@ block|{
 if|if
 condition|(
 name|pirvec
-operator|!=
+operator|>=
 literal|0
 condition|)
-name|vmm_ipi_free
+name|lapic_ipi_free
 argument_list|(
 name|pirvec
 argument_list|)
@@ -2640,13 +2637,19 @@ condition|)
 block|{
 name|pirvec
 operator|=
-name|vmm_ipi_alloc
-argument_list|()
+name|lapic_ipi_alloc
+argument_list|(
+operator|&
+name|IDTVEC
+argument_list|(
+name|justreturn
+argument_list|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|pirvec
-operator|==
+operator|<
 literal|0
 condition|)
 block|{
@@ -3269,7 +3272,7 @@ operator|->
 name|msr_bitmap
 argument_list|)
 expr_stmt|;
-comment|/* 	 * It is safe to allow direct access to MSR_GSBASE and MSR_FSBASE. 	 * The guest FSBASE and GSBASE are saved and restored during 	 * vm-exit and vm-entry respectively. The host FSBASE and GSBASE are 	 * always restored from the vmcs host state area on vm-exit. 	 * 	 * The SYSENTER_CS/ESP/EIP MSRs are identical to FS/GSBASE in 	 * how they are saved/restored so can be directly accessed by the 	 * guest. 	 * 	 * MSR_EFER is saved and restored in the guest VMCS area on a 	 * VM exit and entry respectively. It is also restored from the 	 * host VMCS area on a VM exit. 	 * 	 * MSR_PAT is saved and restored in the guest VMCS are on a VM exit 	 * and entry respectively. It is also restored from the host VMCS 	 * area on a VM exit. 	 * 	 * The TSC MSR is exposed read-only. Writes are disallowed as that 	 * will impact the host TSC. 	 * XXX Writes would be implemented with a wrmsr trap, and 	 * then modifying the TSC offset in the VMCS. 	 */
+comment|/* 	 * It is safe to allow direct access to MSR_GSBASE and MSR_FSBASE. 	 * The guest FSBASE and GSBASE are saved and restored during 	 * vm-exit and vm-entry respectively. The host FSBASE and GSBASE are 	 * always restored from the vmcs host state area on vm-exit. 	 * 	 * The SYSENTER_CS/ESP/EIP MSRs are identical to FS/GSBASE in 	 * how they are saved/restored so can be directly accessed by the 	 * guest. 	 * 	 * MSR_EFER is saved and restored in the guest VMCS area on a 	 * VM exit and entry respectively. It is also restored from the 	 * host VMCS area on a VM exit. 	 * 	 * The TSC MSR is exposed read-only. Writes are disallowed as that 	 * will impact the host TSC. 	 * XXX Writes would be implemented with a wrmsr trap, and 	 * then modifying the TSC offset in the VMCS. 	 */
 if|if
 condition|(
 name|guest_msr_rw
@@ -3312,13 +3315,6 @@ argument_list|(
 name|vmx
 argument_list|,
 name|MSR_EFER
-argument_list|)
-operator|||
-name|guest_msr_rw
-argument_list|(
-name|vmx
-argument_list|,
-name|MSR_PAT
 argument_list|)
 operator|||
 name|guest_msr_ro
@@ -7315,11 +7311,51 @@ name|cpu_mode
 condition|)
 block|{
 case|case
+name|CPU_MODE_REAL
+case|:
+name|vmexit
+operator|->
+name|u
+operator|.
+name|inst_emul
+operator|.
+name|cs_base
+operator|=
+name|vmcs_read
+argument_list|(
+name|VMCS_GUEST_CS_BASE
+argument_list|)
+expr_stmt|;
+name|vmexit
+operator|->
+name|u
+operator|.
+name|inst_emul
+operator|.
+name|cs_d
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 name|CPU_MODE_PROTECTED
 case|:
 case|case
 name|CPU_MODE_COMPATIBILITY
 case|:
+name|vmexit
+operator|->
+name|u
+operator|.
+name|inst_emul
+operator|.
+name|cs_base
+operator|=
+name|vmcs_read
+argument_list|(
+name|VMCS_GUEST_CS_BASE
+argument_list|)
+expr_stmt|;
 name|csar
 operator|=
 name|vmcs_read
@@ -7342,6 +7378,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|vmexit
+operator|->
+name|u
+operator|.
+name|inst_emul
+operator|.
+name|cs_base
+operator|=
+literal|0
+expr_stmt|;
 name|vmexit
 operator|->
 name|u

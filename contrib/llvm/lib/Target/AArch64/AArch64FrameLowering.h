@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AArch64_FRAMELOWERING_H
+name|LLVM_LIB_TARGET_AARCH64_AARCH64FRAMELOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AArch64_FRAMELOWERING_H
+name|LLVM_LIB_TARGET_AARCH64_AARCH64FRAMELOWERING_H
 end_define
 
 begin_include

@@ -440,11 +440,27 @@ argument_list|(
 name|child
 argument_list|)
 control|)
+block|{
+if|if
+condition|(
+operator|!
+name|OF_hasprop
+argument_list|(
+name|child
+argument_list|,
+literal|"gpios"
+argument_list|)
+condition|)
+continue|continue;
 if|if
 condition|(
 name|ofw_gpiobus_add_fdt_child
 argument_list|(
 name|bus
+argument_list|,
+name|driver
+operator|->
+name|name
 argument_list|,
 name|child
 argument_list|)
@@ -452,6 +468,7 @@ operator|==
 name|NULL
 condition|)
 continue|continue;
+block|}
 block|}
 end_function
 

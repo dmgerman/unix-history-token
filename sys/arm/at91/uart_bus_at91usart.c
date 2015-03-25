@@ -107,6 +107,14 @@ directive|include
 file|"uart_if.h"
 end_include
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|uart_class
+name|at91_usart_class
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|int

@@ -7023,16 +7023,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|DEV_NETMAP
-name|CXGBE_UNIMPLEMENTED
-argument_list|(
-name|__func__
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -16349,8 +16339,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
-specifier|inline
 name|int
 name|tnl_cong
 parameter_list|(

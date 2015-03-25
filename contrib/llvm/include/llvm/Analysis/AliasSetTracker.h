@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Metadata.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/ValueHandle.h"
 end_include
 
@@ -159,10 +165,8 @@ block|;
 name|uint64_t
 name|Size
 block|;
-specifier|const
-name|MDNode
-operator|*
-name|TBAAInfo
+name|AAMDNodes
+name|AAInfo
 block|;
 name|public
 operator|:
@@ -198,9 +202,9 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|TBAAInfo
+name|AAInfo
 argument_list|(
-argument|DenseMapInfo<const MDNode *>::getEmptyKey()
+argument|DenseMapInfo<AAMDNodes>::getEmptyKey()
 argument_list|)
 block|{}
 name|Value
@@ -252,11 +256,11 @@ name|NextInList
 return|;
 block|}
 name|void
-name|updateSizeAndTBAAInfo
+name|updateSizeAndAAInfo
 argument_list|(
 argument|uint64_t NewSize
 argument_list|,
-argument|const MDNode *NewTBAAInfo
+argument|const AAMDNodes&NewAAInfo
 argument_list|)
 block|{
 if|if
@@ -271,38 +275,34 @@ name|NewSize
 expr_stmt|;
 if|if
 condition|(
-name|TBAAInfo
+name|AAInfo
 operator|==
 name|DenseMapInfo
 operator|<
-specifier|const
-name|MDNode
-operator|*
+name|AAMDNodes
 operator|>
 operator|::
 name|getEmptyKey
 argument_list|()
 condition|)
-comment|// We don't have a TBAAInfo yet. Set it to NewTBAAInfo.
-name|TBAAInfo
+comment|// We don't have a AAInfo yet. Set it to NewAAInfo.
+name|AAInfo
 operator|=
-name|NewTBAAInfo
+name|NewAAInfo
 expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|TBAAInfo
+name|AAInfo
 operator|!=
-name|NewTBAAInfo
+name|NewAAInfo
 condition|)
-comment|// NewTBAAInfo conflicts with TBAAInfo.
-name|TBAAInfo
+comment|// NewAAInfo conflicts with AAInfo.
+name|AAInfo
 operator|=
 name|DenseMapInfo
 operator|<
-specifier|const
-name|MDNode
-operator|*
+name|AAMDNodes
 operator|>
 operator|::
 name|getTombstoneKey
@@ -318,47 +318,42 @@ return|return
 name|Size
 return|;
 block|}
-comment|/// getTBAAInfo - Return the TBAAInfo, or null if there is no
+comment|/// getAAInfo - Return the AAInfo, or null if there is no
 comment|/// information or conflicting information.
-specifier|const
-name|MDNode
-operator|*
-name|getTBAAInfo
+name|AAMDNodes
+name|getAAInfo
 argument_list|()
 specifier|const
 block|{
-comment|// If we have missing or conflicting TBAAInfo, return null.
+comment|// If we have missing or conflicting AAInfo, return null.
 if|if
 condition|(
-name|TBAAInfo
+name|AAInfo
 operator|==
 name|DenseMapInfo
 operator|<
-specifier|const
-name|MDNode
-operator|*
+name|AAMDNodes
 operator|>
 operator|::
 name|getEmptyKey
 argument_list|()
 operator|||
-name|TBAAInfo
+name|AAInfo
 operator|==
 name|DenseMapInfo
 operator|<
-specifier|const
-name|MDNode
-operator|*
+name|AAMDNodes
 operator|>
 operator|::
 name|getTombstoneKey
 argument_list|()
 condition|)
 return|return
-name|nullptr
+name|AAMDNodes
+argument_list|()
 return|;
 return|return
-name|TBAAInfo
+name|AAInfo
 return|;
 block|}
 name|AliasSet
@@ -1108,17 +1103,15 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-specifier|const
-name|MDNode
-operator|*
-name|getTBAAInfo
+name|AAMDNodes
+name|getAAInfo
 argument_list|()
 specifier|const
 block|{
 return|return
 name|CurNode
 operator|->
-name|getTBAAInfo
+name|getAAInfo
 argument_list|()
 return|;
 block|}
@@ -1379,9 +1372,9 @@ name|uint64_t
 name|Size
 parameter_list|,
 specifier|const
-name|MDNode
-modifier|*
-name|TBAAInfo
+name|AAMDNodes
+modifier|&
+name|AAInfo
 parameter_list|,
 name|bool
 name|KnownMustAlias
@@ -1541,9 +1534,9 @@ name|uint64_t
 name|Size
 argument_list|,
 specifier|const
-name|MDNode
-operator|*
-name|TBAAInfo
+name|AAMDNodes
+operator|&
+name|AAInfo
 argument_list|,
 name|AliasAnalysis
 operator|&
@@ -1739,10 +1732,10 @@ argument|Value *Ptr
 argument_list|,
 argument|uint64_t Size
 argument_list|,
-argument|const MDNode *TBAAInfo
+argument|const AAMDNodes&AAInfo
 argument_list|)
 expr_stmt|;
-comment|// Add a location
+comment|// Add a loc.
 name|bool
 name|add
 parameter_list|(
@@ -1818,9 +1811,9 @@ name|uint64_t
 name|Size
 parameter_list|,
 specifier|const
-name|MDNode
-modifier|*
-name|TBAAInfo
+name|AAMDNodes
+modifier|&
+name|AAInfo
 parameter_list|)
 function_decl|;
 name|bool
@@ -1907,9 +1900,9 @@ name|uint64_t
 name|Size
 parameter_list|,
 specifier|const
-name|MDNode
-modifier|*
-name|TBAAInfo
+name|AAMDNodes
+modifier|&
+name|AAInfo
 parameter_list|,
 name|bool
 modifier|*
@@ -1932,9 +1925,9 @@ name|uint64_t
 name|Size
 parameter_list|,
 specifier|const
-name|MDNode
-modifier|*
-name|TBAAInfo
+name|AAMDNodes
+modifier|&
+name|AAInfo
 parameter_list|)
 block|{
 return|return
@@ -1944,7 +1937,7 @@ name|P
 argument_list|,
 name|Size
 argument_list|,
-name|TBAAInfo
+name|AAInfo
 argument_list|)
 return|;
 block|}
@@ -1962,9 +1955,20 @@ name|uint64_t
 name|Size
 argument_list|,
 specifier|const
-name|MDNode
+name|AAMDNodes
+operator|&
+name|AAInfo
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Return true if the specified instruction "may" (or must) alias one of the
+comment|/// members in any of the sets.
+name|bool
+name|containsUnknown
+argument_list|(
+name|Instruction
 operator|*
-name|TBAAInfo
+name|I
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2166,9 +2170,9 @@ name|uint64_t
 name|Size
 argument_list|,
 specifier|const
-name|MDNode
-operator|*
-name|TBAAInfo
+name|AAMDNodes
+operator|&
+name|AAInfo
 argument_list|,
 name|AliasSet
 operator|::
@@ -2194,7 +2198,7 @@ name|P
 argument_list|,
 name|Size
 argument_list|,
-name|TBAAInfo
+name|AAInfo
 argument_list|,
 operator|&
 name|NewSet
@@ -2226,9 +2230,9 @@ name|uint64_t
 name|Size
 parameter_list|,
 specifier|const
-name|MDNode
-modifier|*
-name|TBAAInfo
+name|AAMDNodes
+modifier|&
+name|AAInfo
 parameter_list|)
 function_decl|;
 end_function_decl

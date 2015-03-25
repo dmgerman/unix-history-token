@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -174,6 +174,18 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_TREE_OUTPUT
+argument_list|,
+literal|"%*s Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr"
+literal|"    Parent   Child    Next     Flags    AcTyp    Final Col L\n"
+argument_list|,
+literal|76
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
 name|CgCloseTable
 argument_list|()
 expr_stmt|;
@@ -219,7 +231,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"%*s Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr    Child    Parent   Flags    AcTyp    Final Col L\n"
+literal|"%*s Value    P_Op A_Op OpLen PByts Len  SubLen PSubLen OpPtr"
+literal|"    Parent   Child    Next     Flags    AcTyp    Final Col L\n"
 argument_list|,
 literal|76
 argument_list|,
@@ -309,7 +322,8 @@ name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"%08X %04X %04X %01X     %04X  %04X %04X   %04X    %08X %08X %08X %08X %08X %04X  %02d  %02d\n"
+literal|"%08X %04X %04X %01X     %04X  %04X %04X   %04X    "
+literal|"%08X %08X %08X %08X %08X %08X %04X  %02d  %02d\n"
 argument_list|,
 comment|/* 1  */
 operator|(
@@ -392,44 +406,51 @@ name|Op
 operator|->
 name|Asl
 operator|.
-name|Child
+name|Parent
 argument_list|,
 comment|/* 11 */
 name|Op
 operator|->
 name|Asl
 operator|.
-name|Parent
+name|Child
 argument_list|,
 comment|/* 12 */
 name|Op
 operator|->
 name|Asl
 operator|.
-name|CompileFlags
+name|Next
 argument_list|,
 comment|/* 13 */
 name|Op
 operator|->
 name|Asl
 operator|.
-name|AcpiBtype
+name|CompileFlags
 argument_list|,
 comment|/* 14 */
 name|Op
 operator|->
 name|Asl
 operator|.
-name|FinalAmlLength
+name|AcpiBtype
 argument_list|,
 comment|/* 15 */
 name|Op
 operator|->
 name|Asl
 operator|.
-name|Column
+name|FinalAmlLength
 argument_list|,
 comment|/* 16 */
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Column
+argument_list|,
+comment|/* 17 */
 name|Op
 operator|->
 name|Asl

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: cgi.c,v 1.102 2014/11/26 17:55:27 schwarze Exp $ */
+comment|/*	$Id: cgi.c,v 1.104 2015/02/10 08:05:30 schwarze Exp $ */
 end_comment
 
 begin_comment
@@ -3296,7 +3296,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/*  			 * This means that the catpage is out of state. 			 * Ignore it and keep going (although the 			 * catpage is bogus). 			 */
+comment|/* 			 * This means that the catpage is out of state. 			 * Ignore it and keep going (although the 			 * catpage is bogus). 			 */
 if|if
 condition|(
 literal|'\b'
@@ -3426,7 +3426,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/*  			 * Handle funny behaviour troff-isms. 			 * These grok'd from the original man2html.c. 			 */
+comment|/* 			 * Handle funny behaviour troff-isms. 			 * These grok'd from the original man2html.c. 			 */
 if|if
 condition|(
 operator|(
@@ -3797,7 +3797,7 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*  		 * Clean up the last character. 		 * We can get to a newline; don't print that.  		 */
+comment|/* 		 * Clean up the last character. 		 * We can get to a newline; don't print that. 		 */
 if|if
 condition|(
 name|italic
@@ -3907,10 +3907,6 @@ name|char
 modifier|*
 name|opts
 decl_stmt|;
-name|enum
-name|mandoclevel
-name|rc
-decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
@@ -3954,7 +3950,7 @@ name|mparse_alloc
 argument_list|(
 name|MPARSE_SO
 argument_list|,
-name|MANDOCLEVEL_FATAL
+name|MANDOCLEVEL_BADARG
 argument_list|,
 name|NULL
 argument_list|,
@@ -3967,8 +3963,6 @@ operator|.
 name|manpath
 argument_list|)
 expr_stmt|;
-name|rc
-operator|=
 name|mparse_readfd
 argument_list|(
 name|mp
@@ -3983,33 +3977,6 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rc
-operator|>=
-name|MANDOCLEVEL_FATAL
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"fatal mandoc error: %s/%s\n"
-argument_list|,
-name|req
-operator|->
-name|q
-operator|.
-name|manpath
-argument_list|,
-name|file
-argument_list|)
-expr_stmt|;
-name|pg_error_internal
-argument_list|()
-expr_stmt|;
-return|return;
-block|}
 name|usepath
 operator|=
 name|strcmp

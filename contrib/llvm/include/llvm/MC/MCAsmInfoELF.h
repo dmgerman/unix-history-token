@@ -64,6 +64,17 @@ name|void
 name|anchor
 argument_list|()
 block|;
+specifier|const
+name|MCSection
+operator|*
+name|getNonexecutableStackSection
+argument_list|(
+argument|MCContext&Ctx
+argument_list|)
+specifier|const
+name|override
+name|final
+block|;
 name|protected
 operator|:
 name|MCAsmInfoELF

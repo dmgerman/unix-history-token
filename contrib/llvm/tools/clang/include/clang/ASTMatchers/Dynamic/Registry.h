@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_MATCHERS_DYNAMIC_REGISTRY_H
+name|LLVM_CLANG_ASTMATCHERS_DYNAMIC_REGISTRY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_MATCHERS_DYNAMIC_REGISTRY_H
+name|LLVM_CLANG_ASTMATCHERS_DYNAMIC_REGISTRY_H
 end_define
 
 begin_include
@@ -143,6 +143,8 @@ argument_list|(
 argument|StringRef TypedText
 argument_list|,
 argument|StringRef MatcherDecl
+argument_list|,
+argument|unsigned Specificity
 argument_list|)
 block|:
 name|TypedText
@@ -152,7 +154,12 @@ argument_list|)
 operator|,
 name|MatcherDecl
 argument_list|(
-argument|MatcherDecl
+name|MatcherDecl
+argument_list|)
+operator|,
+name|Specificity
+argument_list|(
+argument|Specificity
 argument_list|)
 block|{}
 comment|/// \brief The text to type to select this matcher.
@@ -167,6 +174,14 @@ operator|::
 name|string
 name|MatcherDecl
 expr_stmt|;
+comment|/// \brief Value corresponding to the "specificity" of the converted matcher.
+comment|///
+comment|/// Zero specificity indicates that this conversion would produce a trivial
+comment|/// matcher that will either always or never match.
+comment|/// Such matchers are excluded from code completion results.
+name|unsigned
+name|Specificity
+decl_stmt|;
 name|bool
 name|operator
 operator|==
@@ -215,35 +230,25 @@ argument_list|(
 argument|StringRef MatcherName
 argument_list|)
 expr_stmt|;
-comment|/// \brief Compute the list of completions for \p Context.
+comment|/// \brief Compute the list of completion types for \p Context.
 comment|///
 comment|/// Each element of \p Context represents a matcher invocation, going from
-comment|/// outermost to innermost. Elements are pairs consisting of a reference to the
-comment|/// matcher constructor and the index of the next element in the argument list
-comment|/// of that matcher (or for the last element, the index of the completion
-comment|/// point in the argument list). An empty list requests completion for the
-comment|/// root matcher.
-comment|///
-comment|/// The completions are ordered first by decreasing relevance, then
-comment|/// alphabetically.  Relevance is determined by how closely the matcher's
-comment|/// type matches that of the context. For example, if the innermost matcher
-comment|/// takes a FunctionDecl matcher, the FunctionDecl matchers are returned
-comment|/// first, followed by the ValueDecl matchers, then NamedDecl, then Decl, then
-comment|/// polymorphic matchers.
-comment|///
-comment|/// Matchers which are technically convertible to the innermost context but
-comment|/// which would match either all or no nodes are excluded. For example,
-comment|/// namedDecl and varDecl are excluded in a FunctionDecl context, because
-comment|/// those matchers would match respectively all or no nodes in such a context.
+comment|/// outermost to innermost. Elements are pairs consisting of a reference to
+comment|/// the matcher constructor and the index of the next element in the
+comment|/// argument list of that matcher (or for the last element, the index of
+comment|/// the completion point in the argument list). An empty list requests
+comment|/// completion for the root matcher.
 specifier|static
 name|std
 operator|::
 name|vector
 operator|<
-name|MatcherCompletion
+name|ArgKind
 operator|>
-name|getCompletions
+name|getAcceptedCompletionTypes
 argument_list|(
+name|llvm
+operator|::
 name|ArrayRef
 operator|<
 name|std
@@ -253,9 +258,33 @@ operator|<
 name|MatcherCtor
 argument_list|,
 name|unsigned
-operator|>
-expr|>
+operator|>>
 name|Context
+argument_list|)
+expr_stmt|;
+comment|/// \brief Compute the list of completions that match any of
+comment|/// \p AcceptedTypes.
+comment|///
+comment|/// \param AcceptedTypes All types accepted for this completion.
+comment|///
+comment|/// \return All completions for the specified types.
+comment|/// Completions should be valid when used in \c lookupMatcherCtor().
+comment|/// The matcher constructed from the return of \c lookupMatcherCtor()
+comment|/// should be convertible to some type in \p AcceptedTypes.
+specifier|static
+name|std
+operator|::
+name|vector
+operator|<
+name|MatcherCompletion
+operator|>
+name|getMatcherCompletions
+argument_list|(
+name|ArrayRef
+operator|<
+name|ArgKind
+operator|>
+name|AcceptedTypes
 argument_list|)
 expr_stmt|;
 comment|/// \brief Construct a matcher from the registry.

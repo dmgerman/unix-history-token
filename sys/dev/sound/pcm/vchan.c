@@ -93,7 +93,7 @@ name|OID_AUTO
 argument_list|,
 name|passthrough_verbose
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|snd_passthrough_verbose
@@ -4260,7 +4260,7 @@ literal|"vchans"
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 name|VCHAN_SYSCTL_DATA
 argument_list|(
@@ -4298,7 +4298,7 @@ literal|"vchanmode"
 argument_list|,
 name|CTLTYPE_STRING
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 name|VCHAN_SYSCTL_DATA
 argument_list|(
@@ -4336,7 +4336,7 @@ literal|"vchanrate"
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 name|VCHAN_SYSCTL_DATA
 argument_list|(
@@ -4374,7 +4374,7 @@ literal|"vchanformat"
 argument_list|,
 name|CTLTYPE_STRING
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 name|VCHAN_SYSCTL_DATA
 argument_list|(
@@ -4413,7 +4413,7 @@ literal|"vchans"
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 name|VCHAN_SYSCTL_DATA
 argument_list|(
@@ -4451,7 +4451,7 @@ literal|"vchanmode"
 argument_list|,
 name|CTLTYPE_STRING
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 name|VCHAN_SYSCTL_DATA
 argument_list|(
@@ -4489,7 +4489,7 @@ literal|"vchanrate"
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 name|VCHAN_SYSCTL_DATA
 argument_list|(
@@ -4527,7 +4527,7 @@ literal|"vchanformat"
 argument_list|,
 name|CTLTYPE_STRING
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 name|VCHAN_SYSCTL_DATA
 argument_list|(

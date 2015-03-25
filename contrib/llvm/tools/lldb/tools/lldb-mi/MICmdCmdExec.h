@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdCmdExec.h
+comment|// File:        MICmdCmdExec.h
 end_comment
 
 begin_comment
@@ -44,71 +44,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdCmdExecRun				interface.
+comment|// Overview:    CMICmdCmdExecRun                interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdExecContinue			interface.
+comment|//              CMICmdCmdExecContinue           interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdExecNext				interface.
+comment|//              CMICmdCmdExecNext               interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdExecStep				interface.
+comment|//              CMICmdCmdExecStep               interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdExecNextInstruction	interface.
+comment|//              CMICmdCmdExecNextInstruction    interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdExecStepInstruction	interface.
+comment|//              CMICmdCmdExecStepInstruction    interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdExecFinish				interface.
+comment|//              CMICmdCmdExecFinish             interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdExecInterrupt			interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//				To implement new MI commands derive a new command class from the command base
-end_comment
-
-begin_comment
-comment|//				class. To enable the new command for interpretation add the new command class
-end_comment
-
-begin_comment
-comment|//				to the command factory. The files of relevance are:
-end_comment
-
-begin_comment
-comment|//					MICmdCommands.cpp
-end_comment
-
-begin_comment
-comment|//					MICmdBase.h / .cpp
-end_comment
-
-begin_comment
-comment|//					MICmdCmd.h / .cpp
-end_comment
-
-begin_comment
-comment|//				For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
-end_comment
-
-begin_comment
-comment|//				command class as an example.
+comment|//              CMICmdCmdExecInterrupt          interface.
 end_comment
 
 begin_comment
@@ -116,15 +80,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|//              To implement new MI commands derive a new command class from the command base
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//              class. To enable the new command for interpretation add the new command class
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              to the command factory. The files of relevance are:
+end_comment
+
+begin_comment
+comment|//                  MICmdCommands.cpp
+end_comment
+
+begin_comment
+comment|//                  MICmdBase.h / .cpp
+end_comment
+
+begin_comment
+comment|//                  MICmdCmd.h / .cpp
+end_comment
+
+begin_comment
+comment|//              For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
+end_comment
+
+begin_comment
+comment|//              command class as an example.
 end_comment
 
 begin_comment
@@ -132,7 +116,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Environment: Compilers:  Visual C++ 12.
+end_comment
+
+begin_comment
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+end_comment
+
+begin_comment
+comment|//              Libraries:  See MIReadmetxt.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -170,23 +170,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "exec-run".
+comment|//          *this class implements MI command "exec-run".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 07/03/2014.
+comment|// Authors: Illya Rudkin 07/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -264,23 +264,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "exec-continue".
+comment|//          *this class implements MI command "exec-continue".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 07/03/2014.
+comment|// Authors: Illya Rudkin 07/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -358,23 +358,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "exec-next".
+comment|//          *this class implements MI command "exec-next".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 25/03/2014.
+comment|// Authors: Illya Rudkin 25/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -470,23 +470,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "exec-step".
+comment|//          *this class implements MI command "exec-step".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 25/03/2014.
+comment|// Authors: Illya Rudkin 25/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -582,23 +582,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "exec-next-instruction".
+comment|//          *this class implements MI command "exec-next-instruction".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 25/03/2014.
+comment|// Authors: Illya Rudkin 25/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -694,23 +694,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "exec-step-instruction".
+comment|//          *this class implements MI command "exec-step-instruction".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 25/03/2014.
+comment|// Authors: Illya Rudkin 25/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -806,23 +806,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "exec-finish".
+comment|//          *this class implements MI command "exec-finish".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 25/03/2014.
+comment|// Authors: Illya Rudkin 25/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -922,27 +922,27 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "exec-interrupt".
+comment|//          *this class implements MI command "exec-interrupt".
 end_comment
 
 begin_comment
-comment|// Gotchas:	Using Eclipse this command is injected into the command system when a
+comment|// Gotchas: Using Eclipse this command is injected into the command system when a
 end_comment
 
 begin_comment
-comment|//			SIGINT signal is received while running an inferior program.
+comment|//          SIGINT signal is received while running an inferior program.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 03/06/2014.
+comment|// Authors: Illya Rudkin 03/06/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment

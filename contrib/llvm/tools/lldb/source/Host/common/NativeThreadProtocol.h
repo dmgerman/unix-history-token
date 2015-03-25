@@ -100,9 +100,9 @@ name|NativeThreadProtocol
 argument_list|()
 block|{         }
 name|virtual
-specifier|const
-name|char
-operator|*
+name|std
+operator|::
+name|string
 name|GetName
 argument_list|()
 operator|=

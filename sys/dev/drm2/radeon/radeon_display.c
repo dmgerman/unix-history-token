@@ -2019,7 +2019,7 @@ name|work
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -2798,7 +2798,7 @@ operator|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -5940,7 +5940,7 @@ name|dev_err
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"No GEM object associated to handle 0x%08X, "
 literal|"can't create framebuffer\n"
@@ -5970,7 +5970,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -6269,7 +6269,7 @@ condition|)
 block|{
 name|sz
 operator|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|radeon_tmds_pll_enum_list
 argument_list|)
@@ -6339,7 +6339,7 @@ argument_list|)
 expr_stmt|;
 name|sz
 operator|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|radeon_tv_std_enum_list
 argument_list|)
@@ -6367,7 +6367,7 @@ argument_list|)
 expr_stmt|;
 name|sz
 operator|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|radeon_underscan_enum_list
 argument_list|)
@@ -6626,7 +6626,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -6689,7 +6689,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -6761,7 +6761,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -6824,7 +6824,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -6887,7 +6887,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -6950,7 +6950,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -7025,7 +7025,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -7088,7 +7088,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -7162,7 +7162,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -7235,7 +7235,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -7696,22 +7696,7 @@ argument_list|(
 name|rdev
 argument_list|)
 expr_stmt|;
-name|DRM_UNLOCK
-argument_list|(
-name|rdev
-operator|->
-name|ddev
-argument_list|)
-expr_stmt|;
-comment|/* Work around lock recursion. dumbbell@ */
 name|drm_mode_config_cleanup
-argument_list|(
-name|rdev
-operator|->
-name|ddev
-argument_list|)
-expr_stmt|;
-name|DRM_LOCK
 argument_list|(
 name|rdev
 operator|->

@@ -65,6 +65,24 @@ directive|include
 file|"sanitizer_platform.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SANITIZER_DEBUG
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SANITIZER_DEBUG
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|// Only use SANITIZER_*ATTRIBUTE* before the function return type!
 end_comment
@@ -254,30 +272,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// Enable sanitizer compilation for pre-C++11
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__cplusplus
-operator|<
-literal|201103L
-end_if
-
-begin_define
-define|#
-directive|define
-name|nullptr
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|// For portability reasons we do not include stddef.h, stdint.h or any other
 end_comment
 
@@ -408,11 +402,14 @@ typedef|;
 comment|// WARNING: OFF_T may be different from OS type off_t, depending on the value of
 comment|// _FILE_OFFSET_BITS. This definition of OFF_T matches the ABI of system calls
 comment|// like pread and mmap, as opposed to pread64 and mmap64.
-comment|// Mac and Linux/x86-64 are special.
+comment|// FreeBSD, Mac and Linux/x86-64 are special.
 if|#
 directive|if
+name|SANITIZER_FREEBSD
+operator|||
 name|SANITIZER_MAC
 operator|||
+expr|\
 operator|(
 name|SANITIZER_LINUX
 operator|&&
@@ -463,138 +460,6 @@ end_decl_stmt
 
 begin_comment
 comment|// namespace __sanitizer
-end_comment
-
-begin_extern
-extern|extern
-literal|"C"
-block|{
-comment|// Tell the tools to write their reports to "path.<pid>" instead of stderr.
-comment|// The special values are "stdout" and "stderr".
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|void
-name|__sanitizer_set_report_path
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|)
-function_decl|;
-typedef|typedef
-struct|struct
-block|{
-name|int
-name|coverage_sandboxed
-decl_stmt|;
-name|__sanitizer
-operator|::
-name|sptr
-name|coverage_fd
-expr_stmt|;
-name|unsigned
-name|int
-name|coverage_max_block_size
-decl_stmt|;
-block|}
-name|__sanitizer_sandbox_arguments
-typedef|;
-comment|// Notify the tools that the sandbox is going to be turned on.
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|SANITIZER_WEAK_ATTRIBUTE
-name|void
-name|__sanitizer_sandbox_on_notify
-parameter_list|(
-name|__sanitizer_sandbox_arguments
-modifier|*
-name|args
-parameter_list|)
-function_decl|;
-comment|// This function is called by the tool when it has just finished reporting
-comment|// an error. 'error_summary' is a one-line string that summarizes
-comment|// the error message. This function can be overridden by the client.
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|SANITIZER_WEAK_ATTRIBUTE
-name|void
-name|__sanitizer_report_error_summary
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|error_summary
-parameter_list|)
-function_decl|;
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|void
-name|__sanitizer_cov_dump
-parameter_list|()
-function_decl|;
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|void
-name|__sanitizer_cov_init
-parameter_list|()
-function_decl|;
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|void
-name|__sanitizer_cov
-argument_list|(
-name|__sanitizer
-operator|::
-name|u8
-operator|*
-name|guard
-argument_list|)
-decl_stmt|;
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|void
-name|__sanitizer_annotate_contiguous_container
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|beg
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|end
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|old_mid
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|new_mid
-parameter_list|)
-function_decl|;
-name|SANITIZER_INTERFACE_ATTRIBUTE
-name|int
-name|__sanitizer_verify_contiguous_container
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|beg
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|mid
-parameter_list|,
-specifier|const
-name|void
-modifier|*
-name|end
-parameter_list|)
-function_decl|;
-block|}
-end_extern
-
-begin_comment
-comment|// extern "C"
 end_comment
 
 begin_decl_stmt
@@ -1294,7 +1159,7 @@ end_define
 begin_if
 if|#
 directive|if
-name|TSAN_DEBUG
+name|SANITIZER_DEBUG
 end_if
 
 begin_define
@@ -1799,6 +1664,18 @@ name|f
 parameter_list|)
 define|\
 value|{                                                                \     int rverrno;                                                   \     do {                                                           \       res = (f);                                                   \     } while (internal_iserror(res,&rverrno)&& rverrno == EINTR); \   }
+end_define
+
+begin_comment
+comment|// Forces the compiler to generate a frame pointer in the function.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENABLE_FRAME_POINTER
+define|\
+value|do {                                                             \     volatile uptr enable_fp;                                       \     enable_fp = GET_CURRENT_FRAME();                               \   } while (0)
 end_define
 
 begin_endif

@@ -34,19 +34,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FRONTEND_SERIALIZE_DIAGNOSTIC_PRINTER_H_
+name|LLVM_CLANG_FRONTEND_SERIALIZEDDIAGNOSTICPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FRONTEND_SERIALIZE_DIAGNOSTIC_PRINTER_H_
+name|LLVM_CLANG_FRONTEND_SERIALIZEDDIAGNOSTICPRINTER_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Frontend/SerializedDiagnostics.h"
 end_include
 
 begin_include
@@ -81,74 +87,6 @@ decl_stmt|;
 name|namespace
 name|serialized_diags
 block|{
-enum|enum
-name|BlockIDs
-block|{
-comment|/// \brief A top-level block which represents any meta data associated
-comment|/// with the diagostics, including versioning of the format.
-name|BLOCK_META
-init|=
-name|llvm
-operator|::
-name|bitc
-operator|::
-name|FIRST_APPLICATION_BLOCKID
-block|,
-comment|/// \brief The this block acts as a container for all the information
-comment|/// for a specific diagnostic.
-name|BLOCK_DIAG
-block|}
-enum|;
-enum|enum
-name|RecordIDs
-block|{
-name|RECORD_VERSION
-init|=
-literal|1
-block|,
-name|RECORD_DIAG
-block|,
-name|RECORD_SOURCE_RANGE
-block|,
-name|RECORD_DIAG_FLAG
-block|,
-name|RECORD_CATEGORY
-block|,
-name|RECORD_FILENAME
-block|,
-name|RECORD_FIXIT
-block|,
-name|RECORD_FIRST
-init|=
-name|RECORD_VERSION
-block|,
-name|RECORD_LAST
-init|=
-name|RECORD_FIXIT
-block|}
-enum|;
-comment|/// A stable version of DiagnosticIDs::Level.
-comment|///
-comment|/// Do not change the order of values in this enum, and please increment the
-comment|/// serialized diagnostics version number when you add to it.
-enum|enum
-name|Level
-block|{
-name|Ignored
-init|=
-literal|0
-block|,
-name|Note
-block|,
-name|Warning
-block|,
-name|Error
-block|,
-name|Fatal
-block|,
-name|Remark
-block|}
-enum|;
 comment|/// \brief Returns a DiagnosticConsumer that serializes diagnostics to
 comment|///  a bitcode file.
 comment|///
@@ -157,19 +95,21 @@ comment|/// transfer of of diagnostics to the enclosing build system (e.g., an I
 comment|/// This allows wrapper tools for Clang to get diagnostics from Clang
 comment|/// (via libclang) without needing to parse Clang's command line output.
 comment|///
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DiagnosticConsumer
-modifier|*
+operator|>
 name|create
-parameter_list|(
-name|raw_ostream
-modifier|*
-name|OS
-parameter_list|,
-name|DiagnosticOptions
-modifier|*
-name|diags
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|StringRef OutputFile
+argument_list|,
+argument|DiagnosticOptions *Diags
+argument_list|,
+argument|bool MergeChildRecords = false
+argument_list|)
+expr_stmt|;
 block|}
 comment|// end serialized_diags namespace
 block|}

@@ -111,6 +111,8 @@ comment|/* Syntax classes */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|synclass
 name|synclass
@@ -227,6 +229,8 @@ comment|/*  * Syntax classes for is_ functions.  Warning:  if you add new classe
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|synclass
 name|is_entry
@@ -274,6 +278,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
 name|writer
 index|[]

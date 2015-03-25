@@ -562,6 +562,8 @@ name|term
 index|[
 literal|1024
 index|]
+init|=
+literal|"network"
 decl_stmt|;
 name|speed_t
 name|ospeed

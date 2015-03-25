@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HexagonREGISTERINFO_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONREGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|HexagonREGISTERINFO_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONREGISTERINFO_H
 end_define
 
 begin_include

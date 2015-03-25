@@ -4,11 +4,11 @@ comment|/* crypto/engine/eng_dyn.c */
 end_comment
 
 begin_comment
-comment|/* Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL  * project 2001.  */
+comment|/*  * Written by Geoff Thorpe (geoff@geoffthorpe.net) for the OpenSSL project  * 2001.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -24,7 +24,7 @@ file|<openssl/dso.h>
 end_include
 
 begin_comment
-comment|/* Shared libraries implementing ENGINEs for use by the "dynamic" ENGINE loader  * should implement the hook-up functions with the following prototypes. */
+comment|/*  * Shared libraries implementing ENGINEs for use by the "dynamic" ENGINE  * loader should implement the hook-up functions with the following  * prototypes.  */
 end_comment
 
 begin_comment
@@ -285,7 +285,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Loading code stores state inside the ENGINE structure via the "ex_data"  * element. We load all our state into a single structure and use that as a  * single context in the "ex_data" stack. */
+comment|/*  * Loading code stores state inside the ENGINE structure via the "ex_data"  * element. We load all our state into a single structure and use that as a  * single context in the "ex_data" stack.  */
 end_comment
 
 begin_struct
@@ -297,11 +297,11 @@ name|DSO
 modifier|*
 name|dynamic_dso
 decl_stmt|;
-comment|/* The function pointer to the version checking shared library function */
+comment|/*      * The function pointer to the version checking shared library function      */
 name|dynamic_v_check_fn
 name|v_check
 decl_stmt|;
-comment|/* The function pointer to the engine-binding shared library function */
+comment|/*      * The function pointer to the engine-binding shared library function      */
 name|dynamic_bind_engine
 name|bind_engine
 decl_stmt|;
@@ -321,7 +321,7 @@ name|char
 modifier|*
 name|engine_id
 decl_stmt|;
-comment|/* If non-zero, a successfully loaded ENGINE should be added to the internal 	 * ENGINE list. If 2, the add must succeed or the entire load should fail. */
+comment|/*      * If non-zero, a successfully loaded ENGINE should be added to the      * internal ENGINE list. If 2, the add must succeed or the entire load      * should fail.      */
 name|int
 name|list_add_value
 decl_stmt|;
@@ -337,7 +337,7 @@ name|char
 modifier|*
 name|DYNAMIC_F2
 decl_stmt|;
-comment|/* Whether to never use 'dirs', use 'dirs' as a fallback, or only use 	 * 'dirs' for loading. Default is to use 'dirs' as a fallback. */
+comment|/*      * Whether to never use 'dirs', use 'dirs' as a fallback, or only use      * 'dirs' for loading. Default is to use 'dirs' as a fallback.      */
 name|int
 name|dir_load
 decl_stmt|;
@@ -354,7 +354,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* This is the "ex_data" index we obtain and reserve for use with our context  * structure. */
+comment|/*  * This is the "ex_data" index we obtain and reserve for use with our context  * structure.  */
 end_comment
 
 begin_decl_stmt
@@ -386,7 +386,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Because our ex_data element may or may not get allocated depending on whether  * a "first-use" occurs before the ENGINE is freed, we have a memory leak  * problem to solve. We can't declare a "new" handler for the ex_data as we  * don't want a dynamic_data_ctx in *all* ENGINE structures of all types (this  * is a bug in the design of CRYPTO_EX_DATA). As such, we just declare a "free"  * handler and that will get called if an ENGINE is being destroyed and there  * was an ex_data element corresponding to our context type. */
+comment|/*  * Because our ex_data element may or may not get allocated depending on  * whether a "first-use" occurs before the ENGINE is freed, we have a memory  * leak problem to solve. We can't declare a "new" handler for the ex_data as  * we don't want a dynamic_data_ctx in *all* ENGINE structures of all types  * (this is a bug in the design of CRYPTO_EX_DATA). As such, we just declare  * a "free" handler and that will get called if an ENGINE is being destroyed  * and there was an ex_data element corresponding to our context type.  */
 end_comment
 
 begin_function
@@ -504,7 +504,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Construct the per-ENGINE context. We create it blindly and then use a lock to  * check for a race - if so, all but one of the threads "racing" will have  * wasted their time. The alternative involves creating everything inside the  * lock which is far worse. */
+comment|/*  * Construct the per-ENGINE context. We create it blindly and then use a lock  * to check for a race - if so, all but one of the threads "racing" will have  * wasted their time. The alternative involves creating everything inside the  * lock which is far worse.  */
 end_comment
 
 begin_function
@@ -707,7 +707,7 @@ argument_list|(
 name|CRYPTO_LOCK_ENGINE
 argument_list|)
 expr_stmt|;
-comment|/* If we lost the race to set the context, c is non-NULL and *ctx is the 	 * context of the thread that won. */
+comment|/*      * If we lost the race to set the context, c is non-NULL and *ctx is the      * context of the thread that won.      */
 if|if
 condition|(
 name|c
@@ -724,7 +724,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This function retrieves the context structure from an ENGINE's "ex_data", or  * if it doesn't exist yet, sets it up. */
+comment|/*  * This function retrieves the context structure from an ENGINE's "ex_data",  * or if it doesn't exist yet, sets it up.  */
 end_comment
 
 begin_function
@@ -749,7 +749,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* Create and register the ENGINE ex_data, and associate our 		 * "free" function with it to ensure any allocated contexts get 		 * freed when an ENGINE goes underground. */
+comment|/*          * Create and register the ENGINE ex_data, and associate our "free"          * function with it to ensure any allocated contexts get freed when          * an ENGINE goes underground.          */
 name|int
 name|new_idx
 init|=
@@ -814,7 +814,7 @@ argument_list|(
 name|CRYPTO_LOCK_ENGINE
 argument_list|)
 expr_stmt|;
-comment|/* In theory we could "give back" the index here if 		 * (new_idx>-1), but it's not possible and wouldn't gain us much 		 * if it were. */
+comment|/*          * In theory we could "give back" the index here if (new_idx>-1), but          * it's not possible and wouldn't gain us much if it were.          */
 block|}
 name|ctx
 operator|=
@@ -980,13 +980,13 @@ argument_list|(
 name|toadd
 argument_list|)
 expr_stmt|;
-comment|/* If the "add" worked, it gets a structural reference. So either way, 	 * we release our just-created reference. */
+comment|/*      * If the "add" worked, it gets a structural reference. So either way, we      * release our just-created reference.      */
 name|ENGINE_free
 argument_list|(
 name|toadd
 argument_list|)
 expr_stmt|;
-comment|/* If the "add" didn't work, it was probably a conflict because it was 	 * already added (eg. someone calling ENGINE_load_blah then calling 	 * ENGINE_load_builtin_engines() perhaps). */
+comment|/*      * If the "add" didn't work, it was probably a conflict because it was      * already added (eg. someone calling ENGINE_load_blah then calling      * ENGINE_load_builtin_engines() perhaps).      */
 name|ERR_clear_error
 argument_list|()
 expr_stmt|;
@@ -1003,7 +1003,7 @@ modifier|*
 name|e
 parameter_list|)
 block|{
-comment|/* We always return failure - the "dyanamic" engine itself can't be used 	 * for anything. */
+comment|/*      * We always return failure - the "dyanamic" engine itself can't be used      * for anything.      */
 return|return
 literal|0
 return|;
@@ -1020,7 +1020,7 @@ modifier|*
 name|e
 parameter_list|)
 block|{
-comment|/* This should never be called on account of "dynamic_init" always 	 * failing. */
+comment|/*      * This should never be called on account of "dynamic_init" always      * failing.      */
 return|return
 literal|0
 return|;
@@ -1814,7 +1814,7 @@ name|vcheck_res
 init|=
 literal|0
 decl_stmt|;
-comment|/* Now we try to find a version checking function and decide how 		 * to cope with failure if/when it fails. */
+comment|/*          * Now we try to find a version checking function and decide how to          * cope with failure if/when it fails.          */
 name|ctx
 operator|->
 name|v_check
@@ -1848,7 +1848,7 @@ argument_list|(
 name|OSSL_DYNAMIC_VERSION
 argument_list|)
 expr_stmt|;
-comment|/* We fail if the version checker veto'd the load *or* if it is 		 * deferring to us (by returning its version) and we think it is 		 * too old. */
+comment|/*          * We fail if the version checker veto'd the load *or* if it is          * deferring to us (by returning its version) and we think it is too          * old.          */
 if|if
 condition|(
 name|vcheck_res
@@ -1894,7 +1894,7 @@ literal|0
 return|;
 block|}
 block|}
-comment|/* First binary copy the ENGINE structure so that we can roll back if 	 * the hand-over fails */
+comment|/*      * First binary copy the ENGINE structure so that we can roll back if the      * hand-over fails      */
 name|memcpy
 argument_list|(
 operator|&
@@ -1908,7 +1908,7 @@ name|ENGINE
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Provide the ERR, "ex_data", memory, and locking callbacks so the 	 * loaded library uses our state rather than its own. FIXME: As noted in 	 * engine.h, much of this would be simplified if each area of code 	 * provided its own "summary" structure of all related callbacks. It 	 * would also increase opaqueness. */
+comment|/*      * Provide the ERR, "ex_data", memory, and locking callbacks so the      * loaded library uses our state rather than its own. FIXME: As noted in      * engine.h, much of this would be simplified if each area of code      * provided its own "summary" structure of all related callbacks. It      * would also increase opaqueness.      */
 name|fns
 operator|.
 name|static_state
@@ -1999,7 +1999,7 @@ operator|=
 name|CRYPTO_get_dynlock_destroy_callback
 argument_list|()
 expr_stmt|;
-comment|/* Now that we've loaded the dynamic engine, make sure no "dynamic" 	 * ENGINE elements will show through. */
+comment|/*      * Now that we've loaded the dynamic engine, make sure no "dynamic"      * ENGINE elements will show through.      */
 name|engine_set_all_null
 argument_list|(
 name|e
@@ -2103,7 +2103,7 @@ operator|>
 literal|1
 condition|)
 block|{
-comment|/* Fail - NB: By this time, it's too late to 				 * rollback, and trying to do so allows the 				 * bind_engine() code to have created leaks. We 				 * just have to fail where we are, after the 				 * ENGINE has changed. */
+comment|/*                  * Fail - NB: By this time, it's too late to rollback, and                  * trying to do so allows the bind_engine() code to have                  * created leaks. We just have to fail where we are, after                  * the ENGINE has changed.                  */
 name|ENGINEerr
 argument_list|(
 name|ENGINE_F_DYNAMIC_LOAD

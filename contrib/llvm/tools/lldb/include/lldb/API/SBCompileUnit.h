@@ -211,6 +211,12 @@ argument_list|(
 argument|uint32_t type_mask = lldb::eTypeClassAny
 argument_list|)
 expr_stmt|;
+name|lldb
+operator|::
+name|LanguageType
+name|GetLanguage
+argument_list|()
+expr_stmt|;
 name|bool
 name|operator
 operator|==

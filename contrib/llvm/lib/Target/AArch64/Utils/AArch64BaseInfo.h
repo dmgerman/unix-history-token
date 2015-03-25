@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AArch64BASEINFO_H
+name|LLVM_LIB_TARGET_AARCH64_UTILS_AARCH64BASEINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AArch64BASEINFO_H
+name|LLVM_LIB_TARGET_AARCH64_UTILS_AARCH64BASEINFO_H
 end_define
 
 begin_comment
@@ -5761,8 +5761,6 @@ name|string
 name|toString
 argument_list|(
 argument|uint32_t Bits
-argument_list|,
-argument|bool&Valid
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -6134,6 +6132,13 @@ comment|/// referee will affect interpretation.
 name|MO_TLS
 init|=
 literal|0x20
+block|,
+comment|/// MO_CONSTPOOL - This flag indicates that a symbol operand represents
+comment|/// the address of a constant pool entry for the symbol, rather than the
+comment|/// address of the symbol itself.
+name|MO_CONSTPOOL
+init|=
+literal|0x40
 block|}
 enum|;
 block|}

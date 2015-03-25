@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Utility/RegisterNumber.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"UnwindLLDB.h"
 end_include
 
@@ -300,6 +306,12 @@ name|friend
 name|class
 name|UnwindLLDB
 decl_stmt|;
+comment|// Returns true if we have an unwind loop -- the same stack frame unwinding
+comment|// multiple times.
+name|bool
+name|CheckIfLoopingStack
+parameter_list|()
+function_decl|;
 comment|// Indicates whether this frame is frame zero -- the currently
 comment|// executing frame -- or not.
 name|bool
@@ -450,6 +462,19 @@ name|bool
 name|TryFallbackUnwindPlan
 parameter_list|()
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Switch to the fallback unwind plan unconditionally without any safety
+comment|/// checks that it is providing better results than the normal unwind plan.
+comment|///
+comment|/// The only time it is valid to call this method is if the full unwindplan is
+comment|/// found to be fundamentally incorrect/impossible.
+comment|///
+comment|/// Returns true if it was able to install the fallback unwind plan.
+comment|//------------------------------------------------------------------
+name|bool
+name|ForceSwitchToFallbackUnwindPlan
+parameter_list|()
+function_decl|;
 comment|// Get the contents of a general purpose (address-size) register for this frame
 comment|// (usually retrieved from the next frame)
 name|bool
@@ -462,6 +487,44 @@ name|register_kind
 argument_list|,
 name|uint32_t
 name|regnum
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+operator|&
+name|value
+argument_list|)
+decl_stmt|;
+name|bool
+name|ReadGPRValue
+argument_list|(
+specifier|const
+name|RegisterNumber
+operator|&
+name|reg_num
+argument_list|,
+name|lldb
+operator|::
+name|addr_t
+operator|&
+name|value
+argument_list|)
+decl_stmt|;
+comment|// Get the CFA register for a given frame.
+name|bool
+name|ReadCFAValueForRow
+argument_list|(
+name|lldb
+operator|::
+name|RegisterKind
+name|register_kind
+argument_list|,
+specifier|const
+name|UnwindPlan
+operator|::
+name|RowSP
+operator|&
+name|row
 argument_list|,
 name|lldb
 operator|::

@@ -264,8 +264,8 @@ name|defined
 argument_list|(
 name|__cplusplus
 argument_list|)
-expr|\
 operator|&&
+expr|\
 name|__INTEL_COMPILER
 operator|<
 literal|800
@@ -1808,9 +1808,9 @@ define|#
 directive|define
 name|__nonnull
 parameter_list|(
-name|x
+modifier|...
 parameter_list|)
-value|__attribute__((__nonnull__(x)))
+value|__attribute__((__nonnull__(__VA_ARGS__)))
 end_define
 
 begin_else
@@ -1823,7 +1823,7 @@ define|#
 directive|define
 name|__nonnull
 parameter_list|(
-name|x
+modifier|...
 parameter_list|)
 end_define
 
@@ -2806,7 +2806,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * The following definition might not work well if used in header files,  * but it should be better than nothing.  If you want a "do nothing"  * version, then it should generate some harmless declaration, such as:  *    #define __IDSTRING(name,string)	struct __hack  */
+comment|/*  * The following definition might not work well if used in header files,  * but it should be better than nothing.  If you want a "do nothing"  * version, then it should generate some harmless declaration, such as:  *    #define	__IDSTRING(name,string)	struct __hack  */
 end_comment
 
 begin_define

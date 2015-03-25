@@ -22,7 +22,7 @@ file|<dt-bindings/interrupt-controller/irq.h>
 end_include
 
 begin_comment
-comment|/* interrupt specific cell 0 */
+comment|/* interrupt specifier cell 0 */
 end_comment
 
 begin_define
@@ -40,7 +40,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Interrupt specifier cell 2.  * The flaggs in irq.h are valid, plus those below.  */
+comment|/*  * Interrupt specifier cell 2.  * The flags in irq.h are valid, plus those below.  */
 end_comment
 
 begin_define

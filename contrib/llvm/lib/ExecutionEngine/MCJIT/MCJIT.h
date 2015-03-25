@@ -34,14 +34,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_LIB_EXECUTIONENGINE_MCJIT_H
+name|LLVM_LIB_EXECUTIONENGINE_MCJIT_MCJIT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_LIB_EXECUTIONENGINE_MCJIT_H
+name|LLVM_LIB_EXECUTIONENGINE_MCJIT_MCJIT_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"ObjectBuffer.h"
+end_include
 
 begin_include
 include|#
@@ -71,12 +77,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ExecutionEngine/ObjectCache.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ExecutionEngine/ObjectImage.h"
 end_include
 
 begin_include
@@ -116,8 +116,12 @@ name|MCJIT
 operator|*
 name|Parent
 argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|RTDyldMemoryManager
-operator|*
+operator|>
 name|MM
 argument_list|)
 operator|:
@@ -128,7 +132,7 @@ argument_list|)
 block|,
 name|ClientMM
 argument_list|(
-argument|MM
+argument|std::move(MM)
 argument_list|)
 block|{}
 name|uint64_t
@@ -242,7 +246,7 @@ name|notifyObjectLoaded
 argument_list|(
 argument|ExecutionEngine *EE
 argument_list|,
-argument|const ObjectImage *Obj
+argument|const object::ObjectFile&Obj
 argument_list|)
 name|override
 block|{
@@ -357,13 +361,29 @@ name|ExecutionEngine
 block|{
 name|MCJIT
 argument_list|(
-argument|Module *M
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|Module
+operator|>
+name|M
 argument_list|,
-argument|TargetMachine *tm
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|TargetMachine
+operator|>
+name|tm
 argument_list|,
-argument|RTDyldMemoryManager *MemMgr
-argument_list|,
-argument|bool AllocateGVsWithCode
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|RTDyldMemoryManager
+operator|>
+name|MemMgr
 argument_list|)
 block|;
 typedef|typedef
@@ -431,6 +451,31 @@ name|end
 argument_list|()
 return|;
 block|}
+name|iterator_range
+operator|<
+name|ModulePtrSet
+operator|::
+name|iterator
+operator|>
+name|added
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|ModulePtrSet
+operator|::
+name|iterator
+operator|>
+operator|(
+name|begin_added
+argument_list|()
+expr|,
+name|end_added
+argument_list|()
+operator|)
+return|;
+block|}
 name|ModulePtrSet
 operator|::
 name|iterator
@@ -486,7 +531,7 @@ block|}
 name|void
 name|addModule
 argument_list|(
-argument|Module *M
+argument|std::unique_ptr<Module> M
 argument_list|)
 block|{
 name|AddedModules
@@ -494,6 +539,9 @@ operator|.
 name|insert
 argument_list|(
 name|M
+operator|.
+name|release
+argument_list|()
 argument_list|)
 block|;     }
 name|bool
@@ -824,8 +872,12 @@ expr_stmt|;
 block|}
 expr|}
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|TargetMachine
-operator|*
+operator|>
 name|TM
 block|;
 name|MCContext
@@ -838,12 +890,12 @@ block|;
 name|RuntimeDyld
 name|Dyld
 block|;
-name|SmallVector
+name|std
+operator|::
+name|vector
 operator|<
 name|JITEventListener
 operator|*
-block|,
-literal|2
 operator|>
 name|EventListeners
 block|;
@@ -854,89 +906,32 @@ name|SmallVector
 operator|<
 name|object
 operator|::
+name|OwningBinary
+operator|<
+name|object
+operator|::
 name|Archive
-operator|*
+operator|>
 block|,
 literal|2
 operator|>
 name|Archives
 block|;
-typedef|typedef
 name|SmallVector
 operator|<
-name|ObjectImage
-operator|*
-operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>
+block|,
 literal|2
 operator|>
-name|LoadedObjectList
-expr_stmt|;
-name|LoadedObjectList
-name|LoadedObjects
-decl_stmt|;
-comment|// An optional ObjectCache to be notified of compiled objects and used to
-comment|// perform lookup of pre-compiled code to avoid re-compilation.
-name|ObjectCache
-modifier|*
-name|ObjCache
-decl_stmt|;
-name|Function
-modifier|*
-name|FindFunctionNamedInModulePtrSet
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|FnName
-argument_list|,
-name|ModulePtrSet
-operator|::
-name|iterator
-name|I
-argument_list|,
-name|ModulePtrSet
-operator|::
-name|iterator
-name|E
-argument_list|)
-decl_stmt|;
-name|void
-name|runStaticConstructorsDestructorsInModulePtrSet
-argument_list|(
-name|bool
-name|isDtors
-argument_list|,
-name|ModulePtrSet
-operator|::
-name|iterator
-name|I
-argument_list|,
-name|ModulePtrSet
-operator|::
-name|iterator
-name|E
-argument_list|)
-decl_stmt|;
-name|public
-label|:
-operator|~
-name|MCJIT
-argument_list|()
-expr_stmt|;
-comment|/// @name ExecutionEngine interface implementation
-comment|/// @{
-name|void
-name|addModule
-argument_list|(
-name|Module
-operator|*
-name|M
-argument_list|)
-name|override
-decl_stmt|;
-name|void
-name|addObjectFile
-argument_list|(
+name|Buffers
+block|;
+name|SmallVector
+operator|<
 name|std
 operator|::
 name|unique_ptr
@@ -945,61 +940,106 @@ name|object
 operator|::
 name|ObjectFile
 operator|>
-name|O
+block|,
+literal|2
+operator|>
+name|LoadedObjects
+block|;
+comment|// An optional ObjectCache to be notified of compiled objects and used to
+comment|// perform lookup of pre-compiled code to avoid re-compilation.
+name|ObjectCache
+operator|*
+name|ObjCache
+block|;
+name|Function
+operator|*
+name|FindFunctionNamedInModulePtrSet
+argument_list|(
+argument|const char *FnName
+argument_list|,
+argument|ModulePtrSet::iterator I
+argument_list|,
+argument|ModulePtrSet::iterator E
+argument_list|)
+block|;
+name|void
+name|runStaticConstructorsDestructorsInModulePtrSet
+argument_list|(
+argument|bool isDtors
+argument_list|,
+argument|ModulePtrSet::iterator I
+argument_list|,
+argument|ModulePtrSet::iterator E
+argument_list|)
+block|;
+name|public
+operator|:
+operator|~
+name|MCJIT
+argument_list|()
+block|;
+comment|/// @name ExecutionEngine interface implementation
+comment|/// @{
+name|void
+name|addModule
+argument_list|(
+argument|std::unique_ptr<Module> M
 argument_list|)
 name|override
-decl_stmt|;
+block|;
+name|void
+name|addObjectFile
+argument_list|(
+argument|std::unique_ptr<object::ObjectFile> O
+argument_list|)
+name|override
+block|;
+name|void
+name|addObjectFile
+argument_list|(
+argument|object::OwningBinary<object::ObjectFile> O
+argument_list|)
+name|override
+block|;
 name|void
 name|addArchive
 argument_list|(
-name|object
-operator|::
-name|Archive
-operator|*
-name|O
+argument|object::OwningBinary<object::Archive> O
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|bool
 name|removeModule
 argument_list|(
-name|Module
-operator|*
-name|M
+argument|Module *M
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 comment|/// FindFunctionNamed - Search all of the active modules to find the one that
 comment|/// defines FnName.  This is very slow operation and shouldn't be used for
 comment|/// general code.
 name|Function
-modifier|*
+operator|*
 name|FindFunctionNamed
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|FnName
+argument|const char *FnName
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 comment|/// Sets the object manager that MCJIT should use to avoid compilation.
 name|void
 name|setObjectCache
 argument_list|(
-name|ObjectCache
-operator|*
-name|manager
+argument|ObjectCache *manager
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
 name|setProcessAllSections
-parameter_list|(
-name|bool
-name|ProcessAllSections
-parameter_list|)
-function|override
+argument_list|(
+argument|bool ProcessAllSections
+argument_list|)
+name|override
 block|{
 name|Dyld
 operator|.
@@ -1007,17 +1047,14 @@ name|setProcessAllSections
 argument_list|(
 name|ProcessAllSections
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|void
 name|generateCodeForModule
 argument_list|(
-name|Module
-operator|*
-name|M
+argument|Module *M
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 comment|/// finalizeObject - ensure the module is fully processed and is usable.
 comment|///
 comment|/// It is the user-level function for completing the process of making the
@@ -1031,19 +1068,19 @@ name|void
 name|finalizeObject
 argument_list|()
 name|override
-expr_stmt|;
+block|;
 name|virtual
 name|void
 name|finalizeModule
-parameter_list|(
+argument_list|(
 name|Module
-modifier|*
-parameter_list|)
-function_decl|;
+operator|*
+argument_list|)
+block|;
 name|void
 name|finalizeLoadedModules
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 comment|/// runStaticConstructorsDestructors - This method is used to execute all of
 comment|/// the static constructors or destructors for a program.
 comment|///
@@ -1051,69 +1088,27 @@ comment|/// \param isDtors - Run the destructors instead of constructors.
 name|void
 name|runStaticConstructorsDestructors
 argument_list|(
-name|bool
-name|isDtors
+argument|bool isDtors
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
-modifier|*
-name|getPointerToBasicBlock
-argument_list|(
-name|BasicBlock
 operator|*
-name|BB
-argument_list|)
-name|override
-decl_stmt|;
-name|void
-modifier|*
 name|getPointerToFunction
 argument_list|(
-name|Function
-operator|*
-name|F
+argument|Function *F
 argument_list|)
 name|override
-decl_stmt|;
-name|void
-modifier|*
-name|recompileAndRelinkFunction
-argument_list|(
-name|Function
-operator|*
-name|F
-argument_list|)
-name|override
-decl_stmt|;
-name|void
-name|freeMachineCodeForFunction
-argument_list|(
-name|Function
-operator|*
-name|F
-argument_list|)
-name|override
-decl_stmt|;
+block|;
 name|GenericValue
 name|runFunction
 argument_list|(
-name|Function
-operator|*
-name|F
+argument|Function *F
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|GenericValue
-operator|>
-operator|&
-name|ArgValues
+argument|const std::vector<GenericValue>&ArgValues
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 comment|/// getPointerToNamedFunction - This method returns the address of the
 comment|/// specified function by using the dlsym function call.  As such it is only
 comment|/// useful for resolving library symbols, not code generated symbols.
@@ -1123,39 +1118,27 @@ comment|/// found, this function silently returns a null pointer. Otherwise,
 comment|/// it prints a message to stderr and aborts.
 comment|///
 name|void
-modifier|*
+operator|*
 name|getPointerToNamedFunction
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|StringRef Name
 argument_list|,
-name|bool
-name|AbortOnFailure
-operator|=
-name|true
+argument|bool AbortOnFailure = true
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 comment|/// mapSectionAddress - map a section to its target address space value.
 comment|/// Map the address of a JIT section as returned from the memory manager
 comment|/// to the address in the target process as the running code will see it.
 comment|/// This is the address which will be used for relocation resolution.
 name|void
 name|mapSectionAddress
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|LocalAddress
-parameter_list|,
-name|uint64_t
-name|TargetAddress
-parameter_list|)
-function|override
+argument_list|(
+argument|const void *LocalAddress
+argument_list|,
+argument|uint64_t TargetAddress
+argument_list|)
+name|override
 block|{
 name|Dyld
 operator|.
@@ -1165,61 +1148,49 @@ name|LocalAddress
 argument_list|,
 name|TargetAddress
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|void
 name|RegisterJITEventListener
 argument_list|(
-name|JITEventListener
-operator|*
-name|L
+argument|JITEventListener *L
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
 name|UnregisterJITEventListener
 argument_list|(
-name|JITEventListener
-operator|*
-name|L
+argument|JITEventListener *L
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 comment|// If successful, these function will implicitly finalize all loaded objects.
 comment|// To get a function address within MCJIT without causing a finalize, use
 comment|// getSymbolAddress.
 name|uint64_t
 name|getGlobalValueAddress
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|uint64_t
 name|getFunctionAddress
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|TargetMachine
-modifier|*
+operator|*
 name|getTargetMachine
-parameter_list|()
-function|override
+argument_list|()
+name|override
 block|{
 return|return
 name|TM
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 comment|/// @}
@@ -1228,20 +1199,23 @@ comment|/// @{
 specifier|static
 name|void
 name|Register
-parameter_list|()
+argument_list|()
 block|{
 name|MCJITCtor
 operator|=
 name|createJIT
-expr_stmt|;
-block|}
+block|;   }
 specifier|static
 name|ExecutionEngine
-modifier|*
+operator|*
 name|createJIT
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-operator|*
+operator|>
 name|M
 argument_list|,
 name|std
@@ -1250,69 +1224,83 @@ name|string
 operator|*
 name|ErrorStr
 argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|RTDyldMemoryManager
-operator|*
+operator|>
 name|MemMgr
 argument_list|,
-name|bool
-name|GVsWithCode
-argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|TargetMachine
-operator|*
+operator|>
 name|TM
 argument_list|)
-decl_stmt|;
+block|;
 comment|// @}
 comment|// This is not directly exposed via the ExecutionEngine API, but it is
 comment|// used by the LinkingMemoryManager.
 name|uint64_t
 name|getSymbolAddress
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|,
-name|bool
-name|CheckFunctionsOnly
+argument|bool CheckFunctionsOnly
 argument_list|)
-decl_stmt|;
+block|;
 name|protected
-label|:
+operator|:
 comment|/// emitObject -- Generate a JITed object in memory from the specified module
 comment|/// Currently, MCJIT only supports a single module and the module passed to
 comment|/// this function call is expected to be the contained module.  The module
 comment|/// is passed as a parameter here to prepare for multiple module support in
 comment|/// the future.
-name|ObjectBufferStream
-modifier|*
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>
 name|emitObject
-parameter_list|(
+argument_list|(
 name|Module
-modifier|*
+operator|*
 name|M
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|void
 name|NotifyObjectEmitted
-parameter_list|(
+argument_list|(
 specifier|const
-name|ObjectImage
-modifier|&
+name|object
+operator|::
+name|ObjectFile
+operator|&
 name|Obj
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|RuntimeDyld
+operator|::
+name|LoadedObjectInfo
+operator|&
+name|L
+argument_list|)
+block|;
 name|void
 name|NotifyFreeingObject
-parameter_list|(
+argument_list|(
 specifier|const
-name|ObjectImage
-modifier|&
+name|object
+operator|::
+name|ObjectFile
+operator|&
 name|Obj
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|uint64_t
 name|getExistingSymbolAddress
 argument_list|(
@@ -1323,31 +1311,21 @@ name|string
 operator|&
 name|Name
 argument_list|)
-decl_stmt|;
+block|;
 name|Module
-modifier|*
+operator|*
 name|findModuleForSymbol
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
+argument|const std::string&Name
 argument_list|,
-name|bool
-name|CheckFunctionsOnly
+argument|bool CheckFunctionsOnly
 argument_list|)
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// End llvm namespace
 end_comment
 

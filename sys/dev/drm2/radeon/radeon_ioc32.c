@@ -1378,6 +1378,20 @@ begin_comment
 comment|/* The two 64-bit arches where alignof(u64)==4 in 32-bit code */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_X86_64
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_IA64
+argument_list|)
+end_if
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1464,6 +1478,27 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|compat_radeon_cp_setparam
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* X86_64 || IA64 */
+end_comment
 
 begin_decl_stmt
 name|struct
@@ -1573,7 +1608,7 @@ begin_decl_stmt
 name|int
 name|radeon_num_compat_ioctls
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|radeon_compat_ioctls
 argument_list|)

@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_REWRITE_FIX_IT_REWRITER_H
+name|LLVM_CLANG_REWRITE_FRONTEND_FIXITREWRITER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_REWRITE_FIX_IT_REWRITER_H
+name|LLVM_CLANG_REWRITE_FRONTEND_FIXITREWRITER_H
 end_define
 
 begin_include
@@ -199,8 +199,13 @@ name|DiagnosticConsumer
 operator|*
 name|Client
 block|;
-name|bool
-name|OwnsClient
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DiagnosticConsumer
+operator|>
+name|Owner
 block|;
 comment|/// \brief Turn an input path into an output path. NULL implies overwriting
 comment|/// the original.
@@ -386,10 +391,6 @@ unit|}
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_REWRITE_FIX_IT_REWRITER_H
-end_comment
 
 end_unit
 

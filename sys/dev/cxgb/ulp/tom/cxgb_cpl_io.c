@@ -5564,7 +5564,10 @@ name|t_state
 operator|==
 name|TCPS_SYN_SENT
 condition|)
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|toep

@@ -149,6 +149,11 @@ name|FRAMEADDR
 block|,
 name|RETURNADDR
 block|,
+comment|/// FRAME_ALLOC_RECOVER - Represents the llvm.framerecover
+comment|/// intrinsic. Materializes the offset from the frame pointer of another
+comment|/// function to the result of llvm.frameallocate.
+name|FRAME_ALLOC_RECOVER
+block|,
 comment|/// READ_REGISTER, WRITE_REGISTER - This node represents llvm.register on
 comment|/// the DAG, which implements the named register global variables extension.
 name|READ_REGISTER
@@ -668,6 +673,10 @@ name|FROUND
 block|,
 name|FFLOOR
 block|,
+name|FMINNUM
+block|,
+name|FMAXNUM
+block|,
 comment|/// FSINCOS - Compute both fsin and fcos as a single operation.
 name|FSINCOS
 block|,
@@ -872,6 +881,11 @@ name|ATOMIC_LOAD_UMIN
 block|,
 name|ATOMIC_LOAD_UMAX
 block|,
+comment|// Masked load and store
+name|MLOAD
+block|,
+name|MSTORE
+block|,
 comment|/// This corresponds to the llvm.lifetime.* intrinsics. The first operand
 comment|/// is the chain and the second operand is the alloca pointer.
 name|LIFETIME_START
@@ -971,6 +985,9 @@ enum|;
 name|NodeType
 name|getExtForLoadExtType
 parameter_list|(
+name|bool
+name|IsFP
+parameter_list|,
 name|LoadExtType
 parameter_list|)
 function_decl|;

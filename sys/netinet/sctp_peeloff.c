@@ -615,6 +615,14 @@ name|sctp_context
 expr_stmt|;
 name|n_inp
 operator|->
+name|max_cwnd
+operator|=
+name|inp
+operator|->
+name|max_cwnd
+expr_stmt|;
+name|n_inp
+operator|->
 name|local_strreset_support
 operator|=
 name|inp

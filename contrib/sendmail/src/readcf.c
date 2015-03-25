@@ -352,6 +352,23 @@ name|SSL_OP_NO_TICKET
 endif|#
 directive|endif
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SSL_OP_TLSEXT_PADDING
+comment|/* SSL_OP_TLSEXT_PADDING breaks compatibility with some sites */
+name|Srv_SSL_Options
+operator|&=
+operator|~
+name|SSL_OP_TLSEXT_PADDING
+expr_stmt|;
+name|Clt_SSL_Options
+operator|&=
+operator|~
+name|SSL_OP_TLSEXT_PADDING
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SSL_OP_TLSEXT_PADDING */
 endif|#
 directive|endif
 comment|/* STARTTLS */
@@ -10145,6 +10162,17 @@ block|{
 literal|"SSL_OP_CRYPTOPRO_TLSEXT_BUG"
 block|,
 name|SSL_OP_CRYPTOPRO_TLSEXT_BUG
+block|}
+block|,
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|SSL_OP_TLSEXT_PADDING
+block|{
+literal|"SSL_OP_TLSEXT_PADDING"
+block|,
+name|SSL_OP_TLSEXT_PADDING
 block|}
 block|,
 endif|#

@@ -243,6 +243,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libxo/xo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"netstat.h"
 end_include
 
@@ -338,6 +344,57 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|pfsyncacts_name
+index|[]
+init|=
+block|{
+comment|/* PFSYNC_ACT_CLR */
+literal|"clear-all-request"
+block|,
+comment|/* PFSYNC_ACT_INS */
+literal|"state-insert"
+block|,
+comment|/* PFSYNC_ACT_INS_ACK */
+literal|"state-inserted-ack"
+block|,
+comment|/* PFSYNC_ACT_UPD */
+literal|"state-update"
+block|,
+comment|/* PFSYNC_ACT_UPD_C */
+literal|"compressed-state-update"
+block|,
+comment|/* PFSYNC_ACT_UPD_REQ */
+literal|"uncompressed-state-request"
+block|,
+comment|/* PFSYNC_ACT_DEL */
+literal|"state-delete"
+block|,
+comment|/* PFSYNC_ACT_DEL_C */
+literal|"compressed-state-delete"
+block|,
+comment|/* PFSYNC_ACT_INS_F */
+literal|"fragment-insert"
+block|,
+comment|/* PFSYNC_ACT_DEL_F */
+literal|"fragment-delete"
+block|,
+comment|/* PFSYNC_ACT_BUS */
+literal|"bulk-update-mark"
+block|,
+comment|/* PFSYNC_ACT_TDB */
+literal|"TDB-replay-counter-update"
+block|,
+comment|/* PFSYNC_ACT_EOF */
+literal|"end-of-frame-mark"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -346,7 +403,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|fmt
+name|list
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|desc
 parameter_list|,
 name|uint64_t
 modifier|*
@@ -356,6 +418,11 @@ block|{
 name|int
 name|i
 decl_stmt|;
+name|xo_open_list
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -372,6 +439,7 @@ operator|,
 name|a
 operator|++
 control|)
+block|{
 if|if
 condition|(
 operator|*
@@ -381,12 +449,28 @@ name|sflag
 operator|<=
 literal|1
 condition|)
-name|printf
+block|{
+name|xo_open_instance
 argument_list|(
-name|fmt
+name|list
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t\t{e:name}{:count/%ju} {N:/%s%s %s}\n"
 argument_list|,
+name|pfsyncacts_name
+index|[
+name|i
+index|]
+argument_list|,
+call|(
+name|uintmax_t
+call|)
+argument_list|(
 operator|*
 name|a
+argument_list|)
 argument_list|,
 name|pfsyncacts
 index|[
@@ -398,6 +482,20 @@ argument_list|(
 operator|*
 name|a
 argument_list|)
+argument_list|,
+name|desc
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+name|list
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|xo_close_list
+argument_list|(
+name|list
 argument_list|)
 expr_stmt|;
 block|}
@@ -516,10 +614,15 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s:\n"
+literal|"{T:/%s}:\n"
 argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
@@ -531,24 +634,28 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pfsyncstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)pfsyncstat.f, plural(pfsyncstat.f))
+value|if (pfsyncstat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)pfsyncstat.f, plural(pfsyncstat.f))
 name|p
 argument_list|(
 name|pfsyncs_ipackets
 argument_list|,
-literal|"\t%ju packet%s received (IPv4)\n"
+literal|"\t{:received-inet-packets/%ju} "
+literal|"{N:/packet%s received (IPv4)}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_ipackets6
 argument_list|,
-literal|"\t%ju packet%s received (IPv6)\n"
+literal|"\t{:received-inet6-packets/%ju} "
+literal|"{N:/packet%s received (IPv6)}\n"
 argument_list|)
 expr_stmt|;
 name|pfsync_acts_stats
 argument_list|(
-literal|"\t    %ju %s%s received\n"
+literal|"input-histogram"
+argument_list|,
+literal|"received"
 argument_list|,
 operator|&
 name|pfsyncstat
@@ -563,89 +670,103 @@ name|p
 argument_list|(
 name|pfsyncs_badif
 argument_list|,
-literal|"\t\t%ju packet%s discarded for bad interface\n"
+literal|"\t\t/{:dropped-bad-interface/%ju} "
+literal|"{N:/packet%s discarded for bad interface}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badttl
 argument_list|,
-literal|"\t\t%ju packet%s discarded for bad ttl\n"
+literal|"\t\t{:dropped-bad-ttl/%ju} "
+literal|"{N:/packet%s discarded for bad ttl}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_hdrops
 argument_list|,
-literal|"\t\t%ju packet%s shorter than header\n"
+literal|"\t\t{:dropped-short-header/%ju} "
+literal|"{N:/packet%s shorter than header}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badver
 argument_list|,
-literal|"\t\t%ju packet%s discarded for bad version\n"
+literal|"\t\t{:dropped-bad-version/%ju} "
+literal|"{N:/packet%s discarded for bad version}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badauth
 argument_list|,
-literal|"\t\t%ju packet%s discarded for bad HMAC\n"
+literal|"\t\t{:dropped-bad-auth/%ju} "
+literal|"{N:/packet%s discarded for bad HMAC}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badact
 argument_list|,
-literal|"\t\t%ju packet%s discarded for bad action\n"
+literal|"\t\t{:dropped-bad-action/%ju} "
+literal|"{N:/packet%s discarded for bad action}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badlen
 argument_list|,
-literal|"\t\t%ju packet%s discarded for short packet\n"
+literal|"\t\t{:dropped-short/%ju} "
+literal|"{N:/packet%s discarded for short packet}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badval
 argument_list|,
-literal|"\t\t%ju state%s discarded for bad values\n"
+literal|"\t\t{:dropped-bad-values/%ju} "
+literal|"{N:/state%s discarded for bad values}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_stale
 argument_list|,
-literal|"\t\t%ju stale state%s\n"
+literal|"\t\t{:dropped-stale-state/%ju} "
+literal|"{N:/stale state%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_badstate
 argument_list|,
-literal|"\t\t%ju failed state lookup/insert%s\n"
+literal|"\t\t{:dropped-failed-lookup/%ju} "
+literal|"{N:/failed state lookup\\/insert%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_opackets
 argument_list|,
-literal|"\t%ju packet%s sent (IPv4)\n"
+literal|"\t{:sent-inet-packets/%ju} "
+literal|"{N:/packet%s sent (IPv4})\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_opackets6
 argument_list|,
-literal|"\t%ju packet%s sent (IPv6)\n"
+literal|"\t{:send-inet6-packets/%ju} "
+literal|"{N:/packet%s sent (IPv6})\n"
 argument_list|)
 expr_stmt|;
 name|pfsync_acts_stats
 argument_list|(
-literal|"\t    %ju %s%s sent\n"
+literal|"output-histogram"
+argument_list|,
+literal|"sent"
 argument_list|,
 operator|&
 name|pfsyncstat
@@ -660,19 +781,26 @@ name|p
 argument_list|(
 name|pfsyncs_onomem
 argument_list|,
-literal|"\t\t%ju failure%s due to mbuf memory error\n"
+literal|"\t\t{:discarded-no-memory/%ju} "
+literal|"{N:/failure%s due to mbuf memory error}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|pfsyncs_oerrors
 argument_list|,
-literal|"\t\t%ju send error%s\n"
+literal|"\t\t{:send-errors/%ju} "
+literal|"{N:/send error%s}\n"
 argument_list|)
 expr_stmt|;
 undef|#
 directive|undef
 name|p
+name|xo_close_container
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -702,6 +830,11 @@ parameter_list|,
 name|int
 name|width
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
 name|u_long
 name|value
 parameter_list|,
@@ -720,7 +853,7 @@ decl_stmt|;
 name|char
 name|newfmt
 index|[
-literal|32
+literal|64
 index|]
 decl_stmt|;
 name|lsep
@@ -785,28 +918,29 @@ literal|0
 condition|)
 block|{
 comment|/* Print just dash. */
-name|sprintf
+name|xo_emit
 argument_list|(
-name|newfmt
-argument_list|,
-literal|"%s%%%ds%s"
+literal|"{P:/%s}{D:/%*s}{P:/%s}"
 argument_list|,
 name|lsep
 argument_list|,
 name|width
 argument_list|,
-name|rsep
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-name|newfmt
-argument_list|,
 literal|"-"
+argument_list|,
+name|rsep
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * XXX: workaround {P:} modifier can't be empty and doesn't seem to 	 * take args... so we need to conditionally include it in the format. 	 */
+define|#
+directive|define
+name|maybe_pad
+parameter_list|(
+name|pad
+parameter_list|)
+value|do {						    \ 	if (strlen(pad)) {						    \ 		snprintf(newfmt, sizeof(newfmt), "{P:%s}", pad);	    \ 		xo_emit(newfmt);					    \ 	}								    \ } while (0)
 if|if
 condition|(
 name|hflag
@@ -842,50 +976,76 @@ operator||
 name|HN_DECIMAL
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|maybe_pad
+argument_list|(
+name|lsep
+argument_list|)
+expr_stmt|;
+name|snprintf
 argument_list|(
 name|newfmt
 argument_list|,
-literal|"%s%%%ds%s"
+sizeof|sizeof
+argument_list|(
+name|newfmt
+argument_list|)
 argument_list|,
-name|lsep
+literal|"{:%s/%%%ds}"
+argument_list|,
+name|name
 argument_list|,
 name|width
-argument_list|,
-name|rsep
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 name|newfmt
 argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
+name|maybe_pad
+argument_list|(
+name|rsep
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
 comment|/* Construct the format string. */
-name|sprintf
+name|maybe_pad
+argument_list|(
+name|lsep
+argument_list|)
+expr_stmt|;
+name|snprintf
 argument_list|(
 name|newfmt
 argument_list|,
-literal|"%s%%%d%s%s"
+sizeof|sizeof
+argument_list|(
+name|newfmt
+argument_list|)
 argument_list|,
-name|lsep
+literal|"{:%s/%%%d%s}"
+argument_list|,
+name|name
 argument_list|,
 name|width
 argument_list|,
 name|fmt
-argument_list|,
-name|rsep
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 name|newfmt
 argument_list|,
 name|value
+argument_list|)
+expr_stmt|;
+name|maybe_pad
+argument_list|(
+name|rsep
 argument_list|)
 expr_stmt|;
 block|}
@@ -1066,6 +1226,11 @@ argument_list|,
 literal|"getifmaddrs"
 argument_list|)
 expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"interface"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1076,24 +1241,25 @@ if|if
 condition|(
 name|Wflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-7.7s"
+literal|"{T:/%-7.7s}"
 argument_list|,
 literal|"Name"
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-5.5s"
+literal|"{T:/%-5.5s}"
 argument_list|,
 literal|"Name"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %5.5s %-13.13s %-17.17s %8.8s %5.5s %5.5s"
+literal|" {T:/%5.5s} {T:/%-13.13s} {T:/%-17.17s} {T:/%8.8s} "
+literal|"{T:/%5.5s} {T:/%5.5s}"
 argument_list|,
 literal|"Mtu"
 argument_list|,
@@ -1112,16 +1278,16 @@ if|if
 condition|(
 name|bflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %10.10s"
+literal|" {T:/%10.10s}"
 argument_list|,
 literal|"Ibytes"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %8.8s %5.5s"
+literal|" {T:/%8.8s} {T:/%5.5s}"
 argument_list|,
 literal|"Opkts"
 argument_list|,
@@ -1132,16 +1298,16 @@ if|if
 condition|(
 name|bflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %10.10s"
+literal|" {T:/%10.10s}"
 argument_list|,
 literal|"Obytes"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %5s"
+literal|" {T:/%5s}"
 argument_list|,
 literal|"Coll"
 argument_list|)
@@ -1150,16 +1316,16 @@ if|if
 condition|(
 name|dflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"  %s"
+literal|" {T:/%s}"
 argument_list|,
 literal|"Drop"
 argument_list|)
 expr_stmt|;
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1187,6 +1353,10 @@ name|link
 init|=
 name|false
 decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
 if|if
 condition|(
 name|interface
@@ -1205,21 +1375,17 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-if|if
-condition|(
-name|pfunc
-condition|)
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
 name|name
 operator|=
 name|ifa
 operator|->
 name|ifa_name
 expr_stmt|;
+if|if
+condition|(
+name|pfunc
+condition|)
+block|{
 call|(
 modifier|*
 name|pfunc
@@ -1277,27 +1443,28 @@ operator|!=
 name|af
 condition|)
 continue|continue;
+name|xo_open_instance
+argument_list|(
+literal|"interface"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|Wflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-7.7s"
+literal|"{tk:name/%-7.7s}"
 argument_list|,
-name|ifa
-operator|->
-name|ifa_name
+name|name
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-5.5s"
+literal|"{tk:name/%-5.5s}"
 argument_list|,
-name|ifa
-operator|->
-name|ifa_name
+name|name
 argument_list|)
 expr_stmt|;
 define|#
@@ -1312,6 +1479,8 @@ argument_list|(
 literal|"lu"
 argument_list|,
 literal|6
+argument_list|,
+literal|"mtu"
 argument_list|,
 name|IFA_MTU
 argument_list|(
@@ -1339,16 +1508,16 @@ block|{
 case|case
 name|AF_UNSPEC
 case|:
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-13.13s "
+literal|"{:network/%-13.13s} "
 argument_list|,
 literal|"none"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-15.15s "
+literal|"{:address/%-15.15s} "
 argument_list|,
 literal|"none"
 argument_list|)
@@ -1388,9 +1557,9 @@ name|ifa
 operator|->
 name|ifa_netmask
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-13.13s "
+literal|"{t:network/%-13.13s} "
 argument_list|,
 name|netname
 argument_list|(
@@ -1408,9 +1577,9 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-17.17s "
+literal|"{t:address/%-17.17s} "
 argument_list|,
 name|routename
 argument_list|(
@@ -1465,9 +1634,9 @@ name|ifa
 operator|->
 name|ifa_netmask
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-13.13s "
+literal|"{t:network/%-13.13s} "
 argument_list|,
 name|netname6
 argument_list|(
@@ -1506,9 +1675,9 @@ argument_list|,
 name|NI_NUMERICHOST
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-17.17s "
+literal|"{t:address/%-17.17s} "
 argument_list|,
 name|addr_buf
 argument_list|)
@@ -1541,9 +1710,20 @@ literal|10
 index|]
 decl_stmt|;
 name|int
+name|len
+init|=
+literal|32
+decl_stmt|;
+name|char
+name|buf
+index|[
+name|len
+index|]
+decl_stmt|;
+name|int
 name|n
 decl_stmt|,
-name|m
+name|z
 decl_stmt|;
 name|sdl
 operator|=
@@ -1584,14 +1764,23 @@ operator|->
 name|sdl_index
 argument_list|)
 expr_stmt|;
-name|m
-operator|=
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-13.13s "
+literal|"{t:network/%-13.13s} "
 argument_list|,
 name|linknum
 argument_list|)
+expr_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|z
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -1603,15 +1792,22 @@ literal|0
 operator|)
 operator|&&
 operator|(
-name|m
+name|z
 operator|<
-literal|30
+name|len
 operator|)
 condition|)
-name|m
-operator|+=
-name|printf
+block|{
+name|snprintf
 argument_list|(
+name|buf
+operator|+
+name|z
+argument_list|,
+name|len
+operator|-
+name|z
+argument_list|,
 literal|"%02x%c"
 argument_list|,
 operator|*
@@ -1629,22 +1825,32 @@ else|:
 literal|' '
 argument_list|)
 expr_stmt|;
-name|m
-operator|=
-literal|32
-operator|-
-name|m
+name|z
+operator|+=
+literal|3
 expr_stmt|;
-while|while
+block|}
+if|if
 condition|(
-name|m
-operator|--
+name|z
 operator|>
 literal|0
 condition|)
-name|putchar
+name|xo_emit
 argument_list|(
-literal|' '
+literal|"{:address/%*s}"
+argument_list|,
+literal|32
+operator|-
+name|z
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+else|else
+name|xo_emit
+argument_list|(
+literal|"{P:                  }"
 argument_list|)
 expr_stmt|;
 name|link
@@ -1667,6 +1873,8 @@ literal|"lu"
 argument_list|,
 literal|8
 argument_list|,
+literal|"received-packets"
+argument_list|,
 name|IFA_STAT
 argument_list|(
 name|ipackets
@@ -1683,6 +1891,8 @@ literal|"lu"
 argument_list|,
 literal|5
 argument_list|,
+literal|"received-errors"
+argument_list|,
 name|IFA_STAT
 argument_list|(
 name|ierrors
@@ -1696,6 +1906,8 @@ argument_list|(
 literal|"lu"
 argument_list|,
 literal|5
+argument_list|,
+literal|"dropped-packets"
 argument_list|,
 name|IFA_STAT
 argument_list|(
@@ -1715,6 +1927,8 @@ literal|"lu"
 argument_list|,
 literal|10
 argument_list|,
+literal|"received-bytes"
+argument_list|,
 name|IFA_STAT
 argument_list|(
 name|ibytes
@@ -1731,6 +1945,8 @@ literal|"lu"
 argument_list|,
 literal|8
 argument_list|,
+literal|"sent-packets"
+argument_list|,
 name|IFA_STAT
 argument_list|(
 name|opackets
@@ -1746,6 +1962,8 @@ argument_list|(
 literal|"lu"
 argument_list|,
 literal|5
+argument_list|,
+literal|"send-errors"
 argument_list|,
 name|IFA_STAT
 argument_list|(
@@ -1765,6 +1983,8 @@ literal|"lu"
 argument_list|,
 literal|10
 argument_list|,
+literal|"sent-bytes"
+argument_list|,
 name|IFA_STAT
 argument_list|(
 name|obytes
@@ -1780,6 +2000,8 @@ argument_list|(
 literal|"NRSlu"
 argument_list|,
 literal|5
+argument_list|,
+literal|"collisions"
 argument_list|,
 name|IFA_STAT
 argument_list|(
@@ -1799,6 +2021,8 @@ literal|"LSlu"
 argument_list|,
 literal|5
 argument_list|,
+literal|"dropped-packets"
+argument_list|,
 name|IFA_STAT
 argument_list|(
 name|oqdrops
@@ -1807,9 +2031,9 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1817,8 +2041,20 @@ condition|(
 operator|!
 name|aflag
 condition|)
+block|{
+name|xo_close_instance
+argument_list|(
+literal|"interface"
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
 comment|/* 		 * Print family's multicast addresses. 		 */
+name|xo_open_list
+argument_list|(
+literal|"multicast-address"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|ifma
@@ -1867,6 +2103,11 @@ name|fmt
 init|=
 name|NULL
 decl_stmt|;
+name|xo_open_instance
+argument_list|(
+literal|"multicast-address"
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|ifma
@@ -1942,9 +2183,9 @@ argument_list|,
 name|NI_NUMERICHOST
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*s %s\n"
+literal|"{P:/%*s }{t:address/%-19.19s}"
 argument_list|,
 name|Wflag
 condition|?
@@ -2019,9 +2260,9 @@ condition|(
 name|fmt
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*s %-17.17s"
+literal|"{P:/%*s }{t:address/%-17.17s/}"
 argument_list|,
 name|Wflag
 condition|?
@@ -2045,22 +2286,19 @@ operator|==
 name|AF_LINK
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %8ju"
+literal|" {:received-packets/%8lu}"
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|IFA_STAT
 argument_list|(
 name|imcasts
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*s"
+literal|"{P:/%*s}"
 argument_list|,
 name|bflag
 condition|?
@@ -2071,13 +2309,10 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %8ju"
+literal|" {:sent-packets/%8lu}"
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|IFA_STAT
 argument_list|(
 name|omcasts
@@ -2085,12 +2320,17 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_close_instance
+argument_list|(
+literal|"multicast-address"
+argument_list|)
+expr_stmt|;
 name|ifma
 operator|=
 name|ifma
@@ -2098,7 +2338,22 @@ operator|->
 name|ifma_next
 expr_stmt|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"multicast-address"
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"interface"
+argument_list|)
+expr_stmt|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"interface"
+argument_list|)
+expr_stmt|;
 name|freeifaddrs
 argument_list|(
 name|ifap
@@ -2198,7 +2453,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 name|EX_OSERR
 argument_list|,
@@ -2357,7 +2612,7 @@ name|found
 operator|==
 name|false
 condition|)
-name|err
+name|xo_err
 argument_list|(
 name|EX_DATAERR
 argument_list|,
@@ -2506,11 +2761,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"interface-statistics"
+argument_list|)
+expr_stmt|;
 name|banner
 label|:
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%17s %14s %16s"
+literal|"{T:/%17s} {T:/%14s} {T:/%16s}\n"
 argument_list|,
 literal|"input"
 argument_list|,
@@ -2525,14 +2785,10 @@ argument_list|,
 literal|"output"
 argument_list|)
 expr_stmt|;
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"%10s %5s %5s %10s %10s %5s %10s %5s"
+literal|"{T:/%10s} {T:/%5s} {T:/%5s} {T:/%10s} {T:/%10s} {T:/%5s} "
+literal|"{T:/%10s} {T:/%5s}"
 argument_list|,
 literal|"packets"
 argument_list|,
@@ -2555,22 +2811,20 @@ if|if
 condition|(
 name|dflag
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %5.5s"
+literal|" {T:/%5.5s}"
 argument_list|,
 literal|"drops"
 argument_list|)
 expr_stmt|;
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
-name|fflush
-argument_list|(
-name|stdout
-argument_list|)
+name|xo_flush
+argument_list|()
 expr_stmt|;
 name|line
 operator|=
@@ -2593,11 +2847,14 @@ operator|==
 literal|0
 operator|)
 condition|)
-name|exit
+block|{
+name|xo_close_list
 argument_list|(
-literal|0
+literal|"interface-statistics"
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
 name|oldmask
 operator|=
 name|sigblock
@@ -2635,11 +2892,18 @@ argument_list|(
 name|new
 argument_list|)
 expr_stmt|;
+name|xo_open_instance
+argument_list|(
+literal|"stats"
+argument_list|)
+expr_stmt|;
 name|show_stat
 argument_list|(
 literal|"lu"
 argument_list|,
 literal|10
+argument_list|,
+literal|"received-packets"
 argument_list|,
 name|new
 operator|->
@@ -2658,6 +2922,8 @@ literal|"lu"
 argument_list|,
 literal|5
 argument_list|,
+literal|"received-errors"
+argument_list|,
 name|new
 operator|->
 name|ift_ie
@@ -2674,6 +2940,8 @@ argument_list|(
 literal|"lu"
 argument_list|,
 literal|5
+argument_list|,
+literal|"dropped-packets"
 argument_list|,
 name|new
 operator|->
@@ -2692,6 +2960,8 @@ literal|"lu"
 argument_list|,
 literal|10
 argument_list|,
+literal|"received-bytes"
+argument_list|,
 name|new
 operator|->
 name|ift_ib
@@ -2708,6 +2978,8 @@ argument_list|(
 literal|"lu"
 argument_list|,
 literal|10
+argument_list|,
+literal|"sent-packets"
 argument_list|,
 name|new
 operator|->
@@ -2726,6 +2998,8 @@ literal|"lu"
 argument_list|,
 literal|5
 argument_list|,
+literal|"send-errors"
+argument_list|,
 name|new
 operator|->
 name|ift_oe
@@ -2742,6 +3016,8 @@ argument_list|(
 literal|"lu"
 argument_list|,
 literal|10
+argument_list|,
+literal|"sent-bytes"
 argument_list|,
 name|new
 operator|->
@@ -2759,6 +3035,8 @@ argument_list|(
 literal|"NRSlu"
 argument_list|,
 literal|5
+argument_list|,
+literal|"collisions"
 argument_list|,
 name|new
 operator|->
@@ -2781,6 +3059,8 @@ literal|"LSlu"
 argument_list|,
 literal|5
 argument_list|,
+literal|"dropped-packets"
+argument_list|,
 name|new
 operator|->
 name|ift_od
@@ -2792,15 +3072,18 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|putchar
+name|xo_close_instance
 argument_list|(
-literal|'\n'
+literal|"stats"
 argument_list|)
 expr_stmt|;
-name|fflush
+name|xo_emit
 argument_list|(
-name|stdout
+literal|"\n"
 argument_list|)
+expr_stmt|;
+name|xo_flush
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

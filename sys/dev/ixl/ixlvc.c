@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2013-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2013-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -3341,6 +3341,11 @@ name|struct
 name|i40e_virtchnl_queue_select
 name|vqs
 decl_stmt|;
+name|int
+name|error
+init|=
+literal|0
+decl_stmt|;
 name|vqs
 operator|.
 name|vsi_id
@@ -3352,6 +3357,8 @@ operator|->
 name|vsi_id
 expr_stmt|;
 comment|/* Low priority, we don't need to error check */
+name|error
+operator|=
 name|ixlv_send_pf_msg
 argument_list|(
 name|sc
@@ -3371,6 +3378,26 @@ name|vqs
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|IXL_DEBUG
+if|if
+condition|(
+name|error
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"Error sending stats request to PF: %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -3397,20 +3424,15 @@ name|struct
 name|ixl_vsi
 modifier|*
 name|vsi
-decl_stmt|;
-name|uint64_t
-name|tx_discards
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|vsi
-operator|=
+init|=
 operator|&
 name|sc
 operator|->
 name|vsi
-expr_stmt|;
+decl_stmt|;
+name|uint64_t
+name|tx_discards
+decl_stmt|;
 name|tx_discards
 operator|=
 name|es
@@ -3419,16 +3441,15 @@ name|tx_discards
 expr_stmt|;
 for|for
 control|(
+name|int
 name|i
-operator|=
+init|=
 literal|0
 init|;
 name|i
 operator|<
-name|sc
-operator|->
 name|vsi
-operator|.
+operator|->
 name|num_queues
 condition|;
 name|i
@@ -3563,10 +3584,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
 name|vsi
-operator|.
+operator|->
 name|eth_stats
 operator|=
 operator|*
@@ -3677,7 +3696,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|vsi
+name|sc
 operator|->
 name|link_up
 operator|=
@@ -3689,7 +3708,7 @@ name|link_event
 operator|.
 name|link_status
 expr_stmt|;
-name|vsi
+name|sc
 operator|->
 name|link_speed
 operator|=

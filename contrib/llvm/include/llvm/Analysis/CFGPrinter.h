@@ -420,11 +420,16 @@ name|MaxColumns
 condition|)
 block|{
 comment|// Wrap lines.
+comment|// Wrap very long names even though we can't find a space.
 if|if
 condition|(
+operator|!
 name|LastSpace
 condition|)
-block|{
+name|LastSpace
+operator|=
+name|i
+expr_stmt|;
 name|OutStr
 operator|.
 name|insert
@@ -449,8 +454,6 @@ operator|+=
 literal|3
 expr_stmt|;
 comment|// The loop will advance 'i' again.
-block|}
-comment|// Else keep trying to find a space.
 block|}
 else|else
 operator|++

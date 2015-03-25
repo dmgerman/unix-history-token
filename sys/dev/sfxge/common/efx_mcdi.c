@@ -60,52 +60,6 @@ name|EFSYS_OPT_MCDI
 end_if
 
 begin_comment
-comment|/* Shared memory layout */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MCDI_P1_DBL_OFST
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCDI_P2_DBL_OFST
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCDI_P1_PDU_OFST
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCDI_P2_PDU_OFST
-value|0x42
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCDI_P1_REBOOT_OFST
-value|0x1fe
-end_define
-
-begin_define
-define|#
-directive|define
-name|MCDI_P2_REBOOT_OFST
-value|0x1ff
-end_define
-
-begin_comment
 comment|/*  * A reboot/assertion causes the MCDI status word to be set after the  * command word is set or a REBOOT event is sent. If we notice a reboot  * via these mechanisms then wait 10ms for the status word to be set.  */
 end_comment
 
@@ -221,11 +175,15 @@ literal|1
 case|:
 name|pdur
 operator|=
-name|MCDI_P1_PDU_OFST
+name|MC_SMEM_P0_PDU_OFST
+operator|>>
+literal|2
 expr_stmt|;
 name|dbr
 operator|=
-name|MCDI_P1_DBL_OFST
+name|MC_SMEM_P0_DOORBELL_OFST
+operator|>>
+literal|2
 expr_stmt|;
 break|break;
 case|case
@@ -233,11 +191,15 @@ literal|2
 case|:
 name|pdur
 operator|=
-name|MCDI_P2_PDU_OFST
+name|MC_SMEM_P1_PDU_OFST
+operator|>>
+literal|2
 expr_stmt|;
 name|dbr
 operator|=
-name|MCDI_P2_DBL_OFST
+name|MC_SMEM_P1_DOORBELL_OFST
+operator|>>
+literal|2
 expr_stmt|;
 break|break;
 default|default:
@@ -521,9 +483,13 @@ operator|==
 literal|1
 operator|)
 condition|?
-name|MCDI_P1_PDU_OFST
+name|MC_SMEM_P0_PDU_OFST
+operator|>>
+literal|2
 else|:
-name|MCDI_P2_PDU_OFST
+name|MC_SMEM_P1_PDU_OFST
+operator|>>
+literal|2
 expr_stmt|;
 comment|/* Copy payload out if caller supplied buffer */
 if|if
@@ -856,6 +822,21 @@ modifier|*
 name|enp
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|EFX_GRACEFUL_MC_REBOOT
+comment|/* 	 * This function is not being used properly. 	 * Until its callers are fixed, it should always return 0. 	 */
+name|_NOTE
+argument_list|(
+argument|ARGUNUSED(enp)
+argument_list|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|#
+directive|else
 name|efx_mcdi_iface_t
 modifier|*
 name|emip
@@ -907,9 +888,13 @@ operator|==
 literal|1
 operator|)
 condition|?
-name|MCDI_P1_REBOOT_OFST
+name|MC_SMEM_P0_STATUS_OFST
+operator|>>
+literal|2
 else|:
-name|MCDI_P2_REBOOT_OFST
+name|MC_SMEM_P1_STATUS_OFST
+operator|>>
+literal|2
 operator|)
 expr_stmt|;
 name|EFX_BAR_TBL_READD
@@ -982,6 +967,8 @@ operator|(
 name|EIO
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1183,9 +1170,13 @@ operator|==
 literal|1
 operator|)
 condition|?
-name|MCDI_P1_PDU_OFST
+name|MC_SMEM_P0_PDU_OFST
+operator|>>
+literal|2
 else|:
-name|MCDI_P2_PDU_OFST
+name|MC_SMEM_P1_PDU_OFST
+operator|>>
+literal|2
 expr_stmt|;
 comment|/* Read the command header */
 name|EFX_BAR_TBL_READD
@@ -2342,7 +2333,7 @@ if|if
 condition|(
 name|build
 operator|==
-name|MC_CMD_GET_VERSION_OUT_FIRMWARE_BOOTROM
+name|MC_CMD_GET_VERSION_OUT_FIRMWARE_SIENA_BOOTROM
 condition|)
 block|{
 name|status

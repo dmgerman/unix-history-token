@@ -292,6 +292,18 @@ name|ModuleMaps
 operator|:
 literal|1
 block|;
+comment|/// \brief Set the 'home directory' of a module map file to the current
+comment|/// working directory (or the home directory of the module map file that
+comment|/// contained the 'extern module' directive importing this module map file
+comment|/// if any) rather than the directory containing the module map file.
+comment|//
+comment|/// The home directory is where we look for files named in the module map
+comment|/// file.
+name|unsigned
+name|ModuleMapFileHomeIsCwd
+operator|:
+literal|1
+block|;
 comment|/// \brief The interval (in seconds) between pruning operations.
 comment|///
 comment|/// This operation is expensive, because it requires Clang to walk through
@@ -330,17 +342,6 @@ operator|::
 name|string
 operator|>
 name|ModulesIgnoreMacros
-block|;
-comment|/// \brief The set of user-provided module-map-files.
-name|llvm
-operator|::
-name|SetVector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|ModuleMapFiles
 block|;
 comment|/// \brief The set of user-provided virtual filesystem overlay files.
 name|std
@@ -416,6 +417,11 @@ literal|0
 argument_list|)
 block|,
 name|ModuleMaps
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ModuleMapFileHomeIsCwd
 argument_list|(
 literal|0
 argument_list|)

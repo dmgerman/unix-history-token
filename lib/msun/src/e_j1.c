@@ -55,6 +55,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
+specifier|volatile
+name|double
+name|vone
+init|=
+literal|1
+decl_stmt|,
+name|vzero
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
 name|double
 name|huge
 init|=
@@ -556,7 +571,7 @@ literal|0x7fffffff
 operator|&
 name|hx
 expr_stmt|;
-comment|/* if Y1(NaN) is NaN, Y1(-inf) is NaN, Y1(inf) is 0 */
+comment|/* 	 * y1(NaN) = NaN. 	 * y1(Inf) = 0. 	 * y1(-Inf) = NaN and raise invalid exception. 	 */
 if|if
 condition|(
 name|ix
@@ -564,7 +579,7 @@ operator|>=
 literal|0x7ff00000
 condition|)
 return|return
-name|one
+name|vone
 operator|/
 operator|(
 name|x
@@ -574,6 +589,7 @@ operator|*
 name|x
 operator|)
 return|;
+comment|/* y1(+-0) = -inf and raise divide-by-zero exception. */
 if|if
 condition|(
 operator|(
@@ -588,8 +604,9 @@ return|return
 operator|-
 name|one
 operator|/
-name|zero
+name|vzero
 return|;
+comment|/* y1(x<0) = NaN and raise invalid exception. */
 if|if
 condition|(
 name|hx
@@ -597,9 +614,9 @@ operator|<
 literal|0
 condition|)
 return|return
-name|zero
+name|vzero
 operator|/
-name|zero
+name|vzero
 return|;
 if|if
 condition|(
@@ -1133,6 +1150,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|double
 name|pone
 parameter_list|(
@@ -1219,13 +1237,7 @@ operator|=
 name|ps3
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ix
-operator|>=
-literal|0x40000000
-condition|)
+else|else
 block|{
 name|p
 operator|=
@@ -1236,6 +1248,7 @@ operator|=
 name|ps2
 expr_stmt|;
 block|}
+comment|/* ix>=0x40000000 */
 name|z
 operator|=
 name|one
@@ -1645,6 +1658,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|double
 name|qone
 parameter_list|(
@@ -1731,13 +1745,7 @@ operator|=
 name|qs3
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ix
-operator|>=
-literal|0x40000000
-condition|)
+else|else
 block|{
 name|p
 operator|=
@@ -1748,6 +1756,7 @@ operator|=
 name|qs2
 expr_stmt|;
 block|}
+comment|/* ix>=0x40000000 */
 name|z
 operator|=
 name|one

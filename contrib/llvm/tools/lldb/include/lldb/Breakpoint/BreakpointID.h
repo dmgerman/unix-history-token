@@ -236,6 +236,32 @@ name|break_loc_id
 argument_list|)
 decl_stmt|;
 comment|//------------------------------------------------------------------
+comment|/// Takes an input string and checks to see whether it is a breakpoint name.
+comment|/// If it is a mal-formed breakpoint name, error will be set to an appropriate
+comment|/// error string.
+comment|///
+comment|/// @param[in] input
+comment|///     A string containing JUST the breakpoint description.
+comment|/// @param[out] error
+comment|///     If the name is a well-formed breakpoint name, set to success, otherwise set to an error.
+comment|/// @return
+comment|///     \b true if the name is a breakpoint name (as opposed to an ID or range) false otherwise.
+comment|//------------------------------------------------------------------
+specifier|static
+name|bool
+name|StringIsBreakpointName
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|Error
+modifier|&
+name|error
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
 comment|/// Takes a breakpoint ID and the breakpoint location id and returns
 comment|/// a string containing the canonical description for the breakpoint
 comment|/// or breakpoint location.

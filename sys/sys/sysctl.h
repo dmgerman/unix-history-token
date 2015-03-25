@@ -749,6 +749,18 @@ parameter_list|)
 value|(r->oldfunc)(r, p, l)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SYSCTL_OUT_STR
+parameter_list|(
+name|r
+parameter_list|,
+name|p
+parameter_list|)
+value|(r->oldfunc)(r, p, strlen(p) + 1)
+end_define
+
 begin_function_decl
 name|int
 name|sysctl_handle_int

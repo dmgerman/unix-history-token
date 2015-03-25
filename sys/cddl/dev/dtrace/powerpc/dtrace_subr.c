@@ -995,10 +995,6 @@ name|cpuc_dtrace_illval
 operator|=
 name|frame
 operator|->
-name|cpu
-operator|.
-name|aim
-operator|.
 name|dar
 expr_stmt|;
 comment|/* 			 * Offset the instruction pointer to the instruction 			 * following the one causing the fault. 			 */

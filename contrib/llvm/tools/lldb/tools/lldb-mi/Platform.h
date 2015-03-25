@@ -433,7 +433,7 @@ begin_define
 define|#
 directive|define
 name|SIG_DFL
-value|( (sighandler_t) -1 )
+value|((sighandler_t)-1)
 end_define
 
 begin_comment
@@ -444,7 +444,7 @@ begin_define
 define|#
 directive|define
 name|SIG_IGN
-value|( (sighandler_t) -2 )
+value|((sighandler_t)-2)
 end_define
 
 begin_comment

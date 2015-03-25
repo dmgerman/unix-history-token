@@ -49,13 +49,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|VERSION
-value|"1.13.2"
-end_define
-
-begin_define
-define|#
-directive|define
 name|HAVE_DIRENT_NAMLEN
 value|1
 end_define
@@ -127,6 +120,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_STRSEP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_STRTONUM
 value|1
 end_define
 

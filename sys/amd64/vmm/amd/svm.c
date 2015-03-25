@@ -3671,11 +3671,48 @@ name|cpu_mode
 condition|)
 block|{
 case|case
+name|CPU_MODE_REAL
+case|:
+name|vmexit
+operator|->
+name|u
+operator|.
+name|inst_emul
+operator|.
+name|cs_base
+operator|=
+name|seg
+operator|.
+name|base
+expr_stmt|;
+name|vmexit
+operator|->
+name|u
+operator|.
+name|inst_emul
+operator|.
+name|cs_d
+operator|=
+literal|0
+expr_stmt|;
+case|case
 name|CPU_MODE_PROTECTED
 case|:
 case|case
 name|CPU_MODE_COMPATIBILITY
 case|:
+name|vmexit
+operator|->
+name|u
+operator|.
+name|inst_emul
+operator|.
+name|cs_base
+operator|=
+name|seg
+operator|.
+name|base
+expr_stmt|;
 comment|/* 		 * Section 4.8.1 of APM2, Default Operand Size or D bit. 		 */
 name|vmexit
 operator|->
@@ -3699,6 +3736,16 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
+name|vmexit
+operator|->
+name|u
+operator|.
+name|inst_emul
+operator|.
+name|cs_base
+operator|=
+literal|0
+expr_stmt|;
 name|vmexit
 operator|->
 name|u
@@ -7329,10 +7376,6 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|v_tpr
-operator|>=
-literal|0
-operator|&&
-name|v_tpr
 operator|<=
 literal|15
 argument_list|,
@@ -7916,7 +7959,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm __volatile("clgi" : : :);
+asm|__asm __volatile("clgi");
 block|}
 end_function
 
@@ -7929,7 +7972,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-asm|__asm __volatile("stgi" : : :);
+asm|__asm __volatile("stgi");
 block|}
 end_function
 

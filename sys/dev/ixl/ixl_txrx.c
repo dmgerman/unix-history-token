@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2013-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2013-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -10,6 +10,12 @@ end_comment
 begin_comment
 comment|/* **	IXL driver TX/RX Routines: **	    This was seperated to allow usage by ** 	    both the BASE and the VF drivers. */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IXL_STANDALONE_BUILD
+end_ifndef
 
 begin_include
 include|#
@@ -28,6 +34,11 @@ include|#
 directive|include
 file|"opt_rss.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -181,8 +192,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dev/netmap/if_ixl_netmap.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/* ** Multiqueue Transmit driver ** */
+comment|/* DEV_NETMAP */
+end_comment
+
+begin_comment
+comment|/* ** Multiqueue Transmit driver */
 end_comment
 
 begin_function
@@ -2041,6 +2073,31 @@ modifier|*
 name|que
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+init|=
+name|NA
+argument_list|(
+name|que
+operator|->
+name|vsi
+operator|->
+name|ifp
+argument_list|)
+decl_stmt|;
+name|struct
+name|netmap_slot
+modifier|*
+name|slot
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 name|struct
 name|tx_ring
 modifier|*
@@ -2062,6 +2119,28 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+comment|/* 	 * (under lock): if in netmap mode, do some consistency 	 * checks and set slot to entry 0 of the netmap ring. 	 */
+name|slot
+operator|=
+name|netmap_reset
+argument_list|(
+name|na
+argument_list|,
+name|NR_TX
+argument_list|,
+name|que
+operator|->
+name|me
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 name|bzero
 argument_list|(
 operator|(
@@ -2190,6 +2269,59 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+comment|/* 		 * In netmap mode, set the map for the packet buffer. 		 * NOTE: Some drivers (not this one) also need to set 		 * the physical buffer address in the NIC ring. 		 * netmap_idx_n2k() maps a nic index, i, into the corresponding 		 * netmap slot index, si 		 */
+if|if
+condition|(
+name|slot
+condition|)
+block|{
+name|int
+name|si
+init|=
+name|netmap_idx_n2k
+argument_list|(
+operator|&
+name|na
+operator|->
+name|tx_rings
+index|[
+name|que
+operator|->
+name|me
+index|]
+argument_list|,
+name|i
+argument_list|)
+decl_stmt|;
+name|netmap_load_map
+argument_list|(
+name|na
+argument_list|,
+name|buf
+operator|->
+name|tag
+argument_list|,
+name|buf
+operator|->
+name|map
+argument_list|,
+name|NMB
+argument_list|(
+name|na
+argument_list|,
+name|slot
+operator|+
+name|si
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 comment|/* Clear the EOP index */
 name|buf
 operator|->
@@ -3677,6 +3809,31 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+comment|// XXX todo: implement moderation
+if|if
+condition|(
+name|netmap_tx_irq
+argument_list|(
+name|que
+operator|->
+name|vsi
+operator|->
+name|ifp
+argument_list|,
+name|que
+operator|->
+name|me
+argument_list|)
+condition|)
+return|return
+name|FALSE
+return|;
+endif|#
+directive|endif
+comment|/* DEF_NETMAP */
 comment|/* These are not the descriptors you seek, move along :) */
 if|if
 condition|(
@@ -5007,11 +5164,58 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+name|struct
+name|netmap_adapter
+modifier|*
+name|na
+init|=
+name|NA
+argument_list|(
+name|que
+operator|->
+name|vsi
+operator|->
+name|ifp
+argument_list|)
+decl_stmt|;
+name|struct
+name|netmap_slot
+modifier|*
+name|slot
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 name|IXL_RX_LOCK
 argument_list|(
 name|rxr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+comment|/* same as in ixl_init_tx_ring() */
+name|slot
+operator|=
+name|netmap_reset
+argument_list|(
+name|na
+argument_list|,
+name|NR_RX
+argument_list|,
+name|que
+operator|->
+name|me
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 comment|/* Clear the ring contents */
 name|rsize
 operator|=
@@ -5225,6 +5429,106 @@ index|[
 name|j
 index|]
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+comment|/* 		 * In netmap mode, fill the map and set the buffer 		 * address in the NIC ring, considering the offset 		 * between the netmap and NIC rings (see comment in 		 * ixgbe_setup_transmit_ring() ). No need to allocate 		 * an mbuf, so end the block with a continue; 		 */
+if|if
+condition|(
+name|slot
+condition|)
+block|{
+name|int
+name|sj
+init|=
+name|netmap_idx_n2k
+argument_list|(
+operator|&
+name|na
+operator|->
+name|rx_rings
+index|[
+name|que
+operator|->
+name|me
+index|]
+argument_list|,
+name|j
+argument_list|)
+decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
+name|void
+modifier|*
+name|addr
+decl_stmt|;
+name|addr
+operator|=
+name|PNMB
+argument_list|(
+name|na
+argument_list|,
+name|slot
+operator|+
+name|sj
+argument_list|,
+operator|&
+name|paddr
+argument_list|)
+expr_stmt|;
+name|netmap_load_map
+argument_list|(
+name|na
+argument_list|,
+name|rxr
+operator|->
+name|dma
+operator|.
+name|tag
+argument_list|,
+name|buf
+operator|->
+name|pmap
+argument_list|,
+name|addr
+argument_list|)
+expr_stmt|;
+comment|/* Update descriptor and the cached value */
+name|rxr
+operator|->
+name|base
+index|[
+name|j
+index|]
+operator|.
+name|read
+operator|.
+name|pkt_addr
+operator|=
+name|htole64
+argument_list|(
+name|paddr
+argument_list|)
+expr_stmt|;
+name|rxr
+operator|->
+name|base
+index|[
+name|j
+index|]
+operator|.
+name|read
+operator|.
+name|hdr_addr
+operator|=
+literal|0
+expr_stmt|;
+continue|continue;
+block|}
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 comment|/* 		** Don't allocate mbufs if not 		** doing header split, its wasteful 		*/
 if|if
 condition|(
@@ -6262,7 +6566,7 @@ name|RSS
 end_ifdef
 
 begin_comment
-comment|/* ** ixl_ptype_to_hash: parse the packet type ** to determine the appropriate hash. */
+comment|/* ** i40e_ptype_to_hash: parse the packet type ** to determine the appropriate hash. */
 end_comment
 
 begin_function
@@ -6535,6 +6839,38 @@ argument_list|(
 name|rxr
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+if|if
+condition|(
+name|netmap_rx_irq
+argument_list|(
+name|ifp
+argument_list|,
+name|que
+operator|->
+name|me
+argument_list|,
+operator|&
+name|count
+argument_list|)
+condition|)
+block|{
+name|IXL_RX_UNLOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 for|for
 control|(
 name|i

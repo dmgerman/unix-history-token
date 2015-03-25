@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SYSTEMZMCTARGETDESC_H
+name|LLVM_LIB_TARGET_SYSTEMZ_MCTARGETDESC_SYSTEMZMCTARGETDESC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SYSTEMZMCTARGETDESC_H
+name|LLVM_LIB_TARGET_SYSTEMZ_MCTARGETDESC_SYSTEMZMCTARGETDESC_H
 end_define
 
 begin_include

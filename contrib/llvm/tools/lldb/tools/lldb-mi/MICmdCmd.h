@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdCmd.h
+comment|// File:        MICmdCmd.h
 end_comment
 
 begin_comment
@@ -44,47 +44,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdCmdEnablePrettyPrinting	interface.
+comment|// Overview:    CMICmdCmdEnablePrettyPrinting   interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdSource					interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//				To implement new MI commands derive a new command class from the command base
-end_comment
-
-begin_comment
-comment|//				class. To enable the new command for interpretation add the new command class
-end_comment
-
-begin_comment
-comment|//				to the command factory. The files of relevance are:
-end_comment
-
-begin_comment
-comment|//					MICmdCommands.cpp
-end_comment
-
-begin_comment
-comment|//					MICmdBase.h / .cpp
-end_comment
-
-begin_comment
-comment|//					MICmdCmd.h / .cpp
-end_comment
-
-begin_comment
-comment|//				For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
-end_comment
-
-begin_comment
-comment|//				command class as an example.
+comment|//              CMICmdCmdSource                 interface.
 end_comment
 
 begin_comment
@@ -92,15 +56,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|//              To implement new MI commands derive a new command class from the command base
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//              class. To enable the new command for interpretation add the new command class
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              to the command factory. The files of relevance are:
+end_comment
+
+begin_comment
+comment|//                  MICmdCommands.cpp
+end_comment
+
+begin_comment
+comment|//                  MICmdBase.h / .cpp
+end_comment
+
+begin_comment
+comment|//                  MICmdCmd.h / .cpp
+end_comment
+
+begin_comment
+comment|//              For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
+end_comment
+
+begin_comment
+comment|//              command class as an example.
 end_comment
 
 begin_comment
@@ -108,7 +92,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Environment: Compilers:  Visual C++ 12.
+end_comment
+
+begin_comment
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+end_comment
+
+begin_comment
+comment|//              Libraries:  See MIReadmetxt.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -116,7 +116,7 @@ comment|//--
 end_comment
 
 begin_comment
-comment|/*  MI commands implemented are: 	See MICmdCommands.cpp */
+comment|/* MI commands implemented are:         See MICmdCommands.cpp */
 end_comment
 
 begin_pragma
@@ -174,31 +174,31 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "enable-pretty-printing".
+comment|//          *this class implements MI command "enable-pretty-printing".
 end_comment
 
 begin_comment
-comment|//			Enables Python base pretty printing.
+comment|//          Enables Python base pretty printing.
 end_comment
 
 begin_comment
-comment|// Ref:		http://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI-Variable-Objects.html
+comment|// Ref:     http://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI-Variable-Objects.html
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 03/03/2014.
+comment|// Authors: Illya Rudkin 03/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -268,23 +268,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "source".
+comment|//          *this class implements MI command "source".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 05/03/2014.
+comment|// Authors: Illya Rudkin 05/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment

@@ -1087,10 +1087,13 @@ else|else
 block|{
 if|if
 condition|(
+name|fdt32_to_cpu
+argument_list|(
 name|intr
 index|[
 literal|0
 index|]
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -1124,10 +1127,13 @@ expr_stmt|;
 comment|/* 		 * In intr[2], bits[3:0] are trigger type and level flags. 		 *   1 = low-to-high edge triggered 		 *   2 = high-to-low edge triggered 		 *   4 = active high level-sensitive 		 *   8 = active low level-sensitive 		 * The hardware only supports active-high-level or rising-edge. 		 */
 if|if
 condition|(
+name|fdt32_to_cpu
+argument_list|(
 name|intr
 index|[
 literal|2
 index|]
+argument_list|)
 operator|&
 literal|0x0a
 condition|)
@@ -1137,10 +1143,13 @@ argument_list|(
 literal|"unsupported trigger/polarity configuration "
 literal|"0x%2x\n"
 argument_list|,
+name|fdt32_to_cpu
+argument_list|(
 name|intr
 index|[
 literal|2
 index|]
+argument_list|)
 operator|&
 literal|0x0f
 argument_list|)
@@ -1158,10 +1167,13 @@ name|INTR_POLARITY_CONFORM
 expr_stmt|;
 if|if
 condition|(
+name|fdt32_to_cpu
+argument_list|(
 name|intr
 index|[
 literal|2
 index|]
+argument_list|)
 operator|&
 literal|0x01
 condition|)

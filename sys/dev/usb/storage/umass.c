@@ -12154,9 +12154,8 @@ case|case
 name|WRITE_10
 case|:
 case|case
-literal|0x2f
+name|VERIFY_10
 case|:
-comment|/* VERIFY_10 is absent from 					 * scsi_all.h??? */
 case|case
 name|INQUIRY
 case|:

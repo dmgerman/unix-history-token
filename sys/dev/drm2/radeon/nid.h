@@ -162,6 +162,17 @@ name|DMIF_ADDR_CONFIG
 value|0xBD4
 end_define
 
+begin_comment
+comment|/* DCE6 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMIF_ADDR_CALC
+value|0xC00
+end_define
+
 begin_define
 define|#
 directive|define

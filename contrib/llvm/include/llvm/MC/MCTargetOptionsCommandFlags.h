@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CommandLine.h"
+file|"llvm/MC/MCTargetOptions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCTargetOptions.h"
+file|"llvm/Support/CommandLine.h"
 end_include
 
 begin_decl_stmt
@@ -216,6 +216,40 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|cl
+operator|::
+name|opt
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ABIName
+argument_list|(
+literal|"target-abi"
+argument_list|,
+name|cl
+operator|::
+name|Hidden
+argument_list|,
+name|cl
+operator|::
+name|desc
+argument_list|(
+literal|"The name of the ABI to be targeted from the backend."
+argument_list|)
+argument_list|,
+name|cl
+operator|::
+name|init
+argument_list|(
+literal|""
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 specifier|inline
@@ -255,6 +289,12 @@ operator|.
 name|ShowMCInst
 operator|=
 name|ShowMCInst
+expr_stmt|;
+name|Options
+operator|.
+name|ABIName
+operator|=
+name|ABIName
 expr_stmt|;
 return|return
 name|Options

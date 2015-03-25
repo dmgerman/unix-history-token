@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_MANGLENUMBERINGCONTEXT_H
+name|LLVM_CLANG_AST_MANGLENUMBERINGCONTEXT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_MANGLENUMBERINGCONTEXT_H
+name|LLVM_CLANG_AST_MANGLENUMBERINGCONTEXT_H
 end_define
 
 begin_include
@@ -118,18 +118,6 @@ operator|<
 name|MangleNumberingContext
 operator|>
 block|{
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|Type
-operator|*
-block|,
-name|unsigned
-operator|>
-name|ManglingNumbers
-block|;
 name|public
 operator|:
 name|virtual
@@ -139,6 +127,7 @@ argument_list|()
 block|{}
 comment|/// \brief Retrieve the mangling number of a new lambda expression with the
 comment|/// given call operator within this context.
+name|virtual
 name|unsigned
 name|getManglingNumber
 argument_list|(
@@ -147,9 +136,12 @@ name|CXXMethodDecl
 operator|*
 name|CallOperator
 argument_list|)
+operator|=
+literal|0
 block|;
 comment|/// \brief Retrieve the mangling number of a new block literal within this
 comment|/// context.
+name|virtual
 name|unsigned
 name|getManglingNumber
 argument_list|(
@@ -158,8 +150,11 @@ name|BlockDecl
 operator|*
 name|BD
 argument_list|)
+operator|=
+literal|0
 block|;
 comment|/// Static locals are numbered by source order.
+name|virtual
 name|unsigned
 name|getStaticLocalNumber
 argument_list|(
@@ -168,6 +163,8 @@ name|VarDecl
 operator|*
 name|VD
 argument_list|)
+operator|=
+literal|0
 block|;
 comment|/// \brief Retrieve the mangling number of a static local variable within
 comment|/// this context.

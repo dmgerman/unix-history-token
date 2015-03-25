@@ -148,6 +148,16 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
+comment|// createCFLAliasAnalysisPass - This pass implements a set-based approach to
+comment|// alias analysis.
+comment|//
+name|ImmutablePass
+modifier|*
+name|createCFLAliasAnalysisPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
 comment|/// createLibCallAliasAnalysisPass - Create an alias analysis pass that knows
 comment|/// about the semantics of a set of libcalls specified by LCI.  The newly
 comment|/// constructed pass takes ownership of the pointer that is provided.
@@ -183,12 +193,27 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
+comment|// createScopedNoAliasAAPass - This pass implements metadata-based
+comment|// scoped noalias analysis.
+comment|//
+name|ImmutablePass
+modifier|*
+name|createScopedNoAliasAAPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
 comment|// createObjCARCAliasAnalysisPass - This pass implements ObjC-ARC-based
 comment|// alias analysis.
 comment|//
 name|ImmutablePass
 modifier|*
 name|createObjCARCAliasAnalysisPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createPAEvalPass
 parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//

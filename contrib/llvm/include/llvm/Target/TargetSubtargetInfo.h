@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/PBQPRAConstraint.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCSubtargetInfo.h"
 end_include
 
@@ -76,6 +82,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|DataLayout
+decl_stmt|;
+name|class
 name|MachineFunction
 decl_stmt|;
 name|class
@@ -88,10 +97,25 @@ name|class
 name|SUnit
 decl_stmt|;
 name|class
+name|TargetFrameLowering
+decl_stmt|;
+name|class
+name|TargetInstrInfo
+decl_stmt|;
+name|class
+name|TargetLowering
+decl_stmt|;
+name|class
 name|TargetRegisterClass
 decl_stmt|;
 name|class
+name|TargetRegisterInfo
+decl_stmt|;
+name|class
 name|TargetSchedModel
+decl_stmt|;
+name|class
+name|TargetSelectionDAGInfo
 decl_stmt|;
 struct_decl|struct
 name|MachineSchedPolicy
@@ -167,6 +191,106 @@ decl|~
 name|TargetSubtargetInfo
 argument_list|()
 empty_stmt|;
+comment|// Interfaces to the major aspects of target machine information:
+comment|//
+comment|// -- Instruction opcode and operand information
+comment|// -- Pipelines and scheduling information
+comment|// -- Stack frame information
+comment|// -- Selection DAG lowering information
+comment|//
+comment|// N.B. These objects may change during compilation. It's not safe to cache
+comment|// them between functions.
+name|virtual
+decl|const
+name|TargetInstrInfo
+modifier|*
+name|getInstrInfo
+argument_list|()
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+name|virtual
+decl|const
+name|TargetFrameLowering
+modifier|*
+name|getFrameLowering
+argument_list|()
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+name|virtual
+decl|const
+name|TargetLowering
+modifier|*
+name|getTargetLowering
+argument_list|()
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+name|virtual
+decl|const
+name|TargetSelectionDAGInfo
+modifier|*
+name|getSelectionDAGInfo
+argument_list|()
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+name|virtual
+decl|const
+name|DataLayout
+modifier|*
+name|getDataLayout
+argument_list|()
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+comment|/// getRegisterInfo - If register information is available, return it.  If
+comment|/// not, return null.  This is kept separate from RegInfo until RegInfo has
+comment|/// details of graph coloring register allocation removed from it.
+comment|///
+name|virtual
+decl|const
+name|TargetRegisterInfo
+modifier|*
+name|getRegisterInfo
+argument_list|()
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+comment|/// getInstrItineraryData - Returns instruction itinerary data for the target
+comment|/// or specific subtarget.
+comment|///
+name|virtual
+decl|const
+name|InstrItineraryData
+modifier|*
+name|getInstrItineraryData
+argument_list|()
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
 comment|/// Resolve a SchedClass at runtime, where SchedClass identifies an
 comment|/// MCSchedClassDesc with the isVariant property. This may return the ID of
 comment|/// another variant SchedClass, but repeated invocation must quickly terminate
@@ -174,20 +298,21 @@ comment|/// in a nonvariant SchedClass.
 name|virtual
 name|unsigned
 name|resolveSchedClass
-block|(
+argument_list|(
 name|unsigned
 name|SchedClass
-block|, const
+argument_list|,
+specifier|const
 name|MachineInstr
-modifier|*
+operator|*
 name|MI
-block|,
+argument_list|,
 specifier|const
 name|TargetSchedModel
 operator|*
 name|SchedModel
-block|)
-specifier|const
+argument_list|)
+decl|const
 block|{
 return|return
 literal|0
@@ -197,8 +322,8 @@ comment|/// \brief Temporary API to test migration to MI scheduler.
 name|bool
 name|useMachineScheduler
 argument_list|()
-specifier|const
-expr_stmt|;
+decl|const
+empty_stmt|;
 comment|/// \brief True if the subtarget should run MachineScheduler after aggressive
 comment|/// coalescing.
 comment|///
@@ -208,8 +333,8 @@ name|virtual
 name|bool
 name|enableMachineScheduler
 argument_list|()
-specifier|const
-decl_stmt|;
+decl|const
+empty_stmt|;
 comment|/// \brief True if the subtarget should run PostMachineScheduler.
 comment|///
 comment|/// This only takes effect if the target has configured the
@@ -219,15 +344,15 @@ name|virtual
 name|bool
 name|enablePostMachineScheduler
 argument_list|()
-specifier|const
-expr_stmt|;
+decl|const
+empty_stmt|;
 comment|/// \brief True if the subtarget should run the atomic expansion pass.
 name|virtual
 name|bool
-name|enableAtomicExpandLoadLinked
+name|enableAtomicExpand
 argument_list|()
-specifier|const
-expr_stmt|;
+decl|const
+empty_stmt|;
 comment|/// \brief Override generic scheduling policy within a region.
 comment|///
 comment|/// This is a convenient way for targets that don't provide any custom
@@ -236,23 +361,23 @@ comment|/// changes to the generic scheduling policy.
 name|virtual
 name|void
 name|overrideSchedPolicy
-argument_list|(
+block|(
 name|MachineSchedPolicy
-operator|&
+block|&
 name|Policy
-argument_list|,
+block|,
 name|MachineInstr
-operator|*
+modifier|*
 name|begin
-argument_list|,
+block|,
 name|MachineInstr
-operator|*
+modifier|*
 name|end
-argument_list|,
+block|,
 name|unsigned
 name|NumRegionInstrs
-argument_list|)
-decl|const
+block|)
+specifier|const
 block|{}
 comment|// \brief Perform target specific adjustments to the latency of a schedule
 comment|// dependency.
@@ -260,19 +385,13 @@ name|virtual
 name|void
 name|adjustSchedDependency
 argument_list|(
-name|SUnit
-operator|*
-name|def
+argument|SUnit *def
 argument_list|,
-name|SUnit
-operator|*
-name|use
+argument|SUnit *use
 argument_list|,
-name|SDep
-operator|&
-name|dep
+argument|SDep& dep
 argument_list|)
-decl|const
+specifier|const
 block|{ }
 comment|// For use with PostRAScheduling: get the anti-dependence breaking that should
 comment|// be performed before post-RA scheduling.
@@ -293,11 +412,9 @@ name|virtual
 name|void
 name|getCriticalPathRCs
 argument_list|(
-name|RegClassVector
-operator|&
-name|CriticalPathRCs
+argument|RegClassVector&CriticalPathRCs
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|CriticalPathRCs
@@ -330,52 +447,64 @@ name|virtual
 name|bool
 name|enableRALocalReassignment
 argument_list|(
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
+argument|CodeGenOpt::Level OptLevel
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+expr_stmt|;
 comment|/// \brief Enable use of alias analysis during code generation (during MI
 comment|/// scheduling, DAGCombine, etc.).
 name|virtual
 name|bool
 name|useAA
 argument_list|()
-specifier|const
-expr_stmt|;
+decl|const
+empty_stmt|;
 comment|/// \brief Enable the use of the early if conversion pass.
 name|virtual
 name|bool
 name|enableEarlyIfConversion
 argument_list|()
-specifier|const
+decl|const
 block|{
 return|return
 name|false
 return|;
 block|}
-comment|/// \brief Reset the features for the subtarget.
+comment|/// \brief Return PBQPConstraint(s) for the target.
+comment|///
+comment|/// Override to provide custom PBQP constraints.
 name|virtual
-name|void
-name|resetSubtargetFeatures
-parameter_list|(
-specifier|const
-name|MachineFunction
-modifier|*
-name|MF
-parameter_list|)
-block|{ }
+name|std
+decl|::
+name|unique_ptr
+decl|<
+name|PBQPRAConstraint
+decl|>
+name|getCustomPBQPConstraints
+argument_list|()
+decl|const
+block|{
+return|return
+name|nullptr
+return|;
+block|}
+comment|/// Enable tracking of subregister liveness in register allocator.
+name|virtual
+name|bool
+name|enableSubRegLiveness
+argument_list|()
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+decl|}
+empty_stmt|;
 block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
-unit|}
 comment|// End llvm namespace
 end_comment
 

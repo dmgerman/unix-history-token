@@ -1436,6 +1436,12 @@ operator|->
 name|io_lock
 argument_list|)
 expr_stmt|;
+comment|/* Check for pending receives scheduled before interrupt enable */
+name|llan_intr
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1777,6 +1783,8 @@ operator|->
 name|io_lock
 argument_list|)
 expr_stmt|;
+name|restart
+label|:
 name|phyp_hcall
 argument_list|(
 name|H_VIO_SIGNAL
@@ -2054,6 +2062,31 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 	 * H_VIO_SIGNAL enables interrupts for future packets only. 	 * Make sure none were queued between the end of the loop and the 	 * enable interrupts call. 	 */
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|rx_buf
+index|[
+name|sc
+operator|->
+name|rx_dma_slot
+index|]
+operator|.
+name|control
+operator|>>
+literal|7
+operator|)
+operator|==
+name|sc
+operator|->
+name|rx_valid_val
+condition|)
+goto|goto
+name|restart
+goto|;
 name|mtx_unlock
 argument_list|(
 operator|&

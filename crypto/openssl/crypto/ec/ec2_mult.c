@@ -8,7 +8,7 @@ comment|/* ==================================================================== 
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -30,7 +30,7 @@ name|OPENSSL_NO_EC2M
 end_ifndef
 
 begin_comment
-comment|/* Compute the x-coordinate x/z for the point 2*(x/z) in Montgomery projective   * coordinates.  * Uses algorithm Mdouble in appendix of   *     Lopez, J. and Dahab, R.  "Fast multiplication on elliptic curves over   *     GF(2^m) without precomputation" (CHES '99, LNCS 1717).  * modified to not require precomputation of c=b^{2^{m-1}}.  */
+comment|/*-  * Compute the x-coordinate x/z for the point 2*(x/z) in Montgomery projective  * coordinates.  * Uses algorithm Mdouble in appendix of  *     Lopez, J. and Dahab, R.  "Fast multiplication on elliptic curves over  *     GF(2^m) without precomputation" (CHES '99, LNCS 1717).  * modified to not require precomputation of c=b^{2^{m-1}}.  */
 end_comment
 
 begin_function
@@ -253,7 +253,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute the x-coordinate x1/z1 for the point (x1/z1)+(x2/x2) in Montgomery   * projective coordinates.  * Uses algorithm Madd in appendix of   *     Lopez, J. and Dahab, R.  "Fast multiplication on elliptic curves over   *     GF(2^m) without precomputation" (CHES '99, LNCS 1717).  */
+comment|/*-  * Compute the x-coordinate x1/z1 for the point (x1/z1)+(x2/x2) in Montgomery  * projective coordinates.  * Uses algorithm Madd in appendix of  *     Lopez, J. and Dahab, R.  "Fast multiplication on elliptic curves over  *     GF(2^m) without precomputation" (CHES '99, LNCS 1717).  */
 end_comment
 
 begin_function
@@ -509,7 +509,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Compute the x, y affine coordinates from the point (x1, z1) (x2, z2)   * using Montgomery point multiplication algorithm Mxy() in appendix of   *     Lopez, J. and Dahab, R.  "Fast multiplication on elliptic curves over   *     GF(2^m) without precomputation" (CHES '99, LNCS 1717).  * Returns:  *     0 on error  *     1 if return value should be the point at infinity  *     2 otherwise  */
+comment|/*-  * Compute the x, y affine coordinates from the point (x1, z1) (x2, z2)  * using Montgomery point multiplication algorithm Mxy() in appendix of  *     Lopez, J. and Dahab, R.  "Fast multiplication on elliptic curves over  *     GF(2^m) without precomputation" (CHES '99, LNCS 1717).  * Returns:  *     0 on error  *     1 if return value should be the point at infinity  *     2 otherwise  */
 end_comment
 
 begin_function
@@ -1059,7 +1059,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Computes scalar*point and stores the result in r.  * point can not equal r.  * Uses a modified algorithm 2P of  *     Lopez, J. and Dahab, R.  "Fast multiplication on elliptic curves over   *     GF(2^m) without precomputation" (CHES '99, LNCS 1717).  *  * To protect against side-channel attack the function uses constant time swap,  * avoiding conditional branches.  */
+comment|/*-  * Computes scalar*point and stores the result in r.  * point can not equal r.  * Uses a modified algorithm 2P of  *     Lopez, J. and Dahab, R.  "Fast multiplication on elliptic curves over  *     GF(2^m) without precomputation" (CHES '99, LNCS 1717).  *  * To protect against side-channel attack the function uses constant time swap,  * avoiding conditional branches.  */
 end_comment
 
 begin_function
@@ -1182,7 +1182,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Since point_multiply is static we can guarantee that ctx != NULL. */
+comment|/*      * Since point_multiply is static we can guarantee that ctx != NULL.      */
 name|BN_CTX_start
 argument_list|(
 name|ctx
@@ -1685,7 +1685,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Computes the sum  *     scalar*group->generator + scalars[0]*points[0] + ... + scalars[num-1]*points[num-1]  * gracefully ignoring NULL scalar values.  */
+comment|/*-  * Computes the sum  *     scalar*group->generator + scalars[0]*points[0] + ... + scalars[num-1]*points[num-1]  * gracefully ignoring NULL scalar values.  */
 end_comment
 
 begin_function
@@ -1776,7 +1776,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* This implementation is more efficient than the wNAF implementation for 2 	 * or fewer points.  Use the ec_wNAF_mul implementation for 3 or more points, 	 * or if we can perform a fast multiplication based on precomputation. 	 */
+comment|/*      * This implementation is more efficient than the wNAF implementation for      * 2 or fewer points.  Use the ec_wNAF_mul implementation for 3 or more      * points, or if we can perform a fast multiplication based on      * precomputation.      */
 if|if
 condition|(
 operator|(
@@ -2098,7 +2098,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Precomputation for point multiplication: fall back to wNAF methods  * because ec_GF2m_simple_mul() uses ec_wNAF_mul() if appropriate */
+comment|/*  * Precomputation for point multiplication: fall back to wNAF methods because  * ec_GF2m_simple_mul() uses ec_wNAF_mul() if appropriate  */
 end_comment
 
 begin_function

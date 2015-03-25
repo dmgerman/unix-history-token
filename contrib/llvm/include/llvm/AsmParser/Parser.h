@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string>
+file|"llvm/Support/MemoryBuffer.h"
 end_include
 
 begin_decl_stmt
@@ -71,9 +71,6 @@ name|llvm
 block|{
 name|class
 name|Module
-decl_stmt|;
-name|class
-name|MemoryBuffer
 decl_stmt|;
 name|class
 name|SMDiagnostic
@@ -87,86 +84,90 @@ comment|/// Module (intermediate representation) with the corresponding features
 comment|/// that this does not verify that the generated Module is valid, so you should
 comment|/// run the verifier after parsing the file to check that it is okay.
 comment|/// @brief Parse LLVM Assembly from a file
-name|Module
-modifier|*
-name|ParseAssemblyFile
-argument_list|(
-specifier|const
+comment|/// @param Filename The name of the file to parse
+comment|/// @param Error Error result info.
+comment|/// @param Context Context in which to allocate globals info.
 name|std
 operator|::
-name|string
-operator|&
-name|Filename
+name|unique_ptr
+operator|<
+name|Module
+operator|>
+name|parseAssemblyFile
+argument_list|(
+argument|StringRef Filename
 argument_list|,
-comment|///< The name of the file to parse
-name|SMDiagnostic
-operator|&
-name|Error
+argument|SMDiagnostic&Error
 argument_list|,
-comment|///< Error result info.
-name|LLVMContext
-operator|&
-name|Context
-comment|///< Context in which to allocate globals info.
+argument|LLVMContext&Context
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// The function is a secondary interface to the LLVM Assembly Parser. It parses
 comment|/// an ASCII string that (presumably) contains LLVM Assembly code. It returns a
 comment|/// Module (intermediate representation) with the corresponding features. Note
 comment|/// that this does not verify that the generated Module is valid, so you should
 comment|/// run the verifier after parsing the file to check that it is okay.
 comment|/// @brief Parse LLVM Assembly from a string
+comment|/// @param AsmString The string containing assembly
+comment|/// @param Error Error result info.
+comment|/// @param Context Context in which to allocate globals info.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
-name|ParseAssemblyString
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|AsmString
-parameter_list|,
-comment|///< The string containing assembly
+operator|>
+name|parseAssemblyString
+argument_list|(
+argument|StringRef AsmString
+argument_list|,
+argument|SMDiagnostic&Error
+argument_list|,
+argument|LLVMContext&Context
+argument_list|)
+expr_stmt|;
+comment|/// parseAssemblyFile and parseAssemblyString are wrappers around this function.
+comment|/// @brief Parse LLVM Assembly from a MemoryBuffer.
+comment|/// @param F The MemoryBuffer containing assembly
+comment|/// @param Err Error result info.
+comment|/// @param Context Context in which to allocate globals info.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
-name|M
-parameter_list|,
-comment|///< A module to add the assembly too.
-name|SMDiagnostic
-modifier|&
-name|Error
-parameter_list|,
-comment|///< Error result info.
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|)
-function_decl|;
+operator|>
+name|parseAssembly
+argument_list|(
+argument|MemoryBufferRef F
+argument_list|,
+argument|SMDiagnostic&Err
+argument_list|,
+argument|LLVMContext&Context
+argument_list|)
+expr_stmt|;
 comment|/// This function is the low-level interface to the LLVM Assembly Parser.
-comment|/// ParseAssemblyFile and ParseAssemblyString are wrappers around this function.
-comment|/// @brief Parse LLVM Assembly from a MemoryBuffer. This function *always*
-comment|/// takes ownership of the MemoryBuffer.
-name|Module
-modifier|*
-name|ParseAssembly
+comment|/// This is kept as an independent function instead of being inlined into
+comment|/// parseAssembly for the convenience of interactive users that want to add
+comment|/// recently parsed bits to an existing module.
+comment|///
+comment|/// @param F The MemoryBuffer containing assembly
+comment|/// @param M The module to add data to.
+comment|/// @param Err Error result info.
+comment|/// @return true on error.
+name|bool
+name|parseAssemblyInto
 parameter_list|(
-name|MemoryBuffer
-modifier|*
+name|MemoryBufferRef
 name|F
 parameter_list|,
-comment|///< The MemoryBuffer containing assembly
 name|Module
-modifier|*
+modifier|&
 name|M
 parameter_list|,
-comment|///< A module to add the assembly too.
 name|SMDiagnostic
 modifier|&
 name|Err
-parameter_list|,
-comment|///< Error result info.
-name|LLVMContext
-modifier|&
-name|Context
 parameter_list|)
 function_decl|;
 block|}

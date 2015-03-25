@@ -113,7 +113,7 @@ operator|<<
 literal|5
 operator|)
 block|,
-name|CPlusPlus1y
+name|CPlusPlus14
 init|=
 operator|(
 literal|1
@@ -314,9 +314,9 @@ operator|::
 name|CPlusPlus11
 return|;
 block|}
-comment|/// isCPlusPlus1y - Language is a C++14 variant (or later).
+comment|/// isCPlusPlus14 - Language is a C++14 variant (or later).
 name|bool
-name|isCPlusPlus1y
+name|isCPlusPlus14
 argument_list|()
 specifier|const
 block|{
@@ -325,7 +325,7 @@ name|Flags
 operator|&
 name|frontend
 operator|::
-name|CPlusPlus1y
+name|CPlusPlus14
 return|;
 block|}
 comment|/// isCPlusPlus1z - Language is a C++17 variant (or later).

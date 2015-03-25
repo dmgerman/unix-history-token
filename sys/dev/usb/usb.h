@@ -105,14 +105,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_USBHC
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_endif
 endif|#
 directive|endif
@@ -2865,6 +2857,29 @@ parameter_list|(
 name|a
 parameter_list|)
 value|((a)& UE_ISO_TYPE)
+define|#
+directive|define
+name|UE_ISO_USAGE
+value|0x30
+define|#
+directive|define
+name|UE_ISO_USAGE_DATA
+value|0x00
+define|#
+directive|define
+name|UE_ISO_USAGE_FEEDBACK
+value|0x10
+define|#
+directive|define
+name|UE_ISO_USAGE_IMPLICT_FB
+value|0x20
+define|#
+directive|define
+name|UE_GET_ISO_USAGE
+parameter_list|(
+name|a
+parameter_list|)
+value|((a)& UE_ISO_USAGE)
 name|uWord
 name|wMaxPacketSize
 decl_stmt|;

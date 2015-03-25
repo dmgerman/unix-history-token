@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: lint1.h,v 1.12 2002/01/31 19:33:27 tv Exp $ */
+comment|/* $NetBSD: lint1.h,v 1.16 2002/10/21 22:44:08 christos Exp $ */
 end_comment
 
 begin_comment
@@ -211,7 +211,7 @@ value|v_u._v_ldbl
 end_define
 
 begin_comment
-comment|/*  * Structures of type str_t uniqely identify structures. This can't  * be done in structures of type type_t, because these are copied  * if they must be modified. So it would not be possible to check  * if to structures are identical by comparing the pointers to  * the type structures.  *  * The typename is used if the structure is unnamed to identify  * the structure type in pass 2.  */
+comment|/*  * Structures of type str_t uniqely identify structures. This can't  * be done in structures of type type_t, because these are copied  * if they must be modified. So it would not be possible to check  * if two structures are identical by comparing the pointers to  * the type structures.  *  * The typename is used if the structure is unnamed to identify  * the structure type in pass 2.  */
 end_comment
 
 begin_typedef
@@ -336,7 +336,7 @@ name|t_vararg
 range|:
 literal|1
 decl_stmt|;
-comment|/* protoype with ... */
+comment|/* prototype with ... */
 name|u_int
 name|t_typedef
 range|:
@@ -621,7 +621,7 @@ name|s_rimpl
 range|:
 literal|1
 decl_stmt|;
-comment|/* return value of function implizit decl. */
+comment|/* return value of function implicit decl. */
 name|u_int
 name|s_osdef
 range|:
@@ -1086,6 +1086,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* incomplete array type */
+name|u_int
+name|i_namedmem
+range|:
+literal|1
+decl_stmt|;
+comment|/* has c9x named members */
 name|sym_t
 modifier|*
 name|i_mem
@@ -1268,6 +1274,21 @@ name|cstk_t
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|size_t
+name|lo
+decl_stmt|;
+name|size_t
+name|hi
+decl_stmt|;
+block|}
+name|range_t
+typedef|;
+end_typedef
+
 begin_include
 include|#
 directive|include
@@ -1360,6 +1381,19 @@ parameter_list|(
 name|p
 parameter_list|)
 value|(void)memset((p), 0, sizeof(*(p)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|LERROR
+parameter_list|(
+name|fmt
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+value|lerror(__FILE__, __LINE__, fmt, ##args)
 end_define
 
 begin_decl_stmt

@@ -61,6 +61,13 @@ name|FN_SIZECHANGE
 value|0x00000100
 end_define
 
+begin_define
+define|#
+directive|define
+name|FN_DIRECTIO
+value|0x00000200
+end_define
+
 begin_struct
 struct|struct
 name|fuse_vnode_data

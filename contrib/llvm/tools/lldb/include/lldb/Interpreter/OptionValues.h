@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Interpreter/OptionValueChar.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Interpreter/OptionValueDictionary.h"
 end_include
 

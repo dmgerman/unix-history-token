@@ -496,7 +496,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Usage: %s [-abehwxACHPWY] [-c vcpus] [-g<gdb port>] [-l<lpc>]\n"
+literal|"Usage: %s [-abehuwxACHPWY] [-c vcpus] [-g<gdb port>] [-l<lpc>]\n"
 literal|"       %*s [-m mem] [-p vcpu:hostcpu] [-s<pci>] [-U uuid]<vm>\n"
 literal|"       -a: local apic is in xAPIC mode (deprecated)\n"
 literal|"       -A: create ACPI tables\n"
@@ -511,6 +511,7 @@ literal|"       -m: memory size in MB\n"
 literal|"       -p: pin 'vcpu' to 'hostcpu'\n"
 literal|"       -P: vmexit from the guest on pause\n"
 literal|"       -s:<slot,driver,configinfo> PCI slot config\n"
+literal|"       -u: RTC keeps UTC time\n"
 literal|"       -U: uuid\n"
 literal|"       -w: ignore unimplemented MSRs\n"
 literal|"       -W: force virtio to use single-vector MSI\n"
@@ -3178,6 +3179,9 @@ name|max_vcpus
 decl_stmt|,
 name|mptgen
 decl_stmt|;
+name|int
+name|rtc_localtime
+decl_stmt|;
 name|struct
 name|vmctx
 modifier|*
@@ -3225,6 +3229,10 @@ name|mptgen
 operator|=
 literal|1
 expr_stmt|;
+name|rtc_localtime
+operator|=
+literal|1
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3236,7 +3244,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abehwxACHIPWYp:g:c:s:m:l:U:"
+literal|"abehuwxACHIPWYp:g:c:s:m:l:U:"
 argument_list|)
 operator|)
 operator|!=
@@ -3426,6 +3434,14 @@ case|:
 name|strictio
 operator|=
 literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|rtc_localtime
+operator|=
+literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -3659,6 +3675,8 @@ expr_stmt|;
 name|rtc_init
 argument_list|(
 name|ctx
+argument_list|,
+name|rtc_localtime
 argument_list|)
 expr_stmt|;
 name|sci_init

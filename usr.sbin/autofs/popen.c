@@ -346,13 +346,13 @@ condition|)
 break|break;
 name|command
 operator|=
-name|separated_concat
+name|concat
 argument_list|(
 name|command
 argument_list|,
-name|arg
-argument_list|,
 literal|' '
+argument_list|,
+name|arg
 argument_list|)
 expr_stmt|;
 block|}

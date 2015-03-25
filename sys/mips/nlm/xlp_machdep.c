@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2003-2011 Netlogic Microsystems (Netlogic). All rights  * reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *   * THIS SOFTWARE IS PROVIDED BY Netlogic Microsystems ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NETLOGIC OR CONTRIBUTORS BE   * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * NETLOGIC_BSD */
+comment|/*-  * Copyright 2003-2011 Netlogic Microsystems (Netlogic). All rights  * reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * THIS SOFTWARE IS PROVIDED BY Netlogic Microsystems ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL NETLOGIC OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  *  * NETLOGIC_BSD */
 end_comment
 
 begin_include
@@ -2559,7 +2559,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
-comment|/*  	 * We will enable the other threads in core 0 here 	 * so that the TLB and cache info is correct when 	 * mips_init runs 	 */
+comment|/* 	 * We will enable the other threads in core 0 here 	 * so that the TLB and cache info is correct when 	 * mips_init runs 	 */
 name|xlp_enable_threads
 argument_list|(
 name|xlp_mmuval
@@ -2582,7 +2582,7 @@ comment|/* MIPS generic init */
 name|mips_init
 argument_list|()
 expr_stmt|;
-comment|/* 	 * XLP specific post initialization  	 * initialize other on chip stuff 	 */
+comment|/* 	 * XLP specific post initialization 	 * initialize other on chip stuff 	 */
 name|xlp_pic_init
 argument_list|()
 expr_stmt|;
@@ -2643,7 +2643,7 @@ name|SMP
 end_ifdef
 
 begin_comment
-comment|/*  * XLP threads are started simultaneously when we enable threads, this will  * ensure that the threads are blocked in platform_init_ap, until they are   * ready to proceed to smp_init_secondary()  */
+comment|/*  * XLP threads are started simultaneously when we enable threads, this will  * ensure that the threads are blocked in platform_init_ap, until they are  * ready to proceed to smp_init_secondary()  */
 end_comment
 
 begin_decl_stmt
@@ -2869,7 +2869,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * FIXME busy wait here eats too many cycles, especially  		 * in the core 0 while bootup 		 */
+comment|/* 		 * FIXME busy wait here eats too many cycles, especially 		 * in the core 0 while bootup 		 */
 while|while
 condition|(
 name|thr_unblock

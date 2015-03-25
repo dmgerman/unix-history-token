@@ -287,6 +287,89 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * TODO: implement the antenna diversity control for AR9485 and  * other LNA mixing based NICs.  *  * For now we'll just go with the HAL default and make these no-ops.  */
+end_comment
+
+begin_function
+specifier|static
+name|HAL_ANT_SETTING
+name|ar9300_freebsd_get_antenna_switch
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+return|return
+operator|(
+name|HAL_ANT_VARIABLE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|HAL_BOOL
+name|ar9300_freebsd_set_antenna_switch
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_ANT_SETTING
+name|setting
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AH_TRUE
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|u_int
+name|ar9300_freebsd_get_cts_timeout
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+name|u_int
+name|clks
+init|=
+name|MS
+argument_list|(
+name|OS_REG_READ
+argument_list|(
+name|ah
+argument_list|,
+name|AR_TIME_OUT
+argument_list|)
+argument_list|,
+name|AR_TIME_OUT_CTS
+argument_list|)
+decl_stmt|;
+return|return
+name|ath_hal_mac_usec
+argument_list|(
+name|ah
+argument_list|,
+name|clks
+argument_list|)
+return|;
+comment|/* convert from system clocks */
+block|}
+end_function
+
 begin_function
 name|void
 name|ar9300_attach_freebsd_ops
@@ -729,8 +812,18 @@ name|ah_setDefAntenna
 operator|=
 name|ar9300_set_def_antenna
 expr_stmt|;
-comment|// ah->ah_getAntennaSwitch	= ar9300_get_antenna_switch;
-comment|// ah->ah_setAntennaSwitch	= ar9300_set_antenna_switch;
+name|ah
+operator|->
+name|ah_getAntennaSwitch
+operator|=
+name|ar9300_freebsd_get_antenna_switch
+expr_stmt|;
+name|ah
+operator|->
+name|ah_setAntennaSwitch
+operator|=
+name|ar9300_freebsd_set_antenna_switch
+expr_stmt|;
 comment|// ah->ah_setSifsTime		= ar9300_set_sifs_time;
 comment|// ah->ah_getSifsTime		= ar9300_get_sifs_time;
 name|ah
@@ -759,6 +852,12 @@ name|ar9300_set_ack_timeout
 expr_stmt|;
 comment|// XXX ack/ctsrate
 comment|// XXX CTS timeout
+name|ah
+operator|->
+name|ah_getCTSTimeout
+operator|=
+name|ar9300_freebsd_get_cts_timeout
+expr_stmt|;
 comment|// XXX decompmask
 comment|// coverageclass
 name|ah

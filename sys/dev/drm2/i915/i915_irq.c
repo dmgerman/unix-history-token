@@ -6510,7 +6510,7 @@ name|pci_write_config
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|0x94
 argument_list|,
@@ -6525,7 +6525,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|0x98
 argument_list|,
@@ -6549,7 +6549,7 @@ name|pci_write_config
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|0x98
 argument_list|,
@@ -10374,7 +10374,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|error
 operator|->

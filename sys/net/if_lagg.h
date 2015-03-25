@@ -1128,23 +1128,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|uint32_t
-name|lagg_hashmbuf
-parameter_list|(
-name|struct
-name|lagg_softc
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|uint32_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(

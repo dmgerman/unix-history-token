@@ -99,43 +99,88 @@ comment|/// value permissible by the class. MinTime is some point
 comment|/// in the distant past, about 300 billion years BCE.
 comment|/// @brief The smallest possible time value.
 specifier|static
-specifier|const
 name|TimeValue
 name|MinTime
-decl_stmt|;
+parameter_list|()
+block|{
+return|return
+name|TimeValue
+argument_list|(
+name|INT64_MIN
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
 comment|/// A constant TimeValue representing the largest time
 comment|/// value permissible by the class. MaxTime is some point
 comment|/// in the distant future, about 300 billion years AD.
 comment|/// @brief The largest possible time value.
 specifier|static
-specifier|const
 name|TimeValue
 name|MaxTime
-decl_stmt|;
+parameter_list|()
+block|{
+return|return
+name|TimeValue
+argument_list|(
+name|INT64_MAX
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
 comment|/// A constant TimeValue representing the base time,
 comment|/// or zero time of 00:00:00 (midnight) January 1st, 2000.
 comment|/// @brief 00:00:00 Jan 1, 2000 UTC.
 specifier|static
-specifier|const
 name|TimeValue
 name|ZeroTime
-decl_stmt|;
+parameter_list|()
+block|{
+return|return
+name|TimeValue
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
 comment|/// A constant TimeValue for the Posix base time which is
 comment|/// 00:00:00 (midnight) January 1st, 1970.
 comment|/// @brief 00:00:00 Jan 1, 1970 UTC.
 specifier|static
-specifier|const
 name|TimeValue
 name|PosixZeroTime
-decl_stmt|;
+parameter_list|()
+block|{
+return|return
+name|TimeValue
+argument_list|(
+name|PosixZeroTimeSeconds
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
 comment|/// A constant TimeValue for the Win32 base time which is
 comment|/// 00:00:00 (midnight) January 1st, 1601.
 comment|/// @brief 00:00:00 Jan 1, 1601 UTC.
 specifier|static
-specifier|const
 name|TimeValue
 name|Win32ZeroTime
-decl_stmt|;
+parameter_list|()
+block|{
+return|return
+name|TimeValue
+argument_list|(
+name|Win32ZeroTimeSeconds
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
 comment|/// @}
 comment|/// @name Types
 comment|/// @{

@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_READOBJ_OBJDUMPER_H
+name|LLVM_TOOLS_LLVM_READOBJ_OBJDUMPER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_READOBJ_OBJDUMPER_H
+name|LLVM_TOOLS_LLVM_READOBJ_OBJDUMPER_H
 end_define
 
 begin_include
@@ -154,6 +154,27 @@ comment|// Only implemented for MIPS ELF at this time.
 name|virtual
 name|void
 name|printMipsPLTGOT
+parameter_list|()
+block|{ }
+comment|// Only implemented for PE/COFF.
+name|virtual
+name|void
+name|printCOFFImports
+parameter_list|()
+block|{ }
+name|virtual
+name|void
+name|printCOFFExports
+parameter_list|()
+block|{ }
+name|virtual
+name|void
+name|printCOFFDirectives
+parameter_list|()
+block|{ }
+name|virtual
+name|void
+name|printCOFFBaseReloc
 parameter_list|()
 block|{ }
 name|protected

@@ -2677,6 +2677,11 @@ modifier|*
 name|ptep
 decl_stmt|;
 comment|/* 		 * No L2 page table has been allocated. Chances are, this 		 * is because we just allocated the l2_dtable, above. 		 */
+name|l2
+operator|->
+name|l2_occupancy
+operator|++
+expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
@@ -2718,6 +2723,11 @@ literal|0
 condition|)
 block|{
 comment|/* We lost the race. */
+name|l2
+operator|->
+name|l2_occupancy
+operator|--
+expr_stmt|;
 name|uma_zfree
 argument_list|(
 name|l2zone
@@ -2748,6 +2758,11 @@ name|NULL
 condition|)
 block|{
 comment|/* 			 * Oops, no more L2 page tables available at this 			 * time. We may need to deallocate the l2_dtable 			 * if we allocated a new one above. 			 */
+name|l2
+operator|->
+name|l2_occupancy
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|l2
@@ -2783,11 +2798,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|l2
-operator|->
-name|l2_occupancy
-operator|++
-expr_stmt|;
 name|l2b
 operator|->
 name|l2b_kva

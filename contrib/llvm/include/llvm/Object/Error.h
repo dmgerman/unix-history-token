@@ -95,6 +95,9 @@ operator|,
 name|parse_failed
 operator|,
 name|unexpected_eof
+operator|,
+name|bitcode_section_not_found
+operator|,
 block|}
 empty_stmt|;
 specifier|inline

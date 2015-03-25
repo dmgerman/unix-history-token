@@ -861,7 +861,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|OPENSSL_IA32_SSE2
-comment|/* Alternative to this is to call OpenSSL_add_all_algorithms...      * The below code is retained exclusively for debugging purposes. */
+comment|/*      * Alternative to this is to call OpenSSL_add_all_algorithms... The below      * code is retained exclusively for debugging purposes.      */
 block|{
 name|char
 modifier|*

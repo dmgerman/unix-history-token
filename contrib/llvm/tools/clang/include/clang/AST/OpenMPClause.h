@@ -241,7 +241,6 @@ parameter_list|(
 specifier|const
 name|OMPClause
 modifier|*
-name|T
 parameter_list|)
 block|{
 return|return
@@ -623,13 +622,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-specifier|const
-name|Expr
-operator|*
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|reinterpret_cast
 operator|<
 specifier|const
@@ -662,6 +658,7 @@ name|llvm
 operator|::
 name|alignOf
 operator|<
+specifier|const
 name|Expr
 operator|*
 operator|>
@@ -669,9 +666,9 @@ operator|(
 operator|)
 argument_list|)
 operator|)
-operator|,
+argument_list|,
 name|NumVars
-operator|)
+argument_list|)
 return|;
 block|}
 block|}
@@ -2637,6 +2634,394 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief This represents 'read' clause in the '#pragma omp atomic' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp atomic read
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp atomic' has 'read' clause.
+comment|///
+name|class
+name|OMPReadClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|public
+operator|:
+comment|/// \brief Build 'read' clause.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPReadClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_read
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|OMPReadClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_read
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_read
+return|;
+block|}
+name|StmtRange
+name|children
+argument_list|()
+block|{
+return|return
+name|StmtRange
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'write' clause in the '#pragma omp atomic' directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp atomic write
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp atomic' has 'write' clause.
+comment|///
+name|class
+name|OMPWriteClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|public
+operator|:
+comment|/// \brief Build 'write' clause.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPWriteClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_write
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|OMPWriteClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_write
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_write
+return|;
+block|}
+name|StmtRange
+name|children
+argument_list|()
+block|{
+return|return
+name|StmtRange
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'update' clause in the '#pragma omp atomic'
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp atomic update
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp atomic' has 'update' clause.
+comment|///
+name|class
+name|OMPUpdateClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|public
+operator|:
+comment|/// \brief Build 'update' clause.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPUpdateClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_update
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|OMPUpdateClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_update
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_update
+return|;
+block|}
+name|StmtRange
+name|children
+argument_list|()
+block|{
+return|return
+name|StmtRange
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'capture' clause in the '#pragma omp atomic'
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp atomic capture
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp atomic' has 'capture' clause.
+comment|///
+name|class
+name|OMPCaptureClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|public
+operator|:
+comment|/// \brief Build 'capture' clause.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPCaptureClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_capture
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|OMPCaptureClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_capture
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_capture
+return|;
+block|}
+name|StmtRange
+name|children
+argument_list|()
+block|{
+return|return
+name|StmtRange
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This represents 'seq_cst' clause in the '#pragma omp atomic'
+comment|/// directive.
+comment|///
+comment|/// \code
+comment|/// #pragma omp atomic seq_cst
+comment|/// \endcode
+comment|/// In this example directive '#pragma omp atomic' has 'seq_cst' clause.
+comment|///
+name|class
+name|OMPSeqCstClause
+operator|:
+name|public
+name|OMPClause
+block|{
+name|public
+operator|:
+comment|/// \brief Build 'seq_cst' clause.
+comment|///
+comment|/// \param StartLoc Starting location of the clause.
+comment|/// \param EndLoc Ending location of the clause.
+comment|///
+name|OMPSeqCstClause
+argument_list|(
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation EndLoc
+argument_list|)
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_seq_cst
+argument_list|,
+argument|StartLoc
+argument_list|,
+argument|EndLoc
+argument_list|)
+block|{}
+comment|/// \brief Build an empty clause.
+comment|///
+name|OMPSeqCstClause
+argument_list|()
+operator|:
+name|OMPClause
+argument_list|(
+argument|OMPC_seq_cst
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|SourceLocation()
+argument_list|)
+block|{}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const OMPClause *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|OMPC_seq_cst
+return|;
+block|}
+name|StmtRange
+name|children
+argument_list|()
+block|{
+return|return
+name|StmtRange
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief This represents clause 'private' in the '#pragma omp ...' directives.
 comment|///
 comment|/// \code
@@ -2654,6 +3039,10 @@ operator|<
 name|OMPPrivateClause
 operator|>
 block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
 comment|/// \brief Build clause with number of variables \a N.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
@@ -2717,6 +3106,68 @@ expr|,
 name|N
 operator|)
 block|{}
+comment|/// \brief Sets the list of references to private copies with initializers for
+comment|/// new private variables.
+comment|/// \param VL List of references.
+name|void
+name|setPrivateCopies
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|VL
+argument_list|)
+block|;
+comment|/// \brief Gets the list of references to private copies with initializers for
+comment|/// new private variables.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getPrivateCopies
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getPrivateCopies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|varlist_end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|public
 operator|:
 comment|/// \brief Creates clause with a list of variables \a VL.
@@ -2726,6 +3177,7 @@ comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
 comment|/// \param VL List of references to the variables.
+comment|/// \param PrivateVL List of references to private copies with initializers.
 comment|///
 specifier|static
 name|OMPPrivateClause
@@ -2741,6 +3193,8 @@ argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
 argument|ArrayRef<Expr *> VL
+argument_list|,
+argument|ArrayRef<Expr *> PrivateVL
 argument_list|)
 block|;
 comment|/// \brief Creates an empty clause with the place for \a N variables.
@@ -2758,6 +3212,88 @@ argument_list|,
 argument|unsigned N
 argument_list|)
 block|;
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|private_copies_iterator
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|private_copies_const_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|private_copies_iterator
+operator|>
+name|private_copies_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|private_copies_const_iterator
+operator|>
+name|private_copies_const_range
+expr_stmt|;
+name|private_copies_range
+name|private_copies
+argument_list|()
+block|{
+return|return
+name|private_copies_range
+argument_list|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|private_copies_const_range
+name|private_copies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|private_copies_const_range
+argument_list|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|StmtRange
 name|children
 argument_list|()
@@ -2825,6 +3361,10 @@ operator|<
 name|OMPFirstprivateClause
 operator|>
 block|{
+name|friend
+name|class
+name|OMPClauseReader
+block|;
 comment|/// \brief Build clause with number of variables \a N.
 comment|///
 comment|/// \param StartLoc Starting location of the clause.
@@ -2888,6 +3428,136 @@ expr|,
 name|N
 operator|)
 block|{}
+comment|/// \brief Sets the list of references to private copies with initializers for
+comment|/// new private variables.
+comment|/// \param VL List of references.
+name|void
+name|setPrivateCopies
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|VL
+argument_list|)
+block|;
+comment|/// \brief Gets the list of references to private copies with initializers for
+comment|/// new private variables.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getPrivateCopies
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|varlist_end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getPrivateCopies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|varlist_end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Sets the list of references to initializer variables for new
+comment|/// private variables.
+comment|/// \param VL List of references.
+name|void
+name|setInits
+argument_list|(
+name|ArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|VL
+argument_list|)
+block|;
+comment|/// \brief Gets the list of references to initializer variables for new
+comment|/// private variables.
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+name|getInits
+argument_list|()
+block|{
+return|return
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+expr|,
+name|varlist_size
+argument_list|()
+operator|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+name|getInits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|,
+name|varlist_size
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|public
 operator|:
 comment|/// \brief Creates clause with a list of variables \a VL.
@@ -2896,7 +3566,11 @@ comment|/// \param C AST context.
 comment|/// \param StartLoc Starting location of the clause.
 comment|/// \param LParenLoc Location of '('.
 comment|/// \param EndLoc Ending location of the clause.
-comment|/// \param VL List of references to the variables.
+comment|/// \param VL List of references to the original variables.
+comment|/// \param PrivateVL List of references to private copies with initializers.
+comment|/// \param InitVL List of references to auto generated variables used for
+comment|/// initialization of a single array element. Used if firstprivate variable is
+comment|/// of array type.
 comment|///
 specifier|static
 name|OMPFirstprivateClause
@@ -2912,6 +3586,10 @@ argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
 argument|ArrayRef<Expr *> VL
+argument_list|,
+argument|ArrayRef<Expr *> PrivateVL
+argument_list|,
+argument|ArrayRef<Expr *> InitVL
 argument_list|)
 block|;
 comment|/// \brief Creates an empty clause with the place for \a N variables.
@@ -2929,6 +3607,170 @@ argument_list|,
 argument|unsigned N
 argument_list|)
 block|;
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|private_copies_iterator
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|private_copies_const_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|private_copies_iterator
+operator|>
+name|private_copies_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|private_copies_const_iterator
+operator|>
+name|private_copies_const_range
+expr_stmt|;
+name|private_copies_range
+name|private_copies
+argument_list|()
+block|{
+return|return
+name|private_copies_range
+argument_list|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|private_copies_const_range
+name|private_copies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|private_copies_const_range
+argument_list|(
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getPrivateCopies
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+typedef|typedef
+name|MutableArrayRef
+operator|<
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|inits_iterator
+expr_stmt|;
+typedef|typedef
+name|ArrayRef
+operator|<
+specifier|const
+name|Expr
+operator|*
+operator|>
+operator|::
+name|iterator
+name|inits_const_iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|inits_iterator
+operator|>
+name|inits_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|inits_const_iterator
+operator|>
+name|inits_const_range
+expr_stmt|;
+name|inits_range
+name|inits
+argument_list|()
+block|{
+return|return
+name|inits_range
+argument_list|(
+name|getInits
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getInits
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|inits_const_range
+name|inits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|inits_const_range
+argument_list|(
+name|getInits
+argument_list|()
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|getInits
+argument_list|()
+operator|.
+name|end
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|StmtRange
 name|children
 argument_list|()
@@ -4472,13 +5314,17 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief This represents pseudo clause 'flush' for the '#pragma omp flush'
+comment|/// \brief This represents implicit clause 'flush' for the '#pragma omp flush'
 comment|/// directive.
+comment|/// This clause does not exist by itself, it can be only as a part of 'omp
+comment|/// flush' directive. This clause is introduced to keep the original structure
+comment|/// of \a OMPExecutableDirective class and its derivatives and to use the
+comment|/// existing infrastructure of clauses with the list of variables.
 comment|///
 comment|/// \code
 comment|/// #pragma omp flush(a,b)
 comment|/// \endcode
-comment|/// In this example directive '#pragma omp flush' has pseudo clause 'flush'
+comment|/// In this example directive '#pragma omp flush' has implicit clause 'flush'
 comment|/// with the variables 'a' and 'b'.
 comment|///
 name|class

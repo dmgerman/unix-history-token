@@ -79,6 +79,9 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
 name|PBQP
 block|{
 comment|/// \brief Represents a solution to a PBQP problem.
@@ -303,7 +306,13 @@ block|}
 block|}
 empty_stmt|;
 block|}
+comment|// namespace PBQP
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

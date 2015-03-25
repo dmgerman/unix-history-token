@@ -377,9 +377,11 @@ name|Callable
 operator|>
 name|function_ref
 argument_list|(
-name|Callable
-operator|&&
-name|callable
+argument|Callable&&callable
+argument_list|,
+argument|typename std::enable_if<                    !std::is_same<typename std::remove_reference<Callable>::type
+argument_list|,
+argument|function_ref>::value>::type * = nullptr
 argument_list|)
 operator|:
 name|callback
@@ -485,9 +487,11 @@ name|Callable
 operator|>
 name|function_ref
 argument_list|(
-name|Callable
-operator|&&
-name|callable
+argument|Callable&&callable
+argument_list|,
+argument|typename std::enable_if<                    !std::is_same<typename std::remove_reference<Callable>::type
+argument_list|,
+argument|function_ref>::value>::type * = nullptr
 argument_list|)
 operator|:
 name|callback
@@ -596,9 +600,11 @@ name|Callable
 operator|>
 name|function_ref
 argument_list|(
-name|Callable
-operator|&&
-name|callable
+argument|Callable&&callable
+argument_list|,
+argument|typename std::enable_if<                    !std::is_same<typename std::remove_reference<Callable>::type
+argument_list|,
+argument|function_ref>::value>::type * = nullptr
 argument_list|)
 operator|:
 name|callback
@@ -738,9 +744,11 @@ name|Callable
 operator|>
 name|function_ref
 argument_list|(
-name|Callable
-operator|&&
-name|callable
+argument|Callable&&callable
+argument_list|,
+argument|typename std::enable_if<                    !std::is_same<typename std::remove_reference<Callable>::type
+argument_list|,
+argument|function_ref>::value>::type * = nullptr
 argument_list|)
 operator|:
 name|callback
@@ -913,9 +921,11 @@ name|Callable
 operator|>
 name|function_ref
 argument_list|(
-name|Callable
-operator|&&
-name|callable
+argument|Callable&&callable
+argument_list|,
+argument|typename std::enable_if<                    !std::is_same<typename std::remove_reference<Callable>::type
+argument_list|,
+argument|function_ref>::value>::type * = nullptr
 argument_list|)
 operator|:
 name|callback
@@ -3648,6 +3658,29 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_struct
+struct|struct
+name|FreeDeleter
+block|{
+name|void
+name|operator
+argument_list|()
+operator|(
+name|void
+operator|*
+name|v
+operator|)
+block|{
+operator|::
+name|free
+argument_list|(
+name|v
+argument_list|)
+block|;   }
+block|}
+struct|;
+end_struct
 
 begin_expr_stmt
 name|template

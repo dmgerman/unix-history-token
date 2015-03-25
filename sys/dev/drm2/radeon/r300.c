@@ -1972,7 +1972,7 @@ argument_list|(
 name|R_0000F0_RBBM_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|500
 argument_list|)
@@ -1984,7 +1984,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|1
 argument_list|)
@@ -2027,7 +2027,7 @@ argument_list|(
 name|R_0000F0_RBBM_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|500
 argument_list|)
@@ -2039,7 +2039,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|1
 argument_list|)
@@ -6124,9 +6124,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -6388,7 +6388,7 @@ name|r300
 operator|.
 name|reg_safe_bm_size
 operator|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|r300_reg_safe_bm
 argument_list|)

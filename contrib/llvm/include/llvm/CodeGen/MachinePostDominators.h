@@ -81,7 +81,7 @@ name|llvm
 block|{
 comment|///
 comment|/// PostDominatorTree Class - Concrete subclass of DominatorTree that is used
-comment|/// to compute the a post-dominator tree.
+comment|/// to compute the post-dominator tree.
 comment|///
 name|struct
 name|MachinePostDominatorTree

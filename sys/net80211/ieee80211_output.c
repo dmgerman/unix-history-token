@@ -10298,6 +10298,7 @@ name|ic
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Check the channel - we may be using an 11n NIC with an 		 * 11n capable station, but we're configured to be an 11b 		 * channel. 		 */
 if|if
 condition|(
 operator|(
@@ -10307,6 +10308,13 @@ name|iv_flags_ht
 operator|&
 name|IEEE80211_FHT_HT
 operator|)
+operator|&&
+name|IEEE80211_IS_CHAN_HT
+argument_list|(
+name|ni
+operator|->
+name|ni_chan
+argument_list|)
 operator|&&
 name|ni
 operator|->
@@ -10327,6 +10335,7 @@ index|]
 operator|==
 name|IEEE80211_ELEMID_HTCAP
 condition|)
+block|{
 name|frm
 operator|=
 name|ieee80211_add_htcap
@@ -10336,6 +10345,7 @@ argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
+block|}
 name|frm
 operator|=
 name|ieee80211_add_wpa
@@ -10375,6 +10385,7 @@ operator|->
 name|ic_wme
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Same deal - only send HT info if we're on an 11n 		 * capable channel. 		 */
 if|if
 condition|(
 operator|(
@@ -10384,6 +10395,13 @@ name|iv_flags_ht
 operator|&
 name|IEEE80211_FHT_HT
 operator|)
+operator|&&
+name|IEEE80211_IS_CHAN_HT
+argument_list|(
+name|ni
+operator|->
+name|ni_chan
+argument_list|)
 operator|&&
 name|ni
 operator|->
@@ -10404,6 +10422,7 @@ index|]
 operator|==
 name|IEEE80211_ELEMID_VENDOR
 condition|)
+block|{
 name|frm
 operator|=
 name|ieee80211_add_htcap_vendor
@@ -10413,6 +10432,7 @@ argument_list|,
 name|ni
 argument_list|)
 expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_SUPERG

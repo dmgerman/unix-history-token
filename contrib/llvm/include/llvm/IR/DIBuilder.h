@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/TrackingMDRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/ValueHandle.h"
 end_include
 
@@ -111,6 +117,9 @@ name|Module
 decl_stmt|;
 name|class
 name|Value
+decl_stmt|;
+name|class
+name|Constant
 decl_stmt|;
 name|class
 name|LLVMContext
@@ -144,9 +153,6 @@ name|DIEnumerator
 decl_stmt|;
 name|class
 name|DIType
-decl_stmt|;
-name|class
-name|DIArray
 decl_stmt|;
 name|class
 name|DIGlobalVariable
@@ -187,8 +193,6 @@ decl_stmt|;
 name|class
 name|DIBuilder
 block|{
-name|private
-label|:
 name|Module
 modifier|&
 name|M
@@ -229,21 +233,17 @@ decl_stmt|;
 comment|// llvm.dbg.value
 name|SmallVector
 operator|<
-name|Value
+name|Metadata
 operator|*
 operator|,
 literal|4
 operator|>
 name|AllEnumTypes
 expr_stmt|;
-comment|/// Use TrackingVH to collect RetainTypes, since they can be updated
-comment|/// later on.
+comment|/// Track the RetainTypes, since they can be updated later on.
 name|SmallVector
 operator|<
-name|TrackingVH
-operator|<
-name|MDNode
-operator|>
+name|TrackingMDNodeRef
 operator|,
 literal|4
 operator|>
@@ -251,7 +251,7 @@ name|AllRetainTypes
 expr_stmt|;
 name|SmallVector
 operator|<
-name|Value
+name|Metadata
 operator|*
 operator|,
 literal|4
@@ -260,7 +260,7 @@ name|AllSubprograms
 expr_stmt|;
 name|SmallVector
 operator|<
-name|Value
+name|Metadata
 operator|*
 operator|,
 literal|4
@@ -269,52 +269,38 @@ name|AllGVs
 expr_stmt|;
 name|SmallVector
 operator|<
-name|TrackingVH
-operator|<
-name|MDNode
-operator|>
+name|TrackingMDNodeRef
 operator|,
 literal|4
 operator|>
 name|AllImportedModules
 expr_stmt|;
-comment|// Private use for multiple types of template parameters.
-name|DITemplateValueParameter
-name|createTemplateValueParameter
-parameter_list|(
-name|unsigned
-name|Tag
-parameter_list|,
-name|DIDescriptor
-name|Scope
-parameter_list|,
-name|StringRef
-name|Name
-parameter_list|,
-name|DIType
-name|Ty
-parameter_list|,
-name|Value
-modifier|*
-name|Val
-parameter_list|,
+comment|/// \brief Track nodes that may be unresolved.
+name|SmallVector
+operator|<
+name|TrackingMDNodeRef
+operator|,
+literal|4
+operator|>
+name|UnresolvedNodes
+expr_stmt|;
+name|bool
+name|AllowUnresolvedNodes
+decl_stmt|;
+comment|/// Each subprogram's preserved local variables.
+name|DenseMap
+operator|<
 name|MDNode
-modifier|*
-name|File
-init|=
-name|nullptr
-parameter_list|,
-name|unsigned
-name|LineNo
-init|=
-literal|0
-parameter_list|,
-name|unsigned
-name|ColumnNo
-init|=
-literal|0
-parameter_list|)
-function_decl|;
+operator|*
+operator|,
+name|std
+operator|::
+name|vector
+operator|<
+name|TrackingMDNodeRef
+operator|>>
+name|PreservedVariables
+expr_stmt|;
 name|DIBuilder
 argument_list|(
 argument|const DIBuilder&
@@ -331,26 +317,36 @@ operator|&
 operator|)
 name|LLVM_DELETED_FUNCTION
 decl_stmt|;
+comment|/// \brief Create a temporary.
+comment|///
+comment|/// Create an \a MDNodeFwdDecl and track it in \a UnresolvedNodes.
+name|void
+name|trackIfUnresolved
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 name|public
 label|:
+comment|/// \brief Construct a builder for a module.
+comment|///
+comment|/// If \c AllowUnresolved, collect unresolved nodes attached to the module
+comment|/// in order to resolve cycles during \a finalize().
 name|explicit
 name|DIBuilder
 parameter_list|(
 name|Module
 modifier|&
 name|M
+parameter_list|,
+name|bool
+name|AllowUnresolved
+init|=
+name|true
 parameter_list|)
 function_decl|;
-enum|enum
-name|ComplexAddrKind
-block|{
-name|OpPlus
-init|=
-literal|1
-block|,
-name|OpDeref
-block|}
-enum|;
 enum|enum
 name|DebugEmissionKind
 block|{
@@ -533,6 +529,8 @@ parameter_list|)
 function_decl|;
 comment|/// \brief Create debugging information entry for a pointer to member.
 comment|/// @param PointeeTy Type pointed to by this pointer.
+comment|/// @param SizeInBits  Size.
+comment|/// @param AlignInBits Alignment. (optional)
 comment|/// @param Class Type for which this pointer points to members of.
 name|DIDerivedType
 name|createMemberPointerType
@@ -542,6 +540,14 @@ name|PointeeTy
 parameter_list|,
 name|DIType
 name|Class
+parameter_list|,
+name|uint64_t
+name|SizeInBits
+parameter_list|,
+name|uint64_t
+name|AlignInBits
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// createReferenceType - Create debugging information entry for a c++
@@ -688,79 +694,11 @@ name|Flags
 argument_list|,
 name|llvm
 operator|::
-name|Value
+name|Constant
 operator|*
 name|Val
 argument_list|)
 decl_stmt|;
-comment|/// createObjCIVar - Create debugging information entry for Objective-C
-comment|/// instance variable.
-comment|/// @param Name         Member name.
-comment|/// @param File         File where this member is defined.
-comment|/// @param LineNo       Line number.
-comment|/// @param SizeInBits   Member size.
-comment|/// @param AlignInBits  Member alignment.
-comment|/// @param OffsetInBits Member offset.
-comment|/// @param Flags        Flags to encode member attribute, e.g. private
-comment|/// @param Ty           Parent type.
-comment|/// @param PropertyName Name of the Objective C property associated with
-comment|///                     this ivar.
-comment|/// @param PropertyGetterName Name of the Objective C property getter
-comment|///                           selector.
-comment|/// @param PropertySetterName Name of the Objective C property setter
-comment|///                           selector.
-comment|/// @param PropertyAttributes Objective C property attributes.
-name|DIDerivedType
-name|createObjCIVar
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|,
-name|DIFile
-name|File
-parameter_list|,
-name|unsigned
-name|LineNo
-parameter_list|,
-name|uint64_t
-name|SizeInBits
-parameter_list|,
-name|uint64_t
-name|AlignInBits
-parameter_list|,
-name|uint64_t
-name|OffsetInBits
-parameter_list|,
-name|unsigned
-name|Flags
-parameter_list|,
-name|DIType
-name|Ty
-parameter_list|,
-name|StringRef
-name|PropertyName
-init|=
-name|StringRef
-argument_list|()
-parameter_list|,
-name|StringRef
-name|PropertyGetterName
-init|=
-name|StringRef
-argument_list|()
-parameter_list|,
-name|StringRef
-name|PropertySetterName
-init|=
-name|StringRef
-argument_list|()
-parameter_list|,
-name|unsigned
-name|PropertyAttributes
-init|=
-literal|0
-parameter_list|)
-function_decl|;
 comment|/// createObjCIVar - Create debugging information entry for Objective-C
 comment|/// instance variable.
 comment|/// @param Name         Member name.
@@ -1073,7 +1011,7 @@ parameter_list|,
 name|DIType
 name|Ty
 parameter_list|,
-name|Value
+name|Constant
 modifier|*
 name|Val
 parameter_list|,
@@ -1267,13 +1205,13 @@ comment|/// @param ParameterTypes  An array of subroutine parameter types. This
 comment|///                        includes return type at 0th index.
 comment|/// @param Flags           E.g.: LValueReference.
 comment|///                        These flags are used to emit dwarf attributes.
-name|DICompositeType
+name|DISubroutineType
 name|createSubroutineType
 parameter_list|(
 name|DIFile
 name|File
 parameter_list|,
-name|DIArray
+name|DITypeArray
 name|ParameterTypes
 parameter_list|,
 name|unsigned
@@ -1390,9 +1328,9 @@ name|DIType
 name|T
 parameter_list|)
 function_decl|;
-comment|/// createUnspecifiedParameter - Create unspecified type descriptor
+comment|/// createUnspecifiedParameter - Create unspecified parameter type
 comment|/// for a subroutine type.
-name|DIDescriptor
+name|DIBasicType
 name|createUnspecifiedParameter
 parameter_list|()
 function_decl|;
@@ -1402,7 +1340,19 @@ name|getOrCreateArray
 argument_list|(
 name|ArrayRef
 operator|<
-name|Value
+name|Metadata
+operator|*
+operator|>
+name|Elements
+argument_list|)
+decl_stmt|;
+comment|/// getOrCreateTypeArray - Get a DITypeArray, create one if required.
+name|DITypeArray
+name|getOrCreateTypeArray
+argument_list|(
+name|ArrayRef
+operator|<
+name|Metadata
 operator|*
 operator|>
 name|Elements
@@ -1420,77 +1370,7 @@ name|int64_t
 name|Count
 parameter_list|)
 function_decl|;
-comment|/// createGlobalVariable - Create a new descriptor for the specified global.
-comment|/// @param Name        Name of the variable.
-comment|/// @param File        File where this variable is defined.
-comment|/// @param LineNo      Line number.
-comment|/// @param Ty          Variable Type.
-comment|/// @param isLocalToUnit Boolean flag indicate whether this variable is
-comment|///                      externally visible or not.
-comment|/// @param Val         llvm::Value of the variable.
-name|DIGlobalVariable
-name|createGlobalVariable
-argument_list|(
-name|StringRef
-name|Name
-argument_list|,
-name|DIFile
-name|File
-argument_list|,
-name|unsigned
-name|LineNo
-argument_list|,
-name|DITypeRef
-name|Ty
-argument_list|,
-name|bool
-name|isLocalToUnit
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Val
-argument_list|)
-decl_stmt|;
-comment|/// \brief Create a new descriptor for the specified global.
-comment|/// @param Name        Name of the variable.
-comment|/// @param LinkageName Mangled variable name.
-comment|/// @param File        File where this variable is defined.
-comment|/// @param LineNo      Line number.
-comment|/// @param Ty          Variable Type.
-comment|/// @param isLocalToUnit Boolean flag indicate whether this variable is
-comment|///                      externally visible or not.
-comment|/// @param Val         llvm::Value of the variable.
-name|DIGlobalVariable
-name|createGlobalVariable
-argument_list|(
-name|StringRef
-name|Name
-argument_list|,
-name|StringRef
-name|LinkageName
-argument_list|,
-name|DIFile
-name|File
-argument_list|,
-name|unsigned
-name|LineNo
-argument_list|,
-name|DITypeRef
-name|Ty
-argument_list|,
-name|bool
-name|isLocalToUnit
-argument_list|,
-name|llvm
-operator|::
-name|Value
-operator|*
-name|Val
-argument_list|)
-decl_stmt|;
-comment|/// createStaticVariable - Create a new descriptor for the specified
+comment|/// createGlobalVariable - Create a new descriptor for the specified
 comment|/// variable.
 comment|/// @param Context     Variable scope.
 comment|/// @param Name        Name of the variable.
@@ -1503,7 +1383,7 @@ comment|///                      externally visible or not.
 comment|/// @param Val         llvm::Value of the variable.
 comment|/// @param Decl        Reference to the corresponding declaration.
 name|DIGlobalVariable
-name|createStaticVariable
+name|createGlobalVariable
 argument_list|(
 name|DIDescriptor
 name|Context
@@ -1528,7 +1408,46 @@ name|isLocalToUnit
 argument_list|,
 name|llvm
 operator|::
-name|Value
+name|Constant
+operator|*
+name|Val
+argument_list|,
+name|MDNode
+operator|*
+name|Decl
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
+comment|/// createTempGlobalVariableFwdDecl - Identical to createGlobalVariable
+comment|/// except that the resulting DbgNode is temporary and meant to be RAUWed.
+name|DIGlobalVariable
+name|createTempGlobalVariableFwdDecl
+argument_list|(
+name|DIDescriptor
+name|Context
+argument_list|,
+name|StringRef
+name|Name
+argument_list|,
+name|StringRef
+name|LinkageName
+argument_list|,
+name|DIFile
+name|File
+argument_list|,
+name|unsigned
+name|LineNo
+argument_list|,
+name|DITypeRef
+name|Ty
+argument_list|,
+name|bool
+name|isLocalToUnit
+argument_list|,
+name|llvm
+operator|::
+name|Constant
 operator|*
 name|Val
 argument_list|,
@@ -1590,52 +1509,36 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
-comment|/// createComplexVariable - Create a new descriptor for the specified
+comment|/// createExpression - Create a new descriptor for the specified
 comment|/// variable which has a complex address expression for its address.
-comment|/// @param Tag         Dwarf TAG. Usually DW_TAG_auto_variable or
-comment|///                    DW_TAG_arg_variable.
-comment|/// @param Scope       Variable scope.
-comment|/// @param Name        Variable name.
-comment|/// @param F           File where this variable is defined.
-comment|/// @param LineNo      Line number.
-comment|/// @param Ty          Variable Type
 comment|/// @param Addr        An array of complex address operations.
-comment|/// @param ArgNo       If this variable is an argument then this argument's
-comment|///                    number. 1 indicates 1st argument.
-name|DIVariable
-name|createComplexVariable
+name|DIExpression
+name|createExpression
 argument_list|(
-name|unsigned
-name|Tag
-argument_list|,
-name|DIDescriptor
-name|Scope
-argument_list|,
-name|StringRef
-name|Name
-argument_list|,
-name|DIFile
-name|F
-argument_list|,
-name|unsigned
-name|LineNo
-argument_list|,
-name|DITypeRef
-name|Ty
-argument_list|,
 name|ArrayRef
 operator|<
-name|Value
-operator|*
+name|int64_t
 operator|>
 name|Addr
-argument_list|,
-name|unsigned
-name|ArgNo
 operator|=
-literal|0
+name|None
 argument_list|)
 decl_stmt|;
+comment|/// createPieceExpression - Create a descriptor to describe one part
+comment|/// of aggregate variable that is fragmented across multiple Values.
+comment|///
+comment|/// @param OffsetInBytes Offset of the piece in bytes.
+comment|/// @param SizeInBytes   Size of the piece in bytes.
+name|DIExpression
+name|createPieceExpression
+parameter_list|(
+name|unsigned
+name|OffsetInBytes
+parameter_list|,
+name|unsigned
+name|SizeInBytes
+parameter_list|)
+function_decl|;
 comment|/// createFunction - Create a new descriptor for the specified subprogram.
 comment|/// See comments in DISubprogram for descriptions of these fields.
 comment|/// @param Scope         Function scope.
@@ -1654,6 +1557,67 @@ comment|/// @param Fn            llvm::Function pointer.
 comment|/// @param TParam        Function template parameters.
 name|DISubprogram
 name|createFunction
+parameter_list|(
+name|DIDescriptor
+name|Scope
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|,
+name|StringRef
+name|LinkageName
+parameter_list|,
+name|DIFile
+name|File
+parameter_list|,
+name|unsigned
+name|LineNo
+parameter_list|,
+name|DICompositeType
+name|Ty
+parameter_list|,
+name|bool
+name|isLocalToUnit
+parameter_list|,
+name|bool
+name|isDefinition
+parameter_list|,
+name|unsigned
+name|ScopeLine
+parameter_list|,
+name|unsigned
+name|Flags
+init|=
+literal|0
+parameter_list|,
+name|bool
+name|isOptimized
+init|=
+name|false
+parameter_list|,
+name|Function
+modifier|*
+name|Fn
+init|=
+name|nullptr
+parameter_list|,
+name|MDNode
+modifier|*
+name|TParam
+init|=
+name|nullptr
+parameter_list|,
+name|MDNode
+modifier|*
+name|Decl
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// createTempFunctionFwdDecl - Identical to createFunction,
+comment|/// except that the resulting DbgNode is meant to be RAUWed.
+name|DISubprogram
+name|createTempFunctionFwdDecl
 parameter_list|(
 name|DIDescriptor
 name|Scope
@@ -1884,6 +1848,7 @@ comment|/// block with a new file attached. This merely extends the existing
 comment|/// lexical block as it crosses a file.
 comment|/// @param Scope       Lexical block.
 comment|/// @param File        Source file.
+comment|/// @param Discriminator DWARF path discriminator value.
 name|DILexicalBlockFile
 name|createLexicalBlockFile
 parameter_list|(
@@ -1892,6 +1857,11 @@ name|Scope
 parameter_list|,
 name|DIFile
 name|File
+parameter_list|,
+name|unsigned
+name|Discriminator
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// createLexicalBlock - This creates a descriptor for a lexical block
@@ -1900,7 +1870,6 @@ comment|/// @param Scope         Parent lexical scope.
 comment|/// @param File          Source file.
 comment|/// @param Line          Line number.
 comment|/// @param Col           Column number.
-comment|/// @param Discriminator DWARF path discriminator value.
 name|DILexicalBlock
 name|createLexicalBlock
 parameter_list|(
@@ -1915,9 +1884,6 @@ name|Line
 parameter_list|,
 name|unsigned
 name|Col
-parameter_list|,
-name|unsigned
-name|Discriminator
 parameter_list|)
 function_decl|;
 comment|/// \brief Create a descriptor for an imported module.
@@ -1965,7 +1931,7 @@ parameter_list|(
 name|DIScope
 name|Context
 parameter_list|,
-name|DIScope
+name|DIDescriptor
 name|Decl
 parameter_list|,
 name|unsigned
@@ -2000,6 +1966,7 @@ function_decl|;
 comment|/// insertDeclare - Insert a new llvm.dbg.declare intrinsic call.
 comment|/// @param Storage     llvm::Value of the variable
 comment|/// @param VarInfo     Variable's debug info descriptor.
+comment|/// @param Expr         A complex location expression.
 comment|/// @param InsertAtEnd Location for the new intrinsic.
 name|Instruction
 modifier|*
@@ -2013,6 +1980,9 @@ name|Storage
 argument_list|,
 name|DIVariable
 name|VarInfo
+argument_list|,
+name|DIExpression
+name|Expr
 argument_list|,
 name|BasicBlock
 operator|*
@@ -2022,6 +1992,7 @@ decl_stmt|;
 comment|/// insertDeclare - Insert a new llvm.dbg.declare intrinsic call.
 comment|/// @param Storage      llvm::Value of the variable
 comment|/// @param VarInfo      Variable's debug info descriptor.
+comment|/// @param Expr         A complex location expression.
 comment|/// @param InsertBefore Location for the new intrinsic.
 name|Instruction
 modifier|*
@@ -2036,6 +2007,9 @@ argument_list|,
 name|DIVariable
 name|VarInfo
 argument_list|,
+name|DIExpression
+name|Expr
+argument_list|,
 name|Instruction
 operator|*
 name|InsertBefore
@@ -2045,6 +2019,7 @@ comment|/// insertDbgValueIntrinsic - Insert a new llvm.dbg.value intrinsic call
 comment|/// @param Val          llvm::Value of the variable
 comment|/// @param Offset       Offset
 comment|/// @param VarInfo      Variable's debug info descriptor.
+comment|/// @param Expr         A complex location expression.
 comment|/// @param InsertAtEnd Location for the new intrinsic.
 name|Instruction
 modifier|*
@@ -2062,6 +2037,9 @@ argument_list|,
 name|DIVariable
 name|VarInfo
 argument_list|,
+name|DIExpression
+name|Expr
+argument_list|,
 name|BasicBlock
 operator|*
 name|InsertAtEnd
@@ -2071,6 +2049,7 @@ comment|/// insertDbgValueIntrinsic - Insert a new llvm.dbg.value intrinsic call
 comment|/// @param Val          llvm::Value of the variable
 comment|/// @param Offset       Offset
 comment|/// @param VarInfo      Variable's debug info descriptor.
+comment|/// @param Expr         A complex location expression.
 comment|/// @param InsertBefore Location for the new intrinsic.
 name|Instruction
 modifier|*
@@ -2088,11 +2067,51 @@ argument_list|,
 name|DIVariable
 name|VarInfo
 argument_list|,
+name|DIExpression
+name|Expr
+argument_list|,
 name|Instruction
 operator|*
 name|InsertBefore
 argument_list|)
 decl_stmt|;
+comment|/// \brief Replace the vtable holder in the given composite type.
+comment|///
+comment|/// If this creates a self reference, it may orphan some unresolved cycles
+comment|/// in the operands of \c T, so \a DIBuilder needs to track that.
+name|void
+name|replaceVTableHolder
+parameter_list|(
+name|DICompositeType
+modifier|&
+name|T
+parameter_list|,
+name|DICompositeType
+name|VTableHolder
+parameter_list|)
+function_decl|;
+comment|/// \brief Replace arrays on a composite type.
+comment|///
+comment|/// If \c T is resolved, but the arrays aren't -- which can happen if \c T
+comment|/// has a self-reference -- \a DIBuilder needs to track the array to
+comment|/// resolve cycles.
+name|void
+name|replaceArrays
+parameter_list|(
+name|DICompositeType
+modifier|&
+name|T
+parameter_list|,
+name|DIArray
+name|Elements
+parameter_list|,
+name|DIArray
+name|TParems
+init|=
+name|DIArray
+argument_list|()
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

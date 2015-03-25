@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -94,13 +100,16 @@ name|class
 name|LLVMContext
 decl_stmt|;
 name|class
+name|Constant
+decl_stmt|;
+name|class
+name|ConstantAsMetadata
+decl_stmt|;
+name|class
 name|MDNode
 decl_stmt|;
 name|class
 name|MDString
-decl_stmt|;
-name|class
-name|StringRef
 decl_stmt|;
 name|class
 name|MDBuilder
@@ -131,6 +140,16 @@ argument_list|(
 argument|StringRef Str
 argument_list|)
 expr_stmt|;
+comment|/// \brief Return the given constant as metadata.
+name|ConstantAsMetadata
+modifier|*
+name|createConstant
+parameter_list|(
+name|Constant
+modifier|*
+name|C
+parameter_list|)
+function_decl|;
 comment|//===------------------------------------------------------------------===//
 comment|// FPMath metadata.
 comment|//===------------------------------------------------------------------===//
@@ -192,16 +211,93 @@ name|Hi
 parameter_list|)
 function_decl|;
 comment|//===------------------------------------------------------------------===//
-comment|// TBAA metadata.
+comment|// AA metadata.
 comment|//===------------------------------------------------------------------===//
-comment|/// \brief Return metadata appropriate for a TBAA root node.  Each returned
+name|protected
+label|:
+comment|/// \brief Return metadata appropriate for a AA root node (scope or TBAA).
+comment|/// Each returned node is distinct from all other metadata and will never
+comment|/// be identified (uniqued) with anything else.
+name|MDNode
+modifier|*
+name|createAnonymousAARoot
+parameter_list|(
+name|StringRef
+name|Name
+init|=
+name|StringRef
+argument_list|()
+parameter_list|,
+name|MDNode
+modifier|*
+name|Extra
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+name|public
+label|:
+comment|/// \brief Return metadata appropriate for a TBAA root node. Each returned
 comment|/// node is distinct from all other metadata and will never be identified
 comment|/// (uniqued) with anything else.
 name|MDNode
 modifier|*
 name|createAnonymousTBAARoot
 parameter_list|()
-function_decl|;
+block|{
+return|return
+name|createAnonymousAARoot
+argument_list|()
+return|;
+block|}
+comment|/// \brief Return metadata appropriate for an alias scope domain node.
+comment|/// Each returned node is distinct from all other metadata and will never
+comment|/// be identified (uniqued) with anything else.
+name|MDNode
+modifier|*
+name|createAnonymousAliasScopeDomain
+parameter_list|(
+name|StringRef
+name|Name
+init|=
+name|StringRef
+argument_list|()
+parameter_list|)
+block|{
+return|return
+name|createAnonymousAARoot
+argument_list|(
+name|Name
+argument_list|)
+return|;
+block|}
+comment|/// \brief Return metadata appropriate for an alias scope root node.
+comment|/// Each returned node is distinct from all other metadata and will never
+comment|/// be identified (uniqued) with anything else.
+name|MDNode
+modifier|*
+name|createAnonymousAliasScope
+parameter_list|(
+name|MDNode
+modifier|*
+name|Domain
+parameter_list|,
+name|StringRef
+name|Name
+init|=
+name|StringRef
+argument_list|()
+parameter_list|)
+block|{
+return|return
+name|createAnonymousAARoot
+argument_list|(
+name|Name
+argument_list|,
+name|Domain
+argument_list|)
+return|;
+block|}
 comment|/// \brief Return metadata appropriate for a TBAA root node with the given
 comment|/// name.  This may be identified (uniqued) with other roots with the same
 comment|/// name.
@@ -211,6 +307,32 @@ name|createTBAARoot
 parameter_list|(
 name|StringRef
 name|Name
+parameter_list|)
+function_decl|;
+comment|/// \brief Return metadata appropriate for an alias scope domain node with
+comment|/// the given name. This may be identified (uniqued) with other roots with
+comment|/// the same name.
+name|MDNode
+modifier|*
+name|createAliasScopeDomain
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|)
+function_decl|;
+comment|/// \brief Return metadata appropriate for an alias scope node with
+comment|/// the given name. This may be identified (uniqued) with other scopes with
+comment|/// the same name and domain.
+name|MDNode
+modifier|*
+name|createAliasScope
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|MDNode
+modifier|*
+name|Domain
 parameter_list|)
 function_decl|;
 comment|/// \brief Return metadata for a non-root TBAA node with the given name,

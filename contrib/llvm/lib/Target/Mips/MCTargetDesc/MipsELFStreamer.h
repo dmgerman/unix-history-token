@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPSELFSTREAMER_H
+name|LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSELFSTREAMER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPSELFSTREAMER_H
+name|LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSELFSTREAMER_H
 end_define
 
 begin_include
@@ -125,6 +125,15 @@ block|;
 name|MipsRegInfoRecord
 operator|*
 name|RegInfoRecord
+block|;
+name|SmallVector
+operator|<
+name|MCSymbol
+operator|*
+block|,
+literal|4
+operator|>
+name|Labels
 block|;
 name|public
 operator|:
@@ -203,6 +212,40 @@ argument|const MCSubtargetInfo&STI
 argument_list|)
 name|override
 block|;
+comment|/// Overriding this function allows us to record all labels that should be
+comment|/// marked as microMIPS. Based on this data marking is done in
+comment|/// EmitInstruction.
+name|void
+name|EmitLabel
+argument_list|(
+argument|MCSymbol *Symbol
+argument_list|)
+name|override
+block|;
+comment|/// Overriding this function allows us to dismiss all labels that are
+comment|/// candidates for marking as microMIPS when .section directive is processed.
+name|void
+name|SwitchSection
+argument_list|(
+argument|const MCSection *Section
+argument_list|,
+argument|const MCExpr *Subsection = nullptr
+argument_list|)
+name|override
+block|;
+comment|/// Overriding this function allows us to dismiss all labels that are
+comment|/// candidates for marking as microMIPS when .word directive is emitted.
+name|void
+name|EmitValueImpl
+argument_list|(
+argument|const MCExpr *Value
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|const SMLoc&Loc
+argument_list|)
+name|override
+block|;
 comment|/// Emits all the option records stored up until the point it's called.
 name|void
 name|EmitMipsOptionRecords
@@ -236,9 +279,6 @@ name|STI
 parameter_list|,
 name|bool
 name|RelaxAll
-parameter_list|,
-name|bool
-name|NoExecStack
 parameter_list|)
 function_decl|;
 block|}

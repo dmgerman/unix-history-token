@@ -184,6 +184,23 @@ end_define
 
 begin_struct
 struct|struct
+name|gpiobus_pin_data
+block|{
+name|int
+name|mapped
+decl_stmt|;
+comment|/* pin is mapped/reserved. */
+name|char
+modifier|*
+name|name
+decl_stmt|;
+comment|/* pin name. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|gpiobus_softc
 block|{
 name|struct
@@ -212,11 +229,32 @@ name|int
 name|sc_npins
 decl_stmt|;
 comment|/* total pins on bus */
-name|int
+name|struct
+name|gpiobus_pin_data
 modifier|*
-name|sc_pins_mapped
+name|sc_pins
 decl_stmt|;
-comment|/* mark mapped pins */
+comment|/* pin data */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|gpiobus_pin
+block|{
+name|device_t
+name|dev
+decl_stmt|;
+comment|/* gpio device */
+name|uint32_t
+name|flags
+decl_stmt|;
+comment|/* pin flags */
+name|uint32_t
+name|pin
+decl_stmt|;
+comment|/* pin number */
 block|}
 struct|;
 end_struct
@@ -330,7 +368,28 @@ name|ofw_gpiobus_add_fdt_child
 parameter_list|(
 name|device_t
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
 name|phandle_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ofw_gpiobus_parse_gpios
+parameter_list|(
+name|device_t
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|gpiobus_pin
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -392,6 +451,39 @@ name|int
 name|gpiobus_init_softc
 parameter_list|(
 name|device_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|gpiobus_alloc_ivars
+parameter_list|(
+name|struct
+name|gpiobus_ivar
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|gpiobus_free_ivars
+parameter_list|(
+name|struct
+name|gpiobus_ivar
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|gpiobus_map_pin
+parameter_list|(
+name|device_t
+parameter_list|,
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl

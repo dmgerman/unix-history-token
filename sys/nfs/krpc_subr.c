@@ -725,9 +725,9 @@ name|td
 argument_list|)
 operator|)
 condition|)
-goto|goto
-name|out
-goto|;
+return|return
+name|error
+return|;
 name|tv
 operator|.
 name|tv_sec

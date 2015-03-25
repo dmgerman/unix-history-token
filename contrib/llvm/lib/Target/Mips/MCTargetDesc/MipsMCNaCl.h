@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPSMCNACL_H
+name|LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSMCNACL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPSMCNACL_H
+name|LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSMCNACL_H
 end_define
 
 begin_include
@@ -113,9 +113,6 @@ name|STI
 parameter_list|,
 name|bool
 name|RelaxAll
-parameter_list|,
-name|bool
-name|NoExecStack
 parameter_list|)
 function_decl|;
 block|}

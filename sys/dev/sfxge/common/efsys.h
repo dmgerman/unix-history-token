@@ -205,6 +205,57 @@ parameter_list|)
 value|(((x)& ((x) - 1)) == 0)
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__x86_64__
+argument_list|)
+operator|&&
+name|__FreeBSD_version
+operator|>=
+literal|1000000
+define|#
+directive|define
+name|SFXGE_USE_BUS_SPACE_8
+value|1
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|bus_space_read_stream_8
+argument_list|)
+define|#
+directive|define
+name|bus_space_read_stream_8
+parameter_list|(
+name|t
+parameter_list|,
+name|h
+parameter_list|,
+name|o
+parameter_list|)
+define|\
+value|bus_space_read_8((t), (h), (o))
+define|#
+directive|define
+name|bus_space_write_stream_8
+parameter_list|(
+name|t
+parameter_list|,
+name|h
+parameter_list|,
+name|o
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|bus_space_write_8((t), (h), (o), (v))
+endif|#
+directive|endif
+endif|#
+directive|endif
 define|#
 directive|define
 name|ENOTACTIVE
@@ -1464,12 +1515,12 @@ parameter_list|,
 name|_lock
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_dword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);				\ 									\ 		(_edp)->ed_u32[0] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset));			\ 									\ 		EFSYS_PROBE2(bar_readd, unsigned int, (_offset),	\ 		    uint32_t, (_edp)->ed_u32[0]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_dword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);				\ 									\ 		(_edp)->ed_u32[0] = bus_space_read_stream_4(		\ 		    (_esbp)->esb_tag, (_esbp)->esb_handle,		\ 		    (_offset));						\ 									\ 		EFSYS_PROBE2(bar_readd, unsigned int, (_offset),	\ 		    uint32_t, (_edp)->ed_u32[0]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 if|#
 directive|if
 name|defined
 argument_list|(
-name|__x86_64__
+name|SFXGE_USE_BUS_SPACE_8
 argument_list|)
 define|#
 directive|define
@@ -1482,7 +1533,7 @@ parameter_list|,
 name|_eqp
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		SFXGE_BAR_LOCK(_esbp);					\ 									\ 		(_eqp)->eq_u64[0] = bus_space_read_8((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset));			\ 									\ 		EFSYS_PROBE3(bar_readq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		mtx_unlock(&((_esbp)->esb_lock));			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		SFXGE_BAR_LOCK(_esbp);					\ 									\ 		(_eqp)->eq_u64[0] = bus_space_read_stream_8(		\ 		    (_esbp)->esb_tag, (_esbp)->esb_handle,		\ 		    (_offset));						\ 									\ 		EFSYS_PROBE3(bar_readq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		SFXGE_BAR_UNLOCK(_esbp);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFSYS_BAR_READO
@@ -1496,7 +1547,7 @@ parameter_list|,
 name|_lock
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			mtx_lock(&((_esbp)->esb_lock));			\ 									\ 		(_eop)->eo_u64[0] = bus_space_read_8((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset));			\ 		(_eop)->eo_u64[1] = bus_space_read_8((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset+8));			\ 									\ 		EFSYS_PROBE5(bar_reado, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			mtx_unlock(&((_esbp)->esb_lock));		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);				\ 									\ 		(_eop)->eo_u64[0] = bus_space_read_stream_8(		\ 		    (_esbp)->esb_tag, (_esbp)->esb_handle,		\ 		    (_offset));						\ 		(_eop)->eo_u64[1] = bus_space_read_stream_8(		\ 		    (_esbp)->esb_tag, (_esbp)->esb_handle,		\ 		    (_offset) + 8);					\ 									\ 		EFSYS_PROBE5(bar_reado, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 else|#
 directive|else
 define|#
@@ -1510,7 +1561,7 @@ parameter_list|,
 name|_eqp
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		mtx_lock(&((_esbp)->esb_lock));				\ 									\ 		(_eqp)->eq_u32[0] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset));			\ 		(_eqp)->eq_u32[1] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset+4));			\ 									\ 		EFSYS_PROBE3(bar_readq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		SFXGE_BAR_UNLOCK(_esbp);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		SFXGE_BAR_LOCK(_esbp);					\ 									\ 		(_eqp)->eq_u32[0] = bus_space_read_stream_4(		\ 		    (_esbp)->esb_tag, (_esbp)->esb_handle,		\ 		    (_offset));						\ 		(_eqp)->eq_u32[1] = bus_space_read_stream_4(		\ 		    (_esbp)->esb_tag, (_esbp)->esb_handle,		\ 		    (_offset) + 4);					\ 									\ 		EFSYS_PROBE3(bar_readq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		SFXGE_BAR_UNLOCK(_esbp);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFSYS_BAR_READO
@@ -1524,7 +1575,7 @@ parameter_list|,
 name|_lock
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);				\ 									\ 		(_eop)->eo_u32[0] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset));			\ 		(_eop)->eo_u32[1] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset+4));			\ 		(_eop)->eo_u32[2] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset+8));			\ 		(_eop)->eo_u32[3] = bus_space_read_4((_esbp)->esb_tag,	\ 		    (_esbp)->esb_handle, (_offset+12));			\ 									\ 		EFSYS_PROBE5(bar_reado, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);				\ 									\ 		(_eop)->eo_u32[0] = bus_space_read_stream_4(		\ 		    (_esbp)->esb_tag, (_esbp)->esb_handle,		\ 		    (_offset));						\ 		(_eop)->eo_u32[1] = bus_space_read_stream_4(		\ 		    (_esbp)->esb_tag, (_esbp)->esb_handle,		\ 		    (_offset) + 4);					\ 		(_eop)->eo_u32[2] = bus_space_read_stream_4(		\ 		    (_esbp)->esb_tag, (_esbp)->esb_handle,		\ 		    (_offset) + 8);					\ 		(_eop)->eo_u32[3] = bus_space_read_stream_4(		\ 		    (_esbp)->esb_tag, (_esbp)->esb_handle,		\ 		    (_offset) + 12);					\ 									\ 		EFSYS_PROBE5(bar_reado, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 endif|#
 directive|endif
 define|#
@@ -1540,12 +1591,14 @@ parameter_list|,
 name|_lock
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_dword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);			\ 									\ 		EFSYS_PROBE2(bar_writed, unsigned int, (_offset),	\ 		    uint32_t, (_edp)->ed_u32[0]);			\ 									\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), (_edp)->ed_u32[0]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_dword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);				\ 									\ 		EFSYS_PROBE2(bar_writed, unsigned int, (_offset),	\ 		    uint32_t, (_edp)->ed_u32[0]);			\ 									\
+comment|/*							\ 		 * Make sure that previous writes to the dword have	\ 		 * been done. It should be cheaper than barrier just	\ 		 * after the write below.				\ 		 */
+value|\ 		bus_space_barrier((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), sizeof (efx_dword_t),			\ 		    BUS_SPACE_BARRIER_WRITE);				\ 		bus_space_write_stream_4((_esbp)->esb_tag,		\ 		    (_esbp)->esb_handle,				\ 		    (_offset), (_edp)->ed_u32[0]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 if|#
 directive|if
 name|defined
 argument_list|(
-name|__x86_64__
+name|SFXGE_USE_BUS_SPACE_8
 argument_list|)
 define|#
 directive|define
@@ -1558,7 +1611,9 @@ parameter_list|,
 name|_eqp
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		SFXGE_BAR_LOCK(_esbp);					\ 									\ 		EFSYS_PROBE3(bar_writeq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		bus_space_write_8((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), (_eqp)->eq_u64[0]);			\ 									\ 		mtx_unlock(&((_esbp)->esb_lock));			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		SFXGE_BAR_LOCK(_esbp);					\ 									\ 		EFSYS_PROBE3(bar_writeq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\
+comment|/*							\ 		 * Make sure that previous writes to the qword have	\ 		 * been done. It should be cheaper than barrier just	\ 		 * after the write below.				\ 		 */
+value|\ 		bus_space_barrier((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), sizeof (efx_qword_t),			\ 		    BUS_SPACE_BARRIER_WRITE);				\ 		bus_space_write_stream_8((_esbp)->esb_tag,		\ 		    (_esbp)->esb_handle,				\ 		    (_offset), (_eqp)->eq_u64[0]);			\ 									\ 		SFXGE_BAR_UNLOCK(_esbp);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 else|#
 directive|else
 define|#
@@ -1572,14 +1627,18 @@ parameter_list|,
 name|_eqp
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		mtx_lock(&((_esbp)->esb_lock));				\ 									\ 		EFSYS_PROBE3(bar_writeq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), (_eqp)->eq_u32[0]);			\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+4), (_eqp)->eq_u32[1]);			\ 									\ 		SFXGE_BAR_UNLOCK(_esbp);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		SFXGE_BAR_LOCK(_esbp);					\ 									\ 		EFSYS_PROBE3(bar_writeq, unsigned int, (_offset),	\ 		    uint32_t, (_eqp)->eq_u32[1],			\ 		    uint32_t, (_eqp)->eq_u32[0]);			\ 									\
+comment|/*							\ 		 * Make sure that previous writes to the qword have	\ 		 * been done. It should be cheaper than barrier just	\ 		 * after the last write below.				\ 		 */
+value|\ 		bus_space_barrier((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), sizeof (efx_qword_t),			\ 		    BUS_SPACE_BARRIER_WRITE);				\ 		bus_space_write_stream_4((_esbp)->esb_tag,		\ 		    (_esbp)->esb_handle,				\ 		    (_offset), (_eqp)->eq_u32[0]);			\
+comment|/*							\ 		 * It should be guaranteed that the last dword comes	\ 		 * the last, so barrier entire qword to be sure that	\ 		 * neither above nor below writes are reordered.	\ 		 */
+value|\ 		bus_space_barrier((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), sizeof (efx_qword_t),			\ 		    BUS_SPACE_BARRIER_WRITE);				\ 		bus_space_write_stream_4((_esbp)->esb_tag,		\ 		    (_esbp)->esb_handle,				\ 		    (_offset) + 4, (_eqp)->eq_u32[1]);			\ 									\ 		SFXGE_BAR_UNLOCK(_esbp);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 endif|#
 directive|endif
 if|#
 directive|if
 name|defined
 argument_list|(
-name|__x86_64__
+name|SFXGE_USE_BUS_SPACE_8
 argument_list|)
 define|#
 directive|define
@@ -1594,7 +1653,11 @@ parameter_list|,
 name|_lock
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);				\ 									\ 		EFSYS_PROBE5(bar_writeo, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 		bus_space_write_8((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), (_eop)->eo_u64[0]);			\ 		bus_space_write_8((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+8), (_eop)->eo_u64[1]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			mtx_unlock(&((_esbp)->esb_lock));		\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);				\ 									\ 		EFSYS_PROBE5(bar_writeo, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\
+comment|/*							\ 		 * Make sure that previous writes to the oword have	\ 		 * been done. It should be cheaper than barrier just	\ 		 * after the last write below.				\ 		 */
+value|\ 		bus_space_barrier((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), sizeof (efx_oword_t),			\ 		    BUS_SPACE_BARRIER_WRITE);				\ 		bus_space_write_stream_8((_esbp)->esb_tag,		\ 		    (_esbp)->esb_handle,				\ 		    (_offset), (_eop)->eo_u64[0]);			\
+comment|/*							\ 		 * It should be guaranteed that the last qword comes	\ 		 * the last, so barrier entire oword to be sure that	\ 		 * neither above nor below writes are reordered.	\ 		 */
+value|\ 		bus_space_barrier((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), sizeof (efx_oword_t),			\ 		    BUS_SPACE_BARRIER_WRITE);				\ 		bus_space_write_stream_8((_esbp)->esb_tag,		\ 		    (_esbp)->esb_handle,				\ 		    (_offset) + 8, (_eop)->eo_u64[1]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 else|#
 directive|else
 define|#
@@ -1610,7 +1673,11 @@ parameter_list|,
 name|_lock
 parameter_list|)
 define|\
-value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			mtx_lock(&((_esbp)->esb_lock));			\ 									\ 		EFSYS_PROBE5(bar_writeo, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), (_eop)->eo_u32[0]);			\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+4), (_eop)->eo_u32[1]);			\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+8), (_eop)->eo_u32[2]);			\ 		bus_space_write_4((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset+12), (_eop)->eo_u32[3]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_oword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_LOCK(_esbp);				\ 									\ 		EFSYS_PROBE5(bar_writeo, unsigned int, (_offset),	\ 		    uint32_t, (_eop)->eo_u32[3],			\ 		    uint32_t, (_eop)->eo_u32[2],			\ 		    uint32_t, (_eop)->eo_u32[1],			\ 		    uint32_t, (_eop)->eo_u32[0]);			\ 									\
+comment|/*							\ 		 * Make sure that previous writes to the oword have	\ 		 * been done. It should be cheaper than barrier just	\ 		 * after the last write below.				\ 		 */
+value|\ 		bus_space_barrier((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), sizeof (efx_oword_t),			\ 		    BUS_SPACE_BARRIER_WRITE);				\ 		bus_space_write_stream_4((_esbp)->esb_tag,		\ 		    (_esbp)->esb_handle,				\ 		    (_offset), (_eop)->eo_u32[0]);			\ 		bus_space_write_stream_4((_esbp)->esb_tag,		\ 		    (_esbp)->esb_handle,				\ 		    (_offset) + 4, (_eop)->eo_u32[1]);			\ 		bus_space_write_stream_4((_esbp)->esb_tag,		\ 		    (_esbp)->esb_handle,				\ 		    (_offset) + 8, (_eop)->eo_u32[2]);			\
+comment|/*							\ 		 * It should be guaranteed that the last dword comes	\ 		 * the last, so barrier entire oword to be sure that	\ 		 * neither above nor below writes are reordered.	\ 		 */
+value|\ 		bus_space_barrier((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), sizeof (efx_oword_t),			\ 		    BUS_SPACE_BARRIER_WRITE);				\ 		bus_space_write_stream_4((_esbp)->esb_tag,		\ 		    (_esbp)->esb_handle,				\ 		    (_offset) + 12, (_eop)->eo_u32[3]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 endif|#
 directive|endif
 comment|/* SPIN */
@@ -1661,7 +1728,9 @@ parameter_list|,
 name|_p
 parameter_list|)
 define|\
-value|do {								\ 		(_esip) = (_esip);					\ 		(_p) = malloc((_size), M_SFXGE, M_WAITOK|M_ZERO);	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+value|do {								\ 		(_esip) = (_esip);					\
+comment|/*							\ 		 * The macro is used in non-sleepable contexts, for	\ 		 * example, holding a mutex.				\ 		 */
+value|\ 		(_p) = malloc((_size), M_SFXGE, M_NOWAIT|M_ZERO);	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 define|#
 directive|define
 name|EFSYS_KMEM_FREE

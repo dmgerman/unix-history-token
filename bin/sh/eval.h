@@ -128,6 +128,7 @@ begin_function_decl
 name|void
 name|evalstring
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|,

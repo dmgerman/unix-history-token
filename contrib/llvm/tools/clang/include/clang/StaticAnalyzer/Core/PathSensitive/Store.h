@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_STORE_H
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_STORE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_STORE_H
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_STORE_H
 end_define
 
 begin_include
@@ -1027,24 +1027,32 @@ name|this
 return|;
 block|}
 comment|// FIXME: Do we need to pass ProgramStateManager anymore?
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|StoreManager
-modifier|*
+operator|>
 name|CreateRegionStoreManager
-parameter_list|(
+argument_list|(
 name|ProgramStateManager
-modifier|&
+operator|&
 name|StMgr
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|StoreManager
-modifier|*
+operator|>
 name|CreateFieldsOnlyRegionStoreManager
-parameter_list|(
+argument_list|(
 name|ProgramStateManager
-modifier|&
+operator|&
 name|StMgr
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 block|}
 comment|// end GR namespace
 block|}

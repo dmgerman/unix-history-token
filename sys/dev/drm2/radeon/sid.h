@@ -248,6 +248,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DMIF_ADDR_CALC
+value|0xC00
+end_define
+
+begin_define
+define|#
+directive|define
 name|SRBM_STATUS
 value|0xE50
 end_define

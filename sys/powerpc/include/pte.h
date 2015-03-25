@@ -671,46 +671,6 @@ name|ISSRR1_SEGMENT
 value|0x00200000
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_function_decl
-specifier|extern
-name|u_int
-name|dsisr
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* LOCORE */
-end_comment
-
 begin_else
 else|#
 directive|else

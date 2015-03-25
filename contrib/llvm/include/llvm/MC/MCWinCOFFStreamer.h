@@ -116,11 +116,28 @@ operator|&
 name|OS
 argument_list|)
 block|;
+comment|/// state management
+name|void
+name|reset
+argument_list|()
+name|override
+block|{
+name|CurSymbol
+operator|=
+name|nullptr
+block|;
+name|MCObjectStreamer
+operator|::
+name|reset
+argument_list|()
+block|;   }
 comment|/// \name MCStreamer interface
 comment|/// \{
 name|void
 name|InitSections
-argument_list|()
+argument_list|(
+argument|bool NoExecStack
+argument_list|)
 name|override
 block|;
 name|void

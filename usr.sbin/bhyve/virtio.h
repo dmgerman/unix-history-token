@@ -990,35 +990,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called by virtio driver as it starts processing chains.  Each  * completed chain (obtained from vq_getchain()) is released by  * calling vq_relchain(), then when all are done, vq_endchains()  * can tell if / how-many chains were processed and know whether  * and how to generate an interrupt.  */
-end_comment
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|vq_startchains
-parameter_list|(
-name|struct
-name|vqueue_info
-modifier|*
-name|vq
-parameter_list|)
-block|{
-name|vq
-operator|->
-name|vq_save_used
-operator|=
-name|vq
-operator|->
-name|vq_used
-operator|->
-name|vu_idx
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Deliver an interrupt to guest on the given virtual queue  * (if possible, or a generic MSI interrupt if not using MSI-X).  */
 end_comment
 
@@ -1185,6 +1156,10 @@ name|vqueue_info
 modifier|*
 name|vq
 parameter_list|,
+name|uint16_t
+modifier|*
+name|pidx
+parameter_list|,
 name|struct
 name|iovec
 modifier|*
@@ -1202,12 +1177,27 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vq_retchain
+parameter_list|(
+name|struct
+name|vqueue_info
+modifier|*
+name|vq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vq_relchain
 parameter_list|(
 name|struct
 name|vqueue_info
 modifier|*
 name|vq
+parameter_list|,
+name|uint16_t
+name|idx
 parameter_list|,
 name|uint32_t
 name|iolen

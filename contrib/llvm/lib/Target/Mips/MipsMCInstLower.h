@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPSMCINSTLOWER_H
+name|LLVM_LIB_TARGET_MIPS_MIPSMCINSTLOWER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPSMCINSTLOWER_H
+name|LLVM_LIB_TARGET_MIPS_MIPSMCINSTLOWER_H
 end_define
 
 begin_include

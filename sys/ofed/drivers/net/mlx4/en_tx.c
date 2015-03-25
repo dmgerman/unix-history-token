@@ -99,12 +99,6 @@ directive|include
 file|"mlx4_en.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"utils.h"
-end_include
-
 begin_enum
 enum|enum
 block|{
@@ -4129,8 +4123,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|uint32_t
 name|hashrandom
 decl_stmt|;
 end_decl_stmt
@@ -4147,7 +4140,7 @@ parameter_list|)
 block|{
 name|hashrandom
 operator|=
-name|random
+name|m_ether_tcpip_hash_init
 argument_list|()
 expr_stmt|;
 block|}
@@ -4203,11 +4196,6 @@ operator|->
 name|num_tx_rings_p_up
 decl_stmt|;
 name|u32
-name|vlan_tag
-init|=
-literal|0
-decl_stmt|;
-name|u32
 name|up
 init|=
 literal|0
@@ -4215,6 +4203,13 @@ decl_stmt|;
 name|u32
 name|queue_index
 decl_stmt|;
+if|#
+directive|if
+operator|(
+name|MLX4_EN_NUM_UP
+operator|>
+literal|1
+operator|)
 comment|/* Obtain VLAN information if present */
 if|if
 condition|(
@@ -4225,14 +4220,15 @@ operator|&
 name|M_VLANTAG
 condition|)
 block|{
+name|u32
 name|vlan_tag
-operator|=
+init|=
 name|mb
 operator|->
 name|m_pkthdr
 operator|.
 name|ether_vtag
-expr_stmt|;
+decl_stmt|;
 name|up
 operator|=
 operator|(
@@ -4240,8 +4236,12 @@ name|vlan_tag
 operator|>>
 literal|13
 operator|)
+operator|%
+name|MLX4_EN_NUM_UP
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 comment|/* check if flowid is set */
 if|if
 condition|(
@@ -4263,11 +4263,11 @@ expr_stmt|;
 else|else
 name|queue_index
 operator|=
-name|mlx4_en_hashmbuf
+name|m_ether_tcpip_hash
 argument_list|(
-name|MLX4_F_HASHL3
+name|MBUF_HASHFLAG_L3
 operator||
-name|MLX4_F_HASHL4
+name|MBUF_HASHFLAG_L4
 argument_list|,
 name|mb
 argument_list|,

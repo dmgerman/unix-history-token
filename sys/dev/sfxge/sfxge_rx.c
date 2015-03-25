@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/ethernet.h>
 end_include
 
@@ -129,6 +135,40 @@ parameter_list|)
 value|(EFX_RXQ_LIMIT(_entries) * 9 / 10)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_hw_sfxge
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|lro
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Large receive offload (LRO) parameters"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|SFXGE_LRO_PARAM
+parameter_list|(
+name|_param
+parameter_list|)
+value|SFXGE_PARAM(lro._param)
+end_define
+
 begin_comment
 comment|/* Size of the LRO hash table.  Must be a power of 2.  A larger table  * means we can accelerate a larger number of streams.  */
 end_comment
@@ -142,6 +182,41 @@ literal|128
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|SFXGE_LRO_PARAM
+argument_list|(
+name|table_size
+argument_list|)
+argument_list|,
+operator|&
+name|lro_table_size
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_sfxge_lro
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|table_size
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|lro_table_size
+argument_list|,
+literal|0
+argument_list|,
+literal|"Size of the LRO hash table (must be a power of 2)"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Maximum length of a hash chain.  If chains get too long then the lookup  * time increases and may exceed the benefit of LRO.  */
 end_comment
@@ -154,6 +229,41 @@ init|=
 literal|20
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|SFXGE_LRO_PARAM
+argument_list|(
+name|chain_max
+argument_list|)
+argument_list|,
+operator|&
+name|lro_chain_max
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_sfxge_lro
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|chain_max
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|lro_chain_max
+argument_list|,
+literal|0
+argument_list|,
+literal|"The maximum length of a hash chain"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Maximum time (in ticks) that a connection can be idle before it's LRO  * state is discarded.  */
@@ -170,6 +280,42 @@ begin_comment
 comment|/* initialised in sfxge_rx_init() */
 end_comment
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|SFXGE_LRO_PARAM
+argument_list|(
+name|idle_ticks
+argument_list|)
+argument_list|,
+operator|&
+name|lro_idle_ticks
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_sfxge_lro
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|idle_ticks
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|lro_idle_ticks
+argument_list|,
+literal|0
+argument_list|,
+literal|"The maximum time (in ticks) that a connection can be idle "
+literal|"before it's LRO state is discarded"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Number of packets with payload that must arrive in-order before a  * connection is eligible for LRO.  The idea is we should avoid coalescing  * segments when the sender is in slow-start because reducing the ACK rate  * can damage performance.  */
 end_comment
@@ -183,6 +329,42 @@ literal|2000
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|SFXGE_LRO_PARAM
+argument_list|(
+name|slow_start_packets
+argument_list|)
+argument_list|,
+operator|&
+name|lro_slow_start_packets
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_sfxge_lro
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|slow_start_packets
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|lro_slow_start_packets
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of packets with payload that must arrive in-order before "
+literal|"a connection is eligible for LRO"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Number of packets with payload that must arrive in-order following loss  * before a connection is eligible for LRO.  The idea is we should avoid  * coalescing segments when the sender is recovering from loss, because  * reducing the ACK rate can damage performance.  */
 end_comment
@@ -195,6 +377,42 @@ init|=
 literal|20
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+name|SFXGE_LRO_PARAM
+argument_list|(
+name|loss_packets
+argument_list|)
+argument_list|,
+operator|&
+name|lro_loss_packets
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_hw_sfxge_lro
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|loss_packets
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|lro_loss_packets
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of packets with payload that must arrive in-order "
+literal|"following loss before a connection is eligible for LRO"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* Flags for sfxge_lro_conn::l2_id; must not collide with EVL_VLID_MASK */
@@ -382,6 +600,15 @@ endif|#
 directive|endif
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SFXGE_LRO */
+end_comment
 
 begin_function
 name|void
@@ -869,11 +1096,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|rxq
 operator|->
 name|init_state
 operator|!=
 name|SFXGE_RXQ_STARTED
+argument_list|)
 condition|)
 return|return;
 name|rxfill
@@ -1199,11 +1429,14 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|rxq
 operator|->
 name|init_state
 operator|!=
 name|SFXGE_RXQ_STARTED
+argument_list|)
 condition|)
 return|return;
 comment|/* Make sure the queue is full */
@@ -1338,9 +1571,6 @@ name|CSUM_DATA_VALID
 operator||
 name|CSUM_PSEUDO_HDR
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SFXGE_HAVE_MQ
 comment|/* The hash covers a 4-tuple for TCP only */
 if|if
 condition|(
@@ -1378,8 +1608,6 @@ name|M_HASHTYPE_OPAQUE
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|m
 operator|->
 name|m_data
@@ -1441,6 +1669,12 @@ name|NULL
 expr_stmt|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
+end_ifdef
 
 begin_function
 specifier|static
@@ -1677,9 +1911,6 @@ name|optlen
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SFXGE_HAVE_MQ
 name|m
 operator|->
 name|m_pkthdr
@@ -1697,8 +1928,6 @@ argument_list|,
 name|M_HASHTYPE_OPAQUE
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|m
 operator|->
 name|m_pkthdr
@@ -3911,6 +4140,55 @@ expr_stmt|;
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !SFXGE_LRO */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|sfxge_lro
+parameter_list|(
+name|struct
+name|sfxge_rxq
+modifier|*
+name|rxq
+parameter_list|,
+name|struct
+name|sfxge_rx_sw_desc
+modifier|*
+name|rx_buf
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sfxge_lro_end_of_burst
+parameter_list|(
+name|struct
+name|sfxge_rxq
+modifier|*
+name|rxq
+parameter_list|)
+block|{ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SFXGE_LRO */
+end_comment
+
 begin_function
 name|void
 name|sfxge_rx_qcomplete
@@ -4044,11 +4322,14 @@ name|mbuf
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|rxq
 operator|->
 name|init_state
 operator|!=
 name|SFXGE_RXQ_STARTED
+argument_list|)
 condition|)
 goto|goto
 name|discard
@@ -5116,6 +5397,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -5482,6 +5769,46 @@ expr_stmt|;
 block|}
 end_function
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+specifier|static
+name|void
+name|sfxge_lro_init
+parameter_list|(
+name|struct
+name|sfxge_rxq
+modifier|*
+name|rxq
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sfxge_lro_fini
+parameter_list|(
+name|struct
+name|sfxge_rxq
+modifier|*
+name|rxq
+parameter_list|)
+block|{ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SFXGE_LRO */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -5727,25 +6054,6 @@ operator|(
 name|rc
 operator|)
 return|;
-operator|(
-name|void
-operator|)
-name|memset
-argument_list|(
-name|esmp
-operator|->
-name|esm_base
-argument_list|,
-literal|0
-argument_list|,
-name|EFX_RXQ_SIZE
-argument_list|(
-name|sc
-operator|->
-name|rxq_entries
-argument_list|)
-argument_list|)
-expr_stmt|;
 comment|/* Allocate buffer table entries. */
 name|sfxge_sram_buf_tbl_alloc
 argument_list|(
@@ -5845,6 +6153,9 @@ name|member
 parameter_list|)
 define|\
 value|{ #name, offsetof(struct sfxge_rxq, member) }
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
 name|SFXGE_RX_STAT
 argument_list|(
 name|lro_merges
@@ -5914,6 +6225,8 @@ argument|lro_drop_closed
 argument_list|,
 argument|lro.n_drop_closed
 argument_list|)
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -6060,17 +6373,9 @@ literal|0
 init|;
 name|id
 operator|<
-sizeof|sizeof
+name|nitems
 argument_list|(
 name|sfxge_rx_stats
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-name|sfxge_rx_stats
-index|[
-literal|0
-index|]
 argument_list|)
 condition|;
 name|id
@@ -6174,6 +6479,40 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
+if|if
+condition|(
+operator|!
+name|ISP2
+argument_list|(
+name|lro_table_size
+argument_list|)
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s=%u must be power of 2"
+argument_list|,
+name|SFXGE_LRO_PARAM
+argument_list|(
+name|table_size
+argument_list|)
+argument_list|,
+name|lro_table_size
+argument_list|)
+expr_stmt|;
+name|rc
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|fail_lro_table_size
+goto|;
+block|}
 if|if
 condition|(
 name|lro_idle_ticks
@@ -6189,6 +6528,8 @@ operator|+
 literal|1
 expr_stmt|;
 comment|/* 100 ms */
+endif|#
+directive|endif
 name|intr
 operator|=
 operator|&
@@ -6286,6 +6627,13 @@ name|rxq_count
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
+name|fail_lro_table_size
+label|:
+endif|#
+directive|endif
 return|return
 operator|(
 name|rc

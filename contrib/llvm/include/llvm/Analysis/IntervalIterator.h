@@ -854,12 +854,15 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
+operator|!
 name|Visited
 operator|.
-name|count
+name|insert
 argument_list|(
 name|Header
 argument_list|)
+operator|.
+name|second
 condition|)
 return|return
 name|false
@@ -874,14 +877,6 @@ argument_list|(
 name|Header
 argument_list|)
 decl_stmt|;
-name|Visited
-operator|.
-name|insert
-argument_list|(
-name|Header
-argument_list|)
-expr_stmt|;
-comment|// The header has now been visited!
 comment|// Check all of our successors to see if they are in the interval...
 for|for
 control|(

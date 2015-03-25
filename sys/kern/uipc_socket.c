@@ -10340,7 +10340,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * Packet to copyout() is now in 'm' and it is disconnected from the 	 * queue. 	 * 	 * Process one or more MT_CONTROL mbufs present before any data mbufs 	 * in the first mbuf chain on the socket buffer.  We call into the 	 * protocol to perform externalization (or freeing if controlp == 	 * NULL). 	 */
+comment|/* 	 * Packet to copyout() is now in 'm' and it is disconnected from the 	 * queue. 	 * 	 * Process one or more MT_CONTROL mbufs present before any data mbufs 	 * in the first mbuf chain on the socket buffer.  We call into the 	 * protocol to perform externalization (or freeing if controlp == 	 * NULL). In some cases there can be only MT_CONTROL mbufs without 	 * MT_DATA mbufs. 	 */
 if|if
 condition|(
 name|m
@@ -10517,6 +10517,10 @@ block|}
 name|KASSERT
 argument_list|(
 name|m
+operator|==
+name|NULL
+operator|||
+name|m
 operator|->
 name|m_type
 operator|==
@@ -10633,6 +10637,7 @@ name|m
 operator|!=
 name|NULL
 condition|)
+block|{
 name|flags
 operator||=
 name|MSG_TRUNC
@@ -10642,6 +10647,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|flagsp

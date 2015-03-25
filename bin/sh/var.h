@@ -180,6 +180,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|extern
 name|struct
 name|localvar
 modifier|*

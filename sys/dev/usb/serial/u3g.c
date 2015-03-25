@@ -3583,6 +3583,16 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* the following is a RNDIS device, no modem features */
+name|U3G_DEV
+argument_list|(
+name|QUALCOMMINC
+argument_list|,
+name|ZTE_MF730M
+argument_list|,
+name|U3GINIT_SCSIEJECT
+argument_list|)
+block|,
 name|U3G_DEV
 argument_list|(
 name|QUANTA

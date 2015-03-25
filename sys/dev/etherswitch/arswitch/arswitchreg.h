@@ -2060,6 +2060,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR8327_PORT_GMAC0
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8327_PORT_GMAC6
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR8327_REG_MASK
 value|0x000
 end_define
@@ -2474,6 +2488,23 @@ define|#
 directive|define
 name|AR8327_SGMII_CTRL_EN_TX
 value|(1<< 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8327_REG_EEE_CTRL
+value|0x100
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR8327_EEE_CTRL_DISABLE_PHY
+parameter_list|(
+name|_i
+parameter_list|)
+value|BIT(4 + (_i) * 2)
 end_define
 
 begin_define

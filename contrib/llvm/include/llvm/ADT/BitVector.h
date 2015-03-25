@@ -1275,6 +1275,13 @@ name|unsigned
 name|Idx
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|Bits
+operator|&&
+literal|"Bits never allocated"
+argument_list|)
+expr_stmt|;
 name|Bits
 index|[
 name|Idx
@@ -2746,6 +2753,18 @@ name|RHSWords
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|assert
+argument_list|(
+name|Capacity
+operator|>
+literal|0
+operator|&&
+literal|"negative capacity?"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|BitWord
 modifier|*
@@ -3301,6 +3320,15 @@ argument_list|,
 name|Capacity
 operator|*
 literal|2
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|Capacity
+operator|>
+literal|0
+operator|&&
+literal|"realloc-ing zero space"
 argument_list|)
 expr_stmt|;
 name|Bits

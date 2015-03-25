@@ -1111,10 +1111,10 @@ comment|/* filterarg	*/
 name|NULL
 argument_list|,
 comment|/* maxsize	*/
-name|MAXBSIZE
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* nsegments	*/
-name|IDA_NSEG
+name|BUS_SPACE_UNRESTRICTED
 argument_list|,
 comment|/* maxsegsize	*/
 name|BUS_SPACE_MAXSIZE_32BIT

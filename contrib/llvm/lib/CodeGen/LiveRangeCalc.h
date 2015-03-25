@@ -82,13 +82,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_LIVERANGECALC_H
+name|LLVM_LIB_CODEGEN_LIVERANGECALC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_LIVERANGECALC_H
+name|LLVM_LIB_CODEGEN_LIVERANGECALC_H
 end_define
 
 begin_include
@@ -159,13 +159,6 @@ name|Allocator
 operator|*
 name|Alloc
 expr_stmt|;
-comment|/// Seen - Bit vector of active entries in LiveOut, also used as a visited
-comment|/// set by findReachingDefs.  One entry per basic block, indexed by block
-comment|/// number.  This is kept as a separate bit vector because it can be cleared
-comment|/// quickly when switching live ranges.
-name|BitVector
-name|Seen
-decl_stmt|;
 comment|/// LiveOutPair - A value and the block that defined it.  The domtree node is
 comment|/// redundant, it can be computed as: MDT[Indexes.getMBBFromIndex(VNI->def)].
 typedef|typedef
@@ -191,8 +184,15 @@ name|MBB2NumberFunctor
 operator|>
 name|LiveOutMap
 expr_stmt|;
-comment|/// LiveOut - Map each basic block where a live range is live out to the
-comment|/// live-out value and its defining block.
+comment|/// Bit vector of active entries in LiveOut, also used as a visited set by
+comment|/// findReachingDefs.  One entry per basic block, indexed by block number.
+comment|/// This is kept as a separate bit vector because it can be cleared quickly
+comment|/// when switching live ranges.
+name|BitVector
+name|Seen
+decl_stmt|;
+comment|/// Map each basic block where a live range is live out to the live-out value
+comment|/// and its defining block.
 comment|///
 comment|/// For every basic block, MBB, one of these conditions shall be true:
 comment|///
@@ -209,7 +209,7 @@ comment|///
 comment|/// The map can be shared by multiple live ranges as long as no two are
 comment|/// live-out of the same block.
 name|LiveOutMap
-name|LiveOut
+name|Map
 decl_stmt|;
 comment|/// LiveInBlock - Information about a basic block where a live range is known
 comment|/// to be live-in, but the value has not yet been determined.
@@ -319,9 +319,33 @@ name|void
 name|updateSSA
 parameter_list|()
 function_decl|;
-comment|/// Add liveness as specified in the LiveIn vector.
+comment|/// Transfer information from the LiveIn vector to the live ranges and update
+comment|/// the given @p LiveOuts.
 name|void
-name|updateLiveIns
+name|updateFromLiveIns
+parameter_list|()
+function_decl|;
+comment|/// Extend the live range of @p LR to reach all uses of Reg.
+comment|///
+comment|/// All uses must be jointly dominated by existing liveness.  PHI-defs are
+comment|/// inserted as needed to preserve SSA form.
+name|void
+name|extendToUses
+parameter_list|(
+name|LiveRange
+modifier|&
+name|LR
+parameter_list|,
+name|unsigned
+name|Reg
+parameter_list|,
+name|unsigned
+name|LaneMask
+parameter_list|)
+function_decl|;
+comment|/// Reset Map and Seen fields.
+name|void
+name|resetLiveOutMap
 parameter_list|()
 function_decl|;
 name|public
@@ -429,26 +453,7 @@ name|unsigned
 name|Reg
 parameter_list|)
 function_decl|;
-comment|/// createDeadDefs - Create a dead def in LI for every def of LI->reg.
-name|void
-name|createDeadDefs
-parameter_list|(
-name|LiveInterval
-modifier|&
-name|LI
-parameter_list|)
-block|{
-name|createDeadDefs
-argument_list|(
-name|LI
-argument_list|,
-name|LI
-operator|.
-name|reg
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// extendToUses - Extend the live range of LI to reach all uses of Reg.
+comment|/// Extend the live range of @p LR to reach all uses of Reg.
 comment|///
 comment|/// All uses must be jointly dominated by existing liveness.  PHI-defs are
 comment|/// inserted as needed to preserve SSA form.
@@ -460,28 +465,31 @@ modifier|&
 name|LR
 parameter_list|,
 name|unsigned
-name|Reg
+name|PhysReg
 parameter_list|)
-function_decl|;
-comment|/// extendToUses - Extend the live range of LI to reach all uses of LI->reg.
-name|void
+block|{
 name|extendToUses
+argument_list|(
+name|LR
+argument_list|,
+name|PhysReg
+argument_list|,
+operator|~
+literal|0u
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// Calculates liveness for the register specified in live interval @p LI.
+comment|/// Creates subregister live ranges as needed if subreg liveness tracking is
+comment|/// enabled.
+name|void
+name|calculate
 parameter_list|(
 name|LiveInterval
 modifier|&
 name|LI
 parameter_list|)
-block|{
-name|extendToUses
-argument_list|(
-name|LI
-argument_list|,
-name|LI
-operator|.
-name|reg
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Low-level interface.
 comment|//===--------------------------------------------------------------------===//
@@ -522,7 +530,7 @@ name|getNumber
 argument_list|()
 argument_list|)
 expr_stmt|;
-name|LiveOut
+name|Map
 index|[
 name|MBB
 index|]

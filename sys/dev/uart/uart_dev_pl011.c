@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/uart/uart_cpu_fdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/uart/uart_bus.h>
 end_include
 
@@ -397,6 +403,17 @@ end_define
 
 begin_comment
 comment|/* TX buffer empty */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RIS_RTIM
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* Receive timeout */
 end_comment
 
 begin_define
@@ -1368,6 +1385,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|uart_class
 name|uart_pl011_class
@@ -1402,6 +1420,44 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|ofw_compat_data
+name|compat_data
+index|[]
+init|=
+block|{
+block|{
+literal|"arm,pl011"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+operator|&
+name|uart_pl011_class
+block|}
+block|,
+block|{
+name|NULL
+block|,
+operator|(
+name|uintptr_t
+operator|)
+name|NULL
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|UART_FDT_CLASS_AND_DEVICE
+argument_list|(
+name|compat_data
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -1418,6 +1474,9 @@ name|uart_bas
 modifier|*
 name|bas
 decl_stmt|;
+name|int
+name|reg
+decl_stmt|;
 name|bas
 operator|=
 operator|&
@@ -1425,21 +1484,27 @@ name|sc
 operator|->
 name|sc_bas
 expr_stmt|;
-comment|/* Enable RX& TX interrupts */
+comment|/* Enable interrupts */
+name|reg
+operator|=
+operator|(
+name|UART_RXREADY
+operator||
+name|RIS_RTIM
+operator||
+name|UART_TXEMPTY
+operator|)
+expr_stmt|;
 name|__uart_setreg
 argument_list|(
 name|bas
 argument_list|,
 name|UART_IMSC
 argument_list|,
-operator|(
-name|UART_RXREADY
-operator||
-name|UART_TXEMPTY
-operator|)
+name|reg
 argument_list|)
 expr_stmt|;
-comment|/* Clear RX& TX interrupts */
+comment|/* Clear interrupts */
 name|__uart_setreg
 argument_list|(
 name|bas
@@ -1620,11 +1685,14 @@ name|uart_bas
 modifier|*
 name|bas
 decl_stmt|;
+name|uint32_t
+name|ints
+decl_stmt|;
 name|int
 name|ipend
 decl_stmt|;
-name|uint32_t
-name|ints
+name|int
+name|reg
 decl_stmt|;
 name|bas
 operator|=
@@ -1657,7 +1725,11 @@ if|if
 condition|(
 name|ints
 operator|&
+operator|(
 name|UART_RXREADY
+operator||
+name|RIS_RTIM
+operator|)
 condition|)
 name|ipend
 operator||=
@@ -1700,13 +1772,30 @@ name|ipend
 operator||=
 name|SER_INT_TXIDLE
 expr_stmt|;
+comment|/* Disable TX interrupt */
+name|reg
+operator|=
+name|__uart_getreg
+argument_list|(
+name|bas
+argument_list|,
+name|UART_IMSC
+argument_list|)
+expr_stmt|;
+name|reg
+operator|&=
+operator|~
+operator|(
+name|UART_TXEMPTY
+operator|)
+expr_stmt|;
 name|__uart_setreg
 argument_list|(
 name|bas
 argument_list|,
 name|UART_IMSC
 argument_list|,
-name|UART_RXREADY
+name|reg
 argument_list|)
 expr_stmt|;
 block|}
@@ -1842,13 +1931,13 @@ name|uart_bas
 modifier|*
 name|bas
 decl_stmt|;
-name|int
-name|rx
-decl_stmt|;
 name|uint32_t
 name|ints
 decl_stmt|,
 name|xc
+decl_stmt|;
+name|int
+name|rx
 decl_stmt|;
 name|bas
 operator|=
@@ -1877,7 +1966,11 @@ while|while
 condition|(
 name|ints
 operator|&
+operator|(
 name|UART_RXREADY
+operator||
+name|RIS_RTIM
+operator|)
 condition|)
 block|{
 if|if
@@ -1942,7 +2035,11 @@ name|bas
 argument_list|,
 name|UART_ICR
 argument_list|,
+operator|(
 name|UART_RXREADY
+operator||
+name|RIS_RTIM
+operator|)
 argument_list|)
 expr_stmt|;
 name|uart_rx_put
@@ -2016,6 +2113,9 @@ modifier|*
 name|bas
 decl_stmt|;
 name|int
+name|reg
+decl_stmt|;
+name|int
 name|i
 decl_stmt|;
 name|bas
@@ -2068,11 +2168,44 @@ name|bas
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* If not empty wait until it is */
+if|if
+condition|(
+operator|(
+name|__uart_getreg
+argument_list|(
+name|bas
+argument_list|,
+name|UART_FR
+argument_list|)
+operator|&
+name|FR_TXFE
+operator|)
+operator|!=
+name|FR_TXFE
+condition|)
+block|{
 name|sc
 operator|->
 name|sc_txbusy
 operator|=
 literal|1
+expr_stmt|;
+comment|/* Enable TX interrupt */
+name|reg
+operator|=
+name|__uart_getreg
+argument_list|(
+name|bas
+argument_list|,
+name|UART_IMSC
+argument_list|)
+expr_stmt|;
+name|reg
+operator||=
+operator|(
+name|UART_TXEMPTY
+operator|)
 expr_stmt|;
 name|__uart_setreg
 argument_list|(
@@ -2080,18 +2213,30 @@ name|bas
 argument_list|,
 name|UART_IMSC
 argument_list|,
-operator|(
-name|UART_RXREADY
-operator||
-name|UART_TXEMPTY
-operator|)
+name|reg
 argument_list|)
 expr_stmt|;
+block|}
 name|uart_unlock
 argument_list|(
 name|sc
 operator|->
 name|sc_hwmtx
+argument_list|)
+expr_stmt|;
+comment|/* No interrupt expected, schedule the next fifo write */
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|sc_txbusy
+condition|)
+name|uart_sched_softih
+argument_list|(
+name|sc
+argument_list|,
+name|SER_INT_TXIDLE
 argument_list|)
 expr_stmt|;
 return|return

@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -129,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
 end_include
 
 begin_include
@@ -227,7 +239,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"kern.proc.pid failed"
 argument_list|)
@@ -375,6 +387,99 @@ operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+name|bd
+operator|->
+name|bd_promisc
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{e:promiscuous/}"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bd
+operator|->
+name|bd_immediate
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{e:immediate/}"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bd
+operator|->
+name|bd_hdrcmplt
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{e:header-complete/}"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:direction}"
+argument_list|,
+operator|(
+name|bd
+operator|->
+name|bd_direction
+operator|==
+name|BPF_D_IN
+operator|)
+condition|?
+literal|"input"
+else|:
+operator|(
+name|bd
+operator|->
+name|bd_direction
+operator|==
+name|BPF_D_OUT
+operator|)
+condition|?
+literal|"output"
+else|:
+literal|"bidirectional"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bd
+operator|->
+name|bd_feedback
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{e:feedback/}"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bd
+operator|->
+name|bd_async
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{e:async/}"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bd
+operator|->
+name|bd_locked
+condition|)
+name|xo_emit
+argument_list|(
+literal|"{e:locked/}"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -446,7 +551,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"failed to zero bpf counters"
 argument_list|)
@@ -472,7 +577,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"net.bpf.stats"
 argument_list|)
@@ -500,7 +605,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"malloc failed"
 argument_list|)
@@ -526,7 +631,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"net.bpf.stats"
 argument_list|)
@@ -538,12 +643,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5s %6s %7s %9s %9s %9s %5s %5s %s\n"
+literal|"{T:/%5s} {T:/%6s} {T:/%7s} {T:/%9s} {T:/%9s} {T:/%9s} "
+literal|"{T:/%5s} {T:/%5s} {T:/%s}\n"
 argument_list|,
 literal|"Pid"
 argument_list|,
@@ -562,6 +665,16 @@ argument_list|,
 literal|"Hblen"
 argument_list|,
 literal|"Command"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"bpf-statistics"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"bpf-entry"
 argument_list|)
 expr_stmt|;
 for|for
@@ -605,7 +718,7 @@ name|d
 argument_list|)
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"bpf_stats_extended: version mismatch"
 argument_list|)
@@ -628,11 +741,9 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-name|bpf_flags
+name|xo_open_instance
 argument_list|(
-name|d
-argument_list|,
-name|flagbuf
+literal|"bpf-entry"
 argument_list|)
 expr_stmt|;
 name|pname
@@ -644,12 +755,9 @@ operator|->
 name|bd_pid
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%5d %6s %7s %9ju %9ju %9ju %5d %5d %s\n"
+literal|"{k:pid/%5d} {k:interface-name/%6s} "
 argument_list|,
 name|d
 operator|->
@@ -658,17 +766,41 @@ argument_list|,
 name|d
 operator|->
 name|bd_ifname
+argument_list|)
+expr_stmt|;
+name|bpf_flags
+argument_list|(
+name|d
+argument_list|,
+name|flagbuf
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{d:flags/%7s} {:received-packets/%9ju} "
+literal|"{:dropped-packets/%9ju} {:filter-packets/%9ju} "
+literal|"{:store-buffer-length/%5d} {:hold-buffer-length/%5d} "
+literal|"{:process/%s}\n"
 argument_list|,
 name|flagbuf
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|d
 operator|->
 name|bd_rcount
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|d
 operator|->
 name|bd_dcount
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|d
 operator|->
 name|bd_fcount
@@ -689,7 +821,22 @@ argument_list|(
 name|pname
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"bpf-entry"
+argument_list|)
+expr_stmt|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"bpf-entry"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"bpf-statistics"
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|bd

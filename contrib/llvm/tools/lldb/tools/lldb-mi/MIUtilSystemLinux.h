@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		CMIUtilSystemLinux.h
+comment|// File:        CMIUtilSystemLinux.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMIUtilSystemLinux interface.
+comment|// Overview:    CMIUtilSystemLinux interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -110,31 +110,31 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code utility class. Used to set or retrieve information
+comment|// Details: MI common code utility class. Used to set or retrieve information
 end_comment
 
 begin_comment
-comment|//			about the current system or user.
+comment|//          about the current system or user.
 end_comment
 
 begin_comment
-comment|//			*** If you change, remove or add functionality it must be replicated
+comment|//          *** If you change, remove or add functionality it must be replicated
 end_comment
 
 begin_comment
-comment|//			*** for the all platforms supported; Windows, OSX, LINUX
+comment|//          *** for the all platforms supported; Windows, OSX, LINUX
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 29/01/2014.
+comment|// Authors: Illya Rudkin 29/01/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment

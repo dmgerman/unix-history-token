@@ -117,9 +117,20 @@ argument_list|,
 name|read_byte
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|<
+literal|0
+condition|)
 return|return
 operator|(
 name|ret
+operator|)
+return|;
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -334,6 +345,7 @@ name|running
 condition|)
 return|return
 operator|(
+operator|-
 name|EIO
 operator|)
 return|;
@@ -399,6 +411,7 @@ name|running
 condition|)
 return|return
 operator|(
+operator|-
 name|EIO
 operator|)
 return|;
@@ -639,6 +652,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 name|ret
 operator|)
 return|;
@@ -1049,6 +1063,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 name|error
 operator|)
 return|;

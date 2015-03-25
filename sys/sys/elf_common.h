@@ -892,6 +892,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ELFOSABI_FENIXOS
+value|16
+end_define
+
+begin_comment
+comment|/* FenixOS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ELFOSABI_CLOUDABI
+value|17
+end_define
+
+begin_comment
+comment|/* Nuxi CloudABI */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ELFOSABI_ARM
 value|97
 end_define

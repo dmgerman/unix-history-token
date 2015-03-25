@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_SDNODEDBGVALUE_H
+name|LLVM_LIB_CODEGEN_SELECTIONDAG_SDNODEDBGVALUE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_SDNODEDBGVALUE_H
+name|LLVM_LIB_CODEGEN_SELECTIONDAG_SDNODEDBGVALUE_H
 end_define
 
 begin_include
@@ -153,7 +153,11 @@ name|u
 union|;
 name|MDNode
 modifier|*
-name|mdPtr
+name|Var
+decl_stmt|;
+name|MDNode
+modifier|*
+name|Expr
 decl_stmt|;
 name|bool
 name|IsIndirect
@@ -175,7 +179,9 @@ label|:
 comment|// Constructor for non-constants.
 name|SDDbgValue
 argument_list|(
-argument|MDNode *mdP
+argument|MDNode *Var
+argument_list|,
+argument|MDNode *Expr
 argument_list|,
 argument|SDNode *N
 argument_list|,
@@ -190,9 +196,14 @@ argument_list|,
 argument|unsigned O
 argument_list|)
 block|:
-name|mdPtr
+name|Var
 argument_list|(
-name|mdP
+name|Var
+argument_list|)
+operator|,
+name|Expr
+argument_list|(
+name|Expr
 argument_list|)
 operator|,
 name|IsIndirect
@@ -243,7 +254,9 @@ block|;   }
 comment|// Constructor for constants.
 name|SDDbgValue
 argument_list|(
-argument|MDNode *mdP
+argument|MDNode *Var
+argument_list|,
+argument|MDNode *Expr
 argument_list|,
 argument|const Value *C
 argument_list|,
@@ -254,9 +267,14 @@ argument_list|,
 argument|unsigned O
 argument_list|)
 operator|:
-name|mdPtr
+name|Var
 argument_list|(
-name|mdP
+name|Var
+argument_list|)
+operator|,
+name|Expr
+argument_list|(
+name|Expr
 argument_list|)
 operator|,
 name|IsIndirect
@@ -297,7 +315,9 @@ block|;   }
 comment|// Constructor for frame indices.
 name|SDDbgValue
 argument_list|(
-argument|MDNode *mdP
+argument|MDNode *Var
+argument_list|,
+argument|MDNode *Expr
 argument_list|,
 argument|unsigned FI
 argument_list|,
@@ -308,9 +328,14 @@ argument_list|,
 argument|unsigned O
 argument_list|)
 operator|:
-name|mdPtr
+name|Var
 argument_list|(
-name|mdP
+name|Var
+argument_list|)
+operator|,
+name|Expr
+argument_list|(
+name|Expr
 argument_list|)
 operator|,
 name|IsIndirect
@@ -352,26 +377,40 @@ comment|// Returns the kind.
 name|DbgValueKind
 name|getKind
 argument_list|()
+specifier|const
 block|{
 return|return
 name|kind
 return|;
 block|}
-comment|// Returns the MDNode pointer.
+comment|// Returns the MDNode pointer for the variable.
 name|MDNode
-modifier|*
-name|getMDPtr
-parameter_list|()
+operator|*
+name|getVariable
+argument_list|()
+specifier|const
 block|{
 return|return
-name|mdPtr
+name|Var
+return|;
+block|}
+comment|// Returns the MDNode pointer for the expression.
+name|MDNode
+operator|*
+name|getExpression
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Expr
 return|;
 block|}
 comment|// Returns the SDNode* for a register ref
 name|SDNode
-modifier|*
+operator|*
 name|getSDNode
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -379,7 +418,7 @@ name|kind
 operator|==
 name|SDNODE
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|u
 operator|.
@@ -391,7 +430,8 @@ block|}
 comment|// Returns the ResNo for a register ref
 name|unsigned
 name|getResNo
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -399,7 +439,7 @@ name|kind
 operator|==
 name|SDNODE
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|u
 operator|.
@@ -411,9 +451,10 @@ block|}
 comment|// Returns the Value* for a constant
 specifier|const
 name|Value
-modifier|*
+operator|*
 name|getConst
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -421,7 +462,7 @@ name|kind
 operator|==
 name|CONST
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|u
 operator|.
@@ -431,7 +472,8 @@ block|}
 comment|// Returns the FrameIx for a stack object
 name|unsigned
 name|getFrameIx
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -439,7 +481,7 @@ name|kind
 operator|==
 name|FRAMEIX
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|u
 operator|.
@@ -449,7 +491,8 @@ block|}
 comment|// Returns whether this is an indirect value.
 name|bool
 name|isIndirect
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|IsIndirect
@@ -458,7 +501,8 @@ block|}
 comment|// Returns the offset.
 name|uint64_t
 name|getOffset
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Offset
@@ -467,7 +511,8 @@ block|}
 comment|// Returns the DebugLoc.
 name|DebugLoc
 name|getDebugLoc
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|DL
@@ -477,7 +522,8 @@ comment|// Returns the SDNodeOrder.  This is the order of the preceding node in 
 comment|// input.
 name|unsigned
 name|getOrder
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Order
@@ -497,7 +543,8 @@ expr_stmt|;
 block|}
 name|bool
 name|isInvalidated
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|Invalid

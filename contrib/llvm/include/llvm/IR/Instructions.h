@@ -76,13 +76,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/iterator_range.h"
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"llvm/ADT/iterator_range.h"
 end_include
 
 begin_include
@@ -185,6 +185,58 @@ init|=
 literal|1
 block|}
 enum|;
+comment|/// Returns true if the ordering is at least as strong as acquire
+comment|/// (i.e. acquire, acq_rel or seq_cst)
+specifier|inline
+name|bool
+name|isAtLeastAcquire
+parameter_list|(
+name|AtomicOrdering
+name|Ord
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Ord
+operator|==
+name|Acquire
+operator|||
+name|Ord
+operator|==
+name|AcquireRelease
+operator|||
+name|Ord
+operator|==
+name|SequentiallyConsistent
+operator|)
+return|;
+block|}
+comment|/// Returns true if the ordering is at least as strong as release
+comment|/// (i.e. release, acq_rel or seq_cst)
+specifier|inline
+name|bool
+name|isAtLeastRelease
+parameter_list|(
+name|AtomicOrdering
+name|Ord
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Ord
+operator|==
+name|Release
+operator|||
+name|Ord
+operator|==
+name|AcquireRelease
+operator|||
+name|Ord
+operator|==
+name|SequentiallyConsistent
+operator|)
+return|;
+block|}
 comment|//===----------------------------------------------------------------------===//
 comment|//                                AllocaInst Class
 comment|//===----------------------------------------------------------------------===//
@@ -440,7 +492,7 @@ operator|&
 literal|32
 return|;
 block|}
-comment|/// \brief Specify whether this alloca is used to represent a the arguments to
+comment|/// \brief Specify whether this alloca is used to represent the arguments to
 comment|/// a call.
 name|void
 name|setUsedWithInAlloca
@@ -905,18 +957,6 @@ literal|6
 operator|)
 argument_list|)
 block|;   }
-name|bool
-name|isAtomic
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOrdering
-argument_list|()
-operator|!=
-name|NotAtomic
-return|;
-block|}
 name|void
 name|setAtomic
 argument_list|(
@@ -1434,18 +1474,6 @@ literal|6
 operator|)
 argument_list|)
 block|;   }
-name|bool
-name|isAtomic
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOrdering
-argument_list|()
-operator|!=
-name|NotAtomic
-return|;
-block|}
 name|void
 name|setAtomic
 argument_list|(
@@ -2536,7 +2564,7 @@ block|,
 comment|/// *p = old& v
 name|And
 block|,
-comment|/// *p = ~old& v
+comment|/// *p = ~(old& v)
 name|Nand
 block|,
 comment|/// *p = old | v

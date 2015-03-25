@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MipsISelLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -53,12 +59,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/CallingConvLower.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MipsISelLowering.h"
 end_include
 
 begin_decl_stmt
@@ -235,8 +235,6 @@ argument|bool isVarArg
 argument_list|,
 argument|MachineFunction&MF
 argument_list|,
-argument|const TargetMachine&TM
-argument_list|,
 argument|SmallVectorImpl<CCValAssign>&locs
 argument_list|,
 argument|LLVMContext&C
@@ -251,8 +249,6 @@ argument_list|,
 name|isVarArg
 argument_list|,
 name|MF
-argument_list|,
-name|TM
 argument_list|,
 name|locs
 argument_list|,

@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdBase.h
+comment|// File:        MICmdBase.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdBase interface.
+comment|// Overview:    CMICmdBase interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -148,91 +148,91 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command base class. MI commands derive from this base class.
+comment|// Details: MI command base class. MI commands derive from this base class.
 end_comment
 
 begin_comment
-comment|//			The Command Factory creates command objects and passes them to the
+comment|//          The Command Factory creates command objects and passes them to the
 end_comment
 
 begin_comment
-comment|//			Command Invoker. The Invoker takes ownersip of any commands created
+comment|//          Command Invoker. The Invoker takes ownersip of any commands created
 end_comment
 
 begin_comment
-comment|//			which means it is the only object to delete them when a command is
+comment|//          which means it is the only object to delete them when a command is
 end_comment
 
 begin_comment
-comment|//			finished working. Commands do not delete themselves.
+comment|//          finished working. Commands do not delete themselves.
 end_comment
 
 begin_comment
-comment|//			There are two types of command implicitly defined by the state of
+comment|//          There are two types of command implicitly defined by the state of
 end_comment
 
 begin_comment
-comment|//			the m_bWaitForEventFromSBDebugger flag. There is the event type
+comment|//          the m_bWaitForEventFromSBDebugger flag. There is the event type
 end_comment
 
 begin_comment
-comment|//			command which registers (command fn) callbacks with the SBListener
+comment|//          command which registers (command fn) callbacks with the SBListener
 end_comment
 
 begin_comment
-comment|//			does some work then wakes up again when called back, does more work
+comment|//          does some work then wakes up again when called back, does more work
 end_comment
 
 begin_comment
-comment|//			perhaps, ends, then the Invoker calls the command's Acknowledge
+comment|//          perhaps, ends, then the Invoker calls the command's Acknowledge
 end_comment
 
 begin_comment
-comment|//			function. The other type of command is one that just does some work,
+comment|//          function. The other type of command is one that just does some work,
 end_comment
 
 begin_comment
-comment|//			ends, then the Invoker calls the command's Acknowledge function. No
+comment|//          ends, then the Invoker calls the command's Acknowledge function. No
 end_comment
 
 begin_comment
-comment|//			events set up.
+comment|//          events set up.
 end_comment
 
 begin_comment
-comment|//			A command's Execute(), Acknowledge() and event callback functions are
+comment|//          A command's Execute(), Acknowledge() and event callback functions are
 end_comment
 
 begin_comment
-comment|//			carried out in the main thread.
+comment|//          carried out in the main thread.
 end_comment
 
 begin_comment
-comment|//			A command may use the argument derived object classes (CMICmdArgValBase)
+comment|//          A command may use the argument derived object classes (CMICmdArgValBase)
 end_comment
 
 begin_comment
-comment|//			to factor handling and parsing of different types of arguments
+comment|//          to factor handling and parsing of different types of arguments
 end_comment
 
 begin_comment
-comment|//			presented to a command. A command will produce an error should it
+comment|//          presented to a command. A command will produce an error should it
 end_comment
 
 begin_comment
-comment|//			be presented with arguments or options it does not understand.
+comment|//          be presented with arguments or options it does not understand.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 18/02/2014.
+comment|// Authors: Illya Rudkin 18/02/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -441,7 +441,8 @@ comment|// Holds information/status of *this command. Used by other MI code to r
 name|bool
 name|m_bWaitForEventFromSBDebugger
 decl_stmt|;
-comment|// True = yes event type command wait, false = command calls Acknowledge() straight after Execute() no waiting
+comment|// True = yes event type command wait, false = command calls Acknowledge() straight after Execute()
+comment|// no waiting
 name|CMIUtilString
 name|m_strMiCmd
 decl_stmt|;
@@ -449,11 +450,13 @@ comment|// The MI text identifying *this command i.e. 'break-insert'
 name|CMICmnMIResultRecord
 name|m_miResultRecord
 decl_stmt|;
-comment|// This is completed in the Acknowledge() function and returned to the Command Invoker to proceed stdout output. Each command forms 1 response to its input.
+comment|// This is completed in the Acknowledge() function and returned to the Command Invoker to proceed
+comment|// stdout output. Each command forms 1 response to its input.
 name|CMIUtilString
 name|m_miResultRecordExtra
 decl_stmt|;
-comment|// This is completed in the Acknowledge() function and returned to the Command Invoker to proceed stdout output. Hack command produce more response text to help the client because of using LLDB
+comment|// This is completed in the Acknowledge() function and returned to the Command Invoker to proceed
+comment|// stdout output. Hack command produce more response text to help the client because of using LLDB
 name|CMICmnLLDBDebugSessionInfo
 modifier|&
 name|m_rLLDBDebugSessionInfo
@@ -462,7 +465,8 @@ comment|// Access to command sharing information or data across any and all comm
 name|bool
 name|m_bHasResultRecordExtra
 decl_stmt|;
-comment|// True = Yes command produced additional MI output to its 1 line response, false = no extra MI output formed.
+comment|// True = Yes command produced additional MI output to its 1 line response, false = no extra MI output
+comment|// formed.
 name|CMICmdArgSet
 name|m_setCmdArgs
 decl_stmt|;
@@ -479,47 +483,47 @@ comment|//++ -------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Details:	Retrieve the command argument or option object pointer so that it can be
+comment|// Details: Retrieve the command argument or option object pointer so that it can be
 end_comment
 
 begin_comment
-comment|//			examined. If the option found and valid get the value (number, string or list
+comment|//          examined. If the option found and valid get the value (number, string or list
 end_comment
 
 begin_comment
-comment|//			- see CMICmdArgValBase class) from it to use with the command's decision
+comment|//          - see CMICmdArgValBase class) from it to use with the command's decision
 end_comment
 
 begin_comment
-comment|//			making. If the argument is not found the command's error description is set
+comment|//          making. If the argument is not found the command's error description is set
 end_comment
 
 begin_comment
-comment|//			describing the error condition.
+comment|//          describing the error condition.
 end_comment
 
 begin_comment
-comment|// Type:	Template method.
+comment|// Type:    Template method.
 end_comment
 
 begin_comment
-comment|// Args:	vStrOptionName	- (R)	The text name of the argument or option to search for in
+comment|// Args:    vStrOptionName  - (R)   The text name of the argument or option to search for in
 end_comment
 
 begin_comment
-comment|//									the list of the command's possible arguments or options.
+comment|//                                  the list of the command's possible arguments or options.
 end_comment
 
 begin_comment
-comment|// Return:	T * - CMICmdArgValBase derived object.
+comment|// Return:  T * - CMICmdArgValBase derived object.
 end_comment
 
 begin_comment
-comment|//				- NULL = function has failed, unable to retrieve the option/arg object.
+comment|//              - NULL = function has failed, unable to retrieve the option/arg object.
 end_comment
 
 begin_comment
-comment|// Throws:	None.
+comment|// Throws:  None.
 end_comment
 
 begin_comment
@@ -538,7 +542,7 @@ name|CMICmdBase
 operator|::
 name|GetOption
 argument_list|(
-argument|const CMIUtilString& vStrOptionName
+argument|const CMIUtilString&vStrOptionName
 argument_list|)
 block|{
 name|CMICmdArgValBase
@@ -610,47 +614,47 @@ comment|//++ -------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Details:	Retrieve the command argument or option object pointer using template function
+comment|// Details: Retrieve the command argument or option object pointer using template function
 end_comment
 
 begin_comment
-comment|//			CMICmdBase::GetOption(). Should the argument (by name) not be found the
+comment|//          CMICmdBase::GetOption(). Should the argument (by name) not be found the
 end_comment
 
 begin_comment
-comment|//			command will exit with a failure (set in GetOption()).
+comment|//          command will exit with a failure (set in GetOption()).
 end_comment
 
 begin_comment
-comment|// Type:	Preprocessor macro.
+comment|// Type:    Preprocessor macro.
 end_comment
 
 begin_comment
-comment|// Args:	a	- (R) The actual variable's name.
+comment|// Args:    a   - (R) The actual variable's name.
 end_comment
 
 begin_comment
-comment|//			b	- (R) The type of variable (appended to CMICmdArgVal i.e. CMICmdArgValString).
+comment|//          b   - (R) The type of variable (appended to CMICmdArgVal i.e. CMICmdArgValString).
 end_comment
 
 begin_comment
-comment|//			c	- (R)	The text name of the argument or option to search for in the list of
+comment|//          c   - (R) The text name of the argument or option to search for in the list of
 end_comment
 
 begin_comment
-comment|//						the command's possible arguments or options.
+comment|//                    the command's possible arguments or options.
 end_comment
 
 begin_comment
-comment|// Return:	T * - CMICmdArgValBase derived object.
+comment|// Return:  T * - CMICmdArgValBase derived object.
 end_comment
 
 begin_comment
-comment|//				- NULL = function has failed, unable to retrieve the option/arg object.
+comment|//              - NULL = function has failed, unable to retrieve the option/arg object.
 end_comment
 
 begin_comment
-comment|// Throws:	None.
+comment|// Throws:  None.
 end_comment
 
 begin_comment
@@ -669,7 +673,7 @@ parameter_list|,
 name|c
 parameter_list|)
 define|\
-value|CMICmdArgVal##b * a = CMICmdBase::GetOption< CMICmdArgVal##b>( c );\ 	if( a == nullptr )													\ 		return MIstatus::failure;
+value|CMICmdArgVal##b *a = CMICmdBase::GetOption<CMICmdArgVal##b>(c);                                                                        \     if (a == nullptr)                                                                                                                      \         return MIstatus::failure;
 end_define
 
 begin_comment

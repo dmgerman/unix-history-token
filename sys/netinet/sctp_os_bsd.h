@@ -1772,14 +1772,14 @@ value|((so)->so_type)
 end_define
 
 begin_comment
-comment|/* Use a macro for renaming sb_cc to sb_ccc */
+comment|/* Use a macro for renaming sb_cc to sb_acc.  * Initially sb_ccc was used, but this broke select() when used  * with SCTP sockets.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|sb_cc
-value|sb_ccc
+value|sb_acc
 end_define
 
 begin_comment

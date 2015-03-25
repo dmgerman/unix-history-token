@@ -119,6 +119,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
+end_include
+
 begin_comment
 comment|/* The size of the buffer used for I/O. */
 end_comment
@@ -233,9 +239,9 @@ specifier|static
 name|void
 name|printheader
 parameter_list|(
-name|FILE
+name|xo_handle_t
 modifier|*
-name|f
+name|xo
 parameter_list|,
 specifier|const
 name|struct
@@ -267,31 +273,36 @@ name|char
 modifier|*
 name|stat_str
 decl_stmt|;
-name|fprintf
+name|xo_flush_h
 argument_list|(
-name|f
+name|xo
+argument_list|)
+expr_stmt|;
+name|xo_emit_h
+argument_list|(
+name|xo
 argument_list|,
-literal|"Dump header from device %s\n"
+literal|"{Lwc:Dump header from device}{:dump_device/%s}\n"
 argument_list|,
 name|device
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|f
+name|xo
 argument_list|,
-literal|"  Architecture: %s\n"
+literal|"{P:  }{Lwc:Architecture}{:architecture/%s}\n"
 argument_list|,
 name|h
 operator|->
 name|architecture
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|f
+name|xo
 argument_list|,
-literal|"  Architecture Version: %u\n"
+literal|"{P:  }{Lwc:Architecture Version}{:architecture_version/%u}\n"
 argument_list|,
 name|dtoh32
 argument_list|(
@@ -310,34 +321,24 @@ operator|->
 name|dumplength
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|f
+name|xo
 argument_list|,
-literal|"  Dump Length: %lldB (%lld MB)\n"
+literal|"{P:  }{Lwc:Dump Length}{:dump_length_bytes/%lld}\n"
 argument_list|,
 operator|(
 name|long
 name|long
 operator|)
 name|dumplen
-argument_list|,
-call|(
-name|long
-name|long
-call|)
-argument_list|(
-name|dumplen
-operator|>>
-literal|20
-argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|f
+name|xo
 argument_list|,
-literal|"  Blocksize: %d\n"
+literal|"{P:  }{Lwc:Blocksize}{:blocksize/%d}\n"
 argument_list|,
 name|dtoh32
 argument_list|(
@@ -356,11 +357,11 @@ operator|->
 name|dumptime
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|f
+name|xo
 argument_list|,
-literal|"  Dumptime: %s"
+literal|"{P:  }{Lwc:Dumptime}{:dumptime/%s}"
 argument_list|,
 name|ctime
 argument_list|(
@@ -369,66 +370,66 @@ name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|f
+name|xo
 argument_list|,
-literal|"  Hostname: %s\n"
+literal|"{P:  }{Lwc:Hostname}{:hostname/%s}\n"
 argument_list|,
 name|h
 operator|->
 name|hostname
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|f
+name|xo
 argument_list|,
-literal|"  Magic: %s\n"
+literal|"{P:  }{Lwc:Magic}{:magic/%s}\n"
 argument_list|,
 name|h
 operator|->
 name|magic
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|f
+name|xo
 argument_list|,
-literal|"  Version String: %s"
+literal|"{P:  }{Lwc:Version String}{:version_string/%s}"
 argument_list|,
 name|h
 operator|->
 name|versionstring
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|f
+name|xo
 argument_list|,
-literal|"  Panic String: %s\n"
+literal|"{P:  }{Lwc:Panic String}{:panic_string/%s}\n"
 argument_list|,
 name|h
 operator|->
 name|panicstring
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|f
+name|xo
 argument_list|,
-literal|"  Dump Parity: %u\n"
+literal|"{P:  }{Lwc:Dump Parity}{:dump_parity/%u}\n"
 argument_list|,
 name|h
 operator|->
 name|parity
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|f
+name|xo
 argument_list|,
-literal|"  Bounds: %d\n"
+literal|"{P:  }{Lwc:Bounds}{:bounds/%d}\n"
 argument_list|,
 name|bounds
 argument_list|)
@@ -460,18 +461,18 @@ operator|=
 literal|"unknown"
 expr_stmt|;
 block|}
-name|fprintf
+name|xo_emit_h
 argument_list|(
-name|f
+name|xo
 argument_list|,
-literal|"  Dump Status: %s\n"
+literal|"{P:  }{Lwc:Dump Status}{:dump_status/%s}\n"
 argument_list|,
 name|stat_str
 argument_list|)
 expr_stmt|;
-name|fflush
+name|xo_flush_h
 argument_list|(
-name|f
+name|xo
 argument_list|)
 expr_stmt|;
 block|}
@@ -2019,6 +2020,13 @@ modifier|*
 name|device
 parameter_list|)
 block|{
+name|xo_handle_t
+modifier|*
+name|xostdout
+decl_stmt|,
+modifier|*
+name|xoinfo
+decl_stmt|;
 specifier|static
 name|char
 name|infoname
@@ -2082,6 +2090,8 @@ name|status
 decl_stmt|;
 name|u_int
 name|sectorsize
+decl_stmt|,
+name|xostyle
 decl_stmt|;
 name|int
 name|istextdump
@@ -2099,6 +2109,35 @@ name|status
 operator|=
 name|STATUS_UNKNOWN
 expr_stmt|;
+name|xostdout
+operator|=
+name|xo_create_to_file
+argument_list|(
+name|stdout
+argument_list|,
+name|XO_STYLE_TEXT
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xostdout
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: %m"
+argument_list|,
+name|infoname
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 name|maxdumps
@@ -2714,7 +2753,7 @@ argument_list|)
 expr_stmt|;
 name|printheader
 argument_list|(
-name|stdout
+name|xostdout
 argument_list|,
 operator|&
 name|kdhf
@@ -2734,7 +2773,7 @@ argument_list|)
 expr_stmt|;
 name|printheader
 argument_list|(
-name|stdout
+name|xostdout
 argument_list|,
 operator|&
 name|kdhl
@@ -3089,13 +3128,61 @@ goto|goto
 name|closefd
 goto|;
 block|}
+name|xostyle
+operator|=
+name|xo_get_style
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+name|xoinfo
+operator|=
+name|xo_create_to_file
+argument_list|(
+name|info
+argument_list|,
+name|xostyle
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|xoinfo
+operator|==
+name|NULL
+condition|)
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"%s: %m"
+argument_list|,
+name|infoname
+argument_list|)
+expr_stmt|;
+name|nerr
+operator|++
+expr_stmt|;
+goto|goto
+name|closefd
+goto|;
+block|}
+name|xo_open_container_h
+argument_list|(
+name|xoinfo
+argument_list|,
+literal|"crashdump"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|verbose
 condition|)
 name|printheader
 argument_list|(
-name|stdout
+name|xostdout
 argument_list|,
 operator|&
 name|kdhl
@@ -3109,7 +3196,7 @@ argument_list|)
 expr_stmt|;
 name|printheader
 argument_list|(
-name|info
+name|xoinfo
 argument_list|,
 operator|&
 name|kdhl
@@ -3119,6 +3206,23 @@ argument_list|,
 name|bounds
 argument_list|,
 name|status
+argument_list|)
+expr_stmt|;
+name|xo_close_container_h
+argument_list|(
+name|xoinfo
+argument_list|,
+literal|"crashdump"
+argument_list|)
+expr_stmt|;
+name|xo_flush_h
+argument_list|(
+name|xoinfo
+argument_list|)
+expr_stmt|;
+name|xo_finish_h
+argument_list|(
+name|xoinfo
 argument_list|)
 expr_stmt|;
 name|fclose
@@ -3411,6 +3515,18 @@ literal|"error while clearing the dump header: %m"
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_close_container_h
+argument_list|(
+name|xostdout
+argument_list|,
+literal|"crashdump"
+argument_list|)
+expr_stmt|;
+name|xo_finish_h
+argument_list|(
+name|xostdout
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd
@@ -3442,10 +3558,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|fprintf
+name|xo_error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: savecore -c [-v] [device ...]"
@@ -3531,6 +3645,26 @@ argument_list|(
 name|SIGINFO
 argument_list|,
 name|infohandler
+argument_list|)
+expr_stmt|;
+name|argc
+operator|=
+name|xo_parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
 argument_list|)
 expr_stmt|;
 while|while

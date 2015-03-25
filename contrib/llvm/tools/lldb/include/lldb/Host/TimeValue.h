@@ -118,6 +118,13 @@ name|NanoSecPerMicroSec
 init|=
 literal|1000U
 decl_stmt|;
+specifier|static
+specifier|const
+name|uint64_t
+name|NanoSecPerMilliSec
+init|=
+literal|1000000UL
+decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
 comment|//------------------------------------------------------------------
@@ -286,6 +293,20 @@ name|NanoSecPerSec
 operator|)
 operator|/
 name|NanoSecPerMicroSec
+return|;
+block|}
+comment|/// Returns only the fractional portion of the TimeValue rounded down to the
+comment|/// nearest millisecond (divide by one million).
+comment|/// @brief Retrieve the milliseconds component;
+name|uint32_t
+name|milliseconds
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_nano_seconds
+operator|/
+name|NanoSecPerMilliSec
 return|;
 block|}
 name|protected

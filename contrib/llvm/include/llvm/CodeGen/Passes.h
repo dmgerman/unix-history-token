@@ -323,6 +323,9 @@ block|;
 name|bool
 name|Stopped
 block|;
+name|bool
+name|AddingMachinePasses
+block|;
 name|protected
 operator|:
 name|TargetMachine
@@ -550,6 +553,13 @@ name|getOptimizeRegAlloc
 argument_list|()
 specifier|const
 block|;
+comment|/// Return true if the default global register allocator is in use and
+comment|/// has not be overriden on the command line with '-regalloc=...'
+name|bool
+name|usingDefaultRegAlloc
+argument_list|()
+specifier|const
+block|;
 comment|/// Add common target configurable passes that perform LLVM IR to IR
 comment|/// transforms following machine independent optimization.
 name|virtual
@@ -681,18 +691,13 @@ return|return
 name|false
 return|;
 block|}
-comment|/// addPreRegAlloc - This method may be implemented by targets that want to
-comment|/// run passes immediately before register allocation. This should return
-comment|/// true if -print-machineinstrs should print after these passes.
+comment|/// This method may be implemented by targets that want to run passes
+comment|/// immediately before register allocation.
 name|virtual
-name|bool
+name|void
 name|addPreRegAlloc
 argument_list|()
-block|{
-return|return
-name|false
-return|;
-block|}
+block|{ }
 comment|/// createTargetRegisterAllocator - Create the register allocator pass for
 comment|/// this target at the current optimization level.
 name|virtual
@@ -742,38 +747,26 @@ return|return
 name|false
 return|;
 block|}
-comment|/// addPostRegAlloc - This method may be implemented by targets that want to
-comment|/// run passes after register allocation pass pipeline but before
-comment|/// prolog-epilog insertion.  This should return true if -print-machineinstrs
-comment|/// should print after these passes.
+comment|/// This method may be implemented by targets that want to run passes after
+comment|/// register allocation pass pipeline but before prolog-epilog insertion.
 name|virtual
-name|bool
+name|void
 name|addPostRegAlloc
 argument_list|()
-block|{
-return|return
-name|false
-return|;
-block|}
+block|{ }
 comment|/// Add passes that optimize machine instructions after register allocation.
 name|virtual
 name|void
 name|addMachineLateOptimization
 argument_list|()
 block|;
-comment|/// addPreSched2 - This method may be implemented by targets that want to
-comment|/// run passes after prolog-epilog insertion and before the second instruction
-comment|/// scheduling pass.  This should return true if -print-machineinstrs should
-comment|/// print after these passes.
+comment|/// This method may be implemented by targets that want to run passes after
+comment|/// prolog-epilog insertion and before the second instruction scheduling pass.
 name|virtual
-name|bool
+name|void
 name|addPreSched2
 argument_list|()
-block|{
-return|return
-name|false
-return|;
-block|}
+block|{ }
 comment|/// addGCPasses - Add late codegen passes that analyze code for garbage
 comment|/// collection. This should return true if GC info should be printed after
 comment|/// these passes.
@@ -788,37 +781,46 @@ name|void
 name|addBlockPlacement
 argument_list|()
 block|;
-comment|/// addPreEmitPass - This pass may be implemented by targets that want to run
-comment|/// passes immediately before machine code is emitted.  This should return
-comment|/// true if -print-machineinstrs should print out the code after the passes.
+comment|/// This pass may be implemented by targets that want to run passes
+comment|/// immediately before machine code is emitted.
 name|virtual
-name|bool
+name|void
 name|addPreEmitPass
 argument_list|()
-block|{
-return|return
-name|false
-return|;
-block|}
+block|{ }
 comment|/// Utilities for targets to add passes to the pass manager.
 comment|///
 comment|/// Add a CodeGen pass at this point in the pipeline after checking overrides.
 comment|/// Return the pass that was added, or zero if no pass was added.
+comment|/// @p printAfter    if true and adding a machine function pass add an extra
+comment|///                  machine printer pass afterwards
+comment|/// @p verifyAfter   if true and adding a machine function pass add an extra
+comment|///                  machine verification pass afterwards.
 name|AnalysisID
 name|addPass
 argument_list|(
 argument|AnalysisID PassID
+argument_list|,
+argument|bool verifyAfter = true
+argument_list|,
+argument|bool printAfter = true
 argument_list|)
 block|;
 comment|/// Add a pass to the PassManager if that pass is supposed to be run, as
 comment|/// determined by the StartAfter and StopAfter options. Takes ownership of the
 comment|/// pass.
+comment|/// @p printAfter    if true and adding a machine function pass add an extra
+comment|///                  machine printer pass afterwards
+comment|/// @p verifyAfter   if true and adding a machine function pass add an extra
+comment|///                  machine verification pass afterwards.
 name|void
 name|addPass
 argument_list|(
-name|Pass
-operator|*
-name|P
+argument|Pass *P
+argument_list|,
+argument|bool verifyAfter = true
+argument_list|,
+argument|bool printAfter = true
 argument_list|)
 block|;
 comment|/// addMachinePasses helper to create the target-selected or overriden
@@ -837,8 +839,35 @@ name|void
 name|printAndVerify
 argument_list|(
 specifier|const
-name|char
-operator|*
+name|std
+operator|::
+name|string
+operator|&
+name|Banner
+argument_list|)
+block|;
+comment|/// Add a pass to print the machine function if printing is enabled.
+name|void
+name|addPrintPass
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Banner
+argument_list|)
+block|;
+comment|/// Add a pass to perform basic verification of the machine function if
+comment|/// verification is enabled.
+name|void
+name|addVerifyPass
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
 name|Banner
 argument_list|)
 block|; }
@@ -860,7 +889,7 @@ name|llvm
 block|{
 name|FunctionPass
 modifier|*
-name|createAtomicExpandLoadLinkedPass
+name|createAtomicExpandPass
 parameter_list|(
 specifier|const
 name|TargetMachine
@@ -927,11 +956,12 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-comment|/// AtomicExpandLoadLinkedID -- FIXME
+comment|/// AtomicExpandID -- Lowers atomic operations in terms of either cmpxchg
+comment|/// load-linked/store-conditional loops.
 specifier|extern
 name|char
 modifier|&
-name|AtomicExpandLoadLinkedID
+name|AtomicExpandID
 decl_stmt|;
 comment|/// MachineLoopInfo - This pass is a loop analysis pass.
 specifier|extern
@@ -1134,6 +1164,13 @@ name|char
 modifier|&
 name|EarlyIfConverterID
 decl_stmt|;
+comment|/// This pass performs instruction combining using trace metrics to estimate
+comment|/// critical-path and resource depth.
+specifier|extern
+name|char
+modifier|&
+name|MachineCombinerID
+decl_stmt|;
 comment|/// StackSlotColoring - This pass performs stack coloring and merging.
 comment|/// It merges disjoint allocas to reduce the stack size.
 specifier|extern
@@ -1253,15 +1290,15 @@ comment|///
 name|FunctionPass
 modifier|*
 name|createMachineVerifierPass
-parameter_list|(
+argument_list|(
 specifier|const
-name|char
-modifier|*
+name|std
+operator|::
+name|string
+operator|&
 name|Banner
-init|=
-name|nullptr
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// createDwarfEHPass - This pass mulches exception handling code into a form
 comment|/// adapted to code generation.  Required if using dwarf exception handling.
 name|FunctionPass
@@ -1343,6 +1380,13 @@ comment|/// createJumpInstrTables - This pass creates jump-instruction tables.
 name|ModulePass
 modifier|*
 name|createJumpInstrTablesPass
+parameter_list|()
+function_decl|;
+comment|/// createForwardControlFlowIntegrityPass - This pass adds control-flow
+comment|/// integrity.
+name|ModulePass
+modifier|*
+name|createForwardControlFlowIntegrityPass
 parameter_list|()
 function_decl|;
 block|}

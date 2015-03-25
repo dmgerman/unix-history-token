@@ -102,6 +102,9 @@ name|namespace
 name|lldb
 block|{
 name|class
+name|SBPlatform
+decl_stmt|;
+name|class
 name|SBLaunchInfo
 block|{
 name|public
@@ -184,6 +187,33 @@ name|exe_file
 parameter_list|,
 name|bool
 name|add_as_first_arg
+parameter_list|)
+function_decl|;
+comment|//----------------------------------------------------------------------
+comment|/// Get the listener that will be used to receive process events.
+comment|///
+comment|/// If no listener has been set via a call to
+comment|/// SBLaunchInfo::SetListener(), then an invalid SBListener will be
+comment|/// returned (SBListener::IsValid() will return false). If a listener
+comment|/// has been set, then the valid listener object will be returned.
+comment|//----------------------------------------------------------------------
+name|SBListener
+name|GetListener
+parameter_list|()
+function_decl|;
+comment|//----------------------------------------------------------------------
+comment|/// Set the listener that will be used to receive process events.
+comment|///
+comment|/// By default the SBDebugger, which has a listener, that the SBTarget
+comment|/// belongs to will listen for the process events. Calling this function
+comment|/// allows a different listener to be used to listen for process events.
+comment|//----------------------------------------------------------------------
+name|void
+name|SetListener
+parameter_list|(
+name|SBListener
+modifier|&
+name|listener
 parameter_list|)
 function_decl|;
 name|uint32_t
@@ -607,6 +637,33 @@ name|bool
 name|ParentProcessIDIsValid
 parameter_list|()
 function_decl|;
+comment|//----------------------------------------------------------------------
+comment|/// Get the listener that will be used to receive process events.
+comment|///
+comment|/// If no listener has been set via a call to
+comment|/// SBLaunchInfo::SetListener(), then an invalid SBListener will be
+comment|/// returned (SBListener::IsValid() will return false). If a listener
+comment|/// has been set, then the valid listener object will be returned.
+comment|//----------------------------------------------------------------------
+name|SBListener
+name|GetListener
+parameter_list|()
+function_decl|;
+comment|//----------------------------------------------------------------------
+comment|/// Set the listener that will be used to receive process events.
+comment|///
+comment|/// By default the SBDebugger, which has a listener, that the SBTarget
+comment|/// belongs to will listen for the process events. Calling this function
+comment|/// allows a different listener to be used to listen for process events.
+comment|//----------------------------------------------------------------------
+name|void
+name|SetListener
+parameter_list|(
+name|SBListener
+modifier|&
+name|listener
+parameter_list|)
+function_decl|;
 name|protected
 label|:
 name|friend
@@ -741,6 +798,21 @@ name|lldb
 operator|::
 name|SBProcess
 name|GetProcess
+argument_list|()
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Return the platform object associated with the target.
+comment|///
+comment|/// After return, the platform object should be checked for
+comment|/// validity.
+comment|///
+comment|/// @return
+comment|///     A platform object.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBPlatform
+name|GetPlatform
 argument_list|()
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -1191,6 +1263,28 @@ name|GetTriple
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|/// Architecture data byte width accessor
+comment|///
+comment|/// @return
+comment|/// The size in 8-bit (host) bytes of a minimum addressable
+comment|/// unit from the Architecture's data bus
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|GetDataByteSize
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Architecture code byte width accessor
+comment|///
+comment|/// @return
+comment|/// The size in 8-bit (host) bytes of a minimum addressable
+comment|/// unit from the Architecture's code bus
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|GetCodeByteSize
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
 comment|/// Set the base load address for a module section.
 comment|///
 comment|/// @param[in] section
@@ -1352,10 +1446,80 @@ operator|*
 name|name
 argument_list|)
 expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Find global and static variables by pattern.
+comment|///
+comment|/// @param[in] name
+comment|///     The pattern to search for global or static variables
+comment|///
+comment|/// @param[in] max_matches
+comment|///     Allow the number of matches to be limited to \a max_matches.
+comment|///
+comment|/// @param[in] matchtype
+comment|///     The match type to use.
+comment|///
+comment|/// @return
+comment|///     A list of matched variables in an SBValueList.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBValueList
+name|FindGlobalVariables
+argument_list|(
+argument|const char *name
+argument_list|,
+argument|uint32_t max_matches
+argument_list|,
+argument|MatchType matchtype
+argument_list|)
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Find global functions by their name with pattern matching.
+comment|///
+comment|/// @param[in] name
+comment|///     The pattern to search for global or static variables
+comment|///
+comment|/// @param[in] max_matches
+comment|///     Allow the number of matches to be limited to \a max_matches.
+comment|///
+comment|/// @param[in] matchtype
+comment|///     The match type to use.
+comment|///
+comment|/// @return
+comment|///     A list of matched variables in an SBValueList.
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBSymbolContextList
+name|FindGlobalFunctions
+argument_list|(
+argument|const char *name
+argument_list|,
+argument|uint32_t max_matches
+argument_list|,
+argument|MatchType matchtype
+argument_list|)
+expr_stmt|;
 name|void
 name|Clear
 parameter_list|()
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Resolve a current file address into a section offset address.
+comment|///
+comment|/// @param[in] file_addr
+comment|///
+comment|/// @return
+comment|///     An SBAddress which will be valid if...
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|SBAddress
+name|ResolveFileAddress
+argument_list|(
+argument|lldb::addr_t file_addr
+argument_list|)
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Resolve a current load address into a section offset address.
 comment|///
@@ -1421,6 +1585,49 @@ name|uint32_t
 name|resolve_scope
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Read target memory. If a target process is running then memory
+comment|/// is read from here. Otherwise the memory is read from the object
+comment|/// files. For a target whose bytes are sized as a multiple of host
+comment|/// bytes, the data read back will preserve the target's byte order.
+comment|///
+comment|/// @param[in] addr
+comment|///     A target address to read from.
+comment|///
+comment|/// @param[out] buf
+comment|///     The buffer to read memory into.
+comment|///
+comment|/// @param[in] size
+comment|///     The maximum number of host bytes to read in the buffer passed
+comment|///     into this call
+comment|///
+comment|/// @param[out] error
+comment|///     Error information is written here if the memory read fails.
+comment|///
+comment|/// @return
+comment|///     The amount of data read in host bytes.
+comment|//------------------------------------------------------------------
+name|size_t
+name|ReadMemory
+argument_list|(
+specifier|const
+name|SBAddress
+name|addr
+argument_list|,
+name|void
+operator|*
+name|buf
+argument_list|,
+name|size_t
+name|size
+argument_list|,
+name|lldb
+operator|::
+name|SBError
+operator|&
+name|error
+argument_list|)
+decl_stmt|;
 name|lldb
 operator|::
 name|SBBreakpoint
@@ -1769,6 +1976,34 @@ argument_list|,
 argument|lldb::SBType type
 argument_list|)
 expr_stmt|;
+name|lldb
+operator|::
+name|SBValue
+name|CreateValueFromData
+argument_list|(
+argument|const char *name
+argument_list|,
+argument|lldb::SBData data
+argument_list|,
+argument|lldb::SBType type
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|SBValue
+name|CreateValueFromExpression
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|expr
+argument_list|)
+expr_stmt|;
 name|SBSourceManager
 name|GetSourceManager
 parameter_list|()
@@ -1935,6 +2170,10 @@ decl_stmt|;
 name|friend
 name|class
 name|SBDebugger
+decl_stmt|;
+name|friend
+name|class
+name|SBExecutionContext
 decl_stmt|;
 name|friend
 name|class

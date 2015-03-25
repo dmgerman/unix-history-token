@@ -33,12 +33,27 @@ name|CHAR8
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ACPI_THREAD_ID
+end_ifndef
+
+begin_comment
+comment|/* ACPI's definitions are fine */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|UINT8
 name|BOOLEAN
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#

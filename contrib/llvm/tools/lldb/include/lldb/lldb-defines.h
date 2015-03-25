@@ -243,13 +243,6 @@ name|LLDB_GENERIC_ERROR
 value|UINT32_MAX
 end_define
 
-begin_define
-define|#
-directive|define
-name|LLDB_DEFAULT_SHELL
-value|"/bin/sh"
-end_define
-
 begin_comment
 comment|//----------------------------------------------------------------------
 end_comment

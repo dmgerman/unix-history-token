@@ -21,6 +21,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/*  * See e_j0.c for complete comments.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -45,6 +49,21 @@ name|qzerof
 argument_list|(
 name|float
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+specifier|volatile
+name|float
+name|vone
+init|=
+literal|1
+decl_stmt|,
+name|vzero
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -274,7 +293,7 @@ if|if
 condition|(
 name|ix
 operator|>
-literal|0x54000000
+literal|0x58000000
 condition|)
 name|z
 operator|=
@@ -289,6 +308,7 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
+comment|/* |x|>2**49 */
 else|else
 block|{
 name|u
@@ -600,7 +620,6 @@ literal|0x7fffffff
 operator|&
 name|hx
 expr_stmt|;
-comment|/* Y0(NaN) is NaN, y0(-inf) is Nan, y0(inf) is 0  */
 if|if
 condition|(
 name|ix
@@ -608,7 +627,7 @@ operator|>=
 literal|0x7f800000
 condition|)
 return|return
-name|one
+name|vone
 operator|/
 operator|(
 name|x
@@ -628,7 +647,7 @@ return|return
 operator|-
 name|one
 operator|/
-name|zero
+name|vzero
 return|;
 if|if
 condition|(
@@ -637,9 +656,9 @@ operator|<
 literal|0
 condition|)
 return|return
-name|zero
+name|vzero
 operator|/
-name|zero
+name|vzero
 return|;
 if|if
 condition|(
@@ -723,7 +742,7 @@ if|if
 condition|(
 name|ix
 operator|>
-literal|0x54800000
+literal|0x58000000
 condition|)
 name|z
 operator|=
@@ -738,6 +757,7 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
+comment|/* |x|>2**49 */
 else|else
 block|{
 name|u
@@ -782,10 +802,10 @@ if|if
 condition|(
 name|ix
 operator|<=
-literal|0x32000000
+literal|0x39000000
 condition|)
 block|{
-comment|/* x< 2**-27 */
+comment|/* x< 2**-13 */
 return|return
 operator|(
 name|u00
@@ -1170,6 +1190,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|float
 name|pzerof
 parameter_list|(
@@ -1227,7 +1248,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x40f71c58
+literal|0x409173eb
 condition|)
 block|{
 name|p
@@ -1244,7 +1265,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x4036db68
+literal|0x4036d917
 condition|)
 block|{
 name|p
@@ -1256,13 +1277,7 @@ operator|=
 name|pS3
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ix
-operator|>=
-literal|0x40000000
-condition|)
+else|else
 block|{
 name|p
 operator|=
@@ -1273,6 +1288,7 @@ operator|=
 name|pS2
 expr_stmt|;
 block|}
+comment|/* ix>=0x40000000 */
 name|z
 operator|=
 name|one
@@ -1660,6 +1676,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|float
 name|qzerof
 parameter_list|(
@@ -1717,7 +1734,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x40f71c58
+literal|0x409173eb
 condition|)
 block|{
 name|p
@@ -1734,7 +1751,7 @@ if|if
 condition|(
 name|ix
 operator|>=
-literal|0x4036db68
+literal|0x4036d917
 condition|)
 block|{
 name|p
@@ -1746,13 +1763,7 @@ operator|=
 name|qS3
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ix
-operator|>=
-literal|0x40000000
-condition|)
+else|else
 block|{
 name|p
 operator|=
@@ -1763,6 +1774,7 @@ operator|=
 name|qS2
 expr_stmt|;
 block|}
+comment|/* ix>=0x40000000 */
 name|z
 operator|=
 name|one

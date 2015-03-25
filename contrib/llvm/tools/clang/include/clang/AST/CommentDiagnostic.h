@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_COMMENTDIAGNOSTIC_H
+name|LLVM_CLANG_AST_COMMENTDIAGNOSTIC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_COMMENTDIAGNOSTIC_H
+name|LLVM_CLANG_AST_COMMENTDIAGNOSTIC_H
 end_define
 
 begin_include

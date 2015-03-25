@@ -5323,6 +5323,23 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|sc
+operator|->
+name|crq_queue
+index|[
+name|sc
+operator|->
+name|cur_crq
+index|]
+operator|.
+name|valid
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* The hypercalls at both ends of this are not optimal */
 name|phyp_hcall
 argument_list|(
 name|H_VIO_SIGNAL
@@ -5347,22 +5364,6 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-name|sc
-operator|->
-name|crq_queue
-index|[
-name|sc
-operator|->
-name|cur_crq
-index|]
-operator|.
-name|valid
-operator|!=
-literal|0
-condition|)
-block|{
 name|crq
 operator|=
 operator|&
@@ -5583,8 +5584,6 @@ name|sc
 operator|->
 name|n_crqs
 expr_stmt|;
-block|}
-empty_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|sc
@@ -5609,6 +5608,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 

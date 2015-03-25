@@ -198,7 +198,30 @@ comment|/// This also implies a stack map.
 name|PATCHPOINT
 init|=
 literal|18
-block|}
+block|,
+comment|/// This pseudo-instruction loads the stack guard value. Targets which need
+comment|/// to prevent the stack guard value or address from being spilled to the
+comment|/// stack should override TargetLowering::emitLoadStackGuardNode and
+comment|/// additionally expand this pseudo after register allocation.
+name|LOAD_STACK_GUARD
+init|=
+literal|19
+block|,
+comment|/// Call instruction with associated vm state for deoptimization and list
+comment|/// of live pointers for relocation by the garbage collector.  It is
+comment|/// intended to support garbage collection with fully precise relocating
+comment|/// collectors and deoptimizations in either the callee or caller.
+name|STATEPOINT
+init|=
+literal|20
+block|,
+comment|/// Instruction that records the offset of a function's frame allocation in a
+comment|/// label. Created by the llvm.frameallocate intrinsic. It has two arguments:
+comment|/// the symbol for the label and the frame index of the stack allocation.
+name|FRAME_ALLOC
+init|=
+literal|21
+block|, }
 enum|;
 block|}
 comment|// end namespace TargetOpcode

@@ -46,13 +46,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Triple.h"
+file|"clang/Basic/LangOptions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Basic/LangOptions.h"
+file|"llvm/ADT/Triple.h"
 end_include
 
 begin_decl_stmt
@@ -66,9 +66,6 @@ name|enum
 name|class
 name|AttrSyntax
 block|{
-comment|/// Is the attribute identifier generally known for any syntax?
-name|Generic
-operator|,
 comment|/// Is the identifier known as a GNU-style attribute?
 name|GNU
 operator|,
@@ -82,9 +79,9 @@ comment|// Is the identifier known as a pragma attribute?
 name|Pragma
 block|}
 empty_stmt|;
-comment|/// \brief Return true if we recognize and implement the attribute specified by
-comment|/// the given information.
-name|bool
+comment|/// \brief Return the version number associated with the attribute if we
+comment|/// recognize and implement the attribute specified by the given information.
+name|int
 name|hasAttribute
 argument_list|(
 name|AttrSyntax

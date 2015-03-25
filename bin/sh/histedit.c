@@ -1420,6 +1420,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+specifier|const
 name|char
 modifier|*
 name|s
@@ -1437,10 +1438,6 @@ argument_list|,
 name|repl
 argument_list|)
 else|:
-operator|(
-name|char
-operator|*
-operator|)
 name|he
 operator|.
 name|str
@@ -2052,13 +2049,15 @@ name|el
 argument_list|,
 name|argc
 argument_list|,
-operator|(
+name|__DECONST
+argument_list|(
 specifier|const
 name|char
 operator|*
 operator|*
-operator|)
+argument_list|,
 name|argv
+argument_list|)
 argument_list|)
 operator|)
 return|;

@@ -670,7 +670,7 @@ name|fprintf
 argument_list|(
 name|mfp
 argument_list|,
-literal|"-- filemon acquired metadata --\n"
+literal|"\n-- filemon acquired metadata --\n"
 argument_list|)
 expr_stmt|;
 while|while

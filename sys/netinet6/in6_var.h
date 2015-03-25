@@ -106,7 +106,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 struct_decl|;
 end_struct_decl
 
@@ -138,7 +138,7 @@ modifier|*
 name|lltable
 decl_stmt|;
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mld_ifinfo
 decl_stmt|;
@@ -156,19 +156,11 @@ parameter_list|)
 value|(((struct in6_ifextra *)(ifp)->if_afdata[AF_INET6])->lltable)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|_KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_WANT_IFADDR
-argument_list|)
-end_if
+end_ifdef
 
 begin_struct
 struct|struct
@@ -285,6 +277,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_comment
 comment|/* control structure to manage address selection policy */
@@ -2102,15 +2098,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL */
-end_comment
-
 begin_comment
 comment|/*  * IPv6 multicast PCB-layer group filter descriptor.  */
 end_comment
@@ -2208,7 +2195,7 @@ decl_stmt|;
 comment|/* MLD6 listener report timer */
 comment|/* New fields for MLDv2 follow. */
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|in6m_mli
 decl_stmt|;
@@ -2230,7 +2217,7 @@ name|in6m_nsrc
 decl_stmt|;
 comment|/* # of tree entries */
 name|struct
-name|ifqueue
+name|mbufq
 name|in6m_scq
 decl_stmt|;
 comment|/* queue of pending 						 * state-change packets */
@@ -2387,12 +2374,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_comment
 comment|/*  * Lock macros for IPv6 layer multicast address lists.  IPv6 lock goes  * before link layer multicast locks in the lock order.  In most cases,  * consumers of IN_*_MULTI() macros should acquire the locks before  * calling them; users of the in_{add,del}multi() functions should not.  */
@@ -3131,22 +3112,6 @@ name|in6ifa_llaonifp
 parameter_list|(
 name|struct
 name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|ip6_sprintf
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-specifier|const
-name|struct
-name|in6_addr
 modifier|*
 parameter_list|)
 function_decl|;

@@ -51,6 +51,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_LIB_TARGET_NVPTX_NVPTXMACHINEFUNCTIONINFO_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_LIB_TARGET_NVPTX_NVPTXMACHINEFUNCTIONINFO_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -193,6 +205,11 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_endif
 unit|}
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

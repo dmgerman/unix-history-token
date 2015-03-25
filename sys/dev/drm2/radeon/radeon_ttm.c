@@ -2739,7 +2739,7 @@ name|ddev
 operator|->
 name|agp
 operator|->
-name|agpdev
+name|bridge
 argument_list|,
 name|size
 argument_list|,
@@ -2763,7 +2763,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -2872,7 +2872,7 @@ name|r
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|bool
 name|slave
 init|=
@@ -2888,7 +2888,7 @@ operator|)
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 if|if
 condition|(
 name|ttm
@@ -2902,8 +2902,7 @@ literal|0
 return|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
-comment|/* 	 * Maybe unneeded on FreeBSD. 	 *   -- dumbbell@ 	 */
+name|FREEBSD_WIP
 if|if
 condition|(
 name|slave
@@ -2946,7 +2945,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 name|rdev
 operator|=
 name|radeon_get_rdev
@@ -3055,7 +3054,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|gtt
 operator|->
 name|ttm
@@ -3154,7 +3153,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 return|return
 literal|0
@@ -3306,7 +3305,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|pci_unmap_page
 argument_list|(
 name|rdev
@@ -3329,7 +3328,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 block|}
 name|ttm_pool_unpopulate
@@ -3464,8 +3463,6 @@ parameter_list|)
 block|{
 name|int
 name|r
-decl_stmt|,
-name|r2
 decl_stmt|;
 name|r
 operator|=
@@ -3738,50 +3735,6 @@ argument_list|(
 literal|"Failed initializing GTT heap.\n"
 argument_list|)
 expr_stmt|;
-name|r2
-operator|=
-name|radeon_bo_reserve
-argument_list|(
-name|rdev
-operator|->
-name|stollen_vga_memory
-argument_list|,
-name|false
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|likely
-argument_list|(
-name|r2
-operator|==
-literal|0
-argument_list|)
-condition|)
-block|{
-name|radeon_bo_unpin
-argument_list|(
-name|rdev
-operator|->
-name|stollen_vga_memory
-argument_list|)
-expr_stmt|;
-name|radeon_bo_unreserve
-argument_list|(
-name|rdev
-operator|->
-name|stollen_vga_memory
-argument_list|)
-expr_stmt|;
-block|}
-name|radeon_bo_unref
-argument_list|(
-operator|&
-name|rdev
-operator|->
-name|stollen_vga_memory
-argument_list|)
-expr_stmt|;
 return|return
 name|r
 return|;
@@ -3823,50 +3776,6 @@ block|{
 name|DRM_ERROR
 argument_list|(
 literal|"Failed to init debugfs\n"
-argument_list|)
-expr_stmt|;
-name|r2
-operator|=
-name|radeon_bo_reserve
-argument_list|(
-name|rdev
-operator|->
-name|stollen_vga_memory
-argument_list|,
-name|false
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|likely
-argument_list|(
-name|r2
-operator|==
-literal|0
-argument_list|)
-condition|)
-block|{
-name|radeon_bo_unpin
-argument_list|(
-name|rdev
-operator|->
-name|stollen_vga_memory
-argument_list|)
-expr_stmt|;
-name|radeon_bo_unreserve
-argument_list|(
-name|rdev
-operator|->
-name|stollen_vga_memory
-argument_list|)
-expr_stmt|;
-block|}
-name|radeon_bo_unref
-argument_list|(
-operator|&
-name|rdev
-operator|->
-name|stollen_vga_memory
 argument_list|)
 expr_stmt|;
 return|return
@@ -4072,7 +3981,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_decl_stmt
@@ -4347,7 +4256,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 begin_define

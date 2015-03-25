@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MIPS_MIPSFIXUPKINDS_H
+name|LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSFIXUPKINDS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MIPS_MIPSFIXUPKINDS_H
+name|LLVM_LIB_TARGET_MIPS_MCTARGETDESC_MIPSFIXUPKINDS_H
 end_define
 
 begin_include
@@ -204,6 +204,9 @@ block|,
 comment|// resulting in - R_MICROMIPS_GOT16
 name|fixup_MICROMIPS_GOT16
 block|,
+comment|// resulting in - R_MICROMIPS_PC7_S1
+name|fixup_MICROMIPS_PC7_S1
+block|,
 comment|// resulting in - R_MICROMIPS_PC16_S1
 name|fixup_MICROMIPS_PC16_S1
 block|,
@@ -260,10 +263,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_MIPS_MIPSFIXUPKINDS_H
-end_comment
 
 end_unit
 

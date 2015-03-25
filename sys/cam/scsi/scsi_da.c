@@ -3274,6 +3274,42 @@ block|,
 comment|/*quirks*/
 name|DA_Q_4K
 block|}
+block|,
+block|{
+comment|/* 		 * Hama Innostor USB-Stick  		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"Innostor"
+block|,
+literal|"Innostor*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_RC16
+block|}
+block|,
+block|{
+comment|/* 		 * MX-ES USB Drive by Mach Xtreme 		 */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
+literal|"MX"
+block|,
+literal|"MXUB3SES*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|DA_Q_NO_RC16
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt

@@ -132,7 +132,6 @@ modifier|*
 name|d
 parameter_list|)
 function_decl|;
-specifier|const
 name|void
 modifier|*
 name|getInstance

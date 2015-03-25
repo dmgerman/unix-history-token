@@ -10634,6 +10634,10 @@ operator|==
 name|DTYPE_SHM
 condition|)
 block|{
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|shmfd
 operator|=
 name|fp

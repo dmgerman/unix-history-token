@@ -928,7 +928,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|PCI_LBPC
 argument_list|,
@@ -1103,7 +1103,7 @@ name|pci_write_config
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|PCI_LBPC
 argument_list|,

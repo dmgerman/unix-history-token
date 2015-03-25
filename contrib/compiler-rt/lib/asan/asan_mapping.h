@@ -242,7 +242,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Default Linux/MIPS mapping:
+comment|// Default Linux/MIPS32 mapping:
 end_comment
 
 begin_comment
@@ -263,6 +263,34 @@ end_comment
 
 begin_comment
 comment|// || `[0x00000000, 0x0aa9ffff]` || LowMem     ||
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Default Linux/MIPS64 mapping:
+end_comment
+
+begin_comment
+comment|// || `[0x4000000000, 0xffffffffff]` || HighMem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x2800000000, 0x3fffffffff]` || HighShadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x2400000000, 0x27ffffffff]` || ShadowGap  ||
+end_comment
+
+begin_comment
+comment|// || `[0x2000000000, 0x23ffffffff]` || LowShadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x0000000000, 0x1fffffffff]` || LowMem     ||
 end_comment
 
 begin_comment
@@ -319,6 +347,42 @@ end_comment
 
 begin_comment
 comment|// || `[0x00000000, 0x3fffffff]` || LowMem     ||
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Default Windows/i386 mapping:
+end_comment
+
+begin_comment
+comment|// (the exact location of HighShadow/HighMem may vary depending
+end_comment
+
+begin_comment
+comment|//  on WoW64, /LARGEADDRESSAWARE, etc).
+end_comment
+
+begin_comment
+comment|// || `[0x50000000, 0xffffffff]` || HighMem    ||
+end_comment
+
+begin_comment
+comment|// || `[0x3a000000, 0x4fffffff]` || HighShadow ||
+end_comment
+
+begin_comment
+comment|// || `[0x36000000, 0x39ffffff]` || ShadowGap  ||
+end_comment
+
+begin_comment
+comment|// || `[0x30000000, 0x35ffffff]` || LowShadow  ||
+end_comment
+
+begin_comment
+comment|// || `[0x00000000, 0x2fffffff]` || LowMem     ||
 end_comment
 
 begin_decl_stmt
@@ -419,7 +483,7 @@ name|kMIPS64_ShadowOffset64
 init|=
 literal|1ULL
 operator|<<
-literal|36
+literal|37
 decl_stmt|;
 end_decl_stmt
 
@@ -465,6 +529,22 @@ end_decl_stmt
 
 begin_comment
 comment|// 0x400000000000
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|u64
+name|kWindowsShadowOffset32
+init|=
+literal|3ULL
+operator|<<
+literal|28
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// 0x30000000
 end_comment
 
 begin_define
@@ -529,22 +609,30 @@ name|SHADOW_OFFSET
 value|kFreeBSD_ShadowOffset32
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_if
-if|#
-directive|if
+begin_elif
+elif|#
+directive|elif
 name|SANITIZER_IOS
-end_if
+end_elif
 
 begin_define
 define|#
 directive|define
 name|SHADOW_OFFSET
 value|kIosShadowOffset32
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|SANITIZER_WINDOWS
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SHADOW_OFFSET
+value|kWindowsShadowOffset32
 end_define
 
 begin_else
@@ -558,11 +646,6 @@ directive|define
 name|SHADOW_OFFSET
 value|kDefaultShadowOffset32
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

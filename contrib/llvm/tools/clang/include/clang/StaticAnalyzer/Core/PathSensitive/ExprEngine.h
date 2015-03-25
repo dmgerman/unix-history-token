@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_EXPRENGINE
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_EXPRENGINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_EXPRENGINE
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_EXPRENGINE_H
 end_define
 
 begin_include
@@ -655,6 +655,26 @@ argument_list|,
 argument|const Stmt *Term
 argument_list|,
 argument|NodeBuilderContext& BuilderCtx
+argument_list|,
+argument|ExplodedNode *Pred
+argument_list|,
+argument|ExplodedNodeSet&Dst
+argument_list|,
+argument|const CFGBlock *DstT
+argument_list|,
+argument|const CFGBlock *DstF
+argument_list|)
+name|override
+block|;
+comment|/// Called by CoreEngine.
+comment|/// Used to generate successor nodes for temporary destructors depending
+comment|/// on whether the corresponding constructor was visited.
+name|void
+name|processCleanupTemporaryBranch
+argument_list|(
+argument|const CXXBindTemporaryExpr *BTE
+argument_list|,
+argument|NodeBuilderContext&BldCtx
 argument_list|,
 argument|ExplodedNode *Pred
 argument_list|,
@@ -1379,6 +1399,23 @@ argument_list|,
 name|ExplodedNode
 operator|*
 name|Pred
+argument_list|,
+name|ExplodedNodeSet
+operator|&
+name|Dst
+argument_list|)
+block|;
+name|void
+name|VisitCXXBindTemporaryExpr
+argument_list|(
+specifier|const
+name|CXXBindTemporaryExpr
+operator|*
+name|BTE
+argument_list|,
+name|ExplodedNodeSet
+operator|&
+name|PreVisit
 argument_list|,
 name|ExplodedNodeSet
 operator|&

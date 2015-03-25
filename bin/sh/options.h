@@ -208,6 +208,17 @@ block|}
 struct|;
 end_struct
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|optent
+name|optlist
+index|[
+name|NOPTS
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -375,22 +386,6 @@ block|,
 literal|0
 block|}
 block|, }
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|optent
-name|optlist
-index|[
-name|NOPTS
-index|]
 decl_stmt|;
 end_decl_stmt
 

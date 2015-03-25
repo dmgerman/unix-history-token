@@ -224,7 +224,7 @@ name|PreservedAnalyses
 name|run
 parameter_list|(
 name|Module
-modifier|*
+modifier|&
 name|M
 parameter_list|)
 function_decl|;
@@ -232,7 +232,7 @@ name|PreservedAnalyses
 name|run
 parameter_list|(
 name|Function
-modifier|*
+modifier|&
 name|F
 parameter_list|)
 function_decl|;

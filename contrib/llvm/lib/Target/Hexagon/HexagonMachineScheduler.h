@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HEXAGONASMPRINTER_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONMACHINESCHEDULER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|HEXAGONASMPRINTER_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONMACHINESCHEDULER_H
 end_define
 
 begin_include
@@ -223,15 +223,19 @@ name|ResourcesModel
 operator|=
 name|TM
 operator|.
+name|getSubtargetImpl
+argument_list|()
+operator|->
 name|getInstrInfo
 argument_list|()
 operator|->
 name|CreateTargetScheduleState
 argument_list|(
-operator|&
+operator|*
 name|TM
-argument_list|,
-name|nullptr
+operator|.
+name|getSubtargetImpl
+argument_list|()
 argument_list|)
 block|;
 comment|// This hard requirement could be relaxed,
@@ -363,7 +367,6 @@ argument_list|)
 block|{}
 comment|/// Schedule - This is called back from ScheduleDAGInstrs::Run() when it's
 comment|/// time to do some work.
-name|virtual
 name|void
 name|schedule
 argument_list|()
@@ -706,7 +709,6 @@ argument_list|,
 literal|"BotQ"
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|initialize
 argument_list|(
@@ -714,7 +716,6 @@ argument|ScheduleDAGMI *dag
 argument_list|)
 name|override
 block|;
-name|virtual
 name|SUnit
 operator|*
 name|pickNode
@@ -723,7 +724,6 @@ argument|bool&IsTopNode
 argument_list|)
 name|override
 block|;
-name|virtual
 name|void
 name|schedNode
 argument_list|(
@@ -733,7 +733,6 @@ argument|bool IsTopNode
 argument_list|)
 name|override
 block|;
-name|virtual
 name|void
 name|releaseTopNode
 argument_list|(
@@ -741,7 +740,6 @@ argument|SUnit *SU
 argument_list|)
 name|override
 block|;
-name|virtual
 name|void
 name|releaseBottomNode
 argument_list|(

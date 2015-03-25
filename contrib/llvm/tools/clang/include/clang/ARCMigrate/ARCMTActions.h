@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_ARCMIGRATE_ARCMT_ACTION_H
+name|LLVM_CLANG_ARCMIGRATE_ARCMTACTIONS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_ARCMIGRATE_ARCMT_ACTION_H
+name|LLVM_CLANG_ARCMIGRATE_ARCMTACTIONS_H
 end_define
 
 begin_include
@@ -136,8 +136,12 @@ argument|CompilerInstance&CI
 argument_list|)
 name|override
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
@@ -224,8 +228,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI

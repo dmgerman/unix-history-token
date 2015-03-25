@@ -579,6 +579,23 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|xpt_topo_init
+argument_list|,
+operator|&
+name|xsoftc
+operator|.
+name|xpt_topo_lock
+argument_list|,
+literal|"XPT topology lock"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_kern_cam
@@ -3892,20 +3909,6 @@ operator|.
 name|xpt_highpower_lock
 argument_list|,
 literal|"XPT highpower lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|xsoftc
-operator|.
-name|xpt_topo_lock
-argument_list|,
-literal|"XPT topology lock"
 argument_list|,
 name|NULL
 argument_list|,
@@ -21025,6 +21028,8 @@ argument_list|)
 argument_list|,
 name|M_CAMCCB
 argument_list|,
+name|M_ZERO
+operator||
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
@@ -21099,6 +21104,8 @@ argument_list|)
 argument_list|,
 name|M_CAMCCB
 argument_list|,
+name|M_ZERO
+operator||
 name|M_WAITOK
 argument_list|)
 expr_stmt|;

@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_CODEGEN_FUNCTION_INFO_H
+name|LLVM_CLANG_CODEGEN_CGFUNCTIONINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_CODEGEN_FUNCTION_INFO_H
+name|LLVM_CLANG_CODEGEN_CGFUNCTIONINFO_H
 end_define
 
 begin_include
@@ -237,6 +237,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|// isDirect() || isExtend() || isIndirect()
+name|bool
+name|CanBeFlattened
+range|:
+literal|1
+decl_stmt|;
+comment|// isDirect()
 name|ABIArgInfo
 argument_list|(
 argument|Kind K
@@ -307,6 +313,8 @@ argument|unsigned Offset =
 literal|0
 argument_list|,
 argument|llvm::Type *Padding = nullptr
+argument_list|,
+argument|bool CanBeFlattened = true
 argument_list|)
 block|{
 name|auto
@@ -336,6 +344,13 @@ operator|.
 name|setPaddingType
 argument_list|(
 name|Padding
+argument_list|)
+block|;
+name|AI
+operator|.
+name|setCanBeFlattened
+argument_list|(
+name|CanBeFlattened
 argument_list|)
 block|;
 return|return
@@ -1153,6 +1168,43 @@ operator|=
 name|SRet
 expr_stmt|;
 block|}
+name|bool
+name|getCanBeFlattened
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isDirect
+argument_list|()
+operator|&&
+literal|"Invalid kind!"
+argument_list|)
+block|;
+return|return
+name|CanBeFlattened
+return|;
+block|}
+name|void
+name|setCanBeFlattened
+parameter_list|(
+name|bool
+name|Flatten
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isDirect
+argument_list|()
+operator|&&
+literal|"Invalid kind!"
+argument_list|)
+expr_stmt|;
+name|CanBeFlattened
+operator|=
+name|Flatten
+expr_stmt|;
+block|}
 name|void
 name|dump
 argument_list|()
@@ -1422,6 +1474,12 @@ name|InstanceMethod
 operator|:
 literal|1
 block|;
+comment|/// Whether this is a chain call.
+name|unsigned
+name|ChainCall
+operator|:
+literal|1
+block|;
 comment|/// Whether this function is noreturn.
 name|unsigned
 name|NoReturn
@@ -1443,7 +1501,7 @@ block|;
 name|unsigned
 name|RegParm
 operator|:
-literal|4
+literal|3
 block|;
 name|RequiredArgs
 name|Required
@@ -1515,7 +1573,9 @@ name|create
 argument_list|(
 argument|unsigned llvmCC
 argument_list|,
-argument|bool InstanceMethod
+argument|bool instanceMethod
+argument_list|,
+argument|bool chainCall
 argument_list|,
 argument|const FunctionType::ExtInfo&extInfo
 argument_list|,
@@ -1666,6 +1726,25 @@ return|return
 name|Required
 return|;
 block|}
+name|unsigned
+name|getNumRequiredArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isVariadic
+argument_list|()
+operator|?
+name|getRequiredArgs
+argument_list|()
+operator|.
+name|getNumRequiredArgs
+argument_list|()
+operator|:
+name|arg_size
+argument_list|()
+return|;
+block|}
 name|bool
 name|isInstanceMethod
 argument_list|()
@@ -1673,6 +1752,15 @@ specifier|const
 block|{
 return|return
 name|InstanceMethod
+return|;
+block|}
+name|bool
+name|isChainCall
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ChainCall
 return|;
 block|}
 name|bool
@@ -1904,6 +1992,13 @@ name|ID
 operator|.
 name|AddBoolean
 argument_list|(
+name|ChainCall
+argument_list|)
+expr_stmt|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
 name|NoReturn
 argument_list|)
 expr_stmt|;
@@ -1979,6 +2074,9 @@ argument_list|,
 name|bool
 name|InstanceMethod
 argument_list|,
+name|bool
+name|ChainCall
+argument_list|,
 specifier|const
 name|FunctionType
 operator|::
@@ -2014,6 +2112,13 @@ operator|.
 name|AddBoolean
 argument_list|(
 name|InstanceMethod
+argument_list|)
+expr_stmt|;
+name|ID
+operator|.
+name|AddBoolean
+argument_list|(
+name|ChainCall
 argument_list|)
 expr_stmt|;
 name|ID

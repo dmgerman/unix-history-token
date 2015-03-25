@@ -224,7 +224,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TEGRA20_CLK_MEM
+name|TEGRA20_CLK_MC
 value|32
 end_define
 

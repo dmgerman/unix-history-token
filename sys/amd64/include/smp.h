@@ -253,6 +253,12 @@ decl_stmt|,
 comment|/* CPU suspends& waits to be resumed */
 name|IDTVEC
 argument_list|(
+name|justreturn
+argument_list|)
+decl_stmt|,
+comment|/* interrupt CPU with minimum overhead */
+name|IDTVEC
+argument_list|(
 name|rendezvous
 argument_list|)
 decl_stmt|;

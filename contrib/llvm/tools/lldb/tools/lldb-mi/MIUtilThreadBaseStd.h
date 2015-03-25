@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MIUtilThreadBaseStd.h
+comment|// File:        MIUtilThreadBaseStd.h
 end_comment
 
 begin_comment
@@ -44,35 +44,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMIUtilThread interface.
+comment|// Overview:    CMIUtilThread interface.
 end_comment
 
 begin_comment
-comment|//				CMIUtilThreadActiveObjBase interface.
+comment|//              CMIUtilThreadActiveObjBase interface.
 end_comment
 
 begin_comment
-comment|//				CMIUtilThreadMutex interface.
+comment|//              CMIUtilThreadMutex interface.
 end_comment
 
 begin_comment
-comment|//				CMIUtilThreadLock interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
-end_comment
-
-begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
-end_comment
-
-begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              CMIUtilThreadLock interface.
 end_comment
 
 begin_comment
@@ -80,7 +64,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Environment: Compilers:  Visual C++ 12.
+end_comment
+
+begin_comment
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+end_comment
+
+begin_comment
+comment|//              Libraries:  See MIReadmetxt.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -151,23 +151,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code utility class. Handle thread mutual exclusion.
+comment|// Details: MI common code utility class. Handle thread mutual exclusion.
 end_comment
 
 begin_comment
-comment|//			Embed Mutexes in your Active Object and then use them through Locks.
+comment|//          Embed Mutexes in your Active Object and then use them through Locks.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Aidan Dodds 10/03/2014.
+comment|// Authors: Aidan Dodds 10/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -186,7 +186,7 @@ name|CMIUtilThreadMutex
 argument_list|(
 argument|void
 argument_list|)
-block|{ }
+block|{}
 empty_stmt|;
 comment|//
 name|void
@@ -221,7 +221,7 @@ name|CMIUtilThreadMutex
 argument_list|(
 argument|void
 argument_list|)
-block|{ }
+block|{}
 expr_stmt|;
 comment|// Attributes:
 name|private
@@ -243,19 +243,19 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code utility class. Thread object.
+comment|// Details: MI common code utility class. Thread object.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Aidan Dodds 10/03/2014.
+comment|// Authors: Aidan Dodds 10/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -352,23 +352,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code utility class. Base class for a worker thread active
+comment|// Details: MI common code utility class. Base class for a worker thread active
 end_comment
 
 begin_comment
-comment|//			object. Runs an 'captive thread'.
+comment|//          object. Runs an 'captive thread'.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Aidan Dodds 10/03/2014..
+comment|// Authors: Aidan Dodds 10/03/2014..
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -533,27 +533,27 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code utility class. Handle thread resource locking.
+comment|// Details: MI common code utility class. Handle thread resource locking.
 end_comment
 
 begin_comment
-comment|//			Put Locks inside all the methods of your Active Object that access
+comment|//          Put Locks inside all the methods of your Active Object that access
 end_comment
 
 begin_comment
-comment|//			data shared with the captive thread.
+comment|//          data shared with the captive thread.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Aidan Dodds 10/03/2014.
+comment|// Authors: Aidan Dodds 10/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -584,7 +584,7 @@ name|m_rMutex
 operator|.
 name|Lock
 argument_list|()
-block|; 	}
+block|;     }
 comment|// Overrideable:
 name|public
 operator|:
@@ -600,7 +600,7 @@ name|m_rMutex
 operator|.
 name|Unlock
 argument_list|()
-block|; 	}
+block|; }
 comment|// Attributes:
 name|private
 operator|:

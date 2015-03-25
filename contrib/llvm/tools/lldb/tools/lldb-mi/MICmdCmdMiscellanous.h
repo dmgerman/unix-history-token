@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdCmdMiscellanous.h
+comment|// File:        MICmdCmdMiscellanous.h
 end_comment
 
 begin_comment
@@ -44,55 +44,19 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdCmdGdbExit				interface.
+comment|// Overview:    CMICmdCmdGdbExit                interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdListThreadGroups		interface.
+comment|//              CMICmdCmdListThreadGroups       interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdInterpreterExec		interface.
+comment|//              CMICmdCmdInterpreterExec        interface.
 end_comment
 
 begin_comment
-comment|//				CMICmdCmdInferiorTtySet			interface.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|//				To implement new MI commands derive a new command class from the command base
-end_comment
-
-begin_comment
-comment|//				class. To enable the new command for interpretation add the new command class
-end_comment
-
-begin_comment
-comment|//				to the command factory. The files of relevance are:
-end_comment
-
-begin_comment
-comment|//					MICmdCommands.cpp
-end_comment
-
-begin_comment
-comment|//					MICmdBase.h / .cpp
-end_comment
-
-begin_comment
-comment|//					MICmdCmd.h / .cpp
-end_comment
-
-begin_comment
-comment|//				For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
-end_comment
-
-begin_comment
-comment|//				command class as an example.
+comment|//              CMICmdCmdInferiorTtySet         interface.
 end_comment
 
 begin_comment
@@ -100,15 +64,35 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|//              To implement new MI commands derive a new command class from the command base
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//              class. To enable the new command for interpretation add the new command class
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              to the command factory. The files of relevance are:
+end_comment
+
+begin_comment
+comment|//                  MICmdCommands.cpp
+end_comment
+
+begin_comment
+comment|//                  MICmdBase.h / .cpp
+end_comment
+
+begin_comment
+comment|//                  MICmdCmd.h / .cpp
+end_comment
+
+begin_comment
+comment|//              For an introduction to adding a new command see CMICmdCmdSupportInfoMiCmdQuery
+end_comment
+
+begin_comment
+comment|//              command class as an example.
 end_comment
 
 begin_comment
@@ -116,7 +100,23 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Environment: Compilers:  Visual C++ 12.
+end_comment
+
+begin_comment
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+end_comment
+
+begin_comment
+comment|//              Libraries:  See MIReadmetxt.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -166,23 +166,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "gdb-exit".
+comment|//          *this class implements MI command "gdb-exit".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 04/03/2014.
+comment|// Authors: Illya Rudkin 04/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -252,31 +252,31 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "list-thread-groups".
+comment|//          *this class implements MI command "list-thread-groups".
 end_comment
 
 begin_comment
-comment|//			This command does not follow the MI documentation exactly.
+comment|//          This command does not follow the MI documentation exactly.
 end_comment
 
 begin_comment
-comment|//			http://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI-Miscellaneous-Commands.html#GDB_002fMI-Miscellaneous-Commands
+comment|//          http://sourceware.org/gdb/onlinedocs/gdb/GDB_002fMI-Miscellaneous-Commands.html#GDB_002fMI-Miscellaneous-Commands
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 06/03/2014.
+comment|// Authors: Illya Rudkin 06/03/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -429,23 +429,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "interpreter-exec".
+comment|//          *this class implements MI command "interpreter-exec".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 16/05/2014.
+comment|// Authors: Illya Rudkin 16/05/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -538,23 +538,23 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI command class. MI commands derived from the command base class.
+comment|// Details: MI command class. MI commands derived from the command base class.
 end_comment
 
 begin_comment
-comment|//			*this class implements MI command "inferior-tty-set".
+comment|//          *this class implements MI command "inferior-tty-set".
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 22/07/2014.
+comment|// Authors: Illya Rudkin 22/07/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment

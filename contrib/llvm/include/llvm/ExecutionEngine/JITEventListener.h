@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"RuntimeDyld.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Config/llvm-config.h"
 end_include
 
@@ -103,9 +109,13 @@ decl_stmt|;
 name|class
 name|IntelJITEventsWrapper
 decl_stmt|;
+name|namespace
+name|object
+block|{
 name|class
-name|ObjectImage
+name|ObjectFile
 decl_stmt|;
+block|}
 comment|/// JITEvent_EmittedFunctionDetails - Helper struct for containing information
 comment|/// about a generated machine code function.
 struct|struct
@@ -165,43 +175,6 @@ name|virtual
 operator|~
 name|JITEventListener
 argument_list|()
-expr_stmt|;
-comment|/// NotifyFunctionEmitted - Called after a function has been successfully
-comment|/// emitted to memory.  The function still has its MachineFunction attached,
-comment|/// if you should happen to need that.
-name|virtual
-name|void
-name|NotifyFunctionEmitted
-parameter_list|(
-specifier|const
-name|Function
-modifier|&
-parameter_list|,
-name|void
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
-specifier|const
-name|EmittedFunctionDetails
-modifier|&
-parameter_list|)
-block|{}
-comment|/// NotifyFreeingMachineCode - Called from freeMachineCodeForFunction(), after
-comment|/// the global mapping is removed, but before the machine code is returned to
-comment|/// the allocator.
-comment|///
-comment|/// OldPtr is the address of the machine code and will be the same as the Code
-comment|/// parameter to a previous NotifyFunctionEmitted call.  The Function passed
-comment|/// to NotifyFunctionEmitted may have been destroyed by the time of the
-comment|/// matching NotifyFreeingMachineCode call.
-name|virtual
-name|void
-name|NotifyFreeingMachineCode
-parameter_list|(
-name|void
-modifier|*
-parameter_list|)
 block|{}
 comment|/// NotifyObjectEmitted - Called after an object has been successfully
 comment|/// emitted to memory.  NotifyFunctionEmitted will not be called for
@@ -214,25 +187,28 @@ comment|/// were loaded and with relocations performed in-place on debug section
 name|virtual
 name|void
 name|NotifyObjectEmitted
-parameter_list|(
-specifier|const
-name|ObjectImage
-modifier|&
-name|Obj
-parameter_list|)
+argument_list|(
+argument|const object::ObjectFile&Obj
+argument_list|,
+argument|const RuntimeDyld::LoadedObjectInfo&L
+argument_list|)
 block|{}
 comment|/// NotifyFreeingObject - Called just before the memory associated with
 comment|/// a previously emitted object is released.
 name|virtual
 name|void
 name|NotifyFreeingObject
-parameter_list|(
-specifier|const
-name|ObjectImage
-modifier|&
-name|Obj
-parameter_list|)
+argument_list|(
+argument|const object::ObjectFile&Obj
+argument_list|)
 block|{}
+comment|// Get a pointe to the GDB debugger registration listener.
+specifier|static
+name|JITEventListener
+operator|*
+name|createGDBRegistrationListener
+argument_list|()
+expr_stmt|;
 if|#
 directive|if
 name|LLVM_USE_INTEL_JITEVENTS
@@ -333,6 +309,13 @@ block|}
 endif|#
 directive|endif
 comment|// USE_OPROFILE
+name|private
+label|:
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 block|}

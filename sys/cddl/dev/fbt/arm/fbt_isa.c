@@ -35,11 +35,11 @@ begin_define
 define|#
 directive|define
 name|FBT_PATCHVAL
-value|0xe06a0cfe
+value|0xe7f000f0
 end_define
 
 begin_comment
-comment|/* illegal instruction */
+comment|/* Specified undefined instruction */
 end_comment
 
 begin_define
@@ -200,6 +200,14 @@ operator|(
 name|fbt
 operator|->
 name|fbtp_rval
+operator||
+operator|(
+name|fbt
+operator|->
+name|fbtp_savedval
+operator|<<
+name|DTRACE_INVOP_SHIFT
+operator|)
 operator|)
 return|;
 block|}
@@ -344,6 +352,23 @@ literal|1
 index|]
 operator|==
 literal|'_'
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* 	 * Architecture-specific exclusion list, largely to do with FBT trap 	 * processing, to prevent reentrance. 	 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|name
+argument_list|,
+literal|"undefinedinstruction"
+argument_list|)
+operator|==
+literal|0
 condition|)
 return|return
 operator|(
@@ -703,7 +728,7 @@ name|name
 argument_list|,
 name|FBT_RETURN
 argument_list|,
-literal|5
+literal|3
 argument_list|,
 name|fbt
 argument_list|)

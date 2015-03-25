@@ -4575,18 +4575,16 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|ParmVarDecl
-operator|*
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|getParmArray
 argument_list|()
-expr|,
+argument_list|,
 name|getNumParams
 argument_list|()
-operator|)
+argument_list|)
 return|;
 block|}
 comment|// ParmVarDecls* are stored after Info, one for each parameter.
@@ -5859,7 +5857,14 @@ name|UnderlyingTInfo
 operator|=
 name|TI
 block|;   }
-expr|}
+name|void
+name|initializeLocal
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|SourceLocation Loc
+argument_list|)
+block|; }
 block|;
 comment|// FIXME: location of the 'decltype' and parens.
 name|class

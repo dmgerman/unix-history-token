@@ -145,6 +145,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"netstat.h"
 end_include
 
@@ -262,11 +274,6 @@ name|banner_printed
 parameter_list|)
 block|{
 name|char
-name|s0
-index|[
-literal|256
-index|]
-decl_stmt|,
 name|s1
 index|[
 literal|256
@@ -305,38 +312,43 @@ operator|*
 name|banner_printed
 condition|)
 block|{
-name|printf
+name|xo_open_list
 argument_list|(
-literal|" Bandwidth Meters\n"
+literal|"bandwidth-meter"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"  %-30s"
+literal|" {T:Bandwidth Meters}\n"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"  {T:/%-30s}"
 argument_list|,
 literal|"Measured(Start|Packets|Bytes)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %s"
+literal|" {T:/%s}"
 argument_list|,
 literal|"Type"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"  %-30s"
+literal|"  {T:/%-30s}"
 argument_list|,
 literal|"Thresh(Interval|Packets|Bytes)"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" Remain"
+literal|" {T:Remain}"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -347,6 +359,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+name|xo_open_instance
+argument_list|(
+literal|"bandwidth-meter"
+argument_list|)
+expr_stmt|;
 comment|/* The measured values */
 if|if
 condition|(
@@ -356,6 +373,7 @@ name|bm_flags
 operator|&
 name|BW_METER_UNIT_PACKETS
 condition|)
+block|{
 name|sprintf
 argument_list|(
 name|s1
@@ -372,6 +390,21 @@ operator|.
 name|b_packets
 argument_list|)
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:measured-packets/%ju}"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|bw_meter
+operator|->
+name|bm_measured
+operator|.
+name|b_packets
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|sprintf
 argument_list|(
@@ -388,6 +421,7 @@ name|bm_flags
 operator|&
 name|BW_METER_UNIT_BYTES
 condition|)
+block|{
 name|sprintf
 argument_list|(
 name|s2
@@ -404,6 +438,21 @@ operator|.
 name|b_bytes
 argument_list|)
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:measured-bytes/%ju}"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|bw_meter
+operator|->
+name|bm_measured
+operator|.
+name|b_bytes
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|sprintf
 argument_list|(
@@ -412,11 +461,10 @@ argument_list|,
 literal|"?"
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|xo_emit
 argument_list|(
-name|s0
-argument_list|,
-literal|"%lu.%lu|%s|%s"
+literal|"  {[:-30}{:start-time/%lu.%06lu}|{q:measured-packets/%s}"
+literal|"|{q:measured-bytes%s}{]:}"
 argument_list|,
 operator|(
 name|u_long
@@ -441,63 +489,32 @@ argument_list|,
 name|s2
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"  %-30s"
-argument_list|,
-name|s0
-argument_list|)
-expr_stmt|;
 comment|/* The type of entry */
-name|sprintf
+name|xo_emit
 argument_list|(
-name|s0
+literal|"  {t:type/%-3s}"
 argument_list|,
-literal|"%s"
-argument_list|,
-literal|"?"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|(
 name|bw_meter
 operator|->
 name|bm_flags
 operator|&
 name|BW_METER_GEQ
-condition|)
-name|sprintf
-argument_list|(
-name|s0
-argument_list|,
-literal|"%s"
-argument_list|,
+operator|)
+condition|?
 literal|">="
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
+else|:
+operator|(
 name|bw_meter
 operator|->
 name|bm_flags
 operator|&
 name|BW_METER_LEQ
-condition|)
-name|sprintf
-argument_list|(
-name|s0
-argument_list|,
-literal|"%s"
-argument_list|,
+operator|)
+condition|?
 literal|"<="
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  %-3s"
-argument_list|,
-name|s0
+else|:
+literal|"?"
 argument_list|)
 expr_stmt|;
 comment|/* The threshold values */
@@ -509,6 +526,7 @@ name|bm_flags
 operator|&
 name|BW_METER_UNIT_PACKETS
 condition|)
+block|{
 name|sprintf
 argument_list|(
 name|s1
@@ -525,6 +543,21 @@ operator|.
 name|b_packets
 argument_list|)
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:threshold-packets/%ju}"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|bw_meter
+operator|->
+name|bm_threshold
+operator|.
+name|b_packets
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|sprintf
 argument_list|(
@@ -541,6 +574,7 @@ name|bm_flags
 operator|&
 name|BW_METER_UNIT_BYTES
 condition|)
+block|{
 name|sprintf
 argument_list|(
 name|s2
@@ -557,6 +591,21 @@ operator|.
 name|b_bytes
 argument_list|)
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:threshold-bytes/%ju}"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|bw_meter
+operator|->
+name|bm_threshold
+operator|.
+name|b_bytes
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 name|sprintf
 argument_list|(
@@ -565,11 +614,10 @@ argument_list|,
 literal|"?"
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|xo_emit
 argument_list|(
-name|s0
-argument_list|,
-literal|"%lu.%lu|%s|%s"
+literal|"  {[:-30}{:threshold-time/%lu.%06lu}|{q:threshold-packets/%s}"
+literal|"|{q:threshold-bytes%s}{]:}"
 argument_list|,
 operator|(
 name|u_long
@@ -596,13 +644,6 @@ argument_list|,
 name|s1
 argument_list|,
 name|s2
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"  %-30s"
-argument_list|,
-name|s0
 argument_list|)
 expr_stmt|;
 comment|/* Remaining time */
@@ -654,7 +695,7 @@ name|sprintf
 argument_list|(
 name|s3
 argument_list|,
-literal|"%lu.%lu"
+literal|"%lu.%06lu"
 argument_list|,
 operator|(
 name|u_long
@@ -691,7 +732,7 @@ name|sprintf
 argument_list|(
 name|s3
 argument_list|,
-literal|"-%lu.%lu"
+literal|"-%lu.06%lu"
 argument_list|,
 operator|(
 name|u_long
@@ -709,14 +750,19 @@ name|tv_usec
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %s"
+literal|" {:remaining-time/%s}"
 argument_list|,
 name|s3
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_open_instance
+argument_list|(
+literal|"bandwidth-meter"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -769,11 +815,16 @@ operator|*
 name|banner_printed
 condition|)
 block|{
-name|printf
+name|xo_open_list
 argument_list|(
-literal|"\nIPv4 Multicast Forwarding Table\n"
-literal|" Origin          Group            "
-literal|" Packets In-Vif  Out-Vifs:Ttls\n"
+literal|"multicast-forwarding-entry"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\n{T:IPv4 Multicast Forwarding Table}\n"
+literal|" {T:Origin}          {T:Group}            "
+literal|" {T:Packets In-Vif}  {T:Out-Vifs:Ttls}\n"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -782,9 +833,9 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %-15.15s"
+literal|" {:origin-address/%-15.15s}"
 argument_list|,
 name|routename
 argument_list|(
@@ -796,9 +847,9 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %-15.15s"
+literal|" {:group-address/%-15.15s}"
 argument_list|,
 name|routename
 argument_list|(
@@ -810,22 +861,27 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %9lu"
+literal|" {:sent-packets/%9lu}"
 argument_list|,
 name|m
 operator|->
 name|mfc_pkt_cnt
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"  %3d   "
+literal|"  {:parent/%3d}   "
 argument_list|,
 name|m
 operator|->
 name|mfc_parent
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"vif-ttl"
 argument_list|)
 expr_stmt|;
 for|for
@@ -853,9 +909,15 @@ index|]
 operator|>
 literal|0
 condition|)
-name|printf
+block|{
+name|xo_open_instance
 argument_list|(
-literal|" %u:%u"
+literal|"vif-ttl"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|" {k:vif/%u}:{:ttl/%u}"
 argument_list|,
 name|vifi
 argument_list|,
@@ -867,8 +929,19 @@ name|vifi
 index|]
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"vif-ttl"
+argument_list|)
+expr_stmt|;
 block|}
-name|printf
+block|}
+name|xo_close_list
+argument_list|(
+literal|"vif-ttl"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -930,6 +1003,15 @@ operator|.
 name|bm_mfc_next
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|banner_printed
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"bandwidth-meter"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1028,7 +1110,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet.ip.viftable"
 argument_list|)
@@ -1085,11 +1167,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|fprintf
+name|xo_warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"No IPv4 MROUTING kernel support.\n"
+literal|"No IPv4 MROUTING kernel support."
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1157,21 +1237,31 @@ operator|!
 name|banner_printed
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\nIPv4 Virtual Interface Table\n"
+literal|"\n{T:IPv4 Virtual Interface Table\n"
 literal|" Vif   Thresh   Local-Address   "
-literal|"Remote-Address    Pkts-In   Pkts-Out\n"
+literal|"Remote-Address    Pkts-In   Pkts-Out}\n"
 argument_list|)
 expr_stmt|;
 name|banner_printed
 operator|=
 literal|1
 expr_stmt|;
-block|}
-name|printf
+name|xo_open_list
 argument_list|(
-literal|" %2u    %6u   %-15.15s"
+literal|"vif"
+argument_list|)
+expr_stmt|;
+block|}
+name|xo_open_instance
+argument_list|(
+literal|"vif"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|" {:vif/%2u}    {:threshold/%6u}   {:route/%-15.15s}"
 argument_list|,
 comment|/* opposite math of add_vif() */
 name|vifi
@@ -1190,9 +1280,9 @@ name|s_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %-15.15s"
+literal|" {:source/%-15.15s}"
 argument_list|,
 operator|(
 name|v
@@ -1214,9 +1304,9 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %9lu  %9lu\n"
+literal|" {:received-packets/%9lu}  {:sent-packets/%9lu}\n"
 argument_list|,
 name|v
 operator|->
@@ -1227,15 +1317,25 @@ operator|->
 name|v_pkt_out
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"vif"
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|banner_printed
 condition|)
-name|printf
+name|xo_close_list
 argument_list|(
-literal|"\nIPv4 Virtual Interface Table is empty\n"
+literal|"vif"
+argument_list|)
+expr_stmt|;
+else|else
+name|xo_emit
+argument_list|(
+literal|"\n{T:IPv4 Virtual Interface Table is empty}\n"
 argument_list|)
 expr_stmt|;
 name|banner_printed
@@ -1276,7 +1376,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet.ip.mfctable"
 argument_list|)
@@ -1297,7 +1397,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"malloc %lu bytes"
 argument_list|,
@@ -1333,7 +1433,7 @@ argument_list|(
 name|mfctable
 argument_list|)
 expr_stmt|;
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet.ip.mfctable"
 argument_list|)
@@ -1377,11 +1477,20 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|banner_printed
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"multicast-forwarding-entry"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|len
 operator|!=
 literal|0
 condition|)
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"print_mfc: %lu trailing bytes"
 argument_list|,
@@ -1442,7 +1551,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"kread: mfctablesize"
 argument_list|)
@@ -1473,7 +1582,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"malloc %lu bytes"
 argument_list|,
@@ -1554,6 +1663,15 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|banner_printed
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"multicast-forwarding-entry"
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|mfchashtbl
@@ -1565,12 +1683,12 @@ condition|(
 operator|!
 name|banner_printed
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\nIPv4 Multicast Forwarding Table is empty\n"
+literal|"\n{T:IPv4 Multicast Forwarding Table is empty}\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -1657,7 +1775,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet.ip.mrtstat failed."
 argument_list|)
@@ -1676,9 +1794,9 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"IPv4 multicast forwarding:\n"
+literal|"{T:IPv4 multicast forwarding}:\n"
 argument_list|)
 expr_stmt|;
 define|#
@@ -1689,7 +1807,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (mrtstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)mrtstat.f, plural(mrtstat.f))
+value|if (mrtstat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)mrtstat.f, plural(mrtstat.f))
 define|#
 directive|define
 name|p2
@@ -1698,96 +1816,114 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (mrtstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)mrtstat.f, plurales(mrtstat.f))
+value|if (mrtstat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)mrtstat.f, plurales(mrtstat.f))
+name|xo_open_container
+argument_list|(
+literal|"multicast-statistics"
+argument_list|)
+expr_stmt|;
 name|p
 argument_list|(
 name|mrts_mfc_lookups
 argument_list|,
-literal|"\t%ju multicast forwarding cache lookup%s\n"
+literal|"\t{:cache-lookups/%ju} "
+literal|"{N:/multicast forwarding cache lookup%s}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|mrts_mfc_misses
 argument_list|,
-literal|"\t%ju multicast forwarding cache miss%s\n"
+literal|"\t{:cache-misses/%ju} "
+literal|"{N:/multicast forwarding cache miss%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_upcalls
 argument_list|,
-literal|"\t%ju upcall%s to multicast routing daemon\n"
+literal|"\t{:upcalls-total/%ju} "
+literal|"{N:/upcall%s to multicast routing daemon}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_upq_ovflw
 argument_list|,
-literal|"\t%ju upcall queue overflow%s\n"
+literal|"\t{:upcall-overflows/%ju} "
+literal|"{N:/upcall queue overflow%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_upq_sockfull
 argument_list|,
-literal|"\t%ju upcall%s dropped due to full socket buffer\n"
+literal|"\t{:upcalls-dropped-full-buffer/%ju} "
+literal|"{N:/upcall%s dropped due to full socket buffer}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_cache_cleanups
 argument_list|,
-literal|"\t%ju cache cleanup%s\n"
+literal|"\t{:cache-cleanups/%ju} "
+literal|"{N:/cache cleanup%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_no_route
 argument_list|,
-literal|"\t%ju datagram%s with no route for origin\n"
+literal|"\t{:dropped-no-origin/%ju} "
+literal|"{N:/datagram%s with no route for origin}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_bad_tunnel
 argument_list|,
-literal|"\t%ju datagram%s arrived with bad tunneling\n"
+literal|"\t{:dropped-bad-tunnel/%ju} "
+literal|"{N:/datagram%s arrived with bad tunneling}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_cant_tunnel
 argument_list|,
-literal|"\t%ju datagram%s could not be tunneled\n"
+literal|"\t{:dropped-could-not-tunnel/%ju} "
+literal|"{N:/datagram%s could not be tunneled}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_wrong_if
 argument_list|,
-literal|"\t%ju datagram%s arrived on wrong interface\n"
+literal|"\t{:dropped-wrong-incoming-interface/%ju} "
+literal|"{N:/datagram%s arrived on wrong interface}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_drop_sel
 argument_list|,
-literal|"\t%ju datagram%s selectively dropped\n"
+literal|"\t{:dropped-selectively/%ju} "
+literal|"{N:/datagram%s selectively dropped}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_q_overflow
 argument_list|,
-literal|"\t%ju datagram%s dropped due to queue overflow\n"
+literal|"\t{:dropped-queue-overflow/%ju} "
+literal|"{N:/datagram%s dropped due to queue overflow}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrts_pkt2large
 argument_list|,
-literal|"\t%ju datagram%s dropped for being too large\n"
+literal|"\t{:dropped-too-large/%ju} "
+literal|"{N:/datagram%s dropped for being too large}\n"
 argument_list|)
 expr_stmt|;
 undef|#

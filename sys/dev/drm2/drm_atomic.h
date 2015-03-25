@@ -38,7 +38,7 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|BITS_PER_LONG
+name|NB_BITS_PER_LONG
 value|(sizeof(long) * NBBY)
 end_define
 
@@ -49,7 +49,7 @@ name|BITS_TO_LONGS
 parameter_list|(
 name|x
 parameter_list|)
-value|howmany(x, BITS_PER_LONG)
+value|howmany(x, NB_BITS_PER_LONG)
 end_define
 
 begin_define
@@ -72,6 +72,28 @@ parameter_list|,
 name|v
 parameter_list|)
 value|do { *(u_int *)(p) = (v); } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic64_read
+parameter_list|(
+name|p
+parameter_list|)
+value|atomic_load_acq_64(p)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic64_set
+parameter_list|(
+name|p
+parameter_list|,
+name|v
+parameter_list|)
+value|atomic_store_rel_64(p, v)
 end_define
 
 begin_define
@@ -237,7 +259,7 @@ name|__bit_word
 parameter_list|(
 name|b
 parameter_list|)
-value|((b) / BITS_PER_LONG)
+value|((b) / NB_BITS_PER_LONG)
 end_define
 
 begin_define
@@ -247,7 +269,7 @@ name|__bit_mask
 parameter_list|(
 name|b
 parameter_list|)
-value|(1UL<< (b) % BITS_PER_LONG)
+value|(1UL<< (b) % NB_BITS_PER_LONG)
 end_define
 
 begin_define
@@ -301,6 +323,34 @@ define|\
 value|((*__bit_addr(p, b)& __bit_mask(b)) != 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|test_and_set_bit
+parameter_list|(
+name|b
+parameter_list|,
+name|p
+parameter_list|)
+define|\
+value|(atomic_xchg((p), 1) != b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|cmpxchg
+parameter_list|(
+name|ptr
+parameter_list|,
+name|old
+parameter_list|,
+name|new
+parameter_list|)
+define|\
+value|(atomic_cmpset_int((volatile u_int *)(ptr),(old),(new)) ? (old) : (0))
+end_define
+
 begin_function
 specifier|static
 name|__inline
@@ -325,7 +375,7 @@ name|KASSERT
 argument_list|(
 name|max
 operator|%
-name|BITS_PER_LONG
+name|NB_BITS_PER_LONG
 operator|==
 literal|0
 argument_list|,
@@ -346,7 +396,7 @@ name|i
 operator|<
 name|max
 operator|/
-name|BITS_PER_LONG
+name|NB_BITS_PER_LONG
 condition|;
 name|i
 operator|++
@@ -370,7 +420,7 @@ return|return
 operator|(
 name|i
 operator|*
-name|BITS_PER_LONG
+name|NB_BITS_PER_LONG
 operator|+
 name|ffsl
 argument_list|(

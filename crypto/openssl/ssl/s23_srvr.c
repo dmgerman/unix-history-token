@@ -4,11 +4,11 @@ comment|/* ssl/s23_srvr.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2006 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -613,13 +613,13 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+comment|/*-      * Request this many bytes in initial read.      * We can detect SSL 3.0/TLS 1.0 Client Hellos      * ('type == 3') correctly only when the following      * is in a single record, which is not guaranteed by      * the protocol specification:      * Byte  Content      *  0     type            \      *  1/2   version> record header      *  3/4   length          /      *  5     msg_type        \      *  6-8   length> Client Hello message      *  9/10  client_version  /      */
 name|char
 name|buf_space
 index|[
 literal|11
 index|]
 decl_stmt|;
-comment|/* Request this many bytes in initial read. 	                     * We can detect SSL 3.0/TLS 1.0 Client Hellos 	                     * ('type == 3') correctly only when the following 	                     * is in a single record, which is not guaranteed by 	                     * the protocol specification: 	                     * Byte  Content 	                     *  0     type            \ 	                     *  1/2   version> record header 	                     *  3/4   length          / 	                     *  5     msg_type        \ 	                     *  6-8   length> Client Hello message 	                     *  9/10  client_version  / 	                     */
 name|char
 modifier|*
 name|buf
@@ -768,7 +768,7 @@ name|SSL2_MT_CLIENT_HELLO
 operator|)
 condition|)
 block|{
-comment|/* 			 * SSLv2 header 			 */
+comment|/*              * SSLv2 header              */
 if|if
 condition|(
 operator|(
@@ -927,8 +927,8 @@ name|version
 operator|=
 name|TLS1_1_VERSION
 expr_stmt|;
-comment|/* type=2; */
-comment|/* done later to survive restarts */
+comment|/*                          * type=2;                          */
+comment|/*                          * done later to survive restarts                          */
 name|s
 operator|->
 name|state
@@ -955,8 +955,8 @@ name|version
 operator|=
 name|TLS1_VERSION
 expr_stmt|;
-comment|/* type=2; */
-comment|/* done later to survive restarts */
+comment|/*                          * type=2;                          */
+comment|/*                          * done later to survive restarts                          */
 name|s
 operator|->
 name|state
@@ -1055,6 +1055,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+comment|/* p[4]< 5 ... silly record length? */
 elseif|else
 if|if
 condition|(
@@ -1100,7 +1101,6 @@ literal|4
 index|]
 operator|<
 literal|5
-comment|/* silly record length? */
 operator|)
 operator|||
 operator|(
@@ -1117,7 +1117,7 @@ operator|)
 operator|)
 condition|)
 block|{
-comment|/* 			 * SSLv3 or tls1 header 			 */
+comment|/*              * SSLv3 or tls1 header              */
 name|v
 index|[
 literal|0
@@ -1129,7 +1129,7 @@ literal|1
 index|]
 expr_stmt|;
 comment|/* major version (= SSL3_VERSION_MAJOR) */
-comment|/* We must look at client_version inside the Client Hello message 			 * to get the correct minor version. 			 * However if we have only a pathologically small fragment of the 			 * Client Hello message, this would be difficult, and we'd have 			 * to read more records to find out. 			 * No known SSL 3.0 client fragments ClientHello like this, 			 * so we simply reject such connections to avoid 			 * protocol version downgrade attacks. */
+comment|/*              * We must look at client_version inside the Client Hello message              * to get the correct minor version. However if we have only a              * pathologically small fragment of the Client Hello message, this              * would be difficult, and we'd have to read more records to find              * out. No known SSL 3.0 client fragments ClientHello like this,              * so we simply reject such connections to avoid protocol version              * downgrade attacks.              */
 if|if
 condition|(
 name|p
@@ -1158,7 +1158,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* if major version number> 3 set minor to a value 			 * which will use the highest version 3 we support. 			 * If TLS 2.0 ever appears we will need to revise 			 * this.... 			 */
+comment|/*              * if major version number> 3 set minor to a value which will              * use the highest version 3 we support. If TLS 2.0 ever appears              * we will need to revise this....              */
 if|if
 condition|(
 name|p
@@ -1346,7 +1346,7 @@ name|SSL_OP_NO_TLSv1
 operator|)
 condition|)
 block|{
-comment|/* we won't be able to use TLS of course, 					 * but this will send an appropriate alert */
+comment|/*                      * we won't be able to use TLS of course, but this will                      * send an appropriate alert                      */
 name|s
 operator|->
 name|version
@@ -1523,7 +1523,7 @@ operator|==
 name|SSL23_ST_SR_CLNT_HELLO_B
 condition|)
 block|{
-comment|/* we have SSLv3/TLSv1 in an SSLv2 header 		 * (other cases skip this state) */
+comment|/*          * we have SSLv3/TLSv1 in an SSLv2 header (other cases skip this          * state)          */
 name|type
 operator|=
 literal|2
@@ -1555,7 +1555,7 @@ index|[
 literal|4
 index|]
 expr_stmt|;
-comment|/* An SSLv3/TLSv1 backwards-compatible CLIENT-HELLO in an SSLv2 		 * header is sent directly on the wire, not wrapped as a TLS 		 * record. It's format is: 		 * Byte  Content 		 * 0-1   msg_length 		 * 2     msg_type 		 * 3-4   version 		 * 5-6   cipher_spec_length 		 * 7-8   session_id_length 		 * 9-10  challenge_length 		 * ...   ... 		 */
+comment|/*-          * An SSLv3/TLSv1 backwards-compatible CLIENT-HELLO in an SSLv2          * header is sent directly on the wire, not wrapped as a TLS          * record. It's format is:          * Byte  Content          * 0-1   msg_length          * 2     msg_type          * 3-4   version          * 5-6   cipher_spec_length          * 7-8   session_id_length          * 9-10  challenge_length          * ...   ...          */
 name|n
 operator|=
 operator|(
@@ -1627,7 +1627,7 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-comment|/* We previously read 11 bytes, so if j> 0, we must have 		 * j == n+2 == s->packet_length. We have at least 11 valid 		 * packet bytes. */
+comment|/*          * We previously read 11 bytes, so if j> 0, we must have j == n+2 ==          * s->packet_length. We have at least 11 valid packet bytes.          */
 if|if
 condition|(
 name|j
@@ -1656,6 +1656,7 @@ operator|-
 literal|2
 argument_list|)
 expr_stmt|;
+comment|/* CLIENT-HELLO */
 if|if
 condition|(
 name|s
@@ -1691,7 +1692,6 @@ operator|->
 name|msg_callback_arg
 argument_list|)
 expr_stmt|;
-comment|/* CLIENT-HELLO */
 name|p
 operator|=
 name|s
@@ -1752,8 +1752,8 @@ name|s
 operator|->
 name|packet_length
 condition|)
-comment|/* We can't have TLS extensions in SSL 2.0 format 		                                          * Client Hello, can we? Error condition should be 		                                          * '>' otherweise */
 block|{
+comment|/* We can't have TLS                                                           * extensions in SSL                                                           * 2.0 format *                                                           * Client Hello, can                                                           * we? Error                                                           * condition should                                                           * be * '>'                                                           * otherweise */
 name|SSLerr
 argument_list|(
 name|SSL_F_SSL23_GET_CLIENT_HELLO
@@ -1962,7 +1962,7 @@ if|#
 directive|if
 literal|0
 comment|/* copy any remaining data with may be extensions */
-block|p = p+csl+sil+cl; 		while (p<  s->packet+s->packet_length) 			{ 			*(d++)=*(p++); 			}
+block|p = p + csl + sil + cl;         while (p< s->packet + s->packet_length) {             *(d++) = *(p++);         }
 endif|#
 directive|endif
 name|i
@@ -2051,7 +2051,7 @@ goto|;
 else|#
 directive|else
 comment|/* we are talking sslv2 */
-comment|/* we need to clean up the SSLv3/TLSv1 setup and put in the 		 * sslv2 stuff. */
+comment|/*          * we need to clean up the SSLv3/TLSv1 setup and put in the sslv2          * stuff.          */
 if|if
 condition|(
 name|s
@@ -2138,7 +2138,7 @@ operator|=
 literal|0
 expr_stmt|;
 else|else
-comment|/* reject SSL 2.0 session if client supports SSL 3.0 or TLS 1.0 			 * (SSL 3.0 draft/RFC 2246, App. E.2) */
+comment|/*              * reject SSL 2.0 session if client supports SSL 3.0 or TLS 1.0              * (SSL 3.0 draft/RFC 2246, App. E.2)              */
 name|s
 operator|->
 name|s2
@@ -2147,7 +2147,7 @@ name|ssl2_rollback
 operator|=
 literal|1
 expr_stmt|;
-comment|/* setup the n bytes we have read so we get them from 		 * the sslv2 buffer */
+comment|/*          * setup the n bytes we have read so we get them from the sslv2          * buffer          */
 name|s
 operator|->
 name|rstate
@@ -2238,7 +2238,7 @@ literal|3
 operator|)
 condition|)
 block|{
-comment|/* we have SSLv3/TLSv1 (type 2: SSL2 style, type 3: SSL3/TLS style) */
+comment|/*          * we have SSLv3/TLSv1 (type 2: SSL2 style, type 3: SSL3/TLS style)          */
 specifier|const
 name|SSL_METHOD
 modifier|*
@@ -2304,7 +2304,7 @@ operator|==
 literal|3
 condition|)
 block|{
-comment|/* put the 'n' bytes we have read into the input buffer 			 * for SSLv3 */
+comment|/*              * put the 'n' bytes we have read into the input buffer for SSLv3              */
 name|s
 operator|->
 name|rstate
@@ -2423,7 +2423,7 @@ if|#
 directive|if
 literal|0
 comment|/* ssl3_get_client_hello does this */
-block|s->client_version=(v[0]<<8)|v[1];
+block|s->client_version = (v[0]<< 8) | v[1];
 endif|#
 directive|endif
 name|s

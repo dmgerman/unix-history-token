@@ -54,19 +54,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NVPTX_LOWER_AGGR_COPIES_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXLOWERAGGRCOPIES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NVPTX_LOWER_AGGR_COPIES_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXLOWERAGGRCOPIES_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineFunctionAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/StackProtector.h"
 end_include
 
 begin_include
@@ -124,15 +130,17 @@ block|;
 name|AU
 operator|.
 name|addPreserved
-argument_list|(
-literal|"stack-protector"
-argument_list|)
+operator|<
+name|MachineFunctionAnalysis
+operator|>
+operator|(
+operator|)
 block|;
 name|AU
 operator|.
 name|addPreserved
 operator|<
-name|MachineFunctionAnalysis
+name|StackProtector
 operator|>
 operator|(
 operator|)

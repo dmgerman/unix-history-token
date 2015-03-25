@@ -5023,15 +5023,6 @@ name|u_int
 name|flags
 parameter_list|)
 block|{
-name|struct
-name|pcb
-modifier|*
-name|pcb
-decl_stmt|;
-name|pcb
-operator|=
-name|curpcb
-expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(

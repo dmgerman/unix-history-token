@@ -46,13 +46,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPUMACHINEFUNCTION_H
+name|LLVM_LIB_TARGET_R600_AMDGPUMACHINEFUNCTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPUMACHINEFUNCTION_H
+name|LLVM_LIB_TARGET_R600_AMDGPUMACHINEFUNCTION_H
 end_define
 
 begin_include
@@ -113,6 +113,10 @@ comment|/// Number of bytes in the LDS that are being used.
 name|unsigned
 name|LDSSize
 block|;
+comment|/// Start of implicit kernel args
+name|unsigned
+name|ABIArgOffset
+block|;
 name|unsigned
 name|getShaderType
 argument_list|()
@@ -122,18 +126,20 @@ return|return
 name|ShaderType
 return|;
 block|}
-expr|}
-block|;  }
+name|unsigned
+name|ScratchSize
+block|;
+name|bool
+name|IsKernel
+block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDGPUMACHINEFUNCTION_H
-end_comment
 
 end_unit
 

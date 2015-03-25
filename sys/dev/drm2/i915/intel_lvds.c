@@ -935,6 +935,7 @@ name|drm_encoder
 modifier|*
 name|encoder
 parameter_list|,
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -3721,10 +3722,10 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * the initial panel fitting mode will be FULL_SCREEN. 	 */
-name|drm_connector_attach_property
+name|drm_object_attach_property
 argument_list|(
 operator|&
-name|intel_connector
+name|connector
 operator|->
 name|base
 argument_list|,

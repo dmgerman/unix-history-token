@@ -1208,6 +1208,8 @@ argument_list|(
 literal|"Setting sysctl %s failed: %d\n"
 argument_list|,
 name|path
+operator|+
+name|rem
 argument_list|,
 name|error
 argument_list|)
@@ -1254,6 +1256,14 @@ name|struct
 name|sysctl_oid
 modifier|*
 name|q
+decl_stmt|;
+name|int
+name|oid_number
+decl_stmt|;
+name|int
+name|timeout
+init|=
+literal|2
 decl_stmt|;
 comment|/* 	 * First check if another oid with the same name already 	 * exists in the parent's list. 	 */
 name|SYSCTL_ASSERT_XLOCKED
@@ -1311,50 +1321,57 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* 	 * If this oid has a number OID_AUTO, give it a number which 	 * is greater than any current oid. 	 * NOTE: DO NOT change the starting value here, change it in 	 *<sys/sysctl.h>, and make sure it is at least 256 to 	 * accomodate e.g. net.inet.raw as a static sysctl node. 	 */
-if|if
-condition|(
+comment|/* get current OID number */
+name|oid_number
+operator|=
 name|oidp
 operator|->
 name|oid_number
-operator|==
+expr_stmt|;
+if|#
+directive|if
+operator|(
 name|OID_AUTO
+operator|>=
+literal|0
+operator|)
+error|#
+directive|error
+literal|"OID_AUTO is expected to be a negative value"
+endif|#
+directive|endif
+comment|/* 	 * Any negative OID number qualifies as OID_AUTO. Valid OID 	 * numbers should always be positive. 	 * 	 * NOTE: DO NOT change the starting value here, change it in 	 *<sys/sysctl.h>, and make sure it is at least 256 to 	 * accomodate e.g. net.inet.raw as a static sysctl node. 	 */
+if|if
+condition|(
+name|oid_number
+operator|<
+literal|0
 condition|)
 block|{
 specifier|static
 name|int
 name|newoid
-init|=
-name|CTL_AUTO_START
 decl_stmt|;
-name|oidp
-operator|->
+comment|/* 		 * By decrementing the next OID number we spend less 		 * time inserting the OIDs into a sorted list. 		 */
+if|if
+condition|(
+operator|--
+name|newoid
+operator|<
+name|CTL_AUTO_START
+condition|)
+name|newoid
+operator|=
+literal|0x7fffffff
+expr_stmt|;
 name|oid_number
 operator|=
 name|newoid
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|newoid
-operator|==
-literal|0x7fffffff
-condition|)
-name|panic
-argument_list|(
-literal|"out of oids"
-argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-block|else if (oidp->oid_number>= CTL_AUTO_START) {
-comment|/* do not panic; this happens when unregistering sysctl sets */
-block|printf("static sysctl oid too high: %d", oidp->oid_number); 	}
-endif|#
-directive|endif
-comment|/* 	 * Insert the oid into the parent's list in order. 	 */
+comment|/* 	 * Insert the OID into the parent's list sorted by OID number. 	 */
+name|retry
+label|:
 name|q
 operator|=
 name|NULL
@@ -1368,10 +1385,59 @@ argument_list|,
 argument|oid_link
 argument_list|)
 block|{
+comment|/* check if the current OID number is in use */
 if|if
 condition|(
-name|oidp
+name|oid_number
+operator|==
+name|p
 operator|->
+name|oid_number
+condition|)
+block|{
+comment|/* get the next valid OID number */
+if|if
+condition|(
+name|oid_number
+operator|<
+name|CTL_AUTO_START
+operator|||
+name|oid_number
+operator|==
+literal|0x7fffffff
+condition|)
+block|{
+comment|/* wraparound - restart */
+name|oid_number
+operator|=
+name|CTL_AUTO_START
+expr_stmt|;
+comment|/* don't loop forever */
+if|if
+condition|(
+operator|!
+name|timeout
+operator|--
+condition|)
+name|panic
+argument_list|(
+literal|"sysctl: Out of OID numbers\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|retry
+goto|;
+block|}
+else|else
+block|{
+name|oid_number
+operator|++
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
 name|oid_number
 operator|<
 name|p
@@ -1384,9 +1450,52 @@ operator|=
 name|p
 expr_stmt|;
 block|}
+comment|/* check for non-auto OID number collision */
+if|if
+condition|(
+name|oidp
+operator|->
+name|oid_number
+operator|>=
+literal|0
+operator|&&
+name|oidp
+operator|->
+name|oid_number
+operator|<
+name|CTL_AUTO_START
+operator|&&
+name|oid_number
+operator|>=
+name|CTL_AUTO_START
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"sysctl: OID number(%d) is already in use for '%s'\n"
+argument_list|,
+name|oidp
+operator|->
+name|oid_number
+argument_list|,
+name|oidp
+operator|->
+name|oid_name
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* update the OID number, if any */
+name|oidp
+operator|->
+name|oid_number
+operator|=
+name|oid_number
+expr_stmt|;
 if|if
 condition|(
 name|q
+operator|!=
+name|NULL
 condition|)
 name|SLIST_INSERT_AFTER
 argument_list|(
@@ -1455,6 +1564,14 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* only fetch value once */
+name|oidp
+operator|->
+name|oid_kind
+operator||=
+name|CTLFLAG_NOFETCH
+expr_stmt|;
+comment|/* try to fetch value from kernel environment */
 name|sysctl_load_tunable_by_oid_locked
 argument_list|(
 name|oidp
@@ -8051,6 +8168,21 @@ modifier|*
 name|req
 parameter_list|)
 block|{
+comment|/* Supply a default buffer size if none given. */
+if|if
+condition|(
+name|buf
+operator|==
+name|NULL
+operator|&&
+name|length
+operator|==
+literal|0
+condition|)
+name|length
+operator|=
+literal|64
+expr_stmt|;
 name|s
 operator|=
 name|sbuf_new
@@ -8062,6 +8194,8 @@ argument_list|,
 name|length
 argument_list|,
 name|SBUF_FIXEDLEN
+operator||
+name|SBUF_INCLUDENUL
 argument_list|)
 expr_stmt|;
 name|sbuf_set_drain

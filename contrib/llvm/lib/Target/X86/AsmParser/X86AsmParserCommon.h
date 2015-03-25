@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86_ASM_PARSER_COMMON_H
+name|LLVM_LIB_TARGET_X86_ASMPARSER_X86ASMPARSERCOMMON_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86_ASM_PARSER_COMMON_H
+name|LLVM_LIB_TARGET_X86_ASMPARSER_X86ASMPARSERCOMMON_H
 end_define
 
 begin_decl_stmt
@@ -125,22 +125,6 @@ return|;
 block|}
 specifier|inline
 name|bool
-name|isImmZExtu32u8Value
-parameter_list|(
-name|uint64_t
-name|Value
-parameter_list|)
-block|{
-return|return
-operator|(
-name|Value
-operator|<=
-literal|0x00000000000000FFULL
-operator|)
-return|;
-block|}
-specifier|inline
-name|bool
 name|isImmSExti64i8Value
 parameter_list|(
 name|uint64_t
@@ -206,10 +190,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// X86_ASM_PARSER_COMMON_H
-end_comment
 
 end_unit
 

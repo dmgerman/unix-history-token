@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLI_RPCCHANNEL_H
+name|LLVM_TOOLS_LLI_RPCCHANNEL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLI_RPCCHANNEL_H
+name|LLVM_TOOLS_LLI_RPCCHANNEL_H
 end_define
 
 begin_include
@@ -153,10 +153,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLI_RPCCHANNEL_H
-end_comment
 
 end_unit
 

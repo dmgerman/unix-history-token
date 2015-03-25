@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPS16ISELLOWERING_H
+name|LLVM_LIB_TARGET_MIPS_MIPS16ISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPS16ISELLOWERING_H
+name|LLVM_LIB_TARGET_MIPS_MIPS16ISELLOWERING_H
 end_define
 
 begin_include
@@ -80,6 +80,7 @@ operator|:
 name|explicit
 name|Mips16TargetLowering
 argument_list|(
+specifier|const
 name|MipsTargetMachine
 operator|&
 name|TM
@@ -91,11 +92,13 @@ name|STI
 argument_list|)
 block|;
 name|bool
-name|allowsUnalignedMemoryAccesses
+name|allowsMisalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
 argument_list|,
 argument|unsigned AddrSpace
+argument_list|,
+argument|unsigned Align
 argument_list|,
 argument|bool *Fast
 argument_list|)
@@ -166,6 +169,8 @@ argument_list|,
 argument|bool GlobalOrExternal
 argument_list|,
 argument|bool InternalLinkage
+argument_list|,
+argument|bool IsCallReloc
 argument_list|,
 argument|CallLoweringInfo&CLI
 argument_list|,
@@ -282,10 +287,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// Mips16ISELLOWERING_H
-end_comment
 
 end_unit
 

@@ -46,13 +46,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|R600MACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_R600_R600MACHINEFUNCTIONINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|R600MACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_R600_R600MACHINEFUNCTIONINFO_H
 end_define
 
 begin_include
@@ -135,10 +135,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|//R600MACHINEFUNCTIONINFO_H
-end_comment
 
 end_unit
 

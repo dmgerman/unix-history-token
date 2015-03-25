@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -836,14 +836,34 @@ operator|->
 name|IgnoreColor
 argument_list|)
 expr_stmt|;
-name|ACPI_PLD_SET_COLOR
+name|ACPI_PLD_SET_RED
 argument_list|(
 operator|&
 name|Dword
 argument_list|,
 name|PldInfo
 operator|->
-name|Color
+name|Red
+argument_list|)
+expr_stmt|;
+name|ACPI_PLD_SET_GREEN
+argument_list|(
+operator|&
+name|Dword
+argument_list|,
+name|PldInfo
+operator|->
+name|Green
+argument_list|)
+expr_stmt|;
+name|ACPI_PLD_SET_BLUE
+argument_list|(
+operator|&
+name|Dword
+argument_list|,
+name|PldInfo
+operator|->
+name|Blue
 argument_list|)
 expr_stmt|;
 name|ACPI_MOVE_32_TO_32
@@ -1333,7 +1353,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"Revision"
+literal|"PLD_Revision"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1344,7 +1364,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"IgnoreColor"
+literal|"PLD_IgnoreColor"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1355,11 +1375,33 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"Color"
+literal|"PLD_Red"
 argument_list|,
 name|PldInfo
 operator|->
-name|Color
+name|Red
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+name|ACPI_PLD_OUTPUT
+argument_list|,
+literal|"PLD_Green"
+argument_list|,
+name|PldInfo
+operator|->
+name|Green
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+name|ACPI_PLD_OUTPUT
+argument_list|,
+literal|"PLD_Blue"
+argument_list|,
+name|PldInfo
+operator|->
+name|Blue
 argument_list|)
 expr_stmt|;
 comment|/* Second 32-bit dword */
@@ -1367,7 +1409,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"Width"
+literal|"PLD_Width"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1378,7 +1420,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"Height"
+literal|"PLD_Height"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1390,7 +1432,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"UserVisible"
+literal|"PLD_UserVisible"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1401,7 +1443,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"Dock"
+literal|"PLD_Dock"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1412,7 +1454,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"Lid"
+literal|"PLD_Lid"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1423,7 +1465,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"Panel"
+literal|"PLD_Panel"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1434,7 +1476,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"VerticalPosition"
+literal|"PLD_VerticalPosition"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1445,7 +1487,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"HorizontalPosition"
+literal|"PLD_HorizontalPosition"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1456,7 +1498,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"Shape"
+literal|"PLD_Shape"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1467,7 +1509,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"GroupOrientation"
+literal|"PLD_GroupOrientation"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1478,7 +1520,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"GroupToken"
+literal|"PLD_GroupToken"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1489,7 +1531,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"GroupPosition"
+literal|"PLD_GroupPosition"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1500,7 +1542,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"Bay"
+literal|"PLD_Bay"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1512,7 +1554,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"Ejectable"
+literal|"PLD_Ejectable"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1523,7 +1565,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"OspmEjectRequired"
+literal|"PLD_EjectRequired"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1534,7 +1576,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"CabinetNumber"
+literal|"PLD_CabinetNumber"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1545,7 +1587,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"CardCageNumber"
+literal|"PLD_CardCageNumber"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1556,7 +1598,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"Reference"
+literal|"PLD_Reference"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1567,7 +1609,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"Rotation"
+literal|"PLD_Rotation"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1578,7 +1620,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"Order"
+literal|"PLD_Order"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1601,7 +1643,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"VerticalOffset"
+literal|"PLD_VerticalOffset"
 argument_list|,
 name|PldInfo
 operator|->
@@ -1612,7 +1654,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_PLD_OUTPUT
 argument_list|,
-literal|"HorizontalOffset"
+literal|"PLD_HorizontalOffset"
 argument_list|,
 name|PldInfo
 operator|->

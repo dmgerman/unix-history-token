@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_AGGRESSIVEANTIDEPBREAKER_H
+name|LLVM_LIB_CODEGEN_AGGRESSIVEANTIDEPBREAKER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_AGGRESSIVEANTIDEPBREAKER_H
+name|LLVM_LIB_CODEGEN_AGGRESSIVEANTIDEPBREAKER_H
 end_define
 
 begin_include
@@ -144,24 +144,22 @@ block|{
 name|class
 name|RegisterClassInfo
 decl_stmt|;
-comment|/// Class AggressiveAntiDepState
 comment|/// Contains all the state necessary for anti-dep breaking.
 name|class
 name|AggressiveAntiDepState
 block|{
 name|public
 label|:
-comment|/// RegisterReference - Information about a register reference
-comment|/// within a liverange
+comment|/// Information about a register reference within a liverange
 typedef|typedef
 struct|struct
 block|{
-comment|/// Operand - The registers operand
+comment|/// The registers operand
 name|MachineOperand
 modifier|*
 name|Operand
 decl_stmt|;
-comment|/// RC - The register class
+comment|/// The register class
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -172,13 +170,12 @@ name|RegisterReference
 typedef|;
 name|private
 label|:
-comment|/// NumTargetRegs - Number of non-virtual target registers
-comment|/// (i.e. TRI->getNumRegs()).
+comment|/// Number of non-virtual target registers (i.e. TRI->getNumRegs()).
 specifier|const
 name|unsigned
 name|NumTargetRegs
 decl_stmt|;
-comment|/// GroupNodes - Implements a disjoint-union data structure to
+comment|/// Implements a disjoint-union data structure to
 comment|/// form register groups. A node is represented by an index into
 comment|/// the vector. A node can "point to" itself to indicate that it
 comment|/// is the parent of a group, or point to another node to indicate
@@ -191,7 +188,7 @@ name|unsigned
 operator|>
 name|GroupNodes
 expr_stmt|;
-comment|/// GroupNodeIndices - For each register, the index of the GroupNode
+comment|/// For each register, the index of the GroupNode
 comment|/// currently representing the group that the register belongs to.
 comment|/// Register 0 is always represented by the 0 group, a group
 comment|/// composed of registers that are not eligible for anti-aliasing.
@@ -203,7 +200,7 @@ name|unsigned
 operator|>
 name|GroupNodeIndices
 expr_stmt|;
-comment|/// RegRefs - Map registers to all their references within a live range.
+comment|/// Map registers to all their references within a live range.
 name|std
 operator|::
 name|multimap
@@ -214,7 +211,7 @@ name|RegisterReference
 operator|>
 name|RegRefs
 expr_stmt|;
-comment|/// KillIndices - The index of the most recent kill (proceding bottom-up),
+comment|/// The index of the most recent kill (proceding bottom-up),
 comment|/// or ~0u if the register is not live.
 name|std
 operator|::
@@ -224,7 +221,7 @@ name|unsigned
 operator|>
 name|KillIndices
 expr_stmt|;
-comment|/// DefIndices - The index of the most recent complete def (proceding bottom
+comment|/// The index of the most recent complete def (proceding bottom
 comment|/// up), or ~0u if the register is live.
 name|std
 operator|::
@@ -243,7 +240,7 @@ argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
 empty_stmt|;
-comment|/// GetKillIndices - Return the kill indices.
+comment|/// Return the kill indices.
 name|std
 operator|::
 name|vector
@@ -258,7 +255,7 @@ return|return
 name|KillIndices
 return|;
 block|}
-comment|/// GetDefIndices - Return the define indices.
+comment|/// Return the define indices.
 name|std
 operator|::
 name|vector
@@ -273,7 +270,7 @@ return|return
 name|DefIndices
 return|;
 block|}
-comment|/// GetRegRefs - Return the RegRefs map.
+comment|/// Return the RegRefs map.
 name|std
 operator|::
 name|multimap
@@ -290,7 +287,7 @@ return|return
 name|RegRefs
 return|;
 block|}
-comment|// GetGroup - Get the group for a register. The returned value is
+comment|// Get the group for a register. The returned value is
 comment|// the index of the GroupNode representing the group.
 name|unsigned
 name|GetGroup
@@ -299,8 +296,8 @@ name|unsigned
 name|Reg
 parameter_list|)
 function_decl|;
-comment|// GetGroupRegs - Return a vector of the registers belonging to a
-comment|// group. If RegRefs is non-NULL then only included referenced registers.
+comment|// Return a vector of the registers belonging to a group.
+comment|// If RegRefs is non-NULL then only included referenced registers.
 name|void
 name|GetGroupRegs
 argument_list|(
@@ -330,9 +327,8 @@ operator|*
 name|RegRefs
 argument_list|)
 decl_stmt|;
-comment|// UnionGroups - Union Reg1's and Reg2's groups to form a new
-comment|// group. Return the index of the GroupNode representing the
-comment|// group.
+comment|// Union Reg1's and Reg2's groups to form a new group.
+comment|// Return the index of the GroupNode representing the group.
 name|unsigned
 name|UnionGroups
 parameter_list|(
@@ -343,7 +339,7 @@ name|unsigned
 name|Reg2
 parameter_list|)
 function_decl|;
-comment|// LeaveGroup - Remove a register from its current group and place
+comment|// Remove a register from its current group and place
 comment|// it alone in its own group. Return the index of the GroupNode
 comment|// representing the registers new group.
 name|unsigned
@@ -353,7 +349,7 @@ name|unsigned
 name|Reg
 parameter_list|)
 function_decl|;
-comment|/// IsLive - Return true if Reg is live
+comment|/// Return true if Reg is live.
 name|bool
 name|IsLive
 parameter_list|(
@@ -363,7 +359,6 @@ parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// Class AggressiveAntiDepBreaker
 name|class
 name|AggressiveAntiDepBreaker
 range|:
@@ -393,13 +388,12 @@ name|RegisterClassInfo
 operator|&
 name|RegClassInfo
 block|;
-comment|/// CriticalPathSet - The set of registers that should only be
+comment|/// The set of registers that should only be
 comment|/// renamed if they are on the critical path.
 name|BitVector
 name|CriticalPathSet
 block|;
-comment|/// State - The state used to identify and rename anti-dependence
-comment|/// registers.
+comment|/// The state used to identify and rename anti-dependence registers.
 name|AggressiveAntiDepState
 operator|*
 name|State
@@ -428,7 +422,7 @@ operator|~
 name|AggressiveAntiDepBreaker
 argument_list|()
 block|;
-comment|/// Start - Initialize anti-dep breaking for a new basic block.
+comment|/// Initialize anti-dep breaking for a new basic block.
 name|void
 name|StartBlock
 argument_list|(
@@ -436,8 +430,7 @@ argument|MachineBasicBlock *BB
 argument_list|)
 name|override
 block|;
-comment|/// BreakAntiDependencies - Identifiy anti-dependencies along the critical
-comment|/// path
+comment|/// Identifiy anti-dependencies along the critical path
 comment|/// of the ScheduleDAG and break them by renaming registers.
 comment|///
 name|unsigned
@@ -455,7 +448,7 @@ argument|DbgValueVector&DbgValues
 argument_list|)
 name|override
 block|;
-comment|/// Observe - Update liveness information to account for the current
+comment|/// Update liveness information to account for the current
 comment|/// instruction, which will not be scheduled.
 comment|///
 name|void
@@ -469,7 +462,7 @@ argument|unsigned InsertPosIndex
 argument_list|)
 name|override
 block|;
-comment|/// Finish - Finish anti-dep breaking for a basic block.
+comment|/// Finish anti-dep breaking for a basic block.
 name|void
 name|FinishBlock
 argument_list|()
@@ -491,7 +484,7 @@ name|unsigned
 operator|>
 name|RenameOrderType
 expr_stmt|;
-comment|/// IsImplicitDefUse - Return true if MO represents a register
+comment|/// Return true if MO represents a register
 comment|/// that is both implicitly used and defined in MI
 name|bool
 name|IsImplicitDefUse
@@ -505,7 +498,7 @@ operator|&
 name|MO
 argument_list|)
 decl_stmt|;
-comment|/// GetPassthruRegs - If MI implicitly def/uses a register, then
+comment|/// If MI implicitly def/uses a register, then
 comment|/// return that register and all subregisters.
 name|void
 name|GetPassthruRegs

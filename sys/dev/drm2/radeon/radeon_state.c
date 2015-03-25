@@ -6860,7 +6860,7 @@ name|master_priv
 init|=
 name|file_priv
 operator|->
-name|masterp
+name|master
 operator|->
 name|driver_priv
 decl_stmt|;
@@ -8750,7 +8750,7 @@ name|dev
 argument_list|,
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|,
 name|buf
 argument_list|)
@@ -10090,7 +10090,7 @@ name|master_priv
 init|=
 name|file_priv
 operator|->
-name|masterp
+name|master
 operator|->
 name|driver_priv
 decl_stmt|;
@@ -10179,7 +10179,7 @@ name|dev
 argument_list|,
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|,
 name|clear
 argument_list|,
@@ -10382,7 +10382,7 @@ name|dev
 argument_list|,
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|)
 expr_stmt|;
 name|radeon_cp_dispatch_flip
@@ -10391,7 +10391,7 @@ name|dev
 argument_list|,
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|)
 expr_stmt|;
 name|COMMIT_RING
@@ -10438,7 +10438,7 @@ name|master_priv
 init|=
 name|file_priv
 operator|->
-name|masterp
+name|master
 operator|->
 name|driver_priv
 decl_stmt|;
@@ -10507,7 +10507,7 @@ name|dev
 argument_list|,
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|)
 expr_stmt|;
 name|sarea_priv
@@ -10560,7 +10560,7 @@ name|master_priv
 init|=
 name|file_priv
 operator|->
-name|masterp
+name|master
 operator|->
 name|driver_priv
 decl_stmt|;
@@ -10897,7 +10897,7 @@ name|dev
 argument_list|,
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|,
 name|buf
 argument_list|)
@@ -10947,7 +10947,7 @@ name|master_priv
 init|=
 name|file_priv
 operator|->
-name|masterp
+name|master
 operator|->
 name|driver_priv
 decl_stmt|;
@@ -11345,7 +11345,7 @@ name|dev
 argument_list|,
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|,
 name|buf
 argument_list|,
@@ -11366,7 +11366,7 @@ name|dev
 argument_list|,
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|,
 name|buf
 argument_list|)
@@ -11911,7 +11911,7 @@ name|dev
 argument_list|,
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|,
 name|buf
 argument_list|)
@@ -11961,7 +11961,7 @@ name|master_priv
 init|=
 name|file_priv
 operator|->
-name|masterp
+name|master
 operator|->
 name|driver_priv
 decl_stmt|;
@@ -12324,7 +12324,7 @@ name|dev
 argument_list|,
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|,
 name|buf
 argument_list|,
@@ -12391,7 +12391,7 @@ name|dev
 argument_list|,
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|,
 name|buf
 argument_list|)
@@ -13909,7 +13909,7 @@ name|dev
 argument_list|,
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|,
 name|buf
 argument_list|)
@@ -14303,9 +14303,11 @@ operator|->
 name|ring_rptr_offset
 expr_stmt|;
 break|break;
-ifndef|#
-directive|ifndef
-name|__LP64__
+if|#
+directive|if
+name|BITS_PER_LONG
+operator|==
+literal|32
 comment|/* 		 * This ioctl() doesn't work on 64-bit platforms because hw_lock is a 		 * pointer which can't fit into an int-sized variable.  According to 		 * Michel DÃ¤nzer, the ioctl() is only used on embedded platforms, so 		 * not supporting it shouldn't be a problem.  If the same functionality 		 * is needed on 64-bit platforms, a new ioctl() would have to be added, 		 * so backwards-compatibility for the embedded platforms can be 		 * maintained.  --davidm 4-Feb-2004. 		 */
 case|case
 name|RADEON_PARAM_SAREA_HANDLE
@@ -14521,7 +14523,7 @@ name|master_priv
 init|=
 name|file_priv
 operator|->
-name|masterp
+name|master
 operator|->
 name|driver_priv
 decl_stmt|;
@@ -14892,7 +14894,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -15259,7 +15261,7 @@ begin_decl_stmt
 name|int
 name|radeon_max_ioctl
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|radeon_ioctls
 argument_list|)

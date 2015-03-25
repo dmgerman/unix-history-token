@@ -92,7 +92,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
 end_include
 
 begin_include
@@ -350,7 +362,7 @@ name|ret
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -373,7 +385,7 @@ name|ret
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -413,7 +425,7 @@ operator|*
 name|p
 argument_list|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -507,7 +519,7 @@ name|i
 index|]
 argument_list|)
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -785,7 +797,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -804,7 +816,7 @@ argument_list|(
 name|u_int
 argument_list|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -865,7 +877,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -1026,7 +1038,7 @@ name|maxprot
 operator|!=
 name|NETISR_MAXPROT
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -1059,7 +1071,7 @@ name|np_array
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -1084,7 +1096,7 @@ name|ret
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -1105,7 +1117,7 @@ name|ret
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -1138,7 +1150,7 @@ name|ssize_t
 operator|)
 name|len
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -1408,7 +1420,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -1428,7 +1440,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -1449,7 +1461,7 @@ name|proto_array
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -1475,7 +1487,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -1495,7 +1507,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -1519,7 +1531,7 @@ name|proto_array_len
 operator|<
 literal|1
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -1544,7 +1556,7 @@ literal|0
 index|]
 argument_list|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -1654,7 +1666,7 @@ name|nws_array
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -1677,7 +1689,7 @@ name|ret
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -1698,7 +1710,7 @@ name|ret
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -1731,7 +1743,7 @@ name|ssize_t
 operator|)
 name|len
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -1765,7 +1777,7 @@ name|workstream_array
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -1798,7 +1810,7 @@ name|work_array
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -1842,7 +1854,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -1893,12 +1905,13 @@ name|ret
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"%s: kvm_nlist looking up nws on CPU %u: %s"
+literal|"%s: kvm_nlist looking up nws on CPU "
+literal|"%u: %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -1916,7 +1929,7 @@ name|ret
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -1956,7 +1969,7 @@ argument_list|(
 name|nws
 argument_list|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -2016,9 +2029,9 @@ operator||=
 name|NETISR_SNWS_FLAGS_INTR
 expr_stmt|;
 comment|/* 		 * Extract the CPU's per-protocol work information. 		 */
-name|printf
+name|xo_emit
 argument_list|(
-literal|"counting to maxprot: %u\n"
+literal|"counting to maxprot: {:maxprot/%u}\n"
 argument_list|,
 name|maxprot
 argument_list|)
@@ -2183,7 +2196,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -2203,7 +2216,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -2224,7 +2237,7 @@ name|workstream_array
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -2250,7 +2263,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -2270,7 +2283,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -2294,7 +2307,7 @@ name|workstream_array_len
 operator|<
 literal|1
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -2319,7 +2332,7 @@ literal|0
 index|]
 argument_list|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -2359,7 +2372,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -2379,7 +2392,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -2400,7 +2413,7 @@ name|work_array
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -2426,7 +2439,7 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 operator|-
 literal|1
@@ -2446,7 +2459,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -2470,7 +2483,7 @@ name|work_array_len
 operator|<
 literal|1
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -2495,7 +2508,7 @@ literal|0
 index|]
 argument_list|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -2523,36 +2536,36 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-6s"
+literal|"{[:-6}{k:name/%s}{]:}"
 argument_list|,
 name|snpp
 operator|->
 name|snp_name
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %5u"
+literal|" {:protocol/%5u}"
 argument_list|,
 name|snpp
 operator|->
 name|snp_proto
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %6u"
+literal|" {:queue-limit/%6u}"
 argument_list|,
 name|snpp
 operator|->
 name|snp_qlimit
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %6s"
+literal|" {:policy-type/%6s}"
 argument_list|,
 operator|(
 name|snpp
@@ -2601,16 +2614,16 @@ name|tmp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %8s"
+literal|" {:policy/%8s}"
 argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"   %s%s%s\n"
+literal|"   {:flags/%s%s%s}\n"
 argument_list|,
 operator|(
 name|snpp
@@ -2671,6 +2684,11 @@ decl_stmt|;
 name|u_int
 name|i
 decl_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"work"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2704,34 +2722,37 @@ operator|->
 name|snws_wsid
 condition|)
 continue|continue;
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"%4u "
+literal|"work"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{t:workstream/%4u} "
 argument_list|,
 name|snwsp
 operator|->
 name|snws_wsid
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%3u "
+literal|"{t:cpu/%3u} "
 argument_list|,
 name|snwsp
 operator|->
 name|snws_cpu
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%2s"
-argument_list|,
-literal|""
+literal|"{P:  }"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-6s"
+literal|"{t:name/%-6s}"
 argument_list|,
 name|netisr_proto2name
 argument_list|(
@@ -2741,75 +2762,85 @@ name|snw_proto
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %5u"
+literal|" {t:length/%5u}"
 argument_list|,
 name|snwp
 operator|->
 name|snw_len
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %5u"
+literal|" {t:watermark/%5u}"
 argument_list|,
 name|snwp
 operator|->
 name|snw_watermark
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %8ju"
+literal|" {t:dispatched/%8ju}"
 argument_list|,
 name|snwp
 operator|->
 name|snw_dispatched
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %8ju"
+literal|" {t:hybrid-dispatched/%8ju}"
 argument_list|,
 name|snwp
 operator|->
 name|snw_hybrid_dispatched
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %8ju"
+literal|" {t:queue-drops/%8ju}"
 argument_list|,
 name|snwp
 operator|->
 name|snw_qdrops
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %8ju"
+literal|" {t:queued/%8ju}"
 argument_list|,
 name|snwp
 operator|->
 name|snw_queued
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %8ju"
+literal|" {t:handled/%8ju}"
 argument_list|,
 name|snwp
 operator|->
 name|snw_handled
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"work"
+argument_list|)
+expr_stmt|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"work"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2867,7 +2898,7 @@ name|kd
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 operator|-
 literal|1
@@ -2892,14 +2923,19 @@ argument_list|)
 expr_stmt|;
 comment|/* Also does work. */
 block|}
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"Configuration:\n"
+literal|"netisr"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-25s %12s %12s\n"
+literal|"{T:Configuration}:\n"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{T:/%-25s} {T:/%12s} {T:/%12s}\n"
 argument_list|,
 literal|"Setting"
 argument_list|,
@@ -2908,9 +2944,9 @@ argument_list|,
 literal|"Limit"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-25s %12u %12u\n"
+literal|"{T:/%-25s} {T:/%12u} {T:/%12u}\n"
 argument_list|,
 literal|"Thread count"
 argument_list|,
@@ -2919,9 +2955,9 @@ argument_list|,
 name|maxthreads
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-25s %12u %12u\n"
+literal|"{T:/%-25s} {T:/%12u} {T:/%12u}\n"
 argument_list|,
 literal|"Default queue limit"
 argument_list|,
@@ -2930,9 +2966,9 @@ argument_list|,
 name|maxqlimit
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-25s %12s %12s\n"
+literal|"{T:/%-25s} {T:/%12s} {T:/%12s}\n"
 argument_list|,
 literal|"Dispatch policy"
 argument_list|,
@@ -2941,9 +2977,9 @@ argument_list|,
 literal|"n/a"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-25s %12s %12s\n"
+literal|"{T:/%-25s} {T:/%12s} {T:/%12s}\n"
 argument_list|,
 literal|"Threads bound to CPUs"
 argument_list|,
@@ -2956,19 +2992,19 @@ argument_list|,
 literal|"n/a"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Protocols:\n"
+literal|"{T:Protocols}:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-6s %5s %6s %-6s %-8s %-5s\n"
+literal|"{T:/%-6s} {T:/%5s} {T:/%6s} {T:/%-6s} {T:/%-8s} {T:/%-5s}\n"
 argument_list|,
 literal|"Name"
 argument_list|,
@@ -2981,6 +3017,11 @@ argument_list|,
 literal|"Dispatch"
 argument_list|,
 literal|"Flags"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"protocol"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2997,6 +3038,11 @@ name|i
 operator|++
 control|)
 block|{
+name|xo_open_instance
+argument_list|(
+literal|"protocol"
+argument_list|)
+expr_stmt|;
 name|snpp
 operator|=
 operator|&
@@ -3010,36 +3056,47 @@ argument_list|(
 name|snpp
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"protocol"
+argument_list|)
+expr_stmt|;
 block|}
-name|printf
+name|xo_close_list
+argument_list|(
+literal|"protocol"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Workstreams:\n"
+literal|"{T:Workstreams}:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%4s %3s "
+literal|"{T:/%4s} {T:/%3s} "
 argument_list|,
 literal|"WSID"
 argument_list|,
 literal|"CPU"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%2s"
+literal|"{P:/%2s}"
 argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-6s %5s %5s %8s %8s %8s %8s %8s\n"
+literal|"{T:/%-6s} {T:/%5s} {T:/%5s} {T:/%8s} {T:/%8s} {T:/%8s} "
+literal|"{T:/%8s} {T:/%8s}\n"
 argument_list|,
 literal|"Name"
 argument_list|,
@@ -3058,6 +3115,11 @@ argument_list|,
 literal|"Handled"
 argument_list|)
 expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"workstream"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3072,6 +3134,11 @@ name|i
 operator|++
 control|)
 block|{
+name|xo_open_instance
+argument_list|(
+literal|"workstream"
+argument_list|)
+expr_stmt|;
 name|snwsp
 operator|=
 operator|&
@@ -3085,7 +3152,22 @@ argument_list|(
 name|snwsp
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"workstream"
+argument_list|)
+expr_stmt|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"workstream"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"netisr"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

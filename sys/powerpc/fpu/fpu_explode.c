@@ -574,6 +574,8 @@ name|fpreg
 index|[
 name|reg
 index|]
+operator|.
+name|fpr
 expr_stmt|;
 name|l
 operator|=
@@ -597,6 +599,8 @@ name|fpreg
 index|[
 name|reg
 index|]
+operator|.
+name|fpr
 expr_stmt|;
 name|s
 operator|=

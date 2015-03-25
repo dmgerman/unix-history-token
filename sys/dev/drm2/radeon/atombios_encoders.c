@@ -835,7 +835,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1174,6 +1174,45 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_WIP
+end_ifdef
+
+begin_comment
+comment|/* FreeBSD: to please GCC 4.2. */
+end_comment
+
+begin_comment
+comment|/* evil but including atombios.h is much worse */
+end_comment
+
+begin_function_decl
+name|bool
+name|radeon_atom_get_tv_timings
+parameter_list|(
+name|struct
+name|radeon_device
+modifier|*
+name|rdev
+parameter_list|,
+name|int
+name|index
+parameter_list|,
+name|struct
+name|drm_display_mode
+modifier|*
+name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -1257,6 +1296,7 @@ name|drm_encoder
 modifier|*
 name|encoder
 parameter_list|,
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -6465,7 +6505,7 @@ condition|)
 return|return
 name|true
 return|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|1
 argument_list|)
@@ -11918,6 +11958,7 @@ name|drm_encoder
 modifier|*
 name|encoder
 parameter_list|,
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -12188,9 +12229,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 decl_stmt|;
 if|if
@@ -12257,9 +12298,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 decl_stmt|;
 if|if
@@ -12395,9 +12436,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if

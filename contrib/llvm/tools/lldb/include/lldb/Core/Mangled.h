@@ -97,6 +97,8 @@ block|{
 name|ePreferMangled
 block|,
 name|ePreferDemangled
+block|,
+name|ePreferDemangledWithoutArguments
 block|}
 enum|;
 comment|//----------------------------------------------------------------------

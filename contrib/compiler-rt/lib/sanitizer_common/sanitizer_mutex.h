@@ -270,12 +270,37 @@ name|BlockingMutex
 block|{
 name|public
 label|:
+if|#
+directive|if
+name|SANITIZER_WINDOWS
+comment|// Windows does not currently support LinkerInitialized
 name|explicit
 name|BlockingMutex
 parameter_list|(
 name|LinkerInitialized
 parameter_list|)
 function_decl|;
+else|#
+directive|else
+name|explicit
+name|constexpr
+name|BlockingMutex
+argument_list|(
+name|LinkerInitialized
+argument_list|)
+operator|:
+name|opaque_storage_
+block|{
+literal|0
+block|, }
+operator|,
+name|owner_
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+endif|#
+directive|endif
 name|BlockingMutex
 argument_list|()
 expr_stmt|;

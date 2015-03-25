@@ -140,6 +140,9 @@ argument_list|)
 name|pvo_vlink
 expr_stmt|;
 comment|/* Link to common virt page */
+ifndef|#
+directive|ifndef
+name|__powerpc64__
 name|LIST_ENTRY
 argument_list|(
 argument|pvo_entry
@@ -147,6 +150,8 @@ argument_list|)
 name|pvo_olink
 expr_stmt|;
 comment|/* Link to overflow entry */
+endif|#
+directive|endif
 name|RB_ENTRY
 argument_list|(
 argument|pvo_entry
@@ -154,21 +159,31 @@ argument_list|)
 name|pvo_plink
 expr_stmt|;
 comment|/* Link to pmap entries */
-union|union
+struct|struct
 block|{
+ifndef|#
+directive|ifndef
+name|__powerpc64__
+comment|/* 32-bit fields */
 name|struct
 name|pte
 name|pte
 decl_stmt|;
-comment|/* 32 bit PTE */
-name|struct
-name|lpte
-name|lpte
+endif|#
+directive|endif
+comment|/* 64-bit fields */
+name|uintptr_t
+name|slot
 decl_stmt|;
-comment|/* 64 bit PTE */
+name|vm_paddr_t
+name|pa
+decl_stmt|;
+name|vm_prot_t
+name|prot
+decl_stmt|;
 block|}
 name|pvo_pte
-union|;
+struct|;
 name|pmap_t
 name|pvo_pmap
 decl_stmt|;
@@ -234,6 +249,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Used by 32-bit PMAP */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -254,6 +273,25 @@ end_define
 
 begin_comment
 comment|/* slot is valid */
+end_comment
+
+begin_comment
+comment|/* Used by 64-bit PMAP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVO_HID
+value|0x008UL
+end_define
+
+begin_comment
+comment|/* PVO entry in alternate hash*/
+end_comment
+
+begin_comment
+comment|/* Used by both */
 end_comment
 
 begin_define
@@ -287,6 +325,17 @@ end_define
 
 begin_comment
 comment|/* PVO entry allocated during 						   bootstrap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVO_DEAD
+value|0x100UL
+end_define
+
+begin_comment
+comment|/* waiting to be deleted */
 end_comment
 
 begin_define
@@ -423,7 +472,8 @@ begin_struct
 struct|struct
 name|md_page
 block|{
-name|u_int64_t
+specifier|volatile
+name|int32_t
 name|mdpg_attrs
 decl_stmt|;
 name|vm_memattr_t

@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/uart/uart_cpu_fdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/uart/uart_bus.h>
 end_include
 
@@ -2237,6 +2243,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|uart_class
 name|uart_msm_class
@@ -2270,6 +2277,44 @@ name|DEF_CLK
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|ofw_compat_data
+name|compat_data
+index|[]
+init|=
+block|{
+block|{
+literal|"qcom,msm-uartdm"
+block|,
+operator|(
+name|uintptr_t
+operator|)
+operator|&
+name|uart_msm_class
+block|}
+block|,
+block|{
+name|NULL
+block|,
+operator|(
+name|uintptr_t
+operator|)
+name|NULL
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|UART_FDT_CLASS_AND_DEVICE
+argument_list|(
+name|compat_data
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

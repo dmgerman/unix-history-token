@@ -66,6 +66,14 @@ file|<arm/samsung/s3c2xx0/s3c2xx0var.h>
 end_include
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|uart_class
+name|uart_s3c2410_class
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|bus_space_tag_t
 name|uart_bus_space_io
 decl_stmt|;
@@ -74,14 +82,6 @@ end_decl_stmt
 begin_decl_stmt
 name|bus_space_tag_t
 name|uart_bus_space_mem
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|uart_ops
-name|uart_s3c2410_ops
 decl_stmt|;
 end_decl_stmt
 

@@ -136,6 +136,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -143,6 +149,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
 end_include
 
 begin_include
@@ -426,6 +438,11 @@ modifier|*
 name|ipsecstat
 parameter_list|)
 block|{
+name|xo_open_container
+argument_list|(
+literal|"ipsec-statistics"
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|p
@@ -434,106 +451,119 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (ipsecstat->f || sflag<= 1) \     printf(m, (uintmax_t)ipsecstat->f, plural(ipsecstat->f))
+value|if (ipsecstat->f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)ipsecstat->f, plural(ipsecstat->f))
 name|p
 argument_list|(
 name|ips_in_polvio
 argument_list|,
-literal|"\t%ju inbound packet%s violated process "
-literal|"security policy\n"
+literal|"\t{:dropped-policy-violation/%ju} "
+literal|"{N:/inbound packet%s violated process security policy}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_in_nomem
 argument_list|,
-literal|"\t%ju inbound packet%s failed due to "
-literal|"insufficient memory\n"
+literal|"\t{:dropped-no-memory/%ju} "
+literal|"{N:/inbound packet%s failed due to insufficient memory}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_in_inval
 argument_list|,
-literal|"\t%ju invalid inbound packet%s\n"
+literal|"\t{:dropped-invalid/%ju} "
+literal|"{N:/invalid inbound packet%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_out_polvio
 argument_list|,
-literal|"\t%ju outbound packet%s violated process "
-literal|"security policy\n"
+literal|"\t{:discarded-policy-violation/%ju} "
+literal|"{N:/outbound packet%s violated process security policy}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_out_nosa
 argument_list|,
-literal|"\t%ju outbound packet%s with no SA available\n"
+literal|"\t{:discarded-no-sa/%ju} "
+literal|"{N:/outbound packet%s with no SA available}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_out_nomem
 argument_list|,
-literal|"\t%ju outbound packet%s failed due to "
-literal|"insufficient memory\n"
+literal|"\t{:discarded-no-memory/%ju} "
+literal|"{N:/outbound packet%s failed due to insufficient memory}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_out_noroute
 argument_list|,
-literal|"\t%ju outbound packet%s with no route "
-literal|"available\n"
+literal|"\t{:discarded-no-route/%ju} "
+literal|"{N:/outbound packet%s with no route available}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_out_inval
 argument_list|,
-literal|"\t%ju invalid outbound packet%s\n"
+literal|"\t{:discarded-invalid/%ju} "
+literal|"{N:/invalid outbound packet%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_out_bundlesa
 argument_list|,
-literal|"\t%ju outbound packet%s with bundled SAs\n"
+literal|"\t{:send-bundled-sa/%ju} "
+literal|"{N:/outbound packet%s with bundled SAs}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_mbcoalesced
 argument_list|,
-literal|"\t%ju mbuf%s coalesced during clone\n"
+literal|"\t{:mbufs-coalesced-during-clone/%ju} "
+literal|"{N:/mbuf%s coalesced during clone}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_clcoalesced
 argument_list|,
-literal|"\t%ju cluster%s coalesced during clone\n"
+literal|"\t{:clusters-coalesced-during-clone/%ju} "
+literal|"{N:/cluster%s coalesced during clone}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_clcopied
 argument_list|,
-literal|"\t%ju cluster%s copied during clone\n"
+literal|"\t{:clusters-copied-during-clone/%ju} "
+literal|"{N:/cluster%s copied during clone}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ips_mbinserted
 argument_list|,
-literal|"\t%ju mbuf%s inserted during makespace\n"
+literal|"\t{:mbufs-inserted/%ju} "
+literal|"{N:/mbuf%s inserted during makespace}\n"
 argument_list|)
 expr_stmt|;
 undef|#
 directive|undef
 name|p
+name|xo_close_container
+argument_list|(
+literal|"ipsec-statistics"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -569,9 +599,9 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s:\n"
+literal|"{T:/%s}:\n"
 argument_list|,
 name|name
 argument_list|)
@@ -601,33 +631,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_function_decl
-specifier|static
-name|void
-name|ipsec_hist_new
-parameter_list|(
-specifier|const
-name|uint64_t
-modifier|*
-name|hist
-parameter_list|,
-name|size_t
-name|histmax
-parameter_list|,
-specifier|const
-name|struct
-name|val2str
-modifier|*
-name|name
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|title
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -698,6 +701,11 @@ specifier|const
 name|char
 modifier|*
 name|title
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cname
 parameter_list|)
 block|{
 name|int
@@ -745,9 +753,14 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_open_list
 argument_list|(
-literal|"\t%s histogram:\n"
+name|cname
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t{T:/%s histogram}:\n"
 argument_list|,
 name|title
 argument_list|)
@@ -757,6 +770,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|xo_open_instance
+argument_list|(
+name|cname
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|p
@@ -795,9 +813,9 @@ operator|->
 name|str
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t\t%s: %ju\n"
+literal|"\t\t{k:name}: {:count/%ju}\n"
 argument_list|,
 name|p
 operator|->
@@ -815,9 +833,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"\t\t#%lu: %ju\n"
+literal|"\t\t#{k:name/%lu}: {:count/%ju}\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -835,7 +853,22 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|xo_close_instance
+argument_list|(
+name|cname
+argument_list|)
+expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+name|cname
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -851,15 +884,22 @@ modifier|*
 name|ahstat
 parameter_list|)
 block|{
+name|xo_open_container
+argument_list|(
+literal|"ah-statictics"
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|p
 parameter_list|(
 name|f
 parameter_list|,
+name|n
+parameter_list|,
 name|m
 parameter_list|)
-value|if (ahstat->f || sflag<= 1) \     printf("\t%ju" m, (uintmax_t)ahstat->f, plural(ahstat->f))
+value|if (ahstat->f || sflag<= 1) \ 	xo_emit("\t{:" n "/%ju} {N:/" m "}\n",	\ 	    (uintmax_t)ahstat->f, plural(ahstat->f))
 define|#
 directive|define
 name|hist
@@ -869,140 +909,180 @@ parameter_list|,
 name|n
 parameter_list|,
 name|t
+parameter_list|,
+name|c
 parameter_list|)
 define|\
-value|ipsec_hist_new((f), sizeof(f)/sizeof(f[0]), (n), (t));
+value|ipsec_hist_new((f), sizeof(f)/sizeof(f[0]), (n), (t), (c))
 name|p
 argument_list|(
 name|ahs_hdrops
 argument_list|,
-literal|" packet%s shorter than header shows\n"
+literal|"dropped-short-header"
+argument_list|,
+literal|"packet%s shorter than header shows"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_nopf
 argument_list|,
-literal|" packet%s dropped; protocol family not supported\n"
+literal|"dropped-bad-protocol"
+argument_list|,
+literal|"packet%s dropped; protocol family not supported"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_notdb
 argument_list|,
-literal|" packet%s dropped; no TDB\n"
+literal|"dropped-no-tdb"
+argument_list|,
+literal|"packet%s dropped; no TDB"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_badkcr
 argument_list|,
-literal|" packet%s dropped; bad KCR\n"
+literal|"dropped-bad-kcr"
+argument_list|,
+literal|"packet%s dropped; bad KCR"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_qfull
 argument_list|,
-literal|" packet%s dropped; queue full\n"
+literal|"dropped-queue-full"
+argument_list|,
+literal|"packet%s dropped; queue full"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_noxform
 argument_list|,
-literal|" packet%s dropped; no transform\n"
+literal|"dropped-no-transform"
+argument_list|,
+literal|"packet%s dropped; no transform"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_wrap
 argument_list|,
-literal|" replay counter wrap%s\n"
+literal|"replay-counter-wraps"
+argument_list|,
+literal|"replay counter wrap%s"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_badauth
 argument_list|,
-literal|" packet%s dropped; bad authentication detected\n"
+literal|"dropped-bad-auth"
+argument_list|,
+literal|"packet%s dropped; bad authentication detected"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_badauthl
 argument_list|,
-literal|" packet%s dropped; bad authentication length\n"
+literal|"dropped-bad-auth-level"
+argument_list|,
+literal|"packet%s dropped; bad authentication length"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_replay
 argument_list|,
-literal|" possible replay packet%s detected\n"
+literal|"possile-replay-detected"
+argument_list|,
+literal|"possible replay packet%s detected"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_input
 argument_list|,
-literal|" packet%s in\n"
+literal|"received-packets"
+argument_list|,
+literal|"packet%s in"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_output
 argument_list|,
-literal|" packet%s out\n"
+literal|"send-packets"
+argument_list|,
+literal|"packet%s out"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_invalid
 argument_list|,
-literal|" packet%s dropped; invalid TDB\n"
+literal|"dropped-bad-tdb"
+argument_list|,
+literal|"packet%s dropped; invalid TDB"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_ibytes
 argument_list|,
-literal|" byte%s in\n"
+literal|"received-bytes"
+argument_list|,
+literal|"byte%s in"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_obytes
 argument_list|,
-literal|" byte%s out\n"
+literal|"send-bytes"
+argument_list|,
+literal|"byte%s out"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_toobig
 argument_list|,
-literal|" packet%s dropped; larger than IP_MAXPACKET\n"
+literal|"dropped-too-large"
+argument_list|,
+literal|"packet%s dropped; larger than IP_MAXPACKET"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_pdrops
 argument_list|,
-literal|" packet%s blocked due to policy\n"
+literal|"dropped-policy-violation"
+argument_list|,
+literal|"packet%s blocked due to policy"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_crypto
 argument_list|,
-literal|" crypto processing failure%s\n"
+literal|"crypto-failures"
+argument_list|,
+literal|"crypto processing failure%s"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ahs_tunnel
 argument_list|,
-literal|" tunnel sanity check failure%s\n"
+literal|"tunnel-failures"
+argument_list|,
+literal|"tunnel sanity check failure%s"
 argument_list|)
 expr_stmt|;
 name|hist
@@ -1014,6 +1094,8 @@ argument_list|,
 name|ipsec_ahnames
 argument_list|,
 literal|"AH output"
+argument_list|,
+literal|"ah-output-histogram"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -1022,6 +1104,11 @@ name|p
 undef|#
 directive|undef
 name|hist
+name|xo_close_container
+argument_list|(
+literal|"ah-statictics"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1057,9 +1144,9 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s:\n"
+literal|"{T:/%s}:\n"
 argument_list|,
 name|name
 argument_list|)
@@ -1102,15 +1189,22 @@ modifier|*
 name|espstat
 parameter_list|)
 block|{
+name|xo_open_container
+argument_list|(
+literal|"esp-statictics"
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|p
 parameter_list|(
 name|f
 parameter_list|,
+name|n
+parameter_list|,
 name|m
 parameter_list|)
-value|if (espstat->f || sflag<= 1) \     printf("\t%ju" m, (uintmax_t)espstat->f, plural(espstat->f))
+value|if (espstat->f || sflag<= 1)	\ 	xo_emit("\t{:" n "/%ju} {N:/" m "}\n",		\ 	    (uintmax_t)espstat->f, plural(espstat->f))
 define|#
 directive|define
 name|hist
@@ -1120,147 +1214,189 @@ parameter_list|,
 name|n
 parameter_list|,
 name|t
+parameter_list|,
+name|c
 parameter_list|)
 define|\
-value|ipsec_hist_new((f), sizeof(f)/sizeof(f[0]), (n), (t));
+value|ipsec_hist_new((f), sizeof(f)/sizeof(f[0]), (n), (t), (c));
 name|p
 argument_list|(
 name|esps_hdrops
 argument_list|,
-literal|" packet%s shorter than header shows\n"
+literal|"dropped-short-header"
+argument_list|,
+literal|"packet%s shorter than header shows"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_nopf
 argument_list|,
-literal|" packet%s dropped; protocol family not supported\n"
+literal|"dropped-bad-protocol"
+argument_list|,
+literal|"packet%s dropped; protocol family not supported"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_notdb
 argument_list|,
-literal|" packet%s dropped; no TDB\n"
+literal|"dropped-no-tdb"
+argument_list|,
+literal|"packet%s dropped; no TDB"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_badkcr
 argument_list|,
-literal|" packet%s dropped; bad KCR\n"
+literal|"dropped-bad-kcr"
+argument_list|,
+literal|"packet%s dropped; bad KCR"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_qfull
 argument_list|,
-literal|" packet%s dropped; queue full\n"
+literal|"dropped-queue-full"
+argument_list|,
+literal|"packet%s dropped; queue full"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_noxform
 argument_list|,
-literal|" packet%s dropped; no transform\n"
+literal|"dropped-no-transform"
+argument_list|,
+literal|"packet%s dropped; no transform"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_badilen
 argument_list|,
-literal|" packet%s dropped; bad ilen\n"
+literal|"dropped-bad-length"
+argument_list|,
+literal|"packet%s dropped; bad ilen"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_wrap
 argument_list|,
-literal|" replay counter wrap%s\n"
+literal|"replay-counter-wraps"
+argument_list|,
+literal|"replay counter wrap%s"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_badenc
 argument_list|,
-literal|" packet%s dropped; bad encryption detected\n"
+literal|"dropped-bad-crypto"
+argument_list|,
+literal|"packet%s dropped; bad encryption detected"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_badauth
 argument_list|,
-literal|" packet%s dropped; bad authentication detected\n"
+literal|"dropped-bad-auth"
+argument_list|,
+literal|"packet%s dropped; bad authentication detected"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_replay
 argument_list|,
-literal|" possible replay packet%s detected\n"
+literal|"possible-replay-detected"
+argument_list|,
+literal|"possible replay packet%s detected"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_input
 argument_list|,
-literal|" packet%s in\n"
+literal|"received-packets"
+argument_list|,
+literal|"packet%s in"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_output
 argument_list|,
-literal|" packet%s out\n"
+literal|"sent-packets"
+argument_list|,
+literal|"packet%s out"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_invalid
 argument_list|,
-literal|" packet%s dropped; invalid TDB\n"
+literal|"dropped-bad-tdb"
+argument_list|,
+literal|"packet%s dropped; invalid TDB"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_ibytes
 argument_list|,
-literal|" byte%s in\n"
+literal|"receieve-bytes"
+argument_list|,
+literal|"byte%s in"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_obytes
 argument_list|,
-literal|" byte%s out\n"
+literal|"sent-bytes"
+argument_list|,
+literal|"byte%s out"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_toobig
 argument_list|,
-literal|" packet%s dropped; larger than IP_MAXPACKET\n"
+literal|"dropped-too-large"
+argument_list|,
+literal|"packet%s dropped; larger than IP_MAXPACKET"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_pdrops
 argument_list|,
-literal|" packet%s blocked due to policy\n"
+literal|"dropped-policy-violation"
+argument_list|,
+literal|"packet%s blocked due to policy"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_crypto
 argument_list|,
-literal|" crypto processing failure%s\n"
+literal|"crypto-failures"
+argument_list|,
+literal|"crypto processing failure%s"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|esps_tunnel
 argument_list|,
-literal|" tunnel sanity check failure%s\n"
+literal|"tunnel-failures"
+argument_list|,
+literal|"tunnel sanity check failure%s"
 argument_list|)
 expr_stmt|;
 name|hist
@@ -1272,6 +1408,8 @@ argument_list|,
 name|ipsec_espnames
 argument_list|,
 literal|"ESP output"
+argument_list|,
+literal|"esp-output-histogram"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -1280,6 +1418,11 @@ name|p
 undef|#
 directive|undef
 name|hist
+name|xo_close_container
+argument_list|(
+literal|"esp-statictics"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1315,9 +1458,9 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s:\n"
+literal|"{T:/%s}:\n"
 argument_list|,
 name|name
 argument_list|)
@@ -1360,15 +1503,22 @@ modifier|*
 name|ipcompstat
 parameter_list|)
 block|{
+name|xo_open_container
+argument_list|(
+literal|"ipcomp-statictics"
+argument_list|)
+expr_stmt|;
 define|#
 directive|define
 name|p
 parameter_list|(
 name|f
 parameter_list|,
+name|n
+parameter_list|,
 name|m
 parameter_list|)
-value|if (ipcompstat->f || sflag<= 1) \     printf("\t%ju" m, (uintmax_t)ipcompstat->f, plural(ipcompstat->f))
+value|if (ipcompstat->f || sflag<= 1)	\ 	xo_emit("\t{:" n "/%ju} {N:/" m "}\n",		\ 	    (uintmax_t)ipcompstat->f, plural(ipcompstat->f))
 define|#
 directive|define
 name|hist
@@ -1378,112 +1528,144 @@ parameter_list|,
 name|n
 parameter_list|,
 name|t
+parameter_list|,
+name|c
 parameter_list|)
 define|\
-value|ipsec_hist_new((f), sizeof(f)/sizeof(f[0]), (n), (t));
+value|ipsec_hist_new((f), sizeof(f)/sizeof(f[0]), (n), (t), (c));
 name|p
 argument_list|(
 name|ipcomps_hdrops
 argument_list|,
-literal|" packet%s shorter than header shows\n"
+literal|"dropped-short-header"
+argument_list|,
+literal|"packet%s shorter than header shows"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_nopf
 argument_list|,
-literal|" packet%s dropped; protocol family not supported\n"
+literal|"dropped-bad-protocol"
+argument_list|,
+literal|"packet%s dropped; protocol family not supported"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_notdb
 argument_list|,
-literal|" packet%s dropped; no TDB\n"
+literal|"dropped-no-tdb"
+argument_list|,
+literal|"packet%s dropped; no TDB"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_badkcr
 argument_list|,
-literal|" packet%s dropped; bad KCR\n"
+literal|"dropped-bad-kcr"
+argument_list|,
+literal|"packet%s dropped; bad KCR"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_qfull
 argument_list|,
-literal|" packet%s dropped; queue full\n"
+literal|"dropped-queue-full"
+argument_list|,
+literal|"packet%s dropped; queue full"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_noxform
 argument_list|,
-literal|" packet%s dropped; no transform\n"
+literal|"dropped-no-transform"
+argument_list|,
+literal|"packet%s dropped; no transform"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_wrap
 argument_list|,
-literal|" replay counter wrap%s\n"
+literal|"replay-counter-wraps"
+argument_list|,
+literal|"replay counter wrap%s"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_input
 argument_list|,
-literal|" packet%s in\n"
+literal|"receieve-packets"
+argument_list|,
+literal|"packet%s in"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_output
 argument_list|,
-literal|" packet%s out\n"
+literal|"sent-packets"
+argument_list|,
+literal|"packet%s out"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_invalid
 argument_list|,
-literal|" packet%s dropped; invalid TDB\n"
+literal|"dropped-bad-tdb"
+argument_list|,
+literal|"packet%s dropped; invalid TDB"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_ibytes
 argument_list|,
-literal|" byte%s in\n"
+literal|"receieved-bytes"
+argument_list|,
+literal|"byte%s in"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_obytes
 argument_list|,
-literal|" byte%s out\n"
+literal|"sent-bytes"
+argument_list|,
+literal|"byte%s out"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_toobig
 argument_list|,
-literal|" packet%s dropped; larger than IP_MAXPACKET\n"
+literal|"dropped-too-large"
+argument_list|,
+literal|"packet%s dropped; larger than IP_MAXPACKET"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_pdrops
 argument_list|,
-literal|" packet%s blocked due to policy\n"
+literal|"dropped-policy-violation"
+argument_list|,
+literal|"packet%s blocked due to policy"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_crypto
 argument_list|,
-literal|" crypto processing failure%s\n"
+literal|"crypto-failure"
+argument_list|,
+literal|"crypto processing failure%s"
 argument_list|)
 expr_stmt|;
 name|hist
@@ -1495,20 +1677,26 @@ argument_list|,
 name|ipsec_compnames
 argument_list|,
 literal|"COMP output"
+argument_list|,
+literal|"comp-output-histogram"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_threshold
 argument_list|,
-literal|" packet%s sent uncompressed; size< compr. algo. threshold\n"
+literal|"sent-uncompressed-small-packets"
+argument_list|,
+literal|"packet%s sent uncompressed; size< compr. algo. threshold"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|ipcomps_uncompr
 argument_list|,
-literal|" packet%s sent uncompressed; compression was useless\n"
+literal|"sent-uncompressed-useless-packets"
+argument_list|,
+literal|"packet%s sent uncompressed; compression was useless"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -1517,6 +1705,11 @@ name|p
 undef|#
 directive|undef
 name|hist
+name|xo_close_container
+argument_list|(
+literal|"ipcomp-statictics"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1552,9 +1745,9 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s:\n"
+literal|"{T:/%s}:\n"
 argument_list|,
 name|name
 argument_list|)

@@ -294,17 +294,6 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|TUNABLE_INT
-argument_list|(
-literal|"hw.snd.verbose"
-argument_list|,
-operator|&
-name|snd_verbose
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -418,7 +407,7 @@ name|sndstat_pid
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 literal|0
 argument_list|,
@@ -535,7 +524,7 @@ name|verbose
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 literal|0
 argument_list|,

@@ -155,9 +155,12 @@ comment|/// \brief Specifies the kind of module that has been loaded.
 enum|enum
 name|ModuleKind
 block|{
-name|MK_Module
+name|MK_ImplicitModule
 block|,
-comment|///< File is a module proper.
+comment|///< File is an implicitly-loaded module.
+name|MK_ExplicitModule
+block|,
+comment|///< File is an explicitly-loaded module.
 name|MK_PCH
 block|,
 comment|///< File is a PCH file treated as such.
@@ -378,6 +381,10 @@ return|;
 block|}
 block|}
 empty_stmt|;
+typedef|typedef
+name|unsigned
+name|ASTFileSignature
+typedef|;
 comment|/// \brief Information about a module that has been loaded by the ASTReader.
 comment|///
 comment|/// Each instance of the Module class corresponds to a single AST file, which
@@ -421,6 +428,12 @@ name|std
 operator|::
 name|string
 name|ModuleName
+expr_stmt|;
+comment|/// \brief The base directory of the module.
+name|std
+operator|::
+name|string
+name|BaseDirectory
 expr_stmt|;
 name|std
 operator|::
@@ -476,6 +489,11 @@ specifier|const
 name|FileEntry
 modifier|*
 name|File
+decl_stmt|;
+comment|/// \brief The signature of the module file, which may be used along with size
+comment|/// and modification time to identify this particular file.
+name|ASTFileSignature
+name|Signature
 decl_stmt|;
 comment|/// \brief Whether this module has been directly imported by the
 comment|/// user.

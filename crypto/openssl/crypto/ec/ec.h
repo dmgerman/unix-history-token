@@ -12,11 +12,11 @@ comment|/**  * \file crypto/ec/ec.h Include file for the OpenSSL EC functions  *
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by   * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * The elliptic curve binary polynomial software is originally written by   * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by  * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the OpenSSL open source  * license provided above.  *  * The elliptic curve binary polynomial software is originally written by  * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
 end_comment
 
 begin_ifndef
@@ -131,7 +131,7 @@ comment|/** Enum for the point conversion form as defined in X9.62 (ECDSA)  *  f
 typedef|typedef
 enum|enum
 block|{
-comment|/** the point is encoded as z||x, where the octet z specifies  	 *  which solution of the quadratic equation y is  */
+comment|/** the point is encoded as z||x, where the octet z specifies          *  which solution of the quadratic equation y is  */
 name|POINT_CONVERSION_COMPRESSED
 init|=
 literal|2
@@ -156,7 +156,7 @@ typedef|;
 typedef|typedef
 name|struct
 name|ec_group_st
-comment|/* 	 EC_METHOD *meth; 	 -- field definition 	 -- curve coefficients 	 -- optional generator with associated information (order, cofactor) 	 -- optional extra data (precomputed table for fast computation of multiples of generator) 	 -- ASN1 stuff 	*/
+comment|/*-      EC_METHOD *meth;      -- field definition      -- curve coefficients      -- optional generator with associated information (order, cofactor)      -- optional extra data (precomputed table for fast computation of multiples of generator)      -- ASN1 stuff     */
 name|EC_GROUP
 typedef|;
 typedef|typedef
@@ -167,7 +167,7 @@ typedef|;
 comment|/********************************************************************/
 comment|/*               EC_METHODs for curves over GF(p)                   */
 comment|/********************************************************************/
-comment|/** Returns the basic GFp ec methods which provides the basis for the  *  optimized methods.   *  \return  EC_METHOD object  */
+comment|/** Returns the basic GFp ec methods which provides the basis for the  *  optimized methods.  *  \return  EC_METHOD object  */
 specifier|const
 name|EC_METHOD
 modifier|*
@@ -232,7 +232,7 @@ name|OPENSSL_NO_EC2M
 comment|/********************************************************************/
 comment|/*           EC_METHOD for curves over GF(2^m)                      */
 comment|/********************************************************************/
-comment|/** Returns the basic GF2m ec method   *  \return  EC_METHOD object  */
+comment|/** Returns the basic GF2m ec method  *  \return  EC_METHOD object  */
 specifier|const
 name|EC_METHOD
 modifier|*
@@ -300,7 +300,7 @@ modifier|*
 name|src
 parameter_list|)
 function_decl|;
-comment|/** Returns the EC_METHOD of the EC_GROUP object.  *  \param  group  EC_GROUP object   *  \return EC_METHOD used in this EC_GROUP object.  */
+comment|/** Returns the EC_METHOD of the EC_GROUP object.  *  \param  group  EC_GROUP object  *  \return EC_METHOD used in this EC_GROUP object.  */
 specifier|const
 name|EC_METHOD
 modifier|*
@@ -322,7 +322,7 @@ modifier|*
 name|meth
 parameter_list|)
 function_decl|;
-comment|/** Sets the generator and it's order/cofactor of a EC_GROUP object.  *  \param  group      EC_GROUP object   *  \param  generator  EC_POINT object with the generator.  *  \param  order      the order of the group generated by the generator.  *  \param  cofactor   the index of the sub-group generated by the generator  *                     in the group of all points on the elliptic curve.  *  \return 1 on success and 0 if an error occured  */
+comment|/** Sets the generator and it's order/cofactor of a EC_GROUP object.  *  \param  group      EC_GROUP object  *  \param  generator  EC_POINT object with the generator.  *  \param  order      the order of the group generated by the generator.  *  \param  cofactor   the index of the sub-group generated by the generator  *                     in the group of all points on the elliptic curve.  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_GROUP_set_generator
 parameter_list|(
@@ -602,7 +602,7 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/** Returns the number of bits needed to represent a field element   *  \param  group  EC_GROUP object  *  \return number of bits needed to represent a field element  */
+comment|/** Returns the number of bits needed to represent a field element  *  \param  group  EC_GROUP object  *  \return number of bits needed to represent a field element  */
 name|int
 name|EC_GROUP_get_degree
 parameter_list|(
@@ -659,7 +659,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/* EC_GROUP_new_GF*() calls EC_GROUP_new() and EC_GROUP_set_GF*()  * after choosing an appropriate EC_METHOD */
+comment|/*  * EC_GROUP_new_GF*() calls EC_GROUP_new() and EC_GROUP_set_GF*() after  * choosing an appropriate EC_METHOD  */
 comment|/** Creates a new EC_GROUP object with the specified parameters defined  *  over GFp (defined by the equation y^2 = x^3 + a*x + b)  *  \param  p    BIGNUM with the prime number  *  \param  a    BIGNUM with the parameter a of the equation  *  \param  b    BIGNUM with the parameter b of the equation  *  \param  ctx  BN_CTX object (optional)  *  \return newly created EC_GROUP object with the specified parameters  */
 name|EC_GROUP
 modifier|*
@@ -741,7 +741,7 @@ decl_stmt|;
 block|}
 name|EC_builtin_curve
 typedef|;
-comment|/* EC_builtin_curves(EC_builtin_curve *r, size_t size) returns number   * of all available curves or zero if a error occurred.   * In case r ist not zero nitems EC_builtin_curve structures   * are filled with the data of the first nitems internal groups */
+comment|/*  * EC_builtin_curves(EC_builtin_curve *r, size_t size) returns number of all  * available curves or zero if a error occurred. In case r ist not zero  * nitems EC_builtin_curve structures are filled with the data of the first  * nitems internal groups  */
 name|size_t
 name|EC_get_builtin_curves
 parameter_list|(
@@ -799,7 +799,7 @@ modifier|*
 name|src
 parameter_list|)
 function_decl|;
-comment|/** Creates a new EC_POINT object and copies the content of the supplied  *  EC_POINT  *  \param  src    source EC_POINT object  *  \param  group  underlying the EC_GROUP object  *  \return newly created EC_POINT object or NULL if an error occurred   */
+comment|/** Creates a new EC_POINT object and copies the content of the supplied  *  EC_POINT  *  \param  src    source EC_POINT object  *  \param  group  underlying the EC_GROUP object  *  \return newly created EC_POINT object or NULL if an error occurred  */
 name|EC_POINT
 modifier|*
 name|EC_POINT_dup
@@ -815,7 +815,7 @@ modifier|*
 name|group
 parameter_list|)
 function_decl|;
-comment|/** Returns the EC_METHOD used in EC_POINT object   *  \param  point  EC_POINT object  *  \return the EC_METHOD used  */
+comment|/** Returns the EC_METHOD used in EC_POINT object  *  \param  point  EC_POINT object  *  \return the EC_METHOD used  */
 specifier|const
 name|EC_METHOD
 modifier|*
@@ -1212,7 +1212,7 @@ function_decl|;
 comment|/********************************************************************/
 comment|/*         functions for doing EC_POINT arithmetic                  */
 comment|/********************************************************************/
-comment|/** Computes the sum of two EC_POINT   *  \param  group  underlying EC_GROUP object  *  \param  r      EC_POINT object for the result (r = a + b)  *  \param  a      EC_POINT object with the first summand  *  \param  b      EC_POINT object with the second summand  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
+comment|/** Computes the sum of two EC_POINT  *  \param  group  underlying EC_GROUP object  *  \param  r      EC_POINT object for the result (r = a + b)  *  \param  a      EC_POINT object with the first summand  *  \param  b      EC_POINT object with the second summand  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_add
 parameter_list|(
@@ -1240,7 +1240,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/** Computes the double of a EC_POINT  *  \param  group  underlying EC_GROUP object  *  \param  r      EC_POINT object for the result (r = 2 * a)  *  \param  a      EC_POINT object   *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
+comment|/** Computes the double of a EC_POINT  *  \param  group  underlying EC_GROUP object  *  \param  r      EC_POINT object for the result (r = 2 * a)  *  \param  a      EC_POINT object  *  \param  ctx    BN_CTX object (optional)  *  \return 1 on success and 0 if an error occured  */
 name|int
 name|EC_POINT_dbl
 parameter_list|(
@@ -1296,7 +1296,7 @@ modifier|*
 name|p
 parameter_list|)
 function_decl|;
-comment|/** Checks whether the point is on the curve   *  \param  group  underlying EC_GROUP object  *  \param  point  EC_POINT object to check  *  \param  ctx    BN_CTX object (optional)  *  \return 1 if point if on the curve and 0 otherwise  */
+comment|/** Checks whether the point is on the curve  *  \param  group  underlying EC_GROUP object  *  \param  point  EC_POINT object to check  *  \param  ctx    BN_CTX object (optional)  *  \return 1 if point if on the curve and 0 otherwise  */
 name|int
 name|EC_POINT_is_on_curve
 parameter_list|(
@@ -1315,7 +1315,7 @@ modifier|*
 name|ctx
 parameter_list|)
 function_decl|;
-comment|/** Compares two EC_POINTs   *  \param  group  underlying EC_GROUP object  *  \param  a      first EC_POINT object  *  \param  b      second EC_POINT object  *  \param  ctx    BN_CTX object (optional)  *  \return 0 if both points are equal and a value != 0 otherwise  */
+comment|/** Compares two EC_POINTs  *  \param  group  underlying EC_GROUP object  *  \param  a      first EC_POINT object  *  \param  b      second EC_POINT object  *  \param  ctx    BN_CTX object (optional)  *  \return 0 if both points are equal and a value != 0 otherwise  */
 name|int
 name|EC_POINT_cmp
 parameter_list|(
@@ -1474,7 +1474,7 @@ function_decl|;
 comment|/********************************************************************/
 comment|/*                       ASN1 stuff                                 */
 comment|/********************************************************************/
-comment|/* EC_GROUP_get_basis_type() returns the NID of the basis type  * used to represent the field elements */
+comment|/*  * EC_GROUP_get_basis_type() returns the NID of the basis type used to  * represent the field elements  */
 name|int
 name|EC_GROUP_get_basis_type
 parameter_list|(
@@ -1601,7 +1601,7 @@ name|fp
 parameter_list|,
 name|x
 parameter_list|)
-value|ASN1_i2d_fp(i2d_ECPKParameters,(fp), \ 		(unsigned char *)(x))
+value|ASN1_i2d_fp(i2d_ECPKParameters,(fp), \                 (unsigned char *)(x))
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_BIO
@@ -1709,7 +1709,7 @@ name|int
 name|flags
 parameter_list|)
 function_decl|;
-comment|/** Creates a new EC_KEY object using a named curve as underlying  *  EC_GROUP object.  *  \param  nid  NID of the named curve.  *  \return EC_KEY object or NULL if an error occurred.   */
+comment|/** Creates a new EC_KEY object using a named curve as underlying  *  EC_GROUP object.  *  \param  nid  NID of the named curve.  *  \return EC_KEY object or NULL if an error occurred.  */
 name|EC_KEY
 modifier|*
 name|EC_KEY_new_by_curve_name
@@ -1979,7 +1979,7 @@ name|int
 name|asn1_flag
 parameter_list|)
 function_decl|;
-comment|/** Creates a table of pre-computed multiples of the generator to   *  accelerate further EC_KEY operations.  *  \param  key  EC_KEY object  *  \param  ctx  BN_CTX object (optional)  *  \return 1 on success and 0 if an error occurred.  */
+comment|/** Creates a table of pre-computed multiples of the generator to  *  accelerate further EC_KEY operations.  *  \param  key  EC_KEY object  *  \param  ctx  BN_CTX object (optional)  *  \return 1 on success and 0 if an error occurred.  */
 name|int
 name|EC_KEY_precompute_mult
 parameter_list|(
@@ -2163,7 +2163,7 @@ modifier|*
 name|key
 parameter_list|)
 function_decl|;
-comment|/** Prints out the contents of a EC_KEY object  *  \param  bp   BIO object to which the information is printed  *  \param  key  EC_KEY object  *  \param  off  line offset   *  \return 1 on success and 0 if an error occurred  */
+comment|/** Prints out the contents of a EC_KEY object  *  \param  bp   BIO object to which the information is printed  *  \param  key  EC_KEY object  *  \param  off  line offset  *  \return 1 on success and 0 if an error occurred  */
 name|int
 name|EC_KEY_print
 parameter_list|(
@@ -2199,7 +2199,7 @@ modifier|*
 name|key
 parameter_list|)
 function_decl|;
-comment|/** Prints out the contents of a EC_KEY object  *  \param  fp   file descriptor to which the information is printed  *  \param  key  EC_KEY object  *  \param  off  line offset   *  \return 1 on success and 0 if an error occurred  */
+comment|/** Prints out the contents of a EC_KEY object  *  \param  fp   file descriptor to which the information is printed  *  \param  key  EC_KEY object  *  \param  off  line offset  *  \return 1 on success and 0 if an error occurred  */
 name|int
 name|EC_KEY_print_fp
 parameter_list|(
@@ -2264,13 +2264,13 @@ parameter_list|,
 name|nid
 parameter_list|)
 define|\
-value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_PARAMGEN, \ 				EVP_PKEY_CTRL_EC_PARAMGEN_CURVE_NID, nid, NULL)
+value|EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_EC, EVP_PKEY_OP_PARAMGEN, \                                 EVP_PKEY_CTRL_EC_PARAMGEN_CURVE_NID, nid, NULL)
 define|#
 directive|define
 name|EVP_PKEY_CTRL_EC_PARAMGEN_CURVE_NID
 value|(EVP_PKEY_ALG_CTRL + 1)
 comment|/* BEGIN ERROR CODES */
-comment|/* The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
+comment|/*  * The following lines are auto generated by the script mkerr.pl. Any changes  * made after this point may be overwritten when the script is next run.  */
 name|void
 name|ERR_load_EC_strings
 parameter_list|(

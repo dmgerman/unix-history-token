@@ -2737,7 +2737,7 @@ argument_list|(
 name|dpll_a_reg
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|150
 argument_list|)
@@ -2776,7 +2776,7 @@ argument_list|(
 name|dpll_a_reg
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|150
 argument_list|)
@@ -2814,7 +2814,7 @@ name|_DPLL_A_MD
 argument_list|)
 expr_stmt|;
 block|}
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|150
 argument_list|)
@@ -3184,7 +3184,7 @@ argument_list|(
 name|dpll_b_reg
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|150
 argument_list|)
@@ -3223,7 +3223,7 @@ argument_list|(
 name|dpll_b_reg
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|150
 argument_list|)
@@ -3261,7 +3261,7 @@ name|_DPLL_B_MD
 argument_list|)
 expr_stmt|;
 block|}
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|150
 argument_list|)
@@ -4832,7 +4832,7 @@ argument_list|(
 name|VGA_PD
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|150
 argument_list|)
@@ -4875,7 +4875,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|LBB
 argument_list|,
@@ -4890,6 +4890,11 @@ operator|=
 name|I915_READ
 argument_list|(
 name|HWS_PGA
+argument_list|)
+expr_stmt|;
+name|DRM_LOCK
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 name|i915_save_display
@@ -5131,6 +5136,11 @@ literal|2
 operator|)
 argument_list|)
 expr_stmt|;
+name|DRM_UNLOCK
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -5163,7 +5173,7 @@ name|pci_write_config
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|LBB
 argument_list|,
@@ -5172,6 +5182,11 @@ operator|->
 name|saveLBB
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|DRM_LOCK
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 comment|/* Hardware status page */
@@ -5387,6 +5402,11 @@ name|saveSWF2
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+name|DRM_UNLOCK
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 name|intel_iic_reset

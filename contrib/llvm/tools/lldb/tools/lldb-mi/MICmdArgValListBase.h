@@ -36,7 +36,7 @@ comment|//++
 end_comment
 
 begin_comment
-comment|// File:		MICmdArgValListBase.h
+comment|// File:        MICmdArgValListBase.h
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Overview:	CMICmdArgValListBase interface.
+comment|// Overview:    CMICmdArgValListBase interface.
 end_comment
 
 begin_comment
@@ -52,15 +52,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Environment:	Compilers:	Visual C++ 12.
+comment|// Environment: Compilers:  Visual C++ 12.
 end_comment
 
 begin_comment
-comment|//							gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
+comment|//                          gcc (Ubuntu/Linaro 4.8.1-10ubuntu9) 4.8.1
 end_comment
 
 begin_comment
-comment|//				Libraries:	See MIReadmetxt.
+comment|//              Libraries:  See MIReadmetxt.
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// Copyright:	None.
+comment|// Copyright:   None.
 end_comment
 
 begin_comment
@@ -116,63 +116,63 @@ comment|//++ ===================================================================
 end_comment
 
 begin_comment
-comment|// Details:	MI common code class. Command argument with addition options class.
+comment|// Details: MI common code class. Command argument with addition options class.
 end_comment
 
 begin_comment
-comment|//			For example --recurse 1 2 4 [group ...]. Arguments object that
+comment|//          For example --recurse 1 2 4 [group ...]. Arguments object that
 end_comment
 
 begin_comment
-comment|//			require a list of options associated with them derive from the
+comment|//          require a list of options associated with them derive from the
 end_comment
 
 begin_comment
-comment|//			CMICmdArgValListBase class. Additional options are also extracted from
+comment|//          CMICmdArgValListBase class. Additional options are also extracted from
 end_comment
 
 begin_comment
-comment|//			the command arguments text string.
+comment|//          the command arguments text string.
 end_comment
 
 begin_comment
-comment|//			An argument knows what type of argument it is and how it is to
+comment|//          An argument knows what type of argument it is and how it is to
 end_comment
 
 begin_comment
-comment|//			interpret the options (context) string to find and validate a matching
+comment|//          interpret the options (context) string to find and validate a matching
 end_comment
 
 begin_comment
-comment|//			options and so extract a values from it .
+comment|//          options and so extract a values from it .
 end_comment
 
 begin_comment
-comment|//			The CMICmdArgValBase objects are added to the derived argument class's
+comment|//          The CMICmdArgValBase objects are added to the derived argument class's
 end_comment
 
 begin_comment
-comment|//			container. The option arguments belong to that derived class and will
+comment|//          container. The option arguments belong to that derived class and will
 end_comment
 
 begin_comment
-comment|//			be deleted that object goes out of scope.
+comment|//          be deleted that object goes out of scope.
 end_comment
 
 begin_comment
-comment|//			Based on the Interpreter pattern.
+comment|//          Based on the Interpreter pattern.
 end_comment
 
 begin_comment
-comment|// Gotchas:	None.
+comment|// Gotchas: None.
 end_comment
 
 begin_comment
-comment|// Authors:	Illya Rudkin 16/04/2014.
+comment|// Authors: Illya Rudkin 16/04/2014.
 end_comment
 
 begin_comment
-comment|// Changes:	None.
+comment|// Changes: None.
 end_comment
 
 begin_comment
@@ -192,8 +192,7 @@ name|vector
 operator|<
 name|CMICmdArgValBase
 operator|*
-operator|>
-expr|>
+operator|>>
 block|{
 comment|// Typedef:
 name|public
@@ -212,9 +211,9 @@ comment|// Enums:
 name|public
 operator|:
 comment|//++ ---------------------------------------------------------------------------------
-comment|// Details:	CMICmdArgValListBase needs to know what type of argument to look for in
-comment|//			the command options text. It also needs to create argument objects of
-comment|//			a specific type.
+comment|// Details: CMICmdArgValListBase needs to know what type of argument to look for in
+comment|//          the command options text. It also needs to create argument objects of
+comment|//          a specific type.
 comment|//--
 block|enum
 name|ArgValType_e
@@ -280,7 +279,7 @@ end_comment
 begin_macro
 name|CMICmdArgValListBase
 argument_list|(
-argument|const CMIUtilString& vrArgName
+argument|const CMIUtilString&vrArgName
 argument_list|,
 argument|const bool vbMandatory
 argument_list|,
@@ -299,7 +298,7 @@ end_comment
 begin_macro
 name|CMICmdArgValListBase
 argument_list|(
-argument|const CMIUtilString& vrArgName
+argument|const CMIUtilString&vrArgName
 argument_list|,
 argument|const bool vbMandatory
 argument_list|,

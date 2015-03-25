@@ -652,21 +652,6 @@ name|vm_object_t
 operator|)
 name|mem
 expr_stmt|;
-name|bzero
-argument_list|(
-operator|&
-name|object
-operator|->
-name|lock
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|object
-operator|->
-name|lock
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|rw_init_flags
 argument_list|(
 operator|&
@@ -677,6 +662,8 @@ argument_list|,
 literal|"vm object"
 argument_list|,
 name|RW_DUPOK
+operator||
+name|RW_NEW
 argument_list|)
 expr_stmt|;
 comment|/* These are true for any object that has been freed */
@@ -5745,7 +5732,7 @@ name|next
 expr_stmt|;
 continue|continue;
 block|}
-name|VM_OBJECT_WLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|backing_object
 argument_list|)

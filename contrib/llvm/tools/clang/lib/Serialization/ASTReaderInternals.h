@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SERIALIZATION_ASTREADER_INTERNALS_H
+name|LLVM_CLANG_LIB_SERIALIZATION_ASTREADERINTERNALS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SERIALIZATION_ASTREADER_INTERNALS_H
+name|LLVM_CLANG_LIB_SERIALIZATION_ASTREADERINTERNALS_H
 end_define
 
 begin_include
@@ -562,6 +562,12 @@ decl_stmt|;
 name|unsigned
 name|FactoryBits
 decl_stmt|;
+name|bool
+name|InstanceHasMoreThanOneDecl
+decl_stmt|;
+name|bool
+name|FactoryHasMoreThanOneDecl
+decl_stmt|;
 name|SmallVector
 operator|<
 name|ObjCMethodDecl
@@ -716,8 +722,8 @@ comment|/// the header search information.
 comment|///
 comment|/// The on-disk hash table contains a mapping from each header path to
 comment|/// information about that header (how many times it has been included, its
-comment|/// controlling macro, etc.). Note that we actually hash based on the
-comment|/// filename, and support "deep" comparisons of file names based on current
+comment|/// controlling macro, etc.). Note that we actually hash based on the size
+comment|/// and mtime, and support "deep" comparisons of file names based on current
 comment|/// inode numbers, so that the search can cope with non-normalized path names
 comment|/// and symlinks.
 name|class
@@ -761,6 +767,9 @@ specifier|const
 name|char
 modifier|*
 name|Filename
+decl_stmt|;
+name|bool
+name|Imported
 decl_stmt|;
 block|}
 struct|;

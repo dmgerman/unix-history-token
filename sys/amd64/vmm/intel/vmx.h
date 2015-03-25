@@ -244,6 +244,8 @@ name|IDX_MSR_SF_MASK
 block|,
 name|IDX_MSR_KGSBASE
 block|,
+name|IDX_MSR_PAT
+block|,
 name|GUEST_MSR_NUM
 comment|/* must be the last enumeration */
 block|}

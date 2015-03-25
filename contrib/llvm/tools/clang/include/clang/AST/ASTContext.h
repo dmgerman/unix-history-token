@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/SanitizerBlacklist.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/VersionTuple.h"
 end_include
 
@@ -299,6 +305,64 @@ name|class
 name|FullComment
 decl_stmt|;
 block|}
+struct|struct
+name|TypeInfo
+block|{
+name|uint64_t
+name|Width
+decl_stmt|;
+name|unsigned
+name|Align
+decl_stmt|;
+name|bool
+name|AlignIsRequired
+range|:
+literal|1
+decl_stmt|;
+name|TypeInfo
+argument_list|()
+operator|:
+name|Width
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Align
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|AlignIsRequired
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|TypeInfo
+argument_list|(
+argument|uint64_t Width
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|bool AlignIsRequired
+argument_list|)
+operator|:
+name|Width
+argument_list|(
+name|Width
+argument_list|)
+operator|,
+name|Align
+argument_list|(
+name|Align
+argument_list|)
+operator|,
+name|AlignIsRequired
+argument_list|(
+argument|AlignIsRequired
+argument_list|)
+block|{}
+block|}
+struct|;
 comment|/// \brief Holds long-lived AST nodes (such as types and decls) that can be
 comment|/// referred to throughout the semantic analysis of a file.
 name|class
@@ -729,15 +793,9 @@ specifier|const
 name|Type
 operator|*
 operator|,
-name|std
-operator|::
-name|pair
-operator|<
-name|uint64_t
-operator|,
-name|unsigned
+expr_stmt|struct
+name|TypeInfo
 operator|>
-expr|>
 name|TypeInfoMap
 expr_stmt|;
 name|mutable
@@ -1044,9 +1102,6 @@ name|FunctionDecl
 modifier|*
 name|cudaConfigureCallDecl
 decl_stmt|;
-name|TypeSourceInfo
-name|NullTypeSourceInfo
-decl_stmt|;
 comment|/// \brief Keeps track of all declaration attributes.
 comment|///
 comment|/// Since so few decls have attrs, we keep them in a hash map instead of
@@ -1310,6 +1365,16 @@ name|LangOptions
 modifier|&
 name|LangOpts
 decl_stmt|;
+comment|/// \brief Blacklist object that is used by sanitizers to decide which
+comment|/// entities should not be instrumented.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SanitizerBlacklist
+operator|>
+name|SanitizerBL
+expr_stmt|;
 comment|/// \brief The allocator used to create AST objects.
 comment|///
 comment|/// AST objects are never destructed; rather, all memory associated with the
@@ -1481,7 +1546,12 @@ operator|<
 name|typename
 name|NodeT
 operator|>
-name|ParentVector
+name|ArrayRef
+operator|<
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|>
 name|getParents
 argument_list|(
 argument|const NodeT&Node
@@ -1501,7 +1571,12 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-name|ParentVector
+name|ArrayRef
+operator|<
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|>
 name|getParents
 argument_list|(
 specifier|const
@@ -1511,7 +1586,7 @@ name|DynTypedNode
 operator|&
 name|Node
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 specifier|const
 name|clang
 operator|::
@@ -1695,6 +1770,18 @@ specifier|const
 block|{
 return|return
 name|LangOpts
+return|;
+block|}
+specifier|const
+name|SanitizerBlacklist
+operator|&
+name|getSanitizerBlacklist
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|SanitizerBL
 return|;
 block|}
 name|DiagnosticsEngine
@@ -3573,6 +3660,37 @@ name|ResultType
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// \brief Change the exception specification on a function once it is
+end_comment
+
+begin_comment
+comment|/// delay-parsed, instantiated, or computed.
+end_comment
+
+begin_decl_stmt
+name|void
+name|adjustExceptionSpec
+argument_list|(
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|,
+specifier|const
+name|FunctionProtoType
+operator|::
+name|ExceptionSpecInfo
+operator|&
+name|ESI
+argument_list|,
+name|bool
+name|AsWritten
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Return the uniqued reference to the type for a complex
@@ -5842,6 +5960,12 @@ operator|*
 name|Field
 operator|=
 name|nullptr
+argument_list|,
+name|QualType
+operator|*
+name|NotEncodedT
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -6890,22 +7014,18 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|std
-operator|::
-name|pair
-operator|<
-name|uint64_t
-operator|,
-name|unsigned
-operator|>
+begin_decl_stmt
+name|TypeInfo
 name|getTypeInfoImpl
 argument_list|(
-argument|const Type *T
-argument_list|)
 specifier|const
-expr_stmt|;
-end_expr_stmt
+name|Type
+operator|*
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -7041,37 +7161,27 @@ begin_comment
 comment|/// \brief Get the size and alignment of the specified complete type in bits.
 end_comment
 
-begin_expr_stmt
-name|std
-operator|::
-name|pair
-operator|<
-name|uint64_t
-operator|,
-name|unsigned
-operator|>
+begin_decl_stmt
+name|TypeInfo
 name|getTypeInfo
 argument_list|(
-argument|const Type *T
-argument_list|)
 specifier|const
-expr_stmt|;
-end_expr_stmt
+name|Type
+operator|*
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|std
-operator|::
-name|pair
-operator|<
-name|uint64_t
-operator|,
-name|unsigned
-operator|>
+begin_decl_stmt
+name|TypeInfo
 name|getTypeInfo
 argument_list|(
-argument|QualType T
+name|QualType
+name|T
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|getTypeInfo
@@ -7083,7 +7193,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Return the size of the specified (complete) type \p T, in bits.
@@ -7104,7 +7214,7 @@ argument_list|(
 name|T
 argument_list|)
 operator|.
-name|first
+name|Width
 return|;
 block|}
 end_decl_stmt
@@ -7126,7 +7236,7 @@ argument_list|(
 name|T
 argument_list|)
 operator|.
-name|first
+name|Width
 return|;
 block|}
 end_decl_stmt
@@ -7235,7 +7345,7 @@ argument_list|(
 name|T
 argument_list|)
 operator|.
-name|second
+name|Align
 return|;
 block|}
 end_decl_stmt
@@ -7257,7 +7367,7 @@ argument_list|(
 name|T
 argument_list|)
 operator|.
-name|second
+name|Align
 return|;
 block|}
 end_decl_stmt
@@ -7352,6 +7462,38 @@ argument_list|)
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine if the alignment the type has was required using an
+end_comment
+
+begin_comment
+comment|/// alignment attribute.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isAlignmentRequired
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|isAlignmentRequired
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Return the "preferred" alignment of the specified type \p T for
@@ -9880,19 +10022,6 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|TypeSourceInfo
-modifier|*
-name|getNullTypeSourceInfo
-parameter_list|()
-block|{
-return|return
-operator|&
-name|NullTypeSourceInfo
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/// \brief Add a deallocation callback that will be invoked when the
 end_comment
@@ -10474,6 +10603,12 @@ name|bool
 name|EncodePointerToObjCTypedef
 operator|=
 name|false
+argument_list|,
+name|QualType
+operator|*
+name|NotEncodedT
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -10506,6 +10641,12 @@ name|bool
 name|includeVBases
 operator|=
 name|true
+argument_list|,
+name|QualType
+operator|*
+name|NotEncodedT
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -10710,6 +10851,100 @@ name|VTContext
 expr_stmt|;
 end_expr_stmt
 
+begin_label
+name|public
+label|:
+end_label
+
+begin_enum
+enum|enum
+name|PragmaSectionFlag
+enum|:
+name|unsigned
+block|{
+name|PSF_None
+init|=
+literal|0
+block|,
+name|PSF_Read
+init|=
+literal|0x1
+block|,
+name|PSF_Write
+init|=
+literal|0x2
+block|,
+name|PSF_Execute
+init|=
+literal|0x4
+block|,
+name|PSF_Implicit
+init|=
+literal|0x8
+block|,
+name|PSF_Invalid
+init|=
+literal|0x80000000U
+block|,   }
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|SectionInfo
+block|{
+name|DeclaratorDecl
+modifier|*
+name|Decl
+decl_stmt|;
+name|SourceLocation
+name|PragmaSectionLocation
+decl_stmt|;
+name|int
+name|SectionFlags
+decl_stmt|;
+name|SectionInfo
+argument_list|()
+block|{}
+name|SectionInfo
+argument_list|(
+argument|DeclaratorDecl *Decl
+argument_list|,
+argument|SourceLocation PragmaSectionLocation
+argument_list|,
+argument|int SectionFlags
+argument_list|)
+block|:
+name|Decl
+argument_list|(
+name|Decl
+argument_list|)
+operator|,
+name|PragmaSectionLocation
+argument_list|(
+name|PragmaSectionLocation
+argument_list|)
+operator|,
+name|SectionFlags
+argument_list|(
+argument|SectionFlags
+argument_list|)
+block|{}
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|SectionInfo
+operator|>
+name|SectionInfos
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 unit|};
 comment|/// \brief Utility function for constructing a nullary selector.
@@ -10893,15 +11128,15 @@ comment|/// @endcode
 end_comment
 
 begin_comment
-comment|/// Please note that you cannot use delete on the pointer; it must be
+comment|/// Memory allocated through this placement new operator does not need to be
 end_comment
 
 begin_comment
-comment|/// deallocated using an explicit destructor call followed by
+comment|/// explicitly freed, as ASTContext will free all of this memory when it gets
 end_comment
 
 begin_comment
-comment|/// @c Context.Deallocate(Ptr).
+comment|/// destroyed. Please note that you cannot use delete on the pointer.
 end_comment
 
 begin_comment
@@ -11073,15 +11308,15 @@ comment|/// @endcode
 end_comment
 
 begin_comment
-comment|/// Please note that you cannot use delete on the pointer; it must be
+comment|/// Memory allocated through this placement new[] operator does not need to be
 end_comment
 
 begin_comment
-comment|/// deallocated using an explicit destructor call followed by
+comment|/// explicitly freed, as ASTContext will free all of this memory when it gets
 end_comment
 
 begin_comment
-comment|/// @c Context.Deallocate(Ptr).
+comment|/// destroyed. Please note that you cannot use delete on the pointer.
 end_comment
 
 begin_comment

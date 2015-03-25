@@ -55,6 +55,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/Mutex.h"
 end_include
 

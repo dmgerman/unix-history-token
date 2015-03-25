@@ -918,6 +918,7 @@ name|ret
 condition|)
 return|return
 operator|(
+operator|-
 name|ETIMEDOUT
 operator|)
 return|;
@@ -929,6 +930,7 @@ name|GMBUS_SATOER
 condition|)
 return|return
 operator|(
+operator|-
 name|ENXIO
 operator|)
 return|;
@@ -1188,6 +1190,7 @@ name|ret
 condition|)
 return|return
 operator|(
+operator|-
 name|ETIMEDOUT
 operator|)
 return|;
@@ -1199,6 +1202,7 @@ name|GMBUS_SATOER
 condition|)
 return|return
 operator|(
+operator|-
 name|ENXIO
 operator|)
 return|;
@@ -1510,6 +1514,7 @@ condition|)
 block|{
 name|error
 operator|=
+operator|-
 name|IICBUS_TRANSFER
 argument_list|(
 name|dev_priv
@@ -1642,6 +1647,7 @@ if|if
 condition|(
 name|error
 operator|==
+operator|-
 name|ETIMEDOUT
 condition|)
 goto|goto
@@ -1651,6 +1657,7 @@ if|if
 condition|(
 name|error
 operator|==
+operator|-
 name|ENXIO
 condition|)
 goto|goto
@@ -1758,6 +1765,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
+operator|-
 name|ETIMEDOUT
 expr_stmt|;
 block|}
@@ -1880,6 +1888,7 @@ expr_stmt|;
 comment|/* 	 * If no ACK is received during the address phase of a transaction, 	 * the adapter must report -ENXIO. 	 * It is not clear what to return if no ACK is received at other times. 	 * So, we always return -ENXIO in all NAK cases, to ensure we send 	 * it at least during the one case that is specified. 	 */
 name|error
 operator|=
+operator|-
 name|ENXIO
 expr_stmt|;
 goto|goto
@@ -1920,6 +1929,7 @@ name|true
 expr_stmt|;
 name|error
 operator|=
+operator|-
 name|IICBUS_TRANSFER
 argument_list|(
 name|idev
@@ -1944,6 +1954,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 name|error
 operator|)
 return|;
@@ -3131,7 +3142,7 @@ name|device_add_child
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"intel_iicbb"
 argument_list|,
@@ -3159,6 +3170,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|ENXIO
 expr_stmt|;
 goto|goto
@@ -3177,6 +3189,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|device_probe_and_attach
 argument_list|(
 name|dev_priv
@@ -3288,7 +3301,7 @@ name|device_add_child
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"intel_gmbus"
 argument_list|,
@@ -3316,6 +3329,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|ENXIO
 expr_stmt|;
 goto|goto
@@ -3334,6 +3348,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|device_probe_and_attach
 argument_list|(
 name|dev_priv
@@ -3362,6 +3377,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|ENXIO
 expr_stmt|;
 goto|goto

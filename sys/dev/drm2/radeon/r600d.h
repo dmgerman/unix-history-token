@@ -134,40 +134,13 @@ begin_comment
 comment|/* PTE flags */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|PTE_VALID
-value|(1<< 0)
-end_define
+begin_comment
+comment|/*  * FIXME Linux<->FreeBSD: PTE_VALID is already defined on PowerPC on FreeBSD.  * Fortunately, it's never used in the Radeon driver.  */
+end_comment
 
-begin_define
-define|#
-directive|define
-name|PTE_SYSTEM
-value|(1<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_SNOOPED
-value|(1<< 2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_READABLE
-value|(1<< 5)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PTE_WRITEABLE
-value|(1<< 6)
-end_define
+begin_comment
+comment|/* #define PTE_VALID				(1<< 0) #define PTE_SYSTEM				(1<< 1) #define PTE_SNOOPED				(1<< 2) #define PTE_READABLE				(1<< 5) #define PTE_WRITEABLE				(1<< 6) */
+end_comment
 
 begin_comment
 comment|/* tiling bits */

@@ -2076,6 +2076,11 @@ name|defined
 argument_list|(
 name|__amd64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__powerpc__
+argument_list|)
 if|if
 condition|(
 name|caching_flags

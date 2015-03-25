@@ -58,19 +58,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FORMAT_CONTINUATION_INDENTER_H
+name|LLVM_CLANG_LIB_FORMAT_CONTINUATIONINDENTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FORMAT_CONTINUATION_INDENTER_H
+name|LLVM_CLANG_LIB_FORMAT_CONTINUATIONINDENTER_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"Encoding.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"FormatToken.h"
 end_include
 
 begin_include
@@ -120,6 +126,8 @@ comment|/// column \p FirstIndent.
 name|ContinuationIndenter
 argument_list|(
 argument|const FormatStyle&Style
+argument_list|,
+argument|const AdditionalKeywords&Keywords
 argument_list|,
 argument|SourceManager&SourceMgr
 argument_list|,
@@ -386,6 +394,11 @@ function_decl|;
 name|FormatStyle
 name|Style
 decl_stmt|;
+specifier|const
+name|AdditionalKeywords
+modifier|&
+name|Keywords
+decl_stmt|;
 name|SourceManager
 modifier|&
 name|SourceMgr
@@ -438,6 +451,11 @@ operator|,
 name|LastSpace
 argument_list|(
 name|LastSpace
+argument_list|)
+operator|,
+name|NestedBlockIndent
+argument_list|(
+name|Indent
 argument_list|)
 operator|,
 name|FirstLessLess
@@ -530,7 +548,7 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|JSFunctionInlined
+name|NestedBlockInlined
 argument_list|(
 argument|false
 argument_list|)
@@ -551,6 +569,11 @@ comment|/// functionCall(Parameter, otherCall(
 comment|///                             OtherParameter));
 name|unsigned
 name|LastSpace
+decl_stmt|;
+comment|/// \brief If a block relative to this parenthesis level gets wrapped, indent
+comment|/// it this much.
+name|unsigned
+name|NestedBlockIndent
 decl_stmt|;
 comment|/// \brief The position the first "<<" operator encountered on each level.
 comment|///
@@ -655,10 +678,10 @@ comment|/// the same token.
 name|bool
 name|HasMultipleNestedBlocks
 decl_stmt|;
-comment|// \brief The previous JavaScript 'function' keyword is not wrapped to a new
-comment|// line.
+comment|// \brief The start of a nested block (e.g. lambda introducer in C++ or
+comment|// "function" in JavaScript) is not wrapped to a new line.
 name|bool
-name|JSFunctionInlined
+name|NestedBlockInlined
 decl_stmt|;
 name|bool
 name|operator
@@ -703,6 +726,21 @@ name|LastSpace
 return|;
 if|if
 condition|(
+name|NestedBlockIndent
+operator|!=
+name|Other
+operator|.
+name|NestedBlockIndent
+condition|)
+return|return
+name|NestedBlockIndent
+operator|<
+name|Other
+operator|.
+name|NestedBlockIndent
+return|;
+if|if
+condition|(
 name|FirstLessLess
 operator|!=
 name|Other
@@ -893,18 +931,18 @@ name|ContainsUnwrappedBuilder
 return|;
 if|if
 condition|(
-name|JSFunctionInlined
+name|NestedBlockInlined
 operator|!=
 name|Other
 operator|.
-name|JSFunctionInlined
+name|NestedBlockInlined
 condition|)
 return|return
-name|JSFunctionInlined
+name|NestedBlockInlined
 operator|<
 name|Other
 operator|.
-name|JSFunctionInlined
+name|NestedBlockInlined
 return|;
 return|return
 name|false
@@ -1120,10 +1158,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_FORMAT_CONTINUATION_INDENTER_H
-end_comment
 
 end_unit
 

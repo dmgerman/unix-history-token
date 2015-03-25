@@ -455,11 +455,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_false
+argument_list|(
 name|intr
 operator|->
 name|state
 operator|!=
 name|SFXGE_INTR_STARTED
+argument_list|)
 condition|)
 return|return;
 operator|(
