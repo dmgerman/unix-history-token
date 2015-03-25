@@ -728,14 +728,11 @@ condition|)
 block|{
 if|if
 condition|(
-name|__predict_false
-argument_list|(
 name|port
 operator|->
 name|init_state
 operator|==
 name|SFXGE_PORT_STARTED
-argument_list|)
 condition|)
 name|error
 operator|=
