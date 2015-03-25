@@ -109,7 +109,14 @@ end_struct
 begin_define
 define|#
 directive|define
-name|SFXGE_TX_MAX_DEFERRED
+name|SFXGE_TX_DPL_GET_PKT_LIMIT_DEFAULT
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TX_DPL_PUT_PKT_LIMIT_DEFAULT
 value|64
 end_define
 

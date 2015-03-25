@@ -1840,6 +1840,19 @@ argument_list|(
 name|txq
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stdp
+operator|->
+name|std_count
+operator|>=
+name|SFXGE_TX_DPL_GET_PKT_LIMIT_DEFAULT
+condition|)
+return|return
+operator|(
+name|ENOBUFS
+operator|)
+return|;
 operator|*
 operator|(
 name|stdp
@@ -1936,10 +1949,12 @@ if|if
 condition|(
 name|old_len
 operator|>=
-name|SFXGE_TX_MAX_DEFERRED
+name|SFXGE_TX_DPL_PUT_PKT_LIMIT_DEFAULT
 condition|)
 return|return
+operator|(
 name|ENOBUFS
+operator|)
 return|;
 name|mbuf
 operator|->
@@ -2040,7 +2055,6 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Can only fail if we weren't able to get the lock. 	 */
 if|if
 condition|(
 name|sfxge_tx_qdpl_put
@@ -2055,14 +2069,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|KASSERT
-argument_list|(
-operator|!
+if|if
+condition|(
 name|locked
-argument_list|,
-operator|(
-literal|"sfxge_tx_qdpl_put() failed locked"
-operator|)
+condition|)
+name|mtx_unlock
+argument_list|(
+operator|&
+name|txq
+operator|->
+name|lock
 argument_list|)
 expr_stmt|;
 name|rc
