@@ -319,10 +319,12 @@ name|SFXGE_TXQ_LOCK_INIT
 parameter_list|(
 name|_txq
 parameter_list|,
-name|_name
+name|_ifname
+parameter_list|,
+name|_txq_index
 parameter_list|)
 define|\
-value|mtx_init(&(_txq)->lock, (_name), NULL, MTX_DEF)
+value|do {								\ 		struct sfxge_txq  *__txq = (_txq);			\ 									\ 		snprintf((__txq)->lock_name,				\ 			 sizeof((__txq)->lock_name),			\ 			 "%s:txq%u", (_ifname), (_txq_index));		\ 		mtx_init(&(__txq)->lock, (__txq)->lock_name,		\ 			 NULL, MTX_DEF);				\ 	} while (B_FALSE)
 end_define
 
 begin_define
@@ -445,6 +447,12 @@ decl_stmt|;
 name|efsys_mem_t
 modifier|*
 name|tsoh_buffer
+decl_stmt|;
+name|char
+name|lock_name
+index|[
+name|SFXGE_LOCK_NAME_MAX
+index|]
 decl_stmt|;
 comment|/* This field changes more often and is read regularly on both 	 * the initiation and completion paths 	 */
 name|int
