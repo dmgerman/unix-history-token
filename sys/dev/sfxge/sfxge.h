@@ -834,6 +834,10 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
+name|unsigned
+name|int
+name|txq_count
+decl_stmt|;
 block|}
 struct|;
 end_struct
