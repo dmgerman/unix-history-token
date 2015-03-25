@@ -3222,6 +3222,10 @@ name|unsigned
 name|header_len
 decl_stmt|;
 comment|/* Number of bytes of header */
+name|unsigned
+name|seg_size
+decl_stmt|;
+comment|/* TCP segment size */
 block|}
 struct|;
 end_struct
@@ -3843,6 +3847,16 @@ name|th_off
 expr_stmt|;
 name|tso
 operator|->
+name|seg_size
+operator|=
+name|mbuf
+operator|->
+name|m_pkthdr
+operator|.
+name|tso_segsz
+expr_stmt|;
+name|tso
+operator|->
 name|seqnum
 operator|=
 name|ntohl
@@ -4433,11 +4447,7 @@ name|seqnum
 operator|+=
 name|tso
 operator|->
-name|mbuf
-operator|->
-name|m_pkthdr
-operator|.
-name|tso_segsz
+name|seg_size
 expr_stmt|;
 if|if
 condition|(
@@ -4447,11 +4457,7 @@ name|out_len
 operator|>
 name|tso
 operator|->
-name|mbuf
-operator|->
-name|m_pkthdr
-operator|.
-name|tso_segsz
+name|seg_size
 condition|)
 block|{
 comment|/* This packet will not finish the TSO burst. */
@@ -4467,11 +4473,7 @@ name|nh_off
 operator|+
 name|tso
 operator|->
-name|mbuf
-operator|->
-name|m_pkthdr
-operator|.
-name|tso_segsz
+name|seg_size
 expr_stmt|;
 name|tsoh_th
 operator|->
@@ -4598,11 +4600,7 @@ name|packet_space
 operator|=
 name|tso
 operator|->
-name|mbuf
-operator|->
-name|m_pkthdr
-operator|.
-name|tso_segsz
+name|seg_size
 expr_stmt|;
 name|txq
 operator|->
