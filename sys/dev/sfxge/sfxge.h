@@ -652,6 +652,11 @@ modifier|*
 name|stats_node
 decl_stmt|;
 name|struct
+name|sysctl_oid
+modifier|*
+name|txqs_node
+decl_stmt|;
+name|struct
 name|task
 name|task_reset
 decl_stmt|;
