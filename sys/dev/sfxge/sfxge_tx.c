@@ -2565,6 +2565,8 @@ literal|0
 init|;
 name|i
 operator|<
+name|SFXGE_TXQ_IP_TCP_UDP_CKSUM
+operator|+
 name|SFXGE_TX_SCALE
 argument_list|(
 name|sc
