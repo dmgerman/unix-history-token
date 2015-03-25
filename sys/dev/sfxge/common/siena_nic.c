@@ -1951,7 +1951,7 @@ operator|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* EFSYS_OPT_BIST */
+comment|/* EFSYS_OPT_PHY_BIST */
 return|return
 operator|(
 literal|0

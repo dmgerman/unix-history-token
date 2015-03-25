@@ -2009,7 +2009,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Put a packet on the deferred packet list.  *  * If we are called with the txq lock held, we put the packet on the "get  * list", otherwise we atomically push it on the "put list".  The swizzle  * function takes care of ordering.  *  * The length of the put list is bounded by SFXGE_TX_MAX_DEFFERED.  We  * overload the csum_data field in the mbuf to keep track of this length  * because there is no cheap alternative to avoid races.  */
+comment|/*  * Put a packet on the deferred packet list.  *  * If we are called with the txq lock held, we put the packet on the "get  * list", otherwise we atomically push it on the "put list".  The swizzle  * function takes care of ordering.  *  * The length of the put list is bounded by SFXGE_TX_MAX_DEFERRED.  We  * overload the csum_data field in the mbuf to keep track of this length  * because there is no cheap alternative to avoid races.  */
 end_comment
 
 begin_function
@@ -2293,7 +2293,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Called from if_transmit - will try to grab the txq lock and enqueue to the  * put list if it succeeds, otherwise will push onto the defer list.  */
+comment|/*  * Called from if_transmit - will try to grab the txq lock and enqueue to the  * put list if it succeeds, otherwise try to push onto the defer list if space.  */
 end_comment
 
 begin_function

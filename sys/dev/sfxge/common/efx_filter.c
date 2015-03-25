@@ -1637,6 +1637,7 @@ modifier|*
 name|filter_index
 parameter_list|,
 name|__out
+name|unsigned
 name|int
 modifier|*
 name|depth_required
@@ -2187,7 +2188,9 @@ name|filter
 decl_stmt|;
 name|int
 name|filter_idx
-decl_stmt|,
+decl_stmt|;
+name|unsigned
+name|int
 name|depth
 decl_stmt|;
 name|int
@@ -2330,8 +2333,7 @@ name|enp
 operator|->
 name|en_filter
 decl_stmt|;
-name|enum
-name|efx_filter_tbl_id
+name|efx_filter_tbl_id_t
 name|tbl_id
 init|=
 name|efx_filter_tbl_id
