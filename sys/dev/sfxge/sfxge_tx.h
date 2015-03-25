@@ -352,11 +352,6 @@ name|efx_txq_t
 modifier|*
 name|common
 decl_stmt|;
-name|struct
-name|sfxge_txq
-modifier|*
-name|next
-decl_stmt|;
 name|efsys_mem_t
 modifier|*
 name|tsoh_buffer
@@ -447,6 +442,11 @@ function_decl|;
 name|unsigned
 name|int
 name|completed
+decl_stmt|;
+name|struct
+name|sfxge_txq
+modifier|*
+name|next
 decl_stmt|;
 block|}
 struct|;
