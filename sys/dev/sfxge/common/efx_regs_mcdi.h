@@ -2973,8 +2973,25 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MC_CMD_GET_BOARD_CFG_OUT_LEN
+name|MC_CMD_GET_BOARD_CFG_OUT_LENMIN
 value|96
+end_define
+
+begin_define
+define|#
+directive|define
+name|MC_CMD_GET_BOARD_CFG_OUT_LENMAX
+value|136
+end_define
+
+begin_define
+define|#
+directive|define
+name|MC_CMD_GET_BOARD_CFG_OUT_LEN
+parameter_list|(
+name|num
+parameter_list|)
+value|(72+2*(num))
 end_define
 
 begin_define
@@ -3115,8 +3132,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|MC_CMD_GET_BOARD_CFG_OUT_FW_SUBTYPE_LIST_NUM
+name|MC_CMD_GET_BOARD_CFG_OUT_FW_SUBTYPE_LIST_MINNUM
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|MC_CMD_GET_BOARD_CFG_OUT_FW_SUBTYPE_LIST_MAXNUM
+value|32
 end_define
 
 begin_comment
