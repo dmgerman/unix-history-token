@@ -5172,24 +5172,13 @@ name|ifv_ifp
 expr_stmt|;
 name|if_inc_counter
 argument_list|(
-name|ifp
+name|ifv
+operator|->
+name|ifv_ifp
 argument_list|,
 name|IFCOUNTER_IPACKETS
 argument_list|,
 literal|1
-argument_list|)
-expr_stmt|;
-name|if_inc_counter
-argument_list|(
-name|ifp
-argument_list|,
-name|IFCOUNTER_IBYTES
-argument_list|,
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
 argument_list|)
 expr_stmt|;
 comment|/* Pass it back through the parent's input routine. */
