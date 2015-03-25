@@ -3408,6 +3408,8 @@ name|void
 name|linux_compat_init
 parameter_list|(
 name|void
+modifier|*
+name|arg
 parameter_list|)
 block|{
 name|struct
@@ -3625,6 +3627,8 @@ name|void
 name|linux_compat_uninit
 parameter_list|(
 name|void
+modifier|*
+name|arg
 parameter_list|)
 block|{
 name|kobject_kfree_name
