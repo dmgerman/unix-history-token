@@ -403,6 +403,10 @@ name|unsigned
 name|long
 name|drops
 decl_stmt|;
+name|unsigned
+name|long
+name|early_drops
+decl_stmt|;
 comment|/* The following fields change more often, and are used mostly 	 * on the completion path 	 */
 name|unsigned
 name|int
