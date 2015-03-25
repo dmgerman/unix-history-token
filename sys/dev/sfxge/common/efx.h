@@ -4307,6 +4307,13 @@ parameter_list|(
 name|_ndescs
 parameter_list|)
 value|((_ndescs) - 16)
+define|#
+directive|define
+name|EFX_RXQ_DC_NDESCS
+parameter_list|(
+name|_dcsize
+parameter_list|)
+value|(8<< _dcsize)
 typedef|typedef
 enum|enum
 name|efx_rxq_type_e
@@ -4550,6 +4557,13 @@ parameter_list|(
 name|_ndescs
 parameter_list|)
 value|((_ndescs) - 16)
+define|#
+directive|define
+name|EFX_TXQ_DC_NDESCS
+parameter_list|(
+name|_dcsize
+parameter_list|)
+value|(8<< _dcsize)
 specifier|extern
 name|__checkReturn
 name|int
