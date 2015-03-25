@@ -2192,7 +2192,7 @@ operator|->
 name|enp
 argument_list|)
 operator|->
-name|enc_evq_moderation_max
+name|enc_evq_timer_max_us
 condition|)
 block|{
 name|error
