@@ -654,6 +654,16 @@ name|_field
 parameter_list|)
 define|\
 value|EFX_QWORD_FIELD(*_eqp, MCDI_EVENT_ ## _field)
+define|#
+directive|define
+name|MCDI_CMD_DWORD_FIELD
+parameter_list|(
+name|_edp
+parameter_list|,
+name|_field
+parameter_list|)
+define|\
+value|EFX_DWORD_FIELD(*_edp, MC_CMD_ ## _field)
 ifdef|#
 directive|ifdef
 name|__cplusplus
