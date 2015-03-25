@@ -282,6 +282,16 @@ end_include
 begin_define
 define|#
 directive|define
+name|ROUNDUP_POW_OF_TWO
+parameter_list|(
+name|_n
+parameter_list|)
+value|(1ULL<< flsl((_n) - 1))
+end_define
+
+begin_define
+define|#
+directive|define
 name|SFXGE_IP_ALIGN
 value|2
 end_define
@@ -350,6 +360,10 @@ name|unsigned
 name|int
 name|index
 decl_stmt|;
+name|unsigned
+name|int
+name|entries
+decl_stmt|;
 name|efsys_mem_t
 name|mem
 decl_stmt|;
@@ -391,13 +405,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|SFXGE_NEVS
-value|4096
-end_define
 
 begin_define
 define|#
@@ -665,6 +672,14 @@ name|struct
 name|mtx
 name|enp_lock
 decl_stmt|;
+name|unsigned
+name|int
+name|rxq_entries
+decl_stmt|;
+name|unsigned
+name|int
+name|txq_entries
+decl_stmt|;
 name|bus_dma_tag_t
 name|parent_dma_tag
 decl_stmt|;
@@ -799,6 +814,24 @@ name|sc
 parameter_list|)
 value|((sc)->ifnet->if_drv_flags& IFF_DRV_RUNNING)
 end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_PARAM
+parameter_list|(
+name|_name
+parameter_list|)
+value|"hw.sfxge." #_name
+end_define
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_hw_sfxge
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/*  * From sfxge.c.  */

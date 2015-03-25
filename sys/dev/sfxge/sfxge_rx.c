@@ -123,14 +123,10 @@ begin_define
 define|#
 directive|define
 name|RX_REFILL_THRESHOLD
-value|(EFX_RXQ_LIMIT(SFXGE_NDESCS) * 9 / 10)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RX_REFILL_THRESHOLD_2
-value|(RX_REFILL_THRESHOLD / 2)
+parameter_list|(
+name|_entries
+parameter_list|)
+value|(EFX_RXQ_LIMIT(_entries) * 9 / 10)
 end_define
 
 begin_comment
@@ -903,11 +899,13 @@ name|rxfill
 operator|<=
 name|EFX_RXQ_LIMIT
 argument_list|(
-name|SFXGE_NDESCS
+name|rxq
+operator|->
+name|entries
 argument_list|)
 argument_list|,
 operator|(
-literal|"rxfill> EFX_RXQ_LIMIT(SFXGE_NDESCS)"
+literal|"rxfill> EFX_RXQ_LIMIT(rxq->entries)"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -917,7 +915,9 @@ name|min
 argument_list|(
 name|EFX_RXQ_LIMIT
 argument_list|(
-name|SFXGE_NDESCS
+name|rxq
+operator|->
+name|entries
 argument_list|)
 operator|-
 name|rxfill
@@ -931,11 +931,13 @@ name|ntodo
 operator|<=
 name|EFX_RXQ_LIMIT
 argument_list|(
-name|SFXGE_NDESCS
+name|rxq
+operator|->
+name|entries
 argument_list|)
 argument_list|,
 operator|(
-literal|"ntodo> EFX_RQX_LIMIT(SFXGE_NDESCS)"
+literal|"ntodo> EFX_RQX_LIMIT(rxq->entries)"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -991,11 +993,9 @@ operator|+
 name|batch
 operator|)
 operator|&
-operator|(
-name|SFXGE_NDESCS
-operator|-
-literal|1
-operator|)
+name|rxq
+operator|->
+name|ptr_mask
 expr_stmt|;
 name|rx_desc
 operator|=
@@ -1220,7 +1220,9 @@ name|rxq
 argument_list|,
 name|EFX_RXQ_LIMIT
 argument_list|(
-name|SFXGE_NDESCS
+name|rxq
+operator|->
+name|entries
 argument_list|)
 argument_list|,
 name|B_TRUE
@@ -4030,11 +4032,9 @@ operator|=
 name|completed
 operator|++
 operator|&
-operator|(
-name|SFXGE_NDESCS
-operator|-
-literal|1
-operator|)
+name|rxq
+operator|->
+name|ptr_mask
 expr_stmt|;
 name|rx_desc
 operator|=
@@ -4261,7 +4261,9 @@ if|if
 condition|(
 name|level
 operator|<
-name|RX_REFILL_THRESHOLD
+name|rxq
+operator|->
+name|refill_threshold
 condition|)
 name|sfxge_rx_qfill
 argument_list|(
@@ -4269,7 +4271,9 @@ name|rxq
 argument_list|,
 name|EFX_RXQ_LIMIT
 argument_list|(
-name|SFXGE_NDESCS
+name|rxq
+operator|->
+name|entries
 argument_list|)
 argument_list|,
 name|B_FALSE
@@ -4513,7 +4517,9 @@ name|buf_base_id
 argument_list|,
 name|EFX_RXQ_NBUFS
 argument_list|(
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|rxq_entries
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4631,7 +4637,9 @@ name|esmp
 argument_list|,
 name|EFX_RXQ_NBUFS
 argument_list|(
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|rxq_entries
 argument_list|)
 argument_list|)
 operator|)
@@ -4639,7 +4647,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 comment|/* Create the common code receive queue. */
 if|if
@@ -4661,7 +4671,9 @@ name|EFX_RXQ_TYPE_DEFAULT
 argument_list|,
 name|esmp
 argument_list|,
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|rxq_entries
 argument_list|,
 name|rxq
 operator|->
@@ -4712,7 +4724,9 @@ name|rxq
 argument_list|,
 name|EFX_RXQ_LIMIT
 argument_list|(
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|rxq_entries
 argument_list|)
 argument_list|,
 name|B_FALSE
@@ -4745,12 +4759,16 @@ name|buf_base_id
 argument_list|,
 name|EFX_RXQ_NBUFS
 argument_list|(
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|rxq_entries
 argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -5673,6 +5691,35 @@ name|index
 operator|=
 name|index
 expr_stmt|;
+name|rxq
+operator|->
+name|entries
+operator|=
+name|sc
+operator|->
+name|rxq_entries
+expr_stmt|;
+name|rxq
+operator|->
+name|ptr_mask
+operator|=
+name|rxq
+operator|->
+name|entries
+operator|-
+literal|1
+expr_stmt|;
+name|rxq
+operator|->
+name|refill_threshold
+operator|=
+name|RX_REFILL_THRESHOLD
+argument_list|(
+name|rxq
+operator|->
+name|entries
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|rxq
@@ -5710,7 +5757,9 @@ name|sc
 argument_list|,
 name|EFX_RXQ_SIZE
 argument_list|(
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|rxq_entries
 argument_list|)
 argument_list|,
 name|esmp
@@ -5737,7 +5786,9 @@ literal|0
 argument_list|,
 name|EFX_RXQ_SIZE
 argument_list|(
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|rxq_entries
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5748,7 +5799,9 @@ name|sc
 argument_list|,
 name|EFX_RXQ_NBUFS
 argument_list|(
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|rxq_entries
 argument_list|)
 argument_list|,
 operator|&
@@ -5770,7 +5823,9 @@ expr|struct
 name|sfxge_rx_sw_desc
 argument_list|)
 operator|*
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|rxq_entries
 argument_list|,
 name|M_SFXGE
 argument_list|,

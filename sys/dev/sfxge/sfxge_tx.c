@@ -132,7 +132,10 @@ begin_define
 define|#
 directive|define
 name|SFXGE_TXQ_BLOCK_LEVEL
-value|(SFXGE_NDESCS - SFXGE_TSO_MAX_DESC)
+parameter_list|(
+name|_entries
+parameter_list|)
+value|((_entries) - SFXGE_TSO_MAX_DESC)
 end_define
 
 begin_comment
@@ -285,11 +288,9 @@ operator|=
 name|completed
 operator|++
 operator|&
-operator|(
-name|SFXGE_NDESCS
-operator|-
-literal|1
-operator|)
+name|txq
+operator|->
+name|ptr_mask
 expr_stmt|;
 name|stmp
 operator|=
@@ -415,6 +416,11 @@ condition|(
 name|level
 operator|<=
 name|SFXGE_TXQ_UNBLOCK_LEVEL
+argument_list|(
+name|txq
+operator|->
+name|entries
+argument_list|)
 condition|)
 name|sfxge_tx_qunblock
 argument_list|(
@@ -798,7 +804,9 @@ name|KASSERT
 argument_list|(
 name|level
 operator|<=
-name|SFXGE_NDESCS
+name|txq
+operator|->
+name|entries
 argument_list|,
 operator|(
 literal|"overfilled TX queue"
@@ -818,6 +826,11 @@ condition|(
 name|level
 operator|<
 name|SFXGE_TXQ_BLOCK_LEVEL
+argument_list|(
+name|txq
+operator|->
+name|entries
+argument_list|)
 condition|)
 return|return;
 comment|/* Reap, and check again */
@@ -841,6 +854,11 @@ condition|(
 name|level
 operator|<
 name|SFXGE_TXQ_BLOCK_LEVEL
+argument_list|(
+name|txq
+operator|->
+name|entries
+argument_list|)
 condition|)
 return|return;
 name|txq
@@ -873,6 +891,11 @@ condition|(
 name|level
 operator|<
 name|SFXGE_TXQ_BLOCK_LEVEL
+argument_list|(
+name|txq
+operator|->
+name|entries
+argument_list|)
 condition|)
 block|{
 name|mb
@@ -992,11 +1015,9 @@ name|txq
 operator|->
 name|added
 operator|&
-operator|(
-name|SFXGE_NDESCS
-operator|-
-literal|1
-operator|)
+name|txq
+operator|->
+name|ptr_mask
 expr_stmt|;
 name|stmp
 operator|=
@@ -1255,9 +1276,9 @@ name|txq
 operator|->
 name|stmp
 index|[
-name|SFXGE_NDESCS
-operator|-
-literal|1
+name|txq
+operator|->
+name|ptr_mask
 index|]
 argument_list|)
 condition|)
@@ -3133,7 +3154,10 @@ begin_define
 define|#
 directive|define
 name|TSOH_COUNT
-value|(SFXGE_NDESCS / 2u)
+parameter_list|(
+name|_txq_entries
+parameter_list|)
+value|((_txq_entries) / 2u)
 end_define
 
 begin_define
@@ -3147,7 +3171,11 @@ begin_define
 define|#
 directive|define
 name|TSOH_PAGE_COUNT
-value|((TSOH_COUNT + TSOH_PER_PAGE - 1) / TSOH_PER_PAGE)
+parameter_list|(
+name|_txq_entries
+parameter_list|)
+define|\
+value|((TSOH_COUNT(_txq_entries) + TSOH_PER_PAGE - 1) / TSOH_PER_PAGE)
 end_define
 
 begin_function
@@ -3170,6 +3198,17 @@ name|txq
 operator|->
 name|sc
 decl_stmt|;
+name|unsigned
+name|int
+name|tsoh_page_count
+init|=
+name|TSOH_PAGE_COUNT
+argument_list|(
+name|sc
+operator|->
+name|txq_entries
+argument_list|)
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -3182,7 +3221,7 @@ name|tsoh_buffer
 operator|=
 name|malloc
 argument_list|(
-name|TSOH_PAGE_COUNT
+name|tsoh_page_count
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -3207,7 +3246,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|TSOH_PAGE_COUNT
+name|tsoh_page_count
 condition|;
 name|i
 operator|++
@@ -3320,6 +3359,13 @@ init|;
 name|i
 operator|<
 name|TSOH_PAGE_COUNT
+argument_list|(
+name|txq
+operator|->
+name|sc
+operator|->
+name|txq_entries
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -4515,11 +4561,9 @@ name|txq
 operator|->
 name|added
 operator|&
-operator|(
-name|SFXGE_NDESCS
-operator|-
-literal|1
-operator|)
+name|txq
+operator|->
+name|ptr_mask
 expr_stmt|;
 if|if
 condition|(
@@ -4537,8 +4581,10 @@ argument_list|)
 argument_list|)
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 while|while
 condition|(
@@ -4553,11 +4599,9 @@ operator|+
 literal|1
 operator|)
 operator|&
-operator|(
-name|SFXGE_NDESCS
-operator|-
-literal|1
-operator|)
+name|txq
+operator|->
+name|ptr_mask
 expr_stmt|;
 name|tso_fill_packet_with_fragment
 argument_list|(
@@ -4641,11 +4685,9 @@ operator|+
 literal|1
 operator|)
 operator|&
-operator|(
-name|SFXGE_NDESCS
-operator|-
-literal|1
-operator|)
+name|txq
+operator|->
+name|ptr_mask
 expr_stmt|;
 if|if
 condition|(
@@ -4773,6 +4815,11 @@ condition|(
 name|level
 operator|<=
 name|SFXGE_TXQ_UNBLOCK_LEVEL
+argument_list|(
+name|txq
+operator|->
+name|entries
+argument_list|)
 condition|)
 name|txq
 operator|->
@@ -5076,7 +5123,9 @@ name|buf_base_id
 argument_list|,
 name|EFX_TXQ_NBUFS
 argument_list|(
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|txq_entries
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5207,7 +5256,9 @@ name|esmp
 argument_list|,
 name|EFX_TXQ_NBUFS
 argument_list|(
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|txq_entries
 argument_list|)
 argument_list|)
 operator|)
@@ -5215,7 +5266,9 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 comment|/* Determine the kind of queue we are creating. */
 switch|switch
@@ -5287,7 +5340,9 @@ name|type
 argument_list|,
 name|esmp
 argument_list|,
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|txq_entries
 argument_list|,
 name|txq
 operator|->
@@ -5360,12 +5415,16 @@ name|buf_base_id
 argument_list|,
 name|EFX_TXQ_NBUFS
 argument_list|(
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|txq_entries
 argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|rc
+operator|)
 return|;
 block|}
 end_function
@@ -5639,8 +5698,6 @@ decl_stmt|;
 name|unsigned
 name|int
 name|nmaps
-init|=
-name|SFXGE_NDESCS
 decl_stmt|;
 name|txq
 operator|=
@@ -5686,6 +5743,12 @@ name|pend_desc
 argument_list|,
 name|M_SFXGE
 argument_list|)
+expr_stmt|;
+name|nmaps
+operator|=
+name|sc
+operator|->
+name|txq_entries
 expr_stmt|;
 while|while
 condition|(
@@ -5837,6 +5900,24 @@ name|sc
 operator|=
 name|sc
 expr_stmt|;
+name|txq
+operator|->
+name|entries
+operator|=
+name|sc
+operator|->
+name|txq_entries
+expr_stmt|;
+name|txq
+operator|->
+name|ptr_mask
+operator|=
+name|txq
+operator|->
+name|entries
+operator|-
+literal|1
+expr_stmt|;
 name|sc
 operator|->
 name|txq
@@ -5874,7 +5955,9 @@ name|sc
 argument_list|,
 name|EFX_TXQ_SIZE
 argument_list|(
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|txq_entries
 argument_list|)
 argument_list|,
 name|esmp
@@ -5901,7 +5984,9 @@ literal|0
 argument_list|,
 name|EFX_TXQ_SIZE
 argument_list|(
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|txq_entries
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5912,7 +5997,9 @@ name|sc
 argument_list|,
 name|EFX_TXQ_NBUFS
 argument_list|(
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|txq_entries
 argument_list|)
 argument_list|,
 operator|&
@@ -5997,7 +6084,9 @@ argument_list|(
 name|efx_buffer_t
 argument_list|)
 operator|*
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|txq_entries
 argument_list|,
 name|M_SFXGE
 argument_list|,
@@ -6019,7 +6108,9 @@ expr|struct
 name|sfxge_tx_mapping
 argument_list|)
 operator|*
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|txq_entries
 argument_list|,
 name|M_SFXGE
 argument_list|,
@@ -6036,7 +6127,9 @@ literal|0
 init|;
 name|nmaps
 operator|<
-name|SFXGE_NDESCS
+name|sc
+operator|->
+name|txq_entries
 condition|;
 name|nmaps
 operator|++
