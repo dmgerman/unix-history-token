@@ -34,6 +34,28 @@ file|<netinet/tcp.h>
 end_include
 
 begin_comment
+comment|/* Maximum size of TSO packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TSO_MAX_SIZE
+value|(65535)
+end_define
+
+begin_comment
+comment|/*  * Maximum number of segments to be created for a TSO packet.  * Allow for a reasonable minimum MSS of 512.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TSO_MAX_SEGS
+value|howmany(SFXGE_TSO_MAX_SIZE, 512)
+end_define
+
+begin_comment
 comment|/* Maximum number of DMA segments needed to map an mbuf chain.  With  * TSO, the mbuf length may be just over 64K, divided into 2K mbuf  * clusters.  (The chain could be longer than this initially, but can  * be shortened with m_collapse().)  */
 end_comment
 
@@ -41,7 +63,8 @@ begin_define
 define|#
 directive|define
 name|SFXGE_TX_MAPPING_MAX_SEG
-value|(64 / 2 + 1)
+define|\
+value|(1 + howmany(SFXGE_TSO_MAX_SIZE, MCLBYTES))
 end_define
 
 begin_comment
