@@ -165,6 +165,48 @@ comment|/* MC_CMD_SENSOR_IN_3V3 */
 name|EFX_MON_STAT_12V
 block|,
 comment|/* MC_CMD_SENSOR_IN_12V0 */
+name|EFX_MON_STAT_1_2VA
+block|,
+comment|/* MC_CMD_SENSOR_IN_1V2A */
+name|EFX_MON_STAT_VREF
+block|,
+comment|/* MC_CMD_SENSOR_IN_VREF */
+name|EFX_MON_STAT_VAOE
+block|,
+comment|/* MC_CMD_SENSOR_OUT_VAOE */
+name|EFX_MON_STAT_AOE_TEMP
+block|,
+comment|/* MC_CMD_SENSOR_AOE_TEMP */
+name|EFX_MON_STAT_PSU_AOE_TEMP
+block|,
+comment|/* MC_CMD_SENSOR_PSU_AOE_TEMP */
+name|EFX_MON_STAT_PSU_TEMP
+block|,
+comment|/* MC_CMD_SENSOR_PSE_TEMP */
+name|EFX_MON_STAT_FAN0
+block|,
+comment|/* MC_CMD_SENSOR_FAN_0 */
+name|EFX_MON_STAT_FAN1
+block|,
+comment|/* MC_CMD_SENSOR_FAN_1 */
+name|EFX_MON_STAT_FAN2
+block|,
+comment|/* MC_CMD_SENSOR_FAN_2 */
+name|EFX_MON_STAT_FAN3
+block|,
+comment|/* MC_CMD_SENSOR_FAN_3 */
+name|EFX_MON_STAT_FAN4
+block|,
+comment|/* MC_CMD_SENSOR_FAN_4 */
+name|EFX_MON_STAT_VAOE_IN
+block|,
+comment|/* MC_CMD_SENSOR_IN_VAOE */
+name|EFX_MON_STAT_IAOE
+block|,
+comment|/* MC_CMD_SENSOR_OUT_IAOE */
+name|EFX_MON_STAT_IAOE_IN
+block|,
+comment|/* MC_CMD_SENSOR_IN_IAOE */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -216,6 +258,48 @@ comment|/* MC_CMD_SENSOR_IN_3V3 */
 name|EFX_MON_STAT_12V
 block|,
 comment|/* MC_CMD_SENSOR_IN_12V0 */
+name|EFX_MON_STAT_1_2VA
+block|,
+comment|/* MC_CMD_SENSOR_IN_1V2A */
+name|EFX_MON_STAT_VREF
+block|,
+comment|/* MC_CMD_SENSOR_IN_VREF */
+name|EFX_MON_STAT_VAOE
+block|,
+comment|/* MC_CMD_SENSOR_OUT_VAOE */
+name|EFX_MON_STAT_AOE_TEMP
+block|,
+comment|/* MC_CMD_SENSOR_AOE_TEMP */
+name|EFX_MON_STAT_PSU_AOE_TEMP
+block|,
+comment|/* MC_CMD_SENSOR_PSU_AOE_TEMP */
+name|EFX_MON_STAT_PSU_TEMP
+block|,
+comment|/* MC_CMD_SENSOR_PSE_TEMP */
+name|EFX_MON_STAT_FAN0
+block|,
+comment|/* MC_CMD_SENSOR_FAN_0 */
+name|EFX_MON_STAT_FAN1
+block|,
+comment|/* MC_CMD_SENSOR_FAN_1 */
+name|EFX_MON_STAT_FAN2
+block|,
+comment|/* MC_CMD_SENSOR_FAN_2 */
+name|EFX_MON_STAT_FAN3
+block|,
+comment|/* MC_CMD_SENSOR_FAN_3 */
+name|EFX_MON_STAT_FAN4
+block|,
+comment|/* MC_CMD_SENSOR_FAN_4 */
+name|EFX_MON_STAT_VAOE_IN
+block|,
+comment|/* MC_CMD_SENSOR_IN_VAOE */
+name|EFX_MON_STAT_IAOE
+block|,
+comment|/* MC_CMD_SENSOR_OUT_IAOE */
+name|EFX_MON_STAT_IAOE_IN
+block|,
+comment|/* MC_CMD_SENSOR_IN_IAOE */
 block|}
 decl_stmt|;
 end_decl_stmt
