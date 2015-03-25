@@ -432,15 +432,8 @@ parameter_list|(
 name|pthread_attr_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -460,19 +453,8 @@ name|size_t
 modifier|*
 name|__restrict
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
-operator|,
-function_decl|3
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -485,17 +467,8 @@ parameter_list|,
 name|size_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -537,17 +510,8 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -556,15 +520,8 @@ parameter_list|(
 name|pthread_attr_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -575,15 +532,8 @@ modifier|*
 parameter_list|,
 name|size_t
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -594,15 +544,8 @@ modifier|*
 parameter_list|,
 name|size_t
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -616,15 +559,8 @@ modifier|*
 parameter_list|,
 name|size_t
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -648,15 +584,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -725,15 +654,8 @@ parameter_list|(
 name|pthread_barrierattr_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -778,15 +700,8 @@ parameter_list|(
 name|pthread_condattr_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -799,17 +714,8 @@ parameter_list|,
 name|clockid_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -822,17 +728,8 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -841,15 +738,8 @@ parameter_list|(
 name|pthread_condattr_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -860,15 +750,8 @@ modifier|*
 parameter_list|,
 name|clockid_t
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -879,15 +762,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -896,15 +772,8 @@ parameter_list|(
 name|pthread_cond_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -913,15 +782,8 @@ parameter_list|(
 name|pthread_cond_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -934,15 +796,8 @@ specifier|const
 name|pthread_condattr_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -951,15 +806,8 @@ parameter_list|(
 name|pthread_cond_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -977,24 +825,15 @@ name|struct
 name|timespec
 modifier|*
 parameter_list|)
-function_decl|__nonnull
+function_decl|__requires_exclusive
 parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
-operator|,
-function_decl|3
+function_decl|*__mutex
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__requires_exclusive
-argument_list|(
-operator|*
-name|__mutex
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1007,22 +846,15 @@ name|pthread_mutex_t
 modifier|*
 name|__mutex
 parameter_list|)
-function_decl|__nonnull
+function_decl|__requires_exclusive
 parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+function_decl|*__mutex
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__requires_exclusive
-argument_list|(
-operator|*
-name|__mutex
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1048,17 +880,8 @@ parameter_list|,
 name|void
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|3
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1110,15 +933,8 @@ parameter_list|,
 name|clockid_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1149,15 +965,8 @@ name|void
 modifier|*
 parameter_list|)
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1175,15 +984,8 @@ parameter_list|(
 name|pthread_mutexattr_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1192,15 +994,8 @@ parameter_list|(
 name|pthread_mutexattr_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1213,17 +1008,8 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1235,17 +1021,8 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1256,15 +1033,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1275,15 +1045,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1293,20 +1056,15 @@ name|pthread_mutex_t
 modifier|*
 name|__mutex
 parameter_list|)
-function_decl|__nonnull
+function_decl|__requires_unlocked
 parameter_list|(
-function_decl|1
+function_decl|*__mutex
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__requires_unlocked
-argument_list|(
-operator|*
-name|__mutex
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1320,20 +1078,15 @@ specifier|const
 name|pthread_mutexattr_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
+function_decl|__requires_unlocked
 parameter_list|(
-function_decl|1
+function_decl|*__mutex
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__requires_unlocked
-argument_list|(
-operator|*
-name|__mutex
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1343,20 +1096,15 @@ name|pthread_mutex_t
 modifier|*
 name|__mutex
 parameter_list|)
-function_decl|__nonnull
+function_decl|__locks_exclusive
 parameter_list|(
-function_decl|1
+function_decl|*__mutex
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__locks_exclusive
-argument_list|(
-operator|*
-name|__mutex
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1366,22 +1114,17 @@ name|pthread_mutex_t
 modifier|*
 name|__mutex
 parameter_list|)
-function_decl|__nonnull
+function_decl|__trylocks_exclusive
 parameter_list|(
-function_decl|1
+function_decl|0
+operator|,
+function_decl|*__mutex
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__trylocks_exclusive
-argument_list|(
-literal|0
-argument_list|,
-operator|*
-name|__mutex
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1396,24 +1139,17 @@ name|struct
 name|timespec
 modifier|*
 parameter_list|)
-function_decl|__nonnull
+function_decl|__trylocks_exclusive
 parameter_list|(
-function_decl|1
+function_decl|0
 operator|,
-function_decl|2
+function_decl|*__mutex
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__trylocks_exclusive
-argument_list|(
-literal|0
-argument_list|,
-operator|*
-name|__mutex
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1423,20 +1159,15 @@ name|pthread_mutex_t
 modifier|*
 name|__mutex
 parameter_list|)
-function_decl|__nonnull
+function_decl|__unlocks
 parameter_list|(
-function_decl|1
+function_decl|*__mutex
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__unlocks
-argument_list|(
-operator|*
-name|__mutex
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1453,17 +1184,8 @@ parameter_list|(
 name|void
 parameter_list|)
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1473,20 +1195,15 @@ name|pthread_rwlock_t
 modifier|*
 name|__rwlock
 parameter_list|)
-function_decl|__nonnull
+function_decl|__requires_unlocked
 parameter_list|(
-function_decl|1
+function_decl|*__rwlock
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__requires_unlocked
-argument_list|(
-operator|*
-name|__rwlock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1500,20 +1217,15 @@ specifier|const
 name|pthread_rwlockattr_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
+function_decl|__requires_unlocked
 parameter_list|(
-function_decl|1
+function_decl|*__rwlock
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__requires_unlocked
-argument_list|(
-operator|*
-name|__rwlock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1523,20 +1235,15 @@ name|pthread_rwlock_t
 modifier|*
 name|__rwlock
 parameter_list|)
-function_decl|__nonnull
+function_decl|__locks_shared
 parameter_list|(
-function_decl|1
+function_decl|*__rwlock
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__locks_shared
-argument_list|(
-operator|*
-name|__rwlock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1551,24 +1258,17 @@ name|struct
 name|timespec
 modifier|*
 parameter_list|)
-function_decl|__nonnull
+function_decl|__trylocks_shared
 parameter_list|(
-function_decl|1
+function_decl|0
 operator|,
-function_decl|2
+function_decl|*__rwlock
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__trylocks_shared
-argument_list|(
-literal|0
-argument_list|,
-operator|*
-name|__rwlock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1583,24 +1283,17 @@ name|struct
 name|timespec
 modifier|*
 parameter_list|)
-function_decl|__nonnull
+function_decl|__trylocks_exclusive
 parameter_list|(
-function_decl|1
+function_decl|0
 operator|,
-function_decl|2
+function_decl|*__rwlock
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__trylocks_exclusive
-argument_list|(
-literal|0
-argument_list|,
-operator|*
-name|__rwlock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1610,22 +1303,17 @@ name|pthread_rwlock_t
 modifier|*
 name|__rwlock
 parameter_list|)
-function_decl|__nonnull
+function_decl|__trylocks_shared
 parameter_list|(
-function_decl|1
+function_decl|0
+operator|,
+function_decl|*__rwlock
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__trylocks_shared
-argument_list|(
-literal|0
-argument_list|,
-operator|*
-name|__rwlock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1635,22 +1323,17 @@ name|pthread_rwlock_t
 modifier|*
 name|__rwlock
 parameter_list|)
-function_decl|__nonnull
+function_decl|__trylocks_exclusive
 parameter_list|(
-function_decl|1
+function_decl|0
+operator|,
+function_decl|*__rwlock
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__trylocks_exclusive
-argument_list|(
-literal|0
-argument_list|,
-operator|*
-name|__rwlock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1660,20 +1343,15 @@ name|pthread_rwlock_t
 modifier|*
 name|__rwlock
 parameter_list|)
-function_decl|__nonnull
+function_decl|__unlocks
 parameter_list|(
-function_decl|1
+function_decl|*__rwlock
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__unlocks
-argument_list|(
-operator|*
-name|__rwlock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1683,20 +1361,15 @@ name|pthread_rwlock_t
 modifier|*
 name|__rwlock
 parameter_list|)
-function_decl|__nonnull
+function_decl|__locks_exclusive
 parameter_list|(
-function_decl|1
+function_decl|*__rwlock
 end_function_decl
 
-begin_expr_stmt
+begin_empty_stmt
 unit|)
-name|__locks_exclusive
-argument_list|(
-operator|*
-name|__rwlock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1705,15 +1378,8 @@ parameter_list|(
 name|pthread_rwlockattr_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1740,17 +1406,8 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1759,15 +1416,8 @@ parameter_list|(
 name|pthread_rwlockattr_t
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -1790,15 +1440,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|pthread_t
@@ -2102,17 +1745,8 @@ name|struct
 name|sched_param
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -2125,17 +1759,8 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -2148,17 +1773,8 @@ parameter_list|,
 name|int
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -2184,17 +1800,8 @@ name|struct
 name|sched_param
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -2205,15 +1812,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -2224,15 +1824,8 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|1
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -2248,17 +1841,8 @@ name|struct
 name|sched_param
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|2
-operator|,
-function_decl|3
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_function_decl
 name|int
@@ -2273,15 +1857,8 @@ name|struct
 name|sched_param
 modifier|*
 parameter_list|)
-function_decl|__nonnull
-parameter_list|(
-function_decl|3
+function_decl|;
 end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
 
 begin_if
 if|#
