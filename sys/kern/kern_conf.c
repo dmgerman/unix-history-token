@@ -5530,11 +5530,26 @@ block|}
 name|dev_unlock
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|cdp
+operator|->
+name|cdp_flags
+operator|&
+name|CDP_UNREF_DTR
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* avoid out of order notify events */
 name|notify_destroy
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+block|}
 name|mtx_lock
 argument_list|(
 operator|&
@@ -5549,10 +5564,7 @@ operator|=
 name|LIST_FIRST
 argument_list|(
 operator|&
-name|cdev2priv
-argument_list|(
-name|dev
-argument_list|)
+name|cdp
 operator|->
 name|cdp_fdpriv
 argument_list|)
@@ -5782,8 +5794,24 @@ argument_list|(
 name|child
 argument_list|)
 expr_stmt|;
+name|dev_unlock
+argument_list|()
+expr_stmt|;
+comment|/* ensure the destroy event is queued in order */
+name|notify_destroy
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|dev_lock
+argument_list|()
+expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * This function will delist a character device and its children from  * the directory listing and create a destroy event without waiting  * for all character device references to go away. At some later point  * destroy_dev() must be called to complete the character device  * destruction. After calling this function the character device name  * can instantly be re-used.  */
+end_comment
 
 begin_function
 name|void
@@ -5795,6 +5823,17 @@ modifier|*
 name|dev
 parameter_list|)
 block|{
+name|WITNESS_WARN
+argument_list|(
+name|WARN_GIANTOK
+operator||
+name|WARN_SLEEPOK
+argument_list|,
+name|NULL
+argument_list|,
+literal|"delist_dev"
+argument_list|)
+expr_stmt|;
 name|dev_lock
 argument_list|()
 expr_stmt|;
