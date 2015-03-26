@@ -3201,12 +3201,12 @@ name|IN6_IFF_TENTATIVE
 operator|)
 condition|)
 block|{
-name|ifa_free
+name|nd6_dad_na_input
 argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|nd6_dad_na_input
+name|ifa_free
 argument_list|(
 name|ifa
 argument_list|)
