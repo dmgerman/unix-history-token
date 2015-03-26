@@ -3303,9 +3303,6 @@ name|scope
 decl_stmt|;
 comment|/* flags to handle send alternate net tracking */
 name|uint8_t
-name|used_alt_onsack
-decl_stmt|;
-name|uint8_t
 name|used_alt_asconfack
 decl_stmt|;
 name|uint8_t
