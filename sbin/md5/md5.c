@@ -131,25 +131,28 @@ value|8
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|qflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
+specifier|static
 name|char
 modifier|*
 name|checkAgainst
@@ -157,6 +160,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|checksFailed
 decl_stmt|;
