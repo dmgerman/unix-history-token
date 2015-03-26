@@ -30,6 +30,27 @@ name|int
 name|flags
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ARM_NEW_PMAP
+name|pmap_qenter
+argument_list|(
+name|sf
+operator|->
+name|kva
+argument_list|,
+operator|&
+operator|(
+name|sf
+operator|->
+name|m
+operator|)
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|pmap_kenter
 argument_list|(
 name|sf
@@ -44,6 +65,8 @@ name|m
 argument_list|)
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
