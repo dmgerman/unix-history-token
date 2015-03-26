@@ -217,6 +217,25 @@ value|0)
 end_define
 
 begin_comment
+comment|/*  * cache_r4k_op_8lines_64:  *  *	Perform the specified cache operation on 8 64-byte cache lines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cache_r4k_op_8lines_64
+parameter_list|(
+name|va
+parameter_list|,
+name|op
+parameter_list|)
+define|\
+value|do {									\ 	__asm __volatile(						\ 		".set noreorder					\n\t"	\ 		"cache %1, 0x000(%0); cache %1, 0x040(%0)	\n\t"	\ 		"cache %1, 0x080(%0); cache %1, 0x0c0(%0)	\n\t"	\ 		"cache %1, 0x100(%0); cache %1, 0x140(%0)	\n\t"	\ 		"cache %1, 0x180(%0); cache %1, 0x1c0(%0)	\n\t"	\ 		".set reorder"						\ 	    :								\ 	    : "r" (va), "i" (op)					\ 	    : "memory");						\ } while (
+comment|/*CONSTCOND*/
+value|0)
+end_define
+
+begin_comment
 comment|/*  * cache_r4k_op_32lines_16:  *  *	Perform the specified cache operation on 32 16-byte  *	cache lines.  */
 end_comment
 
@@ -250,6 +269,25 @@ name|op
 parameter_list|)
 define|\
 value|do {									\ 	__asm __volatile(						\ 		".set noreorder					\n\t"	\ 		"cache %1, 0x000(%0); cache %1, 0x020(%0);	\n\t"	\ 		"cache %1, 0x040(%0); cache %1, 0x060(%0);	\n\t"	\ 		"cache %1, 0x080(%0); cache %1, 0x0a0(%0);	\n\t"	\ 		"cache %1, 0x0c0(%0); cache %1, 0x0e0(%0);	\n\t"	\ 		"cache %1, 0x100(%0); cache %1, 0x120(%0);	\n\t"	\ 		"cache %1, 0x140(%0); cache %1, 0x160(%0);	\n\t"	\ 		"cache %1, 0x180(%0); cache %1, 0x1a0(%0);	\n\t"	\ 		"cache %1, 0x1c0(%0); cache %1, 0x1e0(%0);	\n\t"	\ 		"cache %1, 0x200(%0); cache %1, 0x220(%0);	\n\t"	\ 		"cache %1, 0x240(%0); cache %1, 0x260(%0);	\n\t"	\ 		"cache %1, 0x280(%0); cache %1, 0x2a0(%0);	\n\t"	\ 		"cache %1, 0x2c0(%0); cache %1, 0x2e0(%0);	\n\t"	\ 		"cache %1, 0x300(%0); cache %1, 0x320(%0);	\n\t"	\ 		"cache %1, 0x340(%0); cache %1, 0x360(%0);	\n\t"	\ 		"cache %1, 0x380(%0); cache %1, 0x3a0(%0);	\n\t"	\ 		"cache %1, 0x3c0(%0); cache %1, 0x3e0(%0);	\n\t"	\ 		".set reorder"						\ 	    :								\ 	    : "r" (va), "i" (op)					\ 	    : "memory");						\ } while (
+comment|/*CONSTCOND*/
+value|0)
+end_define
+
+begin_comment
+comment|/*  * cache_r4k_op_32lines_64:  *  *	Perform the specified cache operation on 32 64-byte  *	cache lines.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|cache_r4k_op_32lines_64
+parameter_list|(
+name|va
+parameter_list|,
+name|op
+parameter_list|)
+define|\
+value|do {									\ 	__asm __volatile(						\ 		".set noreorder					\n\t"	\ 		"cache %1, 0x000(%0); cache %1, 0x040(%0);	\n\t"	\ 		"cache %1, 0x080(%0); cache %1, 0x0c0(%0);	\n\t"	\ 		"cache %1, 0x100(%0); cache %1, 0x140(%0);	\n\t"	\ 		"cache %1, 0x180(%0); cache %1, 0x1c0(%0);	\n\t"	\ 		"cache %1, 0x200(%0); cache %1, 0x240(%0);	\n\t"	\ 		"cache %1, 0x280(%0); cache %1, 0x2c0(%0);	\n\t"	\ 		"cache %1, 0x300(%0); cache %1, 0x340(%0);	\n\t"	\ 		"cache %1, 0x380(%0); cache %1, 0x3c0(%0);	\n\t"	\ 		"cache %1, 0x400(%0); cache %1, 0x440(%0);	\n\t"	\ 		"cache %1, 0x480(%0); cache %1, 0x4c0(%0);	\n\t"	\ 		"cache %1, 0x500(%0); cache %1, 0x540(%0);	\n\t"	\ 		"cache %1, 0x580(%0); cache %1, 0x5c0(%0);	\n\t"	\ 		"cache %1, 0x600(%0); cache %1, 0x640(%0);	\n\t"	\ 		"cache %1, 0x680(%0); cache %1, 0x6c0(%0);	\n\t"	\ 		"cache %1, 0x700(%0); cache %1, 0x740(%0);	\n\t"	\ 		"cache %1, 0x780(%0); cache %1, 0x7c0(%0);	\n\t"	\ 		".set reorder"						\ 	    :								\ 	    : "r" (va), "i" (op)					\ 	    : "memory");						\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
