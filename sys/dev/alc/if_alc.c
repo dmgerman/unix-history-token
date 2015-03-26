@@ -486,7 +486,7 @@ literal|9
 operator|*
 literal|1024
 block|,
-literal|"Atheros AR8161 PCIe Fast Ethernet"
+literal|"Atheros AR8162 PCIe Fast Ethernet"
 block|}
 block|,
 block|{
@@ -498,7 +498,7 @@ literal|9
 operator|*
 literal|1024
 block|,
-literal|"Atheros AR8161 PCIe Gigabit Ethernet"
+literal|"Atheros AR8171 PCIe Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -510,7 +510,7 @@ literal|9
 operator|*
 literal|1024
 block|,
-literal|"Atheros AR8161 PCIe Fast Ethernet"
+literal|"Atheros AR8172 PCIe Fast Ethernet"
 block|}
 block|,
 block|{
