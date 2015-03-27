@@ -1606,6 +1606,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_NCQ_NON_DATA
+value|0x63
+end_define
+
+begin_comment
+comment|/* NCQ non-data command */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_SEND_FPDMA_QUEUED
 value|0x64
 end_define
