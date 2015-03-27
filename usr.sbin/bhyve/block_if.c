@@ -141,15 +141,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|BLOCKIF_MAXREQ
-value|64
+name|BLOCKIF_NUMTHR
+value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|BLOCKIF_NUMTHR
-value|8
+name|BLOCKIF_MAXREQ
+value|(64 + BLOCKIF_NUMTHR)
 end_define
 
 begin_enum
