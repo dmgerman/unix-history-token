@@ -56833,12 +56833,6 @@ name|lun_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Run through the OOA queue and abort each I/O. 	 */
-if|#
-directive|if
-literal|0
-block|TAILQ_FOREACH((struct ctl_io_hdr *)xio,&lun->ooa_queue, ooa_links) {
-endif|#
-directive|endif
 for|for
 control|(
 name|xio
@@ -57733,12 +57727,6 @@ name|ctl_lock
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Run through the OOA queue and attempt to find the given I/O. 	 * The target port, initiator ID, tag type and tag number have to 	 * match the values that we got from the initiator.  If we have an 	 * untagged command to abort, simply abort the first untagged command 	 * we come to.  We only allow one untagged command at a time of course. 	 */
-if|#
-directive|if
-literal|0
-block|TAILQ_FOREACH((struct ctl_io_hdr *)xio,&lun->ooa_queue, ooa_links) {
-endif|#
-directive|endif
 for|for
 control|(
 name|xio
@@ -57841,7 +57829,7 @@ comment|/* 		 * If the abort says that the task is untagged, the 		 * task in th
 if|#
 directive|if
 literal|0
-block|if (((xio->scsiio.tag_type == CTL_TAG_UNTAGGED)&& (io->taskio.tag_type == CTL_TAG_UNTAGGED)) 		 || (xio->scsiio.tag_num == io->taskio.tag_num)) {
+block|if (((xio->scsiio.tag_type == CTL_TAG_UNTAGGED)&& (io->taskio.tag_type == CTL_TAG_UNTAGGED)) 		 || (xio->scsiio.tag_num == io->taskio.tag_num))
 endif|#
 directive|endif
 comment|/* 		 * XXX KDM we've got problems with FC, because it 		 * doesn't send down a tag type with aborts.  So we 		 * can only really go by the tag number... 		 * This may cause problems with parallel SCSI. 		 * Need to figure that out!! 		 */
