@@ -207,6 +207,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|VTBLK_F_FLUSH
+value|(1<< 9)
+end_define
+
+begin_comment
+comment|/* Cache flush support */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VTBLK_F_TOPOLOGY
 value|(1<< 10)
 end_define
@@ -224,7 +235,7 @@ define|#
 directive|define
 name|VTBLK_S_HOSTCAPS
 define|\
-value|( VTBLK_F_SEG_MAX  |						    \     VTBLK_F_BLK_SIZE |						    \     VTBLK_F_TOPOLOGY |						    \     VIRTIO_RING_F_INDIRECT_DESC )
+value|( VTBLK_F_SEG_MAX  |						    \     VTBLK_F_BLK_SIZE |						    \     VTBLK_F_FLUSH    |						    \     VTBLK_F_TOPOLOGY |						    \     VIRTIO_RING_F_INDIRECT_DESC )
 end_define
 
 begin_comment
