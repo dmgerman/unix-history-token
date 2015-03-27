@@ -8068,7 +8068,6 @@ argument_list|(
 name|cbp
 argument_list|)
 expr_stmt|;
-empty_stmt|;
 if|if
 condition|(
 name|bp
