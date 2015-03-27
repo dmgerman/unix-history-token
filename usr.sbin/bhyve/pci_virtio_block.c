@@ -600,6 +600,8 @@ literal|2
 index|]
 decl_stmt|;
 name|uint16_t
+name|idx
+decl_stmt|,
 name|flags
 index|[
 name|VTBLK_MAXSEGS
@@ -612,6 +614,9 @@ operator|=
 name|vq_getchain
 argument_list|(
 name|vq
+argument_list|,
+operator|&
+name|idx
 argument_list|,
 name|iov
 argument_list|,
@@ -996,6 +1001,8 @@ name|vq_relchain
 argument_list|(
 name|vq
 argument_list|,
+name|idx
+argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
@@ -1024,11 +1031,6 @@ name|sc
 init|=
 name|vsc
 decl_stmt|;
-name|vq_startchains
-argument_list|(
-name|vq
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|vq_has_descs
