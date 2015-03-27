@@ -555,6 +555,10 @@ name|tried_devd
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * This function returns summary load of all CPUs.  It was made so  * intentionally to not reduce performance in scenarios when several  * threads are processing requests as a pipeline -- running one at  * a time on different CPUs and waiting for each other.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
