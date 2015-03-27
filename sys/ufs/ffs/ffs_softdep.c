@@ -2738,6 +2738,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|check_inodedep_free
+parameter_list|(
+name|struct
+name|inodedep
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|clear_remove
 parameter_list|(
