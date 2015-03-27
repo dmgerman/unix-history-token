@@ -1628,6 +1628,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ATA_SFPDMA_DSM
+value|0x00
+end_define
+
+begin_comment
+comment|/* Data set management */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SFPDMA_DSM_TRIM
+value|0x01
+end_define
+
+begin_comment
+comment|/* Set trim bit in auxilary */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SFPDMA_HYBRID_EVICT
+value|0x01
+end_define
+
+begin_comment
+comment|/* Hybrid Evict */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATA_SFPDMA_WLDMA
+value|0x02
+end_define
+
+begin_comment
+comment|/* Write Log DMA EXT */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ATA_RECV_FPDMA_QUEUED
 value|0x65
 end_define
