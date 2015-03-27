@@ -333,7 +333,7 @@ end_include
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
-name|u_short
+name|uint32_t
 argument_list|,
 name|ip_id
 argument_list|)
