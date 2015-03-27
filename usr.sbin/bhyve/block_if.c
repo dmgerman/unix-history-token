@@ -142,7 +142,7 @@ begin_define
 define|#
 directive|define
 name|BLOCKIF_MAXREQ
-value|33
+value|64
 end_define
 
 begin_define
