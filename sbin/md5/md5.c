@@ -471,6 +471,7 @@ comment|/* algorithm function table */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|Algorithm_t
 name|Algorithm
@@ -1495,6 +1496,7 @@ comment|/*  * Digests a reference suite of strings and prints the results.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
