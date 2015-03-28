@@ -117,7 +117,11 @@ comment|/* lock to handle */
 name|int
 name|c_flags
 decl_stmt|;
-comment|/* state of this entry */
+comment|/* User State */
+name|int
+name|c_iflags
+decl_stmt|;
+comment|/* Internal State */
 specifier|volatile
 name|int
 name|c_cpu

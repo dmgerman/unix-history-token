@@ -298,7 +298,7 @@ name|UNI
 parameter_list|,
 name|T
 parameter_list|)
-value|((UNI)->T.c.c_flags& (CALLOUT_ACTIVE |	\ 							CALLOUT_PENDING))
+value|(callout_active(&(UNI)->T.c) ||		\ 	callout_pending(&(UNI)->T.c))
 end_define
 
 begin_define
