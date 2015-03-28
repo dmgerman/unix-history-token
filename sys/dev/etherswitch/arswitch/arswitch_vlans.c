@@ -112,7 +112,7 @@ file|"etherswitch_if.h"
 end_include
 
 begin_comment
-comment|/*  * XXX TODO: teach about the AR933x SoC switch  * XXX TODO: teach about the AR934x SoC switch  */
+comment|/*  * XXX TODO: teach about the AR934x SoC switch  */
 end_comment
 
 begin_function
