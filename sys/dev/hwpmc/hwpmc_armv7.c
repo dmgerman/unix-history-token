@@ -337,84 +337,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Performance Monitor Control Register  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|uint32_t
-name|armv7_pmnc_read
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|uint32_t
-name|reg
-decl_stmt|;
-asm|__asm __volatile("mrc p15, 0, %0, c9, c12, 0" : "=r" (reg));
-return|return
-operator|(
-name|reg
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|armv7_pmnc_write
-parameter_list|(
-name|uint32_t
-name|reg
-parameter_list|)
-block|{
-asm|__asm __volatile("mcr p15, 0, %0, c9, c12, 0" : : "r" (reg));
-block|}
-end_function
-
-begin_comment
-comment|/*  * Clock Counter Register (PMCCNTR)  * Counts processor clock cycles.  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|uint32_t
-name|armv7_ccnt_read
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|uint32_t
-name|reg
-decl_stmt|;
-asm|__asm __volatile("mrc p15, 0, %0, c9, c13, 0" : "=r" (reg));
-return|return
-operator|(
-name|reg
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|armv7_ccnt_write
-parameter_list|(
-name|uint32_t
-name|reg
-parameter_list|)
-block|{
-asm|__asm __volatile("mcr p15, 0, %0, c9, c13, 0" : : "r" (reg));
-block|}
-end_function
-
-begin_comment
 comment|/*  * Interrupt Enable Set Register  */
 end_comment
 
@@ -439,7 +361,11 @@ operator|<<
 name|pmc
 operator|)
 expr_stmt|;
-asm|__asm __volatile("mcr p15, 0, %0, c9, c14, 1" : : "r" (reg));
+name|cp15_pminten_set
+argument_list|(
+name|reg
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -468,83 +394,11 @@ operator|<<
 name|pmc
 operator|)
 expr_stmt|;
-asm|__asm __volatile("mcr p15, 0, %0, c9, c14, 2" : : "r" (reg));
-block|}
-end_function
-
-begin_comment
-comment|/*  * Overflow Flag Register  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|uint32_t
-name|armv7_flag_read
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|uint32_t
+name|cp15_pminten_clr
+argument_list|(
 name|reg
-decl_stmt|;
-asm|__asm __volatile("mrc p15, 0, %0, c9, c12, 3" : "=r" (reg));
-return|return
-operator|(
-name|reg
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|armv7_flag_write
-parameter_list|(
-name|uint32_t
-name|reg
-parameter_list|)
-block|{
-asm|__asm __volatile("mcr p15, 0, %0, c9, c12, 3" : : "r" (reg));
-block|}
-end_function
-
-begin_comment
-comment|/*  * Event Selection Register  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|armv7_evtsel_write
-parameter_list|(
-name|uint32_t
-name|reg
-parameter_list|)
-block|{
-asm|__asm __volatile("mcr p15, 0, %0, c9, c13, 1" : : "r" (reg));
-block|}
-end_function
-
-begin_comment
-comment|/*  * PMSELR  */
-end_comment
-
-begin_function
-specifier|static
-name|__inline
-name|void
-name|armv7_select_counter
-parameter_list|(
-name|unsigned
-name|int
-name|pmc
-parameter_list|)
-block|{
-asm|__asm __volatile("mcr p15, 0, %0, c9, c12, 5" : : "r" (pmc));
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -574,7 +428,11 @@ operator|<<
 name|pmc
 operator|)
 expr_stmt|;
-asm|__asm __volatile("mcr p15, 0, %0, c9, c12, 1" : : "r" (reg));
+name|cp15_pmcnten_set
+argument_list|(
+name|reg
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -604,7 +462,11 @@ operator|<<
 name|pmc
 operator|)
 expr_stmt|;
-asm|__asm __volatile("mcr p15, 0, %0, c9, c12, 2" : : "r" (reg));
+name|cp15_pmcnten_clr
+argument_list|(
+name|reg
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -622,35 +484,30 @@ name|int
 name|pmc
 parameter_list|)
 block|{
-name|uint32_t
-name|reg
-init|=
-literal|0
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|pmc
 operator|<
-literal|4
+name|armv7_npmcs
 argument_list|,
 operator|(
-literal|"[armv7,%d] illegal PMC number %d"
+literal|"%s: illegal PMC number %d"
 operator|,
-name|__LINE__
+name|__func__
 operator|,
 name|pmc
 operator|)
 argument_list|)
 expr_stmt|;
-name|armv7_select_counter
+name|cp15_pmselr_set
 argument_list|(
 name|pmc
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("mrc p15, 0, %0, c9, c13, 2" : "=r" (reg));
 return|return
 operator|(
-name|reg
+name|cp15_pmxevcntr_get
+argument_list|()
 operator|)
 return|;
 block|}
@@ -673,23 +530,27 @@ name|KASSERT
 argument_list|(
 name|pmc
 operator|<
-literal|4
+name|armv7_npmcs
 argument_list|,
 operator|(
-literal|"[armv7,%d] illegal PMC number %d"
+literal|"%s: illegal PMC number %d"
 operator|,
-name|__LINE__
+name|__func__
 operator|,
 name|pmc
 operator|)
 argument_list|)
 expr_stmt|;
-name|armv7_select_counter
+name|cp15_pmselr_set
 argument_list|(
 name|pmc
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("mcr p15, 0, %0, c9, c13, 2" : : "r" (reg));
+name|cp15_pmxevcntr_set
+argument_list|(
+name|reg
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|reg
@@ -978,7 +839,7 @@ literal|0xFF
 condition|)
 name|tmp
 operator|=
-name|armv7_ccnt_read
+name|cp15_pmccntr_get
 argument_list|()
 expr_stmt|;
 else|else
@@ -1153,7 +1014,7 @@ name|pm_armv7_evsel
 operator|==
 literal|0xFF
 condition|)
-name|armv7_ccnt_write
+name|cp15_pmccntr_set
 argument_list|(
 name|v
 argument_list|)
@@ -1355,12 +1216,12 @@ operator|.
 name|pm_armv7_evsel
 expr_stmt|;
 comment|/* 	 * Configure the event selection. 	 */
-name|armv7_select_counter
+name|cp15_pmselr_set
 argument_list|(
 name|ri
 argument_list|)
 expr_stmt|;
-name|armv7_evtsel_write
+name|cp15_pmxevtyper_set
 argument_list|(
 name|config
 argument_list|)
@@ -1685,7 +1546,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|armv7_flag_read
+name|cp15_pmovsr_get
 argument_list|()
 operator|&
 name|reg
@@ -1697,7 +1558,7 @@ block|{
 continue|continue;
 block|}
 comment|/* Clear Overflow Flag */
-name|armv7_flag_write
+name|cp15_pmovsr_set
 argument_list|(
 name|reg
 argument_list|)
@@ -2259,14 +2120,14 @@ block|}
 comment|/* Enable unit */
 name|pmnc
 operator|=
-name|armv7_pmnc_read
+name|cp15_pmcr_get
 argument_list|()
 expr_stmt|;
 name|pmnc
 operator||=
 name|ARMV7_PMNC_ENABLE
 expr_stmt|;
-name|armv7_pmnc_write
+name|cp15_pmcr_set
 argument_list|(
 name|pmnc
 argument_list|)
@@ -2296,7 +2157,7 @@ name|pmnc
 decl_stmt|;
 name|pmnc
 operator|=
-name|armv7_pmnc_read
+name|cp15_pmcr_get
 argument_list|()
 expr_stmt|;
 name|pmnc
@@ -2304,7 +2165,7 @@ operator|&=
 operator|~
 name|ARMV7_PMNC_ENABLE
 expr_stmt|;
-name|armv7_pmnc_write
+name|cp15_pmcr_set
 argument_list|(
 name|pmnc
 argument_list|)
@@ -2337,7 +2198,7 @@ name|reg
 decl_stmt|;
 name|reg
 operator|=
-name|armv7_pmnc_read
+name|cp15_pmcr_get
 argument_list|()
 expr_stmt|;
 name|armv7_npmcs
