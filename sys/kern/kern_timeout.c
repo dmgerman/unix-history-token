@@ -1143,7 +1143,10 @@ decl_stmt|;
 comment|/* 	 * Calculate the size of the callout wheel and the preallocated 	 * timeout() structures. 	 * XXX: Clip callout to result of previous function of maxusers 	 * maximum 384.  This is still huge, but acceptable. 	 */
 name|memset
 argument_list|(
-name|cc_cpu
+name|CC_CPU
+argument_list|(
+literal|0
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -4316,11 +4319,13 @@ name|MAXCPU
 operator|)
 operator|||
 operator|(
-name|cc_cpu
-index|[
+operator|(
+name|CC_CPU
+argument_list|(
 name|cpu
-index|]
-operator|.
+argument_list|)
+operator|)
+operator|->
 name|cc_inited
 operator|==
 literal|0
