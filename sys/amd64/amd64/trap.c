@@ -1557,7 +1557,6 @@ case|case
 name|T_STKFLT
 case|:
 comment|/* stack fault */
-break|break;
 case|case
 name|T_PROTFLT
 case|:
