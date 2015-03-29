@@ -4524,7 +4524,7 @@ operator|=
 name|dma_seg
 operator|->
 name|ds_len
-operator|+
+operator|-
 operator|(
 name|tso
 operator|.
