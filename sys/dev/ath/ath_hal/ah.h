@@ -1587,6 +1587,10 @@ name|rxclr_cnt
 decl_stmt|;
 comment|/* rx clear count */
 name|u_int32_t
+name|extrxclr_cnt
+decl_stmt|;
+comment|/* ext chan rx clear count */
+name|u_int32_t
 name|txframecnt_diff
 decl_stmt|;
 comment|/* delta tx frame count */
