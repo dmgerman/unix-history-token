@@ -3307,7 +3307,7 @@ name|device_is_attached
 argument_list|(
 name|child
 argument_list|)
-operator|&&
+operator|||
 name|bootverbose
 operator|==
 literal|0
