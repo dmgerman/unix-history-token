@@ -1809,12 +1809,35 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pj4bv7_setup
+name|armadaxp_idcache_wbinv_all
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|void
+name|cortexa_setup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_MV_PJ4B
+argument_list|)
+end_if
 
 begin_function_decl
 name|void
@@ -1827,16 +1850,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|armadaxp_idcache_wbinv_all
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|cortexa_setup
+name|pj4bv7_setup
 parameter_list|(
 name|void
 parameter_list|)
