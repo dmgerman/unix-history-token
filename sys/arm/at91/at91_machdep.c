@@ -2415,9 +2415,7 @@ name|CPU_CONTROL_MMU_ENABLE
 argument_list|)
 expr_stmt|;
 name|cpu_setup
-argument_list|(
-literal|""
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|set_stackptrs
 argument_list|(

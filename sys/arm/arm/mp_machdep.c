@@ -609,9 +609,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 name|cpu_setup
-argument_list|(
-literal|""
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* Provide stack pointers for other processor modes. */
 name|set_stackptrs
@@ -628,9 +626,7 @@ else|#
 directive|else
 comment|/* ARM_NEW_PMAP */
 name|cpu_setup
-argument_list|(
-name|NULL
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|setttb
 argument_list|(

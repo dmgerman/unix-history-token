@@ -422,9 +422,7 @@ modifier|*
 name|cf_setup
 function_decl|)
 parameter_list|(
-name|char
-modifier|*
-name|string
+name|void
 parameter_list|)
 function_decl|;
 block|}
@@ -934,10 +932,8 @@ begin_define
 define|#
 directive|define
 name|cpu_setup
-parameter_list|(
-name|a
-parameter_list|)
-value|cpufuncs.cf_setup(a)
+parameter_list|()
+value|cpufuncs.cf_setup()
 end_define
 
 begin_function_decl
@@ -1096,9 +1092,7 @@ begin_function_decl
 name|void
 name|fa526_setup
 parameter_list|(
-name|char
-modifier|*
-name|arg
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1384,9 +1378,7 @@ begin_function_decl
 name|void
 name|arm9_setup
 parameter_list|(
-name|char
-modifier|*
-name|string
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1464,9 +1456,7 @@ begin_function_decl
 name|void
 name|arm10_setup
 parameter_list|(
-name|char
-modifier|*
-name|string
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1764,9 +1754,7 @@ begin_function_decl
 name|void
 name|armv7_setup
 parameter_list|(
-name|char
-modifier|*
-name|string
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1823,9 +1811,7 @@ begin_function_decl
 name|void
 name|pj4bv7_setup
 parameter_list|(
-name|char
-modifier|*
-name|string
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1852,8 +1838,7 @@ begin_function_decl
 name|void
 name|cortexa_setup
 parameter_list|(
-name|char
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2063,9 +2048,7 @@ begin_function_decl
 name|void
 name|arm11x6_setup
 parameter_list|(
-name|char
-modifier|*
-name|string
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2647,9 +2630,7 @@ begin_function_decl
 name|void
 name|xscale_setup
 parameter_list|(
-name|char
-modifier|*
-name|string
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

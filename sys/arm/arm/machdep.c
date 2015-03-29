@@ -5867,9 +5867,7 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Now that proper page tables are installed, call cpu_setup() to enable 	 * instruction and data caches and other chip-specific features. 	 */
 name|cpu_setup
-argument_list|(
-literal|""
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Only after the SOC registers block is mapped we can perform device 	 * tree fixups, as they may attempt to read parameters from hardware. 	 */
 name|OF_interpret
@@ -6318,9 +6316,7 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Now that proper page tables are installed, call cpu_setup() to enable 	 * instruction and data caches and other chip-specific features. 	 */
 name|cpu_setup
-argument_list|(
-literal|""
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* Platform-specific initialisation */
 name|platform_probe_and_attach
