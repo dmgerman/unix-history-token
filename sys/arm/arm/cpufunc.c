@@ -490,11 +490,6 @@ name|defined
 argument_list|(
 name|CPU_ARM9E
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_ARM10
-argument_list|)
 end_if
 
 begin_decl_stmt
@@ -781,169 +776,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_ARM9E || CPU_ARM10 */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_ARM10
-end_ifdef
-
-begin_decl_stmt
-name|struct
-name|cpu_functions
-name|arm10_cpufuncs
-init|=
-block|{
-comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id			*/
-name|cpufunc_nullop
-block|,
-comment|/* cpwait		*/
-comment|/* MMU functions */
-name|cpufunc_control
-block|,
-comment|/* control		*/
-name|cpufunc_domains
-block|,
-comment|/* Domain		*/
-name|arm10_setttb
-block|,
-comment|/* Setttb		*/
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus		*/
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress		*/
-comment|/* TLB functions */
-name|armv4_tlb_flushID
-block|,
-comment|/* tlb_flushID		*/
-name|arm10_tlb_flushID_SE
-block|,
-comment|/* tlb_flushID_SE	*/
-name|armv4_tlb_flushI
-block|,
-comment|/* tlb_flushI		*/
-name|arm10_tlb_flushI_SE
-block|,
-comment|/* tlb_flushI_SE	*/
-name|armv4_tlb_flushD
-block|,
-comment|/* tlb_flushD		*/
-name|armv4_tlb_flushD_SE
-block|,
-comment|/* tlb_flushD_SE	*/
-comment|/* Cache operations */
-name|arm10_icache_sync_all
-block|,
-comment|/* icache_sync_all	*/
-name|arm10_icache_sync_range
-block|,
-comment|/* icache_sync_range	*/
-name|arm10_dcache_wbinv_all
-block|,
-comment|/* dcache_wbinv_all	*/
-name|arm10_dcache_wbinv_range
-block|,
-comment|/* dcache_wbinv_range	*/
-name|arm10_dcache_inv_range
-block|,
-comment|/* dcache_inv_range	*/
-name|arm10_dcache_wb_range
-block|,
-comment|/* dcache_wb_range	*/
-name|armv4_idcache_inv_all
-block|,
-comment|/* idcache_inv_all	*/
-name|arm10_idcache_wbinv_all
-block|,
-comment|/* idcache_wbinv_all	*/
-name|arm10_idcache_wbinv_range
-block|,
-comment|/* idcache_wbinv_range	*/
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_wbinv_all	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_wbinv_range	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_inv_range	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_wb_range	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_drain_writebuf */
-comment|/* Other functions */
-name|cpufunc_nullop
-block|,
-comment|/* flush_prefetchbuf	*/
-name|armv4_drain_writebuf
-block|,
-comment|/* drain_writebuf	*/
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E	*/
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* sleep		*/
-comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup	*/
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup	*/
-name|arm10_context_switch
-block|,
-comment|/* context_switch	*/
-name|arm10_setup
-comment|/* cpu setup		*/
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CPU_ARM10 */
+comment|/* CPU_ARM9E */
 end_comment
 
 begin_ifdef
@@ -2151,11 +1984,6 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|CPU_ARM10
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|CPU_ARM1136
 argument_list|)
 operator|||
@@ -3000,11 +2828,6 @@ name|defined
 argument_list|(
 name|CPU_ARM9E
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_ARM10
-argument_list|)
 if|if
 condition|(
 name|cputype
@@ -3078,10 +2901,6 @@ condition|(
 name|cputype
 operator|==
 name|CPU_ID_ARM926EJS
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_ARM1026EJS
 condition|)
 block|{
 name|cpufuncs
@@ -3100,77 +2919,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* CPU_ARM9E || CPU_ARM10 */
-ifdef|#
-directive|ifdef
-name|CPU_ARM10
-if|if
-condition|(
-comment|/* cputype == CPU_ID_ARM1020T || */
-name|cputype
-operator|==
-name|CPU_ID_ARM1020E
-condition|)
-block|{
-comment|/* 		 * Select write-through cacheing (this isn't really an 		 * option on ARM1020T). 		 */
-name|cpufuncs
-operator|=
-name|arm10_cpufuncs
-expr_stmt|;
-name|cpu_reset_needs_v4_MMU_disable
-operator|=
-literal|1
-expr_stmt|;
-comment|/* V4 or higher */
-name|get_cachetype_cp15
-argument_list|()
-expr_stmt|;
-name|arm10_dcache_sets_inc
-operator|=
-literal|1U
-operator|<<
-name|arm_dcache_l2_linesize
-expr_stmt|;
-name|arm10_dcache_sets_max
-operator|=
-operator|(
-literal|1U
-operator|<<
-operator|(
-name|arm_dcache_l2_linesize
-operator|+
-name|arm_dcache_l2_nsets
-operator|)
-operator|)
-operator|-
-name|arm10_dcache_sets_inc
-expr_stmt|;
-name|arm10_dcache_index_inc
-operator|=
-literal|1U
-operator|<<
-operator|(
-literal|32
-operator|-
-name|arm_dcache_l2_assoc
-operator|)
-expr_stmt|;
-name|arm10_dcache_index_max
-operator|=
-literal|0U
-operator|-
-name|arm10_dcache_index_inc
-expr_stmt|;
-name|pmap_pte_init_generic
-argument_list|()
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-endif|#
-directive|endif
-comment|/* CPU_ARM10 */
+comment|/* CPU_ARM9E */
 if|#
 directive|if
 name|defined
@@ -3940,11 +3689,6 @@ operator|||
 expr|\
 name|defined
 argument_list|(
-name|CPU_ARM10
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|CPU_ARM1136
 argument_list|)
 operator|||
@@ -4432,11 +4176,6 @@ directive|if
 name|defined
 argument_list|(
 name|CPU_ARM9E
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_ARM10
 argument_list|)
 end_if
 
