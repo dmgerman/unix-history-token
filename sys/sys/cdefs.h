@@ -1833,9 +1833,16 @@ define|#
 directive|define
 name|__nonnull
 parameter_list|(
-modifier|...
+name|x
 parameter_list|)
-value|__attribute__((__nonnull__(__VA_ARGS__)))
+value|__attribute__((__nonnull__(x)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__nonnull_all
+value|__attribute__((__nonnull__))
 end_define
 
 begin_else
@@ -1848,8 +1855,14 @@ define|#
 directive|define
 name|__nonnull
 parameter_list|(
-modifier|...
+name|x
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__nonnull_all
 end_define
 
 begin_endif
@@ -1959,9 +1972,9 @@ define|#
 directive|define
 name|__alloc_size
 parameter_list|(
-modifier|...
+name|x
 parameter_list|)
-value|__attribute__((__alloc_size__(__VA_ARGS__)))
+value|__attribute__((__alloc_size__(x)))
 end_define
 
 begin_else
@@ -1974,7 +1987,7 @@ define|#
 directive|define
 name|__alloc_size
 parameter_list|(
-modifier|...
+name|x
 parameter_list|)
 end_define
 
