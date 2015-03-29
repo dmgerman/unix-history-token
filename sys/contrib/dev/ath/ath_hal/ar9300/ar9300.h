@@ -584,6 +584,14 @@ name|rx_frame_count
 decl_stmt|;
 comment|/* Last rx Frame count */
 name|u_int32_t
+name|rx_busy_count
+decl_stmt|;
+comment|/* Last rx busy count */
+name|u_int32_t
+name|rx_ext_busy_count
+decl_stmt|;
+comment|/* Last rx busy count; extension channel */
+name|u_int32_t
 name|cycle_count
 decl_stmt|;
 comment|/* Last cycle_count (can detect wrap-around) */
