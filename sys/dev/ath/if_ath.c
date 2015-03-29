@@ -5070,9 +5070,21 @@ name|sc
 argument_list|,
 name|macaddr
 argument_list|)
-operator|<
+operator|==
 literal|0
 condition|)
+block|{
+comment|/* Tell the HAL now about the new MAC */
+name|ath_hal_setmac
+argument_list|(
+name|ah
+argument_list|,
+name|macaddr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|ath_hal_getmac
 argument_list|(
 name|ah
@@ -5080,6 +5092,7 @@ argument_list|,
 name|macaddr
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|sc
