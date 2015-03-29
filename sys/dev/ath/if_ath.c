@@ -10203,7 +10203,7 @@ name|sc
 operator|->
 name|sc_lastlongcal
 operator|=
-literal|0
+name|ticks
 expr_stmt|;
 name|sc
 operator|->
@@ -10221,13 +10221,13 @@ name|sc
 operator|->
 name|sc_lastani
 operator|=
-literal|0
+name|ticks
 expr_stmt|;
 name|sc
 operator|->
 name|sc_lastshortcal
 operator|=
-literal|0
+name|ticks
 expr_stmt|;
 name|sc
 operator|->
