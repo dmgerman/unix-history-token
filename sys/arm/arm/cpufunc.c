@@ -1443,171 +1443,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_ARM1136
-argument_list|)
-end_if
-
-begin_decl_stmt
-name|struct
-name|cpu_functions
-name|arm1136_cpufuncs
-init|=
-block|{
-comment|/* CPU functions */
-name|cpufunc_id
-block|,
-comment|/* id                   */
-name|cpufunc_nullop
-block|,
-comment|/* cpwait               */
-comment|/* MMU functions */
-name|cpufunc_control
-block|,
-comment|/* control              */
-name|cpufunc_domains
-block|,
-comment|/* Domain               */
-name|arm11x6_setttb
-block|,
-comment|/* Setttb               */
-name|cpufunc_faultstatus
-block|,
-comment|/* Faultstatus          */
-name|cpufunc_faultaddress
-block|,
-comment|/* Faultaddress         */
-comment|/* TLB functions */
-name|arm11_tlb_flushID
-block|,
-comment|/* tlb_flushID          */
-name|arm11_tlb_flushID_SE
-block|,
-comment|/* tlb_flushID_SE       */
-name|arm11_tlb_flushI
-block|,
-comment|/* tlb_flushI           */
-name|arm11_tlb_flushI_SE
-block|,
-comment|/* tlb_flushI_SE        */
-name|arm11_tlb_flushD
-block|,
-comment|/* tlb_flushD           */
-name|arm11_tlb_flushD_SE
-block|,
-comment|/* tlb_flushD_SE        */
-comment|/* Cache operations */
-name|arm11x6_icache_sync_all
-block|,
-comment|/* icache_sync_all      */
-name|arm11x6_icache_sync_range
-block|,
-comment|/* icache_sync_range    */
-name|arm11x6_dcache_wbinv_all
-block|,
-comment|/* dcache_wbinv_all     */
-name|armv6_dcache_wbinv_range
-block|,
-comment|/* dcache_wbinv_range   */
-name|armv6_dcache_inv_range
-block|,
-comment|/* dcache_inv_range     */
-name|armv6_dcache_wb_range
-block|,
-comment|/* dcache_wb_range      */
-name|armv6_idcache_inv_all
-block|,
-comment|/* idcache_inv_all	*/
-name|arm11x6_idcache_wbinv_all
-block|,
-comment|/* idcache_wbinv_all    */
-name|arm11x6_idcache_wbinv_range
-block|,
-comment|/* idcache_wbinv_range  */
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_wbinv_all    */
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_wbinv_range  */
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_inv_range    */
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_wb_range     */
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* l2cache_drain_writebuf */
-comment|/* Other functions */
-name|arm11x6_flush_prefetchbuf
-block|,
-comment|/* flush_prefetchbuf    */
-name|arm11_drain_writebuf
-block|,
-comment|/* drain_writebuf       */
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_C     */
-operator|(
-name|void
-operator|*
-operator|)
-name|cpufunc_nullop
-block|,
-comment|/* flush_brnchtgt_E     */
-name|arm11_sleep
-block|,
-comment|/* sleep                */
-comment|/* Soft functions */
-name|cpufunc_null_fixup
-block|,
-comment|/* dataabt_fixup        */
-name|cpufunc_null_fixup
-block|,
-comment|/* prefetchabt_fixup    */
-name|arm11_context_switch
-block|,
-comment|/* context_switch       */
-name|arm11x6_setup
-comment|/* cpu setup            */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CPU_ARM1136 */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
 name|CPU_ARM1176
 argument_list|)
 end_if
@@ -1974,11 +1809,6 @@ expr|\
 name|defined
 argument_list|(
 name|CPU_ARM9E
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_ARM1136
 argument_list|)
 operator|||
 expr|\
@@ -2908,62 +2738,15 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_ARM1136
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|CPU_ARM1176
 argument_list|)
-if|if
-condition|(
-name|cputype
-operator|==
-name|CPU_ID_ARM1136JS
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_ARM1136JSR1
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_ARM1176JZS
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|CPU_ARM1136
-if|if
-condition|(
-name|cputype
-operator|==
-name|CPU_ID_ARM1136JS
-operator|||
-name|cputype
-operator|==
-name|CPU_ID_ARM1136JSR1
-condition|)
-name|cpufuncs
-operator|=
-name|arm1136_cpufuncs
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|CPU_ARM1176
 if|if
 condition|(
 name|cputype
 operator|==
 name|CPU_ID_ARM1176JZS
 condition|)
-name|cpufuncs
-operator|=
-name|arm1176_cpufuncs
-expr_stmt|;
-endif|#
-directive|endif
+block|{
 name|cpu_reset_needs_v4_MMU_disable
 operator|=
 literal|1
@@ -2981,7 +2764,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* CPU_ARM1136 || CPU_ARM1176 */
+comment|/* CPU_ARM1176 */
 if|#
 directive|if
 name|defined
@@ -3871,11 +3654,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_ARM1136
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|CPU_ARM1176
 argument_list|)
 expr|\
@@ -3912,11 +3690,6 @@ directive|ifdef
 name|_PMC_USER_READ_WRITE_
 if|#
 directive|if
-name|defined
-argument_list|(
-name|CPU_ARM1136
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_ARM1176
@@ -3971,11 +3744,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|CPU_ARM1136
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_ARM1176
@@ -4056,11 +3824,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|CPU_ARM1136
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_ARM1176
@@ -4204,33 +3967,6 @@ operator|=
 operator|~
 literal|0
 expr_stmt|;
-comment|/* 	 * This options enables the workaround for the 364296 ARM1136 	 * r0pX errata (possible cache data corruption with 	 * hit-under-miss enabled). It sets the undocumented bit 31 in 	 * the auxiliary control register and the FI bit in the control 	 * register, thus disabling hit-under-miss without putting the 	 * processor into full low interrupt latency mode. ARM11MPCore 	 * is not affected. 	 */
-if|if
-condition|(
-operator|(
-name|cpuid
-operator|&
-name|CPU_ID_CPU_MASK
-operator|)
-operator|==
-name|CPU_ID_ARM1136JS
-condition|)
-block|{
-comment|/* ARM1136JSr0pX */
-name|cpuctrl
-operator||=
-name|CPU_CONTROL_FI_ENABLE
-expr_stmt|;
-name|auxctrl
-operator|=
-name|ARM1136_AUXCTL_PFI
-expr_stmt|;
-name|auxctrl_wax
-operator|=
-operator|~
-name|ARM1136_AUXCTL_PFI
-expr_stmt|;
-block|}
 comment|/* 	 * Enable an errata workaround 	 */
 if|if
 condition|(
@@ -4330,7 +4066,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_ARM1136 || CPU_ARM1176 */
+comment|/* CPU_ARM1176 */
 end_comment
 
 begin_ifdef

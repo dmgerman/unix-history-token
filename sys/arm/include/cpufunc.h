@@ -1853,11 +1853,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_ARM1136
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|CPU_ARM1176
 argument_list|)
 end_if
@@ -2064,42 +2059,6 @@ end_function_decl
 
 begin_comment
 comment|/* no ref. for errata */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_ARM1136
-argument_list|)
-end_if
-
-begin_function_decl
-name|void
-name|arm11_sleep
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|arm1136_sleep_rev0
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* for errata 336501 */
 end_comment
 
 begin_endif
