@@ -3,6 +3,12 @@ begin_comment
 comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/libparse/data_mbg.c,v 4.8 2006/06/22 18:40:01 kardel RELEASE_20060622_A  *  * data_mbg.c,v 4.8 2006/06/22 18:40:01 kardel RELEASE_20060622_A  *  * $Created: Sun Jul 20 12:08:14 1997 $  *  * Copyright (c) 1997-2005 by Frank Kardel<kardel<AT> ntp.org>  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -73,44 +79,38 @@ directive|include
 file|"ieee754io.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|get_mbg_tzname
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|mbg_time_status_str
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -714,7 +714,7 @@ modifier|*
 name|tznamep
 parameter_list|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|tznamep
 argument_list|,
@@ -1021,7 +1021,7 @@ operator|*
 name|buffpp
 condition|)
 block|{
-name|strncpy
+name|strlcpy
 argument_list|(
 name|p
 argument_list|,
@@ -1041,7 +1041,7 @@ operator|+=
 literal|2
 expr_stmt|;
 block|}
-name|strncpy
+name|strlcpy
 argument_list|(
 name|p
 argument_list|,
@@ -1151,6 +1151,9 @@ literal|'+'
 argument_list|,
 name|abs
 argument_list|(
+operator|(
+name|int
+operator|)
 name|tmp
 operator|->
 name|offs_from_utc
@@ -1161,6 +1164,9 @@ argument_list|,
 operator|(
 name|abs
 argument_list|(
+operator|(
+name|int
+operator|)
 name|tmp
 operator|->
 name|offs_from_utc
@@ -1721,7 +1727,7 @@ modifier|*
 name|comparamp
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|comparamp

@@ -6,14 +6,18 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_ntp_select_h
+name|NTP_SELECT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_ntp_select_h
+name|NTP_SELECT_H
 end_define
+
+begin_comment
+comment|/* note: tested by include/l_stdlib.h */
+end_comment
 
 begin_comment
 comment|/* Was: (defined(RS6000)||defined(SYS_PTX))&&!defined(_BSD) */
@@ -21,6 +25,10 @@ end_comment
 
 begin_comment
 comment|/* Could say: !defined(FD_SET)&& defined(HAVE_SYS_SELECT_H) */
+end_comment
+
+begin_comment
+comment|/* except FD_SET can legitimately be a typedef... */
 end_comment
 
 begin_if
@@ -61,36 +69,33 @@ directive|include
 file|<sockLib.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|select
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
 name|width
-operator|,
+parameter_list|,
 name|fd_set
-operator|*
+modifier|*
 name|pReadFds
-operator|,
+parameter_list|,
 name|fd_set
-operator|*
+modifier|*
 name|pWriteFds
-operator|,
+parameter_list|,
 name|fd_set
-operator|*
+modifier|*
 name|pExceptFds
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|timeval
-operator|*
+modifier|*
 name|pTimeOut
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -109,12 +114,6 @@ operator|!
 name|defined
 argument_list|(
 name|FD_SET
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|SYS_WINNT
 argument_list|)
 end_if
 
@@ -175,7 +174,7 @@ name|FD_ZERO
 parameter_list|(
 name|p
 parameter_list|)
-value|memset((char *)(p), 0, sizeof(*(p)))
+value|memset((p), 0, sizeof(*(p)))
 end_define
 
 begin_endif
@@ -219,7 +218,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _ntp_select_h */
+comment|/* NTP_SELECT_H */
 end_comment
 
 end_unit
