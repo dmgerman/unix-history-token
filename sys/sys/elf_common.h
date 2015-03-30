@@ -6472,6 +6472,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|R_AARCH64_TLS_DTPREL64
+value|1028
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_AARCH64_TLS_DTPMOD64
+value|1029
+end_define
+
+begin_define
+define|#
+directive|define
+name|R_AARCH64_TLS_TPREL64
+value|1030
+end_define
+
+begin_define
+define|#
+directive|define
 name|R_AARCH64_TLSDESC
 value|1031
 end_define
@@ -6479,6 +6500,13 @@ end_define
 begin_comment
 comment|/* Identify the TLS descriptor */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|R_AARCH64_IRELATIVE
+value|1032
+end_define
 
 begin_define
 define|#
