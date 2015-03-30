@@ -2704,6 +2704,10 @@ operator|==
 name|CPU_ID_ARM1176JZS
 condition|)
 block|{
+name|cpufuncs
+operator|=
+name|arm1176_cpufuncs
+expr_stmt|;
 name|cpu_reset_needs_v4_MMU_disable
 operator|=
 literal|1
