@@ -3092,6 +3092,12 @@ argument_list|,
 name|desired
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Periodically wake up threads waiting for resources, 		 * so they could ask for reclamation again. 		 */
+name|VMEM_CONDVAR_BROADCAST
+argument_list|(
+name|vm
+argument_list|)
+expr_stmt|;
 block|}
 name|mtx_unlock
 argument_list|(
