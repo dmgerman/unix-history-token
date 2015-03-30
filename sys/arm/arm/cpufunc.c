@@ -1283,11 +1283,6 @@ name|defined
 argument_list|(
 name|CPU_FA526
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_FA626TE
-argument_list|)
 end_if
 
 begin_decl_stmt
@@ -1435,7 +1430,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_FA526 || CPU_FA626TE */
+comment|/* CPU_FA526 */
 end_comment
 
 begin_if
@@ -1842,11 +1837,6 @@ expr|\
 name|defined
 argument_list|(
 name|CPU_FA526
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_FA626TE
 argument_list|)
 operator|||
 name|defined
@@ -2906,11 +2896,6 @@ name|defined
 argument_list|(
 name|CPU_FA526
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_FA626TE
-argument_list|)
 if|if
 condition|(
 name|cputype
@@ -2948,7 +2933,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* CPU_FA526 || CPU_FA626TE */
+comment|/* CPU_FA526 */
 ifdef|#
 directive|ifdef
 name|CPU_XSCALE_80200
@@ -4348,11 +4333,6 @@ name|defined
 argument_list|(
 name|CPU_FA526
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_FA626TE
-argument_list|)
 end_if
 
 begin_function
@@ -4470,7 +4450,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_FA526 || CPU_FA626TE */
+comment|/* CPU_FA526 */
 end_comment
 
 begin_if

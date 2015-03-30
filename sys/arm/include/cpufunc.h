@@ -1081,11 +1081,6 @@ name|defined
 argument_list|(
 name|CPU_FA526
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_FA626TE
-argument_list|)
 end_if
 
 begin_function_decl
@@ -2213,11 +2208,6 @@ expr|\
 name|defined
 argument_list|(
 name|CPU_FA526
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_FA626TE
 argument_list|)
 operator|||
 expr|\
