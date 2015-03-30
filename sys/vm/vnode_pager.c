@@ -2902,8 +2902,6 @@ name|PAGE_SIZE
 argument_list|,
 name|reqpage
 argument_list|,
-literal|0
-argument_list|,
 name|iodone
 argument_list|,
 name|arg
