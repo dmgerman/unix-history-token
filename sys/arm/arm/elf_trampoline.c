@@ -288,11 +288,6 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|CPU_XSCALE_80200
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|CPU_XSCALE_80321
 argument_list|)
 operator|||

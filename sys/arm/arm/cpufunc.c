@@ -99,29 +99,6 @@ directive|include
 file|<machine/cpufunc.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CPU_XSCALE_80200
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<arm/xscale/i80200/i80200reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<arm/xscale/i80200/i80200var.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -944,11 +921,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_XSCALE_80200
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|CPU_XSCALE_80321
 argument_list|)
 operator|||
@@ -1123,7 +1095,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_XSCALE_80200 || CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425    CPU_XSCALE_80219 */
+comment|/* CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425    CPU_XSCALE_80219 */
 end_comment
 
 begin_ifdef
@@ -1810,11 +1782,6 @@ expr|\
 name|defined
 argument_list|(
 name|CPU_ARM1176
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_XSCALE_80200
 argument_list|)
 operator|||
 name|defined
@@ -2934,132 +2901,6 @@ block|}
 endif|#
 directive|endif
 comment|/* CPU_FA526 */
-ifdef|#
-directive|ifdef
-name|CPU_XSCALE_80200
-if|if
-condition|(
-name|cputype
-operator|==
-name|CPU_ID_80200
-condition|)
-block|{
-name|int
-name|rev
-init|=
-name|cpufunc_id
-argument_list|()
-operator|&
-name|CPU_ID_REVISION_MASK
-decl_stmt|;
-name|i80200_icu_init
-argument_list|()
-expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|XSCALE_CCLKCFG
-argument_list|)
-comment|/* 		 * Crank CCLKCFG to maximum legal value. 		 */
-asm|__asm __volatile ("mcr p14, 0, %0, c6, c0, 0"
-block|: 			:
-literal|"r"
-operator|(
-name|XSCALE_CCLKCFG
-operator|)
-block|)
-empty_stmt|;
-endif|#
-directive|endif
-comment|/* 		 * XXX Disable ECC in the Bus Controller Unit; we 		 * don't really support it, yet.  Clear any pending 		 * error indications. 		 */
-asm|__asm __volatile("mcr p13, 0, %0, c0, c1, 0"
-block|: 			:
-literal|"r"
-operator|(
-name|BCUCTL_E0
-operator||
-name|BCUCTL_E1
-operator||
-name|BCUCTL_EV
-operator|)
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
-name|cpufuncs
-operator|=
-name|xscale_cpufuncs
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* 		 * i80200 errata: Step-A0 and A1 have a bug where 		 * D$ dirty bits are not cleared on "invalidate by 		 * address". 		 * 		 * Workaround: Clean cache line before invalidating. 		 */
-end_comment
-
-begin_if
-if|if
-condition|(
-name|rev
-operator|==
-literal|0
-operator|||
-name|rev
-operator|==
-literal|1
-condition|)
-name|cpufuncs
-operator|.
-name|cf_dcache_inv_range
-operator|=
-name|xscale_cache_purgeD_rng
-expr_stmt|;
-end_if
-
-begin_expr_stmt
-name|cpu_reset_needs_v4_MMU_disable
-operator|=
-literal|1
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* XScale needs it */
-end_comment
-
-begin_expr_stmt
-name|get_cachetype_cp15
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|pmap_pte_init_xscale
-argument_list|()
-expr_stmt|;
-end_expr_stmt
-
-begin_goto
-goto|goto
-name|out
-goto|;
-end_goto
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CPU_XSCALE_80200 */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
@@ -3071,11 +2912,8 @@ name|defined
 argument_list|(
 name|CPU_XSCALE_80219
 argument_list|)
-end_if
-
-begin_expr_stmt
-unit|if
-operator|(
+if|if
+condition|(
 name|cputype
 operator|==
 name|CPU_ID_80321_400
@@ -3099,48 +2937,36 @@ operator|||
 name|cputype
 operator|==
 name|CPU_ID_80219_600
-operator|)
+condition|)
 block|{
 name|cpufuncs
 operator|=
 name|xscale_cpufuncs
-block|;
+expr_stmt|;
 name|cpu_reset_needs_v4_MMU_disable
 operator|=
 literal|1
-block|;
+expr_stmt|;
 comment|/* XScale needs it */
 name|get_cachetype_cp15
 argument_list|()
-block|;
+expr_stmt|;
 name|pmap_pte_init_xscale
 argument_list|()
-block|;
+expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
-end_expr_stmt
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* CPU_XSCALE_80321 */
-end_comment
-
-begin_if
 if|#
 directive|if
 name|defined
 argument_list|(
 name|CPU_XSCALE_81342
 argument_list|)
-end_if
-
-begin_if
 if|if
 condition|(
 name|cputype
@@ -3167,28 +2993,13 @@ goto|goto
 name|out
 goto|;
 block|}
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* CPU_XSCALE_81342 */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|CPU_XSCALE_PXA2X0
-end_ifdef
-
-begin_comment
 comment|/* ignore core revision to test PXA2xx CPUs */
-end_comment
-
-begin_if
 if|if
 condition|(
 operator|(
@@ -3243,24 +3054,12 @@ goto|goto
 name|out
 goto|;
 block|}
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* CPU_XSCALE_PXA2X0 */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
 name|CPU_XSCALE_IXP425
-end_ifdef
-
-begin_if
 if|if
 condition|(
 name|cputype
@@ -3299,22 +3098,10 @@ goto|goto
 name|out
 goto|;
 block|}
-end_if
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_comment
 comment|/* CPU_XSCALE_IXP425 */
-end_comment
-
-begin_comment
 comment|/* 	 * Bzzzz. And the answer was ... 	 */
-end_comment
-
-begin_expr_stmt
 name|panic
 argument_list|(
 literal|"No support for this CPU type (%08x) in kernel"
@@ -3322,39 +3109,27 @@ argument_list|,
 name|cputype
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 name|ARCHITECTURE_NOT_PRESENT
 operator|)
 return|;
-end_return
-
-begin_label
 name|out
 label|:
-end_label
-
-begin_expr_stmt
 name|uma_set_align
 argument_list|(
 name|arm_dcache_align_mask
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
+block|}
+end_block
 
 begin_comment
-unit|}
 comment|/*  * Fixup routines for data and prefetch aborts.  *  * Several compile time symbols are used  *  * DEBUG_FAULT_CORRECTION - Print debugging information during the  * correction of registers after a fault.  */
 end_comment
 
@@ -3362,22 +3137,16 @@ begin_comment
 comment|/*  * Null abort fixup routine.  * For use when no fixup is required.  */
 end_comment
 
-begin_macro
-unit|int
+begin_function
+name|int
 name|cpufunc_null_fixup
-argument_list|(
-argument|arg
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
+name|arg
+parameter_list|)
 name|void
 modifier|*
 name|arg
 decl_stmt|;
-end_decl_stmt
-
-begin_block
 block|{
 return|return
 operator|(
@@ -3385,7 +3154,7 @@ name|ABORT_FIXUP_OK
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * CPU Setup code  */
@@ -4458,11 +4227,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CPU_XSCALE_80200
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|CPU_XSCALE_80321
 argument_list|)
 operator|||
@@ -4703,7 +4467,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CPU_XSCALE_80200 || CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 	   CPU_XSCALE_80219 */
+comment|/* CPU_XSCALE_80321 || CPU_XSCALE_PXA2X0 || CPU_XSCALE_IXP425 	   CPU_XSCALE_80219 */
 end_comment
 
 end_unit
