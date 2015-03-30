@@ -456,8 +456,8 @@ name|xrefinfo
 modifier|*
 name|xrefinfo_find
 parameter_list|(
-name|phandle_t
-name|phandle
+name|uintptr_t
+name|key
 parameter_list|,
 name|int
 name|find_by
@@ -497,7 +497,10 @@ name|find_by
 operator|==
 name|FIND_BY_XREF
 operator|&&
-name|phandle
+operator|(
+name|phandle_t
+operator|)
+name|key
 operator|==
 name|xi
 operator|->
@@ -509,7 +512,10 @@ name|find_by
 operator|==
 name|FIND_BY_NODE
 operator|&&
-name|phandle
+operator|(
+name|phandle_t
+operator|)
+name|key
 operator|==
 name|xi
 operator|->
@@ -521,7 +527,7 @@ name|find_by
 operator|==
 name|FIND_BY_DEV
 operator|&&
-name|phandle
+name|key
 operator|==
 operator|(
 name|uintptr_t
