@@ -1422,7 +1422,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|popcnt_pc_map_elem
+name|popcnt_pc_map_elem_pq
 parameter_list|(
 name|uint64_t
 name|elem
@@ -13261,56 +13261,51 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Returns the number of one bits within the given PV chunk map element.  */
+comment|/*  * Returns the number of one bits within the given PV chunk map element.  *  * The erratas for Intel processors state that "POPCNT Instruction May  * Take Longer to Execute Than Expected".  It is believed that the  * issue is the spurious dependency on the destination register.  * Provide a hint to the register rename logic that the destination  * value is overwritten, by clearing it, as suggested in the  * optimization manual.  It should be cheap for unaffected processors  * as well.  *  * Reference numbers for erratas are  * 4th Gen Core: HSD146  * 5th Gen Core: BDM85  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|popcnt_pc_map_elem
+name|popcnt_pc_map_elem_pq
 parameter_list|(
 name|uint64_t
 name|elem
 parameter_list|)
 block|{
-name|int
-name|count
+name|u_long
+name|result
 decl_stmt|;
-comment|/* 	 * This simple method of counting the one bits performs well because 	 * the given element typically contains more zero bits than one bits. 	 */
-name|count
-operator|=
-literal|0
-expr_stmt|;
-for|for
-control|(
-init|;
-name|elem
-operator|!=
-literal|0
-condition|;
-name|elem
-operator|&=
-name|elem
-operator|-
-literal|1
-control|)
-name|count
-operator|++
-expr_stmt|;
-return|return
+asm|__asm __volatile("xorl %k0,%k0;popcntq %1,%0"
+block|:
+literal|"=&r"
 operator|(
-name|count
+name|result
 operator|)
-return|;
-block|}
+operator|:
+literal|"rm"
+operator|(
+name|elem
+operator|)
+block|)
+function|;
 end_function
 
+begin_return
+return|return
+operator|(
+name|result
+operator|)
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|/*  * Ensure that the number of spare PV entries in the specified pmap meets or  * exceeds the given count, "needed".  *  * The given PV list lock may be released.  */
 end_comment
 
 begin_function
-specifier|static
+unit|static
 name|void
 name|reserve_pv_entries
 parameter_list|(
@@ -13405,7 +13400,7 @@ condition|)
 block|{
 name|free
 operator|=
-name|popcnt_pc_map_elem
+name|bitcount64
 argument_list|(
 name|pc
 operator|->
@@ -13417,7 +13412,7 @@ argument_list|)
 expr_stmt|;
 name|free
 operator|+=
-name|popcnt_pc_map_elem
+name|bitcount64
 argument_list|(
 name|pc
 operator|->
@@ -13429,7 +13424,7 @@ argument_list|)
 expr_stmt|;
 name|free
 operator|+=
-name|popcnt_pc_map_elem
+name|bitcount64
 argument_list|(
 name|pc
 operator|->
@@ -13444,7 +13439,7 @@ else|else
 block|{
 name|free
 operator|=
-name|popcntq
+name|popcnt_pc_map_elem_pq
 argument_list|(
 name|pc
 operator|->
@@ -13456,7 +13451,7 @@ argument_list|)
 expr_stmt|;
 name|free
 operator|+=
-name|popcntq
+name|popcnt_pc_map_elem_pq
 argument_list|(
 name|pc
 operator|->
@@ -13468,7 +13463,7 @@ argument_list|)
 expr_stmt|;
 name|free
 operator|+=
-name|popcntq
+name|popcnt_pc_map_elem_pq
 argument_list|(
 name|pc
 operator|->
