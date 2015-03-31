@@ -2730,12 +2730,8 @@ block|{
 if|if
 condition|(
 name|offset
-operator|&
-operator|(
-name|IP6F_OFF_MASK
-operator||
-name|IP6F_MORE_FRAG
-operator|)
+operator|||
+name|ip6f_mf
 condition|)
 name|snprintf
 argument_list|(
