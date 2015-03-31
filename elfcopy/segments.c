@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/queue.h>
 end_include
 
@@ -25,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<gelf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: segments.c 3134 2014-12-23 10:43:59Z kaiwang27 $"
+literal|"$Id: segments.c 3177 2015-03-30 18:19:41Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

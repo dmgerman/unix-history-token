@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -31,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<gelf.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_include
@@ -66,7 +66,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: ascii.c 2358 2011-12-19 18:22:32Z kaiwang27 $"
+literal|"$Id: ascii.c 3177 2015-03-30 18:19:41Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

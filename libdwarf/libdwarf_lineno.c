@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libdwarf_lineno.c 3100 2014-10-25 20:34:29Z jkoshy $"
+literal|"$Id: libdwarf_lineno.c 3164 2015-02-19 01:20:12Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1107,6 +1107,32 @@ expr_stmt|;
 name|li
 operator|->
 name|li_minlen
+operator|=
+name|dbg
+operator|->
+name|read
+argument_list|(
+name|ds
+operator|->
+name|ds_data
+argument_list|,
+operator|&
+name|offset
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|li
+operator|->
+name|li_version
+operator|==
+literal|4
+condition|)
+name|li
+operator|->
+name|li_maxop
 operator|=
 name|dbg
 operator|->

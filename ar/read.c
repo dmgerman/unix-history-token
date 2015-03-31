@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/queue.h>
 end_include
 
@@ -72,7 +66,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: read.c 3163 2015-02-15 21:43:51Z emaste $"
+literal|"$Id: read.c 3174 2015-03-27 17:13:41Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -779,9 +773,37 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* Disallow absolute paths. */
+if|if
+condition|(
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+condition|)
+block|{
+name|bsdar_warnc
+argument_list|(
+name|bsdar
+argument_list|,
+literal|0
+argument_list|,
+literal|"Absolute path '%s'"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* Basic path security flags. */
 name|flags
 operator|=
-literal|0
+name|ARCHIVE_EXTRACT_SECURE_SYMLINKS
+operator||
+expr|\
+name|ARCHIVE_EXTRACT_SECURE_NODOTDOT
 expr_stmt|;
 if|if
 condition|(

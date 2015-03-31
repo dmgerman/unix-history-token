@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006,2008-2010 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: libelf.h 2988 2014-03-17 08:51:49Z jkoshy $  */
+comment|/*-  * Copyright (c) 2006,2008-2010 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: libelf.h 3174 2015-03-27 17:13:41Z emaste $  */
 end_comment
 
 begin_ifndef
@@ -427,8 +427,18 @@ begin_comment
 comment|/* SYSV style archive */
 end_comment
 
-begin_function_decl
-name|__BEGIN_DECLS
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 name|Elf
 modifier|*
 name|elf_begin
@@ -444,9 +454,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|elf_cntl
 parameter_list|(
@@ -458,9 +465,6 @@ name|Elf_Cmd
 name|_cmd
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|elf_end
 parameter_list|(
@@ -469,9 +473,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -481,18 +482,12 @@ name|int
 name|_error
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|elf_errno
 parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|elf_fill
 parameter_list|(
@@ -500,9 +495,6 @@ name|int
 name|_fill
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|elf_flagarhdr
@@ -519,9 +511,6 @@ name|int
 name|_flags
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|elf_flagdata
@@ -538,9 +527,6 @@ name|int
 name|_flags
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|elf_flagehdr
@@ -557,9 +543,6 @@ name|int
 name|_flags
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|elf_flagelf
@@ -576,9 +559,6 @@ name|int
 name|_flags
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|elf_flagphdr
@@ -595,9 +575,6 @@ name|int
 name|_flags
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|elf_flagscn
@@ -614,9 +591,6 @@ name|int
 name|_flags
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|elf_flagshdr
@@ -633,9 +607,6 @@ name|int
 name|_flags
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Arhdr
 modifier|*
 name|elf_getarhdr
@@ -645,9 +616,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Arsym
 modifier|*
 name|elf_getarsym
@@ -661,9 +629,6 @@ modifier|*
 name|_ptr
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|off_t
 name|elf_getbase
 parameter_list|(
@@ -672,9 +637,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Data
 modifier|*
 name|elf_getdata
@@ -686,9 +648,6 @@ name|Elf_Data
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|elf_getident
@@ -702,9 +661,6 @@ modifier|*
 name|_ptr
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|elf_getphdrnum
 parameter_list|(
@@ -717,9 +673,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|elf_getphnum
 parameter_list|(
@@ -732,13 +685,7 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Deprecated */
-end_comment
-
-begin_function_decl
 name|Elf_Scn
 modifier|*
 name|elf_getscn
@@ -751,9 +698,6 @@ name|size_t
 name|_index
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|elf_getshdrnum
 parameter_list|(
@@ -766,9 +710,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|elf_getshnum
 parameter_list|(
@@ -781,13 +722,7 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Deprecated */
-end_comment
-
-begin_function_decl
 name|int
 name|elf_getshdrstrndx
 parameter_list|(
@@ -800,9 +735,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|elf_getshstrndx
 parameter_list|(
@@ -815,13 +747,7 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/* Deprecated */
-end_comment
-
-begin_function_decl
 name|unsigned
 name|long
 name|elf_hash
@@ -832,9 +758,6 @@ modifier|*
 name|_name
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Kind
 name|elf_kind
 parameter_list|(
@@ -843,9 +766,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf
 modifier|*
 name|elf_memory
@@ -858,9 +778,6 @@ name|size_t
 name|_size
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|size_t
 name|elf_ndxscn
 parameter_list|(
@@ -869,9 +786,6 @@ modifier|*
 name|_scn
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Data
 modifier|*
 name|elf_newdata
@@ -881,9 +795,6 @@ modifier|*
 name|_scn
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Scn
 modifier|*
 name|elf_newscn
@@ -893,9 +804,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Scn
 modifier|*
 name|elf_nextscn
@@ -909,9 +817,6 @@ modifier|*
 name|_scn
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Cmd
 name|elf_next
 parameter_list|(
@@ -920,9 +825,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf
 modifier|*
 name|elf_open
@@ -931,9 +833,6 @@ name|int
 name|_fd
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf
 modifier|*
 name|elf_openmemory
@@ -946,9 +845,6 @@ name|size_t
 name|_size
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|off_t
 name|elf_rand
 parameter_list|(
@@ -960,9 +856,6 @@ name|off_t
 name|_off
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Data
 modifier|*
 name|elf_rawdata
@@ -976,9 +869,6 @@ modifier|*
 name|_data
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|elf_rawfile
@@ -992,9 +882,6 @@ modifier|*
 name|_size
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|elf_setshstrndx
 parameter_list|(
@@ -1006,9 +893,6 @@ name|size_t
 name|_shnum
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|elf_strptr
@@ -1024,9 +908,6 @@ name|size_t
 name|_offset
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|off_t
 name|elf_update
 parameter_list|(
@@ -1038,9 +919,6 @@ name|Elf_Cmd
 name|_cmd
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|elf_version
@@ -1050,9 +928,6 @@ name|int
 name|_version
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|long
 name|elf32_checksum
 parameter_list|(
@@ -1061,9 +936,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|size_t
 name|elf32_fsize
 parameter_list|(
@@ -1078,9 +950,6 @@ name|int
 name|_version
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf32_Ehdr
 modifier|*
 name|elf32_getehdr
@@ -1090,9 +959,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf32_Phdr
 modifier|*
 name|elf32_getphdr
@@ -1102,9 +968,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf32_Shdr
 modifier|*
 name|elf32_getshdr
@@ -1114,9 +977,6 @@ modifier|*
 name|_scn
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf32_Ehdr
 modifier|*
 name|elf32_newehdr
@@ -1126,9 +986,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf32_Phdr
 modifier|*
 name|elf32_newphdr
@@ -1141,9 +998,6 @@ name|size_t
 name|_count
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Data
 modifier|*
 name|elf32_xlatetof
@@ -1162,9 +1016,6 @@ name|int
 name|_enc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Data
 modifier|*
 name|elf32_xlatetom
@@ -1183,9 +1034,6 @@ name|int
 name|_enc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|long
 name|elf64_checksum
 parameter_list|(
@@ -1194,9 +1042,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|size_t
 name|elf64_fsize
 parameter_list|(
@@ -1211,9 +1056,6 @@ name|int
 name|_version
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf64_Ehdr
 modifier|*
 name|elf64_getehdr
@@ -1223,9 +1065,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf64_Phdr
 modifier|*
 name|elf64_getphdr
@@ -1235,9 +1074,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf64_Shdr
 modifier|*
 name|elf64_getshdr
@@ -1247,9 +1083,6 @@ modifier|*
 name|_scn
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf64_Ehdr
 modifier|*
 name|elf64_newehdr
@@ -1259,9 +1092,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf64_Phdr
 modifier|*
 name|elf64_newphdr
@@ -1274,9 +1104,6 @@ name|size_t
 name|_count
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Data
 modifier|*
 name|elf64_xlatetof
@@ -1295,9 +1122,6 @@ name|int
 name|_enc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Data
 modifier|*
 name|elf64_xlatetom
@@ -1316,11 +1140,16 @@ name|int
 name|_enc
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
 
-begin_macro
-name|__END_DECLS
-end_macro
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

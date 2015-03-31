@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006,2008 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: gelf.h 1168 2010-09-04 01:03:25Z jkoshy $  */
+comment|/*-  * Copyright (c) 2006,2008 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: gelf.h 3174 2015-03-27 17:13:41Z emaste $  */
 end_comment
 
 begin_ifndef
@@ -14,12 +14,6 @@ define|#
 directive|define
 name|_GELF_H_
 end_define
-
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
 
 begin_include
 include|#
@@ -305,8 +299,18 @@ name|GELF_ST_VISIBILITY
 value|ELF64_ST_VISIBILITY
 end_define
 
-begin_function_decl
-name|__BEGIN_DECLS
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 name|long
 name|gelf_checksum
 parameter_list|(
@@ -315,9 +319,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|size_t
 name|gelf_fsize
 parameter_list|(
@@ -336,9 +337,6 @@ name|int
 name|_version
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|gelf_getclass
 parameter_list|(
@@ -347,9 +345,6 @@ modifier|*
 name|_elf
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|GElf_Dyn
 modifier|*
 name|gelf_getdyn
@@ -366,9 +361,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|GElf_Ehdr
 modifier|*
 name|gelf_getehdr
@@ -382,9 +374,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|GElf_Phdr
 modifier|*
 name|gelf_getphdr
@@ -401,9 +390,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|GElf_Rel
 modifier|*
 name|gelf_getrel
@@ -420,9 +406,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|GElf_Rela
 modifier|*
 name|gelf_getrela
@@ -439,9 +422,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|GElf_Shdr
 modifier|*
 name|gelf_getshdr
@@ -455,9 +435,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|GElf_Sym
 modifier|*
 name|gelf_getsym
@@ -474,9 +451,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|GElf_Sym
 modifier|*
 name|gelf_getsymshndx
@@ -501,9 +475,6 @@ modifier|*
 name|_shindexdst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|gelf_newehdr
@@ -516,9 +487,6 @@ name|int
 name|_class
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|gelf_newphdr
@@ -531,9 +499,6 @@ name|size_t
 name|_phnum
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|gelf_update_dyn
 parameter_list|(
@@ -549,9 +514,6 @@ modifier|*
 name|_src
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|gelf_update_ehdr
 parameter_list|(
@@ -564,9 +526,6 @@ modifier|*
 name|_src
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|gelf_update_phdr
 parameter_list|(
@@ -582,9 +541,6 @@ modifier|*
 name|_src
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|gelf_update_rel
 parameter_list|(
@@ -600,9 +556,6 @@ modifier|*
 name|_src
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|gelf_update_rela
 parameter_list|(
@@ -618,9 +571,6 @@ modifier|*
 name|_src
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|gelf_update_shdr
 parameter_list|(
@@ -633,9 +583,6 @@ modifier|*
 name|_src
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|gelf_update_sym
 parameter_list|(
@@ -651,9 +598,6 @@ modifier|*
 name|_src
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|gelf_update_symshndx
 parameter_list|(
@@ -676,9 +620,6 @@ name|Elf32_Word
 name|_shindexsrc
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Data
 modifier|*
 name|gelf_xlatetof
@@ -701,9 +642,6 @@ name|int
 name|_encode
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Data
 modifier|*
 name|gelf_xlatetom
@@ -726,9 +664,6 @@ name|int
 name|_encode
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|GElf_Cap
 modifier|*
 name|gelf_getcap
@@ -745,9 +680,6 @@ modifier|*
 name|_cap
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|GElf_Move
 modifier|*
 name|gelf_getmove
@@ -764,9 +696,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|GElf_Syminfo
 modifier|*
 name|gelf_getsyminfo
@@ -783,9 +712,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|gelf_update_cap
 parameter_list|(
@@ -801,9 +727,6 @@ modifier|*
 name|_src
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|gelf_update_move
 parameter_list|(
@@ -819,9 +742,6 @@ modifier|*
 name|_src
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|gelf_update_syminfo
 parameter_list|(
@@ -837,11 +757,16 @@ modifier|*
 name|_src
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
 
-begin_macro
-name|__END_DECLS
-end_macro
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
