@@ -820,7 +820,7 @@ block|{
 name|printf
 argument_list|(
 literal|"FAIL: run %d, operation %d, result %d "
-literal|" (errno=%d) should be %d\n"
+literal|" (errno=%d) should be %zu\n"
 argument_list|,
 name|run
 argument_list|,
