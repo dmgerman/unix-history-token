@@ -352,6 +352,23 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|MPC85XX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<powerpc/mpc85xx/mpc85xx.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|DDB
 end_ifdef
 
@@ -1863,6 +1880,9 @@ argument_list|,
 name|boothowto
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MPC85XX
 name|debugf
 argument_list|(
 literal|" kernel ccsrbar = 0x%08x\n"
@@ -1870,6 +1890,8 @@ argument_list|,
 name|CCSRBAR_VA
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|debugf
 argument_list|(
 literal|" MSR = 0x%08x\n"
