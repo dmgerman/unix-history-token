@@ -3672,7 +3672,7 @@ name|callout
 modifier|*
 name|t_callout
 decl_stmt|;
-name|void
+name|timeout_t
 modifier|*
 name|f_callout
 decl_stmt|;
