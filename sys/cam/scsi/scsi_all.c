@@ -23389,7 +23389,7 @@ index|]
 decl_stmt|,
 name|rstr
 index|[
-literal|4
+literal|12
 index|]
 decl_stmt|;
 name|type
@@ -23410,7 +23410,7 @@ condition|)
 block|{
 name|qtype
 operator|=
-literal|"(vendor-unique qualifier)"
+literal|" (vendor-unique qualifier)"
 expr_stmt|;
 block|}
 else|else
@@ -23436,7 +23436,7 @@ name|SID_QUAL_LU_OFFLINE
 case|:
 name|qtype
 operator|=
-literal|"(offline)"
+literal|" (offline)"
 expr_stmt|;
 break|break;
 case|case
@@ -23444,7 +23444,7 @@ name|SID_QUAL_RSVD
 case|:
 name|qtype
 operator|=
-literal|"(reserved qualifier)"
+literal|" (reserved qualifier)"
 expr_stmt|;
 break|break;
 default|default:
@@ -23453,7 +23453,7 @@ name|SID_QUAL_BAD_LU
 case|:
 name|qtype
 operator|=
-literal|"(LUN not supported)"
+literal|" (LUN not supported)"
 expr_stmt|;
 break|break;
 block|}
@@ -23676,18 +23676,8 @@ argument_list|(
 name|inq_data
 argument_list|)
 operator|==
-name|SCSI_REV_CCS
+name|SCSI_REV_0
 condition|)
-name|bcopy
-argument_list|(
-literal|"CCS"
-argument_list|,
-name|rstr
-argument_list|,
-literal|4
-argument_list|)
-expr_stmt|;
-else|else
 name|snprintf
 argument_list|(
 name|rstr
@@ -23697,7 +23687,30 @@ argument_list|(
 name|rstr
 argument_list|)
 argument_list|,
-literal|"%d"
+literal|"SCSI"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|SID_ANSI_REV
+argument_list|(
+name|inq_data
+argument_list|)
+operator|<=
+name|SCSI_REV_SPC
+condition|)
+block|{
+name|snprintf
+argument_list|(
+name|rstr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rstr
+argument_list|)
+argument_list|,
+literal|"SCSI-%d"
 argument_list|,
 name|SID_ANSI_REV
 argument_list|(
@@ -23705,9 +23718,32 @@ name|inq_data
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|snprintf
+argument_list|(
+name|rstr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|rstr
+argument_list|)
+argument_list|,
+literal|"SPC-%d SCSI"
+argument_list|,
+name|SID_ANSI_REV
+argument_list|(
+name|inq_data
+argument_list|)
+operator|-
+literal|2
+argument_list|)
+expr_stmt|;
+block|}
 name|printf
 argument_list|(
-literal|"<%s %s %s> %s %s SCSI-%s device %s\n"
+literal|"<%s %s %s> %s %s %s device%s\n"
 argument_list|,
 name|vendor
 argument_list|,
