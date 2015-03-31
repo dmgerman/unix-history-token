@@ -448,9 +448,21 @@ name|newsigblock
 decl_stmt|,
 name|oldsigblock
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|ifs
+decl_stmt|;
 name|serrno
 operator|=
 name|errno
+expr_stmt|;
+name|ifs
+operator|=
+name|getenv
+argument_list|(
+literal|"IFS"
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -637,9 +649,17 @@ literal|"+u"
 argument_list|,
 literal|"-c"
 argument_list|,
-literal|"eval \"$1\";eval \"wordexp $2\""
+literal|"IFS=$1;eval \"$2\";eval \"wordexp $3\""
 argument_list|,
 literal|""
+argument_list|,
+name|ifs
+operator|!=
+name|NULL
+condition|?
+name|ifs
+else|:
+literal|" \t\n"
 argument_list|,
 name|flags
 operator|&
