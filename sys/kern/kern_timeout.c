@@ -691,6 +691,16 @@ end_struct
 begin_define
 define|#
 directive|define
+name|callout_migrating
+parameter_list|(
+name|c
+parameter_list|)
+value|((c)->c_iflags& CALLOUT_DFRMIGRATION)
+end_define
+
+begin_define
+define|#
+directive|define
 name|cc_exec_curr
 parameter_list|(
 name|cc
