@@ -114,11 +114,11 @@ modifier|*
 name|c_lock
 decl_stmt|;
 comment|/* lock to handle */
-name|int
+name|short
 name|c_flags
 decl_stmt|;
 comment|/* User State */
-name|int
+name|short
 name|c_iflags
 decl_stmt|;
 comment|/* Internal State */
