@@ -126,6 +126,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/pci/pcib_private.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pccard/pccardreg.h>
 end_include
 

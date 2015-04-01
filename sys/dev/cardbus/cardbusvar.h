@@ -107,6 +107,16 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PCI_RES_BUS
+name|struct
+name|resource
+modifier|*
+name|sc_bus
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

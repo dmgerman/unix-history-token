@@ -474,7 +474,9 @@ name|sc
 operator|->
 name|ap_pcibsc
 operator|.
-name|secbus
+name|bus
+operator|.
+name|sec
 argument_list|)
 operator|)
 return|;

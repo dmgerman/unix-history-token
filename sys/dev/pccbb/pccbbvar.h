@@ -121,13 +121,9 @@ name|unsigned
 name|int
 name|pribus
 decl_stmt|;
-name|unsigned
-name|int
-name|secbus
-decl_stmt|;
-name|unsigned
-name|int
-name|subbus
+name|struct
+name|pcib_secbus
+name|bus
 decl_stmt|;
 name|struct
 name|mtx
