@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Kai Wang  * Copyright (c) 2007,2008 Hyogeol Lee<hyogeollee@gmail.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: _libelftc.h 2856 2013-01-04 16:00:26Z jkoshy $  */
+comment|/*-  * Copyright (c) 2009 Kai Wang  * Copyright (c) 2007,2008 Hyogeol Lee<hyogeollee@gmail.com>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $Id: _libelftc.h 3174 2015-03-27 17:13:41Z emaste $  */
 end_comment
 
 begin_ifndef
@@ -139,8 +139,18 @@ name|VECTOR_DEF_CAPACITY
 value|8
 end_define
 
-begin_function_decl
-name|__BEGIN_DECLS
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 name|char
 modifier|*
 name|cpp_demangle_ARM
@@ -151,9 +161,6 @@ modifier|*
 name|_org
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|cpp_demangle_gnu2
@@ -164,9 +171,6 @@ modifier|*
 name|_org
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|cpp_demangle_gnu3
@@ -177,9 +181,6 @@ modifier|*
 name|_org
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|is_cpp_mangled_ARM
 parameter_list|(
@@ -189,9 +190,6 @@ modifier|*
 name|_org
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|is_cpp_mangled_gnu2
 parameter_list|(
@@ -201,9 +199,6 @@ modifier|*
 name|_org
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|is_cpp_mangled_gnu3
 parameter_list|(
@@ -213,9 +208,6 @@ modifier|*
 name|_org
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|libelftc_hash_string
@@ -225,9 +217,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|vector_str_dest
 parameter_list|(
@@ -237,9 +226,6 @@ modifier|*
 name|_vec
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|vector_str_find
 parameter_list|(
@@ -258,9 +244,6 @@ name|size_t
 name|_len
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|vector_str_get_flat
@@ -276,9 +259,6 @@ modifier|*
 name|_len
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|vector_str_init
 parameter_list|(
@@ -288,9 +268,6 @@ modifier|*
 name|_vs
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|vector_str_pop
 parameter_list|(
@@ -300,9 +277,6 @@ modifier|*
 name|_vs
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|vector_str_push
 parameter_list|(
@@ -320,9 +294,6 @@ name|size_t
 name|_len
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|bool
 name|vector_str_push_vector_head
 parameter_list|(
@@ -337,9 +308,6 @@ modifier|*
 name|_org
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|vector_str_substr
@@ -361,11 +329,16 @@ modifier|*
 name|_rlen
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
 
-begin_macro
-name|__END_DECLS
-end_macro
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

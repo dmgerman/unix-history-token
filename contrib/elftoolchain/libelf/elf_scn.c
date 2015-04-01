@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/queue.h>
 end_include
 
@@ -66,7 +60,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elf_scn.c 3147 2015-02-15 18:45:23Z emaste $"
+literal|"$Id: elf_scn.c 3177 2015-03-30 18:19:41Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

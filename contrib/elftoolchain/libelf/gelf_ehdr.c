@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<assert.h>
 end_include
 
@@ -54,7 +48,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: gelf_ehdr.c 2268 2011-12-03 17:05:11Z jkoshy $"
+literal|"$Id: gelf_ehdr.c 3177 2015-03-30 18:19:41Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

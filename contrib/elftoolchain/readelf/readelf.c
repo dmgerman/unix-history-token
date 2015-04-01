@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -132,7 +126,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: readelf.c 3155 2015-02-15 19:15:57Z emaste $"
+literal|"$Id: readelf.c 3178 2015-03-30 18:29:13Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6905,10 +6899,34 @@ return|return
 literal|"R_AARCH64_RELATIVE"
 return|;
 case|case
+literal|1028
+case|:
+return|return
+literal|"R_AARCH64_TLS_DTPREL64"
+return|;
+case|case
+literal|1029
+case|:
+return|return
+literal|"R_AARCH64_TLS_DTPMOD64"
+return|;
+case|case
+literal|1030
+case|:
+return|return
+literal|"R_AARCH64_TLS_TPREL64"
+return|;
+case|case
 literal|1031
 case|:
 return|return
 literal|"R_AARCH64_TLSDESC"
+return|;
+case|case
+literal|1032
+case|:
+return|return
+literal|"R_AARCH64_IRELATIVE"
 return|;
 default|default:
 return|return
