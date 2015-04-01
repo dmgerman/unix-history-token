@@ -290,7 +290,7 @@ end_comment
 
 begin_function_decl
 name|int
-name|vmm_gla2gpa
+name|vm_gla2gpa
 parameter_list|(
 name|struct
 name|vm
