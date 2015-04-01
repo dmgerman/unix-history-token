@@ -330,16 +330,6 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|uint32_t
-argument_list|,
-name|ip_id
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -727,7 +717,6 @@ operator|->
 name|ip_off
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Fill in IP header.  If we are not allowing fragmentation, 	 * then the ip_id field is meaningless, but we don't set it 	 * to zero.  Doing so causes various problems when devices along 	 * the path (routers, load balancers, firewalls, etc.) illegally 	 * disable DF on our packet.  Note that a 16-bit counter 	 * will wrap around in less than 10 seconds at 100 Mbit/s on a 	 * medium with MTU 1500.  See Steven M. Bellovin, "A Technique 	 * for Counting NATted Hosts", Proc. IMW'02, available at 	 *<http://www.cs.columbia.edu/~smb/papers/fnat.pdf>. 	 */
 if|if
 condition|(
 operator|(
@@ -757,12 +746,10 @@ name|hlen
 operator|>>
 literal|2
 expr_stmt|;
+name|ip_fillid
+argument_list|(
 name|ip
-operator|->
-name|ip_id
-operator|=
-name|ip_newid
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|IPSTAT_INC
 argument_list|(

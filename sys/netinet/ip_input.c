@@ -443,42 +443,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|ip_do_randomid
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_net_inet_ip
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|random_id
-argument_list|,
-name|CTLFLAG_VNET
-operator||
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|ip_do_randomid
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|"Assign random ip_id values"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * XXX - Setting ip_checkinterface mostly implements the receive side of  * the Strong ES model described in RFC 1122, but since the routing table  * and transmit implementation do not implement the Strong ES model,  * setting this to 1 results in an odd hybrid.  *  * XXX - ip_checkinterface currently must be disabled if you use ipnat  * to translate the destination address to another local interface.  *  * XXX - ip_checkinterface must be disabled if you add IP aliases  * to the loopback interface instead of the interface where the  * packets for those addresses are received.  */
 end_comment
@@ -1615,12 +1579,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|V_ip_id
-operator|=
-name|time_second
-operator|&
-literal|0xffff
-expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&

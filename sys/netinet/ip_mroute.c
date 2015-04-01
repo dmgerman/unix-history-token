@@ -10680,13 +10680,6 @@ name|pim_encap_iphdr
 expr_stmt|;
 name|ip_outer
 operator|->
-name|ip_id
-operator|=
-name|ip_newid
-argument_list|()
-expr_stmt|;
-name|ip_outer
-operator|->
 name|ip_len
 operator|=
 name|htons
@@ -10750,6 +10743,11 @@ operator||=
 name|htons
 argument_list|(
 name|IP_DF
+argument_list|)
+expr_stmt|;
+name|ip_fillid
+argument_list|(
+name|ip_outer
 argument_list|)
 expr_stmt|;
 name|pimhdr

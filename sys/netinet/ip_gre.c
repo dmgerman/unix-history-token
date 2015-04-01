@@ -610,14 +610,13 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* XXX */
+name|ip_fillid
+argument_list|(
+operator|&
 name|gi
 operator|->
 name|gi_ip
-operator|.
-name|ip_id
-operator|=
-name|ip_newid
-argument_list|()
+argument_list|)
 expr_stmt|;
 break|break;
 endif|#

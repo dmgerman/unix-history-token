@@ -20114,12 +20114,10 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* FreeBSD has a function for ip_id's */
+name|ip_fillid
+argument_list|(
 name|ip
-operator|->
-name|ip_id
-operator|=
-name|ip_newid
-argument_list|()
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
@@ -54493,16 +54491,14 @@ literal|0
 expr_stmt|;
 name|ip
 operator|->
-name|ip_id
-operator|=
-name|ip_newid
-argument_list|()
-expr_stmt|;
-name|ip
-operator|->
 name|ip_off
 operator|=
 literal|0
+expr_stmt|;
+name|ip_fillid
+argument_list|(
+name|ip
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->

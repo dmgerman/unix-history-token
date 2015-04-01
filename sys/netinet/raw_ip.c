@@ -2426,6 +2426,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
+comment|/* 		 * This doesn't allow application to specify ID of zero, 		 * but we got this limitation from the beginning of history. 		 */
 if|if
 condition|(
 name|ip
@@ -2434,12 +2435,10 @@ name|ip_id
 operator|==
 literal|0
 condition|)
+name|ip_fillid
+argument_list|(
 name|ip
-operator|->
-name|ip_id
-operator|=
-name|ip_newid
-argument_list|()
+argument_list|)
 expr_stmt|;
 comment|/* 		 * XXX prevent ip_output from overwriting header fields. 		 */
 name|flags
