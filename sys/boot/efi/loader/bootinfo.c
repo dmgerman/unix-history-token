@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/elf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/metadata.h>
 end_include
 
@@ -104,12 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
-file|"x86_efi.h"
+file|"loader_efi.h"
 end_include
 
 begin_decl_stmt
 name|UINTN
-name|x86_efi_mapkey
+name|efi_mapkey
 decl_stmt|;
 end_decl_stmt
 
@@ -1037,7 +1043,7 @@ argument_list|,
 name|NULL
 argument_list|,
 operator|&
-name|x86_efi_mapkey
+name|efi_mapkey
 argument_list|,
 operator|&
 name|mmsz
@@ -1160,7 +1166,7 @@ argument_list|,
 name|mm
 argument_list|,
 operator|&
-name|x86_efi_mapkey
+name|efi_mapkey
 argument_list|,
 operator|&
 name|mmsz
@@ -1347,7 +1353,7 @@ block|}
 comment|/* Try reading the /etc/fstab file to select the root device */
 name|getrootmount
 argument_list|(
-name|x86_efi_fmtdev
+name|efi_fmtdev
 argument_list|(
 operator|(
 name|void

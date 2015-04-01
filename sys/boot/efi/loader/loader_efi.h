@@ -6,18 +6,18 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_X86_EFI_COPY_H_
+name|_LOADER_EFI_COPY_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_X86_EFI_COPY_H_
+name|_LOADER_EFI_COPY_H_
 end_define
 
 begin_function_decl
 name|int
-name|x86_efi_autoload
+name|efi_autoload
 parameter_list|(
 name|void
 parameter_list|)
@@ -26,7 +26,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|x86_efi_getdev
+name|efi_getdev
 parameter_list|(
 name|void
 modifier|*
@@ -50,7 +50,7 @@ end_function_decl
 begin_function_decl
 name|char
 modifier|*
-name|x86_efi_fmtdev
+name|efi_fmtdev
 parameter_list|(
 name|void
 modifier|*
@@ -61,7 +61,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|x86_efi_setcurrdev
+name|efi_setcurrdev
 parameter_list|(
 name|struct
 name|env_var
@@ -81,16 +81,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|x86_efi_copy_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|x86_efi_copy_finish
+name|efi_copy_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -99,7 +90,7 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|x86_efi_copyin
+name|efi_copyin
 parameter_list|(
 specifier|const
 name|void
@@ -118,7 +109,7 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|x86_efi_copyout
+name|efi_copyout
 parameter_list|(
 specifier|const
 name|vm_offset_t
@@ -137,7 +128,7 @@ end_function_decl
 
 begin_function_decl
 name|ssize_t
-name|x86_efi_readin
+name|efi_readin
 parameter_list|(
 specifier|const
 name|int
@@ -153,12 +144,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+modifier|*
+name|efi_translate
+parameter_list|(
+name|vm_offset_t
+name|ptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|UINTN
-name|x86_efi_mapkey
+name|efi_mapkey
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|efi_copy_finish
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -166,7 +177,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _X86_EFI_COPY_H_ */
+comment|/* _LOADER_EFI_COPY_H_ */
 end_comment
 
 end_unit

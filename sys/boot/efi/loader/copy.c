@@ -96,7 +96,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|x86_efi_copy_init
+name|efi_copy_init
 parameter_list|(
 name|void
 parameter_list|)
@@ -167,7 +167,7 @@ end_function
 
 begin_function
 name|ssize_t
-name|x86_efi_copyin
+name|efi_copyin
 parameter_list|(
 specifier|const
 name|void
@@ -252,7 +252,7 @@ end_function
 
 begin_function
 name|ssize_t
-name|x86_efi_copyout
+name|efi_copyout
 parameter_list|(
 specifier|const
 name|vm_offset_t
@@ -317,7 +317,7 @@ end_function
 
 begin_function
 name|ssize_t
-name|x86_efi_readin
+name|efi_readin
 parameter_list|(
 specifier|const
 name|int
@@ -378,7 +378,7 @@ end_function
 
 begin_function
 name|void
-name|x86_efi_copy_finish
+name|efi_copy_finish
 parameter_list|(
 name|void
 parameter_list|)

@@ -111,7 +111,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"x86_efi.h"
+file|"loader_efi.h"
 end_include
 
 begin_decl_stmt
@@ -179,6 +179,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|file_format
 name|amd64_elf
@@ -192,6 +193,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|file_format
 name|amd64_elf_obj
@@ -200,6 +202,25 @@ block|{
 name|elf64_obj_loadfile
 block|,
 name|elf64_obj_exec
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|file_format
+modifier|*
+name|file_formats
+index|[]
+init|=
+block|{
+operator|&
+name|amd64_elf
+block|,
+operator|&
+name|amd64_elf_obj
+block|,
+name|NULL
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -866,7 +887,7 @@ name|ExitBootServices
 argument_list|(
 name|IH
 argument_list|,
-name|x86_efi_mapkey
+name|efi_mapkey
 argument_list|)
 expr_stmt|;
 if|if
@@ -902,7 +923,7 @@ name|trampoline
 argument_list|(
 name|trampstack
 argument_list|,
-name|x86_efi_copy_finish
+name|efi_copy_finish
 argument_list|,
 name|kernend
 argument_list|,

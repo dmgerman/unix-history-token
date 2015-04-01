@@ -19,7 +19,7 @@ end_expr_stmt
 
 begin_function
 name|int
-name|x86_efi_autoload
+name|efi_autoload
 parameter_list|(
 name|void
 parameter_list|)
