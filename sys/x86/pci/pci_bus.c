@@ -307,7 +307,6 @@ comment|/* Pass MSI requests up to the nexus. */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|legacy_pcib_alloc_msi
 parameter_list|(
@@ -361,7 +360,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|legacy_pcib_alloc_msix
 parameter_list|(
