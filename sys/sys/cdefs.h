@@ -22,6 +22,27 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__has_attribute
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__has_attribute
+parameter_list|(
+name|x
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__has_extension
 end_ifndef
 
@@ -1144,6 +1165,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* lint */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -1772,9 +1797,9 @@ define|#
 directive|define
 name|__nonnull
 parameter_list|(
-modifier|...
+name|x
 parameter_list|)
-value|__attribute__((__nonnull__(__VA_ARGS__)))
+value|__attribute__((__nonnull__(x)))
 end_define
 
 begin_else
@@ -1787,7 +1812,7 @@ define|#
 directive|define
 name|__nonnull
 parameter_list|(
-modifier|...
+name|x
 parameter_list|)
 end_define
 
@@ -1814,6 +1839,13 @@ name|__fastcall
 value|__attribute__((__fastcall__))
 end_define
 
+begin_define
+define|#
+directive|define
+name|__result_use_check
+value|__attribute__((__warn_unused_result__))
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1823,6 +1855,12 @@ begin_define
 define|#
 directive|define
 name|__fastcall
+end_define
+
+begin_define
+define|#
+directive|define
+name|__result_use_check
 end_define
 
 begin_endif
