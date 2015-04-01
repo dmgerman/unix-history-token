@@ -106,6 +106,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ah_diagcodes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"net80211/ieee80211_ioctl.h"
 end_include
 
@@ -1993,7 +1999,7 @@ literal|4
 block|,
 literal|"ni+"
 block|,
-literal|"NI-"
+literal|"NI+"
 block|,
 literal|"ANI increased noise immunity"
 block|}
@@ -2612,10 +2618,6 @@ name|S_MAX
 value|S_BMISSCOUNT+1
 end_define
 
-begin_comment
-comment|/*  * XXX fold this into the external HAL definitions! -adrian  */
-end_comment
-
 begin_struct
 struct|struct
 name|_athstats
@@ -2627,102 +2629,12 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|ATH_SUPPORT_ANI
-struct|struct
-block|{
-name|uint32_t
-name|ast_ani_niup
-decl_stmt|;
-comment|/* increased noise immunity */
-name|uint32_t
-name|ast_ani_nidown
-decl_stmt|;
-comment|/* decreased noise immunity */
-name|uint32_t
-name|ast_ani_spurup
-decl_stmt|;
-comment|/* increased spur immunity */
-name|uint32_t
-name|ast_ani_spurdown
-decl_stmt|;
-comment|/* descreased spur immunity */
-name|uint32_t
-name|ast_ani_ofdmon
-decl_stmt|;
-comment|/* OFDM weak signal detect on */
-name|uint32_t
-name|ast_ani_ofdmoff
-decl_stmt|;
-comment|/* OFDM weak signal detect off*/
-name|uint32_t
-name|ast_ani_cckhigh
-decl_stmt|;
-comment|/* CCK weak signal thr high */
-name|uint32_t
-name|ast_ani_ccklow
-decl_stmt|;
-comment|/* CCK weak signal thr low */
-name|uint32_t
-name|ast_ani_stepup
-decl_stmt|;
-comment|/* increased first step level */
-name|uint32_t
-name|ast_ani_stepdown
-decl_stmt|;
-comment|/* decreased first step level */
-name|uint32_t
-name|ast_ani_ofdmerrs
-decl_stmt|;
-comment|/* cumulative ofdm phy err cnt*/
-name|uint32_t
-name|ast_ani_cckerrs
-decl_stmt|;
-comment|/* cumulative cck phy err cnt */
-name|uint32_t
-name|ast_ani_reset
-decl_stmt|;
-comment|/* params zero'd for non-STA */
-name|uint32_t
-name|ast_ani_lzero
-decl_stmt|;
-comment|/* listen time forced to zero */
-name|uint32_t
-name|ast_ani_lneg
-decl_stmt|;
-comment|/* listen time calculated< 0 */
-name|HAL_MIB_STATS
-name|ast_mibstats
-decl_stmt|;
-comment|/* MIB counter stats */
-name|HAL_NODE_STATS
-name|ast_nodestats
-decl_stmt|;
-comment|/* latest rssi stats */
-block|}
+name|HAL_ANI_STATS
 name|ani_stats
-struct|;
-struct|struct
-block|{
-name|uint8_t
-name|noiseImmunityLevel
 decl_stmt|;
-name|uint8_t
-name|spurImmunityLevel
-decl_stmt|;
-name|uint8_t
-name|firstepLevel
-decl_stmt|;
-name|uint8_t
-name|ofdmWeakSigDetectOff
-decl_stmt|;
-name|uint8_t
-name|cckWeakSigThreshold
-decl_stmt|;
-name|uint32_t
-name|listenTime
-decl_stmt|;
-block|}
+name|HAL_ANI_STATE
 name|ani_state
-struct|;
+decl_stmt|;
 endif|#
 directive|endif
 block|}
@@ -2986,8 +2898,9 @@ name|atd
 operator|.
 name|ad_id
 operator|=
-literal|5
+name|HAL_DIAG_ANI_CURRENT
 expr_stmt|;
+comment|/* HAL_DIAG_ANI_CURRENT */
 name|wf
 operator|->
 name|atd
@@ -3059,8 +2972,9 @@ name|atd
 operator|.
 name|ad_id
 operator|=
-literal|8
+name|HAL_DIAG_ANI_STATS
 expr_stmt|;
+comment|/* HAL_DIAG_ANI_STATS */
 name|wf
 operator|->
 name|atd
