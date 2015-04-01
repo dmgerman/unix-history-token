@@ -1067,7 +1067,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|EFTYPE
+name|EINVAL
 expr_stmt|;
 goto|goto
 name|error
@@ -1118,7 +1118,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|EFTYPE
+name|EINVAL
 expr_stmt|;
 goto|goto
 name|error
@@ -1563,7 +1563,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EFTYPE
+name|EINVAL
 operator|)
 return|;
 block|}
@@ -1610,7 +1610,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EFTYPE
+name|EINVAL
 operator|)
 return|;
 block|}
