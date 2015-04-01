@@ -1266,6 +1266,9 @@ decl_stmt|;
 name|uint32_t
 name|ah_tx_chainmask
 decl_stmt|;
+name|HAL_ANI_STATE
+name|ext_ani_state
+decl_stmt|;
 block|}
 struct|;
 end_struct
