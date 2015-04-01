@@ -2615,6 +2615,12 @@ operator|->
 name|kve_type
 operator|!=
 name|KVME_TYPE_SWAP
+operator|&&
+name|kve
+operator|->
+name|kve_type
+operator|!=
+name|KVME_TYPE_PHYS
 operator|)
 condition|)
 continue|continue;
