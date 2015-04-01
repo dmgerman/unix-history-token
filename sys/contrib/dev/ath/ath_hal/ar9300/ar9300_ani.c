@@ -1033,8 +1033,7 @@ comment|/*  * Return the current statistics.  */
 end_comment
 
 begin_function
-name|struct
-name|ar9300_stats
+name|HAL_ANI_STATS
 modifier|*
 name|ar9300_ani_get_current_stats
 parameter_list|(
