@@ -331,8 +331,7 @@ comment|/*  * Return the current statistics.  */
 end_comment
 
 begin_function
-name|struct
-name|ar5212Stats
+name|HAL_ANI_STATS
 modifier|*
 name|ar5212AniGetCurrentStats
 parameter_list|(

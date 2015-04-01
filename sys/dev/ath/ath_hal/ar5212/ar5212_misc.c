@@ -4922,8 +4922,7 @@ literal|0
 else|:
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|ar5212Stats
+name|HAL_ANI_STATS
 argument_list|)
 expr_stmt|;
 return|return
