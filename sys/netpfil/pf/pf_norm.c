@@ -340,6 +340,10 @@ name|uint16_t
 name|ft_maxlen
 decl_stmt|;
 comment|/* maximum fragment payload length */
+name|uint32_t
+name|ft_id
+decl_stmt|;
+comment|/* fragment id */
 block|}
 struct|;
 end_struct
@@ -3635,6 +3639,9 @@ decl_stmt|;
 name|int
 name|off
 decl_stmt|;
+name|uint32_t
+name|frag_id
+decl_stmt|;
 name|uint16_t
 name|total
 decl_stmt|,
@@ -3844,6 +3851,12 @@ operator|=
 name|frag
 operator|->
 name|fr_maxlen
+expr_stmt|;
+name|frag_id
+operator|=
+name|frag
+operator|->
+name|fr_id
 expr_stmt|;
 name|frent
 operator|=
@@ -4092,6 +4105,12 @@ operator|->
 name|ft_maxlen
 operator|=
 name|maxlen
+expr_stmt|;
+name|ftag
+operator|->
+name|ft_id
+operator|=
+name|frag_id
 expr_stmt|;
 name|m_tag_prepend
 argument_list|(
@@ -5957,6 +5976,9 @@ name|struct
 name|pf_pdesc
 name|pd
 decl_stmt|;
+name|uint32_t
+name|frag_id
+decl_stmt|;
 name|uint16_t
 name|hdrlen
 decl_stmt|,
@@ -5989,6 +6011,12 @@ operator|=
 name|ftag
 operator|->
 name|ft_maxlen
+expr_stmt|;
+name|frag_id
+operator|=
+name|ftag
+operator|->
+name|ft_id
 expr_stmt|;
 name|m_tag_delete
 argument_list|(
@@ -6127,6 +6155,8 @@ argument_list|,
 name|proto
 argument_list|,
 name|maxlen
+argument_list|,
+name|frag_id
 argument_list|)
 expr_stmt|;
 name|m
