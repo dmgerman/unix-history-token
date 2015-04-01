@@ -1272,19 +1272,19 @@ name|sp_done
 decl_stmt|;
 comment|/* 	 * These variables are used to put an upper bound on the 	 * amount of memory used by RPC requests which are queued 	 * waiting for execution. 	 */
 name|unsigned
-name|int
+name|long
 name|sp_space_low
 decl_stmt|;
 name|unsigned
-name|int
+name|long
 name|sp_space_high
 decl_stmt|;
 name|unsigned
-name|int
+name|long
 name|sp_space_used
 decl_stmt|;
 name|unsigned
-name|int
+name|long
 name|sp_space_used_highest
 decl_stmt|;
 name|bool_t
