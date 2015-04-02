@@ -249,17 +249,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|void
-name|die
-argument_list|(
-name|void
-argument_list|)
-name|__dead2
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|void
@@ -3103,7 +3092,7 @@ argument_list|(
 literal|"environment corrupt; aborting"
 argument_list|)
 expr_stmt|;
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 block|}
@@ -3400,7 +3389,7 @@ name|obj_main
 operator|==
 name|NULL
 condition|)
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 name|max_stack_flags
@@ -3546,7 +3535,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 block|}
@@ -3906,7 +3895,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 name|preload_tail
@@ -3930,7 +3919,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 comment|/* Make a list of all objects loaded at startup. */
@@ -4017,7 +4006,7 @@ operator|&&
 operator|!
 name|ld_tracing
 condition|)
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 if|if
@@ -4109,7 +4098,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 name|dbg
@@ -4127,7 +4116,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 if|if
@@ -4265,7 +4254,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 if|if
@@ -4650,7 +4639,7 @@ name|def
 operator|==
 name|NULL
 condition|)
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 if|if
@@ -5318,9 +5307,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
-name|die
+name|rtld_die
 parameter_list|(
 name|void
 parameter_list|)
@@ -7054,7 +7042,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 block|}
@@ -10351,7 +10339,7 @@ argument_list|(
 literal|"sysctl for hw.pagesize(s) failed"
 argument_list|)
 expr_stmt|;
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 block|}
@@ -14705,7 +14693,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 block|}
@@ -23284,7 +23272,7 @@ argument_list|,
 name|index
 argument_list|)
 expr_stmt|;
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 block|}
@@ -23894,7 +23882,7 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 block|}
@@ -25656,7 +25644,7 @@ argument_list|(
 literal|"stack overflow detected; terminated"
 argument_list|)
 expr_stmt|;
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 block|}
@@ -25684,7 +25672,7 @@ argument_list|(
 literal|"buffer overflow detected; terminated"
 argument_list|)
 expr_stmt|;
-name|die
+name|rtld_die
 argument_list|()
 expr_stmt|;
 block|}
