@@ -1443,7 +1443,7 @@ condition|;
 name|counts
 operator|--
 control|)
-comment|/* 				 * Prevent gcc from optimizing 				 * out the loop 				 */
+comment|/* 				 * Prevent the compiler from optimizing 				 * out the loop 				 */
 name|cpufunc_nullop
 argument_list|()
 expr_stmt|;
