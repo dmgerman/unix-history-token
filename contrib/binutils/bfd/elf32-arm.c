@@ -25545,6 +25545,12 @@ case|:
 case|case
 name|Tag_ABI_HardFP_use
 case|:
+case|case
+name|Tag_CPU_unaligned_access
+case|:
+case|case
+name|Tag_FP_HP_extension
+case|:
 comment|/* Use the largest value specified.  */
 if|if
 condition|(
@@ -26288,9 +26294,9 @@ block|}
 break|break;
 default|default:
 comment|/* All known attributes should be explicitly covered.   */
-name|abort
-argument_list|()
-expr_stmt|;
+comment|/* XXX Not now */
+comment|/* abort (); */
+break|break;
 block|}
 block|}
 comment|/* Merge Tag_compatibility attributes and any common GNU ones.  */
