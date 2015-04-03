@@ -77,11 +77,30 @@ directive|include
 file|<machine/psl.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<machine/specialreg.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
