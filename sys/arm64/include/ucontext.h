@@ -42,10 +42,11 @@ name|long
 name|long
 name|gp_elr
 decl_stmt|;
-name|unsigned
-name|long
-name|long
+name|uint32_t
 name|gp_spsr
+decl_stmt|;
+name|u_int
+name|gp_pad
 decl_stmt|;
 block|}
 struct|;
@@ -69,6 +70,9 @@ name|fp_cr
 decl_stmt|;
 name|u_int
 name|fp_flags
+decl_stmt|;
+name|u_int
+name|fp_pad
 decl_stmt|;
 block|}
 struct|;
@@ -94,6 +98,17 @@ directive|define
 name|_MC_FP_VALID
 value|0x1
 comment|/* Set when mc_fpregs has valid data */
+name|u_int
+name|mc_pad
+decl_stmt|;
+comment|/* Padding */
+name|uint64_t
+name|mc_spare
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* Space for expansion, set to zero */
 block|}
 struct|;
 end_struct
