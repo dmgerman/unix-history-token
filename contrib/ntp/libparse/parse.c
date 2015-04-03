@@ -75,7 +75,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ntp_unixtime.h"
+file|"timevalops.h"
 end_include
 
 begin_include
@@ -157,19 +157,16 @@ name|nformats
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|u_long
 name|timepacket
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|parse_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * strings support usually not in kernel - duplicated, but what the heck  */
@@ -375,21 +372,6 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-specifier|extern
-name|long
-name|tstouslo
-index|[]
-decl_stmt|;
-specifier|extern
-name|long
-name|tstousmid
-index|[]
-decl_stmt|;
-specifier|extern
-name|long
-name|tstoushi
-index|[]
-decl_stmt|;
 name|l_fp
 name|delt
 decl_stmt|;
@@ -783,6 +765,9 @@ name|parse_index
 operator|++
 index|]
 operator|=
+operator|(
+name|char
+operator|)
 name|ch
 expr_stmt|;
 return|return
@@ -2501,7 +2486,7 @@ name|msyslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"parse: INTERNAL error: bad return code of convert routine \"%s\"\n"
+literal|"parse: INTERNAL error: bad return code of convert routine \"%s\""
 argument_list|,
 name|clockformats
 index|[

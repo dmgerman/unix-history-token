@@ -4295,7 +4295,7 @@ name|tr
 operator|->
 name|tr_length
 operator|>
-name|MAXBSIZE
+name|DFLTPHYS
 condition|)
 return|return
 operator|(

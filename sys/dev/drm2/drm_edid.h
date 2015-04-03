@@ -15,18 +15,6 @@ directive|define
 name|__DRM_EDID_H__
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/drm2/drmP.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -319,7 +307,7 @@ name|u8
 name|c
 decl_stmt|;
 comment|/* need to divide by 2 */
-name|u16
+name|__le16
 name|m
 decl_stmt|;
 name|u8
@@ -588,7 +576,7 @@ begin_struct
 struct|struct
 name|detailed_timing
 block|{
-name|u16
+name|__le16
 name|pixel_clock
 decl_stmt|;
 comment|/* need to multiply by 10 KHz */
@@ -789,6 +777,10 @@ directive|define
 name|DRM_EDID_FEATURE_STANDARD_COLOR
 value|(1<< 2)
 end_define
+
+begin_comment
+comment|/* If analog */
+end_comment
 
 begin_define
 define|#
@@ -1068,6 +1060,18 @@ name|struct
 name|drm_display_mode
 modifier|*
 name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|drm_load_edid_firmware
+parameter_list|(
+name|struct
+name|drm_connector
+modifier|*
+name|connector
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -17738,6 +17738,12 @@ operator|=
 name|AH_FALSE
 expr_stmt|;
 block|}
+comment|/* FreeBSD: clear the channel survey data */
+name|ath_hal_survey_clear
+argument_list|(
+name|ah
+argument_list|)
+expr_stmt|;
 comment|/*      * Fast channel change (Change synthesizer based on channel freq      * without resetting chip)      * Don't do it when      *   - Flag is not set      *   - Chip is just coming out of full sleep      *   - Channel to be set is same as current channel      *   - Channel flags are different, like when moving from 2GHz to 5GHz      *     channels      *   - Merlin: Switching in/out of fast clock enabled channels      *             (not currently coded, since fast clock is enabled      *             across the 5GHz band      *             and we already do a full reset when switching in/out      *             of 5GHz channels)      */
 if|#
 directive|if
@@ -25951,6 +25957,7 @@ return|return
 name|AH_TRUE
 return|;
 block|}
+comment|/* XXX TODO: Add AR9565 support? */
 block|}
 end_function
 

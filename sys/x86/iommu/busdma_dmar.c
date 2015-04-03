@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pcireg.h>
 end_include
 
@@ -302,7 +308,6 @@ comment|/*  * Given original device, find the requester ID that will be seen by 
 end_comment
 
 begin_function
-specifier|static
 name|device_t
 name|dmar_get_requester
 parameter_list|(
@@ -810,6 +815,18 @@ condition|(
 name|dmar
 operator|==
 name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+if|if
+condition|(
+operator|!
+name|dmar
+operator|->
+name|dma_enabled
 condition|)
 return|return
 operator|(
@@ -4238,6 +4255,22 @@ modifier|*
 name|unit
 parameter_list|)
 block|{
+name|unit
+operator|->
+name|dma_enabled
+operator|=
+literal|1
+expr_stmt|;
+name|TUNABLE_INT_FETCH
+argument_list|(
+literal|"hw.dmar.dma"
+argument_list|,
+operator|&
+name|unit
+operator|->
+name|dma_enabled
+argument_list|)
+expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&

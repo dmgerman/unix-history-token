@@ -83,6 +83,39 @@ parameter_list|)
 value|(((a)<(b))?(a):(b))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_WIP
+end_ifdef
+
+begin_comment
+comment|/* FreeBSD: to please GCC 4.2. */
+end_comment
+
+begin_function_decl
+name|int
+name|r600_dma_cs_next_reloc
+parameter_list|(
+name|struct
+name|radeon_cs_parser
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|radeon_cs_reloc
+modifier|*
+modifier|*
+name|cs_reloc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|int
@@ -7137,7 +7170,7 @@ name|CHIP_CAYMAN
 condition|)
 name|last_reg
 operator|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|cayman_reg_safe_bm
 argument_list|)
@@ -7145,7 +7178,7 @@ expr_stmt|;
 else|else
 name|last_reg
 operator|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|evergreen_reg_safe_bm
 argument_list|)
@@ -10704,7 +10737,7 @@ name|CHIP_CAYMAN
 condition|)
 name|last_reg
 operator|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|cayman_reg_safe_bm
 argument_list|)
@@ -10712,7 +10745,7 @@ expr_stmt|;
 else|else
 name|last_reg
 operator|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|evergreen_reg_safe_bm
 argument_list|)
@@ -15397,9 +15430,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if

@@ -8358,14 +8358,9 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
-name|ip
-operator|->
-name|ip_id
-operator|=
-name|htons
+name|ip_fillid
 argument_list|(
-name|ip_randomid
-argument_list|()
+name|ip
 argument_list|)
 expr_stmt|;
 comment|/* build the pfsync header */

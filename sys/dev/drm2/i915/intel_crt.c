@@ -408,6 +408,7 @@ name|drm_encoder
 modifier|*
 name|encoder
 parameter_list|,
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -1155,14 +1156,6 @@ operator|->
 name|input
 operator|&
 name|DRM_EDID_INPUT_DIGITAL
-expr_stmt|;
-name|connector
-operator|->
-name|display_info
-operator|.
-name|raw_edid
-operator|=
-name|NULL
 expr_stmt|;
 name|free
 argument_list|(

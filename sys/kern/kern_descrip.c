@@ -10657,10 +10657,9 @@ name|fd_files
 expr_stmt|;
 if|if
 condition|(
-name|fd
-operator|<
-literal|0
-operator|||
+operator|(
+name|u_int
+operator|)
 name|fd
 operator|>=
 name|fdt

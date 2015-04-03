@@ -3385,7 +3385,7 @@ begin_define
 define|#
 directive|define
 name|NUM_KNOWN_OBJ_ATTRIBUTES
-value|32
+value|71
 end_define
 
 begin_comment

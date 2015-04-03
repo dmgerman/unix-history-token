@@ -92,7 +92,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 decl_stmt|;
 if|if
@@ -197,7 +197,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 decl_stmt|;
 if|if
@@ -588,7 +588,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 decl_stmt|;
 if|if
@@ -614,9 +614,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if

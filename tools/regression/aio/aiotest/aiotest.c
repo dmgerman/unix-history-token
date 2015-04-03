@@ -10,7 +10,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
 end_include
 
 begin_include
@@ -183,63 +189,30 @@ name|aio_timedout
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|int
-name|aio_notpresent
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/*  * Attempt to provide a cleaner failure mode in the event AIO support is not  * present by catching and reporting SIGSYS.  */
-end_comment
-
 begin_function
 specifier|static
 name|void
-name|aio_sigsys
-parameter_list|(
-name|int
-name|sig
-parameter_list|)
-block|{
-name|aio_notpresent
-operator|=
-literal|1
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|aio_sigsys_setup
+name|aio_available
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 if|if
 condition|(
-name|signal
+name|modfind
 argument_list|(
-name|SIGSYS
-argument_list|,
-name|aio_sigsys
+literal|"aio"
 argument_list|)
 operator|==
-name|SIG_ERR
+operator|-
+literal|1
 condition|)
 name|errx
 argument_list|(
-operator|-
-literal|1
+literal|0
 argument_list|,
-literal|"FAIL: signal(SIGSYS): %s"
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|"aio support not available in the kernel; skipping "
+literal|"testcases"
 argument_list|)
 expr_stmt|;
 block|}
@@ -256,6 +229,7 @@ name|aio_timeout_signal
 parameter_list|(
 name|int
 name|sig
+name|__unused
 parameter_list|)
 block|{
 name|aio_timedout
@@ -301,7 +275,6 @@ name|SIG_ERR
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: %s: aio_timeout_set: signal(SIGALRM): %s"
@@ -353,7 +326,6 @@ name|SIG_ERR
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: %s: aio_timeout_stop: signal(NULL): %s"
@@ -568,7 +540,6 @@ name|BUFFER_MAX
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_context_init: buffer too large"
@@ -653,7 +624,6 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"%s: aio_context_init: aio_test_buffer: internal "
@@ -757,9 +727,9 @@ decl_stmt|;
 name|ssize_t
 name|len
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
+name|aio_available
+argument_list|()
+expr_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -834,14 +804,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|aio_notpresent
-condition|)
-name|errno
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
-if|if
-condition|(
 name|aio_timedout
 condition|)
 block|{
@@ -852,7 +814,6 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_write_test: "
@@ -872,7 +833,6 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_write_test: aio_write: %s"
@@ -914,14 +874,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|aio_notpresent
-condition|)
-name|errno
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
-if|if
-condition|(
 name|aio_timedout
 condition|)
 block|{
@@ -932,7 +884,6 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_write_test: "
@@ -952,7 +903,6 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_write_test: aio_waitcomplete: %s"
@@ -993,7 +943,6 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_write_test: aio_waitcomplete: short "
@@ -1038,6 +987,9 @@ decl_stmt|;
 name|ssize_t
 name|len
 decl_stmt|;
+name|aio_available
+argument_list|()
+expr_stmt|;
 name|bzero
 argument_list|(
 name|ac
@@ -1123,14 +1075,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|aio_notpresent
-condition|)
-name|errno
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
-if|if
-condition|(
 name|aio_timedout
 condition|)
 block|{
@@ -1141,7 +1085,6 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_read_test: "
@@ -1161,7 +1104,6 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_read_test: aio_read %s"
@@ -1203,14 +1145,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|aio_notpresent
-condition|)
-name|errno
-operator|=
-name|EOPNOTSUPP
-expr_stmt|;
-if|if
-condition|(
 name|aio_timedout
 condition|)
 block|{
@@ -1221,7 +1155,6 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_read_test: "
@@ -1241,7 +1174,6 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_read_test: aio_waitcomplete: %s"
@@ -1282,7 +1214,6 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_read_test: aio_waitcomplete: short "
@@ -1326,7 +1257,6 @@ argument_list|)
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: %s: aio_read_test: buffer mismatch"
@@ -1438,6 +1368,9 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
+name|aio_available
+argument_list|()
+expr_stmt|;
 name|strcpy
 argument_list|(
 name|pathname
@@ -1461,7 +1394,6 @@ literal|1
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: aio_file_test: mkstemp: %s"
@@ -1661,7 +1593,10 @@ name|struct
 name|aio_context
 name|ac
 decl_stmt|;
-comment|/* 	 * In theory, mktemp() can return a name that is then collided with. 	 * Because this is a regression test, we treat that as a test failure 	 * rather than retrying. 	 */
+name|aio_available
+argument_list|()
+expr_stmt|;
+comment|/* 	 * In theory, mkstemp() can return a name that is then collided with. 	 * Because this is a regression test, we treat that as a test failure 	 * rather than retrying. 	 */
 name|strcpy
 argument_list|(
 name|pathname
@@ -1669,9 +1604,38 @@ argument_list|,
 name|PATH_TEMPLATE
 argument_list|)
 expr_stmt|;
-name|mktemp
+if|if
+condition|(
+name|mkstemp
 argument_list|(
 name|pathname
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"FAIL: aio_fifo_test: mkstemp failed"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|unlink
+argument_list|(
+name|pathname
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"FAIL: aio_fifo_test: unlink failed"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1688,7 +1652,6 @@ literal|1
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: aio_fifo_test: mkfifo: %s"
@@ -1754,7 +1717,6 @@ name|error
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: aio_fifo_test: read_fd open: %s"
@@ -1805,7 +1767,6 @@ name|error
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: aio_fifo_test: write_fd open: %s"
@@ -1964,6 +1925,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|aio_available
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|socketpair
@@ -1981,7 +1945,6 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: aio_socketpair_test: socketpair: %s"
@@ -2167,6 +2130,9 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|aio_available
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|openpty
@@ -2188,7 +2154,6 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: aio_pty_test: openpty: %s"
@@ -2240,7 +2205,6 @@ name|error
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: aio_pty_test: tcgetattr: %s"
@@ -2289,7 +2253,6 @@ name|error
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: aio_pty_test: tcsetattr: %s"
@@ -2417,6 +2380,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|aio_available
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|pipe
@@ -2428,7 +2394,6 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: aio_pipe_test: pipe: %s"
@@ -2667,8 +2632,6 @@ name|error
 decl_stmt|,
 name|fd
 decl_stmt|,
-name|i
-decl_stmt|,
 name|mdctl_fd
 decl_stmt|,
 name|unit
@@ -2691,6 +2654,27 @@ name|struct
 name|md_ioctl
 name|mdio
 decl_stmt|;
+name|aio_available
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"WARNING: aio_md_test: skipped as euid "
+literal|"!= 0\n"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|mdctl_fd
 operator|=
 name|open
@@ -2711,7 +2695,6 @@ literal|0
 condition|)
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: aio_md_test: open(/dev/%s): %s"
@@ -2818,7 +2801,6 @@ name|error
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: aio_md_test: MDIOCATTACH: %s"
@@ -2883,7 +2865,6 @@ name|error
 expr_stmt|;
 name|errx
 argument_list|(
-operator|-
 literal|1
 argument_list|,
 literal|"FAIL: aio_md_test: open(%s): %s"
@@ -2956,18 +2937,9 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
-name|aio_sigsys_setup
-argument_list|()
-expr_stmt|;
 name|aio_file_test
 argument_list|()
 expr_stmt|;
@@ -2983,25 +2955,14 @@ expr_stmt|;
 name|aio_pipe_test
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-name|geteuid
-argument_list|()
-operator|==
-literal|0
-condition|)
 name|aio_md_test
 argument_list|()
 expr_stmt|;
-else|else
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"WARNING: aio_md_test: skipped as euid "
-literal|"!= 0\n"
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

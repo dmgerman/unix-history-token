@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: mem.c,v 1.2 2002/01/21 19:49:51 tv Exp $	*/
+comment|/*	$NetBSD: mem.c,v 1.4 2003/10/16 06:35:26 itojun Exp $	*/
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: mem.c,v 1.2 2002/01/21 19:49:51 tv Exp $"
+literal|"$NetBSD: mem.c,v 1.4 2003/10/16 06:35:26 itojun Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -40,6 +40,14 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -151,10 +159,14 @@ name|size_t
 name|s
 parameter_list|)
 block|{
+name|void
+modifier|*
+name|n
+decl_stmt|;
 if|if
 condition|(
 operator|(
-name|p
+name|n
 operator|=
 name|realloc
 argument_list|(
@@ -166,8 +178,19 @@ operator|)
 operator|==
 name|NULL
 condition|)
+block|{
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|nomem
 argument_list|()
+expr_stmt|;
+block|}
+name|p
+operator|=
+name|n
 expr_stmt|;
 return|return
 operator|(

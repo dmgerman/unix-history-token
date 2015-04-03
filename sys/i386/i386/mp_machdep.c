@@ -4872,7 +4872,7 @@ argument_list|)
 expr_stmt|;
 name|lapic_ipi_wait
 argument_list|(
-literal|20
+literal|100
 argument_list|)
 expr_stmt|;
 comment|/* Explicitly deassert the INIT IPI. */
@@ -4920,7 +4920,7 @@ condition|(
 operator|!
 name|lapic_ipi_wait
 argument_list|(
-literal|20
+literal|100
 argument_list|)
 condition|)
 name|panic
@@ -4959,7 +4959,7 @@ condition|(
 operator|!
 name|lapic_ipi_wait
 argument_list|(
-literal|20
+literal|100
 argument_list|)
 condition|)
 name|panic

@@ -629,7 +629,10 @@ end_define
 begin_if
 if|#
 directive|if
-literal|1
+name|defined
+argument_list|(
+name|CONFIG_ACPI
+argument_list|)
 end_if
 
 begin_function
@@ -1391,7 +1394,7 @@ name|acpi_get_handle
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -1470,7 +1473,7 @@ name|device_printf
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"No ACPI video bus found\n"
 argument_list|)
@@ -1509,7 +1512,7 @@ name|device_printf
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"More than 8 outputs detected\n"
 argument_list|)
@@ -1625,7 +1628,7 @@ name|device_printf
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"More than 8 outputs detected\n"
 argument_list|)
@@ -2184,7 +2187,7 @@ name|pci_read_config
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|PCI_ASLS
 argument_list|,

@@ -1731,7 +1731,7 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"malloc %zd bytes"
+literal|"malloc %zu bytes"
 argument_list|,
 name|size
 argument_list|)
@@ -5083,7 +5083,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"malloc(%zd)"
+literal|"malloc(%zu)"
 argument_list|,
 name|argbuflen
 operator|+

@@ -703,6 +703,7 @@ name|void
 modifier|*
 name|wb_ptr
 decl_stmt|;
+comment|/* FreeBSD: to please GCC 4.2. */
 if|if
 condition|(
 name|rdev
@@ -1514,7 +1515,7 @@ name|reg
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 if|if
 condition|(
 name|efi_enabled
@@ -1535,7 +1536,7 @@ name|false
 return|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 comment|/* first check CRTCs */
 if|if
 condition|(
@@ -2003,7 +2004,7 @@ name|PAGE_SIZE
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2506,9 +2507,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 decl_stmt|;
 if|if
@@ -2778,7 +2779,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_comment
@@ -2845,7 +2846,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 begin_comment
@@ -3036,7 +3037,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_function
@@ -3088,7 +3089,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 begin_comment
@@ -3098,7 +3099,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_function
@@ -3251,7 +3252,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 begin_comment
@@ -3261,7 +3262,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_function
@@ -3352,7 +3353,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 begin_comment
@@ -3397,7 +3398,7 @@ name|dev
 operator|=
 name|ddev
 operator|->
-name|device
+name|dev
 expr_stmt|;
 name|rdev
 operator|->
@@ -3788,7 +3789,7 @@ literal|40
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|r
 operator|=
 name|pci_set_dma_mask
@@ -3865,7 +3866,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 comment|/* Registers mapping */
 comment|/* TODO: block userspace mapping of io register */
 name|DRM_SPININIT
@@ -4092,7 +4093,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 comment|/* if we have> 1 VGA cards, then disable the radeon VGA resources */
 comment|/* this will fail for cards that aren't VGA class devices, just 	 * ignore it */
 name|vga_client_register
@@ -4120,7 +4121,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 name|r
 operator|=
 name|radeon_init
@@ -4481,7 +4482,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_function_decl
@@ -4503,7 +4504,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 begin_comment
@@ -4607,7 +4608,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|vga_switcheroo_unregister_client
 argument_list|(
 name|rdev
@@ -4630,7 +4631,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 if|if
 condition|(
 name|rdev
@@ -4708,7 +4709,7 @@ name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|radeon_debugfs_remove_files
 argument_list|(
 name|rdev
@@ -4716,7 +4717,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 end_function
 
@@ -4783,7 +4784,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 if|if
 condition|(
 name|state
@@ -4799,7 +4800,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 name|rdev
 operator|=
 name|dev
@@ -5036,7 +5037,7 @@ name|pci_save_state
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|rdev
+name|dev
 operator|->
 name|dev
 argument_list|)
@@ -5044,7 +5045,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 if|if
 condition|(
 name|state
@@ -5064,26 +5065,26 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 name|pci_set_powerstate
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|PCI_POWERSTATE_D3
 argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 block|}
 name|console_lock
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 name|radeon_fbdev_set_suspend
 argument_list|(
 name|rdev
@@ -5093,13 +5094,13 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|console_unlock
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 return|return
 literal|0
 return|;
@@ -5150,18 +5151,21 @@ literal|0
 return|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|console_lock
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 name|pci_set_powerstate
+argument_list|(
+name|device_get_parent
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
+argument_list|)
 argument_list|,
 name|PCI_POWERSTATE_D0
 argument_list|)
@@ -5170,7 +5174,7 @@ name|pci_restore_state
 argument_list|(
 name|device_get_parent
 argument_list|(
-name|rdev
+name|dev
 operator|->
 name|dev
 argument_list|)
@@ -5178,7 +5182,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 if|if
 condition|(
 name|pci_enable_device
@@ -5199,7 +5203,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 comment|/* resume AGP if in use */
 name|radeon_agp_resume
 argument_list|(
@@ -5248,13 +5252,13 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|console_unlock
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 comment|/* init dig PHYs, disp eng pll */
 if|if
 condition|(
@@ -5718,7 +5722,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_function
@@ -6036,7 +6040,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 begin_endif

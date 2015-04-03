@@ -2654,6 +2654,9 @@ decl_stmt|;
 name|uint64_t
 name|gla
 decl_stmt|;
+name|uint64_t
+name|cs_base
+decl_stmt|;
 name|int
 name|cs_d
 decl_stmt|;

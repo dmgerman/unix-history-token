@@ -7269,10 +7269,10 @@ parameter_list|(
 name|uma_zone_t
 name|zone
 parameter_list|,
-name|int
+name|vm_size_t
 name|bytes
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|flags
 parameter_list|,

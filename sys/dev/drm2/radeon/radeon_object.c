@@ -42,7 +42,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_include
@@ -57,8 +57,47 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_WIP
+end_ifdef
+
+begin_comment
+comment|/* FreeBSD: to please GCC 4.2. */
+end_comment
+
+begin_function_decl
+name|int
+name|radeon_ttm_init
+parameter_list|(
+name|struct
+name|radeon_device
+modifier|*
+name|rdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|radeon_ttm_fini
+parameter_list|(
+name|struct
+name|radeon_device
+modifier|*
+name|rdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -577,9 +616,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -753,7 +792,7 @@ name|bo
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|trace_radeon_bo_create
 argument_list|(
 name|bo
@@ -761,7 +800,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 return|return
 literal|0
 return|;
@@ -1617,6 +1656,13 @@ argument_list|,
 argument|list
 argument_list|)
 block|{
+name|DRM_LOCK
+argument_list|(
+name|rdev
+operator|->
+name|ddev
+argument_list|)
+expr_stmt|;
 name|dev_err
 argument_list|(
 name|rdev
@@ -1697,6 +1743,13 @@ operator|&
 name|bo
 operator|->
 name|gem_base
+argument_list|)
+expr_stmt|;
+name|DRM_UNLOCK
+argument_list|(
+name|rdev
+operator|->
+name|ddev
 argument_list|)
 expr_stmt|;
 block|}
@@ -2037,7 +2090,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_function
@@ -2075,7 +2128,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 begin_function

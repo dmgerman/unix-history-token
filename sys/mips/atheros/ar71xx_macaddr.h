@@ -15,6 +15,16 @@ directive|define
 name|__ATHEROS_AR71XX_MACADDR_H__
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|uint8_t
+name|ar71xx_board_mac_addr
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|extern
 name|int

@@ -59,6 +59,15 @@ name|caddr_t
 name|pcb_onfault
 decl_stmt|;
 comment|/* On fault handler */
+ifdef|#
+directive|ifdef
+name|ARM_NEW_PMAP
+name|uint32_t
+name|pcb_pagedir
+decl_stmt|;
+comment|/* TTB0 value */
+else|#
+directive|else
 name|vm_offset_t
 name|pcb_pagedir
 decl_stmt|;
@@ -76,6 +85,8 @@ name|u_int
 name|pcb_dacr
 decl_stmt|;
 comment|/* Domain Access Control Reg */
+endif|#
+directive|endif
 name|struct
 name|vfp_state
 name|pcb_vfpstate

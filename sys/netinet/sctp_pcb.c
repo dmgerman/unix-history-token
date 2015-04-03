@@ -7664,6 +7664,9 @@ name|struct
 name|sctp_inpcb
 modifier|*
 name|tinp
+decl_stmt|,
+modifier|*
+name|ninp
 decl_stmt|;
 if|if
 condition|(
@@ -7707,6 +7710,9 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|SCTP_INP_INFO_WLOCK
+argument_list|()
+expr_stmt|;
 name|head
 operator|=
 operator|&
@@ -7729,13 +7735,15 @@ argument_list|)
 index|]
 expr_stmt|;
 comment|/* Kick out all non-listeners to the TCP hash */
-name|LIST_FOREACH
+name|LIST_FOREACH_SAFE
 argument_list|(
 argument|tinp
 argument_list|,
 argument|head
 argument_list|,
 argument|sctp_hash
+argument_list|,
+argument|ninp
 argument_list|)
 block|{
 if|if
@@ -7897,6 +7905,9 @@ name|SCTP_INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
+expr_stmt|;
+name|SCTP_INP_INFO_WUNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

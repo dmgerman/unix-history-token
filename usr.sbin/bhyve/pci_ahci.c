@@ -10075,6 +10075,8 @@ argument_list|)
 expr_stmt|;
 name|ncq
 operator|=
+name|dsm
+operator|=
 literal|0
 expr_stmt|;
 name|aior

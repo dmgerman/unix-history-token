@@ -8,15 +8,15 @@ comment|/**********************************************************************/
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  Copyright (C) 2001-2004, Takao Abe.  All rights reserved.         */
+comment|/*  Copyright (C) 2001-2011, Takao Abe.  All rights reserved.	      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|/*  Permission to use, copy, modify, and distribute this software     */
 end_comment
 
 begin_comment
-comment|/*  and its documentation for any purpose is hereby granted           */
+comment|/*  and its documentation for any purpose is hereby granted	      */
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ comment|/*  without fee, provided that the following conditions are met:      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
@@ -44,11 +44,11 @@ comment|/*  copyright notice and this license. in the documentation and/or    */
 end_comment
 
 begin_comment
-comment|/*  other materials provided with the distribution.                   */
+comment|/*  other materials provided with the distribution.		      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
@@ -60,11 +60,11 @@ comment|/*  endorse or promote products derived from this software without    */
 end_comment
 
 begin_comment
-comment|/*  prior written permission.                                         */
+comment|/*  prior written permission.					      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
@@ -72,15 +72,15 @@ comment|/*  THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT EXPRESSED OR IMPLIED    */
 end_comment
 
 begin_comment
-comment|/*  WARRANTIES OF ANY KIND, INCLUDING, BUT NOT LIMITED TO, THE        */
+comment|/*  WARRANTIES OF ANY KIND, INCLUDING, BUT NOT LIMITED TO, THE	      */
 end_comment
 
 begin_comment
-comment|/*  IMPLIED WARRANTIES OF MERCHANTABLILITY AND FITNESS FOR A          */
+comment|/*  IMPLIED WARRANTIES OF MERCHANTABLILITY AND FITNESS FOR A	      */
 end_comment
 
 begin_comment
-comment|/*  PARTICULAR PURPOSE.                                               */
+comment|/*  PARTICULAR PURPOSE.						      */
 end_comment
 
 begin_comment
@@ -92,7 +92,7 @@ comment|/*  INDIRECT, GENERAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES   */
 end_comment
 
 begin_comment
-comment|/*  ( INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE        */
+comment|/*  ( INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE	      */
 end_comment
 
 begin_comment
@@ -104,7 +104,7 @@ comment|/*  INTERRUPTION ) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,     */
 end_comment
 
 begin_comment
-comment|/*  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ( INCLUDING        */
+comment|/*  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT ( INCLUDING	      */
 end_comment
 
 begin_comment
@@ -116,7 +116,7 @@ comment|/*  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
@@ -124,7 +124,7 @@ comment|/*  This driver is developed in my private time, and is opened as     */
 end_comment
 
 begin_comment
-comment|/*  voluntary contributions for the NTP.                              */
+comment|/*  voluntary contributions for the NTP.			      */
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ comment|/*  The manufacturer of the JJY receiver has not participated in      */
 end_comment
 
 begin_comment
-comment|/*  a development of this driver.                                     */
+comment|/*  a development of this driver.				      */
 end_comment
 
 begin_comment
@@ -140,35 +140,11 @@ comment|/*  The manufacturer does not warrant anything about this driver,     */
 end_comment
 
 begin_comment
-comment|/*  and is not liable for anything about this driver.                 */
+comment|/*  and is not liable for anything about this driver.		      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
-end_comment
-
-begin_comment
-comment|/**********************************************************************/
-end_comment
-
-begin_comment
-comment|/*                                                                    */
-end_comment
-
-begin_comment
-comment|/*  Author     Takao Abe                                              */
-end_comment
-
-begin_comment
-comment|/*  Email      abetakao@bea.hi-ho.ne.jp                               */
-end_comment
-
-begin_comment
-comment|/*  Homepage   http://www.bea.hi-ho.ne.jp/abetakao/                   */
-end_comment
-
-begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
@@ -176,51 +152,99 @@ comment|/**********************************************************************/
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  History                                                           */
+comment|/*  Author     Takao Abe					      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*  Email      takao_abe@xurb.jp				      */
 end_comment
 
 begin_comment
-comment|/*  2001/07/15                                                        */
+comment|/*  Homepage   http://www.bea.hi-ho.ne.jp/abetakao/		      */
 end_comment
 
 begin_comment
-comment|/*    [New]    Support the Tristate Ltd. JJY receiver                 */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*  The email address abetakao@bea.hi-ho.ne.jp is never read	      */
 end_comment
 
 begin_comment
-comment|/*  2001/08/04                                                        */
+comment|/*  from 2010, because a few filtering rule are provided by the	      */
 end_comment
 
 begin_comment
-comment|/*    [Change] Log to clockstats even if bad reply                    */
+comment|/*  "hi-ho.ne.jp", and lots of spam mail are reached.		      */
 end_comment
 
 begin_comment
-comment|/*    [Fix]    PRECISION = (-3) (about 100 ms)                        */
+comment|/*  New email address for supporting the refclock_jjy is	      */
 end_comment
 
 begin_comment
-comment|/*    [Add]    Support the C-DEX Co.Ltd. JJY receiver                 */
+comment|/*  takao_abe@xurb.jp						      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  2001/12/04                                                        */
+comment|/**********************************************************************/
+end_comment
+
+begin_comment
+comment|/*								      */
+end_comment
+
+begin_comment
+comment|/*  History							      */
+end_comment
+
+begin_comment
+comment|/*								      */
+end_comment
+
+begin_comment
+comment|/*  2001/07/15							      */
+end_comment
+
+begin_comment
+comment|/*    [New]    Support the Tristate Ltd. JJY receiver		      */
+end_comment
+
+begin_comment
+comment|/*								      */
+end_comment
+
+begin_comment
+comment|/*  2001/08/04							      */
+end_comment
+
+begin_comment
+comment|/*    [Change] Log to clockstats even if bad reply		      */
+end_comment
+
+begin_comment
+comment|/*    [Fix]    PRECISION = (-3) (about 100 ms)			      */
+end_comment
+
+begin_comment
+comment|/*    [Add]    Support the C-DEX Co.Ltd. JJY receiver		      */
+end_comment
+
+begin_comment
+comment|/*								      */
+end_comment
+
+begin_comment
+comment|/*  2001/12/04							      */
 end_comment
 
 begin_comment
@@ -228,23 +252,23 @@ comment|/*    [Fix]    C-DEX JST2000 ( fukusima@goto.info.waseda.ac.jp )      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  2002/07/12                                                        */
+comment|/*  2002/07/12							      */
 end_comment
 
 begin_comment
-comment|/*    [Fix]    Portability for FreeBSD ( patched by the user )        */
+comment|/*    [Fix]    Portability for FreeBSD ( patched by the user )	      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  2004/10/31                                                        */
+comment|/*  2004/10/31							      */
 end_comment
 
 begin_comment
@@ -252,55 +276,103 @@ comment|/*    [Change] Command send timing for the Tristate Ltd. JJY receiver */
 end_comment
 
 begin_comment
-comment|/*             JJY-01 ( Firmware version 2.01 )                       */
+comment|/*	       JJY-01 ( Firmware version 2.01 )			      */
 end_comment
 
 begin_comment
-comment|/*             Thanks to Andy Taki for testing under FreeBSD          */
+comment|/*	       Thanks to Andy Taki for testing under FreeBSD	      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  2004/11/28                                                        */
+comment|/*  2004/11/28							      */
 end_comment
 
 begin_comment
-comment|/*    [Add]    Support the Echo Keisokuki LT-2000 receiver            */
+comment|/*    [Add]    Support the Echo Keisokuki LT-2000 receiver	      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  2006/11/04                                                        */
+comment|/*  2006/11/04							      */
 end_comment
 
 begin_comment
-comment|/*    [Fix]    C-DEX JST2000                                          */
+comment|/*    [Fix]    C-DEX JST2000					      */
 end_comment
 
 begin_comment
-comment|/*             Thanks to Hideo Kuramatsu for the patch                */
+comment|/*	       Thanks to Hideo Kuramatsu for the patch		      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  2009/04/05                                                        */
+comment|/*  2009/04/05							      */
 end_comment
 
 begin_comment
-comment|/*    [Add]    Support the CITIZEN T.I.C JJY-200 receiver             */
+comment|/*    [Add]    Support the CITIZEN T.I.C JJY-200 receiver	      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
+end_comment
+
+begin_comment
+comment|/*  2010/11/20							      */
+end_comment
+
+begin_comment
+comment|/*    [Change] Bug 1618 ( Harmless )				      */
+end_comment
+
+begin_comment
+comment|/*	       Code clean up ( Remove unreachable codes ) in	      */
+end_comment
+
+begin_comment
+comment|/*	       jjy_start()					      */
+end_comment
+
+begin_comment
+comment|/*    [Change] Change clockstats format of the Tristate JJY01/02      */
+end_comment
+
+begin_comment
+comment|/*	       Issues more command to get the status of the receiver  */
+end_comment
+
+begin_comment
+comment|/*	       when "fudge 127.127.40.X flag1 1" is specified	      */
+end_comment
+
+begin_comment
+comment|/*	       ( DATE,STIM -> DCST,STUS,DATE,STIM )		      */
+end_comment
+
+begin_comment
+comment|/*								      */
+end_comment
+
+begin_comment
+comment|/*  2011/04/30							      */
+end_comment
+
+begin_comment
+comment|/*    [Add]    Support the Tristate Ltd. TS-GPSclock-01		      */
+end_comment
+
+begin_comment
+comment|/*								      */
 end_comment
 
 begin_comment
@@ -409,19 +481,19 @@ comment|/**********************************************************************/
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  The Tristate Ltd. JJY receiver JJY01                              */
+comment|/*  The Tristate Ltd. JJY receiver JJY01			      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  Command        Response                 Remarks                   */
+comment|/*  Command	   Response		    Remarks		      */
 end_comment
 
 begin_comment
@@ -429,39 +501,47 @@ comment|/*  ------------   ----------------------   ---------------------     */
 end_comment
 
 begin_comment
-comment|/*  date<CR><LF>   YYYY/MM/DD XXX<CR><LF>                             */
+comment|/*  dcst<CR><LF>   VALID|INVALID<CR><LF>			      */
 end_comment
 
 begin_comment
-comment|/*  time<CR><LF>   HH:MM:SS<CR><LF>                                   */
+comment|/*  stus<CR><LF>   ADJUSTED|UNADJUSTED<CR><LF>			      */
 end_comment
 
 begin_comment
-comment|/*  stim<CR><LF>   HH:MM:SS<CR><LF>         Reply at just second      */
+comment|/*  date<CR><LF>   YYYY/MM/DD XXX<CR><LF>			      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*  time<CR><LF>   HH:MM:SS<CR><LF>	    Not used by this driver   */
 end_comment
 
 begin_comment
-comment|/*  During synchronization after a receiver is turned on,             */
+comment|/*  stim<CR><LF>   HH:MM:SS<CR><LF>	    Reply at just second      */
 end_comment
 
 begin_comment
-comment|/*  It replies the past time from 2000/01/01 00:00:00.                */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  The function "refclock_process" checks the time and tells         */
+comment|/*  During synchronization after a receiver is turned on,	      */
 end_comment
 
 begin_comment
-comment|/*  as an insanity time.                                              */
+comment|/*  It replies the past time from 2000/01/01 00:00:00.		      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*  The function "refclock_process" checks the time and tells	      */
+end_comment
+
+begin_comment
+comment|/*  as an insanity time.					      */
+end_comment
+
+begin_comment
+comment|/*								      */
 end_comment
 
 begin_comment
@@ -469,19 +549,19 @@ comment|/**********************************************************************/
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  The C-DEX Co. Ltd. JJY receiver JST2000                           */
+comment|/*  The C-DEX Co. Ltd. JJY receiver JST2000			      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  Command        Response                 Remarks                   */
+comment|/*  Command	   Response		    Remarks		      */
 end_comment
 
 begin_comment
@@ -489,11 +569,11 @@ comment|/*  ------------   ----------------------   ---------------------     */
 end_comment
 
 begin_comment
-comment|/*<ENQ>1J<ETX><STX>JYYMMDD HHMMSSS<ETX>                          */
+comment|/*<ENQ>1J<ETX><STX>JYYMMDD HHMMSSS<ETX>			      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
@@ -501,19 +581,19 @@ comment|/**********************************************************************/
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  The Echo Keisokuki Co. Ltd. JJY receiver LT2000                   */
+comment|/*  The Echo Keisokuki Co. Ltd. JJY receiver LT2000		      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  Command        Response                 Remarks                   */
+comment|/*  Command        Response		    Remarks		      */
 end_comment
 
 begin_comment
@@ -521,27 +601,27 @@ comment|/*  ------------   ----------------------   ---------------------     */
 end_comment
 
 begin_comment
-comment|/*  #                                       Mode 1 (Request&Send)     */
+comment|/*  #					    Mode 1 (Request&Send)     */
 end_comment
 
 begin_comment
-comment|/*  T              YYMMDDWHHMMSS<BCC1><BCC2><CR>                      */
+comment|/*  T		   YYMMDDWHHMMSS<BCC1><BCC2><CR>		      */
 end_comment
 
 begin_comment
-comment|/*  C                                       Mode 2 (Continuous)       */
+comment|/*  C					    Mode 2 (Continuous)	      */
 end_comment
 
 begin_comment
-comment|/*                 YYMMDDWHHMMSS<ST1><ST2><ST3><ST4><CR>              */
+comment|/*		   YYMMDDWHHMMSS<ST1><ST2><ST3><ST4><CR>	      */
 end_comment
 
 begin_comment
-comment|/*<SUB>                    Second signal             */
+comment|/*<SUB>		    Second signal	      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
@@ -549,19 +629,19 @@ comment|/**********************************************************************/
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  The CITIZEN T.I.C CO., LTD. JJY receiver JJY200                   */
+comment|/*  The CITIZEN T.I.C CO., LTD. JJY receiver JJY200		      */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
 end_comment
 
 begin_comment
-comment|/*  Command        Response                 Remarks                   */
+comment|/*  Command	   Response		    Remarks		      */
 end_comment
 
 begin_comment
@@ -569,19 +649,87 @@ comment|/*  ------------   ----------------------   ---------------------     */
 end_comment
 
 begin_comment
-comment|/*                 'XX YY/MM/DD W HH:MM:SS<CR>                        */
+comment|/*		   'XX YY/MM/DD W HH:MM:SS<CR>			      */
 end_comment
 
 begin_comment
-comment|/*                                          XX: OK|NG|ER              */
+comment|/*					    XX: OK|NG|ER	      */
 end_comment
 
 begin_comment
-comment|/*                                          W:  0(Monday)-6(Sunday)   */
+comment|/*					    W:  0(Monday)-6(Sunday)   */
 end_comment
 
 begin_comment
-comment|/*                                                                    */
+comment|/*								      */
+end_comment
+
+begin_comment
+comment|/**********************************************************************/
+end_comment
+
+begin_comment
+comment|/*								      */
+end_comment
+
+begin_comment
+comment|/*  The Tristate Ltd. GPS clock TS-GPSCLOCK-01			      */
+end_comment
+
+begin_comment
+comment|/*								      */
+end_comment
+
+begin_comment
+comment|/*  This clock has NMEA mode and command/respose mode.		      */
+end_comment
+
+begin_comment
+comment|/*  When this jjy driver are used, set to command/respose mode        */
+end_comment
+
+begin_comment
+comment|/*  of this clock by the onboard switch SW4, and make sure the        */
+end_comment
+
+begin_comment
+comment|/*  LED-Y is tured on.						      */
+end_comment
+
+begin_comment
+comment|/*  Other than this JJY driver, the refclock driver type 20,	      */
+end_comment
+
+begin_comment
+comment|/*  generic NMEA driver, works with the NMEA mode of this clock.      */
+end_comment
+
+begin_comment
+comment|/*								      */
+end_comment
+
+begin_comment
+comment|/*  Command	   Response		    Remarks		      */
+end_comment
+
+begin_comment
+comment|/*  ------------   ----------------------   ---------------------     */
+end_comment
+
+begin_comment
+comment|/*  stus<CR><LF>   *R|*G|*U|+U<CR><LF>				      */
+end_comment
+
+begin_comment
+comment|/*  date<CR><LF>   YY/MM/DD<CR><LF>				      */
+end_comment
+
+begin_comment
+comment|/*  time<CR><LF>   HH:MM:SS<CR><LF>				      */
+end_comment
+
+begin_comment
+comment|/*								      */
 end_comment
 
 begin_comment
@@ -656,6 +804,17 @@ end_define
 
 begin_comment
 comment|/* UART speed (4800 baud) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SPEED232_TRISTATE_GPSCLOCK01
+value|B38400
+end_define
+
+begin_comment
+comment|/* USB  speed (38400 baud) */
 end_comment
 
 begin_define
@@ -794,203 +953,218 @@ name|UNITTYPE_CITIZENTIC_JJY200
 value|4
 end_define
 
+begin_define
+define|#
+directive|define
+name|UNITTYPE_TRISTATE_GPSCLOCK01
+value|5
+end_define
+
 begin_comment
 comment|/*  * Function prototypes  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|jjy_start
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jjy_shutdown
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jjy_poll
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jjy_poll_tristate_jjy01
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jjy_poll_cdex_jst2000
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jjy_poll_echokeisokuki_lt2000
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|jjy_poll_citizentic_jjy200
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|static
+name|void
+name|jjy_poll_tristate_gpsclock01
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|peer
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|jjy_receive
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|jjy_receive_tristate_jjy01
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|jjy_receive_cdex_jst2000
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|jjy_receive_echokeisokuki_lt2000
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|jjy_receive_citizentic_jjy200
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|jjy_receive_tristate_gpsclock01
+parameter_list|(
+name|struct
+name|recvbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|printableString
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Transfer vector  */
@@ -1056,6 +1230,409 @@ value|64
 end_define
 
 begin_comment
+comment|/*  * Tristate JJY01/JJY02 constants definition  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_COMMAND_NUMBER_DATE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_COMMAND_NUMBER_TIME
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_COMMAND_NUMBER_STIM
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_COMMAND_NUMBER_STUS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_COMMAND_NUMBER_DCST
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_REPLY_DATE
+value|"yyyy/mm/dd www\r\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_REPLY_STIM
+value|"hh:mm:ss\r\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_REPLY_STUS_YES
+value|"adjusted\r\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_REPLY_STUS_NO
+value|"unadjusted\r\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_REPLY_DCST_VALID
+value|"valid\r\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_REPLY_DCST_INVALID
+value|"invalid\r\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_REPLY_LENGTH_DATE
+value|14
+end_define
+
+begin_comment
+comment|/* Length without<CR><LF> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_REPLY_LENGTH_STIM
+value|8
+end_define
+
+begin_comment
+comment|/* Length without<CR><LF> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_REPLY_LENGTH_STUS_YES
+value|8
+end_define
+
+begin_comment
+comment|/* Length without<CR><LF> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_REPLY_LENGTH_STUS_NO
+value|10
+end_define
+
+begin_comment
+comment|/* Length without<CR><LF> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_REPLY_LENGTH_DCST_VALID
+value|5
+end_define
+
+begin_comment
+comment|/* Length without<CR><LF> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_JJY01_REPLY_LENGTH_DCST_INVALID
+value|7
+end_define
+
+begin_comment
+comment|/* Length without<CR><LF> */
+end_comment
+
+begin_struct
+specifier|static
+struct|struct
+block|{
+specifier|const
+name|char
+name|commandNumber
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|commandLog
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|command
+decl_stmt|;
+name|int
+name|commandLength
+decl_stmt|;
+block|}
+name|tristate_jjy01_command_sequence
+index|[]
+init|=
+block|{
+comment|/* dcst<CR><LF> -> VALID<CR><LF> or INVALID<CR><LF> */
+block|{
+name|TS_JJY01_COMMAND_NUMBER_DCST
+block|,
+literal|"dcst"
+block|,
+literal|"dcst\r\n"
+block|,
+literal|6
+block|}
+block|,
+comment|/* stus<CR><LF> -> ADJUSTED<CR><LF> or UNADJUSTED<CR><LF> */
+block|{
+name|TS_JJY01_COMMAND_NUMBER_STUS
+block|,
+literal|"stus"
+block|,
+literal|"stus\r\n"
+block|,
+literal|6
+block|}
+block|,
+comment|/* date<CR><LF> -> YYYY/MM/DD WWW<CR><LF> */
+block|{
+name|TS_JJY01_COMMAND_NUMBER_DATE
+block|,
+literal|"date"
+block|,
+literal|"date\r\n"
+block|,
+literal|6
+block|}
+block|,
+comment|/* stim<CR><LF> -> HH:MM:SS<CR><LF> */
+block|{
+name|TS_JJY01_COMMAND_NUMBER_STIM
+block|,
+literal|"stim"
+block|,
+literal|"stim\r\n"
+block|,
+literal|6
+block|}
+block|,
+comment|/* End of command */
+block|{
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Tristate TS-GPSCLOCK01 constants definition  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_GPSCLOCK01_COMMAND_NUMBER_DATE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_GPSCLOCK01_COMMAND_NUMBER_TIME
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_GPSCLOCK01_COMMAND_NUMBER_STUS
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_GPSCLOCK01_REPLY_DATE
+value|"yyyy/mm/dd\r\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_GPSCLOCK01_REPLY_TIME
+value|"hh:mm:ss\r\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_GPSCLOCK01_REPLY_STUS_RTC
+value|"*R\r\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_GPSCLOCK01_REPLY_STUS_GPS
+value|"*G\r\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_GPSCLOCK01_REPLY_STUS_UTC
+value|"*U\r\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_GPSCLOCK01_REPLY_STUS_PPS
+value|"+U\r\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|TS_GPSCLOCK01_REPLY_LENGTH_DATE
+value|10
+end_define
+
+begin_comment
+comment|/* Length without<CR><LF> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_GPSCLOCK01_REPLY_LENGTH_TIME
+value|8
+end_define
+
+begin_comment
+comment|/* Length without<CR><LF> */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TS_GPSCLOCK01_REPLY_LENGTH_STUS
+value|2
+end_define
+
+begin_comment
+comment|/* Length without<CR><LF> */
+end_comment
+
+begin_struct
+specifier|static
+struct|struct
+block|{
+name|char
+name|commandNumber
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|commandLog
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|command
+decl_stmt|;
+name|int
+name|commandLength
+decl_stmt|;
+block|}
+name|tristate_gpsclock01_command_sequence
+index|[]
+init|=
+block|{
+comment|/* stus<CR><LF> -> *R<CR><LF> or *G<CR><LF> or *U<CR><LF> or +U<CR><LF> */
+block|{
+name|TS_GPSCLOCK01_COMMAND_NUMBER_STUS
+block|,
+literal|"stus"
+block|,
+literal|"stus\r\n"
+block|,
+literal|6
+block|}
+block|,
+comment|/* date<CR><LF> -> YYYY/MM/DD WWW<CR><LF> */
+block|{
+name|TS_GPSCLOCK01_COMMAND_NUMBER_DATE
+block|,
+literal|"date"
+block|,
+literal|"date\r\n"
+block|,
+literal|6
+block|}
+block|,
+comment|/* time<CR><LF> -> HH:MM:SS<CR><LF> */
+block|{
+name|TS_GPSCLOCK01_COMMAND_NUMBER_TIME
+block|,
+literal|"time"
+block|,
+literal|"time\r\n"
+block|,
+literal|6
+block|}
+block|,
+comment|/* End of command */
+block|{
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|0
+block|}
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/**************************************************************************************************/
 end_comment
 
@@ -1104,6 +1681,17 @@ decl_stmt|;
 name|int
 name|iSpeed232
 decl_stmt|;
+name|char
+name|sLogText
+index|[
+name|MAX_LOGTEXT
+index|]
+decl_stmt|,
+name|sDevText
+index|[
+name|MAX_LOGTEXT
+index|]
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -1144,17 +1732,51 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+name|snprintf
+argument_list|(
+name|sDevText
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sDevText
+argument_list|)
+argument_list|,
+name|DEVICE
+argument_list|,
+name|unit
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|sLogText
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sLogText
+argument_list|)
+argument_list|,
+literal|"*Initialze*  %s  mode=%d"
+argument_list|,
+name|sDevText
+argument_list|,
+name|peer
+operator|->
+name|ttl
+argument_list|)
+expr_stmt|;
+name|record_clock_stats
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|srcadr
+argument_list|,
+name|sLogText
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Open serial port 	 */
-if|if
-condition|(
-operator|!
-operator|(
 name|pDeviceName
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|emalloc
 argument_list|(
 name|strlen
@@ -1164,16 +1786,17 @@ argument_list|)
 operator|+
 literal|10
 argument_list|)
-operator|)
-condition|)
-block|{
-return|return
-name|RC_START_ERROR
-return|;
-block|}
-name|sprintf
+expr_stmt|;
+name|snprintf
 argument_list|(
 name|pDeviceName
+argument_list|,
+name|strlen
+argument_list|(
+name|DEVICE
+argument_list|)
+operator|+
+literal|10
 argument_list|,
 name|DEVICE
 argument_list|,
@@ -1239,6 +1862,18 @@ operator|=
 name|SPEED232_CITIZENTIC_JJY200
 expr_stmt|;
 break|break ;
+case|case
+literal|5
+case|:
+name|iDiscipline
+operator|=
+name|LDISC_CLK
+expr_stmt|;
+name|iSpeed232
+operator|=
+name|SPEED232_TRISTATE_GPSCLOCK01
+expr_stmt|;
+break|break ;
 default|default :
 name|msyslog
 argument_list|(
@@ -1272,10 +1907,6 @@ return|return
 name|RC_START_ERROR
 return|;
 block|}
-if|if
-condition|(
-operator|!
-operator|(
 name|fd
 operator|=
 name|refclock_open
@@ -1286,7 +1917,12 @@ name|iSpeed232
 argument_list|,
 name|iDiscipline
 argument_list|)
-operator|)
+expr_stmt|;
+if|if
+condition|(
+name|fd
+operator|<=
+literal|0
 condition|)
 block|{
 name|free
@@ -1312,51 +1948,27 @@ name|pDeviceName
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate and initialize unit structure 	 */
-if|if
-condition|(
-operator|!
-operator|(
 name|up
 operator|=
-operator|(
-expr|struct
-name|jjyunit
-operator|*
-operator|)
 name|emalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|jjyunit
+operator|*
+name|up
 argument_list|)
-argument_list|)
-operator|)
-condition|)
-block|{
-name|close
-argument_list|(
-name|fd
 argument_list|)
 expr_stmt|;
-return|return
-name|RC_START_ERROR
-return|;
-block|}
 name|memset
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|up
 argument_list|,
 literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|jjyunit
+operator|*
+name|up
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1393,31 +2005,13 @@ name|version
 operator|=
 literal|100
 expr_stmt|;
-name|up
-operator|->
-name|lineexpect
-operator|=
-literal|2
-expr_stmt|;
-name|up
-operator|->
-name|charexpect
-index|[
-literal|0
-index|]
-operator|=
-literal|14
-expr_stmt|;
+comment|/* 2010/11/20 */
+comment|/* Command sequence is defined by the struct tristate_jjy01_command_sequence, */
+comment|/* and the following 3 lines are not used in the mode LDISC_CLK. */
+comment|/* up->lineexpect = 2 ; */
+comment|/* up->charexpect[0] = 14 ; */
 comment|/* YYYY/MM/DD WWW<CR><LF> */
-name|up
-operator|->
-name|charexpect
-index|[
-literal|1
-index|]
-operator|=
-literal|8
-expr_stmt|;
+comment|/* up->charexpect[1] =  8 ; */
 comment|/* HH:MM:SS<CR><LF> */
 break|break ;
 case|case
@@ -1531,43 +2125,21 @@ literal|23
 expr_stmt|;
 comment|/* 'XX YY/MM/DD W HH:MM:SS<CR> */
 break|break ;
-default|default :
-name|msyslog
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"JJY receiver [ %s mode %d ] : Unsupported mode"
-argument_list|,
-name|ntoa
-argument_list|(
-operator|&
-name|peer
-operator|->
-name|srcadr
-argument_list|)
-argument_list|,
-name|peer
-operator|->
-name|ttl
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
+case|case
+literal|5
+case|:
 name|up
-argument_list|)
+operator|->
+name|unittype
+operator|=
+name|UNITTYPE_TRISTATE_GPSCLOCK01
 expr_stmt|;
-return|return
-name|RC_START_ERROR
-return|;
+break|break ;
+comment|/* 2010/11/20 */
+comment|/* The "default:" section of this switch block is never executed,     */
+comment|/* because the former switch block traps the same "default:" case.    */
+comment|/* This "default:" section codes are removed to avoid spending time   */
+comment|/* in the future looking, though the codes are functionally harmless. */
 block|}
 name|pp
 operator|=
@@ -1579,9 +2151,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 name|pp
@@ -1598,9 +2167,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -1636,14 +2202,25 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|up
 argument_list|)
+expr_stmt|;
+name|pp
+operator|->
+name|unitptr
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 name|RC_START_ERROR
@@ -1655,12 +2232,6 @@ operator|->
 name|precision
 operator|=
 name|PRECISION
-expr_stmt|;
-name|peer
-operator|->
-name|burst
-operator|=
-literal|1
 expr_stmt|;
 name|pp
 operator|->
@@ -1737,15 +2308,21 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|jjyunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
 expr_stmt|;
+if|if
+condition|(
+operator|-
+literal|1
+operator|!=
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+condition|)
 name|io_closeclock
 argument_list|(
 operator|&
@@ -1754,12 +2331,14 @@ operator|->
 name|io
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NULL
+operator|!=
+name|up
+condition|)
 name|free
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|up
 argument_list|)
 expr_stmt|;
@@ -1825,14 +2404,9 @@ decl_stmt|;
 comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -1842,11 +2416,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|jjyunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -2102,6 +2671,67 @@ condition|)
 return|return ;
 block|}
 comment|/* 	 * We get down to business 	 */
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+block|{
+if|if
+condition|(
+name|up
+operator|->
+name|linediscipline
+operator|==
+name|LDISC_RAW
+condition|)
+block|{
+name|printableString
+argument_list|(
+name|sLogText
+argument_list|,
+name|MAX_LOGTEXT
+argument_list|,
+name|up
+operator|->
+name|rawbuf
+argument_list|,
+name|up
+operator|->
+name|charcount
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printableString
+argument_list|(
+name|sLogText
+argument_list|,
+name|MAX_LOGTEXT
+argument_list|,
+name|pp
+operator|->
+name|a_lastcode
+argument_list|,
+name|pp
+operator|->
+name|lencode
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"jjy_receive (refclock_jjy.c) : [%s]\n"
+argument_list|,
+name|sLogText
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 name|pp
 operator|->
 name|lastrec
@@ -2168,6 +2798,17 @@ case|:
 name|rc
 operator|=
 name|jjy_receive_citizentic_jjy200
+argument_list|(
+name|rbufp
+argument_list|)
+expr_stmt|;
+break|break ;
+case|case
+name|UNITTYPE_TRISTATE_GPSCLOCK01
+case|:
+name|rc
+operator|=
+name|jjy_receive_tristate_gpsclock01
 argument_list|(
 name|rbufp
 argument_list|)
@@ -2300,7 +2941,9 @@ name|rc
 operator|==
 literal|0
 condition|)
+block|{
 return|return ;
+block|}
 name|up
 operator|->
 name|bPollFlag
@@ -2323,11 +2966,16 @@ argument_list|,
 name|CEVNT_BADREPLY
 argument_list|)
 expr_stmt|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|sLogText
 argument_list|,
 literal|"BAD REPLY ["
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sLogText
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2339,7 +2987,7 @@ operator|==
 name|LDISC_RAW
 condition|)
 block|{
-name|strncat
+name|strlcat
 argument_list|(
 name|sLogText
 argument_list|,
@@ -2347,20 +2995,16 @@ name|up
 operator|->
 name|rawbuf
 argument_list|,
-name|MAX_LOGTEXT
-operator|-
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|sLogText
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|strncat
+name|strlcat
 argument_list|(
 name|sLogText
 argument_list|,
@@ -2368,14 +3012,10 @@ name|pp
 operator|->
 name|a_lastcode
 argument_list|,
-name|MAX_LOGTEXT
-operator|-
-name|strlen
+sizeof|sizeof
 argument_list|(
 name|sLogText
 argument_list|)
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2399,11 +3039,16 @@ name|MAX_LOGTEXT
 operator|-
 literal|2
 condition|)
-name|strcat
+name|strlcat
 argument_list|(
 name|sLogText
 argument_list|,
 literal|"]"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sLogText
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|record_clock_stats
@@ -2620,9 +3265,14 @@ block|}
 endif|#
 directive|endif
 comment|/* 	 * Process the new sample in the median filter and determine the 	 * timecode timestamp. 	 */
-name|sprintf
+name|snprintf
 argument_list|(
 name|sLogText
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sLogText
+argument_list|)
 argument_list|,
 literal|"%04d/%02d/%02d %02d:%02d:%02d.%1d JST"
 argument_list|,
@@ -2716,13 +3366,19 @@ modifier|*
 name|rbufp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sFunctionName
 init|=
 literal|"jjy_receive_tristate_jjy01"
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|jjyunit
 modifier|*
@@ -2748,17 +3404,36 @@ decl_stmt|;
 name|int
 name|rc
 decl_stmt|;
+name|int
+name|bOverMidnight
+init|=
+literal|0
+decl_stmt|;
+name|char
+name|sLogText
+index|[
+name|MAX_LOGTEXT
+index|]
+decl_stmt|,
+name|sReplyText
+index|[
+name|MAX_LOGTEXT
+index|]
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|pCmd
+decl_stmt|;
+name|int
+name|iCmdLen
+decl_stmt|;
 comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -2768,11 +3443,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|jjyunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -2816,48 +3486,29 @@ expr_stmt|;
 block|}
 switch|switch
 condition|(
+name|tristate_jjy01_command_sequence
+index|[
 name|up
 operator|->
 name|linecount
+operator|-
+literal|1
+index|]
+operator|.
+name|commandNumber
 condition|)
 block|{
 case|case
-literal|1
+name|TS_JJY01_COMMAND_NUMBER_DATE
 case|:
 comment|/* YYYY/MM/DD WWW */
 if|if
 condition|(
 name|iLen
 operator|!=
-literal|14
+name|TS_JJY01_REPLY_LENGTH_DATE
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-operator|>=
-literal|2
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s (refclock_jjy.c) : Reply length error ( up->linecount=%d  iLen=%d )\n"
-argument_list|,
-name|sFunctionName
-argument_list|,
-name|up
-operator|->
-name|linecount
-argument_list|,
-name|iLen
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|up
 operator|->
 name|lineerror
@@ -2927,30 +3578,6 @@ operator|>
 literal|31
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-operator|>=
-literal|2
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s (refclock_jjy.c) : Date error ( up->linecount=%d )\n"
-argument_list|,
-name|sFunctionName
-argument_list|,
-name|up
-operator|->
-name|linecount
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|up
 operator|->
 name|lineerror
@@ -2959,151 +3586,27 @@ literal|1
 expr_stmt|;
 break|break ;
 block|}
-comment|/*** Start of modification on 2004/10/31 */
+comment|/*** Start of modification on 2004/10/31 ***/
 comment|/* 		 * Following codes are moved from the function jjy_poll_tristate_jjy01 in this source. 		 * The Tristate JJY-01 ( Firmware version 1.01 ) accepts "time" and "stim" commands without any delay. 		 * But the JJY-01 ( Firmware version 2.01 ) does not accept these commands continuously, 		 * so this driver issues the second command "stim" after the reply of the first command "date". 		 */
-comment|/* 		 * Send "stim<CR><LF>" or "time<CR><LF>" command 		 */
-if|if
-condition|(
-name|up
-operator|->
-name|version
-operator|>=
-literal|100
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s (refclock_jjy.c) : send 'stim<CR><LF>'\n"
-argument_list|,
-name|sFunctionName
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-if|if
-condition|(
-name|write
-argument_list|(
-name|pp
-operator|->
-name|io
-operator|.
-name|fd
-argument_list|,
-literal|"stim\r\n"
-argument_list|,
-literal|6
-argument_list|)
-operator|!=
-literal|6
-condition|)
-block|{
-name|refclock_report
-argument_list|(
-name|peer
-argument_list|,
-name|CEVNT_FAULT
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s (refclock_jjy.c) : send 'time<CR><LF>'\n"
-argument_list|,
-name|sFunctionName
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-if|if
-condition|(
-name|write
-argument_list|(
-name|pp
-operator|->
-name|io
-operator|.
-name|fd
-argument_list|,
-literal|"time\r\n"
-argument_list|,
-literal|6
-argument_list|)
-operator|!=
-literal|6
-condition|)
-block|{
-name|refclock_report
-argument_list|(
-name|peer
-argument_list|,
-name|CEVNT_FAULT
-argument_list|)
-expr_stmt|;
-block|}
-block|}
+comment|/*** 2010/11/20 ***/
+comment|/* 		 * Codes of a next command issue are moved to the end of this function. 		 */
 comment|/*** End of modification ***/
-return|return
-literal|0
-return|;
+break|break ;
 case|case
-literal|2
+name|TS_JJY01_COMMAND_NUMBER_TIME
+case|:
+comment|/* HH:MM:SS */
+case|case
+name|TS_JJY01_COMMAND_NUMBER_STIM
 case|:
 comment|/* HH:MM:SS */
 if|if
 condition|(
 name|iLen
 operator|!=
-literal|8
+name|TS_JJY01_REPLY_LENGTH_STIM
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-operator|>=
-literal|2
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s (refclock_jjy.c) : Reply length error ( up->linecount=%d  iLen=%d )\n"
-argument_list|,
-name|sFunctionName
-argument_list|,
-name|up
-operator|->
-name|linecount
-argument_list|,
-name|iLen
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|up
 operator|->
 name|lineerror
@@ -3161,30 +3664,6 @@ operator|>
 literal|60
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|DEBUG
-if|if
-condition|(
-name|debug
-operator|>=
-literal|2
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s (refclock_jjy.c) : Time error ( up->linecount=%d )\n"
-argument_list|,
-name|sFunctionName
-argument_list|,
-name|up
-operator|->
-name|linecount
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|up
 operator|->
 name|lineerror
@@ -3220,10 +3699,117 @@ operator|<=
 literal|2
 condition|)
 block|{
-comment|/* 			 * The command "date" and "time" ( or "stim" ) were sent to the JJY receiver continuously. 			 * But the JJY receiver replies a date and time separately. 			 * Just after midnight transitions, we ignore this time. 			 */
-return|return
+comment|/* 			 * The command "date" and "time" ( or "stim" ) were sent to the JJY receiver separately, 			 * and the JJY receiver replies a date and time separately. 			 * Just after midnight transitions, we ignore this time. 			 */
+name|bOverMidnight
+operator|=
+literal|1
+expr_stmt|;
+block|}
+break|break ;
+case|case
+name|TS_JJY01_COMMAND_NUMBER_STUS
+case|:
+if|if
+condition|(
+operator|(
+name|iLen
+operator|==
+name|TS_JJY01_REPLY_LENGTH_STUS_YES
+operator|&&
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+name|TS_JJY01_REPLY_STUS_YES
+argument_list|,
+name|TS_JJY01_REPLY_LENGTH_STUS_YES
+argument_list|)
+operator|==
 literal|0
-return|;
+operator|)
+operator|||
+operator|(
+name|iLen
+operator|==
+name|TS_JJY01_REPLY_LENGTH_STUS_NO
+operator|&&
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+name|TS_JJY01_REPLY_STUS_NO
+argument_list|,
+name|TS_JJY01_REPLY_LENGTH_STUS_NO
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* Good */
+block|}
+else|else
+block|{
+name|up
+operator|->
+name|lineerror
+operator|=
+literal|1
+expr_stmt|;
+break|break ;
+block|}
+break|break ;
+case|case
+name|TS_JJY01_COMMAND_NUMBER_DCST
+case|:
+if|if
+condition|(
+operator|(
+name|iLen
+operator|==
+name|TS_JJY01_REPLY_LENGTH_DCST_VALID
+operator|&&
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+name|TS_JJY01_REPLY_DCST_VALID
+argument_list|,
+name|TS_JJY01_REPLY_LENGTH_DCST_VALID
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|iLen
+operator|==
+name|TS_JJY01_REPLY_LENGTH_DCST_INVALID
+operator|&&
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+name|TS_JJY01_REPLY_DCST_INVALID
+argument_list|,
+name|TS_JJY01_REPLY_LENGTH_DCST_INVALID
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* Good */
+block|}
+else|else
+block|{
+name|up
+operator|->
+name|lineerror
+operator|=
+literal|1
+expr_stmt|;
+break|break ;
 block|}
 break|break ;
 default|default :
@@ -3236,8 +3822,206 @@ literal|1
 expr_stmt|;
 break|break ;
 block|}
+comment|/* Clockstats Log */
+name|printableString
+argument_list|(
+name|sReplyText
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sReplyText
+argument_list|)
+argument_list|,
+name|pBuf
+argument_list|,
+name|iLen
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|sLogText
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sLogText
+argument_list|)
+argument_list|,
+literal|"%d: %s -> %c: %s"
+argument_list|,
+name|up
+operator|->
+name|linecount
+argument_list|,
+name|tristate_jjy01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+operator|-
+literal|1
+index|]
+operator|.
+name|commandLog
+argument_list|,
+operator|(
+name|up
+operator|->
+name|lineerror
+operator|==
+literal|0
+operator|)
+condition|?
+operator|(
+operator|(
+name|bOverMidnight
+operator|==
+literal|0
+operator|)
+condition|?
+literal|'O'
+else|:
+literal|'S'
+operator|)
+else|:
+literal|'X'
+argument_list|,
+name|sReplyText
+argument_list|)
+expr_stmt|;
+name|record_clock_stats
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|srcadr
+argument_list|,
+name|sLogText
+argument_list|)
+expr_stmt|;
+comment|/* Check before issue next command */
+if|if
+condition|(
+name|up
+operator|->
+name|lineerror
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Do not issue next command */
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|bOverMidnight
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Do not issue next command */
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|tristate_jjy01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|command
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Command sequence completed */
 return|return
 literal|1
+return|;
+block|}
+comment|/* Issue next command */
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s (refclock_jjy.c) : send '%s'\n"
+argument_list|,
+name|sFunctionName
+argument_list|,
+name|tristate_jjy01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|commandLog
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|pCmd
+operator|=
+name|tristate_jjy01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|command
+expr_stmt|;
+name|iCmdLen
+operator|=
+name|tristate_jjy01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|commandLength
+expr_stmt|;
+if|if
+condition|(
+name|write
+argument_list|(
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+argument_list|,
+name|pCmd
+argument_list|,
+name|iCmdLen
+argument_list|)
+operator|!=
+name|iCmdLen
+condition|)
+block|{
+name|refclock_report
+argument_list|(
+name|peer
+argument_list|,
+name|CEVNT_FAULT
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+literal|0
 return|;
 block|}
 end_function
@@ -3257,13 +4041,19 @@ modifier|*
 name|rbufp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sFunctionName
 init|=
 literal|"jjy_receive_cdex_jst2000"
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|jjyunit
 modifier|*
@@ -3292,14 +4082,9 @@ decl_stmt|;
 comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -3309,11 +4094,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|jjyunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -3598,13 +4378,19 @@ modifier|*
 name|rbufp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sFunctionName
 init|=
 literal|"jjy_receive_echokeisokuki_lt2000"
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|jjyunit
 modifier|*
@@ -3642,14 +4428,9 @@ decl_stmt|;
 comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -3659,11 +4440,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|jjyunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -3786,7 +4562,7 @@ name|printf
 argument_list|(
 literal|"%s (refclock_jjy.c) : send '#'\n"
 argument_list|,
-name|sFunctionName
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -4332,13 +5108,19 @@ modifier|*
 name|rbufp
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
 specifier|static
+specifier|const
 name|char
 modifier|*
 name|sFunctionName
 init|=
 literal|"jjy_receive_citizentic_jjy200"
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|jjyunit
 modifier|*
@@ -4375,17 +5157,12 @@ decl_stmt|;
 name|int
 name|iWeekday
 decl_stmt|;
-comment|/*      * Initialize pointers and read the timecode and timestamp      */
+comment|/* 	* Initialize pointers and read the timecode and timestamp 	*/
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -4395,11 +5172,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|jjyunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4441,7 +5213,7 @@ operator|->
 name|lencode
 expr_stmt|;
 block|}
-comment|/*      * JJY-200 sends a timestamp every second.      * So, a timestamp is ignored unless it is right after polled.      */
+comment|/* 	* JJY-200 sends a timestamp every second. 	* So, a timestamp is ignored unless it is right after polled. 	*/
 if|if
 condition|(
 operator|!
@@ -4713,6 +5485,798 @@ begin_comment
 comment|/**************************************************************************************************/
 end_comment
 
+begin_function
+specifier|static
+name|int
+name|jjy_receive_tristate_gpsclock01
+parameter_list|(
+name|struct
+name|recvbuf
+modifier|*
+name|rbufp
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|sFunctionName
+init|=
+literal|"jjy_receive_tristate_gpsclock01"
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|jjyunit
+modifier|*
+name|up
+decl_stmt|;
+name|struct
+name|refclockproc
+modifier|*
+name|pp
+decl_stmt|;
+name|struct
+name|peer
+modifier|*
+name|peer
+decl_stmt|;
+name|char
+modifier|*
+name|pBuf
+decl_stmt|;
+name|int
+name|iLen
+decl_stmt|;
+name|int
+name|rc
+decl_stmt|;
+name|int
+name|bOverMidnight
+init|=
+literal|0
+decl_stmt|;
+name|char
+name|sLogText
+index|[
+name|MAX_LOGTEXT
+index|]
+decl_stmt|,
+name|sReplyText
+index|[
+name|MAX_LOGTEXT
+index|]
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|pCmd
+decl_stmt|;
+name|int
+name|iCmdLen
+decl_stmt|;
+comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 */
+name|peer
+operator|=
+name|rbufp
+operator|->
+name|recv_peer
+expr_stmt|;
+name|pp
+operator|=
+name|peer
+operator|->
+name|procptr
+expr_stmt|;
+name|up
+operator|=
+name|pp
+operator|->
+name|unitptr
+expr_stmt|;
+if|if
+condition|(
+name|up
+operator|->
+name|linediscipline
+operator|==
+name|LDISC_RAW
+condition|)
+block|{
+name|pBuf
+operator|=
+name|up
+operator|->
+name|rawbuf
+expr_stmt|;
+name|iLen
+operator|=
+name|up
+operator|->
+name|charcount
+expr_stmt|;
+block|}
+else|else
+block|{
+name|pBuf
+operator|=
+name|pp
+operator|->
+name|a_lastcode
+expr_stmt|;
+name|iLen
+operator|=
+name|pp
+operator|->
+name|lencode
+expr_stmt|;
+block|}
+comment|/* 	 * Ignore NMEA data stream 	 */
+if|if
+condition|(
+name|iLen
+operator|>
+literal|5
+operator|&&
+operator|(
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+literal|"$GP"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+literal|"$PFEC"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s (refclock_jjy.c) : Skip NMEA stream [%s]\n"
+argument_list|,
+name|sFunctionName
+argument_list|,
+name|pBuf
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+return|return
+literal|0
+return|;
+block|}
+comment|/* 	 * Skip command prompt '$Cmd>' from the TS-GPSclock-01 	 */
+if|if
+condition|(
+name|iLen
+operator|==
+literal|5
+operator|&&
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+literal|"$Cmd>"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|iLen
+operator|>
+literal|5
+operator|&&
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+literal|"$Cmd>"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|pBuf
+operator|+=
+literal|5
+expr_stmt|;
+name|iLen
+operator|-=
+literal|5
+expr_stmt|;
+block|}
+comment|/* 	 * Ignore NMEA data stream after command prompt 	 */
+if|if
+condition|(
+name|iLen
+operator|>
+literal|5
+operator|&&
+operator|(
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+literal|"$GP"
+argument_list|,
+literal|3
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+literal|"$PFEC"
+argument_list|,
+literal|5
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s (refclock_jjy.c) : Skip NMEA stream [%s]\n"
+argument_list|,
+name|sFunctionName
+argument_list|,
+name|pBuf
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+return|return
+literal|0
+return|;
+block|}
+switch|switch
+condition|(
+name|tristate_gpsclock01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+operator|-
+literal|1
+index|]
+operator|.
+name|commandNumber
+condition|)
+block|{
+case|case
+name|TS_GPSCLOCK01_COMMAND_NUMBER_DATE
+case|:
+comment|/* YYYY/MM/DD */
+if|if
+condition|(
+name|iLen
+operator|!=
+name|TS_GPSCLOCK01_REPLY_LENGTH_DATE
+condition|)
+block|{
+name|up
+operator|->
+name|lineerror
+operator|=
+literal|1
+expr_stmt|;
+break|break ;
+block|}
+name|rc
+operator|=
+name|sscanf
+argument_list|(
+name|pBuf
+argument_list|,
+literal|"%4d/%2d/%2d"
+argument_list|,
+operator|&
+name|up
+operator|->
+name|year
+argument_list|,
+operator|&
+name|up
+operator|->
+name|month
+argument_list|,
+operator|&
+name|up
+operator|->
+name|day
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|3
+operator|||
+name|up
+operator|->
+name|year
+operator|<
+literal|2000
+operator|||
+name|up
+operator|->
+name|month
+operator|<
+literal|1
+operator|||
+name|up
+operator|->
+name|month
+operator|>
+literal|12
+operator|||
+name|up
+operator|->
+name|day
+operator|<
+literal|1
+operator|||
+name|up
+operator|->
+name|day
+operator|>
+literal|31
+condition|)
+block|{
+name|up
+operator|->
+name|lineerror
+operator|=
+literal|1
+expr_stmt|;
+break|break ;
+block|}
+break|break ;
+case|case
+name|TS_GPSCLOCK01_COMMAND_NUMBER_TIME
+case|:
+comment|/* HH:MM:SS */
+if|if
+condition|(
+name|iLen
+operator|!=
+name|TS_GPSCLOCK01_REPLY_LENGTH_TIME
+condition|)
+block|{
+name|up
+operator|->
+name|lineerror
+operator|=
+literal|1
+expr_stmt|;
+break|break ;
+block|}
+name|rc
+operator|=
+name|sscanf
+argument_list|(
+name|pBuf
+argument_list|,
+literal|"%2d:%2d:%2d"
+argument_list|,
+operator|&
+name|up
+operator|->
+name|hour
+argument_list|,
+operator|&
+name|up
+operator|->
+name|minute
+argument_list|,
+operator|&
+name|up
+operator|->
+name|second
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|3
+operator|||
+name|up
+operator|->
+name|hour
+operator|>
+literal|23
+operator|||
+name|up
+operator|->
+name|minute
+operator|>
+literal|59
+operator|||
+name|up
+operator|->
+name|second
+operator|>
+literal|60
+condition|)
+block|{
+name|up
+operator|->
+name|lineerror
+operator|=
+literal|1
+expr_stmt|;
+break|break ;
+block|}
+name|up
+operator|->
+name|msecond
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|up
+operator|->
+name|hour
+operator|==
+literal|0
+operator|&&
+name|up
+operator|->
+name|minute
+operator|==
+literal|0
+operator|&&
+name|up
+operator|->
+name|second
+operator|<=
+literal|2
+condition|)
+block|{
+comment|/* 			 * The command "date" and "time" were sent to the JJY receiver separately, 			 * and the JJY receiver replies a date and time separately. 			 * Just after midnight transitions, we ignore this time. 			 */
+name|bOverMidnight
+operator|=
+literal|1
+expr_stmt|;
+block|}
+break|break ;
+case|case
+name|TS_GPSCLOCK01_COMMAND_NUMBER_STUS
+case|:
+if|if
+condition|(
+name|iLen
+operator|==
+name|TS_GPSCLOCK01_REPLY_LENGTH_STUS
+operator|&&
+operator|(
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+name|TS_GPSCLOCK01_REPLY_STUS_RTC
+argument_list|,
+name|TS_GPSCLOCK01_REPLY_LENGTH_STUS
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+name|TS_GPSCLOCK01_REPLY_STUS_GPS
+argument_list|,
+name|TS_GPSCLOCK01_REPLY_LENGTH_STUS
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+name|TS_GPSCLOCK01_REPLY_STUS_UTC
+argument_list|,
+name|TS_GPSCLOCK01_REPLY_LENGTH_STUS
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|pBuf
+argument_list|,
+name|TS_GPSCLOCK01_REPLY_STUS_PPS
+argument_list|,
+name|TS_GPSCLOCK01_REPLY_LENGTH_STUS
+argument_list|)
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* Good */
+block|}
+else|else
+block|{
+name|up
+operator|->
+name|lineerror
+operator|=
+literal|1
+expr_stmt|;
+break|break ;
+block|}
+break|break ;
+default|default :
+comment|/*  Unexpected reply */
+name|up
+operator|->
+name|lineerror
+operator|=
+literal|1
+expr_stmt|;
+break|break ;
+block|}
+comment|/* Clockstats Log */
+name|printableString
+argument_list|(
+name|sReplyText
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sReplyText
+argument_list|)
+argument_list|,
+name|pBuf
+argument_list|,
+name|iLen
+argument_list|)
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|sLogText
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|sLogText
+argument_list|)
+argument_list|,
+literal|"%d: %s -> %c: %s"
+argument_list|,
+name|up
+operator|->
+name|linecount
+argument_list|,
+name|tristate_gpsclock01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+operator|-
+literal|1
+index|]
+operator|.
+name|commandLog
+argument_list|,
+operator|(
+name|up
+operator|->
+name|lineerror
+operator|==
+literal|0
+operator|)
+condition|?
+operator|(
+operator|(
+name|bOverMidnight
+operator|==
+literal|0
+operator|)
+condition|?
+literal|'O'
+else|:
+literal|'S'
+operator|)
+else|:
+literal|'X'
+argument_list|,
+name|sReplyText
+argument_list|)
+expr_stmt|;
+name|record_clock_stats
+argument_list|(
+operator|&
+name|peer
+operator|->
+name|srcadr
+argument_list|,
+name|sLogText
+argument_list|)
+expr_stmt|;
+comment|/* Check before issue next command */
+if|if
+condition|(
+name|up
+operator|->
+name|lineerror
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Do not issue next command */
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|bOverMidnight
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Do not issue next command */
+return|return
+literal|0
+return|;
+block|}
+if|if
+condition|(
+name|tristate_gpsclock01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|command
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* Command sequence completed */
+return|return
+literal|1
+return|;
+block|}
+comment|/* Issue next command */
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s (refclock_jjy.c) : send '%s'\n"
+argument_list|,
+name|sFunctionName
+argument_list|,
+name|tristate_gpsclock01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|commandLog
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|pCmd
+operator|=
+name|tristate_gpsclock01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|command
+expr_stmt|;
+name|iCmdLen
+operator|=
+name|tristate_gpsclock01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|commandLength
+expr_stmt|;
+if|if
+condition|(
+name|write
+argument_list|(
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+argument_list|,
+name|pCmd
+argument_list|,
+name|iCmdLen
+argument_list|)
+operator|!=
+name|iCmdLen
+condition|)
+block|{
+name|refclock_report
+argument_list|(
+name|peer
+argument_list|,
+name|CEVNT_FAULT
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**************************************************************************************************/
+end_comment
+
 begin_comment
 comment|/*  jjy_poll - called by the transmit procedure                                                   */
 end_comment
@@ -4753,11 +6317,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|jjyunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -4886,6 +6445,17 @@ name|peer
 argument_list|)
 expr_stmt|;
 break|break ;
+case|case
+name|UNITTYPE_TRISTATE_GPSCLOCK01
+case|:
+name|jjy_poll_tristate_gpsclock01
+argument_list|(
+name|unit
+argument_list|,
+name|peer
+argument_list|)
+expr_stmt|;
+break|break ;
 default|default :
 break|break ;
 block|}
@@ -4910,10 +6480,36 @@ modifier|*
 name|peer
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|sFunctionName
+init|=
+literal|"jjy_poll_tristate_jjy01"
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|jjyunit
+modifier|*
+name|up
+decl_stmt|;
 name|struct
 name|refclockproc
 modifier|*
 name|pp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|pCmd
+decl_stmt|;
+name|int
+name|iCmdLen
 decl_stmt|;
 name|pp
 operator|=
@@ -4921,7 +6517,32 @@ name|peer
 operator|->
 name|procptr
 expr_stmt|;
-comment|/* 	 * Send "date<CR><LF>" command 	 */
+name|up
+operator|=
+name|pp
+operator|->
+name|unitptr
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pp
+operator|->
+name|sloppyclockflag
+operator|&
+name|CLK_FLAG1
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|up
+operator|->
+name|linecount
+operator|=
+literal|2
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -4932,12 +6553,74 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"jjy_poll_tristate_jjy01 (refclock_jjy.c) : send 'date<CR><LF>'\n"
+literal|"%s (refclock_jjy.c) : flag1=%X CLK_FLAG1=%X up->linecount=%d\n"
+argument_list|,
+name|sFunctionName
+argument_list|,
+name|pp
+operator|->
+name|sloppyclockflag
+argument_list|,
+name|CLK_FLAG1
+argument_list|,
+name|up
+operator|->
+name|linecount
 argument_list|)
 expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Send a first command 	 */
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s (refclock_jjy.c) : send '%s'\n"
+argument_list|,
+name|sFunctionName
+argument_list|,
+name|tristate_jjy01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|commandLog
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|pCmd
+operator|=
+name|tristate_jjy01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|command
+expr_stmt|;
+name|iCmdLen
+operator|=
+name|tristate_jjy01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|commandLength
+expr_stmt|;
 if|if
 condition|(
 name|write
@@ -4948,12 +6631,12 @@ name|io
 operator|.
 name|fd
 argument_list|,
-literal|"date\r\n"
+name|pCmd
 argument_list|,
-literal|6
+name|iCmdLen
 argument_list|)
 operator|!=
-literal|6
+name|iCmdLen
 condition|)
 block|{
 name|refclock_report
@@ -5084,11 +6767,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|jjyunit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -5199,6 +6877,511 @@ block|{
 comment|/* Do nothing ( up->bPollFlag is set by the jjy_poll ) */
 block|}
 end_function
+
+begin_comment
+comment|/**************************************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|jjy_poll_tristate_gpsclock01
+parameter_list|(
+name|int
+name|unit
+parameter_list|,
+name|struct
+name|peer
+modifier|*
+name|peer
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|DEBUG
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|sFunctionName
+init|=
+literal|"jjy_poll_tristate_gpsclock01"
+decl_stmt|;
+endif|#
+directive|endif
+name|struct
+name|jjyunit
+modifier|*
+name|up
+decl_stmt|;
+name|struct
+name|refclockproc
+modifier|*
+name|pp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|pCmd
+decl_stmt|;
+name|int
+name|iCmdLen
+decl_stmt|;
+name|pp
+operator|=
+name|peer
+operator|->
+name|procptr
+expr_stmt|;
+name|up
+operator|=
+name|pp
+operator|->
+name|unitptr
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pp
+operator|->
+name|sloppyclockflag
+operator|&
+name|CLK_FLAG1
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+name|up
+operator|->
+name|linecount
+operator|=
+literal|1
+expr_stmt|;
+block|}
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s (refclock_jjy.c) : flag1=%X CLK_FLAG1=%X up->linecount=%d\n"
+argument_list|,
+name|sFunctionName
+argument_list|,
+name|pp
+operator|->
+name|sloppyclockflag
+argument_list|,
+name|CLK_FLAG1
+argument_list|,
+name|up
+operator|->
+name|linecount
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* 	 * Send a first command 	 */
+ifdef|#
+directive|ifdef
+name|DEBUG
+if|if
+condition|(
+name|debug
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s (refclock_jjy.c) : send '%s'\n"
+argument_list|,
+name|sFunctionName
+argument_list|,
+name|tristate_gpsclock01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|commandLog
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+name|pCmd
+operator|=
+name|tristate_gpsclock01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|command
+expr_stmt|;
+name|iCmdLen
+operator|=
+name|tristate_gpsclock01_command_sequence
+index|[
+name|up
+operator|->
+name|linecount
+index|]
+operator|.
+name|commandLength
+expr_stmt|;
+if|if
+condition|(
+name|write
+argument_list|(
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+argument_list|,
+name|pCmd
+argument_list|,
+name|iCmdLen
+argument_list|)
+operator|!=
+name|iCmdLen
+condition|)
+block|{
+name|refclock_report
+argument_list|(
+name|peer
+argument_list|,
+name|CEVNT_FAULT
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_comment
+comment|/**************************************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|printableString
+parameter_list|(
+name|char
+modifier|*
+name|sOutput
+parameter_list|,
+name|int
+name|iOutputLen
+parameter_list|,
+name|char
+modifier|*
+name|sInput
+parameter_list|,
+name|int
+name|iInputLen
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|printableControlChar
+index|[]
+init|=
+block|{
+literal|"<NUL>"
+block|,
+literal|"<SOH>"
+block|,
+literal|"<STX>"
+block|,
+literal|"<ETX>"
+block|,
+literal|"<EOT>"
+block|,
+literal|"<ENQ>"
+block|,
+literal|"<ACK>"
+block|,
+literal|"<BEL>"
+block|,
+literal|"<BS>"
+block|,
+literal|"<HT>"
+block|,
+literal|"<LF>"
+block|,
+literal|"<VT>"
+block|,
+literal|"<FF>"
+block|,
+literal|"<CR>"
+block|,
+literal|"<SO>"
+block|,
+literal|"<SI>"
+block|,
+literal|"<DLE>"
+block|,
+literal|"<DC1>"
+block|,
+literal|"<DC2>"
+block|,
+literal|"<DC3>"
+block|,
+literal|"<DC4>"
+block|,
+literal|"<NAK>"
+block|,
+literal|"<SYN>"
+block|,
+literal|"<ETB>"
+block|,
+literal|"<CAN>"
+block|,
+literal|"<EM>"
+block|,
+literal|"<SUB>"
+block|,
+literal|"<ESC>"
+block|,
+literal|"<FS>"
+block|,
+literal|"<GS>"
+block|,
+literal|"<RS>"
+block|,
+literal|"<US>"
+block|,
+literal|" "
+block|}
+decl_stmt|;
+name|size_t
+name|i
+decl_stmt|,
+name|j
+decl_stmt|,
+name|n
+decl_stmt|;
+name|size_t
+name|InputLen
+decl_stmt|;
+name|size_t
+name|OutputLen
+decl_stmt|;
+name|InputLen
+operator|=
+operator|(
+name|size_t
+operator|)
+name|iInputLen
+expr_stmt|;
+name|OutputLen
+operator|=
+operator|(
+name|size_t
+operator|)
+name|iOutputLen
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+name|j
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|InputLen
+operator|&&
+name|j
+operator|<
+name|OutputLen
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|isprint
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+name|sInput
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+block|{
+name|n
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|+
+literal|1
+operator|>=
+name|OutputLen
+condition|)
+break|break ;
+name|sOutput
+index|[
+name|j
+index|]
+operator|=
+name|sInput
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|sInput
+index|[
+name|i
+index|]
+operator|&
+literal|0xFF
+operator|)
+operator|<
+name|COUNTOF
+argument_list|(
+name|printableControlChar
+argument_list|)
+condition|)
+block|{
+name|n
+operator|=
+name|strlen
+argument_list|(
+name|printableControlChar
+index|[
+name|sInput
+index|[
+name|i
+index|]
+operator|&
+literal|0xFF
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|+
+name|n
+operator|+
+literal|1
+operator|>=
+name|OutputLen
+condition|)
+break|break ;
+name|strlcpy
+argument_list|(
+name|sOutput
+operator|+
+name|j
+argument_list|,
+name|printableControlChar
+index|[
+name|sInput
+index|[
+name|i
+index|]
+operator|&
+literal|0xFF
+index|]
+argument_list|,
+name|OutputLen
+operator|-
+name|j
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|n
+operator|=
+literal|5
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|+
+name|n
+operator|+
+literal|1
+operator|>=
+name|OutputLen
+condition|)
+break|break ;
+name|snprintf
+argument_list|(
+name|sOutput
+operator|+
+name|j
+argument_list|,
+name|OutputLen
+operator|-
+name|j
+argument_list|,
+literal|"<x%X>"
+argument_list|,
+name|sInput
+index|[
+name|i
+index|]
+operator|&
+literal|0xFF
+argument_list|)
+expr_stmt|;
+block|}
+name|j
+operator|+=
+name|n
+expr_stmt|;
+block|}
+name|sOutput
+index|[
+name|min
+argument_list|(
+name|j
+argument_list|,
+operator|(
+name|size_t
+operator|)
+name|iOutputLen
+operator|-
+literal|1
+argument_list|)
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/**************************************************************************************************/
+end_comment
 
 begin_else
 else|#

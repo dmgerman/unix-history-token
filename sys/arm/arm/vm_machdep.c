@@ -538,11 +538,11 @@ name|td_md
 operator|.
 name|md_tp
 operator|=
-operator|(
-name|register_t
-operator|)
-name|get_tls
-argument_list|()
+name|td1
+operator|->
+name|td_md
+operator|.
+name|md_tp
 expr_stmt|;
 endif|#
 directive|endif
@@ -1093,10 +1093,6 @@ else|#
 directive|else
 name|set_tls
 argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
 name|tls_base
 argument_list|)
 expr_stmt|;

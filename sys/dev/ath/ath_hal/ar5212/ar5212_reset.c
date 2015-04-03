@@ -826,19 +826,9 @@ literal|0
 expr_stmt|;
 comment|/* NB: silence compiler */
 comment|/* Blank the channel survey statistics */
-name|OS_MEMZERO
+name|ath_hal_survey_clear
 argument_list|(
-operator|&
-name|ahp
-operator|->
-name|ah_chansurvey
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ahp
-operator|->
-name|ah_chansurvey
-argument_list|)
+name|ah
 argument_list|)
 expr_stmt|;
 if|#

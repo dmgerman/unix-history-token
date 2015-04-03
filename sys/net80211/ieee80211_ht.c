@@ -5258,6 +5258,12 @@ name|txa_ni
 operator|=
 name|ni
 expr_stmt|;
+name|tap
+operator|->
+name|txa_lastsample
+operator|=
+name|ticks
+expr_stmt|;
 comment|/* NB: further initialization deferred */
 block|}
 name|ni
@@ -6021,6 +6027,12 @@ operator|->
 name|txa_tid
 operator|=
 name|tid
+expr_stmt|;
+name|tap
+operator|->
+name|txa_lastsample
+operator|=
+name|ticks
 expr_stmt|;
 block|}
 comment|/* NB: AMPDU tx/rx governed by IEEE80211_FHT_AMPDU_{TX,RX} */
@@ -8035,6 +8047,12 @@ name|txa_flags
 operator||=
 name|IEEE80211_AGGR_SETUP
 expr_stmt|;
+name|tap
+operator|->
+name|txa_lastsample
+operator|=
+name|ticks
+expr_stmt|;
 block|}
 end_function
 
@@ -8130,11 +8148,12 @@ argument_list|(
 name|tap
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Reset packet estimate. 	 */
 name|tap
 operator|->
 name|txa_lastsample
 operator|=
-literal|0
+name|ticks
 expr_stmt|;
 name|tap
 operator|->

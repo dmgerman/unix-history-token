@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|CPU_NTYPES
-value|(defined(CPU_ARM9) +				\ 			 defined(CPU_ARM9E) +				\ 			 defined(CPU_ARM10) +				\ 			 defined(CPU_ARM1136) +				\ 			 defined(CPU_ARM1176) +				\ 			 defined(CPU_XSCALE_80200) +			\ 			 defined(CPU_XSCALE_80321) +			\ 			 defined(CPU_XSCALE_PXA2X0) +			\ 			 defined(CPU_FA526) +				\ 			 defined(CPU_FA626TE) +				\ 			 defined(CPU_XSCALE_IXP425)) +			\ 			 defined(CPU_CORTEXA) +				\ 			 defined(CPU_KRAIT) +				\ 			 defined(CPU_MV_PJ4B)
+value|(defined(CPU_ARM9) +				\ 			 defined(CPU_ARM9E) +				\ 			 defined(CPU_ARM1176) +				\ 			 defined(CPU_XSCALE_80321) +			\ 			 defined(CPU_XSCALE_PXA2X0) +			\ 			 defined(CPU_FA526) +				\ 			 defined(CPU_XSCALE_IXP425)) +			\ 			 defined(CPU_CORTEXA) +				\ 			 defined(CPU_KRAIT) +				\ 			 defined(CPU_MV_PJ4B)
 end_define
 
 begin_comment
@@ -85,17 +85,7 @@ argument_list|(
 name|CPU_ARM9E
 argument_list|)
 operator|||
-name|defined
-argument_list|(
-name|CPU_ARM10
-argument_list|)
-operator|||
 expr|\
-name|defined
-argument_list|(
-name|CPU_XSCALE_80200
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_80321
@@ -121,12 +111,6 @@ operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_IXP425
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|CPU_FA626TE
 argument_list|)
 operator|)
 end_if
@@ -168,11 +152,6 @@ end_if
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|CPU_ARM1136
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_ARM1176
@@ -437,21 +416,9 @@ argument_list|(
 name|CPU_ARM9E
 argument_list|)
 operator|||
-expr|\
-name|defined
-argument_list|(
-name|CPU_ARM10
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_FA526
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|CPU_FA626TE
 argument_list|)
 operator|)
 end_if
@@ -483,11 +450,6 @@ end_endif
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|CPU_ARM1136
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_ARM1176
@@ -565,11 +527,6 @@ begin_if
 if|#
 directive|if
 operator|(
-name|defined
-argument_list|(
-name|CPU_XSCALE_80200
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_80321
@@ -668,11 +625,6 @@ begin_if
 if|#
 directive|if
 operator|(
-name|defined
-argument_list|(
-name|CPU_XSCALE_80200
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|CPU_XSCALE_80321

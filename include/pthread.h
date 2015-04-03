@@ -236,7 +236,7 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * Static once initialization values.   */
+comment|/*  * Static once initialization values.  */
 end_comment
 
 begin_define
@@ -247,7 +247,7 @@ value|{ PTHREAD_NEEDS_INIT, NULL }
 end_define
 
 begin_comment
-comment|/*  * Static initialization values.   */
+comment|/*  * Static initialization values.  */
 end_comment
 
 begin_define

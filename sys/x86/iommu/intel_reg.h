@@ -499,7 +499,7 @@ begin_define
 define|#
 directive|define
 name|DMAR_IRTE1_DLM_LP
-value|(1ULL<< 5
+value|(1ULL<< 5)
 end_define
 
 begin_define
@@ -1134,7 +1134,7 @@ value|(1<< 4)
 end_define
 
 begin_comment
-comment|/* Extended Interrupt Mode */
+comment|/* Extended Interrupt Mode (x2APIC) */
 end_comment
 
 begin_define
@@ -2178,16 +2178,16 @@ begin_comment
 comment|/* Descriptor size */
 end_comment
 
+begin_comment
+comment|/* Context-cache Invalidate Descriptor */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DMAR_IQ_DESCR_CTX_INV
 value|0x1
 end_define
-
-begin_comment
-comment|/* Context-cache Invalidate 					   Descriptor */
-end_comment
 
 begin_define
 define|#
@@ -2264,16 +2264,16 @@ begin_comment
 comment|/* Function Mask */
 end_comment
 
+begin_comment
+comment|/* IOTLB Invalidate Descriptor */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DMAR_IQ_DESCR_IOTLB_INV
 value|0x2
 end_define
-
-begin_comment
-comment|/* IOTLB Invalidate Descriptor */
-end_comment
 
 begin_define
 define|#
@@ -2344,16 +2344,27 @@ begin_comment
 comment|/* Domain Id */
 end_comment
 
+begin_comment
+comment|/* Device-TLB Invalidate Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_DTLB_INV
+value|0x3
+end_define
+
+begin_comment
+comment|/* Invalidate Interrupt Entry Cache */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DMAR_IQ_DESCR_IEC_INV
 value|0x4
 end_define
-
-begin_comment
-comment|/* Invalidate Interrupt Entry Cache */
-end_comment
 
 begin_define
 define|#
@@ -2394,16 +2405,16 @@ begin_comment
 comment|/* Index Mask */
 end_comment
 
+begin_comment
+comment|/* Invalidation Wait Descriptor */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|DMAR_IQ_DESCR_WAIT_ID
 value|0x5
 end_define
-
-begin_comment
-comment|/* Invalidation Wait Descriptor */
-end_comment
 
 begin_define
 define|#
@@ -2451,6 +2462,39 @@ end_define
 begin_comment
 comment|/* Status Data */
 end_comment
+
+begin_comment
+comment|/* Extended IOTLB Invalidate Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_EIOTLB_INV
+value|0x6
+end_define
+
+begin_comment
+comment|/* PASID-Cache Invalidate Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_PASIDC_INV
+value|0x7
+end_define
+
+begin_comment
+comment|/* Extended Device-TLB Invalidate Descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DMAR_IQ_DESCR_EDTLB_INV
+value|0x8
+end_define
 
 begin_comment
 comment|/* Invalidation Queue Head register */

@@ -4164,13 +4164,6 @@ argument_list|)
 expr_stmt|;
 name|ip
 operator|->
-name|ip_id
-operator|=
-name|ip_newid
-argument_list|()
-expr_stmt|;
-name|ip
-operator|->
 name|ip_off
 operator|=
 name|htons
@@ -4195,6 +4188,11 @@ operator|->
 name|ip_sum
 operator|=
 literal|0
+expr_stmt|;
+name|ip_fillid
+argument_list|(
+name|ip
+argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(

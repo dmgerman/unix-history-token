@@ -290,7 +290,7 @@ value|0x100
 end_define
 
 begin_comment
-comment|/* PCI config registers */
+comment|/* PCI config registers - AR724X_PCI_CTRL_BASE */
 end_comment
 
 begin_define

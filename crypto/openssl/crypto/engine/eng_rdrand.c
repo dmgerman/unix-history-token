@@ -236,7 +236,7 @@ comment|/* add */
 name|get_random_bytes
 block|,
 name|random_status
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -460,7 +460,7 @@ name|ENGINE_load_rdrand
 parameter_list|(
 name|void
 parameter_list|)
-block|{}
+block|{ }
 end_function
 
 begin_endif

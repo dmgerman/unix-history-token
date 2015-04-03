@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007 John Birrell (jb@freebsd.org)  * Copyright (c) 2009-2011,2014 Kai Wang  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: libdwarf.h 3149 2015-02-15 19:00:06Z emaste $  */
+comment|/*-  * Copyright (c) 2007 John Birrell (jb@freebsd.org)  * Copyright (c) 2009-2011,2014 Kai Wang  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: libdwarf.h 3174 2015-03-27 17:13:41Z emaste $  */
 end_comment
 
 begin_ifndef
@@ -1752,8 +1752,18 @@ begin_comment
 comment|/* Function prototype definitions. */
 end_comment
 
-begin_function_decl
-name|__BEGIN_DECLS
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_comp_dir
 parameter_list|(
@@ -1766,9 +1776,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_const_value_signedint
 parameter_list|(
@@ -1780,9 +1787,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_const_value_string
 parameter_list|(
@@ -1795,9 +1799,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_const_value_unsignedint
 parameter_list|(
@@ -1809,9 +1810,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_dataref
 parameter_list|(
@@ -1829,9 +1827,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_flag
 parameter_list|(
@@ -1847,9 +1842,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_location_expr
 parameter_list|(
@@ -1865,9 +1857,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_name
 parameter_list|(
@@ -1880,9 +1869,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_producer
 parameter_list|(
@@ -1895,9 +1881,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_ref_address
 parameter_list|(
@@ -1915,9 +1898,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_reference
 parameter_list|(
@@ -1933,9 +1913,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_signed_const
 parameter_list|(
@@ -1951,9 +1928,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_string
 parameter_list|(
@@ -1970,9 +1944,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_targ_address
 parameter_list|(
@@ -1990,9 +1961,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_targ_address_b
 parameter_list|(
@@ -2010,9 +1978,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Attribute
 name|dwarf_add_AT_unsigned_const
 parameter_list|(
@@ -2028,9 +1993,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_arange
 parameter_list|(
@@ -2046,9 +2008,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_arange_b
 parameter_list|(
@@ -2068,9 +2027,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_die_to_debug
 parameter_list|(
@@ -2082,9 +2038,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_directory_decl
 parameter_list|(
@@ -2097,9 +2050,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_expr_addr
 parameter_list|(
@@ -2113,9 +2063,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_expr_addr_b
 parameter_list|(
@@ -2129,9 +2076,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_expr_gen
 parameter_list|(
@@ -2147,9 +2091,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Fde
 name|dwarf_add_fde_inst
 parameter_list|(
@@ -2165,9 +2106,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_file_decl
 parameter_list|(
@@ -2186,9 +2124,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_frame_cie
 parameter_list|(
@@ -2211,9 +2146,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_frame_fde
 parameter_list|(
@@ -2235,9 +2167,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_frame_fde_b
 parameter_list|(
@@ -2263,9 +2192,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_funcname
 parameter_list|(
@@ -2280,9 +2206,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_line_entry
 parameter_list|(
@@ -2304,9 +2227,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_pubname
 parameter_list|(
@@ -2321,9 +2241,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_typename
 parameter_list|(
@@ -2338,9 +2255,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_varname
 parameter_list|(
@@ -2355,9 +2269,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_add_weakname
 parameter_list|(
@@ -2372,9 +2283,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_arrayorder
 parameter_list|(
@@ -2387,9 +2295,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_attr
 parameter_list|(
@@ -2404,9 +2309,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_attrlist
 parameter_list|(
@@ -2423,9 +2325,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_attroffset
 parameter_list|(
@@ -2438,9 +2337,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_attrval_flag
 parameter_list|(
@@ -2455,9 +2351,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_attrval_signed
 parameter_list|(
@@ -2472,9 +2365,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_attrval_string
 parameter_list|(
@@ -2491,9 +2381,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_attrval_unsigned
 parameter_list|(
@@ -2508,9 +2395,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_bitoffset
 parameter_list|(
@@ -2523,9 +2407,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_bitsize
 parameter_list|(
@@ -2538,9 +2419,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_bytesize
 parameter_list|(
@@ -2553,9 +2431,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_child
 parameter_list|(
@@ -2568,9 +2443,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|dwarf_dealloc
 parameter_list|(
@@ -2581,9 +2453,6 @@ parameter_list|,
 name|Dwarf_Unsigned
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_def_macro
 parameter_list|(
@@ -2601,9 +2470,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_die_CU_offset
 parameter_list|(
@@ -2616,9 +2482,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_die_CU_offset_range
 parameter_list|(
@@ -2634,18 +2497,12 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_die_abbrev_code
 parameter_list|(
 name|Dwarf_Die
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Die
 name|dwarf_die_link
 parameter_list|(
@@ -2663,9 +2520,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_diename
 parameter_list|(
@@ -2679,9 +2533,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_dieoffset
 parameter_list|(
@@ -2694,9 +2545,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_elf_init
 parameter_list|(
@@ -2716,9 +2564,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_end_macro_file
 parameter_list|(
@@ -2728,9 +2573,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -2740,9 +2582,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_expand_frame_instructions
 parameter_list|(
@@ -2763,9 +2602,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_expr_current_offset
 parameter_list|(
@@ -2775,9 +2611,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Addr
 name|dwarf_expr_into_block
 parameter_list|(
@@ -2790,9 +2623,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Fde
 name|dwarf_fde_cfa_offset
 parameter_list|(
@@ -2806,9 +2636,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|dwarf_fde_cie_list_dealloc
 parameter_list|(
@@ -2825,9 +2652,6 @@ parameter_list|,
 name|Dwarf_Signed
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|dwarf_find_macro_value_start
@@ -2836,9 +2660,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_finish
 parameter_list|(
@@ -2848,9 +2669,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_formaddr
 parameter_list|(
@@ -2863,9 +2681,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_formblock
 parameter_list|(
@@ -2879,9 +2694,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_formexprloc
 parameter_list|(
@@ -2897,9 +2709,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_formflag
 parameter_list|(
@@ -2912,9 +2721,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_formref
 parameter_list|(
@@ -2927,9 +2733,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_formsdata
 parameter_list|(
@@ -2942,9 +2745,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_formsig8
 parameter_list|(
@@ -2957,9 +2757,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_formstring
 parameter_list|(
@@ -2973,9 +2770,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_formudata
 parameter_list|(
@@ -2988,9 +2782,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_func_cu_offset
 parameter_list|(
@@ -3003,9 +2794,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_func_die_offset
 parameter_list|(
@@ -3018,9 +2806,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_func_name_offsets
 parameter_list|(
@@ -3040,9 +2825,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_funcname
 parameter_list|(
@@ -3056,9 +2838,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|dwarf_funcs_dealloc
 parameter_list|(
@@ -3070,9 +2849,6 @@ parameter_list|,
 name|Dwarf_Signed
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_ACCESS_name
 parameter_list|(
@@ -3084,9 +2860,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_ATE_name
 parameter_list|(
@@ -3098,9 +2871,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_AT_name
 parameter_list|(
@@ -3112,9 +2882,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_CC_name
 parameter_list|(
@@ -3126,9 +2893,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_CFA_name
 parameter_list|(
@@ -3140,9 +2904,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_CHILDREN_name
 parameter_list|(
@@ -3154,9 +2915,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_DSC_name
 parameter_list|(
@@ -3168,9 +2926,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_DS_name
 parameter_list|(
@@ -3182,9 +2937,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_EH_name
 parameter_list|(
@@ -3196,9 +2948,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_END_name
 parameter_list|(
@@ -3210,9 +2959,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_FORM_name
 parameter_list|(
@@ -3224,9 +2970,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_ID_name
 parameter_list|(
@@ -3238,9 +2981,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_INL_name
 parameter_list|(
@@ -3252,9 +2992,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_LANG_name
 parameter_list|(
@@ -3266,9 +3003,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_LNE_name
 parameter_list|(
@@ -3280,9 +3014,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_LNS_name
 parameter_list|(
@@ -3294,9 +3025,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_MACINFO_name
 parameter_list|(
@@ -3308,9 +3036,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_OP_name
 parameter_list|(
@@ -3322,9 +3047,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_ORD_name
 parameter_list|(
@@ -3336,9 +3058,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_TAG_name
 parameter_list|(
@@ -3350,9 +3069,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_VIRTUALITY_name
 parameter_list|(
@@ -3364,9 +3080,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_VIS_name
 parameter_list|(
@@ -3378,9 +3091,6 @@ modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_abbrev
 parameter_list|(
@@ -3401,9 +3111,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_abbrev_children_flag
 parameter_list|(
@@ -3416,9 +3123,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_abbrev_code
 parameter_list|(
@@ -3431,9 +3135,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_abbrev_entry
 parameter_list|(
@@ -3454,9 +3155,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_abbrev_tag
 parameter_list|(
@@ -3469,9 +3167,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_address_size
 parameter_list|(
@@ -3484,9 +3179,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_arange
 parameter_list|(
@@ -3504,9 +3196,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_arange_cu_header_offset
 parameter_list|(
@@ -3519,9 +3208,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_arange_info
 parameter_list|(
@@ -3540,9 +3226,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_aranges
 parameter_list|(
@@ -3559,9 +3242,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_cie_index
 parameter_list|(
@@ -3574,9 +3254,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_cie_info
 parameter_list|(
@@ -3611,9 +3288,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_cie_of_fde
 parameter_list|(
@@ -3626,9 +3300,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_cu_die_offset
 parameter_list|(
@@ -3641,9 +3312,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_cu_die_offset_given_cu_header_offset
 parameter_list|(
@@ -3658,9 +3326,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_cu_die_offset_given_cu_header_offset_b
 parameter_list|(
@@ -3677,18 +3342,12 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Bool
 name|dwarf_get_die_infotypes_flag
 parameter_list|(
 name|Dwarf_Die
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_elf
 parameter_list|(
@@ -3702,9 +3361,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_fde_at_pc
 parameter_list|(
@@ -3726,9 +3382,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_fde_info_for_all_regs
 parameter_list|(
@@ -3746,9 +3399,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_fde_info_for_all_regs3
 parameter_list|(
@@ -3766,9 +3416,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_fde_info_for_cfa_reg3
 parameter_list|(
@@ -3798,9 +3445,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_fde_info_for_reg
 parameter_list|(
@@ -3826,9 +3470,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_fde_info_for_reg3
 parameter_list|(
@@ -3860,9 +3501,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_fde_instr_bytes
 parameter_list|(
@@ -3878,9 +3516,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_fde_list
 parameter_list|(
@@ -3904,9 +3539,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_fde_list_eh
 parameter_list|(
@@ -3930,9 +3562,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_fde_n
 parameter_list|(
@@ -3948,9 +3577,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_fde_range
 parameter_list|(
@@ -3981,9 +3607,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|enum
 name|Dwarf_Form_Class
 name|dwarf_get_form_class
@@ -3997,9 +3620,6 @@ parameter_list|,
 name|Dwarf_Half
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_funcs
 parameter_list|(
@@ -4016,9 +3636,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_globals
 parameter_list|(
@@ -4035,9 +3652,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_loclist_entry
 parameter_list|(
@@ -4064,9 +3678,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_macro_details
 parameter_list|(
@@ -4087,9 +3698,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_pubtypes
 parameter_list|(
@@ -4106,9 +3714,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_ranges
 parameter_list|(
@@ -4130,9 +3735,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_ranges_a
 parameter_list|(
@@ -4156,9 +3758,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_relocation_info
 parameter_list|(
@@ -4180,9 +3779,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_relocation_info_count
 parameter_list|(
@@ -4198,9 +3794,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Ptr
 name|dwarf_get_section_bytes
 parameter_list|(
@@ -4218,9 +3811,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_section_max_offsets
 parameter_list|(
@@ -4260,9 +3850,6 @@ name|Dwarf_Unsigned
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_section_max_offsets_b
 parameter_list|(
@@ -4305,9 +3892,6 @@ name|Dwarf_Unsigned
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_str
 parameter_list|(
@@ -4326,9 +3910,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_types
 parameter_list|(
@@ -4345,9 +3926,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_vars
 parameter_list|(
@@ -4364,9 +3942,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_get_weaks
 parameter_list|(
@@ -4383,9 +3958,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_global_cu_offset
 parameter_list|(
@@ -4398,9 +3970,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_global_die_offset
 parameter_list|(
@@ -4413,9 +3982,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_global_formref
 parameter_list|(
@@ -4428,9 +3994,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_global_name_offsets
 parameter_list|(
@@ -4450,9 +4013,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|dwarf_globals_dealloc
 parameter_list|(
@@ -4464,9 +4024,6 @@ parameter_list|,
 name|Dwarf_Signed
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_globname
 parameter_list|(
@@ -4480,9 +4037,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_hasattr
 parameter_list|(
@@ -4497,9 +4051,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_hasform
 parameter_list|(
@@ -4514,9 +4065,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_highpc
 parameter_list|(
@@ -4529,9 +4077,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_highpc_b
 parameter_list|(
@@ -4551,9 +4096,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_init
 parameter_list|(
@@ -4572,9 +4114,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_line_srcfileno
 parameter_list|(
@@ -4587,9 +4126,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_lineaddr
 parameter_list|(
@@ -4602,9 +4138,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_linebeginstatement
 parameter_list|(
@@ -4617,9 +4150,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_lineblock
 parameter_list|(
@@ -4632,9 +4162,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_lineendsequence
 parameter_list|(
@@ -4647,9 +4174,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_lineno
 parameter_list|(
@@ -4662,9 +4186,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_lineoff
 parameter_list|(
@@ -4677,9 +4198,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_linesrc
 parameter_list|(
@@ -4693,9 +4211,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_lne_end_sequence
 parameter_list|(
@@ -4707,9 +4222,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_lne_set_address
 parameter_list|(
@@ -4723,9 +4235,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_loclist
 parameter_list|(
@@ -4742,9 +4251,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_loclist_from_expr
 parameter_list|(
@@ -4765,9 +4271,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_loclist_from_expr_a
 parameter_list|(
@@ -4790,9 +4293,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_loclist_from_expr_b
 parameter_list|(
@@ -4819,9 +4319,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_loclist_n
 parameter_list|(
@@ -4839,9 +4336,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_lowpc
 parameter_list|(
@@ -4854,9 +4348,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Die
 name|dwarf_new_die
 parameter_list|(
@@ -4876,9 +4367,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Expr
 name|dwarf_new_expr
 parameter_list|(
@@ -4888,9 +4376,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Fde
 name|dwarf_new_fde
 parameter_list|(
@@ -4900,9 +4385,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_next_cu_header
 parameter_list|(
@@ -4927,9 +4409,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_next_cu_header_b
 parameter_list|(
@@ -4960,9 +4439,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_next_cu_header_c
 parameter_list|(
@@ -5001,9 +4477,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_next_types_section
 parameter_list|(
@@ -5013,9 +4486,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_object_finish
 parameter_list|(
@@ -5025,9 +4495,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_object_init
 parameter_list|(
@@ -5045,9 +4512,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_offdie
 parameter_list|(
@@ -5062,9 +4526,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_offdie_b
 parameter_list|(
@@ -5081,9 +4542,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Unsigned
 name|dwarf_producer_finish
 parameter_list|(
@@ -5093,9 +4551,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Debug
 name|dwarf_producer_init
 parameter_list|(
@@ -5111,9 +4566,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_P_Debug
 name|dwarf_producer_init_b
 parameter_list|(
@@ -5129,9 +4581,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_producer_set_isa
 parameter_list|(
@@ -5144,9 +4593,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_pubtype_cu_offset
 parameter_list|(
@@ -5159,9 +4605,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_pubtype_die_offset
 parameter_list|(
@@ -5174,9 +4617,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_pubtype_name_offsets
 parameter_list|(
@@ -5196,9 +4636,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_pubtypename
 parameter_list|(
@@ -5212,9 +4649,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|dwarf_pubtypes_dealloc
 parameter_list|(
@@ -5226,9 +4660,6 @@ parameter_list|,
 name|Dwarf_Signed
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|dwarf_ranges_dealloc
 parameter_list|(
@@ -5240,18 +4671,12 @@ parameter_list|,
 name|Dwarf_Signed
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|dwarf_reset_section_bytes
 parameter_list|(
 name|Dwarf_P_Debug
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Half
 name|dwarf_set_frame_cfa_value
 parameter_list|(
@@ -5260,9 +4685,6 @@ parameter_list|,
 name|Dwarf_Half
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Half
 name|dwarf_set_frame_rule_initial_value
 parameter_list|(
@@ -5271,9 +4693,6 @@ parameter_list|,
 name|Dwarf_Half
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Half
 name|dwarf_set_frame_rule_table_size
 parameter_list|(
@@ -5282,9 +4701,6 @@ parameter_list|,
 name|Dwarf_Half
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Half
 name|dwarf_set_frame_same_value
 parameter_list|(
@@ -5293,9 +4709,6 @@ parameter_list|,
 name|Dwarf_Half
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Half
 name|dwarf_set_frame_undefined_value
 parameter_list|(
@@ -5304,18 +4717,12 @@ parameter_list|,
 name|Dwarf_Half
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_set_reloc_application
 parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Ptr
 name|dwarf_seterrarg
 parameter_list|(
@@ -5324,9 +4731,6 @@ parameter_list|,
 name|Dwarf_Ptr
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Handler
 name|dwarf_seterrhand
 parameter_list|(
@@ -5335,9 +4739,6 @@ parameter_list|,
 name|Dwarf_Handler
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_siblingof
 parameter_list|(
@@ -5352,9 +4753,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_siblingof_b
 parameter_list|(
@@ -5371,9 +4769,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_srcfiles
 parameter_list|(
@@ -5391,9 +4786,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_srclang
 parameter_list|(
@@ -5406,9 +4798,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_srclines
 parameter_list|(
@@ -5425,9 +4814,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|dwarf_srclines_dealloc
 parameter_list|(
@@ -5439,9 +4825,6 @@ parameter_list|,
 name|Dwarf_Signed
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_start_macro_file
 parameter_list|(
@@ -5455,9 +4838,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_tag
 parameter_list|(
@@ -5470,9 +4850,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Dwarf_Signed
 name|dwarf_transform_to_disk_form
 parameter_list|(
@@ -5482,9 +4859,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_type_cu_offset
 parameter_list|(
@@ -5497,9 +4871,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_type_die_offset
 parameter_list|(
@@ -5512,9 +4883,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_type_name_offsets
 parameter_list|(
@@ -5534,9 +4902,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_typename
 parameter_list|(
@@ -5550,9 +4915,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|dwarf_types_dealloc
 parameter_list|(
@@ -5564,9 +4926,6 @@ parameter_list|,
 name|Dwarf_Signed
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_undef_macro
 parameter_list|(
@@ -5581,9 +4940,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_var_cu_offset
 parameter_list|(
@@ -5596,9 +4952,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_var_die_offset
 parameter_list|(
@@ -5611,9 +4964,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_var_name_offsets
 parameter_list|(
@@ -5633,9 +4983,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_varname
 parameter_list|(
@@ -5649,9 +4996,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|dwarf_vars_dealloc
 parameter_list|(
@@ -5663,9 +5007,6 @@ parameter_list|,
 name|Dwarf_Signed
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_vendor_ext
 parameter_list|(
@@ -5680,9 +5021,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_weak_cu_offset
 parameter_list|(
@@ -5695,9 +5033,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_weak_die_offset
 parameter_list|(
@@ -5710,9 +5045,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_weak_name_offsets
 parameter_list|(
@@ -5732,9 +5064,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_weakname
 parameter_list|(
@@ -5748,9 +5077,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|dwarf_weaks_dealloc
 parameter_list|(
@@ -5762,9 +5088,6 @@ parameter_list|,
 name|Dwarf_Signed
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_whatattr
 parameter_list|(
@@ -5777,9 +5100,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_whatform
 parameter_list|(
@@ -5792,9 +5112,6 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|dwarf_whatform_direct
 parameter_list|(
@@ -5807,11 +5124,16 @@ name|Dwarf_Error
 modifier|*
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
 
-begin_macro
-name|__END_DECLS
-end_macro
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

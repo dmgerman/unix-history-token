@@ -1737,11 +1737,6 @@ argument_list|,
 name|VIRTIO_TYPE_BLOCK
 argument_list|)
 expr_stmt|;
-name|pci_lintr_request
-argument_list|(
-name|pi
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|vi_intr_init

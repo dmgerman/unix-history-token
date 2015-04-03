@@ -313,6 +313,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|MT_PLURAL
+parameter_list|(
+name|a
+parameter_list|)
+value|(a == 1) ? "" : "s"
+end_define
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -2352,8 +2362,10 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%s: min blocksize %u bytes, "
-literal|"max blocksize %u bytes, granularity %u bytes\n"
+literal|"%s:\n"
+literal|"    min blocksize %u byte%s\n"
+literal|"    max blocksize %u byte%s\n"
+literal|"    granularity %u byte%s\n"
 argument_list|,
 name|tape
 argument_list|,
@@ -2361,13 +2373,42 @@ name|rblim
 operator|.
 name|min_block_length
 argument_list|,
+name|MT_PLURAL
+argument_list|(
+name|rblim
+operator|.
+name|min_block_length
+argument_list|)
+argument_list|,
 name|rblim
 operator|.
 name|max_block_length
 argument_list|,
+name|MT_PLURAL
+argument_list|(
+name|rblim
+operator|.
+name|max_block_length
+argument_list|)
+argument_list|,
+operator|(
+literal|1
+operator|<<
 name|rblim
 operator|.
 name|granularity
+operator|)
+argument_list|,
+name|MT_PLURAL
+argument_list|(
+operator|(
+literal|1
+operator|<<
+name|rblim
+operator|.
+name|granularity
+operator|)
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -7333,9 +7374,21 @@ argument_list|)
 operator|==
 literal|0
 operator|)
+operator|||
+operator|(
+name|strcmp
+argument_list|(
+name|entry
+operator|->
+name|entry_name
+argument_list|,
+literal|"density_code"
+argument_list|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
-comment|/* XXX KDM this should really be unsigned */
 name|printf
 argument_list|(
 literal|"%*s%s (%s): %s\n"

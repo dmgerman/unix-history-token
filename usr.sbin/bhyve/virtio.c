@@ -486,6 +486,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Legacy interrupts are mandatory for virtio devices */
+name|pci_lintr_request
+argument_list|(
+name|vs
+operator|->
+name|vs_pi
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

@@ -726,7 +726,7 @@ specifier|const
 name|u32
 name|evergreen_ps_size
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|evergreen_ps
 argument_list|)
@@ -738,7 +738,7 @@ specifier|const
 name|u32
 name|evergreen_vs_size
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|evergreen_vs
 argument_list|)
@@ -750,7 +750,7 @@ specifier|const
 name|u32
 name|evergreen_default_size
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|evergreen_default_state
 argument_list|)

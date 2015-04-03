@@ -301,6 +301,13 @@ name|spinunlock
 argument_list|,
 name|__libc_spinunlock_stub
 argument_list|)
+block|,
+name|SLOT
+argument_list|(
+name|kevent
+argument_list|,
+name|__sys_kevent
+argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt

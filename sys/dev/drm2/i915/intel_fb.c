@@ -280,29 +280,32 @@ goto|goto
 name|out_unref
 goto|;
 block|}
+name|info
+operator|=
+name|framebuffer_alloc
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|info
+condition|)
+block|{
+name|ret
+operator|=
+operator|-
+name|ENOMEM
+expr_stmt|;
+goto|goto
+name|out_unpin
+goto|;
+block|}
 if|#
 directive|if
 literal|0
-block|info = framebuffer_alloc(0, device); 	if (!info) { 		ret = -ENOMEM; 		goto out_unpin; 	}  	info->par = ifbdev;
+block|info->par = ifbdev;
 else|#
 directive|else
-name|info
-operator|=
-name|malloc
-argument_list|(
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|fb_info
-argument_list|)
-argument_list|,
-name|DRM_MEM_KMS
-argument_list|,
-name|M_WAITOK
-operator||
-name|M_ZERO
-argument_list|)
-expr_stmt|;
 name|info
 operator|->
 name|fb_size
@@ -316,22 +319,6 @@ operator|=
 name|sizes
 operator|->
 name|surface_bpp
-expr_stmt|;
-name|info
-operator|->
-name|fb_width
-operator|=
-name|sizes
-operator|->
-name|fb_width
-expr_stmt|;
-name|info
-operator|->
-name|fb_height
-operator|=
-name|sizes
-operator|->
-name|fb_height
 expr_stmt|;
 name|info
 operator|->
@@ -423,10 +410,43 @@ block|strcpy(info->fix.id, "inteldrmfb");  	info->flags = FBINFO_DEFAULT | FBINF
 comment|/* setup aperture base/size for vesafb takeover */
 block|info->apertures = alloc_apertures(1); 	if (!info->apertures) { 		ret = -ENOMEM; 		goto out_unpin; 	} 	info->apertures->ranges[0].base = dev->mode_config.fb_base; 	info->apertures->ranges[0].size = 		dev_priv->mm.gtt->gtt_mappable_entries<< PAGE_SHIFT;  	info->fix.smem_start = dev->mode_config.fb_base + obj->gtt_offset; 	info->fix.smem_len = size;  	info->screen_base = ioremap_wc(dev->agp->base + obj->gtt_offset, size); 	if (!info->screen_base) { 		ret = -ENOSPC; 		goto out_unpin; 	} 	info->screen_size = size;
 comment|//	memset(info->screen_base, 0, size);
-block|drm_fb_helper_fill_fix(info, fb->pitches[0], fb->depth); 	drm_fb_helper_fill_var(info,&ifbdev->helper, sizes->fb_width, sizes->fb_height);
-comment|/* Use default scratch pixmap (info->pixmap.flags = FB_PIXMAP_SYSTEM) */
 endif|#
 directive|endif
+name|drm_fb_helper_fill_fix
+argument_list|(
+name|info
+argument_list|,
+name|fb
+operator|->
+name|pitches
+index|[
+literal|0
+index|]
+argument_list|,
+name|fb
+operator|->
+name|depth
+argument_list|)
+expr_stmt|;
+name|drm_fb_helper_fill_var
+argument_list|(
+name|info
+argument_list|,
+operator|&
+name|ifbdev
+operator|->
+name|helper
+argument_list|,
+name|sizes
+operator|->
+name|fb_width
+argument_list|,
+name|sizes
+operator|->
+name|fb_height
+argument_list|)
+expr_stmt|;
+comment|/* Use default scratch pixmap (info->pixmap.flags = FB_PIXMAP_SYSTEM) */
 name|DRM_DEBUG_KMS
 argument_list|(
 literal|"allocated %dx%d (s %dbits) fb: 0x%08x, bo %p\n"
@@ -619,12 +639,11 @@ modifier|*
 name|ifbdev
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|struct fb_info *info;
-endif|#
-directive|endif
+name|struct
+name|fb_info
+modifier|*
+name|info
+decl_stmt|;
 name|struct
 name|intel_framebuffer
 modifier|*
@@ -635,12 +654,35 @@ name|ifbdev
 operator|->
 name|ifb
 decl_stmt|;
+if|if
+condition|(
+name|ifbdev
+operator|->
+name|helper
+operator|.
+name|fbdev
+condition|)
+block|{
+name|info
+operator|=
+name|ifbdev
+operator|->
+name|helper
+operator|.
+name|fbdev
+expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (ifbdev->helper.fbdev) { 		info = ifbdev->helper.fbdev; 		unregister_framebuffer(info); 		iounmap(info->screen_base); 		if (info->cmap.len) 			fb_dealloc_cmap(&info->cmap); 		framebuffer_release(info); 	}
+block|unregister_framebuffer(info); 		iounmap(info->screen_base); 		if (info->cmap.len) 			fb_dealloc_cmap(&info->cmap);
 endif|#
 directive|endif
+name|framebuffer_release
+argument_list|(
+name|info
+argument_list|)
+expr_stmt|;
+block|}
 name|drm_fb_helper_fini
 argument_list|(
 operator|&

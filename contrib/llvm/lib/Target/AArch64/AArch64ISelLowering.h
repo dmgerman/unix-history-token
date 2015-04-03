@@ -108,9 +108,9 @@ comment|// 4-instruction MOVZ/MOVK sequence for 64-bit addresses.
 name|CALL
 block|,
 comment|// Function call.
-comment|// Almost the same as a normal call node, except that a TLSDesc relocation is
-comment|// needed so the linker can relax it correctly if possible.
-name|TLSDESC_CALL
+comment|// Produces the full sequence of instructions for getting the thread pointer
+comment|// offset of a variable into X0, using the TLSDesc model.
+name|TLSDESC_CALLSEQ
 block|,
 name|ADRP
 block|,
@@ -1663,13 +1663,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|SDValue
-name|LowerELFTLSDescCall
+name|LowerELFTLSDescCallSeq
 argument_list|(
 name|SDValue
 name|SymAddr
-argument_list|,
-name|SDValue
-name|DescAddr
 argument_list|,
 name|SDLoc
 name|DL

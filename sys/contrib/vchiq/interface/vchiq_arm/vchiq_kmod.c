@@ -370,7 +370,9 @@ name|armed
 condition|)
 block|{
 comment|/* trigger vc interrupt */
-asm|__asm __volatile ("mcr p15, 0, %0, c7, c10, 4" : : "r" (0) : "memory");
+name|dsb
+argument_list|()
+expr_stmt|;
 name|vchiq_write_4
 argument_list|(
 literal|0x48

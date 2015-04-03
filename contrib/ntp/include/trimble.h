@@ -930,25 +930,22 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|cmd_info_t
 modifier|*
 name|trimble_convert
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|int
 name|cmd
-operator|,
+parameter_list|,
 name|cmd_info_t
-operator|*
+modifier|*
 name|tbl
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

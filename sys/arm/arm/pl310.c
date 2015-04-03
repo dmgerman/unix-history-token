@@ -1671,6 +1671,12 @@ argument_list|,
 name|M_DEVBUF
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_ich
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -1831,9 +1837,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|panic
+name|device_printf
 argument_list|(
-literal|"Cannot allocate IRQ\n"
+name|dev
+argument_list|,
+literal|"cannot allocate IRQ, not using interrupt\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2045,6 +2053,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_irq_res
+operator|!=
+name|NULL
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_ich
+operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
@@ -2095,11 +2116,21 @@ argument_list|,
 literal|"config_intrhook_establish failed\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|sc
+operator|->
+name|sc_ich
+argument_list|,
+name|M_DEVBUF
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENXIO
 operator|)
 return|;
+block|}
 block|}
 name|device_printf
 argument_list|(

@@ -4,11 +4,11 @@ comment|/* crypto/rand/md_rand.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2001 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_define
@@ -111,7 +111,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* #define PREDICT	1 */
+comment|/* #define PREDICT      1 */
 end_comment
 
 begin_define
@@ -203,11 +203,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* may be set only when a thread                                            * holds CRYPTO_LOCK_RAND                                            * (to prevent double locking) */
+comment|/* may be set only when a thread                                            * holds CRYPTO_LOCK_RAND (to                                            * prevent double locking) */
 end_comment
 
 begin_comment
 comment|/* access to lockin_thread is synchronized by CRYPTO_LOCK_RAND2 */
+end_comment
+
+begin_comment
+comment|/* valid iff crypto_lock_rand is set */
 end_comment
 
 begin_decl_stmt
@@ -216,10 +220,6 @@ name|CRYPTO_THREADID
 name|locking_threadid
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* valid iff crypto_lock_rand is set */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -484,7 +484,7 @@ operator|!
 name|num
 condition|)
 return|return;
-comment|/* 	 * (Based on the rand(3) manpage) 	 * 	 * The input is chopped up into units of 20 bytes (or less for 	 * the last block).  Each of these blocks is run through the hash 	 * function as follows:  The data passed to the hash function 	 * is the current 'md', the same number of bytes from the 'state' 	 * (the location determined by in incremented looping index) as 	 * the current 'block', the new key data 'block', and 'count' 	 * (which is incremented after each use). 	 * The result of this is kept in 'md' and also xored into the 	 * 'state' at the same locations that were used as input into the          * hash function. 	 */
+comment|/*      * (Based on the rand(3) manpage)      *      * The input is chopped up into units of 20 bytes (or less for      * the last block).  Each of these blocks is run through the hash      * function as follows:  The data passed to the hash function      * is the current 'md', the same number of bytes from the 'state'      * (the location determined by in incremented looping index) as      * the current 'block', the new key data 'block', and 'count'      * (which is incremented after each use).      * The result of this is kept in 'md' and also xored into the      * 'state' at the same locations that were used as input into the      * hash function.      */
 comment|/* check if we already have the lock */
 if|if
 condition|(
@@ -542,7 +542,7 @@ name|st_idx
 operator|=
 name|state_index
 expr_stmt|;
-comment|/* use our own copies of the counters so that even 	 * if a concurrent thread seeds with exactly the 	 * same data and uses the same subarray there's _some_ 	 * difference */
+comment|/*      * use our own copies of the counters so that even if a concurrent thread      * seeds with exactly the same data and uses the same subarray there's      * _some_ difference      */
 name|md_c
 index|[
 literal|0
@@ -614,7 +614,7 @@ name|state_index
 expr_stmt|;
 block|}
 comment|/* state_index<= state_num<= STATE_SIZE */
-comment|/* state[st_idx], ..., state[(st_idx + num - 1) % STATE_SIZE] 	 * are what we will use now, but other threads may use them 	 * as well */
+comment|/*      * state[st_idx], ..., state[(st_idx + num - 1) % STATE_SIZE] are what we      * will use now, but other threads may use them as well      */
 name|md_count
 index|[
 literal|1
@@ -781,7 +781,7 @@ argument_list|,
 name|j
 argument_list|)
 expr_stmt|;
-comment|/* We know that line may cause programs such as 		   purify and valgrind to complain about use of 		   uninitialized data.  The problem is not, it's 		   with the caller.  Removing that line will make 		   sure you get really bad randomness and thereby 		   other problems such as very insecure keys. */
+comment|/*          * We know that line may cause programs such as purify and valgrind          * to complain about use of uninitialized data.  The problem is not,          * it's with the caller.  Removing that line will make sure you get          * really bad randomness and thereby other problems such as very          * insecure keys.          */
 name|MD_Update
 argument_list|(
 operator|&
@@ -845,7 +845,7 @@ name|k
 operator|++
 control|)
 block|{
-comment|/* Parallel threads may interfere with this, 			 * but always each byte of the new state is 			 * the XOR of some previous value of its 			 * and local_md (itermediate values may be lost). 			 * Alway using locking could hurt performance more 			 * than necessary given that conflicts occur only 			 * when the total seeding is longer than the random 			 * state. */
+comment|/*              * Parallel threads may interfere with this, but always each byte              * of the new state is the XOR of some previous value of its and              * local_md (itermediate values may be lost). Alway using locking              * could hurt performance more than necessary given that              * conflicts occur only when the total seeding is longer than the              * random state.              */
 name|state
 index|[
 name|st_idx
@@ -885,7 +885,7 @@ argument_list|(
 name|CRYPTO_LOCK_RAND
 argument_list|)
 expr_stmt|;
-comment|/* Don't just copy back local_md into md -- this could mean that 	 * other thread's seeding remains without effect (except for 	 * the incremented counter).  By XORing it we keep at least as 	 * much entropy as fits into md. */
+comment|/*      * Don't just copy back local_md into md -- this could mean that other      * thread's seeding remains without effect (except for the incremented      * counter).  By XORing it we keep at least as much entropy as fits into      * md.      */
 for|for
 control|(
 name|k
@@ -1157,7 +1157,7 @@ operator|/
 literal|2
 operator|)
 expr_stmt|;
-comment|/* 	 * (Based on the rand(3) manpage:) 	 * 	 * For each group of 10 bytes (or less), we do the following: 	 * 	 * Input into the hash function the local 'md' (which is initialized from 	 * the global 'md' before any bytes are generated), the bytes that are to 	 * be overwritten by the random bytes, and bytes from the 'state' 	 * (incrementing looping index). From this digest output (which is kept 	 * in 'md'), the top (up to) 10 bytes are returned to the caller and the 	 * bottom 10 bytes are xored into the 'state'. 	 *  	 * Finally, after we have finished 'num' random bytes for the 	 * caller, 'count' (which is incremented) and the local and global 'md' 	 * are fed into the hash function and the results are kept in the 	 * global 'md'. 	 */
+comment|/*      * (Based on the rand(3) manpage:)      *      * For each group of 10 bytes (or less), we do the following:      *      * Input into the hash function the local 'md' (which is initialized from      * the global 'md' before any bytes are generated), the bytes that are to      * be overwritten by the random bytes, and bytes from the 'state'      * (incrementing looping index). From this digest output (which is kept      * in 'md'), the top (up to) 10 bytes are returned to the caller and the      * bottom 10 bytes are xored into the 'state'.      *      * Finally, after we have finished 'num' random bytes for the      * caller, 'count' (which is incremented) and the local and global 'md'      * are fed into the hash function and the results are kept in the      * global 'md'.      */
 if|if
 condition|(
 name|lock
@@ -1225,7 +1225,7 @@ operator|!
 name|ok
 condition|)
 block|{
-comment|/* If the PRNG state is not yet unpredictable, then seeing 		 * the PRNG output may help attackers to determine the new 		 * state; thus we have to decrease the entropy estimate. 		 * Once we've had enough initial seeding we don't bother to 		 * adjust the entropy count, though, because we're not ambitious 		 * to provide *information-theoretic* randomness. 		 * 		 * NOTE: This approach fails if the program forks before 		 * we have enough entropy. Entropy should be collected 		 * in a separate input pool and be transferred to the 		 * output pool only when the entropy limit has been reached. 		 */
+comment|/*          * If the PRNG state is not yet unpredictable, then seeing the PRNG          * output may help attackers to determine the new state; thus we have          * to decrease the entropy estimate. Once we've had enough initial          * seeding we don't bother to adjust the entropy count, though,          * because we're not ambitious to provide *information-theoretic*          * randomness. NOTE: This approach fails if the program forks before          * we have enough entropy. Entropy should be collected in a separate          * input pool and be transferred to the output pool only when the          * entropy limit has been reached.          */
 name|entropy
 operator|-=
 name|num
@@ -1246,7 +1246,7 @@ condition|(
 name|do_stir_pool
 condition|)
 block|{
-comment|/* In the output function only half of 'md' remains secret, 		 * so we better make sure that the required entropy gets 		 * 'evenly distributed' through 'state', our randomness pool. 		 * The input function (ssleay_rand_add) chains all of 'md', 		 * which makes it more suitable for this purpose. 		 */
+comment|/*          * In the output function only half of 'md' remains secret, so we          * better make sure that the required entropy gets 'evenly          * distributed' through 'state', our randomness pool. The input          * function (ssleay_rand_add) chains all of 'md', which makes it more          * suitable for this purpose.          */
 name|int
 name|n
 init|=
@@ -1275,7 +1275,7 @@ directive|define
 name|DUMMY_SEED
 value|"...................."
 comment|/* at least MD_DIGEST_LENGTH */
-comment|/* Note that the seed does not matter, it's just that 			 * ssleay_rand_add expects to have something to hash. */
+comment|/*              * Note that the seed does not matter, it's just that              * ssleay_rand_add expects to have something to hash.              */
 name|ssleay_rand_add
 argument_list|(
 name|DUMMY_SEED
@@ -1351,7 +1351,7 @@ name|state_index
 operator|%=
 name|state_num
 expr_stmt|;
-comment|/* state[st_idx], ..., state[(st_idx + num_ceil - 1) % st_num] 	 * are now ours (but other threads may use them too) */
+comment|/*      * state[st_idx], ..., state[(st_idx + num_ceil - 1) % st_num] are now      * ours (but other threads may use them too)      */
 name|md_count
 index|[
 literal|0
@@ -1414,8 +1414,8 @@ if|if
 condition|(
 name|curr_pid
 condition|)
-comment|/* just in the first iteration to save time */
 block|{
+comment|/* just in the first iteration to save time */
 name|MD_Update
 argument_list|(
 operator|&
@@ -1478,7 +1478,7 @@ ifndef|#
 directive|ifndef
 name|PURIFY
 comment|/* purify complains */
-comment|/* The following line uses the supplied buffer as a small 		 * source of entropy: since this buffer is often uninitialised 		 * it may cause programs such as purify or valgrind to 		 * complain. So for those builds it is not used: the removal 		 * of such a small source of entropy has negligible impact on 		 * security. 		 */
+comment|/*          * The following line uses the supplied buffer as a small source of          * entropy: since this buffer is often uninitialised it may cause          * programs such as purify or valgrind to complain. So for those          * builds it is not used: the removal of such a small source of          * entropy has negligible impact on security.          */
 name|MD_Update
 argument_list|(
 operator|&
@@ -1590,6 +1590,7 @@ name|i
 operator|++
 control|)
 block|{
+comment|/* may compete with other threads */
 name|state
 index|[
 name|st_idx
@@ -1601,7 +1602,6 @@ index|[
 name|i
 index|]
 expr_stmt|;
-comment|/* may compete with other threads */
 if|if
 condition|(
 name|st_idx
@@ -1790,7 +1790,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* pseudo-random bytes that are guaranteed to be unique but not    unpredictable */
+comment|/*  * pseudo-random bytes that are guaranteed to be unique but not unpredictable  */
 end_comment
 
 begin_function
@@ -1845,7 +1845,7 @@ operator|&
 name|cur
 argument_list|)
 expr_stmt|;
-comment|/* check if we already have the lock 	 * (could happen if a RAND_poll() implementation calls RAND_status()) */
+comment|/*      * check if we already have the lock (could happen if a RAND_poll()      * implementation calls RAND_status())      */
 if|if
 condition|(
 name|crypto_lock_rand
@@ -1890,7 +1890,7 @@ argument_list|(
 name|CRYPTO_LOCK_RAND
 argument_list|)
 expr_stmt|;
-comment|/* prevent ssleay_rand_bytes() from trying to obtain the lock again */
+comment|/*          * prevent ssleay_rand_bytes() from trying to obtain the lock again          */
 name|CRYPTO_w_lock
 argument_list|(
 name|CRYPTO_LOCK_RAND2

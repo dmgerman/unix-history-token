@@ -2543,6 +2543,14 @@ name|ext_type
 operator|=
 name|EXT_EXTREF
 expr_stmt|;
+name|m
+operator|->
+name|m_ext
+operator|.
+name|ext_flags
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 

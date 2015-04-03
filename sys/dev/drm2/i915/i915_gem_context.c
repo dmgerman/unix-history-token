@@ -975,7 +975,11 @@ name|file
 operator|->
 name|driver_priv
 decl_stmt|;
-comment|//DRM_LOCK(dev); /* Called from preclose(), the lock is already owned. */
+name|DRM_LOCK
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|drm_gem_names_foreach
 argument_list|(
 operator|&
@@ -996,7 +1000,11 @@ operator|->
 name|context_idr
 argument_list|)
 expr_stmt|;
-comment|//DRM_UNLOCK(dev);
+name|DRM_UNLOCK
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

@@ -3672,7 +3672,7 @@ name|callout
 modifier|*
 name|t_callout
 decl_stmt|;
-name|void
+name|timeout_t
 modifier|*
 name|f_callout
 decl_stmt|;
@@ -3800,7 +3800,11 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"bad timer_type"
+literal|"tp %p bad timer_type %#x"
+argument_list|,
+name|tp
+argument_list|,
+name|timer_type
 argument_list|)
 expr_stmt|;
 block|}
@@ -3927,7 +3931,11 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"bad timer_type"
+literal|"tp %p bad timer_type %#x"
+argument_list|,
+name|tp
+argument_list|,
+name|timer_type
 argument_list|)
 expr_stmt|;
 block|}

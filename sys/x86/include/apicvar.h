@@ -371,6 +371,34 @@ name|APIC_BUS_MAX
 value|APIC_BUS_PCI
 end_define
 
+begin_define
+define|#
+directive|define
+name|IRQ_EXTINT
+value|(NUM_IO_INTS + 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IRQ_NMI
+value|(NUM_IO_INTS + 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IRQ_SMI
+value|(NUM_IO_INTS + 3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IRQ_DISABLED
+value|(NUM_IO_INTS + 4)
+end_define
+
 begin_comment
 comment|/*  * An APIC enumerator is a psuedo bus driver that enumerates APIC's including  * CPU's and I/O APIC's.  */
 end_comment

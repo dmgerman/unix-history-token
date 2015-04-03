@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: func.c,v 1.16 2002/01/03 04:25:15 thorpej Exp $	*/
+comment|/*	$NetBSD: func.c,v 1.22 2005/09/24 15:30:35 perry Exp $	*/
 end_comment
 
 begin_comment
@@ -347,9 +347,9 @@ name|c_env
 operator|!=
 name|env
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"popctrl() 1"
+literal|"popctrl()"
 argument_list|)
 expr_stmt|;
 name|cstk
@@ -516,9 +516,9 @@ name|s_blklev
 operator|!=
 literal|1
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"funcdef() 1"
+literal|"funcdef()"
 argument_list|)
 expr_stmt|;
 name|inssym
@@ -670,9 +670,9 @@ name|s_name
 operator|!=
 name|unnamed
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"funcdef() 2"
+literal|"funcdef()"
 argument_list|)
 expr_stmt|;
 comment|/* formal parameter lacks name: param #%d */
@@ -694,9 +694,9 @@ name|s_name
 operator|==
 name|unnamed
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"funcdef() 3"
+literal|"funcdef()"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1108,9 +1108,9 @@ name|d_ctx
 operator|!=
 name|EXTERN
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"funcend() 1"
+literal|"funcend()"
 argument_list|)
 expr_stmt|;
 name|rmsyms
@@ -1314,9 +1314,9 @@ name|c_swtype
 operator|==
 name|NULL
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"label() 1"
+literal|"label()"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1382,6 +1382,8 @@ operator|=
 name|constant
 argument_list|(
 name|tn
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 operator|(
@@ -1690,6 +1692,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|pushctrl
@@ -1971,6 +1975,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|pushctrl
@@ -2039,9 +2045,9 @@ name|c_swtype
 operator|==
 name|NULL
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"switch2() 1"
+literal|"switch2()"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the switch expression was of type enumeration, count the case 	 * labels and the number of enumerators. If both counts are not 	 * equal print a warning. 	 */
@@ -2070,9 +2076,9 @@ name|t_enum
 operator|==
 name|NULL
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"switch2() 2"
+literal|"switch2()"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2360,6 +2366,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -2585,6 +2593,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The end of the loop is only reached if it is no endless loop 	 * or there was a break statement which could be reached. 	 */
@@ -2710,6 +2720,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -2781,6 +2793,8 @@ argument_list|(
 name|tn2
 argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|,
 literal|1
 argument_list|)
@@ -2969,6 +2983,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -3497,6 +3513,8 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

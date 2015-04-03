@@ -447,6 +447,11 @@ name|LocVT
 parameter_list|,
 name|LocInfo
 name|HTP
+parameter_list|,
+name|unsigned
+name|ExtraInfo
+init|=
+literal|0
 parameter_list|)
 block|{
 return|return
@@ -456,7 +461,7 @@ name|ValNo
 argument_list|,
 name|ValVT
 argument_list|,
-literal|0
+name|ExtraInfo
 argument_list|,
 name|LocVT
 argument_list|,
@@ -568,6 +573,15 @@ name|isMemLoc
 argument_list|()
 argument_list|)
 block|;
+return|return
+name|Loc
+return|;
+block|}
+name|unsigned
+name|getExtraInfo
+argument_list|()
+specifier|const
+block|{
 return|return
 name|Loc
 return|;

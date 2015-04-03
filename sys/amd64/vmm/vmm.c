@@ -5574,6 +5574,8 @@ name|uint64_t
 name|gla
 decl_stmt|,
 name|gpa
+decl_stmt|,
+name|cs_base
 decl_stmt|;
 name|struct
 name|vm_guest_paging
@@ -5633,6 +5635,16 @@ operator|.
 name|inst_emul
 operator|.
 name|gpa
+expr_stmt|;
+name|cs_base
+operator|=
+name|vme
+operator|->
+name|u
+operator|.
+name|inst_emul
+operator|.
+name|cs_base
 expr_stmt|;
 name|cs_d
 operator|=
@@ -5719,6 +5731,8 @@ argument_list|,
 name|vme
 operator|->
 name|rip
+operator|+
+name|cs_base
 argument_list|,
 name|length
 argument_list|,
@@ -10385,7 +10399,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|vmm_gla2gpa
+name|vm_gla2gpa
 argument_list|(
 name|vm
 argument_list|,

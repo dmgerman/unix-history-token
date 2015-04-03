@@ -84,6 +84,119 @@ begin_comment
 comment|/* CONFIG_PPC_PMAC */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_WIP
+end_ifdef
+
+begin_comment
+comment|/* FreeBSD: to please GCC 4.2. */
+end_comment
+
+begin_comment
+comment|/* from radeon_encoder.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|uint32_t
+name|radeon_get_encoder_enum
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|uint32_t
+name|supported_device
+parameter_list|,
+name|uint8_t
+name|dac
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|radeon_link_encoder_connector
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* from radeon_connector.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|radeon_add_legacy_connector
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|uint32_t
+name|connector_id
+parameter_list|,
+name|uint32_t
+name|supported_device
+parameter_list|,
+name|int
+name|connector_type
+parameter_list|,
+name|struct
+name|radeon_i2c_bus_rec
+modifier|*
+name|i2c_bus
+parameter_list|,
+name|uint16_t
+name|connector_object_id
+parameter_list|,
+name|struct
+name|radeon_hpd
+modifier|*
+name|hpd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* from radeon_legacy_encoder.c */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|radeon_add_legacy_encoder
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|uint32_t
+name|encoder_enum
+parameter_list|,
+name|uint32_t
+name|supported_device
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* old legacy ATI BIOS routines */
 end_comment
@@ -1659,7 +1772,7 @@ name|size
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1769,7 +1882,7 @@ name|bios_hardcoded_edid_size
 argument_list|,
 name|DRM_MEM_KMS
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3892,7 +4005,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -4026,6 +4139,41 @@ condition|)
 name|found
 operator|=
 literal|1
+expr_stmt|;
+block|}
+comment|/* quirks */
+comment|/* Radeon 9100 (R200) */
+if|if
+condition|(
+operator|(
+name|dev
+operator|->
+name|pci_device
+operator|==
+literal|0x514D
+operator|)
+operator|&&
+operator|(
+name|dev
+operator|->
+name|pci_subvendor
+operator|==
+literal|0x174B
+operator|)
+operator|&&
+operator|(
+name|dev
+operator|->
+name|pci_subdevice
+operator|==
+literal|0x7149
+operator|)
+condition|)
+block|{
+comment|/* vbios value is bad, use the default */
+name|found
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -4472,7 +4620,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -5052,7 +5200,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -5467,7 +5615,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -12244,7 +12392,7 @@ literal|2
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -12282,7 +12430,7 @@ literal|1
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -12310,7 +12458,7 @@ literal|1
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
@@ -12648,7 +12796,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|struct
 name|i2c_board_info
 name|info
@@ -12706,7 +12854,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 block|}
 block|}
@@ -12779,7 +12927,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|struct
 name|i2c_board_info
 name|info
@@ -12843,7 +12991,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 block|}
 block|}
@@ -14252,7 +14400,7 @@ name|index
 operator|+=
 literal|2
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 name|val
 argument_list|)
@@ -14272,7 +14420,7 @@ name|index
 operator|+=
 literal|2
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 name|val
 argument_list|)
@@ -14500,7 +14648,7 @@ name|index
 operator|+=
 literal|2
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 name|val
 argument_list|)
@@ -14866,7 +15014,7 @@ name|offset
 operator|+=
 literal|2
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 name|val
 argument_list|)
@@ -15145,7 +15293,7 @@ block|{
 case|case
 literal|1
 case|:
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|150
 argument_list|)
@@ -15154,7 +15302,7 @@ break|break;
 case|case
 literal|2
 case|:
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|1
 argument_list|)
@@ -15228,7 +15376,7 @@ literal|0
 block|uint32_t mclk_cntl = 						    RREG32_PLL 						    (RADEON_MCLK_CNTL); 						mclk_cntl&= 0xffff0000;
 comment|/*mclk_cntl |= 0x00001111;*/
 comment|/* ??? */
-block|WREG32_PLL(RADEON_MCLK_CNTL, 							   mclk_cntl); 						DRM_MDELAY(10);
+block|WREG32_PLL(RADEON_MCLK_CNTL, 							   mclk_cntl); 						mdelay(10);
 endif|#
 directive|endif
 name|WREG32_PLL
@@ -15241,7 +15389,7 @@ operator|~
 name|RADEON_CG_NO1_DEBUG_0
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|10
 argument_list|)

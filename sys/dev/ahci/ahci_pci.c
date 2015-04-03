@@ -2497,6 +2497,18 @@ name|AHCI_Q_1MSI
 block|}
 block|,
 block|{
+literal|0x00311c36
+block|,
+literal|0x00
+block|,
+literal|"Annapurna"
+block|,
+name|AHCI_Q_FORCE_PI
+operator||
+name|AHCI_Q_RESTORE_CAP
+block|}
+block|,
+block|{
 literal|0x00000000
 block|,
 literal|0x00
@@ -2768,7 +2780,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2792,7 +2804,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2918,7 +2930,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2932,7 +2944,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}

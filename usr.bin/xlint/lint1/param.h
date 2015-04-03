@@ -278,6 +278,26 @@ name|SIZEOF_IS_ULONG
 value|0
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|__aarch64__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|PTRDIFF_IS_LONG
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_IS_ULONG
+value|1
+end_define
+
 begin_else
 else|#
 directive|else

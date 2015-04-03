@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: decl.c,v 1.29 2002/01/18 21:01:39 thorpej Exp $ */
+comment|/* $NetBSD: decl.c,v 1.33 2004/06/20 22:20:16 jmc Exp $ */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: decl.c,v 1.29 2002/01/18 21:01:39 thorpej Exp $"
+literal|"$NetBSD: decl.c,v 1.33 2004/06/20 22:20:16 jmc Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -908,9 +908,9 @@ name|t
 operator|!=
 name|ENUM
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"setcompl() 1"
+literal|"setcompl()"
 argument_list|)
 expr_stmt|;
 name|tp
@@ -1080,7 +1080,7 @@ name|NOTSPEC
 condition|)
 block|{
 comment|/* 			 * something like "typedef int a; int a b;" 			 * This should not happen with current grammar. 			 */
-name|lerror
+name|LERROR
 argument_list|(
 literal|"addtype()"
 argument_list|)
@@ -1231,7 +1231,7 @@ comment|/* %s C does not support 'long long' */
 operator|(
 name|void
 operator|)
-name|gnuism
+name|c99ism
 argument_list|(
 literal|265
 argument_list|,
@@ -1239,7 +1239,7 @@ name|tflag
 condition|?
 literal|"traditional"
 else|:
-literal|"ANSI"
+literal|"c89"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1902,9 +1902,9 @@ name|q
 operator|!=
 name|VOLATILE
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"addqual() 1"
+literal|"addqual()"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2058,9 +2058,9 @@ name|d_nxt
 operator|==
 name|NULL
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"popdecl() 1"
+literal|"popdecl()"
 argument_list|)
 expr_stmt|;
 name|di
@@ -2084,9 +2084,9 @@ case|case
 name|EXTERN
 case|:
 comment|/* there is nothing after external declarations */
-name|lerror
+name|LERROR
 argument_list|(
-literal|"popdecl() 2"
+literal|"popdecl()"
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
@@ -2207,9 +2207,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|lerror
+name|LERROR
 argument_list|(
-literal|"popdecl() 3"
+literal|"popdecl()"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2443,9 +2443,9 @@ operator|)
 condition|)
 block|{
 comment|/* should never happen */
-name|lerror
+name|LERROR
 argument_list|(
-literal|"deftyp() 1"
+literal|"deftyp()"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2571,9 +2571,9 @@ name|VOID
 case|:
 break|break;
 default|default:
-name|lerror
+name|LERROR
 argument_list|(
-literal|"deftyp() 2"
+literal|"deftyp()"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2763,9 +2763,9 @@ name|d_type
 operator|->
 name|t_typedef
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"deftyp() 3"
+literal|"deftyp()"
 argument_list|)
 expr_stmt|;
 comment|/* typedef already qualified with "%s" */
@@ -2799,9 +2799,9 @@ name|d_type
 operator|->
 name|t_typedef
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"deftyp() 4"
+literal|"deftyp()"
 argument_list|)
 expr_stmt|;
 comment|/* typedef already qualified with "%s" */
@@ -3061,7 +3061,7 @@ case|case
 name|FUNC
 case|:
 comment|/* compiler takes size of function */
-name|lerror
+name|LERROR
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -3157,7 +3157,7 @@ name|elsz
 operator|<=
 literal|0
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
 literal|"length()"
 argument_list|)
@@ -3329,9 +3329,9 @@ argument_list|)
 operator|*
 name|CHAR_BIT
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"getbound() 1"
+literal|"getbound()"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3712,7 +3712,7 @@ name|s_name
 operator|==
 name|unnamed
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
 literal|"chktyp()"
 argument_list|)
@@ -3885,9 +3885,9 @@ name|sc
 operator|!=
 name|MOU
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"decl1str() 1"
+literal|"decl1str()"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3918,9 +3918,9 @@ operator|!=
 name|MOU
 condition|)
 comment|/* should be ensured by storesym() */
-name|lerror
+name|LERROR
 argument_list|(
-literal|"decl1str() 2"
+literal|"decl1str()"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4019,6 +4019,12 @@ condition|(
 name|sflag
 condition|)
 block|{
+name|char
+name|buf
+index|[
+literal|64
+index|]
+decl_stmt|;
 comment|/* 					 * bit-field type '%s' invalid in 					 * ANSI C 					 */
 name|warning
 argument_list|(
@@ -4026,6 +4032,13 @@ literal|273
 argument_list|,
 name|tyname
 argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
 name|tp
 argument_list|)
 argument_list|)
@@ -4322,7 +4335,7 @@ literal|0
 condition|)
 block|{
 comment|/* illegal zero sized structure member: %s */
-name|warning
+name|c99ism
 argument_list|(
 literal|39
 argument_list|,
@@ -5078,10 +5091,12 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* zero or negative array dimension */
+comment|/* negative array dimension */
 name|error
 argument_list|(
 literal|20
+argument_list|,
+name|n
 argument_list|)
 expr_stmt|;
 name|n
@@ -5099,10 +5114,12 @@ operator|&&
 name|dim
 condition|)
 block|{
-comment|/* zero or negative array dimension */
-name|warning
+comment|/* zero array dimension */
+name|c99ism
 argument_list|(
-literal|20
+literal|322
+argument_list|,
+name|dim
 argument_list|)
 expr_stmt|;
 block|}
@@ -5846,9 +5863,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|lerror
+name|LERROR
 argument_list|(
-literal|"dname() 1"
+literal|"dname()"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5905,9 +5922,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|lerror
+name|LERROR
 argument_list|(
-literal|"dname() 2"
+literal|"dname()"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6011,17 +6028,17 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|lerror
+name|LERROR
 argument_list|(
-literal|"dname() 3"
+literal|"dname()"
 argument_list|)
 expr_stmt|;
 block|}
 break|break;
 default|default:
-name|lerror
+name|LERROR
 argument_list|(
-literal|"dname() 4"
+literal|"dname()"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6102,7 +6119,7 @@ name|sym
 operator|->
 name|s_defarg
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
 literal|"iname()"
 argument_list|)
@@ -6227,7 +6244,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|lerror
+name|LERROR
 argument_list|(
 literal|"mktag()"
 argument_list|)
@@ -6928,7 +6945,7 @@ literal|"enum"
 expr_stmt|;
 break|break;
 default|default:
-name|lerror
+name|LERROR
 argument_list|(
 literal|"tagttoa()"
 argument_list|)
@@ -7045,7 +7062,7 @@ comment|/* zero sized %s */
 operator|(
 name|void
 operator|)
-name|gnuism
+name|c99ism
 argument_list|(
 literal|47
 argument_list|,
@@ -9110,9 +9127,9 @@ name|src
 operator|->
 name|t_tspec
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"compltyp() 1"
+literal|"compltyp()"
 argument_list|)
 expr_stmt|;
 if|if
@@ -10534,9 +10551,9 @@ case|:
 comment|/* 				 * Warnings and errors are printed in ledecl() 				 */
 break|break;
 default|default:
-name|lerror
+name|LERROR
 argument_list|(
-literal|"decl1loc() 1"
+literal|"decl1loc()"
 argument_list|)
 expr_stmt|;
 block|}
@@ -11106,7 +11123,7 @@ name|d_ctx
 operator|!=
 name|PARG
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
 literal|"aname()"
 argument_list|)
@@ -11675,9 +11692,9 @@ name|arg
 operator|->
 name|s_set
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"chkausg() 1"
+literal|"chkausg()"
 argument_list|)
 expr_stmt|;
 if|if
@@ -11754,9 +11771,9 @@ name|s_blklev
 operator|==
 literal|0
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"chkvusg() 1"
+literal|"chkvusg()"
 argument_list|)
 expr_stmt|;
 comment|/* errors in expressions easily cause lots of these warnings */
@@ -12025,9 +12042,9 @@ name|s_blklev
 operator|!=
 literal|1
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"chklusg() 1"
+literal|"chklusg()"
 argument_list|)
 expr_stmt|;
 if|if
@@ -12193,9 +12210,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|lerror
+name|LERROR
 argument_list|(
-literal|"chktusg() 1"
+literal|"chktusg()"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12312,9 +12329,9 @@ name|s_kind
 operator|!=
 name|FMOS
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"chkglsyms() 1"
+literal|"chkglsyms()"
 argument_list|)
 expr_stmt|;
 block|}
@@ -12368,9 +12385,9 @@ name|s_scl
 operator|!=
 name|STATIC
 condition|)
-name|lerror
+name|LERROR
 argument_list|(
-literal|"chkglvar() 1"
+literal|"chkglvar()"
 argument_list|)
 expr_stmt|;
 name|glchksz

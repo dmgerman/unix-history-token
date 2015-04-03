@@ -2998,7 +2998,7 @@ literal|"eq"
 argument_list|,
 name|CTLTYPE_INT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 name|d
 argument_list|,
@@ -3012,16 +3012,6 @@ argument_list|,
 literal|"I"
 argument_list|,
 literal|"Bass/Treble Equalizer (0=disable, 1=enable, 2=bypass)"
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buf
-argument_list|)
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3079,7 +3069,7 @@ literal|"eq_preamp"
 argument_list|,
 name|CTLTYPE_STRING
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 name|d
 argument_list|,

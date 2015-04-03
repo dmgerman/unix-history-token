@@ -674,34 +674,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|RS690_MC_NB_CNTL
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|RS690_HIDE_MMCFG_BAR
-value|(1<< 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RS690_AGPMODE30
-value|(1<< 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RS690_AGP30ENHANCED
-value|(1<< 5)
-end_define
-
-begin_define
-define|#
-directive|define
 name|RS690_MC_DATA
 value|0x7c
 end_define
@@ -2149,8 +2121,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|AVIVO_D1MODE_MASTER_UPDATE_LOCK
+value|0x60e0
+end_define
+
+begin_define
+define|#
+directive|define
 name|AVIVO_D1MODE_MASTER_UPDATE_MODE
 value|0x60e4
+end_define
+
+begin_define
+define|#
+directive|define
+name|AVIVO_D1CRTC_UPDATE_LOCK
+value|0x60e8
 end_define
 
 begin_comment

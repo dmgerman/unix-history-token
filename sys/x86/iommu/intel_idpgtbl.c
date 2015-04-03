@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -2025,6 +2031,19 @@ operator|(
 name|uintmax_t
 operator|)
 name|pg_sz
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|pg_sz
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"pg_sz 0 lvl %d"
+operator|,
+name|lvl
 operator|)
 argument_list|)
 expr_stmt|;

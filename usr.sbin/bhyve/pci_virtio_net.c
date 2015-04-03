@@ -2702,11 +2702,6 @@ argument_list|,
 name|VIRTIO_TYPE_NET
 argument_list|)
 expr_stmt|;
-name|pci_lintr_request
-argument_list|(
-name|pi
-argument_list|)
-expr_stmt|;
 comment|/* link always up */
 name|sc
 operator|->

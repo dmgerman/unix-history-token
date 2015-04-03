@@ -554,13 +554,6 @@ name|sin
 operator|.
 name|sin_addr
 expr_stmt|;
-name|ipo
-operator|->
-name|ip_id
-operator|=
-name|ip_newid
-argument_list|()
-expr_stmt|;
 comment|/* If the inner protocol is IP... */
 switch|switch
 condition|(
@@ -752,6 +745,11 @@ goto|goto
 name|nofamily
 goto|;
 block|}
+name|ip_fillid
+argument_list|(
+name|ipo
+argument_list|)
+expr_stmt|;
 name|otos
 operator|=
 literal|0

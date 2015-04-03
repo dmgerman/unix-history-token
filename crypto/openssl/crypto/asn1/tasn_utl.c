@@ -4,11 +4,11 @@ comment|/* tasn_utl.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000-2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000-2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -68,7 +68,7 @@ value|(void *)(((char *) addr) + offset)
 end_define
 
 begin_comment
-comment|/* Given an ASN1_ITEM CHOICE type return  * the selector value  */
+comment|/*  * Given an ASN1_ITEM CHOICE type return the selector value  */
 end_comment
 
 begin_function
@@ -108,7 +108,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given an ASN1_ITEM CHOICE type set  * the selector value, return old value.  */
+comment|/*  * Given an ASN1_ITEM CHOICE type set the selector value, return old value.  */
 end_comment
 
 begin_function
@@ -164,7 +164,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Do reference counting. The value 'op' decides what to do.   * if it is +1 then the count is incremented. If op is 0 count is  * set to 1. If op is -1 count is decremented and the return value  * is the current refrence count or 0 if no reference count exists.  */
+comment|/*  * Do reference counting. The value 'op' decides what to do. if it is +1  * then the count is incremented. If op is 0 count is set to 1. If op is -1  * count is decremented and the return value is the current refrence count or  * 0 if no reference count exists.  */
 end_comment
 
 begin_function
@@ -771,7 +771,7 @@ operator|->
 name|offset
 argument_list|)
 expr_stmt|;
-comment|/* NOTE for BOOLEAN types the field is just a plain  	 * int so we can't return int **, so settle for 	 * (int *). 	 */
+comment|/*      * NOTE for BOOLEAN types the field is just a plain int so we can't      * return int **, so settle for (int *).      */
 return|return
 name|pvaltmp
 return|;
@@ -779,7 +779,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Handle ANY DEFINED BY template, find the selector, look up  * the relevant ASN1_TEMPLATE in the table and return it.  */
+comment|/*  * Handle ANY DEFINED BY template, find the selector, look up the relevant  * ASN1_TEMPLATE in the table and return it.  */
 end_comment
 
 begin_function
@@ -883,7 +883,7 @@ operator|->
 name|null_tt
 return|;
 block|}
-comment|/* Convert type to a long: 	 * NB: don't check for NID_undef here because it 	 * might be a legitimate value in the table 	 */
+comment|/*      * Convert type to a long: NB: don't check for NID_undef here because it      * might be a legitimate value in the table      */
 if|if
 condition|(
 name|tt
@@ -917,7 +917,7 @@ operator|*
 name|sfld
 argument_list|)
 expr_stmt|;
-comment|/* Try to find matching entry in table 	 * Maybe should check application types first to 	 * allow application override? Might also be useful 	 * to have a flag which indicates table is sorted and 	 * we can do a binary search. For now stick to a 	 * linear search. 	 */
+comment|/*      * Try to find matching entry in table Maybe should check application      * types first to allow application override? Might also be useful to      * have a flag which indicates table is sorted and we can do a binary      * search. For now stick to a linear search.      */
 for|for
 control|(
 name|atbl

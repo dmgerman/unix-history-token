@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ntp_fp.h"
 end_include
 
@@ -13,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|GPSORIGIN
-value|ULONG_CONST(2524953600)
+value|2524953600UL
 end_define
 
 begin_comment

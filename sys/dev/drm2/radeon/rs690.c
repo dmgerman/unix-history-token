@@ -97,7 +97,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|1
 argument_list|)

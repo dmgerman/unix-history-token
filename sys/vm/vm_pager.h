@@ -514,6 +514,9 @@ name|reqpage
 parameter_list|,
 name|int
 name|npages
+parameter_list|,
+name|boolean_t
+name|object_locked
 parameter_list|)
 function_decl|;
 end_function_decl

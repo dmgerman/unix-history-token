@@ -1750,6 +1750,236 @@ comment|/* PL1 only Thread ID Register */
 end_comment
 
 begin_comment
+comment|/*  * CP15 C14 registers  * These are the Generic Timer registers and may be unallocated on some SoCs.  * Only use these when you know the Generic Timer is available.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTFRQ
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr, c14, c0, 0
+end_define
+
+begin_comment
+comment|/* Counter Frequency Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTKCTL
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr, c14, c1, 0
+end_define
+
+begin_comment
+comment|/* Timer PL1 Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTP_TVAL
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr, c14, c2, 0
+end_define
+
+begin_comment
+comment|/* PL1 Physical Timer Value Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTP_CTL
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr, c14, c2, 1
+end_define
+
+begin_comment
+comment|/* PL1 Physical Timer Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTV_TVAL
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr, c14, c3, 0
+end_define
+
+begin_comment
+comment|/* Virtual Timer Value Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTV_CTL
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr, c14, c3, 1
+end_define
+
+begin_comment
+comment|/* Virtual Timer Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTHCTL
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 4, rr, c14, c1, 0
+end_define
+
+begin_comment
+comment|/* Timer PL2 Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTHP_TVAL
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 4, rr, c14, c2, 0
+end_define
+
+begin_comment
+comment|/* PL2 Physical Timer Value Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTHP_CTL
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 4, rr, c14, c2, 1
+end_define
+
+begin_comment
+comment|/* PL2 Physical Timer Control Register */
+end_comment
+
+begin_comment
+comment|/* 64-bit registers for use with mcrr/mrrc */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTPCT
+parameter_list|(
+name|rq
+parameter_list|,
+name|rr
+parameter_list|)
+value|p15, 0, rq, rr, c14
+end_define
+
+begin_comment
+comment|/* Physical Count Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTVCT
+parameter_list|(
+name|rq
+parameter_list|,
+name|rr
+parameter_list|)
+value|p15, 1, rq, rr, c14
+end_define
+
+begin_comment
+comment|/* Virtual Count Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTP_CVAL
+parameter_list|(
+name|rq
+parameter_list|,
+name|rr
+parameter_list|)
+value|p15, 2, rq, rr, c14
+end_define
+
+begin_comment
+comment|/* PL1 Physical Timer Compare Value Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTV_CVAL
+parameter_list|(
+name|rq
+parameter_list|,
+name|rr
+parameter_list|)
+value|p15, 3, rq, rr, c14
+end_define
+
+begin_comment
+comment|/* Virtual Timer Compare Value Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTVOFF
+parameter_list|(
+name|rq
+parameter_list|,
+name|rr
+parameter_list|)
+value|p15, 4, rq, rr, c14
+end_define
+
+begin_comment
+comment|/* Virtual Offset Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_CNTHP_CVAL
+parameter_list|(
+name|rq
+parameter_list|,
+name|rr
+parameter_list|)
+value|p15, 6, rq, rr, c14
+end_define
+
+begin_comment
+comment|/* PL2 Physical Timer Compare Value Register */
+end_comment
+
+begin_comment
 comment|/*  * CP15 C15 registers  */
 end_comment
 

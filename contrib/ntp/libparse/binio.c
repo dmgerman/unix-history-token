@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"binio.h"
 end_include
 
@@ -178,6 +184,9 @@ literal|16
 expr_stmt|;
 name|retval
 operator||=
+operator|(
+name|u_long
+operator|)
 operator|*
 operator|(
 operator|(
@@ -432,6 +441,9 @@ name|retval
 decl_stmt|;
 name|retval
 operator|=
+operator|(
+name|u_long
+operator|)
 operator|*
 operator|(
 operator|(

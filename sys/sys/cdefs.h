@@ -22,6 +22,27 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__has_attribute
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__has_attribute
+parameter_list|(
+name|x
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__has_extension
 end_ifndef
 
@@ -264,8 +285,8 @@ name|defined
 argument_list|(
 name|__cplusplus
 argument_list|)
-expr|\
 operator|&&
+expr|\
 name|__INTEL_COMPILER
 operator|<
 literal|800
@@ -1157,6 +1178,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* lint */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -1813,6 +1838,13 @@ parameter_list|)
 value|__attribute__((__nonnull__(x)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|__nonnull_all
+value|__attribute__((__nonnull__))
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1825,6 +1857,12 @@ name|__nonnull
 parameter_list|(
 name|x
 parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__nonnull_all
 end_define
 
 begin_endif
@@ -1850,6 +1888,13 @@ name|__fastcall
 value|__attribute__((__fastcall__))
 end_define
 
+begin_define
+define|#
+directive|define
+name|__result_use_check
+value|__attribute__((__warn_unused_result__))
+end_define
+
 begin_else
 else|#
 directive|else
@@ -1859,6 +1904,12 @@ begin_define
 define|#
 directive|define
 name|__fastcall
+end_define
+
+begin_define
+define|#
+directive|define
+name|__result_use_check
 end_define
 
 begin_endif
@@ -1893,6 +1944,51 @@ begin_define
 define|#
 directive|define
 name|__returns_twice
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__has_attribute
+argument_list|(
+name|alloc_size
+argument_list|)
+operator|||
+name|__GNUC_PREREQ__
+argument_list|(
+literal|4
+operator|,
+literal|3
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__alloc_size
+parameter_list|(
+name|x
+parameter_list|)
+value|__attribute__((__alloc_size__(x)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__alloc_size
+parameter_list|(
+name|x
+parameter_list|)
 end_define
 
 begin_endif
@@ -2806,7 +2902,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/*  * The following definition might not work well if used in header files,  * but it should be better than nothing.  If you want a "do nothing"  * version, then it should generate some harmless declaration, such as:  *    #define __IDSTRING(name,string)	struct __hack  */
+comment|/*  * The following definition might not work well if used in header files,  * but it should be better than nothing.  If you want a "do nothing"  * version, then it should generate some harmless declaration, such as:  *    #define	__IDSTRING(name,string)	struct __hack  */
 end_comment
 
 begin_define

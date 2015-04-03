@@ -89,7 +89,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_function_decl
@@ -111,7 +111,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 begin_function_decl
@@ -371,7 +371,7 @@ name|PM_PROFILE_AUTO
 case|:
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 if|if
 condition|(
 name|power_supply_is_system_supplied
@@ -440,7 +440,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 break|break;
 case|case
 name|PM_PROFILE_LOW
@@ -735,7 +735,7 @@ name|false
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|wait_event_timeout
 argument_list|(
 name|rdev
@@ -758,7 +758,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 block|}
 end_function
@@ -867,7 +867,7 @@ name|pm
 operator|.
 name|default_sclk
 expr_stmt|;
-comment|/* starting with BTC, there is one state that is used for both 		 * MH and SH.  Difference is that we always use the high clock index for 		 * mclk. 		 */
+comment|/* starting with BTC, there is one state that is used for both 		 * MH and SH.  Difference is that we always use the high clock index for 		 * mclk and vddci. 		 */
 if|if
 condition|(
 operator|(
@@ -1254,7 +1254,13 @@ name|current_power_state_index
 operator|)
 condition|)
 return|return;
-comment|//DRM_LOCK(rdev->ddev); XXX Recursion, already locked in drm_attach/drm_load -- dumbbell@
+name|DRM_LOCK
+argument_list|(
+name|rdev
+operator|->
+name|ddev
+argument_list|)
+expr_stmt|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -1344,7 +1350,13 @@ operator|.
 name|mclk_lock
 argument_list|)
 expr_stmt|;
-comment|//DRM_UNLOCK(rdev->ddev); XXX Recursion, already locked in drm_attach/drm_load -- dumbbell@
+name|DRM_UNLOCK
+argument_list|(
+name|rdev
+operator|->
+name|ddev
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 block|}
@@ -1532,7 +1544,13 @@ operator|.
 name|mclk_lock
 argument_list|)
 expr_stmt|;
-comment|//DRM_UNLOCK(rdev->ddev); XXX Recursion, already locked in drm_attach/drm_load -- dumbbell@
+name|DRM_UNLOCK
+argument_list|(
+name|rdev
+operator|->
+name|ddev
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1765,7 +1783,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_function
@@ -2350,7 +2368,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|cancel_delayed_work_sync
 argument_list|(
 operator|&
@@ -2363,7 +2381,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 else|else
 block|{
@@ -2672,7 +2690,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 begin_function
@@ -2693,7 +2711,7 @@ literal|0
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|rdev
 operator|->
 name|pm
@@ -2704,7 +2722,7 @@ name|NULL
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 switch|switch
 condition|(
 name|rdev
@@ -2746,7 +2764,7 @@ name|err
 return|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|rdev
 operator|->
 name|pm
@@ -2852,7 +2870,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 break|break;
 default|default:
 break|break;
@@ -2876,7 +2894,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 if|if
 condition|(
 name|rdev
@@ -2913,7 +2931,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 end_function
 
@@ -2979,7 +2997,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|cancel_delayed_work_sync
 argument_list|(
 operator|&
@@ -2992,7 +3010,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 end_function
 
@@ -3251,7 +3269,7 @@ name|DYNPM_STATE_ACTIVE
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|schedule_delayed_work
 argument_list|(
 operator|&
@@ -3269,7 +3287,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 name|sx_xunlock
 argument_list|(
@@ -3564,7 +3582,7 @@ name|ret
 return|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|INIT_DELAYED_WORK
 argument_list|(
 operator|&
@@ -3579,7 +3597,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 if|if
 condition|(
 name|rdev
@@ -3594,7 +3612,7 @@ block|{
 comment|/* where's the best place to put these? */
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|ret
 operator|=
 name|device_create_file
@@ -3609,7 +3627,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 if|if
 condition|(
 name|ret
@@ -3621,7 +3639,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|ret
 operator|=
 name|device_create_file
@@ -3636,7 +3654,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 if|if
 condition|(
 name|ret
@@ -3693,14 +3711,6 @@ operator|>
 literal|1
 condition|)
 block|{
-name|DRM_UNLOCK
-argument_list|(
-name|rdev
-operator|->
-name|ddev
-argument_list|)
-expr_stmt|;
-comment|/* Work around LOR. */
 name|sx_xlock
 argument_list|(
 operator|&
@@ -3786,16 +3796,9 @@ operator|.
 name|mutex
 argument_list|)
 expr_stmt|;
-name|DRM_LOCK
-argument_list|(
-name|rdev
-operator|->
-name|ddev
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|cancel_delayed_work_sync
 argument_list|(
 operator|&
@@ -3828,7 +3831,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 if|if
 condition|(
@@ -4094,7 +4097,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|cancel_delayed_work
 argument_list|(
 operator|&
@@ -4107,7 +4110,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 name|rdev
 operator|->
 name|pm
@@ -4193,7 +4196,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|schedule_delayed_work
 argument_list|(
 operator|&
@@ -4211,7 +4214,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 elseif|else
 if|if
@@ -4235,7 +4238,7 @@ name|DYNPM_STATE_ACTIVE
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|schedule_delayed_work
 argument_list|(
 operator|&
@@ -4253,7 +4256,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 name|DRM_DEBUG_DRIVER
 argument_list|(
 literal|"radeon: dynamic power management activated\n"
@@ -4277,7 +4280,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|cancel_delayed_work
 argument_list|(
 operator|&
@@ -4290,7 +4293,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 name|rdev
 operator|->
 name|pm
@@ -4494,7 +4497,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_function
@@ -4842,7 +4845,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 begin_comment
@@ -4920,6 +4923,39 @@ operator|.
 name|default_sclk
 argument_list|)
 expr_stmt|;
+comment|/* radeon_get_engine_clock is not reliable on APUs so just print the current clock */
+if|if
+condition|(
+operator|(
+name|rdev
+operator|->
+name|family
+operator|>=
+name|CHIP_PALM
+operator|)
+operator|&&
+operator|(
+name|rdev
+operator|->
+name|flags
+operator|&
+name|RADEON_IS_IGP
+operator|)
+condition|)
+name|seq_printf
+argument_list|(
+name|m
+argument_list|,
+literal|"current engine clock: %u0 kHz\n"
+argument_list|,
+name|rdev
+operator|->
+name|pm
+operator|.
+name|current_sclk
+argument_list|)
+expr_stmt|;
+else|else
 name|seq_printf
 argument_list|(
 name|m

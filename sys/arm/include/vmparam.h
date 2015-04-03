@@ -167,12 +167,23 @@ begin_comment
 comment|/*  * The line between user space and kernel space  * Mappings>= KERNEL_BASE are constant across all processes  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|KERNBASE
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|KERNBASE
 value|0xc0000000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * max number of non-contig chunks of physical RAM you can have  */
@@ -303,20 +314,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|UPT_MAX_ADDRESS
-value|VADDR(UPTPTDI + 3, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UPT_MIN_ADDRESS
-value|VADDR(UPTPTDI, 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|VM_MIN_ADDRESS
 value|(0x00001000)
 end_define
@@ -331,17 +328,17 @@ begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|KERNBASE
+value|(KERNBASE - 0x00400000)
 end_define
+
+begin_comment
+comment|/* !!! PT2MAP_SIZE */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* VM_MAXUSER_ADDRESS */
-end_comment
 
 begin_define
 define|#

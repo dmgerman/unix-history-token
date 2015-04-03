@@ -812,81 +812,102 @@ begin_comment
 comment|/* rssi-based processing ena'd*/
 end_comment
 
-begin_struct
-struct|struct
-name|ar5212Stats
-block|{
-name|uint32_t
-name|ast_ani_niup
-decl_stmt|;
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|struct ar5212Stats { 	uint32_t	ast_ani_niup;
 comment|/* ANI increased noise immunity */
-name|uint32_t
-name|ast_ani_nidown
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_nidown;
 comment|/* ANI decreased noise immunity */
-name|uint32_t
-name|ast_ani_spurup
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_spurup;
 comment|/* ANI increased spur immunity */
-name|uint32_t
-name|ast_ani_spurdown
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_spurdown;
 comment|/* ANI descreased spur immunity */
-name|uint32_t
-name|ast_ani_ofdmon
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_ofdmon;
 comment|/* ANI OFDM weak signal detect on */
-name|uint32_t
-name|ast_ani_ofdmoff
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_ofdmoff;
 comment|/* ANI OFDM weak signal detect off */
-name|uint32_t
-name|ast_ani_cckhigh
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_cckhigh;
 comment|/* ANI CCK weak signal threshold high */
-name|uint32_t
-name|ast_ani_ccklow
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_ccklow;
 comment|/* ANI CCK weak signal threshold low */
-name|uint32_t
-name|ast_ani_stepup
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_stepup;
 comment|/* ANI increased first step level */
-name|uint32_t
-name|ast_ani_stepdown
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_stepdown;
 comment|/* ANI decreased first step level */
-name|uint32_t
-name|ast_ani_ofdmerrs
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_ofdmerrs;
 comment|/* ANI cumulative ofdm phy err count */
-name|uint32_t
-name|ast_ani_cckerrs
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_cckerrs;
 comment|/* ANI cumulative cck phy err count */
-name|uint32_t
-name|ast_ani_reset
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_reset;
 comment|/* ANI parameters zero'd for non-STA */
-name|uint32_t
-name|ast_ani_lzero
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_lzero;
 comment|/* ANI listen time forced to zero */
-name|uint32_t
-name|ast_ani_lneg
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|uint32_t	ast_ani_lneg;
 comment|/* ANI listen time calculated< 0 */
-name|HAL_MIB_STATS
-name|ast_mibstats
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|HAL_MIB_STATS	ast_mibstats;
 comment|/* MIB counter stats */
-name|HAL_NODE_STATS
-name|ast_nodestats
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|HAL_NODE_STATS	ast_nodestats;
 comment|/* Latest rssi stats from driver */
-block|}
-struct|;
-end_struct
+end_comment
+
+begin_endif
+unit|};
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * NF Cal history buffer  */
@@ -991,8 +1012,7 @@ name|uint32_t
 name|ah_maskReg
 decl_stmt|;
 comment|/* copy of AR_IMR */
-name|struct
-name|ar5212Stats
+name|HAL_ANI_STATS
 name|ah_stats
 decl_stmt|;
 comment|/* various statistics */
@@ -1187,10 +1207,6 @@ name|AH_MAXCHAN
 index|]
 decl_stmt|;
 comment|/* per-channel state */
-name|HAL_CHANNEL_SURVEY
-name|ah_chansurvey
-decl_stmt|;
-comment|/* channel survey */
 comment|/* AR5416 uses some of the AR5212 ANI code; these are the ANI methods */
 name|HAL_BOOL
 function_decl|(
@@ -1249,6 +1265,9 @@ name|ah_rx_chainmask
 decl_stmt|;
 name|uint32_t
 name|ah_tx_chainmask
+decl_stmt|;
+name|HAL_ANI_STATE
+name|ext_ani_state
 decl_stmt|;
 block|}
 struct|;
@@ -3833,8 +3852,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|struct
-name|ar5212Stats
+name|HAL_ANI_STATS
 modifier|*
 name|ar5212AniGetCurrentStats
 parameter_list|(

@@ -121,7 +121,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Fixme!!                Find out the values of these constants for other platforms.     */
+comment|/*      * Fixme!! Find out the values of these constants for other platforms.      */
 end_comment
 
 begin_define

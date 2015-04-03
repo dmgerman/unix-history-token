@@ -4,11 +4,11 @@ comment|/* evp_locl.h */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -25,7 +25,7 @@ directive|define
 name|BLOCK_CIPHER_ecb_loop
 parameter_list|()
 define|\
-value|size_t i, bl; \ 	bl = ctx->cipher->block_size;\ 	if(inl< bl) return 1;\ 	inl -= bl; \ 	for(i=0; i<= inl; i+=bl)
+value|size_t i, bl; \         bl = ctx->cipher->block_size;\         if(inl< bl) return 1;\         inl -= bl; \         for(i=0; i<= inl; i+=bl)
 end_define
 
 begin_define
@@ -42,7 +42,7 @@ parameter_list|,
 name|ksched
 parameter_list|)
 define|\
-value|static int cname##_ecb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, size_t inl) \ {\ 	BLOCK_CIPHER_ecb_loop() \ 		cprefix##_ecb_encrypt(in + i, out + i,&((kstruct *)ctx->cipher_data)->ksched, ctx->encrypt);\ 	return 1;\ }
+value|static int cname##_ecb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, size_t inl) \ {\         BLOCK_CIPHER_ecb_loop() \                 cprefix##_ecb_encrypt(in + i, out + i,&((kstruct *)ctx->cipher_data)->ksched, ctx->encrypt);\         return 1;\ }
 end_define
 
 begin_define
@@ -68,7 +68,7 @@ parameter_list|,
 name|ksched
 parameter_list|)
 define|\
-value|static int cname##_ofb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, size_t inl) \ {\ 	while(inl>=EVP_MAXCHUNK)\ 	    {\ 	    cprefix##_ofb##cbits##_encrypt(in, out, (long)EVP_MAXCHUNK,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num);\ 	    inl-=EVP_MAXCHUNK;\ 	    in +=EVP_MAXCHUNK;\ 	    out+=EVP_MAXCHUNK;\ 	    }\ 	if (inl)\ 	    cprefix##_ofb##cbits##_encrypt(in, out, (long)inl,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num);\ 	return 1;\ }
+value|static int cname##_ofb_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, size_t inl) \ {\         while(inl>=EVP_MAXCHUNK)\             {\             cprefix##_ofb##cbits##_encrypt(in, out, (long)EVP_MAXCHUNK,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num);\             inl-=EVP_MAXCHUNK;\             in +=EVP_MAXCHUNK;\             out+=EVP_MAXCHUNK;\             }\         if (inl)\             cprefix##_ofb##cbits##_encrypt(in, out, (long)inl,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num);\         return 1;\ }
 end_define
 
 begin_define
@@ -85,7 +85,7 @@ parameter_list|,
 name|ksched
 parameter_list|)
 define|\
-value|static int cname##_cbc_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, size_t inl) \ {\ 	while(inl>=EVP_MAXCHUNK) \ 	    {\ 	    cprefix##_cbc_encrypt(in, out, (long)EVP_MAXCHUNK,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv, ctx->encrypt);\ 	    inl-=EVP_MAXCHUNK;\ 	    in +=EVP_MAXCHUNK;\ 	    out+=EVP_MAXCHUNK;\ 	    }\ 	if (inl)\ 	    cprefix##_cbc_encrypt(in, out, (long)inl,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv, ctx->encrypt);\ 	return 1;\ }
+value|static int cname##_cbc_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, size_t inl) \ {\         while(inl>=EVP_MAXCHUNK) \             {\             cprefix##_cbc_encrypt(in, out, (long)EVP_MAXCHUNK,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv, ctx->encrypt);\             inl-=EVP_MAXCHUNK;\             in +=EVP_MAXCHUNK;\             out+=EVP_MAXCHUNK;\             }\         if (inl)\             cprefix##_cbc_encrypt(in, out, (long)inl,&((kstruct *)ctx->cipher_data)->ksched, ctx->iv, ctx->encrypt);\         return 1;\ }
 end_define
 
 begin_define
@@ -104,7 +104,7 @@ parameter_list|,
 name|ksched
 parameter_list|)
 define|\
-value|static int cname##_cfb##cbits##_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, size_t inl) \ {\ 	size_t chunk=EVP_MAXCHUNK;\ 	if (cbits==1)  chunk>>=3;\ 	if (inl<chunk) chunk=inl;\ 	while(inl&& inl>=chunk)\ 	    {\             cprefix##_cfb##cbits##_encrypt(in, out, (long)((cbits==1)&& !(ctx->flags& EVP_CIPH_FLAG_LENGTH_BITS) ?inl*8:inl),&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num, ctx->encrypt);\ 	    inl-=chunk;\ 	    in +=chunk;\ 	    out+=chunk;\ 	    if(inl<chunk) chunk=inl;\ 	    }\ 	return 1;\ }
+value|static int cname##_cfb##cbits##_cipher(EVP_CIPHER_CTX *ctx, unsigned char *out, const unsigned char *in, size_t inl) \ {\         size_t chunk=EVP_MAXCHUNK;\         if (cbits==1)  chunk>>=3;\         if (inl<chunk) chunk=inl;\         while(inl&& inl>=chunk)\             {\             cprefix##_cfb##cbits##_encrypt(in, out, (long)((cbits==1)&& !(ctx->flags& EVP_CIPH_FLAG_LENGTH_BITS) ?inl*8:inl),&((kstruct *)ctx->cipher_data)->ksched, ctx->iv,&ctx->num, ctx->encrypt);\             inl-=chunk;\             in +=chunk;\             out+=chunk;\             if(inl<chunk) chunk=inl;\             }\         return 1;\ }
 end_define
 
 begin_define
@@ -123,7 +123,7 @@ parameter_list|,
 name|ksched
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_func_cbc(cname, cprefix, kstruct, ksched) \ 	BLOCK_CIPHER_func_cfb(cname, cprefix, cbits, kstruct, ksched) \ 	BLOCK_CIPHER_func_ecb(cname, cprefix, kstruct, ksched) \ 	BLOCK_CIPHER_func_ofb(cname, cprefix, cbits, kstruct, ksched)
+value|BLOCK_CIPHER_func_cbc(cname, cprefix, kstruct, ksched) \         BLOCK_CIPHER_func_cfb(cname, cprefix, cbits, kstruct, ksched) \         BLOCK_CIPHER_func_ecb(cname, cprefix, kstruct, ksched) \         BLOCK_CIPHER_func_ofb(cname, cprefix, cbits, kstruct, ksched)
 end_define
 
 begin_define
@@ -162,7 +162,7 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|static const EVP_CIPHER cname##_##mode = { \ 	nid##_##nmode, block_size, key_len, iv_len, \ 	flags | EVP_CIPH_##MODE##_MODE, \ 	init_key, \ 	cname##_##mode##_cipher, \ 	cleanup, \ 	sizeof(kstruct), \ 	set_asn1, get_asn1,\ 	ctrl, \ 	NULL \ }; \ const EVP_CIPHER *EVP_##cname##_##mode(void) { return&cname##_##mode; }
+value|static const EVP_CIPHER cname##_##mode = { \         nid##_##nmode, block_size, key_len, iv_len, \         flags | EVP_CIPH_##MODE##_MODE, \         init_key, \         cname##_##mode##_cipher, \         cleanup, \         sizeof(kstruct), \         set_asn1, get_asn1,\         ctrl, \         NULL \ }; \ const EVP_CIPHER *EVP_##cname##_##mode(void) { return&cname##_##mode; }
 end_define
 
 begin_define
@@ -195,7 +195,7 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_def1(cname, cbc, cbc, CBC, kstruct, nid, block_size, key_len, \ 		  iv_len, flags, init_key, cleanup, set_asn1, get_asn1, ctrl)
+value|BLOCK_CIPHER_def1(cname, cbc, cbc, CBC, kstruct, nid, block_size, key_len, \                   iv_len, flags, init_key, cleanup, set_asn1, get_asn1, ctrl)
 end_define
 
 begin_define
@@ -228,7 +228,7 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_def1(cname, cfb##cbits, cfb##cbits, CFB, kstruct, nid, 1, \ 		  key_len, iv_len, flags, init_key, cleanup, set_asn1, \ 		  get_asn1, ctrl)
+value|BLOCK_CIPHER_def1(cname, cfb##cbits, cfb##cbits, CFB, kstruct, nid, 1, \                   key_len, iv_len, flags, init_key, cleanup, set_asn1, \                   get_asn1, ctrl)
 end_define
 
 begin_define
@@ -261,7 +261,7 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_def1(cname, ofb##cbits, ofb, OFB, kstruct, nid, 1, \ 		  key_len, iv_len, flags, init_key, cleanup, set_asn1, \ 		  get_asn1, ctrl)
+value|BLOCK_CIPHER_def1(cname, ofb##cbits, ofb, OFB, kstruct, nid, 1, \                   key_len, iv_len, flags, init_key, cleanup, set_asn1, \                   get_asn1, ctrl)
 end_define
 
 begin_define
@@ -292,7 +292,7 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_def1(cname, ecb, ecb, ECB, kstruct, nid, block_size, key_len, \ 		  0, flags, init_key, cleanup, set_asn1, get_asn1, ctrl)
+value|BLOCK_CIPHER_def1(cname, ecb, ecb, ECB, kstruct, nid, block_size, key_len, \                   0, flags, init_key, cleanup, set_asn1, get_asn1, ctrl)
 end_define
 
 begin_define
@@ -327,11 +327,11 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_def_cbc(cname, kstruct, nid, block_size, key_len, iv_len, flags, \ 		     init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_cfb(cname, kstruct, nid, key_len, iv_len, cbits, \ 		     flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ofb(cname, kstruct, nid, key_len, iv_len, cbits, \ 		     flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ecb(cname, kstruct, nid, block_size, key_len, flags, \ 		     init_key, cleanup, set_asn1, get_asn1, ctrl)
+value|BLOCK_CIPHER_def_cbc(cname, kstruct, nid, block_size, key_len, iv_len, flags, \                      init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_cfb(cname, kstruct, nid, key_len, iv_len, cbits, \                      flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ofb(cname, kstruct, nid, key_len, iv_len, cbits, \                      flags, init_key, cleanup, set_asn1, get_asn1, ctrl) \ BLOCK_CIPHER_def_ecb(cname, kstruct, nid, block_size, key_len, flags, \                      init_key, cleanup, set_asn1, get_asn1, ctrl)
 end_define
 
 begin_comment
-comment|/* #define BLOCK_CIPHER_defs(cname, kstruct, \ 				nid, block_size, key_len, iv_len, flags,\ 				 init_key, cleanup, set_asn1, get_asn1, ctrl)\ static const EVP_CIPHER cname##_cbc = {\ 	nid##_cbc, block_size, key_len, iv_len, \ 	flags | EVP_CIPH_CBC_MODE,\ 	init_key,\ 	cname##_cbc_cipher,\ 	cleanup,\ 	sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\ 		sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\ 	set_asn1, get_asn1,\ 	ctrl, \ 	NULL \ };\ const EVP_CIPHER *EVP_##cname##_cbc(void) { return&cname##_cbc; }\ static const EVP_CIPHER cname##_cfb = {\ 	nid##_cfb64, 1, key_len, iv_len, \ 	flags | EVP_CIPH_CFB_MODE,\ 	init_key,\ 	cname##_cfb_cipher,\ 	cleanup,\ 	sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\ 		sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\ 	set_asn1, get_asn1,\ 	ctrl,\ 	NULL \ };\ const EVP_CIPHER *EVP_##cname##_cfb(void) { return&cname##_cfb; }\ static const EVP_CIPHER cname##_ofb = {\ 	nid##_ofb64, 1, key_len, iv_len, \ 	flags | EVP_CIPH_OFB_MODE,\ 	init_key,\ 	cname##_ofb_cipher,\ 	cleanup,\ 	sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\ 		sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\ 	set_asn1, get_asn1,\ 	ctrl,\ 	NULL \ };\ const EVP_CIPHER *EVP_##cname##_ofb(void) { return&cname##_ofb; }\ static const EVP_CIPHER cname##_ecb = {\ 	nid##_ecb, block_size, key_len, iv_len, \ 	flags | EVP_CIPH_ECB_MODE,\ 	init_key,\ 	cname##_ecb_cipher,\ 	cleanup,\ 	sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\ 		sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\ 	set_asn1, get_asn1,\ 	ctrl,\ 	NULL \ };\ const EVP_CIPHER *EVP_##cname##_ecb(void) { return&cname##_ecb; } */
+comment|/*- #define BLOCK_CIPHER_defs(cname, kstruct, \                                 nid, block_size, key_len, iv_len, flags,\                                  init_key, cleanup, set_asn1, get_asn1, ctrl)\ static const EVP_CIPHER cname##_cbc = {\         nid##_cbc, block_size, key_len, iv_len, \         flags | EVP_CIPH_CBC_MODE,\         init_key,\         cname##_cbc_cipher,\         cleanup,\         sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\                 sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\         set_asn1, get_asn1,\         ctrl, \         NULL \ };\ const EVP_CIPHER *EVP_##cname##_cbc(void) { return&cname##_cbc; }\ static const EVP_CIPHER cname##_cfb = {\         nid##_cfb64, 1, key_len, iv_len, \         flags | EVP_CIPH_CFB_MODE,\         init_key,\         cname##_cfb_cipher,\         cleanup,\         sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\                 sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\         set_asn1, get_asn1,\         ctrl,\         NULL \ };\ const EVP_CIPHER *EVP_##cname##_cfb(void) { return&cname##_cfb; }\ static const EVP_CIPHER cname##_ofb = {\         nid##_ofb64, 1, key_len, iv_len, \         flags | EVP_CIPH_OFB_MODE,\         init_key,\         cname##_ofb_cipher,\         cleanup,\         sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\                 sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\         set_asn1, get_asn1,\         ctrl,\         NULL \ };\ const EVP_CIPHER *EVP_##cname##_ofb(void) { return&cname##_ofb; }\ static const EVP_CIPHER cname##_ecb = {\         nid##_ecb, block_size, key_len, iv_len, \         flags | EVP_CIPH_ECB_MODE,\         init_key,\         cname##_ecb_cipher,\         cleanup,\         sizeof(EVP_CIPHER_CTX)-sizeof((((EVP_CIPHER_CTX *)NULL)->c))+\                 sizeof((((EVP_CIPHER_CTX *)NULL)->c.kstruct)),\         set_asn1, get_asn1,\         ctrl,\         NULL \ };\ const EVP_CIPHER *EVP_##cname##_ecb(void) { return&cname##_ecb; } */
 end_comment
 
 begin_define
@@ -370,7 +370,7 @@ parameter_list|,
 name|ctrl
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_all_funcs(cname, cprefix, cbits, kstruct, ksched) \ 	BLOCK_CIPHER_defs(cname, kstruct, nid, block_size, key_len, iv_len, \ 			  cbits, flags, init_key, cleanup, set_asn1, \ 			  get_asn1, ctrl)
+value|BLOCK_CIPHER_all_funcs(cname, cprefix, cbits, kstruct, ksched) \         BLOCK_CIPHER_defs(cname, kstruct, nid, block_size, key_len, iv_len, \                           cbits, flags, init_key, cleanup, set_asn1, \                           get_asn1, ctrl)
 end_define
 
 begin_define
@@ -405,7 +405,7 @@ parameter_list|,
 name|iv_len
 parameter_list|)
 define|\
-value|BLOCK_CIPHER_func_cfb(cipher##_##keysize,cprefix,cbits,kstruct,ksched) \ 	BLOCK_CIPHER_def_cfb(cipher##_##keysize,kstruct, \ 			     NID_##cipher##_##keysize, keysize/8, iv_len, cbits, \ 			     0, cipher##_init_key, NULL, \ 			     EVP_CIPHER_set_asn1_iv, \ 			     EVP_CIPHER_get_asn1_iv, \ 			     NULL)
+value|BLOCK_CIPHER_func_cfb(cipher##_##keysize,cprefix,cbits,kstruct,ksched) \         BLOCK_CIPHER_def_cfb(cipher##_##keysize,kstruct, \                              NID_##cipher##_##keysize, keysize/8, iv_len, cbits, \                              0, cipher##_init_key, NULL, \                              EVP_CIPHER_set_asn1_iv, \                              EVP_CIPHER_get_asn1_iv, \                              NULL)
 end_define
 
 begin_struct

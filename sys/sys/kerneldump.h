@@ -166,10 +166,6 @@ name|architectureversion
 decl_stmt|;
 define|#
 directive|define
-name|KERNELDUMP_ALPHA_VERSION
-value|1
-define|#
-directive|define
 name|KERNELDUMP_AMD64_VERSION
 value|2
 define|#

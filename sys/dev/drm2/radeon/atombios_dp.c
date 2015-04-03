@@ -641,7 +641,7 @@ operator|)
 operator|==
 name|AUX_NATIVE_REPLY_DEFER
 condition|)
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|400
 argument_list|)
@@ -832,7 +832,7 @@ operator|)
 operator|==
 name|AUX_NATIVE_REPLY_DEFER
 condition|)
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|400
 argument_list|)
@@ -1222,7 +1222,7 @@ argument_list|(
 literal|"aux_ch native defer\n"
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|400
 argument_list|)
@@ -1266,11 +1266,8 @@ literal|0
 index|]
 expr_stmt|;
 return|return
-operator|(
-literal|0
-operator|)
+name|ret
 return|;
-comment|/* Return ret on Linux. */
 case|case
 name|AUX_I2C_REPLY_NACK
 case|:
@@ -1291,7 +1288,7 @@ argument_list|(
 literal|"aux_i2c defer\n"
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|400
 argument_list|)
@@ -3219,7 +3216,7 @@ modifier|*
 name|dp_info
 parameter_list|)
 block|{
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|400
 argument_list|)
@@ -3331,7 +3328,7 @@ argument_list|(
 name|dp_info
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|400
 argument_list|)

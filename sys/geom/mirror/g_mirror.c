@@ -4592,7 +4592,7 @@ operator|->
 name|sc_queue_mtx
 argument_list|)
 expr_stmt|;
-name|bioq_disksort
+name|bioq_insert_tail
 argument_list|(
 operator|&
 name|sc
@@ -5044,7 +5044,7 @@ operator|->
 name|sc_queue_mtx
 argument_list|)
 expr_stmt|;
-name|bioq_disksort
+name|bioq_insert_tail
 argument_list|(
 operator|&
 name|sc
@@ -5236,7 +5236,7 @@ operator|->
 name|sc_queue_mtx
 argument_list|)
 expr_stmt|;
-name|bioq_disksort
+name|bioq_insert_tail
 argument_list|(
 operator|&
 name|sc
@@ -5886,7 +5886,7 @@ operator|->
 name|sc_queue_mtx
 argument_list|)
 expr_stmt|;
-name|bioq_disksort
+name|bioq_insert_tail
 argument_list|(
 operator|&
 name|sc
@@ -8063,11 +8063,8 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|bioq_remove
+name|g_destroy_bio
 argument_list|(
-operator|&
-name|queue
-argument_list|,
 name|cbp
 argument_list|)
 expr_stmt|;
@@ -9419,7 +9416,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|=
-name|bioq_first
+name|bioq_takefirst
 argument_list|(
 operator|&
 name|sc
@@ -9540,16 +9537,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|bioq_remove
-argument_list|(
-operator|&
-name|sc
-operator|->
-name|sc_queue
-argument_list|,
-name|bp
-argument_list|)
-expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&

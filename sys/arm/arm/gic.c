@@ -516,6 +516,24 @@ name|GICD_ICFGR_TRIG_MASK
 value|0x2
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GIC_DEFAULT_ICFGR_INIT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GIC_DEFAULT_ICFGR_INIT
+value|0x00000000
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|arm_gic_softc
@@ -1467,7 +1485,7 @@ operator|>>
 literal|4
 argument_list|)
 argument_list|,
-literal|0x00000000
+name|GIC_DEFAULT_ICFGR_INIT
 argument_list|)
 expr_stmt|;
 block|}
