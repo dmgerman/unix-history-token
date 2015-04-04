@@ -1423,7 +1423,7 @@ name|mode
 argument_list|,
 literal|"mode"
 argument_list|,
-literal|"change or display text modes"
+literal|"change or display EFI text modes"
 argument_list|,
 name|command_mode
 argument_list|)
@@ -1681,7 +1681,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"Choose the mode with \"col<mode number>\"\n"
+literal|"Select a mode with the command \"mode<number>\"\n"
 argument_list|)
 expr_stmt|;
 return|return
