@@ -136,7 +136,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-specifier|static
 name|int
 name|uart_fdt_get_clock
 parameter_list|(
@@ -155,7 +154,7 @@ comment|/* clock-frequency is a FreeBSD-only extention. */
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|node
 argument_list|,
@@ -188,7 +187,7 @@ comment|/* XXX this should go to simple-bus fixup or so */
 if|if
 condition|(
 operator|(
-name|OF_getprop
+name|OF_getencprop
 argument_list|(
 name|OF_parent
 argument_list|(
@@ -213,14 +212,6 @@ name|clock
 operator|=
 literal|0
 expr_stmt|;
-operator|*
-name|cell
-operator|=
-name|fdt32_to_cpu
-argument_list|(
-name|clock
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -230,7 +221,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|uart_fdt_get_shift
 parameter_list|(
