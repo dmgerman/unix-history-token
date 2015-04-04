@@ -116,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/fdt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/allwinner/a10_wdog.h>
 end_include
 

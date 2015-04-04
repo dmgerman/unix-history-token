@@ -140,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/fdt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/ti/ti_prcm.h>
 end_include
 
