@@ -117,7 +117,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * File reader object   */
+comment|/*  * File reader object  */
 end_comment
 
 begin_struct_decl

@@ -5070,7 +5070,7 @@ name|lp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * construct the initial sort structure  	 */
+comment|/* 	 * construct the initial sort structure 	 */
 for|for
 control|(
 name|i
