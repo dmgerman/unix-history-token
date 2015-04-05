@@ -716,16 +716,16 @@ name|flags
 decl_stmt|;
 comment|/* see below */
 name|int
-name|magic
+name|unused1
 decl_stmt|;
-comment|/* version number */
+comment|/* unused, was version number */
 name|u_int16_t
-name|u2w
+name|unused2
 index|[
 literal|128
 index|]
 decl_stmt|;
-comment|/* Local->Unicode table */
+comment|/* no longer used, was Local->Unicode table */
 name|char
 modifier|*
 name|cs_win
@@ -858,13 +858,6 @@ define|#
 directive|define
 name|MSDOSFS_FSIMOD
 value|0x01000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSDOSFS_ARGSMAGIC
-value|0xe4eff300
 end_define
 
 begin_endif
