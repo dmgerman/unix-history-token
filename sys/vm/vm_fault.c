@@ -3818,7 +3818,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|VM_OBJECT_TRYRLOCK
+name|VM_OBJECT_TRYWLOCK
 argument_list|(
 name|first_object
 argument_list|)
@@ -3829,7 +3829,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-name|VM_OBJECT_RLOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|first_object
 argument_list|)
@@ -4083,7 +4083,7 @@ name|first_object
 operator|!=
 name|object
 condition|)
-name|VM_OBJECT_RUNLOCK
+name|VM_OBJECT_WUNLOCK
 argument_list|(
 name|first_object
 argument_list|)
