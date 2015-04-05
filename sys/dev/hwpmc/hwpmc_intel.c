@@ -596,6 +596,18 @@ literal|3
 expr_stmt|;
 break|break;
 case|case
+literal|0x3D
+case|:
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_BROADWELL
+expr_stmt|;
+name|nclasses
+operator|=
+literal|3
+expr_stmt|;
+break|break;
+case|case
 literal|0x3F
 case|:
 comment|/* Per Intel document 325462-045US 09/2014. */
@@ -772,6 +784,9 @@ case|case
 name|PMC_CPU_INTEL_ATOM_SILVERMONT
 case|:
 case|case
+name|PMC_CPU_INTEL_BROADWELL
+case|:
+case|case
 name|PMC_CPU_INTEL_CORE
 case|:
 case|case
@@ -943,6 +958,9 @@ case|:
 case|case
 name|PMC_CPU_INTEL_WESTMERE
 case|:
+case|case
+name|PMC_CPU_INTEL_BROADWELL
+case|:
 name|error
 operator|=
 name|pmc_uncore_initialize
@@ -1021,6 +1039,9 @@ name|PMC_CPU_INTEL_ATOM
 case|:
 case|case
 name|PMC_CPU_INTEL_ATOM_SILVERMONT
+case|:
+case|case
+name|PMC_CPU_INTEL_BROADWELL
 case|:
 case|case
 name|PMC_CPU_INTEL_CORE
@@ -1148,6 +1169,9 @@ operator|->
 name|pmd_cputype
 condition|)
 block|{
+case|case
+name|PMC_CPU_INTEL_BROADWELL
+case|:
 case|case
 name|PMC_CPU_INTEL_COREI7
 case|:
