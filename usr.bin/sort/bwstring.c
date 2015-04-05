@@ -1164,7 +1164,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a new binary string from a raw binary buffer.  */
+comment|/*  * Create a new binary string from a wide character buffer.  */
 end_comment
 
 begin_function
