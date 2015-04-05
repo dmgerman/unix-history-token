@@ -6094,6 +6094,11 @@ return|;
 case|case
 name|VMEM_MAXFREE
 case|:
+name|VMEM_LOCK
+argument_list|(
+name|vm
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -6124,6 +6129,11 @@ index|]
 argument_list|)
 condition|)
 continue|continue;
+name|VMEM_UNLOCK
+argument_list|(
+name|vm
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|(
@@ -6140,6 +6150,11 @@ name|vm_quantum_shift
 operator|)
 return|;
 block|}
+name|VMEM_UNLOCK
+argument_list|(
+name|vm
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
