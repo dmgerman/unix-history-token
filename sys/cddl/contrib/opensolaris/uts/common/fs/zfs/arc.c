@@ -18896,9 +18896,9 @@ name|arc_c
 operator|/
 literal|4
 argument_list|,
-literal|64
+literal|16
 operator|<<
-literal|18
+literal|20
 argument_list|)
 expr_stmt|;
 comment|/* set max to 1/2 of all memory, or all but 1GB, whichever is more */
@@ -18950,9 +18950,9 @@ if|if
 condition|(
 name|zfs_arc_max
 operator|>
-literal|64
+literal|16
 operator|<<
-literal|18
+literal|20
 operator|&&
 name|zfs_arc_max
 operator|<
@@ -18967,9 +18967,9 @@ if|if
 condition|(
 name|zfs_arc_min
 operator|>
-literal|64
+literal|16
 operator|<<
-literal|18
+literal|20
 operator|&&
 name|zfs_arc_min
 operator|<=
