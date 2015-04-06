@@ -5732,7 +5732,11 @@ operator|=
 name|res
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev
