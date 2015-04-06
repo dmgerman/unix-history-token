@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/bpf.h>
 end_include
 
