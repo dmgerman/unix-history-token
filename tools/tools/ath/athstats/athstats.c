@@ -5071,6 +5071,10 @@ name|bs
 argument_list|,
 literal|"%lu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|wf
 operator|->
 name|total
@@ -5079,6 +5083,10 @@ name|ath
 operator|.
 name|ast_rx_packets
 operator|-
+operator|(
+name|unsigned
+name|long
+operator|)
 name|wf
 operator|->
 name|total
@@ -5102,6 +5110,10 @@ name|bs
 argument_list|,
 literal|"%lu"
 argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
 name|wf
 operator|->
 name|total
