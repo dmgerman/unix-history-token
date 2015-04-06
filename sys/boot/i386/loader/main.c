@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"libi386/smbios.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"btxv86.h"
 end_include
 
@@ -490,7 +496,7 @@ argument_list|,
 name|heap_top
 argument_list|)
 expr_stmt|;
-comment|/*       * XXX Chicken-and-egg problem; we want to have console output early, but some      * console attributes may depend on reading from eg. the boot device, which we      * can't do yet.      *      * We can use printf() etc. once this is done.      * If the previous boot stage has requested a serial console, prefer that.      */
+comment|/*      * XXX Chicken-and-egg problem; we want to have console output early, but some      * console attributes may depend on reading from eg. the boot device, which we      * can't do yet.      *      * We can use printf() etc. once this is done.      * If the previous boot stage has requested a serial console, prefer that.      */
 name|bi_setboothowto
 argument_list|(
 name|initial_howto
@@ -758,7 +764,9 @@ argument_list|()
 expr_stmt|;
 comment|/* detect SMBIOS for future reference */
 name|smbios_detect
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 comment|/* detect PCI BIOS for future reference */
 name|biospci_detect
