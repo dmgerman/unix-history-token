@@ -265,7 +265,7 @@ begin_define
 define|#
 directive|define
 name|FAULTBUF_R13
-value|6
+value|4
 end_define
 
 begin_function_decl
