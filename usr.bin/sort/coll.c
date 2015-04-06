@@ -2714,7 +2714,7 @@ parameter_list|(
 name|N
 parameter_list|)
 define|\
-value|static int									\ list_coll_##N(struct sort_list_item **ss1, struct sort_list_item **ss2)		\ {										\ 										\ 	return (list_coll_offset(ss1, ss2, N));					\ }
+value|static int 								\ list_coll_##N(struct sort_list_item **ss1, struct sort_list_item **ss2)	\ {									\ 									\ 	return (list_coll_offset(ss1, ss2, N));				\ }
 end_define
 
 begin_macro
