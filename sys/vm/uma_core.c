@@ -7796,8 +7796,6 @@ argument_list|)
 operator|*
 operator|(
 name|mp_maxid
-operator|+
-literal|1
 operator|)
 operator|)
 expr_stmt|;
