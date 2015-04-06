@@ -349,6 +349,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|EFI_SYSTEM_TABLE
 modifier|*
 name|systab
@@ -356,6 +357,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|EFI_HANDLE
 modifier|*
 name|image
