@@ -412,6 +412,15 @@ name|int
 name|capMiddle
 decl_stmt|;
 name|int
+name|capLowPower
+decl_stmt|;
+name|int
+name|capMultiFingerReport
+decl_stmt|;
+name|int
+name|capBallistics
+decl_stmt|;
+name|int
 name|nExtendedButtons
 decl_stmt|;
 name|int
