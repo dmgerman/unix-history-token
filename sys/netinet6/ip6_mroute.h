@@ -628,6 +628,51 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Structure to export 'struct mif6' to userland via sysctl.  */
+end_comment
+
+begin_struct
+struct|struct
+name|mif6_sctl
+block|{
+name|u_char
+name|m6_flags
+decl_stmt|;
+comment|/* MIFF_ flags defined above         */
+name|u_int
+name|m6_rate_limit
+decl_stmt|;
+comment|/* max rate			     */
+name|struct
+name|in6_addr
+name|m6_lcl_addr
+decl_stmt|;
+comment|/* local interface address           */
+name|uint32_t
+name|m6_ifp
+decl_stmt|;
+comment|/* interface index	             */
+name|u_quad_t
+name|m6_pkt_in
+decl_stmt|;
+comment|/* # pkts in on interface            */
+name|u_quad_t
+name|m6_pkt_out
+decl_stmt|;
+comment|/* # pkts out on interface           */
+name|u_quad_t
+name|m6_bytes_in
+decl_stmt|;
+comment|/* # bytes in on interface	     */
+name|u_quad_t
+name|m6_bytes_out
+decl_stmt|;
+comment|/* # bytes out on interface	     */
+block|}
+struct|;
+end_struct
+
 begin_if
 if|#
 directive|if
