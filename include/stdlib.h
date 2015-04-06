@@ -325,6 +325,15 @@ argument_list|,
 name|size_t
 argument_list|)
 name|__malloc_like
+name|__result_use_check
+name|__alloc_size
+argument_list|(
+literal|1
+argument_list|)
+name|__alloc_size
+argument_list|(
+literal|2
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -402,6 +411,11 @@ argument_list|(
 name|size_t
 argument_list|)
 name|__malloc_like
+name|__result_use_check
+name|__alloc_size
+argument_list|(
+literal|1
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -491,18 +505,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 modifier|*
 name|realloc
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__result_use_check
+name|__alloc_size
+argument_list|(
+literal|2
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -837,6 +856,10 @@ argument_list|,
 name|size_t
 argument_list|)
 name|__malloc_like
+name|__alloc_size
+argument_list|(
+literal|2
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -957,8 +980,19 @@ name|size_t
 parameter_list|,
 name|size_t
 parameter_list|)
-function_decl|;
+function_decl|__nonnull
+parameter_list|(
+function_decl|1
 end_function_decl
+
+begin_expr_stmt
+unit|)
+name|__alloc_size
+argument_list|(
+literal|3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* (ADV) */
@@ -2155,18 +2189,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 modifier|*
 name|reallocf
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
-parameter_list|,
+operator|*
+argument_list|,
 name|size_t
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__result_use_check
+name|__alloc_size
+argument_list|(
+literal|2
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
