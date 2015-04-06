@@ -581,7 +581,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Brief design of carp(4).  *  * Any carp-capable ifnet may have a list of carp softcs hanging off  * its ifp->if_carp pointer. Each softc represents one unique virtual  * host id, or vhid. The softc has a back pointer to the ifnet. All  * softcs are joined in a global list, which has quite limited use.  *  * Any interface address that takes part in CARP negotiation has a  * pointer to the softc of its vhid, ifa->ifa_carp. That could be either  * AF_INET or AF_INET6 address.  *  * Although, one can get the softc's backpointer to ifnet and traverse  * through its ifp->if_addrhead queue to find all interface addresses  * involved in CARP, we keep a growable array of ifaddr pointers. This  * allows us to avoid grabbing the IF_ADDR_LOCK() in many traversals that  * do calls into the network stack, thus avoiding LORs.  *  * Locking:  *  * Each softc has a lock sc_mtx. It is used to synchronise carp_input_c(),  * callout-driven events and ioctl()s.  *  * To traverse the list of softcs on an ifnet we use CIF_LOCK(), to  * traverse the global list we use the mutex carp_mtx.  *  * Known issues with locking:  *  * - There is no protection for races between two ioctl() requests,  *   neither SIOCSVH, nor SIOCAIFADDR& SIOCAIFADDR_IN6. I think that all  *   interface ioctl()s should be serialized right in net/if.c.  * - Sending ad, we put the pointer to the softc in an mtag, and no reference  *   counting is done on the softc.  * - On module unload we may race (?) with packet processing thread  *   dereferencing our function pointers.  */
+comment|/*  * Brief design of carp(4).  *  * Any carp-capable ifnet may have a list of carp softcs hanging off  * its ifp->if_carp pointer. Each softc represents one unique virtual  * host id, or vhid. The softc has a back pointer to the ifnet. All  * softcs are joined in a global list, which has quite limited use.  *  * Any interface address that takes part in CARP negotiation has a  * pointer to the softc of its vhid, ifa->ifa_carp. That could be either  * AF_INET or AF_INET6 address.  *  * Although, one can get the softc's backpointer to ifnet and traverse  * through its ifp->if_addrhead queue to find all interface addresses  * involved in CARP, we keep a growable array of ifaddr pointers. This  * allows us to avoid grabbing the IF_ADDR_LOCK() in many traversals that  * do calls into the network stack, thus avoiding LORs.  *  * Locking:  *  * Each softc has a lock sc_mtx. It is used to synchronise carp_input_c(),  * callout-driven events and ioctl()s.  *  * To traverse the list of softcs on an ifnet we use CIF_LOCK(), to  * traverse the global list we use the mutex carp_mtx.  *  * Known issues with locking:  *  * - Sending ad, we put the pointer to the softc in an mtag, and no reference  *   counting is done on the softc.  * - On module unload we may race (?) with packet processing thread  *   dereferencing our function pointers.  */
 end_comment
 
 begin_comment
@@ -1431,6 +1431,14 @@ specifier|static
 name|struct
 name|mtx
 name|carp_mtx
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|sx
+name|carp_sx
 decl_stmt|;
 end_decl_stmt
 
@@ -8299,6 +8307,12 @@ goto|goto
 name|out
 goto|;
 block|}
+name|sx_xlock
+argument_list|(
+operator|&
+name|carp_sx
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -8970,6 +8984,12 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
+name|sx_xunlock
+argument_list|(
+operator|&
+name|carp_sx
+argument_list|)
+expr_stmt|;
 name|out
 label|:
 if|if
@@ -10450,6 +10470,12 @@ operator|&
 name|carp_mtx
 argument_list|)
 expr_stmt|;
+name|sx_destroy
+argument_list|(
+operator|&
+name|carp_sx
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -10474,6 +10500,14 @@ argument_list|,
 name|NULL
 argument_list|,
 name|MTX_DEF
+argument_list|)
+expr_stmt|;
+name|sx_init
+argument_list|(
+operator|&
+name|carp_sx
+argument_list|,
+literal|"carp_sx"
 argument_list|)
 expr_stmt|;
 name|LIST_INIT
