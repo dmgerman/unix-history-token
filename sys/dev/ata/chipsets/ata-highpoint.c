@@ -553,7 +553,7 @@ name|ata_highpoint_chipinit
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_DEFAULT
+name|BUS_PROBE_LOW_PRIORITY
 operator|)
 return|;
 block|}

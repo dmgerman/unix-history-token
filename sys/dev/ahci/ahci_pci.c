@@ -2768,7 +2768,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2792,7 +2792,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2918,7 +2918,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2932,7 +2932,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
