@@ -13744,6 +13744,8 @@ literal|0
 decl_stmt|;
 name|int
 name|rc
+init|=
+literal|0
 decl_stmt|;
 name|BXE_FP_RX_LOCK
 argument_list|(
@@ -14294,6 +14296,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+comment|/* we simply reuse the received mbuf and don't post it to the stack */
+name|m
+operator|=
+name|NULL
+expr_stmt|;
 name|BLOGE
 argument_list|(
 name|sc
@@ -14671,6 +14678,13 @@ name|sw_cq_cons
 argument_list|)
 expr_stmt|;
 comment|/* limit spinning on the queue */
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+break|break;
 if|if
 condition|(
 name|rx_pkts
