@@ -910,7 +910,7 @@ name|strlen
 argument_list|(
 name|auth
 operator|->
-name|a_secret
+name|a_mutual_secret
 argument_list|)
 expr_stmt|;
 if|if
