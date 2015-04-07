@@ -799,6 +799,17 @@ begin_comment
 comment|/* get members */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SIOCGIFXMEDIA
+value|_IOWR('i', 139, struct ifmediareq)
+end_define
+
+begin_comment
+comment|/* get net xmedia */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
