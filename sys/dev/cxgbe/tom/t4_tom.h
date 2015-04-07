@@ -18,13 +18,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|KTR_CXGBE
-value|KTR_SPARE3
-end_define
-
-begin_define
-define|#
-directive|define
 name|LISTEN_HASH_SIZE
 value|32
 end_define
