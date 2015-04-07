@@ -11329,6 +11329,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+name|len
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"%s"
@@ -11340,6 +11345,15 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
 name|out
 goto|;
