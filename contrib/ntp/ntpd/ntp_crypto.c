@@ -193,6 +193,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MAX_VALLEN
+value|(65535 - VALUE_LEN)
+end_define
+
+begin_define
+define|#
+directive|define
 name|YEAR
 value|(60 * 60 * 24 * 365)
 end_define
@@ -574,15 +581,17 @@ name|crypto_encrypt
 name|P
 argument_list|(
 operator|(
-expr|struct
-name|exten
+specifier|const
+name|u_char
+operator|*
+operator|,
+name|u_int
+operator|,
+name|keyid_t
 operator|*
 operator|,
 expr|struct
 name|value
-operator|*
-operator|,
-name|keyid_t
 operator|*
 operator|)
 argument_list|)
@@ -2225,6 +2234,22 @@ operator|->
 name|vallen
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Bug 2761: I hope this isn't too early... 			 */
+if|if
+condition|(
+name|vallen
+operator|==
+literal|0
+operator|||
+name|len
+operator|-
+name|VALUE_LEN
+operator|<
+name|vallen
+condition|)
+return|return
+name|XEVNT_LEN
+return|;
 block|}
 switch|switch
 condition|(
@@ -2309,9 +2334,9 @@ operator|>
 name|MAXHOSTNAME
 operator|||
 name|len
-operator|<
+operator|-
 name|VALUE_LEN
-operator|+
+operator|<
 name|vallen
 condition|)
 block|{
@@ -4868,6 +4893,12 @@ operator|||
 name|vallen
 operator|>
 name|MAXHOSTNAME
+operator|||
+name|len
+operator|-
+name|VALUE_LEN
+operator|<
+name|vallen
 condition|)
 block|{
 name|rval
@@ -5406,15 +5437,37 @@ name|CRYPTO_COOK
 operator||
 name|CRYPTO_RESP
 case|:
+name|vallen
+operator|=
+name|ntohl
+argument_list|(
+name|ep
+operator|->
+name|vallen
+argument_list|)
+expr_stmt|;
+comment|/* Must be<64k */
 if|if
 condition|(
+name|vallen
+operator|==
+literal|0
+operator|||
+operator|(
+name|vallen
+operator|>=
+name|MAX_VALLEN
+operator|)
+operator|||
 operator|(
 name|opcode
 operator|&
-literal|0xffff
+literal|0x0000ffff
 operator|)
 operator|<
 name|VALUE_LEN
+operator|+
+name|vallen
 condition|)
 block|{
 name|rval
@@ -5476,18 +5529,28 @@ name|rval
 operator|=
 name|crypto_encrypt
 argument_list|(
+operator|(
+specifier|const
+name|u_char
+operator|*
+operator|)
 name|ep
+operator|->
+name|pkt
 argument_list|,
-operator|&
-name|vtemp
+name|vallen
 argument_list|,
 operator|&
 name|tcookie
+argument_list|,
+operator|&
+name|vtemp
 argument_list|)
 operator|)
 operator|==
 name|XEVNT_OK
 condition|)
+block|{
 name|len
 operator|+=
 name|crypto_send
@@ -5504,6 +5567,7 @@ operator|&
 name|vtemp
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 comment|/* 	 * Find peer and send autokey data and signature in broadcast 	 * server and symmetric modes. Use the values in the autokey 	 * structure. If no association is found, either the server has 	 * restarted with new associations or some perp has replayed an 	 * old message, in which case light the error bit. 	 */
 case|case
@@ -5871,6 +5935,21 @@ operator|->
 name|vallen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|vallen
+operator|==
+literal|0
+operator|||
+name|vallen
+operator|>
+name|MAX_VALLEN
+condition|)
+return|return
+operator|(
+name|XEVNT_LEN
+operator|)
+return|;
 name|i
 operator|=
 operator|(
@@ -5896,10 +5975,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|siglen
+operator|>
+name|MAX_VALLEN
+operator|||
 name|len
-operator|<
+operator|-
 name|VALUE_LEN
-operator|+
+operator|<
 operator|(
 operator|(
 name|vallen
@@ -5911,7 +5994,23 @@ literal|4
 operator|)
 operator|*
 literal|4
+operator|||
+name|len
+operator|-
+name|VALUE_LEN
+operator|-
+operator|(
+operator|(
+name|vallen
 operator|+
+literal|3
+operator|)
+operator|/
+literal|4
+operator|)
+operator|*
+literal|4
+operator|<
 operator|(
 operator|(
 name|siglen
@@ -6147,6 +6246,7 @@ operator|->
 name|digest
 argument_list|)
 expr_stmt|;
+comment|/* XXX: the "+ 12" needs to be at least documented... */
 name|EVP_VerifyUpdate
 argument_list|(
 operator|&
@@ -6237,7 +6337,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * crypto_encrypt - construct encrypted cookie and signature from  * extension field and cookie  *  * Returns  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_CKY	bad or missing cookie  * XEVNT_PER	host certificate expired  */
+comment|/*  * crypto_encrypt - construct vp (encrypted cookie and signature) from  * the public key and cookie.  *  * Returns:  * XEVNT_OK	success  * XEVNT_PUB	bad or missing public key  * XEVNT_CKY	bad or missing cookie  * XEVNT_PER	host certificate expired  */
 end_comment
 
 begin_function
@@ -6245,22 +6345,26 @@ specifier|static
 name|int
 name|crypto_encrypt
 parameter_list|(
-name|struct
-name|exten
+specifier|const
+name|u_char
 modifier|*
-name|ep
+name|ptr
 parameter_list|,
-comment|/* extension pointer */
+comment|/* Public Key */
+name|u_int
+name|vallen
+parameter_list|,
+comment|/* Length of Public Key */
+name|keyid_t
+modifier|*
+name|cookie
+parameter_list|,
+comment|/* server cookie */
 name|struct
 name|value
 modifier|*
 name|vp
-parameter_list|,
 comment|/* value pointer */
-name|keyid_t
-modifier|*
-name|cookie
-comment|/* server cookie */
 parameter_list|)
 block|{
 name|EVP_PKEY
@@ -6279,33 +6383,7 @@ comment|/* NTP timestamp */
 name|u_int32
 name|temp32
 decl_stmt|;
-name|u_int
-name|len
-decl_stmt|;
-name|u_char
-modifier|*
-name|ptr
-decl_stmt|;
 comment|/* 	 * Extract the public key from the request. 	 */
-name|len
-operator|=
-name|ntohl
-argument_list|(
-name|ep
-operator|->
-name|vallen
-argument_list|)
-expr_stmt|;
-name|ptr
-operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
-name|ep
-operator|->
-name|pkt
-expr_stmt|;
 name|pkey
 operator|=
 name|d2i_PublicKey
@@ -6317,7 +6395,7 @@ argument_list|,
 operator|&
 name|ptr
 argument_list|,
-name|len
+name|vallen
 argument_list|)
 expr_stmt|;
 if|if
@@ -6384,7 +6462,7 @@ name|hostval
 operator|.
 name|tstamp
 expr_stmt|;
-name|len
+name|vallen
 operator|=
 name|EVP_PKEY_size
 argument_list|(
@@ -6397,7 +6475,7 @@ name|vallen
 operator|=
 name|htonl
 argument_list|(
-name|len
+name|vallen
 argument_list|)
 expr_stmt|;
 name|vp
@@ -6406,7 +6484,7 @@ name|ptr
 operator|=
 name|emalloc
 argument_list|(
-name|len
+name|vallen
 argument_list|)
 expr_stmt|;
 name|temp32
@@ -6555,7 +6633,7 @@ name|vp
 operator|->
 name|ptr
 argument_list|,
-name|len
+name|vallen
 argument_list|)
 expr_stmt|;
 if|if
@@ -6570,7 +6648,7 @@ operator|->
 name|sig
 argument_list|,
 operator|&
-name|len
+name|vallen
 argument_list|,
 name|sign_pkey
 argument_list|)
@@ -6581,7 +6659,7 @@ name|siglen
 operator|=
 name|htonl
 argument_list|(
-name|len
+name|sign_siglen
 argument_list|)
 expr_stmt|;
 return|return
@@ -6912,7 +6990,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * crypto_args - construct extension field from arguments  *  * This routine creates an extension field with current timestamps and  * specified opcode, association ID and optional string. Note that the  * extension field is created here, but freed after the crypto_xmit()  * call in the protocol module.  *  * Returns extension field pointer (no errors).  */
+comment|/*  * crypto_args - construct extension field from arguments  *  * This routine creates an extension field with current timestamps and  * specified opcode, association ID and optional string. Note that the  * extension field is created here, but freed after the crypto_xmit()  * call in the protocol module.  *  * Returns extension field pointer (no errors).  *  * XXX: opcode and len should really be 32-bit quantities and  * we should make sure that str is not too big.  */
 end_comment
 
 begin_function
@@ -6951,6 +7029,9 @@ name|u_int
 name|len
 decl_stmt|;
 comment|/* extension field length */
+name|size_t
+name|slen
+decl_stmt|;
 name|tstamp
 operator|=
 name|crypto_time
@@ -6970,13 +7051,19 @@ name|str
 operator|!=
 name|NULL
 condition|)
-name|len
-operator|+=
+block|{
+name|slen
+operator|=
 name|strlen
 argument_list|(
 name|str
 argument_list|)
 expr_stmt|;
+name|len
+operator|+=
+name|slen
+expr_stmt|;
+block|}
 name|ep
 operator|=
 name|emalloc
@@ -7081,10 +7168,7 @@ name|vallen
 operator|=
 name|htonl
 argument_list|(
-name|strlen
-argument_list|(
-name|str
-argument_list|)
+name|slen
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -7099,10 +7183,7 @@ name|pkt
 argument_list|,
 name|str
 argument_list|,
-name|strlen
-argument_list|(
-name|str
-argument_list|)
+name|slen
 argument_list|)
 expr_stmt|;
 block|}
@@ -7129,7 +7210,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * crypto_send - construct extension field from value components  *  * Returns extension field length. Note: it is not polite to send a  * nonempty signature with zero timestamp or a nonzero timestamp with  * empty signature, but these rules are not enforced here.  */
+comment|/*  * crypto_send - construct extension field from value components  *  * Returns extension field length. Note: it is not polite to send a  * nonempty signature with zero timestamp or a nonzero timestamp with  * empty signature, but these rules are not enforced here.  *  * XXX This code won't work on a box with 16-bit ints.  */
 end_comment
 
 begin_function
@@ -8615,6 +8696,13 @@ decl_stmt|;
 name|u_int
 name|len
 decl_stmt|;
+comment|/* extension field length */
+name|u_int
+name|vallen
+init|=
+literal|0
+decl_stmt|;
+comment|/* value length */
 comment|/* 	 * If the IFF parameters are not valid, something awful 	 * happened or we are being tormented. 	 */
 if|if
 condition|(
@@ -8645,7 +8733,7 @@ operator|.
 name|dsa
 expr_stmt|;
 comment|/* 	 * Extract r from the challenge. 	 */
-name|len
+name|vallen
 operator|=
 name|ntohl
 argument_list|(
@@ -8654,6 +8742,36 @@ operator|->
 name|vallen
 argument_list|)
 expr_stmt|;
+name|len
+operator|=
+name|ntohl
+argument_list|(
+name|ep
+operator|->
+name|opcode
+argument_list|)
+operator|&
+literal|0x0000ffff
+expr_stmt|;
+if|if
+condition|(
+name|vallen
+operator|==
+literal|0
+operator|||
+name|len
+operator|<
+name|VALUE_LEN
+operator|||
+name|len
+operator|-
+name|VALUE_LEN
+operator|<
+name|vallen
+condition|)
+return|return
+name|XEVNT_LEN
+return|;
 if|if
 condition|(
 operator|(
@@ -8669,7 +8787,7 @@ name|ep
 operator|->
 name|pkt
 argument_list|,
-name|len
+name|vallen
 argument_list|,
 name|NULL
 argument_list|)
@@ -8724,7 +8842,7 @@ name|BN_rand
 argument_list|(
 name|bk
 argument_list|,
-name|len
+name|vallen
 operator|*
 literal|8
 argument_list|,
@@ -8840,43 +8958,7 @@ name|bk
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Encode the values in ASN.1 and sign. 	 */
-name|tstamp
-operator|=
-name|crypto_time
-argument_list|()
-expr_stmt|;
-name|memset
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|value
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|vp
-operator|->
-name|tstamp
-operator|=
-name|htonl
-argument_list|(
-name|tstamp
-argument_list|)
-expr_stmt|;
-name|vp
-operator|->
-name|fstamp
-operator|=
-name|htonl
-argument_list|(
-name|if_fstamp
-argument_list|)
-expr_stmt|;
-name|len
+name|vallen
 operator|=
 name|i2d_DSA_SIG
 argument_list|(
@@ -8887,8 +8969,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|len
-operator|<=
+name|vallen
+operator|==
 literal|0
 condition|)
 block|{
@@ -8918,20 +9000,83 @@ name|XEVNT_ERR
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|vallen
+operator|>
+name|MAX_VALLEN
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"crypto_bob: signature is too big: %d"
+argument_list|,
+name|vallen
+argument_list|)
+expr_stmt|;
+name|DSA_SIG_free
+argument_list|(
+name|sdsa
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|XEVNT_LEN
+operator|)
+return|;
+block|}
+name|memset
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|value
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|tstamp
+operator|=
+name|crypto_time
+argument_list|()
+expr_stmt|;
+name|vp
+operator|->
+name|tstamp
+operator|=
+name|htonl
+argument_list|(
+name|tstamp
+argument_list|)
+expr_stmt|;
+name|vp
+operator|->
+name|fstamp
+operator|=
+name|htonl
+argument_list|(
+name|if_fstamp
+argument_list|)
+expr_stmt|;
 name|vp
 operator|->
 name|vallen
 operator|=
 name|htonl
 argument_list|(
-name|len
+name|vallen
 argument_list|)
 expr_stmt|;
 name|ptr
 operator|=
 name|emalloc
 argument_list|(
-name|len
+name|vallen
 argument_list|)
 expr_stmt|;
 name|vp
@@ -8989,6 +9134,7 @@ operator|(
 name|XEVNT_PER
 operator|)
 return|;
+comment|/* XXX: more validation to make sure the sign fits... */
 name|vp
 operator|->
 name|sig
@@ -9032,7 +9178,7 @@ name|vp
 operator|->
 name|ptr
 argument_list|,
-name|len
+name|vallen
 argument_list|)
 expr_stmt|;
 if|if
@@ -9047,7 +9193,7 @@ operator|->
 name|sig
 argument_list|,
 operator|&
-name|len
+name|vallen
 argument_list|,
 name|sign_pkey
 argument_list|)

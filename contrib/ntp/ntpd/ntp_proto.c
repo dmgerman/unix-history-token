@@ -1892,7 +1892,7 @@ literal|0
 operator|||
 name|has_mac
 operator|<
-literal|0
+name|MIN_MAC_LEN
 condition|)
 block|{
 name|sys_badlength
@@ -2008,6 +2008,20 @@ expr_stmt|;
 return|return;
 comment|/* bad MAC length */
 block|}
+block|}
+comment|/* 	 * If has_mac is< 0 we had a malformed packet. 	 */
+if|if
+condition|(
+name|has_mac
+operator|<
+literal|0
+condition|)
+block|{
+name|sys_badlength
+operator|++
+expr_stmt|;
+return|return;
+comment|/* bad length */
 block|}
 ifdef|#
 directive|ifdef
@@ -3128,21 +3142,7 @@ name|TEST2
 expr_stmt|;
 comment|/* bogus packet */
 block|}
-comment|/* 	 * Update the origin and destination timestamps. If 	 * unsynchronized or bogus abandon ship. If the crypto machine 	 * breaks, light the crypto bit and plaint the log. 	 */
-name|peer
-operator|->
-name|org
-operator|=
-name|p_xmt
-expr_stmt|;
-name|peer
-operator|->
-name|rec
-operator|=
-name|rbufp
-operator|->
-name|recv_time
-expr_stmt|;
+comment|/* 	 * If unsynchronized or bogus abandon ship. If the crypto machine 	 * breaks, light the crypto bit and plaint the log. 	 */
 if|if
 condition|(
 name|peer
@@ -3235,6 +3235,8 @@ name|peer
 operator|->
 name|keyid
 operator|||
+name|has_mac
+operator|||
 operator|(
 name|restrict_mask
 operator|&
@@ -3253,6 +3255,9 @@ name|TEST5
 expr_stmt|;
 if|if
 condition|(
+name|has_mac
+operator|&&
+operator|(
 name|hismode
 operator|==
 name|MODE_ACTIVE
@@ -3260,6 +3265,7 @@ operator|||
 name|hismode
 operator|==
 name|MODE_PASSIVE
+operator|)
 condition|)
 name|fast_xmit
 argument_list|(
@@ -3275,7 +3281,21 @@ expr_stmt|;
 return|return;
 comment|/* bad auth */
 block|}
-comment|/* 	 * That was hard and I am sweaty, but the packet is squeaky 	 * clean. Get on with real work. 	 */
+comment|/* 	 * That was hard and I am sweaty, but the packet is squeaky 	 * clean. Get on with real work. 	 * 	 * Update the origin and destination timestamps. 	 */
+name|peer
+operator|->
+name|org
+operator|=
+name|p_xmt
+expr_stmt|;
+name|peer
+operator|->
+name|rec
+operator|=
+name|rbufp
+operator|->
+name|recv_time
+expr_stmt|;
 name|peer
 operator|->
 name|received
