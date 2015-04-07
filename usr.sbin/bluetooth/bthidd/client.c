@@ -19,6 +19,12 @@ directive|include
 file|<assert.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|L2CAP_SOCKET_CHECKED
+end_define
+
 begin_include
 include|#
 directive|include
@@ -988,6 +994,18 @@ expr_stmt|;
 name|l2addr
 operator|.
 name|l2cap_psm
+operator|=
+literal|0
+expr_stmt|;
+name|l2addr
+operator|.
+name|l2cap_bdaddr_type
+operator|=
+name|BDADDR_BREDR
+expr_stmt|;
+name|l2addr
+operator|.
+name|l2cap_cid
 operator|=
 literal|0
 expr_stmt|;
