@@ -132,6 +132,9 @@ name|l2cap
 parameter_list|,
 name|bdaddr_p
 name|bdaddr
+parameter_list|,
+name|int
+name|type
 parameter_list|)
 block|{
 name|struct
@@ -165,6 +168,8 @@ argument_list|(
 name|l2cap
 argument_list|,
 name|bdaddr
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 if|if
@@ -251,6 +256,8 @@ argument_list|(
 name|l2cap
 argument_list|,
 name|bdaddr
+argument_list|,
+name|type
 argument_list|)
 expr_stmt|;
 if|if
@@ -333,7 +340,7 @@ name|ep
 operator|->
 name|link_type
 operator|=
-name|NG_HCI_LINK_ACL
+name|type
 expr_stmt|;
 name|con
 operator|->
@@ -498,6 +505,10 @@ operator|&
 name|ep
 operator|->
 name|bdaddr
+argument_list|,
+name|ep
+operator|->
+name|link_type
 argument_list|)
 expr_stmt|;
 if|if
@@ -747,6 +758,10 @@ operator|&
 name|ep
 operator|->
 name|bdaddr
+argument_list|,
+name|ep
+operator|->
+name|link_type
 argument_list|)
 expr_stmt|;
 if|if
@@ -836,6 +851,10 @@ operator|&
 name|ep
 operator|->
 name|bdaddr
+argument_list|,
+name|ep
+operator|->
+name|link_type
 argument_list|)
 expr_stmt|;
 if|if
@@ -3053,6 +3072,26 @@ name|m_nextpkt
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_PROTO2
+condition|)
+block|{
+name|ng_l2cap_lp_receive
+argument_list|(
+name|con
+operator|->
+name|l2cap
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|NG_L2CAP_INFO
 argument_list|(
 literal|"%s: %s - sending ACL packet, con_handle=%d, len=%d\n"

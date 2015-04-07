@@ -26,6 +26,8 @@ parameter_list|(
 name|ng_l2cap_p
 parameter_list|,
 name|bdaddr_p
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

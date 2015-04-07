@@ -792,6 +792,9 @@ name|unit
 parameter_list|,
 name|bdaddr_p
 name|bdaddr
+parameter_list|,
+name|int
+name|link_type
 parameter_list|)
 block|{
 name|ng_hci_neighbor_p
@@ -838,6 +841,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|n
+operator|->
+name|addrtype
+operator|==
+name|link_type
+operator|&&
 name|bcmp
 argument_list|(
 operator|&
@@ -1021,8 +1030,8 @@ condition|(
 name|con
 operator|->
 name|link_type
-operator|==
-name|NG_HCI_LINK_ACL
+operator|!=
+name|NG_HCI_LINK_SCO
 condition|)
 name|NG_HCI_BUFF_ACL_TOTAL
 argument_list|(
@@ -1111,8 +1120,8 @@ condition|(
 name|con
 operator|->
 name|link_type
-operator|==
-name|NG_HCI_LINK_ACL
+operator|!=
+name|NG_HCI_LINK_SCO
 condition|)
 name|NG_HCI_BUFF_ACL_FREE
 argument_list|(

@@ -3652,6 +3652,18 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/*Commands - LE*/
+name|f
+operator|=
+name|ng_btsocket_hci_raw_sec_filter
+operator|->
+name|commands
+index|[
+name|NG_HCI_OGF_LE
+operator|-
+literal|1
+index|]
+expr_stmt|;
 block|}
 end_function
 

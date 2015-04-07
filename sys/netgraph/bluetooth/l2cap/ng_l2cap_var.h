@@ -217,6 +217,10 @@ name|u_int16_t
 name|cid
 decl_stmt|;
 comment|/* last allocated CID */
+name|u_int16_t
+name|lecid
+decl_stmt|;
+comment|/* last allocated CID for LE */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -286,6 +290,9 @@ name|u_int8_t
 name|ident
 decl_stmt|;
 comment|/* last allocated ident */
+name|uint8_t
+name|linktype
+decl_stmt|;
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -385,6 +392,9 @@ name|u_int16_t
 name|dcid
 decl_stmt|;
 comment|/* destination channel ID */
+name|uint16_t
+name|idtype
+decl_stmt|;
 name|u_int16_t
 name|imtu
 decl_stmt|;
