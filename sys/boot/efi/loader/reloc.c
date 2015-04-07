@@ -41,11 +41,19 @@ directive|include
 file|<bootstrap.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__i386__
-end_ifdef
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -71,7 +79,10 @@ end_define
 begin_elif
 elif|#
 directive|elif
+name|defined
+argument_list|(
 name|__amd64__
+argument_list|)
 end_elif
 
 begin_define
@@ -95,13 +106,98 @@ name|ELFW_R_TYPE
 value|ELF64_R_TYPE
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+error|architecture not supported
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|RELOC_TYPE_NONE
+value|R_X86_64_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|RELOC_TYPE_RELATIVE
+value|R_X86_64_RELATIVE
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|RELOC_TYPE_NONE
+value|R_ARM_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|RELOC_TYPE_RELATIVE
+value|R_ARM_RELATIVE
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|RELOC_TYPE_NONE
+value|R_386_NONE
+end_define
+
+begin_define
+define|#
+directive|define
+name|RELOC_TYPE_RELATIVE
+value|R_386_RELATIVE
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/*  * A simple relocator for IA32/AMD64 EFI binaries.  */
+comment|/*  * A simple relocator for EFI binaries.  */
 end_comment
 
 begin_function
@@ -236,21 +332,7 @@ default|default:
 break|break;
 block|}
 block|}
-comment|/* 	 * Perform the actual relocation. 	 * XXX: We are reusing code for the amd64 version of this, but 	 * we must make sure the relocation types are the same. 	 */
-name|CTASSERT
-argument_list|(
-name|R_386_NONE
-operator|==
-name|R_X86_64_NONE
-argument_list|)
-expr_stmt|;
-name|CTASSERT
-argument_list|(
-name|R_386_RELATIVE
-operator|==
-name|R_X86_64_RELATIVE
-argument_list|)
-expr_stmt|;
+comment|/* 	 * Perform the actual relocation. 	 */
 for|for
 control|(
 init|;
@@ -274,12 +356,12 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|R_386_NONE
+name|RELOC_TYPE_NONE
 case|:
 comment|/* No relocation needs be performed. */
 break|break;
 case|case
-name|R_386_RELATIVE
+name|RELOC_TYPE_RELATIVE
 case|:
 comment|/* Address relative to the base address. */
 name|newaddr
