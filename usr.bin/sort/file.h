@@ -153,29 +153,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Structure for zero-separated file reading (for input files list)  */
-end_comment
-
-begin_struct
-struct|struct
-name|file0_reader
-block|{
-name|char
-modifier|*
-name|current_line
-decl_stmt|;
-name|FILE
-modifier|*
-name|f
-decl_stmt|;
-name|size_t
-name|current_sz
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
 comment|/* memory */
 end_comment
 
@@ -289,19 +266,6 @@ name|struct
 name|file_reader
 modifier|*
 name|fr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|char
-modifier|*
-name|read_file0_line
-parameter_list|(
-name|struct
-name|file0_reader
-modifier|*
-name|f0r
 parameter_list|)
 function_decl|;
 end_function_decl
