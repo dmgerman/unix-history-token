@@ -24277,7 +24277,7 @@ name|sysctl_ddp_stats
 argument_list|,
 literal|"A"
 argument_list|,
-literal|"DDP statistics"
+literal|"non-TCP DDP statistics"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_PROC
