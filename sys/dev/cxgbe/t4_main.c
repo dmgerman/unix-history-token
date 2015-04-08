@@ -18243,6 +18243,11 @@ name|rc
 decl_stmt|,
 name|i
 decl_stmt|;
+name|ASSERT_SYNCHRONIZED_OP
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ADAPTER_LOCK_ASSERT_NOTOWNED
 argument_list|(
 name|sc
