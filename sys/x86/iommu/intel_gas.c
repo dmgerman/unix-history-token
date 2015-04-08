@@ -1743,6 +1743,9 @@ decl_stmt|;
 name|dmar_gaddr_t
 name|size
 decl_stmt|;
+name|int
+name|offset
+decl_stmt|;
 specifier|const
 name|struct
 name|bus_dma_tag_common
@@ -1829,6 +1832,10 @@ name|a
 operator|->
 name|size
 operator|+
+name|a
+operator|->
+name|offset
+operator|+
 name|DMAR_PAGE_SIZE
 operator|>
 name|prev
@@ -1854,6 +1861,10 @@ operator|->
 name|entry
 operator|->
 name|start
+operator|+
+name|a
+operator|->
+name|offset
 argument_list|,
 name|a
 operator|->
@@ -1871,7 +1882,7 @@ operator|(
 name|true
 operator|)
 return|;
-comment|/* 	 * The start to start + size region crosses the boundary. 	 * Check if there is enough space after the next boundary 	 * after the prev->end. 	 */
+comment|/* 	 * The start + offset to start + offset + size region crosses 	 * the boundary.  Check if there is enough space after the 	 * next boundary after the prev->end. 	 */
 name|bs
 operator|=
 operator|(
@@ -1880,6 +1891,10 @@ operator|->
 name|entry
 operator|->
 name|start
+operator|+
+name|a
+operator|->
+name|offset
 operator|+
 name|a
 operator|->
@@ -1919,6 +1934,10 @@ name|start
 operator|+
 name|a
 operator|->
+name|offset
+operator|+
+name|a
+operator|->
 name|size
 operator|+
 name|DMAR_PAGE_SIZE
@@ -1935,6 +1954,10 @@ name|start
 operator|+
 name|a
 operator|->
+name|offset
+operator|+
+name|a
+operator|->
 name|size
 operator|<=
 name|end
@@ -1942,6 +1965,10 @@ operator|&&
 name|dmar_test_boundary
 argument_list|(
 name|start
+operator|+
+name|a
+operator|->
+name|offset
 argument_list|,
 name|a
 operator|->
@@ -2440,6 +2467,10 @@ name|a
 operator|->
 name|size
 operator|+
+name|a
+operator|->
+name|offset
+operator|+
 name|DMAR_PAGE_SIZE
 condition|)
 return|return
@@ -2791,6 +2822,9 @@ parameter_list|,
 name|dmar_gaddr_t
 name|size
 parameter_list|,
+name|int
+name|offset
+parameter_list|,
 name|u_int
 name|flags
 parameter_list|,
@@ -2860,6 +2894,12 @@ operator|.
 name|size
 operator|=
 name|size
+expr_stmt|;
+name|a
+operator|.
+name|offset
+operator|=
+name|offset
 expr_stmt|;
 name|a
 operator|.
@@ -3742,6 +3782,9 @@ parameter_list|,
 name|dmar_gaddr_t
 name|size
 parameter_list|,
+name|int
+name|offset
+parameter_list|,
 name|u_int
 name|eflags
 parameter_list|,
@@ -3833,6 +3876,8 @@ argument_list|,
 name|common
 argument_list|,
 name|size
+argument_list|,
+name|offset
 argument_list|,
 name|flags
 argument_list|,
