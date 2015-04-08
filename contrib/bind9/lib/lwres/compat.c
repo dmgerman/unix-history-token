@@ -415,6 +415,7 @@ if|if
 condition|(
 name|neg
 condition|)
+comment|/* XXX: acc was declared unsigned! */
 name|acc
 operator|=
 operator|-

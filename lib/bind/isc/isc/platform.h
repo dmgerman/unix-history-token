@@ -223,6 +223,17 @@ name|ISC_PLATFORM_FIXIN6ISADDR
 end_undef
 
 begin_comment
+comment|/*! \brief  * Define if the system has struct sockaddr_storage.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_PLATFORM_HAVESOCKADDRSTORAGE
+value|1
+end_define
+
+begin_comment
 comment|/*! \brief  * Define if the system supports kqueue multiplexing  */
 end_comment
 

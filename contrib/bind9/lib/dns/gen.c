@@ -25,8 +25,16 @@ value|1
 end_define
 
 begin_comment
-comment|/*  * We use snprintf.  */
+comment|/*  * We use snprintf which was defined late in Windows even it is in C99.  */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|_MSC_VER
+operator|<
+literal|1900
+end_if
 
 begin_define
 define|#
@@ -34,6 +42,11 @@ directive|define
 name|snprintf
 value|_snprintf
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -7503,6 +7503,10 @@ operator|->
 name|rpz_cidr
 operator|!=
 name|NULL
+operator|&&
+name|node
+operator|->
+name|rpz
 condition|)
 block|{
 name|dns_fixedname_init
@@ -7685,6 +7689,10 @@ operator|->
 name|rpz_cidr
 operator|!=
 name|NULL
+operator|&&
+name|node
+operator|->
+name|rpz
 condition|)
 name|dns_rpz_cidr_deleteip
 argument_list|(
@@ -9645,16 +9653,6 @@ operator|*
 operator|)
 name|db
 decl_stmt|;
-name|RWLOCK
-argument_list|(
-operator|&
-name|rbtdb
-operator|->
-name|tree_lock
-argument_list|,
-name|isc_rwlocktype_read
-argument_list|)
-expr_stmt|;
 name|version
 operator|->
 name|havensec3
@@ -10032,16 +10030,6 @@ argument_list|,
 name|isc_rwlocktype_read
 argument_list|)
 expr_stmt|;
-name|RWUNLOCK
-argument_list|(
-operator|&
-name|rbtdb
-operator|->
-name|tree_lock
-argument_list|,
-name|isc_rwlocktype_read
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -10296,9 +10284,6 @@ name|rdatasetheader_t
 modifier|*
 name|header
 decl_stmt|;
-name|isc_boolean_t
-name|writer
-decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|VALID_RBTDB
@@ -10411,12 +10396,6 @@ operator|=
 name|version
 operator|->
 name|serial
-expr_stmt|;
-name|writer
-operator|=
-name|version
-operator|->
-name|writer
 expr_stmt|;
 if|if
 condition|(
@@ -10570,6 +10549,26 @@ name|link
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 			 * Update the zone's secure status. 			 */
+if|if
+condition|(
+operator|!
+name|IS_CACHE
+argument_list|(
+name|rbtdb
+argument_list|)
+condition|)
+name|iszonesecure
+argument_list|(
+name|db
+argument_list|,
+name|version
+argument_list|,
+name|rbtdb
+operator|->
+name|origin_node
+argument_list|)
+expr_stmt|;
 comment|/* 			 * Become the current version. 			 */
 name|version
 operator|->
@@ -10826,30 +10825,6 @@ operator|->
 name|lock
 argument_list|,
 name|isc_rwlocktype_write
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Update the zone's secure status. 	 */
-if|if
-condition|(
-name|writer
-operator|&&
-name|commit
-operator|&&
-operator|!
-name|IS_CACHE
-argument_list|(
-name|rbtdb
-argument_list|)
-condition|)
-name|iszonesecure
-argument_list|(
-name|db
-argument_list|,
-name|version
-argument_list|,
-name|rbtdb
-operator|->
-name|origin_node
 argument_list|)
 expr_stmt|;
 if|if
@@ -11817,6 +11792,12 @@ name|rpz_cidr
 argument_list|,
 name|fname
 argument_list|)
+expr_stmt|;
+name|node
+operator|->
+name|rpz
+operator|=
+literal|1
 expr_stmt|;
 block|}
 endif|#
@@ -25449,10 +25430,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|unsigned
-name|int
-name|refs
-decl_stmt|;
 name|INSIST
 argument_list|(
 name|rbtversion
@@ -31227,6 +31204,7 @@ name|rpz_cidr
 operator|!=
 name|NULL
 condition|)
+block|{
 name|dns_rpz_cidr_addip
 argument_list|(
 name|rbtdb
@@ -31236,6 +31214,13 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+name|node
+operator|->
+name|rpz
+operator|=
+literal|1
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|if

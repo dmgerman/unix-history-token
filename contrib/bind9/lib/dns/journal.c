@@ -6386,6 +6386,13 @@ operator|&
 name|diff
 argument_list|)
 expr_stmt|;
+name|INSIST
+argument_list|(
+name|ver
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|result

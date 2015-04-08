@@ -5355,7 +5355,7 @@ literal|4
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* 		 * Escape double quote, semi-colon, backslash. 		 * If we are not enclosing the string in double 		 * quotes also escape at sign. 		 */
+comment|/* 		 * Escape double quote and backslash.  If we are not 		 * enclosing the string in double quotes also escape 		 * at sign and semicolon. 		 */
 if|if
 condition|(
 operator|*
@@ -5366,21 +5366,23 @@ operator|||
 operator|*
 name|sp
 operator|==
-literal|0x3b
-operator|||
-operator|*
-name|sp
-operator|==
 literal|0x5c
 operator|||
 operator|(
 operator|!
 name|quote
 operator|&&
+operator|(
 operator|*
 name|sp
 operator|==
 literal|0x40
+operator|||
+operator|*
+name|sp
+operator|==
+literal|0x3b
+operator|)
 operator|)
 condition|)
 block|{

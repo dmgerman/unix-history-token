@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2015  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -585,7 +585,7 @@ begin_decl_stmt
 specifier|static
 name|FILE
 modifier|*
-name|fp
+name|outfp
 init|=
 name|NULL
 decl_stmt|;
@@ -810,7 +810,7 @@ specifier|static
 name|unsigned
 name|char
 modifier|*
-name|salt
+name|gsalt
 init|=
 name|saltbuf
 decl_stmt|;
@@ -1134,7 +1134,7 @@ name|name
 argument_list|,
 name|masterstyle
 argument_list|,
-name|fp
+name|outfp
 argument_list|)
 expr_stmt|;
 name|check_result
@@ -1355,7 +1355,7 @@ name|r
 operator|.
 name|length
 argument_list|,
-name|fp
+name|outfp
 argument_list|,
 name|NULL
 argument_list|)
@@ -1568,24 +1568,6 @@ operator|!=
 name|ISC_R_SUCCESS
 condition|)
 block|{
-name|char
-name|keystr
-index|[
-name|DST_KEY_FORMATSIZE
-index|]
-decl_stmt|;
-name|dst_key_format
-argument_list|(
-name|key
-argument_list|,
-name|keystr
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|keystr
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|fatal
 argument_list|(
 literal|"dnskey '%s' failed to sign data: %s"
@@ -3999,7 +3981,7 @@ modifier|*
 name|salt
 parameter_list|,
 name|size_t
-name|salt_length
+name|salt_len
 parameter_list|,
 name|isc_boolean_t
 name|speculative
@@ -4042,7 +4024,7 @@ argument_list|,
 operator|(
 name|int
 operator|)
-name|salt_length
+name|salt_len
 argument_list|,
 name|name
 operator|->
@@ -4534,7 +4516,7 @@ modifier|*
 name|salt
 parameter_list|,
 name|size_t
-name|salt_length
+name|salt_len
 parameter_list|)
 block|{
 name|dns_fixedname_t
@@ -4670,7 +4652,7 @@ name|iterations
 argument_list|,
 name|salt
 argument_list|,
-name|salt_length
+name|salt_len
 argument_list|,
 name|ISC_TRUE
 argument_list|)
@@ -9425,7 +9407,7 @@ modifier|*
 name|salt
 parameter_list|,
 name|size_t
-name|salt_length
+name|salt_len
 parameter_list|,
 name|dns_iterations_t
 name|iterations
@@ -9534,7 +9516,7 @@ operator|(
 name|unsigned
 name|char
 operator|)
-name|salt_length
+name|salt_len
 expr_stmt|;
 name|DE_CONST
 argument_list|(
@@ -9770,7 +9752,7 @@ modifier|*
 name|salt
 parameter_list|,
 name|size_t
-name|salt_length
+name|salt_len
 parameter_list|,
 name|unsigned
 name|int
@@ -9834,7 +9816,7 @@ name|DNS_NAME_FORMATSIZE
 index|]
 decl_stmt|;
 name|size_t
-name|hash_length
+name|hash_len
 decl_stmt|;
 name|dns_name_format
 argument_list|(
@@ -9879,7 +9861,7 @@ argument_list|,
 name|hash
 argument_list|,
 operator|&
-name|hash_length
+name|hash_len
 argument_list|,
 name|name
 argument_list|,
@@ -9891,7 +9873,7 @@ name|iterations
 argument_list|,
 name|salt
 argument_list|,
-name|salt_length
+name|salt_len
 argument_list|)
 expr_stmt|;
 name|check_result
@@ -9932,7 +9914,7 @@ name|iterations
 argument_list|,
 name|salt
 argument_list|,
-name|salt_length
+name|salt_len
 argument_list|,
 name|nexthash
 argument_list|,
@@ -10121,7 +10103,7 @@ modifier|*
 name|salt
 parameter_list|,
 name|size_t
-name|salt_length
+name|salt_len
 parameter_list|,
 name|hashlist_t
 modifier|*
@@ -10365,7 +10347,7 @@ name|nsec3
 operator|.
 name|salt_length
 operator|==
-name|salt_length
+name|salt_len
 operator|&&
 operator|!
 name|memcmp
@@ -10376,7 +10358,7 @@ name|salt
 argument_list|,
 name|salt
 argument_list|,
-name|salt_length
+name|salt_len
 argument_list|)
 condition|)
 continue|continue;
@@ -11074,7 +11056,7 @@ modifier|*
 name|salt
 parameter_list|,
 name|size_t
-name|salt_length
+name|salt_len
 parameter_list|,
 name|hashlist_t
 modifier|*
@@ -11585,7 +11567,7 @@ name|iterations
 argument_list|,
 name|salt
 argument_list|,
-name|salt_length
+name|salt_len
 argument_list|,
 name|ISC_FALSE
 argument_list|)
@@ -11633,7 +11615,7 @@ name|iterations
 argument_list|,
 name|salt
 argument_list|,
-name|salt_length
+name|salt_len
 argument_list|)
 expr_stmt|;
 name|count
@@ -11678,7 +11660,7 @@ name|iterations
 argument_list|,
 name|salt
 argument_list|,
-name|salt_length
+name|salt_len
 argument_list|,
 name|ISC_FALSE
 argument_list|)
@@ -11695,7 +11677,7 @@ name|iterations
 argument_list|,
 name|salt
 argument_list|,
-name|salt_length
+name|salt_len
 argument_list|)
 expr_stmt|;
 block|}
@@ -11738,7 +11720,7 @@ name|addnsec3param
 argument_list|(
 name|salt
 argument_list|,
-name|salt_length
+name|salt_len
 argument_list|,
 name|iterations
 argument_list|)
@@ -11813,7 +11795,7 @@ name|iterations
 argument_list|,
 name|salt
 argument_list|,
-name|salt_length
+name|salt_len
 argument_list|,
 name|hashlist
 argument_list|)
@@ -12174,7 +12156,7 @@ name|node
 argument_list|,
 name|salt
 argument_list|,
-name|salt_length
+name|salt_len
 argument_list|,
 name|iterations
 argument_list|,
@@ -12243,7 +12225,7 @@ name|NULL
 argument_list|,
 name|salt
 argument_list|,
-name|salt_length
+name|salt_len
 argument_list|,
 name|iterations
 argument_list|,
@@ -13528,7 +13510,7 @@ name|void
 name|set_nsec3params
 parameter_list|(
 name|isc_boolean_t
-name|update_chain
+name|update
 parameter_list|,
 name|isc_boolean_t
 name|set_salt
@@ -13648,7 +13630,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|update_chain
+name|update
 operator|&&
 name|set_salt
 condition|)
@@ -13697,7 +13679,7 @@ argument_list|,
 name|orig_saltlen
 argument_list|)
 expr_stmt|;
-name|salt
+name|gsalt
 operator|=
 name|saltbuf
 expr_stmt|;
@@ -13705,7 +13687,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|update_chain
+name|update
 operator|&&
 name|set_iter
 condition|)
@@ -13880,7 +13862,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|update_chain
+name|update
 operator|&&
 name|set_optout
 condition|)
@@ -17123,8 +17105,6 @@ literal|"."
 expr_stmt|;
 name|setup_logging
 argument_list|(
-name|verbose
-argument_list|,
 name|mctx
 argument_list|,
 operator|&
@@ -17981,7 +17961,7 @@ name|dns_hash_sha1
 argument_list|,
 name|nsec3iter
 argument_list|,
-name|salt
+name|gsalt
 argument_list|,
 name|salt_length
 argument_list|,
@@ -18039,7 +18019,7 @@ condition|(
 name|output_stdout
 condition|)
 block|{
-name|fp
+name|outfp
 operator|=
 name|stdout
 expr_stmt|;
@@ -18117,7 +18097,7 @@ argument_list|(
 name|tempfile
 argument_list|,
 operator|&
-name|fp
+name|outfp
 argument_list|)
 expr_stmt|;
 else|else
@@ -18128,7 +18108,7 @@ argument_list|(
 name|tempfile
 argument_list|,
 operator|&
-name|fp
+name|outfp
 argument_list|)
 expr_stmt|;
 if|if
@@ -18160,12 +18140,12 @@ expr_stmt|;
 block|}
 name|print_time
 argument_list|(
-name|fp
+name|outfp
 argument_list|)
 expr_stmt|;
 name|print_version
 argument_list|(
-name|fp
+name|outfp
 argument_list|)
 expr_stmt|;
 name|result
@@ -18574,7 +18554,7 @@ argument_list|,
 operator|&
 name|header
 argument_list|,
-name|fp
+name|outfp
 argument_list|)
 expr_stmt|;
 name|check_result
@@ -18611,7 +18591,7 @@ name|result
 operator|=
 name|isc_stdio_close
 argument_list|(
-name|fp
+name|outfp
 argument_list|)
 expr_stmt|;
 name|check_result

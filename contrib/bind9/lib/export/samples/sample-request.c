@@ -958,12 +958,17 @@ name|ai_protocol
 operator|=
 name|IPPROTO_UDP
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AI_NUMERICHOST
 name|hints
 operator|.
 name|ai_flags
 operator|=
 name|AI_NUMERICHOST
 expr_stmt|;
+endif|#
+directive|endif
 name|gai_error
 operator|=
 name|getaddrinfo

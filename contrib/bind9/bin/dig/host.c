@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009-2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -586,7 +586,7 @@ literal|"       -W specifies how long to wait for a reply\n"
 literal|"       -4 use IPv4 query transport only\n"
 literal|"       -6 use IPv6 query transport only\n"
 literal|"       -m set memory debugging flag (trace|record|usage)\n"
-literal|"       -v print version number and exit\n"
+literal|"       -V print version number and exit\n"
 argument_list|,
 name|stderr
 argument_list|)
@@ -1044,7 +1044,7 @@ name|dns_name_t
 name|empty_name
 decl_stmt|;
 name|char
-name|t
+name|tbuf
 index|[
 literal|4096
 index|]
@@ -1146,11 +1146,11 @@ argument_list|(
 operator|&
 name|target
 argument_list|,
-name|t
+name|tbuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|t
+name|tbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1592,7 +1592,7 @@ name|isc_region_t
 name|r
 decl_stmt|;
 name|char
-name|t
+name|tbuf
 index|[
 literal|4096
 index|]
@@ -1618,11 +1618,11 @@ argument_list|(
 operator|&
 name|target
 argument_list|,
-name|t
+name|tbuf
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|t
+name|tbuf
 argument_list|)
 argument_list|)
 expr_stmt|;

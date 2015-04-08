@@ -8217,7 +8217,7 @@ name|DOIO_SOFT
 operator|)
 return|;
 block|}
-comment|/* 		 * Simulate a firewall blocking UDP responses bigger than 		 * 512 bytes. 		 */
+comment|/* 		 * Simulate a firewall blocking UDP responses bigger than 		 * 'maxudp' bytes. 		 */
 if|if
 condition|(
 name|sock
@@ -8543,6 +8543,38 @@ argument_list|)
 expr_stmt|;
 name|resend
 label|:
+if|if
+condition|(
+name|sock
+operator|->
+name|type
+operator|==
+name|isc_sockettype_udp
+operator|&&
+name|sock
+operator|->
+name|manager
+operator|->
+name|maxudp
+operator|!=
+literal|0
+operator|&&
+name|write_count
+operator|>
+operator|(
+name|size_t
+operator|)
+name|sock
+operator|->
+name|manager
+operator|->
+name|maxudp
+condition|)
+name|cc
+operator|=
+name|write_count
+expr_stmt|;
+else|else
 name|cc
 operator|=
 name|sendmsg

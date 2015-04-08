@@ -68,12 +68,17 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
+name|RUNTIME_CHECK
+argument_list|(
 name|EVP_DigestInit
 argument_list|(
 name|ctx
 argument_list|,
 name|EVP_md5
 argument_list|()
+argument_list|)
+operator|==
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -115,6 +120,8 @@ name|int
 name|len
 parameter_list|)
 block|{
+name|RUNTIME_CHECK
+argument_list|(
 name|EVP_DigestUpdate
 argument_list|(
 name|ctx
@@ -130,6 +137,9 @@ operator|(
 name|size_t
 operator|)
 name|len
+argument_list|)
+operator|==
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -149,6 +159,8 @@ modifier|*
 name|digest
 parameter_list|)
 block|{
+name|RUNTIME_CHECK
+argument_list|(
 name|EVP_DigestFinal
 argument_list|(
 name|ctx
@@ -156,6 +168,9 @@ argument_list|,
 name|digest
 argument_list|,
 name|NULL
+argument_list|)
+operator|==
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

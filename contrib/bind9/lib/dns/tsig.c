@@ -1390,13 +1390,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+operator|&&
 name|tkey
 operator|->
 name|generated
 condition|)
 block|{
 comment|/* 		 * Add the new key to the LRU list and remove the least 		 * recently used key if there are too many keys on the list. 		 */
-name|ISC_LIST_INITANDAPPEND
+name|ISC_LIST_APPEND
 argument_list|(
 name|ring
 operator|->
@@ -2233,6 +2237,13 @@ operator|&
 name|tkey
 operator|->
 name|mctx
+argument_list|)
+expr_stmt|;
+name|ISC_LINK_INIT
+argument_list|(
+name|tkey
+argument_list|,
+name|link
 argument_list|)
 expr_stmt|;
 name|tkey

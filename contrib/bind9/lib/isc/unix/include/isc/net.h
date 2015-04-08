@@ -25,7 +25,7 @@ comment|/*****  ***** Module Info  *****/
 end_comment
 
 begin_comment
-comment|/*! \file  * \brief  * Basic Networking Types  *  * This module is responsible for defining the following basic networking  * types:  *  *\li		struct in_addr  *\li		struct in6_addr  *\li		struct in6_pktinfo  *\li		struct sockaddr  *\li		struct sockaddr_in  *\li		struct sockaddr_in6  *\li		in_port_t  *  * It ensures that the AF_ and PF_ macros are defined.  *  * It declares ntoh[sl]() and hton[sl]().  *  * It declares inet_aton(), inet_ntop(), and inet_pton().  *  * It ensures that #INADDR_LOOPBACK, #INADDR_ANY, #IN6ADDR_ANY_INIT,  * in6addr_any, and in6addr_loopback are available.  *  * It ensures that IN_MULTICAST() is available to check for multicast  * addresses.  *  * MP:  *\li	No impact.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	N/A.  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	BSD Socket API  *\li	RFC2553  */
+comment|/*! \file  * \brief  * Basic Networking Types  *  * This module is responsible for defining the following basic networking  * types:  *  *\li		struct in_addr  *\li		struct in6_addr  *\li		struct in6_pktinfo  *\li		struct sockaddr  *\li		struct sockaddr_in  *\li		struct sockaddr_in6  *\li		struct sockaddr_storage  *\li		in_port_t  *  * It ensures that the AF_ and PF_ macros are defined.  *  * It declares ntoh[sl]() and hton[sl]().  *  * It declares inet_aton(), inet_ntop(), and inet_pton().  *  * It ensures that #INADDR_LOOPBACK, #INADDR_ANY, #IN6ADDR_ANY_INIT,  * in6addr_any, and in6addr_loopback are available.  *  * It ensures that IN_MULTICAST() is available to check for multicast  * addresses.  *  * MP:  *\li	No impact.  *  * Reliability:  *\li	No anticipated impact.  *  * Resources:  *\li	N/A.  *  * Security:  *\li	No anticipated impact.  *  * Standards:  *\li	BSD Socket API  *\li	RFC2553  */
 end_comment
 
 begin_comment
@@ -523,6 +523,115 @@ name|int
 name|ipi6_ifindex
 decl_stmt|;
 comment|/*%< send/recv interface index */
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ISC_PLATFORM_HAVESOCKADDRSTORAGE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_SS_MAXSIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SS_ALIGNSIZE
+value|(sizeof (isc_uint64_t))
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_HAVESALEN
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_SS_PAD1SIZE
+value|(_SS_ALIGNSIZE - (2 * sizeof(isc_uint8_t)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SS_PAD2SIZE
+value|(_SS_MAXSIZE - (_SS_ALIGNSIZE + _SS_PAD1SIZE \ 		       + 2 * sizeof(isc_uint8_t)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_SS_PAD1SIZE
+value|(_SS_ALIGNSIZE - sizeof(isc_uint16_t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_SS_PAD2SIZE
+value|(_SS_MAXSIZE - (_SS_ALIGNSIZE + _SS_PAD1SIZE \ 			+ sizeof(isc_uint16_t)))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_struct
+struct|struct
+name|sockaddr_storage
+block|{
+ifdef|#
+directive|ifdef
+name|ISC_PLATFORM_HAVESALEN
+name|isc_uint8_t
+name|ss_len
+decl_stmt|;
+name|isc_uint8_t
+name|ss_family
+decl_stmt|;
+else|#
+directive|else
+name|isc_uint16_t
+name|ss_family
+decl_stmt|;
+endif|#
+directive|endif
+name|char
+name|__ss_pad1
+index|[
+name|_SS_PAD1SIZE
+index|]
+decl_stmt|;
+name|isc_uint64_t
+name|__ss_align
+decl_stmt|;
+comment|/* field to force desired structure */
+name|char
+name|__ss_pad2
+index|[
+name|_SS_PAD2SIZE
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct

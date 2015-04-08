@@ -3359,6 +3359,13 @@ name|orderp
 operator|=
 literal|0
 expr_stmt|;
+operator|*
+name|nlabelsp
+operator|=
+name|name1
+operator|->
+name|labels
+expr_stmt|;
 return|return
 operator|(
 name|dns_namereln_equal

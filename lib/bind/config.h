@@ -490,6 +490,14 @@ comment|/* #undef ALLOW_FILTER_AAAA_ON_V4 */
 end_comment
 
 begin_comment
+comment|/* define if ATF unit tests are to be built. */
+end_comment
+
+begin_comment
+comment|/* #undef ATF_TEST */
+end_comment
+
+begin_comment
 comment|/* Define if recvmsg() does not meet all of the BSD socket API specifications.    */
 end_comment
 
@@ -517,17 +525,23 @@ begin_comment
 comment|/* Define to enable rpz-nsdname rules. */
 end_comment
 
-begin_comment
-comment|/* #undef ENABLE_RPZ_NSDNAME */
-end_comment
+begin_define
+define|#
+directive|define
+name|ENABLE_RPZ_NSDNAME
+value|1
+end_define
 
 begin_comment
 comment|/* Define to enable rpz-nsip rules. */
 end_comment
 
-begin_comment
-comment|/* #undef ENABLE_RPZ_NSIP */
-end_comment
+begin_define
+define|#
+directive|define
+name|ENABLE_RPZ_NSIP
+value|1
+end_define
 
 begin_comment
 comment|/* Solaris hack to get select_large_fdset. */
@@ -659,6 +673,36 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `fseeko' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FSEEKO
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `ftello' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FTELLO
+value|1
+end_define
+
+begin_comment
+comment|/* Define to use gperftools CPU profiler. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GPERFTOOLS_PROFILER */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<gssapi/gssapi.h> header file. */
 end_comment
 
@@ -691,7 +735,7 @@ comment|/* #undef HAVE_GSSAPI_KRB5_H */
 end_comment
 
 begin_comment
-comment|/* Define to 1 if you have the `if_nametoindex' function. */
+comment|/* Define to 1 if you have the if_nametoindex function. */
 end_comment
 
 begin_define
@@ -1213,6 +1257,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* HMAC_*() return ints */
+end_comment
+
+begin_comment
+comment|/* #undef HMAC_RETURN_INT */
+end_comment
+
+begin_comment
 comment|/* return type of gai_strerror */
 end_comment
 
@@ -1243,6 +1295,17 @@ define|#
 directive|define
 name|IRS_GETNAMEINFO_FLAGS_T
 value|int
+end_define
+
+begin_comment
+comment|/* Define to the sockaddr length type used by getnameinfo(3). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IRS_GETNAMEINFO_SOCKLEN_T
+value|socklen_t
 end_define
 
 begin_comment
@@ -1299,7 +1362,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_BUGREPORT
-value|""
+value|"bind9-bugs@isc.org"
 end_define
 
 begin_comment
@@ -1310,7 +1373,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_NAME
-value|""
+value|"BIND"
 end_define
 
 begin_comment
@@ -1321,7 +1384,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|""
+value|"BIND 9.9"
 end_define
 
 begin_comment
@@ -1332,7 +1395,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_TARNAME
-value|""
+value|"bind"
 end_define
 
 begin_comment
@@ -1343,7 +1406,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_URL
-value|""
+value|"https://www.isc.org/downloads/BIND/"
 end_define
 
 begin_comment
@@ -1354,7 +1417,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|""
+value|"9.9"
 end_define
 
 begin_comment
@@ -1492,14 +1555,8 @@ begin_comment
 comment|/* Define to empty if your compiler does not support "static inline". */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|inline
-end_define
-
 begin_comment
-comment|/**/
+comment|/* #undef inline */
 end_comment
 
 begin_comment

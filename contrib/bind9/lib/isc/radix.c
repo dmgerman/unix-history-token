@@ -1364,6 +1364,17 @@ index|]
 expr_stmt|;
 if|if
 condition|(
+name|prefix
+operator|->
+name|bitlen
+operator|<
+name|node
+operator|->
+name|bit
+condition|)
+continue|continue;
+if|if
+condition|(
 name|_comp_with_mask
 argument_list|(
 name|isc_prefix_tochar

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -1930,11 +1930,6 @@ operator|!
 name|short_form
 condition|)
 block|{
-name|isc_boolean_t
-name|headers
-init|=
-name|ISC_TRUE
-decl_stmt|;
 name|puts
 argument_list|(
 literal|"------------"
@@ -1947,7 +1942,7 @@ name|query
 argument_list|,
 name|msg
 argument_list|,
-name|headers
+name|ISC_TRUE
 argument_list|,
 name|DNS_SECTION_QUESTION
 argument_list|)
@@ -1958,7 +1953,7 @@ name|query
 argument_list|,
 name|msg
 argument_list|,
-name|headers
+name|ISC_TRUE
 argument_list|,
 name|DNS_SECTION_ANSWER
 argument_list|)
@@ -1969,7 +1964,7 @@ name|query
 argument_list|,
 name|msg
 argument_list|,
-name|headers
+name|ISC_TRUE
 argument_list|,
 name|DNS_SECTION_AUTHORITY
 argument_list|)
@@ -1980,7 +1975,7 @@ name|query
 argument_list|,
 name|msg
 argument_list|,
-name|headers
+name|ISC_TRUE
 argument_list|,
 name|DNS_SECTION_ADDITIONAL
 argument_list|)

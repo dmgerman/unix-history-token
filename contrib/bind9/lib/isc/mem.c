@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010, 2012-2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
-end_comment
-
-begin_comment
-comment|/* $Id$ */
+comment|/*  * Copyright (C) 2004-2010, 2012-2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -460,7 +456,14 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|isc_mutex_t
-name|lock
+name|contextslock
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|isc_mutex_t
+name|createlock
 decl_stmt|;
 end_decl_stmt
 
@@ -3650,18 +3653,12 @@ name|size
 operator|<=
 name|ctx
 operator|->
-name|total
+name|inuse
 argument_list|)
 expr_stmt|;
 name|ctx
 operator|->
 name|inuse
-operator|-=
-name|size
-expr_stmt|;
-name|ctx
-operator|->
-name|total
 operator|-=
 name|size
 expr_stmt|;
@@ -4246,7 +4243,18 @@ argument_list|(
 name|isc_mutex_init
 argument_list|(
 operator|&
-name|lock
+name|createlock
+argument_list|)
+operator|==
+name|ISC_R_SUCCESS
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|isc_mutex_init
+argument_list|(
+operator|&
+name|contextslock
 argument_list|)
 operator|==
 name|ISC_R_SUCCESS
@@ -4981,7 +4989,7 @@ expr_stmt|;
 name|LOCK
 argument_list|(
 operator|&
-name|lock
+name|contextslock
 argument_list|)
 expr_stmt|;
 name|ISC_LIST_INITANDAPPEND
@@ -4996,7 +5004,7 @@ expr_stmt|;
 name|UNLOCK
 argument_list|(
 operator|&
-name|lock
+name|contextslock
 argument_list|)
 expr_stmt|;
 operator|*
@@ -5231,7 +5239,7 @@ decl_stmt|;
 name|LOCK
 argument_list|(
 operator|&
-name|lock
+name|contextslock
 argument_list|)
 expr_stmt|;
 name|ISC_LIST_UNLINK
@@ -5252,7 +5260,7 @@ expr_stmt|;
 name|UNLOCK
 argument_list|(
 operator|&
-name|lock
+name|contextslock
 argument_list|)
 expr_stmt|;
 name|ctx
@@ -11577,7 +11585,7 @@ expr_stmt|;
 name|LOCK
 argument_list|(
 operator|&
-name|lock
+name|contextslock
 argument_list|)
 expr_stmt|;
 for|for
@@ -11623,7 +11631,7 @@ block|}
 name|UNLOCK
 argument_list|(
 operator|&
-name|lock
+name|contextslock
 argument_list|)
 expr_stmt|;
 endif|#
@@ -11668,7 +11676,7 @@ expr_stmt|;
 name|LOCK
 argument_list|(
 operator|&
-name|lock
+name|contextslock
 argument_list|)
 expr_stmt|;
 if|if
@@ -11743,7 +11751,7 @@ block|}
 name|UNLOCK
 argument_list|(
 operator|&
-name|lock
+name|contextslock
 argument_list|)
 expr_stmt|;
 block|}
@@ -12535,7 +12543,7 @@ expr_stmt|;
 name|LOCK
 argument_list|(
 operator|&
-name|lock
+name|contextslock
 argument_list|)
 expr_stmt|;
 name|lost
@@ -12587,7 +12595,7 @@ block|{
 name|UNLOCK
 argument_list|(
 operator|&
-name|lock
+name|contextslock
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -12598,7 +12606,7 @@ block|}
 name|UNLOCK
 argument_list|(
 operator|&
-name|lock
+name|contextslock
 argument_list|)
 expr_stmt|;
 name|TRY0

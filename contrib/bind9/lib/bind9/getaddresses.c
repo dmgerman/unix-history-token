@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2014  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001, 2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2014, 2015  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001, 2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -409,9 +409,9 @@ ifdef|#
 directive|ifdef
 name|ISC_PLATFORM_HAVESCOPEID
 name|isc_result_t
-name|result
+name|iresult
 decl_stmt|;
-name|result
+name|iresult
 operator|=
 name|isc_netscope_pton
 argument_list|(
@@ -430,18 +430,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|result
+name|iresult
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
 return|return
 operator|(
-name|result
+name|iresult
 operator|)
 return|;
 else|#
 directive|else
-comment|/* 				 * The extended format is specified while the 				 * system does not provide the ability to use 				 * it.  Throw an explicit error instead of 				 * ignoring the specified value. 				 */
+comment|/* 				 * The extended format is specified while the 				 * system does not provide the ability to use 				 * it.	Throw an explicit error instead of 				 * ignoring the specified value. 				 */
 return|return
 operator|(
 name|ISC_R_BADADDRESSFORM
