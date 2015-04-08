@@ -272,6 +272,62 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEVICE_POLLING
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
+name|netisr_polling
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Enable Polling. */
+end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.isr.polling_enable"
+argument_list|,
+operator|&
+name|netisr_polling
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_isr
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|polling_enable
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|netisr_polling
+argument_list|,
+literal|0
+argument_list|,
+literal|"Enable polling"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*-  * Three global direct dispatch policies are supported:  *  * NETISR_DISPATCH_DEFERRED: All work is deferred for a netisr, regardless of  * context (may be overriden by protocols).  *  * NETISR_DISPATCH_HYBRID: If the executing context allows direct dispatch,  * and we're running on the CPU the work would be performed on, then direct  * dispatch it if it wouldn't violate ordering constraints on the workstream.  *  * NETISR_DISPATCH_DIRECT: If the executing context allows direct dispatch,  * always direct dispatch.  (The default.)  *  * Notice that changing the global policy could lead to short periods of  * misordered processing, but this is considered acceptable as compared to  * the complexity of enforcing ordering during policy changes.  Protocols can  * override the global policy (when they're not doing that, they select  * NETISR_DISPATCH_DEFAULT).  */
 end_comment
@@ -3070,6 +3126,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
+if|if
+condition|(
+name|netisr_polling
+condition|)
+block|{
 name|KASSERT
 argument_list|(
 name|nws_count
@@ -3086,6 +3147,7 @@ expr_stmt|;
 name|netisr_poll
 argument_list|()
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 ifdef|#
@@ -3223,6 +3285,10 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
+if|if
+condition|(
+name|netisr_polling
+condition|)
 name|netisr_pollmore
 argument_list|()
 expr_stmt|;
@@ -4266,6 +4332,12 @@ name|netisr_workstream
 modifier|*
 name|nwsp
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|netisr_polling
+condition|)
+return|return;
 name|nwsp
 operator|=
 name|DPCPU_ID_PTR
@@ -4568,6 +4640,9 @@ name|DEVICE_POLLING
 comment|/* 	 * The device polling code is not yet aware of how to deal with 	 * multiple netisr threads, so for the time being compiling in device 	 * polling disables parallel netisr workers. 	 */
 if|if
 condition|(
+name|netisr_polling
+operator|&&
+operator|(
 name|netisr_maxthreads
 operator|!=
 literal|1
@@ -4575,6 +4650,7 @@ operator|||
 name|netisr_bindthreads
 operator|!=
 literal|0
+operator|)
 condition|)
 block|{
 name|printf
