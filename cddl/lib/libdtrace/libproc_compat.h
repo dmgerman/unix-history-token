@@ -240,10 +240,7 @@ begin_define
 define|#
 directive|define
 name|Pupdate_maps
-parameter_list|(
-name|p
-parameter_list|)
-value|do { } while (0)
+value|proc_rdagent
 end_define
 
 begin_define
