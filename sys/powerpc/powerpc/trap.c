@@ -1753,13 +1753,13 @@ name|vector
 condition|)
 block|{
 case|case
-name|EXC_DTMISS
-case|:
-case|case
 name|EXC_DSE
 case|:
 case|case
 name|EXC_DSI
+case|:
+case|case
+name|EXC_DTMISS
 case|:
 name|printf
 argument_list|(
@@ -1772,6 +1772,9 @@ operator|->
 name|dar
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AIM
 name|printf
 argument_list|(
 literal|"   dsisr           = 0x%"
@@ -1787,15 +1790,17 @@ operator|.
 name|dsisr
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
-case|case
-name|EXC_ITMISS
-case|:
 case|case
 name|EXC_ISE
 case|:
 case|case
 name|EXC_ISI
+case|:
+case|case
+name|EXC_ITMISS
 case|:
 name|printf
 argument_list|(
@@ -1810,6 +1815,26 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|BOOKE
+name|printf
+argument_list|(
+literal|"   esr             = 0x%"
+name|PRIxPTR
+literal|"\n"
+argument_list|,
+name|frame
+operator|->
+name|cpu
+operator|.
+name|booke
+operator|.
+name|esr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"   srr0            = 0x%"
