@@ -16994,6 +16994,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * {begin|end}_synchronized_op must be called from the same thread.  */
+end_comment
+
 begin_function
 name|int
 name|begin_synchronized_op
@@ -17208,6 +17212,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * {begin|end}_synchronized_op must be called from the same thread.  */
+end_comment
 
 begin_function
 name|void
