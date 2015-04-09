@@ -26168,25 +26168,6 @@ argument_list|,
 literal|0xffff0000
 argument_list|)
 expr_stmt|;
-comment|/* Cleanup. */
-name|wpi_prph_write
-argument_list|(
-name|sc
-argument_list|,
-name|WPI_APMG_CLK_DIS
-argument_list|,
-literal|0x00000400
-argument_list|)
-expr_stmt|;
-name|wpi_prph_clrbits
-argument_list|(
-name|sc
-argument_list|,
-name|WPI_APMG_PS
-argument_list|,
-literal|0x00000E00
-argument_list|)
-expr_stmt|;
 comment|/* Retrieve PCIe Active State Power Management (ASPM). */
 name|reg
 operator|=
@@ -26274,6 +26255,25 @@ condition|)
 return|return
 name|error
 return|;
+comment|/* Cleanup. */
+name|wpi_prph_write
+argument_list|(
+name|sc
+argument_list|,
+name|WPI_APMG_CLK_DIS
+argument_list|,
+literal|0x00000400
+argument_list|)
+expr_stmt|;
+name|wpi_prph_clrbits
+argument_list|(
+name|sc
+argument_list|,
+name|WPI_APMG_PS
+argument_list|,
+literal|0x00000200
+argument_list|)
+expr_stmt|;
 comment|/* Enable DMA and BSM (Bootstrap State Machine). */
 name|wpi_prph_write
 argument_list|(
