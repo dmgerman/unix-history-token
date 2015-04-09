@@ -2242,7 +2242,7 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|,
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXSIZE
 argument_list|,
 literal|1
 argument_list|,
