@@ -1784,7 +1784,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"LoadImage failed with error %d\n"
+literal|"LoadImage failed with error %lx\n"
 argument_list|,
 name|status
 argument_list|)
@@ -1820,7 +1820,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"HandleProtocol failed with error %d\n"
+literal|"HandleProtocol failed with error %lx\n"
 argument_list|,
 name|status
 argument_list|)
@@ -1855,7 +1855,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"StartImage failed with error %d\n"
+literal|"StartImage failed with error %lx\n"
 argument_list|,
 name|status
 argument_list|)
