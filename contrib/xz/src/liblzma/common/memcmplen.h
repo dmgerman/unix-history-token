@@ -79,25 +79,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/// How many extra bytes lzma_memcmplen() may read. This depends on
-end_comment
-
-begin_comment
-comment|/// the method but since it is just a few bytes the biggest possible
-end_comment
-
-begin_comment
-comment|/// value is used here.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LZMA_MEMCMPLEN_EXTRA
-value|16
-end_define
-
-begin_comment
 comment|/// Find out how many equal bytes the two buffers have.
 end_comment
 
@@ -151,6 +132,26 @@ end_comment
 
 begin_comment
 comment|///             This is always at least len and at most limit.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \note       LZMA_MEMCMPLEN_EXTRA defines how many extra bytes may be read.
+end_comment
+
+begin_comment
+comment|///             It's rounded up to 2^n. This extra amount needs to be
+end_comment
+
+begin_comment
+comment|///             allocated in the buffers being used. It needs to be
+end_comment
+
+begin_comment
+comment|///             initialized too to keep Valgrind quiet.
 end_comment
 
 begin_decl_stmt
@@ -268,6 +269,10 @@ comment|// I keep this x86-64 only for now since that's where I know this
 comment|// to be a good method. This may be fine on other 64-bit CPUs too.
 comment|// On big endian one should use xor instead of subtraction and switch
 comment|// to __builtin_clzll().
+define|#
+directive|define
+name|LZMA_MEMCMPLEN_EXTRA
+value|8
 while|while
 condition|(
 name|len
@@ -437,6 +442,10 @@ comment|// SSE2 version for 32-bit and 64-bit x86. On x86-64 the above
 comment|// version is sometimes significantly faster and sometimes
 comment|// slightly slower than this SSE2 version, so this SSE2
 comment|// version isn't used on x86-64.
+define|#
+directive|define
+name|LZMA_MEMCMPLEN_EXTRA
+value|16
 while|while
 condition|(
 name|len
@@ -567,6 +576,10 @@ argument_list|(
 name|WORDS_BIGENDIAN
 argument_list|)
 comment|// Generic 32-bit little endian method
+define|#
+directive|define
+name|LZMA_MEMCMPLEN_EXTRA
+value|4
 while|while
 condition|(
 name|len
@@ -670,6 +683,10 @@ argument_list|(
 name|WORDS_BIGENDIAN
 argument_list|)
 comment|// Generic 32-bit big endian method
+define|#
+directive|define
+name|LZMA_MEMCMPLEN_EXTRA
+value|4
 while|while
 condition|(
 name|len
@@ -764,6 +781,10 @@ return|;
 else|#
 directive|else
 comment|// Simple portable version that doesn't use unaligned access.
+define|#
+directive|define
+name|LZMA_MEMCMPLEN_EXTRA
+value|0
 while|while
 condition|(
 name|len

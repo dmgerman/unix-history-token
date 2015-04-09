@@ -489,6 +489,23 @@ name|write_pos
 operator|=
 name|write_pos
 expr_stmt|;
+comment|// Silence Valgrind. lzma_memcmplen() can read extra bytes
+comment|// and Valgrind will give warnings if those bytes are uninitialized
+comment|// because Valgrind cannot see that the values of the uninitialized
+comment|// bytes are eventually ignored.
+name|memzero
+argument_list|(
+name|coder
+operator|->
+name|mf
+operator|.
+name|buffer
+operator|+
+name|write_pos
+argument_list|,
+name|LZMA_MEMCMPLEN_EXTRA
+argument_list|)
+expr_stmt|;
 comment|// If end of stream has been reached or flushing completed, we allow
 comment|// the encoder to process all the input (that is, read_pos is allowed
 comment|// to reach write_pos). Otherwise we keep keep_size_after bytes
