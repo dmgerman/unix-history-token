@@ -808,7 +808,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|ip_drain_locked
+name|ip_drain_vnet
 parameter_list|(
 name|void
 parameter_list|)
@@ -1927,7 +1927,7 @@ argument_list|,
 name|V_in_ifaddrhmask
 argument_list|)
 expr_stmt|;
-name|ip_drain_locked
+name|ip_drain_vnet
 argument_list|()
 expr_stmt|;
 name|uma_zdestroy
@@ -5587,13 +5587,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Drain off all datagram fragments.  *  * Call without any IPQ locks held.  */
+comment|/*  * Drain off all datagram fragments.  */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|ip_drain_locked
+name|ip_drain_vnet
 parameter_list|(
 name|void
 parameter_list|)
@@ -5704,7 +5704,7 @@ argument_list|(
 name|vnet_iter
 argument_list|)
 expr_stmt|;
-name|ip_drain_locked
+name|ip_drain_vnet
 argument_list|()
 expr_stmt|;
 name|CURVNET_RESTORE
