@@ -856,7 +856,6 @@ name|flags
 operator|=
 name|ARCHIVE_EXTRACT_SECURE_SYMLINKS
 operator||
-expr|\
 name|ARCHIVE_EXTRACT_SECURE_NODOTDOT
 expr_stmt|;
 if|if
