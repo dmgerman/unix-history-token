@@ -393,6 +393,11 @@ argument_list|,
 literal|"\nInterpreting compile-time constant expressions\n\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|Gbl_FoldConstants
+condition|)
+block|{
 name|TrWalkParseTree
 argument_list|(
 name|RootNode
@@ -406,6 +411,17 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+literal|"    Optional folding disabled\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|UtEndEvent
 argument_list|(
 name|Event

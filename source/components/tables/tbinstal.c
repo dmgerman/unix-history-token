@@ -354,12 +354,10 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not acquire table length at %p"
+literal|"Could not acquire table length at %8.8X%8.8X"
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|Address
 argument_list|)
 operator|)
@@ -488,12 +486,10 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not acquire table length at %p"
+literal|"Could not acquire table length at %8.8X%8.8X"
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|Address
 argument_list|)
 operator|)
@@ -529,7 +525,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Ignoring installation of %4.4s at %p"
+literal|"Ignoring installation of %4.4s at %8.8X%8.8X"
 operator|,
 name|NewTableDesc
 operator|.
@@ -537,10 +533,8 @@ name|Signature
 operator|.
 name|Ascii
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|Address
 argument_list|)
 operator|)
@@ -734,14 +728,6 @@ name|TableIndex
 operator|=
 name|i
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_TABLES
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -753,10 +739,12 @@ block|}
 comment|/* Add the table to the global root table list */
 name|Status
 operator|=
-name|AcpiTbGetNextRootIndex
+name|AcpiTbGetNextTableDescriptor
 argument_list|(
 operator|&
 name|i
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -956,10 +944,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%4.4s "
-name|ACPI_PRINTF_UINT
-literal|" %s table override, new table: "
-name|ACPI_PRINTF_UINT
+literal|"%4.4s 0x%8.8X%8.8X"
+literal|" %s table override, new table: 0x%8.8X%8.8X"
 operator|,
 name|OldTableDesc
 operator|->
@@ -967,7 +953,7 @@ name|Signature
 operator|.
 name|Ascii
 operator|,
-name|ACPI_FORMAT_TO_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|OldTableDesc
 operator|->
@@ -976,7 +962,7 @@ argument_list|)
 operator|,
 name|OverrideType
 operator|,
-name|ACPI_FORMAT_TO_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|NewTableDesc
 operator|.
@@ -1021,97 +1007,6 @@ operator|&
 name|NewTableDesc
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbStoreTable  *  * PARAMETERS:  Address             - Table address  *              Table               - Table header  *              Length              - Table length  *              Flags               - Install flags  *              TableIndex          - Where the table index is returned  *  * RETURN:      Status and table index.  *  * DESCRIPTION: Add an ACPI table to the global table list  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_STATUS
-name|AcpiTbStoreTable
-parameter_list|(
-name|ACPI_PHYSICAL_ADDRESS
-name|Address
-parameter_list|,
-name|ACPI_TABLE_HEADER
-modifier|*
-name|Table
-parameter_list|,
-name|UINT32
-name|Length
-parameter_list|,
-name|UINT8
-name|Flags
-parameter_list|,
-name|UINT32
-modifier|*
-name|TableIndex
-parameter_list|)
-block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|ACPI_TABLE_DESC
-modifier|*
-name|TableDesc
-decl_stmt|;
-name|Status
-operator|=
-name|AcpiTbGetNextRootIndex
-argument_list|(
-name|TableIndex
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
-comment|/* Initialize added table */
-name|TableDesc
-operator|=
-operator|&
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-operator|*
-name|TableIndex
-index|]
-expr_stmt|;
-name|AcpiTbInitTableDescriptor
-argument_list|(
-name|TableDesc
-argument_list|,
-name|Address
-argument_list|,
-name|Flags
-argument_list|,
-name|Table
-argument_list|)
-expr_stmt|;
-name|TableDesc
-operator|->
-name|Pointer
-operator|=
-name|Table
-expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
 block|}
 end_function
 
@@ -1165,10 +1060,8 @@ condition|)
 block|{
 name|ACPI_FREE
 argument_list|(
-name|ACPI_CAST_PTR
+name|ACPI_PHYSADDR_TO_PTR
 argument_list|(
-name|void
-argument_list|,
 name|TableDesc
 operator|->
 name|Address

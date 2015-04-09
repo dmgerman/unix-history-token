@@ -101,6 +101,8 @@ name|Data
 operator|.
 name|Address16
 operator|.
+name|Address
+operator|.
 name|Granularity
 argument_list|)
 block|,
@@ -200,6 +202,8 @@ name|Data
 operator|.
 name|Address32
 operator|.
+name|Address
+operator|.
 name|Granularity
 argument_list|)
 block|,
@@ -298,6 +302,8 @@ argument_list|(
 name|Data
 operator|.
 name|Address64
+operator|.
+name|Address
 operator|.
 name|Granularity
 argument_list|)
@@ -420,6 +426,8 @@ argument_list|(
 name|Data
 operator|.
 name|ExtAddress64
+operator|.
+name|Address
 operator|.
 name|Granularity
 argument_list|)

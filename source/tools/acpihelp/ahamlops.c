@@ -597,7 +597,7 @@ literal|"NameString SuperName"
 block|,
 name|NULL
 block|,
-literal|"DefLoad := LoadOp NameString DDBHandleObject"
+literal|"DefLoad := LoadOp NameString DdbHandleObject"
 block|}
 block|,
 block|{
@@ -733,7 +733,7 @@ literal|0x5B28
 block|,
 literal|"0x5B28"
 block|,
-literal|"FromBCDOp"
+literal|"FromBcdOp"
 block|,
 literal|"TermObject"
 block|,
@@ -741,7 +741,7 @@ literal|"TermArg Target"
 block|,
 name|NULL
 block|,
-literal|"DefFromBCD := FromBCDOp BCDValue Target"
+literal|"DefFromBcd := FromBcdOp BcdValue Target"
 block|}
 block|,
 block|{
@@ -751,7 +751,7 @@ literal|0x5B29
 block|,
 literal|"0x5B29"
 block|,
-literal|"ToBCD"
+literal|"ToBcd"
 block|,
 literal|"TermObject"
 block|,
@@ -759,7 +759,7 @@ literal|"TermArg Target"
 block|,
 name|NULL
 block|,
-literal|"DefToBCD := ToBCDOp Operand Target"
+literal|"DefToBcd := ToBcdOp Operand Target"
 block|}
 block|,
 block|{
@@ -777,7 +777,7 @@ literal|"SuperName"
 block|,
 name|NULL
 block|,
-literal|"DefUnload := UnloadOp DDBHandleObject"
+literal|"DefUnload := UnloadOp DdbHandleObject"
 block|}
 block|,
 block|{
@@ -921,7 +921,7 @@ literal|"NameString ByteData DWordData ByteData"
 block|,
 literal|"ObjectList"
 block|,
-literal|"DefProcessor := ProcessorOp PkgLength NameString ProcID PblkAddr PblkLen ObjectList"
+literal|"DefProcessor := ProcessorOp PkgLength NameString ProcId PblkAddr PblkLen ObjectList"
 block|}
 block|,
 block|{
@@ -1623,7 +1623,7 @@ literal|"TermArg TermArg Target"
 block|,
 name|NULL
 block|,
-literal|"DefNAnd := NandOp Operand Operand Target"
+literal|"DefNand := NandOp Operand Operand Target"
 block|}
 block|,
 block|{
@@ -1659,7 +1659,7 @@ literal|"TermArg TermArg Target"
 block|,
 name|NULL
 block|,
-literal|"DefNOr := NorOp Operand Operand Target"
+literal|"DefNor := NorOp Operand Operand Target"
 block|}
 block|,
 block|{
@@ -1677,7 +1677,7 @@ literal|"TermArg TermArg Target"
 block|,
 name|NULL
 block|,
-literal|"DefXOr := XorOp Operand Operand Target"
+literal|"DefXor := XorOp Operand Operand Target"
 block|}
 block|,
 block|{
@@ -1983,7 +1983,7 @@ literal|"TermArg TermArg"
 block|,
 name|NULL
 block|,
-literal|"DefLAnd := LandOp Operand Operand"
+literal|"DefLAnd := LAndOp Operand Operand"
 block|}
 block|,
 block|{
@@ -2001,7 +2001,7 @@ literal|"TermArg TermArg"
 block|,
 name|NULL
 block|,
-literal|"DefLOr := LorOp Operand Operand"
+literal|"DefLOr := LOrOp Operand Operand"
 block|}
 block|,
 block|{
@@ -2019,7 +2019,7 @@ literal|"TermArg"
 block|,
 name|NULL
 block|,
-literal|"DefLNot := LnotOp Operand"
+literal|"DefLNot := LNotOp Operand"
 block|}
 block|,
 block|{
@@ -2037,7 +2037,7 @@ literal|"TermArg TermArg"
 block|,
 name|NULL
 block|,
-literal|"DefLNotEqual := LnotEqualOp Operand Operand"
+literal|"DefLNotEqual := LNotEqualOp Operand Operand"
 block|}
 block|,
 block|{
@@ -2055,7 +2055,7 @@ literal|"TermArg TermArg"
 block|,
 name|NULL
 block|,
-literal|"DefLLessEqual := LlessEqualOp Operand Operand"
+literal|"DefLLessEqual := LLessEqualOp Operand Operand"
 block|}
 block|,
 block|{
@@ -2073,7 +2073,7 @@ literal|"TermArg TermArg"
 block|,
 name|NULL
 block|,
-literal|"DefLGreaterEqual := LgreaterEqualOp Operand Operand"
+literal|"DefLGreaterEqual := LGreaterEqualOp Operand Operand"
 block|}
 block|,
 block|{
@@ -2091,7 +2091,7 @@ literal|"TermArg TermArg"
 block|,
 name|NULL
 block|,
-literal|"DefLEqual := LequalOp Operand Operand"
+literal|"DefLEqual := LEqualOp Operand Operand"
 block|}
 block|,
 block|{
@@ -2109,7 +2109,7 @@ literal|"TermArg TermArg"
 block|,
 name|NULL
 block|,
-literal|"DefLGreater := LgreaterOp Operand Operand"
+literal|"DefLGreater := LGreaterOp Operand Operand"
 block|}
 block|,
 block|{
@@ -2127,7 +2127,7 @@ literal|"TermArg TermArg"
 block|,
 name|NULL
 block|,
-literal|"DefLLess := LlessOp Operand Operand"
+literal|"DefLLess := LLessOp Operand Operand"
 block|}
 block|,
 block|{
@@ -2353,7 +2353,7 @@ literal|0xA3
 block|,
 literal|"0xA3"
 block|,
-literal|"NoopOp"
+literal|"NoOpOp"
 block|,
 literal|"TermObject"
 block|,
@@ -2361,7 +2361,7 @@ name|NULL
 block|,
 name|NULL
 block|,
-literal|"DefNoop := NoopOp"
+literal|"DefNoOp := NoOpOp"
 block|}
 block|,
 block|{

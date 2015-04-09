@@ -213,7 +213,6 @@ block|{
 name|ACPI_TABLE_HEADER
 name|LocalHeader
 decl_stmt|;
-comment|/*      * The reason that we use ACPI_PRINTF_UINT and ACPI_FORMAT_TO_UINT is to      * support both 32-bit and 64-bit hosts/addresses in a consistent manner.      * The %p specifier does not emit uniform output on all hosts. On some,      * leading zeros are not supported.      */
 if|if
 condition|(
 name|ACPI_COMPARE_NAME
@@ -232,15 +231,13 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%-4.4s "
-name|ACPI_PRINTF_UINT
-literal|" %06X"
+literal|"%-4.4s 0x%8.8X%8.8X %06X"
 operator|,
 name|Header
 operator|->
 name|Signature
 operator|,
-name|ACPI_FORMAT_TO_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)
@@ -296,11 +293,9 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"RSDP "
-name|ACPI_PRINTF_UINT
-literal|" %06X (v%.2d %-6.6s)"
+literal|"RSDP 0x%8.8X%8.8X %06X (v%.2d %-6.6s)"
 operator|,
-name|ACPI_FORMAT_TO_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)
@@ -361,15 +356,14 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%-4.4s "
-name|ACPI_PRINTF_UINT
+literal|"%-4.4s 0x%8.8X%8.8X"
 literal|" %06X (v%.2d %-6.6s %-8.8s %08X %-4.4s %08X)"
 operator|,
 name|LocalHeader
 operator|.
 name|Signature
 operator|,
-name|ACPI_FORMAT_TO_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)

@@ -753,7 +753,11 @@ condition|)
 block|{
 name|LocalEventStatus
 operator||=
+operator|(
 name|ACPI_EVENT_FLAG_ENABLED
+operator||
+name|ACPI_EVENT_FLAG_ENABLE_SET
+operator|)
 expr_stmt|;
 block|}
 comment|/* Fixed event currently active? */
@@ -793,7 +797,7 @@ condition|)
 block|{
 name|LocalEventStatus
 operator||=
-name|ACPI_EVENT_FLAG_SET
+name|ACPI_EVENT_FLAG_STATUS_SET
 expr_stmt|;
 block|}
 operator|(

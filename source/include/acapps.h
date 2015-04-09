@@ -132,7 +132,7 @@ parameter_list|(
 name|UtilityName
 parameter_list|)
 define|\
-value|"\n%s\n%s version %8.8X%s [%s]\n%s\n\n", \     ACPICA_NAME, \     UtilityName, ((UINT32) ACPI_CA_VERSION), ACPI_WIDTH, __DATE__, \     ACPICA_COPYRIGHT
+value|"\n%s\n%s version %8.8X%s\n%s\n\n", \     ACPICA_NAME, \     UtilityName, ((UINT32) ACPI_CA_VERSION), ACPI_WIDTH, \     ACPICA_COPYRIGHT
 end_define
 
 begin_define
@@ -145,7 +145,7 @@ parameter_list|,
 name|Prefix
 parameter_list|)
 define|\
-value|"%s%s\n%s%s version %8.8X%s [%s]\n%s%s\n%s\n", \     Prefix, ACPICA_NAME, \     Prefix, UtilityName, ((UINT32) ACPI_CA_VERSION), ACPI_WIDTH, __DATE__, \     Prefix, ACPICA_COPYRIGHT, \     Prefix
+value|"%s%s\n%s%s version %8.8X%s\n%s%s\n%s\n", \     Prefix, ACPICA_NAME, \     Prefix, UtilityName, ((UINT32) ACPI_CA_VERSION), ACPI_WIDTH, \     Prefix, ACPICA_COPYRIGHT, \     Prefix
 end_define
 
 begin_comment

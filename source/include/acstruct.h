@@ -70,24 +70,6 @@ name|ACPI_WALK_METHOD_RESTART
 value|0x02
 end_define
 
-begin_comment
-comment|/* Flags for iASL compiler only */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_WALK_CONST_REQUIRED
-value|0x10
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_WALK_CONST_OPTIONAL
-value|0x20
-end_define
-
 begin_typedef
 typedef|typedef
 struct|struct

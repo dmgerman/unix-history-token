@@ -3349,7 +3349,7 @@ index|[
 name|ACPI_NAME_SIZE
 index|]
 argument_list|,
-literal|"%d"
+literal|"%u"
 argument_list|,
 name|Instance
 argument_list|)

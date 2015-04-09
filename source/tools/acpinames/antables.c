@@ -509,6 +509,9 @@ name|ExternalFadt
 operator|->
 name|Dsdt
 operator|=
+operator|(
+name|UINT32
+operator|)
 name|DsdtAddress
 expr_stmt|;
 name|ExternalFadt
@@ -882,11 +885,11 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
+name|ACPI_PTR_TO_PHYSADDR
+argument_list|(
 operator|&
 name|LocalRSDP
+argument_list|)
 operator|)
 return|;
 block|}

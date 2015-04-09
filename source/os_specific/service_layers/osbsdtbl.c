@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Module Name: osfreebsdtbl - FreeBSD OSL for obtaining ACPI tables  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Module Name: osbsdtbl - BSD OSL for obtaining ACPI tables  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -13,11 +13,30 @@ directive|include
 file|"acpidump.h"
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD_kernel__
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<kenv.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -47,7 +66,7 @@ end_define
 begin_macro
 name|ACPI_MODULE_NAME
 argument_list|(
-literal|"osfreebsdtbl"
+literal|"osbsdtbl"
 argument_list|)
 end_macro
 
@@ -123,6 +142,20 @@ begin_comment
 comment|/* Hints for RSDP */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD_kernel__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -136,6 +169,27 @@ directive|define
 name|SYSTEM_SYSCTL
 value|"machdep.acpi_root"
 end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__NetBSD__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SYSTEM_SYSCTL
+value|"hw.acpi.root"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Initialization flags */
@@ -837,12 +891,25 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD_kernel__
+argument_list|)
 name|char
 name|Buffer
 index|[
 literal|32
 index|]
 decl_stmt|;
+endif|#
+directive|endif
 name|ACPI_TABLE_HEADER
 modifier|*
 name|MappedTable
@@ -900,6 +967,17 @@ operator|=
 name|Gbl_RsdpBase
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD_kernel__
+argument_list|)
 elseif|else
 if|if
 condition|(
@@ -932,6 +1010,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|!

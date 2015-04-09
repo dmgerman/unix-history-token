@@ -573,6 +573,14 @@ literal|'c'
 case|:
 break|break;
 case|case
+literal|'f'
+case|:
+name|AcpiGbl_ForceAmlDisassembly
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'l'
 case|:
 comment|/* Use legacy ASL code (not ASL+) for disassembly */

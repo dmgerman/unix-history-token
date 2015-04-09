@@ -503,7 +503,7 @@ operator|)
 return|;
 block|}
 comment|/* This is where the disassembly happens */
-name|AcpiGbl_DbOpt_disasm
+name|AcpiGbl_DbOpt_Disasm
 operator|=
 name|TRUE
 expr_stmt|;

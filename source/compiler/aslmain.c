@@ -525,6 +525,13 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-df"
+argument_list|,
+literal|"Force disassembler to assume table contains valid AML"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-dl"
 argument_list|,
 literal|"Emit legacy ASL code only (no C-style operators)"

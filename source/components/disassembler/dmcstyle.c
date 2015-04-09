@@ -190,6 +190,7 @@ operator|!
 name|Child1
 condition|)
 block|{
+comment|/* Parse tree may be confused or corrupted */
 return|return
 operator|(
 name|FALSE
@@ -205,6 +206,19 @@ name|Common
 operator|.
 name|Next
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Child2
+condition|)
+block|{
+comment|/* Parse tree may be confused or corrupted */
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
 comment|/* Setup the operator string for this opcode */
 switch|switch
 condition|(
@@ -594,6 +608,19 @@ operator|==
 name|AML_DIVIDE_OP
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|Target
+condition|)
+block|{
+comment|/* Parse tree may be confused or corrupted */
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
 comment|/*              * Divide has an extra target operand (Remainder).              * If this extra target is specified, it cannot be converted              * to a C-style operator              */
 if|if
 condition|(
@@ -850,6 +877,19 @@ name|Next
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|Target
+condition|)
+block|{
+comment|/* Parse tree may be confused or corrupted */
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+if|if
+condition|(
 name|AcpiDmIsValidTarget
 argument_list|(
 name|Target
@@ -902,6 +942,19 @@ name|Common
 operator|.
 name|Next
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Target
+condition|)
+block|{
+comment|/* Parse tree may be confused or corrupted */
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
 name|AcpiDmPromoteTarget
 argument_list|(
 name|Op

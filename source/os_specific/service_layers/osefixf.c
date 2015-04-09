@@ -25,6 +25,20 @@ directive|include
 file|"acapps.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|_COMPONENT
+value|ACPI_OS_SERVICES
+end_define
+
+begin_macro
+name|ACPI_MODULE_NAME
+argument_list|(
+literal|"osefixf"
+argument_list|)
+end_macro
+
 begin_comment
 comment|/* Local definitions */
 end_comment
@@ -279,8 +293,7 @@ modifier|*
 name|Guid
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|ACPI_PHYSICAL_ADDRESS
 name|Address
 init|=
 literal|0
@@ -324,9 +337,8 @@ condition|)
 block|{
 name|Address
 operator|=
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
+name|ACPI_PTR_TO_PHYSADDR
+argument_list|(
 name|ST
 operator|->
 name|ConfigurationTable
@@ -335,18 +347,14 @@ name|i
 index|]
 operator|.
 name|VendorTable
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
 block|}
 return|return
 operator|(
-call|(
-name|ACPI_PHYSICAL_ADDRESS
-call|)
-argument_list|(
 name|Address
-argument_list|)
 operator|)
 return|;
 block|}

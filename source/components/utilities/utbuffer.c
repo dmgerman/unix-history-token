@@ -346,6 +346,20 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/*              * Add comment characters so rest of line is ignored when              * compiled              */
+if|if
+condition|(
+name|j
+operator|==
+literal|0
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"// "
+argument_list|)
+expr_stmt|;
+block|}
 name|BufChar
 operator|=
 name|Buffer

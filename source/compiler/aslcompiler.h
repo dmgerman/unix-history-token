@@ -1664,6 +1664,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|TrPrintNodeCompileFlags
+parameter_list|(
+name|UINT32
+name|Flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|TrReleaseNode
 parameter_list|(
 name|ACPI_PARSE_OBJECT
@@ -1711,6 +1721,16 @@ name|TrCreateLeafNode
 parameter_list|(
 name|UINT32
 name|ParseOpcode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|TrCreateNullTarget
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

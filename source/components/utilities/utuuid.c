@@ -33,6 +33,21 @@ literal|"utuuid"
 argument_list|)
 end_macro
 
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+name|ACPI_ASL_COMPILER
+operator|||
+name|defined
+name|ACPI_EXEC_APP
+operator|||
+name|defined
+name|ACPI_HELP_APP
+operator|)
+end_if
+
 begin_comment
 comment|/*  * UUID support functions.  *  * This table is used to convert an input UUID ascii string to a 16 byte  * buffer and the reverse. The table maps a UUID buffer index 0-15 to  * the index within the 36-byte UUID string where the associated 2-byte  * hex value can be found.  *  * 36-byte UUID strings are of the form:  *     aabbccdd-eeff-gghh-iijj-kkllmmnnoopp  * Where aa-pp are one byte hex numbers, made up of two hex digits  *  * Note: This table is basically the inverse of the string-to-offset table  * found in the ACPI spec in the description of the ToUUID macro.  */
 end_comment
@@ -156,6 +171,11 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

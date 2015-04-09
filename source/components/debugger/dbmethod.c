@@ -891,7 +891,7 @@ name|Op
 argument_list|)
 expr_stmt|;
 comment|/* Now we can disassemble the method */
-name|AcpiGbl_DbOpt_verbose
+name|AcpiGbl_DbOpt_Verbose
 operator|=
 name|FALSE
 expr_stmt|;
@@ -904,7 +904,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|AcpiGbl_DbOpt_verbose
+name|AcpiGbl_DbOpt_Verbose
 operator|=
 name|TRUE
 expr_stmt|;

@@ -1726,11 +1726,16 @@ name|RegionElement
 operator|->
 name|Length
 operator|=
+call|(
+name|UINT32
+call|)
+argument_list|(
 name|BaseAddress
 operator|-
 name|RegionAddress
 operator|+
 name|Length
+argument_list|)
 expr_stmt|;
 name|BufferResize
 operator|=
@@ -1770,6 +1775,10 @@ name|RegionElement
 operator|->
 name|Length
 operator|=
+call|(
+name|UINT32
+call|)
+argument_list|(
 name|RegionAddress
 operator|-
 name|BaseAddress
@@ -1777,6 +1786,7 @@ operator|+
 name|RegionElement
 operator|->
 name|Length
+argument_list|)
 expr_stmt|;
 name|BufferResize
 operator|=

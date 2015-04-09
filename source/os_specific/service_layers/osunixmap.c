@@ -316,10 +316,10 @@ argument_list|()
 expr_stmt|;
 name|Offset
 operator|=
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
+name|ACPI_TO_INTEGER
+argument_list|(
 name|Where
+argument_list|)
 operator|%
 name|PageSize
 expr_stmt|;

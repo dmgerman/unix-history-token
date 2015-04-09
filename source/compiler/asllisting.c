@@ -548,13 +548,35 @@ name|DbgPrint
 argument_list|(
 name|ASL_TREE_OUTPUT
 argument_list|,
-literal|"    (%.4X)\n"
+literal|"    (%.4X) Flags %8.8X"
 argument_list|,
 name|Op
 operator|->
 name|Asl
 operator|.
 name|ParseOpcode
+argument_list|,
+name|Op
+operator|->
+name|Asl
+operator|.
+name|CompileFlags
+argument_list|)
+expr_stmt|;
+name|TrPrintNodeCompileFlags
+argument_list|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|CompileFlags
+argument_list|)
+expr_stmt|;
+name|DbgPrint
+argument_list|(
+name|ASL_TREE_OUTPUT
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 return|return

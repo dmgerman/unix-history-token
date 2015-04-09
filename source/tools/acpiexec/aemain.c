@@ -575,9 +575,9 @@ break|break;
 case|case
 literal|'i'
 case|:
-name|AcpiGbl_DbOpt_ini_methods
+name|AcpiGbl_DbOpt_NoIniMethods
 operator|=
-name|FALSE
+name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -813,10 +813,6 @@ break|break;
 case|case
 literal|'g'
 case|:
-name|AcpiGbl_DbOpt_tables
-operator|=
-name|TRUE
-expr_stmt|;
 name|AcpiGbl_DbFilename
 operator|=
 name|NULL
@@ -876,11 +872,7 @@ break|break;
 case|case
 literal|'o'
 case|:
-name|AcpiGbl_DbOpt_disasm
-operator|=
-name|TRUE
-expr_stmt|;
-name|AcpiGbl_DbOpt_stats
+name|AcpiGbl_DbOpt_Disasm
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1142,10 +1134,6 @@ goto|goto
 name|EnterDebugger
 goto|;
 block|}
-name|AcpiGbl_DbOpt_tables
-operator|=
-name|TRUE
-expr_stmt|;
 name|AcpiGbl_CstyleDisassembly
 operator|=
 name|FALSE
@@ -1364,8 +1352,7 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|AcpiGbl_DbOpt_ini_methods
+name|AcpiGbl_DbOpt_NoIniMethods
 condition|)
 block|{
 name|InitFlags

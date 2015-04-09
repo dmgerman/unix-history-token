@@ -203,7 +203,7 @@ begin_function
 name|ACPI_STATUS
 name|AcpiFindRootPointer
 parameter_list|(
-name|ACPI_SIZE
+name|ACPI_PHYSICAL_ADDRESS
 modifier|*
 name|TableAddress
 parameter_list|)
@@ -365,6 +365,9 @@ expr_stmt|;
 operator|*
 name|TableAddress
 operator|=
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
 name|PhysicalAddress
 expr_stmt|;
 name|return_ACPI_STATUS
@@ -453,6 +456,9 @@ expr_stmt|;
 operator|*
 name|TableAddress
 operator|=
+operator|(
+name|ACPI_PHYSICAL_ADDRESS
+operator|)
 name|PhysicalAddress
 expr_stmt|;
 name|return_ACPI_STATUS

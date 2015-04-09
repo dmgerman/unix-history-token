@@ -1189,7 +1189,7 @@ name|TableHeader
 operator|.
 name|AslCompilerRevision
 operator|=
-name|ASL_REVISION
+name|ACPI_CA_VERSION
 expr_stmt|;
 comment|/* Table length. Checksum zero for now, will rewrite later */
 name|TableHeader

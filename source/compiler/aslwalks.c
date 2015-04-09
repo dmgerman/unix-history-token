@@ -568,6 +568,15 @@ operator|(
 name|AE_OK
 operator|)
 return|;
+case|case
+name|AML_EXTERNAL_OP
+case|:
+comment|/*          * Not really a "runtime" opcode since it used by disassembler only.          * The parser will find any issues with the operands.          */
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 default|default:
 break|break;
 block|}
@@ -929,7 +938,6 @@ break|break;
 case|case
 name|PARSEOP_DEBUG
 case|:
-break|break;
 case|case
 name|PARSEOP_REFOF
 case|:

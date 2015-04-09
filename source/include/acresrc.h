@@ -849,8 +849,14 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * rsdump  */
+comment|/*  * rsdump - Debugger support  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUGGER
+end_ifdef
 
 begin_function_decl
 name|void
@@ -873,6 +879,11 @@ name|RouteTable
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Resource conversion tables  */

@@ -550,25 +550,6 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|AcpiDmSlicSubnames
-index|[]
-init|=
-block|{
-literal|"Public Key Structure"
-block|,
-literal|"Windows Marker Structure"
-block|,
-literal|"Unknown SubTable Type"
-comment|/* Reserved */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
 name|AcpiDmSratSubnames
 index|[]
 init|=
@@ -1039,6 +1020,20 @@ block|,
 name|TemplateMsct
 block|,
 literal|"Maximum System Characteristics Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_MSDM
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpSlic
+block|,
+name|DtCompileSlic
+block|,
+name|TemplateMsdm
+block|,
+literal|"Microsoft Data Management table"
 block|}
 block|,
 block|{
@@ -1701,7 +1696,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown ACPI table type [%4.4s]\n\n"
+literal|"\n**** Unknown ACPI table signature [%4.4s]\n\n"
 argument_list|,
 name|Table
 operator|->
@@ -1712,13 +1707,37 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Unknown ACPI table signature [%4.4s], decoding header only\n"
+literal|"Unknown ACPI table signature [%4.4s], "
 argument_list|,
 name|Table
 operator|->
 name|Signature
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|AcpiGbl_ForceAmlDisassembly
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"decoding ACPI table header only\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"assuming table contains valid AML code\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else
@@ -2083,6 +2102,9 @@ decl_stmt|;
 name|UINT16
 name|Temp16
 decl_stmt|;
+name|UINT32
+name|Temp32
+decl_stmt|;
 name|UINT64
 name|Value
 decl_stmt|;
@@ -2181,7 +2203,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** ACPI table terminates in the middle of a data structure!\n"
+literal|"**** ACPI table terminates in the middle of a data structure! (dump table)\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2289,9 +2311,6 @@ case|case
 name|ACPI_DMT_SIG
 case|:
 case|case
-name|ACPI_DMT_SLIC
-case|:
-case|case
 name|ACPI_DMT_LPIT
 case|:
 name|ByteLength
@@ -2365,6 +2384,17 @@ case|:
 name|ByteLength
 operator|=
 literal|128
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_BUFFER
+case|:
+case|case
+name|ACPI_DMT_RAW_BUFFER
+case|:
+name|ByteLength
+operator|=
+name|SubtableLength
 expr_stmt|;
 break|break;
 case|case
@@ -3088,7 +3118,8 @@ name|AcpiOsPrintf
 argument_list|(
 name|UINT8_FORMAT
 argument_list|,
-name|Temp8
+operator|*
+name|Target
 argument_list|,
 name|AcpiDmGasAccessWidth
 index|[
@@ -3644,37 +3675,38 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_DMT_SLIC
+name|ACPI_DMT_RAW_BUFFER
 case|:
-comment|/* SLIC subtable types */
-name|Temp8
-operator|=
-operator|*
-name|Target
-expr_stmt|;
-if|if
-condition|(
-name|Temp8
-operator|>
-name|ACPI_SLIC_TYPE_RESERVED
-condition|)
-block|{
-name|Temp8
-operator|=
-name|ACPI_SLIC_TYPE_RESERVED
-expr_stmt|;
-block|}
+comment|/*              * Currently only used for SLIC table              */
 name|AcpiOsPrintf
 argument_list|(
-name|UINT32_FORMAT
+literal|"/* Proprietary data structure */ "
+argument_list|)
+expr_stmt|;
+name|AcpiDmDumpBuffer
+argument_list|(
+name|Table
 argument_list|,
-operator|*
-name|Target
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
 argument_list|,
-name|AcpiDmSlicSubnames
-index|[
-name|Temp8
-index|]
+name|ByteLength
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_HEADER
+argument_list|)
+argument_list|,
+literal|"Licensing Data"
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3815,56 +3847,38 @@ case|case
 name|ACPI_DMT_LPIT
 case|:
 comment|/* LPIT subtable types */
-name|Temp8
+name|Temp32
 operator|=
-operator|*
+name|ACPI_GET32
+argument_list|(
 name|Target
+argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
-name|Temp8
+name|Temp32
+operator|>
+name|ACPI_LPIT_TYPE_RESERVED
 condition|)
 block|{
-case|case
-name|ACPI_LPIT_TYPE_NATIVE_CSTATE
-case|:
-name|Name
+name|Temp32
 operator|=
-name|AcpiDmLpitSubnames
-index|[
-literal|0
-index|]
+name|ACPI_LPIT_TYPE_RESERVED
 expr_stmt|;
-break|break;
-case|case
-name|ACPI_LPIT_TYPE_SIMPLE_IO
-case|:
-name|Name
-operator|=
-name|AcpiDmLpitSubnames
-index|[
-literal|1
-index|]
-expr_stmt|;
-break|break;
-default|default:
-name|Name
-operator|=
-name|AcpiDmLpitSubnames
-index|[
-literal|2
-index|]
-expr_stmt|;
-break|break;
 block|}
 name|AcpiOsPrintf
 argument_list|(
 name|UINT32_FORMAT
 argument_list|,
-operator|*
+name|ACPI_GET32
+argument_list|(
 name|Target
+argument_list|)
 argument_list|,
-name|Name
+name|AcpiDmLpitSubnames
+index|[
+name|Temp32
+index|]
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3905,7 +3919,7 @@ operator|!
 name|SubtableLength
 condition|)
 block|{
-comment|/* If this table is not the main table, subtable must have valid length */
+comment|/*          * If this table is not the main table, the subtable must have a          * valid length          */
 name|AcpiOsPrintf
 argument_list|(
 literal|"Invalid zero length subtable\n"

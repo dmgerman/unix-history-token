@@ -1312,7 +1312,7 @@ block|,
 comment|/* EXTERNAL */
 name|OP_TABLE_ENTRY
 argument_list|(
-name|AML_DEFAULT_ARG_OP
+name|AML_EXTERNAL_OP
 argument_list|,
 literal|0
 argument_list|,

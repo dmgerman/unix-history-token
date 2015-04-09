@@ -1354,7 +1354,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|AcpiGbl_DbOpt_verbose
+name|AcpiGbl_DbOpt_Verbose
 condition|)
 block|{
 operator|(

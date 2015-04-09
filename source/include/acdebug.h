@@ -121,7 +121,7 @@ name|DBTEST_OUTPUT_LEVEL
 parameter_list|(
 name|lvl
 parameter_list|)
-value|if (AcpiGbl_DbOpt_verbose)
+value|if (AcpiGbl_DbOpt_Verbose)
 end_define
 
 begin_define

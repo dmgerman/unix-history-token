@@ -3463,7 +3463,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" base %8.8X%8.8X Length %X\n"
 argument_list|,
-name|ACPI_FORMAT_NATIVE_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->

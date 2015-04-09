@@ -516,6 +516,46 @@ operator||=
 name|ACPI_EVENT_FLAG_WAKE_ENABLED
 expr_stmt|;
 block|}
+comment|/* GPE currently enabled (enable bit == 1)? */
+name|Status
+operator|=
+name|AcpiHwRead
+argument_list|(
+operator|&
+name|InByte
+argument_list|,
+operator|&
+name|GpeRegisterInfo
+operator|->
+name|EnableAddress
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|RegisterBit
+operator|&
+name|InByte
+condition|)
+block|{
+name|LocalEventStatus
+operator||=
+name|ACPI_EVENT_FLAG_ENABLE_SET
+expr_stmt|;
+block|}
 comment|/* GPE currently active (status bit == 1)? */
 name|Status
 operator|=
@@ -553,7 +593,7 @@ condition|)
 block|{
 name|LocalEventStatus
 operator||=
-name|ACPI_EVENT_FLAG_SET
+name|ACPI_EVENT_FLAG_STATUS_SET
 expr_stmt|;
 block|}
 comment|/* Set return value */

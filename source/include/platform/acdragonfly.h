@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  *  * Name: acnetbsd.h - OS specific defines, etc.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Name: acdragonfly.h - OS specific for DragonFly BSD  *  *****************************************************************************/
 end_comment
 
 begin_comment
@@ -10,52 +10,35 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__ACNETBSD_H__
+name|__ACDRAGONFLY_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__ACNETBSD_H__
+name|__ACDRAGONFLY_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<platform/acgcc.h>
+end_include
+
 begin_comment
-comment|/* NetBSD uses GCC */
+comment|/* DragonFly uses GCC */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"acgcc.h"
+file|<sys/types.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|ACPI_UINTPTR_T
-value|uintptr_t
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_LOCAL_CACHE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_CAST_PTHREAD_T
-parameter_list|(
-name|x
-parameter_list|)
-value|((ACPI_THREAD_ID) ACPI_TO_INTEGER (x))
-end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_LP64
+name|__LP64__
 end_ifdef
 
 begin_define
@@ -77,10 +60,23 @@ name|ACPI_MACHINE_WIDTH
 value|32
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_USE_NATIVE_DIVIDE
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ACPI_UINTPTR_T
+value|uintptr_t
+end_define
 
 begin_define
 define|#
@@ -96,24 +92,22 @@ name|COMPILER_DEPENDENT_UINT64
 value|uint64_t
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_STANDALONE
-argument_list|)
-end_if
+begin_define
+define|#
+directive|define
+name|ACPI_USE_DO_WHILE_0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_SYSTEM_CLIBRARY
+end_define
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_KERNEL_OPT
+name|_KERNEL
 end_ifdef
 
 begin_include
@@ -122,23 +116,10 @@ directive|include
 file|"opt_acpi.h"
 end_include
 
-begin_comment
-comment|/* collect build-time options here */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _KERNEL_OPT */
-end_comment
-
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/ctype.h>
 end_include
 
 begin_include
@@ -150,51 +131,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/stdarg.h>
+file|<machine/acpica_machdep.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/acpi_func.h>
+file|<stdarg.h>
 end_include
-
-begin_define
-define|#
-directive|define
-name|asm
-value|__asm
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_NATIVE_DIVIDE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_SYSTEM_XFACE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_EXTERNAL_XFACE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_INTERNAL_XFACE
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_INTERNAL_VAR_XFACE
-end_define
 
 begin_ifdef
 ifdef|#
@@ -208,11 +152,9 @@ directive|define
 name|ACPI_DEBUG_OUTPUT
 end_define
 
-begin_define
-define|#
-directive|define
-name|ACPI_DBG_TRACK_ALLOCATIONS
-end_define
+begin_comment
+comment|/* enable debug output */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -239,11 +181,21 @@ begin_define
 define|#
 directive|define
 name|DEBUGGER_THREADING
-value|0
+value|DEBUGGER_SINGLE_THREADED
 end_define
 
 begin_comment
 comment|/* integrated with DDB */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* XXX */
 end_comment
 
 begin_include
@@ -261,12 +213,6 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|ACPI_DISASSEMBLER
-end_define
-
-begin_define
-define|#
-directive|define
 name|ACPI_DEBUGGER
 end_define
 
@@ -279,14 +225,177 @@ begin_comment
 comment|/* DDB */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|ACPI_DISASSEMBLER
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG_CACHE
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsReleaseObject
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiOsReleaseObject
+parameter_list|(
+name|Cache
+parameter_list|,
+name|Object
+parameter_list|)
+define|\
+value|_AcpiOsReleaseObject((Cache), (Object), __func__, __LINE__)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG_LOCKS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsAcquireLock
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiOsAcquireLock
+parameter_list|(
+name|Handle
+parameter_list|)
+define|\
+value|_AcpiOsAcquireLock((Handle), __func__, __LINE__)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_DEBUG_MEMMAP
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsMapMemory
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiOsMapMemory
+parameter_list|(
+name|Where
+parameter_list|,
+name|Length
+parameter_list|)
+define|\
+value|_AcpiOsMapMemory((Where), (Length), __func__, __LINE__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsUnmapMemory
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiOsUnmapMemory
+parameter_list|(
+name|LogicalAddress
+parameter_list|,
+name|Size
+parameter_list|)
+define|\
+value|_AcpiOsUnmapMemory((LogicalAddress), (Size), __func__, __LINE__)
+end_define
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* ACPI_DEBUG */
+comment|/* XXX TBI */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_USE_ALTERNATE_PROTOTYPE_AcpiOsWaitEventsComplete
+end_define
+
+begin_define
+define|#
+directive|define
+name|AcpiOsWaitEventsComplete
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|USE_NATIVE_ALLOCATE_ZEROED
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_SPINLOCK
+value|struct acpi_spinlock *
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|acpi_spinlock
+struct_decl|;
+end_struct_decl
+
+begin_define
+define|#
+directive|define
+name|ACPI_CACHE_T
+value|struct acpicache
+end_define
+
+begin_struct_decl
+struct_decl|struct
+name|acpicache
+struct_decl|;
+end_struct_decl
 
 begin_else
 else|#
@@ -294,23 +403,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* defined(_KERNEL) || defined(_STANDALONE) */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
-
-begin_comment
-comment|/* Not building kernel code, so use libc */
+comment|/* _KERNEL */
 end_comment
 
 begin_define
@@ -322,21 +415,18 @@ end_define
 begin_define
 define|#
 directive|define
-name|__cli
-parameter_list|()
+name|ACPI_CAST_PTHREAD_T
+parameter_list|(
+name|pthread
+parameter_list|)
+value|((ACPI_THREAD_ID) ACPI_TO_INTEGER (pthread))
 end_define
 
 begin_define
 define|#
 directive|define
-name|__sti
+name|ACPI_FLUSH_CPU_CACHE
 parameter_list|()
-end_define
-
-begin_define
-define|#
-directive|define
-name|__cdecl
 end_define
 
 begin_endif
@@ -345,24 +435,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* defined(_KERNEL) || defined(_STANDALONE) */
+comment|/* _KERNEL */
 end_comment
-
-begin_comment
-comment|/* Always use NetBSD code over our local versions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_SYSTEM_CLIBRARY
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_USE_NATIVE_DIVIDE
-end_define
 
 begin_endif
 endif|#
@@ -370,7 +444,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ACNETBSD_H__ */
+comment|/* __ACDRAGONFLY_H_ */
 end_comment
 
 end_unit

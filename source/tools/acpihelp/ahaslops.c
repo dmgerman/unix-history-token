@@ -277,7 +277,7 @@ literal|"Integer Divide"
 block|}
 block|,
 block|{
-literal|"DMA"
+literal|"Dma"
 block|,
 literal|"(DmaTypeKeyword, BusMasterKeyword, XferTypeKeyword, "
 literal|"DescriptorName) {DmaChannelList} => Buffer"
@@ -286,7 +286,7 @@ literal|"DMA Resource Descriptor macro"
 block|}
 block|,
 block|{
-literal|"DWordIO"
+literal|"DWordIo"
 block|,
 literal|"(ResourceTypeKeyword, MinKeyword, MaxKeyword, "
 literal|"DecodeKeyword, RangeTypeKeyword, AddressGranularity, "
@@ -294,7 +294,7 @@ literal|"AddressMinimum, AddressMaximum, AddressTranslation, "
 literal|"RangeLength, ResourceSourceIndex, "
 literal|"ResourceSource, DescriptorName, TypeKeyword, TranslationKeyword)"
 block|,
-literal|"DWord IO Resource Descriptor macro"
+literal|"DWord I/O Resource Descriptor macro"
 block|}
 block|,
 block|{
@@ -322,7 +322,7 @@ literal|"DWord Space Resource Descriptor macro"
 block|}
 block|,
 block|{
-literal|"EISAID"
+literal|"EisaId"
 block|,
 literal|"(EisaIdString) => DWordConst"
 block|,
@@ -362,14 +362,14 @@ literal|"Declare an event synchronization object"
 block|}
 block|,
 block|{
-literal|"ExtendedIO"
+literal|"ExtendedIo"
 block|,
 literal|"(ResourceTypeKeyword, MinKeyword, MaxKeyword, "
 literal|"DecodeKeyword, RangeTypeKeyword, AddressGranularity, "
 literal|"AddressMinimum, AddressMaximum, AddressTranslation, RangeLength, "
 literal|"TypeSpecificAttributes, DescriptorName, TypeKeyword, TranslationKeyword)"
 block|,
-literal|"Extended IO Resource Descriptor macro"
+literal|"Extended I/O Resource Descriptor macro"
 block|}
 block|,
 block|{
@@ -437,7 +437,7 @@ literal|"Index of first most significant bit set"
 block|}
 block|,
 block|{
-literal|"FixedDMA"
+literal|"FixedDma"
 block|,
 literal|"(DmaRequestLine, Channel, TransferWidthKeyword, DescriptorName) => Buffer"
 block|,
@@ -445,7 +445,7 @@ literal|"Fixed DMA Resource Descriptor macro"
 block|}
 block|,
 block|{
-literal|"FixedIO"
+literal|"FixedIo"
 block|,
 literal|"(AddressBase, RangeLength, DescriptorName) => Buffer"
 block|,
@@ -453,9 +453,9 @@ literal|"Fixed I/O Resource Descriptor macro"
 block|}
 block|,
 block|{
-literal|"FromBCD"
+literal|"FromBcd"
 block|,
-literal|"(BCDValue, Result) => Integer"
+literal|"(BcdValue, Result) => Integer"
 block|,
 literal|"Convert from BCD to numeric"
 block|}
@@ -554,16 +554,16 @@ literal|"Interrupt Resource Descriptor macro"
 block|}
 block|,
 block|{
-literal|"IO"
+literal|"Io"
 block|,
 literal|"(IoDecodeKeyword, AddressMin, AddressMax, AddressAlignment, "
 literal|"RangeLength, DescriptorName) => Buffer"
 block|,
-literal|"IO Resource Descriptor macro"
+literal|"I/O Resource Descriptor macro"
 block|}
 block|,
 block|{
-literal|"IRQ"
+literal|"Irq"
 block|,
 literal|"(InterruptTypeKeyword, InterruptLevelKeyword, ShareTypeKeyword, "
 literal|"DescriptorName) {InterruptList} => Buffer"
@@ -572,7 +572,7 @@ literal|"Interrupt Resource Descriptor macro"
 block|}
 block|,
 block|{
-literal|"IRQNoFlags"
+literal|"IrqNoFlags"
 block|,
 literal|"(DescriptorName) {InterruptList} => Buffer"
 block|,
@@ -874,7 +874,7 @@ literal|"Declare a processor package"
 block|}
 block|,
 block|{
-literal|"QWordIO"
+literal|"QWordIo"
 block|,
 literal|"(ResourceTypeKeyword, MinKeyword, MaxKeyword, DecodeKeyword, "
 literal|"RangeTypeKeyword, AddressGranularity, "
@@ -882,7 +882,7 @@ literal|"AddressMinimum, AddressMaximum, AddressTranslation, RangeLength, "
 literal|"ResourceSourceIndex, ResourceSource, DescriptorName, TypeKeyword, "
 literal|"TranslationKeyword)"
 block|,
-literal|"QWord IO Resource Descriptor macro"
+literal|"QWord I/O Resource Descriptor macro"
 block|}
 block|,
 block|{
@@ -1100,7 +1100,7 @@ literal|"Get 64-bit timer value"
 block|}
 block|,
 block|{
-literal|"ToBCD"
+literal|"ToBcd"
 block|,
 literal|"(Value, Result) => Integer"
 block|,
@@ -1148,7 +1148,7 @@ literal|"Copy ASCII string from buffer"
 block|}
 block|,
 block|{
-literal|"ToUUID"
+literal|"ToUuid"
 block|,
 literal|"(AsciiString) => Buffer"
 block|,
@@ -1227,7 +1227,7 @@ literal|"Word Bus number Resource Descriptor macro"
 block|}
 block|,
 block|{
-literal|"WordIO"
+literal|"WordIo"
 block|,
 literal|"(ResourceTypeKeyword, MinKeyword, MaxKeyword, DecodeKeyword, "
 literal|"RangeTypeKeyword, AddressGranularity, "
@@ -1235,7 +1235,7 @@ literal|"AddressMinimum, AddressMaximum, AddressTranslation, RangeLength, "
 literal|"ResourceSourceIndex, ResourceSource, DescriptorName, TypeKeyword, "
 literal|"TranslationKeyword)"
 block|,
-literal|"Word IO Resource Descriptor macro"
+literal|"Word I/O Resource Descriptor macro"
 block|}
 block|,
 block|{
@@ -1250,7 +1250,7 @@ literal|"Word Space Resource Descriptor macro"
 block|}
 block|,
 block|{
-literal|"XOr"
+literal|"Xor"
 block|,
 literal|"(Source1, Source2, Result) => Integer"
 block|,

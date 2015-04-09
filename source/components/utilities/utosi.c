@@ -192,6 +192,17 @@ name|ACPI_OSI_WIN_8
 block|}
 block|,
 comment|/* Windows 8.1 and Server 2012 R2 - Added 01/2014 */
+block|{
+literal|"Windows 2015"
+block|,
+name|NULL
+block|,
+literal|0
+block|,
+name|ACPI_OSI_WIN_10
+block|}
+block|,
+comment|/* Windows 10 - Added 03/2015 */
 comment|/* Feature Group Strings */
 block|{
 literal|"Extended Address Space Descriptor"

@@ -1672,10 +1672,10 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
+name|ACPI_PTR_TO_PHYSADDR
+argument_list|(
 name|RsdpCode
+argument_list|)
 operator|)
 return|;
 block|}
