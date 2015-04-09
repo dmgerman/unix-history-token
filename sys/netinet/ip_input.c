@@ -3500,13 +3500,14 @@ argument_list|,
 name|V_maxnipq
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Zero specifies no further fragment queue allocation -- set the 	 * bound very low, but rely on implementation elsewhere to actually 	 * prevent allocation and reclaim current queues. 	 */
+comment|/* 	 * Zero specifies no further fragment queue allocation. 	 */
 if|if
 condition|(
 name|V_maxnipq
 operator|==
 literal|0
 condition|)
+block|{
 name|uma_zone_set_max
 argument_list|(
 name|V_ipq_zone
@@ -3514,6 +3515,10 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|ip_drain_vnet
+argument_list|()
+expr_stmt|;
+block|}
 block|}
 end_function
 
