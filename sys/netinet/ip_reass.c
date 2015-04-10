@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/hash.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -157,19 +163,6 @@ name|IPREASS_HMASK
 value|(IPREASS_NHASH - 1)
 end_define
 
-begin_define
-define|#
-directive|define
-name|IPREASS_HASH
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-define|\
-value|(((((x)& 0xF) | ((((x)>> 8)& 0xF)<< 4)) ^ (y))& IPREASS_HMASK)
-end_define
-
 begin_struct
 struct|struct
 name|ipqbucket
@@ -210,6 +203,24 @@ define|#
 directive|define
 name|V_ipq
 value|VNET(ipq)
+end_define
+
+begin_expr_stmt
+specifier|static
+name|VNET_DEFINE
+argument_list|(
+name|uint32_t
+argument_list|,
+name|ipq_hashseed
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|V_ipq_hashseed
+value|VNET(ipq_hashseed)
 end_define
 
 begin_define
@@ -624,7 +635,7 @@ name|ecn
 decl_stmt|,
 name|ecn0
 decl_stmt|;
-name|u_short
+name|uint32_t
 name|hash
 decl_stmt|;
 ifdef|#
@@ -828,18 +839,29 @@ name|hlen
 expr_stmt|;
 name|hash
 operator|=
-name|IPREASS_HASH
-argument_list|(
 name|ip
 operator|->
 name|ip_src
 operator|.
 name|s_addr
-argument_list|,
+operator|^
 name|ip
 operator|->
 name|ip_id
+expr_stmt|;
+name|hash
+operator|=
+name|jenkins_hash32
+argument_list|(
+operator|&
+name|hash
+argument_list|,
+literal|1
+argument_list|,
+name|V_ipq_hashseed
 argument_list|)
+operator|&
+name|IPREASS_HMASK
 expr_stmt|;
 name|head
 operator|=
@@ -2060,6 +2082,11 @@ name|MTX_DUPOK
 argument_list|)
 expr_stmt|;
 block|}
+name|V_ipq_hashseed
+operator|=
+name|arc4random
+argument_list|()
+expr_stmt|;
 name|V_maxfragsperpacket
 operator|=
 literal|16
