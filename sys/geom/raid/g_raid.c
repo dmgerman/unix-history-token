@@ -5945,7 +5945,7 @@ operator|->
 name|sc_queue_mtx
 argument_list|)
 expr_stmt|;
-name|bioq_disksort
+name|bioq_insert_tail
 argument_list|(
 operator|&
 name|sc
@@ -6957,7 +6957,7 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-name|bioq_disksort
+name|bioq_insert_tail
 argument_list|(
 operator|&
 name|sc
@@ -7436,7 +7436,7 @@ operator|->
 name|sc_queue_mtx
 argument_list|)
 expr_stmt|;
-name|bioq_disksort
+name|bioq_insert_tail
 argument_list|(
 operator|&
 name|sc
