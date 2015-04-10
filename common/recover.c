@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: recover.c,v 11.2 2012/10/09 08:06:58 zy Exp $"
+literal|"$Id: recover.c,v 11.3 2015/04/04 03:50:42 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -174,133 +174,115 @@ name|VI_DHEADER
 value|"X-vi-data:"
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|rcv_copy
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|rcv_email
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|rcv_mailfile
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|rcv_mktemp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|rcv_dlnwrite
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|rcv_dlnread
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * rcv_tmp --  *	Build a file name that will be used as the recovery file.  *  * PUBLIC: int rcv_tmp __P((SCR *, EXF *, char *));  */
+comment|/*  * rcv_tmp --  *	Build a file name that will be used as the recovery file.  *  * PUBLIC: int rcv_tmp(SCR *, EXF *, char *);  */
 end_comment
 
 begin_function
@@ -524,7 +506,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * rcv_init --  *	Force the file to be snapshotted for recovery.  *  * PUBLIC: int rcv_init __P((SCR *));  */
+comment|/*  * rcv_init --  *	Force the file to be snapshotted for recovery.  *  * PUBLIC: int rcv_init(SCR *);  */
 end_comment
 
 begin_function
@@ -742,7 +724,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * rcv_sync --  *	Sync the file, optionally:  *		flagging the backup file to be preserved  *		snapshotting the backup file and send email to the user  *		sending email to the user if the file was modified  *		ending the file session  *  * PUBLIC: int rcv_sync __P((SCR *, u_int));  */
+comment|/*  * rcv_sync --  *	Sync the file, optionally:  *		flagging the backup file to be preserved  *		snapshotting the backup file and send email to the user  *		sending email to the user if the file was modified  *		ending the file session  *  * PUBLIC: int rcv_sync(SCR *, u_int);  */
 end_comment
 
 begin_function
@@ -810,8 +792,6 @@ name|F_MODIFIED
 argument_list|)
 condition|)
 block|{
-name|SIGBLOCK
-expr_stmt|;
 if|if
 condition|(
 name|ep
@@ -850,16 +830,12 @@ argument_list|,
 literal|"060|File backup failed: %s"
 argument_list|)
 expr_stmt|;
-name|SIGUNBLOCK
-expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 block|}
-name|SIGUNBLOCK
-expr_stmt|;
 comment|/* REQUEST: don't remove backing file on exit. */
 if|if
 condition|(
@@ -1979,7 +1955,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	people making love  *	never exactly the same  *	just like a snowflake  *  * rcv_list --  *	List the files that can be recovered by this user.  *  * PUBLIC: int rcv_list __P((SCR *));  */
+comment|/*  *	people making love  *	never exactly the same  *	just like a snowflake  *  * rcv_list --  *	List the files that can be recovered by this user.  *  * PUBLIC: int rcv_list(SCR *);  */
 end_comment
 
 begin_function
@@ -2435,7 +2411,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * rcv_read --  *	Start a recovered file as the file to edit.  *  * PUBLIC: int rcv_read __P((SCR *, FREF *));  */
+comment|/*  * rcv_read --  *	Start a recovered file as the file to edit.  *  * PUBLIC: int rcv_read(SCR *, FREF *);  */
 end_comment
 
 begin_function
@@ -2575,7 +2551,7 @@ name|msgq_str
 argument_list|(
 name|sp
 argument_list|,
-name|M_ERR
+name|M_SYSERR
 argument_list|,
 name|rp
 argument_list|,

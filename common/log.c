@@ -111,40 +111,34 @@ begin_comment
 comment|/*  * The log consists of records, each containing a type byte and a variable  * length byte string, as follows:  *  *	LOG_CURSOR_INIT		MARK  *	LOG_CURSOR_END		MARK  *	LOG_LINE_APPEND 	recno_t		char *  *	LOG_LINE_DELETE		recno_t		char *  *	LOG_LINE_INSERT		recno_t		char *  *	LOG_LINE_RESET_F	recno_t		char *  *	LOG_LINE_RESET_B	recno_t		char *  *	LOG_MARK		LMARK  *  * We do before image physical logging.  This means that the editor layer  * MAY NOT modify records in place, even if simply deleting or overwriting  * characters.  Since the smallest unit of logging is a line, we're using  * up lots of space.  This may eventually have to be reduced, probably by  * doing logical logging, which is a much cooler database phrase.  *  * The implementation of the historic vi 'u' command, using roll-forward and  * roll-back, is simple.  Each set of changes has a LOG_CURSOR_INIT record,  * followed by a number of other records, followed by a LOG_CURSOR_END record.  * LOG_LINE_RESET records come in pairs.  The first is a LOG_LINE_RESET_B  * record, and is the line before the change.  The second is LOG_LINE_RESET_F,  * and is the line after the change.  Roll-back is done by backing up to the  * first LOG_CURSOR_INIT record before a change.  Roll-forward is done in a  * similar fashion.  *  * The 'U' command is implemented by rolling backward to a LOG_CURSOR_END  * record for a line different from the current one.  It should be noted that  * this means that a subsequent 'u' command will make a change based on the  * new position of the log's cursor.  This is okay, and, in fact, historic vi  * behaved that way.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|log_cursor1
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|log_err
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -157,69 +151,63 @@ operator|&&
 literal|0
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|log_trace
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|recno_t
-operator|,
+parameter_list|,
 name|u_char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|apply_with
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|SCR
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|recno_t
-argument_list|,
+parameter_list|,
 name|CHAR_T
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|size_t
-argument_list|)
-operator|,
+parameter_list|)
+parameter_list|,
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|recno_t
-operator|,
+parameter_list|,
 name|u_char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Try and restart the log on failure, i.e. if we run out of memory. */
@@ -274,7 +262,7 @@ value|((char *)(((log_t*)0)->str) - (char *)0)
 end_define
 
 begin_comment
-comment|/*  * log_init --  *	Initialize the logging subsystem.  *  * PUBLIC: int log_init __P((SCR *, EXF *));  */
+comment|/*  * log_init --  *	Initialize the logging subsystem.  *  * PUBLIC: int log_init(SCR *, EXF *);  */
 end_comment
 
 begin_function
@@ -393,7 +381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * log_end --  *	Close the logging subsystem.  *  * PUBLIC: int log_end __P((SCR *, EXF *));  */
+comment|/*  * log_end --  *	Close the logging subsystem.  *  * PUBLIC: int log_end(SCR *, EXF *);  */
 end_comment
 
 begin_function
@@ -507,7 +495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * log_cursor --  *	Log the current cursor position, starting an event.  *  * PUBLIC: int log_cursor __P((SCR *));  */
+comment|/*  * log_cursor --  *	Log the current cursor position, starting an event.  *  * PUBLIC: int log_cursor(SCR *);  */
 end_comment
 
 begin_function
@@ -822,7 +810,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * log_line --  *	Log a line change.  *  * PUBLIC: int log_line __P((SCR *, recno_t, u_int));  */
+comment|/*  * log_line --  *	Log a line change.  *  * PUBLIC: int log_line(SCR *, recno_t, u_int);  */
 end_comment
 
 begin_function
@@ -1272,7 +1260,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * log_mark --  *	Log a mark position.  For the log to work, we assume that there  *	aren't any operations that just put out a log record -- this  *	would mean that undo operations would only reset marks, and not  *	cause any other change.  *  * PUBLIC: int log_mark __P((SCR *, LMARK *));  */
+comment|/*  * log_mark --  *	Log a mark position.  For the log to work, we assume that there  *	aren't any operations that just put out a log record -- this  *	would mean that undo operations would only reset marks, and not  *	cause any other change.  *  * PUBLIC: int log_mark(SCR *, LMARK *);  */
 end_comment
 
 begin_function
@@ -1521,7 +1509,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Log_backward --  *	Roll the log backward one operation.  *  * PUBLIC: int log_backward __P((SCR *, MARK *));  */
+comment|/*  * Log_backward --  *	Roll the log backward one operation.  *  * PUBLIC: int log_backward(SCR *, MARK *);  */
 end_comment
 
 begin_function
@@ -2035,7 +2023,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Log_setline --  *	Reset the line to its original appearance.  *  * XXX  * There's a bug in this code due to our not logging cursor movements  * unless a change was made.  If you do a change, move off the line,  * then move back on and do a 'U', the line will be restored to the way  * it was before the original change.  *  * PUBLIC: int log_setline __P((SCR *));  */
+comment|/*  * Log_setline --  *	Reset the line to its original appearance.  *  * XXX  * There's a bug in this code due to our not logging cursor movements  * unless a change was made.  If you do a change, move off the line,  * then move back on and do a 'U', the line will be restored to the way  * it was before the original change.  *  * PUBLIC: int log_setline(SCR *);  */
 end_comment
 
 begin_function
@@ -2487,7 +2475,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Log_forward --  *	Roll the log forward one operation.  *  * PUBLIC: int log_forward __P((SCR *, MARK *));  */
+comment|/*  * Log_forward --  *	Roll the log forward one operation.  *  * PUBLIC: int log_forward(SCR *, MARK *);  */
 end_comment
 
 begin_function

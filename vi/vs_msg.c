@@ -119,103 +119,88 @@ name|sw_t
 typedef|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vs_divider
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vs_msgsave
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|mtype_t
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vs_output
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|mtype_t
-operator|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vs_scroll
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|sw_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vs_wait
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|sw_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * vs_busy --  *	Display, update or clear a busy message.  *  * This routine is the default editor interface for vi busy messages.  It  * implements a standard strategy of stealing lines from the bottom of the  * vi text screen.  Screens using an alternate method of displaying busy  * messages, e.g. X11 clock icons, should set their scr_busy function to the  * correct function before calling the main editor routine.  *  * PUBLIC: void vs_busy __P((SCR *, const char *, busy_t));  */
+comment|/*  * vs_busy --  *	Display, update or clear a busy message.  *  * This routine is the default editor interface for vi busy messages.  It  * implements a standard strategy of stealing lines from the bottom of the  * vi text screen.  Screens using an alternate method of displaying busy  * messages, e.g. X11 clock icons, should set their scr_busy function to the  * correct function before calling the main editor routine.  *  * PUBLIC: void vs_busy(SCR *, const char *, busy_t);  */
 end_comment
 
 begin_function
@@ -696,7 +681,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * vs_home --  *	Home the cursor to the bottom row, left-most column.  *  * PUBLIC: void vs_home __P((SCR *));  */
+comment|/*   * vs_home --  *	Home the cursor to the bottom row, left-most column.  *  * PUBLIC: void vs_home(SCR *);  */
 end_comment
 
 begin_function
@@ -745,7 +730,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_update --  *	Update a command.  *  * PUBLIC: void vs_update __P((SCR *, const char *, const CHAR_T *));  */
+comment|/*  * vs_update --  *	Update a command.  *  * PUBLIC: void vs_update(SCR *, const char *, const CHAR_T *);  */
 end_comment
 
 begin_function
@@ -1049,7 +1034,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_msg --  *	Display ex output or error messages for the screen.  *  * This routine is the default editor interface for all ex output, and all ex  * and vi error/informational messages.  It implements the standard strategy  * of stealing lines from the bottom of the vi text screen.  Screens using an  * alternate method of displaying messages, e.g. dialog boxes, should set their  * scr_msg function to the correct function before calling the editor.  *  * PUBLIC: void vs_msg __P((SCR *, mtype_t, char *, size_t));  */
+comment|/*  * vs_msg --  *	Display ex output or error messages for the screen.  *  * This routine is the default editor interface for all ex output, and all ex  * and vi error/informational messages.  It implements the standard strategy  * of stealing lines from the bottom of the vi text screen.  Screens using an  * alternate method of displaying messages, e.g. dialog boxes, should set their  * scr_msg function to the correct function before calling the editor.  *  * PUBLIC: void vs_msg(SCR *, mtype_t, char *, size_t);  */
 end_comment
 
 begin_function
@@ -2269,7 +2254,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_ex_resolve --  *	Deal with ex message output.  *  * This routine is called when exiting a colon command to resolve any ex  * output that may have occurred.  *  * PUBLIC: int vs_ex_resolve __P((SCR *, int *));  */
+comment|/*  * vs_ex_resolve --  *	Deal with ex message output.  *  * This routine is called when exiting a colon command to resolve any ex  * output that may have occurred.  *  * PUBLIC: int vs_ex_resolve(SCR *, int *);  */
 end_comment
 
 begin_function
@@ -2684,7 +2669,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_resolve --  *	Deal with message output.  *  * PUBLIC: int vs_resolve __P((SCR *, SCR *, int));  */
+comment|/*  * vs_resolve --  *	Deal with message output.  *  * PUBLIC: int vs_resolve(SCR *, SCR *, int);  */
 end_comment
 
 begin_function

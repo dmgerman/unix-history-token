@@ -101,25 +101,22 @@ directive|include
 file|"../common/common.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|filter_ldisplay
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|FILE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_filter --  *	Run a range of lines through a filter utility and optionally  *	replace the original text with the stdout/stderr output of  *	the utility.  *  * PUBLIC: int ex_filter __P((SCR *,   * PUBLIC:    EXCMD *, MARK *, MARK *, MARK *, CHAR_T *, enum filtertype));  */
+comment|/*  * ex_filter --  *	Run a range of lines through a filter utility and optionally  *	replace the original text with the stdout/stderr output of  *	the utility.  *  * PUBLIC: int ex_filter(SCR *,   * PUBLIC:    EXCMD *, MARK *, MARK *, MARK *, CHAR_T *, enum filtertype);  */
 end_comment
 
 begin_function

@@ -84,7 +84,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_undo -- u  *	Undo the last change.  *  * PUBLIC: int ex_undo __P((SCR *, EXCMD *));  */
+comment|/*  * ex_undo -- u  *	Undo the last change.  *  * PUBLIC: int ex_undo(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

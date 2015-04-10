@@ -96,7 +96,7 @@ file|"../vi/vi.h"
 end_include
 
 begin_comment
-comment|/*  * ex_bg --	:bg  *	Hide the screen.  *  * PUBLIC: int ex_bg __P((SCR *, EXCMD *));  */
+comment|/*  * ex_bg --	:bg  *	Hide the screen.  *  * PUBLIC: int ex_bg(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -124,7 +124,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_fg --	:fg [file]  *	Show the screen.  *  * PUBLIC: int ex_fg __P((SCR *, EXCMD *));  */
+comment|/*  * ex_fg --	:fg [file]  *	Show the screen.  *  * PUBLIC: int ex_fg(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -217,7 +217,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_resize --	:resize [+-]rows  *	Change the screen size.  *  * PUBLIC: int ex_resize __P((SCR *, EXCMD *));  */
+comment|/*  * ex_resize --	:resize [+-]rows  *	Change the screen size.  *  * PUBLIC: int ex_resize(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -318,7 +318,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_sdisplay --  *	Display the list of screens.  *  * PUBLIC: int ex_sdisplay __P((SCR *));  */
+comment|/*  * ex_sdisplay --  *	Display the list of screens.  *  * PUBLIC: int ex_sdisplay(SCR *);  */
 end_comment
 
 begin_function

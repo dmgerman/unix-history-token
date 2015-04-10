@@ -78,7 +78,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_equal -- :address =  *  * PUBLIC: int ex_equal __P((SCR *, EXCMD *));  */
+comment|/*  * ex_equal -- :address =  *  * PUBLIC: int ex_equal(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

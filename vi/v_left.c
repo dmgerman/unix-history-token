@@ -84,7 +84,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * v_left -- [count]^H, [count]h  *	Move left by columns.  *  * PUBLIC: int v_left __P((SCR *, VICMD *));  */
+comment|/*  * v_left -- [count]^H, [count]h  *	Move left by columns.  *  * PUBLIC: int v_left(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -207,7 +207,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_cfirst -- [count]_  *	Move to the first non-blank character in a line.  *  * PUBLIC: int v_cfirst __P((SCR *, VICMD *));  */
+comment|/*  * v_cfirst -- [count]_  *	Move to the first non-blank character in a line.  *  * PUBLIC: int v_cfirst(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -415,7 +415,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_first -- ^  *	Move to the first non-blank character in this line.  *  * PUBLIC: int v_first __P((SCR *, VICMD *));  */
+comment|/*  * v_first -- ^  *	Move to the first non-blank character in this line.  *  * PUBLIC: int v_first(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -580,7 +580,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_ncol -- [count]|  *	Move to column count or the first column on this line.  If the  *	requested column is past EOL, move to EOL.  The nasty part is  *	that we have to know character column widths to make this work.  *  * PUBLIC: int v_ncol __P((SCR *, VICMD *));  */
+comment|/*  * v_ncol -- [count]|  *	Move to column count or the first column on this line.  If the  *	requested column is past EOL, move to EOL.  The nasty part is  *	that we have to know character column widths to make this work.  *  * PUBLIC: int v_ncol(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -795,7 +795,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_zero -- 0  *	Move to the first column on this line.  *  * PUBLIC: int v_zero __P((SCR *, VICMD *));  */
+comment|/*  * v_zero -- 0  *	Move to the first column on this line.  *  * PUBLIC: int v_zero(SCR *, VICMD *);  */
 end_comment
 
 begin_function

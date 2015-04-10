@@ -84,7 +84,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * v_right -- [count]' ', [count]l  *	Move right by columns.  *  * PUBLIC: int v_right __P((SCR *, VICMD *));  */
+comment|/*  * v_right -- [count]' ', [count]l  *	Move right by columns.  *  * PUBLIC: int v_right(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -306,7 +306,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_dollar -- [count]$  *	Move to the last column.  *  * PUBLIC: int v_dollar __P((SCR *, VICMD *));  */
+comment|/*  * v_dollar -- [count]$  *	Move to the last column.  *  * PUBLIC: int v_dollar(SCR *, VICMD *);  */
 end_comment
 
 begin_function

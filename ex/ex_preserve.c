@@ -90,7 +90,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_preserve -- :pre[serve]  *	Push the file to recovery.  *  * PUBLIC: int ex_preserve __P((SCR *, EXCMD *));  */
+comment|/*  * ex_preserve -- :pre[serve]  *	Push the file to recovery.  *  * PUBLIC: int ex_preserve(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -215,7 +215,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_recover -- :rec[over][!] file  *	Recover the file.  *  * PUBLIC: int ex_recover __P((SCR *, EXCMD *));  */
+comment|/*  * ex_recover -- :rec[over][!] file  *	Recover the file.  *  * PUBLIC: int ex_recover(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

@@ -119,126 +119,111 @@ directive|include
 file|"../common/common.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|argv_alloc
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|argv_comp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|argv_fexp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|EXCMD
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|size_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|argv_sexp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|size_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|argv_flt_user
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|EXCMD
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * argv_init --  *	Build  a prototype arguments list.  *  * PUBLIC: int argv_init __P((SCR *, EXCMD *));  */
+comment|/*  * argv_init --  *	Build  a prototype arguments list.  *  * PUBLIC: int argv_init(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -303,7 +288,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * argv_exp0 --  *	Append a string to the argument list.  *  * PUBLIC: int argv_exp0 __P((SCR *, EXCMD *, CHAR_T *, size_t));  */
+comment|/*  * argv_exp0 --  *	Append a string to the argument list.  *  * PUBLIC: int argv_exp0(SCR *, EXCMD *, CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -421,7 +406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * argv_exp1 --  *	Do file name expansion on a string, and append it to the  *	argument list.  *  * PUBLIC: int argv_exp1 __P((SCR *, EXCMD *, CHAR_T *, size_t, int));  */
+comment|/*  * argv_exp1 --  *	Do file name expansion on a string, and append it to the  *	argument list.  *  * PUBLIC: int argv_exp1(SCR *, EXCMD *, CHAR_T *, size_t, int);  */
 end_comment
 
 begin_function
@@ -615,7 +600,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * argv_exp2 --  *	Do file name and shell expansion on a string, and append it to  *	the argument list.  *  * PUBLIC: int argv_exp2 __P((SCR *, EXCMD *, CHAR_T *, size_t));  */
+comment|/*  * argv_exp2 --  *	Do file name and shell expansion on a string, and append it to  *	the argument list.  *  * PUBLIC: int argv_exp2(SCR *, EXCMD *, CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -935,7 +920,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * argv_exp3 --  *	Take a string and break it up into an argv, which is appended  *	to the argument list.  *  * PUBLIC: int argv_exp3 __P((SCR *, EXCMD *, CHAR_T *, size_t));  */
+comment|/*  * argv_exp3 --  *	Take a string and break it up into an argv, which is appended  *	to the argument list.  *  * PUBLIC: int argv_exp3(SCR *, EXCMD *, CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -1236,7 +1221,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * argv_flt_ex --  *	Filter the ex commands with a prefix, and append the results to  *	the argument list.  *  * PUBLIC: int argv_flt_ex __P((SCR *, EXCMD *, CHAR_T *, size_t));  */
+comment|/*  * argv_flt_ex --  *	Filter the ex commands with a prefix, and append the results to  *	the argument list.  *  * PUBLIC: int argv_flt_ex(SCR *, EXCMD *, CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -2614,7 +2599,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * argv_free --  *	Free up argument structures.  *  * PUBLIC: int argv_free __P((SCR *));  */
+comment|/*  * argv_free --  *	Free up argument structures.  *  * PUBLIC: int argv_free(SCR *);  */
 end_comment
 
 begin_function
@@ -2749,7 +2734,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * argv_flt_path --  *	Find all file names matching the prefix and append them to the  *	argument list.  *  * PUBLIC: int argv_flt_path __P((SCR *, EXCMD *, CHAR_T *, size_t));  */
+comment|/*  * argv_flt_path --  *	Find all file names matching the prefix and append them to the  *	argument list.  *  * PUBLIC: int argv_flt_path(SCR *, EXCMD *, CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -4077,7 +4062,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * argv_esc --  *	Escape a string into an ex and shell argument.  *  * PUBLIC: CHAR_T *argv_esc __P((SCR *, EXCMD *, CHAR_T *, size_t));  */
+comment|/*  * argv_esc --  *	Escape a string into an ex and shell argument.  *  * PUBLIC: CHAR_T *argv_esc(SCR *, EXCMD *, CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -4354,7 +4339,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * argv_uesc --  *	Unescape an escaped ex and shell argument.  *  * PUBLIC: CHAR_T *argv_uesc __P((SCR *, EXCMD *, CHAR_T *, size_t));  */
+comment|/*  * argv_uesc --  *	Unescape an escaped ex and shell argument.  *  * PUBLIC: CHAR_T *argv_uesc(SCR *, EXCMD *, CHAR_T *, size_t);  */
 end_comment
 
 begin_function

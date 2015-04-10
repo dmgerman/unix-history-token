@@ -164,25 +164,22 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|inc_err
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
-expr|enum
+modifier|*
+parameter_list|,
+name|enum
 name|nresult
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * v_increment -- [count]#[#+-]  *	Increment/decrement a keyword number.  *  * PUBLIC: int v_increment __P((SCR *, VICMD *));  */
+comment|/*  * v_increment -- [count]#[#+-]  *	Increment/decrement a keyword number.  *  * PUBLIC: int v_increment(SCR *, VICMD *);  */
 end_comment
 
 begin_function

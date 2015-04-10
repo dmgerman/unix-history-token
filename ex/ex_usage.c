@@ -102,7 +102,7 @@ file|"../vi/vi.h"
 end_include
 
 begin_comment
-comment|/*  * ex_help -- :help  *	Display help message.  *  * PUBLIC: int ex_help __P((SCR *, EXCMD *));  */
+comment|/*  * ex_help -- :help  *	Display help message.  *  * PUBLIC: int ex_help(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -177,7 +177,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_usage -- :exusage [cmd]  *	Display ex usage strings.  *  * PUBLIC: int ex_usage __P((SCR *, EXCMD *));  */
+comment|/*  * ex_usage -- :exusage [cmd]  *	Display ex usage strings.  *  * PUBLIC: int ex_usage(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -634,7 +634,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_viusage -- :viusage [key]  *	Display vi usage strings.  *  * PUBLIC: int ex_viusage __P((SCR *, EXCMD *));  */
+comment|/*  * ex_viusage -- :viusage [key]  *	Display vi usage strings.  *  * PUBLIC: int ex_viusage(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

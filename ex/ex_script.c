@@ -189,105 +189,87 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sscr_check
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sscr_getprompt
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sscr_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sscr_insert
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sscr_matchprompt
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|size_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|sscr_setprompt
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_script -- : sc[ript][!] [file]  *	Switch to script mode.  *  * PUBLIC: int ex_script __P((SCR *, EXCMD *));  */
+comment|/*  * ex_script -- : sc[ript][!] [file]  *	Switch to script mode.  *  * PUBLIC: int ex_script(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -1426,7 +1408,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sscr_exec --  *	Take a line and hand it off to the shell.  *  * PUBLIC: int sscr_exec __P((SCR *, recno_t));  */
+comment|/*  * sscr_exec --  *	Take a line and hand it off to the shell.  *  * PUBLIC: int sscr_exec(SCR *, recno_t);  */
 end_comment
 
 begin_function
@@ -1849,7 +1831,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sscr_input --  *	Read any waiting shell input.  *  * PUBLIC: int sscr_input __P((SCR *));  */
+comment|/*  * sscr_input --  *	Read any waiting shell input.  *  * PUBLIC: int sscr_input(SCR *);  */
 end_comment
 
 begin_function
@@ -2837,7 +2819,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * sscr_end --  *	End the pipe to a shell.  *  * PUBLIC: int sscr_end __P((SCR *));  */
+comment|/*  * sscr_end --  *	End the pipe to a shell.  *  * PUBLIC: int sscr_end(SCR *);  */
 end_comment
 
 begin_function

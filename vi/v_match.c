@@ -102,7 +102,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * v_match -- %  *	Search to matching character.  *  * PUBLIC: int v_match __P((SCR *, VICMD *));  */
+comment|/*  * v_match -- %  *	Search to matching character.  *  * PUBLIC: int v_match(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -145,15 +145,12 @@ argument_list|(
 operator|*
 name|gc
 argument_list|)
-name|__P
 argument_list|(
-operator|(
 name|SCR
 operator|*
-operator|,
+argument_list|,
 name|VCS
 operator|*
-operator|)
 argument_list|)
 decl_stmt|;
 name|CHAR_T
@@ -717,7 +714,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_buildmcs --  *	Build the match character list.  *  * PUBLIC: int v_buildmcs __P((SCR *, char *));  */
+comment|/*  * v_buildmcs --  *	Build the match character list.  *  * PUBLIC: int v_buildmcs(SCR *, char *);  */
 end_comment
 
 begin_function

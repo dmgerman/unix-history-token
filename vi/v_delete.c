@@ -84,7 +84,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * v_delete -- [buffer][count]d[count]motion  *	       [buffer][count]D  *	Delete a range of text.  *  * PUBLIC: int v_delete __P((SCR *, VICMD *));  */
+comment|/*  * v_delete -- [buffer][count]d[count]motion  *	       [buffer][count]D  *	Delete a range of text.  *  * PUBLIC: int v_delete(SCR *, VICMD *);  */
 end_comment
 
 begin_function
