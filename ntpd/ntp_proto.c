@@ -1181,7 +1181,7 @@ block|{
 name|u_char
 name|oreach
 decl_stmt|;
-comment|/* 		 * Update the reachability status. If not heard for 		 * three consecutive polls, stuff infinity in the clock 		 * filter.  		 */
+comment|/* 		 * Update the reachability status. If not heard for 		 * three consecutive polls, stuff infinity in the clock 		 * filter. 		 */
 name|oreach
 operator|=
 name|peer
@@ -1492,7 +1492,7 @@ operator|->
 name|retry
 operator|--
 expr_stmt|;
-comment|/* 	 * Do not transmit if in broadcast client mode.  	 */
+comment|/* 	 * Do not transmit if in broadcast client mode. 	 */
 if|if
 condition|(
 name|peer
@@ -2569,7 +2569,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|HAVE_NTP_SIGND
-comment|/* 		 * If the signature is 20 bytes long, the last 16 of 		 * which are zero, then this is a Microsoft client 		 * wanting AD-style authentication of the server's 		 * reply.   		 * 		 * This is described in Microsoft's WSPP docs, in MS-SNTP: 		 * http://msdn.microsoft.com/en-us/library/cc212930.aspx 		 */
+comment|/* 		 * If the signature is 20 bytes long, the last 16 of 		 * which are zero, then this is a Microsoft client 		 * wanting AD-style authentication of the server's 		 * reply. 		 * 		 * This is described in Microsoft's WSPP docs, in MS-SNTP: 		 * http://msdn.microsoft.com/en-us/library/cc212930.aspx 		 */
 block|}
 elseif|else
 if|if
@@ -3100,7 +3100,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 comment|/* hooray */
-comment|/* 	 * This is a server mode packet returned in response to a client 	 * mode packet sent to a multicast group address (for 	 * manycastclient) or to a unicast address (for pool). The 	 * origin timestamp is a good nonce to reliably associate the 	 * reply with what was sent. If there is no match, that's 	 * curious and could be an intruder attempting to clog, so we 	 * just ignore it. 	 * 	 * If the packet is authentic and the manycastclient or pool  	 * association is found, we mobilize a client association and 	 * copy pertinent variables from the manycastclient or pool 	 * association to the new client association. If not, just 	 * ignore the packet. 	 * 	 * There is an implosion hazard at the manycast client, since 	 * the manycast servers send the server packet immediately. If 	 * the guy is already here, don't fire up a duplicate. 	 */
+comment|/* 	 * This is a server mode packet returned in response to a client 	 * mode packet sent to a multicast group address (for 	 * manycastclient) or to a unicast address (for pool). The 	 * origin timestamp is a good nonce to reliably associate the 	 * reply with what was sent. If there is no match, that's 	 * curious and could be an intruder attempting to clog, so we 	 * just ignore it. 	 * 	 * If the packet is authentic and the manycastclient or pool 	 * association is found, we mobilize a client association and 	 * copy pertinent variables from the manycastclient or pool 	 * association to the new client association. If not, just 	 * ignore the packet. 	 * 	 * There is an implosion hazard at the manycast client, since 	 * the manycast servers send the server packet immediately. If 	 * the guy is already here, don't fire up a duplicate. 	 */
 case|case
 name|AM_MANYCAST
 case|:
@@ -4178,43 +4178,6 @@ name|TEST2
 expr_stmt|;
 comment|/* bogus */
 block|}
-comment|/* 	 * Update the state variables. 	 */
-if|if
-condition|(
-name|peer
-operator|->
-name|flip
-operator|==
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|hismode
-operator|!=
-name|MODE_BROADCAST
-condition|)
-name|peer
-operator|->
-name|rec
-operator|=
-name|p_xmt
-expr_stmt|;
-name|peer
-operator|->
-name|dst
-operator|=
-name|rbufp
-operator|->
-name|recv_time
-expr_stmt|;
-block|}
-name|peer
-operator|->
-name|xmt
-operator|=
-name|p_xmt
-expr_stmt|;
 comment|/* 	 * If this is a crypto_NAK, the server cannot authenticate a 	 * client packet. The server might have just changed keys. Clear 	 * the association and restart the protocol. 	 */
 if|if
 condition|(
@@ -4280,7 +4243,7 @@ endif|#
 directive|endif
 comment|/* AUTOKEY */
 return|return;
-comment|/*  	 * If the digest fails, the client cannot authenticate a server 	 * reply to a client packet previously sent. The loopback check 	 * is designed to avoid a bait-and-switch attack, which was 	 * possible in past versions. If symmetric modes, return a 	 * crypto-NAK. The peer should restart the protocol. 	 */
+comment|/* 	 * If the digest fails or it's missing for authenticated 	 * associations, the client cannot authenticate a server 	 * reply to a client packet previously sent. The loopback check 	 * is designed to avoid a bait-and-switch attack, which was 	 * possible in past versions. If symmetric modes, return a 	 * crypto-NAK. The peer should restart the protocol. 	 */
 block|}
 elseif|else
 if|if
@@ -4288,6 +4251,10 @@ condition|(
 operator|!
 name|AUTH
 argument_list|(
+name|peer
+operator|->
+name|keyid
+operator|||
 name|has_mac
 operator|||
 operator|(
@@ -4323,6 +4290,9 @@ operator|++
 expr_stmt|;
 if|if
 condition|(
+name|has_mac
+operator|&&
+operator|(
 name|hismode
 operator|==
 name|MODE_ACTIVE
@@ -4330,6 +4300,7 @@ operator|||
 name|hismode
 operator|==
 name|MODE_PASSIVE
+operator|)
 condition|)
 name|fast_xmit
 argument_list|(
@@ -4379,6 +4350,43 @@ directive|endif
 comment|/* AUTOKEY */
 return|return;
 block|}
+comment|/* 	 * Update the state variables. 	 */
+if|if
+condition|(
+name|peer
+operator|->
+name|flip
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|hismode
+operator|!=
+name|MODE_BROADCAST
+condition|)
+name|peer
+operator|->
+name|rec
+operator|=
+name|p_xmt
+expr_stmt|;
+name|peer
+operator|->
+name|dst
+operator|=
+name|rbufp
+operator|->
+name|recv_time
+expr_stmt|;
+block|}
+name|peer
+operator|->
+name|xmt
+operator|=
+name|p_xmt
+expr_stmt|;
 comment|/* 	 * Set the peer ppoll to the maximum of the packet ppoll and the 	 * peer minpoll. If a kiss-o'-death, set the peer minpoll to 	 * this maximum and advance the headway to give the sender some 	 * headroom. Very intricate. 	 */
 name|peer
 operator|->
@@ -7793,7 +7801,7 @@ operator|%
 name|NTP_SHIFT
 expr_stmt|;
 block|}
-comment|/* 	 * If the clock has stabilized, sort the samples by distance.   	 */
+comment|/* 	 * If the clock has stabilized, sort the samples by distance. 	 */
 if|if
 condition|(
 name|freq_cnt
@@ -8744,7 +8752,7 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
-comment|/* 		 * If this peer could have the orphan parent 		 * as a synchronization ancestor, exclude it 		 * from selection to avoid forming a  		 * synchronization loop within the orphan mesh, 		 * triggering stratum climb to infinity  		 * instability.  Peers at stratum higher than 		 * the orphan stratum could have the orphan 		 * parent in ancestry so are excluded. 		 * See http://bugs.ntp.org/2050 		 */
+comment|/* 		 * If this peer could have the orphan parent 		 * as a synchronization ancestor, exclude it 		 * from selection to avoid forming a 		 * synchronization loop within the orphan mesh, 		 * triggering stratum climb to infinity 		 * instability.  Peers at stratum higher than 		 * the orphan stratum could have the orphan 		 * parent in ancestry so are excluded. 		 * See http://bugs.ntp.org/2050 		 */
 if|if
 condition|(
 name|peer
@@ -9124,7 +9132,7 @@ name|allow
 operator|++
 control|)
 block|{
-comment|/* 		 * Bound the interval (low, high) as the smallest  		 * interval containing points from the most sources. 		 */
+comment|/* 		 * Bound the interval (low, high) as the smallest 		 * interval containing points from the most sources. 		 */
 name|n
 operator|=
 literal|0
@@ -9240,7 +9248,7 @@ name|low
 condition|)
 break|break;
 block|}
-comment|/* 	 * Clustering algorithm. Whittle candidate list of falsetickers, 	 * who leave the island immediately. The TRUE peer is always a 	 * truechimer. We must leave at least one peer to collect the 	 * million bucks. 	 * 	 * We assert the correct time is contained in the interval, but 	 * the best offset estimate for the interval might not be 	 * contained in the interval. For this purpose, a truechimer is 	 * defined as the midpoint of an interval that overlaps the  	 * intersection interval. 	 */
+comment|/* 	 * Clustering algorithm. Whittle candidate list of falsetickers, 	 * who leave the island immediately. The TRUE peer is always a 	 * truechimer. We must leave at least one peer to collect the 	 * million bucks. 	 * 	 * We assert the correct time is contained in the interval, but 	 * the best offset estimate for the interval might not be 	 * contained in the interval. For this purpose, a truechimer is 	 * defined as the midpoint of an interval that overlaps the 	 * intersection interval. 	 */
 name|j
 operator|=
 literal|0
@@ -9337,6 +9345,17 @@ name|typepps
 operator|=
 name|peer
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|peer
+operator|->
+name|flags
+operator|&
+name|FLAG_TSTAMP_PPS
+operator|)
+condition|)
 continue|continue;
 block|}
 endif|#
@@ -9366,7 +9385,7 @@ name|nlist
 operator|=
 name|j
 expr_stmt|;
-comment|/* 	 * If no survivors remain at this point, check if the modem  	 * driver, local driver or orphan parent in that order. If so, 	 * nominate the first one found as the only survivor. 	 * Otherwise, give up and leave the island to the rats. 	 */
+comment|/* 	 * If no survivors remain at this point, check if the modem 	 * driver, local driver or orphan parent in that order. If so, 	 * nominate the first one found as the only survivor. 	 * Otherwise, give up and leave the island to the rats. 	 */
 if|if
 condition|(
 name|nlist
@@ -9520,7 +9539,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Now, vote outlyers off the island by select jitter weighted 	 * by root distance. Continue voting as long as there are more 	 * than sys_minclock survivors and the select jitter of the peer 	 * with the worst metric is greater than the minimum peer 	 * jitter. Stop if we are about to discard a TRUE or PREFER  	 * peer, who of course have the immunity idol. 	 */
+comment|/* 	 * Now, vote outlyers off the island by select jitter weighted 	 * by root distance. Continue voting as long as there are more 	 * than sys_minclock survivors and the select jitter of the peer 	 * with the worst metric is greater than the minimum peer 	 * jitter. Stop if we are about to discard a TRUE or PREFER 	 * peer, who of course have the immunity idol. 	 */
 while|while
 condition|(
 literal|1
@@ -11252,7 +11271,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* 		 * In symmetric modes the parameter, certificate,  		 * identity, cookie and autokey exchanges are 		 * required. The leapsecond exchange is optional. But, a 		 * peer will not believe the other peer until the other 		 * peer has synchronized, so the certificate exchange 		 * might loop until then. If a peer finds a broken 		 * autokey sequence, it uses the autokey exchange to 		 * retrieve the autokey values. In any case, if a new 		 * keylist is generated, the autokey values are pushed. 		 */
+comment|/* 		 * In symmetric modes the parameter, certificate, 		 * identity, cookie and autokey exchanges are 		 * required. The leapsecond exchange is optional. But, a 		 * peer will not believe the other peer until the other 		 * peer has synchronized, so the certificate exchange 		 * might loop until then. If a peer finds a broken 		 * autokey sequence, it uses the autokey exchange to 		 * retrieve the autokey values. In any case, if a new 		 * keylist is generated, the autokey values are pushed. 		 */
 case|case
 name|MODE_ACTIVE
 case|:

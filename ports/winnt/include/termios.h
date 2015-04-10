@@ -1087,7 +1087,7 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|void
 modifier|*
 parameter_list|)
 function_decl|;

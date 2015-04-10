@@ -6576,6 +6576,8 @@ decl_stmt|;
 comment|/* extension field length */
 name|size_t
 name|slen
+init|=
+literal|0
 decl_stmt|;
 name|tstamp
 operator|=

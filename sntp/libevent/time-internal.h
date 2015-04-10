@@ -206,14 +206,6 @@ name|last_time
 decl_stmt|;
 block|}
 struct|;
-define|#
-directive|define
-name|EV_MONOT_PRECISE
-value|1
-define|#
-directive|define
-name|EV_MONOT_FALLBACK
-value|2
 name|int
 name|evutil_configure_monotonic_time_
 parameter_list|(

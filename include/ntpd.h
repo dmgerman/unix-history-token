@@ -1324,6 +1324,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|peer_cleanup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* ntp_crypto.c */
 end_comment
@@ -2973,12 +2983,23 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|double
-name|clock_max
+name|clock_max_back
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* max offset before step (s) */
+comment|/* max backward offset before step (s) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|double
+name|clock_max_fwd
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max forward offset before step (s) */
 end_comment
 
 begin_decl_stmt
@@ -3129,7 +3150,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* allow panic correction */
+comment|/* allow panic correction (-g) */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|force_step_once
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* always step time once at startup (-G) */
 end_comment
 
 begin_decl_stmt
@@ -3140,7 +3172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* exit on first clock set */
+comment|/* exit on first clock set (-q) */
 end_comment
 
 begin_decl_stmt

@@ -141,6 +141,16 @@ name|testcase_t
 name|thread_testcases
 index|[]
 decl_stmt|;
+specifier|extern
+name|struct
+name|evutil_weakrand_state
+name|test_weakrand_state
+decl_stmt|;
+define|#
+directive|define
+name|test_weakrand
+parameter_list|()
+value|(evutil_weakrand_(&test_weakrand_state))
 name|void
 name|regress_threads
 parameter_list|(
@@ -390,7 +400,7 @@ parameter_list|,
 name|tolerance
 parameter_list|)
 define|\
-value|tt_int_op(abs(timeval_msec_diff((tv1), (tv2)) - diff),<=, tolerance)
+value|tt_int_op(labs(timeval_msec_diff((tv1), (tv2)) - diff),<=, tolerance)
 define|#
 directive|define
 name|test_timeval_diff_eq

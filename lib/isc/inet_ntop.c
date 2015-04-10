@@ -515,6 +515,16 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|best
+operator|.
+name|len
+operator|=
+name|cur
+operator|.
+name|len
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 name|i

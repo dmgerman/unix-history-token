@@ -92,6 +92,15 @@ operator|-
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|NULL
+operator|==
+name|get_sys_time_as_filetime
+condition|)
+name|init_win_precise_time
+argument_list|()
+expr_stmt|;
 call|(
 modifier|*
 name|get_sys_time_as_filetime

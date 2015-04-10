@@ -92,6 +92,12 @@ directive|include
 file|"event2/event_struct.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"util-internal.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|called
@@ -118,6 +124,13 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|evutil_weakrand_state
+name|weakrand_state
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -127,35 +140,15 @@ name|int
 name|n
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|_WIN32
 return|return
-call|(
-name|int
-call|)
+name|evutil_weakrand_
 argument_list|(
-name|rand
-argument_list|()
+operator|&
+name|weakrand_state
+argument_list|)
 operator|%
 name|n
-argument_list|)
 return|;
-else|#
-directive|else
-return|return
-call|(
-name|int
-call|)
-argument_list|(
-name|random
-argument_list|()
-operator|%
-name|n
-argument_list|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -239,6 +232,10 @@ operator|.
 name|tv_usec
 operator|%
 literal|2
+operator|||
+name|called
+operator|<
+name|NEVENT
 condition|)
 name|evtimer_add
 argument_list|(
@@ -316,6 +313,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|evutil_weakrand_seed_
+argument_list|(
+operator|&
+name|weakrand_state
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* Initalize the event library */
 name|event_init
 argument_list|()
@@ -393,6 +398,15 @@ expr_stmt|;
 block|}
 name|event_dispatch
 argument_list|()
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%d, %d\n"
+argument_list|,
+name|called
+argument_list|,
+name|NEVENT
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

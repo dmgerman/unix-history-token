@@ -310,6 +310,17 @@ name|allow_panic
 operator|=
 name|TRUE
 expr_stmt|;
+if|if
+condition|(
+name|HAVE_OPT
+argument_list|(
+name|FORCE_STEP_ONCE
+argument_list|)
+condition|)
+name|force_step_once
+operator|=
+name|TRUE
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_DROPROOT

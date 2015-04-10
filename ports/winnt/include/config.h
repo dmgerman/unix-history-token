@@ -1826,7 +1826,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MISSING_C99_STYLE_INIT
+name|MISSING_C99_STRUCT_INIT
 value|1
 end_define
 

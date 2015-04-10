@@ -2487,6 +2487,12 @@ argument_list|,
 name|wTimerRes
 argument_list|)
 expr_stmt|;
+comment|/* Pause briefly before measuring the clock precision, see [Bug 2790] */
+name|Sleep
+argument_list|(
+literal|33
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{

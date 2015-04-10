@@ -72,7 +72,7 @@ block|{}
 endif|#
 directive|endif
 struct|;
-comment|/**     Pointer to a position within an evbuffer.      Used when repeatedly searching through a buffer.  Calling any function     that modifies or re-packs the buffer contents may invalidate all     evbuffer_ptrs for that buffer.  Do not modify these values except with     evbuffer_ptr_set.      Used when repeatedly searching through a buffer.  Calls to any function     that modifies or re-packs the buffer contents may invalidate all     evbuffer_ptrs for that buffer.  Do not modify these values except with     evbuffer_ptr_set.      An evbuffer_ptr can represent any position from the start of a buffer up     to a position immediately after the end of a buffer.      @see evbuffer_ptr_set()  */
+comment|/**     Pointer to a position within an evbuffer.      Used when repeatedly searching through a buffer.  Calling any function     that modifies or re-packs the buffer contents may invalidate all     evbuffer_ptrs for that buffer.  Do not modify or contruct these values     except with evbuffer_ptr_set.      An evbuffer_ptr can represent any position from the start of a buffer up     to a position immediately after the end of a buffer.      @see evbuffer_ptr_set()  */
 struct|struct
 name|evbuffer_ptr
 block|{
@@ -910,7 +910,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/**    Sets the search pointer in the buffer to position.     There are two ways to use this function: you can call       evbuffer_ptr_set(buf,&pos, N, EVBUFFER_PTR_SET)    to move 'pos' to a position 'N' bytes after the start of the buffer, or       evbuffer_ptr_set(buf,&pos, N, EVBUFFER_PTR_SET)    to move 'pos' forward by 'N' bytes.     If evbuffer_ptr is not initialized, this function can only be called    with EVBUFFER_PTR_SET.     An evbuffer_ptr can represent any position from the start of the buffer to    a position immediately after the end of the buffer.     @param buffer the evbuffer to be search    @param ptr a pointer to a struct evbuffer_ptr    @param position the position at which to start the next search    @param how determines how the pointer should be manipulated.    @returns 0 on success or -1 otherwise */
+comment|/**    Sets the search pointer in the buffer to position.     There are two ways to use this function: you can call       evbuffer_ptr_set(buf,&pos, N, EVBUFFER_PTR_SET)    to move 'pos' to a position 'N' bytes after the start of the buffer, or       evbuffer_ptr_set(buf,&pos, N, EVBUFFER_PTR_ADD)    to move 'pos' forward by 'N' bytes.     If evbuffer_ptr is not initialized, this function can only be called    with EVBUFFER_PTR_SET.     An evbuffer_ptr can represent any position from the start of the buffer to    a position immediately after the end of the buffer.     @param buffer the evbuffer to be search    @param ptr a pointer to a struct evbuffer_ptr    @param position the position at which to start the next search    @param how determines how the pointer should be manipulated.    @returns 0 on success or -1 otherwise */
 end_comment
 
 begin_function_decl

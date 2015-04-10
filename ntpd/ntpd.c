@@ -5424,6 +5424,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|peer_cleanup
+argument_list|()
+expr_stmt|;
 name|exit
 argument_list|(
 literal|0

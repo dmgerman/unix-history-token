@@ -2670,7 +2670,7 @@ directive|if
 operator|!
 name|defined
 argument_list|(
-name|MISSING_C99_STYLE_INIT
+name|MISSING_C99_STRUCT_INIT
 argument_list|)
 end_if
 
