@@ -785,7 +785,7 @@ name|s
 argument_list|)
 expr_stmt|;
 block|}
-name|exit
+name|_exit
 argument_list|(
 literal|0
 argument_list|)
