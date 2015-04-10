@@ -89,38 +89,32 @@ directive|include
 file|"vi.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|notfound
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|ARG_CHAR_T
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|noprev
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * v_chrepeat -- [count];  *	Repeat the last F, f, T or t search.  *  * PUBLIC: int v_chrepeat __P((SCR *, VICMD *));  */
+comment|/*  * v_chrepeat -- [count];  *	Repeat the last F, f, T or t search.  *  * PUBLIC: int v_chrepeat(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -232,7 +226,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_chrrepeat -- [count],  *	Repeat the last F, f, T or t search in the reverse direction.  *  * PUBLIC: int v_chrrepeat __P((SCR *, VICMD *));  */
+comment|/*  * v_chrrepeat -- [count],  *	Repeat the last F, f, T or t search in the reverse direction.  *  * PUBLIC: int v_chrrepeat(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -372,7 +366,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_cht -- [count]tc  *	Search forward in the line for the character before the next  *	occurrence of the specified character.  *  * PUBLIC: int v_cht __P((SCR *, VICMD *));  */
+comment|/*  * v_cht -- [count]tc  *	Search forward in the line for the character before the next  *	occurrence of the specified character.  *  * PUBLIC: int v_cht(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -445,7 +439,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_chf -- [count]fc  *	Search forward in the line for the next occurrence of the  *	specified character.  *  * PUBLIC: int v_chf __P((SCR *, VICMD *));  */
+comment|/*  * v_chf -- [count]fc  *	Search forward in the line for the next occurrence of the  *	specified character.  *  * PUBLIC: int v_chf(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -687,7 +681,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_chT -- [count]Tc  *	Search backward in the line for the character after the next  *	occurrence of the specified character.  *  * PUBLIC: int v_chT __P((SCR *, VICMD *));  */
+comment|/*  * v_chT -- [count]Tc  *	Search backward in the line for the character after the next  *	occurrence of the specified character.  *  * PUBLIC: int v_chT(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -751,7 +745,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_chF -- [count]Fc  *	Search backward in the line for the next occurrence of the  *	specified character.  *  * PUBLIC: int v_chF __P((SCR *, VICMD *));  */
+comment|/*  * v_chF -- [count]Fc  *	Search backward in the line for the next occurrence of the  *	specified character.  *  * PUBLIC: int v_chF(SCR *, VICMD *);  */
 end_comment
 
 begin_function

@@ -78,7 +78,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_set -- :set  *	Ex set option.  *  * PUBLIC: int ex_set __P((SCR *, EXCMD *));  */
+comment|/*  * ex_set -- :set  *	Ex set option.  *  * PUBLIC: int ex_set(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

@@ -108,7 +108,7 @@ file|"../vi/vi.h"
 end_include
 
 begin_comment
-comment|/*  * screen_init --  *	Do the default initialization of an SCR structure.  *  * PUBLIC: int screen_init __P((GS *, SCR *, SCR **));  */
+comment|/*  * screen_init --  *	Do the default initialization of an SCR structure.  *  * PUBLIC: int screen_init(GS *, SCR *, SCR **);  */
 end_comment
 
 begin_function
@@ -587,7 +587,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * screen_end --  *	Release a screen, no matter what had (and had not) been  *	initialized.  *  * PUBLIC: int screen_end __P((SCR *));  */
+comment|/*  * screen_end --  *	Release a screen, no matter what had (and had not) been  *	initialized.  *  * PUBLIC: int screen_end(SCR *);  */
 end_comment
 
 begin_function
@@ -889,7 +889,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * screen_next --  *	Return the next screen in the queue.  *  * PUBLIC: SCR *screen_next __P((SCR *));  */
+comment|/*  * screen_next --  *	Return the next screen in the queue.  *  * PUBLIC: SCR *screen_next(SCR *);  */
 end_comment
 
 begin_function

@@ -95,150 +95,126 @@ directive|include
 file|"vi.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vs_deleteln
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vs_insertln
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vs_sm_delete
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|recno_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vs_sm_down
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|MARK
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|recno_t
-operator|,
+parameter_list|,
 name|scroll_t
-operator|,
+parameter_list|,
 name|SMAP
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vs_sm_erase
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vs_sm_insert
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|recno_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vs_sm_reset
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|recno_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vs_sm_up
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|MARK
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|recno_t
-operator|,
+parameter_list|,
 name|scroll_t
-operator|,
+parameter_list|,
 name|SMAP
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * vs_change --  *	Make a change to the screen.  *  * PUBLIC: int vs_change __P((SCR *, recno_t, lnop_t));  */
+comment|/*  * vs_change --  *	Make a change to the screen.  *  * PUBLIC: int vs_change(SCR *, recno_t, lnop_t);  */
 end_comment
 
 begin_function
@@ -697,7 +673,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_sm_fill --  *	Fill in the screen map, placing the specified line at the  *	right position.  There isn't any way to tell if an SMAP  *	entry has been filled in, so this routine had better be  *	called with P_FILL set before anything else is done.  *  * !!!  * Unexported interface: if lno is OOBLNO, P_TOP means that the HMAP  * slot is already filled in, P_BOTTOM means that the TMAP slot is  * already filled in, and we just finish up the job.  *  * PUBLIC: int vs_sm_fill __P((SCR *, recno_t, pos_t));  */
+comment|/*  * vs_sm_fill --  *	Fill in the screen map, placing the specified line at the  *	right position.  There isn't any way to tell if an SMAP  *	entry has been filled in, so this routine had better be  *	called with P_FILL set before anything else is done.  *  * !!!  * Unexported interface: if lno is OOBLNO, P_TOP means that the HMAP  * slot is already filled in, P_BOTTOM means that the TMAP slot is  * already filled in, and we just finish up the job.  *  * PUBLIC: int vs_sm_fill(SCR *, recno_t, pos_t);  */
 end_comment
 
 begin_function
@@ -2291,7 +2267,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_sm_scroll  *	Scroll the SMAP up/down count logical lines.  Different  *	semantics based on the vi command, *sigh*.  *  * PUBLIC: int vs_sm_scroll __P((SCR *, MARK *, recno_t, scroll_t));  */
+comment|/*  * vs_sm_scroll  *	Scroll the SMAP up/down count logical lines.  Different  *	semantics based on the vi command, *sigh*.  *  * PUBLIC: int vs_sm_scroll(SCR *, MARK *, recno_t, scroll_t);  */
 end_comment
 
 begin_function
@@ -3230,7 +3206,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_sm_1up --  *	Scroll the SMAP up one.  *  * PUBLIC: int vs_sm_1up __P((SCR *));  */
+comment|/*  * vs_sm_1up --  *	Scroll the SMAP up one.  *  * PUBLIC: int vs_sm_1up(SCR *);  */
 end_comment
 
 begin_function
@@ -4290,7 +4266,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_sm_1down --  *	Scroll the SMAP down one.  *  * PUBLIC: int vs_sm_1down __P((SCR *));  */
+comment|/*  * vs_sm_1down --  *	Scroll the SMAP down one.  *  * PUBLIC: int vs_sm_1down(SCR *);  */
 end_comment
 
 begin_function
@@ -4598,7 +4574,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_sm_next --  *	Fill in the next entry in the SMAP.  *  * PUBLIC: int vs_sm_next __P((SCR *, SMAP *, SMAP *));  */
+comment|/*  * vs_sm_next --  *	Fill in the next entry in the SMAP.  *  * PUBLIC: int vs_sm_next(SCR *, SMAP *, SMAP *);  */
 end_comment
 
 begin_function
@@ -4727,7 +4703,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_sm_prev --  *	Fill in the previous entry in the SMAP.  *  * PUBLIC: int vs_sm_prev __P((SCR *, SMAP *, SMAP *));  */
+comment|/*  * vs_sm_prev --  *	Fill in the previous entry in the SMAP.  *  * PUBLIC: int vs_sm_prev(SCR *, SMAP *, SMAP *);  */
 end_comment
 
 begin_function
@@ -4853,7 +4829,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_sm_cursor --  *	Return the SMAP entry referenced by the cursor.  *  * PUBLIC: int vs_sm_cursor __P((SCR *, SMAP **));  */
+comment|/*  * vs_sm_cursor --  *	Return the SMAP entry referenced by the cursor.  *  * PUBLIC: int vs_sm_cursor(SCR *, SMAP **);  */
 end_comment
 
 begin_function
@@ -5017,7 +4993,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_sm_position --  *	Return the line/column of the top, middle or last line on the screen.  *	(The vi H, M and L commands.)  Here because only the screen routines  *	know what's really out there.  *  * PUBLIC: int vs_sm_position __P((SCR *, MARK *, u_long, pos_t));  */
+comment|/*  * vs_sm_position --  *	Return the line/column of the top, middle or last line on the screen.  *	(The vi H, M and L commands.)  Here because only the screen routines  *	know what's really out there.  *  * PUBLIC: int vs_sm_position(SCR *, MARK *, u_long, pos_t);  */
 end_comment
 
 begin_function
@@ -5345,7 +5321,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_sm_nlines --  *	Return the number of screen lines from an SMAP entry to the  *	start of some file line, less than a maximum value.  *  * PUBLIC: recno_t vs_sm_nlines __P((SCR *, SMAP *, recno_t, size_t));  */
+comment|/*  * vs_sm_nlines --  *	Return the number of screen lines from an SMAP entry to the  *	start of some file line, less than a maximum value.  *  * PUBLIC: recno_t vs_sm_nlines(SCR *, SMAP *, recno_t, size_t);  */
 end_comment
 
 begin_function

@@ -78,7 +78,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_open -- :[line] o[pen] [/pattern/] [flags]  *  *	Switch to single line "open" mode.  *  * PUBLIC: int ex_open __P((SCR *, EXCMD *));  */
+comment|/*  * ex_open -- :[line] o[pen] [/pattern/] [flags]  *  *	Switch to single line "open" mode.  *  * PUBLIC: int ex_open(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

@@ -95,29 +95,26 @@ directive|include
 file|"common.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|LMARK
 modifier|*
 name|mark_find
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|ARG_CHAR_T
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Marks are maintained in a key sorted singly linked list.  We can't  * use arrays because we have no idea how big an index key could be.  * The underlying assumption is that users don't have more than, say,  * 10 marks at any one time, so this will be is fast enough.  *  * Marks are fixed, and modifications to the line don't update the mark's  * position in the line.  This can be hard.  If you add text to the line,  * place a mark in that text, undo the addition and use ` to move to the  * mark, the location will have disappeared.  It's tempting to try to adjust  * the mark with the changes in the line, but this is hard to do, especially  * if we've given the line to v_ntext.c:v_ntext() for editing.  Historic vi  * would move to the first non-blank on the line when the mark location was  * past the end of the line.  This can be complicated by deleting to a mark  * that has disappeared using the ` command.  Historic vi treated this as  * a line-mode motion and deleted the line.  This implementation complains to  * the user.  *  * In historic vi, marks returned if the operation was undone, unless the  * mark had been subsequently reset.  Tricky.  This is hard to start with,  * but in the presence of repeated undo it gets nasty.  When a line is  * deleted, we delete (and log) any marks on that line.  An undo will create  * the mark.  Any mark creations are noted as to whether the user created  * it or if it was created by an undo.  The former cannot be reset by another  * undo, but the latter may.  *  * All of these routines translate ABSMARK2 to ABSMARK1.  Setting either of  * the absolute mark locations sets both, so that "m'" and "m`" work like  * they, ah, for lack of a better word, "should".  */
 end_comment
 
 begin_comment
-comment|/*  * mark_init --  *	Set up the marks.  *  * PUBLIC: int mark_init __P((SCR *, EXF *));  */
+comment|/*  * mark_init --  *	Set up the marks.  *  * PUBLIC: int mark_init(SCR *, EXF *);  */
 end_comment
 
 begin_function
@@ -150,7 +147,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mark_end --  *	Free up the marks.  *  * PUBLIC: int mark_end __P((SCR *, EXF *));  */
+comment|/*  * mark_end --  *	Free up the marks.  *  * PUBLIC: int mark_end(SCR *, EXF *);  */
 end_comment
 
 begin_function
@@ -211,7 +208,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mark_get --  *	Get the location referenced by a mark.  *  * PUBLIC: int mark_get __P((SCR *, ARG_CHAR_T, MARK *, mtype_t));  */
+comment|/*  * mark_get --  *	Get the location referenced by a mark.  *  * PUBLIC: int mark_get(SCR *, ARG_CHAR_T, MARK *, mtype_t);  */
 end_comment
 
 begin_function
@@ -398,7 +395,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mark_set --  *	Set the location referenced by a mark.  *  * PUBLIC: int mark_set __P((SCR *, ARG_CHAR_T, MARK *, int));  */
+comment|/*  * mark_set --  *	Set the location referenced by a mark.  *  * PUBLIC: int mark_set(SCR *, ARG_CHAR_T, MARK *, int);  */
 end_comment
 
 begin_function
@@ -649,7 +646,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mark_insdel --  *	Update the marks based on an insertion or deletion.  *  * PUBLIC: int mark_insdel __P((SCR *, lnop_t, recno_t));  */
+comment|/*  * mark_insdel --  *	Update the marks based on an insertion or deletion.  *  * PUBLIC: int mark_insdel(SCR *, lnop_t, recno_t);  */
 end_comment
 
 begin_function

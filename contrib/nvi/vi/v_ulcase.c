@@ -107,33 +107,30 @@ directive|include
 file|"vi.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ulcase
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|recno_t
-operator|,
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * v_ulcase -- [count]~  *	Toggle upper& lower case letters.  *  * !!!  * Historic vi didn't permit ~ to cross newline boundaries.  I can  * think of no reason why it shouldn't, which at least lets the user  * auto-repeat through a paragraph.  *  * !!!  * In historic vi, the count was ignored.  It would have been better  * if there had been an associated motion, but it's too late to make  * that the default now.  *  * PUBLIC: int v_ulcase __P((SCR *, VICMD *));  */
+comment|/*  * v_ulcase -- [count]~  *	Toggle upper& lower case letters.  *  * !!!  * Historic vi didn't permit ~ to cross newline boundaries.  I can  * think of no reason why it shouldn't, which at least lets the user  * auto-repeat through a paragraph.  *  * !!!  * In historic vi, the count was ignored.  It would have been better  * if there had been an associated motion, but it's too late to make  * that the default now.  *  * PUBLIC: int v_ulcase(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -381,7 +378,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_mulcase -- [count]~[count]motion  *	Toggle upper& lower case letters over a range.  *  * PUBLIC: int v_mulcase __P((SCR *, VICMD *));  */
+comment|/*  * v_mulcase -- [count]~[count]motion  *	Toggle upper& lower case letters over a range.  *  * PUBLIC: int v_mulcase(SCR *, VICMD *);  */
 end_comment
 
 begin_function

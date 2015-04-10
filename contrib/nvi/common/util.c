@@ -143,7 +143,7 @@ file|"common.h"
 end_include
 
 begin_comment
-comment|/*  * binc --  *	Increase the size of a buffer.  *  * PUBLIC: void *binc __P((SCR *, void *, size_t *, size_t));  */
+comment|/*  * binc --  *	Increase the size of a buffer.  *  * PUBLIC: void *binc(SCR *, void *, size_t *, size_t);  */
 end_comment
 
 begin_function
@@ -262,7 +262,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * nonblank --  *	Set the column number of the first non-blank character  *	including or after the starting column.  On error, set  *	the column to 0, it's safest.  *  * PUBLIC: int nonblank __P((SCR *, recno_t, size_t *));  */
+comment|/*  * nonblank --  *	Set the column number of the first non-blank character  *	including or after the starting column.  On error, set  *	the column to 0, it's safest.  *  * PUBLIC: int nonblank(SCR *, recno_t, size_t *);  */
 end_comment
 
 begin_function
@@ -404,7 +404,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * tail --  *	Return tail of a path.  *  * PUBLIC: char *tail __P((char *));  */
+comment|/*  * tail --  *	Return tail of a path.  *  * PUBLIC: char *tail(char *);  */
 end_comment
 
 begin_function
@@ -452,7 +452,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * join --  *	Join two paths; need free.  *  * PUBLIC: char *join __P((char *, char *));  */
+comment|/*  * join --  *	Join two paths; need free.  *  * PUBLIC: char *join(char *, char *);  */
 end_comment
 
 begin_function
@@ -531,7 +531,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * expanduser --  *	Return a "~" or "~user" expanded path; need free.  *  * PUBLIC: char *expanduser __P((char *));  */
+comment|/*  * expanduser --  *	Return a "~" or "~user" expanded path; need free.  *  * PUBLIC: char *expanduser(char *);  */
 end_comment
 
 begin_function
@@ -772,7 +772,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * quote --  *	Return a escaped string for /bin/sh; need free.  *  * PUBLIC: char *quote __P((char *));  */
+comment|/*  * quote --  *	Return a escaped string for /bin/sh; need free.  *  * PUBLIC: char *quote(char *);  */
 end_comment
 
 begin_function
@@ -1028,7 +1028,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_strdup --  *	Strdup for 8-bit character strings with an associated length.  *  * PUBLIC: char *v_strdup __P((SCR *, const char *, size_t));  */
+comment|/*  * v_strdup --  *	Strdup for 8-bit character strings with an associated length.  *  * PUBLIC: char *v_strdup(SCR *, const char *, size_t);  */
 end_comment
 
 begin_function
@@ -1103,7 +1103,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_wstrdup --  *	Strdup for wide character strings with an associated length.  *  * PUBLIC: CHAR_T *v_wstrdup __P((SCR *, const CHAR_T *, size_t));  */
+comment|/*  * v_wstrdup --  *	Strdup for wide character strings with an associated length.  *  * PUBLIC: CHAR_T *v_wstrdup(SCR *, const CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -1185,7 +1185,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * nget_uslong --  *      Get an unsigned long, checking for overflow.  *  * PUBLIC: enum nresult nget_uslong __P((u_long *, const CHAR_T *, CHAR_T **, int));  */
+comment|/*  * nget_uslong --  *      Get an unsigned long, checking for overflow.  *  * PUBLIC: enum nresult nget_uslong(u_long *, const CHAR_T *, CHAR_T **, int);  */
 end_comment
 
 begin_function
@@ -1263,7 +1263,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * nget_slong --  *      Convert a signed long, checking for overflow and underflow.  *  * PUBLIC: enum nresult nget_slong __P((long *, const CHAR_T *, CHAR_T **, int));  */
+comment|/*  * nget_slong --  *      Convert a signed long, checking for overflow and underflow.  *  * PUBLIC: enum nresult nget_slong(long *, const CHAR_T *, CHAR_T **, int);  */
 end_comment
 
 begin_function
@@ -1357,7 +1357,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * timepoint_steady --  *      Get a timestamp from a monotonic clock.  *  * PUBLIC: void timepoint_steady __P((struct timespec *));  */
+comment|/*  * timepoint_steady --  *      Get a timestamp from a monotonic clock.  *  * PUBLIC: void timepoint_steady(struct timespec *);  */
 end_comment
 
 begin_function
@@ -1472,7 +1472,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * timepoint_system --  *      Get the current calendar time.  *  * PUBLIC: void timepoint_system __P((struct timespec *));  */
+comment|/*  * timepoint_system --  *      Get the current calendar time.  *  * PUBLIC: void timepoint_system(struct timespec *);  */
 end_comment
 
 begin_function
@@ -1602,7 +1602,7 @@ file|<stdarg.h>
 end_include
 
 begin_comment
-comment|/*  * TRACE --  *	debugging trace routine.  *  * PUBLIC: void TRACE __P((SCR *, const char *, ...));  */
+comment|/*  * TRACE --  *	debugging trace routine.  *  * PUBLIC: void TRACE(SCR *, const char *, ...);  */
 end_comment
 
 begin_function

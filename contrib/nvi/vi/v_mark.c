@@ -100,30 +100,27 @@ block|}
 enum|;
 end_enum
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|mark
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|VICMD
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
-expr|enum
+parameter_list|,
+name|enum
 name|which
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * v_mark -- m[a-z]  *	Set a mark.  *  * PUBLIC: int v_mark __P((SCR *, VICMD *));  */
+comment|/*  * v_mark -- m[a-z]  *	Set a mark.  *  * PUBLIC: int v_mark(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -162,7 +159,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_bmark -- `['`a-z]  *	Move to a mark.  *  * Moves to a mark, setting both row and column.  *  * !!!  * Although not commonly known, the "'`" and "'`" forms are historically  * valid.  The behavior is determined by the first character, so "`'" is  * the same as "``".  Remember this fact -- you'll be amazed at how many  * people don't know it and will be delighted that you are able to tell  * them.  *  * PUBLIC: int v_bmark __P((SCR *, VICMD *));  */
+comment|/*  * v_bmark -- `['`a-z]  *	Move to a mark.  *  * Moves to a mark, setting both row and column.  *  * !!!  * Although not commonly known, the "'`" and "'`" forms are historically  * valid.  The behavior is determined by the first character, so "`'" is  * the same as "``".  Remember this fact -- you'll be amazed at how many  * people don't know it and will be delighted that you are able to tell  * them.  *  * PUBLIC: int v_bmark(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -196,7 +193,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_fmark -- '['`a-z]  *	Move to a mark.  *  * Move to the first nonblank character of the line containing the mark.  *  * PUBLIC: int v_fmark __P((SCR *, VICMD *));  */
+comment|/*  * v_fmark -- '['`a-z]  *	Move to a mark.  *  * Move to the first nonblank character of the line containing the mark.  *  * PUBLIC: int v_fmark(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -230,7 +227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_emark --<mouse click>  *	Mouse mark.  *  * PUBLIC: int v_emark __P((SCR *, VICMD *));  */
+comment|/*  * v_emark --<mouse click>  *	Mouse mark.  *  * PUBLIC: int v_emark(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -661,158 +658,6 @@ operator|=
 name|FORWARD
 expr_stmt|;
 comment|/* 	 * Yank cursor motion, when associated with marks as motion commands, 	 * historically behaved as follows: 	 * 	 * ` motion			' motion 	 *		Line change?		Line change? 	 *		Y	N		Y	N 	 *	      --------------	      --------------- 	 * FORWARD:  |	NM	NM	      | NM	NM 	 *	     |			      | 	 * BACKWARD: |	M	M	      | M	NM(1) 	 * 	 * where NM means the cursor didn't move, and M means the cursor 	 * moved to the mark. 	 * 	 * As the cursor was usually moved for yank commands associated 	 * with backward motions, this implementation regularizes it by 	 * changing the NM at position (1) to be an M.  This makes mark 	 * motions match search motions, which is probably A Good Thing. 	 * 	 * Delete cursor motion was always to the start of the text region, 	 * regardless.  Ignore other motion commands. 	 */
-ifdef|#
-directive|ifdef
-name|HISTORICAL_PRACTICE
-if|if
-condition|(
-name|ISCMD
-argument_list|(
-name|vp
-operator|->
-name|rkp
-argument_list|,
-literal|'y'
-argument_list|)
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-name|cmd
-operator|==
-name|BQMARK
-operator|||
-operator|(
-name|cmd
-operator|==
-name|FQMARK
-operator|&&
-name|vp
-operator|->
-name|m_start
-operator|.
-name|lno
-operator|!=
-name|vp
-operator|->
-name|m_stop
-operator|.
-name|lno
-operator|)
-operator|)
-operator|&&
-operator|(
-name|vp
-operator|->
-name|m_start
-operator|.
-name|lno
-operator|>
-name|vp
-operator|->
-name|m_stop
-operator|.
-name|lno
-operator|||
-operator|(
-name|vp
-operator|->
-name|m_start
-operator|.
-name|lno
-operator|==
-name|vp
-operator|->
-name|m_stop
-operator|.
-name|lno
-operator|&&
-name|vp
-operator|->
-name|m_start
-operator|.
-name|cno
-operator|>
-name|vp
-operator|->
-name|m_stop
-operator|.
-name|cno
-operator|)
-operator|)
-condition|)
-name|vp
-operator|->
-name|m_final
-operator|=
-name|vp
-operator|->
-name|m_stop
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|ISCMD
-argument_list|(
-name|vp
-operator|->
-name|rkp
-argument_list|,
-literal|'d'
-argument_list|)
-condition|)
-if|if
-condition|(
-name|vp
-operator|->
-name|m_start
-operator|.
-name|lno
-operator|>
-name|vp
-operator|->
-name|m_stop
-operator|.
-name|lno
-operator|||
-operator|(
-name|vp
-operator|->
-name|m_start
-operator|.
-name|lno
-operator|==
-name|vp
-operator|->
-name|m_stop
-operator|.
-name|lno
-operator|&&
-name|vp
-operator|->
-name|m_start
-operator|.
-name|cno
-operator|>
-name|vp
-operator|->
-name|m_stop
-operator|.
-name|cno
-operator|)
-condition|)
-name|vp
-operator|->
-name|m_final
-operator|=
-name|vp
-operator|->
-name|m_stop
-expr_stmt|;
-else|#
-directive|else
 name|vp
 operator|->
 name|m_final
@@ -821,8 +666,6 @@ name|vp
 operator|->
 name|m_start
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Forward marks are always line oriented, and it's set in the 	 * vcmd.c table. 	 */
 if|if
 condition|(

@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: vs_split.c,v 10.42 2001/06/25 15:19:38 skimo Exp $"
+literal|"$Id: vs_split.c,v 10.43 2015/04/05 15:21:55 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -117,66 +117,57 @@ name|jdir_t
 typedef|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|SCR
 modifier|*
 name|vs_getbg
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vs_insert
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
+modifier|*
 name|sp
-operator|,
+parameter_list|,
 name|GS
-operator|*
+modifier|*
 name|gp
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vs_join
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|SCR
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|jdir_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * vs_split --  *	Create a new screen, horizontally.  *  * PUBLIC: int vs_split __P((SCR *, SCR *, int));  */
+comment|/*  * vs_split --  *	Create a new screen, horizontally.  *  * PUBLIC: int vs_split(SCR *, SCR *, int);  */
 end_comment
 
 begin_function
@@ -865,6 +856,8 @@ operator||
 name|SC_SCR_VI
 operator||
 name|SC_SCR_EX
+operator||
+name|SC_READONLY
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -877,7 +870,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_vsplit --  *	Create a new screen, vertically.  *  * PUBLIC: int vs_vsplit __P((SCR *, SCR *));  */
+comment|/*  * vs_vsplit --  *	Create a new screen, vertically.  *  * PUBLIC: int vs_vsplit(SCR *, SCR *);  */
 end_comment
 
 begin_function
@@ -1179,6 +1172,8 @@ operator||
 name|SC_SCR_VI
 operator||
 name|SC_SCR_EX
+operator||
+name|SC_READONLY
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1352,7 +1347,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_discard --  *	Discard the screen, folding the real-estate into a related screen,  *	if one exists, and return that screen.  *  * PUBLIC: int vs_discard __P((SCR *, SCR **));  */
+comment|/*  * vs_discard --  *	Discard the screen, folding the real-estate into a related screen,  *	if one exists, and return that screen.  *  * PUBLIC: int vs_discard(SCR *, SCR **);  */
 end_comment
 
 begin_function
@@ -2565,7 +2560,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_fg --  *	Background the current screen, and foreground a new one.  *  * PUBLIC: int vs_fg __P((SCR *, SCR **, CHAR_T *, int));  */
+comment|/*  * vs_fg --  *	Background the current screen, and foreground a new one.  *  * PUBLIC: int vs_fg(SCR *, SCR **, CHAR_T *, int);  */
 end_comment
 
 begin_function
@@ -2788,7 +2783,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_bg --  *	Background the screen, and switch to the next one.  *  * PUBLIC: int vs_bg __P((SCR *));  */
+comment|/*  * vs_bg --  *	Background the screen, and switch to the next one.  *  * PUBLIC: int vs_bg(SCR *);  */
 end_comment
 
 begin_function
@@ -2914,7 +2909,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_swap --  *	Swap the current screen with a backgrounded one.  *  * PUBLIC: int vs_swap __P((SCR *, SCR **, char *));  */
+comment|/*  * vs_swap --  *	Swap the current screen with a backgrounded one.  *  * PUBLIC: int vs_swap(SCR *, SCR **, char *);  */
 end_comment
 
 begin_function
@@ -3315,7 +3310,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_resize --  *	Change the absolute size of the current screen.  *  * PUBLIC: int vs_resize __P((SCR *, long, adj_t));  */
+comment|/*  * vs_resize --  *	Change the absolute size of the current screen.  *  * PUBLIC: int vs_resize(SCR *, long, adj_t);  */
 end_comment
 
 begin_function

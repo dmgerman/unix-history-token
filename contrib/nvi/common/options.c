@@ -119,61 +119,52 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|opts_abbcmp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|opts_cmp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|opts_print
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|OPTLIST
 specifier|const
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_ifdef
 ifdef|#
@@ -1802,7 +1793,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * opts_init --  *	Initialize some of the options.  *  * PUBLIC: int opts_init __P((SCR *, int *));  */
+comment|/*  * opts_init --  *	Initialize some of the options.  *  * PUBLIC: int opts_init(SCR *, int *);  */
 end_comment
 
 begin_function
@@ -2725,7 +2716,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * opts_set --  *	Change the values of one or more options.  *  * PUBLIC: int opts_set __P((SCR *, ARGS *[], char *));  */
+comment|/*  * opts_set --  *	Change the values of one or more options.  *  * PUBLIC: int opts_set(SCR *, ARGS *[], char *);  */
 end_comment
 
 begin_function
@@ -4122,7 +4113,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * o_set --  *	Set an option's value.  *  * PUBLIC: int o_set __P((SCR *, int, u_int, char *, u_long));  */
+comment|/*  * o_set --  *	Set an option's value.  *  * PUBLIC: int o_set(SCR *, int, u_int, char *, u_long);  */
 end_comment
 
 begin_function
@@ -4350,7 +4341,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * opts_empty --  *	Return 1 if the string option is invalid, 0 if it's OK.  *  * PUBLIC: int opts_empty __P((SCR *, int, int));  */
+comment|/*  * opts_empty --  *	Return 1 if the string option is invalid, 0 if it's OK.  *  * PUBLIC: int opts_empty(SCR *, int, int);  */
 end_comment
 
 begin_function
@@ -4431,7 +4422,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * opts_dump --  *	List the current values of selected options.  *  * PUBLIC: void opts_dump __P((SCR *, enum optdisp));  */
+comment|/*  * opts_dump --  *	List the current values of selected options.  *  * PUBLIC: void opts_dump(SCR *, enum optdisp);  */
 end_comment
 
 begin_function
@@ -5222,7 +5213,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * opts_save --  *	Write the current configuration to a file.  *  * PUBLIC: int opts_save __P((SCR *, FILE *));  */
+comment|/*  * opts_save --  *	Write the current configuration to a file.  *  * PUBLIC: int opts_save(SCR *, FILE *);  */
 end_comment
 
 begin_function
@@ -5561,7 +5552,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * opts_search --  *	Search for an option.  *  * PUBLIC: OPTLIST const *opts_search __P((CHAR_T *));  */
+comment|/*   * opts_search --  *	Search for an option.  *  * PUBLIC: OPTLIST const *opts_search(CHAR_T *);  */
 end_comment
 
 begin_function
@@ -5792,7 +5783,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * opts_nomatch --  *	Standard nomatch error message for options.  *  * PUBLIC: void opts_nomatch __P((SCR *, CHAR_T *));  */
+comment|/*   * opts_nomatch --  *	Standard nomatch error message for options.  *  * PUBLIC: void opts_nomatch(SCR *, CHAR_T *);  */
 end_comment
 
 begin_function
@@ -5913,7 +5904,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * opts_copy --  *	Copy a screen's OPTION array.  *  * PUBLIC: int opts_copy __P((SCR *, SCR *));  */
+comment|/*  * opts_copy --  *	Copy a screen's OPTION array.  *  * PUBLIC: int opts_copy(SCR *, SCR *);  */
 end_comment
 
 begin_function
@@ -6150,7 +6141,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * opts_free --  *	Free all option strings  *  * PUBLIC: void opts_free __P((SCR *));  */
+comment|/*  * opts_free --  *	Free all option strings  *  * PUBLIC: void opts_free(SCR *);  */
 end_comment
 
 begin_function

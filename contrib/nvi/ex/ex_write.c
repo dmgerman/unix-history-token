@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: ex_write.c,v 10.41 2011/12/02 01:07:06 zy Exp $"
+literal|"$Id: ex_write.c,v 10.43 2015/04/03 15:18:45 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<strings.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -134,28 +128,25 @@ block|}
 enum|;
 end_enum
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|exwr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|EXCMD
-operator|*
-operator|,
-expr|enum
+modifier|*
+parameter_list|,
+name|enum
 name|which
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_wn --	:wn[!] [>>] [file]  *	Write to a file and switch to the next one.  *  * PUBLIC: int ex_wn __P((SCR *, EXCMD *));  */
+comment|/*  * ex_wn --	:wn[!] [>>] [file]  *	Write to a file and switch to the next one.  *  * PUBLIC: int ex_wn(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -222,7 +213,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_wq --	:wq[!] [>>] [file]  *	Write to a file and quit.  *  * PUBLIC: int ex_wq __P((SCR *, EXCMD *));  */
+comment|/*  * ex_wq --	:wq[!] [>>] [file]  *	Write to a file and quit.  *  * PUBLIC: int ex_wq(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -316,7 +307,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_write --	:write[!] [>>] [file]  *		:write [!] [cmd]  *	Write to a file.  *  * PUBLIC: int ex_write __P((SCR *, EXCMD *));  */
+comment|/*  * ex_write --	:write[!] [>>] [file]  *		:write [!] [cmd]  *	Write to a file.  *  * PUBLIC: int ex_write(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -348,7 +339,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_xit -- :x[it]! [file]  *	Write out any modifications and quit.  *  * PUBLIC: int ex_xit __P((SCR *, EXCMD *));  */
+comment|/*  * ex_xit -- :x[it]! [file]  *	Write out any modifications and quit.  *  * PUBLIC: int ex_xit(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -1204,7 +1195,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_writefp --  *	Write a range of lines to a FILE *.  *  * PUBLIC: int ex_writefp __P((SCR *,  * PUBLIC:    char *, FILE *, MARK *, MARK *, u_long *, u_long *, int));  */
+comment|/*  * ex_writefp --  *	Write a range of lines to a FILE *.  *  * PUBLIC: int ex_writefp(SCR *,  * PUBLIC:    char *, FILE *, MARK *, MARK *, u_long *, u_long *, int);  */
 end_comment
 
 begin_function
@@ -1271,20 +1262,9 @@ decl_stmt|;
 name|char
 modifier|*
 name|msg
-decl_stmt|;
-name|CHAR_T
+decl_stmt|,
 modifier|*
 name|p
-decl_stmt|;
-name|char
-modifier|*
-name|f
-decl_stmt|;
-name|size_t
-name|flen
-decl_stmt|;
-name|int
-name|isutf16
 decl_stmt|;
 name|gp
 operator|=
@@ -1337,105 +1317,10 @@ literal|"253|Writing..."
 expr_stmt|;
 if|if
 condition|(
-name|O_ISSET
-argument_list|(
-name|sp
-argument_list|,
-name|O_FILEENCODING
-argument_list|)
-condition|)
-block|{
-name|isutf16
-operator|=
-operator|!
-name|strncasecmp
-argument_list|(
-name|O_STR
-argument_list|(
-name|sp
-argument_list|,
-name|O_FILEENCODING
-argument_list|)
-argument_list|,
-literal|"utf-16"
-argument_list|,
-literal|6
-argument_list|)
-expr_stmt|;
-name|isutf16
-operator|+=
-operator|!
-name|strncasecmp
-argument_list|(
-name|O_STR
-argument_list|(
-name|sp
-argument_list|,
-name|O_FILEENCODING
-argument_list|)
-argument_list|,
-literal|"utf-16le"
-argument_list|,
-literal|8
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-name|isutf16
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
 name|tline
 operator|!=
 literal|0
 condition|)
-block|{
-if|if
-condition|(
-name|isutf16
-operator|==
-literal|1
-operator|&&
-name|fwrite
-argument_list|(
-literal|"\xfe\xff"
-argument_list|,
-literal|1
-argument_list|,
-literal|2
-argument_list|,
-name|fp
-argument_list|)
-operator|!=
-literal|2
-condition|)
-goto|goto
-name|err
-goto|;
-if|if
-condition|(
-name|isutf16
-operator|==
-literal|2
-operator|&&
-name|fwrite
-argument_list|(
-literal|"\xff\xfe"
-argument_list|,
-literal|1
-argument_list|,
-literal|2
-argument_list|,
-name|fp
-argument_list|)
-operator|!=
-literal|2
-condition|)
-goto|goto
-name|err
-goto|;
 for|for
 control|(
 init|;
@@ -1503,13 +1388,11 @@ block|}
 block|}
 if|if
 condition|(
-name|db_get
+name|db_rget
 argument_list|(
 name|sp
 argument_list|,
 name|fline
-argument_list|,
-name|DBG_FATAL
 argument_list|,
 operator|&
 name|p
@@ -1521,33 +1404,20 @@ condition|)
 goto|goto
 name|err
 goto|;
-name|INT2FILE
-argument_list|(
-name|sp
-argument_list|,
-name|p
-argument_list|,
-name|len
-argument_list|,
-name|f
-argument_list|,
-name|flen
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|fwrite
 argument_list|(
-name|f
+name|p
 argument_list|,
 literal|1
 argument_list|,
-name|flen
+name|len
 argument_list|,
 name|fp
 argument_list|)
 operator|!=
-name|flen
+name|len
 condition|)
 goto|goto
 name|err
@@ -1556,59 +1426,6 @@ name|ccnt
 operator|+=
 name|len
 expr_stmt|;
-comment|/* UTF-16 w/o BOM is big-endian */
-switch|switch
-condition|(
-name|isutf16
-condition|)
-block|{
-case|case
-literal|1
-case|:
-comment|/* UTF-16BE */
-if|if
-condition|(
-name|fwrite
-argument_list|(
-literal|"\0\x0a"
-argument_list|,
-literal|1
-argument_list|,
-literal|2
-argument_list|,
-name|fp
-argument_list|)
-operator|!=
-literal|2
-condition|)
-goto|goto
-name|done
-goto|;
-break|break;
-case|case
-literal|2
-case|:
-comment|/* UTF-16LE */
-if|if
-condition|(
-name|fwrite
-argument_list|(
-literal|"\x0a\0"
-argument_list|,
-literal|1
-argument_list|,
-literal|2
-argument_list|,
-name|fp
-argument_list|)
-operator|!=
-literal|2
-condition|)
-goto|goto
-name|done
-goto|;
-break|break;
-default|default:
 if|if
 condition|(
 name|putc
@@ -1620,17 +1437,11 @@ argument_list|)
 operator|!=
 literal|'\n'
 condition|)
-goto|goto
-name|done
-goto|;
-block|}
+break|break;
 operator|++
 name|ccnt
 expr_stmt|;
 block|}
-block|}
-name|done
-label|:
 if|if
 condition|(
 name|fflush

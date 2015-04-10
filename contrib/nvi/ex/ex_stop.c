@@ -96,7 +96,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_stop -- :stop[!]  *	      :suspend[!]  *	Suspend execution.  *  * PUBLIC: int ex_stop __P((SCR *, EXCMD *));  */
+comment|/*  * ex_stop -- :stop[!]  *	      :suspend[!]  *	Suspend execution.  *  * PUBLIC: int ex_stop(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

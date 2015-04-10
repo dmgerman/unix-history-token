@@ -114,7 +114,7 @@ file|"pathnames.h"
 end_include
 
 begin_comment
-comment|/*  * ex_mkexrc -- :mkexrc[!] [file]  *  * Create (or overwrite) a .exrc file with the current info.  *  * PUBLIC: int ex_mkexrc __P((SCR *, EXCMD *));  */
+comment|/*  * ex_mkexrc -- :mkexrc[!] [file]  *  * Create (or overwrite) a .exrc file with the current info.  *  * PUBLIC: int ex_mkexrc(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

@@ -84,7 +84,7 @@ file|"version.h"
 end_include
 
 begin_comment
-comment|/*  * ex_version -- :version  *	Display the program version.  *  * PUBLIC: int ex_version __P((SCR *, EXCMD *));  */
+comment|/*  * ex_version -- :version  *	Display the program version.  *  * PUBLIC: int ex_version(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

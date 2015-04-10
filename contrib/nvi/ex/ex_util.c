@@ -102,7 +102,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_cinit --  *	Create an EX command structure.  *  * PUBLIC: void ex_cinit __P((SCR *, EXCMD *, int, int, recno_t, recno_t, int));  */
+comment|/*  * ex_cinit --  *	Create an EX command structure.  *  * PUBLIC: void ex_cinit(SCR *, EXCMD *, int, int, recno_t, recno_t, int);  */
 end_comment
 
 begin_function
@@ -215,7 +215,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_getline --  *	Return a line from the file.  *  * PUBLIC: int ex_getline __P((SCR *, FILE *, size_t *));  */
+comment|/*  * ex_getline --  *	Return a line from the file.  *  * PUBLIC: int ex_getline(SCR *, FILE *, size_t *);  */
 end_comment
 
 begin_function
@@ -405,7 +405,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_ncheck --  *	Check for more files to edit.  *  * PUBLIC: int ex_ncheck __P((SCR *, int));  */
+comment|/*  * ex_ncheck --  *	Check for more files to edit.  *  * PUBLIC: int ex_ncheck(SCR *, int);  */
 end_comment
 
 begin_function
@@ -521,7 +521,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_init --  *	Init the screen for ex.  *  * PUBLIC: int ex_init __P((SCR *));  */
+comment|/*  * ex_init --  *	Init the screen for ex.  *  * PUBLIC: int ex_init(SCR *);  */
 end_comment
 
 begin_function
@@ -620,7 +620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_emsg --  *	Display a few common ex and vi error messages.  *  * PUBLIC: void ex_wemsg __P((SCR *, CHAR_T *, exm_t));  */
+comment|/*  * ex_emsg --  *	Display a few common ex and vi error messages.  *  * PUBLIC: void ex_wemsg(SCR *, CHAR_T *, exm_t);  */
 end_comment
 
 begin_function
@@ -684,7 +684,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_emsg --  *	Display a few common ex and vi error messages.  *  * PUBLIC: void ex_emsg __P((SCR *, char *, exm_t));  */
+comment|/*  * ex_emsg --  *	Display a few common ex and vi error messages.  *  * PUBLIC: void ex_emsg(SCR *, char *, exm_t);  */
 end_comment
 
 begin_function

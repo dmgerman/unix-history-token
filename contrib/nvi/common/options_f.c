@@ -108,7 +108,7 @@ file|"common.h"
 end_include
 
 begin_comment
-comment|/*  * PUBLIC: int f_altwerase __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_altwerase(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -153,7 +153,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_columns __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_columns(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -242,7 +242,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_lines __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_lines(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -491,7 +491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_lisp __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_lisp(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -533,7 +533,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_msgcat __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_msgcat(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -576,7 +576,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_print __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_print(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -682,7 +682,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_readonly __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_readonly(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -736,7 +736,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_recompile __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_recompile(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -821,7 +821,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_reformat __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_reformat(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -861,7 +861,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_ttywerase __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_ttywerase(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -906,7 +906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_w300 __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_w300(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -982,7 +982,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_w1200 __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_w1200(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -1062,7 +1062,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_w9600 __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_w9600(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -1138,7 +1138,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_window __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_window(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -1206,7 +1206,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int f_encoding __P((SCR *, OPTION *, char *, u_long *));  */
+comment|/*  * PUBLIC: int f_encoding(SCR *, OPTION *, char *, u_long *);  */
 end_comment
 
 begin_function

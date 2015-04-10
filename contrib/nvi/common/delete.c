@@ -96,7 +96,7 @@ file|"common.h"
 end_include
 
 begin_comment
-comment|/*  * del --  *	Delete a range of text.  *  * PUBLIC: int del __P((SCR *, MARK *, MARK *, int));  */
+comment|/*  * del --  *	Delete a range of text.  *  * PUBLIC: int del(SCR *, MARK *, MARK *, int);  */
 end_comment
 
 begin_function

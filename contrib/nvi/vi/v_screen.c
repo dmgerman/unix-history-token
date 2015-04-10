@@ -84,7 +84,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * v_screen -- ^W  *	Switch screens.  *  * PUBLIC: int v_screen __P((SCR *, VICMD *));  */
+comment|/*  * v_screen -- ^W  *	Switch screens.  *  * PUBLIC: int v_screen(SCR *, VICMD *);  */
 end_comment
 
 begin_function

@@ -111,7 +111,7 @@ value|\ 	if (p[0] == '\014') {						\ 		if (!--cnt)						\ 			goto found;					\ 
 end_define
 
 begin_comment
-comment|/*  * v_paragraphf -- [count]}  *	Move forward count paragraphs.  *  * Paragraphs are empty lines after text, formfeed characters, or values  * from the paragraph or section options.  *  * PUBLIC: int v_paragraphf __P((SCR *, VICMD *));  */
+comment|/*  * v_paragraphf -- [count]}  *	Move forward count paragraphs.  *  * Paragraphs are empty lines after text, formfeed characters, or values  * from the paragraph or section options.  *  * PUBLIC: int v_paragraphf(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -666,7 +666,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_paragraphb -- [count]{  *	Move backward count paragraphs.  *  * PUBLIC: int v_paragraphb __P((SCR *, VICMD *));  */
+comment|/*  * v_paragraphb -- [count]{  *	Move backward count paragraphs.  *  * PUBLIC: int v_paragraphb(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -999,7 +999,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_buildps --  *	Build the paragraph command search pattern.  *  * PUBLIC: int v_buildps __P((SCR *, char *, char *));  */
+comment|/*  * v_buildps --  *	Build the paragraph command search pattern.  *  * PUBLIC: int v_buildps(SCR *, char *, char *);  */
 end_comment
 
 begin_function

@@ -113,23 +113,20 @@ directive|include
 file|"../common/common.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|sigmsg
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_shell -- :sh[ell]  *	Invoke the program named in the SHELL environment variable  *	with the argument -i.  *  * PUBLIC: int ex_shell __P((SCR *, EXCMD *));  */
+comment|/*  * ex_shell -- :sh[ell]  *	Invoke the program named in the SHELL environment variable  *	with the argument -i.  *  * PUBLIC: int ex_shell(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -292,7 +289,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_exec_proc --  *	Run a separate process.  *  * PUBLIC: int ex_exec_proc __P((SCR *, EXCMD *, char *, const char *, int));  */
+comment|/*  * ex_exec_proc --  *	Run a separate process.  *  * PUBLIC: int ex_exec_proc(SCR *, EXCMD *, char *, const char *, int);  */
 end_comment
 
 begin_function
@@ -620,7 +617,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * proc_wait --  *	Wait for one of the processes.  *  * !!!  * The pid_t type varies in size from a short to a long depending on the  * system.  It has to be cast into something or the standard promotion  * rules get you.  I'm using a long based on the belief that nobody is  * going to make it unsigned and it's unlikely to be a quad.  *  * PUBLIC: int proc_wait __P((SCR *, long, const char *, int, int));  */
+comment|/*  * proc_wait --  *	Wait for one of the processes.  *  * !!!  * The pid_t type varies in size from a short to a long depending on the  * system.  It has to be cast into something or the standard promotion  * rules get you.  I'm using a long based on the belief that nobody is  * going to make it unsigned and it's unlikely to be a quad.  *  * PUBLIC: int proc_wait(SCR *, long, const char *, int, int);  */
 end_comment
 
 begin_function

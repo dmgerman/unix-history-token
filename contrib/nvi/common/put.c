@@ -96,7 +96,7 @@ file|"common.h"
 end_include
 
 begin_comment
-comment|/*  * put --  *	Put text buffer contents into the file.  *  * PUBLIC: int put __P((SCR *, CB *, CHAR_T *, MARK *, MARK *, int));  */
+comment|/*  * put --  *	Put text buffer contents into the file.  *  * PUBLIC: int put(SCR *, CB *, CHAR_T *, MARK *, MARK *, int);  */
 end_comment
 
 begin_function

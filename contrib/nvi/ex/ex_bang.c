@@ -108,7 +108,7 @@ file|"../vi/vi.h"
 end_include
 
 begin_comment
-comment|/*  * ex_bang -- :[line [,line]] ! command  *  * Pass the rest of the line after the ! character to the program named by  * the O_SHELL option.  *  * Historical vi did NOT do shell expansion on the arguments before passing  * them, only file name expansion.  This means that the O_SHELL program got  * "$t" as an argument if that is what the user entered.  Also, there's a  * special expansion done for the bang command.  Any exclamation points in  * the user's argument are replaced by the last, expanded ! command.  *  * There's some fairly amazing slop in this routine to make the different  * ways of getting here display the right things.  It took a long time to  * get it right (wrong?), so be careful.  *  * PUBLIC: int ex_bang __P((SCR *, EXCMD *));  */
+comment|/*  * ex_bang -- :[line [,line]] ! command  *  * Pass the rest of the line after the ! character to the program named by  * the O_SHELL option.  *  * Historical vi did NOT do shell expansion on the arguments before passing  * them, only file name expansion.  This means that the O_SHELL program got  * "$t" as an argument if that is what the user entered.  Also, there's a  * special expansion done for the bang command.  Any exclamation points in  * the user's argument are replaced by the last, expanded ! command.  *  * There's some fairly amazing slop in this routine to make the different  * ways of getting here display the right things.  It took a long time to  * get it right (wrong?), so be careful.  *  * PUBLIC: int ex_bang(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

@@ -108,7 +108,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * v_replace -- [count]r<char>  *  * !!!  * The r command in historic vi was almost beautiful in its badness.  For  * example, "r<erase>" and "r<word erase>" beeped the terminal and deleted  * a single character.  "Nr<carriage return>", where N was greater than 1,  * inserted a single carriage return.  "r<escape>" did cancel the command,  * but "r<literal><escape>" erased a single character.  To enter a literal  *<literal> character, it required three<literal> characters after the  * command.  This may not be right, but at least it's not insane.  *  * PUBLIC: int v_replace __P((SCR *, VICMD *));  */
+comment|/*  * v_replace -- [count]r<char>  *  * !!!  * The r command in historic vi was almost beautiful in its badness.  For  * example, "r<erase>" and "r<word erase>" beeped the terminal and deleted  * a single character.  "Nr<carriage return>", where N was greater than 1,  * inserted a single carriage return.  "r<escape>" did cancel the command,  * but "r<literal><escape>" erased a single character.  To enter a literal  *<literal> character, it required three<literal> characters after the  * command.  This may not be right, but at least it's not insane.  *  * PUBLIC: int v_replace(SCR *, VICMD *);  */
 end_comment
 
 begin_function

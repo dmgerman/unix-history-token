@@ -102,7 +102,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_cd -- :cd[!] [directory]  *	Change directories.  *  * PUBLIC: int ex_cd __P((SCR *, EXCMD *));  */
+comment|/*  * ex_cd -- :cd[!] [directory]  *	Change directories.  *  * PUBLIC: int ex_cd(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
