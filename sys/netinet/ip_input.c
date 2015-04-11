@@ -335,7 +335,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|ipreass_init
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -343,7 +345,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|ipreass_drain
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -351,7 +355,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|ipreass_slowtimo
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -365,7 +371,9 @@ begin_function_decl
 specifier|extern
 name|void
 name|ipreass_destroy
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 function_decl|;
 end_function_decl
 
