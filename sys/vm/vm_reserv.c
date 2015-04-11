@@ -4091,11 +4091,28 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Continue with this reservation. */
+comment|/* 				 * The current page doesn't meet the alignment 				 * and/or boundary requirements.  Continue 				 * searching this reservation until the rest 				 * of its free pages are either excluded or 				 * exhausted. 				 */
 name|hi
 operator|=
 name|lo
+operator|+
+literal|1
 expr_stmt|;
+if|if
+condition|(
+name|hi
+operator|>=
+name|NBPOPMAP
+condition|)
+block|{
+name|hi
+operator|=
+literal|0
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+block|}
 continue|continue;
 block|}
 comment|/* Find the next used page. */
