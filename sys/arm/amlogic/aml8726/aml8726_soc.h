@@ -29,6 +29,15 @@ name|AML_SOC_CBUS_BASE_ADDR
 value|0xc1100000
 end_define
 
+begin_function_decl
+name|void
+name|aml8726_identify_soc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* cbus */
 end_comment
@@ -38,6 +47,13 @@ define|#
 directive|define
 name|AML_SOC_HW_REV_REG
 value|0x7d4c
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_SOC_HW_REV_UNKNOWN
+value|0xffffffff
 end_define
 
 begin_define
@@ -87,6 +103,13 @@ define|#
 directive|define
 name|AML_SOC_METAL_REV_REG
 value|0x81a8
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_SOC_METAL_REV_UNKNOWN
+value|0xffffffff
 end_define
 
 begin_define
