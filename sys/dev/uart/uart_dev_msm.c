@@ -2274,7 +2274,12 @@ operator|.
 name|uc_rclk
 operator|=
 name|DEF_CLK
-block|, }
+block|,
+operator|.
+name|uc_rshift
+operator|=
+literal|0
+block|}
 decl_stmt|;
 end_decl_stmt
 

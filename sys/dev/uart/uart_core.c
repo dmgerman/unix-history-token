@@ -333,6 +333,34 @@ return|;
 block|}
 end_function
 
+begin_function
+name|u_int
+name|uart_getregshift
+parameter_list|(
+name|struct
+name|uart_class
+modifier|*
+name|uc
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|uc
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|uc
+operator|->
+name|uc_rshift
+else|:
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Schedule a soft interrupt. We do this on the 0 to !0 transition  * of the TTY pending interrupt status.  */
 end_comment
