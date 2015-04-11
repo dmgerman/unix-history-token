@@ -162,6 +162,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_SIG_MSDM
+value|"MSDM"
+end_define
+
+begin_comment
+comment|/* Microsoft Data Management Table */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACPI_SIG_MTMR
 value|"MTMR"
 end_define
@@ -2430,6 +2441,11 @@ block|,
 name|ACPI_LPIT_TYPE_SIMPLE_IO
 init|=
 literal|0x01
+block|,
+name|ACPI_LPIT_TYPE_RESERVED
+init|=
+literal|0x02
+comment|/* 2 and above are reserved */
 block|}
 enum|;
 end_enum
@@ -2644,6 +2660,28 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*******************************************************************************  *  * MSDM - Microsoft Data Management table  *  * Conforms to "Microsoft Software Licensing Tables (SLIC and MSDM)",  * November 29, 2011. Copyright 2011 Microsoft  *  ******************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Basic MSDM table is only the common ACPI header */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_msdm
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+block|}
+name|ACPI_TABLE_MSDM
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*******************************************************************************  *  * MTMR - MID Timer Table  *        Version 1  *  * Conforms to "Simple Firmware Interface Specification",  * Draft 0.8.2, Oct 19, 2010  * NOTE: The ACPI MTMR is equivalent to the SFI MTMR table.  *  ******************************************************************************/
 end_comment
 
@@ -2685,7 +2723,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * SLIC - Software Licensing Description Table  *        Version 1  *  * Conforms to "OEM Activation 2.0 for Windows Vista Operating Systems",  * Copyright 2006  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * SLIC - Software Licensing Description Table  *  * Conforms to "Microsoft Software Licensing Tables (SLIC and MSDM)",  * November 29, 2011. Copyright 2011 Microsoft  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -2703,156 +2741,6 @@ decl_stmt|;
 comment|/* Common ACPI table header */
 block|}
 name|ACPI_TABLE_SLIC
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Common SLIC subtable header */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_slic_header
-block|{
-name|UINT32
-name|Type
-decl_stmt|;
-name|UINT32
-name|Length
-decl_stmt|;
-block|}
-name|ACPI_SLIC_HEADER
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Values for Type field above */
-end_comment
-
-begin_enum
-enum|enum
-name|AcpiSlicType
-block|{
-name|ACPI_SLIC_TYPE_PUBLIC_KEY
-init|=
-literal|0
-block|,
-name|ACPI_SLIC_TYPE_WINDOWS_MARKER
-init|=
-literal|1
-block|,
-name|ACPI_SLIC_TYPE_RESERVED
-init|=
-literal|2
-comment|/* 2 and greater are reserved */
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * SLIC Subtables, correspond to Type in ACPI_SLIC_HEADER  */
-end_comment
-
-begin_comment
-comment|/* 0: Public Key Structure */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_slic_key
-block|{
-name|ACPI_SLIC_HEADER
-name|Header
-decl_stmt|;
-name|UINT8
-name|KeyType
-decl_stmt|;
-name|UINT8
-name|Version
-decl_stmt|;
-name|UINT16
-name|Reserved
-decl_stmt|;
-name|UINT32
-name|Algorithm
-decl_stmt|;
-name|char
-name|Magic
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|UINT32
-name|BitLength
-decl_stmt|;
-name|UINT32
-name|Exponent
-decl_stmt|;
-name|UINT8
-name|Modulus
-index|[
-literal|128
-index|]
-decl_stmt|;
-block|}
-name|ACPI_SLIC_KEY
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* 1: Windows Marker Structure */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_slic_marker
-block|{
-name|ACPI_SLIC_HEADER
-name|Header
-decl_stmt|;
-name|UINT32
-name|Version
-decl_stmt|;
-name|char
-name|OemId
-index|[
-name|ACPI_OEM_ID_SIZE
-index|]
-decl_stmt|;
-comment|/* ASCII OEM identification */
-name|char
-name|OemTableId
-index|[
-name|ACPI_OEM_TABLE_ID_SIZE
-index|]
-decl_stmt|;
-comment|/* ASCII OEM table identification */
-name|char
-name|WindowsFlag
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|UINT32
-name|SlicVersion
-decl_stmt|;
-name|UINT8
-name|Reserved
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|UINT8
-name|Signature
-index|[
-literal|128
-index|]
-decl_stmt|;
-block|}
-name|ACPI_SLIC_MARKER
 typedef|;
 end_typedef
 

@@ -341,19 +341,15 @@ argument_list|(
 operator|(
 name|ACPI_DB_IO
 operator|,
-literal|"Address %p LastAddress %p Length %X"
+literal|"Address %8.8X%8.8X LastAddress %8.8X%8.8X Length %X"
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|Address
 argument_list|)
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|LastAddress
 argument_list|)
 operator|,
@@ -374,12 +370,10 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Illegal I/O port address/length above 64K: %p/0x%X"
+literal|"Illegal I/O port address/length above 64K: %8.8X%8.8X/0x%X"
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|Address
 argument_list|)
 operator|,
@@ -467,12 +461,10 @@ argument_list|(
 operator|(
 name|ACPI_DB_IO
 operator|,
-literal|"Denied AML access to port 0x%p/%X (%s 0x%.4X-0x%.4X)"
+literal|"Denied AML access to port 0x%8.8X%8.8X/%X (%s 0x%.4X-0x%.4X)"
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|Address
 argument_list|)
 operator|,

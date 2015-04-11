@@ -281,6 +281,10 @@ expr_stmt|;
 comment|/*          * If mapping the entire remaining portion of the region will cross          * a page boundary, just map up to the page boundary, do not cross.          * On some systems, crossing a page boundary while mapping regions          * can cause warnings if the pages have different attributes          * due to resource management.          *          * This has the added benefit of constraining a single mapping to          * one page, which is similar to the original code that used a 4k          * maximum window.          */
 name|PageBoundaryMapLength
 operator|=
+call|(
+name|ACPI_SIZE
+call|)
+argument_list|(
 name|ACPI_ROUND_UP
 argument_list|(
 name|Address
@@ -289,6 +293,7 @@ name|ACPI_DEFAULT_PAGE_SIZE
 argument_list|)
 operator|-
 name|Address
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -321,9 +326,6 @@ name|MappedLogicalAddress
 operator|=
 name|AcpiOsMapMemory
 argument_list|(
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
 name|Address
 argument_list|,
 name|MapLength
@@ -344,7 +346,7 @@ name|AE_INFO
 operator|,
 literal|"Could not map memory at 0x%8.8X%8.8X, size %u"
 operator|,
-name|ACPI_FORMAT_NATIVE_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)
@@ -414,7 +416,7 @@ name|BitWidth
 operator|,
 name|Function
 operator|,
-name|ACPI_FORMAT_NATIVE_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)
@@ -635,7 +637,7 @@ name|BitWidth
 operator|,
 name|Function
 operator|,
-name|ACPI_FORMAT_NATIVE_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)

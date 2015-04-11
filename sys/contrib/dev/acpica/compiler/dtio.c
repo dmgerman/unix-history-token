@@ -929,6 +929,12 @@ name|Column
 operator|=
 name|Column
 expr_stmt|;
+name|Field
+operator|->
+name|StringLength
+operator|=
+name|Length
+expr_stmt|;
 name|DtLinkField
 argument_list|(
 name|Field
@@ -976,6 +982,15 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+name|ACPI_MEMSET
+argument_list|(
+name|Gbl_CurrentLineBuffer
+argument_list|,
+literal|0
+argument_list|,
+name|Gbl_LineBufferSize
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2031,7 +2046,7 @@ name|ASL_DEBUG_OUTPUT
 argument_list|,
 literal|"\nField List:\n"
 literal|"LineNo   ByteOff  NameCol  Column   TableOff "
-literal|"Flags    %32s : %s\n\n"
+literal|"Flags %32s : %s\n\n"
 argument_list|,
 literal|"Name"
 argument_list|,
@@ -2047,7 +2062,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"%.08X %.08X %.08X %.08X %.08X %.08X %32s : %s\n"
+literal|"%.08X %.08X %.08X %.08X %.08X %2.2X    %32s : %s\n"
 argument_list|,
 name|Field
 operator|->

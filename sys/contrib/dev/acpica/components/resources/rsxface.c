@@ -79,7 +79,7 @@ parameter_list|,
 name|In
 parameter_list|)
 define|\
-value|ACPI_COPY_FIELD(Out, In, ResourceType);              \     ACPI_COPY_FIELD(Out, In, ProducerConsumer);          \     ACPI_COPY_FIELD(Out, In, Decode);                    \     ACPI_COPY_FIELD(Out, In, MinAddressFixed);           \     ACPI_COPY_FIELD(Out, In, MaxAddressFixed);           \     ACPI_COPY_FIELD(Out, In, Info);                      \     ACPI_COPY_FIELD(Out, In, Granularity);               \     ACPI_COPY_FIELD(Out, In, Minimum);                   \     ACPI_COPY_FIELD(Out, In, Maximum);                   \     ACPI_COPY_FIELD(Out, In, TranslationOffset);         \     ACPI_COPY_FIELD(Out, In, AddressLength);             \     ACPI_COPY_FIELD(Out, In, ResourceSource);
+value|ACPI_COPY_FIELD(Out, In, ResourceType);              \     ACPI_COPY_FIELD(Out, In, ProducerConsumer);          \     ACPI_COPY_FIELD(Out, In, Decode);                    \     ACPI_COPY_FIELD(Out, In, MinAddressFixed);           \     ACPI_COPY_FIELD(Out, In, MaxAddressFixed);           \     ACPI_COPY_FIELD(Out, In, Info);                      \     ACPI_COPY_FIELD(Out, In, Address.Granularity);       \     ACPI_COPY_FIELD(Out, In, Address.Minimum);           \     ACPI_COPY_FIELD(Out, In, Address.Maximum);           \     ACPI_COPY_FIELD(Out, In, Address.TranslationOffset); \     ACPI_COPY_FIELD(Out, In, Address.AddressLength);     \     ACPI_COPY_FIELD(Out, In, ResourceSource);
 end_define
 
 begin_comment

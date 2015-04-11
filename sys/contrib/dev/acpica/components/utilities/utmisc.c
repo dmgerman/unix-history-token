@@ -90,6 +90,18 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+name|ACPI_ASL_COMPILER
+operator|||
+name|defined
+name|ACPI_EXEC_APP
+operator|)
+end_if
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtIsAmlTable  *  * PARAMETERS:  Table               - An ACPI table  *  * RETURN:      TRUE if table contains executable AML; FALSE otherwise  *  * DESCRIPTION: Check ACPI Signature for a table that contains AML code.  *              Currently, these are DSDT,SSDT,PSDT. All other table types are  *              data tables that do not contain AML code.  *  ******************************************************************************/
 end_comment
@@ -147,6 +159,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtDwordByteSwap  *  * PARAMETERS:  Value           - Value to be converted  *  * RETURN:      UINT32 integer with bytes swapped  *  * DESCRIPTION: Convert a 32-bit value to big-endian (swap the bytes)  *  ******************************************************************************/

@@ -26,13 +26,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ASL_REVISION
-value|ACPI_CA_VERSION
-end_define
-
-begin_define
-define|#
-directive|define
 name|ASL_COMPILER_NAME
 value|"ASL+ Optimizing Compiler"
 end_define

@@ -980,6 +980,8 @@ name|Data
 operator|.
 name|Address16
 operator|.
+name|Address
+operator|.
 name|Minimum
 expr_stmt|;
 name|max
@@ -990,6 +992,8 @@ name|Data
 operator|.
 name|Address16
 operator|.
+name|Address
+operator|.
 name|Maximum
 expr_stmt|;
 name|length
@@ -999,6 +1003,8 @@ operator|->
 name|Data
 operator|.
 name|Address16
+operator|.
+name|Address
 operator|.
 name|AddressLength
 expr_stmt|;
@@ -1014,6 +1020,8 @@ name|Data
 operator|.
 name|Address32
 operator|.
+name|Address
+operator|.
 name|Minimum
 expr_stmt|;
 name|max
@@ -1024,6 +1032,8 @@ name|Data
 operator|.
 name|Address32
 operator|.
+name|Address
+operator|.
 name|Maximum
 expr_stmt|;
 name|length
@@ -1033,6 +1043,8 @@ operator|->
 name|Data
 operator|.
 name|Address32
+operator|.
+name|Address
 operator|.
 name|AddressLength
 expr_stmt|;
@@ -1048,6 +1060,8 @@ name|Data
 operator|.
 name|Address64
 operator|.
+name|Address
+operator|.
 name|Minimum
 expr_stmt|;
 name|max
@@ -1058,6 +1072,8 @@ name|Data
 operator|.
 name|Address64
 operator|.
+name|Address
+operator|.
 name|Maximum
 expr_stmt|;
 name|length
@@ -1067,6 +1083,8 @@ operator|->
 name|Data
 operator|.
 name|Address64
+operator|.
+name|Address
 operator|.
 name|AddressLength
 expr_stmt|;
@@ -1093,6 +1111,8 @@ name|Data
 operator|.
 name|ExtAddress64
 operator|.
+name|Address
+operator|.
 name|Minimum
 expr_stmt|;
 name|max
@@ -1103,6 +1123,8 @@ name|Data
 operator|.
 name|ExtAddress64
 operator|.
+name|Address
+operator|.
 name|Maximum
 expr_stmt|;
 name|length
@@ -1112,6 +1134,8 @@ operator|->
 name|Data
 operator|.
 name|ExtAddress64
+operator|.
+name|Address
 operator|.
 name|AddressLength
 expr_stmt|;

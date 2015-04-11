@@ -146,6 +146,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|AML_EXTERNAL_OP
+value|(UINT16) 0x15
+end_define
+
+begin_comment
+comment|/* ACPI 6.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AML_DUAL_NAME_PREFIX
 value|(UINT16) 0x2e
 end_define
@@ -1079,13 +1090,6 @@ define|#
 directive|define
 name|AML_INT_BYTELIST_OP
 value|(UINT16) 0x0033
-end_define
-
-begin_define
-define|#
-directive|define
-name|AML_INT_STATICSTRING_OP
-value|(UINT16) 0x0034
 end_define
 
 begin_define

@@ -152,7 +152,7 @@ value|(*ACPI_CAST64 (ptr) = (UINT64) (val))
 end_define
 
 begin_comment
-comment|/*  * printf() format helpers. These macros are workarounds for the difficulties  * with emitting 64-bit integers and 64-bit pointers with the same code  * for both 32-bit and 64-bit hosts.  */
+comment|/*  * printf() format helper. This macros is a workaround for the difficulties  * with emitting 64-bit integers and 64-bit pointers with the same code  * for both 32-bit and 64-bit hosts.  */
 end_comment
 
 begin_define
@@ -164,78 +164,6 @@ name|i
 parameter_list|)
 value|ACPI_HIDWORD(i), ACPI_LODWORD(i)
 end_define
-
-begin_if
-if|#
-directive|if
-name|ACPI_MACHINE_WIDTH
-operator|==
-literal|64
-end_if
-
-begin_define
-define|#
-directive|define
-name|ACPI_FORMAT_NATIVE_UINT
-parameter_list|(
-name|i
-parameter_list|)
-value|ACPI_FORMAT_UINT64(i)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FORMAT_TO_UINT
-parameter_list|(
-name|i
-parameter_list|)
-value|ACPI_FORMAT_UINT64(i)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PRINTF_UINT
-value|"0x%8.8X%8.8X"
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|ACPI_FORMAT_NATIVE_UINT
-parameter_list|(
-name|i
-parameter_list|)
-value|0, (UINT32) (i)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_FORMAT_TO_UINT
-parameter_list|(
-name|i
-parameter_list|)
-value|(UINT32) (i)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_PRINTF_UINT
-value|"0x%8.8X"
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Macros for moving data around to/from buffers that are possibly unaligned.  * If the hardware supports the transfer of unaligned data, just do the store.  * Otherwise, we have to move one byte at a time.  */

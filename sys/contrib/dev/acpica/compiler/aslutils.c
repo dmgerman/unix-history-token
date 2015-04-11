@@ -1114,6 +1114,21 @@ name|ASL_OPTIMIZATION
 index|]
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TotalFolds
+condition|)
+block|{
+name|FlPrintFile
+argument_list|(
+name|FileId
+argument_list|,
+literal|", %u Constants Folded"
+argument_list|,
+name|TotalFolds
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|FlPrintFile
 argument_list|(
