@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<paths.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdarg.h>
 end_include
 
@@ -491,7 +497,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-literal|"/dev/null"
+name|_PATH_DEVNULL
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -504,7 +510,9 @@ literal|0
 condition|)
 name|fail_err
 argument_list|(
-literal|"open(\"/dev/null\")"
+literal|"open(\" "
+name|_PATH_DEVNULL
+literal|" \")"
 argument_list|)
 expr_stmt|;
 return|return
@@ -519,15 +527,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|__unused
-name|argc
-parameter_list|,
-name|char
-name|__unused
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -542,6 +542,8 @@ name|int
 name|fd
 decl_stmt|,
 name|i
+decl_stmt|,
+name|start
 decl_stmt|;
 name|printf
 argument_list|(
@@ -549,16 +551,17 @@ literal|"1..15\n"
 argument_list|)
 expr_stmt|;
 comment|/* We better start up with fd's 0, 1, and 2 open. */
-name|fd
+name|start
 operator|=
 name|devnull
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|fd
-operator|!=
-literal|3
+name|start
+operator|==
+operator|-
+literal|1
 condition|)
 name|fail
 argument_list|(
@@ -566,7 +569,7 @@ literal|"open"
 argument_list|,
 literal|"bad descriptor %d"
 argument_list|,
-name|fd
+name|start
 argument_list|)
 expr_stmt|;
 name|ok
@@ -582,15 +585,17 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|fd
+name|start
 operator|!=
-literal|3
+name|fd
 condition|)
 name|fail
 argument_list|(
 literal|"highest_fd"
 argument_list|,
-literal|"bad descriptor %d"
+literal|"bad descriptor %d != %d"
+argument_list|,
+name|start
 argument_list|,
 name|fd
 argument_list|)
@@ -603,7 +608,9 @@ expr_stmt|;
 comment|/* Try to use closefrom() for just closing fd 3. */
 name|closefrom
 argument_list|(
-literal|3
+name|start
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|fd
@@ -615,7 +622,7 @@ if|if
 condition|(
 name|fd
 operator|!=
-literal|2
+name|start
 condition|)
 name|fail
 argument_list|(
@@ -660,7 +667,9 @@ if|if
 condition|(
 name|fd
 operator|!=
-literal|18
+name|start
+operator|+
+literal|16
 condition|)
 name|fail
 argument_list|(
