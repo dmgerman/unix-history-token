@@ -110,6 +110,7 @@ value|((struct sockaddr *)(ss))
 end_define
 
 begin_function
+specifier|static
 name|void
 name|prepare_ifsun
 parameter_list|(
@@ -355,23 +356,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-if|if
-condition|(
-name|uds_name1
-operator|!=
-name|NULL
-condition|)
 name|unlink
 argument_list|(
 name|uds_name1
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|uds_name2
-operator|!=
-name|NULL
-condition|)
 name|unlink
 argument_list|(
 name|uds_name2
