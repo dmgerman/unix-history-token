@@ -79,6 +79,11 @@ decl_stmt|;
 name|u_short
 name|port
 decl_stmt|;
+name|listen_sock
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 comment|/* Shutdown(2) on an invalid file descriptor has to return EBADF. */
 if|if
 condition|(
