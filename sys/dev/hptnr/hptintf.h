@@ -1011,6 +1011,10 @@ define|#
 directive|define
 name|HPT_CAP_DISK_CHECKING
 value|0x2
+define|#
+directive|define
+name|HPT_CAP_REPORT_SECTOR_SIZE
+value|0x10
 typedef|typedef
 struct|struct
 name|_DRIVER_CAPABILITIES

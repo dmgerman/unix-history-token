@@ -695,7 +695,7 @@ begin_define
 define|#
 directive|define
 name|HPT_OSM_TIMEOUT
-value|(20*hz)
+value|(120*hz)
 end_define
 
 begin_comment
