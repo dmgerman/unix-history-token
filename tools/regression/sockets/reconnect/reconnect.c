@@ -181,6 +181,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|create_uds_server
 parameter_list|(
@@ -288,6 +289,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|connect_uds_server
 parameter_list|(
@@ -350,6 +352,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|cleanup
 parameter_list|(
