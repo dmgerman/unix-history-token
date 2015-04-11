@@ -49,7 +49,9 @@ end_define
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|mq_attr
