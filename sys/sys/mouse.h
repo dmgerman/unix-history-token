@@ -349,7 +349,7 @@ comment|/* I/F dependent model ID: MOUSE_MODEL_XXX */
 name|int
 name|hwid
 decl_stmt|;
-comment|/* I/F dependent hardware ID 				 * for the PS/2 mouse, it will be PSM_XXX_ID  				 */
+comment|/* I/F dependent hardware ID 				 * for the PS/2 mouse, it will be PSM_XXX_ID 				 */
 block|}
 name|mousehw_t
 typedef|;
@@ -425,6 +425,51 @@ name|nExtendedButtons
 decl_stmt|;
 name|int
 name|nExtendedQueries
+decl_stmt|;
+name|int
+name|capClickPad
+decl_stmt|;
+name|int
+name|capDeluxeLEDs
+decl_stmt|;
+name|int
+name|noAbsoluteFilter
+decl_stmt|;
+name|int
+name|capReportsV
+decl_stmt|;
+name|int
+name|capUniformClickPad
+decl_stmt|;
+name|int
+name|capReportsMin
+decl_stmt|;
+name|int
+name|capInterTouch
+decl_stmt|;
+name|int
+name|capReportsMax
+decl_stmt|;
+name|int
+name|capClearPad
+decl_stmt|;
+name|int
+name|capAdvancedGestures
+decl_stmt|;
+name|int
+name|multiFingerMode
+decl_stmt|;
+name|int
+name|capCoveredPad
+decl_stmt|;
+name|int
+name|verticalScroll
+decl_stmt|;
+name|int
+name|horizontalScroll
+decl_stmt|;
+name|int
+name|verticalWheel
 decl_stmt|;
 block|}
 name|synapticshw_t
@@ -1427,7 +1472,7 @@ value|MOUSE_PS2_SYNC
 end_define
 
 begin_comment
-comment|/* GlidePoint (PS/2) `tapping' 					        * Yes! this is the same bit  						* as SYNC! 					 	*/
+comment|/* GlidePoint (PS/2) `tapping' 					        * Yes! this is the same bit 						* as SYNC! 					 	*/
 end_comment
 
 begin_define
@@ -1799,7 +1844,7 @@ comment|/* sysmouse extended data packet */
 end_comment
 
 begin_comment
-comment|/*  * /dev/sysmouse sends data in two formats, depending on the protocol  * level.  At the level 0, format is exactly the same as MousSystems'  * five byte packet.  At the level 1, the first five bytes are the same  * as at the level 0.  There are additional three bytes which shows  * `dz' and the states of additional buttons.  `dz' is expressed as the  * sum of the byte 5 and 6 which contain signed seven bit values.  * The states of the button 4 though 10 are in the bit 0 though 6 in   * the byte 7 respectively: 1 indicates the button is up.  */
+comment|/*  * /dev/sysmouse sends data in two formats, depending on the protocol  * level.  At the level 0, format is exactly the same as MousSystems'  * five byte packet.  At the level 1, the first five bytes are the same  * as at the level 0.  There are additional three bytes which shows  * `dz' and the states of additional buttons.  `dz' is expressed as the  * sum of the byte 5 and 6 which contain signed seven bit values.  * The states of the button 4 though 10 are in the bit 0 though 6 in  * the byte 7 respectively: 1 indicates the button is up.  */
 end_comment
 
 begin_define

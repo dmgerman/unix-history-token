@@ -1931,6 +1931,13 @@ end_if
 begin_define
 define|#
 directive|define
+name|__gnu_inline
+value|__attribute__((__gnu_inline__))
+end_define
+
+begin_define
+define|#
+directive|define
 name|__returns_twice
 value|__attribute__((__returns_twice__))
 end_define
@@ -1939,6 +1946,12 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|__gnu_inline
+end_define
 
 begin_define
 define|#
