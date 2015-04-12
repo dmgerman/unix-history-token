@@ -695,6 +695,17 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
+name|bit_set
+argument_list|(
+name|filter
+operator|.
+name|event_mask
+argument_list|,
+name|NG_HCI_EVENT_LE
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|setsockopt
