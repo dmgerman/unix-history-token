@@ -3390,7 +3390,6 @@ literal|"sun-color"
 argument_list|)
 operator|==
 literal|0
-operator|)
 operator|||
 name|strcmp
 argument_list|(
@@ -3400,6 +3399,7 @@ literal|"dumb"
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|utf8
