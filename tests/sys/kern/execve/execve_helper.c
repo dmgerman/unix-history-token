@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<errno.h>
 end_include
 
@@ -28,12 +34,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<unistd.h>
 end_include
 
@@ -41,18 +41,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -79,14 +75,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-name|unsetenv
-argument_list|(
-literal|"LANG"
-argument_list|)
-expr_stmt|;
-comment|/* we compare C error strings */
-if|if
-condition|(
 name|execve
 argument_list|(
 name|argv
@@ -102,27 +90,14 @@ index|]
 argument_list|,
 name|NULL
 argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-block|{
-name|printf
+expr_stmt|;
+name|err
 argument_list|(
-literal|"%s\n"
+literal|1
 argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
+literal|""
 argument_list|)
 expr_stmt|;
-name|exit
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_function
 
