@@ -245,18 +245,18 @@ name|tls_index
 typedef|;
 end_typedef
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|void
 modifier|*
 name|__tls_get_addr
-parameter_list|(
+argument_list|(
 name|tls_index
-modifier|*
+operator|*
 name|ti
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__exported
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#

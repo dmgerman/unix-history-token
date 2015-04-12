@@ -91,6 +91,12 @@ directive|include
 file|"rtld.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"rtld_tls.h"
+end_include
+
 begin_comment
 comment|/*  * Process the special R_X86_64_COPY relocations in the main program.  These  * copy data from a shared object into a region in the main program's BSS  * segment.  *  * Returns 0 on success, -1 on failure.  */
 end_comment
