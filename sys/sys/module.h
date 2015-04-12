@@ -182,7 +182,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Module dependency declarartion  */
+comment|/*  * Module dependency declaration  */
 end_comment
 
 begin_struct
