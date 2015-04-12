@@ -12739,7 +12739,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"uma_zone_set_init: Invalid zone type"
+literal|"uma_zone_set_fini: Invalid zone type"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12911,7 +12911,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"uma_zone_set_init: Invalid zone type"
+literal|"uma_zone_set_freef: Invalid zone type"
 operator|)
 argument_list|)
 expr_stmt|;
