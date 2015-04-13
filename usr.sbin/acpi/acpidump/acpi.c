@@ -778,12 +778,41 @@ block|{
 case|case
 name|ACPI_GAS_MEMORY
 case|:
+if|if
+condition|(
+name|gas
+operator|->
+name|BitWidth
+operator|<=
+literal|32
+condition|)
 name|printf
 argument_list|(
-literal|"0x%08lx:%u[%u] (Memory)"
+literal|"0x%08x:%u[%u] (Memory)"
 argument_list|,
 operator|(
-name|u_long
+name|u_int
+operator|)
+name|gas
+operator|->
+name|Address
+argument_list|,
+name|gas
+operator|->
+name|BitOffset
+argument_list|,
+name|gas
+operator|->
+name|BitWidth
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"0x%016jx:%u[%u] (Memory)"
+argument_list|,
+operator|(
+name|uintmax_t
 operator|)
 name|gas
 operator|->
@@ -804,10 +833,10 @@ name|ACPI_GAS_IO
 case|:
 name|printf
 argument_list|(
-literal|"0x%02lx:%u[%u] (IO)"
+literal|"0x%02x:%u[%u] (IO)"
 argument_list|,
 operator|(
-name|u_long
+name|u_int
 operator|)
 name|gas
 operator|->
@@ -929,10 +958,10 @@ case|:
 default|default:
 name|printf
 argument_list|(
-literal|"0x%08lx (?)"
+literal|"0x%016jx (?)"
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|gas
 operator|->
@@ -3917,7 +3946,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tAddress=0x%0jx\n"
+literal|"\tAddress=0x%016jx\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -4050,7 +4079,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tBaseAddress=0x%0jx\n"
+literal|"\tBaseAddress=0x%016jx\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -4062,7 +4091,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tLimitAddress=0x%0jx\n"
+literal|"\tLimitAddress=0x%016jx\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -4327,7 +4356,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tBaseAddress=0x%0jx\n"
+literal|"\tBaseAddress=0x%016jx\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -5121,9 +5150,6 @@ name|i
 decl_stmt|,
 name|entries
 decl_stmt|;
-name|u_long
-name|addr
-decl_stmt|;
 name|rsdt
 operator|=
 operator|(
@@ -5201,8 +5227,10 @@ name|addr_size
 operator|==
 literal|4
 condition|)
-name|addr
-operator|=
+name|printf
+argument_list|(
+literal|"0x%08x"
+argument_list|,
 name|le32toh
 argument_list|(
 name|rsdt
@@ -5212,10 +5240,16 @@ index|[
 name|i
 index|]
 argument_list|)
+argument_list|)
 expr_stmt|;
 else|else
-name|addr
-operator|=
+name|printf
+argument_list|(
+literal|"0x%016jx"
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|le64toh
 argument_list|(
 name|xsdt
@@ -5225,12 +5259,6 @@ index|[
 name|i
 index|]
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"0x%08lx"
-argument_list|,
-name|addr
 argument_list|)
 expr_stmt|;
 block|}
@@ -5998,10 +6026,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"\tX_FACS=0x%08lx, "
+literal|"\tX_FACS=0x%016jx, "
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|fadt
 operator|->
@@ -6010,10 +6038,10 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"X_DSDT=0x%08lx\n"
+literal|"X_DSDT=0x%016jx\n"
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|fadt
 operator|->
@@ -6317,20 +6345,18 @@ name|XFirmwareWakingVector
 operator|!=
 literal|0
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"\tX_Firm_Wake_Vec=%08lx\n"
+literal|"\tX_Firm_Wake_Vec=%016jx\n"
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|facs
 operator|->
 name|XFirmwareWakingVector
 argument_list|)
 expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"\tVersion=%u\n"
@@ -6542,10 +6568,10 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"\tXSDT=0x%08lx, length=%u, cksum=%u\n"
+literal|"\tXSDT=0x%016jx, length=%u, cksum=%u\n"
 argument_list|,
 operator|(
-name|u_long
+name|uintmax_t
 operator|)
 name|rp
 operator|->
