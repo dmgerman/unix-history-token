@@ -38832,7 +38832,7 @@ name|sc
 argument_list|,
 name|IWN_DEBUG_RESET
 argument_list|,
-literal|"TLV type %d reconized but not handled\n"
+literal|"TLV type %d recognized but not handled\n"
 argument_list|,
 name|le16toh
 argument_list|(
