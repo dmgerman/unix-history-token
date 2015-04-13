@@ -124,7 +124,7 @@ name|char
 modifier|*
 name|sysctl
 decl_stmt|;
-name|off_t
+name|size_t
 name|offset
 decl_stmt|;
 name|size_t

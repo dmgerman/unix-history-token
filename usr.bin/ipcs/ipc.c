@@ -179,30 +179,51 @@ index|[]
 init|=
 block|{
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"sema"
 block|}
 block|,
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"seminfo"
 block|}
 block|,
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"msginfo"
 block|}
 block|,
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"msqids"
 block|}
 block|,
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"shminfo"
 block|}
 block|,
 block|{
+operator|.
+name|n_name
+operator|=
 literal|"shmsegs"
 block|}
 block|,
 block|{
+operator|.
+name|n_name
+operator|=
 name|NULL
 block|}
 block|}
@@ -250,6 +271,7 @@ value|struct shminfo
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scgs_vector
 name|shminfo_scgsv
@@ -258,6 +280,9 @@ init|=
 block|{
 name|SHMINFO_XVEC
 block|{
+operator|.
+name|sysctl
+operator|=
 name|NULL
 block|}
 block|}
@@ -278,6 +303,7 @@ value|struct seminfo
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scgs_vector
 name|seminfo_scgsv
@@ -286,6 +312,9 @@ init|=
 block|{
 name|SEMINFO_XVEC
 block|{
+operator|.
+name|sysctl
+operator|=
 name|NULL
 block|}
 block|}
@@ -306,6 +335,7 @@ value|struct msginfo
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|scgs_vector
 name|msginfo_scgsv
@@ -314,6 +344,9 @@ init|=
 block|{
 name|MSGINFO_XVEC
 block|{
+operator|.
+name|sysctl
+operator|=
 name|NULL
 block|}
 block|}
