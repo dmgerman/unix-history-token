@@ -639,6 +639,9 @@ comment|/* Error buf for kvm_openfiles. */
 name|int
 name|i
 decl_stmt|;
+name|u_long
+name|shmidx
+decl_stmt|;
 name|uid_t
 name|uid
 init|=
@@ -1171,17 +1174,17 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|i
+name|shmidx
 operator|=
 literal|0
 init|;
-name|i
+name|shmidx
 operator|<
 name|shminfo
 operator|.
 name|shmmni
 condition|;
-name|i
+name|shmidx
 operator|+=
 literal|1
 control|)
@@ -1190,7 +1193,7 @@ if|if
 condition|(
 name|kxshmids
 index|[
-name|i
+name|shmidx
 index|]
 operator|.
 name|u
@@ -1210,7 +1213,7 @@ name|uid
 operator|!=
 name|kxshmids
 index|[
-name|i
+name|shmidx
 index|]
 operator|.
 name|u
@@ -1222,14 +1225,14 @@ condition|)
 continue|continue;
 name|print_kshmptr
 argument_list|(
-name|i
+name|shmidx
 argument_list|,
 name|option
 argument_list|,
 operator|&
 name|kxshmids
 index|[
-name|i
+name|shmidx
 index|]
 argument_list|)
 expr_stmt|;
@@ -1470,7 +1473,7 @@ name|print_kmsqtotal
 parameter_list|(
 name|struct
 name|msginfo
-name|msginfo
+name|local_msginfo
 parameter_list|)
 block|{
 name|printf
@@ -1482,7 +1485,7 @@ name|printf
 argument_list|(
 literal|"\tmsgmax: %12d\t(max characters in a message)\n"
 argument_list|,
-name|msginfo
+name|local_msginfo
 operator|.
 name|msgmax
 argument_list|)
@@ -1491,7 +1494,7 @@ name|printf
 argument_list|(
 literal|"\tmsgmni: %12d\t(# of message queues)\n"
 argument_list|,
-name|msginfo
+name|local_msginfo
 operator|.
 name|msgmni
 argument_list|)
@@ -1500,7 +1503,7 @@ name|printf
 argument_list|(
 literal|"\tmsgmnb: %12d\t(max characters in a message queue)\n"
 argument_list|,
-name|msginfo
+name|local_msginfo
 operator|.
 name|msgmnb
 argument_list|)
@@ -1509,7 +1512,7 @@ name|printf
 argument_list|(
 literal|"\tmsgtql: %12d\t(max # of messages in system)\n"
 argument_list|,
-name|msginfo
+name|local_msginfo
 operator|.
 name|msgtql
 argument_list|)
@@ -1518,7 +1521,7 @@ name|printf
 argument_list|(
 literal|"\tmsgssz: %12d\t(size of a message segment)\n"
 argument_list|,
-name|msginfo
+name|local_msginfo
 operator|.
 name|msgssz
 argument_list|)
@@ -1527,7 +1530,7 @@ name|printf
 argument_list|(
 literal|"\tmsgseg: %12d\t(# of message segments in system)\n\n"
 argument_list|,
-name|msginfo
+name|local_msginfo
 operator|.
 name|msgseg
 argument_list|)
@@ -1906,7 +1909,7 @@ name|print_kshmtotal
 parameter_list|(
 name|struct
 name|shminfo
-name|shminfo
+name|local_shminfo
 parameter_list|)
 block|{
 name|printf
@@ -1918,7 +1921,7 @@ name|printf
 argument_list|(
 literal|"\tshmmax: %12lu\t(max shared memory segment size)\n"
 argument_list|,
-name|shminfo
+name|local_shminfo
 operator|.
 name|shmmax
 argument_list|)
@@ -1927,7 +1930,7 @@ name|printf
 argument_list|(
 literal|"\tshmmin: %12lu\t(min shared memory segment size)\n"
 argument_list|,
-name|shminfo
+name|local_shminfo
 operator|.
 name|shmmin
 argument_list|)
@@ -1936,7 +1939,7 @@ name|printf
 argument_list|(
 literal|"\tshmmni: %12lu\t(max number of shared memory identifiers)\n"
 argument_list|,
-name|shminfo
+name|local_shminfo
 operator|.
 name|shmmni
 argument_list|)
@@ -1945,7 +1948,7 @@ name|printf
 argument_list|(
 literal|"\tshmseg: %12lu\t(max shared memory segments per process)\n"
 argument_list|,
-name|shminfo
+name|local_shminfo
 operator|.
 name|shmseg
 argument_list|)
@@ -1954,7 +1957,7 @@ name|printf
 argument_list|(
 literal|"\tshmall: %12lu\t(max amount of shared memory in pages)\n\n"
 argument_list|,
-name|shminfo
+name|local_shminfo
 operator|.
 name|shmall
 argument_list|)
@@ -2325,7 +2328,7 @@ name|print_ksemtotal
 parameter_list|(
 name|struct
 name|seminfo
-name|seminfo
+name|local_seminfo
 parameter_list|)
 block|{
 name|printf
@@ -2337,7 +2340,7 @@ name|printf
 argument_list|(
 literal|"\tsemmni: %12d\t(# of semaphore identifiers)\n"
 argument_list|,
-name|seminfo
+name|local_seminfo
 operator|.
 name|semmni
 argument_list|)
@@ -2346,7 +2349,7 @@ name|printf
 argument_list|(
 literal|"\tsemmns: %12d\t(# of semaphores in system)\n"
 argument_list|,
-name|seminfo
+name|local_seminfo
 operator|.
 name|semmns
 argument_list|)
@@ -2355,7 +2358,7 @@ name|printf
 argument_list|(
 literal|"\tsemmnu: %12d\t(# of undo structures in system)\n"
 argument_list|,
-name|seminfo
+name|local_seminfo
 operator|.
 name|semmnu
 argument_list|)
@@ -2364,7 +2367,7 @@ name|printf
 argument_list|(
 literal|"\tsemmsl: %12d\t(max # of semaphores per id)\n"
 argument_list|,
-name|seminfo
+name|local_seminfo
 operator|.
 name|semmsl
 argument_list|)
@@ -2373,7 +2376,7 @@ name|printf
 argument_list|(
 literal|"\tsemopm: %12d\t(max # of operations per semop call)\n"
 argument_list|,
-name|seminfo
+name|local_seminfo
 operator|.
 name|semopm
 argument_list|)
@@ -2382,7 +2385,7 @@ name|printf
 argument_list|(
 literal|"\tsemume: %12d\t(max # of undo entries per process)\n"
 argument_list|,
-name|seminfo
+name|local_seminfo
 operator|.
 name|semume
 argument_list|)
@@ -2391,7 +2394,7 @@ name|printf
 argument_list|(
 literal|"\tsemusz: %12d\t(size in bytes of undo structure)\n"
 argument_list|,
-name|seminfo
+name|local_seminfo
 operator|.
 name|semusz
 argument_list|)
@@ -2400,7 +2403,7 @@ name|printf
 argument_list|(
 literal|"\tsemvmx: %12d\t(semaphore maximum value)\n"
 argument_list|,
-name|seminfo
+name|local_seminfo
 operator|.
 name|semvmx
 argument_list|)
@@ -2409,7 +2412,7 @@ name|printf
 argument_list|(
 literal|"\tsemaem: %12d\t(adjust on exit max value)\n\n"
 argument_list|,
-name|seminfo
+name|local_seminfo
 operator|.
 name|semaem
 argument_list|)

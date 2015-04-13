@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Routines for mapping device memory.  */
+comment|/*  * Routines for mapping device memory.  *  * This is used on both arm and arm64.  */
 end_comment
 
 begin_include
@@ -69,6 +69,12 @@ directive|include
 file|<machine/devmap.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/vmparam.h>
+end_include
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -87,6 +93,50 @@ init|=
 name|false
 decl_stmt|;
 end_decl_stmt
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MAX_VADDR
+value|VM_MAX_KERNEL_ADDRESS
+end_define
+
+begin_define
+define|#
+directive|define
+name|PTE_DEVICE
+value|VM_MEMATTR_DEVICE
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|MAX_VADDR
+value|ARM_VECTORS_HIGH
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * The allocated-kva (akva) devmap table and metadata.  Platforms can call  * arm_devmap_add_entry() to add static device mappings to this table using  * automatically allocated virtual addresses carved out of the top of kva space.  * Allocation begins immediately below the ARM_VECTORS_HIGH address.  */
@@ -122,9 +172,27 @@ specifier|static
 name|vm_offset_t
 name|akva_devmap_vaddr
 init|=
-name|ARM_VECTORS_HIGH
+name|MAX_VADDR
 decl_stmt|;
 end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__aarch64__
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|early_boot
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Print the contents of the static mapping table using the provided printf-like  * output function (which will be either printf or db_printf).  */
@@ -274,7 +342,7 @@ operator|)
 return|;
 name|lowaddr
 operator|=
-name|ARM_VECTORS_HIGH
+name|MAX_VADDR
 expr_stmt|;
 for|for
 control|(
@@ -375,6 +443,9 @@ name|akva_devmap_entries
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Allocate virtual address space from the top of kva downwards.  If the 	 * range being mapped is aligned and sized to 1MB boundaries then also 	 * align the virtual address to the next-lower 1MB boundary so that we 	 * end up with a nice efficient section mapping. 	 */
+ifdef|#
+directive|ifdef
+name|__arm__
 if|if
 condition|(
 operator|(
@@ -405,6 +476,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+endif|#
+directive|endif
 block|{
 name|akva_devmap_vaddr
 operator|=
@@ -545,6 +618,12 @@ operator|++
 name|pd
 control|)
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
 name|pmap_map_chunk
 argument_list|(
 name|l1pt
@@ -570,6 +649,29 @@ operator|->
 name|pd_cache
 argument_list|)
 expr_stmt|;
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+name|pmap_kenter_device
+argument_list|(
+name|pd
+operator|->
+name|pd_va
+argument_list|,
+name|pd
+operator|->
+name|pd_size
+argument_list|,
+name|pd
+operator|->
+name|pd_pa
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 end_function
@@ -849,6 +951,44 @@ operator|+
 name|offset
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__aarch64__
+if|if
+condition|(
+name|early_boot
+condition|)
+block|{
+name|akva_devmap_vaddr
+operator|=
+name|trunc_page
+argument_list|(
+name|akva_devmap_vaddr
+operator|-
+name|size
+argument_list|)
+expr_stmt|;
+name|va
+operator|=
+name|akva_devmap_vaddr
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|va
+operator|>=
+name|VM_MAX_KERNEL_ADDRESS
+operator|-
+name|L2_SIZE
+argument_list|,
+operator|(
+literal|"Too many early devmap mappings"
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+endif|#
+directive|endif
 name|va
 operator|=
 name|kva_alloc
