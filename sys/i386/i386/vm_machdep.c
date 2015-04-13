@@ -1073,9 +1073,17 @@ operator|~
 name|PSL_T
 expr_stmt|;
 comment|/* 	 * Set registers for trampoline to user mode.  Leave space for the 	 * return address on stack.  These are the kernel mode register values. 	 */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PAE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PAE_TABLES
+argument_list|)
 name|pcb2
 operator|->
 name|pcb_cr3
