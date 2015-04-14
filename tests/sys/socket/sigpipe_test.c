@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -80,7 +86,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"usage: sigpipe tcpport"
+literal|"usage: sigpipe [tcpport]"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1126,12 +1132,38 @@ decl_stmt|;
 if|if
 condition|(
 name|argc
-operator|!=
-literal|2
+operator|==
+literal|1
 condition|)
-name|usage
+block|{
+name|srandomdev
 argument_list|()
 expr_stmt|;
+comment|/* Pick a random unprivileged port 1025-65535 */
+name|port
+operator|=
+name|MAX
+argument_list|(
+operator|(
+name|int
+operator|)
+name|random
+argument_list|()
+operator|%
+literal|65535
+argument_list|,
+literal|1025
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|argc
+operator|==
+literal|2
+condition|)
+block|{
 name|port
 operator|=
 name|strtol
@@ -1162,6 +1194,11 @@ name|dummy
 operator|!=
 literal|'\0'
 condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+else|else
 name|usage
 argument_list|()
 expr_stmt|;
