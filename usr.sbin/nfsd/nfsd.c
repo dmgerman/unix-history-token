@@ -3234,7 +3234,8 @@ name|listen
 argument_list|(
 name|tcpsock
 argument_list|,
-literal|5
+operator|-
+literal|1
 argument_list|)
 operator|<
 literal|0
@@ -3682,7 +3683,8 @@ name|listen
 argument_list|(
 name|tcp6sock
 argument_list|,
-literal|5
+operator|-
+literal|1
 argument_list|)
 operator|<
 literal|0
