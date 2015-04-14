@@ -878,7 +878,8 @@ name|solisten
 argument_list|(
 name|so
 argument_list|,
-name|SOMAXCONN
+operator|-
+literal|1
 argument_list|,
 name|curthread
 argument_list|)
