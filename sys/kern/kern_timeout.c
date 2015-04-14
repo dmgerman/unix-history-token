@@ -2671,7 +2671,7 @@ name|C_DIRECT_EXEC
 condition|)
 name|c
 operator|->
-name|c_flags
+name|c_iflags
 operator||=
 name|CALLOUT_DIRECT
 expr_stmt|;
