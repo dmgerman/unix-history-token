@@ -157,10 +157,18 @@ name|STAGE_PAGES
 operator|*
 literal|4096
 expr_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__aarch64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__arm__
-comment|/* Round the kernel load address to a 2MiB value */
+argument_list|)
+comment|/* 	 * Round the kernel load address to a 2MiB value. This is needed 	 * because the kernel builds a page table based on where it has 	 * been loaded in physical address space. As the kernel will use 	 * either a 1MiB or 2MiB page for this we need to make sure it 	 * is correctly aligned for both cases. 	 */
 name|staging
 operator|=
 name|roundup2
