@@ -19780,6 +19780,15 @@ name|size
 operator|<
 literal|0
 condition|)
+block|{
+name|ccb
+operator|->
+name|casync
+operator|.
+name|async_arg_ptr
+operator|=
+name|async_arg
+expr_stmt|;
 name|ccb
 operator|->
 name|casync
@@ -19788,6 +19797,7 @@ name|async_arg_size
 operator|=
 name|size
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|path
