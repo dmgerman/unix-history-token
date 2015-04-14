@@ -2129,7 +2129,7 @@ comment|/* 6to4 interface */
 end_comment
 
 begin_comment
-comment|/* not based on IANA assignments */
+comment|/* FreeBSD specific, not based on IANA assignments */
 end_comment
 
 begin_define
@@ -2139,12 +2139,20 @@ name|IFT_GIF
 value|0xf0
 end_define
 
+begin_comment
+comment|/* Generic tunnel interface */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IFT_PVC
 value|0xf1
 end_define
+
+begin_comment
+comment|/* Unused */
+end_comment
 
 begin_define
 define|#
@@ -2153,6 +2161,10 @@ name|IFT_ENC
 value|0xf4
 end_define
 
+begin_comment
+comment|/* Encapsulating interface */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2160,12 +2172,20 @@ name|IFT_PFLOG
 value|0xf6
 end_define
 
+begin_comment
+comment|/* PF packet filter logging */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IFT_PFSYNC
 value|0xf7
 end_define
+
+begin_comment
+comment|/* PF packet filter synchronization */
+end_comment
 
 begin_endif
 endif|#
