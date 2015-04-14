@@ -156,7 +156,7 @@ if|if
 condition|(
 name|errno
 operator|!=
-name|EPROTONOSUPPORT
+name|EPROTOTYPE
 condition|)
 name|err
 argument_list|(
