@@ -37688,6 +37688,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|dir
+operator|==
+name|PF_OUT
+operator|&&
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|&&
 name|ifp
 operator|!=
 name|m
