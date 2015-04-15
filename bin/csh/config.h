@@ -659,7 +659,6 @@ begin_define
 define|#
 directive|define
 name|ICONV_CONST
-value|const
 end_define
 
 begin_comment

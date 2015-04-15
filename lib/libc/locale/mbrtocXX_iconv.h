@@ -400,12 +400,10 @@ name|i
 operator|++
 control|)
 block|{
-specifier|const
 name|char
 modifier|*
 name|src
-decl_stmt|;
-name|char
+decl_stmt|,
 modifier|*
 name|dst
 decl_stmt|;

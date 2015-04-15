@@ -1061,7 +1061,6 @@ name|int
 parameter_list|,
 name|int
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1206,7 +1205,6 @@ name|struct
 name|mbdata
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|,
@@ -1223,7 +1221,6 @@ name|struct
 name|mbdata
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1742,7 +1739,6 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1757,7 +1753,6 @@ parameter_list|(
 name|char
 modifier|*
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -1772,7 +1767,6 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-specifier|const
 name|void
 modifier|*
 parameter_list|,
@@ -1789,7 +1783,6 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-specifier|const
 name|void
 modifier|*
 parameter_list|,
