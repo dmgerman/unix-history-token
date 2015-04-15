@@ -7166,6 +7166,8 @@ operator||=
 name|MNTK_LOOKUP_SHARED
 operator||
 name|MNTK_NO_IOPF
+operator||
+name|MNTK_USES_BCACHE
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(

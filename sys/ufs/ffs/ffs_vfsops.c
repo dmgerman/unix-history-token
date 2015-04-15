@@ -5498,6 +5498,8 @@ operator||
 name|MNTK_UNMAPPED_BUFS
 operator||
 name|MNTK_SUSPENDABLE
+operator||
+name|MNTK_USES_BCACHE
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
