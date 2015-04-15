@@ -6098,10 +6098,8 @@ parameter_list|)
 block|{
 name|int
 name|x
-decl_stmt|,
-name|incr
 decl_stmt|;
-comment|/* 	 * Wait delay loops for IPI to be sent.  This is highly bogus 	 * since this is sensitive to CPU clock speed.  If delay is 	 * -1, we wait forever. 	 */
+comment|/* 	 * Wait delay microseconds for IPI to be sent.  If delay is 	 * -1, we wait forever. 	 */
 if|if
 condition|(
 name|delay
@@ -6110,20 +6108,27 @@ operator|-
 literal|1
 condition|)
 block|{
-name|incr
-operator|=
-literal|0
+while|while
+condition|(
+operator|(
+name|lapic
+operator|->
+name|icr_lo
+operator|&
+name|APIC_DELSTAT_MASK
+operator|)
+operator|!=
+name|APIC_DELSTAT_IDLE
+condition|)
+name|ia32_pause
+argument_list|()
 expr_stmt|;
-name|delay
-operator|=
+return|return
+operator|(
 literal|1
-expr_stmt|;
+operator|)
+return|;
 block|}
-else|else
-name|incr
-operator|=
-literal|1
-expr_stmt|;
 for|for
 control|(
 name|x
@@ -6136,7 +6141,7 @@ name|delay
 condition|;
 name|x
 operator|+=
-name|incr
+literal|5
 control|)
 block|{
 if|if
@@ -6156,8 +6161,10 @@ operator|(
 literal|1
 operator|)
 return|;
-name|ia32_pause
-argument_list|()
+name|DELAY
+argument_list|(
+literal|5
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -6311,7 +6318,7 @@ begin_define
 define|#
 directive|define
 name|BEFORE_SPIN
-value|1000000
+value|50000
 end_define
 
 begin_ifdef
@@ -6324,7 +6331,7 @@ begin_define
 define|#
 directive|define
 name|AFTER_SPIN
-value|1000
+value|50
 end_define
 
 begin_endif
@@ -6373,6 +6380,8 @@ operator|=
 name|APIC_DESTMODE_PHY
 operator||
 name|APIC_TRIGMOD_EDGE
+operator||
+name|APIC_LEVEL_ASSERT
 expr_stmt|;
 comment|/* 	 * IPI_STOP_HARD is just a "fake" vector used to send a NMI. 	 * Use special rules regard NMI if passed, otherwise specify 	 * the vector. 	 */
 if|if
@@ -6384,8 +6393,6 @@ condition|)
 name|icrlo
 operator||=
 name|APIC_DELMODE_NMI
-operator||
-name|APIC_LEVEL_ASSERT
 expr_stmt|;
 else|else
 name|icrlo
@@ -6393,8 +6400,6 @@ operator||=
 name|vector
 operator||
 name|APIC_DELMODE_FIXED
-operator||
-name|APIC_LEVEL_DEASSERT
 expr_stmt|;
 name|destfield
 operator|=
