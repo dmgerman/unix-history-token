@@ -437,7 +437,7 @@ value|((vm_offset_t)(((pdi)<<PDRSHIFT)|((pti)<<PAGE_SHIFT)))
 end_define
 
 begin_comment
-comment|/* Initial number of kernel page tables. */
+comment|/*  * The initial number of kernel page table pages that are constructed  * by locore must be sufficient to map vm_page_array.  That number can  * be calculated as follows:  *     max_phys / PAGE_SIZE * sizeof(struct vm_page) / NBPDR  * PAE:      max_phys 16G, sizeof(vm_page) 76, NBPDR 2M, 152 page table pages.  * Non-PAE:  max_phys 4G,  sizeof(vm_page) 68, NBPDR 4M, 18 page table pages.  */
 end_comment
 
 begin_ifndef
@@ -452,10 +452,6 @@ directive|ifdef
 name|PAE
 end_ifdef
 
-begin_comment
-comment|/* 152 page tables needed to map 16G (76B "struct vm_page", 2M page tables). */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -467,10 +463,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* 18 page tables needed to map 4G (72B "struct vm_page", 4M page tables). */
-end_comment
 
 begin_define
 define|#
