@@ -1320,7 +1320,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Unhandled %s%c 0x%04x\n"
+literal|"Unhandled %s%c 0x%04x at 0x%lx\n"
 argument_list|,
 name|in
 condition|?
@@ -1345,6 +1345,10 @@ literal|'l'
 operator|)
 argument_list|,
 name|port
+argument_list|,
+name|vmexit
+operator|->
+name|rip
 argument_list|)
 expr_stmt|;
 return|return
