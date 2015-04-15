@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* PCI/PCI-X/PCIe bus interface for the LSI MPT2 controllers */
+comment|/* PCI/PCI-X/PCIe bus interface for the Avago Tech (LSI) MPT2 controllers */
 end_comment
 
 begin_comment
@@ -416,7 +416,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2004"
+literal|"Avago Technologies (LSI) SAS2004"
 block|}
 block|,
 block|{
@@ -430,7 +430,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2008"
+literal|"Avago Technologies (LSI) SAS2008"
 block|}
 block|,
 block|{
@@ -444,7 +444,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2108"
+literal|"Avago Technologies (LSI) SAS2108"
 block|}
 block|,
 block|{
@@ -458,7 +458,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2108"
+literal|"Avago Technologies (LSI) SAS2108"
 block|}
 block|,
 block|{
@@ -472,7 +472,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2108"
+literal|"Avago Technologies (LSI) SAS2108"
 block|}
 block|,
 block|{
@@ -486,7 +486,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2116"
+literal|"Avago Technologies (LSI) SAS2116"
 block|}
 block|,
 block|{
@@ -500,7 +500,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2116"
+literal|"Avago Technologies (LSI) SAS2116"
 block|}
 block|,
 block|{
@@ -514,7 +514,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2208"
+literal|"Avago Technologies (LSI) SAS2208"
 block|}
 block|,
 block|{
@@ -528,7 +528,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2208"
+literal|"Avago Technologies (LSI) SAS2208"
 block|}
 block|,
 block|{
@@ -542,7 +542,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2208"
+literal|"Avago Technologies (LSI) SAS2208"
 block|}
 block|,
 block|{
@@ -556,7 +556,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2208"
+literal|"Avago Technologies (LSI) SAS2208"
 block|}
 block|,
 block|{
@@ -570,7 +570,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2208"
+literal|"Avago Technologies (LSI) SAS2208"
 block|}
 block|,
 block|{
@@ -584,7 +584,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2208"
+literal|"Avago Technologies (LSI) SAS2208"
 block|}
 block|,
 block|{
@@ -598,7 +598,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2308"
+literal|"Avago Technologies (LSI) SAS2308"
 block|}
 block|,
 comment|// Add Customer specific vender/subdevice id before generic
@@ -670,7 +670,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2308"
+literal|"Avago Technologies (LSI) SAS2308"
 block|}
 block|,
 block|{
@@ -684,7 +684,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS2308"
+literal|"Avago Technologies (LSI) SAS2308"
 block|}
 block|,
 block|{
@@ -696,9 +696,9 @@ literal|0xffff
 block|,
 literal|0xffff
 block|,
-name|MPS_FLAGS_WD_AVAILABLE
+literal|0
 block|,
-literal|"LSI SSS6200"
+literal|"Avago Technologies (LSI) SSS6200"
 block|}
 block|,
 block|{
