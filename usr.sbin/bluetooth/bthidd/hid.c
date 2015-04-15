@@ -103,40 +103,6 @@ directive|include
 file|"kbd.h"
 end_include
 
-begin_undef
-undef|#
-directive|undef
-name|min
-end_undef
-
-begin_define
-define|#
-directive|define
-name|min
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|(((x)< (y))? (x) : (y))
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|ASIZE
-end_undef
-
-begin_define
-define|#
-directive|define
-name|ASIZE
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a)/sizeof(a[0]))
-end_define
-
 begin_comment
 comment|/*  * Process data from control channel  */
 end_comment
