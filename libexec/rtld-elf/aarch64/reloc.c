@@ -618,7 +618,7 @@ name|index
 operator|=
 name|defobj
 operator|->
-name|tlsindex
+name|tlsoffset
 operator|+
 name|def
 operator|->
@@ -852,7 +852,7 @@ index|]
 operator|=
 name|obj
 operator|->
-name|tlsindex
+name|tlsoffset
 operator|+
 name|rela
 operator|->
