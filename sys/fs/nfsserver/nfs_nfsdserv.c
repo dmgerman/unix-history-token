@@ -5364,7 +5364,7 @@ if|if
 condition|(
 name|retlen
 operator|>
-name|NFS_MAXDATA
+name|NFS_SRVMAXIO
 operator|||
 name|retlen
 operator|<
