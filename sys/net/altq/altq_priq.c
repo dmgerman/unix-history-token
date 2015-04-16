@@ -176,7 +176,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<altq/altq.h>
+file|<net/altq/altq.h>
 end_include
 
 begin_ifdef
@@ -188,7 +188,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<altq/altq_conf.h>
+file|<net/altq/altq_conf.h>
 end_include
 
 begin_endif
@@ -199,7 +199,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<altq/altq_priq.h>
+file|<net/altq/altq_priq.h>
 end_include
 
 begin_comment

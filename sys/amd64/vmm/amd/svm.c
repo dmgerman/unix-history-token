@@ -8254,15 +8254,12 @@ block|}
 comment|/* We are asked to give the cpu by scheduler. */
 if|if
 condition|(
-name|curthread
-operator|->
-name|td_flags
-operator|&
-operator|(
-name|TDF_ASTPENDING
-operator||
-name|TDF_NEEDRESCHED
-operator|)
+name|vcpu_should_yield
+argument_list|(
+name|vm
+argument_list|,
+name|vcpu
+argument_list|)
 condition|)
 block|{
 name|enable_gintr

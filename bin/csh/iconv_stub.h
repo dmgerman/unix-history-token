@@ -30,7 +30,6 @@ name|dl_iconv_t
 parameter_list|(
 name|iconv_t
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*

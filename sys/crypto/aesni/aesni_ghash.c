@@ -19,6 +19,12 @@ directive|include
 file|<crypto/aesni/aesni.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<crypto/aesni/aesni_os.h>
+end_include
+
 begin_else
 else|#
 directive|else

@@ -176,37 +176,37 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<altq/if_altq.h>
+file|<net/altq/if_altq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq.h>
+file|<net/altq/altq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq_rmclass.h>
+file|<net/altq/altq_rmclass.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq_rmclass_debug.h>
+file|<net/altq/altq_rmclass_debug.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq_red.h>
+file|<net/altq/altq_red.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq_rio.h>
+file|<net/altq/altq_rio.h>
 end_include
 
 begin_comment

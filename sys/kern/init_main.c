@@ -3108,6 +3108,12 @@ expr_stmt|;
 name|vfs_mountroot
 argument_list|()
 expr_stmt|;
+comment|/* Wipe GELI passphrase from the environment. */
+name|kern_unsetenv
+argument_list|(
+literal|"kern.geom.eli.passphrase"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Need just enough stack to hold the faked-up "execve()" arguments. 	 */
 name|addr
 operator|=

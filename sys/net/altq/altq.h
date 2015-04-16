@@ -878,7 +878,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<altq/altq_var.h>
+file|<net/altq/altq_var.h>
 end_include
 
 begin_endif

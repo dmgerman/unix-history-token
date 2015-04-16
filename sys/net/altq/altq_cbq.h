@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: altq_cbq.h,v 1.12 2003/10/03 05:05:15 kjc Exp $	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) Sun Microsystems, Inc. 1993-1998 All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the SMCC Technology  *      Development Group at Sun Microsystems, Inc.  *  * 4. The name of the Sun Microsystems, Inc nor may not be used to endorse or  *      promote products derived from this software without specific prior  *      written permission.  *  * SUN MICROSYSTEMS DOES NOT CLAIM MERCHANTABILITY OF THIS SOFTWARE OR THE  * SUITABILITY OF THIS SOFTWARE FOR ANY PARTICULAR PURPOSE.  The software is  * provided "as is" without express or implied warranty of any kind.  *  * These notices must be retained in any copies of any part of this software.  */
+comment|/*-  * Copyright (c) Sun Microsystems, Inc. 1993-1998 All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the SMCC Technology  *      Development Group at Sun Microsystems, Inc.  *  * 4. The name of the Sun Microsystems, Inc nor may not be used to endorse or  *      promote products derived from this software without specific prior  *      written permission.  *  * SUN MICROSYSTEMS DOES NOT CLAIM MERCHANTABILITY OF THIS SOFTWARE OR THE  * SUITABILITY OF THIS SOFTWARE FOR ANY PARTICULAR PURPOSE.  The software is  * provided "as is" without express or implied warranty of any kind.  *  * These notices must be retained in any copies of any part of this software.  *  * $KAME: altq_cbq.h,v 1.12 2003/10/03 05:05:15 kjc Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -22,25 +18,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|<altq/altq.h>
+file|<net/altq/altq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq_rmclass.h>
+file|<net/altq/altq_rmclass.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq_red.h>
+file|<net/altq/altq_red.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq_rio.h>
+file|<net/altq/altq_rio.h>
 end_include
 
 begin_ifdef
