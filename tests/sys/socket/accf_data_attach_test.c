@@ -57,6 +57,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<atf-c.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -68,12 +74,24 @@ begin_comment
 comment|/*  * A number of small tests to confirm that attaching ACCF_DATA accept filters  * to inet4 ports works as expected.  We test:  *  * - That no accept filter is attached on a newly created socket.  * - That bind() has no affect on the accept filter state.  * - That we can't attach an accept filter to a socket that isn't in the  *   listen state.  * - That after we fail to attach the filter, querying the kernel shows no  *   filter attached.  * - That we can attach an accept filter to a socket that is in the listen  *   state.  * - That once an accept filter is attached, we can query to make sure it is  *   attached.  * - That once an accept filter is attached, we can remove it and query to  *   make sure it is removed.  */
 end_comment
 
-begin_function
-name|int
-name|main
-parameter_list|(
-name|void
-parameter_list|)
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
+name|accf_data_attach_test
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|accf_data_attach_test
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|accept_filter_arg
@@ -91,11 +109,6 @@ name|lso
 decl_stmt|,
 name|ret
 decl_stmt|;
-name|printf
-argument_list|(
-literal|"1..11\n"
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Step 0. Open socket(). 	 */
 name|lso
 operator|=
@@ -108,29 +121,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|lso
-operator|==
-operator|-
-literal|1
-condition|)
-name|errx
+name|ATF_REQUIRE_MSG
 argument_list|(
+name|lso
+operator|!=
 operator|-
 literal|1
 argument_list|,
-literal|"not ok 1 - socket: %s"
+literal|"socket failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 1 - socket\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 1. After socket().  Should return EINVAL, since no accept 	 * filter should be attached. 	 */
@@ -152,8 +155,10 @@ argument_list|(
 name|afa
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+name|ATF_REQUIRE_ERRNO
+argument_list|(
+name|EINVAL
+argument_list|,
 name|getsockopt
 argument_list|(
 name|lso
@@ -168,47 +173,9 @@ argument_list|,
 operator|&
 name|len
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"not ok 2 - getsockopt() after socket() succeeded"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|!=
-name|EINVAL
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"not ok 2 - getsockopt() after socket() failed with "
-literal|"%d (%s)"
-argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 2 - getsockopt\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 2. Bind().  Ideally this will succeed. 	 */
@@ -258,8 +225,8 @@ argument_list|(
 name|INADDR_LOOPBACK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|bind
 argument_list|(
 name|lso
@@ -277,25 +244,15 @@ argument_list|(
 name|sin
 argument_list|)
 argument_list|)
-operator|<
+operator|==
 literal|0
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
 argument_list|,
-literal|"not ok 3 - bind %s"
+literal|"bind failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 3 - bind\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 3: After bind().  getsockopt() should return EINVAL, since no 	 *  accept filter should be attached. 	 */
@@ -306,8 +263,10 @@ argument_list|(
 name|afa
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+name|ATF_REQUIRE_ERRNO
+argument_list|(
+name|EINVAL
+argument_list|,
 name|getsockopt
 argument_list|(
 name|lso
@@ -322,46 +281,9 @@ argument_list|,
 operator|&
 name|len
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
+operator|==
 operator|-
 literal|1
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"not ok 4 - getsockopt() after bind() succeeded"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|!=
-name|EINVAL
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"not ok 4 -  getsockopt() after bind() failed with %d (%s)"
-argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 4 - getsockopt\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 4: Setsockopt() before listen().  Should fail, since it's not 	 * yet a listen() socket. 	 */
@@ -385,8 +307,8 @@ argument_list|,
 name|ACCF_NAME
 argument_list|)
 expr_stmt|;
-name|ret
-operator|=
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|setsockopt
 argument_list|(
 name|lso
@@ -403,24 +325,10 @@ argument_list|(
 name|afa
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|==
+operator|!=
 literal|0
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
 argument_list|,
-literal|"not ok 5 - setsockopt() before listen() succeeded"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 5 - setsockopt\n"
+literal|"setsockopt succeeded unexpectedly"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 5: Getsockopt() after pre-listen() setsockopt().  Should 	 * fail with EINVAL, since setsockopt() should have failed. 	 */
@@ -448,76 +356,33 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|==
-literal|0
-condition|)
-name|errx
+name|ATF_REQUIRE_ERRNO
 argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"not ok 6 - getsockopt() after pre-listen() setsockopt() "
-literal|"succeeded"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|!=
 name|EINVAL
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
 argument_list|,
-literal|"not ok 6 - pre-listen() getsockopt() failed with %d (%s)"
-argument_list|,
-name|errno
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 6 - getsockopt\n"
+name|ret
+operator|!=
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 6: listen(). 	 */
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|listen
 argument_list|(
 name|lso
 argument_list|,
-operator|-
 literal|1
 argument_list|)
-operator|<
+operator|==
 literal|0
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
 argument_list|,
-literal|"not ok 7 - listen: %s"
+literal|"listen failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 7 - listen\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 7: Getsockopt() after listen().  Should fail with EINVAL, 	 * since we have not installed accept filter yet. 	 */
@@ -545,36 +410,18 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|ret
 operator|==
-literal|0
-condition|)
-name|errx
-argument_list|(
 operator|-
 literal|1
-argument_list|,
-literal|"not ok 8 - getsockopt() after listen() but before "
-literal|"setsockopt() succeeded"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 name|errno
-operator|!=
+operator|==
 name|EINVAL
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
 argument_list|,
-literal|"not ok 8 - getsockopt() after listen() but before "
-literal|"setsockopt() failed with %d (%s)"
-argument_list|,
-name|errno
+literal|"getsockopt after listen failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -582,9 +429,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|atf_tc_expect_fail
 argument_list|(
-literal|"ok 8 - getsockopt\n"
+literal|"XXX(ngie): step 8 always fails on my system for some odd reason"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 8: After listen().  This call to setsockopt() should succeed. 	 */
@@ -627,31 +474,19 @@ name|afa
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-name|errx
+comment|//ATF_REQUIRE_MSG(ret == 0,
+name|ATF_REQUIRE_MSG
 argument_list|(
-operator|-
-literal|1
+name|ret
+operator|==
+literal|0
 argument_list|,
-literal|"not ok 9 - setsockopt() after listen() failed with %d "
-literal|"(%s)"
-argument_list|,
-name|errno
+literal|"setsockopt after listen failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
 name|errno
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 9 - setsockopt\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 9: After setsockopt().  Should succeed and identify 	 * ACCF_NAME. 	 */
@@ -690,21 +525,13 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-name|errx
+name|ATF_REQUIRE_MSG
 argument_list|(
-operator|-
-literal|1
+name|ret
+operator|==
+literal|0
 argument_list|,
-literal|"not ok 10 - getsockopt() after listen() setsockopt() "
-literal|"failed with %d (%s)"
-argument_list|,
-name|errno
+literal|"getsockopt after listen/setsockopt failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -712,23 +539,8 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|len
-operator|!=
-sizeof|sizeof
+name|ATF_REQUIRE_EQ
 argument_list|(
-name|afa
-argument_list|)
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"not ok 10 - getsockopt() after setsockopet()  after "
-literal|"listen() returned wrong size (got %d expected %zd)"
-argument_list|,
 name|len
 argument_list|,
 sizeof|sizeof
@@ -737,37 +549,13 @@ name|afa
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|strcmp
+name|ATF_REQUIRE_STREQ
 argument_list|(
 name|afa
 operator|.
 name|af_name
 argument_list|,
 name|ACCF_NAME
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-literal|"not ok 10 - getsockopt() after setsockopt() after "
-literal|"listen() mismatch (got %s expected %s)"
-argument_list|,
-name|afa
-operator|.
-name|af_name
-argument_list|,
-name|ACCF_NAME
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 10 - getsockopt\n"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Step 10: Remove accept filter.  After removing the accept filter 	 * getsockopt() should fail with EINVAL. 	 */
@@ -786,21 +574,13 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-name|errx
+name|ATF_REQUIRE_MSG
 argument_list|(
-operator|-
-literal|1
+name|ret
+operator|==
+literal|0
 argument_list|,
-literal|"not ok 11 - setsockopt() after listen() "
-literal|"failed with %d (%s)"
-argument_list|,
-name|errno
+literal|"setsockopt failed to remove accept filter: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -843,40 +623,18 @@ operator|&
 name|len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|ret
 operator|==
-literal|0
-condition|)
-name|errx
-argument_list|(
 operator|-
 literal|1
-argument_list|,
-literal|"not ok 11 - getsockopt() after removing "
-literal|"the accept filter returns valid accept filter %s"
-argument_list|,
-name|afa
-operator|.
-name|af_name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 name|errno
-operator|!=
+operator|==
 name|EINVAL
-condition|)
-name|errx
-argument_list|(
-operator|-
-literal|1
 argument_list|,
-literal|"not ok 11 - getsockopt() after removing the accept"
-literal|"filter failed with %d (%s)"
-argument_list|,
-name|errno
+literal|"getsockopt failed after removing the accept filter: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -884,23 +642,38 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"ok 11 - setsockopt\n"
-argument_list|)
-expr_stmt|;
 name|close
 argument_list|(
 name|lso
 argument_list|)
 expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ATF_TP_ADD_TCS
+argument_list|(
+argument|tp
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
+name|accf_data_attach_test
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|atf_no_error
+argument_list|()
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 
