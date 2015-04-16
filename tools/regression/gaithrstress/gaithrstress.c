@@ -1062,7 +1062,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Read %u random words from %s.\n"
+literal|"Read %zu random words from %s.\n"
 argument_list|,
 name|nrandwords
 argument_list|,
@@ -1163,14 +1163,14 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"creating worker %u"
+literal|"creating worker %zu"
 argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u%s"
+literal|"%zu%s"
 argument_list|,
 name|i
 argument_list|,
@@ -1261,7 +1261,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%u%s"
+literal|"%zu%s"
 argument_list|,
 name|i
 argument_list|,
@@ -1324,7 +1324,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|"%-10u%-20ju%-20ju%u:%s%.2f\n"
+literal|"%-10zu%-20ju%-20ju%ld:%s%.2f\n"
 argument_list|,
 name|i
 argument_list|,
