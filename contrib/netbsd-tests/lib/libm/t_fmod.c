@@ -91,6 +91,17 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|LDBL_PREC
+operator|!=
+literal|53
 name|ATF_CHECK
 argument_list|(
 name|fmodl
@@ -103,6 +114,8 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ATF_CHECK
 argument_list|(
 name|fmodf
