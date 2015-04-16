@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$KAME: altq_hfsc.h,v 1.12 2003/12/05 05:40:46 kjc Exp $	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1997-1999 Carnegie Mellon University. All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation is hereby granted (including for commercial or  * for-profit use), provided that both the copyright notice and this  * permission notice appear in all copies of the software, derivative  * works, or modified versions, and any portions thereof.  *  * THIS SOFTWARE IS EXPERIMENTAL AND IS KNOWN TO HAVE BUGS, SOME OF  * WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON PROVIDES THIS  * SOFTWARE IN ITS ``AS IS'' CONDITION, AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL CARNEGIE MELLON UNIVERSITY BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH  * DAMAGE.  *  * Carnegie Mellon encourages (but does not require) users of this  * software to return any improvements or extensions that they make,  * and to grant Carnegie Mellon the rights to redistribute these  * changes without encumbrance.  */
+comment|/*-  * Copyright (c) 1997-1999 Carnegie Mellon University. All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation is hereby granted (including for commercial or  * for-profit use), provided that both the copyright notice and this  * permission notice appear in all copies of the software, derivative  * works, or modified versions, and any portions thereof.  *  * THIS SOFTWARE IS EXPERIMENTAL AND IS KNOWN TO HAVE BUGS, SOME OF  * WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON PROVIDES THIS  * SOFTWARE IN ITS ``AS IS'' CONDITION, AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL CARNEGIE MELLON UNIVERSITY BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH  * DAMAGE.  *  * Carnegie Mellon encourages (but does not require) users of this  * software to return any improvements or extensions that they make,  * and to grant Carnegie Mellon the rights to redistribute these  * changes without encumbrance.  *  * $KAME: altq_hfsc.h,v 1.12 2003/12/05 05:40:46 kjc Exp $  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -22,25 +18,25 @@ end_define
 begin_include
 include|#
 directive|include
-file|<altq/altq.h>
+file|<net/altq/altq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq_classq.h>
+file|<net/altq/altq_classq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq_red.h>
+file|<net/altq/altq_red.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq_rio.h>
+file|<net/altq/altq_rio.h>
 end_include
 
 begin_ifdef

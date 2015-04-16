@@ -73,7 +73,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|<altq/altqconf.h>
+file|<net/altq/altqconf.h>
 end_include
 
 begin_endif
