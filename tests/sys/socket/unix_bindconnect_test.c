@@ -1249,7 +1249,7 @@ name|strlcpy
 argument_list|(
 name|directory_path
 argument_list|,
-literal|"/tmp/unix_bind.XXXXXXX"
+literal|"unix_bind.XXXXXXX"
 argument_list|,
 name|PATH_MAX
 argument_list|)

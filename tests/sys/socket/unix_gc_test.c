@@ -3882,7 +3882,7 @@ name|strlcpy
 argument_list|(
 name|dpath
 argument_list|,
-literal|"/tmp/unpgc.XXXXXXXX"
+literal|"unpgc.XXXXXXXX"
 argument_list|,
 sizeof|sizeof
 argument_list|(
