@@ -74,14 +74,14 @@ begin_define
 define|#
 directive|define
 name|VTFONT_MAXMAPPINGS
-value|8192
+value|65536
 end_define
 
 begin_define
 define|#
 directive|define
 name|VTFONT_MAXGLYPHSIZE
-value|1048576
+value|2097152
 end_define
 
 begin_define

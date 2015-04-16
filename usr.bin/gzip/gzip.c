@@ -6758,7 +6758,11 @@ argument_list|,
 name|name
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|name
+argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|GZIP_ORIGNAME
 argument_list|)
@@ -6788,7 +6792,7 @@ index|[
 literal|0
 index|]
 operator|!=
-literal|0
+literal|'\0'
 condition|)
 block|{
 name|char
@@ -6798,6 +6802,14 @@ decl_stmt|,
 modifier|*
 name|nf
 decl_stmt|;
+comment|/* Make sure that name is NUL-terminated */
+name|name
+index|[
+name|rbytes
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
 comment|/* strip saved directory name */
 name|nf
 operator|=

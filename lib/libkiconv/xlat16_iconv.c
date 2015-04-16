@@ -199,7 +199,6 @@ function_decl|)
 parameter_list|(
 name|iconv_t
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -282,7 +281,6 @@ name|my_iconv_char
 parameter_list|(
 name|iconv_t
 parameter_list|,
-specifier|const
 name|u_char
 modifier|*
 modifier|*
@@ -1162,12 +1160,6 @@ name|my_iconv_char
 argument_list|(
 name|cd
 argument_list|,
-operator|(
-specifier|const
-name|u_char
-operator|*
-operator|*
-operator|)
 operator|&
 name|srcp
 argument_list|,
@@ -1804,7 +1796,6 @@ parameter_list|(
 name|iconv_t
 name|cd
 parameter_list|,
-specifier|const
 name|u_char
 modifier|*
 modifier|*
@@ -1824,12 +1815,10 @@ modifier|*
 name|olen
 parameter_list|)
 block|{
-specifier|const
 name|u_char
 modifier|*
 name|sp
-decl_stmt|;
-name|u_char
+decl_stmt|,
 modifier|*
 name|dp
 decl_stmt|,
@@ -1887,7 +1876,6 @@ argument_list|(
 name|cd
 argument_list|,
 operator|(
-specifier|const
 name|char
 operator|*
 operator|*
@@ -2019,7 +2007,6 @@ argument_list|(
 name|cd
 argument_list|,
 operator|(
-specifier|const
 name|char
 operator|*
 operator|*
@@ -2187,7 +2174,6 @@ argument_list|(
 name|cd
 argument_list|,
 operator|(
-specifier|const
 name|char
 operator|*
 operator|*

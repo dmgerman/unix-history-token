@@ -241,6 +241,9 @@ decl_stmt|;
 name|uint32_t
 name|cpacr
 decl_stmt|;
+name|critical_enter
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Only store the registers if the VFP is enabled, 	 * i.e. return if we are trapping on FP access. 	 */
 name|cpacr
 operator|=
@@ -256,10 +259,10 @@ name|cpacr
 operator|&
 name|CPACR_FPEN_MASK
 operator|)
-operator|!=
+operator|==
 name|CPACR_FPEN_TRAP_NONE
 condition|)
-return|return;
+block|{
 name|vfp_state
 operator|=
 name|td
@@ -303,10 +306,7 @@ operator|(
 name|vfp_state
 operator|)
 block|)
-function|;
-end_function
-
-begin_expr_stmt
+empty_stmt|;
 name|td
 operator|->
 name|td_pcb
@@ -315,9 +315,6 @@ name|pcb_fpcr
 operator|=
 name|fpcr
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|td
 operator|->
 name|td_pcb
@@ -326,16 +323,17 @@ name|pcb_fpsr
 operator|=
 name|fpsr
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|dsb
 argument_list|()
 expr_stmt|;
-end_expr_stmt
+name|vfp_disable
+argument_list|()
+expr_stmt|;
+block|}
+end_function
 
 begin_expr_stmt
-name|vfp_disable
+name|critical_exit
 argument_list|()
 expr_stmt|;
 end_expr_stmt

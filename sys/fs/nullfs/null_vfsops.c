@@ -676,7 +676,11 @@ name|v_mount
 operator|->
 name|mnt_kern_flag
 operator|&
+operator|(
 name|MNTK_SUSPENDABLE
+operator||
+name|MNTK_USES_BCACHE
+operator|)
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(

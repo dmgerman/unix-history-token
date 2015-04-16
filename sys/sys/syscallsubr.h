@@ -861,6 +861,10 @@ parameter_list|,
 name|size_t
 name|bufsize
 parameter_list|,
+name|size_t
+modifier|*
+name|countp
+parameter_list|,
 name|enum
 name|uio_seg
 name|bufseg

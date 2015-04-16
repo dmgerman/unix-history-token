@@ -6319,7 +6319,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * RFC 1813 3.3.21: if count is 0, a flush from offset to the end of 	 * file is done.  At this time VOP_FSYNC does not accept offset and 	 * byte count parameters so call VOP_FSYNC the whole file for now. 	 * The same is true for NFSv4: RFC 3530 Sec. 14.2.3. 	 */
+comment|/* 	 * RFC 1813 3.3.21: if count is 0, a flush from offset to the end of 	 * file is done.  At this time VOP_FSYNC does not accept offset and 	 * byte count parameters so call VOP_FSYNC the whole file for now. 	 * The same is true for NFSv4: RFC 3530 Sec. 14.2.3. 	 * File systems that do not use the buffer cache (as indicated 	 * by MNTK_USES_BCACHE not being set) must use VOP_FSYNC(). 	 */
 if|if
 condition|(
 name|cnt
@@ -6329,6 +6329,18 @@ operator|||
 name|cnt
 operator|>
 name|MAX_COMMIT_COUNT
+operator|||
+operator|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_USES_BCACHE
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 		 * Give up and do the whole thing 		 */

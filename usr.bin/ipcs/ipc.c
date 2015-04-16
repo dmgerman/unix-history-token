@@ -154,23 +154,6 @@ name|shmsegs
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
-name|void
-name|kget
-parameter_list|(
-name|int
-name|idx
-parameter_list|,
-name|void
-modifier|*
-name|addr
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 name|struct
 name|nlist

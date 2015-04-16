@@ -1482,6 +1482,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MNTK_USES_BCACHE
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* FS uses the buffer cache. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNTK_NOASYNC
 value|0x00800000
 end_define
