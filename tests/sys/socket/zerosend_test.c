@@ -1220,6 +1220,7 @@ modifier|*
 name|fdp
 parameter_list|)
 block|{
+name|unsigned
 name|int
 name|i
 decl_stmt|;

@@ -73,6 +73,17 @@ begin_comment
 comment|/*  * This regression test is intended to verify whether or not SIGPIPE is  * properly generated in several simple test cases, as well as testing  * whether SO_NOSIGPIPE disables SIGPIPE, if available on the system.  * SIGPIPE is generated if a write or send is attempted on a socket that has  * been shutdown for write.  This test runs several test cases with UNIX  * domain sockets and TCP sockets to confirm that either EPIPE or SIGPIPE is  * properly returned.  *  * For the purposes of testing TCP, an unused port number must be specified.  */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|void
+name|usage
+argument_list|(
+name|void
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
