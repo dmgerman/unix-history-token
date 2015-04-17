@@ -7142,12 +7142,6 @@ argument_list|(
 operator|&
 name|in6
 argument_list|)
-operator|||
-name|in6_clearscope
-argument_list|(
-operator|&
-name|in6
-argument_list|)
 condition|)
 return|return
 operator|(
