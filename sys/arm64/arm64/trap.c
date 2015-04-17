@@ -201,7 +201,7 @@ end_endif
 
 begin_decl_stmt
 specifier|extern
-name|uintptr_t
+name|register_t
 name|fsu_intr_fault
 decl_stmt|;
 end_decl_stmt
@@ -639,6 +639,10 @@ name|pcb
 operator|->
 name|pcb_onfault
 operator|==
+operator|(
+name|vm_offset_t
+operator|)
+operator|&
 name|fsu_intr_fault
 argument_list|)
 condition|)
