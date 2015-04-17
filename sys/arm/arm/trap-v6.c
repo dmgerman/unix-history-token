@@ -139,6 +139,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu.h>
 end_include
 
@@ -831,6 +837,25 @@ else|:
 name|cp15_dfsr_get
 argument_list|()
 expr_stmt|;
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|7
+name|far
+operator|=
+operator|(
+name|prefetch
+operator|)
+condition|?
+name|cp15_ifar_get
+argument_list|()
+else|:
+name|cp15_dfar_get
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|far
 operator|=
 operator|(
@@ -845,6 +870,8 @@ else|:
 name|cp15_dfar_get
 argument_list|()
 expr_stmt|;
+endif|#
+directive|endif
 name|idx
 operator|=
 name|FSR_TO_FAULT
