@@ -206,6 +206,10 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_comment
+comment|/*   * Note the flags field is actually *two* fields. The c_flags  * field is the one that caller operations that may, or may not have  * a lock touches i.e. callout_deactivate(). The other, the c_iflags,  * is the internal flags that *must* be kept correct on which the  * callout system depend on e.g. callout_pending().  * The c_iflag is used internally by the callout system to determine which  * list the callout is on and track internal state. Callers *should not*   * use the c_flags field directly but should use the macros provided.  *    * The c_iflags field holds internal flags that are protected by internal  * locks of the callout subsystem.  The c_flags field holds external flags.  * The caller must hold its own lock while manipulating or reading external  * flags via callout_active(), callout_deactivate(), callout_reset*(), or  * callout_stop() to avoid races.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -214,16 +218,6 @@ parameter_list|(
 name|c
 parameter_list|)
 value|((c)->c_flags& CALLOUT_ACTIVE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|callout_migrating
-parameter_list|(
-name|c
-parameter_list|)
-value|((c)->c_flags& CALLOUT_DFRMIGRATION)
 end_define
 
 begin_define
@@ -328,7 +322,7 @@ name|callout_pending
 parameter_list|(
 name|c
 parameter_list|)
-value|((c)->c_flags& CALLOUT_PENDING)
+value|((c)->c_iflags& CALLOUT_PENDING)
 end_define
 
 begin_function_decl
@@ -380,7 +374,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|callout_reset_sbt_on((c), (sbt), (pr), (fn), (arg), (c)->c_cpu, (flags))
+value|callout_reset_sbt_on((c), (sbt), (pr), (fn), (arg), -1, (flags))
 end_define
 
 begin_define
@@ -437,7 +431,7 @@ parameter_list|,
 name|arg
 parameter_list|)
 define|\
-value|callout_reset_on((c), (on_tick), (fn), (arg), (c)->c_cpu)
+value|callout_reset_on((c), (on_tick), (fn), (arg), -1)
 end_define
 
 begin_define
@@ -490,7 +484,7 @@ parameter_list|,
 name|flags
 parameter_list|)
 define|\
-value|callout_schedule_sbt_on((c), (sbt), (pr), (c)->c_cpu, (flags))
+value|callout_schedule_sbt_on((c), (sbt), (pr), -1, (flags))
 end_define
 
 begin_define
