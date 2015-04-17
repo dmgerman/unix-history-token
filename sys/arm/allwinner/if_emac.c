@@ -3029,25 +3029,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|ifp
-operator|=
-name|sc
-operator|->
-name|emac_ifp
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_RUNNING
-operator|)
-operator|==
-literal|0
-condition|)
-return|return;
 comment|/* Disable all interrupts */
 name|EMAC_WRITE_REG
 argument_list|(
@@ -3107,6 +3088,12 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ifp
+operator|=
+name|sc
+operator|->
+name|emac_ifp
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -3124,19 +3111,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_RUNNING
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
 comment|/* Re-enable interrupt mask */
 name|reg_val
 operator|=
@@ -3160,7 +3134,6 @@ argument_list|,
 name|reg_val
 argument_list|)
 expr_stmt|;
-block|}
 name|EMAC_UNLOCK
 argument_list|(
 name|sc
