@@ -331,6 +331,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|Oflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* limit to single volume */
+end_comment
+
+begin_decl_stmt
+name|int
 name|Xflag
 decl_stmt|;
 end_decl_stmt

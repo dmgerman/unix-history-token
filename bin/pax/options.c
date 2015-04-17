@@ -904,7 +904,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ab:cdf:iklno:p:rs:tuvwx:zB:DE:G:HLPT:U:XYZ"
+literal|"ab:cdf:iklno:p:rs:tuvwx:zB:DE:G:HLOPT:U:XYZ"
 argument_list|)
 operator|)
 operator|!=
@@ -1577,6 +1577,15 @@ name|CLF
 expr_stmt|;
 break|break;
 case|case
+literal|'O'
+case|:
+comment|/* 			 * Force one volume. Non standard option. 			 */
+name|Oflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'P'
 case|:
 comment|/* 			 * do NOT follow symlinks (default) 			 */
@@ -1973,7 +1982,7 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|Oflag
+name|tar_Oflag
 init|=
 literal|0
 decl_stmt|;
@@ -2188,7 +2197,7 @@ expr_stmt|;
 case|case
 literal|'O'
 case|:
-name|Oflag
+name|tar_Oflag
 operator|=
 literal|1
 expr_stmt|;
@@ -2556,7 +2565,7 @@ operator|&
 operator|(
 name|fsub
 index|[
-name|Oflag
+name|tar_Oflag
 condition|?
 name|F_OTAR
 else|:
@@ -2567,7 +2576,7 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|Oflag
+name|tar_Oflag
 condition|)
 block|{
 name|paxwarn
@@ -5107,7 +5116,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"usage: pax [-cdnvz] [-E limit] [-f archive] "
+literal|"usage: pax [-cdnOvz] [-E limit] [-f archive] "
 argument_list|,
 name|stderr
 argument_list|)
@@ -5157,7 +5166,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"       pax -r [-cdiknuvzDYZ] [-E limit] "
+literal|"       pax -r [-cdiknOuvzDYZ] [-E limit] "
 argument_list|,
 name|stderr
 argument_list|)
@@ -5217,7 +5226,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"       pax -w [-dituvzHLPX] [-b blocksize] "
+literal|"       pax -w [-dituvzHLOPX] [-b blocksize] "
 argument_list|,
 name|stderr
 argument_list|)
@@ -5287,7 +5296,7 @@ name|void
 operator|)
 name|fputs
 argument_list|(
-literal|"       pax -r -w [-diklntuvDHLPXYZ] "
+literal|"       pax -r -w [-diklntuvDHLOPXYZ] "
 argument_list|,
 name|stderr
 argument_list|)
