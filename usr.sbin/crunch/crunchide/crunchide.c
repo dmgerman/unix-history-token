@@ -732,32 +732,6 @@ init|=
 block|{
 ifdef|#
 directive|ifdef
-name|NLIST_AOUT
-block|{
-literal|"a.out"
-block|,
-name|check_aout
-block|,
-name|hide_aout
-block|,	}
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|NLIST_ECOFF
-block|{
-literal|"ECOFF"
-block|,
-name|check_elf64
-block|,
-name|hide_elf64
-block|,	}
-block|,
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|NLIST_ELF32
 block|{
 literal|"ELF32"
