@@ -148,6 +148,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|EMAC_TX_FIFO0
+value|(1<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMAC_TX_FIFO1
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|EMAC_RX_CTL
 value|0x3C
 end_define
@@ -205,7 +219,7 @@ begin_define
 define|#
 directive|define
 name|EMAC_INT_STA_TX
-value|(0x01 | 0x02)
+value|(EMAC_TX_FIFO0 | EMAC_TX_FIFO1)
 end_define
 
 begin_define
