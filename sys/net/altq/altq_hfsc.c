@@ -1,33 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
-end_comment
-
-begin_comment
-comment|/*	$KAME: altq_hfsc.c,v 1.24 2003/12/05 05:40:46 kjc Exp $	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) 1997-1999 Carnegie Mellon University. All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation is hereby granted (including for commercial or  * for-profit use), provided that both the copyright notice and this  * permission notice appear in all copies of the software, derivative  * works, or modified versions, and any portions thereof.  *  * THIS SOFTWARE IS EXPERIMENTAL AND IS KNOWN TO HAVE BUGS, SOME OF  * WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON PROVIDES THIS  * SOFTWARE IN ITS ``AS IS'' CONDITION, AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL CARNEGIE MELLON UNIVERSITY BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH  * DAMAGE.  *  * Carnegie Mellon encourages (but does not require) users of this  * software to return any improvements or extensions that they make,  * and to grant Carnegie Mellon the rights to redistribute these  * changes without encumbrance.  */
+comment|/*-  * Copyright (c) 1997-1999 Carnegie Mellon University. All Rights Reserved.  *  * Permission to use, copy, modify, and distribute this software and  * its documentation is hereby granted (including for commercial or  * for-profit use), provided that both the copyright notice and this  * permission notice appear in all copies of the software, derivative  * works, or modified versions, and any portions thereof.  *  * THIS SOFTWARE IS EXPERIMENTAL AND IS KNOWN TO HAVE BUGS, SOME OF  * WHICH MAY HAVE SERIOUS CONSEQUENCES.  CARNEGIE MELLON PROVIDES THIS  * SOFTWARE IN ITS ``AS IS'' CONDITION, AND ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL CARNEGIE MELLON UNIVERSITY BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT  * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH  * DAMAGE.  *  * Carnegie Mellon encourages (but does not require) users of this  * software to return any improvements or extensions that they make,  * and to grant Carnegie Mellon the rights to redistribute these  * changes without encumbrance.  *  * $KAME: altq_hfsc.c,v 1.24 2003/12/05 05:40:46 kjc Exp $  * $FreeBSD$  */
 end_comment
 
 begin_comment
 comment|/*  * H-FSC is described in Proceedings of SIGCOMM'97,  * "A Hierarchical Fair Service Curve Algorithm for Link-Sharing,  * Real-Time and Priority Service"  * by Ion Stoica, Hui Zhang, and T. S. Eugene Ng.  *  * Oleg Cherevko<olwi@aq.ml.com.ua> added the upperlimit for link-sharing.  * when a class has an upperlimit, the fit-time is computed from the  * upperlimit service curve.  the link-sharing scheduler does not schedule  * a class whose fit-time exceeds the current time.  */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
 
 begin_include
 include|#
@@ -41,31 +19,11 @@ directive|include
 file|"opt_inet.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"opt_inet6.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ || __NetBSD__ */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -1100,23 +1058,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|__NetBSD__
 name|s
 operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|altq_attach
@@ -2788,23 +2734,11 @@ name|cl_parent
 operator|=
 name|parent
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__NetBSD__
 name|s
 operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|IFQ_LOCK
 argument_list|(
 name|hif
@@ -3175,23 +3109,11 @@ operator|(
 name|EBUSY
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|__NetBSD__
 name|s
 operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|IFQ_LOCK
 argument_list|(
 name|cl
@@ -8770,23 +8692,11 @@ operator|=
 name|read_machclk
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__NetBSD__
 name|s
 operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|IFQ_LOCK
 argument_list|(
 name|cl

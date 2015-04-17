@@ -1,29 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/*-  * Copyright (c) Sun Microsystems, Inc. 1993-1998 All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the SMCC Technology  *      Development Group at Sun Microsystems, Inc.  *  * 4. The name of the Sun Microsystems, Inc nor may not be used to endorse or  *      promote products derived from this software without specific prior  *      written permission.  *  * SUN MICROSYSTEMS DOES NOT CLAIM MERCHANTABILITY OF THIS SOFTWARE OR THE  * SUITABILITY OF THIS SOFTWARE FOR ANY PARTICULAR PURPOSE.  The software is  * provided "as is" without express or implied warranty of any kind.  *  * These notices must be retained in any copies of any part of this software.  *  * $KAME: altq_cbq.c,v 1.19 2003/09/17 14:23:25 kjc Exp $  * $FreeBSD$  */
 end_comment
-
-begin_comment
-comment|/*	$KAME: altq_cbq.c,v 1.19 2003/09/17 14:23:25 kjc Exp $	*/
-end_comment
-
-begin_comment
-comment|/*  * Copyright (c) Sun Microsystems, Inc. 1993-1998 All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by the SMCC Technology  *      Development Group at Sun Microsystems, Inc.  *  * 4. The name of the Sun Microsystems, Inc nor may not be used to endorse or  *      promote products derived from this software without specific prior  *      written permission.  *  * SUN MICROSYSTEMS DOES NOT CLAIM MERCHANTABILITY OF THIS SOFTWARE OR THE  * SUITABILITY OF THIS SOFTWARE FOR ANY PARTICULAR PURPOSE.  The software is  * provided "as is" without express or implied warranty of any kind.  *  * These notices must be retained in any copies of any part of this software.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
 
 begin_include
 include|#
@@ -37,31 +15,11 @@ directive|include
 file|"opt_inet.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"opt_inet6.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__ || __NetBSD__ */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -1310,23 +1268,11 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-ifdef|#
-directive|ifdef
-name|__NetBSD__
 name|s
 operator|=
 name|splnet
 argument_list|()
 expr_stmt|;
-else|#
-directive|else
-name|s
-operator|=
-name|splimp
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|error
 operator|=
 name|altq_attach
