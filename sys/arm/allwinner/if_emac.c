@@ -1627,10 +1627,6 @@ name|len
 operator|=
 name|MCLBYTES
 expr_stmt|;
-name|len
-operator|-=
-name|ETHER_CRC_LEN
-expr_stmt|;
 comment|/* Copy entire frame to mbuf first. */
 name|bus_space_read_multi_4
 argument_list|(
@@ -1681,6 +1677,8 @@ operator|.
 name|len
 operator|=
 name|len
+operator|-
+name|ETHER_CRC_LEN
 expr_stmt|;
 comment|/* 			 * Emac controller needs strict aligment, so to avoid 			 * copying over an entire frame to align, we allocate 			 * a new mbuf and copy ethernet header + IP header to 			 * the new mbuf. The new mbuf is prepended into the 			 * existing mbuf chain. 			 */
 if|if
