@@ -654,8 +654,6 @@ literal|"nfs"
 block|,
 literal|"nullfs"
 block|,
-literal|"oldnfs"
-block|,
 literal|"smbfs"
 block|,
 literal|"udf"
