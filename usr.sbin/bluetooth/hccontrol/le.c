@@ -303,16 +303,16 @@ decl_stmt|;
 name|int
 name|policy
 decl_stmt|;
+name|int
+name|e
+decl_stmt|,
+name|n
+decl_stmt|;
 name|ng_hci_le_set_scan_parameters_cp
 name|cp
 decl_stmt|;
 name|ng_hci_le_set_scan_parameters_rp
 name|rp
-decl_stmt|;
-name|int
-name|e
-decl_stmt|,
-name|n
 decl_stmt|;
 if|if
 condition|(
@@ -320,11 +320,9 @@ name|argc
 operator|!=
 literal|5
 condition|)
-block|{
 return|return
 name|USAGE
 return|;
-block|}
 if|if
 condition|(
 name|strcmp
@@ -339,12 +337,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|type
 operator|=
 literal|1
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -360,18 +356,14 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|type
 operator|=
 literal|0
 expr_stmt|;
-block|}
 else|else
-block|{
 return|return
 name|USAGE
 return|;
-block|}
 name|interval
 operator|=
 call|(
@@ -444,12 +436,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|adrtype
 operator|=
 literal|0
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -465,18 +455,14 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|adrtype
 operator|=
 literal|1
 expr_stmt|;
-block|}
 else|else
-block|{
 return|return
 name|USAGE
 return|;
-block|}
 if|if
 condition|(
 name|strcmp
@@ -491,12 +477,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|policy
 operator|=
 literal|0
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -512,18 +496,14 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|policy
 operator|=
 literal|1
 expr_stmt|;
-block|}
 else|else
-block|{
 return|return
 name|USAGE
 return|;
-block|}
 name|cp
 operator|.
 name|le_scan_type
@@ -658,12 +638,10 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|enable
 operator|=
 literal|1
 expr_stmt|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -679,11 +657,9 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 name|USAGE
 return|;
-block|}
 name|n
 operator|=
 sizeof|sizeof
@@ -751,11 +727,9 @@ name|status
 operator|!=
 literal|0
 condition|)
-block|{
 return|return
 name|ERROR
 return|;
-block|}
 return|return
 name|OK
 return|;
@@ -871,11 +845,9 @@ operator|)
 operator|>=
 name|buflast
 condition|)
-block|{
 goto|goto
 name|done
 goto|;
-block|}
 name|curbuf
 index|[
 literal|0
@@ -921,11 +893,9 @@ literal|3
 operator|>
 name|buflast
 condition|)
-block|{
 goto|goto
 name|done
 goto|;
-block|}
 name|curbuf
 index|[
 literal|0
@@ -1209,7 +1179,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"SEt SCAN RESPONSE %d %d %d\n"
+literal|"SET SCAN RESPONSE %d %d %d\n"
 argument_list|,
 name|e
 argument_list|,
@@ -1283,7 +1253,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"LOCAL SUPPOREDED:%d %d %lu\n"
+literal|"LOCAL SUPPOREDED: %d %d %lu\n"
 argument_list|,
 name|e
 argument_list|,
@@ -1343,7 +1313,7 @@ name|NG_HCI_OPCODE
 argument_list|(
 name|NG_HCI_OGF_LE
 argument_list|,
-name|NG_HCI_OCF_LE_READ_SUPPORTED_STATUS
+name|NG_HCI_OCF_LE_READ_SUPPORTED
 argument_list|)
 argument_list|,
 operator|(
@@ -1359,7 +1329,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"LE_STATUS:%d %d %lx\n"
+literal|"LE_STATUS: %d %d %lx\n"
 argument_list|,
 name|e
 argument_list|,
@@ -1609,11 +1579,9 @@ name|argc
 operator|!=
 literal|1
 condition|)
-block|{
 return|return
 name|USAGE
 return|;
-block|}
 if|if
 condition|(
 name|strcasecmp
@@ -1661,7 +1629,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-block|{
 name|set_event_mask
 argument_list|(
 name|s
@@ -1669,13 +1636,10 @@ argument_list|,
 name|NG_HCI_EVENT_MASK_DEFAULT
 argument_list|)
 expr_stmt|;
-block|}
 else|else
-block|{
 return|return
 name|USAGE
 return|;
-block|}
 return|return
 name|OK
 return|;
@@ -1697,7 +1661,7 @@ literal|"Enable LE event "
 block|,
 operator|&
 name|le_enable
-block|,   }
+block|, }
 block|,
 block|{
 literal|"le_read_local_supported_features"
