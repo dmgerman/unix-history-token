@@ -176,16 +176,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|acpi_cpu_idle_mwait
-parameter_list|(
-name|uint32_t
-name|mwait_hint
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 modifier|*
 name|acpi_map_table
 parameter_list|(
