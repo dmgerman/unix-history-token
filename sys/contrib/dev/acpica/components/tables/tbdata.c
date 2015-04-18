@@ -187,9 +187,12 @@ name|ACPI_CAST_PTR
 argument_list|(
 name|ACPI_TABLE_HEADER
 argument_list|,
+name|ACPI_PHYSADDR_TO_PTR
+argument_list|(
 name|TableDesc
 operator|->
 name|Address
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -382,7 +385,10 @@ name|ACPI_CAST_PTR
 argument_list|(
 name|ACPI_TABLE_HEADER
 argument_list|,
+name|ACPI_PHYSADDR_TO_PTR
+argument_list|(
 name|Address
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -750,8 +756,7 @@ name|AE_INFO
 operator|,
 name|AE_NO_MEMORY
 operator|,
-literal|"%4.4s "
-name|ACPI_PRINTF_UINT
+literal|"%4.4s 0x%8.8X%8.8X"
 literal|" Attempted table install failed"
 operator|,
 name|AcpiUtValidAcpiName
@@ -771,7 +776,7 @@ name|Ascii
 else|:
 literal|"????"
 operator|,
-name|ACPI_FORMAT_TO_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|TableDesc
 operator|->
@@ -996,20 +1001,28 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetNextRootIndex  *  * PARAMETERS:  TableIndex          - Where table index is returned  *  * RETURN:      Status and table index.  *  * DESCRIPTION: Allocate a new ACPI table entry to the global table list  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetNextTableDescriptor  *  * PARAMETERS:  TableIndex          - Where table index is returned  *              TableDesc           - Where table descriptor is returned  *  * RETURN:      Status and table index/descriptor.  *  * DESCRIPTION: Allocate a new ACPI table entry to the global table list  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiTbGetNextRootIndex
+name|AcpiTbGetNextTableDescriptor
 parameter_list|(
 name|UINT32
 modifier|*
 name|TableIndex
+parameter_list|,
+name|ACPI_TABLE_DESC
+modifier|*
+modifier|*
+name|TableDesc
 parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
+decl_stmt|;
+name|UINT32
+name|i
 decl_stmt|;
 comment|/* Ensure that there is room for the table in the Root Table List */
 if|if
@@ -1043,8 +1056,7 @@ operator|)
 return|;
 block|}
 block|}
-operator|*
-name|TableIndex
+name|i
 operator|=
 name|AcpiGbl_RootTableList
 operator|.
@@ -1055,6 +1067,34 @@ operator|.
 name|CurrentTableCount
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|TableIndex
+condition|)
+block|{
+operator|*
+name|TableIndex
+operator|=
+name|i
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|TableDesc
+condition|)
+block|{
+operator|*
+name|TableDesc
+operator|=
+operator|&
+name|AcpiGbl_RootTableList
+operator|.
+name|Tables
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_OK

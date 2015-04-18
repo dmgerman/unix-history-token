@@ -397,6 +397,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGP_EXTERNAL_OP
+value|ARGP_LIST3 (ARGP_NAMESTRING, ARGP_BYTEDATA,      ARGP_BYTEDATA)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGP_FATAL_OP
 value|ARGP_LIST3 (ARGP_BYTEDATA,   ARGP_DWORDDATA,     ARGP_TERMARG)
 end_define
@@ -1264,6 +1271,13 @@ define|#
 directive|define
 name|ARGI_EVENT_OP
 value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_EXTERNAL_OP
+value|ARGI_LIST3 (ARGI_STRING,     ARGI_INTEGER,       ARGI_INTEGER)
 end_define
 
 begin_define

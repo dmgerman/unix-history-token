@@ -52,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|AML_NUM_OPCODES
-value|0x81
+value|0x82
 end_define
 
 begin_comment

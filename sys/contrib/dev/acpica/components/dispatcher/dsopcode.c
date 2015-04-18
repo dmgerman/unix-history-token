@@ -1128,7 +1128,7 @@ literal|"RgnObj %p Addr %8.8X%8.8X Len %X\n"
 operator|,
 name|ObjDesc
 operator|,
-name|ACPI_FORMAT_NATIVE_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->
@@ -1420,10 +1420,7 @@ name|Region
 operator|.
 name|Address
 operator|=
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
-name|ACPI_TO_INTEGER
+name|ACPI_PTR_TO_PHYSADDR
 argument_list|(
 name|Table
 argument_list|)
@@ -1447,7 +1444,7 @@ literal|"RgnObj %p Addr %8.8X%8.8X Len %X\n"
 operator|,
 name|ObjDesc
 operator|,
-name|ACPI_FORMAT_NATIVE_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->

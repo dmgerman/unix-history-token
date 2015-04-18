@@ -188,7 +188,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"\nAdded [%4.4s] address range: 0x%p-0x%p\n"
+literal|"\nAdded [%4.4s] address range: 0x%8.8X%8.8X-0x%8.8X%8.8X\n"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -197,17 +197,13 @@ operator|->
 name|RegionNode
 argument_list|)
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|Address
 argument_list|)
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|RangeInfo
 operator|->
 name|EndAddress
@@ -336,7 +332,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_NAMES
 operator|,
-literal|"\nRemoved [%4.4s] address range: 0x%p-0x%p\n"
+literal|"\nRemoved [%4.4s] address range: 0x%8.8X%8.8X-0x%8.8X%8.8X\n"
 operator|,
 name|AcpiUtGetNodeName
 argument_list|(
@@ -345,19 +341,15 @@ operator|->
 name|RegionNode
 argument_list|)
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|RangeInfo
 operator|->
 name|StartAddress
 argument_list|)
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|RangeInfo
 operator|->
 name|EndAddress
@@ -517,40 +509,32 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%s range 0x%p-0x%p conflicts with OpRegion 0x%p-0x%p (%s)"
+literal|"%s range 0x%8.8X%8.8X-0x%8.8X%8.8X conflicts with OpRegion 0x%8.8X%8.8X-0x%8.8X%8.8X (%s)"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
 name|SpaceId
 argument_list|)
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|Address
 argument_list|)
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|EndAddress
 argument_list|)
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|RangeInfo
 operator|->
 name|StartAddress
 argument_list|)
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|RangeInfo
 operator|->
 name|EndAddress
