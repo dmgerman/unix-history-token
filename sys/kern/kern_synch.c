@@ -373,60 +373,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/*  * These probes reference Solaris features that are not implemented in FreeBSD.  * Create the probes anyway for compatibility with existing D scripts; they'll  * just never fire.  */
-end_comment
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE
-argument_list|(
-name|sched
-argument_list|, , ,
-name|cpucaps__sleep
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE
-argument_list|(
-name|sched
-argument_list|, , ,
-name|cpucaps__wakeup
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE
-argument_list|(
-name|sched
-argument_list|, , ,
-name|schedctl__nopreempt
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE
-argument_list|(
-name|sched
-argument_list|, , ,
-name|schedctl__preempt
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE
-argument_list|(
-name|sched
-argument_list|, , ,
-name|schedctl__yield
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
 name|void
