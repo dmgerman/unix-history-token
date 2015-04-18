@@ -740,7 +740,6 @@ sizeof|sizeof
 argument_list|(
 name|line_t
 operator|*
-operator|*
 argument_list|)
 argument_list|)
 operator|)
