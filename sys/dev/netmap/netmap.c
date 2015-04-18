@@ -9450,6 +9450,42 @@ block|}
 endif|#
 directive|endif
 comment|/* linux */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"netmap queues/slots: TX %d/%d, RX %d/%d\n"
+argument_list|,
+name|hwna
+operator|->
+name|up
+operator|.
+name|num_tx_rings
+argument_list|,
+name|hwna
+operator|->
+name|up
+operator|.
+name|num_tx_desc
+argument_list|,
+name|hwna
+operator|->
+name|up
+operator|.
+name|num_rx_rings
+argument_list|,
+name|hwna
+operator|->
+name|up
+operator|.
+name|num_rx_desc
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|D
 argument_list|(
 literal|"success for %s tx %d/%d rx %d/%d queues/slots"
@@ -9485,6 +9521,8 @@ operator|.
 name|num_rx_desc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
