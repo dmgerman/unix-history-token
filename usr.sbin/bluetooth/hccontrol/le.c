@@ -87,6 +87,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1261,6 +1267,9 @@ name|rp
 operator|.
 name|status
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rp
 operator|.
 name|le_features
@@ -1337,6 +1346,9 @@ name|rp
 operator|.
 name|status
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|rp
 operator|.
 name|le_status
