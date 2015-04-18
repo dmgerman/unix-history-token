@@ -89,7 +89,7 @@ name|SLOT
 argument_list|(
 name|fcntl
 argument_list|,
-name|__fcntl_compat
+name|__sys_fcntl
 argument_list|)
 block|,
 name|SLOT
