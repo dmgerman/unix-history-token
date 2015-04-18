@@ -15,46 +15,6 @@ directive|define
 name|EAP_IKEV2_COMMON_H
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CCNS_PL
-end_ifdef
-
-begin_comment
-comment|/* incorrect bit order */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IKEV2_FLAGS_LENGTH_INCLUDED
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|IKEV2_FLAGS_MORE_FRAGMENTS
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|IKEV2_FLAGS_ICV_INCLUDED
-value|0x04
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* CCNS_PL */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -75,15 +35,6 @@ directive|define
 name|IKEV2_FLAGS_ICV_INCLUDED
 value|0x20
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CCNS_PL */
-end_comment
 
 begin_define
 define|#

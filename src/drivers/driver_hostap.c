@@ -1030,9 +1030,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"recv"
+name|MSG_ERROR
+argument_list|,
+literal|"recv: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1097,9 +1104,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket[PF_PACKET,SOCK_RAW]"
+name|MSG_ERROR
+argument_list|,
+literal|"socket[PF_PACKET,SOCK_RAW]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1123,9 +1137,11 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not register read socket\n"
+name|MSG_ERROR
+argument_list|,
+literal|"Could not register read socket"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1183,9 +1199,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl(SIOCGIFINDEX)"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl(SIOCGIFINDEX): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1271,9 +1294,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"bind"
+name|MSG_ERROR
+argument_list|,
+literal|"bind: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1925,15 +1955,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOCSIFMTU]"
+name|MSG_INFO
+argument_list|,
+literal|"Setting MTU failed - trying to survive with current value: ioctl[SIOCSIFMTU]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
 argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"Setting MTU failed - trying to survive with "
-literal|"current value\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2039,9 +2070,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[PRISM2_IOCTL_HOSTAPD]"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl[PRISM2_IOCTL_HOSTAPD]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2671,9 +2709,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[PRISM2_IOCTL_PRISM2_PARAM]"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl[PRISM2_IOCTL_PRISM2_PARAM]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2928,16 +2973,18 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOCSIWESSID]"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"len=%d\n"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl[SIOCSIWESSID,len=%d]: %s"
 argument_list|,
 name|len
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4873,12 +4920,19 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOCGIWRANGE]"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl[SIOCGIWRANGE]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|range
 argument_list|)
@@ -5142,12 +5196,19 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket[PF_INET,SOCK_DGRAM]"
+name|MSG_ERROR
+argument_list|,
+literal|"socket[PF_INET,SOCK_DGRAM]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|drv
 argument_list|)
@@ -5168,9 +5229,11 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not enable hostapd mode for interface %s\n"
+name|MSG_ERROR
+argument_list|,
+literal|"Could not enable hostapd mode for interface %s"
 argument_list|,
 name|drv
 operator|->
@@ -5184,7 +5247,7 @@ operator|->
 name|ioctl_sock
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|drv
 argument_list|)
@@ -5217,7 +5280,7 @@ operator|->
 name|ioctl_sock
 argument_list|)
 expr_stmt|;
-name|free
+name|os_free
 argument_list|(
 name|drv
 argument_list|)
@@ -5579,9 +5642,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOCSIWFREQ]"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl[SIOCSIWFREQ]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

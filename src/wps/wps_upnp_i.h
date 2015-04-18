@@ -529,21 +529,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|send_wpabuf
-parameter_list|(
-name|int
-name|fd
-parameter_list|,
-name|struct
-name|wpabuf
-modifier|*
-name|buf
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|get_netif_info
 parameter_list|(
 specifier|const
@@ -663,6 +648,11 @@ name|ssdp_open_multicast_sock
 parameter_list|(
 name|u32
 name|ip_addr
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|forced_ifname
 parameter_list|)
 function_decl|;
 end_function_decl

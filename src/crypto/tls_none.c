@@ -645,5 +645,30 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|tls_get_library_version
+parameter_list|(
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|buf_len
+parameter_list|)
+block|{
+return|return
+name|os_snprintf
+argument_list|(
+name|buf
+argument_list|,
+name|buf_len
+argument_list|,
+literal|"none"
+argument_list|)
+return|;
+block|}
+end_function
+
 end_unit
 

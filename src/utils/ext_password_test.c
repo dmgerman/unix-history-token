@@ -106,7 +106,7 @@ name|data
 init|=
 name|ctx
 decl_stmt|;
-name|os_free
+name|str_clear_free
 argument_list|(
 name|data
 operator|->

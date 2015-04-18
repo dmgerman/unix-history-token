@@ -89,6 +89,8 @@ expr_stmt|;
 name|wps_registrar_selected_registrar_changed
 argument_list|(
 name|reg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -313,9 +315,6 @@ operator|.
 name|version2
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|CONFIG_WPS2
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -335,9 +334,6 @@ argument_list|,
 name|ETH_ALEN
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* CONFIG_WPS2 */
 block|}
 name|eloop_register_timeout
 argument_list|(
@@ -356,6 +352,8 @@ block|}
 name|wps_registrar_selected_registrar_changed
 argument_list|(
 name|reg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -401,6 +399,8 @@ condition|)
 name|wps_registrar_selected_registrar_changed
 argument_list|(
 name|reg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}

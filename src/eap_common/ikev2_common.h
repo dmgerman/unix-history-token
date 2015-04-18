@@ -257,43 +257,12 @@ name|IKEV2_MnVer
 value|0
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|CCNS_PL
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|IKEV2_VERSION
-value|((IKEV2_MjVer) | ((IKEV2_MnVer)<< 4))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* CCNS_PL */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|IKEV2_VERSION
 value|(((IKEV2_MjVer)<< 4) | (IKEV2_MnVer))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CCNS_PL */
-end_comment
 
 begin_comment
 comment|/* IKEv2 Exchange Types */

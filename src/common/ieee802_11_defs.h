@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IEEE 802.11 Frame type definitions  * Copyright (c) 2002-2009, Jouni Malinen<j@w1.fi>  * Copyright (c) 2007-2008 Intel Corporation  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * IEEE 802.11 Frame type definitions  * Copyright (c) 2002-2015, Jouni Malinen<j@w1.fi>  * Copyright (c) 2007-2008 Intel Corporation  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -100,6 +100,13 @@ parameter_list|(
 name|fc
 parameter_list|)
 value|(((fc)& 0x00f0)>> 4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_INVALID_MGMT_SEQ
+value|0xFFFF
 end_define
 
 begin_define
@@ -965,6 +972,20 @@ name|WLAN_STATUS_TRANSMISSION_FAILURE
 value|79
 end_define
 
+begin_define
+define|#
+directive|define
+name|WLAN_STATUS_QUERY_RESP_OUTSTANDING
+value|95
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_STATUS_ASSOC_DENIED_NO_VHT
+value|104
+end_define
+
 begin_comment
 comment|/* Reason codes (IEEE 802.11-2007, 7.3.1.7, Table 7-22) */
 end_comment
@@ -1164,6 +1185,73 @@ value|34
 end_define
 
 begin_comment
+comment|/* IEEE 802.11s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WLAN_REASON_MESH_PEERING_CANCELLED
+value|52
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_REASON_MESH_MAX_PEERS
+value|53
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_REASON_MESH_CONFIG_POLICY_VIOLATION
+value|54
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_REASON_MESH_CLOSE_RCVD
+value|55
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_REASON_MESH_MAX_RETRIES
+value|56
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_REASON_MESH_CONFIRM_TIMEOUT
+value|57
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_REASON_MESH_INVALID_GTK
+value|58
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_REASON_MESH_INCONSISTENT_PARAMS
+value|59
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_REASON_MESH_INVALID_SECURITY_CAP
+value|60
+end_define
+
+begin_comment
 comment|/* Information Element IDs */
 end_comment
 
@@ -1221,6 +1309,13 @@ define|#
 directive|define
 name|WLAN_EID_COUNTRY
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_EID_BSS_LOAD
+value|11
 end_define
 
 begin_define
@@ -1325,6 +1420,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WLAN_EID_QOS
+value|46
+end_define
+
+begin_define
+define|#
+directive|define
 name|WLAN_EID_RSN
 value|48
 end_define
@@ -1334,6 +1436,13 @@ define|#
 directive|define
 name|WLAN_EID_EXT_SUPP_RATES
 value|50
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_EID_NEIGHBOR_REPORT
+value|52
 end_define
 
 begin_define
@@ -1367,6 +1476,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WLAN_EID_SUPPORTED_OPERATING_CLASSES
+value|59
+end_define
+
+begin_define
+define|#
+directive|define
 name|WLAN_EID_HT_OPERATION
 value|61
 end_define
@@ -1390,6 +1506,13 @@ define|#
 directive|define
 name|WLAN_EID_TIME_ADVERTISEMENT
 value|69
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_EID_RRM_ENABLED_CAPABILITIES
+value|70
 end_define
 
 begin_define
@@ -1486,6 +1609,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WLAN_EID_QOS_MAP_SET
+value|110
+end_define
+
+begin_define
+define|#
+directive|define
 name|WLAN_EID_ROAMING_CONSORTIUM
 value|111
 end_define
@@ -1493,8 +1623,43 @@ end_define
 begin_define
 define|#
 directive|define
+name|WLAN_EID_MESH_CONFIG
+value|113
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_EID_MESH_ID
+value|114
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_EID_PEER_MGMT
+value|117
+end_define
+
+begin_define
+define|#
+directive|define
 name|WLAN_EID_EXT_CAPAB
 value|127
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_EID_AMPE
+value|139
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_EID_MIC
+value|140
 end_define
 
 begin_define
@@ -1644,6 +1809,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|WLAN_ACTION_PROTECTED_DUAL
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
 name|WLAN_ACTION_WNM
 value|10
 end_define
@@ -1660,6 +1832,13 @@ define|#
 directive|define
 name|WLAN_ACTION_TDLS
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_ACTION_SELF_PROTECTED
+value|15
 end_define
 
 begin_define
@@ -1731,6 +1910,87 @@ define|#
 directive|define
 name|WLAN_TDLS_DISCOVERY_RESPONSE
 value|14
+end_define
+
+begin_comment
+comment|/* Protected Dual of Public Action frames */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WLAN_PROT_DSE_ENABLEMENT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_PROT_DSE_DEENABLEMENT
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_PROT_EXT_CSA
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_PROT_MEASUREMENT_REQ
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_PROT_MEASUREMENT_REPORT
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_PROT_DSE_POWER_CONSTRAINT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_PROT_VENDOR_SPECIFIC
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_PROT_GAS_INITIAL_REQ
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_PROT_GAS_INITIAL_RESP
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_PROT_GAS_COMEBACK_REQ
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_PROT_GAS_COMEBACK_RESP
+value|13
 end_define
 
 begin_comment
@@ -1837,6 +2097,74 @@ define|#
 directive|define
 name|WLAN_TDLS_DISCOVERY_REQUEST
 value|10
+end_define
+
+begin_comment
+comment|/* Radio Measurement Action codes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WLAN_RRM_RADIO_MEASUREMENT_REQUEST
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_RRM_RADIO_MEASUREMENT_REPORT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_RRM_LINK_MEASUREMENT_REQUEST
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_RRM_LINK_MEASUREMENT_REPORT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_RRM_NEIGHBOR_REPORT_REQUEST
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_RRM_NEIGHBOR_REPORT_RESPONSE
+value|5
+end_define
+
+begin_comment
+comment|/* Radio Measurement capabilities (from RRM Capabilities IE) */
+end_comment
+
+begin_comment
+comment|/* byte 1 (out of 5) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WLAN_RRM_CAPS_LINK_MEASUREMENT
+value|BIT(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_RRM_CAPS_NEIGHBOR_REPORT
+value|BIT(1)
 end_define
 
 begin_comment
@@ -2767,6 +3095,45 @@ block|}
 name|STRUCT_PACKED
 name|bss_tm_resp
 struct|;
+struct|struct
+block|{
+name|u8
+name|action
+decl_stmt|;
+comment|/* 6 */
+name|u8
+name|dialog_token
+decl_stmt|;
+name|u8
+name|query_reason
+decl_stmt|;
+comment|/* BSS Transition Candidate List 					 * Entries (optional) */
+name|u8
+name|variable
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|STRUCT_PACKED
+name|bss_tm_query
+struct|;
+struct|struct
+block|{
+name|u8
+name|action
+decl_stmt|;
+comment|/* 15 */
+name|u8
+name|variable
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|STRUCT_PACKED
+name|slf_prot_action
+struct|;
 block|}
 name|u
 union|;
@@ -2793,6 +3160,10 @@ name|IEEE80211_HT_MCS_MASK_LEN
 value|10
 end_define
 
+begin_comment
+comment|/* HT Capabilities element */
+end_comment
+
 begin_struct
 struct|struct
 name|ieee80211_ht_capabilities
@@ -2803,6 +3174,7 @@ decl_stmt|;
 name|u8
 name|a_mpdu_params
 decl_stmt|;
+comment|/* Maximum A-MPDU Length Exponent B0..B1 			   * Minimum MPDU Start Spacing B2..B4 			   * Reserved B5..B7 */
 name|u8
 name|supported_mcs_set
 index|[
@@ -2823,27 +3195,65 @@ name|STRUCT_PACKED
 struct|;
 end_struct
 
+begin_comment
+comment|/* HT Operation element */
+end_comment
+
 begin_struct
 struct|struct
 name|ieee80211_ht_operation
 block|{
 name|u8
-name|control_chan
+name|primary_chan
 decl_stmt|;
+comment|/* Five octets of HT Operation Information */
 name|u8
 name|ht_param
 decl_stmt|;
+comment|/* B0..B7 */
 name|le16
 name|operation_mode
 decl_stmt|;
+comment|/* B8..B23 */
 name|le16
-name|stbc_param
+name|param
 decl_stmt|;
+comment|/* B24..B39 */
 name|u8
-name|basic_set
+name|basic_mcs_set
 index|[
 literal|16
 index|]
+decl_stmt|;
+block|}
+name|STRUCT_PACKED
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ieee80211_obss_scan_parameters
+block|{
+name|le16
+name|scan_passive_dwell
+decl_stmt|;
+name|le16
+name|scan_active_dwell
+decl_stmt|;
+name|le16
+name|width_trigger_scan_interval
+decl_stmt|;
+name|le16
+name|scan_passive_total_per_channel
+decl_stmt|;
+name|le16
+name|scan_active_total_per_channel
+decl_stmt|;
+name|le16
+name|channel_transition_delay_factor
+decl_stmt|;
+name|le16
+name|scan_activity_threshold
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -2857,12 +3267,23 @@ block|{
 name|le32
 name|vht_capabilities_info
 decl_stmt|;
-name|u8
-name|vht_supported_mcs_set
-index|[
-literal|8
-index|]
+struct|struct
+block|{
+name|le16
+name|rx_map
 decl_stmt|;
+name|le16
+name|rx_highest
+decl_stmt|;
+name|le16
+name|tx_map
+decl_stmt|;
+name|le16
+name|tx_highest
+decl_stmt|;
+block|}
+name|vht_supported_mcs_set
+struct|;
 block|}
 name|STRUCT_PACKED
 struct|;
@@ -2883,6 +3304,51 @@ name|vht_op_info_chan_center_freq_seg1_idx
 decl_stmt|;
 name|le16
 name|vht_basic_mcs_set
+decl_stmt|;
+block|}
+name|STRUCT_PACKED
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ieee80211_ampe_ie
+block|{
+name|u8
+name|selected_pairwise_suite
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u8
+name|local_nonce
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|u8
+name|peer_nonce
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|u8
+name|mgtk
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|u8
+name|key_rsc
+index|[
+literal|8
+index|]
+decl_stmt|;
+name|u8
+name|key_expiration
+index|[
+literal|4
+index|]
 decl_stmt|;
 block|}
 name|STRUCT_PACKED
@@ -2933,6 +3399,17 @@ directive|define
 name|ERP_INFO_BARKER_PREAMBLE_MODE
 value|BIT(2)
 end_define
+
+begin_define
+define|#
+directive|define
+name|OVERLAPPING_BSS_TRANS_DELAY_FACTOR
+value|5
+end_define
+
+begin_comment
+comment|/* HT Capabilities Info field within HT Capabilities element */
+end_comment
 
 begin_define
 define|#
@@ -3053,12 +3530,9 @@ name|HT_CAP_INFO_DSSS_CCK40MHZ
 value|((u16) BIT(12))
 end_define
 
-begin_define
-define|#
-directive|define
-name|HT_CAP_INFO_PSMP_SUPP
-value|((u16) BIT(13))
-end_define
+begin_comment
+comment|/* B13 - Reserved (was PSMP support during P802.11n development) */
+end_comment
 
 begin_define
 define|#
@@ -3074,6 +3548,10 @@ name|HT_CAP_INFO_LSIG_TXOP_PROTECT_SUPPORT
 value|((u16) BIT(15))
 end_define
 
+begin_comment
+comment|/* HT Extended Capabilities field within HT Capabilities element */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3084,8 +3562,26 @@ end_define
 begin_define
 define|#
 directive|define
+name|EXT_HT_CAP_INFO_PCO_TRANS_TIME_MASK
+value|((u16) (BIT(1) | BIT(2)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXT_HT_CAP_INFO_TRANS_TIME_OFFSET
 value|1
+end_define
+
+begin_comment
+comment|/* B3..B7 - Reserved */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT_HT_CAP_INFO_MCS_FEEDBACK_MASK
+value|((u16) (BIT(8) | BIT(9)))
 end_define
 
 begin_define
@@ -3098,7 +3594,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|EXT_HT_CAP_INFO_HTC_SUPPORTED
+name|EXT_HT_CAP_INFO_HTC_SUPPORT
 value|((u16) BIT(10))
 end_define
 
@@ -3109,180 +3605,232 @@ name|EXT_HT_CAP_INFO_RD_RESPONDER
 value|((u16) BIT(11))
 end_define
 
+begin_comment
+comment|/* B12..B15 - Reserved */
+end_comment
+
+begin_comment
+comment|/* Transmit Beanforming Capabilities within HT Capabilities element */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_TXBF_CAP
+name|TX_BF_CAP_IMPLICIT_TXBF_RX_CAP
 value|((u32) BIT(0))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_RX_STAGGERED_SOUNDING_CAP
+name|TX_BF_CAP_RX_STAGGERED_SOUNDING_CAP
 value|((u32) BIT(1))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_TX_STAGGERED_SOUNDING_CAP
+name|TX_BF_CAP_TX_STAGGERED_SOUNDING_CAP
 value|((u32) BIT(2))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_RX_ZLF_CAP
+name|TX_BF_CAP_RX_NDP_CAP
 value|((u32) BIT(3))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_TX_ZLF_CAP
+name|TX_BF_CAP_TX_NDP_CAP
 value|((u32) BIT(4))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_IMPLICIT_ZLF_CAP
+name|TX_BF_CAP_IMPLICIT_TX_BF_CAP
 value|((u32) BIT(5))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_CALIB_OFFSET
+name|TX_BF_CAP_CALIBRATION_MASK
+value|((u32) (BIT(6) | BIT(7))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_BF_CAP_CALIB_OFFSET
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_EXPLICIT_CSI_TXBF_CAP
+name|TX_BF_CAP_EXPLICIT_CSI_TXBF_CAP
 value|((u32) BIT(8))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_EXPLICIT_UNCOMPR_STEERING_MATRIX_CAP
+name|TX_BF_CAP_EXPLICIT_NONCOMPR_STEERING_CAP
 value|((u32) BIT(9))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_EXPLICIT_BF_CSI_FEEDBACK_CAP
+name|TX_BF_CAP_EXPLICIT_COMPR_STEERING_CAP
 value|((u32) BIT(10))
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_EXPLICIT_BF_CSI_FEEDBACK_OFFSET
+name|TX_BF_CAP_EXPLICIT_TX_BF_CSI_FEEDBACK_MASK
+value|((u32) (BIT(10) | BIT(11)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_BF_CAP_EXPLICIT_BF_CSI_FEEDBACK_OFFSET
 value|11
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_EXPLICIT_UNCOMPR_STEERING_MATRIX_FEEDBACK_OFFSET
+name|TX_BF_CAP_EXPLICIT_UNCOMPR_STEERING_MATRIX_FEEDBACK_OFFSET
 value|13
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_EXPLICIT_COMPRESSED_STEERING_MATRIX_FEEDBACK_OFFSET
+name|TX_BF_CAP_EXPLICIT_COMPRESSED_STEERING_MATRIX_FEEDBACK_OFFSET
 value|15
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_MINIMAL_GROUPING_OFFSET
+name|TX_BF_CAP_MINIMAL_GROUPING_OFFSET
 value|17
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_CSI_NUM_BEAMFORMER_ANT_OFFSET
+name|TX_BF_CAP_CSI_NUM_BEAMFORMER_ANT_OFFSET
 value|19
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_UNCOMPRESSED_STEERING_MATRIX_BEAMFORMER_ANT_OFFSET
+name|TX_BF_CAP_UNCOMPRESSED_STEERING_MATRIX_BEAMFORMER_ANT_OFFSET
 value|21
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_COMPRESSED_STEERING_MATRIX_BEAMFORMER_ANT_OFFSET
+name|TX_BF_CAP_COMPRESSED_STEERING_MATRIX_BEAMFORMER_ANT_OFFSET
 value|23
 end_define
 
 begin_define
 define|#
 directive|define
-name|TX_BEAMFORM_CAP_SCI_MAX_OF_ROWS_BEANFORMER_SUPPORTED_OFFSET
+name|TX_BF_CAP_SCI_MAX_OF_ROWS_BEANFORMER_SUPPORTED_OFFSET
 value|25
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASEL_CAPABILITY_ASEL_CAPABLE
+name|TX_BF_CAP_CHANNEL_ESTIMATION_CAP_MASK
+value|((u32) (BIT(27) | BIT(28)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TX_BF_CAP_CHANNEL_ESTIMATION_CAP_OFFSET
+value|27
+end_define
+
+begin_comment
+comment|/* B29..B31 - Reserved */
+end_comment
+
+begin_comment
+comment|/* ASEL Capability field within HT Capabilities element */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ASEL_CAP_ASEL_CAPABLE
 value|((u8) BIT(0))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASEL_CAPABILITY_EXPLICIT_CSI_FEEDBACK_BASED_TX_AS_CAP
+name|ASEL_CAP_EXPLICIT_CSI_FEEDBACK_BASED_TX_AS_CAP
 value|((u8) BIT(1))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASEL_CAPABILITY_ANT_INDICES_FEEDBACK_BASED_TX_AS_CAP
+name|ASEL_CAP_ANT_INDICES_FEEDBACK_BASED_TX_AS_CAP
 value|((u8) BIT(2))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASEL_CAPABILITY_EXPLICIT_CSI_FEEDBACK_CAP
+name|ASEL_CAP_EXPLICIT_CSI_FEEDBACK_CAP
 value|((u8) BIT(3))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASEL_CAPABILITY_ANT_INDICES_FEEDBACK_CAP
+name|ASEL_CAP_ANT_INDICES_FEEDBACK_CAP
 value|((u8) BIT(4))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASEL_CAPABILITY_RX_AS_CAP
+name|ASEL_CAP_RX_AS_CAP
 value|((u8) BIT(5))
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASEL_CAPABILITY_TX_SOUND_PPDUS_CAP
+name|ASEL_CAP_TX_SOUNDING_PPDUS_CAP
 value|((u8) BIT(6))
 end_define
+
+begin_comment
+comment|/* B7 - Reserved */
+end_comment
+
+begin_comment
+comment|/* First octet of HT Operation Information within HT Operation element */
+end_comment
 
 begin_define
 define|#
@@ -3308,7 +3856,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|HT_INFO_HT_PARAM_REC_TRANS_CHNL_WIDTH
+name|HT_INFO_HT_PARAM_STA_CHNL_WIDTH
 value|((u8) BIT(2))
 end_define
 
@@ -3319,125 +3867,140 @@ name|HT_INFO_HT_PARAM_RIFS_MODE
 value|((u8) BIT(3))
 end_define
 
-begin_define
-define|#
-directive|define
-name|HT_INFO_HT_PARAM_CTRL_ACCESS_ONLY
-value|((u8) BIT(4))
-end_define
+begin_comment
+comment|/* B4..B7 - Reserved */
+end_comment
+
+begin_comment
+comment|/* HT Protection (B8..B9 of HT Operation Information) */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HT_INFO_HT_PARAM_SRV_INTERVAL_GRANULARITY
-value|((u8) BIT(5))
-end_define
-
-begin_define
-define|#
-directive|define
-name|OP_MODE_PURE
+name|HT_PROT_NO_PROTECTION
 value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|OP_MODE_MAY_BE_LEGACY_STAS
+name|HT_PROT_NONMEMBER_PROTECTION
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|OP_MODE_20MHZ_HT_STA_ASSOCED
+name|HT_PROT_20MHZ_PROTECTION
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|OP_MODE_MIXED
+name|HT_PROT_NON_HT_MIXED
 value|3
 end_define
 
-begin_define
-define|#
-directive|define
-name|HT_INFO_OPERATION_MODE_OP_MODE_MASK
-define|\
-value|(0x0001 | 0x0002)
-end_define
+begin_comment
+comment|/* Bits within ieee80211_ht_operation::operation_mode (BIT(0) maps to B8 in  * HT Operation Information) */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HT_INFO_OPERATION_MODE_OP_MODE_OFFSET
-value|0
+name|HT_OPER_OP_MODE_HT_PROT_MASK
+value|((u16) (BIT(0) | BIT(1)))
 end_define
+
+begin_comment
+comment|/* B8..B9 */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HT_INFO_OPERATION_MODE_NON_GF_DEVS_PRESENT
-value|((u8) BIT(2))
+name|HT_OPER_OP_MODE_NON_GF_HT_STAS_PRESENT
+value|((u16) BIT(2))
 end_define
+
+begin_comment
+comment|/* B10 */
+end_comment
+
+begin_comment
+comment|/* BIT(3), i.e., B11 in HT Operation Information field - Reserved */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HT_INFO_OPERATION_MODE_TRANSMIT_BURST_LIMIT
-value|((u8) BIT(3))
+name|HT_OPER_OP_MODE_OBSS_NON_HT_STAS_PRESENT
+value|((u16) BIT(4))
 end_define
+
+begin_comment
+comment|/* B12 */
+end_comment
+
+begin_comment
+comment|/* BIT(5)..BIT(15), i.e., B13..B23 - Reserved */
+end_comment
+
+begin_comment
+comment|/* Last two octets of HT Operation Information (BIT(0) = B24) */
+end_comment
+
+begin_comment
+comment|/* B24..B29 - Reserved */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|HT_INFO_OPERATION_MODE_NON_HT_STA_PRESENT
-value|((u8) BIT(4))
-end_define
-
-begin_define
-define|#
-directive|define
-name|HT_INFO_STBC_PARAM_DUAL_BEACON
+name|HT_OPER_PARAM_DUAL_BEACON
 value|((u16) BIT(6))
 end_define
 
 begin_define
 define|#
 directive|define
-name|HT_INFO_STBC_PARAM_DUAL_STBC_PROTECT
+name|HT_OPER_PARAM_DUAL_CTS_PROTECTION
 value|((u16) BIT(7))
 end_define
 
 begin_define
 define|#
 directive|define
-name|HT_INFO_STBC_PARAM_SECONDARY_BCN
+name|HT_OPER_PARAM_STBC_BEACON
 value|((u16) BIT(8))
 end_define
 
 begin_define
 define|#
 directive|define
-name|HT_INFO_STBC_PARAM_LSIG_TXOP_PROTECT_ALLOWED
+name|HT_OPER_PARAM_LSIG_TXOP_PROT_FULL_SUPP
 value|((u16) BIT(9))
 end_define
 
 begin_define
 define|#
 directive|define
-name|HT_INFO_STBC_PARAM_PCO_ACTIVE
+name|HT_OPER_PARAM_PCO_ACTIVE
 value|((u16) BIT(10))
 end_define
 
 begin_define
 define|#
 directive|define
-name|HT_INFO_STBC_PARAM_PCO_PHASE
+name|HT_OPER_PARAM_PCO_PHASE
 value|((u16) BIT(11))
 end_define
+
+begin_comment
+comment|/* B36..B39 - Reserved */
+end_comment
 
 begin_define
 define|#
@@ -3474,6 +4037,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|VHT_CAP_MAX_MPDU_LENGTH_MASK
+value|((u32) BIT(0) | BIT(1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_MAX_MPDU_LENGTH_MASK_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|VHT_CAP_SUPP_CHAN_WIDTH_160MHZ
 value|((u32) BIT(2))
 end_define
@@ -3483,6 +4060,13 @@ define|#
 directive|define
 name|VHT_CAP_SUPP_CHAN_WIDTH_160_80PLUS80MHZ
 value|((u32) BIT(3))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_SUPP_CHAN_WIDTH_MASK
+value|((u32) BIT(2) | BIT(3))
 end_define
 
 begin_define
@@ -3544,6 +4128,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|VHT_CAP_RXSTBC_MASK
+value|((u32) BIT(8) | BIT(9) | \ 							   BIT(10))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_RXSTBC_MASK_SHIFT
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|VHT_CAP_SU_BEAMFORMER_CAPABLE
 value|((u32) BIT(11))
 end_define
@@ -3558,15 +4156,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|VHT_CAP_BEAMFORMER_ANTENNAS_MAX
-value|((u32) BIT(13) | BIT(14))
+name|VHT_CAP_BEAMFORMEE_STS_MAX
+value|((u32) BIT(13) | \ 							   BIT(14) | BIT(15))
 end_define
 
 begin_define
 define|#
 directive|define
-name|VHT_CAP_SOUNDING_DIMENTION_MAX
-value|((u32) BIT(16) | BIT(17))
+name|VHT_CAP_BEAMFORMEE_STS_MAX_SHIFT
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_BEAMFORMEE_STS_OFFSET
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_SOUNDING_DIMENSION_MAX
+value|((u32) BIT(16) | \ 							   BIT(17) | BIT(18))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_SOUNDING_DIMENSION_MAX_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_SOUNDING_DIMENSION_OFFSET
+value|16
 end_define
 
 begin_define
@@ -3600,8 +4226,57 @@ end_define
 begin_define
 define|#
 directive|define
-name|VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT
+name|VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_1
 value|((u32) BIT(23))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_2
+value|((u32) BIT(24))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_3
+value|((u32) BIT(23) | BIT(24))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_4
+value|((u32) BIT(25))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_5
+value|((u32) BIT(23) | BIT(25))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_6
+value|((u32) BIT(24) | BIT(25))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_MAX
+value|((u32) BIT(23) | \ 							   BIT(24) | BIT(25))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CAP_MAX_A_MPDU_LENGTH_EXPONENT_MAX_SHIFT
+value|23
 end_define
 
 begin_define
@@ -3635,6 +4310,66 @@ end_define
 begin_define
 define|#
 directive|define
+name|VHT_OPMODE_CHANNEL_WIDTH_MASK
+value|((u8) BIT(0) | BIT(1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_OPMODE_CHANNEL_RxNSS_MASK
+value|((u8) BIT(4) | BIT(5) | \ 						     BIT(6))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_OPMODE_NOTIF_RX_NSS_SHIFT
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_RX_NSS_MAX_STREAMS
+value|8
+end_define
+
+begin_comment
+comment|/* VHT channel widths */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VHT_CHANWIDTH_USE_HT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CHANWIDTH_80MHZ
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CHANWIDTH_160MHZ
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|VHT_CHANWIDTH_80P80MHZ
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|OUI_MICROSOFT
 value|0x0050f2
 end_define
@@ -3648,6 +4383,13 @@ define|#
 directive|define
 name|WPA_IE_VENDOR_TYPE
 value|0x0050f201
+end_define
+
+begin_define
+define|#
+directive|define
+name|WMM_IE_VENDOR_TYPE
+value|0x0050f202
 end_define
 
 begin_define
@@ -3690,6 +4432,13 @@ define|#
 directive|define
 name|HS20_IE_VENDOR_TYPE
 value|0x506f9a10
+end_define
+
+begin_define
+define|#
+directive|define
+name|OSEN_IE_VENDOR_TYPE
+value|0x506f9a12
 end_define
 
 begin_define
@@ -3843,6 +4592,13 @@ block|}
 name|STRUCT_PACKED
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|WMM_QOSINFO_AP_UAPSD
+value|0x80
+end_define
 
 begin_define
 define|#
@@ -4096,6 +4852,7 @@ end_comment
 
 begin_enum
 enum|enum
+name|wmm_ac
 block|{
 name|WMM_AC_BE
 init|=
@@ -4116,6 +4873,10 @@ name|WMM_AC_VO
 init|=
 literal|3
 comment|/* Voice */
+block|,
+name|WMM_AC_NUM
+init|=
+literal|4
 block|}
 enum|;
 end_enum
@@ -4132,6 +4893,13 @@ define|#
 directive|define
 name|HS20_ANQP_OUI_TYPE
 value|17
+end_define
+
+begin_define
+define|#
+directive|define
+name|HS20_OSEN_OUI_TYPE
+value|18
 end_define
 
 begin_define
@@ -4181,6 +4949,91 @@ define|#
 directive|define
 name|HS20_STYPE_OPERATING_CLASS
 value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|HS20_STYPE_OSU_PROVIDERS_LIST
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|HS20_STYPE_ICON_REQUEST
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|HS20_STYPE_ICON_BINARY_FILE
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|HS20_DGAF_DISABLED
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|HS20_PPS_MO_ID_PRESENT
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|HS20_ANQP_DOMAIN_ID_PRESENT
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|HS20_VERSION
+value|0x10
+end_define
+
+begin_comment
+comment|/* Release 2 */
+end_comment
+
+begin_comment
+comment|/* WNM-Notification WFA vendors specific subtypes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HS20_WNM_SUB_REM_NEEDED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HS20_WNM_DEAUTH_IMMINENT_NOTICE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HS20_DEAUTH_REASON_CODE_BSS
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|HS20_DEAUTH_REASON_CODE_ESS
+value|1
 end_define
 
 begin_comment
@@ -4273,6 +5126,42 @@ block|,
 name|P2P_ATTR_INVITATION_FLAGS
 init|=
 literal|18
+block|,
+name|P2P_ATTR_OOB_GO_NEG_CHANNEL
+init|=
+literal|19
+block|,
+name|P2P_ATTR_SERVICE_HASH
+init|=
+literal|21
+block|,
+name|P2P_ATTR_SESSION_INFORMATION_DATA
+init|=
+literal|22
+block|,
+name|P2P_ATTR_CONNECTION_CAPABILITY
+init|=
+literal|23
+block|,
+name|P2P_ATTR_ADVERTISEMENT_ID
+init|=
+literal|24
+block|,
+name|P2P_ATTR_ADVERTISED_SERVICE
+init|=
+literal|25
+block|,
+name|P2P_ATTR_SESSION_ID
+init|=
+literal|26
+block|,
+name|P2P_ATTR_FEATURE_CAPABILITY
+init|=
+literal|27
+block|,
+name|P2P_ATTR_PERSISTENT_GROUP
+init|=
+literal|28
 block|,
 name|P2P_ATTR_VENDOR_SPECIFIC
 init|=
@@ -4387,6 +5276,13 @@ name|P2P_GROUP_CAPAB_GROUP_FORMATION
 value|BIT(6)
 end_define
 
+begin_define
+define|#
+directive|define
+name|P2P_GROUP_CAPAB_IP_ADDR_ALLOCATION
+value|BIT(7)
+end_define
+
 begin_comment
 comment|/* Invitation Flags */
 end_comment
@@ -4474,6 +5370,29 @@ block|,
 name|P2P_SC_FAIL_REJECTED_BY_USER
 init|=
 literal|11
+block|,
+name|P2P_SC_SUCCESS_DEFERRED
+init|=
+literal|12
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|p2p_role_indication
+block|{
+name|P2P_DEVICE_NOT_IN_GROUP
+init|=
+literal|0x00
+block|,
+name|P2P_CLIENT_IN_A_GROUP
+init|=
+literal|0x01
+block|,
+name|P2P_GO_IN_A_GROUP
+init|=
+literal|0x02
 block|, }
 enum|;
 end_enum
@@ -4590,6 +5509,10 @@ name|P2P_SERV_WIFI_DISPLAY
 init|=
 literal|4
 block|,
+name|P2P_SERV_P2PS
+init|=
+literal|11
+block|,
 name|P2P_SERV_VENDOR_SPECIFIC
 init|=
 literal|255
@@ -4667,6 +5590,67 @@ block|}
 enum|;
 end_enum
 
+begin_comment
+comment|/* 802.11s */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MESH_SYNC_METHOD_NEIGHBOR_OFFSET
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MESH_SYNC_METHOD_VENDOR
+value|255
+end_define
+
+begin_define
+define|#
+directive|define
+name|MESH_PATH_PROTOCOL_HWMP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MESH_PATH_PROTOCOL_VENDOR
+value|255
+end_define
+
+begin_define
+define|#
+directive|define
+name|MESH_PATH_METRIC_AIRTIME
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MESH_PATH_METRIC_VENDOR
+value|255
+end_define
+
+begin_enum
+enum|enum
+name|plink_action_field
+block|{
+name|PLINK_OPEN
+init|=
+literal|1
+block|,
+name|PLINK_CONFIRM
+block|,
+name|PLINK_CLOSE
+block|}
+enum|;
+end_enum
+
 begin_define
 define|#
 directive|define
@@ -4677,6 +5661,27 @@ end_define
 begin_comment
 comment|/* Broadcom (Epigram) */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|VENDOR_VHT_TYPE
+value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|VENDOR_VHT_SUBTYPE
+value|0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|VENDOR_VHT_SUBTYPE2
+value|0x00
+end_define
 
 begin_define
 define|#
@@ -4756,6 +5761,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|WLAN_CIPHER_SUITE_GCMP_256
+value|0x000FAC09
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_CIPHER_SUITE_CCMP_256
+value|0x000FAC0A
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_CIPHER_SUITE_BIP_GMAC_128
+value|0x000FAC0B
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_CIPHER_SUITE_BIP_GMAC_256
+value|0x000FAC0C
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_CIPHER_SUITE_BIP_CMAC_256
+value|0x000FAC0D
+end_define
+
+begin_define
+define|#
+directive|define
 name|WLAN_CIPHER_SUITE_SMS4
 value|0x00147201
 end_define
@@ -4813,8 +5853,57 @@ end_define
 begin_define
 define|#
 directive|define
+name|WLAN_AKM_SUITE_FT_8021X
+value|0x000FAC03
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_AKM_SUITE_FT_PSK
+value|0x000FAC04
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_AKM_SUITE_8021X_SHA256
+value|0x000FAC05
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_AKM_SUITE_PSK_SHA256
+value|0x000FAC06
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_AKM_SUITE_8021X_SUITE_B
+value|0x000FAC11
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_AKM_SUITE_8021X_SUITE_B_192
+value|0x000FAC12
+end_define
+
+begin_define
+define|#
+directive|define
 name|WLAN_AKM_SUITE_CCKM
 value|0x00409600
+end_define
+
+begin_define
+define|#
+directive|define
+name|WLAN_AKM_SUITE_OSEN
+value|0x506f9a01
 end_define
 
 begin_comment
@@ -4978,6 +6067,140 @@ directive|define
 name|WNM_BSS_TM_REQ_ESS_DISASSOC_IMMINENT
 value|BIT(4)
 end_define
+
+begin_comment
+comment|/* IEEE Std 802.11-2012 - Table 8-253 */
+end_comment
+
+begin_enum
+enum|enum
+name|bss_trans_mgmt_status_code
+block|{
+name|WNM_BSS_TM_ACCEPT
+init|=
+literal|0
+block|,
+name|WNM_BSS_TM_REJECT_UNSPECIFIED
+init|=
+literal|1
+block|,
+name|WNM_BSS_TM_REJECT_INSUFFICIENT_BEACON
+init|=
+literal|2
+block|,
+name|WNM_BSS_TM_REJECT_INSUFFICIENT_CAPABITY
+init|=
+literal|3
+block|,
+name|WNM_BSS_TM_REJECT_UNDESIRED
+init|=
+literal|4
+block|,
+name|WNM_BSS_TM_REJECT_DELAY_REQUEST
+init|=
+literal|5
+block|,
+name|WNM_BSS_TM_REJECT_STA_CANDIDATE_LIST_PROVIDED
+init|=
+literal|6
+block|,
+name|WNM_BSS_TM_REJECT_NO_SUITABLE_CANDIDATES
+init|=
+literal|7
+block|,
+name|WNM_BSS_TM_REJECT_LEAVING_ESS
+init|=
+literal|8
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|WNM_NEIGHBOR_TSF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|WNM_NEIGHBOR_CONDENSED_COUNTRY_STRING
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|WNM_NEIGHBOR_BSS_TRANSITION_CANDIDATE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|WNM_NEIGHBOR_BSS_TERMINATION_DURATION
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|WNM_NEIGHBOR_BEARING
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|WNM_NEIGHBOR_MEASUREMENT_PILOT
+value|66
+end_define
+
+begin_define
+define|#
+directive|define
+name|WNM_NEIGHBOR_RRM_ENABLED_CAPABILITIES
+value|70
+end_define
+
+begin_define
+define|#
+directive|define
+name|WNM_NEIGHBOR_MULTIPLE_BSSID
+value|71
+end_define
+
+begin_comment
+comment|/* QoS action */
+end_comment
+
+begin_enum
+enum|enum
+name|qos_action
+block|{
+name|QOS_ADDTS_REQ
+init|=
+literal|0
+block|,
+name|QOS_ADDTS_RESP
+init|=
+literal|1
+block|,
+name|QOS_DELTS
+init|=
+literal|2
+block|,
+name|QOS_SCHEDULE
+init|=
+literal|3
+block|,
+name|QOS_QOS_MAP_CONFIG
+init|=
+literal|4
+block|, }
+enum|;
+end_enum
 
 begin_comment
 comment|/* IEEE Std 802.11-2012, 8.4.2.62 20/40 BSS Coexistence element */
@@ -5154,6 +6377,111 @@ literal|1
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/* Channel Switch modes (802.11h) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHAN_SWITCH_MODE_ALLOW_TX
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHAN_SWITCH_MODE_BLOCK_TX
+value|1
+end_define
+
+begin_struct
+struct|struct
+name|tpc_report
+block|{
+name|u8
+name|eid
+decl_stmt|;
+name|u8
+name|len
+decl_stmt|;
+name|u8
+name|tx_power
+decl_stmt|;
+name|u8
+name|link_margin
+decl_stmt|;
+block|}
+name|STRUCT_PACKED
+struct|;
+end_struct
+
+begin_comment
+comment|/* IEEE Std 802.11-2012, 8.5.7.4 - Link Measurement Request frame format */
+end_comment
+
+begin_struct
+struct|struct
+name|rrm_link_measurement_request
+block|{
+name|u8
+name|dialog_token
+decl_stmt|;
+name|s8
+name|tx_power
+decl_stmt|;
+name|s8
+name|max_tp
+decl_stmt|;
+name|u8
+name|variable
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|STRUCT_PACKED
+struct|;
+end_struct
+
+begin_comment
+comment|/* IEEE Std 802.11-2012, 8.5.7.5 - Link Measurement Report frame format */
+end_comment
+
+begin_struct
+struct|struct
+name|rrm_link_measurement_report
+block|{
+name|u8
+name|dialog_token
+decl_stmt|;
+name|struct
+name|tpc_report
+name|tpc
+decl_stmt|;
+name|u8
+name|rx_ant_id
+decl_stmt|;
+name|u8
+name|tx_ant_id
+decl_stmt|;
+name|u8
+name|rcpi
+decl_stmt|;
+name|u8
+name|rsni
+decl_stmt|;
+name|u8
+name|variable
+index|[
+literal|0
+index|]
+decl_stmt|;
+block|}
+name|STRUCT_PACKED
+struct|;
+end_struct
 
 begin_endif
 endif|#

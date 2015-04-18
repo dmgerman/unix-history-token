@@ -76,23 +76,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|hostapd_ip_diff
-parameter_list|(
-name|struct
-name|hostapd_ip_addr
-modifier|*
-name|a
-parameter_list|,
-name|struct
-name|hostapd_ip_addr
-modifier|*
-name|b
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|hostapd_parse_ip_addr
 parameter_list|(
 specifier|const

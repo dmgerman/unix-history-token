@@ -170,17 +170,11 @@ name|int
 name|success
 parameter_list|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Device Discoverability Request TX callback: success=%d"
+literal|"Device Discoverability Request TX callback: success=%d"
 argument_list|,
 name|success
 argument_list|)
@@ -210,18 +204,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: GO acknowledged Device Discoverability Request - wait "
-literal|"for response"
+literal|"GO acknowledged Device Discoverability Request - wait for response"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * TODO: is the remain-on-channel from Action frame TX long enough for 	 * most cases or should we try to increase its duration and/or start 	 * another remain-on-channel if needed once the previous one expires? 	 */
@@ -253,6 +240,10 @@ name|wpabuf
 modifier|*
 name|req
 decl_stmt|;
+name|unsigned
+name|int
+name|wait_time
+decl_stmt|;
 name|go
 operator|=
 name|p2p_get_device
@@ -277,18 +268,11 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Could not find peer entry for GO and frequency "
-literal|"to send Device Discoverability Request"
+literal|"Could not find peer entry for GO and frequency to send Device Discoverability Request"
 argument_list|)
 expr_stmt|;
 return|return
@@ -321,17 +305,11 @@ return|return
 operator|-
 literal|1
 return|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Sending Device Discoverability Request to GO "
+literal|"Sending Device Discoverability Request to GO "
 name|MACSTR
 literal|" for client "
 name|MACSTR
@@ -382,6 +360,34 @@ name|pending_action_state
 operator|=
 name|P2P_PENDING_DEV_DISC_REQUEST
 expr_stmt|;
+name|wait_time
+operator|=
+literal|1000
+expr_stmt|;
+if|if
+condition|(
+name|p2p
+operator|->
+name|cfg
+operator|->
+name|max_listen
+operator|&&
+name|wait_time
+operator|>
+name|p2p
+operator|->
+name|cfg
+operator|->
+name|max_listen
+condition|)
+name|wait_time
+operator|=
+name|p2p
+operator|->
+name|cfg
+operator|->
+name|max_listen
+expr_stmt|;
 if|if
 condition|(
 name|p2p_send_action
@@ -420,23 +426,17 @@ argument_list|(
 name|req
 argument_list|)
 argument_list|,
-literal|1000
+name|wait_time
 argument_list|)
 operator|<
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Failed to send Action frame"
+literal|"Failed to send Action frame"
 argument_list|)
 expr_stmt|;
 name|wpabuf_free
@@ -549,17 +549,11 @@ name|int
 name|success
 parameter_list|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Device Discoverability Response TX callback: success=%d"
+literal|"Device Discoverability Response TX callback: success=%d"
 argument_list|,
 name|success
 argument_list|)
@@ -626,17 +620,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Sending Device Discoverability Response to "
+literal|"Sending Device Discoverability Response to "
 name|MACSTR
 literal|" (status %u freq %d)"
 argument_list|,
@@ -694,17 +682,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Failed to send Action frame"
+literal|"Failed to send Action frame"
 argument_list|)
 expr_stmt|;
 block|}
@@ -749,17 +731,11 @@ decl_stmt|;
 name|size_t
 name|g
 decl_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Received Device Discoverability Request from "
+literal|"Received Device Discoverability Request from "
 name|MACSTR
 literal|" (freq=%d)"
 argument_list|,
@@ -793,18 +769,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Invalid Dialog Token 0 (must be nonzero) in "
-literal|"Device Discoverability Request"
+literal|"Invalid Dialog Token 0 (must be nonzero) in Device Discoverability Request"
 argument_list|)
 expr_stmt|;
 name|p2p_send_dev_disc_resp
@@ -839,18 +808,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: P2P Device ID attribute missing from Device "
-literal|"Discoverability Request"
+literal|"P2P Device ID attribute missing from Device Discoverability Request"
 argument_list|)
 expr_stmt|;
 name|p2p_send_dev_disc_resp
@@ -915,19 +877,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Scheduled "
-literal|"GO Discoverability Request for the target "
-literal|"device"
+literal|"Scheduled GO Discoverability Request for the target device"
 argument_list|)
 expr_stmt|;
 comment|/* 			 * P2P group code will use a callback to indicate TX 			 * status, so that we can reply to the request once the 			 * target client has acknowledged the request or it has 			 * timed out. 			 */
@@ -965,19 +919,11 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Requested client "
-literal|"was not found in any group or did not support client "
-literal|"discoverability"
+literal|"Requested client was not found in any group or did not support client discoverability"
 argument_list|)
 expr_stmt|;
 name|p2p_send_dev_disc_resp
@@ -1039,17 +985,11 @@ decl_stmt|;
 name|u8
 name|status
 decl_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Received Device Discoverability Response from "
+literal|"Received Device Discoverability Response from "
 name|MACSTR
 argument_list|,
 name|MAC2STR
@@ -1086,18 +1026,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Ignore unexpected "
-literal|"Device Discoverability Response"
+literal|"Ignore unexpected Device Discoverability Response"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1143,19 +1076,11 @@ operator|->
 name|dialog_token
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Ignore Device "
-literal|"Discoverability Response with unexpected dialog "
-literal|"token %u (expected %u)"
+literal|"Ignore Device Discoverability Response with unexpected dialog token %u (expected %u)"
 argument_list|,
 name|msg
 operator|.
@@ -1187,17 +1112,11 @@ operator|&
 name|msg
 argument_list|)
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Device Discoverability Response status %u"
+literal|"Device Discoverability Response status %u"
 argument_list|,
 name|status
 argument_list|)
@@ -1249,19 +1168,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No pending "
-literal|"operation with the client discoverability peer "
-literal|"anymore"
+literal|"No pending operation with the client discoverability peer anymore"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1274,17 +1185,11 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Peer is expected to be awake for at least 100 TU; try to 		 * connect immediately. 		 */
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Client discoverability request succeeded"
+literal|"Client discoverability request succeeded"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1331,17 +1236,11 @@ block|}
 else|else
 block|{
 comment|/* 		 * Client discoverability request failed; try to connect from 		 * timeout. 		 */
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Client discoverability request failed"
+literal|"Client discoverability request failed"
 argument_list|)
 expr_stmt|;
 name|p2p_set_timeout
@@ -1370,17 +1269,11 @@ name|int
 name|success
 parameter_list|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: GO Discoverability Request TX callback: success=%d"
+literal|"GO Discoverability Request TX callback: success=%d"
 argument_list|,
 name|success
 argument_list|)
@@ -1407,18 +1300,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No pending Device "
-literal|"Discoverability Request"
+literal|"No pending Device Discoverability Request"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1495,18 +1381,11 @@ name|wpabuf
 modifier|*
 name|ies
 decl_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Received GO Discoverability Request - remain awake for "
-literal|"100 TU"
+literal|"Received GO Discoverability Request - remain awake for 100 TU"
 argument_list|)
 expr_stmt|;
 name|ies
@@ -1562,18 +1441,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Failed to start listen mode for client "
-literal|"discoverability"
+literal|"Failed to start listen mode for client discoverability"
 argument_list|)
 expr_stmt|;
 block|}

@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<stdint.h>
 end_include
 
 begin_include
@@ -57,35 +57,35 @@ end_include
 
 begin_typedef
 typedef|typedef
-name|__uint32_t
+name|uint32_t
 name|__u32
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|__int32_t
+name|int32_t
 name|__s32
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|__uint16_t
+name|uint16_t
 name|__u16
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|__int16_t
+name|int16_t
 name|__s16
 typedef|;
 end_typedef
 
 begin_typedef
 typedef|typedef
-name|__uint8_t
+name|uint8_t
 name|__u8
 typedef|;
 end_typedef

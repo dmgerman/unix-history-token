@@ -512,9 +512,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOCGMIIREG]"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl[SIOCGMIIREG]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -596,9 +603,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOCSMIIREG"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl[SIOCSMIIREG]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1380,6 +1394,8 @@ block|}
 else|else
 block|{
 comment|/* if both multiport addresses are the same we can add */
+if|if
+condition|(
 name|wpa_driver_roboswitch_read
 argument_list|(
 name|drv
@@ -1392,7 +1408,7 @@ name|read1
 argument_list|,
 literal|3
 argument_list|)
-expr_stmt|;
+operator|||
 name|wpa_driver_roboswitch_read
 argument_list|(
 name|drv
@@ -1405,9 +1421,7 @@ name|read2
 argument_list|,
 literal|3
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 name|os_memcmp
 argument_list|(
 name|read1
@@ -1423,6 +1437,8 @@ return|return
 operator|-
 literal|1
 return|;
+if|if
+condition|(
 name|wpa_driver_roboswitch_read
 argument_list|(
 name|drv
@@ -1435,7 +1451,7 @@ name|read1
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|||
 name|wpa_driver_roboswitch_read
 argument_list|(
 name|drv
@@ -1448,9 +1464,7 @@ name|read2
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|||
 name|read1
 index|[
 literal|0
@@ -2155,9 +2169,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOCGMIIPHY]"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl[SIOCGMIIPHY]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|os_free

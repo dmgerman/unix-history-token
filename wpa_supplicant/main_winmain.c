@@ -305,6 +305,8 @@ name|ifaces
 index|[
 name|i
 index|]
+argument_list|,
+name|NULL
 argument_list|)
 operator|==
 name|NULL

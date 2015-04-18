@@ -344,11 +344,31 @@ end_define
 begin_define
 define|#
 directive|define
+name|RTA_SPACE
+parameter_list|(
+name|len
+parameter_list|)
+value|RTA_ALIGN(RTA_LENGTH(len))
+end_define
+
+begin_define
+define|#
+directive|define
 name|RTA_DATA
 parameter_list|(
 name|rta
 parameter_list|)
 value|((void *) (((char *) (rta)) + RTA_LENGTH(0)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RTA_PAYLOAD
+parameter_list|(
+name|rta
+parameter_list|)
+value|((int) ((rta)->rta_len) - RTA_LENGTH(0))
 end_define
 
 begin_struct

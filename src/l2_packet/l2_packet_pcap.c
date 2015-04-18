@@ -243,18 +243,20 @@ operator|->
 name|eth
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Failed to open interface '%s'.\n"
+name|MSG_ERROR
+argument_list|,
+literal|"Failed to open interface '%s' - eth_open: %s"
 argument_list|,
 name|l2
 operator|->
 name|ifname
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-literal|"eth_open"
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -277,18 +279,20 @@ operator|<
 literal|0
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Failed to get own hw address from interface '%s'.\n"
+name|MSG_ERROR
+argument_list|,
+literal|"Failed to get own hw address from interface '%s' - eth_get: %s"
 argument_list|,
 name|l2
 operator|->
 name|ifname
-argument_list|)
-expr_stmt|;
-name|perror
+argument_list|,
+name|strerror
 argument_list|(
-literal|"eth_get"
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|eth_close
@@ -1973,6 +1977,27 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_WINPCAP */
+block|}
+end_function
+
+begin_function
+name|int
+name|l2_packet_set_packet_filter
+parameter_list|(
+name|struct
+name|l2_packet_data
+modifier|*
+name|l2
+parameter_list|,
+name|enum
+name|l2_packet_filter_type
+name|type
+parameter_list|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
 block|}
 end_function
 

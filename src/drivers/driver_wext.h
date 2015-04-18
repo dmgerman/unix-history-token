@@ -123,21 +123,6 @@ comment|/* whether driver is using cfg80211 */
 name|u8
 name|max_level
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|ANDROID
-name|int
-name|errors
-decl_stmt|;
-name|int
-name|driver_is_started
-decl_stmt|;
-name|int
-name|bgscan_enabled
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* ANDROID */
 block|}
 struct|;
 end_struct

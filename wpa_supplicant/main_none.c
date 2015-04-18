@@ -111,6 +111,8 @@ name|global
 argument_list|,
 operator|&
 name|iface
+argument_list|,
+name|NULL
 argument_list|)
 operator|==
 name|NULL

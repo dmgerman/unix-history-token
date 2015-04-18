@@ -47,6 +47,23 @@ end_function
 
 begin_function
 name|int
+name|os_get_reltime
+parameter_list|(
+name|struct
+name|os_reltime
+modifier|*
+name|t
+parameter_list|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|os_mktime
 parameter_list|(
 name|int
@@ -650,6 +667,30 @@ block|}
 end_function
 
 begin_function
+name|int
+name|os_memcmp_const
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|a
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+name|b
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
 name|char
 modifier|*
 name|os_strstr
@@ -704,6 +745,31 @@ end_endif
 begin_comment
 comment|/* OS_NO_C_LIB_DEFINES */
 end_comment
+
+begin_function
+name|int
+name|os_exec
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|program
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|arg
+parameter_list|,
+name|int
+name|wait_completion
+parameter_list|)
+block|{
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
 
 end_unit
 

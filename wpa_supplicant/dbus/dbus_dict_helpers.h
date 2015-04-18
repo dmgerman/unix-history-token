@@ -537,11 +537,15 @@ begin_comment
 comment|/*  * Reading a dict from a DBusMessage  */
 end_comment
 
+begin_comment
+comment|/*  * Used only in struct wpa_dbus_dict_entry::array_type internally to identify  * special binary array case.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|WPAS_DBUS_TYPE_BINARRAY
-value|(DBUS_NUMBER_OF_TYPES + 100)
+value|((int) '@')
 end_define
 
 begin_struct

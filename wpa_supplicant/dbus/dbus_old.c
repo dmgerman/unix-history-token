@@ -329,8 +329,7 @@ name|message
 argument_list|,
 name|WPAS_ERROR_INVALID_IFACE
 argument_list|,
-literal|"wpa_supplicant knows nothing about "
-literal|"this interface."
+literal|"wpa_supplicant knows nothing about this interface."
 argument_list|)
 return|;
 block|}
@@ -728,6 +727,24 @@ condition|)
 goto|goto
 name|out
 goto|;
+name|wpa_printf
+argument_list|(
+name|MSG_MSGDUMP
+argument_list|,
+literal|"dbus[old/iface]: %s.%s (%s) [%s]"
+argument_list|,
+name|msg_interface
+argument_list|,
+name|method
+argument_list|,
+name|path
+argument_list|,
+name|dbus_message_get_signature
+argument_list|(
+name|message
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|iface_obj_path
 operator|=
 name|wpas_dbus_decompose_object_path
@@ -1096,6 +1113,9 @@ argument_list|,
 name|wpa_s
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|CONFIG_NO_CONFIG_BLOBS
 elseif|else
 if|if
 condition|(
@@ -1136,19 +1156,23 @@ argument_list|,
 name|wpa_s
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_NO_CONFIG_BLOBS */
 ifdef|#
 directive|ifdef
 name|CONFIG_WPS
 elseif|else
 if|if
 condition|(
-operator|!
 name|os_strcmp
 argument_list|(
 name|method
 argument_list|,
 literal|"wpsPbc"
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|reply
 operator|=
@@ -1162,13 +1186,14 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|!
 name|os_strcmp
 argument_list|(
 name|method
 argument_list|,
 literal|"wpsPin"
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|reply
 operator|=
@@ -1182,13 +1207,14 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-operator|!
 name|os_strcmp
 argument_list|(
 name|method
 argument_list|,
 literal|"wpsReg"
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|reply
 operator|=
@@ -1205,13 +1231,14 @@ comment|/* CONFIG_WPS */
 elseif|else
 if|if
 condition|(
-operator|!
 name|os_strcmp
 argument_list|(
 name|method
 argument_list|,
 literal|"flush"
 argument_list|)
+operator|==
+literal|0
 condition|)
 name|reply
 operator|=
@@ -1224,6 +1251,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* If the message was handled, send back the reply */
+name|out
+label|:
 if|if
 condition|(
 name|reply
@@ -1252,8 +1281,6 @@ name|reply
 argument_list|)
 expr_stmt|;
 block|}
-name|out
-label|:
 name|os_free
 argument_list|(
 name|iface_obj_path
@@ -1367,6 +1394,24 @@ condition|)
 return|return
 name|DBUS_HANDLER_RESULT_NOT_YET_HANDLED
 return|;
+name|wpa_printf
+argument_list|(
+name|MSG_MSGDUMP
+argument_list|,
+literal|"dbus[old]: %s.%s (%s) [%s]"
+argument_list|,
+name|msg_interface
+argument_list|,
+name|method
+argument_list|,
+name|path
+argument_list|,
+name|dbus_message_get_signature
+argument_list|(
+name|message
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* Validate the method interface */
 if|if
 condition|(
@@ -1590,8 +1635,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: Not enough memory to send scan "
-literal|"results signal"
+literal|"dbus: Not enough memory to send scan results signal"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1723,9 +1767,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: wpa_supplicant_dbus_notify_state_change: "
-literal|"could not create dbus signal; likely out of "
-literal|"memory"
+literal|"dbus: %s: could not create dbus signal; likely out of memory"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1744,29 +1788,6 @@ argument_list|(
 name|old_state
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|new_state_str
-operator|==
-name|NULL
-operator|||
-name|old_state_str
-operator|==
-name|NULL
-condition|)
-block|{
-name|wpa_printf
-argument_list|(
-name|MSG_ERROR
-argument_list|,
-literal|"dbus: wpa_supplicant_dbus_notify_state_change: "
-literal|"Could not convert state strings"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 if|if
 condition|(
 operator|!
@@ -1792,9 +1813,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: wpa_supplicant_dbus_notify_state_change: "
-literal|"Not enough memory to construct state change "
-literal|"signal"
+literal|"dbus: %s: Not enough memory to construct state change signal"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1894,8 +1915,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: Not enough memory to send scan "
-literal|"results signal"
+literal|"dbus: Not enough memory to send scan results signal"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1933,8 +1953,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: Not enough memory to construct "
-literal|"signal"
+literal|"dbus: Not enough memory to construct signal"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2028,9 +2047,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: wpa_supplicant_dbus_notify_wps_cred: "
-literal|"Could not create dbus signal; likely out of "
-literal|"memory"
+literal|"dbus: %s: Could not create dbus signal; likely out of memory"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2063,8 +2082,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: wpa_supplicant_dbus_notify_wps_cred: "
-literal|"Not enough memory to construct signal"
+literal|"dbus: %s: Not enough memory to construct signal"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2230,9 +2250,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: wpa_supplicant_dbus_notify_certification: "
-literal|"Could not create dbus signal; likely out of "
-literal|"memory"
+literal|"dbus: %s: Could not create dbus signal; likely out of memory"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2306,8 +2326,9 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: wpa_supplicant_dbus_notify_certification: "
-literal|"Not enough memory to construct signal"
+literal|"dbus: %s: Not enough memory to construct signal"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2399,8 +2420,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: Could not set up message "
-literal|"handler"
+literal|"dbus: Could not set up message handler"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2453,8 +2473,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: Could not request service name: "
-literal|"already registered"
+literal|"dbus: Could not request service name: already registered"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2463,8 +2482,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: Could not request service name: "
-literal|"%s %s"
+literal|"dbus: Could not request service name: %s %s"
 argument_list|,
 name|error
 operator|.
@@ -2640,8 +2658,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: Could not set up message "
-literal|"handler for interface %s"
+literal|"dbus: Could not set up message handler for interface %s"
 argument_list|,
 name|wpa_s
 operator|->
@@ -2709,6 +2726,12 @@ expr_stmt|;
 if|if
 condition|(
 name|ctrl_iface
+operator|==
+name|NULL
+operator|||
+name|wpa_s
+operator|->
+name|dbus_path
 operator|==
 name|NULL
 condition|)

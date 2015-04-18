@@ -775,9 +775,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"sendto[IAPP-ADD]"
+name|MSG_INFO
+argument_list|,
+literal|"sendto[IAPP-ADD]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -909,9 +916,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"send[L2 Update]"
+name|MSG_INFO
+argument_list|,
+literal|"send[L2 Update]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -936,14 +950,12 @@ modifier|*
 name|sta
 parameter_list|)
 block|{
-name|struct
-name|ieee80211_mgmt
-modifier|*
-name|assoc
-decl_stmt|;
 name|u16
 name|seq
+init|=
+literal|0
 decl_stmt|;
+comment|/* TODO */
 if|if
 condition|(
 name|iapp
@@ -951,28 +963,6 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|assoc
-operator|=
-name|sta
-operator|->
-name|last_assoc_req
-expr_stmt|;
-name|seq
-operator|=
-name|assoc
-condition|?
-name|WLAN_GET_SEQ_SEQ
-argument_list|(
-name|le_to_host16
-argument_list|(
-name|assoc
-operator|->
-name|seq_ctrl
-argument_list|)
-argument_list|)
-else|:
-literal|0
-expr_stmt|;
 comment|/* IAPP-ADD.request(MAC Address, Sequence Number, Timeout) */
 name|hostapd_logger
 argument_list|(
@@ -1013,26 +1003,7 @@ argument_list|,
 name|seq
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|assoc
-operator|&&
-name|WLAN_FC_GET_STYPE
-argument_list|(
-name|le_to_host16
-argument_list|(
-name|assoc
-operator|->
-name|frame_control
-argument_list|)
-argument_list|)
-operator|==
-name|WLAN_FC_STYPE_REASSOC_REQ
-condition|)
-block|{
-comment|/* IAPP-MOVE.request(MAC Address, Sequence Number, Old AP, 		 *                   Context Block, Timeout) 		 */
-comment|/* TODO: Send IAPP-MOVE to the old AP; Map Old AP BSSID to 		 * IP address */
-block|}
+comment|/* TODO: If this was reassociation: 	 * IAPP-MOVE.request(MAC Address, Sequence Number, Old AP, 	 *                   Context Block, Timeout) 	 * TODO: Send IAPP-MOVE to the old AP; Map Old AP BSSID to 	 * IP address */
 block|}
 end_function
 
@@ -1092,9 +1063,11 @@ name|add
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Invalid IAPP-ADD packet length %d (expected %lu)\n"
+name|MSG_INFO
+argument_list|,
+literal|"Invalid IAPP-ADD packet length %d (expected %lu)"
 argument_list|,
 name|len
 argument_list|,
@@ -1305,9 +1278,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"recvfrom"
+name|MSG_INFO
+argument_list|,
+literal|"iapp_receive_udp - recvfrom: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1440,9 +1420,11 @@ operator|!=
 name|IAPP_VERSION
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Dropping IAPP frame with unknown version %d\n"
+name|MSG_INFO
+argument_list|,
+literal|"Dropping IAPP frame with unknown version %d"
 argument_list|,
 name|hdr
 operator|->
@@ -1458,9 +1440,11 @@ operator|>
 name|len
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Underflow IAPP frame (hlen=%d len=%d)\n"
+name|MSG_INFO
+argument_list|,
+literal|"Underflow IAPP frame (hlen=%d len=%d)"
 argument_list|,
 name|hlen
 argument_list|,
@@ -1476,9 +1460,11 @@ operator|<
 name|len
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Ignoring %d extra bytes from IAPP frame\n"
+name|MSG_INFO
+argument_list|,
+literal|"Ignoring %d extra bytes from IAPP frame"
 argument_list|,
 name|len
 operator|-
@@ -1509,7 +1495,7 @@ name|from
 argument_list|,
 name|hdr
 argument_list|,
-name|hlen
+name|len
 operator|-
 sizeof|sizeof
 argument_list|(
@@ -1527,9 +1513,11 @@ comment|/* IAPP-MOVE.indication(MAC Address, New BSSID, 		 * Sequence Number, AP
 comment|/* TODO: process */
 break|break;
 default|default:
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Unknown IAPP command %d\n"
+name|MSG_INFO
+argument_list|,
+literal|"Unknown IAPP command %d"
 argument_list|,
 name|hdr
 operator|->
@@ -1645,9 +1633,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket[PF_INET,SOCK_DGRAM]"
+name|MSG_INFO
+argument_list|,
+literal|"iapp_init - socket[PF_INET,SOCK_DGRAM]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|iapp_deinit
@@ -1705,9 +1700,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl(SIOCGIFINDEX)"
+name|MSG_INFO
+argument_list|,
+literal|"iapp_init - ioctl(SIOCGIFINDEX): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|iapp_deinit
@@ -1742,9 +1744,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl(SIOCGIFADDR)"
+name|MSG_INFO
+argument_list|,
+literal|"iapp_init - ioctl(SIOCGIFADDR): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|iapp_deinit
@@ -1777,9 +1786,11 @@ operator|!=
 name|AF_INET
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Invalid address family %i (SIOCGIFADDR)\n"
+name|MSG_INFO
+argument_list|,
+literal|"IAPP: Invalid address family %i (SIOCGIFADDR)"
 argument_list|,
 name|paddr
 operator|->
@@ -1824,9 +1835,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl(SIOCGIFBRDADDR)"
+name|MSG_INFO
+argument_list|,
+literal|"iapp_init - ioctl(SIOCGIFBRDADDR): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|iapp_deinit
@@ -1859,9 +1877,11 @@ operator|!=
 name|AF_INET
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Invalid address family %i (SIOCGIFBRDADDR)\n"
+name|MSG_INFO
+argument_list|,
+literal|"Invalid address family %i (SIOCGIFBRDADDR)"
 argument_list|,
 name|paddr
 operator|->
@@ -1940,9 +1960,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"bind[UDP]"
+name|MSG_INFO
+argument_list|,
+literal|"iapp_init - bind[UDP]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|iapp_deinit
@@ -2013,9 +2040,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"setsockopt[UDP,IP_ADD_MEMBERSHIP]"
+name|MSG_INFO
+argument_list|,
+literal|"iapp_init - setsockopt[UDP,IP_ADD_MEMBERSHIP]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|iapp_deinit
@@ -2052,9 +2086,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket[PF_PACKET,SOCK_RAW]"
+name|MSG_INFO
+argument_list|,
+literal|"iapp_init - socket[PF_PACKET,SOCK_RAW]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|iapp_deinit
@@ -2116,9 +2157,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"bind[PACKET]"
+name|MSG_INFO
+argument_list|,
+literal|"iapp_init - bind[PACKET]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|iapp_deinit
@@ -2146,9 +2194,11 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not register read socket for IAPP.\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not register read socket for IAPP"
 argument_list|)
 expr_stmt|;
 name|iapp_deinit
@@ -2160,9 +2210,11 @@ return|return
 name|NULL
 return|;
 block|}
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"IEEE 802.11F (IAPP) using interface %s\n"
+name|MSG_INFO
+argument_list|,
+literal|"IEEE 802.11F (IAPP) using interface %s"
 argument_list|,
 name|iface
 argument_list|)
@@ -2263,9 +2315,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"setsockopt[UDP,IP_DEL_MEMBERSHIP]"
+name|MSG_INFO
+argument_list|,
+literal|"iapp_deinit - setsockopt[UDP,IP_DEL_MEMBERSHIP]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
