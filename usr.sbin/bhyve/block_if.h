@@ -59,6 +59,9 @@ decl_stmt|;
 name|off_t
 name|br_offset
 decl_stmt|;
+name|ssize_t
+name|br_resid
+decl_stmt|;
 name|void
 function_decl|(
 modifier|*
