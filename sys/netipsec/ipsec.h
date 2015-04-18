@@ -1498,14 +1498,17 @@ parameter_list|(
 name|union
 name|sockaddr_union
 modifier|*
-name|sa
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|socklen_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|extern
-specifier|const
 name|char
 modifier|*
 name|ipsec_logsastr
@@ -1513,6 +1516,11 @@ parameter_list|(
 name|struct
 name|secasvar
 modifier|*
+parameter_list|,
+name|char
+modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
