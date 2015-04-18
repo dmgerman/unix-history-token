@@ -10645,6 +10645,23 @@ literal|"pmap_release: pmap has reserved page table page(s)"
 operator|)
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|CPU_EMPTY
+argument_list|(
+operator|&
+name|pmap
+operator|->
+name|pm_active
+argument_list|)
+argument_list|,
+operator|(
+literal|"releasing active pmap %p"
+operator|,
+name|pmap
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|pmap_pcid_enabled
