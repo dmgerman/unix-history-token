@@ -1313,7 +1313,7 @@ name|NG_HCI_OPCODE
 argument_list|(
 name|NG_HCI_OGF_LE
 argument_list|,
-name|NG_HCI_OCF_LE_READ_SUPPORTED
+name|NG_HCI_OCF_LE_READ_SUPPORTED_STATUS
 argument_list|)
 argument_list|,
 operator|(
