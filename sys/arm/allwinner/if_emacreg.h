@@ -871,6 +871,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EMAC_PKT_OK
+value|(1<< 7)
+end_define
+
+begin_define
+define|#
+directive|define
 name|EMAC_RX_FLUSH_FIFO
 value|(1<< 3)
 end_define
