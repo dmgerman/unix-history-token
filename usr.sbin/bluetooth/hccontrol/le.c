@@ -1253,7 +1253,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"LOCAL SUPPORTED: %d %d %lu\n"
+literal|"LOCAL SUPPORTED: %d %d %jx\n"
 argument_list|,
 name|e
 argument_list|,
@@ -1329,7 +1329,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"LE_STATUS: %d %d %lx\n"
+literal|"LE_STATUS: %d %d %jx\n"
 argument_list|,
 name|e
 argument_list|,
