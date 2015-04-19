@@ -9290,10 +9290,6 @@ name|sep
 operator|->
 name|se_rpc_lowvers
 operator|=
-name|sep
-operator|->
-name|se_rpc_lowvers
-operator|=
 literal|0
 expr_stmt|;
 name|memcpy
