@@ -1102,13 +1102,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|linelen
-operator|==
-literal|0
-condition|)
-continue|continue;
-if|if
-condition|(
 operator|*
 name|line
 operator|==
