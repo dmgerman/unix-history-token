@@ -678,6 +678,13 @@ name|proctree_lock
 argument_list|)
 expr_stmt|;
 block|}
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 block|}
 name|done
 label|:
