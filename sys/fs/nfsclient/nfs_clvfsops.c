@@ -305,7 +305,7 @@ name|M_NEWNFSREQ
 argument_list|,
 literal|"newnfsclient_req"
 argument_list|,
-literal|"New NFS request header"
+literal|"NFS request header"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -317,7 +317,7 @@ name|M_NEWNFSMNT
 argument_list|,
 literal|"newnfsmnt"
 argument_list|,
-literal|"New NFS mount struct"
+literal|"NFS mount struct"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

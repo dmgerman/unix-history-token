@@ -353,7 +353,7 @@ name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"New NFS server"
+literal|"NFS server"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -479,7 +479,7 @@ name|nfsd_debuglevel
 argument_list|,
 literal|0
 argument_list|,
-literal|"Debug level for new nfs server"
+literal|"Debug level for NFS server"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
