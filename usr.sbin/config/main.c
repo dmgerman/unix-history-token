@@ -3239,8 +3239,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|len
-decl_stmt|,
 name|osz
 decl_stmt|,
 name|r
@@ -3433,8 +3431,6 @@ argument_list|(
 name|cmd
 argument_list|)
 expr_stmt|;
-name|len
-operator|=
 name|fread
 argument_list|(
 name|o
