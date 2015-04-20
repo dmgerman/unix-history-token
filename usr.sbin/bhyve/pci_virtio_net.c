@@ -2735,14 +2735,20 @@ argument_list|,
 name|VIRTIO_TYPE_NET
 argument_list|)
 expr_stmt|;
-comment|/* link always up */
+comment|/* Link is up if we managed to open tap device. */
 name|sc
 operator|->
 name|vsc_config
 operator|.
 name|status
 operator|=
-literal|1
+operator|(
+name|sc
+operator|->
+name|vsc_tapfd
+operator|>=
+literal|0
+operator|)
 expr_stmt|;
 comment|/* use BAR 1 to map MSI-X table and PBA, if we're using MSI-X */
 if|if
