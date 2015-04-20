@@ -5497,6 +5497,11 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
+name|ixgbe_rxeof
+argument_list|(
+name|que
+argument_list|)
+expr_stmt|;
 name|IXGBE_TX_LOCK
 argument_list|(
 name|txr
