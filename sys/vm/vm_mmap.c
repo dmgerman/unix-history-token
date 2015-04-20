@@ -5381,11 +5381,6 @@ name|vm_offset_t
 name|foff
 decl_stmt|;
 name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
-name|struct
 name|ucred
 modifier|*
 name|cred
@@ -5397,12 +5392,6 @@ name|flags
 decl_stmt|,
 name|locktype
 decl_stmt|;
-name|mp
-operator|=
-name|vp
-operator|->
-name|v_mount
-expr_stmt|;
 name|cred
 operator|=
 name|td
