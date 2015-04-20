@@ -6410,10 +6410,6 @@ decl_stmt|;
 name|u_int
 name|nfrags
 decl_stmt|;
-name|netif_extra_info_t
-modifier|*
-name|extra
-decl_stmt|;
 name|int
 name|otherend_id
 decl_stmt|;
@@ -6565,10 +6561,6 @@ comment|/* 	 * Start packing the mbufs in this chain into 	 * the fragment point
 name|m
 operator|=
 name|m_head
-expr_stmt|;
-name|extra
-operator|=
-name|NULL
 expr_stmt|;
 name|otherend_id
 operator|=
