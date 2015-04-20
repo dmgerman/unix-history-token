@@ -3284,6 +3284,7 @@ name|ndp
 operator|!=
 name|NULL
 condition|)
+block|{
 name|FREE
 argument_list|(
 operator|(
@@ -3294,6 +3295,11 @@ argument_list|,
 name|M_NFSCLDELEG
 argument_list|)
 expr_stmt|;
+name|ndp
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|ret
