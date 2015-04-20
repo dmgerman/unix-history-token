@@ -180,7 +180,7 @@ define|#
 directive|define
 name|XF_IP4
 value|1
-comment|/* IP inside IP */
+comment|/* unused */
 define|#
 directive|define
 name|XF_AH
@@ -343,35 +343,6 @@ struct_decl|struct
 name|cryptoini
 struct_decl|;
 end_struct_decl
-
-begin_comment
-comment|/* XF_IP4 */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|int
-name|ipip_output
-parameter_list|(
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|ipsecrequest
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/* XF_AH */

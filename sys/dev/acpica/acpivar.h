@@ -2581,6 +2581,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|int
+name|acpi_parse_pxm
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+modifier|*
+name|domain
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

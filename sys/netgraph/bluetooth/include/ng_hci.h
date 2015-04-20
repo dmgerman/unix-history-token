@@ -4088,6 +4088,20 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|NG_HCI_EVENT_MASK_DEFAULT
+value|0x1fffffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_HCI_EVENT_MASK_LE
+value|0x2000000000000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|NG_HCI_OCF_RESET
 value|0x0003
 end_define
@@ -6480,6 +6494,13 @@ name|ng_hci_status_rp
 name|ng_hci_le_set_event_mask_rp
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|NG_HCI_LE_EVENT_MASK_ALL
+value|0x1f
+end_define
 
 begin_define
 define|#

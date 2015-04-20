@@ -40,6 +40,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_hwpmc_hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kstack_pages.h"
 end_include
 
@@ -797,6 +803,25 @@ name|int_debug
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|int_performance_counter
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -930,6 +955,18 @@ argument_list|,
 name|int_debug
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+name|SET_TRAP
+argument_list|(
+name|SPR_IVOR35
+argument_list|,
+name|int_performance_counter
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

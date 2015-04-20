@@ -5488,9 +5488,6 @@ name|adapter
 operator|->
 name|ifp
 decl_stmt|;
-name|bool
-name|more
-decl_stmt|;
 if|if
 condition|(
 name|ifp
@@ -5500,8 +5497,6 @@ operator|&
 name|IFF_DRV_RUNNING
 condition|)
 block|{
-name|more
-operator|=
 name|ixgbe_rxeof
 argument_list|(
 name|que

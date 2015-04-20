@@ -3139,6 +3139,14 @@ name|dev
 argument_list|,
 name|VIRTIO_BLK_F_TOPOLOGY
 argument_list|)
+operator|&&
+name|blkcfg
+operator|->
+name|topology
+operator|.
+name|physical_block_exp
+operator|>
+literal|0
 condition|)
 block|{
 name|dp

@@ -6976,27 +6976,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/*  * MWAIT cpu power states.  Lower 4 bits are sub-states.  */
-define|#
-directive|define
-name|MWAIT_C0
-value|0xf0
-define|#
-directive|define
-name|MWAIT_C1
-value|0x00
-define|#
-directive|define
-name|MWAIT_C2
-value|0x10
-define|#
-directive|define
-name|MWAIT_C3
-value|0x20
-define|#
-directive|define
-name|MWAIT_C4
-value|0x30
 specifier|static
 name|void
 name|cpu_idle_mwait
