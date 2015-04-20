@@ -2743,6 +2743,10 @@ operator|.
 name|status
 operator|=
 operator|(
+name|opts
+operator|==
+name|NULL
+operator|||
 name|sc
 operator|->
 name|vsc_tapfd
