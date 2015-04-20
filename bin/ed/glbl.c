@@ -187,6 +187,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+operator|(
 name|regexec
 argument_list|(
 name|pat
@@ -201,6 +202,7 @@ literal|0
 argument_list|)
 operator|==
 name|isgcmd
+operator|)
 operator|&&
 name|set_active_node
 argument_list|(
