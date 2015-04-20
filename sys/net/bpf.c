@@ -185,12 +185,6 @@ directive|include
 file|<net/if_var.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|BPF_INTERNAL
-end_define
-
 begin_include
 include|#
 directive|include
@@ -282,6 +276,74 @@ argument_list|,
 literal|"BPF"
 argument_list|,
 literal|"BPF data"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|bpf_if
+block|{
+define|#
+directive|define
+name|bif_next
+value|bif_ext.bif_next
+define|#
+directive|define
+name|bif_dlist
+value|bif_ext.bif_dlist
+name|struct
+name|bpf_if_ext
+name|bif_ext
+decl_stmt|;
+comment|/* public members */
+name|u_int
+name|bif_dlt
+decl_stmt|;
+comment|/* link layer type */
+name|u_int
+name|bif_hdrlen
+decl_stmt|;
+comment|/* length of link header */
+name|struct
+name|ifnet
+modifier|*
+name|bif_ifp
+decl_stmt|;
+comment|/* corresponding interface */
+name|struct
+name|rwlock
+name|bif_lock
+decl_stmt|;
+comment|/* interface lock */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|bpf_d
+argument_list|)
+name|bif_wlist
+expr_stmt|;
+comment|/* writer-only list */
+name|int
+name|bif_flags
+decl_stmt|;
+comment|/* Interface flags */
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|offsetof
+argument_list|(
+expr|struct
+name|bpf_if
+argument_list|,
+name|bif_ext
+argument_list|)
+operator|==
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6924,7 +6986,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|flags
+name|bif_flags
 operator|&
 name|BPFIF_FLAG_DYING
 condition|)
@@ -9809,7 +9871,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|flags
+name|bif_flags
 operator||=
 name|BPFIF_FLAG_DYING
 expr_stmt|;
