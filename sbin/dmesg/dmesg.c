@@ -429,6 +429,14 @@ argument_list|,
 literal|"sysctl kern.msgbuf"
 argument_list|)
 expr_stmt|;
+comment|/* Allocate extra room for growth between the sysctl calls. */
+name|buflen
+operator|+=
+name|buflen
+operator|/
+literal|8
+expr_stmt|;
+comment|/* Allocate more than sysctl sees, for room to append \n\0. */
 if|if
 condition|(
 operator|(
