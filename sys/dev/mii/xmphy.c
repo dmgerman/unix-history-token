@@ -373,10 +373,8 @@ directive|define
 name|ADD
 parameter_list|(
 name|m
-parameter_list|,
-name|c
 parameter_list|)
-value|ifmedia_add(&sc->mii_pdata->mii_media, (m), (c), NULL)
+value|ifmedia_add(&sc->mii_pdata->mii_media, (m), 0, NULL)
 define|#
 directive|define
 name|PRINT
@@ -405,8 +403,6 @@ name|sc
 operator|->
 name|mii_inst
 argument_list|)
-argument_list|,
-name|XMPHY_BMCR_FDX
 argument_list|)
 expr_stmt|;
 name|PRINT
@@ -428,8 +424,6 @@ name|sc
 operator|->
 name|mii_inst
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|PRINT
@@ -451,8 +445,6 @@ name|sc
 operator|->
 name|mii_inst
 argument_list|)
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|PRINT
