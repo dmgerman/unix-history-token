@@ -4142,7 +4142,7 @@ comment|/* filter, filterarg */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsize */
-name|CISS_MAX_SG_ELEMENTS
+name|BUS_SPACE_UNRESTRICTED
 argument_list|,
 comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
@@ -4202,11 +4202,18 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+operator|(
+name|CISS_MAX_SG_ELEMENTS
+operator|-
+literal|1
+operator|)
+operator|*
+name|PAGE_SIZE
 argument_list|,
+comment|/* maxsize */
 name|CISS_MAX_SG_ELEMENTS
 argument_list|,
-comment|/* maxsize, nsegments */
+comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */

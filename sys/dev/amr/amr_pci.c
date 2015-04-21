@@ -1118,11 +1118,12 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+name|BUS_SPACE_MAXSIZE
 argument_list|,
-name|AMR_NSEG
+comment|/* maxsize */
+name|BUS_SPACE_UNRESTRICTED
 argument_list|,
-comment|/* maxsize, nsegments */
+comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
@@ -1178,12 +1179,13 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+name|DFLTPHYS
 argument_list|,
+comment|/* maxsize */
 name|AMR_NSEG
 argument_list|,
-comment|/* maxsize, nsegments */
-name|MAXBSIZE
+comment|/* nsegments */
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
 literal|0
@@ -1243,12 +1245,13 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+name|DFLTPHYS
 argument_list|,
+comment|/* maxsize */
 name|AMR_NSEG
 argument_list|,
-comment|/* maxsize, nsegments */
-name|MAXBSIZE
+comment|/* nsegments */
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
 literal|0

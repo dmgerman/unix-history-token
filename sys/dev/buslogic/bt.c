@@ -3234,7 +3234,7 @@ comment|/* filterarg	*/
 name|NULL
 argument_list|,
 comment|/* maxsize	*/
-name|MAXBSIZE
+name|DFLTPHYS
 argument_list|,
 comment|/* nsegments	*/
 name|BT_NSEG
