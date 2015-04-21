@@ -9582,7 +9582,7 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+name|BUS_SPACE_MAXSIZE
 argument_list|,
 comment|/* maxsize */
 name|BUS_SPACE_UNRESTRICTED

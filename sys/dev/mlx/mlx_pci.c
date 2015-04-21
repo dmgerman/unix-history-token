@@ -794,11 +794,12 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-name|MLX_NSEG
+comment|/* maxsize */
+name|BUS_SPACE_UNRESTRICTED
 argument_list|,
-comment|/* maxsize, nsegments */
+comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */

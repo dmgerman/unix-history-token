@@ -3201,7 +3201,11 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+name|sc
+operator|->
+name|aac_max_sectors
+operator|<<
+literal|9
 argument_list|,
 comment|/* maxsize */
 name|sc
@@ -3209,7 +3213,7 @@ operator|->
 name|aac_sg_tablesize
 argument_list|,
 comment|/* nsegments */
-name|MAXBSIZE
+name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW

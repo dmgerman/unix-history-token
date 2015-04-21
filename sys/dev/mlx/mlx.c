@@ -1863,11 +1863,12 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAXBSIZE
+name|MLX_MAXPHYS
 argument_list|,
+comment|/* maxsize */
 name|MLX_NSEG
 argument_list|,
-comment|/* maxsize, nsegments */
+comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
