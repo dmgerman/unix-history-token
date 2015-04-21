@@ -3302,7 +3302,7 @@ name|SIP_MEDIA_REMOVABLE
 block|,
 literal|"MX"
 block|,
-literal|"MXUB3SES*"
+literal|"MXUB3*"
 block|,
 literal|"*"
 block|}
