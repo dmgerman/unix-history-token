@@ -5618,19 +5618,7 @@ condition|)
 block|{
 name|DPRINTF
 argument_list|(
-literal|"no mode line found for %dx%d @ %dHz!\n"
-argument_list|,
-name|mode
-operator|.
-name|hdisplay
-argument_list|,
-name|mode
-operator|.
-name|vdisplay
-argument_list|,
-name|mode
-operator|.
-name|hz
+literal|"no mode line found\n"
 argument_list|)
 expr_stmt|;
 name|i
