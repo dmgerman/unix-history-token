@@ -1173,15 +1173,6 @@ argument_list|,
 literal|" "
 argument_list|)
 expr_stmt|;
-define|#
-directive|define
-name|ADD
-parameter_list|(
-name|m
-parameter_list|,
-name|c
-parameter_list|)
-value|ifmedia_add(&sc->mii_pdata->mii_media, (m), (c), NULL)
 comment|/* Add the supported media types */
 if|if
 condition|(
@@ -1215,8 +1206,15 @@ name|mii_anegticks
 operator|=
 name|MII_ANEGTICKS_GIGE
 expr_stmt|;
-name|ADD
+name|ifmedia_add
 argument_list|(
+operator|&
+name|sc
+operator|->
+name|mii_pdata
+operator|->
+name|mii_media
+argument_list|,
 name|IFM_MAKEWORD
 argument_list|(
 name|IFM_ETHER
@@ -1230,9 +1228,9 @@ operator|->
 name|mii_inst
 argument_list|)
 argument_list|,
-name|BRGPHY_S1000
-operator||
-name|BRGPHY_BMCR_FDX
+literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1240,7 +1238,7 @@ argument_list|(
 literal|"1000baseSX-FDX, "
 argument_list|)
 expr_stmt|;
-comment|/* 2.5G support is a software enabled feature on the 5708S and 5709S. */
+comment|/* 		 * 2.5G support is a software enabled feature 		 * on the 5708S and 5709S. 		 */
 if|if
 condition|(
 name|bce_sc
@@ -1254,8 +1252,15 @@ name|BCE_PHY_2_5G_CAPABLE_FLAG
 operator|)
 condition|)
 block|{
-name|ADD
+name|ifmedia_add
 argument_list|(
+operator|&
+name|sc
+operator|->
+name|mii_pdata
+operator|->
+name|mii_media
+argument_list|,
 name|IFM_MAKEWORD
 argument_list|(
 name|IFM_ETHER
@@ -1270,6 +1275,8 @@ name|mii_inst
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1314,8 +1321,15 @@ operator||=
 name|BRGPHY_NOANWAIT
 expr_stmt|;
 block|}
-name|ADD
+name|ifmedia_add
 argument_list|(
+operator|&
+name|sc
+operator|->
+name|mii_pdata
+operator|->
+name|mii_media
+argument_list|,
 name|IFM_MAKEWORD
 argument_list|(
 name|IFM_ETHER
@@ -1330,6 +1344,8 @@ name|mii_inst
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1338,9 +1354,6 @@ literal|"auto\n"
 argument_list|)
 expr_stmt|;
 block|}
-undef|#
-directive|undef
-name|ADD
 name|MIIBUS_MEDIAINIT
 argument_list|(
 name|sc
