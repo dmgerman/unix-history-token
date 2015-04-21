@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: main.c,v 1.226 2014/02/07 17:23:35 pooka Exp $	*/
+comment|/*	$NetBSD: main.c,v 1.232 2015/03/26 22:20:42 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: main.c,v 1.226 2014/02/07 17:23:35 pooka Exp $"
+literal|"$NetBSD: main.c,v 1.232 2015/03/26 22:20:42 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -82,7 +82,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: main.c,v 1.226 2014/02/07 17:23:35 pooka Exp $"
+literal|"$NetBSD: main.c,v 1.232 2015/03/26 22:20:42 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -107,7 +107,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*-  * main.c --  *	The main file for this entire program. Exit routines etc  *	reside here.  *  * Utility functions defined in this file:  *	Main_ParseArgLine	Takes a line of arguments, breaks them and  *				treats them as if they were given when first  *				invoked. Used by the parse module to implement  *				the .MFLAGS target.  *  *	Error			Print a tagged error message. The global  *				MAKE variable must have been defined. This  *				takes a format string and two optional  *				arguments for it.  *  *	Fatal			Print an error message and exit. Also takes  *				a format string and two arguments.  *  *	Punt			Aborts all jobs and exits with a message. Also  *				takes a format string and two arguments.  *  *	Finish			Finish things up by printing the number of  *				errors which occurred, as passed to it, and  *				exiting.  */
+comment|/*-  * main.c --  *	The main file for this entire program. Exit routines etc  *	reside here.  *  * Utility functions defined in this file:  *	Main_ParseArgLine	Takes a line of arguments, breaks them and  *				treats them as if they were given when first  *				invoked. Used by the parse module to implement  *				the .MFLAGS target.  *  *	Error			Print a tagged error message. The global  *				MAKE variable must have been defined. This  *				takes a format string and optional arguments  *				for it.  *  *	Fatal			Print an error message and exit. Also takes  *				a format string and arguments for it.  *  *	Punt			Aborts all jobs and exits with a message. Also  *				takes a format string and arguments for it.  *  *	Finish			Finish things up by printing the number of  *				errors which occurred, as passed to it, and  *				exiting.  */
 end_comment
 
 begin_include
@@ -6413,6 +6413,11 @@ decl_stmt|;
 name|int
 name|cc
 decl_stmt|;
+comment|/* bytes read, or -1 */
+name|int
+name|savederr
+decl_stmt|;
+comment|/* saved errno */
 operator|*
 name|errnum
 operator|=
@@ -6572,6 +6577,10 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
+name|savederr
+operator|=
+literal|0
+expr_stmt|;
 name|Buf_Init
 argument_list|(
 operator|&
@@ -6640,6 +6649,17 @@ name|EINTR
 operator|)
 condition|)
 do|;
+if|if
+condition|(
+name|cc
+operator|==
+operator|-
+literal|1
+condition|)
+name|savederr
+operator|=
+name|errno
+expr_stmt|;
 comment|/* 	 * Close the input side of the pipe. 	 */
 operator|(
 name|void
@@ -6711,8 +6731,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|cc
-operator|==
+name|savederr
+operator|!=
 literal|0
 condition|)
 operator|*
