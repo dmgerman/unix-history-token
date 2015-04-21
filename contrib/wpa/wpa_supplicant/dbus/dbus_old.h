@@ -444,19 +444,27 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+specifier|inline
+name|void
 name|wpa_supplicant_dbus_notify_state_change
 parameter_list|(
-name|w
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
 parameter_list|,
-name|n
+name|enum
+name|wpa_states
+name|new_state
 parameter_list|,
-name|o
+name|enum
+name|wpa_states
+name|old_state
 parameter_list|)
-value|do { } while (0)
-end_define
+block|{ }
+end_function
 
 begin_function
 specifier|static

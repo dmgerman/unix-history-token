@@ -1236,7 +1236,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|os_memcmp
+name|os_memcmp_const
 argument_list|(
 name|x
 argument_list|,

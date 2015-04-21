@@ -77,6 +77,9 @@ name|u8
 modifier|*
 name|bssid
 parameter_list|,
+name|u8
+name|categ
+parameter_list|,
 specifier|const
 name|u8
 modifier|*

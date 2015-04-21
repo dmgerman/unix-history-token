@@ -190,6 +190,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|size_t
+name|wpa_trace_calling_func
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|buf
+index|[]
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_else
 else|#
 directive|else

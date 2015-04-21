@@ -21,20 +21,11 @@ name|wpa_scan_results
 struct_decl|;
 end_struct_decl
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|IEEE8021X_EAPOL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|CONFIG_NO_WPA2
-argument_list|)
-end_if
+end_ifdef
 
 begin_function_decl
 name|void
@@ -196,7 +187,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* IEEE8021X_EAPOL and !CONFIG_NO_WPA2 */
+comment|/* IEEE8021X_EAPOL */
 end_comment
 
 begin_function
@@ -395,7 +386,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IEEE8021X_EAPOL and !CONFIG_NO_WPA2 */
+comment|/* IEEE8021X_EAPOL */
 end_comment
 
 begin_endif

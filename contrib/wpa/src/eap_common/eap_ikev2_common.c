@@ -221,54 +221,6 @@ name|wpabuf
 modifier|*
 name|msg
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|CCNS_PL
-name|msg
-operator|=
-name|eap_msg_alloc
-argument_list|(
-name|EAP_VENDOR_IETF
-argument_list|,
-name|EAP_TYPE_IKEV2
-argument_list|,
-literal|1
-argument_list|,
-name|code
-argument_list|,
-name|id
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|msg
-operator|==
-name|NULL
-condition|)
-block|{
-name|wpa_printf
-argument_list|(
-name|MSG_ERROR
-argument_list|,
-literal|"EAP-IKEV2: Failed to allocate memory "
-literal|"for fragment ack"
-argument_list|)
-expr_stmt|;
-return|return
-name|NULL
-return|;
-block|}
-name|wpabuf_put_u8
-argument_list|(
-name|msg
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* Flags */
-else|#
-directive|else
-comment|/* CCNS_PL */
 name|msg
 operator|=
 name|eap_msg_alloc
@@ -303,9 +255,6 @@ return|return
 name|NULL
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* CCNS_PL */
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -502,7 +451,7 @@ return|;
 block|}
 if|if
 condition|(
-name|os_memcmp
+name|os_memcmp_const
 argument_list|(
 name|icv
 argument_list|,

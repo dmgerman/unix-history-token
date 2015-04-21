@@ -834,6 +834,16 @@ argument_list|(
 name|er
 operator|->
 name|ip_addr
+argument_list|,
+name|er
+operator|->
+name|forced_ifname
+condition|?
+name|er
+operator|->
+name|ifname
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

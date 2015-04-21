@@ -442,7 +442,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * eap_pax_initial_key_derivation - EAP-PAX initial key derivation  * @mac_id: MAC ID (EAP_PAX_MAC_*) / currently, only HMAC_SHA1_128 is supported  * @ak: Authentication Key  * @e: Entropy  * @mk: Buffer for the derived Master Key  * @ck: Buffer for the derived Confirmation Key  * @ick: Buffer for the derived Integrity Check Key  * Returns: 0 on success, -1 on failure  */
+comment|/**  * eap_pax_initial_key_derivation - EAP-PAX initial key derivation  * @mac_id: MAC ID (EAP_PAX_MAC_*) / currently, only HMAC_SHA1_128 is supported  * @ak: Authentication Key  * @e: Entropy  * @mk: Buffer for the derived Master Key  * @ck: Buffer for the derived Confirmation Key  * @ick: Buffer for the derived Integrity Check Key  * @mid: Buffer for the derived Method ID  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
@@ -473,6 +473,10 @@ parameter_list|,
 name|u8
 modifier|*
 name|ick
+parameter_list|,
+name|u8
+modifier|*
+name|mid
 parameter_list|)
 block|{
 name|wpa_printf
@@ -546,6 +550,27 @@ name|EAP_PAX_ICK_LEN
 argument_list|,
 name|ick
 argument_list|)
+operator|||
+name|eap_pax_kdf
+argument_list|(
+name|mac_id
+argument_list|,
+name|mk
+argument_list|,
+name|EAP_PAX_MK_LEN
+argument_list|,
+literal|"Method ID"
+argument_list|,
+name|e
+argument_list|,
+literal|2
+operator|*
+name|EAP_PAX_RAND_LEN
+argument_list|,
+name|EAP_PAX_MID_LEN
+argument_list|,
+name|mid
+argument_list|)
 condition|)
 return|return
 operator|-
@@ -593,6 +618,17 @@ argument_list|,
 name|ick
 argument_list|,
 name|EAP_PAX_ICK_LEN
+argument_list|)
+expr_stmt|;
+name|wpa_hexdump_key
+argument_list|(
+name|MSG_MSGDUMP
+argument_list|,
+literal|"EAP-PAX: MID"
+argument_list|,
+name|mid
+argument_list|,
+name|EAP_PAX_MID_LEN
 argument_list|)
 expr_stmt|;
 return|return

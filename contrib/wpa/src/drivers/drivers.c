@@ -6,7 +6,19 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"includes.h"
+file|"utils/includes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"utils/common.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"driver.h"
 end_include
 
 begin_ifdef
@@ -93,33 +105,6 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CONFIG_DRIVER_MADWIFI
-end_ifdef
-
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-name|wpa_driver_madwifi_ops
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* driver_madwifi.c */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* CONFIG_DRIVER_MADWIFI */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|CONFIG_DRIVER_BSD
 end_ifdef
 
@@ -142,6 +127,33 @@ end_endif
 
 begin_comment
 comment|/* CONFIG_DRIVER_BSD */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_DRIVER_OPENBSD
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|wpa_driver_ops
+name|wpa_driver_openbsd_ops
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* driver_openbsd.c */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_DRIVER_OPENBSD */
 end_comment
 
 begin_ifdef
@@ -201,20 +213,20 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|CONFIG_DRIVER_TEST
+name|CONFIG_DRIVER_MACSEC_QCA
 end_ifdef
+
+begin_comment
+comment|/* driver_macsec_qca.c */
+end_comment
 
 begin_decl_stmt
 specifier|extern
 name|struct
 name|wpa_driver_ops
-name|wpa_driver_test_ops
+name|wpa_driver_macsec_qca_ops
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/* driver_test.c */
-end_comment
 
 begin_endif
 endif|#
@@ -222,7 +234,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* CONFIG_DRIVER_TEST */
+comment|/* CONFIG_DRIVER_MACSEC_QCA */
 end_comment
 
 begin_ifdef
@@ -316,15 +328,6 @@ init|=
 block|{
 ifdef|#
 directive|ifdef
-name|CONFIG_DRIVER_WEXT
-operator|&
-name|wpa_driver_wext_ops
-block|,
-endif|#
-directive|endif
-comment|/* CONFIG_DRIVER_WEXT */
-ifdef|#
-directive|ifdef
 name|CONFIG_DRIVER_NL80211
 operator|&
 name|wpa_driver_nl80211_ops
@@ -332,6 +335,15 @@ block|,
 endif|#
 directive|endif
 comment|/* CONFIG_DRIVER_NL80211 */
+ifdef|#
+directive|ifdef
+name|CONFIG_DRIVER_WEXT
+operator|&
+name|wpa_driver_wext_ops
+block|,
+endif|#
+directive|endif
+comment|/* CONFIG_DRIVER_WEXT */
 ifdef|#
 directive|ifdef
 name|CONFIG_DRIVER_HOSTAP
@@ -343,15 +355,6 @@ directive|endif
 comment|/* CONFIG_DRIVER_HOSTAP */
 ifdef|#
 directive|ifdef
-name|CONFIG_DRIVER_MADWIFI
-operator|&
-name|wpa_driver_madwifi_ops
-block|,
-endif|#
-directive|endif
-comment|/* CONFIG_DRIVER_MADWIFI */
-ifdef|#
-directive|ifdef
 name|CONFIG_DRIVER_BSD
 operator|&
 name|wpa_driver_bsd_ops
@@ -359,6 +362,15 @@ block|,
 endif|#
 directive|endif
 comment|/* CONFIG_DRIVER_BSD */
+ifdef|#
+directive|ifdef
+name|CONFIG_DRIVER_OPENBSD
+operator|&
+name|wpa_driver_openbsd_ops
+block|,
+endif|#
+directive|endif
+comment|/* CONFIG_DRIVER_OPENBSD */
 ifdef|#
 directive|ifdef
 name|CONFIG_DRIVER_NDIS
@@ -379,13 +391,13 @@ directive|endif
 comment|/* CONFIG_DRIVER_WIRED */
 ifdef|#
 directive|ifdef
-name|CONFIG_DRIVER_TEST
+name|CONFIG_DRIVER_MACSEC_QCA
 operator|&
-name|wpa_driver_test_ops
+name|wpa_driver_macsec_qca_ops
 block|,
 endif|#
 directive|endif
-comment|/* CONFIG_DRIVER_TEST */
+comment|/* CONFIG_DRIVER_MACSEC_QCA */
 ifdef|#
 directive|ifdef
 name|CONFIG_DRIVER_ROBOSWITCH

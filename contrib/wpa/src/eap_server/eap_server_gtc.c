@@ -777,7 +777,7 @@ name|user
 operator|->
 name|password_len
 operator|||
-name|os_memcmp
+name|os_memcmp_const
 argument_list|(
 name|pos
 argument_list|,

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP common peer/server definitions  * Copyright (c) 2004-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * EAP common peer/server definitions  * Copyright (c) 2004-2014, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -20,6 +20,30 @@ include|#
 directive|include
 file|"wpabuf.h"
 end_include
+
+begin_struct
+struct|struct
+name|erp_tlvs
+block|{
+specifier|const
+name|u8
+modifier|*
+name|keyname
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|domain
+decl_stmt|;
+name|u8
+name|keyname_len
+decl_stmt|;
+name|u8
+name|domain_len
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_function_decl
 name|int
@@ -120,6 +144,31 @@ name|struct
 name|wpabuf
 modifier|*
 name|msg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|erp_parse_tlvs
+parameter_list|(
+specifier|const
+name|u8
+modifier|*
+name|pos
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|end
+parameter_list|,
+name|struct
+name|erp_tlvs
+modifier|*
+name|tlvs
+parameter_list|,
+name|int
+name|stop_at_keyname
 parameter_list|)
 function_decl|;
 end_function_decl
