@@ -5440,6 +5440,8 @@ argument_list|,
 name|uap
 operator|->
 name|buflen
+argument_list|,
+name|MAXPATHLEN
 argument_list|)
 operator|)
 return|;
@@ -5465,6 +5467,9 @@ name|bufseg
 parameter_list|,
 name|u_int
 name|buflen
+parameter_list|,
+name|u_int
+name|path_max
 parameter_list|)
 block|{
 name|char
@@ -5514,11 +5519,11 @@ if|if
 condition|(
 name|buflen
 operator|>
-name|MAXPATHLEN
+name|path_max
 condition|)
 name|buflen
 operator|=
-name|MAXPATHLEN
+name|path_max
 expr_stmt|;
 name|tmpbuf
 operator|=
