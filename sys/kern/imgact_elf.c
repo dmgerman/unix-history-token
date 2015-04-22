@@ -3924,6 +3924,17 @@ operator|.
 name|p_flags
 argument_list|)
 expr_stmt|;
+name|imgp
+operator|->
+name|stack_sz
+operator|=
+name|phdr
+index|[
+name|i
+index|]
+operator|.
+name|p_memsz
+expr_stmt|;
 break|break;
 block|}
 block|}

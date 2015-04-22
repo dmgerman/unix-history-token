@@ -3523,6 +3523,23 @@ condition|(
 name|which
 operator|==
 name|RLIMIT_STACK
+operator|&&
+comment|/* 	     * Skip calls from exec_new_vmspace(), done when stack is 	     * not mapped yet. 	     */
+operator|(
+name|td
+operator|!=
+name|curthread
+operator|||
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_INEXEC
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
 comment|/* 		 * Stack is allocated to the max at exec time with only 		 * "rlim_cur" bytes accessible.  If stack limit is going 		 * up make more accessible, if going down make inaccessible. 		 */
