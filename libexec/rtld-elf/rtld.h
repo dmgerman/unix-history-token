@@ -1070,6 +1070,12 @@ literal|1
 decl_stmt|;
 comment|/* Don't search default library path */
 name|bool
+name|z_global
+range|:
+literal|1
+decl_stmt|;
+comment|/* Make the object global */
+name|bool
 name|ref_nodel
 range|:
 literal|1
