@@ -1112,9 +1112,7 @@ name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
 name|cpu_setup
-argument_list|(
-literal|""
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Fetch the SDRAM start/size from the i80321 SDRAM configration 	 * registers. 	 */
 name|i80321_calibrate_delay

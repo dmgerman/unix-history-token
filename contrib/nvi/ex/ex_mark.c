@@ -78,7 +78,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_mark -- :mark char  *	      :k char  *	Mark lines.  *  *  * PUBLIC: int ex_mark __P((SCR *, EXCMD *));  */
+comment|/*  * ex_mark -- :mark char  *	      :k char  *	Mark lines.  *  *  * PUBLIC: int ex_mark(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

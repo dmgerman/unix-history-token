@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: search.c,v 10.26 2011/07/04 20:16:26 zy Exp $"
+literal|"$Id: search.c,v 10.27 2015/03/13 18:41:35 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -127,48 +127,42 @@ name|smsg_t
 typedef|;
 end_typedef
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|search_msg
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|smsg_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|search_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|dir_t
-operator|,
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * search_init --  *	Set up a search.  */
@@ -621,7 +615,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * f_search --  *	Do a forward search.  *  * PUBLIC: int f_search __P((SCR *,  * PUBLIC:    MARK *, MARK *, CHAR_T *, size_t, CHAR_T **, u_int));  */
+comment|/*  * f_search --  *	Do a forward search.  *  * PUBLIC: int f_search(SCR *,  * PUBLIC:    MARK *, MARK *, CHAR_T *, size_t, CHAR_T **, u_int);  */
 end_comment
 
 begin_function
@@ -681,6 +675,8 @@ decl_stmt|,
 name|rval
 decl_stmt|,
 name|wrapped
+init|=
+literal|0
 decl_stmt|;
 name|CHAR_T
 modifier|*
@@ -859,6 +855,10 @@ name|lno
 operator|=
 literal|1
 expr_stmt|;
+name|wrapped
+operator|=
+literal|1
+expr_stmt|;
 block|}
 block|}
 else|else
@@ -884,10 +884,6 @@ operator|,
 name|rval
 operator|=
 literal|1
-operator|,
-name|wrapped
-operator|=
-literal|0
 init|;
 condition|;
 operator|++
@@ -1292,7 +1288,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * b_search --  *	Do a backward search.  *  * PUBLIC: int b_search __P((SCR *,  * PUBLIC:    MARK *, MARK *, CHAR_T *, size_t, CHAR_T **, u_int));  */
+comment|/*  * b_search --  *	Do a backward search.  *  * PUBLIC: int b_search(SCR *,  * PUBLIC:    MARK *, MARK *, CHAR_T *, size_t, CHAR_T **, u_int);  */
 end_comment
 
 begin_function
@@ -2177,7 +2173,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * search_busy --  *	Put up the busy searching message.  *  * PUBLIC: void search_busy __P((SCR *, busy_t));  */
+comment|/*  * search_busy --  *	Put up the busy searching message.  *  * PUBLIC: void search_busy(SCR *, busy_t);  */
 end_comment
 
 begin_function

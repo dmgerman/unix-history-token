@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: strlcat.c,v 1.13 2005/08/08 08:05:37 espie Exp $	*/
+comment|/*	$OpenBSD: strlcat.c,v 1.15 2015/03/02 21:41:08 millert Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1998 Todd C. Miller<Todd.Miller@courtesan.com>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 1998, 2015 Todd C. Miller<Todd.Miller@courtesan.com>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_include
@@ -34,7 +34,7 @@ file|<string.h>
 end_include
 
 begin_comment
-comment|/*  * Appends src to string dst of size siz (unlike strncat, siz is the  * full size of dst, not space left).  At most siz-1 characters  * will be copied.  Always NUL terminates (unless siz<= strlen(dst)).  * Returns strlen(src) + MIN(siz, strlen(initial dst)).  * If retval>= siz, truncation occurred.  */
+comment|/*  * Appends src to string dst of size dsize (unlike strncat, dsize is the  * full size of dst, not space left).  At most dsize-1 characters  * will be copied.  Always NUL terminates (unless dsize<= strlen(dst)).  * Returns strlen(src) + MIN(dsize, strlen(initial dst)).  * If retval>= dsize, truncation occurred.  */
 end_comment
 
 begin_function
@@ -53,31 +53,32 @@ name|__restrict
 name|src
 parameter_list|,
 name|size_t
-name|siz
+name|dsize
 parameter_list|)
 block|{
+specifier|const
 name|char
 modifier|*
-name|d
+name|odst
 init|=
 name|dst
 decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|s
+name|osrc
 init|=
 name|src
 decl_stmt|;
 name|size_t
 name|n
 init|=
-name|siz
+name|dsize
 decl_stmt|;
 name|size_t
 name|dlen
 decl_stmt|;
-comment|/* Find the end of dst and adjust bytes left but don't go past end */
+comment|/* Find the end of dst and adjust bytes left but don't go past end. */
 while|while
 condition|(
 name|n
@@ -86,28 +87,29 @@ operator|!=
 literal|0
 operator|&&
 operator|*
-name|d
+name|dst
 operator|!=
 literal|'\0'
 condition|)
-name|d
+name|dst
 operator|++
 expr_stmt|;
 name|dlen
 operator|=
-name|d
-operator|-
 name|dst
+operator|-
+name|odst
 expr_stmt|;
 name|n
 operator|=
-name|siz
+name|dsize
 operator|-
 name|dlen
 expr_stmt|;
 if|if
 condition|(
 name|n
+operator|--
 operator|==
 literal|0
 condition|)
@@ -117,14 +119,14 @@ name|dlen
 operator|+
 name|strlen
 argument_list|(
-name|s
+name|src
 argument_list|)
 operator|)
 return|;
 while|while
 condition|(
 operator|*
-name|s
+name|src
 operator|!=
 literal|'\0'
 condition|)
@@ -133,26 +135,26 @@ if|if
 condition|(
 name|n
 operator|!=
-literal|1
+literal|0
 condition|)
 block|{
 operator|*
-name|d
+name|dst
 operator|++
 operator|=
 operator|*
-name|s
+name|src
 expr_stmt|;
 name|n
 operator|--
 expr_stmt|;
 block|}
-name|s
+name|src
 operator|++
 expr_stmt|;
 block|}
 operator|*
-name|d
+name|dst
 operator|=
 literal|'\0'
 expr_stmt|;
@@ -161,9 +163,9 @@ operator|(
 name|dlen
 operator|+
 operator|(
-name|s
-operator|-
 name|src
+operator|-
+name|osrc
 operator|)
 operator|)
 return|;

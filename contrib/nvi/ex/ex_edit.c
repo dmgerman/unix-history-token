@@ -101,30 +101,27 @@ directive|include
 file|"../vi/vi.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ex_N_edit
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|EXCMD
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|FREF
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_edit --	:e[dit][!] [+cmd] [file]  *		:ex[!] [+cmd] [file]  *		:vi[sual][!] [+cmd] [file]  *  * Edit a file; if none specified, re-edit the current file.  The third  * form of the command can only be executed while in vi mode.  See the  * hack in ex.c:ex_cmd().  *  * !!!  * Historic vi didn't permit the '+' command form without specifying  * a file name as well.  This seems unreasonable, so we support it  * regardless.  *  * PUBLIC: int ex_edit __P((SCR *, EXCMD *));  */
+comment|/*  * ex_edit --	:e[dit][!] [+cmd] [file]  *		:ex[!] [+cmd] [file]  *		:vi[sual][!] [+cmd] [file]  *  * Edit a file; if none specified, re-edit the current file.  The third  * form of the command can only be executed while in vi mode.  See the  * hack in ex.c:ex_cmd().  *  * !!!  * Historic vi didn't permit the '+' command form without specifying  * a file name as well.  This seems unreasonable, so we support it  * regardless.  *  * PUBLIC: int ex_edit(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

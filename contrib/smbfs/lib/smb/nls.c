@@ -345,7 +345,6 @@ name|char
 modifier|*
 name|dst
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|src
@@ -476,7 +475,6 @@ name|char
 modifier|*
 name|dst
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|src
@@ -607,7 +605,6 @@ name|void
 modifier|*
 name|dst
 parameter_list|,
-specifier|const
 name|void
 modifier|*
 name|src
@@ -625,7 +622,6 @@ name|p
 init|=
 name|dst
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|s
@@ -753,7 +749,6 @@ name|void
 modifier|*
 name|dst
 parameter_list|,
-specifier|const
 name|void
 modifier|*
 name|src
@@ -771,7 +766,6 @@ name|p
 init|=
 name|dst
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|s

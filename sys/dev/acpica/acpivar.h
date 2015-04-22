@@ -554,7 +554,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Various features and capabilities for the acpi_get_features() method.  * In particular, these are used for the ACPI 3.0 _PDC and _OSC methods.  * See the Intel document titled "Intel Processor Vendor-Specific ACPI",  * number 302223-005.  */
+comment|/*  * Various features and capabilities for the acpi_get_features() method.  * In particular, these are used for the ACPI 3.0 _PDC and _OSC methods.  * See the Intel document titled "Intel Processor Vendor-Specific ACPI",  * number 302223-007.  */
 end_comment
 
 begin_define
@@ -676,6 +676,28 @@ end_define
 
 begin_comment
 comment|/* Intel P-state HW coordination */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_INTR_CPPC
+value|(1<< 12)
+end_define
+
+begin_comment
+comment|/* Native Interrupt Handling for 	     Collaborative Processor Performance Control notifications */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_CAP_HW_DUTY_C
+value|(1<< 13)
+end_define
+
+begin_comment
+comment|/* Hardware Duty Cycling */
 end_comment
 
 begin_comment
@@ -2551,6 +2573,21 @@ name|dev
 parameter_list|,
 name|device_t
 name|child
+parameter_list|,
+name|int
+modifier|*
+name|domain
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|acpi_parse_pxm
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|,
 name|int
 modifier|*

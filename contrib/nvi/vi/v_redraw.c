@@ -84,7 +84,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * v_redraw -- ^L, ^R  *	Redraw the screen.  *  * PUBLIC: int v_redraw __P((SCR *, VICMD *));  */
+comment|/*  * v_redraw -- ^L, ^R  *	Redraw the screen.  *  * PUBLIC: int v_redraw(SCR *, VICMD *);  */
 end_comment
 
 begin_function

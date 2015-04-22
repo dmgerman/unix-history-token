@@ -1347,7 +1347,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Allocate memory for use when boot strapping the kernel memory 	 * allocator. 	 */
+comment|/* 	 * Allocate memory for use when boot strapping the kernel memory 	 * allocator. 	 * 	 * CTFLAG_RDTUN doesn't work during the early boot process, so we must 	 * manually fetch the value. 	 */
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"vm.boot_pages"

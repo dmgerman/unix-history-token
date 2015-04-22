@@ -21352,10 +21352,10 @@ expr_stmt|;
 block|}
 block|}
 comment|/* Now fill in hash table */
-comment|/* XXX This means RSS enable + 8 queues for my igb (82580.) */
+comment|/* 	 * MRQC: Multiple Receive Queues Command 	 * Set queuing to RSS control, number depends on the device. 	 */
 name|mrqc
 operator|=
-name|E1000_MRQC_ENABLE_RSS_4Q
+name|E1000_MRQC_ENABLE_RSS_8Q
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -23685,10 +23685,16 @@ operator||=
 name|M_VLANTAG
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|RSS
-comment|/* XXX set flowtype once this works right */
+comment|/* 			 * In case of multiqueue, we have RXCSUM.PCSD bit set 			 * and never cleared. This means we have RSS hash 			 * available to be used. 			 */
+if|if
+condition|(
+name|adapter
+operator|->
+name|num_queues
+operator|>
+literal|1
+condition|)
+block|{
 name|rxr
 operator|->
 name|fmp
@@ -23795,21 +23801,6 @@ name|M_HASHTYPE_RSS_TCP_IPV6_EX
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* XXX no UDP support in RSS just yet */
-ifdef|#
-directive|ifdef
-name|notyet
-case|case
-name|E1000_RXDADV_RSSTYPE_IPV4_UDP
-case|:
-case|case
-name|E1000_RXDADV_RSSTYPE_IPV6_UDP
-case|:
-case|case
-name|E1000_RXDADV_RSSTYPE_IPV6_UDP_EX
-case|:
-endif|#
-directive|endif
 default|default:
 comment|/* XXX fallthrough */
 name|M_HASHTYPE_SET
@@ -23822,13 +23813,12 @@ name|M_HASHTYPE_OPAQUE
 argument_list|)
 expr_stmt|;
 block|}
-elif|#
-directive|elif
-operator|!
-name|defined
-argument_list|(
+block|}
+else|else
+block|{
+ifndef|#
+directive|ifndef
 name|IGB_LEGACY_TX
-argument_list|)
 name|rxr
 operator|->
 name|fmp
@@ -23852,6 +23842,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+block|}
 name|sendmp
 operator|=
 name|rxr

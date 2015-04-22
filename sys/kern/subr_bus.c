@@ -8140,6 +8140,28 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+comment|/* 			 * Probes that return BUS_PROBE_NOWILDCARD or lower 			 * only match on devices whose driver was explicitly 			 * specified. 			 */
+if|if
+condition|(
+name|result
+operator|<=
+name|BUS_PROBE_NOWILDCARD
+operator|&&
+operator|!
+operator|(
+name|child
+operator|->
+name|flags
+operator|&
+name|DF_FIXEDCLASS
+operator|)
+condition|)
+block|{
+name|result
+operator|=
+name|ENXIO
+expr_stmt|;
+block|}
 comment|/* 			 * The driver returned an error so it 			 * certainly doesn't match. 			 */
 if|if
 condition|(
@@ -8172,23 +8194,6 @@ operator|>
 name|pri
 condition|)
 block|{
-comment|/* 				 * Probes that return BUS_PROBE_NOWILDCARD 				 * or lower only match on devices whose 				 * driver was explicitly specified. 				 */
-if|if
-condition|(
-name|result
-operator|<=
-name|BUS_PROBE_NOWILDCARD
-operator|&&
-operator|!
-operator|(
-name|child
-operator|->
-name|flags
-operator|&
-name|DF_FIXEDCLASS
-operator|)
-condition|)
-continue|continue;
 name|best
 operator|=
 name|dl

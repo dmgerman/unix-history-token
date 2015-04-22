@@ -2017,6 +2017,9 @@ parameter_list|,
 name|int
 name|level
 parameter_list|,
+name|int
+name|global
+parameter_list|,
 specifier|const
 name|char
 modifier|*

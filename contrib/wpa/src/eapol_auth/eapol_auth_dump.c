@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * IEEE 802.1X-2004 Authenticator - State dump  * Copyright (c) 2002-2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * IEEE 802.1X-2004 Authenticator - State dump  * Copyright (c) 2002-2013, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -457,40 +457,54 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|eapol_auth_dump_state
 parameter_list|(
-name|FILE
-modifier|*
-name|f
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|prefix
-parameter_list|,
 name|struct
 name|eapol_state_machine
 modifier|*
 name|sm
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|buflen
 parameter_list|)
 block|{
-name|fprintf
-argument_list|(
-name|f
-argument_list|,
-literal|"%sEAPOL state machine:\n"
-argument_list|,
-name|prefix
-argument_list|)
+name|char
+modifier|*
+name|pos
+decl_stmt|,
+modifier|*
+name|end
+decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
+name|pos
+operator|=
+name|buf
 expr_stmt|;
-name|fprintf
+name|end
+operator|=
+name|pos
+operator|+
+name|buflen
+expr_stmt|;
+name|ret
+operator|=
+name|os_snprintf
 argument_list|(
-name|f
+name|pos
 argument_list|,
-literal|"%s  aWhile=%d quietWhile=%d reAuthWhen=%d\n"
+name|end
+operator|-
+name|pos
 argument_list|,
-name|prefix
+literal|"aWhile=%d\nquietWhile=%d\n"
+literal|"reAuthWhen=%d\n"
 argument_list|,
 name|sm
 operator|->
@@ -505,6 +519,26 @@ operator|->
 name|reAuthWhen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|os_snprintf_error
+argument_list|(
+name|end
+operator|-
+name|pos
+argument_list|,
+name|ret
+argument_list|)
+condition|)
+return|return
+name|pos
+operator|-
+name|buf
+return|;
+name|pos
+operator|+=
+name|ret
+expr_stmt|;
 define|#
 directive|define
 name|_SB
@@ -512,18 +546,35 @@ parameter_list|(
 name|b
 parameter_list|)
 value|((b) ? "TRUE" : "FALSE")
-name|fprintf
+name|ret
+operator|=
+name|os_snprintf
 argument_list|(
-name|f
+name|pos
 argument_list|,
-literal|"%s  authAbort=%s authFail=%s authPortStatus=%s authStart=%s\n"
-literal|"%s  authTimeout=%s authSuccess=%s eapFail=%s eapolEap=%s\n"
-literal|"%s  eapSuccess=%s eapTimeout=%s initialize=%s "
+name|end
+operator|-
+name|pos
+argument_list|,
+literal|"authAbort=%s\n"
+literal|"authFail=%s\n"
+literal|"authPortStatus=%s\n"
+literal|"authStart=%s\n"
+literal|"authTimeout=%s\n"
+literal|"authSuccess=%s\n"
+literal|"eapFail=%s\n"
+literal|"eapolEap=%s\n"
+literal|"eapSuccess=%s\n"
+literal|"eapTimeout=%s\n"
+literal|"initialize=%s\n"
 literal|"keyAvailable=%s\n"
-literal|"%s  keyDone=%s keyRun=%s keyTxEnabled=%s portControl=%s\n"
-literal|"%s  portEnabled=%s portValid=%s reAuthenticate=%s\n"
-argument_list|,
-name|prefix
+literal|"keyDone=%s\n"
+literal|"keyRun=%s\n"
+literal|"keyTxEnabled=%s\n"
+literal|"portControl=%s\n"
+literal|"portEnabled=%s\n"
+literal|"portValid=%s\n"
+literal|"reAuthenticate=%s\n"
 argument_list|,
 name|_SB
 argument_list|(
@@ -552,8 +603,6 @@ name|sm
 operator|->
 name|authStart
 argument_list|)
-argument_list|,
-name|prefix
 argument_list|,
 name|_SB
 argument_list|(
@@ -584,8 +633,6 @@ name|sm
 operator|->
 name|eapolEap
 argument_list|)
-argument_list|,
-name|prefix
 argument_list|,
 name|_SB
 argument_list|(
@@ -621,8 +668,6 @@ operator|->
 name|eapKeyAvailable
 argument_list|)
 argument_list|,
-name|prefix
-argument_list|,
 name|_SB
 argument_list|(
 name|sm
@@ -651,8 +696,6 @@ operator|->
 name|portControl
 argument_list|)
 argument_list|,
-name|prefix
-argument_list|,
 name|_SB
 argument_list|(
 name|sm
@@ -677,30 +720,55 @@ name|reAuthenticate
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+if|if
+condition|(
+name|os_snprintf_error
 argument_list|(
-name|f
+name|end
+operator|-
+name|pos
 argument_list|,
-literal|"%s  Authenticator PAE:\n"
-literal|"%s    state=%s\n"
-literal|"%s    eapolLogoff=%s eapolStart=%s eapRestart=%s\n"
-literal|"%s    portMode=%s reAuthCount=%d\n"
-literal|"%s    quietPeriod=%d reAuthMax=%d\n"
-literal|"%s    authEntersConnecting=%d\n"
-literal|"%s    authEapLogoffsWhileConnecting=%d\n"
-literal|"%s    authEntersAuthenticating=%d\n"
-literal|"%s    authAuthSuccessesWhileAuthenticating=%d\n"
-literal|"%s    authAuthTimeoutsWhileAuthenticating=%d\n"
-literal|"%s    authAuthFailWhileAuthenticating=%d\n"
-literal|"%s    authAuthEapStartsWhileAuthenticating=%d\n"
-literal|"%s    authAuthEapLogoffWhileAuthenticating=%d\n"
-literal|"%s    authAuthReauthsWhileAuthenticated=%d\n"
-literal|"%s    authAuthEapStartsWhileAuthenticated=%d\n"
-literal|"%s    authAuthEapLogoffWhileAuthenticated=%d\n"
+name|ret
+argument_list|)
+condition|)
+return|return
+name|pos
+operator|-
+name|buf
+return|;
+name|pos
+operator|+=
+name|ret
+expr_stmt|;
+name|ret
+operator|=
+name|os_snprintf
+argument_list|(
+name|pos
 argument_list|,
-name|prefix
+name|end
+operator|-
+name|pos
 argument_list|,
-name|prefix
+literal|"auth_pae_state=%s\n"
+literal|"eapolLogoff=%s\n"
+literal|"eapolStart=%s\n"
+literal|"eapRestart=%s\n"
+literal|"portMode=%s\n"
+literal|"reAuthCount=%d\n"
+literal|"quietPeriod=%d\n"
+literal|"reAuthMax=%d\n"
+literal|"authEntersConnecting=%d\n"
+literal|"authEapLogoffsWhileConnecting=%d\n"
+literal|"authEntersAuthenticating=%d\n"
+literal|"authAuthSuccessesWhileAuthenticating=%d\n"
+literal|"authAuthTimeoutsWhileAuthenticating=%d\n"
+literal|"authAuthFailWhileAuthenticating=%d\n"
+literal|"authAuthEapStartsWhileAuthenticating=%d\n"
+literal|"authAuthEapLogoffWhileAuthenticating=%d\n"
+literal|"authAuthReauthsWhileAuthenticated=%d\n"
+literal|"authAuthEapStartsWhileAuthenticated=%d\n"
+literal|"authAuthEapLogoffWhileAuthenticated=%d\n"
 argument_list|,
 name|auth_pae_state_txt
 argument_list|(
@@ -708,8 +776,6 @@ name|sm
 operator|->
 name|auth_pae_state
 argument_list|)
-argument_list|,
-name|prefix
 argument_list|,
 name|_SB
 argument_list|(
@@ -734,8 +800,6 @@ operator|->
 name|eapRestart
 argument_list|)
 argument_list|,
-name|prefix
-argument_list|,
 name|port_type_txt
 argument_list|(
 name|sm
@@ -747,8 +811,6 @@ name|sm
 operator|->
 name|reAuthCount
 argument_list|,
-name|prefix
-argument_list|,
 name|sm
 operator|->
 name|quietPeriod
@@ -757,90 +819,91 @@ name|sm
 operator|->
 name|reAuthMax
 argument_list|,
-name|prefix
-argument_list|,
 name|sm
 operator|->
 name|authEntersConnecting
-argument_list|,
-name|prefix
 argument_list|,
 name|sm
 operator|->
 name|authEapLogoffsWhileConnecting
 argument_list|,
-name|prefix
-argument_list|,
 name|sm
 operator|->
 name|authEntersAuthenticating
-argument_list|,
-name|prefix
 argument_list|,
 name|sm
 operator|->
 name|authAuthSuccessesWhileAuthenticating
 argument_list|,
-name|prefix
-argument_list|,
 name|sm
 operator|->
 name|authAuthTimeoutsWhileAuthenticating
-argument_list|,
-name|prefix
 argument_list|,
 name|sm
 operator|->
 name|authAuthFailWhileAuthenticating
 argument_list|,
-name|prefix
-argument_list|,
 name|sm
 operator|->
 name|authAuthEapStartsWhileAuthenticating
-argument_list|,
-name|prefix
 argument_list|,
 name|sm
 operator|->
 name|authAuthEapLogoffWhileAuthenticating
 argument_list|,
-name|prefix
-argument_list|,
 name|sm
 operator|->
 name|authAuthReauthsWhileAuthenticated
 argument_list|,
-name|prefix
-argument_list|,
 name|sm
 operator|->
 name|authAuthEapStartsWhileAuthenticated
-argument_list|,
-name|prefix
 argument_list|,
 name|sm
 operator|->
 name|authAuthEapLogoffWhileAuthenticated
 argument_list|)
 expr_stmt|;
-name|fprintf
+if|if
+condition|(
+name|os_snprintf_error
 argument_list|(
-name|f
+name|end
+operator|-
+name|pos
 argument_list|,
-literal|"%s  Backend Authentication:\n"
-literal|"%s    state=%s\n"
-literal|"%s    eapNoReq=%s eapReq=%s eapResp=%s\n"
-literal|"%s    serverTimeout=%d\n"
-literal|"%s    backendResponses=%d\n"
-literal|"%s    backendAccessChallenges=%d\n"
-literal|"%s    backendOtherRequestsToSupplicant=%d\n"
-literal|"%s    backendAuthSuccesses=%d\n"
-literal|"%s    backendAuthFails=%d\n"
+name|ret
+argument_list|)
+condition|)
+return|return
+name|pos
+operator|-
+name|buf
+return|;
+name|pos
+operator|+=
+name|ret
+expr_stmt|;
+name|ret
+operator|=
+name|os_snprintf
+argument_list|(
+name|pos
 argument_list|,
-name|prefix
+name|end
+operator|-
+name|pos
 argument_list|,
-name|prefix
+literal|"be_auth_state=%s\n"
+literal|"eapNoReq=%s\n"
+literal|"eapReq=%s\n"
+literal|"eapResp=%s\n"
+literal|"serverTimeout=%d\n"
+literal|"backendResponses=%d\n"
+literal|"backendAccessChallenges=%d\n"
+literal|"backendOtherRequestsToSupplicant=%d\n"
+literal|"backendAuthSuccesses=%d\n"
+literal|"backendAuthFails=%d\n"
 argument_list|,
 name|be_auth_state_txt
 argument_list|(
@@ -848,8 +911,6 @@ name|sm
 operator|->
 name|be_auth_state
 argument_list|)
-argument_list|,
-name|prefix
 argument_list|,
 name|_SB
 argument_list|(
@@ -878,54 +939,64 @@ operator|->
 name|eapResp
 argument_list|)
 argument_list|,
-name|prefix
-argument_list|,
 name|sm
 operator|->
 name|serverTimeout
-argument_list|,
-name|prefix
 argument_list|,
 name|sm
 operator|->
 name|backendResponses
 argument_list|,
-name|prefix
-argument_list|,
 name|sm
 operator|->
 name|backendAccessChallenges
-argument_list|,
-name|prefix
 argument_list|,
 name|sm
 operator|->
 name|backendOtherRequestsToSupplicant
 argument_list|,
-name|prefix
-argument_list|,
 name|sm
 operator|->
 name|backendAuthSuccesses
-argument_list|,
-name|prefix
 argument_list|,
 name|sm
 operator|->
 name|backendAuthFails
 argument_list|)
 expr_stmt|;
-name|fprintf
+if|if
+condition|(
+name|os_snprintf_error
 argument_list|(
-name|f
+name|end
+operator|-
+name|pos
 argument_list|,
-literal|"%s  Reauthentication Timer:\n"
-literal|"%s    state=%s\n"
-literal|"%s    reAuthPeriod=%d reAuthEnabled=%s\n"
+name|ret
+argument_list|)
+condition|)
+return|return
+name|pos
+operator|-
+name|buf
+return|;
+name|pos
+operator|+=
+name|ret
+expr_stmt|;
+name|ret
+operator|=
+name|os_snprintf
+argument_list|(
+name|pos
 argument_list|,
-name|prefix
+name|end
+operator|-
+name|pos
 argument_list|,
-name|prefix
+literal|"reauth_timer_state=%s\n"
+literal|"reAuthPeriod=%d\n"
+literal|"reAuthEnabled=%s\n"
 argument_list|,
 name|reauth_timer_state_txt
 argument_list|(
@@ -933,8 +1004,6 @@ name|sm
 operator|->
 name|reauth_timer_state
 argument_list|)
-argument_list|,
-name|prefix
 argument_list|,
 name|sm
 operator|->
@@ -948,16 +1017,37 @@ name|reAuthEnabled
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+if|if
+condition|(
+name|os_snprintf_error
 argument_list|(
-name|f
+name|end
+operator|-
+name|pos
 argument_list|,
-literal|"%s  Authenticator Key Transmit:\n"
-literal|"%s    state=%s\n"
+name|ret
+argument_list|)
+condition|)
+return|return
+name|pos
+operator|-
+name|buf
+return|;
+name|pos
+operator|+=
+name|ret
+expr_stmt|;
+name|ret
+operator|=
+name|os_snprintf
+argument_list|(
+name|pos
 argument_list|,
-name|prefix
+name|end
+operator|-
+name|pos
 argument_list|,
-name|prefix
+literal|"auth_key_tx_state=%s\n"
 argument_list|,
 name|auth_key_tx_state_txt
 argument_list|(
@@ -967,17 +1057,38 @@ name|auth_key_tx_state
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+if|if
+condition|(
+name|os_snprintf_error
 argument_list|(
-name|f
+name|end
+operator|-
+name|pos
 argument_list|,
-literal|"%s  Key Receive:\n"
-literal|"%s    state=%s\n"
-literal|"%s    rxKey=%s\n"
+name|ret
+argument_list|)
+condition|)
+return|return
+name|pos
+operator|-
+name|buf
+return|;
+name|pos
+operator|+=
+name|ret
+expr_stmt|;
+name|ret
+operator|=
+name|os_snprintf
+argument_list|(
+name|pos
 argument_list|,
-name|prefix
+name|end
+operator|-
+name|pos
 argument_list|,
-name|prefix
+literal|"key_rx_state=%s\n"
+literal|"rxKey=%s\n"
 argument_list|,
 name|key_rx_state_txt
 argument_list|(
@@ -985,8 +1096,6 @@ name|sm
 operator|->
 name|key_rx_state
 argument_list|)
-argument_list|,
-name|prefix
 argument_list|,
 name|_SB
 argument_list|(
@@ -996,19 +1105,40 @@ name|rxKey
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|fprintf
+if|if
+condition|(
+name|os_snprintf_error
 argument_list|(
-name|f
+name|end
+operator|-
+name|pos
 argument_list|,
-literal|"%s  Controlled Directions:\n"
-literal|"%s    state=%s\n"
-literal|"%s    adminControlledDirections=%s "
+name|ret
+argument_list|)
+condition|)
+return|return
+name|pos
+operator|-
+name|buf
+return|;
+name|pos
+operator|+=
+name|ret
+expr_stmt|;
+name|ret
+operator|=
+name|os_snprintf
+argument_list|(
+name|pos
+argument_list|,
+name|end
+operator|-
+name|pos
+argument_list|,
+literal|"ctrl_dir_state=%s\n"
+literal|"adminControlledDirections=%s\n"
 literal|"operControlledDirections=%s\n"
-literal|"%s    operEdge=%s\n"
-argument_list|,
-name|prefix
-argument_list|,
-name|prefix
+literal|"operEdge=%s\n"
 argument_list|,
 name|ctrl_dir_state_txt
 argument_list|(
@@ -1016,8 +1146,6 @@ name|sm
 operator|->
 name|ctrl_dir_state
 argument_list|)
-argument_list|,
-name|prefix
 argument_list|,
 name|ctrl_dir_txt
 argument_list|(
@@ -1033,8 +1161,6 @@ operator|->
 name|operControlledDirections
 argument_list|)
 argument_list|,
-name|prefix
-argument_list|,
 name|_SB
 argument_list|(
 name|sm
@@ -1043,9 +1169,34 @@ name|operEdge
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|os_snprintf_error
+argument_list|(
+name|end
+operator|-
+name|pos
+argument_list|,
+name|ret
+argument_list|)
+condition|)
+return|return
+name|pos
+operator|-
+name|buf
+return|;
+name|pos
+operator|+=
+name|ret
+expr_stmt|;
 undef|#
 directive|undef
 name|_SB
+return|return
+name|pos
+operator|-
+name|buf
+return|;
 block|}
 end_function
 

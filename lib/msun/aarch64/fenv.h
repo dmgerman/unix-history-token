@@ -187,7 +187,7 @@ name|__mrs_fpcr
 parameter_list|(
 name|__r
 parameter_list|)
-value|__asm __volatile("mrs %0, fpcr" : : "r" (__r))
+value|__asm __volatile("mrs %0, fpcr" : "=r" (__r))
 end_define
 
 begin_define
@@ -197,7 +197,7 @@ name|__msr_fpcr
 parameter_list|(
 name|__r
 parameter_list|)
-value|__asm __volatile("msr fpcr, %0" : "=r" (*(__r)))
+value|__asm __volatile("msr fpcr, %0" : : "r" (__r))
 end_define
 
 begin_define
@@ -207,7 +207,7 @@ name|__mrs_fpsr
 parameter_list|(
 name|__r
 parameter_list|)
-value|__asm __volatile("mrs %0, fpsr" : : "r" (__r))
+value|__asm __volatile("mrs %0, fpsr" : "=r" (__r))
 end_define
 
 begin_define
@@ -217,7 +217,7 @@ name|__msr_fpsr
 parameter_list|(
 name|__r
 parameter_list|)
-value|__asm __volatile("msr fpsr, %0" : "=r" (*(__r)))
+value|__asm __volatile("msr fpsr, %0" : : "r" (__r))
 end_define
 
 begin_function
@@ -235,7 +235,6 @@ name|__r
 decl_stmt|;
 name|__mrs_fpsr
 argument_list|(
-operator|&
 name|__r
 argument_list|)
 expr_stmt|;
@@ -276,7 +275,6 @@ name|__r
 decl_stmt|;
 name|__mrs_fpsr
 argument_list|(
-operator|&
 name|__r
 argument_list|)
 expr_stmt|;
@@ -315,7 +313,6 @@ name|__r
 decl_stmt|;
 name|__mrs_fpsr
 argument_list|(
-operator|&
 name|__r
 argument_list|)
 expr_stmt|;
@@ -359,7 +356,6 @@ name|__r
 decl_stmt|;
 name|__mrs_fpsr
 argument_list|(
-operator|&
 name|__r
 argument_list|)
 expr_stmt|;
@@ -395,7 +391,6 @@ name|__r
 decl_stmt|;
 name|__mrs_fpsr
 argument_list|(
-operator|&
 name|__r
 argument_list|)
 expr_stmt|;
@@ -423,7 +418,6 @@ name|__r
 decl_stmt|;
 name|__mrs_fpcr
 argument_list|(
-operator|&
 name|__r
 argument_list|)
 expr_stmt|;
@@ -469,7 +463,6 @@ operator|)
 return|;
 name|__mrs_fpcr
 argument_list|(
-operator|&
 name|__r
 argument_list|)
 expr_stmt|;
@@ -512,9 +505,11 @@ modifier|*
 name|__envp
 parameter_list|)
 block|{
+name|fenv_t
+name|__r
+decl_stmt|;
 name|__mrs_fpcr
 argument_list|(
-operator|&
 name|__r
 argument_list|)
 expr_stmt|;
@@ -527,7 +522,6 @@ name|_ENABLE_MASK
 expr_stmt|;
 name|__mrs_fpsr
 argument_list|(
-operator|&
 name|__r
 argument_list|)
 expr_stmt|;
@@ -570,7 +564,6 @@ name|__r
 decl_stmt|;
 name|__mrs_fpcr
 argument_list|(
-operator|&
 name|__r
 argument_list|)
 expr_stmt|;
@@ -595,7 +588,6 @@ argument_list|)
 expr_stmt|;
 name|__mrs_fpsr
 argument_list|(
-operator|&
 name|__r
 argument_list|)
 expr_stmt|;
@@ -614,7 +606,7 @@ name|_ROUND_SHIFT
 operator|)
 operator|)
 expr_stmt|;
-name|r
+name|__r
 operator|&=
 operator|~
 operator|(
@@ -658,25 +650,230 @@ argument_list|)
 expr_stmt|;
 name|__msr_fpsr
 argument_list|(
-argument|(*__envp)& (FE_ALL_EXCEPT | (_ROUND_MASK<< _ROUND_SHIFT)); 	return (
+operator|(
+operator|*
+name|__envp
+operator|)
+operator|&
+operator|(
+name|FE_ALL_EXCEPT
+operator||
+operator|(
+name|_ROUND_MASK
+operator|<<
+name|_ROUND_SHIFT
+operator|)
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 literal|0
-argument|); }  __fenv_static inline int feupdateenv(const fenv_t *__envp) { 	fexcept_t __r;  	__mrs_fpsr(&__r); 	fesetenv(__envp); 	feraiseexcept(__r& FE_ALL_EXCEPT); 	return (
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__fenv_static
+specifier|inline
+name|int
+name|feupdateenv
+parameter_list|(
+specifier|const
+name|fenv_t
+modifier|*
+name|__envp
+parameter_list|)
+block|{
+name|fexcept_t
+name|__r
+decl_stmt|;
+name|__mrs_fpsr
+argument_list|(
+name|__r
+argument_list|)
+expr_stmt|;
+name|fesetenv
+argument_list|(
+name|__envp
+argument_list|)
+expr_stmt|;
+name|feraiseexcept
+argument_list|(
+name|__r
+operator|&
+name|FE_ALL_EXCEPT
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
 literal|0
-argument|); }
+operator|)
+return|;
+block|}
+end_function
+
+begin_if
 if|#
 directive|if
 name|__BSD_VISIBLE
+end_if
+
+begin_comment
 comment|/* We currently provide no external definitions of the functions below. */
-argument|static inline int feenableexcept(int __mask) { 	fenv_t __old_r
-argument_list|,
-argument|__new_r;  	__mrs_fpcr(&__old_r); 	__new_r = __old_r | ((__mask& FE_ALL_EXCEPT)<< _FPUSW_SHIFT); 	__msr_fpcr(__new_r); 	return ((__old_r>> _FPUSW_SHIFT)& FE_ALL_EXCEPT); }  static inline int fedisableexcept(int __mask) { 	fenv_t __old_r
-argument_list|,
-argument|__new_r;  	__mrs_fpcr(&__old_r); 	__new_r = __old_r& ~((__mask& FE_ALL_EXCEPT)<< _FPUSW_SHIFT); 	__msr_fpcr(__new_r); 	return ((__old_r>> _FPUSW_SHIFT)& FE_ALL_EXCEPT); }  static inline int fegetexcept(void) { 	fenv_t __r;  	__mrs_fpcr(&__r); 	return ((__r& _ENABLE_MASK)>> _FPUSW_SHIFT); }
+end_comment
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|feenableexcept
+parameter_list|(
+name|int
+name|__mask
+parameter_list|)
+block|{
+name|fenv_t
+name|__old_r
+decl_stmt|,
+name|__new_r
+decl_stmt|;
+name|__mrs_fpcr
+argument_list|(
+name|__old_r
+argument_list|)
+expr_stmt|;
+name|__new_r
+operator|=
+name|__old_r
+operator||
+operator|(
+operator|(
+name|__mask
+operator|&
+name|FE_ALL_EXCEPT
+operator|)
+operator|<<
+name|_FPUSW_SHIFT
+operator|)
+expr_stmt|;
+name|__msr_fpcr
+argument_list|(
+name|__new_r
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|__old_r
+operator|>>
+name|_FPUSW_SHIFT
+operator|)
+operator|&
+name|FE_ALL_EXCEPT
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|fedisableexcept
+parameter_list|(
+name|int
+name|__mask
+parameter_list|)
+block|{
+name|fenv_t
+name|__old_r
+decl_stmt|,
+name|__new_r
+decl_stmt|;
+name|__mrs_fpcr
+argument_list|(
+name|__old_r
+argument_list|)
+expr_stmt|;
+name|__new_r
+operator|=
+name|__old_r
+operator|&
+operator|~
+operator|(
+operator|(
+name|__mask
+operator|&
+name|FE_ALL_EXCEPT
+operator|)
+operator|<<
+name|_FPUSW_SHIFT
+operator|)
+expr_stmt|;
+name|__msr_fpcr
+argument_list|(
+name|__new_r
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|__old_r
+operator|>>
+name|_FPUSW_SHIFT
+operator|)
+operator|&
+name|FE_ALL_EXCEPT
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|fegetexcept
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|fenv_t
+name|__r
+decl_stmt|;
+name|__mrs_fpcr
+argument_list|(
+name|__r
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+name|__r
+operator|&
+name|_ENABLE_MASK
+operator|)
+operator|>>
+name|_FPUSW_SHIFT
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
 endif|#
 directive|endif
+end_endif
+
+begin_comment
 comment|/* __BSD_VISIBLE */
-argument|__END_DECLS
-end_function
+end_comment
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

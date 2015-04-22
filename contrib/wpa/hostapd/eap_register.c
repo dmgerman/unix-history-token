@@ -113,6 +113,29 @@ directive|endif
 comment|/* EAP_SERVER_TLS */
 ifdef|#
 directive|ifdef
+name|EAP_SERVER_TLS
+ifdef|#
+directive|ifdef
+name|CONFIG_HS20
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+name|ret
+operator|=
+name|eap_server_wfa_unauth_tls_register
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_HS20 */
+endif|#
+directive|endif
+comment|/* EAP_SERVER_TLS */
+ifdef|#
+directive|ifdef
 name|EAP_SERVER_MSCHAPV2
 if|if
 condition|(
@@ -417,6 +440,23 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* EAP_SERVER_PWD */
+ifdef|#
+directive|ifdef
+name|EAP_SERVER_EKE
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+name|ret
+operator|=
+name|eap_server_eke_register
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* EAP_SERVER_EKE */
 return|return
 name|ret
 return|;

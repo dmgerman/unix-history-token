@@ -801,6 +801,24 @@ name|ADA_Q_4K
 block|}
 block|,
 block|{
+comment|/* WDC Caviar Red Advanced Format (4k) drives */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"WDC WD????CX*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
 comment|/* WDC Caviar Green Advanced Format (4k) drives */
 block|{
 name|T_DIRECT
@@ -819,7 +837,7 @@ name|ADA_Q_4K
 block|}
 block|,
 block|{
-comment|/* WDC Caviar Green Advanced Format (4k) drives */
+comment|/* WDC Caviar Green/Red Advanced Format (4k) drives */
 block|{
 name|T_DIRECT
 block|,
@@ -828,6 +846,42 @@ block|,
 literal|"*"
 block|,
 literal|"WDC WD????RX*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
+comment|/* WDC Caviar Red Advanced Format (4k) drives */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"WDC WD??????CX*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
+comment|/* WDC Caviar Black Advanced Format (4k) drives */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"WDC WD??????EX*"
 block|,
 literal|"*"
 block|}

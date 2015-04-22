@@ -102,7 +102,7 @@ file|"common.h"
 end_include
 
 begin_comment
-comment|/*  * seq_set --  *	Internal version to enter a sequence.  *  * PUBLIC: int seq_set __P((SCR *, CHAR_T *,  * PUBLIC:    size_t, CHAR_T *, size_t, CHAR_T *, size_t, seq_t, int));  */
+comment|/*  * seq_set --  *	Internal version to enter a sequence.  *  * PUBLIC: int seq_set(SCR *, CHAR_T *,  * PUBLIC:    size_t, CHAR_T *, size_t, CHAR_T *, size_t, seq_t, int);  */
 end_comment
 
 begin_function
@@ -586,7 +586,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * seq_delete --  *	Delete a sequence.  *  * PUBLIC: int seq_delete __P((SCR *, CHAR_T *, size_t, seq_t));  */
+comment|/*  * seq_delete --  *	Delete a sequence.  *  * PUBLIC: int seq_delete(SCR *, CHAR_T *, size_t, seq_t);  */
 end_comment
 
 begin_function
@@ -736,7 +736,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * seq_free --  *	Free a map entry.  *  * PUBLIC: int seq_free __P((SEQ *));  */
+comment|/*  * seq_free --  *	Free a map entry.  *  * PUBLIC: int seq_free(SEQ *);  */
 end_comment
 
 begin_function
@@ -807,7 +807,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * seq_find --  *	Search the sequence list for a match to a buffer, if ispartial  *	isn't NULL, partial matches count.  *  * PUBLIC: SEQ *seq_find  * PUBLIC:    __P((SCR *, SEQ **, EVENT *, CHAR_T *, size_t, seq_t, int *));  */
+comment|/*  * seq_find --  *	Search the sequence list for a match to a buffer, if ispartial  *	isn't NULL, partial matches count.  *  * PUBLIC: SEQ *seq_find  * PUBLIC:   (SCR *, SEQ **, EVENT *, CHAR_T *, size_t, seq_t, int *);  */
 end_comment
 
 begin_function
@@ -1124,7 +1124,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * seq_close --  *	Discard all sequences.  *  * PUBLIC: void seq_close __P((GS *));  */
+comment|/*  * seq_close --  *	Discard all sequences.  *  * PUBLIC: void seq_close(GS *);  */
 end_comment
 
 begin_function
@@ -1178,7 +1178,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * seq_dump --  *	Display the sequence entries of a specified type.  *  * PUBLIC: int seq_dump __P((SCR *, seq_t, int));  */
+comment|/*  * seq_dump --  *	Display the sequence entries of a specified type.  *  * PUBLIC: int seq_dump(SCR *, seq_t, int);  */
 end_comment
 
 begin_function
@@ -1472,7 +1472,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * seq_save --  *	Save the sequence entries to a file.  *  * PUBLIC: int seq_save __P((SCR *, FILE *, char *, seq_t));  */
+comment|/*  * seq_save --  *	Save the sequence entries to a file.  *  * PUBLIC: int seq_save(SCR *, FILE *, char *, seq_t);  */
 end_comment
 
 begin_function
@@ -1731,7 +1731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * e_memcmp --  *	Compare a string of EVENT's to a string of CHAR_T's.  *  * PUBLIC: int e_memcmp __P((CHAR_T *, EVENT *, size_t));  */
+comment|/*  * e_memcmp --  *	Compare a string of EVENT's to a string of CHAR_T's.  *  * PUBLIC: int e_memcmp(CHAR_T *, EVENT *, size_t);  */
 end_comment
 
 begin_function

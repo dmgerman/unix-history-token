@@ -163,12 +163,16 @@ operator|++
 operator|=
 name|base64_table
 index|[
+operator|(
 name|in
 index|[
 literal|0
 index|]
 operator|>>
 literal|2
+operator|)
+operator|&
+literal|0x3f
 index|]
 expr_stmt|;
 operator|*
@@ -177,6 +181,7 @@ operator|++
 operator|=
 name|base64_table
 index|[
+operator|(
 operator|(
 operator|(
 name|in
@@ -198,6 +203,9 @@ index|]
 operator|>>
 literal|4
 operator|)
+operator|)
+operator|&
+literal|0x3f
 index|]
 expr_stmt|;
 operator|*
@@ -206,6 +214,7 @@ operator|++
 operator|=
 name|base64_table
 index|[
+operator|(
 operator|(
 operator|(
 name|in
@@ -227,6 +236,9 @@ index|]
 operator|>>
 literal|6
 operator|)
+operator|)
+operator|&
+literal|0x3f
 index|]
 expr_stmt|;
 operator|*
@@ -283,12 +295,16 @@ operator|++
 operator|=
 name|base64_table
 index|[
+operator|(
 name|in
 index|[
 literal|0
 index|]
 operator|>>
 literal|2
+operator|)
+operator|&
+literal|0x3f
 index|]
 expr_stmt|;
 if|if
@@ -307,6 +323,7 @@ operator|=
 name|base64_table
 index|[
 operator|(
+operator|(
 name|in
 index|[
 literal|0
@@ -316,6 +333,9 @@ literal|0x03
 operator|)
 operator|<<
 literal|4
+operator|)
+operator|&
+literal|0x3f
 index|]
 expr_stmt|;
 operator|*
@@ -333,6 +353,7 @@ operator|++
 operator|=
 name|base64_table
 index|[
+operator|(
 operator|(
 operator|(
 name|in
@@ -354,6 +375,9 @@ index|]
 operator|>>
 literal|4
 operator|)
+operator|)
+operator|&
+literal|0x3f
 index|]
 expr_stmt|;
 operator|*
@@ -362,6 +386,7 @@ operator|++
 operator|=
 name|base64_table
 index|[
+operator|(
 operator|(
 name|in
 index|[
@@ -372,6 +397,9 @@ literal|0x0f
 operator|)
 operator|<<
 literal|2
+operator|)
+operator|&
+literal|0x3f
 index|]
 expr_stmt|;
 block|}

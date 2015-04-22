@@ -104,68 +104,59 @@ block|}
 enum|;
 end_enum
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|bword
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|VICMD
-operator|*
-operator|,
-expr|enum
+modifier|*
+parameter_list|,
+name|enum
 name|which
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|eword
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|VICMD
-operator|*
-operator|,
-expr|enum
+modifier|*
+parameter_list|,
+name|enum
 name|which
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|fword
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|VICMD
-operator|*
-operator|,
-expr|enum
+modifier|*
+parameter_list|,
+name|enum
 name|which
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * v_wordW -- [count]W  *	Move forward a bigword at a time.  *  * PUBLIC: int v_wordW __P((SCR *, VICMD *));  */
+comment|/*  * v_wordW -- [count]W  *	Move forward a bigword at a time.  *  * PUBLIC: int v_wordW(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -197,7 +188,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_wordw -- [count]w  *	Move forward a word at a time.  *  * PUBLIC: int v_wordw __P((SCR *, VICMD *));  */
+comment|/*  * v_wordw -- [count]w  *	Move forward a word at a time.  *  * PUBLIC: int v_wordw(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -887,7 +878,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_wordE -- [count]E  *	Move forward to the end of the bigword.  *  * PUBLIC: int v_wordE __P((SCR *, VICMD *));  */
+comment|/*  * v_wordE -- [count]E  *	Move forward to the end of the bigword.  *  * PUBLIC: int v_wordE(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -919,7 +910,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_worde -- [count]e  *	Move forward to the end of the word.  *  * PUBLIC: int v_worde __P((SCR *, VICMD *));  */
+comment|/*  * v_worde -- [count]e  *	Move forward to the end of the word.  *  * PUBLIC: int v_worde(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -1502,7 +1493,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_WordB -- [count]B  *	Move backward a bigword at a time.  *  * PUBLIC: int v_wordB __P((SCR *, VICMD *));  */
+comment|/*  * v_WordB -- [count]B  *	Move backward a bigword at a time.  *  * PUBLIC: int v_wordB(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -1534,7 +1525,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_wordb -- [count]b  *	Move backward a word at a time.  *  * PUBLIC: int v_wordb __P((SCR *, VICMD *));  */
+comment|/*  * v_wordb -- [count]b  *	Move backward a word at a time.  *  * PUBLIC: int v_wordb(SCR *, VICMD *);  */
 end_comment
 
 begin_function

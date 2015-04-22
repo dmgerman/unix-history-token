@@ -66,12 +66,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/fdt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<dev/uart/uart.h>
 end_include
 
@@ -1606,7 +1600,12 @@ operator|.
 name|uc_rclk
 operator|=
 literal|24000000
+block|,
 comment|/* TODO: get value from CCM */
+operator|.
+name|uc_rshift
+operator|=
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

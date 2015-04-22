@@ -107,53 +107,47 @@ directive|include
 file|"vi.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|v_exaddr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|VICMD
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|dir_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|v_search
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|VICMD
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|u_int
-operator|,
+parameter_list|,
 name|dir_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * v_srch -- [count]?RE[? offset]  *	Ex address search backward.  *  * PUBLIC: int v_searchb __P((SCR *, VICMD *));  */
+comment|/*  * v_srch -- [count]?RE[? offset]  *	Ex address search backward.  *  * PUBLIC: int v_searchb(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -185,7 +179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_searchf -- [count]/RE[/ offset]  *	Ex address search forward.  *  * PUBLIC: int v_searchf __P((SCR *, VICMD *));  */
+comment|/*  * v_searchf -- [count]/RE[/ offset]  *	Ex address search forward.  *  * PUBLIC: int v_searchf(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -993,7 +987,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_searchN -- N  *	Reverse last search.  *  * PUBLIC: int v_searchN __P((SCR *, VICMD *));  */
+comment|/*  * v_searchN -- N  *	Reverse last search.  *  * PUBLIC: int v_searchN(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -1066,7 +1060,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_searchn -- n  *	Repeat last search.  *  * PUBLIC: int v_searchn __P((SCR *, VICMD *));  */
+comment|/*  * v_searchn -- n  *	Repeat last search.  *  * PUBLIC: int v_searchn(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -1156,7 +1150,7 @@ value|(SIZE(RE_NWSTOP) - 1)
 end_define
 
 begin_comment
-comment|/*  * v_searchw -- [count]^A  *	Search for the word under the cursor.  *  * PUBLIC: int v_searchw __P((SCR *, VICMD *));  */
+comment|/*  * v_searchw -- [count]^A  *	Search for the word under the cursor.  *  * PUBLIC: int v_searchw(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -1605,7 +1599,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_correct --  *	Handle command with a search as the motion.  *  * !!!  * Historically, commands didn't affect the line searched to/from if the  * motion command was a search and the final position was the start/end  * of the line.  There were some special cases and vi was not consistent;  * it was fairly easy to confuse it.  For example, given the two lines:  *  *	abcdefghi  *	ABCDEFGHI  *  * placing the cursor on the 'A' and doing y?$ would so confuse it that 'h'  * 'k' and put would no longer work correctly.  In any case, we try to do  * the right thing, but it's not going to exactly match historic practice.  *  * PUBLIC: int v_correct __P((SCR *, VICMD *, int));  */
+comment|/*  * v_correct --  *	Handle command with a search as the motion.  *  * !!!  * Historically, commands didn't affect the line searched to/from if the  * motion command was a search and the final position was the start/end  * of the line.  There were some special cases and vi was not consistent;  * it was fairly easy to confuse it.  For example, given the two lines:  *  *	abcdefghi  *	ABCDEFGHI  *  * placing the cursor on the 'A' and doing y?$ would so confuse it that 'h'  * 'k' and put would no longer work correctly.  In any case, we try to do  * the right thing, but it's not going to exactly match historic practice.  *  * PUBLIC: int v_correct(SCR *, VICMD *, int);  */
 end_comment
 
 begin_function

@@ -115,6 +115,12 @@ directive|define
 name|ACPI_SINGLE_THREADED
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_32BIT_PHYSICAL_ADDRESS
+end_define
+
 begin_endif
 endif|#
 directive|endif

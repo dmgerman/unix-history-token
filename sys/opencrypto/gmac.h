@@ -9,6 +9,12 @@ directive|ifndef
 name|_GMAC_H_
 end_ifndef
 
+begin_define
+define|#
+directive|define
+name|_GMAC_H_
+end_define
+
 begin_include
 include|#
 directive|include

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: gzip.c,v 1.106 2014/10/18 08:33:30 snj Exp $	*/
+comment|/*	$NetBSD: gzip.c,v 1.108 2015/04/15 02:29:12 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -576,7 +576,7 @@ name|char
 name|gzip_version
 index|[]
 init|=
-literal|"FreeBSD gzip 20141022"
+literal|"FreeBSD gzip 20150413"
 decl_stmt|;
 end_decl_stmt
 
@@ -6468,7 +6468,6 @@ name|timestamp
 init|=
 literal|0
 decl_stmt|;
-name|unsigned
 name|char
 name|name
 index|[
@@ -6759,7 +6758,11 @@ argument_list|,
 name|name
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|name
+argument_list|)
+operator|-
+literal|1
 argument_list|,
 name|GZIP_ORIGNAME
 argument_list|)
@@ -6789,21 +6792,58 @@ index|[
 literal|0
 index|]
 operator|!=
-literal|0
+literal|'\0'
 condition|)
 block|{
-comment|/* preserve original directory name */
 name|char
 modifier|*
 name|dp
-init|=
+decl_stmt|,
+modifier|*
+name|nf
+decl_stmt|;
+comment|/* Make sure that name is NUL-terminated */
+name|name
+index|[
+name|rbytes
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+comment|/* strip saved directory name */
+name|nf
+operator|=
+name|strrchr
+argument_list|(
+name|name
+argument_list|,
+literal|'/'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|nf
+operator|==
+name|NULL
+condition|)
+name|nf
+operator|=
+name|name
+expr_stmt|;
+else|else
+name|nf
+operator|++
+expr_stmt|;
+comment|/* preserve original directory name */
+name|dp
+operator|=
 name|strrchr
 argument_list|(
 name|file
 argument_list|,
 literal|'/'
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|dp
@@ -6842,7 +6882,7 @@ name|int
 operator|)
 name|rbytes
 argument_list|,
-name|name
+name|nf
 argument_list|)
 expr_stmt|;
 block|}
@@ -9838,7 +9878,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s (based on NetBSD gzip 20141018)\n"
+literal|"%s (based on NetBSD gzip 20150113)\n"
 argument_list|,
 name|gzip_version
 argument_list|)

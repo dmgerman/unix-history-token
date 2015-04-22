@@ -102,37 +102,8 @@ file|"libc_private.h"
 end_include
 
 begin_comment
-comment|/*  * Older FreeBSD 2.0, 2.1 and 2.2 had different ps_strings structures and  * in different locations.  * 1: old_ps_strings at the very top of the stack.  * 2: old_ps_strings at SPARE_USRSPACE below the top of the stack.  * 3: ps_strings at the very top of the stack.  * This attempts to support a kernel built in the #2 and #3 era.  */
+comment|/*  * Older FreeBSD 2.0, 2.1 and 2.2 had different ps_strings structures and  * in different locations.  * 1: old_ps_strings at the very top of the stack.  * 2: old_ps_strings at SPARE_USRSPACE below the top of the stack.  * 3: ps_strings at the very top of the stack.  * We only support a kernel providing #3 style ps_strings.  *  * For historical purposes, a definition of the old ps_strings structure  * and location is preserved below: struct old_ps_strings { 	char	*old_ps_argvstr; 	int	old_ps_nargvstr; 	char	*old_ps_envstr; 	int	old_ps_nenvstr; }; #define	OLD_PS_STRINGS ((struct old_ps_strings *) \ 	(USRSTACK - SPARE_USRSPACE - sizeof(struct old_ps_strings)))  */
 end_comment
-
-begin_struct
-struct|struct
-name|old_ps_strings
-block|{
-name|char
-modifier|*
-name|old_ps_argvstr
-decl_stmt|;
-name|int
-name|old_ps_nargvstr
-decl_stmt|;
-name|char
-modifier|*
-name|old_ps_envstr
-decl_stmt|;
-name|int
-name|old_ps_nenvstr
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|OLD_PS_STRINGS
-value|((struct old_ps_strings *) \ 	(USRSTACK - SPARE_USRSPACE - sizeof(struct old_ps_strings)))
-end_define
 
 begin_include
 include|#
@@ -523,14 +494,16 @@ operator|)
 name|ul_ps_strings
 expr_stmt|;
 block|}
-comment|/* PS_STRINGS points to zeroed memory on a style #2 kernel */
+comment|/* 	 * PS_STRINGS points to zeroed memory on a style #2 kernel. 	 * Should not happen. 	 */
 if|if
 condition|(
 name|ps_strings
 operator|->
 name|ps_argvstr
+operator|==
+name|NULL
 condition|)
-block|{
+return|return;
 comment|/* style #3 */
 if|if
 condition|(
@@ -569,7 +542,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 				 * The program may have scribbled into its 				 * argv array, e.g., to remove some arguments. 				 * If that has happened, break out before 				 * trying to call strlen on a NULL pointer. 				 */
+comment|/* 			 * The program may have scribbled into its 			 * argv array, e.g., to remove some arguments. 			 * If that has happened, break out before 			 * trying to call strlen on a NULL pointer. 			 */
 if|if
 condition|(
 name|oargv
@@ -599,6 +572,8 @@ argument_list|,
 literal|"%s%s"
 argument_list|,
 name|len
+operator|!=
+literal|0
 condition|?
 literal|" "
 else|:
@@ -613,6 +588,8 @@ expr_stmt|;
 if|if
 condition|(
 name|len
+operator|!=
+literal|0
 condition|)
 name|len
 operator|++
@@ -648,46 +625,6 @@ name|ps_argvstr
 operator|=
 name|nargvp
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* style #2 - we can only restore our first arg :-( */
-if|if
-condition|(
-operator|*
-name|obuf
-operator|==
-literal|'\0'
-condition|)
-name|strncpy
-argument_list|(
-name|obuf
-argument_list|,
-name|OLD_PS_STRINGS
-operator|->
-name|old_ps_argvstr
-argument_list|,
-name|SPT_BUFSIZE
-operator|-
-literal|1
-argument_list|)
-expr_stmt|;
-name|OLD_PS_STRINGS
-operator|->
-name|old_ps_nargvstr
-operator|=
-literal|1
-expr_stmt|;
-name|OLD_PS_STRINGS
-operator|->
-name|old_ps_argvstr
-operator|=
-name|nargvp
-index|[
-literal|0
-index|]
-expr_stmt|;
-block|}
 block|}
 end_function
 

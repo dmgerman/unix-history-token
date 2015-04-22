@@ -614,15 +614,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-name|u_short
-name|ipid
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_expr_stmt
 specifier|static
 name|int
@@ -1340,10 +1331,6 @@ condition|)
 name|V_ipforwarding
 operator|=
 literal|1
-expr_stmt|;
-name|ipid
-operator|=
-literal|0
 expr_stmt|;
 name|SPL_X
 argument_list|(
@@ -5729,87 +5716,6 @@ argument_list|()
 expr_stmt|;
 return|return
 name|newiss
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_comment
-comment|/* Function:    ipf_nextipid                                                */
-end_comment
-
-begin_comment
-comment|/* Returns:     int - 0 == success, -1 == error (packet should be droppped) */
-end_comment
-
-begin_comment
-comment|/* Parameters:  fin(I) - pointer to packet information                      */
-end_comment
-
-begin_comment
-comment|/*                                                                          */
-end_comment
-
-begin_comment
-comment|/* Returns the next IPv4 ID to use for this packet.                         */
-end_comment
-
-begin_comment
-comment|/* ------------------------------------------------------------------------ */
-end_comment
-
-begin_function
-name|u_short
-name|ipf_nextipid
-parameter_list|(
-name|fin
-parameter_list|)
-name|fr_info_t
-modifier|*
-name|fin
-decl_stmt|;
-block|{
-name|u_short
-name|id
-decl_stmt|;
-ifndef|#
-directive|ifndef
-name|RANDOM_IP_ID
-name|MUTEX_ENTER
-argument_list|(
-operator|&
-name|ipfmain
-operator|.
-name|ipf_rw
-argument_list|)
-expr_stmt|;
-name|id
-operator|=
-name|ipid
-operator|++
-expr_stmt|;
-name|MUTEX_EXIT
-argument_list|(
-operator|&
-name|ipfmain
-operator|.
-name|ipf_rw
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|id
-operator|=
-name|ip_randomid
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
-return|return
-name|id
 return|;
 block|}
 end_function

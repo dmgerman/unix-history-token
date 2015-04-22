@@ -4,7 +4,7 @@ comment|/*	$NetBSD: regerror.c,v 1.2 2008/12/05 22:51:43 christos Exp $ */
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993, 1994 Henry Spencer.  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)regerror.c	8.3 (Berkeley) 3/19/94  */
+comment|/*-  * Copyright (c) 1992, 1993, 1994 Henry Spencer.  * Copyright (c) 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Henry Spencer of the University of Toronto.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)regerror.c	8.3 (Berkeley) 3/19/94  */
 end_comment
 
 begin_if
@@ -110,20 +110,17 @@ specifier|static
 name|char
 modifier|*
 name|regatoi
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|regex_t
-operator|*
+modifier|*
 name|preg
-operator|,
+parameter_list|,
 name|char
-operator|*
+modifier|*
 name|localbuf
-operator|)
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus
@@ -333,17 +330,14 @@ name|size_t
 name|errbuf_size
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|rerr
 modifier|*
 name|r
 decl_stmt|;
-specifier|register
 name|size_t
 name|len
 decl_stmt|;
-specifier|register
 name|int
 name|target
 init|=
@@ -352,7 +346,6 @@ operator|&
 operator|~
 name|REG_ITOA
 decl_stmt|;
-specifier|register
 specifier|const
 name|char
 modifier|*
@@ -501,9 +494,6 @@ operator|>
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|strlcpy
 argument_list|(
 name|errbuf
@@ -523,7 +513,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - regatoi - internal routine to implement REG_ATOI  == static char *regatoi(const regex_t *preg, char *localbuf);  */
+comment|/*  - regatoi - internal routine to implement REG_ATOI  */
 end_comment
 
 begin_function
@@ -546,7 +536,7 @@ if|#
 directive|if
 literal|0
 comment|/* we don't seem to use this and it gives a warning. */
-block|register struct rerr *r; 	register size_t siz; 	register char *p;  	for (r = rerrs; r->code != 0; r++) 		if (strcmp(r->name, preg->re_endp) == 0) 			break; 	if (r->code == 0) 		return("0");  	sprintf(localbuf, "%d", r->code);
+block|struct rerr *r; 	size_t siz; 	char *p;  	for (r = rerrs; r->code != 0; r++) 		if (strcmp(r->name, preg->re_endp) == 0) 			break; 	if (r->code == 0) 		return("0");  	sprintf(localbuf, "%d", r->code);
 else|#
 directive|else
 operator|*

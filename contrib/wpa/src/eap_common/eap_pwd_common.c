@@ -542,6 +542,9 @@ operator|=
 name|NID_secp521r1
 expr_stmt|;
 break|break;
+ifndef|#
+directive|ifndef
+name|OPENSSL_IS_BORINGSSL
 case|case
 literal|25
 case|:
@@ -550,6 +553,9 @@ operator|=
 name|NID_X9_62_prime192v1
 expr_stmt|;
 break|break;
+endif|#
+directive|endif
+comment|/* OPENSSL_IS_BORINGSSL */
 case|case
 literal|26
 case|:
@@ -1229,7 +1235,7 @@ name|group
 operator|=
 name|NULL
 expr_stmt|;
-name|EC_POINT_free
+name|EC_POINT_clear_free
 argument_list|(
 name|grp
 operator|->
@@ -1242,7 +1248,7 @@ name|pwe
 operator|=
 name|NULL
 expr_stmt|;
-name|BN_free
+name|BN_clear_free
 argument_list|(
 name|grp
 operator|->
@@ -1255,7 +1261,7 @@ name|order
 operator|=
 name|NULL
 expr_stmt|;
-name|BN_free
+name|BN_clear_free
 argument_list|(
 name|grp
 operator|->
@@ -1274,17 +1280,17 @@ literal|1
 expr_stmt|;
 block|}
 comment|/* cleanliness and order.... */
-name|BN_free
+name|BN_clear_free
 argument_list|(
 name|cofactor
 argument_list|)
 expr_stmt|;
-name|BN_free
+name|BN_clear_free
 argument_list|(
 name|x_candidate
 argument_list|)
 expr_stmt|;
-name|BN_free
+name|BN_clear_free
 argument_list|(
 name|rnd
 argument_list|)
@@ -1343,6 +1349,10 @@ parameter_list|,
 name|u8
 modifier|*
 name|emsk
+parameter_list|,
+name|u8
+modifier|*
+name|session_id
 parameter_list|)
 block|{
 name|struct
@@ -1358,14 +1368,6 @@ index|]
 decl_stmt|,
 modifier|*
 name|cruft
-decl_stmt|;
-name|u8
-name|session_id
-index|[
-name|SHA256_MAC_LEN
-operator|+
-literal|1
-index|]
 decl_stmt|;
 name|u8
 name|msk_emsk

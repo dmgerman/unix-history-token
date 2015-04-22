@@ -436,13 +436,13 @@ name|ACPI_GPIO_INFO
 modifier|*
 name|PrevGpio
 decl_stmt|;
+name|char
+modifier|*
+name|Buffer
+decl_stmt|;
 comment|/*      * Allocate a new info block and insert it into the global GPIO list      * sorted by both source device name and then the pin number. There is      * one block per pin.      */
-name|Info
+name|Buffer
 operator|=
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_GPIO_INFO
-argument_list|,
 name|UtStringCacheCalloc
 argument_list|(
 sizeof|sizeof
@@ -450,6 +450,14 @@ argument_list|(
 name|ACPI_GPIO_INFO
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|Info
+operator|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_GPIO_INFO
+argument_list|,
+name|Buffer
 argument_list|)
 expr_stmt|;
 name|NextGpio
@@ -611,13 +619,13 @@ name|ACPI_SERIAL_INFO
 modifier|*
 name|PrevSerial
 decl_stmt|;
+name|char
+modifier|*
+name|Buffer
+decl_stmt|;
 comment|/*      * Allocate a new info block and insert it into the global Serial list      * sorted by both source device name and then the address.      */
-name|Info
+name|Buffer
 operator|=
-name|ACPI_CAST_PTR
-argument_list|(
-name|ACPI_SERIAL_INFO
-argument_list|,
 name|UtStringCacheCalloc
 argument_list|(
 sizeof|sizeof
@@ -625,6 +633,14 @@ argument_list|(
 name|ACPI_SERIAL_INFO
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|Info
+operator|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|ACPI_SERIAL_INFO
+argument_list|,
+name|Buffer
 argument_list|)
 expr_stmt|;
 name|NextSerial

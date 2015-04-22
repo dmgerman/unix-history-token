@@ -155,11 +155,6 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|CPU_ARM1136
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|CPU_ARM1176
 argument_list|)
 end_elif

@@ -3444,12 +3444,18 @@ value|do {					\ 	(d)->bd_hbuf = (d)->bd_sbuf;					\ 	(d)->bd_hlen = (d)->bd_sle
 end_define
 
 begin_comment
-comment|/*  * Descriptor associated with each attached hardware interface.  * FIXME: this structure is exposed to external callers to speed up  * bpf_peers_present() call. However we cover all fields not needed by  * this function via BPF_INTERNAL define  */
+comment|/*  * Descriptor associated with each attached hardware interface.  * Part of this structure is exposed to external callers to speed up  * bpf_peers_present() calls.  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|bpf_if
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
-name|bpf_if
+name|bpf_if_ext
 block|{
 name|LIST_ENTRY
 argument_list|(
@@ -3466,42 +3472,6 @@ argument_list|)
 name|bif_dlist
 expr_stmt|;
 comment|/* descriptor list */
-ifdef|#
-directive|ifdef
-name|BPF_INTERNAL
-name|u_int
-name|bif_dlt
-decl_stmt|;
-comment|/* link layer type */
-name|u_int
-name|bif_hdrlen
-decl_stmt|;
-comment|/* length of link header */
-name|struct
-name|ifnet
-modifier|*
-name|bif_ifp
-decl_stmt|;
-comment|/* corresponding interface */
-name|struct
-name|rwlock
-name|bif_lock
-decl_stmt|;
-comment|/* interface lock */
-name|LIST_HEAD
-argument_list|(
-argument_list|,
-argument|bpf_d
-argument_list|)
-name|bif_wlist
-expr_stmt|;
-comment|/* writer-only list */
-name|int
-name|flags
-decl_stmt|;
-comment|/* Interface flags */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -3669,13 +3639,27 @@ modifier|*
 name|bpf
 parameter_list|)
 block|{
+name|struct
+name|bpf_if_ext
+modifier|*
+name|ext
+decl_stmt|;
+name|ext
+operator|=
+operator|(
+expr|struct
+name|bpf_if_ext
+operator|*
+operator|)
+name|bpf
+expr_stmt|;
 if|if
 condition|(
 operator|!
 name|LIST_EMPTY
 argument_list|(
 operator|&
-name|bpf
+name|ext
 operator|->
 name|bif_dlist
 argument_list|)

@@ -425,7 +425,7 @@ begin_define
 define|#
 directive|define
 name|EXC_DEBUG
-value|0x2000
+value|0x2f10
 end_define
 
 begin_comment

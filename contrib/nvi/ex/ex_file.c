@@ -96,7 +96,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_file -- :f[ile] [name]  *	Change the file's name and display the status line.  *  * PUBLIC: int ex_file __P((SCR *, EXCMD *));  */
+comment|/*  * ex_file -- :f[ile] [name]  *	Change the file's name and display the status line.  *  * PUBLIC: int ex_file(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

@@ -68,9 +68,6 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-name|int
-name|rval
-decl_stmt|;
 name|dof_helper_t
 modifier|*
 name|dhp
@@ -82,6 +79,9 @@ modifier|*
 name|dof
 init|=
 name|NULL
+decl_stmt|;
+name|int
+name|rval
 decl_stmt|;
 switch|switch
 condition|(
@@ -174,7 +174,7 @@ condition|)
 block|{
 name|dhp
 operator|->
-name|gen
+name|dofhp_gen
 operator|=
 name|rval
 expr_stmt|;
@@ -228,6 +228,8 @@ name|rval
 operator|=
 name|dtrace_helper_destroygen
 argument_list|(
+name|NULL
+argument_list|,
 operator|(
 name|int
 operator|)

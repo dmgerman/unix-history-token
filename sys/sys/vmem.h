@@ -521,6 +521,13 @@ name|VMEM_FREE
 value|0x02
 end_define
 
+begin_define
+define|#
+directive|define
+name|VMEM_MAXFREE
+value|0x10
+end_define
+
 begin_endif
 endif|#
 directive|endif

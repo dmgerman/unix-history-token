@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: conv.c,v 2.39 2013/07/01 23:28:13 zy Exp $"
+literal|"$Id: conv.c,v 2.40 2014/02/27 16:25:29 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -120,7 +120,7 @@ file|"common.h"
 end_include
 
 begin_comment
-comment|/*  * codeset --  *	Get the locale encoding.  *  * PUBLIC: char * codeset __P((void));  */
+comment|/*  * codeset --  *	Get the locale encoding.  *  * PUBLIC: char * codeset(void);  */
 end_comment
 
 begin_function
@@ -309,7 +309,7 @@ parameter_list|,
 name|len
 parameter_list|)
 define|\
-value|do {								\ 	size_t outleft;							\ 	char *bp = buffer;						\ 	outleft = CONV_BUFFER_SIZE;					\ 	errno = 0;							\ 	if (iconv(id, (iconv_src_t)&str,&left,&bp,&outleft) == -1&&	\ 		errno != E2BIG)						\ 	    goto err;							\ 	if ((len = CONV_BUFFER_SIZE - outleft) == 0) {			\ 	    error = -left;						\ 	    goto err;							\ 	}				    				\ 	src = buffer;							\     } while (0)
+value|do {								\ 		size_t outleft;						\ 		char *bp = buffer;					\ 		outleft = CONV_BUFFER_SIZE;				\ 		errno = 0;						\ 		if (iconv(id, (iconv_src_t)&str,&left,&bp,&outleft)	\ 		    == -1&& errno != E2BIG)				\ 			goto err;					\ 		if ((len = CONV_BUFFER_SIZE - outleft) == 0) {		\ 			error = -left;					\ 			goto err;					\ 		}							\ 		src = buffer;						\ 	} while (0)
 end_define
 
 begin_define
@@ -318,7 +318,7 @@ directive|define
 name|IC_RESET
 parameter_list|()
 define|\
-value|do {								\ 	if (id != (iconv_t)-1)						\ 	    iconv(id, NULL, NULL, NULL, NULL);				\     } while(0)
+value|do {								\ 		if (id != (iconv_t)-1)					\ 			iconv(id, NULL, NULL, NULL, NULL);		\ 	} while(0)
 end_define
 
 begin_else
@@ -1084,7 +1084,7 @@ parameter_list|,
 name|offset
 parameter_list|)
 define|\
-value|do {								\ 	char *bp = _buffer;						\ 	int ret;							\ 	do {								\ 	    size_t outleft = cw->blen1 - offset;			\ 	    char *obp = cw->bp1.c + offset;				\ 	    if (cw->blen1< offset + MB_CUR_MAX) {		    	\ 		nlen += 256;						\ 		BINC_RETC(NULL, cw->bp1.c, cw->blen1, nlen);		\ 	    }						    		\ 	    errno = 0;						    	\ 	    ret = iconv(id, (iconv_src_t)&bp, lenp,&obp,&outleft);	\ 	    if (ret == -1&& errno != E2BIG)				\ 		goto err;						\ 	    offset = cw->blen1 - outleft;			        \ 	} while (ret != 0); 					        \     } while (0)
+value|do {								\ 		char *bp = _buffer;					\ 		int ret;						\ 		do {							\ 			size_t outleft = cw->blen1 - offset;		\ 			char *obp = cw->bp1.c + offset;			\ 			if (cw->blen1< offset + MB_CUR_MAX) {		\ 				nlen += 256;				\ 				BINC_RETC(NULL, cw->bp1.c, cw->blen1,	\ 				    nlen);				\ 			}						\ 			errno = 0;					\ 			ret = iconv(id, (iconv_src_t)&bp, lenp,&obp,	\&outleft);					\ 			if (ret == -1&& errno != E2BIG)		\ 				goto err;				\ 			offset = cw->blen1 - outleft;			\ 		} while (ret != 0); 					\ 	} while (0)
 else|#
 directive|else
 define|#
@@ -1321,6 +1321,7 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
+comment|/* back to the initial state */
 name|CONVERT2
 argument_list|(
 name|NULL
@@ -1332,7 +1333,6 @@ argument_list|,
 name|offset
 argument_list|)
 expr_stmt|;
-comment|/* back to the initial state */
 operator|*
 name|tolen
 operator|=
@@ -1493,7 +1493,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * conv_init --  *	Initialize the iconv environment.  *  * PUBLIC: void conv_init __P((SCR *, SCR *));  */
+comment|/*  * conv_init --  *	Initialize the iconv environment.  *  * PUBLIC: void conv_init(SCR *, SCR *);  */
 end_comment
 
 begin_function
@@ -1562,7 +1562,7 @@ argument_list|,
 name|NULL
 argument_list|)
 decl_stmt|;
-comment|/* 	 * XXX 	 * This hack fixes the libncursesw issue on FreeBSD. 	 */
+comment|/* 		 * XXX 		 * This hack fixes the libncursesw issue on FreeBSD. 		 */
 if|if
 condition|(
 operator|!
@@ -1616,7 +1616,7 @@ argument_list|,
 literal|"zh_CN.GB18030"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Switch to 8bit mode if locale is C; 	 * LC_CTYPE should be reseted to C if unmatched. 	 */
+comment|/* 		 * Switch to 8bit mode if locale is C; 		 * LC_CTYPE should be reseted to C if unmatched. 		 */
 if|if
 condition|(
 operator|!
@@ -1785,7 +1785,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * conv_enc --  *	Convert file/input encoding.  *  * PUBLIC: int conv_enc __P((SCR *, int, char *));  */
+comment|/*  * conv_enc --  *	Convert file/input encoding.  *  * PUBLIC: int conv_enc(SCR *, int, char *);  */
 end_comment
 
 begin_function
@@ -1821,6 +1821,11 @@ name|c2w
 decl_stmt|,
 modifier|*
 name|w2c
+decl_stmt|;
+name|iconv_t
+name|id_c2w
+decl_stmt|,
+name|id_w2c
 decl_stmt|;
 switch|switch
 condition|(
@@ -1866,40 +1871,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|c2w
-operator|!=
-operator|(
-name|iconv_t
-operator|)
-operator|-
-literal|1
-condition|)
-name|iconv_close
-argument_list|(
-operator|*
-name|c2w
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|w2c
-operator|!=
-operator|(
-name|iconv_t
-operator|)
-operator|-
-literal|1
-condition|)
-name|iconv_close
-argument_list|(
-operator|*
-name|w2c
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|strcasecmp
 argument_list|(
 name|codeset
@@ -1912,8 +1883,7 @@ block|{
 if|if
 condition|(
 operator|(
-operator|*
-name|c2w
+name|id_c2w
 operator|=
 name|iconv_open
 argument_list|(
@@ -1936,8 +1906,7 @@ goto|;
 if|if
 condition|(
 operator|(
-operator|*
-name|w2c
+name|id_w2c
 operator|=
 name|iconv_open
 argument_list|(
@@ -1959,11 +1928,8 @@ name|err
 goto|;
 block|}
 else|else
-operator|*
-name|c2w
-operator|=
-operator|*
-name|w2c
+block|{
+name|id_c2w
 operator|=
 operator|(
 name|iconv_t
@@ -1971,6 +1937,15 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
+name|id_w2c
+operator|=
+operator|(
+name|iconv_t
+operator|)
+operator|-
+literal|1
+expr_stmt|;
+block|}
 break|break;
 case|case
 name|O_INPUTENCODING
@@ -2011,40 +1986,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|c2w
-operator|!=
-operator|(
-name|iconv_t
-operator|)
-operator|-
-literal|1
-condition|)
-name|iconv_close
-argument_list|(
-operator|*
-name|c2w
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|w2c
-operator|!=
-operator|(
-name|iconv_t
-operator|)
-operator|-
-literal|1
-condition|)
-name|iconv_close
-argument_list|(
-operator|*
-name|w2c
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|strcasecmp
 argument_list|(
 name|codeset
@@ -2057,8 +1998,7 @@ block|{
 if|if
 condition|(
 operator|(
-operator|*
-name|c2w
+name|id_c2w
 operator|=
 name|iconv_open
 argument_list|(
@@ -2080,8 +2020,7 @@ name|err
 goto|;
 block|}
 else|else
-operator|*
-name|c2w
+name|id_c2w
 operator|=
 operator|(
 name|iconv_t
@@ -2093,8 +2032,7 @@ comment|/* UTF-16 can not be locale and can not be inputed. */
 if|if
 condition|(
 operator|(
-operator|*
-name|w2c
+name|id_w2c
 operator|=
 name|iconv_open
 argument_list|(
@@ -2114,7 +2052,55 @@ goto|goto
 name|err
 goto|;
 break|break;
+default|default:
+name|abort
+argument_list|()
+expr_stmt|;
 block|}
+if|if
+condition|(
+operator|*
+name|c2w
+operator|!=
+operator|(
+name|iconv_t
+operator|)
+operator|-
+literal|1
+condition|)
+name|iconv_close
+argument_list|(
+operator|*
+name|c2w
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|w2c
+operator|!=
+operator|(
+name|iconv_t
+operator|)
+operator|-
+literal|1
+condition|)
+name|iconv_close
+argument_list|(
+operator|*
+name|w2c
+argument_list|)
+expr_stmt|;
+operator|*
+name|c2w
+operator|=
+name|id_c2w
+expr_stmt|;
+operator|*
+name|w2c
+operator|=
+name|id_w2c
+expr_stmt|;
 name|F_CLR
 argument_list|(
 name|sp
@@ -2175,7 +2161,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * conv_end --  *	Close the iconv descriptors, release the buffer.  *  * PUBLIC: void conv_end __P((SCR *));  */
+comment|/*  * conv_end --  *	Close the iconv descriptors, release the buffer.  *  * PUBLIC: void conv_end(SCR *);  */
 end_comment
 
 begin_function

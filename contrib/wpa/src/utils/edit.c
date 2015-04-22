@@ -43,7 +43,7 @@ begin_define
 define|#
 directive|define
 name|CMD_BUF_LEN
-value|256
+value|4096
 end_define
 
 begin_decl_stmt
@@ -1496,6 +1496,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|currbuf_valid
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|cmdbuf_len

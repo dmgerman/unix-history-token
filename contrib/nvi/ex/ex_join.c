@@ -96,7 +96,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_join -- :[line [,line]] j[oin][!] [count] [flags]  *	Join lines.  *  * PUBLIC: int ex_join __P((SCR *, EXCMD *));  */
+comment|/*  * ex_join -- :[line [,line]] j[oin][!] [count] [flags]  *	Join lines.  *  * PUBLIC: int ex_join(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

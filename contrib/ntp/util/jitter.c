@@ -48,7 +48,7 @@ begin_define
 define|#
 directive|define
 name|NBUF
-value|80002
+value|800002
 end_define
 
 begin_define
@@ -82,12 +82,6 @@ end_define
 begin_comment
 comment|/* Solaris hires clock */
 end_comment
-
-begin_decl_stmt
-name|int
-name|debug
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|char

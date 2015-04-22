@@ -357,6 +357,16 @@ name|ACPI_SIZE
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_32BIT_PHYSICAL_ADDRESS
+end_ifdef
+
+begin_comment
+comment|/*  * OSPMs can define this to shrink the size of the structures for 32-bit  * none PAE environment. ASL compiler may always define this to generate  * 32-bit OSPM compliant tables.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|UINT32
@@ -370,6 +380,42 @@ name|UINT32
 name|ACPI_PHYSICAL_ADDRESS
 typedef|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ACPI_32BIT_PHYSICAL_ADDRESS */
+end_comment
+
+begin_comment
+comment|/*  * It is reported that, after some calculations, the physical addresses can  * wrap over the 32-bit boundary on 32-bit PAE environment.  * https://bugzilla.kernel.org/show_bug.cgi?id=87971  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|UINT64
+name|ACPI_IO_ADDRESS
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|UINT64
+name|ACPI_PHYSICAL_ADDRESS
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_32BIT_PHYSICAL_ADDRESS */
+end_comment
 
 begin_define
 define|#
@@ -2452,7 +2498,7 @@ value|ACPI_EVENT_MAX + 1
 end_define
 
 begin_comment
-comment|/*  * Event Status - Per event  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +-------------+-+-+-+-+  * |   Bits 31:4 |3|2|1|0|  * +-------------+-+-+-+-+  *          |     | | | |  *          |     | | | +- Enabled?  *          |     | | +--- Enabled for wake?  *          |     | +----- Set?  *          |     +------- Has a handler?  *          +-------------<Reserved>  */
+comment|/*  * Event Status - Per event  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +-------------+-+-+-+-+-+  * |   Bits 31:5 |4|3|2|1|0|  * +-------------+-+-+-+-+-+  *          |     | | | | |  *          |     | | | | +- Enabled?  *          |     | | | +--- Enabled for wake?  *          |     | | +----- Status bit set?  *          |     | +------- Enable bit set?  *          |     +--------- Has a handler?  *          +---------------<Reserved>  */
 end_comment
 
 begin_typedef
@@ -2486,15 +2532,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_EVENT_FLAG_SET
+name|ACPI_EVENT_FLAG_STATUS_SET
 value|(ACPI_EVENT_STATUS) 0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_EVENT_FLAG_HAS_HANDLER
+name|ACPI_EVENT_FLAG_ENABLE_SET
 value|(ACPI_EVENT_STATUS) 0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_FLAG_HAS_HANDLER
+value|(ACPI_EVENT_STATUS) 0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_FLAG_SET
+value|ACPI_EVENT_FLAG_STATUS_SET
 end_define
 
 begin_comment
@@ -4495,6 +4555,13 @@ define|#
 directive|define
 name|ACPI_OSI_WIN_8
 value|0x0C
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WIN_10
+value|0x0D
 end_define
 
 begin_comment

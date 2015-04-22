@@ -1860,6 +1860,9 @@ parameter_list|,
 name|dmar_gaddr_t
 name|size
 parameter_list|,
+name|int
+name|offset
+parameter_list|,
 name|u_int
 name|eflags
 parameter_list|,

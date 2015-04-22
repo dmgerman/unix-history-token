@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/fdt/fdt_common.h>
 end_include
 
@@ -331,8 +337,6 @@ decl_stmt|,
 name|cputype
 decl_stmt|;
 name|vm_offset_t
-name|smp_boot
-decl_stmt|,
 name|pmu_boot_off
 decl_stmt|;
 comment|/* 	 * Initialization procedure depends on core revision, 	 * in this step CHIP ID is checked to choose proper procedure 	 */
@@ -344,28 +348,6 @@ expr_stmt|;
 name|cputype
 operator|&=
 name|CPU_ID_CPU_MASK
-expr_stmt|;
-name|smp_boot
-operator|=
-name|kva_alloc
-argument_list|(
-name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|pmap_kenter_nocache
-argument_list|(
-name|smp_boot
-argument_list|,
-literal|0xffff0000
-argument_list|)
-expr_stmt|;
-name|dst
-operator|=
-operator|(
-name|uint32_t
-operator|*
-operator|)
-name|smp_boot
 expr_stmt|;
 comment|/* 	 * Set the PA of CPU0 Boot Address Redirect register used in 	 * mptramp according to the actual SoC registers' base address. 	 */
 name|pmu_boot_off
@@ -386,6 +368,15 @@ operator|=
 name|fdt_immr_pa
 operator|+
 name|pmu_boot_off
+expr_stmt|;
+name|dst
+operator|=
+name|pmap_mapdev
+argument_list|(
+literal|0xffff0000
+argument_list|,
+name|PAGE_SIZE
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -419,9 +410,12 @@ operator|*
 name|src
 expr_stmt|;
 block|}
-name|kva_free
+name|pmap_unmapdev
 argument_list|(
-name|smp_boot
+operator|(
+name|vm_offset_t
+operator|)
+name|dst
 argument_list|,
 name|PAGE_SIZE
 argument_list|)

@@ -780,14 +780,12 @@ condition|(
 operator|*
 name|argv
 operator|&&
-name|sigstring_to_signum
+operator|!
+name|is_number
 argument_list|(
 operator|*
 name|argv
 argument_list|)
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 if|if

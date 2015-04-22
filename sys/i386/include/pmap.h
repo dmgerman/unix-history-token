@@ -177,11 +177,19 @@ begin_comment
 comment|/* PAT	PAT index		*/
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PAE
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PAE_TABLES
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -221,11 +229,19 @@ name|PG_MANAGED
 value|PG_AVAIL2
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PAE
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PAE_TABLES
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -385,11 +401,19 @@ directive|ifndef
 name|KVA_PAGES
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PAE
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PAE_TABLES
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -437,7 +461,7 @@ value|((vm_offset_t)(((pdi)<<PDRSHIFT)|((pti)<<PAGE_SHIFT)))
 end_define
 
 begin_comment
-comment|/* Initial number of kernel page tables. */
+comment|/*  * The initial number of kernel page table pages that are constructed  * by locore must be sufficient to map vm_page_array.  That number can  * be calculated as follows:  *     max_phys / PAGE_SIZE * sizeof(struct vm_page) / NBPDR  * PAE:      max_phys 16G, sizeof(vm_page) 76, NBPDR 2M, 152 page table pages.  * PAE_TABLES: max_phys 4G,  sizeof(vm_page) 68, NBPDR 2M, 36 page table pages.  * Non-PAE:  max_phys 4G,  sizeof(vm_page) 68, NBPDR 4M, 18 page table pages.  */
 end_comment
 
 begin_ifndef
@@ -446,15 +470,14 @@ directive|ifndef
 name|NKPT
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PAE
-end_ifdef
-
-begin_comment
-comment|/* 152 page tables needed to map 16G (76B "struct vm_page", 2M page tables). */
-end_comment
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -463,14 +486,26 @@ name|NKPT
 value|240
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|PAE_TABLES
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|NKPT
+value|60
+end_define
+
 begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* 18 page tables needed to map 4G (72B "struct vm_page", 4M page tables). */
-end_comment
 
 begin_define
 define|#
@@ -591,11 +626,19 @@ directive|include
 file|<vm/_vm_radix.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PAE
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PAE_TABLES
+argument_list|)
+end_if
 
 begin_typedef
 typedef|typedef
@@ -704,11 +747,19 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PAE
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PAE_TABLES
+argument_list|)
+end_if
 
 begin_decl_stmt
 specifier|extern
@@ -1276,10 +1327,17 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|(
 name|defined
 argument_list|(
 name|PAE
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PAE_TABLES
+argument_list|)
+operator|)
 operator|&&
 operator|!
 name|defined
@@ -1350,6 +1408,12 @@ operator|!
 name|defined
 argument_list|(
 name|PAE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|PAE_TABLES
 argument_list|)
 operator|&&
 operator|!
@@ -1518,14 +1582,22 @@ argument_list|)
 name|pm_list
 expr_stmt|;
 comment|/* List of all pmaps */
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PAE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PAE_TABLES
+argument_list|)
 name|pdpt_entry_t
 modifier|*
 name|pm_pdpt
 decl_stmt|;
-comment|/* KVA of page director pointer 						   table */
+comment|/* KVA of page directory pointer 						   table */
 endif|#
 directive|endif
 name|struct

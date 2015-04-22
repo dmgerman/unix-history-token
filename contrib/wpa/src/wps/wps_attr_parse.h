@@ -233,18 +233,6 @@ comment|/* ETH_ALEN (6) octets */
 specifier|const
 name|u8
 modifier|*
-name|key_prov_auto
-decl_stmt|;
-comment|/* 1 octet (Bool) */
-specifier|const
-name|u8
-modifier|*
-name|dot1x_enabled
-decl_stmt|;
-comment|/* 1 octet (Bool) */
-specifier|const
-name|u8
-modifier|*
 name|selected_registrar
 decl_stmt|;
 comment|/* 1 octet (Bool) */
@@ -288,6 +276,12 @@ specifier|const
 name|u8
 modifier|*
 name|ap_channel
+decl_stmt|;
+comment|/* 2 octets */
+specifier|const
+name|u8
+modifier|*
+name|registrar_configuration_methods
 decl_stmt|;
 comment|/* 2 octets */
 comment|/* variable length fields */
@@ -364,24 +358,6 @@ decl_stmt|;
 comment|/*<= 64 octets */
 name|size_t
 name|network_key_len
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|eap_type
-decl_stmt|;
-comment|/*<= 8 octets */
-name|size_t
-name|eap_type_len
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|eap_identity
-decl_stmt|;
-comment|/*<= 64 octets */
-name|size_t
-name|eap_identity_len
 decl_stmt|;
 specifier|const
 name|u8

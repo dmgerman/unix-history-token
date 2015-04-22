@@ -18,7 +18,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"utils/eloop.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"common/ieee802_11_defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"common/wpa_ctrl.h"
 end_include
 
 begin_include
@@ -234,17 +246,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_info
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_INFO
-argument_list|,
-literal|"P2P: Mismatching country (ours=%c%c peer's=%c%c)"
+literal|"Mismatching country (ours=%c%c peer's=%c%c)"
 argument_list|,
 name|p2p
 operator|->
@@ -330,17 +336,11 @@ operator|>
 name|end
 condition|)
 block|{
-name|wpa_msg
+name|p2p_info
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_INFO
-argument_list|,
-literal|"P2P: Invalid peer Channel List"
+literal|"Invalid peer Channel List"
 argument_list|)
 expr_stmt|;
 return|return
@@ -411,18 +411,11 @@ operator|&
 name|intersection
 argument_list|)
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Own reg_classes %d "
-literal|"peer reg_classes %d intersection reg_classes %d"
+literal|"Own reg_classes %d peer reg_classes %d intersection reg_classes %d"
 argument_list|,
 operator|(
 name|int
@@ -457,17 +450,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_info
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_INFO
-argument_list|,
-literal|"P2P: No common channels found"
+literal|"No common channels found"
 argument_list|)
 expr_stmt|;
 return|return
@@ -557,6 +544,18 @@ case|:
 return|return
 name|DEV_PW_PUSHBUTTON
 return|;
+case|case
+name|WPS_NFC
+case|:
+return|return
+name|DEV_PW_NFC_CONNECTION_HANDOVER
+return|;
+case|case
+name|WPS_P2PS
+case|:
+return|return
+name|DEV_PW_P2PS_DEFAULT
+return|;
 default|default:
 return|return
 name|DEV_PW_DEFAULT
@@ -599,6 +598,18 @@ name|WPS_PBC
 case|:
 return|return
 literal|"PBC"
+return|;
+case|case
+name|WPS_NFC
+case|:
+return|return
+literal|"NFC"
+return|;
+case|case
+name|WPS_P2PS
+case|:
+return|return
+literal|"P2PS"
 return|;
 default|default:
 return|return
@@ -643,6 +654,9 @@ name|extra
 init|=
 literal|0
 decl_stmt|;
+name|u16
+name|pw_id
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|CONFIG_WIFI_DISPLAY
@@ -664,6 +678,31 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_WIFI_DISPLAY */
+if|if
+condition|(
+name|p2p
+operator|->
+name|vendor_elem
+operator|&&
+name|p2p
+operator|->
+name|vendor_elem
+index|[
+name|VENDOR_ELEM_P2P_GO_NEG_REQ
+index|]
+condition|)
+name|extra
+operator|+=
+name|wpabuf_len
+argument_list|(
+name|p2p
+operator|->
+name|vendor_elem
+index|[
+name|VENDOR_ELEM_P2P_GO_NEG_REQ
+index|]
+argument_list|)
+expr_stmt|;
 name|buf
 operator|=
 name|wpabuf_alloc
@@ -682,25 +721,6 @@ condition|)
 return|return
 name|NULL
 return|;
-name|peer
-operator|->
-name|dialog_token
-operator|++
-expr_stmt|;
-if|if
-condition|(
-name|peer
-operator|->
-name|dialog_token
-operator|==
-literal|0
-condition|)
-name|peer
-operator|->
-name|dialog_token
-operator|=
-literal|1
-expr_stmt|;
 name|p2p_buf_add_public_action_hdr
 argument_list|(
 name|buf
@@ -797,19 +817,10 @@ operator|<<
 literal|1
 operator|)
 operator||
-name|p2p
+name|peer
 operator|->
-name|next_tie_breaker
+name|tie_breaker
 argument_list|)
-expr_stmt|;
-name|p2p
-operator|->
-name|next_tie_breaker
-operator|=
-operator|!
-name|p2p
-operator|->
-name|next_tie_breaker
 expr_stmt|;
 name|p2p_buf_add_config_timeout
 argument_list|(
@@ -927,22 +938,59 @@ name|len
 argument_list|)
 expr_stmt|;
 comment|/* WPS IE with Device Password ID attribute */
-name|p2p_build_wps_ie
-argument_list|(
-name|p2p
-argument_list|,
-name|buf
-argument_list|,
+name|pw_id
+operator|=
 name|p2p_wps_method_pw_id
 argument_list|(
 name|peer
 operator|->
 name|wps_method
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|->
+name|oob_pw_id
+condition|)
+name|pw_id
+operator|=
+name|peer
+operator|->
+name|oob_pw_id
+expr_stmt|;
+if|if
+condition|(
+name|p2p_build_wps_ie
+argument_list|(
+name|p2p
+argument_list|,
+name|buf
+argument_list|,
+name|pw_id
 argument_list|,
 literal|0
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Failed to build WPS IE for GO Negotiation Request"
+argument_list|)
 expr_stmt|;
+name|wpabuf_free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|CONFIG_WIFI_DISPLAY
@@ -964,6 +1012,31 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_WIFI_DISPLAY */
+if|if
+condition|(
+name|p2p
+operator|->
+name|vendor_elem
+operator|&&
+name|p2p
+operator|->
+name|vendor_elem
+index|[
+name|VENDOR_ELEM_P2P_GO_NEG_REQ
+index|]
+condition|)
+name|wpabuf_put_buf
+argument_list|(
+name|buf
+argument_list|,
+name|p2p
+operator|->
+name|vendor_elem
+index|[
+name|VENDOR_ELEM_P2P_GO_NEG_REQ
+index|]
+argument_list|)
+expr_stmt|;
 return|return
 name|buf
 return|;
@@ -1005,17 +1078,11 @@ block|{
 name|u16
 name|config_method
 decl_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Use PD-before-GO-Neg workaround for "
+literal|"Use PD-before-GO-Neg workaround for "
 name|MACSTR
 argument_list|,
 name|MAC2STR
@@ -1066,6 +1133,19 @@ name|config_method
 operator|=
 name|WPS_CONFIG_PUSHBUTTON
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|dev
+operator|->
+name|wps_method
+operator|==
+name|WPS_P2PS
+condition|)
+name|config_method
+operator|=
+name|WPS_CONFIG_P2PS
+expr_stmt|;
 else|else
 return|return
 operator|-
@@ -1081,6 +1161,8 @@ operator|->
 name|info
 operator|.
 name|p2p_device_addr
+argument_list|,
+name|NULL
 argument_list|,
 name|config_method
 argument_list|,
@@ -1110,23 +1192,30 @@ name|oper_freq
 expr_stmt|;
 if|if
 condition|(
+name|dev
+operator|->
+name|oob_go_neg_freq
+operator|>
+literal|0
+condition|)
+name|freq
+operator|=
+name|dev
+operator|->
+name|oob_go_neg_freq
+expr_stmt|;
+if|if
+condition|(
 name|freq
 operator|<=
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No Listen/Operating frequency known for the "
-literal|"peer "
+literal|"No Listen/Operating frequency known for the peer "
 name|MACSTR
 literal|" to send GO Negotiation Request"
 argument_list|,
@@ -1164,17 +1253,11 @@ return|return
 operator|-
 literal|1
 return|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Sending GO Negotiation Request"
+literal|"Sending GO Negotiation Request"
 argument_list|)
 expr_stmt|;
 name|p2p_set_state
@@ -1195,6 +1278,15 @@ operator|->
 name|go_neg_peer
 operator|=
 name|dev
+expr_stmt|;
+name|eloop_cancel_timeout
+argument_list|(
+name|p2p_go_neg_wait_timeout
+argument_list|,
+name|p2p
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
 name|dev
 operator|->
@@ -1243,23 +1335,17 @@ argument_list|(
 name|req
 argument_list|)
 argument_list|,
-literal|200
+literal|500
 argument_list|)
 operator|<
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Failed to send Action frame"
+literal|"Failed to send Action frame"
 argument_list|)
 expr_stmt|;
 comment|/* Use P2P find to recover and retry */
@@ -1334,17 +1420,14 @@ name|extra
 init|=
 literal|0
 decl_stmt|;
-name|wpa_msg
+name|u16
+name|pw_id
+decl_stmt|;
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Building GO Negotiation Response"
+literal|"Building GO Negotiation Response"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -1368,6 +1451,31 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_WIFI_DISPLAY */
+if|if
+condition|(
+name|p2p
+operator|->
+name|vendor_elem
+operator|&&
+name|p2p
+operator|->
+name|vendor_elem
+index|[
+name|VENDOR_ELEM_P2P_GO_NEG_RESP
+index|]
+condition|)
+name|extra
+operator|+=
+name|wpabuf_len
+argument_list|(
+name|p2p
+operator|->
+name|vendor_elem
+index|[
+name|VENDOR_ELEM_P2P_GO_NEG_RESP
+index|]
+argument_list|)
+expr_stmt|;
 name|buf
 operator|=
 name|wpabuf_alloc
@@ -1526,18 +1634,11 @@ operator|==
 name|REMOTE_GO
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Omit Operating "
-literal|"Channel attribute"
+literal|"Omit Operating Channel attribute"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1710,12 +1811,8 @@ name|len
 argument_list|)
 expr_stmt|;
 comment|/* WPS IE with Device Password ID attribute */
-name|p2p_build_wps_ie
-argument_list|(
-name|p2p
-argument_list|,
-name|buf
-argument_list|,
+name|pw_id
+operator|=
 name|p2p_wps_method_pw_id
 argument_list|(
 name|peer
@@ -1726,10 +1823,53 @@ name|wps_method
 else|:
 name|WPS_NOT_READY
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|peer
+operator|&&
+name|peer
+operator|->
+name|oob_pw_id
+condition|)
+name|pw_id
+operator|=
+name|peer
+operator|->
+name|oob_pw_id
+expr_stmt|;
+if|if
+condition|(
+name|p2p_build_wps_ie
+argument_list|(
+name|p2p
+argument_list|,
+name|buf
+argument_list|,
+name|pw_id
 argument_list|,
 literal|0
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Failed to build WPS IE for GO Negotiation Response"
+argument_list|)
 expr_stmt|;
+name|wpabuf_free
+argument_list|(
+name|buf
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
 ifdef|#
 directive|ifdef
 name|CONFIG_WIFI_DISPLAY
@@ -1751,6 +1891,31 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_WIFI_DISPLAY */
+if|if
+condition|(
+name|p2p
+operator|->
+name|vendor_elem
+operator|&&
+name|p2p
+operator|->
+name|vendor_elem
+index|[
+name|VENDOR_ELEM_P2P_GO_NEG_RESP
+index|]
+condition|)
+name|wpabuf_put_buf
+argument_list|(
+name|buf
+argument_list|,
+name|p2p
+operator|->
+name|vendor_elem
+index|[
+name|VENDOR_ELEM_P2P_GO_NEG_RESP
+index|]
+argument_list|)
+expr_stmt|;
 return|return
 name|buf
 return|;
@@ -1793,17 +1958,168 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
+specifier|const
+name|int
+name|op_classes_5ghz
+index|[]
+init|=
+block|{
+literal|124
+block|,
+literal|115
+block|,
+literal|0
+block|}
+decl_stmt|;
+specifier|const
+name|int
+name|op_classes_ht40
+index|[]
+init|=
+block|{
+literal|126
+block|,
+literal|127
+block|,
+literal|116
+block|,
+literal|117
+block|,
+literal|0
+block|}
+decl_stmt|;
+specifier|const
+name|int
+name|op_classes_vht
+index|[]
+init|=
+block|{
+literal|128
+block|,
+literal|0
+block|}
+decl_stmt|;
+if|if
+condition|(
+name|p2p
+operator|->
+name|own_freq_preference
+operator|>
+literal|0
+operator|&&
+name|p2p_freq_to_channel
+argument_list|(
+name|p2p
+operator|->
+name|own_freq_preference
+argument_list|,
+operator|&
+name|op_reg_class
+argument_list|,
+operator|&
+name|op_channel
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|p2p_channels_includes
+argument_list|(
+name|intersection
+argument_list|,
+name|op_reg_class
+argument_list|,
+name|op_channel
+argument_list|)
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Pick own channel preference (reg_class %u channel %u) from intersection"
+argument_list|,
+name|op_reg_class
+argument_list|,
+name|op_channel
+argument_list|)
+expr_stmt|;
+name|p2p
+operator|->
+name|op_reg_class
+operator|=
+name|op_reg_class
+expr_stmt|;
+name|p2p
+operator|->
+name|op_channel
+operator|=
+name|op_channel
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|p2p
+operator|->
+name|best_freq_overall
+operator|>
+literal|0
+operator|&&
+name|p2p_freq_to_channel
+argument_list|(
+name|p2p
+operator|->
+name|best_freq_overall
+argument_list|,
+operator|&
+name|op_reg_class
+argument_list|,
+operator|&
+name|op_channel
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|p2p_channels_includes
+argument_list|(
+name|intersection
+argument_list|,
+name|op_reg_class
+argument_list|,
+name|op_channel
+argument_list|)
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Pick best overall channel (reg_class %u channel %u) from intersection"
+argument_list|,
+name|op_reg_class
+argument_list|,
+name|op_channel
+argument_list|)
+expr_stmt|;
+name|p2p
+operator|->
+name|op_reg_class
+operator|=
+name|op_reg_class
+expr_stmt|;
+name|p2p
+operator|->
+name|op_channel
+operator|=
+name|op_channel
+expr_stmt|;
+return|return;
+block|}
 comment|/* First, try to pick the best channel from another band */
 name|freq
 operator|=
 name|p2p_channel_to_freq
 argument_list|(
-name|p2p
-operator|->
-name|cfg
-operator|->
-name|country
-argument_list|,
 name|p2p
 operator|->
 name|op_reg_class
@@ -1829,14 +2145,22 @@ name|best_freq_5
 operator|>
 literal|0
 operator|&&
-name|p2p_freq_to_channel
+operator|!
+name|p2p_channels_includes
 argument_list|(
+name|intersection
+argument_list|,
 name|p2p
 operator|->
-name|cfg
-operator|->
-name|country
+name|op_reg_class
 argument_list|,
+name|p2p
+operator|->
+name|op_channel
+argument_list|)
+operator|&&
+name|p2p_freq_to_channel
+argument_list|(
 name|p2p
 operator|->
 name|best_freq_5
@@ -1860,18 +2184,11 @@ name|op_channel
 argument_list|)
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Pick best 5 GHz "
-literal|"channel (reg_class %u channel %u) from intersection"
+literal|"Pick best 5 GHz channel (reg_class %u channel %u) from intersection"
 argument_list|,
 name|op_reg_class
 argument_list|,
@@ -1908,14 +2225,22 @@ name|best_freq_24
 operator|>
 literal|0
 operator|&&
-name|p2p_freq_to_channel
+operator|!
+name|p2p_channels_includes
 argument_list|(
+name|intersection
+argument_list|,
 name|p2p
 operator|->
-name|cfg
-operator|->
-name|country
+name|op_reg_class
 argument_list|,
+name|p2p
+operator|->
+name|op_channel
+argument_list|)
+operator|&&
+name|p2p_freq_to_channel
+argument_list|(
 name|p2p
 operator|->
 name|best_freq_24
@@ -1939,18 +2264,11 @@ name|op_channel
 argument_list|)
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Pick best 2.4 GHz "
-literal|"channel (reg_class %u channel %u) from intersection"
+literal|"Pick best 2.4 GHz channel (reg_class %u channel %u) from intersection"
 argument_list|,
 name|op_reg_class
 argument_list|,
@@ -2056,19 +2374,11 @@ index|]
 operator|.
 name|chan
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Pick "
-literal|"highest preferred chnnel (op_class %u "
-literal|"channel %u) from intersection"
+literal|"Pick highest preferred channel (op_class %u channel %u) from intersection"
 argument_list|,
 name|p2p
 operator|->
@@ -2082,109 +2392,125 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-comment|/* Try a channel where we might be able to use HT40 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|intersection
-operator|->
-name|reg_classes
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|struct
-name|p2p_reg_class
-modifier|*
-name|c
-init|=
-operator|&
-name|intersection
-operator|->
-name|reg_class
-index|[
-name|i
-index|]
-decl_stmt|;
+comment|/* Try a channel where we might be able to use VHT */
 if|if
 condition|(
-name|c
-operator|->
-name|reg_class
-operator|==
-literal|116
-operator|||
-name|c
-operator|->
-name|reg_class
-operator|==
-literal|117
-operator|||
-name|c
-operator|->
-name|reg_class
-operator|==
-literal|126
-operator|||
-name|c
-operator|->
-name|reg_class
-operator|==
-literal|127
-condition|)
-block|{
-name|wpa_msg
+name|p2p_channel_select
 argument_list|(
-name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
+name|intersection
 argument_list|,
-name|MSG_DEBUG
+name|op_classes_vht
 argument_list|,
-literal|"P2P: Pick possible HT40 channel (reg_class "
-literal|"%u channel %u) from intersection"
-argument_list|,
-name|c
-operator|->
-name|reg_class
-argument_list|,
-name|c
-operator|->
-name|channel
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
+operator|&
 name|p2p
 operator|->
 name|op_reg_class
-operator|=
-name|c
-operator|->
-name|reg_class
-expr_stmt|;
+argument_list|,
+operator|&
 name|p2p
 operator|->
 name|op_channel
-operator|=
-name|c
-operator|->
-name|channel
-index|[
+argument_list|)
+operator|==
 literal|0
-index|]
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Pick possible VHT channel (op_class %u channel %u) from intersection"
+argument_list|,
+name|p2p
+operator|->
+name|op_reg_class
+argument_list|,
+name|p2p
+operator|->
+name|op_channel
+argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* Try a channel where we might be able to use HT40 */
+if|if
+condition|(
+name|p2p_channel_select
+argument_list|(
+name|intersection
+argument_list|,
+name|op_classes_ht40
+argument_list|,
+operator|&
+name|p2p
+operator|->
+name|op_reg_class
+argument_list|,
+operator|&
+name|p2p
+operator|->
+name|op_channel
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Pick possible HT40 channel (op_class %u channel %u) from intersection"
+argument_list|,
+name|p2p
+operator|->
+name|op_reg_class
+argument_list|,
+name|p2p
+operator|->
+name|op_channel
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* Prefer a 5 GHz channel */
+if|if
+condition|(
+name|p2p_channel_select
+argument_list|(
+name|intersection
+argument_list|,
+name|op_classes_5ghz
+argument_list|,
+operator|&
+name|p2p
+operator|->
+name|op_reg_class
+argument_list|,
+operator|&
+name|p2p
+operator|->
+name|op_channel
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Pick possible 5 GHz channel (op_class %u channel %u) from intersection"
+argument_list|,
+name|p2p
+operator|->
+name|op_reg_class
+argument_list|,
+name|p2p
+operator|->
+name|op_channel
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 comment|/* 	 * Try to see if the original channel is in the intersection. If 	 * so, no need to change anything, as it already contains some 	 * randomness. 	 */
 if|if
@@ -2203,18 +2529,11 @@ name|op_channel
 argument_list|)
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Using original operating class and channel "
-literal|"(op_class %u channel %u) from intersection"
+literal|"Using original operating class and channel (op_class %u channel %u) from intersection"
 argument_list|,
 name|p2p
 operator|->
@@ -2238,18 +2557,11 @@ index|[
 literal|0
 index|]
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Pick another channel "
-literal|"(reg_class %u channel %u) from intersection"
+literal|"Pick another channel (reg_class %u channel %u) from intersection"
 argument_list|,
 name|cl
 operator|->
@@ -2286,7 +2598,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|p2p_go_select_channel
 parameter_list|(
@@ -2307,11 +2618,34 @@ parameter_list|)
 block|{
 name|struct
 name|p2p_channels
+name|tmp
+decl_stmt|,
 name|intersection
 decl_stmt|;
-name|size_t
-name|i
-decl_stmt|;
+name|p2p_channels_dump
+argument_list|(
+name|p2p
+argument_list|,
+literal|"own channels"
+argument_list|,
+operator|&
+name|p2p
+operator|->
+name|channels
+argument_list|)
+expr_stmt|;
+name|p2p_channels_dump
+argument_list|(
+name|p2p
+argument_list|,
+literal|"peer channels"
+argument_list|,
+operator|&
+name|dev
+operator|->
+name|channels
+argument_list|)
+expr_stmt|;
 name|p2p_channels_intersect
 argument_list|(
 operator|&
@@ -2323,6 +2657,63 @@ operator|&
 name|dev
 operator|->
 name|channels
+argument_list|,
+operator|&
+name|tmp
+argument_list|)
+expr_stmt|;
+name|p2p_channels_dump
+argument_list|(
+name|p2p
+argument_list|,
+literal|"intersection"
+argument_list|,
+operator|&
+name|tmp
+argument_list|)
+expr_stmt|;
+name|p2p_channels_remove_freqs
+argument_list|(
+operator|&
+name|tmp
+argument_list|,
+operator|&
+name|p2p
+operator|->
+name|no_go_freq
+argument_list|)
+expr_stmt|;
+name|p2p_channels_dump
+argument_list|(
+name|p2p
+argument_list|,
+literal|"intersection after no-GO removal"
+argument_list|,
+operator|&
+name|tmp
+argument_list|)
+expr_stmt|;
+name|p2p_channels_intersect
+argument_list|(
+operator|&
+name|tmp
+argument_list|,
+operator|&
+name|p2p
+operator|->
+name|cfg
+operator|->
+name|channels
+argument_list|,
+operator|&
+name|intersection
+argument_list|)
+expr_stmt|;
+name|p2p_channels_dump
+argument_list|(
+name|p2p
+argument_list|,
+literal|"intersection with local channel list"
 argument_list|,
 operator|&
 name|intersection
@@ -2353,81 +2744,17 @@ name|status
 operator|=
 name|P2P_SC_FAIL_NO_COMMON_CHANNELS
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No common channels found"
+literal|"No common channels found"
 argument_list|)
 expr_stmt|;
 return|return
 operator|-
 literal|1
 return|;
-block|}
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|intersection
-operator|.
-name|reg_classes
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|struct
-name|p2p_reg_class
-modifier|*
-name|c
-decl_stmt|;
-name|c
-operator|=
-operator|&
-name|intersection
-operator|.
-name|reg_class
-index|[
-name|i
-index|]
-expr_stmt|;
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: reg_class %u"
-argument_list|,
-name|c
-operator|->
-name|reg_class
-argument_list|)
-expr_stmt|;
-name|wpa_hexdump
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: channels"
-argument_list|,
-name|c
-operator|->
-name|channel
-argument_list|,
-name|c
-operator|->
-name|channels
-argument_list|)
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -2461,18 +2788,11 @@ name|status
 operator|=
 name|P2P_SC_FAIL_NO_COMMON_CHANNELS
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Peer does "
-literal|"not support the forced channel"
+literal|"Peer does not support the forced channel"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2480,19 +2800,11 @@ operator|-
 literal|1
 return|;
 block|}
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Selected operating "
-literal|"channel (op_class %u channel %u) not acceptable to "
-literal|"the peer"
+literal|"Selected operating channel (op_class %u channel %u) not acceptable to the peer"
 argument_list|,
 name|p2p
 operator|->
@@ -2532,19 +2844,11 @@ operator|->
 name|cfg_op_channel
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Try to optimize "
-literal|"channel selection with peer information received; "
-literal|"previously selected op_class %u channel %u"
+literal|"Try to optimize channel selection with peer information received; previously selected op_class %u channel %u"
 argument_list|,
 name|p2p
 operator|->
@@ -2654,17 +2958,11 @@ decl_stmt|;
 name|int
 name|freq
 decl_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Received GO Negotiation Request from "
+literal|"Received GO Negotiation Request from "
 name|MACSTR
 literal|"(freq=%d)"
 argument_list|,
@@ -2697,18 +2995,11 @@ operator|.
 name|capability
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Mandatory Capability attribute missing from GO "
-literal|"Negotiation Request"
+literal|"Mandatory Capability attribute missing from GO Negotiation Request"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2738,18 +3029,11 @@ literal|0x01
 expr_stmt|;
 else|else
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Mandatory GO Intent attribute missing from GO "
-literal|"Negotiation Request"
+literal|"Mandatory GO Intent attribute missing from GO Negotiation Request"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2770,18 +3054,11 @@ operator|.
 name|config_timeout
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Mandatory Configuration Timeout attribute "
-literal|"missing from GO Negotiation Request"
+literal|"Mandatory Configuration Timeout attribute missing from GO Negotiation Request"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2802,17 +3079,11 @@ operator|.
 name|listen_channel
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No Listen Channel attribute received"
+literal|"No Listen Channel attribute received"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2827,17 +3098,11 @@ operator|.
 name|operating_channel
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No Operating Channel attribute received"
+literal|"No Operating Channel attribute received"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2852,17 +3117,11 @@ operator|.
 name|channel_list
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No Channel List attribute received"
+literal|"No Channel List attribute received"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2877,18 +3136,11 @@ operator|.
 name|intended_addr
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No Intended P2P Interface Address attribute "
-literal|"received"
+literal|"No Intended P2P Interface Address attribute received"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2903,17 +3155,11 @@ operator|.
 name|p2p_device_info
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No P2P Device Info attribute received"
+literal|"No P2P Device Info attribute received"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2936,17 +3182,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unexpected GO Negotiation Request SA="
+literal|"Unexpected GO Negotiation Request SA="
 name|MACSTR
 literal|" != dev_addr="
 name|MACSTR
@@ -2989,18 +3229,11 @@ operator|.
 name|status
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unexpected Status attribute (%d) in GO "
-literal|"Negotiation Request"
+literal|"Unexpected Status attribute (%d) in GO Negotiation Request"
 argument_list|,
 operator|*
 name|msg
@@ -3008,6 +3241,56 @@ operator|.
 name|status
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|&&
+name|p2p
+operator|->
+name|go_neg_peer
+operator|==
+name|dev
+operator|&&
+operator|*
+name|msg
+operator|.
+name|status
+operator|==
+name|P2P_SC_FAIL_REJECTED_BY_USER
+condition|)
+block|{
+comment|/* 			 * This mechanism for using Status attribute in GO 			 * Negotiation Request is not compliant with the P2P 			 * specification, but some deployed devices use it to 			 * indicate rejection of GO Negotiation in a case where 			 * they have sent out GO Negotiation Response with 			 * status 1. The P2P specification explicitly disallows 			 * this. To avoid unnecessary interoperability issues 			 * and extra frames, mark the pending negotiation as 			 * failed and do not reply to this GO Negotiation 			 * Request frame. 			 */
+name|p2p
+operator|->
+name|cfg
+operator|->
+name|send_action_done
+argument_list|(
+name|p2p
+operator|->
+name|cfg
+operator|->
+name|cb_ctx
+argument_list|)
+expr_stmt|;
+name|p2p_go_neg_failed
+argument_list|(
+name|p2p
+argument_list|,
+operator|*
+name|msg
+operator|.
+name|status
+argument_list|)
+expr_stmt|;
+name|p2p_parse_free
+argument_list|(
+operator|&
+name|msg
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 goto|goto
 name|fail
 goto|;
@@ -3033,11 +3316,22 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|(
 name|dev
 operator|->
 name|flags
 operator|&
 name|P2P_DEV_PROBE_REQ_ONLY
+operator|)
+operator|||
+operator|!
+operator|(
+name|dev
+operator|->
+name|flags
+operator|&
+name|P2P_DEV_REPORTED
+operator|)
 condition|)
 name|p2p_add_dev_info
 argument_list|(
@@ -3051,6 +3345,73 @@ operator|&
 name|msg
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|dev
+operator|->
+name|listen_freq
+operator|&&
+operator|!
+name|dev
+operator|->
+name|oper_freq
+condition|)
+block|{
+comment|/* 		 * This may happen if the peer entry was added based on PD 		 * Request and no Probe Request/Response frame has been received 		 * from this peer (or that information has timed out). 		 */
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Update peer "
+name|MACSTR
+literal|" based on GO Neg Req since listen/oper freq not known"
+argument_list|,
+name|MAC2STR
+argument_list|(
+name|dev
+operator|->
+name|info
+operator|.
+name|p2p_device_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|p2p_add_dev_info
+argument_list|(
+name|p2p
+argument_list|,
+name|sa
+argument_list|,
+name|dev
+argument_list|,
+operator|&
+name|msg
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|p2p
+operator|->
+name|go_neg_peer
+operator|&&
+name|p2p
+operator|->
+name|go_neg_peer
+operator|==
+name|dev
+condition|)
+name|eloop_cancel_timeout
+argument_list|(
+name|p2p_go_neg_wait_timeout
+argument_list|,
+name|p2p
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dev
@@ -3062,17 +3423,11 @@ operator|&
 name|P2P_DEV_USER_REJECTED
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: User has rejected this peer"
+literal|"User has rejected this peer"
 argument_list|)
 expr_stmt|;
 name|status
@@ -3087,24 +3442,36 @@ name|dev
 operator|==
 name|NULL
 operator|||
+operator|(
 name|dev
 operator|->
 name|wps_method
 operator|==
 name|WPS_NOT_READY
-condition|)
-block|{
-name|wpa_msg
-argument_list|(
+operator|&&
+operator|(
 name|p2p
 operator|->
-name|cfg
+name|authorized_oob_dev_pw_id
+operator|==
+literal|0
+operator|||
+name|p2p
 operator|->
-name|msg_ctx
+name|authorized_oob_dev_pw_id
+operator|!=
+name|msg
+operator|.
+name|dev_password_id
+operator|)
+operator|)
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Not ready for GO negotiation with "
+literal|"Not ready for GO negotiation with "
 name|MACSTR
 argument_list|,
 name|MAC2STR
@@ -3116,16 +3483,6 @@ expr_stmt|;
 name|status
 operator|=
 name|P2P_SC_FAIL_INFO_CURRENTLY_UNAVAILABLE
-expr_stmt|;
-if|if
-condition|(
-name|dev
-condition|)
-name|dev
-operator|->
-name|flags
-operator||=
-name|P2P_DEV_PEER_WAITING_RESPONSE
 expr_stmt|;
 name|p2p
 operator|->
@@ -3161,17 +3518,11 @@ operator|!=
 name|dev
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Already in Group Formation with another peer"
+literal|"Already in Group Formation with another peer"
 argument_list|)
 expr_stmt|;
 name|status
@@ -3192,19 +3543,11 @@ operator|->
 name|go_neg_peer
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Starting "
-literal|"GO Negotiation with previously authorized "
-literal|"peer"
+literal|"Starting GO Negotiation with previously authorized peer"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3219,17 +3562,11 @@ name|P2P_DEV_FORCE_FREQ
 operator|)
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Use default channel settings"
+literal|"Use default channel settings"
 argument_list|)
 expr_stmt|;
 name|p2p
@@ -3276,18 +3613,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Use previously configured "
-literal|"forced channel settings"
+literal|"Use previously configured forced channel settings"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3307,17 +3637,11 @@ operator|.
 name|go_intent
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No GO Intent attribute received"
+literal|"No GO Intent attribute received"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3338,17 +3662,11 @@ operator|>
 name|P2P_MAX_GO_INTENT
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Invalid GO Intent value (%u) received"
+literal|"Invalid GO Intent value (%u) received"
 argument_list|,
 operator|*
 name|msg
@@ -3384,18 +3702,11 @@ operator|>
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Do not reply since peer has higher "
-literal|"address and GO Neg Request already sent"
+literal|"Do not reply since peer has higher address and GO Neg Request already sent"
 argument_list|)
 expr_stmt|;
 name|p2p_parse_free
@@ -3427,17 +3738,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Incompatible GO Intent"
+literal|"Incompatible GO Intent"
 argument_list|)
 expr_stmt|;
 name|status
@@ -3468,17 +3773,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No common channels found"
+literal|"No common channels found"
 argument_list|)
 expr_stmt|;
 name|status
@@ -3499,17 +3798,11 @@ block|{
 case|case
 name|DEV_PW_REGISTRAR_SPECIFIED
 case|:
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: PIN from peer Display"
+literal|"PIN from peer Display"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3521,18 +3814,11 @@ operator|!=
 name|WPS_PIN_KEYPAD
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: We have wps_method=%s -> "
-literal|"incompatible"
+literal|"We have wps_method=%s -> incompatible"
 argument_list|,
 name|p2p_wps_method_str
 argument_list|(
@@ -3554,17 +3840,11 @@ break|break;
 case|case
 name|DEV_PW_USER_SPECIFIED
 case|:
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Peer entered PIN on Keypad"
+literal|"Peer entered PIN on Keypad"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3576,18 +3856,11 @@ operator|!=
 name|WPS_PIN_DISPLAY
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: We have wps_method=%s -> "
-literal|"incompatible"
+literal|"We have wps_method=%s -> incompatible"
 argument_list|,
 name|p2p_wps_method_str
 argument_list|(
@@ -3609,17 +3882,11 @@ break|break;
 case|case
 name|DEV_PW_PUSHBUTTON
 case|:
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Peer using pushbutton"
+literal|"Peer using pushbutton"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3631,18 +3898,53 @@ operator|!=
 name|WPS_PBC
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
+literal|"We have wps_method=%s -> incompatible"
 argument_list|,
-literal|"P2P: We have wps_method=%s -> "
-literal|"incompatible"
+name|p2p_wps_method_str
+argument_list|(
+name|dev
+operator|->
+name|wps_method
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+name|P2P_SC_FAIL_INCOMPATIBLE_PROV_METHOD
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+break|break;
+case|case
+name|DEV_PW_P2PS_DEFAULT
+case|:
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Peer using P2PS pin"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|->
+name|wps_method
+operator|!=
+name|WPS_P2PS
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"We have wps_method=%s -> incompatible"
 argument_list|,
 name|p2p_wps_method_str
 argument_list|(
@@ -3662,17 +3964,110 @@ goto|;
 block|}
 break|break;
 default|default:
-name|wpa_msg
+if|if
+condition|(
+name|msg
+operator|.
+name|dev_password_id
+operator|&&
+name|msg
+operator|.
+name|dev_password_id
+operator|==
+name|dev
+operator|->
+name|oob_pw_id
+condition|)
+block|{
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
+literal|"Peer using NFC"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|->
+name|wps_method
+operator|!=
+name|WPS_NFC
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
 argument_list|,
-literal|"P2P: Unsupported Device Password ID %d"
+literal|"We have wps_method=%s -> incompatible"
+argument_list|,
+name|p2p_wps_method_str
+argument_list|(
+name|dev
+operator|->
+name|wps_method
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+name|P2P_SC_FAIL_INCOMPATIBLE_PROV_METHOD
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+break|break;
+block|}
+ifdef|#
+directive|ifdef
+name|CONFIG_WPS_NFC
+if|if
+condition|(
+name|p2p
+operator|->
+name|authorized_oob_dev_pw_id
+operator|&&
+name|msg
+operator|.
+name|dev_password_id
+operator|==
+name|p2p
+operator|->
+name|authorized_oob_dev_pw_id
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Using static handover with our device password from NFC Tag"
+argument_list|)
+expr_stmt|;
+name|dev
+operator|->
+name|wps_method
+operator|=
+name|WPS_NFC
+expr_stmt|;
+name|dev
+operator|->
+name|oob_pw_id
+operator|=
+name|p2p
+operator|->
+name|authorized_oob_dev_pw_id
+expr_stmt|;
+break|break;
+block|}
+endif|#
+directive|endif
+comment|/* CONFIG_WPS_NFC */
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Unsupported Device Password ID %d"
 argument_list|,
 name|msg
 operator|.
@@ -3722,15 +4117,6 @@ name|oper_freq
 operator|=
 name|p2p_channel_to_freq
 argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-name|msg
-operator|.
-name|operating_channel
-argument_list|,
 name|msg
 operator|.
 name|operating_channel
@@ -3746,18 +4132,11 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Peer operating "
-literal|"channel preference: %d MHz"
+literal|"Peer operating channel preference: %d MHz"
 argument_list|,
 name|dev
 operator|->
@@ -3794,17 +4173,11 @@ literal|1
 index|]
 expr_stmt|;
 block|}
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: GO Negotiation with "
+literal|"GO Negotiation with "
 name|MACSTR
 argument_list|,
 name|MAC2STR
@@ -3867,6 +4240,15 @@ name|go_neg_peer
 operator|=
 name|dev
 expr_stmt|;
+name|eloop_cancel_timeout
+argument_list|(
+name|p2p_go_neg_wait_timeout
+argument_list|,
+name|p2p
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|status
 operator|=
 name|P2P_SC_SUCCESS
@@ -3915,17 +4297,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Sending GO Negotiation Response"
+literal|"Sending GO Negotiation Response"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3947,12 +4323,6 @@ name|p2p
 operator|->
 name|cfg
 operator|->
-name|country
-argument_list|,
-name|p2p
-operator|->
-name|cfg
-operator|->
 name|reg_class
 argument_list|,
 name|p2p
@@ -3969,17 +4339,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unknown regulatory class/channel"
+literal|"Unknown regulatory class/channel"
 argument_list|)
 expr_stmt|;
 name|wpabuf_free
@@ -4075,23 +4439,17 @@ argument_list|(
 name|resp
 argument_list|)
 argument_list|,
-literal|250
+literal|500
 argument_list|)
 operator|<
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Failed to send Action frame"
+literal|"Failed to send Action frame"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4156,17 +4514,11 @@ name|extra
 init|=
 literal|0
 decl_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Building GO Negotiation Confirm"
+literal|"Building GO Negotiation Confirm"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4190,6 +4542,31 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_WIFI_DISPLAY */
+if|if
+condition|(
+name|p2p
+operator|->
+name|vendor_elem
+operator|&&
+name|p2p
+operator|->
+name|vendor_elem
+index|[
+name|VENDOR_ELEM_P2P_GO_NEG_CONF
+index|]
+condition|)
+name|extra
+operator|+=
+name|wpabuf_len
+argument_list|(
+name|p2p
+operator|->
+name|vendor_elem
+index|[
+name|VENDOR_ELEM_P2P_GO_NEG_CONF
+index|]
+argument_list|)
+expr_stmt|;
 name|buf
 operator|=
 name|wpabuf_alloc
@@ -4440,6 +4817,31 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_WIFI_DISPLAY */
+if|if
+condition|(
+name|p2p
+operator|->
+name|vendor_elem
+operator|&&
+name|p2p
+operator|->
+name|vendor_elem
+index|[
+name|VENDOR_ELEM_P2P_GO_NEG_CONF
+index|]
+condition|)
+name|wpabuf_put_buf
+argument_list|(
+name|buf
+argument_list|,
+name|p2p
+operator|->
+name|vendor_elem
+index|[
+name|VENDOR_ELEM_P2P_GO_NEG_CONF
+index|]
+argument_list|)
+expr_stmt|;
 return|return
 name|buf
 return|;
@@ -4477,11 +4879,6 @@ name|p2p_device
 modifier|*
 name|dev
 decl_stmt|;
-name|struct
-name|wpabuf
-modifier|*
-name|conf
-decl_stmt|;
 name|int
 name|go
 init|=
@@ -4500,17 +4897,11 @@ decl_stmt|;
 name|int
 name|freq
 decl_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Received GO Negotiation Response from "
+literal|"Received GO Negotiation Response from "
 name|MACSTR
 literal|" (freq=%d)"
 argument_list|,
@@ -4550,17 +4941,11 @@ operator|->
 name|go_neg_peer
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Not ready for GO negotiation with "
+literal|"Not ready for GO negotiation with "
 name|MACSTR
 argument_list|,
 name|MAC2STR
@@ -4596,18 +4981,11 @@ name|P2P_DEV_WAIT_GO_NEG_RESPONSE
 operator|)
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Was not expecting GO Negotiation Response - "
-literal|"ignore"
+literal|"Was not expecting GO Negotiation Response - ignore"
 argument_list|)
 expr_stmt|;
 name|p2p_parse_free
@@ -4636,17 +5014,11 @@ operator|->
 name|dialog_token
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unexpected Dialog Token %u (expected %u)"
+literal|"Unexpected Dialog Token %u (expected %u)"
 argument_list|,
 name|msg
 operator|.
@@ -4673,17 +5045,11 @@ operator|.
 name|status
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No Status attribute received"
+literal|"No Status attribute received"
 argument_list|)
 expr_stmt|;
 name|status
@@ -4702,17 +5068,11 @@ operator|.
 name|status
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: GO Negotiation rejected: status %d"
+literal|"GO Negotiation rejected: status %d"
 argument_list|,
 operator|*
 name|msg
@@ -4736,18 +5096,11 @@ operator|==
 name|P2P_SC_FAIL_INFO_CURRENTLY_UNAVAILABLE
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Wait for the peer to become ready for "
-literal|"GO Negotiation"
+literal|"Wait for the peer to become ready for GO Negotiation"
 argument_list|)
 expr_stmt|;
 name|dev
@@ -4756,12 +5109,44 @@ name|flags
 operator||=
 name|P2P_DEV_NOT_YET_READY
 expr_stmt|;
-name|dev
-operator|->
-name|wait_count
-operator|=
-literal|0
+name|eloop_cancel_timeout
+argument_list|(
+name|p2p_go_neg_wait_timeout
+argument_list|,
+name|p2p
+argument_list|,
+name|NULL
+argument_list|)
 expr_stmt|;
+name|eloop_register_timeout
+argument_list|(
+literal|120
+argument_list|,
+literal|0
+argument_list|,
+name|p2p_go_neg_wait_timeout
+argument_list|,
+name|p2p
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|p2p
+operator|->
+name|state
+operator|==
+name|P2P_CONNECT_LISTEN
+condition|)
+name|p2p_set_state
+argument_list|(
+name|p2p
+argument_list|,
+name|P2P_WAIT_PEER_CONNECT
+argument_list|)
+expr_stmt|;
+else|else
 name|p2p_set_state
 argument_list|(
 name|p2p
@@ -4781,24 +5166,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Stop GO Negotiation attempt"
+literal|"Stop GO Negotiation attempt"
 argument_list|)
 expr_stmt|;
 name|p2p_go_neg_failed
 argument_list|(
 name|p2p
-argument_list|,
-name|dev
 argument_list|,
 operator|*
 name|msg
@@ -4836,18 +5213,11 @@ operator|.
 name|capability
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Mandatory Capability attribute missing from GO "
-literal|"Negotiation Response"
+literal|"Mandatory Capability attribute missing from GO Negotiation Response"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4872,18 +5242,11 @@ operator|.
 name|p2p_device_info
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Mandatory P2P Device Info attribute missing "
-literal|"from GO Negotiation Response"
+literal|"Mandatory P2P Device Info attribute missing from GO Negotiation Response"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4908,18 +5271,11 @@ operator|.
 name|intended_addr
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No Intended P2P Interface Address attribute "
-literal|"received"
+literal|"No Intended P2P Interface Address attribute received"
 argument_list|)
 expr_stmt|;
 name|status
@@ -4938,17 +5294,11 @@ operator|.
 name|go_intent
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No GO Intent attribute received"
+literal|"No GO Intent attribute received"
 argument_list|)
 expr_stmt|;
 name|status
@@ -4973,17 +5323,11 @@ operator|>
 name|P2P_MAX_GO_INTENT
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Invalid GO Intent value (%u) received"
+literal|"Invalid GO Intent value (%u) received"
 argument_list|,
 operator|*
 name|msg
@@ -5022,17 +5366,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Incompatible GO Intent"
+literal|"Incompatible GO Intent"
 argument_list|)
 expr_stmt|;
 name|status
@@ -5089,18 +5427,11 @@ operator|!
 name|go
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Mandatory P2P Group ID attribute missing from "
-literal|"GO Negotiation Response"
+literal|"Mandatory P2P Group ID attribute missing from GO Negotiation Response"
 argument_list|)
 expr_stmt|;
 name|p2p
@@ -5109,9 +5440,6 @@ name|ssid_len
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CONFIG_P2P_STRICT
 name|status
 operator|=
 name|P2P_SC_FAIL_INVALID_PARAMS
@@ -5119,9 +5447,6 @@ expr_stmt|;
 goto|goto
 name|fail
 goto|;
-endif|#
-directive|endif
-comment|/* CONFIG_P2P_STRICT */
 block|}
 if|if
 condition|(
@@ -5131,18 +5456,11 @@ operator|.
 name|config_timeout
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Mandatory Configuration Timeout attribute "
-literal|"missing from GO Negotiation Response"
+literal|"Mandatory Configuration Timeout attribute missing from GO Negotiation Response"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -5196,17 +5514,11 @@ name|go
 condition|)
 block|{
 comment|/* 		 * Note: P2P Client may omit Operating Channel attribute to 		 * indicate it does not have a preference. 		 */
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No Operating Channel attribute received"
+literal|"No Operating Channel attribute received"
 argument_list|)
 expr_stmt|;
 name|status
@@ -5225,17 +5537,11 @@ operator|.
 name|channel_list
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No Channel List attribute received"
+literal|"No Channel List attribute received"
 argument_list|)
 expr_stmt|;
 name|status
@@ -5266,17 +5572,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No common channels found"
+literal|"No common channels found"
 argument_list|)
 expr_stmt|;
 name|status
@@ -5300,15 +5600,6 @@ name|oper_freq
 operator|=
 name|p2p_channel_to_freq
 argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
-name|msg
-operator|.
-name|operating_channel
-argument_list|,
 name|msg
 operator|.
 name|operating_channel
@@ -5324,18 +5615,11 @@ literal|4
 index|]
 argument_list|)
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Peer operating "
-literal|"channel preference: %d MHz"
+literal|"Peer operating channel preference: %d MHz"
 argument_list|,
 name|dev
 operator|->
@@ -5360,17 +5644,11 @@ block|{
 case|case
 name|DEV_PW_REGISTRAR_SPECIFIED
 case|:
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: PIN from peer Display"
+literal|"PIN from peer Display"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5382,18 +5660,11 @@ operator|!=
 name|WPS_PIN_KEYPAD
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: We have wps_method=%s -> "
-literal|"incompatible"
+literal|"We have wps_method=%s -> incompatible"
 argument_list|,
 name|p2p_wps_method_str
 argument_list|(
@@ -5415,17 +5686,11 @@ break|break;
 case|case
 name|DEV_PW_USER_SPECIFIED
 case|:
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Peer entered PIN on Keypad"
+literal|"Peer entered PIN on Keypad"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5437,18 +5702,11 @@ operator|!=
 name|WPS_PIN_DISPLAY
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: We have wps_method=%s -> "
-literal|"incompatible"
+literal|"We have wps_method=%s -> incompatible"
 argument_list|,
 name|p2p_wps_method_str
 argument_list|(
@@ -5470,17 +5728,11 @@ break|break;
 case|case
 name|DEV_PW_PUSHBUTTON
 case|:
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Peer using pushbutton"
+literal|"Peer using pushbutton"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5492,18 +5744,53 @@ operator|!=
 name|WPS_PBC
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
+literal|"We have wps_method=%s -> incompatible"
 argument_list|,
-literal|"P2P: We have wps_method=%s -> "
-literal|"incompatible"
+name|p2p_wps_method_str
+argument_list|(
+name|dev
+operator|->
+name|wps_method
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+name|P2P_SC_FAIL_INCOMPATIBLE_PROV_METHOD
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+break|break;
+case|case
+name|DEV_PW_P2PS_DEFAULT
+case|:
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"P2P: Peer using P2PS default pin"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|->
+name|wps_method
+operator|!=
+name|WPS_P2PS
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"We have wps_method=%s -> incompatible"
 argument_list|,
 name|p2p_wps_method_str
 argument_list|(
@@ -5523,17 +5810,66 @@ goto|;
 block|}
 break|break;
 default|default:
-name|wpa_msg
+if|if
+condition|(
+name|msg
+operator|.
+name|dev_password_id
+operator|&&
+name|msg
+operator|.
+name|dev_password_id
+operator|==
+name|dev
+operator|->
+name|oob_pw_id
+condition|)
+block|{
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
+literal|"Peer using NFC"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|dev
+operator|->
+name|wps_method
+operator|!=
+name|WPS_NFC
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
 argument_list|,
-literal|"P2P: Unsupported Device Password ID %d"
+literal|"We have wps_method=%s -> incompatible"
+argument_list|,
+name|p2p_wps_method_str
+argument_list|(
+name|dev
+operator|->
+name|wps_method
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|status
+operator|=
+name|P2P_SC_FAIL_INCOMPATIBLE_PROV_METHOD
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+break|break;
+block|}
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Unsupported Device Password ID %d"
 argument_list|,
 name|msg
 operator|.
@@ -5579,17 +5915,11 @@ argument_list|(
 name|p2p
 argument_list|)
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: GO Negotiation with "
+literal|"GO Negotiation with "
 name|MACSTR
 argument_list|,
 name|MAC2STR
@@ -5613,7 +5943,17 @@ argument_list|)
 expr_stmt|;
 name|fail
 label|:
-name|conf
+comment|/* Store GO Negotiation Confirmation to allow retransmission */
+name|wpabuf_free
+argument_list|(
+name|dev
+operator|->
+name|go_neg_conf
+argument_list|)
+expr_stmt|;
+name|dev
+operator|->
+name|go_neg_conf
 operator|=
 name|p2p_build_go_neg_conf
 argument_list|(
@@ -5642,22 +5982,18 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|conf
+name|dev
+operator|->
+name|go_neg_conf
 operator|==
 name|NULL
 condition|)
 return|return;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Sending GO Negotiation Confirm"
+literal|"Sending GO Negotiation Confirm"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5708,6 +6044,18 @@ name|dev
 operator|->
 name|listen_freq
 expr_stmt|;
+name|dev
+operator|->
+name|go_neg_conf_freq
+operator|=
+name|freq
+expr_stmt|;
+name|dev
+operator|->
+name|go_neg_conf_sent
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|p2p_send_action
@@ -5728,49 +6076,81 @@ name|sa
 argument_list|,
 name|wpabuf_head
 argument_list|(
-name|conf
+name|dev
+operator|->
+name|go_neg_conf
 argument_list|)
 argument_list|,
 name|wpabuf_len
 argument_list|(
-name|conf
+name|dev
+operator|->
+name|go_neg_conf
 argument_list|)
 argument_list|,
-literal|0
+literal|200
 argument_list|)
 operator|<
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Failed to send Action frame"
+literal|"Failed to send Action frame"
 argument_list|)
 expr_stmt|;
 name|p2p_go_neg_failed
 argument_list|(
 name|p2p
 argument_list|,
-name|dev
-argument_list|,
 operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
-name|wpabuf_free
+name|p2p
+operator|->
+name|cfg
+operator|->
+name|send_action_done
 argument_list|(
-name|conf
+name|p2p
+operator|->
+name|cfg
+operator|->
+name|cb_ctx
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+name|dev
+operator|->
+name|go_neg_conf_sent
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|status
+operator|!=
+name|P2P_SC_SUCCESS
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"GO Negotiation failed"
+argument_list|)
+expr_stmt|;
+name|p2p_go_neg_failed
+argument_list|(
+name|p2p
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -5806,17 +6186,11 @@ name|struct
 name|p2p_message
 name|msg
 decl_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Received GO Negotiation Confirm from "
+literal|"Received GO Negotiation Confirm from "
 name|MACSTR
 argument_list|,
 name|MAC2STR
@@ -5853,17 +6227,11 @@ operator|->
 name|go_neg_peer
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Not ready for GO negotiation with "
+literal|"Not ready for GO negotiation with "
 name|MACSTR
 argument_list|,
 name|MAC2STR
@@ -5883,19 +6251,11 @@ operator|==
 name|P2P_PENDING_GO_NEG_RESPONSE
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Stopped waiting "
-literal|"for TX status on GO Negotiation Response since we "
-literal|"already received Confirmation"
+literal|"Stopped waiting for TX status on GO Negotiation Response since we already received Confirmation"
 argument_list|)
 expr_stmt|;
 name|p2p
@@ -5930,18 +6290,17 @@ name|P2P_DEV_WAIT_GO_NEG_CONFIRM
 operator|)
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Was not expecting GO Negotiation Confirm - "
-literal|"ignore"
+literal|"Was not expecting GO Negotiation Confirm - ignore"
+argument_list|)
+expr_stmt|;
+name|p2p_parse_free
+argument_list|(
+operator|&
+name|msg
 argument_list|)
 expr_stmt|;
 return|return;
@@ -5952,6 +6311,19 @@ name|flags
 operator|&=
 operator|~
 name|P2P_DEV_WAIT_GO_NEG_CONFIRM
+expr_stmt|;
+name|p2p
+operator|->
+name|cfg
+operator|->
+name|send_action_done
+argument_list|(
+name|p2p
+operator|->
+name|cfg
+operator|->
+name|cb_ctx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -5964,17 +6336,11 @@ operator|->
 name|dialog_token
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unexpected Dialog Token %u (expected %u)"
+literal|"Unexpected Dialog Token %u (expected %u)"
 argument_list|,
 name|msg
 operator|.
@@ -6001,17 +6367,11 @@ operator|.
 name|status
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No Status attribute received"
+literal|"No Status attribute received"
 argument_list|)
 expr_stmt|;
 name|p2p_parse_free
@@ -6030,17 +6390,21 @@ operator|.
 name|status
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
+literal|"GO Negotiation rejected: status %d"
 argument_list|,
-literal|"P2P: GO Negotiation rejected: status %d"
+operator|*
+name|msg
+operator|.
+name|status
+argument_list|)
+expr_stmt|;
+name|p2p_go_neg_failed
+argument_list|(
+name|p2p
 argument_list|,
 operator|*
 name|msg
@@ -6108,18 +6472,11 @@ operator|==
 name|REMOTE_GO
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Mandatory P2P Group ID attribute missing from "
-literal|"GO Negotiation Confirmation"
+literal|"Mandatory P2P Group ID attribute missing from GO Negotiation Confirmation"
 argument_list|)
 expr_stmt|;
 name|p2p
@@ -6128,9 +6485,13 @@ name|ssid_len
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CONFIG_P2P_STRICT
+name|p2p_go_neg_failed
+argument_list|(
+name|p2p
+argument_list|,
+name|P2P_SC_FAIL_INVALID_PARAMS
+argument_list|)
+expr_stmt|;
 name|p2p_parse_free
 argument_list|(
 operator|&
@@ -6138,9 +6499,6 @@ name|msg
 argument_list|)
 expr_stmt|;
 return|return;
-endif|#
-directive|endif
-comment|/* CONFIG_P2P_STRICT */
 block|}
 if|if
 condition|(
@@ -6150,18 +6508,11 @@ operator|.
 name|operating_channel
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Mandatory Operating Channel attribute missing "
-literal|"from GO Negotiation Confirmation"
+literal|"Mandatory Operating Channel attribute missing from GO Negotiation Confirmation"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -6178,6 +6529,66 @@ endif|#
 directive|endif
 comment|/* CONFIG_P2P_STRICT */
 block|}
+elseif|else
+if|if
+condition|(
+name|dev
+operator|->
+name|go_state
+operator|==
+name|REMOTE_GO
+condition|)
+block|{
+name|int
+name|oper_freq
+init|=
+name|p2p_channel_to_freq
+argument_list|(
+name|msg
+operator|.
+name|operating_channel
+index|[
+literal|3
+index|]
+argument_list|,
+name|msg
+operator|.
+name|operating_channel
+index|[
+literal|4
+index|]
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|oper_freq
+operator|!=
+name|dev
+operator|->
+name|oper_freq
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Updated peer (GO) operating channel preference from %d MHz to %d MHz"
+argument_list|,
+name|dev
+operator|->
+name|oper_freq
+argument_list|,
+name|oper_freq
+argument_list|)
+expr_stmt|;
+name|dev
+operator|->
+name|oper_freq
+operator|=
+name|oper_freq
+expr_stmt|;
+block|}
+block|}
 if|if
 condition|(
 operator|!
@@ -6186,18 +6597,11 @@ operator|.
 name|channel_list
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Mandatory Operating Channel attribute missing "
-literal|"from GO Negotiation Confirmation"
+literal|"Mandatory Operating Channel attribute missing from GO Negotiation Confirmation"
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -6230,35 +6634,21 @@ name|UNKNOWN_GO
 condition|)
 block|{
 comment|/* 		 * This should not happen since GO negotiation has already 		 * been completed. 		 */
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unexpected GO Neg state - do not know which end "
-literal|"becomes GO"
+literal|"Unexpected GO Neg state - do not know which end becomes GO"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 comment|/* 	 * The peer could have missed our ctrl::ack frame for GO Negotiation 	 * Confirm and continue retransmitting the frame. To reduce the 	 * likelihood of the peer not getting successful TX status for the 	 * GO Negotiation Confirm frame, wait a short time here before starting 	 * the group so that we will remain on the current channel to 	 * acknowledge any possible retransmission from the peer. 	 */
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: 20 ms wait on current "
-literal|"channel before starting group"
+literal|"20 ms wait on current channel before starting group"
 argument_list|)
 expr_stmt|;
 name|os_sleep

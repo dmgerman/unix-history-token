@@ -48,22 +48,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../hostapd/wpa.h"
+file|"ap/wpa_auth.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|wpa_debug_level
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|wpa_debug_show_keys
-decl_stmt|;
-end_decl_stmt
 
 begin_struct
 struct|struct
@@ -1549,6 +1535,8 @@ argument_list|,
 name|wpa
 operator|->
 name|supp_addr
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

@@ -135,7 +135,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * This driver supports a generic dumb clock that only outputs hh:mm:ss,  * in local time, no less.  *  * Input format:  *  *      hh:mm:ss<cr>  *  * hh:mm:ss -- what you'd expect, with a 24 hour clock.  (Heck, that's the only  * way it could get stupider.)  We take time on the<cr>.  *  * The original source of this module was the WWVB module.  */
+comment|/*  * This driver supports a generic dumb clock that only outputs hh:mm:ss,  * in local time, no less.  *  * Input format:  *  *	hh:mm:ss<cr>  *  * hh:mm:ss -- what you'd expect, with a 24 hour clock.  (Heck, that's the only  * way it could get stupider.)  We take time on the<cr>.  *  * The original source of this module was the WWVB module.  */
 end_comment
 
 begin_comment
@@ -245,54 +245,45 @@ begin_comment
 comment|/*  * Function prototypes  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|dumbclock_start
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|dumbclock_shutdown
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|peer
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|dumbclock_receive
-name|P
-argument_list|(
-operator|(
-expr|struct
+parameter_list|(
+name|struct
 name|recvbuf
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_if
 if|#
@@ -301,7 +292,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static	void	dumbclock_poll		P((int, struct peer *));
+unit|static	void	dumbclock_poll		(int, struct peer *);
 endif|#
 directive|endif
 end_endif
@@ -387,12 +378,14 @@ name|time_t
 name|now
 decl_stmt|;
 comment|/* 	 * Open serial port. Don't bother with CLK line discipline, since 	 * it's not available. 	 */
-operator|(
-name|void
-operator|)
-name|sprintf
+name|snprintf
 argument_list|(
 name|device
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|device
+argument_list|)
 argument_list|,
 name|DEVICE
 argument_list|,
@@ -429,7 +422,7 @@ expr_stmt|;
 if|if
 condition|(
 name|fd
-operator|<
+operator|<=
 literal|0
 condition|)
 return|return
@@ -440,55 +433,12 @@ return|;
 comment|/* 	 * Allocate and initialize unit structure 	 */
 name|up
 operator|=
-operator|(
-expr|struct
-name|dumbclock_unit
-operator|*
-operator|)
-name|emalloc
+name|emalloc_zero
 argument_list|(
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|dumbclock_unit
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|up
-operator|==
-name|NULL
-condition|)
-block|{
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-name|memset
-argument_list|(
-operator|(
-name|char
 operator|*
-operator|)
 name|up
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|dumbclock_unit
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -502,9 +452,6 @@ name|pp
 operator|->
 name|unitptr
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|up
 expr_stmt|;
 name|pp
@@ -521,9 +468,6 @@ name|io
 operator|.
 name|srcclock
 operator|=
-operator|(
-name|caddr_t
-operator|)
 name|peer
 expr_stmt|;
 name|pp
@@ -554,18 +498,30 @@ name|io
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|close
 argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+operator|=
+operator|-
+literal|1
+expr_stmt|;
 name|free
 argument_list|(
 name|up
 argument_list|)
+expr_stmt|;
+name|pp
+operator|->
+name|unitptr
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -606,7 +562,6 @@ if|if
 condition|(
 name|tm_time_p
 condition|)
-block|{
 name|up
 operator|->
 name|ymd
@@ -614,13 +569,10 @@ operator|=
 operator|*
 name|tm_time_p
 expr_stmt|;
-block|}
 else|else
-block|{
 return|return
 literal|0
 return|;
-block|}
 comment|/* 	 * Initialize miscellaneous variables 	 */
 name|peer
 operator|->
@@ -695,15 +647,21 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|dumbclock_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
 expr_stmt|;
+if|if
+condition|(
+operator|-
+literal|1
+operator|!=
+name|pp
+operator|->
+name|io
+operator|.
+name|fd
+condition|)
 name|io_closeclock
 argument_list|(
 operator|&
@@ -712,6 +670,12 @@ operator|->
 name|io
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NULL
+operator|!=
+name|up
+condition|)
 name|free
 argument_list|(
 name|up
@@ -777,14 +741,9 @@ comment|/* got a good time flag */
 comment|/* 	 * Initialize pointers and read the timecode and timestamp 	 */
 name|peer
 operator|=
-operator|(
-expr|struct
-name|peer
-operator|*
-operator|)
 name|rbufp
 operator|->
-name|recv_srcclock
+name|recv_peer
 expr_stmt|;
 name|pp
 operator|=
@@ -794,11 +753,6 @@ name|procptr
 expr_stmt|;
 name|up
 operator|=
-operator|(
-expr|struct
-name|dumbclock_unit
-operator|*
-operator|)
 name|pp
 operator|->
 name|unitptr
@@ -961,13 +915,26 @@ decl_stmt|;
 name|int
 name|adjmon
 decl_stmt|;
-name|int
+name|time_t
 name|reality_delta
 decl_stmt|;
 name|time_t
 name|now
 decl_stmt|;
-comment|/* 	     * Convert to GMT for sites that distribute localtime.  This              * means we have to figure out what day it is.  Easier said 	     * than done... 	     */
+comment|/* 	     * Convert to GMT for sites that distribute localtime.  This 	     * means we have to figure out what day it is.  Easier said 	     * than done... 	     */
+name|memset
+argument_list|(
+operator|&
+name|asserted_tm
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|asserted_tm
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|asserted_tm
 operator|.
 name|tm_year
@@ -1341,7 +1308,7 @@ literal|0
 end_if
 
 begin_endif
-unit|pp = peer->procptr; 	up = (struct dumbclock_unit *)pp->unitptr; 	if (peer->reach == 0) 		refclock_report(peer, CEVNT_TIMEOUT); 	if (up->linect> 0) 		pollchar = 'R'; 	else 		pollchar = 'T'; 	if (write(pp->io.fd,&pollchar, 1) != 1) 		refclock_report(peer, CEVNT_FAULT); 	else 		pp->polls++;
+unit|pp = peer->procptr; 	up = pp->unitptr; 	if (peer->reach == 0) 		refclock_report(peer, CEVNT_TIMEOUT); 	if (up->linect> 0) 		pollchar = 'R'; 	else 		pollchar = 'T'; 	if (write(pp->io.fd,&pollchar, 1) != 1) 		refclock_report(peer, CEVNT_FAULT); 	else 		pp->polls++;
 endif|#
 directive|endif
 end_endif
@@ -1369,7 +1336,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* REFCLOCK */
+comment|/* defined(REFCLOCK)&& defined(CLOCK_DUMBCLOCK) */
 end_comment
 
 end_unit

@@ -705,9 +705,14 @@ specifier|const
 name|uint32_t
 name|limit
 init|=
+name|my_max
+argument_list|(
+literal|2
+argument_list|,
 name|len_main
 operator|-
 literal|1
+argument_list|)
 decl_stmt|;
 for|for
 control|(

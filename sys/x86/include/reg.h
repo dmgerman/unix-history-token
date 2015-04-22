@@ -248,6 +248,12 @@ name|__dbreg64
 value|dbreg
 end_define
 
+begin_define
+define|#
+directive|define
+name|__HAVE_REG32
+end_define
+
 begin_endif
 endif|#
 directive|endif

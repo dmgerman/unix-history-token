@@ -736,7 +736,7 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
-name|int
+name|ssize_t
 name|iolen
 decl_stmt|;
 name|int
@@ -996,10 +996,18 @@ operator|.
 name|iov_len
 expr_stmt|;
 block|}
+name|io
+operator|->
+name|io_req
+operator|.
+name|br_resid
+operator|=
+name|iolen
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
-literal|"virtio-block: %s op, %d bytes, %d segs, offset %ld\n\r"
+literal|"virtio-block: %s op, %zd bytes, %d segs, offset %ld\n\r"
 operator|,
 name|writeop
 condition|?
@@ -1735,11 +1743,6 @@ argument_list|,
 name|PCIR_SUBDEV_0
 argument_list|,
 name|VIRTIO_TYPE_BLOCK
-argument_list|)
-expr_stmt|;
-name|pci_lintr_request
-argument_list|(
-name|pi
 argument_list|)
 expr_stmt|;
 if|if

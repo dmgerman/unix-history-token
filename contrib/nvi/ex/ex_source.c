@@ -108,7 +108,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_source -- :source file  *	Execute ex commands from a file.  *  * PUBLIC: int ex_source __P((SCR *, EXCMD *));  */
+comment|/*  * ex_source -- :source file  *	Execute ex commands from a file.  *  * PUBLIC: int ex_source(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

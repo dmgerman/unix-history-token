@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20150204
+value|0x20150410
 end_define
 
 begin_include
@@ -1028,7 +1028,7 @@ end_macro
 begin_macro
 name|ACPI_EXTERNAL_RETURN_STATUS
 argument_list|(
-argument|ACPI_STATUS AcpiFindRootPointer (     ACPI_SIZE               *RsdpAddress)
+argument|ACPI_STATUS AcpiFindRootPointer (     ACPI_PHYSICAL_ADDRESS   *RsdpAddress)
 argument_list|)
 end_macro
 

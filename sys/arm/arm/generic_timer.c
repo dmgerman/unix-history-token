@@ -129,12 +129,6 @@ directive|include
 file|<machine/bus.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/fdt.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -395,6 +389,114 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__arm__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|get_el0
+parameter_list|(
+name|x
+parameter_list|)
+value|cp15_## x ##_get()
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_el1
+parameter_list|(
+name|x
+parameter_list|)
+value|cp15_## x ##_get()
+end_define
+
+begin_define
+define|#
+directive|define
+name|set_el0
+parameter_list|(
+name|x
+parameter_list|,
+name|val
+parameter_list|)
+value|cp15_## x ##_set(val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|set_el1
+parameter_list|(
+name|x
+parameter_list|,
+name|val
+parameter_list|)
+value|cp15_## x ##_set(val)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* __aarch64__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|get_el0
+parameter_list|(
+name|x
+parameter_list|)
+value|READ_SPECIALREG(x ##_el0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_el1
+parameter_list|(
+name|x
+parameter_list|)
+value|READ_SPECIALREG(x ##_el1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|set_el0
+parameter_list|(
+name|x
+parameter_list|,
+name|val
+parameter_list|)
+value|WRITE_SPECIALREG(x ##_el0, val)
+end_define
+
+begin_define
+define|#
+directive|define
+name|set_el1
+parameter_list|(
+name|x
+parameter_list|,
+name|val
+parameter_list|)
+value|WRITE_SPECIALREG(x ##_el1, val)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -403,14 +505,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|uint32_t
-name|val
-decl_stmt|;
-comment|/* cntfrq */
-asm|__asm volatile("mrc p15, 0, %0, c14, c0, 0" : "=r" (val));
 return|return
 operator|(
-name|val
+name|get_el0
+argument_list|(
+name|cntfrq
+argument_list|)
 operator|)
 return|;
 block|}
@@ -435,11 +535,21 @@ if|if
 condition|(
 name|physical
 condition|)
-comment|/* cntpct */
-asm|__asm volatile("mrrc p15, 0, %Q0, %R0, c14" : "=r" (val));
+name|val
+operator|=
+name|get_el0
+argument_list|(
+name|cntpct
+argument_list|)
+expr_stmt|;
 else|else
-comment|/* cntvct */
-asm|__asm volatile("mrrc p15, 1, %Q0, %R0, c14" : "=r" (val));
+name|val
+operator|=
+name|get_el0
+argument_list|(
+name|cntvct
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|val
@@ -464,53 +574,34 @@ if|if
 condition|(
 name|physical
 condition|)
-comment|/* cntp_ctl */
-asm|__asm volatile("mcr p15, 0, %[val], c14, c2, 1" : :
-index|[
+name|set_el0
+argument_list|(
+name|cntp_ctl
+argument_list|,
 name|val
-index|]
-literal|"r"
-operator|(
-name|val
-operator|)
-block|)
-function|;
-end_function
-
-begin_else
+argument_list|)
+expr_stmt|;
 else|else
-comment|/* cntv_ctl */
-asm|__asm volatile("mcr p15, 0, %[val], c14, c3, 1" : :
-index|[
+name|set_el0
+argument_list|(
+name|cntv_ctl
+argument_list|,
 name|val
-index|]
-literal|"r"
-operator|(
-name|val
-operator|)
-end_else
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
+argument_list|)
+expr_stmt|;
 name|isb
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|int
 name|set_tval
 parameter_list|(
@@ -525,53 +616,34 @@ if|if
 condition|(
 name|physical
 condition|)
-comment|/* cntp_tval */
-asm|__asm volatile("mcr p15, 0, %[val], c14, c2, 0" : :
-index|[
+name|set_el0
+argument_list|(
+name|cntp_tval
+argument_list|,
 name|val
-index|]
-literal|"r"
-operator|(
-name|val
-operator|)
-block|)
-function|;
-end_function
-
-begin_else
+argument_list|)
+expr_stmt|;
 else|else
-comment|/* cntv_tval */
-asm|__asm volatile("mcr p15, 0, %[val], c14, c3, 0" : :
-index|[
+name|set_el0
+argument_list|(
+name|cntv_tval
+argument_list|,
 name|val
-index|]
-literal|"r"
-operator|(
-name|val
-operator|)
-end_else
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
+argument_list|)
+expr_stmt|;
 name|isb
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
+block|}
+end_function
 
 begin_function
-unit|}  static
+specifier|static
 name|int
 name|get_ctrl
 parameter_list|(
@@ -586,11 +658,21 @@ if|if
 condition|(
 name|physical
 condition|)
-comment|/* cntp_ctl */
-asm|__asm volatile("mrc p15, 0, %0, c14, c2, 1" : "=r" (val));
+name|val
+operator|=
+name|get_el0
+argument_list|(
+name|cntp_ctl
+argument_list|)
+expr_stmt|;
 else|else
-comment|/* cntv_ctl */
-asm|__asm volatile("mrc p15, 0, %0, c14, c3, 1" : "=r" (val));
+name|val
+operator|=
+name|get_el0
+argument_list|(
+name|cntv_ctl
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|val
@@ -610,7 +692,13 @@ block|{
 name|uint32_t
 name|cntkctl
 decl_stmt|;
-asm|__asm volatile("mrc p15, 0, %0, c14, c1, 0" : "=r" (cntkctl));
+name|cntkctl
+operator|=
+name|get_el1
+argument_list|(
+name|cntkctl
+argument_list|)
+expr_stmt|;
 name|cntkctl
 operator|&=
 operator|~
@@ -626,7 +714,13 @@ operator||
 name|GT_CNTKCTL_PL0PCTEN
 operator|)
 expr_stmt|;
-asm|__asm volatile("mcr p15, 0, %0, c14, c1, 0" : : "r" (cntkctl));
+name|set_el1
+argument_list|(
+name|cntkctl
+argument_list|,
+name|cntkctl
+argument_list|)
+expr_stmt|;
 name|isb
 argument_list|()
 expr_stmt|;
@@ -942,7 +1036,6 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
 name|ofw_bus_is_compatible
 argument_list|(
 name|dev
@@ -950,11 +1043,7 @@ argument_list|,
 literal|"arm,armv7-timer"
 argument_list|)
 condition|)
-return|return
-operator|(
-name|ENXIO
-operator|)
-return|;
+block|{
 name|device_set_desc
 argument_list|(
 name|dev
@@ -965,6 +1054,36 @@ expr_stmt|;
 return|return
 operator|(
 name|BUS_PROBE_DEFAULT
+operator|)
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ofw_bus_is_compatible
+argument_list|(
+name|dev
+argument_list|,
+literal|"arm,armv8-timer"
+argument_list|)
+condition|)
+block|{
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"ARMv8 Generic Timer"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|BUS_PROBE_DEFAULT
+operator|)
+return|;
+block|}
+return|return
+operator|(
+name|ENXIO
 operator|)
 return|;
 block|}
@@ -1121,12 +1240,26 @@ name|ENXIO
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|__arm__
 name|sc
 operator|->
 name|physical
 operator|=
 name|true
 expr_stmt|;
+else|#
+directive|else
+comment|/* __aarch64__ */
+name|sc
+operator|->
+name|physical
+operator|=
+name|false
+expr_stmt|;
+endif|#
+directive|endif
 name|arm_tmr_sc
 operator|=
 name|sc
@@ -1473,7 +1606,7 @@ condition|;
 name|counts
 operator|--
 control|)
-comment|/* 				 * Prevent gcc from optimizing 				 * out the loop 				 */
+comment|/* 				 * Prevent the compiler from optimizing 				 * out the loop 				 */
 name|cpufunc_nullop
 argument_list|()
 expr_stmt|;

@@ -6,14 +6,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_FDT_SIMPLEBUS_PRIVATE_H
+name|_FDT_SIMPLEBUS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_FDT_SIMPLEBUS_PRIVATE_H
+name|_FDT_SIMPLEBUS_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<dev/ofw/ofw_bus.h>
+end_include
 
 begin_comment
 comment|/* FDT simplebus */
@@ -91,13 +97,75 @@ block|}
 struct|;
 end_struct
 
+begin_function_decl
+name|void
+name|simplebus_init
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|phandle_t
+name|node
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|device_t
+name|simplebus_add_device
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|phandle_t
+name|node
+parameter_list|,
+name|u_int
+name|order
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|int
+name|unit
+parameter_list|,
+name|struct
+name|simplebus_devinfo
+modifier|*
+name|di
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|simplebus_devinfo
+modifier|*
+name|simplebus_setup_dinfo
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|phandle_t
+name|node
+parameter_list|,
+name|struct
+name|simplebus_devinfo
+modifier|*
+name|di
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
 end_endif
 
 begin_comment
-comment|/* _FDT_SIMPLEBUS_PRIVATE_H */
+comment|/* _FDT_SIMPLEBUS_H */
 end_comment
 
 end_unit

@@ -244,11 +244,19 @@ name|NPTEPG
 value|(PAGE_SIZE/(sizeof (pt_entry_t)))
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PAE
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PAE_TABLES
+argument_list|)
+end_if
 
 begin_define
 define|#

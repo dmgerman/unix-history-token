@@ -101,71 +101,62 @@ begin_comment
 comment|/*  * DCF77 raw time code  *  * From "Zur Zeit", Physikalisch-Technische Bundesanstalt (PTB), Braunschweig  * und Berlin, Maerz 1989  *  * Timecode transmission:  * AM:  *	time marks are send every second except for the second before the  *	next minute mark  *	time marks consist of a reduction of transmitter power to 25%  *	of the nominal level  *	the falling edge is the time indication (on time)  *	time marks of a 100ms duration constitute a logical 0  *	time marks of a 200ms duration constitute a logical 1  * FM:  *	see the spec. (basically a (non-)inverted psuedo random phase shift)  *  * Encoding:  * Second	Contents  * 0  - 10	AM: free, FM: 0  * 11 - 14	free  * 15		R     - alternate antenna  * 16		A1    - expect zone change (1 hour before)  * 17 - 18	Z1,Z2 - time zone  *		 0  0 illegal  *		 0  1 MEZ  (MET)  *		 1  0 MESZ (MED, MET DST)  *		 1  1 illegal  * 19		A2    - expect leap insertion/deletion (1 hour before)  * 20		S     - start of time code (1)  * 21 - 24	M1    - BCD (lsb first) Minutes  * 25 - 27	M10   - BCD (lsb first) 10 Minutes  * 28		P1    - Minute Parity (even)  * 29 - 32	H1    - BCD (lsb first) Hours  * 33 - 34      H10   - BCD (lsb first) 10 Hours  * 35		P2    - Hour Parity (even)  * 36 - 39	D1    - BCD (lsb first) Days  * 40 - 41	D10   - BCD (lsb first) 10 Days  * 42 - 44	DW    - BCD (lsb first) day of week (1: Monday -> 7: Sunday)  * 45 - 49	MO    - BCD (lsb first) Month  * 50           MO0   - 10 Months  * 51 - 53	Y1    - BCD (lsb first) Years  * 54 - 57	Y10   - BCD (lsb first) 10 Years  * 58 		P3    - Date Parity (even)  * 59		      - usually missing (minute indication), except for leap insertion  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|u_long
 name|pps_rawdcf
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|parse_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|timestamp_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|u_long
 name|cvt_rawdcf
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|unsigned
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|format
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|clocktime_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|u_long
 name|inp_rawdcf
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|parse_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|unsigned
 name|int
-operator|,
+parameter_list|,
 name|timestamp_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_typedef
 typedef|typedef
@@ -224,11 +215,13 @@ specifier|static
 struct|struct
 name|dcfparam
 block|{
+specifier|const
 name|unsigned
 name|char
 modifier|*
 name|onebits
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -239,6 +232,7 @@ name|dcfparameter
 init|=
 block|{
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -247,6 +241,7 @@ literal|"###############RADMLS1248124P124812P1248121241248112481248P??"
 block|,
 comment|/* 'ONE' representation */
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -579,6 +574,7 @@ parameter_list|,
 name|int
 name|idx
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -665,6 +661,7 @@ parameter_list|,
 name|int
 name|idx
 parameter_list|,
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -760,6 +757,7 @@ name|s
 init|=
 name|buffer
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -769,6 +767,7 @@ name|dcfprm
 operator|->
 name|onebits
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -806,7 +805,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"parse: convert_rawdcf: INCOMPLETE DATA - time code only has %d bits\n"
+literal|"parse: convert_rawdcf: INCOMPLETE DATA - time code only has %d bits"
 argument_list|,
 name|size
 argument_list|)
@@ -1349,7 +1348,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"parse: convert_rawdcf: parity check FAILED for \"%s\"\n"
+literal|"parse: convert_rawdcf: parity check FAILED for \"%s\""
 argument_list|,
 name|buffer
 argument_list|)
@@ -1427,6 +1426,7 @@ name|s
 operator|+
 name|size
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -1436,6 +1436,7 @@ name|dcfparameter
 operator|.
 name|onebits
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*

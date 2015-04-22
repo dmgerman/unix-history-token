@@ -815,7 +815,7 @@ name|noobj_alloc
 parameter_list|(
 name|uma_zone_t
 parameter_list|,
-name|int
+name|vm_size_t
 parameter_list|,
 name|uint8_t
 modifier|*
@@ -833,7 +833,7 @@ name|page_alloc
 parameter_list|(
 name|uma_zone_t
 parameter_list|,
-name|int
+name|vm_size_t
 parameter_list|,
 name|uint8_t
 modifier|*
@@ -851,7 +851,7 @@ name|startup_alloc
 parameter_list|(
 name|uma_zone_t
 parameter_list|,
-name|int
+name|vm_size_t
 parameter_list|,
 name|uint8_t
 modifier|*
@@ -869,7 +869,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
-name|int
+name|vm_size_t
 parameter_list|,
 name|uint8_t
 parameter_list|)
@@ -1557,15 +1557,8 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 for|for
 control|(
-name|i
-operator|=
-literal|0
-operator|,
 name|ubz
 operator|=
 operator|&
@@ -4377,7 +4370,7 @@ parameter_list|(
 name|uma_zone_t
 name|zone
 parameter_list|,
-name|int
+name|vm_size_t
 name|bytes
 parameter_list|,
 name|uint8_t
@@ -4598,7 +4591,7 @@ parameter_list|(
 name|uma_zone_t
 name|zone
 parameter_list|,
-name|int
+name|vm_size_t
 name|bytes
 parameter_list|,
 name|uint8_t
@@ -4655,7 +4648,7 @@ parameter_list|(
 name|uma_zone_t
 name|zone
 parameter_list|,
-name|int
+name|vm_size_t
 name|bytes
 parameter_list|,
 name|uint8_t
@@ -4875,7 +4868,7 @@ name|void
 modifier|*
 name|mem
 parameter_list|,
-name|int
+name|vm_size_t
 name|size
 parameter_list|,
 name|uint8_t
@@ -12764,7 +12757,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"uma_zone_set_init: Invalid zone type"
+literal|"uma_zone_set_fini: Invalid zone type"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12936,7 +12929,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"uma_zone_set_init: Invalid zone type"
+literal|"uma_zone_set_freef: Invalid zone type"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -13585,7 +13578,7 @@ name|void
 modifier|*
 name|uma_large_malloc
 parameter_list|(
-name|int
+name|vm_size_t
 name|size
 parameter_list|,
 name|int
@@ -14911,11 +14904,7 @@ name|int
 name|error
 decl_stmt|,
 name|max
-decl_stmt|,
-name|old
 decl_stmt|;
-name|old
-operator|=
 name|max
 operator|=
 name|uma_zone_get_max
@@ -14949,17 +14938,6 @@ condition|)
 return|return
 operator|(
 name|error
-operator|)
-return|;
-if|if
-condition|(
-name|max
-operator|<
-name|old
-condition|)
-return|return
-operator|(
-name|EINVAL
 operator|)
 return|;
 name|uma_zone_set_max

@@ -23,6 +23,38 @@ begin_comment
 comment|/* Structs that need to be initialised by initarm */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ARM_NEW_PMAP
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|irqstack
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|undstack
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|vm_offset_t
+name|abtstack
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_struct_decl
 struct_decl|struct
 name|pv_addr
@@ -52,6 +84,11 @@ name|pv_addr
 name|abtstack
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Define various stack sizes in pages */

@@ -503,44 +503,6 @@ value|do {									\ 	IN_IFADDR_RLOCK();						\ 	for ((ia) = TAILQ_FIRST(&V_in_i
 end_define
 
 begin_comment
-comment|/*  * IP datagram reassembly.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPREASS_NHASH_LOG2
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPREASS_NHASH
-value|(1<< IPREASS_NHASH_LOG2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPREASS_HMASK
-value|(IPREASS_NHASH - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPREASS_HASH
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-define|\
-value|(((((x)& 0xF) | ((((x)>> 8)& 0xF)<< 4)) ^ (y))& IPREASS_HMASK)
-end_define
-
-begin_comment
 comment|/*  * Legacy IPv4 IGMP per-link structure.  */
 end_comment
 

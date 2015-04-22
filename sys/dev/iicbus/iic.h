@@ -181,6 +181,17 @@ begin_comment
 comment|/* repeated start */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|I2CSADDR
+value|_IOW('i', 8, uint8_t)
+end_define
+
+begin_comment
+comment|/* set slave address for future I/O */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

@@ -78,7 +78,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_yank -- :[line [,line]] ya[nk] [buffer] [count]  *	Yank the lines into a buffer.  *  * PUBLIC: int ex_yank __P((SCR *, EXCMD *));  */
+comment|/*  * ex_yank -- :[line [,line]] ya[nk] [buffer] [count]  *	Yank the lines into a buffer.  *  * PUBLIC: int ex_yank(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

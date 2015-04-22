@@ -102,7 +102,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * v_screen_copy --  *	Copy vi screen.  *  * PUBLIC: int v_screen_copy __P((SCR *, SCR *));  */
+comment|/*  * v_screen_copy --  *	Copy vi screen.  *  * PUBLIC: int v_screen_copy(SCR *, SCR *);  */
 end_comment
 
 begin_function
@@ -338,7 +338,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_screen_end --  *	End a vi screen.  *  * PUBLIC: int v_screen_end __P((SCR *));  */
+comment|/*  * v_screen_end --  *	End a vi screen.  *  * PUBLIC: int v_screen_end(SCR *);  */
 end_comment
 
 begin_function
@@ -463,7 +463,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_optchange --  *	Handle change of options for vi.  *  * PUBLIC: int v_optchange __P((SCR *, int, char *, u_long *));  */
+comment|/*  * v_optchange --  *	Handle change of options for vi.  *  * PUBLIC: int v_optchange(SCR *, int, char *, u_long *);  */
 end_comment
 
 begin_function

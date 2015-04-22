@@ -95,60 +95,51 @@ directive|include
 file|"tag.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|is_prefix
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|ARGS
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|bdisplay
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|db
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CB
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_display -- :display b[uffers] | c[onnections] | s[creens] | t[ags]  *  *	Display cscope connections, buffers, tags or screens.  *  * PUBLIC: int ex_display __P((SCR *, EXCMD *));  */
+comment|/*  * ex_display -- :display b[uffers] | c[onnections] | s[creens] | t[ags]  *  *	Display cscope connections, buffers, tags or screens.  *  * PUBLIC: int ex_display(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

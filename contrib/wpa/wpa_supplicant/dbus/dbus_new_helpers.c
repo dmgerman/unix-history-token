@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"dbus_new_handlers.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"dbus_dict_helpers.h"
 end_include
 
@@ -146,23 +152,7 @@ argument_list|,
 operator|&
 name|entry_iter
 argument_list|)
-condition|)
-block|{
-name|dbus_set_error_const
-argument_list|(
-name|error
-argument_list|,
-name|DBUS_ERROR_NO_MEMORY
-argument_list|,
-literal|"no memory"
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
-if|if
-condition|(
+operator|||
 operator|!
 name|dbus_message_iter_append_basic
 argument_list|(
@@ -177,20 +167,9 @@ operator|->
 name|dbus_property
 argument_list|)
 condition|)
-block|{
-name|dbus_set_error_const
-argument_list|(
+goto|goto
 name|error
-argument_list|,
-name|DBUS_ERROR_NO_MEMORY
-argument_list|,
-literal|"no memory"
-argument_list|)
-expr_stmt|;
-return|return
-name|FALSE
-return|;
-block|}
+goto|;
 comment|/* An error getting a property fails the request entirely */
 if|if
 condition|(
@@ -210,6 +189,9 @@ condition|)
 return|return
 name|FALSE
 return|;
+if|if
+condition|(
+operator|!
 name|dbus_message_iter_close_container
 argument_list|(
 name|dict_iter
@@ -217,10 +199,27 @@ argument_list|,
 operator|&
 name|entry_iter
 argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|error
+goto|;
 block|}
 return|return
 name|TRUE
+return|;
+name|error
+label|:
+name|dbus_set_error_const
+argument_list|(
+name|error
+argument_list|,
+name|DBUS_ERROR_NO_MEMORY
+argument_list|,
+literal|"no memory"
+argument_list|)
+expr_stmt|;
+return|return
+name|FALSE
 return|;
 block|}
 end_function
@@ -274,20 +273,12 @@ name|reply
 operator|==
 name|NULL
 condition|)
-block|{
-name|wpa_printf
-argument_list|(
-name|MSG_ERROR
-argument_list|,
-literal|"%s: out of memory creating dbus reply"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 return|return
-name|NULL
+name|wpas_dbus_error_no_memory
+argument_list|(
+name|message
+argument_list|)
 return|;
-block|}
 name|dbus_message_iter_init_append
 argument_list|(
 name|reply
@@ -309,33 +300,16 @@ name|dict_iter
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
-argument_list|(
-name|MSG_ERROR
-argument_list|,
-literal|"%s: out of memory creating reply"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 name|dbus_message_unref
 argument_list|(
 name|reply
 argument_list|)
 expr_stmt|;
-name|reply
-operator|=
-name|dbus_message_new_error
+return|return
+name|wpas_dbus_error_no_memory
 argument_list|(
 name|message
-argument_list|,
-name|DBUS_ERROR_NO_MEMORY
-argument_list|,
-literal|"out of memory"
 argument_list|)
-expr_stmt|;
-return|return
-name|reply
 return|;
 block|}
 name|dbus_error_init
@@ -383,8 +357,7 @@ name|error
 argument_list|,
 name|DBUS_ERROR_INVALID_ARGS
 argument_list|,
-literal|"No readable properties"
-literal|" in this interface"
+literal|"No readable properties in this interface"
 argument_list|)
 expr_stmt|;
 name|dbus_error_free
@@ -397,6 +370,9 @@ return|return
 name|reply
 return|;
 block|}
+if|if
+condition|(
+operator|!
 name|wpa_dbus_dict_close_write
 argument_list|(
 operator|&
@@ -405,7 +381,20 @@ argument_list|,
 operator|&
 name|dict_iter
 argument_list|)
+condition|)
+block|{
+name|dbus_message_unref
+argument_list|(
+name|reply
+argument_list|)
 expr_stmt|;
+return|return
+name|wpas_dbus_error_no_memory
+argument_list|(
+name|message
+argument_list|)
+return|;
+block|}
 return|return
 name|reply
 return|;
@@ -523,16 +512,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|<
-literal|0
-operator|||
-operator|(
-name|size_t
-operator|)
-name|ret
-operator|>=
+name|os_snprintf_error
+argument_list|(
 name|blen
+argument_list|,
+name|ret
+argument_list|)
 condition|)
 return|return
 literal|0
@@ -1101,6 +1086,18 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_MSGDUMP
+argument_list|,
+literal|"%s: Get(%s)"
+argument_list|,
+name|__func__
+argument_list|,
+name|property
+argument_list|)
+expr_stmt|;
 return|return
 name|properties_get
 argument_list|(
@@ -1113,6 +1110,18 @@ operator|->
 name|user_data
 argument_list|)
 return|;
+block|}
+name|wpa_printf
+argument_list|(
+name|MSG_MSGDUMP
+argument_list|,
+literal|"%s: Set(%s)"
+argument_list|,
+name|__func__
+argument_list|,
+name|property
+argument_list|)
+expr_stmt|;
 return|return
 name|properties_set
 argument_list|(
@@ -1546,13 +1555,18 @@ name|wpa_printf
 argument_list|(
 name|MSG_MSGDUMP
 argument_list|,
-literal|"dbus: %s.%s (%s)"
+literal|"dbus: %s.%s (%s) [%s]"
 argument_list|,
 name|msg_interface
 argument_list|,
 name|method
 argument_list|,
 name|path
+argument_list|,
+name|dbus_message_get_signature
+argument_list|(
+name|message
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* if message is introspection method call */
@@ -1602,8 +1616,7 @@ name|message
 argument_list|,
 name|DBUS_ERROR_UNKNOWN_METHOD
 argument_list|,
-literal|"wpa_supplicant was compiled without "
-literal|"introspection support."
+literal|"wpa_supplicant was compiled without introspection support."
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1874,8 +1887,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: Could not set up message "
-literal|"handler"
+literal|"dbus: Could not set up message handler"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1928,8 +1940,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: Could not request service name: "
-literal|"already registered"
+literal|"dbus: Could not request service name: already registered"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1938,8 +1949,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: Could not request service name: "
-literal|"%s %s"
+literal|"dbus: Could not request service name: %s %s"
 argument_list|,
 name|error
 operator|.
@@ -2097,7 +2107,6 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|os_strcmp
 argument_list|(
 name|error
@@ -2106,6 +2115,8 @@ name|name
 argument_list|,
 name|DBUS_ERROR_OBJECT_PATH_IN_USE
 argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|wpa_printf
@@ -2126,30 +2137,15 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: Could not set up message "
-literal|"handler for interface %s object %s"
+literal|"dbus: Could not set up message handler for interface %s object %s (error: %s message: %s)"
 argument_list|,
 name|ifname
 argument_list|,
 name|path
-argument_list|)
-expr_stmt|;
-name|wpa_printf
-argument_list|(
-name|MSG_ERROR
-argument_list|,
-literal|"dbus error: %s"
 argument_list|,
 name|error
 operator|.
 name|name
-argument_list|)
-expr_stmt|;
-name|wpa_printf
-argument_list|(
-name|MSG_ERROR
-argument_list|,
-literal|"dbus: %s"
 argument_list|,
 name|error
 operator|.
@@ -2255,17 +2251,17 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: %s: Could not obtain object's "
-literal|"private data: %s"
+literal|"dbus: %s: Could not obtain object's private data: %s"
 argument_list|,
 name|__func__
 argument_list|,
 name|path
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
-else|else
-block|{
 name|eloop_cancel_timeout
 argument_list|(
 name|flush_object_timeout_handler
@@ -2275,7 +2271,6 @@ argument_list|,
 name|obj_desc
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 operator|!
@@ -2418,12 +2413,7 @@ argument_list|,
 operator|&
 name|entry_iter
 argument_list|)
-condition|)
-return|return
-name|FALSE
-return|;
-if|if
-condition|(
+operator|||
 operator|!
 name|dbus_message_iter_append_basic
 argument_list|(
@@ -2479,8 +2469,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: %s: Cannot get "
-literal|"new value of property %s: (%s) %s"
+literal|"dbus: %s: Cannot get new value of property %s: (%s) %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2504,8 +2493,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: %s: Cannot get "
-literal|"new value of property %s"
+literal|"dbus: %s: Cannot get new value of property %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2620,13 +2608,8 @@ argument_list|,
 operator|&
 name|interface
 argument_list|)
-condition|)
-goto|goto
-name|err
-goto|;
+operator|||
 comment|/* Changed properties dict */
-if|if
-condition|(
 operator|!
 name|dbus_message_iter_open_container
 argument_list|(
@@ -2640,12 +2623,7 @@ argument_list|,
 operator|&
 name|dict_iter
 argument_list|)
-condition|)
-goto|goto
-name|err
-goto|;
-if|if
-condition|(
+operator|||
 operator|!
 name|put_changed_properties
 argument_list|(
@@ -2658,12 +2636,7 @@ name|dict_iter
 argument_list|,
 literal|0
 argument_list|)
-condition|)
-goto|goto
-name|err
-goto|;
-if|if
-condition|(
+operator|||
 operator|!
 name|dbus_message_iter_close_container
 argument_list|(
@@ -2673,13 +2646,8 @@ argument_list|,
 operator|&
 name|dict_iter
 argument_list|)
-condition|)
-goto|goto
-name|err
-goto|;
+operator|||
 comment|/* Invalidated properties array (empty) */
-if|if
-condition|(
 operator|!
 name|dbus_message_iter_open_container
 argument_list|(
@@ -2693,12 +2661,7 @@ argument_list|,
 operator|&
 name|dict_iter
 argument_list|)
-condition|)
-goto|goto
-name|err
-goto|;
-if|if
-condition|(
+operator|||
 operator|!
 name|dbus_message_iter_close_container
 argument_list|(
@@ -2709,28 +2672,7 @@ operator|&
 name|dict_iter
 argument_list|)
 condition|)
-goto|goto
-name|err
-goto|;
-name|dbus_connection_send
-argument_list|(
-name|con
-argument_list|,
-name|msg
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|out
-label|:
-name|dbus_message_unref
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
-return|return;
-name|err
-label|:
+block|{
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -2740,9 +2682,24 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+block|}
+else|else
+block|{
+name|dbus_connection_send
+argument_list|(
+name|con
+argument_list|,
+name|msg
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+name|dbus_message_unref
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2822,12 +2779,7 @@ argument_list|,
 operator|&
 name|dict_iter
 argument_list|)
-condition|)
-goto|goto
-name|err
-goto|;
-if|if
-condition|(
+operator|||
 operator|!
 name|put_changed_properties
 argument_list|(
@@ -2840,12 +2792,7 @@ name|dict_iter
 argument_list|,
 literal|1
 argument_list|)
-condition|)
-goto|goto
-name|err
-goto|;
-if|if
-condition|(
+operator|||
 operator|!
 name|dbus_message_iter_close_container
 argument_list|(
@@ -2856,28 +2803,7 @@ operator|&
 name|dict_iter
 argument_list|)
 condition|)
-goto|goto
-name|err
-goto|;
-name|dbus_connection_send
-argument_list|(
-name|con
-argument_list|,
-name|msg
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|out
-label|:
-name|dbus_message_unref
-argument_list|(
-name|msg
-argument_list|)
-expr_stmt|;
-return|return;
-name|err
-label|:
+block|{
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -2887,9 +2813,24 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+block|}
+else|else
+block|{
+name|dbus_connection_send
+argument_list|(
+name|con
+argument_list|,
+name|msg
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+name|dbus_message_unref
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2978,8 +2919,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"dbus: %s: Timeout - sending changed properties "
-literal|"of object %s"
+literal|"dbus: %s: Timeout - sending changed properties of object %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3190,12 +3130,6 @@ argument_list|,
 name|obj_desc
 argument_list|)
 expr_stmt|;
-name|dsc
-operator|=
-name|obj_desc
-operator|->
-name|properties
-expr_stmt|;
 for|for
 control|(
 name|dsc
@@ -3343,8 +3277,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: wpa_dbus_property_changed: "
-literal|"could not obtain object's private data: %s"
+literal|"dbus: wpa_dbus_property_changed: could not obtain object's private data: %s"
 argument_list|,
 name|path
 argument_list|)
@@ -3428,8 +3361,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: wpa_dbus_property_changed: "
-literal|"no property %s in object %s"
+literal|"dbus: wpa_dbus_property_changed: no property %s in object %s"
 argument_list|,
 name|property
 argument_list|,
@@ -3450,8 +3382,6 @@ operator|->
 name|con
 argument_list|,
 name|obj_desc
-operator|->
-name|path
 argument_list|)
 condition|)
 block|{
@@ -3542,8 +3472,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: %s: could not obtain object's "
-literal|"private data: %s"
+literal|"dbus: %s: could not obtain object's private data: %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3612,8 +3541,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"dbus: %s: failed to get object"
-literal|" properties: (%s) %s"
+literal|"dbus: %s: failed to get object properties: (%s) %s"
 argument_list|,
 name|__func__
 argument_list|,
@@ -3665,7 +3593,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * wpas_dbus_new_decompose_object_path - Decompose an interface object path into parts  * @path: The dbus object path  * @p2p_persistent_group: indicates whether to parse the path as a P2P  *                        persistent group object  * @network: (out) the configured network this object path refers to, if any  * @bssid: (out) the scanned bssid this object path refers to, if any  * Returns: The object path of the network interface this path refers to  *  * For a given object path, decomposes the object path into object id, network,  * and BSSID parts, if those parts exist.  */
+comment|/**  * wpas_dbus_new_decompose_object_path - Decompose an interface object path into parts  * @path: The dbus object path  * @sep: Separating part (e.g., "Networks" or "PersistentGroups")  * @item: (out) The part following the specified separator, if any  * Returns: The object path of the interface this path refers to  *  * For a given object path, decomposes the object path into object id and  * requested part, if those parts exist. The caller is responsible for freeing  * the returned value. The *item pointer points to that allocated value and must  * not be freed separately.  *  * As an example, path = "/fi/w1/wpa_supplicant1/Interfaces/1/Networks/0" and  * sep = "Networks" would result in "/fi/w1/wpa_supplicant1/Interfaces/1"  * getting returned and *items set to point to "0".  */
 end_comment
 
 begin_function
@@ -3678,18 +3606,15 @@ name|char
 modifier|*
 name|path
 parameter_list|,
-name|int
-name|p2p_persistent_group
+specifier|const
+name|char
+modifier|*
+name|sep
 parameter_list|,
 name|char
 modifier|*
 modifier|*
-name|network
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|bssid
+name|item
 parameter_list|)
 block|{
 specifier|const
@@ -3709,14 +3634,19 @@ name|obj_path_only
 decl_stmt|;
 name|char
 modifier|*
-name|next_sep
+name|pos
 decl_stmt|;
-comment|/* Be a bit paranoid about path */
+name|size_t
+name|sep_len
+decl_stmt|;
+operator|*
+name|item
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Verify that this starts with our interface prefix */
 if|if
 condition|(
-operator|!
-name|path
-operator|||
 name|os_strncmp
 argument_list|(
 name|path
@@ -3726,10 +3656,13 @@ literal|"/"
 argument_list|,
 name|dev_path_prefix_len
 argument_list|)
+operator|!=
+literal|0
 condition|)
 return|return
 name|NULL
 return|;
+comment|/* not our path */
 comment|/* Ensure there's something at the end of the path */
 if|if
 condition|(
@@ -3763,153 +3696,79 @@ condition|)
 return|return
 name|NULL
 return|;
-name|next_sep
+name|pos
 operator|=
-name|os_strchr
-argument_list|(
 name|obj_path_only
 operator|+
 name|dev_path_prefix_len
+expr_stmt|;
+name|pos
+operator|=
+name|os_strchr
+argument_list|(
+name|pos
 argument_list|,
 literal|'/'
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|next_sep
-operator|!=
+name|pos
+operator|==
 name|NULL
 condition|)
-block|{
-specifier|const
-name|char
-modifier|*
-name|net_part
-init|=
-name|os_strstr
-argument_list|(
-name|next_sep
-argument_list|,
-name|p2p_persistent_group
-condition|?
-name|WPAS_DBUS_NEW_PERSISTENT_GROUPS_PART
-literal|"/"
-else|:
-name|WPAS_DBUS_NEW_NETWORKS_PART
-literal|"/"
-argument_list|)
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|bssid_part
-init|=
-name|os_strstr
-argument_list|(
-name|next_sep
-argument_list|,
-name|WPAS_DBUS_NEW_BSSIDS_PART
-literal|"/"
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|network
-operator|&&
-name|net_part
-condition|)
-block|{
-comment|/* Deal with a request for a configured network */
-specifier|const
-name|char
-modifier|*
-name|net_name
-init|=
-name|net_part
-operator|+
-name|os_strlen
-argument_list|(
-name|p2p_persistent_group
-condition|?
-name|WPAS_DBUS_NEW_PERSISTENT_GROUPS_PART
-literal|"/"
-else|:
-name|WPAS_DBUS_NEW_NETWORKS_PART
-literal|"/"
-argument_list|)
-decl_stmt|;
+return|return
+name|obj_path_only
+return|;
+comment|/* no next item on the path */
+comment|/* Separate network interface prefix from the path */
 operator|*
-name|network
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
-name|os_strlen
-argument_list|(
-name|net_name
-argument_list|)
-condition|)
-operator|*
-name|network
-operator|=
-name|os_strdup
-argument_list|(
-name|net_name
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|bssid
-operator|&&
-name|bssid_part
-condition|)
-block|{
-comment|/* Deal with a request for a scanned BSSID */
-specifier|const
-name|char
-modifier|*
-name|bssid_name
-init|=
-name|bssid_part
-operator|+
-name|os_strlen
-argument_list|(
-name|WPAS_DBUS_NEW_BSSIDS_PART
-literal|"/"
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|os_strlen
-argument_list|(
-name|bssid_name
-argument_list|)
-condition|)
-operator|*
-name|bssid
-operator|=
-name|os_strdup
-argument_list|(
-name|bssid_name
-argument_list|)
-expr_stmt|;
-else|else
-operator|*
-name|bssid
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-comment|/* Cut off interface object path before "/" */
-operator|*
-name|next_sep
+name|pos
+operator|++
 operator|=
 literal|'\0'
 expr_stmt|;
-block|}
+name|sep_len
+operator|=
+name|os_strlen
+argument_list|(
+name|sep
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|os_strncmp
+argument_list|(
+name|pos
+argument_list|,
+name|sep
+argument_list|,
+name|sep_len
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|pos
+index|[
+name|sep_len
+index|]
+operator|!=
+literal|'/'
+condition|)
+return|return
+name|obj_path_only
+return|;
+comment|/* no match */
+comment|/* return a pointer to the requested item */
+operator|*
+name|item
+operator|=
+name|pos
+operator|+
+name|sep_len
+operator|+
+literal|1
+expr_stmt|;
 return|return
 name|obj_path_only
 return|;

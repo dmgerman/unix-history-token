@@ -1144,10 +1144,8 @@ name|def
 operator|==
 name|NULL
 condition|)
-name|_rtld_error
-argument_list|(
-literal|"bind failed no symbol"
-argument_list|)
+name|rtld_die
+argument_list|()
 expr_stmt|;
 name|target
 operator|=

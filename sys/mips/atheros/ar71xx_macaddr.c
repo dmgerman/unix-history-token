@@ -44,12 +44,27 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/ethernet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/atheros/ar71xx_macaddr.h>
 end_include
 
 begin_comment
 comment|/*  * Some boards don't have a separate MAC address for each individual  * device on-board, but instead need to derive them from a single MAC  * address stored somewhere.  */
 end_comment
+
+begin_decl_stmt
+name|uint8_t
+name|ar71xx_board_mac_addr
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Initialise a MAC address 'dst' from a MAC address 'src'.  *  * 'offset' is added to the low three bytes to allow for sequential  * MAC addresses to be derived from a single one.  *  * 'is_local' is whether this 'dst' should be made a local MAC address.  *  * Returns 0 if it was successfully initialised, -1 on error.  */

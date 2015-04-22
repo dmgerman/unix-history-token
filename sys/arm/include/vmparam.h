@@ -314,20 +314,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|UPT_MAX_ADDRESS
-value|VADDR(UPTPTDI + 3, 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|UPT_MIN_ADDRESS
-value|VADDR(UPTPTDI, 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|VM_MIN_ADDRESS
 value|(0x00001000)
 end_define
@@ -342,17 +328,17 @@ begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|KERNBASE
+value|(KERNBASE - 0x00400000)
 end_define
+
+begin_comment
+comment|/* !!! PT2MAP_SIZE */
+end_comment
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* VM_MAXUSER_ADDRESS */
-end_comment
 
 begin_define
 define|#

@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: vs_refresh.c,v 10.53 2013/11/01 11:57:36 zy Exp $"
+literal|"$Id: vs_refresh.c,v 10.54 2015/04/08 16:32:49 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -123,38 +123,32 @@ begin_comment
 comment|/* Flush to screen. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|vs_modeline
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|vs_paint
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * v_repaint --  *	Repaint selected lines from the screen.  *  * PUBLIC: int vs_repaint __P((SCR *, EVENT *));  */
+comment|/*  * v_repaint --  *	Repaint selected lines from the screen.  *  * PUBLIC: int vs_repaint(SCR *, EVENT *);  */
 end_comment
 
 begin_function
@@ -234,7 +228,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_refresh --  *	Refresh all screens.  *  * PUBLIC: int vs_refresh __P((SCR *, int));  */
+comment|/*  * vs_refresh --  *	Refresh all screens.  *  * PUBLIC: int vs_refresh(SCR *, int);  */
 end_comment
 
 begin_function
@@ -2026,10 +2020,6 @@ name|sp
 argument_list|,
 name|O_NUMBER
 argument_list|)
-operator|&&
-name|cnt
-operator|>=
-name|O_NUMBER_LENGTH
 condition|)
 name|cnt
 operator|-=

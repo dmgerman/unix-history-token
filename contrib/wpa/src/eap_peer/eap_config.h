@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP peer configuration data  * Copyright (c) 2003-2008, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * EAP peer configuration data  * Copyright (c) 2003-2013, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -71,7 +71,7 @@ modifier|*
 name|private_key
 decl_stmt|;
 comment|/** 	 * private_key_passwd - Password for private key file 	 * 	 * If left out, this will be asked through control interface. 	 */
-name|u8
+name|char
 modifier|*
 name|private_key_passwd
 decl_stmt|;
@@ -80,7 +80,7 @@ name|u8
 modifier|*
 name|dh_file
 decl_stmt|;
-comment|/** 	 * subject_match - Constraint for server certificate subject 	 * 	 * This substring is matched against the subject of the authentication 	 * server certificate. If this string is set, the server sertificate is 	 * only accepted if it contains this string in the subject. The subject 	 * string is in following format: 	 * 	 * /C=US/ST=CA/L=San Francisco/CN=Test AS/emailAddress=as@n.example.com 	 */
+comment|/** 	 * subject_match - Constraint for server certificate subject 	 * 	 * This substring is matched against the subject of the authentication 	 * server certificate. If this string is set, the server sertificate is 	 * only accepted if it contains this string in the subject. The subject 	 * string is in following format: 	 * 	 * /C=US/ST=CA/L=San Francisco/CN=Test AS/emailAddress=as@n.example.com 	 * 	 * Note: Since this is a substring match, this cannot be used securily 	 * to do a suffix match against a possible domain name in the CN entry. 	 * For such a use case, domain_suffix_match should be used instead. 	 */
 name|u8
 modifier|*
 name|subject_match
@@ -89,6 +89,16 @@ comment|/** 	 * altsubject_match - Constraint for server certificate alt. subjec
 name|u8
 modifier|*
 name|altsubject_match
+decl_stmt|;
+comment|/** 	 * domain_suffix_match - Constraint for server domain name 	 * 	 * If set, this FQDN is used as a suffix match requirement for the 	 * server certificate in SubjectAltName dNSName element(s). If a 	 * matching dNSName is found, this constraint is met. If no dNSName 	 * values are present, this constraint is matched against SubjectName CN 	 * using same suffix match comparison. Suffix match here means that the 	 * host/domain name is compared one label at a time starting from the 	 * top-level domain and all the labels in domain_suffix_match shall be 	 * included in the certificate. The certificate may include additional 	 * sub-level labels in addition to the required labels. 	 * 	 * For example, domain_suffix_match=example.com would match 	 * test.example.com but would not match test-example.com. 	 */
+name|char
+modifier|*
+name|domain_suffix_match
+decl_stmt|;
+comment|/** 	 * domain_match - Constraint for server domain name 	 * 	 * If set, this FQDN is used as a full match requirement for the 	 * server certificate in SubjectAltName dNSName element(s). If a 	 * matching dNSName is found, this constraint is met. If no dNSName 	 * values are present, this constraint is matched against SubjectName CN 	 * using same full match comparison. This behavior is similar to 	 * domain_suffix_match, but has the requirement of a full match, i.e., 	 * no subdomains or wildcard matches are allowed. Case-insensitive 	 * comparison is used, so "Example.com" matches "example.com", but would 	 * not match "test.Example.com". 	 */
+name|char
+modifier|*
+name|domain_match
 decl_stmt|;
 comment|/** 	 * ca_cert2 - File path to CA certificate file (PEM/DER) (Phase 2) 	 * 	 * This file can have one or more trusted CA certificates. If ca_cert2 	 * and ca_path2 are not included, server certificate will not be 	 * verified. This is insecure and a trusted CA certificate should 	 * always be configured. Full path to the file should be used since 	 * working directory may change when wpa_supplicant is run in the 	 * background. 	 * 	 * This field is like ca_cert, but used for phase 2 (inside 	 * EAP-TTLS/PEAP/FAST tunnel) authentication. 	 * 	 * Alternatively, a named configuration blob can be used by setting 	 * this to blob://blob_name. 	 */
 name|u8
@@ -111,7 +121,7 @@ modifier|*
 name|private_key2
 decl_stmt|;
 comment|/** 	 * private_key2_passwd -  Password for private key file 	 * 	 * This field is like private_key_passwd, but used for phase 2 (inside 	 * EAP-TTLS/PEAP/FAST tunnel) authentication. 	 */
-name|u8
+name|char
 modifier|*
 name|private_key2_passwd
 decl_stmt|;
@@ -130,18 +140,28 @@ name|u8
 modifier|*
 name|altsubject_match2
 decl_stmt|;
+comment|/** 	 * domain_suffix_match2 - Constraint for server domain name 	 * 	 * This field is like domain_suffix_match, but used for phase 2 (inside 	 * EAP-TTLS/PEAP/FAST tunnel) authentication. 	 */
+name|char
+modifier|*
+name|domain_suffix_match2
+decl_stmt|;
+comment|/** 	 * domain_match2 - Constraint for server domain name 	 * 	 * This field is like domain_match, but used for phase 2 (inside 	 * EAP-TTLS/PEAP/FAST tunnel) authentication. 	 */
+name|char
+modifier|*
+name|domain_match2
+decl_stmt|;
 comment|/** 	 * eap_methods - Allowed EAP methods 	 * 	 * (vendor=EAP_VENDOR_IETF,method=EAP_TYPE_NONE) terminated list of 	 * allowed EAP methods or %NULL if all methods are accepted. 	 */
 name|struct
 name|eap_method_type
 modifier|*
 name|eap_methods
 decl_stmt|;
-comment|/** 	 * phase1 - Phase 1 (outer authentication) parameters 	 * 	 * String with field-value pairs, e.g., "peapver=0" or 	 * "peapver=1 peaplabel=1". 	 * 	 * 'peapver' can be used to force which PEAP version (0 or 1) is used. 	 * 	 * 'peaplabel=1' can be used to force new label, "client PEAP 	 * encryption",	to be used during key derivation when PEAPv1 or newer. 	 * 	 * Most existing PEAPv1 implementation seem to be using the old label, 	 * "client EAP encryption", and wpa_supplicant is now using that as the 	 * default value. 	 * 	 * Some servers, e.g., Radiator, may require peaplabel=1 configuration 	 * to interoperate with PEAPv1; see eap_testing.txt for more details. 	 * 	 * 'peap_outer_success=0' can be used to terminate PEAP authentication 	 * on tunneled EAP-Success. This is required with some RADIUS servers 	 * that implement draft-josefsson-pppext-eap-tls-eap-05.txt (e.g., 	 * Lucent NavisRadius v4.4.0 with PEAP in "IETF Draft 5" mode). 	 * 	 * include_tls_length=1 can be used to force wpa_supplicant to include 	 * TLS Message Length field in all TLS messages even if they are not 	 * fragmented. 	 * 	 * sim_min_num_chal=3 can be used to configure EAP-SIM to require three 	 * challenges (by default, it accepts 2 or 3). 	 * 	 * result_ind=1 can be used to enable EAP-SIM and EAP-AKA to use 	 * protected result indication. 	 * 	 * fast_provisioning option can be used to enable in-line provisioning 	 * of EAP-FAST credentials (PAC): 	 * 0 = disabled, 	 * 1 = allow unauthenticated provisioning, 	 * 2 = allow authenticated provisioning, 	 * 3 = allow both unauthenticated and authenticated provisioning 	 * 	 * fast_max_pac_list_len=num option can be used to set the maximum 	 * number of PAC entries to store in a PAC list (default: 10). 	 * 	 * fast_pac_format=binary option can be used to select binary format 	 * for storing PAC entries in order to save some space (the default 	 * text format uses about 2.5 times the size of minimal binary format). 	 * 	 * crypto_binding option can be used to control PEAPv0 cryptobinding 	 * behavior: 	 * 0 = do not use cryptobinding (default) 	 * 1 = use cryptobinding if server supports it 	 * 2 = require cryptobinding 	 * 	 * EAP-WSC (WPS) uses following options: pin=Device_Password and 	 * uuid=Device_UUID 	 */
+comment|/** 	 * phase1 - Phase 1 (outer authentication) parameters 	 * 	 * String with field-value pairs, e.g., "peapver=0" or 	 * "peapver=1 peaplabel=1". 	 * 	 * 'peapver' can be used to force which PEAP version (0 or 1) is used. 	 * 	 * 'peaplabel=1' can be used to force new label, "client PEAP 	 * encryption",	to be used during key derivation when PEAPv1 or newer. 	 * 	 * Most existing PEAPv1 implementation seem to be using the old label, 	 * "client EAP encryption", and wpa_supplicant is now using that as the 	 * default value. 	 * 	 * Some servers, e.g., Radiator, may require peaplabel=1 configuration 	 * to interoperate with PEAPv1; see eap_testing.txt for more details. 	 * 	 * 'peap_outer_success=0' can be used to terminate PEAP authentication 	 * on tunneled EAP-Success. This is required with some RADIUS servers 	 * that implement draft-josefsson-pppext-eap-tls-eap-05.txt (e.g., 	 * Lucent NavisRadius v4.4.0 with PEAP in "IETF Draft 5" mode). 	 * 	 * include_tls_length=1 can be used to force wpa_supplicant to include 	 * TLS Message Length field in all TLS messages even if they are not 	 * fragmented. 	 * 	 * sim_min_num_chal=3 can be used to configure EAP-SIM to require three 	 * challenges (by default, it accepts 2 or 3). 	 * 	 * result_ind=1 can be used to enable EAP-SIM and EAP-AKA to use 	 * protected result indication. 	 * 	 * fast_provisioning option can be used to enable in-line provisioning 	 * of EAP-FAST credentials (PAC): 	 * 0 = disabled, 	 * 1 = allow unauthenticated provisioning, 	 * 2 = allow authenticated provisioning, 	 * 3 = allow both unauthenticated and authenticated provisioning 	 * 	 * fast_max_pac_list_len=num option can be used to set the maximum 	 * number of PAC entries to store in a PAC list (default: 10). 	 * 	 * fast_pac_format=binary option can be used to select binary format 	 * for storing PAC entries in order to save some space (the default 	 * text format uses about 2.5 times the size of minimal binary format). 	 * 	 * crypto_binding option can be used to control PEAPv0 cryptobinding 	 * behavior: 	 * 0 = do not use cryptobinding (default) 	 * 1 = use cryptobinding if server supports it 	 * 2 = require cryptobinding 	 * 	 * EAP-WSC (WPS) uses following options: pin=Device_Password and 	 * uuid=Device_UUID 	 * 	 * For wired IEEE 802.1X authentication, "allow_canned_success=1" can be 	 * used to configure a mode that allows EAP-Success (and EAP-Failure) 	 * without going through authentication step. Some switches use such 	 * sequence when forcing the port to be authorized/unauthorized or as a 	 * fallback option if the authentication server is unreachable. By 	 * default, wpa_supplicant discards such frames to protect against 	 * potential attacks by rogue devices, but this option can be used to 	 * disable that protection for cases where the server/authenticator does 	 * not need to be authenticated. 	 */
 name|char
 modifier|*
 name|phase1
 decl_stmt|;
-comment|/** 	 * phase2 - Phase2 (inner authentication with TLS tunnel) parameters 	 * 	 * String with field-value pairs, e.g., "auth=MSCHAPV2" for EAP-PEAP or 	 * "autheap=MSCHAPV2 autheap=MD5" for EAP-TTLS. 	 */
+comment|/** 	 * phase2 - Phase2 (inner authentication with TLS tunnel) parameters 	 * 	 * String with field-value pairs, e.g., "auth=MSCHAPV2" for EAP-PEAP or 	 * "autheap=MSCHAPV2 autheap=MD5" for EAP-TTLS. "mschapv2_retry=0" can 	 * be used to disable MSCHAPv2 password retry in authentication failure 	 * cases. 	 */
 name|char
 modifier|*
 name|phase2
@@ -280,6 +300,28 @@ value|BIT(1)
 comment|/** 	 * flags - Network configuration flags (bitfield) 	 * 	 * This variable is used for internal flags to describe further details 	 * for the network parameters. 	 * bit 0 = password is represented as a 16-byte NtPasswordHash value 	 *         instead of plaintext password 	 * bit 1 = password is stored in external storage; the value in the 	 *         password field is the name of that external entry 	 */
 name|u32
 name|flags
+decl_stmt|;
+comment|/** 	 * ocsp - Whether to use/require OCSP to check server certificate 	 * 	 * 0 = do not use OCSP stapling (TLS certificate status extension) 	 * 1 = try to use OCSP stapling, but not require response 	 * 2 = require valid OCSP stapling response 	 */
+name|int
+name|ocsp
+decl_stmt|;
+comment|/** 	 * external_sim_resp - Response from external SIM processing 	 * 	 * This field should not be set in configuration step. It is only used 	 * internally when control interface is used to request external 	 * SIM/USIM processing. 	 */
+name|char
+modifier|*
+name|external_sim_resp
+decl_stmt|;
+comment|/** 	 * sim_num - User selected SIM identifier 	 * 	 * This variable is used for identifying which SIM is used if the system 	 * has more than one. 	 */
+name|int
+name|sim_num
+decl_stmt|;
+comment|/** 	 * openssl_ciphers - OpenSSL cipher string 	 * 	 * This is an OpenSSL specific configuration option for configuring the 	 * ciphers for this connection. If not set, the default cipher suite 	 * list is used. 	 */
+name|char
+modifier|*
+name|openssl_ciphers
+decl_stmt|;
+comment|/** 	 * erp - Whether EAP Re-authentication Protocol (ERP) is enabled 	 */
+name|int
+name|erp
 decl_stmt|;
 block|}
 struct|;

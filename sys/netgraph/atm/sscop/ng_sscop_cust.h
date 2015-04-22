@@ -316,7 +316,7 @@ name|S
 parameter_list|,
 name|T
 parameter_list|)
-value|((S)->t_##T.c_flags& (CALLOUT_PENDING))
+value|(callout_pending(&(S)->t_##T))
 end_define
 
 begin_comment

@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -93,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
 end_include
 
 begin_include
@@ -140,7 +140,7 @@ name|conf
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -263,7 +263,7 @@ name|targ
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -373,7 +373,7 @@ name|name
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -412,7 +412,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -546,7 +546,7 @@ operator|>=
 name|MAX_NAME_LEN
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"overlong name for \"%s\"; max length allowed "
 literal|"by iSCSI specification is %d characters"
@@ -636,7 +636,7 @@ operator|==
 literal|':'
 condition|)
 continue|continue;
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"invalid character \"%c\" in iSCSI name "
 literal|"\"%s\"; allowed characters are letters, digits, "
@@ -686,7 +686,7 @@ argument_list|)
 operator|+
 literal|16
 condition|)
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"invalid iSCSI name \"%s\"; the \"eui.\" "
 literal|"should be followed by exactly 16 hexadecimal "
@@ -727,7 +727,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"invalid character \"%c\" in iSCSI "
 literal|"name \"%s\"; allowed characters are 1-9 "
@@ -777,7 +777,7 @@ argument_list|)
 operator|+
 literal|32
 condition|)
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"invalid iSCSI name \"%s\"; the \"naa.\" "
 literal|"should be followed by at most 32 hexadecimal "
@@ -818,7 +818,7 @@ index|]
 argument_list|)
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"invalid character \"%c\" in ISCSI "
 literal|"name \"%s\"; allowed characters are 1-9 "
@@ -838,7 +838,7 @@ block|}
 block|}
 else|else
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"invalid iSCSI name \"%s\"; should start with "
 literal|"either \".iqn\", \"eui.\", or \"naa.\""
@@ -916,7 +916,7 @@ name|t_name
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -941,7 +941,7 @@ name|t_name
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -973,7 +973,7 @@ argument_list|)
 operator|==
 name|false
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1007,7 +1007,7 @@ name|t_address
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1044,7 +1044,7 @@ argument_list|)
 operator|==
 name|false
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1150,7 +1150,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1170,7 +1170,7 @@ name|t_secret
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1204,7 +1204,7 @@ name|t_mutual_user
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1224,7 +1224,7 @@ name|t_mutual_secret
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1669,7 +1669,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"ISCSISADD"
 argument_list|)
@@ -1755,7 +1755,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"ISCSISMODIFY"
 argument_list|)
@@ -1864,7 +1864,7 @@ name|states
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -1933,7 +1933,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1982,7 +1982,7 @@ name|isl
 operator|.
 name|isl_nentries
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2140,7 +2140,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"ISCSISMODIFY"
 argument_list|)
@@ -2211,7 +2211,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"ISCSISREMOVE"
 argument_list|)
@@ -2308,7 +2308,7 @@ name|states
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -2378,7 +2378,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"ISCSISLIST"
 argument_list|)
@@ -2396,6 +2396,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|xo_open_list
+argument_list|(
+literal|"session"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2427,108 +2432,168 @@ name|state
 operator|->
 name|iss_conf
 expr_stmt|;
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"Session ID:       %u\n"
+literal|"session"
+argument_list|)
+expr_stmt|;
+comment|/* 			 * Display-only modifier as this information 			 * is also present within the 'session' container 			 */
+name|xo_emit
+argument_list|(
+literal|"{L:/%-18s}{V:sessionId/%u}\n"
+argument_list|,
+literal|"Session ID:"
 argument_list|,
 name|state
 operator|->
 name|iss_id
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"Initiator name:   %s\n"
+literal|"initiator"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{L:/%-18s}{V:name/%s}\n"
+argument_list|,
+literal|"Initiator name:"
 argument_list|,
 name|conf
 operator|->
 name|isc_initiator
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Initiator portal: %s\n"
+literal|"{L:/%-18s}{V:portal/%s}\n"
+argument_list|,
+literal|"Initiator portal:"
 argument_list|,
 name|conf
 operator|->
 name|isc_initiator_addr
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Initiator alias:  %s\n"
+literal|"{L:/%-18s}{V:alias/%s}\n"
+argument_list|,
+literal|"Initiator alias:"
 argument_list|,
 name|conf
 operator|->
 name|isc_initiator_alias
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_close_container
 argument_list|(
-literal|"Target name:      %s\n"
+literal|"initiator"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"target"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{L:/%-18s}{V:name/%s}\n"
+argument_list|,
+literal|"Target name:"
 argument_list|,
 name|conf
 operator|->
 name|isc_target
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Target portal:    %s\n"
+literal|"{L:/%-18s}{V:portal/%s}\n"
+argument_list|,
+literal|"Target portal:"
 argument_list|,
 name|conf
 operator|->
 name|isc_target_addr
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Target alias:     %s\n"
+literal|"{L:/%-18s}{V:alias/%s}\n"
+argument_list|,
+literal|"Target alias:"
 argument_list|,
 name|state
 operator|->
 name|iss_target_alias
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_close_container
 argument_list|(
-literal|"User:             %s\n"
+literal|"target"
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"auth"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{L:/%-18s}{V:user/%s}\n"
+argument_list|,
+literal|"User:"
 argument_list|,
 name|conf
 operator|->
 name|isc_user
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Secret:           %s\n"
+literal|"{L:/%-18s}{V:secret/%s}\n"
+argument_list|,
+literal|"Secret:"
 argument_list|,
 name|conf
 operator|->
 name|isc_secret
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Mutual user:      %s\n"
+literal|"{L:/%-18s}{V:mutualUser/%s}\n"
+argument_list|,
+literal|"Mutual user:"
 argument_list|,
 name|conf
 operator|->
 name|isc_mutual_user
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Mutual secret:    %s\n"
+literal|"{L:/%-18s}{V:mutualSecret/%s}\n"
+argument_list|,
+literal|"Mutual secret:"
 argument_list|,
 name|conf
 operator|->
 name|isc_mutual_secret
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_close_container
 argument_list|(
-literal|"Session type:     %s\n"
+literal|"auth"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{L:/%-18s}{V:type/%s}\n"
+argument_list|,
+literal|"Session type:"
 argument_list|,
 name|conf
 operator|->
@@ -2539,9 +2604,11 @@ else|:
 literal|"Normal"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Session state:    %s\n"
+literal|"{L:/%-18s}{V:state/%s}\n"
+argument_list|,
+literal|"Session state:"
 argument_list|,
 name|state
 operator|->
@@ -2552,18 +2619,22 @@ else|:
 literal|"Disconnected"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Failure reason:   %s\n"
+literal|"{L:/%-18s}{V:failureReason/%s}\n"
+argument_list|,
+literal|"Failure reason:"
 argument_list|,
 name|state
 operator|->
 name|iss_reason
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Header digest:    %s\n"
+literal|"{L:/%-18s}{V:headerDigest/%s}\n"
+argument_list|,
+literal|"Header digest:"
 argument_list|,
 name|state
 operator|->
@@ -2576,9 +2647,11 @@ else|:
 literal|"None"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Data digest:      %s\n"
+literal|"{L:/%-18s}{V:dataDigest/%s}\n"
+argument_list|,
+literal|"Data digest:"
 argument_list|,
 name|state
 operator|->
@@ -2591,18 +2664,22 @@ else|:
 literal|"None"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"DataSegmentLen:   %d\n"
+literal|"{L:/%-18s}{V:dataSegmentLen/%d}\n"
+argument_list|,
+literal|"DataSegmentLen:"
 argument_list|,
 name|state
 operator|->
 name|iss_max_data_segment_length
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"ImmediateData:    %s\n"
+literal|"{L:/%-18s}{V:immediateData/%s}\n"
+argument_list|,
+literal|"ImmediateData:"
 argument_list|,
 name|state
 operator|->
@@ -2613,9 +2690,11 @@ else|:
 literal|"No"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"iSER (RDMA):      %s\n"
+literal|"{L:/%-18s}{V:iSER/%s}\n"
+argument_list|,
+literal|"iSER (RDMA):"
 argument_list|,
 name|conf
 operator|->
@@ -2626,18 +2705,22 @@ else|:
 literal|"No"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Offload driver:   %s\n"
+literal|"{L:/%-18s}{V:offloadDriver/%s}\n"
+argument_list|,
+literal|"Offload driver:"
 argument_list|,
 name|state
 operator|->
 name|iss_offload
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Device nodes:     "
+literal|"{L:/%-18s}"
+argument_list|,
+literal|"Device nodes:"
 argument_list|)
 expr_stmt|;
 name|print_periphs
@@ -2647,24 +2730,47 @@ operator|->
 name|iss_id
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n\n"
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"session"
+argument_list|)
+expr_stmt|;
 block|}
+name|xo_close_list
+argument_list|(
+literal|"session"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-36s %-16s %s\n"
+literal|"{T:/%-36s} {T:/%-16s} {T:/%s}\n"
 argument_list|,
 literal|"Target name"
 argument_list|,
 literal|"Target portal"
 argument_list|,
 literal|"State"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isl
+operator|.
+name|isl_nentries
+operator|!=
+literal|0
+condition|)
+name|xo_open_list
+argument_list|(
+literal|"session"
 argument_list|)
 expr_stmt|;
 for|for
@@ -2698,9 +2804,14 @@ name|state
 operator|->
 name|iss_conf
 expr_stmt|;
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"%-36s %-16s "
+literal|"session"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{V:name/%-36s/%s} {V:portal/%-16s/%s} "
 argument_list|,
 name|conf
 operator|->
@@ -2723,9 +2834,9 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s\n"
+literal|"{V:state/%s}\n"
 argument_list|,
 name|state
 operator|->
@@ -2742,9 +2853,11 @@ operator|->
 name|isc_discovery
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Discovery\n"
+literal|"{V:state}\n"
+argument_list|,
+literal|"Discovery"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2756,9 +2869,11 @@ operator|->
 name|iss_connected
 condition|)
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Connected: "
+literal|"{V:state}: "
+argument_list|,
+literal|"Connected"
 argument_list|)
 expr_stmt|;
 name|print_periphs
@@ -2768,7 +2883,7 @@ operator|->
 name|iss_id
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -2776,14 +2891,34 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|xo_emit
 argument_list|(
-literal|"Disconnected\n"
+literal|"{V:state}\n"
+argument_list|,
+literal|"Disconnected"
 argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|xo_close_instance
+argument_list|(
+literal|"session"
+argument_list|)
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|isl
+operator|.
+name|isl_nentries
+operator|!=
+literal|0
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"session"
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2911,7 +3046,7 @@ name|c
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -3039,6 +3174,20 @@ name|target
 modifier|*
 name|targ
 decl_stmt|;
+name|argc
+operator|=
+name|xo_parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"iscsictl"
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -3150,7 +3299,7 @@ argument_list|(
 name|optarg
 argument_list|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3163,7 +3312,7 @@ name|session_id
 operator|<
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3176,7 +3325,7 @@ name|session_id
 operator|>
 name|UINT_MAX
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3284,7 +3433,7 @@ name|Lflag
 operator|>
 literal|1
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3312,7 +3461,7 @@ name|portal
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3325,7 +3474,7 @@ name|target
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3338,7 +3487,7 @@ name|user
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3351,7 +3500,7 @@ name|secret
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3364,7 +3513,7 @@ name|nickname
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3377,7 +3526,7 @@ name|discovery_host
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3399,7 +3548,7 @@ name|portal
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3412,7 +3561,7 @@ name|target
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3425,7 +3574,7 @@ name|user
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3438,7 +3587,7 @@ name|secret
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3451,7 +3600,7 @@ name|discovery_host
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3473,7 +3622,7 @@ name|portal
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3486,7 +3635,7 @@ name|target
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3506,7 +3655,7 @@ name|portal
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3523,7 +3672,7 @@ name|portal
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3540,7 +3689,7 @@ name|target
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3558,7 +3707,7 @@ name|secret
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3575,7 +3724,7 @@ name|user
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3589,7 +3738,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3602,7 +3751,7 @@ name|vflag
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3625,7 +3774,7 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3638,7 +3787,7 @@ name|discovery_host
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3651,7 +3800,7 @@ name|aflag
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3671,7 +3820,7 @@ name|portal
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3684,7 +3833,7 @@ name|target
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3697,7 +3846,7 @@ name|user
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3710,7 +3859,7 @@ name|secret
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3724,7 +3873,7 @@ name|vflag
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3746,7 +3895,7 @@ name|user
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3759,7 +3908,7 @@ name|secret
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3772,7 +3921,7 @@ name|discovery_host
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3792,7 +3941,7 @@ name|portal
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3805,7 +3954,7 @@ name|target
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3818,7 +3967,7 @@ name|nickname
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3840,7 +3989,7 @@ name|portal
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3853,7 +4002,7 @@ name|target
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3873,7 +4022,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3888,7 +4037,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3901,7 +4050,7 @@ name|vflag
 operator|!=
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3924,7 +4073,7 @@ name|portal
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3937,7 +4086,7 @@ name|target
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3950,7 +4099,7 @@ name|user
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3963,7 +4112,7 @@ name|secret
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3976,7 +4125,7 @@ name|nickname
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3989,7 +4138,7 @@ name|discovery_host
 operator|!=
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -4003,7 +4152,7 @@ operator|!=
 operator|-
 literal|1
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -4070,7 +4219,7 @@ name|iscsi_fd
 operator|<
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -4145,7 +4294,7 @@ name|targ
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -4264,7 +4413,7 @@ argument_list|)
 operator|==
 name|false
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -4415,7 +4564,7 @@ name|error
 operator|!=
 literal|0
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -4433,6 +4582,14 @@ operator|(
 literal|1
 operator|)
 return|;
+name|xo_close_container
+argument_list|(
+literal|"iscsictl"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0

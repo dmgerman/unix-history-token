@@ -84,7 +84,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * v_yank -- [buffer][count]y[count][motion]  *	     [buffer][count]Y  *	Yank text (or lines of text) into a cut buffer.  *  * !!!  * Historic vi moved the cursor to the from MARK if it was before the current  * cursor and on a different line, e.g., "yk" moves the cursor but "yj" and  * "yl" do not.  Unfortunately, it's too late to change this now.  Matching  * the historic semantics isn't easy.  The line number was always changed and  * column movement was usually relative.  However, "y'a" moved the cursor to  * the first non-blank of the line marked by a, while "y`a" moved the cursor  * to the line and column marked by a.  Hopefully, the motion component code  * got it right...   Unlike delete, we make no adjustments here.  *  * PUBLIC: int v_yank __P((SCR *, VICMD *));  */
+comment|/*  * v_yank -- [buffer][count]y[count][motion]  *	     [buffer][count]Y  *	Yank text (or lines of text) into a cut buffer.  *  * !!!  * Historic vi moved the cursor to the from MARK if it was before the current  * cursor and on a different line, e.g., "yk" moves the cursor but "yj" and  * "yl" do not.  Unfortunately, it's too late to change this now.  Matching  * the historic semantics isn't easy.  The line number was always changed and  * column movement was usually relative.  However, "y'a" moved the cursor to  * the first non-blank of the line marked by a, while "y`a" moved the cursor  * to the line and column marked by a.  Hopefully, the motion component code  * got it right...   Unlike delete, we make no adjustments here.  *  * PUBLIC: int v_yank(SCR *, VICMD *);  */
 end_comment
 
 begin_function

@@ -63,6 +63,27 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DEFAULT_USER_MPM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_MAX_PEER_LINKS
+value|99
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_MESH_MAX_INACTIVITY
+value|300
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_FAST_REAUTH
 value|1
 end_define
@@ -86,6 +107,13 @@ define|#
 directive|define
 name|DEFAULT_P2P_GO_MAX_INACTIVITY
 value|(5 * 60)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_P2P_OPTIMIZE_LISTEN_CHAN
+value|0
 end_define
 
 begin_define
@@ -123,6 +151,48 @@ name|DEFAULT_ACCESS_NETWORK_TYPE
 value|15
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEFAULT_SCAN_CUR_FREQ
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_P2P_SEARCH_DELAY
+value|500
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_RAND_ADDR_LIFETIME
+value|60
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_KEY_MGMT_OFFLOAD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_CERT_IN_CB
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_P2P_GO_CTWINDOW
+value|0
+end_define
+
 begin_include
 include|#
 directive|include
@@ -154,6 +224,10 @@ decl_stmt|;
 comment|/** 	 * id - Unique id for the credential 	 * 	 * This identifier is used as a unique identifier for each credential 	 * block when using the control interface. Each credential is allocated 	 * an id when it is being created, either when reading the 	 * configuration file or when a new credential is added through the 	 * control interface. 	 */
 name|int
 name|id
+decl_stmt|;
+comment|/** 	 * temporary - Whether this credential is temporary and not to be saved 	 */
+name|int
+name|temporary
 decl_stmt|;
 comment|/** 	 * priority - Priority group 	 * 	 * By default, all networks and credentials get the same priority group 	 * (0). This field can be used to give higher priority for credentials 	 * (and similarly in struct wpa_ssid for network blocks) to change the 	 * Interworking automatic networking selection behavior. The matching 	 * network (based on either an enabled network block or a credential) 	 * with the highest priority value will be selected. 	 */
 name|int
@@ -212,10 +286,20 @@ name|char
 modifier|*
 name|milenage
 decl_stmt|;
-comment|/** 	 * domain - Home service provider FQDN 	 * 	 * This is used to compare against the Domain Name List to figure out 	 * whether the AP is operated by the Home SP. 	 */
+comment|/** 	 * domain_suffix_match - Constraint for server domain name 	 * 	 * If set, this FQDN is used as a suffix match requirement for the AAA 	 * server certificate in SubjectAltName dNSName element(s). If a 	 * matching dNSName is found, this constraint is met. If no dNSName 	 * values are present, this constraint is matched against SubjectName CN 	 * using same suffix match comparison. Suffix match here means that the 	 * host/domain name is compared one label at a time starting from the 	 * top-level domain and all the labels in @domain_suffix_match shall be 	 * included in the certificate. The certificate may include additional 	 * sub-level labels in addition to the required labels. 	 * 	 * For example, domain_suffix_match=example.com would match 	 * test.example.com but would not match test-example.com. 	 */
 name|char
 modifier|*
+name|domain_suffix_match
+decl_stmt|;
+comment|/** 	 * domain - Home service provider FQDN(s) 	 * 	 * This is used to compare against the Domain Name List to figure out 	 * whether the AP is operated by the Home SP. Multiple domain entries 	 * can be used to configure alternative FQDNs that will be considered 	 * home networks. 	 */
+name|char
+modifier|*
+modifier|*
 name|domain
+decl_stmt|;
+comment|/** 	 * num_domain - Number of FQDNs in the domain array 	 */
+name|size_t
+name|num_domain
 decl_stmt|;
 comment|/** 	 * roaming_consortium - Roaming Consortium OI 	 * 	 * If roaming_consortium_len is non-zero, this field contains the 	 * Roaming Consortium OI that can be used to determine which access 	 * points support authentication with this credential. This is an 	 * alternative to the use of the realm parameter. When using Roaming 	 * Consortium to match the network, the EAP parameters need to be 	 * pre-configured with the credential since the NAI Realm information 	 * may not be available or fetched. 	 */
 name|u8
@@ -227,6 +311,15 @@ decl_stmt|;
 comment|/** 	 * roaming_consortium_len - Length of roaming_consortium 	 */
 name|size_t
 name|roaming_consortium_len
+decl_stmt|;
+name|u8
+name|required_roaming_consortium
+index|[
+literal|15
+index|]
+decl_stmt|;
+name|size_t
+name|required_roaming_consortium_len
 decl_stmt|;
 comment|/** 	 * eap_method - EAP method to use 	 * 	 * Pre-configured EAP method to use with this credential or %NULL to 	 * indicate no EAP method is selected, i.e., the method will be 	 * selected automatically based on ANQP information. 	 */
 name|struct
@@ -262,6 +355,88 @@ name|excluded_ssid
 struct|;
 name|size_t
 name|num_excluded_ssid
+decl_stmt|;
+struct|struct
+name|roaming_partner
+block|{
+name|char
+name|fqdn
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|int
+name|exact_match
+decl_stmt|;
+name|u8
+name|priority
+decl_stmt|;
+name|char
+name|country
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+modifier|*
+name|roaming_partner
+struct|;
+name|size_t
+name|num_roaming_partner
+decl_stmt|;
+name|int
+name|update_identifier
+decl_stmt|;
+comment|/** 	 * provisioning_sp - FQDN of the SP that provisioned the credential 	 */
+name|char
+modifier|*
+name|provisioning_sp
+decl_stmt|;
+comment|/** 	 * sp_priority - Credential priority within a provisioning SP 	 * 	 * This is the priority of the credential among all credentials 	 * provisionined by the same SP (i.e., for entries that have identical 	 * provisioning_sp value). The range of this priority is 0-255 with 0 	 * being the highest and 255 the lower priority. 	 */
+name|int
+name|sp_priority
+decl_stmt|;
+name|unsigned
+name|int
+name|min_dl_bandwidth_home
+decl_stmt|;
+name|unsigned
+name|int
+name|min_ul_bandwidth_home
+decl_stmt|;
+name|unsigned
+name|int
+name|min_dl_bandwidth_roaming
+decl_stmt|;
+name|unsigned
+name|int
+name|min_ul_bandwidth_roaming
+decl_stmt|;
+comment|/** 	 * max_bss_load - Maximum BSS Load Channel Utilization (1..255) 	 * This value is used as the maximum channel utilization for network 	 * selection purposes for home networks. If the AP does not advertise 	 * BSS Load or if the limit would prevent any connection, this 	 * constraint will be ignored. 	 */
+name|unsigned
+name|int
+name|max_bss_load
+decl_stmt|;
+name|unsigned
+name|int
+name|num_req_conn_capab
+decl_stmt|;
+name|u8
+modifier|*
+name|req_conn_capab_proto
+decl_stmt|;
+name|int
+modifier|*
+modifier|*
+name|req_conn_capab_port
+decl_stmt|;
+comment|/** 	 * ocsp - Whether to use/require OCSP to check server certificate 	 * 	 * 0 = do not use OCSP stapling (TLS certificate status extension) 	 * 1 = try to use OCSP stapling, but not require response 	 * 2 = require valid OCSP stapling response 	 */
+name|int
+name|ocsp
+decl_stmt|;
+comment|/** 	 * sim_num - User selected SIM identifier 	 * 	 * This variable is used for identifying which SIM is used if the system 	 * has more than one. 	 */
+name|int
+name|sim_num
 decl_stmt|;
 block|}
 struct|;
@@ -372,6 +547,20 @@ name|CFG_CHANGED_EXT_PW_BACKEND
 value|BIT(14)
 end_define
 
+begin_define
+define|#
+directive|define
+name|CFG_CHANGED_NFC_PASSWORD_TOKEN
+value|BIT(15)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CFG_CHANGED_P2P_PASSPHRASE_LEN
+value|BIT(16)
+end_define
+
 begin_comment
 comment|/**  * struct wpa_config - wpa_supplicant configuration data  *  * This data structure is presents the per-interface (radio) configuration  * data. In many cases, there is only one struct wpa_config instance, but if  * more than one network interface is being controlled, one instance is used  * for each.  */
 end_comment
@@ -411,6 +600,11 @@ comment|/** 	 * ap_scan - AP scanning/selection 	 * 	 * By default, wpa_supplica
 name|int
 name|ap_scan
 decl_stmt|;
+comment|/** 	 * bgscan - Background scan and roaming parameters or %NULL if none 	 * 	 * This is an optional set of parameters for background scanning and 	 * roaming within a network (ESS). For more detailed information see 	 * ssid block documentation. 	 * 	 * The variable defines default bgscan behavior for all BSS station 	 * networks except for those which have their own bgscan configuration. 	 */
+name|char
+modifier|*
+name|bgscan
+decl_stmt|;
 comment|/** 	 * disable_scan_offload - Disable automatic offloading of scan requests 	 * 	 * By default, %wpa_supplicant tries to offload scanning if the driver 	 * indicates support for this (sched_scan). This configuration 	 * parameter can be used to disable this offloading mechanism. 	 */
 name|int
 name|disable_scan_offload
@@ -444,6 +638,11 @@ name|char
 modifier|*
 name|pkcs11_module_path
 decl_stmt|;
+comment|/** 	 * openssl_ciphers - OpenSSL cipher string 	 * 	 * This is an OpenSSL specific configuration option for configuring the 	 * default ciphers. If not set, "DEFAULT:!EXP:!LOW" is used as the 	 * default. 	 */
+name|char
+modifier|*
+name|openssl_ciphers
+decl_stmt|;
 comment|/** 	 * pcsc_reader - PC/SC reader name prefix 	 * 	 * If not %NULL, PC/SC reader with a name that matches this prefix is 	 * initialized for SIM/USIM access. Empty string can be used to match 	 * the first available reader. 	 */
 name|char
 modifier|*
@@ -453,6 +652,10 @@ comment|/** 	 * pcsc_pin - PIN for USIM, GSM SIM, and smartcards 	 * 	 * This fi
 name|char
 modifier|*
 name|pcsc_pin
+decl_stmt|;
+comment|/** 	 * external_sim - Use external processing for SIM/USIM operations 	 */
+name|int
+name|external_sim
 decl_stmt|;
 comment|/** 	 * driver_param - Driver interface parameters 	 * 	 * This text string is passed to the selected driver interface with the 	 * optional struct wpa_driver_ops::set_param() handler. This can be 	 * used to configure driver specific options without having to add new 	 * driver interface functionality. 	 */
 name|char
@@ -598,6 +801,19 @@ modifier|*
 name|p2p_pref_chan
 decl_stmt|;
 name|struct
+name|wpa_freq_range_list
+name|p2p_no_go_freq
+decl_stmt|;
+name|int
+name|p2p_add_cli_chan
+decl_stmt|;
+name|int
+name|p2p_ignore_shared_freq
+decl_stmt|;
+name|int
+name|p2p_optimize_listen_chan
+decl_stmt|;
+name|struct
 name|wpabuf
 modifier|*
 name|wps_vendor_ext_m1
@@ -618,6 +834,11 @@ decl_stmt|;
 comment|/** 	 * p2p_group_idle - Maximum idle time in seconds for P2P group 	 * 	 * This value controls how long a P2P group is maintained after there 	 * is no other members in the group. As a GO, this means no associated 	 * stations in the group. As a P2P client, this means no GO seen in 	 * scan results. The maximum idle time is specified in seconds with 0 	 * indicating no time limit, i.e., the P2P group remains in active 	 * state indefinitely until explicitly removed. As a P2P client, the 	 * maximum idle time of P2P_MAX_CLIENT_IDLE seconds is enforced, i.e., 	 * this parameter is mainly meant for GO use and for P2P client, it can 	 * only be used to reduce the default timeout to smaller value. A 	 * special value -1 can be used to configure immediate removal of the 	 * group for P2P client role on any disconnection after the data 	 * connection has been established. 	 */
 name|int
 name|p2p_group_idle
+decl_stmt|;
+comment|/** 	 * p2p_passphrase_len - Passphrase length (8..63) for P2P GO 	 * 	 * This parameter controls the length of the random passphrase that is 	 * generated at the GO. 	 */
+name|unsigned
+name|int
+name|p2p_passphrase_len
 decl_stmt|;
 comment|/** 	 * bss_max_count - Maximum number of BSS entries to keep in memory 	 */
 name|unsigned
@@ -646,6 +867,15 @@ comment|/** 	 * max_num_sta - Maximum number of STAs in an AP/P2P GO 	 */
 name|unsigned
 name|int
 name|max_num_sta
+decl_stmt|;
+comment|/** 	 * freq_list - Array of allowed scan frequencies or %NULL for all 	 * 	 * This is an optional zero-terminated array of frequencies in 	 * megahertz (MHz) to allow for narrowing scanning range. 	 */
+name|int
+modifier|*
+name|freq_list
+decl_stmt|;
+comment|/** 	 * scan_cur_freq - Whether to scan only the current channel 	 * 	 * If true, attempt to scan only the current channel if any other 	 * VIFs on this radio are already associated on a particular channel. 	 */
+name|int
+name|scan_cur_freq
 decl_stmt|;
 comment|/** 	 * changed_parameters - Bitmap of changed parameters since last update 	 */
 name|unsigned
@@ -683,6 +913,10 @@ comment|/** 	 * autoscan - Automatic scan parameters or %NULL if none 	 * 	 * Th
 name|char
 modifier|*
 name|autoscan
+decl_stmt|;
+comment|/** 	 * wps_nfc_pw_from_config - NFC Device Password was read from config 	 * 	 * This parameter can be determined whether the NFC Device Password was 	 * included in the configuration (1) or generated dynamically (0). Only 	 * the former case is re-written back to the configuration file. 	 */
+name|int
+name|wps_nfc_pw_from_config
 decl_stmt|;
 comment|/** 	 * wps_nfc_dev_pw_id - NFC Device Password ID for password token 	 */
 name|int
@@ -730,6 +964,14 @@ comment|/** 	 * p2p_go_ht40 - Default mode for HT40 enable when operating as GO.
 name|int
 name|p2p_go_ht40
 decl_stmt|;
+comment|/** 	 * p2p_go_vht - Default mode for VHT enable when operating as GO 	 * 	 * This will take effect for p2p_group_add, p2p_connect, and p2p_invite. 	 * Note that regulatory constraints and driver capabilities are 	 * consulted anyway, so setting it to 1 can't do real harm. 	 * By default: 0 (disabled) 	 */
+name|int
+name|p2p_go_vht
+decl_stmt|;
+comment|/** 	 * p2p_go_ctwindow - CTWindow to use when operating as GO 	 * 	 * By default: 0 (no CTWindow). Values 0-127 can be used to indicate 	 * the length of the CTWindow in TUs. 	 */
+name|int
+name|p2p_go_ctwindow
+decl_stmt|;
 comment|/** 	 * p2p_disabled - Whether P2P operations are disabled for this interface 	 */
 name|int
 name|p2p_disabled
@@ -746,6 +988,118 @@ comment|/** 	 * pmf - Whether to enable/require PMF by default 	 * 	 * By defaul
 name|enum
 name|mfp_options
 name|pmf
+decl_stmt|;
+comment|/** 	 * sae_groups - Preference list of enabled groups for SAE 	 * 	 * By default (if this parameter is not set), the mandatory group 19 	 * (ECC group defined over a 256-bit prime order field) is preferred, 	 * but other groups are also enabled. If this parameter is set, the 	 * groups will be tried in the indicated order. 	 */
+name|int
+modifier|*
+name|sae_groups
+decl_stmt|;
+comment|/** 	 * dtim_period - Default DTIM period in Beacon intervals 	 * 	 * This parameter can be used to set the default value for network 	 * blocks that do not specify dtim_period. 	 */
+name|int
+name|dtim_period
+decl_stmt|;
+comment|/** 	 * beacon_int - Default Beacon interval in TU 	 * 	 * This parameter can be used to set the default value for network 	 * blocks that do not specify beacon_int. 	 */
+name|int
+name|beacon_int
+decl_stmt|;
+comment|/** 	 * ap_vendor_elements: Vendor specific elements for Beacon/ProbeResp 	 * 	 * This parameter can be used to define additional vendor specific 	 * elements for Beacon and Probe Response frames in AP/P2P GO mode. The 	 * format for these element(s) is a hexdump of the raw information 	 * elements (id+len+payload for one or more elements). 	 */
+name|struct
+name|wpabuf
+modifier|*
+name|ap_vendor_elements
+decl_stmt|;
+comment|/** 	 * ignore_old_scan_res - Ignore scan results older than request 	 * 	 * The driver may have a cache of scan results that makes it return 	 * information that is older than our scan trigger. This parameter can 	 * be used to configure such old information to be ignored instead of 	 * allowing it to update the internal BSS table. 	 */
+name|int
+name|ignore_old_scan_res
+decl_stmt|;
+comment|/** 	 * sched_scan_interval -  schedule scan interval 	 */
+name|unsigned
+name|int
+name|sched_scan_interval
+decl_stmt|;
+comment|/** 	 * tdls_external_control - External control for TDLS setup requests 	 * 	 * Enable TDLS mode where external programs are given the control 	 * to specify the TDLS link to get established to the driver. The 	 * driver requests the TDLS setup to the supplicant only for the 	 * specified TDLS peers. 	 */
+name|int
+name|tdls_external_control
+decl_stmt|;
+name|u8
+name|ip_addr_go
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u8
+name|ip_addr_mask
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u8
+name|ip_addr_start
+index|[
+literal|4
+index|]
+decl_stmt|;
+name|u8
+name|ip_addr_end
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/** 	 * osu_dir - OSU provider information directory 	 * 	 * If set, allow FETCH_OSU control interface command to be used to fetch 	 * OSU provider information into all APs and store the results in this 	 * directory. 	 */
+name|char
+modifier|*
+name|osu_dir
+decl_stmt|;
+comment|/** 	 * wowlan_triggers - Wake-on-WLAN triggers 	 * 	 * If set, these wowlan triggers will be configured. 	 */
+name|char
+modifier|*
+name|wowlan_triggers
+decl_stmt|;
+comment|/** 	 * p2p_search_delay - Extra delay between concurrent search iterations 	 * 	 * Add extra delay (in milliseconds) between search iterations when 	 * there is a concurrent operation to make p2p_find friendlier to 	 * concurrent operations by avoiding it from taking 100% of radio 	 * resources. 	 */
+name|unsigned
+name|int
+name|p2p_search_delay
+decl_stmt|;
+comment|/** 	 * mac_addr - MAC address policy default 	 * 	 * 0 = use permanent MAC address 	 * 1 = use random MAC address for each ESS connection 	 * 2 = like 1, but maintain OUI (with local admin bit set) 	 * 	 * By default, permanent MAC address is used unless policy is changed by 	 * the per-network mac_addr parameter. Global mac_addr=1 can be used to 	 * change this default behavior. 	 */
+name|int
+name|mac_addr
+decl_stmt|;
+comment|/** 	 * rand_addr_lifetime - Lifetime of random MAC address in seconds 	 */
+name|unsigned
+name|int
+name|rand_addr_lifetime
+decl_stmt|;
+comment|/** 	 * preassoc_mac_addr - Pre-association MAC address policy 	 * 	 * 0 = use permanent MAC address 	 * 1 = use random MAC address 	 * 2 = like 1, but maintain OUI (with local admin bit set) 	 */
+name|int
+name|preassoc_mac_addr
+decl_stmt|;
+comment|/** 	 * key_mgmt_offload - Use key management offload 	 * 	 * Key management offload should be used if the device supports it. 	 * Key management offload is the capability of a device operating as 	 * a station to do the exchange necessary to establish temporal keys 	 * during initial RSN connection, after roaming, or during a PTK 	 * rekeying operation. 	 */
+name|int
+name|key_mgmt_offload
+decl_stmt|;
+comment|/** 	 * user_mpm - MPM residency 	 * 	 * 0: MPM lives in driver. 	 * 1: wpa_supplicant handles peering and station allocation. 	 * 	 * If AMPE or SAE is enabled, the MPM is always in userspace. 	 */
+name|int
+name|user_mpm
+decl_stmt|;
+comment|/** 	 * max_peer_links - Maximum number of peer links 	 * 	 * Maximum number of mesh peering currently maintained by the STA. 	 */
+name|int
+name|max_peer_links
+decl_stmt|;
+comment|/** 	 * cert_in_cb - Whether to include a peer certificate dump in events 	 * 	 * This controls whether peer certificates for authentication server and 	 * its certificate chain are included in EAP peer certificate events. 	 */
+name|int
+name|cert_in_cb
+decl_stmt|;
+comment|/** 	 * mesh_max_inactivity - Timeout in seconds to detect STA inactivity 	 * 	 * This timeout value is used in mesh STA to clean up inactive stations. 	 * By default: 300 seconds. 	 */
+name|int
+name|mesh_max_inactivity
+decl_stmt|;
+comment|/** 	 * passive_scan - Whether to force passive scan for network connection 	 * 	 * This parameter can be used to force only passive scanning to be used 	 * for network connection cases. It should be noted that this will slow 	 * down scan operations and reduce likelihood of finding the AP. In 	 * addition, some use cases will override this due to functional 	 * requirements, e.g., for finding an AP that uses hidden SSID 	 * (scan_ssid=1) or P2P device discovery. 	 */
+name|int
+name|passive_scan
+decl_stmt|;
+comment|/** 	 * reassoc_same_bss_optim - Whether to optimize reassoc-to-same-BSS 	 */
+name|int
+name|reassoc_same_bss_optim
 decl_stmt|;
 block|}
 struct|;
@@ -915,6 +1269,49 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|wpa_config_dump_values
+parameter_list|(
+name|struct
+name|wpa_config
+modifier|*
+name|config
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|buflen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|wpa_config_get_value
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|struct
+name|wpa_config
+modifier|*
+name|config
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|buflen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 modifier|*
@@ -1075,6 +1472,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|wpa_config_flush_blobs
+parameter_list|(
+name|struct
+name|wpa_config
+modifier|*
+name|config
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|struct
 name|wpa_cred
 modifier|*
@@ -1153,6 +1562,24 @@ name|value
 parameter_list|,
 name|int
 name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|wpa_config_get_cred_no_key
+parameter_list|(
+name|struct
+name|wpa_cred
+modifier|*
+name|cred
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|var
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1250,7 +1677,7 @@ comment|/* Prototypes for backend specific functions from the selected config_*.
 end_comment
 
 begin_comment
-comment|/**  * wpa_config_read - Read and parse configuration database  * @name: Name of the configuration (e.g., path and file name for the  * configuration file)  * Returns: Pointer to allocated configuration data or %NULL on failure  *  * This function reads configuration data, parses its contents, and allocates  * data structures needed for storing configuration information. The allocated  * data can be freed with wpa_config_free().  *  * Each configuration backend needs to implement this function.  */
+comment|/**  * wpa_config_read - Read and parse configuration database  * @name: Name of the configuration (e.g., path and file name for the  * configuration file)  * @cfgp: Pointer to previously allocated configuration data or %NULL if none  * Returns: Pointer to allocated configuration data or %NULL on failure  *  * This function reads configuration data, parses its contents, and allocates  * data structures needed for storing configuration information. The allocated  * data can be freed with wpa_config_free().  *  * Each configuration backend needs to implement this function.  */
 end_comment
 
 begin_function_decl
@@ -1263,6 +1690,11 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|,
+name|struct
+name|wpa_config
+modifier|*
+name|cfgp
 parameter_list|)
 function_decl|;
 end_function_decl

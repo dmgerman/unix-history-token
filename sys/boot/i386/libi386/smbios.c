@@ -35,16 +35,46 @@ directive|include
 file|<sys/endian.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|EFI
+end_ifdef
+
+begin_comment
+comment|/* In EFI, we don't need PTOV(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PTOV
+parameter_list|(
+name|x
+parameter_list|)
+value|(caddr_t)(x)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|"btxv86.h"
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
-file|"libi386.h"
+file|"smbios.h"
 end_include
 
 begin_comment
@@ -1396,7 +1426,9 @@ specifier|static
 name|void
 name|smbios_probe
 parameter_list|(
-name|void
+specifier|const
+name|caddr_t
+name|addr
 parameter_list|)
 block|{
 name|caddr_t
@@ -1404,7 +1436,7 @@ name|saddr
 decl_stmt|,
 name|info
 decl_stmt|;
-name|u_int32_t
+name|uintptr_t
 name|paddr
 decl_stmt|;
 if|if
@@ -1425,6 +1457,10 @@ name|saddr
 operator|=
 name|smbios_sigsearch
 argument_list|(
+name|addr
+condition|?
+name|addr
+else|:
 name|PTOV
 argument_list|(
 name|SMBIOS_START
@@ -1666,7 +1702,9 @@ begin_function
 name|void
 name|smbios_detect
 parameter_list|(
-name|void
+specifier|const
+name|caddr_t
+name|addr
 parameter_list|)
 block|{
 name|char
@@ -1682,7 +1720,9 @@ name|int
 name|i
 decl_stmt|;
 name|smbios_probe
-argument_list|()
+argument_list|(
+name|addr
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1924,8 +1964,11 @@ modifier|*
 name|product
 parameter_list|)
 block|{
+comment|/* XXXRP currently, only called from non-EFI. */
 name|smbios_probe
-argument_list|()
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 return|return
 operator|(

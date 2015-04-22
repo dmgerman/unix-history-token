@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: x86emu.c,v 1.5 2010/02/17 15:09:47 pirofti Exp $	*/
+comment|/*	$OpenBSD: x86emu.c,v 1.9 2014/06/15 11:04:49 pirofti Exp $	*/
 end_comment
 
 begin_comment
@@ -23597,7 +23597,7 @@ name|d
 parameter_list|)
 block|{
 asm|__asm__
-specifier|__volatile__
+specifier|volatile
 asm|("cpuid" 			     : "=a" (*a), "=b" (*b), 			       "=c" (*c), "=d" (*d) 			     : "a" (*a), "c" (*c) 			     : "cc");
 block|}
 end_function

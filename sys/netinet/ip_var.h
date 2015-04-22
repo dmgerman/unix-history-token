@@ -611,20 +611,6 @@ end_struct_decl
 begin_expr_stmt
 name|VNET_DECLARE
 argument_list|(
-name|u_short
-argument_list|,
-name|ip_id
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* ip packet ctr, for ids */
-end_comment
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
 name|int
 argument_list|,
 name|ip_defttl
@@ -1106,10 +1092,12 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int16_t
-name|ip_randomid
-parameter_list|(
 name|void
+name|ip_fillid
+parameter_list|(
+name|struct
+name|ip
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1605,31 +1593,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|ip_do_randomid
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_ip_do_randomid
-value|VNET(ip_do_randomid)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ip_newid
-parameter_list|()
-value|((V_ip_do_randomid != 0) ? ip_randomid() : \ 			    htons(V_ip_id++))
-end_define
 
 begin_endif
 endif|#

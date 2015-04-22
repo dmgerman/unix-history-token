@@ -25,6 +25,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|L2CAP_SOCKET_CHECKED
+end_define
+
 begin_include
 include|#
 directive|include

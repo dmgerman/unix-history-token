@@ -801,6 +801,7 @@ name|vm_memguard_divisor
 operator|=
 literal|10
 expr_stmt|;
+comment|/* CTFLAG_RDTUN doesn't work during the early boot process. */
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"vm.memguard.divisor"

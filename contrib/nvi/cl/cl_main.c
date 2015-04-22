@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: cl_main.c,v 10.55 2011/08/15 19:52:28 zy Exp $"
+literal|"$Id: cl_main.c,v 10.56 2015/04/05 06:20:53 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -157,122 +157,101 @@ begin_comment
 comment|/* GLOBAL: Blocked signals. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|cl_func_std
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|GS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|CL_PRIVATE
 modifier|*
 name|cl_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|GS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|GS
 modifier|*
 name|gs_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|perr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|setsig
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
-expr|struct
+parameter_list|,
+name|struct
 name|sigaction
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|int
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|sig_end
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|GS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|term_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * main --  *	This is the main loop for the standalone curses editor.  */
@@ -287,8 +266,8 @@ name|argc
 parameter_list|,
 name|char
 modifier|*
-modifier|*
 name|argv
+index|[]
 parameter_list|)
 block|{
 specifier|static
@@ -434,7 +413,7 @@ name|NULL
 condition|)
 name|ttype
 operator|=
-literal|"unknown"
+literal|"ansi"
 expr_stmt|;
 name|term_init
 argument_list|(
@@ -683,11 +662,6 @@ operator|||
 name|defined
 argument_list|(
 name|PURIFY
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|LIBRARY
 argument_list|)
 if|if
 condition|(
@@ -1209,7 +1183,7 @@ name|GLOBAL_CLP
 end_undef
 
 begin_comment
-comment|/*  * sig_init --  *	Initialize signals.  *  * PUBLIC: int sig_init __P((GS *, SCR *));  */
+comment|/*  * sig_init --  *	Initialize signals.  *  * PUBLIC: int sig_init(GS *, SCR *);  */
 end_comment
 
 begin_function
@@ -1462,7 +1436,7 @@ name|struct
 name|sigaction
 name|act
 decl_stmt|;
-comment|/* 	 * Use sigaction(2), not signal(3), since we don't always want to 	 * restart system calls.  The example is when waiting for a command 	 * mode keystroke and SIGWINCH arrives.  Besides, you can't portably 	 * restart system calls (thanks, POSIX!).  On the other hand, you 	 * can't portably NOT restart system calls (thanks, Sun!).  SunOS 	 * used SA_INTERRUPT as their extension to NOT restart read calls. 	 * We sure hope nobody else used it for anything else.  Mom told me 	 * there'd be days like this.  She just never told me that there'd 	 * be so many. 	 */
+comment|/* 	 * Use sigaction(2), not signal(3), since we don't always want to 	 * restart system calls.  The example is when waiting for a command 	 * mode keystroke and SIGWINCH arrives.  Besides, you can't portably 	 * restart system calls (thanks, POSIX!). 	 */
 name|act
 operator|.
 name|sa_handler
@@ -1477,25 +1451,12 @@ operator|.
 name|sa_mask
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SA_INTERRUPT
-name|act
-operator|.
-name|sa_flags
-operator|=
-name|SA_INTERRUPT
-expr_stmt|;
-else|#
-directive|else
 name|act
 operator|.
 name|sa_flags
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|sigaction

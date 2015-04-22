@@ -1638,8 +1638,6 @@ name|struct
 name|shmmap_state
 modifier|*
 name|shmmap_s
-init|=
-name|NULL
 decl_stmt|;
 name|vm_offset_t
 name|attach_va
@@ -5217,7 +5215,7 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
-name|error
+name|EINVAL
 operator|)
 return|;
 block|}

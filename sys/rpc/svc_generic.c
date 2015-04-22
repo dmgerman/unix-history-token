@@ -616,7 +616,8 @@ name|bind
 operator|.
 name|qlen
 operator|=
-name|SOMAXCONN
+operator|-
+literal|1
 expr_stmt|;
 name|xprt
 operator|=
@@ -1004,7 +1005,8 @@ name|solisten
 argument_list|(
 name|so
 argument_list|,
-name|SOMAXCONN
+operator|-
+literal|1
 argument_list|,
 name|curthread
 argument_list|)

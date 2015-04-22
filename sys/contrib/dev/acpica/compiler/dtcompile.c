@@ -137,6 +137,12 @@ operator|)
 return|;
 block|}
 comment|/* Preprocessor */
+if|if
+condition|(
+name|Gbl_PreprocessFlag
+condition|)
+block|{
+comment|/* Preprocessor */
 name|Event
 operator|=
 name|UtBeginEvent
@@ -162,6 +168,7 @@ operator|(
 name|AE_OK
 operator|)
 return|;
+block|}
 block|}
 comment|/*      * Scan the input file (file is already open) and      * build the parse tree      */
 name|Event

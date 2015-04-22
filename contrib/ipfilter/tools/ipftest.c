@@ -4733,5 +4733,29 @@ block|}
 block|}
 end_function
 
+begin_function
+name|void
+name|ip_fillid
+parameter_list|(
+name|struct
+name|ip
+modifier|*
+name|ip
+parameter_list|)
+block|{
+specifier|static
+name|uint16_t
+name|ip_id
+decl_stmt|;
+name|ip
+operator|->
+name|ip_id
+operator|=
+name|ip_id
+operator|++
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

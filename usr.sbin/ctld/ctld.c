@@ -910,7 +910,7 @@ name|strlen
 argument_list|(
 name|auth
 operator|->
-name|a_secret
+name|a_mutual_secret
 argument_list|)
 expr_stmt|;
 if|if
@@ -11640,6 +11640,14 @@ name|client_fd
 operator|<
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+name|errno
+operator|==
+name|ECONNABORTED
+condition|)
+continue|continue;
 name|log_err
 argument_list|(
 literal|1
@@ -11647,6 +11655,7 @@ argument_list|,
 literal|"accept"
 argument_list|)
 expr_stmt|;
+block|}
 name|assert
 argument_list|(
 name|client_salen

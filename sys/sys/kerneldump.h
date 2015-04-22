@@ -166,7 +166,7 @@ name|architectureversion
 decl_stmt|;
 define|#
 directive|define
-name|KERNELDUMP_ALPHA_VERSION
+name|KERNELDUMP_AARCH64_VERSION
 value|1
 define|#
 directive|define

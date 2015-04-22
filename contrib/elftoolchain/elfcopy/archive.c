@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -81,7 +75,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: archive.c 3102 2014-10-29 21:09:01Z jkoshy $"
+literal|"$Id: archive.c 3174 2015-03-27 17:13:41Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

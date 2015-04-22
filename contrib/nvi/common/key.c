@@ -119,91 +119,76 @@ directive|include
 file|"../vi/vi.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|v_event_append
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|EVENT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|v_event_grow
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|v_key_cmp
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|void
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|void
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|v_keyval
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|scr_keyval_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|v_sync
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * !!!  * Historic vi always used:  *  *	^D: autoindent deletion  *	^H: last character deletion  *	^W: last word deletion  *	^Q: quote the next character (if not used in flow control).  *	^V: quote the next character  *  * regardless of the user's choices for these characters.  The user's erase  * and kill characters worked in addition to these characters.  Nvi wires  * down the above characters, but in addition permits the VEOF, VERASE, VKILL  * and VWERASE characters described by the user's termios structure.  *  * Ex was not consistent with this scheme, as it historically ran in tty  * cooked mode.  This meant that the scroll command and autoindent erase  * characters were mapped to the user's EOF character, and the character  * and word deletion characters were the user's tty character and word  * deletion characters.  This implementation makes it all consistent, as  * described above for vi.  *  * !!!  * This means that all screens share a special key set.  */
@@ -419,7 +404,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * v_key_init --  *	Initialize the special key lookup table.  *  * PUBLIC: int v_key_init __P((SCR *));  */
+comment|/*  * v_key_init --  *	Initialize the special key lookup table.  *  * PUBLIC: int v_key_init(SCR *);  */
 end_comment
 
 begin_function
@@ -728,7 +713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_key_ilookup --  *	Build the fast-lookup key display array.  *  * PUBLIC: void v_key_ilookup __P((SCR *));  */
+comment|/*  * v_key_ilookup --  *	Build the fast-lookup key display array.  *  * PUBLIC: void v_key_ilookup(SCR *);  */
 end_comment
 
 begin_function
@@ -835,7 +820,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_key_len --  *	Return the length of the string that will display the key.  *	This routine is the backup for the KEY_LEN() macro.  *  * PUBLIC: size_t v_key_len __P((SCR *, ARG_CHAR_T));  */
+comment|/*  * v_key_len --  *	Return the length of the string that will display the key.  *	This routine is the backup for the KEY_LEN() macro.  *  * PUBLIC: size_t v_key_len(SCR *, ARG_CHAR_T);  */
 end_comment
 
 begin_function
@@ -871,7 +856,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_key_name --  *	Return the string that will display the key.  This routine  *	is the backup for the KEY_NAME() macro.  *  * PUBLIC: char *v_key_name __P((SCR *, ARG_CHAR_T));  */
+comment|/*  * v_key_name --  *	Return the string that will display the key.  This routine  *	is the backup for the KEY_NAME() macro.  *  * PUBLIC: char *v_key_name(SCR *, ARG_CHAR_T);  */
 end_comment
 
 begin_function
@@ -1459,7 +1444,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_key_val --  *	Fill in the value for a key.  This routine is the backup  *	for the KEY_VAL() macro.  *  * PUBLIC: e_key_t v_key_val __P((SCR *, ARG_CHAR_T));  */
+comment|/*  * v_key_val --  *	Fill in the value for a key.  This routine is the backup  *	for the KEY_VAL() macro.  *  * PUBLIC: e_key_t v_key_val(SCR *, ARG_CHAR_T);  */
 end_comment
 
 begin_function
@@ -1525,7 +1510,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_event_push --  *	Push events/keys onto the front of the buffer.  *  * There is a single input buffer in ex/vi.  Characters are put onto the  * end of the buffer by the terminal input routines, and pushed onto the  * front of the buffer by various other functions in ex/vi.  Each key has  * an associated flag value, which indicates if it has already been quoted,  * and if it is the result of a mapping or an abbreviation.  *  * PUBLIC: int v_event_push __P((SCR *, EVENT *, CHAR_T *, size_t, u_int));  */
+comment|/*  * v_event_push --  *	Push events/keys onto the front of the buffer.  *  * There is a single input buffer in ex/vi.  Characters are put onto the  * end of the buffer by the terminal input routines, and pushed onto the  * front of the buffer by various other functions in ex/vi.  Each key has  * an associated flag value, which indicates if it has already been quoted,  * and if it is the result of a mapping or an abbreviation.  *  * PUBLIC: int v_event_push(SCR *, EVENT *, CHAR_T *, size_t, u_int);  */
 end_comment
 
 begin_function
@@ -1989,7 +1974,7 @@ value|{							\ 	if ((gp->i_cnt -= len) == 0)					\ 		gp->i_next = 0;						\ 	el
 end_define
 
 begin_comment
-comment|/*  * v_event_get --  *	Return the next event.  *  * !!!  * The flag EC_NODIGIT probably needs some explanation.  First, the idea of  * mapping keys is that one or more keystrokes act like a function key.  * What's going on is that vi is reading a number, and the character following  * the number may or may not be mapped (EC_MAPCOMMAND).  For example, if the  * user is entering the z command, a valid command is "z40+", and we don't want  * to map the '+', i.e. if '+' is mapped to "xxx", we don't want to change it  * into "z40xxx".  However, if the user enters "35x", we want to put all of the  * characters through the mapping code.  *  * Historical practice is a bit muddled here.  (Surprise!)  It always permitted  * mapping digits as long as they weren't the first character of the map, e.g.  * ":map ^A1 xxx" was okay.  It also permitted the mapping of the digits 1-9  * (the digit 0 was a special case as it doesn't indicate the start of a count)  * as the first character of the map, but then ignored those mappings.  While  * it's probably stupid to map digits, vi isn't your mother.  *  * The way this works is that the EC_MAPNODIGIT causes term_key to return the  * end-of-digit without "looking" at the next character, i.e. leaving it as the  * user entered it.  Presumably, the next term_key call will tell us how the  * user wants it handled.  *  * There is one more complication.  Users might map keys to digits, and, as  * it's described above, the commands:  *  *	:map g 1G  *	d2g  *  * would return the keys "d2<end-of-digits>1G", when the user probably wanted  * "d21<end-of-digits>G".  So, if a map starts off with a digit we continue as  * before, otherwise, we pretend we haven't mapped the character, and return  *<end-of-digits>.  *  * Now that that's out of the way, let's talk about Energizer Bunny macros.  * It's easy to create macros that expand to a loop, e.g. map x 3x.  It's  * fairly easy to detect this example, because it's all internal to term_key.  * If we're expanding a macro and it gets big enough, at some point we can  * assume it's looping and kill it.  The examples that are tough are the ones  * where the parser is involved, e.g. map x "ayyx"byy.  We do an expansion  * on 'x', and get "ayyx"byy.  We then return the first 4 characters, and then  * find the looping macro again.  There is no way that we can detect this  * without doing a full parse of the command, because the character that might  * cause the loop (in this case 'x') may be a literal character, e.g. the map  * map x "ayy"xyy"byy is perfectly legal and won't cause a loop.  *  * Historic vi tried to detect looping macros by disallowing obvious cases in  * the map command, maps that that ended with the same letter as they started  * (which wrongly disallowed "map x 'x"), and detecting macros that expanded  * too many times before keys were returned to the command parser.  It didn't  * get many (most?) of the tricky cases right, however, and it was certainly  * possible to create macros that ran forever.  And, even if it did figure out  * what was going on, the user was usually tossed into ex mode.  Finally, any  * changes made before vi realized that the macro was recursing were left in  * place.  We recover gracefully, but the only recourse the user has in an  * infinite macro loop is to interrupt.  *  * !!!  * It is historic practice that mapping characters to themselves as the first  * part of the mapped string was legal, and did not cause infinite loops, i.e.  * ":map! { {^M^T" and ":map n nz." were known to work.  The initial, matching  * characters were returned instead of being remapped.  *  * !!!  * It is also historic practice that the macro "map ] ]]^" caused a single ]  * keypress to behave as the command ]] (the ^ got the map past the vi check  * for "tail recursion").  Conversely, the mapping "map n nn^" went recursive.  * What happened was that, in the historic vi, maps were expanded as the keys  * were retrieved, but not all at once and not centrally.  So, the keypress ]  * pushed ]]^ on the stack, and then the first ] from the stack was passed to  * the ]] command code.  The ]] command then retrieved a key without entering  * the mapping code.  This could bite us anytime a user has a map that depends  * on secondary keys NOT being mapped.  I can't see any possible way to make  * this work in here without the complete abandonment of Rationality Itself.  *  * XXX  * The final issue is recovery.  It would be possible to undo all of the work  * that was done by the macro if we entered a record into the log so that we  * knew when the macro started, and, in fact, this might be worth doing at some  * point.  Given that this might make the log grow unacceptably (consider that  * cursor keys are done with maps), for now we leave any changes made in place.  *  * PUBLIC: int v_event_get __P((SCR *, EVENT *, int, u_int32_t));  */
+comment|/*  * v_event_get --  *	Return the next event.  *  * !!!  * The flag EC_NODIGIT probably needs some explanation.  First, the idea of  * mapping keys is that one or more keystrokes act like a function key.  * What's going on is that vi is reading a number, and the character following  * the number may or may not be mapped (EC_MAPCOMMAND).  For example, if the  * user is entering the z command, a valid command is "z40+", and we don't want  * to map the '+', i.e. if '+' is mapped to "xxx", we don't want to change it  * into "z40xxx".  However, if the user enters "35x", we want to put all of the  * characters through the mapping code.  *  * Historical practice is a bit muddled here.  (Surprise!)  It always permitted  * mapping digits as long as they weren't the first character of the map, e.g.  * ":map ^A1 xxx" was okay.  It also permitted the mapping of the digits 1-9  * (the digit 0 was a special case as it doesn't indicate the start of a count)  * as the first character of the map, but then ignored those mappings.  While  * it's probably stupid to map digits, vi isn't your mother.  *  * The way this works is that the EC_MAPNODIGIT causes term_key to return the  * end-of-digit without "looking" at the next character, i.e. leaving it as the  * user entered it.  Presumably, the next term_key call will tell us how the  * user wants it handled.  *  * There is one more complication.  Users might map keys to digits, and, as  * it's described above, the commands:  *  *	:map g 1G  *	d2g  *  * would return the keys "d2<end-of-digits>1G", when the user probably wanted  * "d21<end-of-digits>G".  So, if a map starts off with a digit we continue as  * before, otherwise, we pretend we haven't mapped the character, and return  *<end-of-digits>.  *  * Now that that's out of the way, let's talk about Energizer Bunny macros.  * It's easy to create macros that expand to a loop, e.g. map x 3x.  It's  * fairly easy to detect this example, because it's all internal to term_key.  * If we're expanding a macro and it gets big enough, at some point we can  * assume it's looping and kill it.  The examples that are tough are the ones  * where the parser is involved, e.g. map x "ayyx"byy.  We do an expansion  * on 'x', and get "ayyx"byy.  We then return the first 4 characters, and then  * find the looping macro again.  There is no way that we can detect this  * without doing a full parse of the command, because the character that might  * cause the loop (in this case 'x') may be a literal character, e.g. the map  * map x "ayy"xyy"byy is perfectly legal and won't cause a loop.  *  * Historic vi tried to detect looping macros by disallowing obvious cases in  * the map command, maps that that ended with the same letter as they started  * (which wrongly disallowed "map x 'x"), and detecting macros that expanded  * too many times before keys were returned to the command parser.  It didn't  * get many (most?) of the tricky cases right, however, and it was certainly  * possible to create macros that ran forever.  And, even if it did figure out  * what was going on, the user was usually tossed into ex mode.  Finally, any  * changes made before vi realized that the macro was recursing were left in  * place.  We recover gracefully, but the only recourse the user has in an  * infinite macro loop is to interrupt.  *  * !!!  * It is historic practice that mapping characters to themselves as the first  * part of the mapped string was legal, and did not cause infinite loops, i.e.  * ":map! { {^M^T" and ":map n nz." were known to work.  The initial, matching  * characters were returned instead of being remapped.  *  * !!!  * It is also historic practice that the macro "map ] ]]^" caused a single ]  * keypress to behave as the command ]] (the ^ got the map past the vi check  * for "tail recursion").  Conversely, the mapping "map n nn^" went recursive.  * What happened was that, in the historic vi, maps were expanded as the keys  * were retrieved, but not all at once and not centrally.  So, the keypress ]  * pushed ]]^ on the stack, and then the first ] from the stack was passed to  * the ]] command code.  The ]] command then retrieved a key without entering  * the mapping code.  This could bite us anytime a user has a map that depends  * on secondary keys NOT being mapped.  I can't see any possible way to make  * this work in here without the complete abandonment of Rationality Itself.  *  * XXX  * The final issue is recovery.  It would be possible to undo all of the work  * that was done by the macro if we entered a record into the log so that we  * knew when the macro started, and, in fact, this might be worth doing at some  * point.  Given that this might make the log grow unacceptably (consider that  * cursor keys are done with maps), for now we leave any changes made in place.  *  * PUBLIC: int v_event_get(SCR *, EVENT *, int, u_int32_t);  */
 end_comment
 
 begin_function
@@ -2857,7 +2842,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_event_err --  *	Unexpected event.  *  * PUBLIC: void v_event_err __P((SCR *, EVENT *));  */
+comment|/*  * v_event_err --  *	Unexpected event.  *  * PUBLIC: void v_event_err(SCR *, EVENT *);  */
 end_comment
 
 begin_function
@@ -3006,7 +2991,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_event_flush --  *	Flush any flagged keys, returning if any keys were flushed.  *  * PUBLIC: int v_event_flush __P((SCR *, u_int));  */
+comment|/*  * v_event_flush --  *	Flush any flagged keys, returning if any keys were flushed.  *  * PUBLIC: int v_event_flush(SCR *, u_int);  */
 end_comment
 
 begin_function

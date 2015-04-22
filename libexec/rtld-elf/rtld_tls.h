@@ -23,46 +23,46 @@ begin_comment
 comment|/*  * Allocate a TLS block for a new thread. The memory allocated will  * include 'tcbsize' bytes aligned to a 'tcbalign' boundary (in bytes)  * for the thread library's private purposes. The location of the TCB  * block is returned by this function. For architectures using  * 'Variant I' TLS, the thread local storage follows the TCB, and for  * 'Variant II', the thread local storage precedes it. For  * architectures using the 'Variant II' model (e.g. i386, amd64,  * sparc64), the TCB must begin with two pointer fields which are used  * by rtld for its TLS implementation. For the 'Variant I' model, the  * TCB must begin with a single pointer field for rtld's  * implementation.  *  * If the value of 'oldtls' is non-NULL, the new TLS block will be  * initialised using the values contained in 'oldtls' and 'oldtls'  * will be freed. This is typically used when initialising a thread  * library to migrate from using the initial bootstrap TLS block  * created by rtld to one which contains suitable thread library  * private data.  *  * The value returned from this function is suitable for installing  * directly into the thread pointer register.  */
 end_comment
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|void
 modifier|*
 name|_rtld_allocate_tls
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|oldtls
-parameter_list|,
+argument_list|,
 name|size_t
 name|tcbsize
-parameter_list|,
+argument_list|,
 name|size_t
 name|tcbalign
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__exported
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Free a TLS block allocated using _rtld_allocate_tls(). The tcbsize  * and tcbalign parameters must be the same as those used to allocate  * the block.  */
 end_comment
 
-begin_function_decl
-specifier|extern
+begin_decl_stmt
 name|void
 name|_rtld_free_tls
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|tcb
-parameter_list|,
+argument_list|,
 name|size_t
 name|tcbsize
-parameter_list|,
+argument_list|,
 name|size_t
 name|tcbalign
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__exported
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

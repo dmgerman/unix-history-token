@@ -107,6 +107,8 @@ block|,
 name|WPAS_DBUS_BSS_PROP_WPS
 block|,
 name|WPAS_DBUS_BSS_PROP_IES
+block|,
+name|WPAS_DBUS_BSS_PROP_AGE
 block|, }
 enum|;
 end_enum
@@ -247,23 +249,8 @@ name|WPAS_DBUS_NEW_IFACE_P2P_PEER
 value|WPAS_DBUS_NEW_INTERFACE ".Peer"
 end_define
 
-begin_define
-define|#
-directive|define
-name|WPAS_DBUS_NEW_P2P_GROUPMEMBERS_PART
-value|"Members"
-end_define
-
-begin_define
-define|#
-directive|define
-name|WPAS_DBUS_NEW_IFACE_P2P_GROUPMEMBER
-define|\
-value|WPAS_DBUS_NEW_INTERFACE ".GroupMember"
-end_define
-
 begin_comment
-comment|/* Errors */
+comment|/* Top-level Errors */
 end_comment
 
 begin_define
@@ -288,6 +275,14 @@ directive|define
 name|WPAS_DBUS_ERROR_IFACE_EXISTS
 define|\
 value|WPAS_DBUS_NEW_INTERFACE ".InterfaceExists"
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPAS_DBUS_ERROR_IFACE_DISABLED
+define|\
+value|WPAS_DBUS_NEW_INTERFACE ".InterfaceDisabled"
 end_define
 
 begin_define
@@ -376,6 +371,18 @@ directive|define
 name|WPAS_DBUS_ERROR_SUBSCRIPTION_EPERM
 define|\
 value|WPAS_DBUS_NEW_INTERFACE ".SubscriptionNotYou"
+end_define
+
+begin_comment
+comment|/* Interface-level errors */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WPAS_DBUS_ERROR_IFACE_SCAN_ERROR
+define|\
+value|WPAS_DBUS_NEW_IFACE_INTERFACE ".ScanError"
 end_define
 
 begin_function_decl
@@ -845,6 +852,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|wpas_dbus_signal_peer_groups_changed
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|dev_addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|wpas_dbus_signal_p2p_group_removed
 parameter_list|(
 name|struct
@@ -1041,40 +1065,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|wpas_dbus_register_p2p_groupmember
-parameter_list|(
-name|struct
-name|wpa_supplicant
-modifier|*
-name|wpa_s
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|p2p_if_addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|wpas_dbus_unregister_p2p_groupmember
-parameter_list|(
-name|struct
-name|wpa_supplicant
-modifier|*
-name|wpa_s
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|p2p_if_addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|wpas_dbus_signal_p2p_peer_disconnected
 parameter_list|(
 name|struct
@@ -1206,6 +1196,15 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|altsubject
+index|[]
+parameter_list|,
+name|int
+name|num_altsubject
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|cert_hash
 parameter_list|,
 specifier|const
@@ -1273,6 +1272,40 @@ specifier|const
 name|char
 modifier|*
 name|parameter
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|wpas_dbus_signal_sta_authorized
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|sta
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|wpas_dbus_signal_sta_deauthorized
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|sta
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1759,6 +1792,25 @@ begin_function
 specifier|static
 specifier|inline
 name|void
+name|wpas_dbus_signal_peer_groups_changed
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|dev_addr
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
 name|wpas_dbus_signal_p2p_group_removed
 parameter_list|(
 name|struct
@@ -2200,6 +2252,15 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+name|altsubject
+index|[]
+parameter_list|,
+name|int
+name|num_altsubject
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 name|cert_hash
 parameter_list|,
 specifier|const
@@ -2271,6 +2332,44 @@ specifier|const
 name|char
 modifier|*
 name|parameter
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|wpas_dbus_signal_sta_authorized
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|sta
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|wpas_dbus_signal_sta_deauthorized
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|sta
 parameter_list|)
 block|{ }
 end_function

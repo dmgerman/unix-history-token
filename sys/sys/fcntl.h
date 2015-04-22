@@ -476,6 +476,28 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__BSD_VISIBLE
+end_if
+
+begin_define
+define|#
+directive|define
+name|O_VERIFY
+value|0x00200000
+end_define
+
+begin_comment
+comment|/* open only after verification */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * XXX missing O_DSYNC, O_RSYNC.  */
 end_comment

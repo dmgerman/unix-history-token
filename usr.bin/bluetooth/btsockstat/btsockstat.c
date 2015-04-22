@@ -51,11 +51,11 @@ directive|include
 file|<net/if.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<net/if_var.h>
-end_include
+begin_define
+define|#
+directive|define
+name|L2CAP_SOCKET_CHECKED
+end_define
 
 begin_include
 include|#

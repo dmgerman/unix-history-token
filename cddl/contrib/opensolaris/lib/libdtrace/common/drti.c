@@ -569,6 +569,18 @@ name|l_addr
 else|:
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|dh
+operator|.
+name|dofhp_pid
+operator|=
+name|getpid
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|lmid
@@ -760,7 +772,7 @@ name|gen
 operator|=
 name|dh
 operator|.
-name|gen
+name|dofhp_gen
 expr_stmt|;
 endif|#
 directive|endif

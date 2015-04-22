@@ -84,7 +84,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * v_z -- [count]z[count][-.+^<CR>]  *	Move the screen.  *  * PUBLIC: int v_z __P((SCR *, VICMD *));  */
+comment|/*  * v_z -- [count]z[count][-.+^<CR>]  *	Move the screen.  *  * PUBLIC: int v_z(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -528,7 +528,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_crel --  *	Change the relative size of the current screen.  *  * PUBLIC: int vs_crel __P((SCR *, long));  */
+comment|/*  * vs_crel --  *	Change the relative size of the current screen.  *  * PUBLIC: int vs_crel(SCR *, long);  */
 end_comment
 
 begin_function

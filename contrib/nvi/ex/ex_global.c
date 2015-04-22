@@ -118,28 +118,25 @@ block|}
 enum|;
 end_enum
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ex_g_setup
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|EXCMD
-operator|*
-operator|,
-expr|enum
+modifier|*
+parameter_list|,
+name|enum
 name|which
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_global -- [line [,line]] g[lobal][!] /pattern/ [commands]  *	Exec on lines matching a pattern.  *  * PUBLIC: int ex_global __P((SCR *, EXCMD *));  */
+comment|/*  * ex_global -- [line [,line]] g[lobal][!] /pattern/ [commands]  *	Exec on lines matching a pattern.  *  * PUBLIC: int ex_global(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -182,7 +179,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_v -- [line [,line]] v /pattern/ [commands]  *	Exec on lines not matching a pattern.  *  * PUBLIC: int ex_v __P((SCR *, EXCMD *));  */
+comment|/*  * ex_v -- [line [,line]] v /pattern/ [commands]  *	Exec on lines not matching a pattern.  *  * PUBLIC: int ex_v(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -1128,7 +1125,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_g_insdel --  *	Update the ranges based on an insertion or deletion.  *  * PUBLIC: int ex_g_insdel __P((SCR *, lnop_t, recno_t));  */
+comment|/*  * ex_g_insdel --  *	Update the ranges based on an insertion or deletion.  *  * PUBLIC: int ex_g_insdel(SCR *, lnop_t, recno_t);  */
 end_comment
 
 begin_function

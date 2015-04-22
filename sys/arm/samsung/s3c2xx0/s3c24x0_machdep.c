@@ -1391,9 +1391,7 @@ name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
 name|cpu_setup
-argument_list|(
-literal|""
-argument_list|)
+argument_list|()
 expr_stmt|;
 comment|/* Disable all peripheral interrupts */
 name|ioreg_write32

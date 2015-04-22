@@ -264,6 +264,9 @@ block|,
 comment|/* Types used only for the Data Table Compiler */
 name|ACPI_DMT_BUFFER
 block|,
+name|ACPI_DMT_RAW_BUFFER
+block|,
+comment|/* Large, multiple line buffer */
 name|ACPI_DMT_DEVICE_PATH
 block|,
 name|ACPI_DMT_LABEL
@@ -1544,23 +1547,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|ACPI_DMTABLE_INFO
-name|AcpiDmTableInfoSlicHdr
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|ACPI_DMTABLE_INFO
-name|AcpiDmTableInfoSlic0
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|ACPI_DMTABLE_INFO
-name|AcpiDmTableInfoSlic1
+name|AcpiDmTableInfoSlic
 index|[]
 decl_stmt|;
 end_decl_stmt
@@ -1844,6 +1831,33 @@ end_function_decl
 begin_comment
 comment|/*  * dmtbdump  */
 end_comment
+
+begin_function_decl
+name|void
+name|AcpiDmDumpBuffer
+parameter_list|(
+name|void
+modifier|*
+name|Table
+parameter_list|,
+name|UINT32
+name|BufferOffset
+parameter_list|,
+name|UINT32
+name|Length
+parameter_list|,
+name|UINT32
+name|AbsoluteOffset
+parameter_list|,
+name|char
+modifier|*
+name|Header
+parameter_list|,
+name|BOOLEAN
+name|MultiLine
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -3370,9 +3384,26 @@ parameter_list|(
 name|char
 modifier|*
 name|Filename
+parameter_list|,
+name|UINT8
+name|TableType
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_AML_TABLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IS_DATA_TABLE
+value|1
+end_define
 
 begin_endif
 endif|#

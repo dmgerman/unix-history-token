@@ -6071,7 +6071,7 @@ name|MO_NO_FLAG
 block|,
 name|MO_FRAGMENT
 init|=
-literal|0x7
+literal|0xf
 block|,
 comment|/// MO_PAGE - A symbol operand with this flag represents the pc-relative
 comment|/// offset of the 4K page containing the symbol.  This is used with the
@@ -6111,19 +6111,26 @@ name|MO_G0
 init|=
 literal|6
 block|,
+comment|/// MO_HI12 - This flag indicates that a symbol operand represents the bits
+comment|/// 13-24 of a 64-bit address, used in a arithmetic immediate-shifted-left-
+comment|/// by-12-bits instruction.
+name|MO_HI12
+init|=
+literal|7
+block|,
 comment|/// MO_GOT - This flag indicates that a symbol operand represents the
 comment|/// address of the GOT entry for the symbol, rather than the address of
 comment|/// the symbol itself.
 name|MO_GOT
 init|=
-literal|8
+literal|0x10
 block|,
 comment|/// MO_NC - Indicates whether the linker is expected to check the symbol
 comment|/// reference for overflow. For example in an ADRP/ADD pair of relocations
 comment|/// the ADRP usually does check, but not the ADD.
 name|MO_NC
 init|=
-literal|0x10
+literal|0x20
 block|,
 comment|/// MO_TLS - Indicates that the operand being accessed is some kind of
 comment|/// thread-local symbol. On Darwin, only one type of thread-local access
@@ -6131,14 +6138,14 @@ comment|/// exists (pre linker-relaxation), but on ELF the TLSModel used for the
 comment|/// referee will affect interpretation.
 name|MO_TLS
 init|=
-literal|0x20
+literal|0x40
 block|,
 comment|/// MO_CONSTPOOL - This flag indicates that a symbol operand represents
 comment|/// the address of a constant pool entry for the symbol, rather than the
 comment|/// address of the symbol itself.
 name|MO_CONSTPOOL
 init|=
-literal|0x40
+literal|0x80
 block|}
 enum|;
 block|}

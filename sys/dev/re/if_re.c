@@ -15487,18 +15487,6 @@ operator|~
 literal|0x00080000
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Enable transmit and receive. 	 */
-name|CSR_WRITE_1
-argument_list|(
-name|sc
-argument_list|,
-name|RL_COMMAND
-argument_list|,
-name|RL_CMD_TX_ENB
-operator||
-name|RL_CMD_RX_ENB
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Set the initial TX configuration. 	 */
 if|if
 condition|(
@@ -15585,6 +15573,18 @@ literal|0x5100
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * Enable transmit and receive. 	 */
+name|CSR_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|RL_COMMAND
+argument_list|,
+name|RL_CMD_TX_ENB
+operator||
+name|RL_CMD_RX_ENB
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEVICE_POLLING
@@ -15662,23 +15662,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notdef
-comment|/* Enable receiver and transmitter. */
-name|CSR_WRITE_1
-argument_list|(
-name|sc
-argument_list|,
-name|RL_COMMAND
-argument_list|,
-name|RL_CMD_TX_ENB
-operator||
-name|RL_CMD_RX_ENB
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Initialize the timer interrupt register so that 	 * a timer interrupt will be generated once the timer 	 * reaches a certain number of ticks. The timer is 	 * reloaded on each transmit. 	 */
 ifdef|#
 directive|ifdef

@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: line.c,v 10.26 2011/08/12 12:36:41 zy Exp $"
+literal|"$Id: line.c,v 10.27 2015/04/03 14:17:21 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -95,28 +95,25 @@ directive|include
 file|"../vi/vi.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|scr_update
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|recno_t
-operator|,
+parameter_list|,
 name|lnop_t
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * db_eget --  *	Front-end to db_get, special case handling for empty files.  *  * PUBLIC: int db_eget __P((SCR *, recno_t, CHAR_T **, size_t *, int *));  */
+comment|/*  * db_eget --  *	Front-end to db_get, special case handling for empty files.  *  * PUBLIC: int db_eget(SCR *, recno_t, CHAR_T **, size_t *, int *);  */
 end_comment
 
 begin_function
@@ -260,7 +257,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * db_get --  *	Look in the text buffers for a line, followed by the cache, followed  *	by the database.  *  * PUBLIC: int db_get __P((SCR *, recno_t, u_int32_t, CHAR_T **, size_t *));  */
+comment|/*  * db_get --  *	Look in the text buffers for a line, followed by the cache, followed  *	by the database.  *  * PUBLIC: int db_get(SCR *, recno_t, u_int32_t, CHAR_T **, size_t *);  */
 end_comment
 
 begin_function
@@ -314,9 +311,6 @@ name|wp
 decl_stmt|;
 name|size_t
 name|wlen
-decl_stmt|;
-name|size_t
-name|nlen
 decl_stmt|;
 comment|/* 	 * The underlying recno stuff handles zero by returning NULL, but 	 * have to have an OOB condition for the look-aside into the input 	 * buffer anyway. 	 */
 if|if
@@ -590,12 +584,6 @@ name|OOBLNO
 expr_stmt|;
 name|nocache
 label|:
-name|nlen
-operator|=
-literal|1024
-expr_stmt|;
-name|retry
-label|:
 comment|/* Get the line from the underlying database. */
 name|key
 operator|.
@@ -694,28 +682,6 @@ operator|(
 literal|1
 operator|)
 return|;
-case|case
-literal|0
-case|:
-if|if
-condition|(
-name|data
-operator|.
-name|size
-operator|>
-name|nlen
-condition|)
-block|{
-name|nlen
-operator|=
-name|data
-operator|.
-name|size
-expr_stmt|;
-goto|goto
-name|retry
-goto|;
-block|}
 block|}
 if|if
 condition|(
@@ -884,7 +850,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * db_delete --  *	Delete a line from the file.  *  * PUBLIC: int db_delete __P((SCR *, recno_t));  */
+comment|/*  * db_delete --  *	Delete a line from the file.  *  * PUBLIC: int db_delete(SCR *, recno_t);  */
 end_comment
 
 begin_function
@@ -1017,8 +983,6 @@ argument_list|(
 name|lno
 argument_list|)
 expr_stmt|;
-name|SIGBLOCK
-expr_stmt|;
 if|if
 condition|(
 name|ep
@@ -1060,8 +1024,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|SIGUNBLOCK
-expr_stmt|;
 comment|/* Flush the cache, update line count, before screen update. */
 if|if
 condition|(
@@ -1134,7 +1096,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * db_append --  *	Append a line into the file.  *  * PUBLIC: int db_append __P((SCR *, int, recno_t, CHAR_T *, size_t));  */
+comment|/*  * db_append --  *	Append a line into the file.  *  * PUBLIC: int db_append(SCR *, int, recno_t, CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -1279,8 +1241,6 @@ name|size
 operator|=
 name|flen
 expr_stmt|;
-name|SIGBLOCK
-expr_stmt|;
 if|if
 condition|(
 name|ep
@@ -1326,8 +1286,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|SIGUNBLOCK
-expr_stmt|;
 comment|/* Flush the cache, update line count, before screen update. */
 if|if
 condition|(
@@ -1453,7 +1411,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * db_insert --  *	Insert a line into the file.  *  * PUBLIC: int db_insert __P((SCR *, recno_t, CHAR_T *, size_t));  */
+comment|/*  * db_insert --  *	Insert a line into the file.  *  * PUBLIC: int db_insert(SCR *, recno_t, CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -1601,8 +1559,6 @@ name|size
 operator|=
 name|flen
 expr_stmt|;
-name|SIGBLOCK
-expr_stmt|;
 if|if
 condition|(
 name|ep
@@ -1648,8 +1604,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|SIGUNBLOCK
-expr_stmt|;
 comment|/* Flush the cache, update line count, before screen update. */
 if|if
 condition|(
@@ -1769,7 +1723,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * db_set --  *	Store a line in the file.  *  * PUBLIC: int db_set __P((SCR *, recno_t, CHAR_T *, size_t));  */
+comment|/*  * db_set --  *	Store a line in the file.  *  * PUBLIC: int db_set(SCR *, recno_t, CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -1924,8 +1878,6 @@ name|size
 operator|=
 name|flen
 expr_stmt|;
-name|SIGBLOCK
-expr_stmt|;
 if|if
 condition|(
 name|ep
@@ -1971,8 +1923,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|SIGUNBLOCK
-expr_stmt|;
 comment|/* Flush the cache, before logging or screen update. */
 if|if
 condition|(
@@ -2042,7 +1992,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * db_exist --  *	Return if a line exists.  *  * PUBLIC: int db_exist __P((SCR *, recno_t));  */
+comment|/*  * db_exist --  *	Return if a line exists.  *  * PUBLIC: int db_exist(SCR *, recno_t);  */
 end_comment
 
 begin_function
@@ -2188,7 +2138,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * db_last --  *	Return the number of lines in the file.  *  * PUBLIC: int db_last __P((SCR *, recno_t *));  */
+comment|/*  * db_last --  *	Return the number of lines in the file.  *  * PUBLIC: int db_last(SCR *, recno_t *);  */
 end_comment
 
 begin_function
@@ -2395,10 +2345,6 @@ operator|(
 literal|0
 operator|)
 return|;
-case|case
-literal|0
-case|:
-empty_stmt|;
 block|}
 name|memcpy
 argument_list|(
@@ -2566,7 +2512,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * db_rget --  *	Retrieve a raw line from database. No cache, no conversion.  *  * PUBLIC: int db_rget __P((SCR *, recno_t, char **, size_t *));  */
+comment|/*  * db_rget --  *	Retrieve a raw line from the database.  *  * PUBLIC: int db_rget(SCR *, recno_t, char **, size_t *);  */
 end_comment
 
 begin_function
@@ -2601,25 +2547,14 @@ decl_stmt|;
 name|EXF
 modifier|*
 name|ep
-decl_stmt|;
-comment|/* Check for no underlying file. */
-if|if
-condition|(
-operator|(
-name|ep
-operator|=
+init|=
 name|sp
 operator|->
 name|ep
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+decl_stmt|;
+name|int
+name|rval
+decl_stmt|;
 comment|/* Get the line from the underlying database. */
 name|key
 operator|.
@@ -2639,6 +2574,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|rval
+operator|=
 name|ep
 operator|->
 name|db
@@ -2657,19 +2595,11 @@ name|data
 argument_list|,
 literal|0
 argument_list|)
-condition|)
-comment|/* We do not report error, and do not ensure the size! */
-return|return
-operator|(
-literal|1
 operator|)
-return|;
-if|if
-condition|(
-name|lenp
-operator|!=
-name|NULL
+operator|==
+literal|0
 condition|)
+block|{
 operator|*
 name|lenp
 operator|=
@@ -2677,12 +2607,6 @@ name|data
 operator|.
 name|size
 expr_stmt|;
-if|if
-condition|(
-name|pp
-operator|!=
-name|NULL
-condition|)
 operator|*
 name|pp
 operator|=
@@ -2690,16 +2614,17 @@ name|data
 operator|.
 name|data
 expr_stmt|;
+block|}
 return|return
 operator|(
-literal|0
+name|rval
 operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * db_rset --  *	Store a line in the file. No log, no conversion.  *  * PUBLIC: int db_rset __P((SCR *, recno_t, char *, size_t));  */
+comment|/*  * db_rset --  *	Store a raw line into the database.  *  * PUBLIC: int db_rset(SCR *, recno_t, char *, size_t);  */
 end_comment
 
 begin_function
@@ -2729,25 +2654,11 @@ decl_stmt|;
 name|EXF
 modifier|*
 name|ep
-decl_stmt|;
-comment|/* Check for no underlying file. */
-if|if
-condition|(
-operator|(
-name|ep
-operator|=
+init|=
 name|sp
 operator|->
 name|ep
-operator|)
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
+decl_stmt|;
 comment|/* Update file. */
 name|key
 operator|.
@@ -2777,8 +2688,7 @@ name|size
 operator|=
 name|len
 expr_stmt|;
-if|if
-condition|(
+return|return
 name|ep
 operator|->
 name|db
@@ -2797,26 +2707,12 @@ name|data
 argument_list|,
 literal|0
 argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-comment|/* We do not report error, and do not ensure the size! */
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-return|return
-operator|(
-literal|0
-operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * db_err --  *	Report a line error.  *  * PUBLIC: void db_err __P((SCR *, recno_t));  */
+comment|/*  * db_err --  *	Report a line error.  *  * PUBLIC: void db_err(SCR *, recno_t);  */
 end_comment
 
 begin_function

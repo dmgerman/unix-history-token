@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Kai Wang  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD: users/kaiwang27/elftc/libelftc.h 392 2009-05-31 19:17:46Z kaiwang27 $  * $Id: libelftc.h 3031 2014-05-01 17:45:41Z jkoshy $  */
+comment|/*-  * Copyright (c) 2009 Kai Wang  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR(S) BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $FreeBSD: users/kaiwang27/elftc/libelftc.h 392 2009-05-31 19:17:46Z kaiwang27 $  * $Id: libelftc.h 3174 2015-03-27 17:13:41Z emaste $  */
 end_comment
 
 begin_ifndef
@@ -132,8 +132,18 @@ name|ELFTC_DEM_NOPARAM
 value|0x00010000U
 end_define
 
-begin_function_decl
-name|__BEGIN_DECLS
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 name|Elftc_Bfd_Target
 modifier|*
 name|elftc_bfd_find_target
@@ -144,9 +154,6 @@ modifier|*
 name|_tgt_name
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elftc_Bfd_Target_Flavor
 name|elftc_bfd_target_flavor
 parameter_list|(
@@ -155,9 +162,6 @@ modifier|*
 name|_tgt
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|elftc_bfd_target_byteorder
@@ -167,9 +171,6 @@ modifier|*
 name|_tgt
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|elftc_bfd_target_class
@@ -179,9 +180,6 @@ modifier|*
 name|_tgt
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|elftc_bfd_target_machine
@@ -191,9 +189,6 @@ modifier|*
 name|_tgt
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|elftc_copyfile
 parameter_list|(
@@ -204,9 +199,6 @@ name|int
 name|_dstfd
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|elftc_demangle
 parameter_list|(
@@ -227,9 +219,6 @@ name|int
 name|_flags
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|elftc_set_timestamps
 parameter_list|(
@@ -244,9 +233,6 @@ modifier|*
 name|_sb
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elftc_String_Table
 modifier|*
 name|elftc_string_table_create
@@ -255,9 +241,6 @@ name|int
 name|_hint
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|elftc_string_table_destroy
 parameter_list|(
@@ -266,9 +249,6 @@ modifier|*
 name|_table
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elftc_String_Table
 modifier|*
 name|elftc_string_table_from_section
@@ -281,9 +261,6 @@ name|int
 name|_hint
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -298,9 +275,6 @@ modifier|*
 name|_sz
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|size_t
 name|elftc_string_table_insert
 parameter_list|(
@@ -314,9 +288,6 @@ modifier|*
 name|_string
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|size_t
 name|elftc_string_table_lookup
 parameter_list|(
@@ -330,9 +301,6 @@ modifier|*
 name|_string
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|elftc_string_table_remove
 parameter_list|(
@@ -346,9 +314,6 @@ modifier|*
 name|_string
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -362,9 +327,6 @@ name|size_t
 name|offset
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|const
 name|char
 modifier|*
@@ -373,11 +335,16 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
 
-begin_macro
-name|__END_DECLS
-end_macro
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

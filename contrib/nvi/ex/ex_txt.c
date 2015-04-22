@@ -105,46 +105,40 @@ begin_comment
 comment|/*  * !!!  * The backslash characters was special when it preceded a newline as part of  * a substitution replacement pattern.  For example, the input ":a\<cr>" would  * failed immediately with an error, as the<cr> wasn't part of a substitution  * replacement pattern.  This implies a frightening integration of the editor  * and the parser and/or the RE engine.  There's no way I'm going to reproduce  * those semantics.  *  * So, if backslashes are special, this code inserts the backslash and the next  * character into the string, without regard for the character or the command  * being entered.  Since "\<cr>" was illegal historically (except for the one  * special case), and the command will fail eventually, no historical scripts  * should break (presuming they didn't depend on the failure mode itself or the  * characters remaining when failure occurred.  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|txt_dent
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TEXT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|txt_prompt
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TEXT
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|ARG_CHAR_T
-operator|,
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_txt --  *	Get lines from the terminal for ex.  *  * PUBLIC: int ex_txt __P((SCR *, TEXTH *, ARG_CHAR_T, u_int32_t));  */
+comment|/*  * ex_txt --  *	Get lines from the terminal for ex.  *  * PUBLIC: int ex_txt(SCR *, TEXTH *, ARG_CHAR_T, u_int32_t);  */
 end_comment
 
 begin_function

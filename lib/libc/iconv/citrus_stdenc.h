@@ -194,7 +194,6 @@ modifier|*
 name|__restrict
 name|idx
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*

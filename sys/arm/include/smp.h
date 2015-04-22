@@ -76,6 +76,20 @@ name|IPI_TLB
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPI_CACHE
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPI_LAZYPMAP
+value|9
+end_define
+
 begin_function_decl
 name|void
 name|init_secondary

@@ -35,67 +35,55 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|looks_utf8
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|looks_utf16
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|decode_utf8
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 name|int
 name|decode_utf16
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -685,7 +673,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * looks_utf8 --  *  Decide whether some text looks like UTF-8. Returns:  *  *     -1: invalid UTF-8  *      0: uses odd control characters, so doesn't look like text  *      1: 7-bit text  *      2: definitely UTF-8 text (valid high-bit set bytes)  *  *  Based on RFC 3629. UTF-8 with BOM is not accepted.  *  * PUBLIC: int looks_utf8 __P((const char *, size_t));  */
+comment|/*  * looks_utf8 --  *  Decide whether some text looks like UTF-8. Returns:  *  *     -1: invalid UTF-8  *      0: uses odd control characters, so doesn't look like text  *      1: 7-bit text  *      2: definitely UTF-8 text (valid high-bit set bytes)  *  *  Based on RFC 3629. UTF-8 with BOM is not accepted.  *  * PUBLIC: int looks_utf8(const char *, size_t);  */
 end_comment
 
 begin_function
@@ -959,7 +947,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * looks_utf16 --  *  Decide whether some text looks like UTF-16. Returns:  *  *      0: invalid UTF-16  *      1: Little-endian UTF-16  *      2: Big-endian UTF-16  *  * PUBLIC: int looks_utf16 __P((const char *, size_t));  */
+comment|/*  * looks_utf16 --  *  Decide whether some text looks like UTF-16. Returns:  *  *      0: invalid UTF-16  *      1: Little-endian UTF-16  *      2: Big-endian UTF-16  *  * PUBLIC: int looks_utf16(const char *, size_t);  */
 end_comment
 
 begin_function
@@ -1208,7 +1196,7 @@ name|X
 end_undef
 
 begin_comment
-comment|/*  * decode_utf8 --  *  Decode a UTF-8 character from byte string to Unicode.  *  Returns -1 if the first byte is a not UTF-8 leader.  *  *  Based on RFC 3629, but without error detection.  *  * PUBLIC: int decode_utf8 __P((const char *));  */
+comment|/*  * decode_utf8 --  *  Decode a UTF-8 character from byte string to Unicode.  *  Returns -1 if the first byte is a not UTF-8 leader.  *  *  Based on RFC 3629, but without error detection.  *  * PUBLIC: int decode_utf8(const char *);  */
 end_comment
 
 begin_function
@@ -1425,7 +1413,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * decode_utf16 --  *  Decode a UTF-16 character from byte string to Unicode.  *  Returns -1 if the first unsigned integer is invalid.  *  *  No error detection on supplementary bytes.  *  * PUBLIC: int decode_utf16 __P((const char *, int));  */
+comment|/*  * decode_utf16 --  *  Decode a UTF-16 character from byte string to Unicode.  *  Returns -1 if the first unsigned integer is invalid.  *  *  No error detection on supplementary bytes.  *  * PUBLIC: int decode_utf16(const char *, int);  */
 end_comment
 
 begin_function

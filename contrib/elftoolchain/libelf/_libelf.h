@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2006,2008-2011 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: _libelf.h 3011 2014-03-23 03:32:42Z jkoshy $  */
+comment|/*-  * Copyright (c) 2006,2008-2011 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: _libelf.h 3174 2015-03-27 17:13:41Z emaste $  */
 end_comment
 
 begin_ifndef
@@ -552,8 +552,18 @@ begin_comment
 comment|/*  * Function Prototypes.  */
 end_comment
 
-begin_function_decl
-name|__BEGIN_DECLS
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__cplusplus
+end_ifdef
+
+begin_extern
+extern|extern
+literal|"C"
+block|{
+endif|#
+directive|endif
 name|struct
 name|_Libelf_Data
 modifier|*
@@ -564,9 +574,6 @@ modifier|*
 name|_s
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf
 modifier|*
 name|_libelf_allocate_elf
@@ -574,9 +581,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Scn
 modifier|*
 name|_libelf_allocate_scn
@@ -589,9 +593,6 @@ name|size_t
 name|_ndx
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Arhdr
 modifier|*
 name|_libelf_ar_gethdr
@@ -601,9 +602,6 @@ modifier|*
 name|_e
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf
 modifier|*
 name|_libelf_ar_open
@@ -616,9 +614,6 @@ name|int
 name|_reporterror
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf
 modifier|*
 name|_libelf_ar_open_member
@@ -634,9 +629,6 @@ modifier|*
 name|_ar
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Arsym
 modifier|*
 name|_libelf_ar_process_bsd_symtab
@@ -650,9 +642,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Arsym
 modifier|*
 name|_libelf_ar_process_svr4_symtab
@@ -666,9 +655,6 @@ modifier|*
 name|_dst
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|long
 name|_libelf_checksum
 parameter_list|(
@@ -680,9 +666,6 @@ name|int
 name|_elfclass
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|_libelf_ehdr
@@ -698,9 +681,6 @@ name|int
 name|_allocate
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|_libelf_falign
@@ -712,9 +692,6 @@ name|int
 name|_elfclass
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|size_t
 name|_libelf_fsize
 parameter_list|(
@@ -732,16 +709,10 @@ name|size_t
 name|count
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_macro
 name|int
 argument_list|(
 argument|*_libelf_get_translator(Elf_Type _t, int _direction, int _elfclass)
 argument_list|)
-end_macro
-
-begin_expr_stmt
 operator|(
 name|unsigned
 name|char
@@ -763,9 +734,6 @@ name|int
 name|_byteswap
 operator|)
 expr_stmt|;
-end_expr_stmt
-
-begin_function_decl
 name|void
 modifier|*
 name|_libelf_getphdr
@@ -778,9 +746,6 @@ name|int
 name|_elfclass
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|_libelf_getshdr
@@ -793,9 +758,6 @@ name|int
 name|_elfclass
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|_libelf_init_elf
 parameter_list|(
@@ -807,9 +769,6 @@ name|Elf_Kind
 name|_kind
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|_libelf_load_section_headers
 parameter_list|(
@@ -822,9 +781,6 @@ modifier|*
 name|ehdr
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|unsigned
 name|int
 name|_libelf_malign
@@ -836,9 +792,6 @@ name|int
 name|_elfclass
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf
 modifier|*
 name|_libelf_memory
@@ -855,9 +808,6 @@ name|int
 name|_reporterror
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|size_t
 name|_libelf_msize
 parameter_list|(
@@ -872,9 +822,6 @@ name|int
 name|_version
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 modifier|*
 name|_libelf_newphdr
@@ -890,9 +837,6 @@ name|size_t
 name|_count
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf
 modifier|*
 name|_libelf_open_object
@@ -907,9 +851,6 @@ name|int
 name|_reporterror
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|_Libelf_Data
 modifier|*
@@ -921,9 +862,6 @@ modifier|*
 name|_d
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf
 modifier|*
 name|_libelf_release_elf
@@ -933,9 +871,6 @@ modifier|*
 name|_e
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Scn
 modifier|*
 name|_libelf_release_scn
@@ -945,9 +880,6 @@ modifier|*
 name|_s
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|_libelf_setphnum
 parameter_list|(
@@ -966,9 +898,6 @@ name|size_t
 name|_phnum
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|_libelf_setshnum
 parameter_list|(
@@ -987,9 +916,6 @@ name|size_t
 name|_shnum
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|_libelf_setshstrndx
 parameter_list|(
@@ -1008,9 +934,6 @@ name|size_t
 name|_shstrndx
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|Elf_Data
 modifier|*
 name|_libelf_xlate
@@ -1035,9 +958,6 @@ name|int
 name|_direction
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|_libelf_xlate_shtype
 parameter_list|(
@@ -1045,11 +965,16 @@ name|uint32_t
 name|_sht
 parameter_list|)
 function_decl|;
-end_function_decl
+ifdef|#
+directive|ifdef
+name|__cplusplus
+block|}
+end_extern
 
-begin_macro
-name|__END_DECLS
-end_macro
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

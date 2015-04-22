@@ -1508,6 +1508,14 @@ name|vsc_rx_ready
 operator|=
 literal|1
 expr_stmt|;
+name|vq
+operator|->
+name|vq_used
+operator|->
+name|vu_flags
+operator||=
+name|VRING_USED_F_NO_NOTIFY
+expr_stmt|;
 block|}
 block|}
 end_function
@@ -1706,6 +1714,14 @@ operator|->
 name|tx_mtx
 argument_list|)
 expr_stmt|;
+name|vq
+operator|->
+name|vq_used
+operator|->
+name|vu_flags
+operator||=
+name|VRING_USED_F_NO_NOTIFY
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1815,6 +1831,15 @@ block|{
 comment|/* note - tx mutex is locked here */
 do|do
 block|{
+name|vq
+operator|->
+name|vq_used
+operator|->
+name|vu_flags
+operator|&=
+operator|~
+name|VRING_USED_F_NO_NOTIFY
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -1875,6 +1900,14 @@ operator|!
 name|have_work
 condition|)
 do|;
+name|vq
+operator|->
+name|vq_used
+operator|->
+name|vu_flags
+operator||=
+name|VRING_USED_F_NO_NOTIFY
+expr_stmt|;
 name|sc
 operator|->
 name|tx_in_progress
@@ -2702,19 +2735,24 @@ argument_list|,
 name|VIRTIO_TYPE_NET
 argument_list|)
 expr_stmt|;
-name|pci_lintr_request
-argument_list|(
-name|pi
-argument_list|)
-expr_stmt|;
-comment|/* link always up */
+comment|/* Link is up if we managed to open tap device. */
 name|sc
 operator|->
 name|vsc_config
 operator|.
 name|status
 operator|=
-literal|1
+operator|(
+name|opts
+operator|==
+name|NULL
+operator|||
+name|sc
+operator|->
+name|vsc_tapfd
+operator|>=
+literal|0
+operator|)
 expr_stmt|;
 comment|/* use BAR 1 to map MSI-X table and PBA, if we're using MSI-X */
 if|if

@@ -104,12 +104,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/fdt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/broadcom/bcm2835/bcm2835_wdog.h>
 end_include
 

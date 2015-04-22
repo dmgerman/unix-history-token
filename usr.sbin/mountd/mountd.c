@@ -8729,6 +8729,19 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * We do not need to delete "export" flag from 		 * filesystems that do not have it set. 		 */
+if|if
+condition|(
+operator|!
+operator|(
+name|fsp
+operator|->
+name|f_flags
+operator|&
+name|MNT_EXPORTED
+operator|)
+condition|)
+continue|continue;
 comment|/* 		 * Do not delete export for network filesystem by 		 * passing "export" arg to nmount(). 		 * It only makes sense to do this for local filesystems. 		 */
 if|if
 condition|(

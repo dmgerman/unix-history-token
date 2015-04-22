@@ -1020,6 +1020,15 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+end_if
+
 begin_function
 name|int
 name|freebsd6_pread
@@ -1088,6 +1097,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Scatter read system call.  */
@@ -2088,6 +2102,15 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+end_if
+
 begin_function
 name|int
 name|freebsd6_pwrite
@@ -2156,6 +2179,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Gather write system call.  */

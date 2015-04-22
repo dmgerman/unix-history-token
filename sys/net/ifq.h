@@ -86,7 +86,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<altq/if_altq.h>
+file|<net/altq/if_altq.h>
 end_include
 
 begin_comment

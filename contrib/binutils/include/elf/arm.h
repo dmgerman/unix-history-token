@@ -1825,6 +1825,26 @@ block|,
 name|Tag_ABI_FP_optimization_goals
 block|,
 comment|/* 32 is generic.  */
+name|Tag_CPU_unaligned_access
+operator|=
+literal|34
+block|,
+name|Tag_FP_HP_extension
+operator|=
+literal|36
+block|,
+name|Tag_ABI_FP_16bit_format
+operator|=
+literal|38
+block|,
+name|Tag_MPextension_use
+operator|=
+literal|42
+block|,
+name|Tag_DIV_use
+operator|=
+literal|44
+block|,
 name|Tag_Virtualization_use
 operator|=
 literal|68

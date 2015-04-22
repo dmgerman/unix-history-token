@@ -768,9 +768,7 @@ comment|/* 	 * This HAS to be the last item because we adjust the zone size 	 * 
 name|struct
 name|uma_cache
 name|uz_cpu
-index|[
-literal|1
-index|]
+index|[]
 decl_stmt|;
 comment|/* Per cpu caches */
 block|}
@@ -933,7 +931,7 @@ name|void
 modifier|*
 name|uma_large_malloc
 parameter_list|(
-name|int
+name|vm_size_t
 name|size
 parameter_list|,
 name|int
@@ -1213,7 +1211,7 @@ parameter_list|(
 name|uma_zone_t
 name|zone
 parameter_list|,
-name|int
+name|vm_size_t
 name|bytes
 parameter_list|,
 name|uint8_t
@@ -1234,7 +1232,7 @@ name|void
 modifier|*
 name|mem
 parameter_list|,
-name|int
+name|vm_size_t
 name|size
 parameter_list|,
 name|uint8_t

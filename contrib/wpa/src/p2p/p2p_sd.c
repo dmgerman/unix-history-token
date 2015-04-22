@@ -206,6 +206,11 @@ name|wsd
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|count
+init|=
+literal|0
+decl_stmt|;
 if|if
 condition|(
 operator|!
@@ -272,24 +277,44 @@ operator|!
 name|wsd
 condition|)
 continue|continue;
+comment|/* if the query is a broadcast query */
 if|if
 condition|(
 name|q
 operator|->
 name|for_all_peers
-operator|&&
-operator|!
-operator|(
+condition|)
+block|{
+comment|/* 			 * check if there are any broadcast queries pending for 			 * this device 			 */
+if|if
+condition|(
 name|dev
 operator|->
-name|flags
-operator|&
-name|P2P_DEV_SD_INFO
-operator|)
+name|sd_pending_bcast_queries
+operator|<=
+literal|0
 condition|)
 return|return
-name|q
+name|NULL
 return|;
+comment|/* query number that needs to be send to the device */
+if|if
+condition|(
+name|count
+operator|==
+name|dev
+operator|->
+name|sd_pending_bcast_queries
+operator|-
+literal|1
+condition|)
+goto|goto
+name|found
+goto|;
+name|count
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -314,13 +339,106 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-return|return
-name|q
-return|;
+goto|goto
+name|found
+goto|;
 block|}
 return|return
 name|NULL
 return|;
+name|found
+label|:
+if|if
+condition|(
+name|dev
+operator|->
+name|sd_reqs
+operator|>
+literal|100
+condition|)
+block|{
+name|p2p_dbg
+argument_list|(
+name|p2p
+argument_list|,
+literal|"Too many SD request attempts to "
+name|MACSTR
+literal|" - skip remaining queries"
+argument_list|,
+name|MAC2STR
+argument_list|(
+name|dev
+operator|->
+name|info
+operator|.
+name|p2p_device_addr
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+return|return
+name|q
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|p2p_decrease_sd_bc_queries
+parameter_list|(
+name|struct
+name|p2p_data
+modifier|*
+name|p2p
+parameter_list|,
+name|int
+name|query_number
+parameter_list|)
+block|{
+name|struct
+name|p2p_device
+modifier|*
+name|dev
+decl_stmt|;
+name|p2p
+operator|->
+name|num_p2p_sd_queries
+operator|--
+expr_stmt|;
+name|dl_list_for_each
+argument_list|(
+argument|dev
+argument_list|,
+argument|&p2p->devices
+argument_list|,
+argument|struct p2p_device
+argument_list|,
+argument|list
+argument_list|)
+block|{
+if|if
+condition|(
+name|query_number
+operator|<=
+name|dev
+operator|->
+name|sd_pending_bcast_queries
+operator|-
+literal|1
+condition|)
+block|{
+comment|/* 			 * Query not yet sent to the device and it is to be 			 * removed, so update the pending count. 			*/
+name|dev
+operator|->
+name|sd_pending_bcast_queries
+operator|--
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -348,6 +466,11 @@ decl_stmt|,
 modifier|*
 name|prev
 decl_stmt|;
+name|int
+name|query_number
+init|=
+literal|0
+decl_stmt|;
 name|q
 operator|=
 name|p2p
@@ -370,6 +493,20 @@ operator|==
 name|query
 condition|)
 block|{
+comment|/* If the query is a broadcast query, decrease one from 			 * all the devices */
+if|if
+condition|(
+name|query
+operator|->
+name|for_all_peers
+condition|)
+name|p2p_decrease_sd_bc_queries
+argument_list|(
+name|p2p
+argument_list|,
+name|query_number
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|prev
@@ -409,6 +546,15 @@ return|return
 literal|1
 return|;
 block|}
+if|if
+condition|(
+name|q
+operator|->
+name|for_all_peers
+condition|)
+name|query_number
+operator|++
+expr_stmt|;
 name|prev
 operator|=
 name|q
@@ -510,6 +656,12 @@ name|prev
 argument_list|)
 expr_stmt|;
 block|}
+name|p2p
+operator|->
+name|num_p2p_sd_queries
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -571,18 +723,11 @@ argument_list|,
 name|ANQP_VENDOR_SPECIFIC
 argument_list|)
 expr_stmt|;
-name|wpabuf_put_be24
+name|wpabuf_put_be32
 argument_list|(
 name|buf
 argument_list|,
-name|OUI_WFA
-argument_list|)
-expr_stmt|;
-name|wpabuf_put_u8
-argument_list|(
-name|buf
-argument_list|,
-name|P2P_OUI_TYPE
+name|P2P_IE_VENDOR_TYPE
 argument_list|)
 expr_stmt|;
 name|wpabuf_put_le16
@@ -698,17 +843,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Failed to send Action frame"
+literal|"Failed to send Action frame"
 argument_list|)
 expr_stmt|;
 name|wpabuf_free
@@ -802,18 +941,11 @@ argument_list|,
 name|ANQP_VENDOR_SPECIFIC
 argument_list|)
 expr_stmt|;
-name|wpabuf_put_be24
+name|wpabuf_put_be32
 argument_list|(
 name|buf
 argument_list|,
-name|OUI_WFA
-argument_list|)
-expr_stmt|;
-name|wpabuf_put_u8
-argument_list|(
-name|buf
-argument_list|,
-name|P2P_OUI_TYPE
+name|P2P_IE_VENDOR_TYPE
 argument_list|)
 expr_stmt|;
 comment|/* Service Update Indicator */
@@ -946,18 +1078,11 @@ operator|+
 name|total_len
 argument_list|)
 expr_stmt|;
-name|wpabuf_put_be24
+name|wpabuf_put_be32
 argument_list|(
 name|buf
 argument_list|,
-name|OUI_WFA
-argument_list|)
-expr_stmt|;
-name|wpabuf_put_u8
-argument_list|(
-name|buf
-argument_list|,
-name|P2P_OUI_TYPE
+name|P2P_IE_VENDOR_TYPE
 argument_list|)
 expr_stmt|;
 comment|/* Service Update Indicator */
@@ -1022,6 +1147,10 @@ decl_stmt|;
 name|int
 name|freq
 decl_stmt|;
+name|unsigned
+name|int
+name|wait_time
+decl_stmt|;
 name|freq
 operator|=
 name|dev
@@ -1045,18 +1174,11 @@ operator|<=
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No Listen/Operating frequency known for the "
-literal|"peer "
+literal|"No Listen/Operating frequency known for the peer "
 name|MACSTR
 literal|" to send SD Request"
 argument_list|,
@@ -1094,17 +1216,11 @@ return|return
 operator|-
 literal|1
 return|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Start Service Discovery with "
+literal|"Start Service Discovery with "
 name|MACSTR
 argument_list|,
 name|MAC2STR
@@ -1140,6 +1256,11 @@ return|return
 operator|-
 literal|1
 return|;
+name|dev
+operator|->
+name|sd_reqs
+operator|++
+expr_stmt|;
 name|p2p
 operator|->
 name|sd_peer
@@ -1157,6 +1278,34 @@ operator|->
 name|pending_action_state
 operator|=
 name|P2P_PENDING_SD
+expr_stmt|;
+name|wait_time
+operator|=
+literal|5000
+expr_stmt|;
+if|if
+condition|(
+name|p2p
+operator|->
+name|cfg
+operator|->
+name|max_listen
+operator|&&
+name|wait_time
+operator|>
+name|p2p
+operator|->
+name|cfg
+operator|->
+name|max_listen
+condition|)
+name|wait_time
+operator|=
+name|p2p
+operator|->
+name|cfg
+operator|->
+name|max_listen
 expr_stmt|;
 if|if
 condition|(
@@ -1194,23 +1343,17 @@ argument_list|(
 name|req
 argument_list|)
 argument_list|,
-literal|5000
+name|wait_time
 argument_list|)
 operator|<
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Failed to send Action frame"
+literal|"Failed to send Action frame"
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1319,12 +1462,6 @@ name|p2p
 operator|->
 name|cfg
 operator|->
-name|country
-argument_list|,
-name|p2p
-operator|->
-name|cfg
-operator|->
 name|reg_class
 argument_list|,
 name|p2p
@@ -1356,20 +1493,13 @@ operator|*
 name|pos
 operator|++
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: GAS Initial Request from "
+literal|"GAS Initial Request from "
 name|MACSTR
-literal|" (dialog token %u, "
-literal|"freq %d)"
+literal|" (dialog token %u, freq %d)"
 argument_list|,
 name|MAC2STR
 argument_list|(
@@ -1389,17 +1519,11 @@ operator|!=
 name|WLAN_EID_ADV_PROTO
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unexpected IE in GAS Initial Request: %u"
+literal|"Unexpected IE in GAS Initial Request: %u"
 argument_list|,
 operator|*
 name|pos
@@ -1433,17 +1557,11 @@ operator|<
 literal|2
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Invalid IE in GAS Initial Request"
+literal|"Invalid IE in GAS Initial Request"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1460,17 +1578,11 @@ operator|!=
 name|ACCESS_NETWORK_QUERY_PROTOCOL
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unsupported GAS advertisement protocol id %u"
+literal|"Unsupported GAS advertisement protocol id %u"
 argument_list|,
 operator|*
 name|pos
@@ -1538,17 +1650,11 @@ operator|!=
 name|ANQP_VENDOR_SPECIFIC
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unsupported ANQP Info ID %u"
+literal|"Unsupported ANQP Info ID %u"
 argument_list|,
 name|WPA_GET_LE16
 argument_list|(
@@ -1588,44 +1694,32 @@ operator|+
 literal|1
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Invalid ANQP Query Request length"
+literal|"Invalid ANQP Query Request length"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 if|if
 condition|(
-name|WPA_GET_BE24
+name|WPA_GET_BE32
 argument_list|(
 name|pos
 argument_list|)
 operator|!=
-name|OUI_WFA
+name|P2P_IE_VENDOR_TYPE
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
+literal|"Unsupported ANQP vendor OUI-type %08x"
 argument_list|,
-literal|"P2P: Unsupported ANQP OUI %06x"
-argument_list|,
-name|WPA_GET_BE24
+name|WPA_GET_BE32
 argument_list|(
 name|pos
 argument_list|)
@@ -1635,36 +1729,7 @@ return|return;
 block|}
 name|pos
 operator|+=
-literal|3
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|pos
-operator|!=
-name|P2P_OUI_TYPE
-condition|)
-block|{
-name|wpa_msg
-argument_list|(
-name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
-argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unsupported ANQP vendor type %u"
-argument_list|,
-operator|*
-name|pos
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|pos
-operator|++
+literal|4
 expr_stmt|;
 if|if
 condition|(
@@ -1682,17 +1747,11 @@ argument_list|(
 name|pos
 argument_list|)
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Service Update Indicator: %u"
+literal|"Service Update Indicator: %u"
 argument_list|,
 name|update_indic
 argument_list|)
@@ -1775,18 +1834,11 @@ operator|>
 literal|1400
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: SD response long "
-literal|"enough to require fragmentation"
+literal|"SD response long enough to require fragmentation"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1797,18 +1849,11 @@ name|sd_resp
 condition|)
 block|{
 comment|/* 			 * TODO: Could consider storing the fragmented response 			 * separately for each peer to avoid having to drop old 			 * one if there is more than one pending SD query. 			 * Though, that would eat more memory, so there are 			 * also benefits to just using a single buffer. 			 */
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Drop "
-literal|"previous SD response"
+literal|"Drop previous SD response"
 argument_list|)
 expr_stmt|;
 name|wpabuf_free
@@ -1837,18 +1882,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|wpa_msg
+name|p2p_err
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_ERROR
-argument_list|,
-literal|"P2P: Failed to "
-literal|"allocate SD response fragmentation area"
+literal|"Failed to allocate SD response fragmentation area"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1902,18 +1940,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: SD response fits "
-literal|"in initial response"
+literal|"SD response fits in initial response"
 argument_list|)
 expr_stmt|;
 name|resp
@@ -1984,17 +2015,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Failed to send Action frame"
+literal|"Failed to send Action frame"
 argument_list|)
 expr_stmt|;
 name|wpabuf_free
@@ -2099,17 +2124,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Ignore unexpected GAS Initial Response from "
+literal|"Ignore unexpected GAS Initial Response from "
 name|MACSTR
 argument_list|,
 name|MAC2STR
@@ -2138,17 +2157,11 @@ argument_list|(
 name|p2p
 argument_list|)
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Received GAS Initial Response from "
+literal|"Received GAS Initial Response from "
 name|MACSTR
 literal|" (len=%d)"
 argument_list|,
@@ -2172,17 +2185,11 @@ operator|+
 literal|2
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Too short GAS Initial Response frame"
+literal|"Too short GAS Initial Response frame"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2216,17 +2223,11 @@ name|pos
 operator|+=
 literal|2
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: dialog_token=%u status_code=%u comeback_delay=%u"
+literal|"dialog_token=%u status_code=%u comeback_delay=%u"
 argument_list|,
 name|dialog_token
 argument_list|,
@@ -2240,17 +2241,11 @@ condition|(
 name|status_code
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Service Discovery failed: status code %u"
+literal|"Service Discovery failed: status code %u"
 argument_list|,
 name|status_code
 argument_list|)
@@ -2265,17 +2260,11 @@ operator|!=
 name|WLAN_EID_ADV_PROTO
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unexpected IE in GAS Initial Response: %u"
+literal|"Unexpected IE in GAS Initial Response: %u"
 argument_list|,
 operator|*
 name|pos
@@ -2309,17 +2298,11 @@ operator|<
 literal|2
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Invalid IE in GAS Initial Response"
+literal|"Invalid IE in GAS Initial Response"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2336,17 +2319,11 @@ operator|!=
 name|ACCESS_NETWORK_QUERY_PROTOCOL
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unsupported GAS advertisement protocol id %u"
+literal|"Unsupported GAS advertisement protocol id %u"
 argument_list|,
 operator|*
 name|pos
@@ -2368,18 +2345,11 @@ operator|>
 name|end
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Too short Query "
-literal|"Response"
+literal|"Too short Query Response"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2395,17 +2365,11 @@ name|pos
 operator|+=
 literal|2
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Query Response Length: %d"
+literal|"Query Response Length: %d"
 argument_list|,
 name|slen
 argument_list|)
@@ -2419,18 +2383,11 @@ operator|>
 name|end
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Not enough Query "
-literal|"Response data"
+literal|"Not enough Query Response data"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2446,18 +2403,11 @@ condition|(
 name|comeback_delay
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Fragmented "
-literal|"response - request fragments"
+literal|"Fragmented response - request fragments"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2467,18 +2417,11 @@ operator|->
 name|sd_rx_resp
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Drop "
-literal|"old SD reassembly buffer"
+literal|"Drop old SD reassembly buffer"
 argument_list|)
 expr_stmt|;
 name|wpabuf_free
@@ -2528,17 +2471,11 @@ operator|!=
 name|ANQP_VENDOR_SPECIFIC
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unsupported ANQP Info ID %u"
+literal|"Unsupported ANQP Info ID %u"
 argument_list|,
 name|WPA_GET_LE16
 argument_list|(
@@ -2578,44 +2515,32 @@ operator|+
 literal|1
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Invalid ANQP Query Response length"
+literal|"Invalid ANQP Query Response length"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
 if|if
 condition|(
-name|WPA_GET_BE24
+name|WPA_GET_BE32
 argument_list|(
 name|pos
 argument_list|)
 operator|!=
-name|OUI_WFA
+name|P2P_IE_VENDOR_TYPE
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
+literal|"Unsupported ANQP vendor OUI-type %08x"
 argument_list|,
-literal|"P2P: Unsupported ANQP OUI %06x"
-argument_list|,
-name|WPA_GET_BE24
+name|WPA_GET_BE32
 argument_list|(
 name|pos
 argument_list|)
@@ -2625,36 +2550,7 @@ return|return;
 block|}
 name|pos
 operator|+=
-literal|3
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|pos
-operator|!=
-name|P2P_OUI_TYPE
-condition|)
-block|{
-name|wpa_msg
-argument_list|(
-name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
-argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unsupported ANQP vendor type %u"
-argument_list|,
-operator|*
-name|pos
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|pos
-operator|++
+literal|4
 expr_stmt|;
 if|if
 condition|(
@@ -2672,17 +2568,11 @@ argument_list|(
 name|pos
 argument_list|)
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Service Update Indicator: %u"
+literal|"Service Update Indicator: %u"
 argument_list|,
 name|update_indic
 argument_list|)
@@ -2690,23 +2580,6 @@ expr_stmt|;
 name|pos
 operator|+=
 literal|2
-expr_stmt|;
-name|p2p
-operator|->
-name|sd_peer
-operator|->
-name|flags
-operator||=
-name|P2P_DEV_SD_INFO
-expr_stmt|;
-name|p2p
-operator|->
-name|sd_peer
-operator|->
-name|flags
-operator|&=
-operator|~
-name|P2P_DEV_SD_SCHEDULE
 expr_stmt|;
 name|p2p
 operator|->
@@ -2736,17 +2609,11 @@ name|p2p_sd_query
 modifier|*
 name|q
 decl_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Remove completed SD query %p"
+literal|"Remove completed SD query %p"
 argument_list|,
 name|p2p
 operator|->
@@ -2885,17 +2752,11 @@ operator|=
 operator|*
 name|data
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Dialog Token: %u"
+literal|"Dialog Token: %u"
 argument_list|,
 name|dialog_token
 argument_list|)
@@ -2909,18 +2770,11 @@ operator|->
 name|sd_resp_dialog_token
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No pending SD "
-literal|"response fragment for dialog token %u"
+literal|"No pending SD response fragment for dialog token %u"
 argument_list|,
 name|dialog_token
 argument_list|)
@@ -2936,18 +2790,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No pending SD "
-literal|"response fragment available"
+literal|"No pending SD response fragment available"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2968,18 +2815,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No pending SD "
-literal|"response fragment for "
+literal|"No pending SD response fragment for "
 name|MACSTR
 argument_list|,
 name|MAC2STR
@@ -3065,18 +2905,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Send GAS Comeback "
-literal|"Response (frag_id %d more=%d frag_len=%d)"
+literal|"Send GAS Comeback Response (frag_id %d more=%d frag_len=%d)"
 argument_list|,
 name|p2p
 operator|->
@@ -3106,18 +2939,11 @@ condition|(
 name|more
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: %d more bytes "
-literal|"remain to be sent"
+literal|"%d more bytes remain to be sent"
 argument_list|,
 call|(
 name|int
@@ -3139,18 +2965,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: All fragments of "
-literal|"SD response sent"
+literal|"All fragments of SD response sent"
 argument_list|)
 expr_stmt|;
 name|wpabuf_free
@@ -3210,17 +3029,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Failed to send Action frame"
+literal|"Failed to send Action frame"
 argument_list|)
 expr_stmt|;
 name|wpabuf_free
@@ -3339,17 +3152,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Ignore unexpected GAS Comeback Response from "
+literal|"Ignore unexpected GAS Comeback Response from "
 name|MACSTR
 argument_list|,
 name|MAC2STR
@@ -3378,17 +3185,11 @@ argument_list|(
 name|p2p
 argument_list|)
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Received GAS Comeback Response from "
+literal|"Received GAS Comeback Response from "
 name|MACSTR
 literal|" (len=%d)"
 argument_list|,
@@ -3412,17 +3213,11 @@ operator|+
 literal|2
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Too short GAS Comeback Response frame"
+literal|"Too short GAS Comeback Response frame"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3477,17 +3272,11 @@ name|pos
 operator|+=
 literal|2
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: dialog_token=%u status_code=%u frag_id=%d more_frags=%d "
+literal|"dialog_token=%u status_code=%u frag_id=%d more_frags=%d "
 literal|"comeback_delay=%u"
 argument_list|,
 name|dialog_token
@@ -3507,17 +3296,11 @@ condition|(
 name|status_code
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Service Discovery failed: status code %u"
+literal|"Service Discovery failed: status code %u"
 argument_list|,
 name|status_code
 argument_list|)
@@ -3532,17 +3315,11 @@ operator|!=
 name|WLAN_EID_ADV_PROTO
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unexpected IE in GAS Comeback Response: %u"
+literal|"Unexpected IE in GAS Comeback Response: %u"
 argument_list|,
 operator|*
 name|pos
@@ -3576,17 +3353,11 @@ operator|<
 literal|2
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Invalid IE in GAS Comeback Response"
+literal|"Invalid IE in GAS Comeback Response"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3603,17 +3374,11 @@ operator|!=
 name|ACCESS_NETWORK_QUERY_PROTOCOL
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unsupported GAS advertisement protocol id %u"
+literal|"Unsupported GAS advertisement protocol id %u"
 argument_list|,
 operator|*
 name|pos
@@ -3635,18 +3400,11 @@ operator|>
 name|end
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Too short Query "
-literal|"Response"
+literal|"Too short Query Response"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3662,17 +3420,11 @@ name|pos
 operator|+=
 literal|2
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Query Response Length: %d"
+literal|"Query Response Length: %d"
 argument_list|,
 name|slen
 argument_list|)
@@ -3686,18 +3438,11 @@ operator|>
 name|end
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Not enough Query "
-literal|"Response data"
+literal|"Not enough Query Response data"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3709,18 +3454,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: No Query Response "
-literal|"data"
+literal|"No Query Response data"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3763,17 +3501,11 @@ operator|!=
 name|ANQP_VENDOR_SPECIFIC
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unsupported ANQP Info ID %u"
+literal|"Unsupported ANQP Info ID %u"
 argument_list|,
 name|WPA_GET_LE16
 argument_list|(
@@ -3798,18 +3530,11 @@ name|pos
 operator|+=
 literal|2
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: ANQP Query Response "
-literal|"length: %u"
+literal|"ANQP Query Response length: %u"
 argument_list|,
 name|slen
 argument_list|)
@@ -3823,17 +3548,11 @@ operator|+
 literal|1
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Invalid ANQP Query Response length"
+literal|"Invalid ANQP Query Response length"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3849,27 +3568,21 @@ condition|)
 return|return;
 if|if
 condition|(
-name|WPA_GET_BE24
+name|WPA_GET_BE32
 argument_list|(
 name|pos
 argument_list|)
 operator|!=
-name|OUI_WFA
+name|P2P_IE_VENDOR_TYPE
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
+literal|"Unsupported ANQP vendor OUI-type %08x"
 argument_list|,
-literal|"P2P: Unsupported ANQP OUI %06x"
-argument_list|,
-name|WPA_GET_BE24
+name|WPA_GET_BE32
 argument_list|(
 name|pos
 argument_list|)
@@ -3879,36 +3592,7 @@ return|return;
 block|}
 name|pos
 operator|+=
-literal|3
-expr_stmt|;
-if|if
-condition|(
-operator|*
-name|pos
-operator|!=
-name|P2P_OUI_TYPE
-condition|)
-block|{
-name|wpa_msg
-argument_list|(
-name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
-argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Unsupported ANQP vendor type %u"
-argument_list|,
-operator|*
-name|pos
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-name|pos
-operator|++
+literal|4
 expr_stmt|;
 if|if
 condition|(
@@ -3928,17 +3612,11 @@ argument_list|(
 name|pos
 argument_list|)
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Service Update Indicator: %u"
+literal|"Service Update Indicator: %u"
 argument_list|,
 name|p2p
 operator|->
@@ -3981,18 +3659,11 @@ operator|-
 name|pos
 argument_list|)
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Current SD reassembly "
-literal|"buffer length: %u"
+literal|"Current SD reassembly buffer length: %u"
 argument_list|,
 operator|(
 name|unsigned
@@ -4011,18 +3682,11 @@ condition|(
 name|more_frags
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: More fragments "
-literal|"remains"
+literal|"More fragments remains"
 argument_list|)
 expr_stmt|;
 comment|/* TODO: what would be a good size limit? */
@@ -4051,18 +3715,11 @@ name|sd_rx_resp
 operator|=
 name|NULL
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Too long "
-literal|"SD response - drop it"
+literal|"Too long SD response - drop it"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4080,23 +3737,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|p2p
-operator|->
-name|sd_peer
-operator|->
-name|flags
-operator||=
-name|P2P_DEV_SD_INFO
-expr_stmt|;
-name|p2p
-operator|->
-name|sd_peer
-operator|->
-name|flags
-operator|&=
-operator|~
-name|P2P_DEV_SD_SCHEDULE
-expr_stmt|;
 name|p2p
 operator|->
 name|sd_peer
@@ -4125,17 +3765,11 @@ name|p2p_sd_query
 modifier|*
 name|q
 decl_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Remove completed SD query %p"
+literal|"Remove completed SD query %p"
 argument_list|,
 name|p2p
 operator|->
@@ -4342,17 +3976,11 @@ name|sd_queries
 operator|=
 name|q
 expr_stmt|;
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Added SD Query %p"
+literal|"Added SD Query %p"
 argument_list|,
 name|q
 argument_list|)
@@ -4369,6 +3997,12 @@ name|p2p_device
 modifier|*
 name|dev
 decl_stmt|;
+name|p2p
+operator|->
+name|num_p2p_sd_queries
+operator|++
+expr_stmt|;
+comment|/* Update all the devices for the newly added broadcast query */
 name|dl_list_for_each
 argument_list|(
 argument|dev
@@ -4379,13 +4013,28 @@ argument|struct p2p_device
 argument_list|,
 argument|list
 argument_list|)
+block|{
+if|if
+condition|(
 name|dev
 operator|->
-name|flags
-operator|&=
-operator|~
-name|P2P_DEV_SD_INFO
+name|sd_pending_bcast_queries
+operator|<=
+literal|0
+condition|)
+name|dev
+operator|->
+name|sd_pending_bcast_queries
+operator|=
+literal|1
 expr_stmt|;
+else|else
+name|dev
+operator|->
+name|sd_pending_bcast_queries
+operator|++
+expr_stmt|;
+block|}
 block|}
 return|return
 name|q
@@ -4504,17 +4153,11 @@ name|req
 argument_list|)
 condition|)
 block|{
-name|wpa_msg
+name|p2p_dbg
 argument_list|(
 name|p2p
-operator|->
-name|cfg
-operator|->
-name|msg_ctx
 argument_list|,
-name|MSG_DEBUG
-argument_list|,
-literal|"P2P: Cancel pending SD query %p"
+literal|"Cancel pending SD query %p"
 argument_list|,
 name|req
 argument_list|)

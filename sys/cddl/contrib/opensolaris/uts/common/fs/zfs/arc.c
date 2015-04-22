@@ -12075,11 +12075,18 @@ literal|1
 operator|)
 return|;
 block|}
+define|#
+directive|define
+name|zio_arena
+value|NULL
+else|#
+directive|else
+define|#
+directive|define
+name|zio_arena
+value|heap_arena
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|illumos
 comment|/* 	 * If zio data pages are being allocated out of a separate heap segment, 	 * then enforce that the size of available vmem for this arena remains 	 * above about 1/16th free. 	 * 	 * Note: The 1/16th arena free requirement was put in place 	 * to aggressively evict memory from the arc in order to avoid 	 * memory fragmentation issues. 	 */
 if|if
 condition|(
@@ -12110,9 +12117,43 @@ operator|(
 literal|1
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* illumos */
+comment|/* 	 * Above limits know nothing about real level of KVA fragmentation. 	 * Start aggressive reclamation if too little sequential KVA left. 	 */
+if|if
+condition|(
+name|vmem_size
+argument_list|(
+name|heap_arena
+argument_list|,
+name|VMEM_MAXFREE
+argument_list|)
+operator|<
+name|zfs_max_recordsize
+condition|)
+block|{
+name|DTRACE_PROBE2
+argument_list|(
+name|arc__reclaim_maxfree
+argument_list|,
+name|uint64_t
+argument_list|,
+name|vmem_size
+argument_list|(
+name|heap_arena
+argument_list|,
+name|VMEM_MAXFREE
+argument_list|)
+argument_list|,
+name|uint64_t
+argument_list|,
+name|zfs_max_recordsize
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 else|#
 directive|else
 comment|/* _KERNEL */
@@ -19010,9 +19051,9 @@ name|arc_c
 operator|/
 literal|4
 argument_list|,
-literal|64
+literal|16
 operator|<<
-literal|18
+literal|20
 argument_list|)
 expr_stmt|;
 comment|/* set max to 1/2 of all memory, or all but 1GB, whichever is more */
@@ -19064,9 +19105,9 @@ if|if
 condition|(
 name|zfs_arc_max
 operator|>
-literal|64
+literal|16
 operator|<<
-literal|18
+literal|20
 operator|&&
 name|zfs_arc_max
 operator|<
@@ -19081,9 +19122,9 @@ if|if
 condition|(
 name|zfs_arc_min
 operator|>
-literal|64
+literal|16
 operator|<<
-literal|18
+literal|20
 operator|&&
 name|zfs_arc_min
 operator|<=
