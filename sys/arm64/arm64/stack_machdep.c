@@ -74,9 +74,33 @@ modifier|*
 name|td
 parameter_list|)
 block|{
+if|if
+condition|(
+name|TD_IS_SWAPPED
+argument_list|(
+name|td
+argument_list|)
+condition|)
 name|panic
 argument_list|(
-literal|"stack_save_td"
+literal|"stack_save_td: swapped"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|TD_IS_RUNNING
+argument_list|(
+name|td
+argument_list|)
+condition|)
+name|panic
+argument_list|(
+literal|"stack_save_td: running"
+argument_list|)
+expr_stmt|;
+name|stack_zero
+argument_list|(
+name|st
 argument_list|)
 expr_stmt|;
 block|}
@@ -92,9 +116,9 @@ modifier|*
 name|st
 parameter_list|)
 block|{
-name|panic
+name|stack_zero
 argument_list|(
-literal|"stack_save"
+name|st
 argument_list|)
 expr_stmt|;
 block|}
