@@ -11488,6 +11488,8 @@ argument_list|,
 name|O_RDONLY
 operator||
 name|O_CLOEXEC
+operator||
+name|O_VERIFY
 argument_list|)
 operator|)
 operator|==
@@ -14685,6 +14687,8 @@ argument_list|,
 name|O_RDONLY
 operator||
 name|O_CLOEXEC
+operator||
+name|O_VERIFY
 argument_list|)
 expr_stmt|;
 if|if

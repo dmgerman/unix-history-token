@@ -231,6 +231,15 @@ operator||=
 name|O_CLOEXEC
 expr_stmt|;
 break|break;
+case|case
+literal|'v'
+case|:
+comment|/* verify */
+name|o
+operator||=
+name|O_VERIFY
+expr_stmt|;
+break|break;
 default|default:
 name|known
 operator|=
