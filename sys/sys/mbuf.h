@@ -2647,9 +2647,11 @@ name|m
 parameter_list|,
 name|uma_zone_t
 name|zone
+name|__unused
 parameter_list|,
 name|int
 name|size
+name|__unused
 parameter_list|,
 name|int
 name|how
@@ -5056,7 +5058,7 @@ name|m_tag
 operator|*
 name|m_tag_next
 argument_list|(
-argument|struct mbuf *m
+argument|struct mbuf *m __unused
 argument_list|,
 argument|struct m_tag *t
 argument_list|)
@@ -5342,8 +5344,8 @@ end_return
 
 begin_function
 unit|}  static
+name|__inline
 name|int
-specifier|inline
 name|rt_m_getfib
 parameter_list|(
 name|struct
