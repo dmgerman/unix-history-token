@@ -3107,7 +3107,7 @@ name|vfs_mountroot
 argument_list|()
 expr_stmt|;
 comment|/* Wipe GELI passphrase from the environment. */
-name|kern_unsetenv
+name|unsetenv
 argument_list|(
 literal|"kern.geom.eli.passphrase"
 argument_list|)
