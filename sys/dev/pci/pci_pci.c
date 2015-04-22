@@ -5078,16 +5078,17 @@ block|{
 if|#
 directive|if
 operator|!
+operator|(
 name|defined
 argument_list|(
 name|NEW_PCIB
 argument_list|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
 name|PCI_RES_BUS
 argument_list|)
+operator|)
 case|case
 literal|0x12258086
 case|:
@@ -5158,16 +5159,17 @@ break|break;
 if|#
 directive|if
 operator|!
+operator|(
 name|defined
 argument_list|(
 name|NEW_PCIB
 argument_list|)
 operator|&&
-operator|!
 name|defined
 argument_list|(
 name|PCI_RES_BUS
 argument_list|)
+operator|)
 comment|/* Compaq R3000 BIOS sets wrong subordinate bus number. */
 case|case
 literal|0x00dd10de
