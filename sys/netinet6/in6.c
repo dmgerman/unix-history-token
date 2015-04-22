@@ -547,6 +547,16 @@ name|ifa
 operator|->
 name|ifa_ifp
 expr_stmt|;
+if|if
+condition|(
+name|nd6_need_cache
+argument_list|(
+name|ifp
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return;
 name|IF_AFDATA_LOCK
 argument_list|(
 name|ifp
