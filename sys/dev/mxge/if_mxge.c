@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/zlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -165,12 +171,6 @@ begin_include
 include|#
 directive|include
 file|<net/if_vlan_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<net/zlib.h>
 end_include
 
 begin_include
