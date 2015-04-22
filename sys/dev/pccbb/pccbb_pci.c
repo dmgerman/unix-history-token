@@ -2283,7 +2283,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-name|PCIR_SECLAT_1
+name|PCIR_SECLAT_2
 argument_list|,
 literal|1
 argument_list|)
@@ -2296,7 +2296,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-name|PCIR_SECLAT_1
+name|PCIR_SECLAT_2
 argument_list|,
 literal|0x20
 argument_list|,
