@@ -7308,7 +7308,7 @@ literal|1
 argument_list|,
 name|CHAN_X11_WINDOW_DEFAULT
 argument_list|,
-name|CHAN_TCP_WINDOW_DEFAULT
+name|CHAN_TCP_PACKET_DEFAULT
 argument_list|,
 literal|0
 argument_list|,
