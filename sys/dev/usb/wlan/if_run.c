@@ -1277,7 +1277,7 @@ name|RUN_DEV
 argument_list|(
 name|MELCO
 argument_list|,
-name|RT2870_1
+name|WLIUCG300HP
 argument_list|)
 block|,
 name|RUN_DEV
@@ -1320,6 +1320,13 @@ argument_list|(
 name|MELCO
 argument_list|,
 name|WLIUCGNM
+argument_list|)
+block|,
+name|RUN_DEV
+argument_list|(
+name|MELCO
+argument_list|,
+name|WLIUCG300HPV1
 argument_list|)
 block|,
 name|RUN_DEV
