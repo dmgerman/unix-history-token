@@ -674,8 +674,6 @@ name|open
 argument_list|(
 name|name
 argument_list|,
-name|flags
-operator||
 name|O_RDONLY
 operator||
 name|O_EXLOCK
