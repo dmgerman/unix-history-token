@@ -1812,6 +1812,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHN_FBSD_CACHED
+value|SHN_LOOS
+end_define
+
+begin_comment
+comment|/* Transient, for sys/kern/link_elf_obj 					   linker only: Cached global in local 					   symtab. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SHN_HIOS
 value|0xff3f
 end_define
