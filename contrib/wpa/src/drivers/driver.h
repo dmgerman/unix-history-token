@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Driver interface definition  * Copyright (c) 2003-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  *  * This file defines a driver interface used by both %wpa_supplicant and  * hostapd. The first part of the file defines data structures used in various  * driver operations. This is followed by the struct wpa_driver_ops that each  * driver wrapper will beed to define with callback functions for requesting  * driver operations. After this, there are definitions for driver event  * reporting with wpa_supplicant_event() and some convenience helper functions  * that can be used to report events.  */
+comment|/*  * Driver interface definition  * Copyright (c) 2003-2015, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  *  * This file defines a driver interface used by both %wpa_supplicant and  * hostapd. The first part of the file defines data structures used in various  * driver operations. This is followed by the struct wpa_driver_ops that each  * driver wrapper will beed to define with callback functions for requesting  * driver operations. After this, there are definitions for driver event  * reporting with wpa_supplicant_event() and some convenience helper functions  * that can be used to report events.  */
 end_comment
 
 begin_ifndef
@@ -28,6 +28,12 @@ directive|include
 file|"common/defs.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"utils/list.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -38,15 +44,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|HOSTAPD_CHAN_PASSIVE_SCAN
+name|HOSTAPD_CHAN_NO_IR
 value|0x00000002
-end_define
-
-begin_define
-define|#
-directive|define
-name|HOSTAPD_CHAN_NO_IBSS
-value|0x00000004
 end_define
 
 begin_define
@@ -77,6 +76,132 @@ name|HOSTAPD_CHAN_HT40
 value|0x00000040
 end_define
 
+begin_define
+define|#
+directive|define
+name|HOSTAPD_CHAN_SURVEY_LIST_INITIALIZED
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTAPD_CHAN_DFS_UNKNOWN
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTAPD_CHAN_DFS_USABLE
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTAPD_CHAN_DFS_UNAVAILABLE
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTAPD_CHAN_DFS_AVAILABLE
+value|0x00000300
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTAPD_CHAN_DFS_MASK
+value|0x00000300
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTAPD_CHAN_VHT_10_70
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTAPD_CHAN_VHT_30_50
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTAPD_CHAN_VHT_50_30
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTAPD_CHAN_VHT_70_10
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTAPD_CHAN_INDOOR_ONLY
+value|0x00010000
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTAPD_CHAN_GO_CONCURRENT
+value|0x00020000
+end_define
+
+begin_comment
+comment|/**  * enum reg_change_initiator - Regulatory change initiator  */
+end_comment
+
+begin_enum
+enum|enum
+name|reg_change_initiator
+block|{
+name|REGDOM_SET_BY_CORE
+block|,
+name|REGDOM_SET_BY_USER
+block|,
+name|REGDOM_SET_BY_DRIVER
+block|,
+name|REGDOM_SET_BY_COUNTRY_IE
+block|,
+name|REGDOM_BEACON_HINT
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/**  * enum reg_type - Regulatory change types  */
+end_comment
+
+begin_enum
+enum|enum
+name|reg_type
+block|{
+name|REGDOM_TYPE_UNKNOWN
+block|,
+name|REGDOM_TYPE_COUNTRY
+block|,
+name|REGDOM_TYPE_WORLD
+block|,
+name|REGDOM_TYPE_CUSTOM_WORLD
+block|,
+name|REGDOM_TYPE_INTERSECTION
+block|, }
+enum|;
+end_enum
+
 begin_comment
 comment|/**  * struct hostapd_channel_data - Channel information  */
 end_comment
@@ -97,9 +222,34 @@ comment|/** 	 * flag - Channel flags (HOSTAPD_CHAN_*) 	 */
 name|int
 name|flag
 decl_stmt|;
-comment|/** 	 * max_tx_power - maximum transmit power in dBm 	 */
+comment|/** 	 * max_tx_power - Regulatory transmit power limit in dBm 	 */
 name|u8
 name|max_tx_power
+decl_stmt|;
+comment|/** 	 * survey_list - Linked list of surveys (struct freq_survey) 	 */
+name|struct
+name|dl_list
+name|survey_list
+decl_stmt|;
+comment|/** 	 * min_nf - Minimum observed noise floor, in dBm, based on all 	 * surveyed channel data 	 */
+name|s8
+name|min_nf
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_ACS
+comment|/** 	 * interference_factor - Computed interference factor on this 	 * channel (used internally in src/ap/acs.c; driver wrappers do not 	 * need to set this) 	 */
+name|long
+name|double
+name|interference_factor
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_ACS */
+comment|/** 	 * dfs_cac_ms - DFS CAC time in milliseconds 	 */
+name|unsigned
+name|int
+name|dfs_cac_ms
 decl_stmt|;
 block|}
 struct|;
@@ -110,6 +260,13 @@ define|#
 directive|define
 name|HOSTAPD_MODE_FLAG_HT_INFO_KNOWN
 value|BIT(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HOSTAPD_MODE_FLAG_VHT_INFO_KNOWN
+value|BIT(1)
 end_define
 
 begin_comment
@@ -203,6 +360,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_MODE_MESH
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_CAP_ESS
 value|0x0001
 end_define
@@ -220,6 +384,61 @@ directive|define
 name|IEEE80211_CAP_PRIVACY
 value|0x0010
 end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CAP_RRM
+value|0x1000
+end_define
+
+begin_comment
+comment|/* DMG (60 GHz) IEEE 802.11ad */
+end_comment
+
+begin_comment
+comment|/* type - bits 0..1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CAP_DMG_MASK
+value|0x0003
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CAP_DMG_IBSS
+value|0x0001
+end_define
+
+begin_comment
+comment|/* Tx by: STA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CAP_DMG_PBSS
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Tx by: PCP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_CAP_DMG_AP
+value|0x0003
+end_define
+
+begin_comment
+comment|/* Tx by: AP */
+end_comment
 
 begin_define
 define|#
@@ -252,19 +471,12 @@ end_define
 begin_define
 define|#
 directive|define
-name|WPA_SCAN_AUTHENTICATED
-value|BIT(4)
-end_define
-
-begin_define
-define|#
-directive|define
 name|WPA_SCAN_ASSOCIATED
 value|BIT(5)
 end_define
 
 begin_comment
-comment|/**  * struct wpa_scan_res - Scan result for an BSS/IBSS  * @flags: information flags about the BSS/IBSS (WPA_SCAN_*)  * @bssid: BSSID  * @freq: frequency of the channel in MHz (e.g., 2412 = channel 1)  * @beacon_int: beacon interval in TUs (host byte order)  * @caps: capability information field in host byte order  * @qual: signal quality  * @noise: noise level  * @level: signal level  * @tsf: Timestamp  * @age: Age of the information in milliseconds (i.e., how many milliseconds  * ago the last Beacon or Probe Response frame was received)  * @ie_len: length of the following IE field in octets  * @beacon_ie_len: length of the following Beacon IE field in octets  *  * This structure is used as a generic format for scan results from the  * driver. Each driver interface implementation is responsible for converting  * the driver or OS specific scan results into this format.  *  * If the driver does not support reporting all IEs, the IE data structure is  * constructed of the IEs that are available. This field will also need to  * include SSID in IE format. All drivers are encouraged to be extended to  * report all IEs to make it easier to support future additions.  */
+comment|/**  * struct wpa_scan_res - Scan result for an BSS/IBSS  * @flags: information flags about the BSS/IBSS (WPA_SCAN_*)  * @bssid: BSSID  * @freq: frequency of the channel in MHz (e.g., 2412 = channel 1)  * @beacon_int: beacon interval in TUs (host byte order)  * @caps: capability information field in host byte order  * @qual: signal quality  * @noise: noise level  * @level: signal level  * @tsf: Timestamp  * @age: Age of the information in milliseconds (i.e., how many milliseconds  * ago the last Beacon or Probe Response frame was received)  * @est_throughput: Estimated throughput in kbps (this is calculated during  * scan result processing if left zero by the driver wrapper)  * @snr: Signal-to-noise ratio in dB (calculated during scan result processing)  * @ie_len: length of the following IE field in octets  * @beacon_ie_len: length of the following Beacon IE field in octets  *  * This structure is used as a generic format for scan results from the  * driver. Each driver interface implementation is responsible for converting  * the driver or OS specific scan results into this format.  *  * If the driver does not support reporting all IEs, the IE data structure is  * constructed of the IEs that are available. This field will also need to  * include SSID in IE format. All drivers are encouraged to be extended to  * report all IEs to make it easier to support future additions.  *  * This structure data is followed by ie_len octets of IEs from Probe Response  * frame (or if the driver does not indicate source of IEs, these may also be  * from Beacon frame). After the first set of IEs, another set of IEs may follow  * (with beacon_ie_len octets of data) if the driver provides both IE sets.  */
 end_comment
 
 begin_struct
@@ -306,19 +518,26 @@ name|unsigned
 name|int
 name|age
 decl_stmt|;
+name|unsigned
+name|int
+name|est_throughput
+decl_stmt|;
+name|int
+name|snr
+decl_stmt|;
 name|size_t
 name|ie_len
 decl_stmt|;
 name|size_t
 name|beacon_ie_len
 decl_stmt|;
-comment|/* 	 * Followed by ie_len octets of IEs from Probe Response frame (or if 	 * the driver does not indicate source of IEs, these may also be from 	 * Beacon frame). After the first set of IEs, another set of IEs may 	 * follow (with beacon_ie_len octets of data) if the driver provides 	 * both IE sets. 	 */
+comment|/* Followed by ie_len + beacon_ie_len octets of IE data */
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/**  * struct wpa_scan_results - Scan results  * @res: Array of pointers to allocated variable length scan result entries  * @num: Number of entries in the scan result array  */
+comment|/**  * struct wpa_scan_results - Scan results  * @res: Array of pointers to allocated variable length scan result entries  * @num: Number of entries in the scan result array  * @fetch_time: Time when the results were fetched from the driver  */
 end_comment
 
 begin_struct
@@ -333,6 +552,10 @@ name|res
 decl_stmt|;
 name|size_t
 name|num
+decl_stmt|;
+name|struct
+name|os_reltime
+name|fetch_time
 decl_stmt|;
 block|}
 struct|;
@@ -448,9 +671,46 @@ name|s32
 name|filter_rssi
 decl_stmt|;
 comment|/** 	 * p2p_probe - Used to disable CCK (802.11b) rates for P2P probes 	 * 	 * When set, the driver is expected to remove rates 1, 2, 5.5, and 11 	 * Mbps from the support rates element(s) in the Probe Request frames 	 * and not to transmit the frames at any of those rates. 	 */
-name|u8
+name|unsigned
+name|int
 name|p2p_probe
+range|:
+literal|1
 decl_stmt|;
+comment|/** 	 * only_new_results - Request driver to report only new results 	 * 	 * This is used to request the driver to report only BSSes that have 	 * been detected after this scan request has been started, i.e., to 	 * flush old cached BSS entries. 	 */
+name|unsigned
+name|int
+name|only_new_results
+range|:
+literal|1
+decl_stmt|;
+comment|/** 	 * low_priority - Requests driver to use a lower scan priority 	 * 	 * This is used to request the driver to use a lower scan priority 	 * if it supports such a thing. 	 */
+name|unsigned
+name|int
+name|low_priority
+range|:
+literal|1
+decl_stmt|;
+comment|/** 	 * mac_addr_rand - Requests driver to randomize MAC address 	 */
+name|unsigned
+name|int
+name|mac_addr_rand
+range|:
+literal|1
+decl_stmt|;
+comment|/** 	 * mac_addr - MAC address used with randomization. The address cannot be 	 * a multicast one, i.e., bit 0 of byte 0 should not be set. 	 */
+specifier|const
+name|u8
+modifier|*
+name|mac_addr
+decl_stmt|;
+comment|/** 	 * mac_addr_mask - MAC address mask used with randomization. 	 * 	 * Bits that are 0 in the mask should be randomized. Bits that are 1 in 	 * the mask should be taken as is from mac_addr. The mask should not 	 * allow the generation of a multicast address, i.e., bit 0 of byte 0 	 * must be set. 	 */
+specifier|const
+name|u8
+modifier|*
+name|mac_addr_mask
+decl_stmt|;
+comment|/* 	 * NOTE: Whenever adding new parameters here, please make sure 	 * wpa_scan_clone_params() and wpa_scan_free_params() get updated with 	 * matching changes. 	 */
 block|}
 struct|;
 end_struct
@@ -514,11 +774,13 @@ comment|/** 	 * p2p - Whether this connection is a P2P group 	 */
 name|int
 name|p2p
 decl_stmt|;
+comment|/** 	 * sae_data - SAE elements for Authentication frame 	 * 	 * This buffer starts with the Authentication transaction sequence 	 * number field. If SAE is not used, this pointer is %NULL. 	 */
 specifier|const
 name|u8
 modifier|*
 name|sae_data
 decl_stmt|;
+comment|/** 	 * sae_data_len - Length of sae_data buffer in octets 	 */
 name|size_t
 name|sae_data_len
 decl_stmt|;
@@ -526,21 +788,74 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/**  * enum wps_mode - WPS mode  */
+end_comment
+
 begin_enum
 enum|enum
 name|wps_mode
 block|{
+comment|/** 	 * WPS_MODE_NONE - No WPS provisioning being used 	 */
 name|WPS_MODE_NONE
-comment|/* no WPS provisioning being used */
 block|,
+comment|/** 	 * WPS_MODE_OPEN - WPS provisioning with AP that is in open mode 	 */
 name|WPS_MODE_OPEN
-comment|/* WPS provisioning with AP that is in open mode */
 block|,
+comment|/** 	 * WPS_MODE_PRIVACY - WPS provisioning with AP that is using protection 	 */
 name|WPS_MODE_PRIVACY
-comment|/* WPS provisioning with AP that is using protection 			  */
 block|}
 enum|;
 end_enum
+
+begin_comment
+comment|/**  * struct hostapd_freq_params - Channel parameters  */
+end_comment
+
+begin_struct
+struct|struct
+name|hostapd_freq_params
+block|{
+comment|/** 	 * mode - Mode/band (HOSTAPD_MODE_IEEE80211A, ..) 	 */
+name|enum
+name|hostapd_hw_mode
+name|mode
+decl_stmt|;
+comment|/** 	 * freq - Primary channel center frequency in MHz 	 */
+name|int
+name|freq
+decl_stmt|;
+comment|/** 	 * channel - Channel number 	 */
+name|int
+name|channel
+decl_stmt|;
+comment|/** 	 * ht_enabled - Whether HT is enabled 	 */
+name|int
+name|ht_enabled
+decl_stmt|;
+comment|/** 	 * sec_channel_offset - Secondary channel offset for HT40 	 * 	 * 0 = HT40 disabled, 	 * -1 = HT40 enabled, secondary channel below primary, 	 * 1 = HT40 enabled, secondary channel above primary 	 */
+name|int
+name|sec_channel_offset
+decl_stmt|;
+comment|/** 	 * vht_enabled - Whether VHT is enabled 	 */
+name|int
+name|vht_enabled
+decl_stmt|;
+comment|/** 	 * center_freq1 - Segment 0 center frequency in MHz 	 * 	 * Valid for both HT and VHT. 	 */
+name|int
+name|center_freq1
+decl_stmt|;
+comment|/** 	 * center_freq2 - Segment 1 center frequency in MHz 	 * 	 * Non-zero only for bandwidth 80 and an 80+80 channel 	 */
+name|int
+name|center_freq2
+decl_stmt|;
+comment|/** 	 * bandwidth - Channel bandwidth in MHz (20, 40, 80, 160) 	 */
+name|int
+name|bandwidth
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/**  * struct wpa_driver_associate_params - Association parameters  * Data for struct wpa_driver_ops::associate().  */
@@ -556,6 +871,12 @@ name|u8
 modifier|*
 name|bssid
 decl_stmt|;
+comment|/** 	 * bssid_hint - BSSID of a proposed AP 	 * 	 * This indicates which BSS has been found a suitable candidate for 	 * initial association for drivers that use driver/firmwate-based BSS 	 * selection. Unlike the @bssid parameter, @bssid_hint does not limit 	 * the driver from selecting other BSSes in the ESS. 	 */
+specifier|const
+name|u8
+modifier|*
+name|bssid_hint
+decl_stmt|;
 comment|/** 	 * ssid - The selected SSID 	 */
 specifier|const
 name|u8
@@ -566,13 +887,22 @@ comment|/** 	 * ssid_len - Length of the SSID (1..32) 	 */
 name|size_t
 name|ssid_len
 decl_stmt|;
-comment|/** 	 * freq - Frequency of the channel the selected AP is using 	 * Frequency that the selected AP is using (in MHz as 	 * reported in the scan results) 	 */
-name|int
+comment|/** 	 * freq - channel parameters 	 */
+name|struct
+name|hostapd_freq_params
 name|freq
+decl_stmt|;
+comment|/** 	 * freq_hint - Frequency of the channel the proposed AP is using 	 * 	 * This provides a channel on which a suitable BSS has been found as a 	 * hint for the driver. Unlike the @freq parameter, @freq_hint does not 	 * limit the driver from selecting other channels for 	 * driver/firmware-based BSS selection. 	 */
+name|int
+name|freq_hint
 decl_stmt|;
 comment|/** 	 * bg_scan_period - Background scan period in seconds, 0 to disable 	 * background scan, or -1 to indicate no change to default driver 	 * configuration 	 */
 name|int
 name|bg_scan_period
+decl_stmt|;
+comment|/** 	 * beacon_int - Beacon interval for IBSS or 0 to use driver default 	 */
+name|int
+name|beacon_int
 decl_stmt|;
 comment|/** 	 * wpa_ie - WPA information element for (Re)Association Request 	 * WPA information element to be included in (Re)Association 	 * Request (including information element id and length). Use 	 * of this WPA IE is optional. If the driver generates the WPA 	 * IE, it can use pairwise_suite, group_suite, and 	 * key_mgmt_suite to select proper algorithms. In this case, 	 * the driver has to notify wpa_supplicant about the used WPA 	 * IE by generating an event that the interface code will 	 * convert into EVENT_ASSOCINFO data (see below). 	 * 	 * When using WPA2/IEEE 802.11i, wpa_ie is used for RSN IE 	 * instead. The driver can determine which version is used by 	 * looking at the first byte of the IE (0xdd for WPA, 0x30 for 	 * WPA2/RSN). 	 * 	 * When using WPS, wpa_ie is used for WPS IE instead of WPA/RSN IE. 	 */
 specifier|const
@@ -589,19 +919,19 @@ name|unsigned
 name|int
 name|wpa_proto
 decl_stmt|;
-comment|/** 	 * pairwise_suite - Selected pairwise cipher suite 	 * 	 * This is usually ignored if @wpa_ie is used. 	 */
-name|enum
-name|wpa_cipher
+comment|/** 	 * pairwise_suite - Selected pairwise cipher suite (WPA_CIPHER_*) 	 * 	 * This is usually ignored if @wpa_ie is used. 	 */
+name|unsigned
+name|int
 name|pairwise_suite
 decl_stmt|;
-comment|/** 	 * group_suite - Selected group cipher suite 	 * 	 * This is usually ignored if @wpa_ie is used. 	 */
-name|enum
-name|wpa_cipher
+comment|/** 	 * group_suite - Selected group cipher suite (WPA_CIPHER_*) 	 * 	 * This is usually ignored if @wpa_ie is used. 	 */
+name|unsigned
+name|int
 name|group_suite
 decl_stmt|;
-comment|/** 	 * key_mgmt_suite - Selected key management suite 	 * 	 * This is usually ignored if @wpa_ie is used. 	 */
-name|enum
-name|wpa_key_mgmt
+comment|/** 	 * key_mgmt_suite - Selected key management suite (WPA_KEY_MGMT_*) 	 * 	 * This is usually ignored if @wpa_ie is used. 	 */
+name|unsigned
+name|int
 name|key_mgmt_suite
 decl_stmt|;
 comment|/** 	 * auth_alg - Allowed authentication algorithms 	 * Bit field of WPA_AUTH_ALG_* 	 */
@@ -692,23 +1022,57 @@ comment|/** 	 * fixed_bssid - Whether to force this BSSID in IBSS mode 	 * 1 = F
 name|int
 name|fixed_bssid
 decl_stmt|;
+comment|/** 	 * fixed_freq - Fix control channel in IBSS mode 	 * 0 = don't fix control channel (default) 	 * 1 = fix control channel; this prevents IBSS merging with another 	 *	channel 	 */
+name|int
+name|fixed_freq
+decl_stmt|;
 comment|/** 	 * disable_ht - Disable HT (IEEE 802.11n) for this connection 	 */
 name|int
 name|disable_ht
 decl_stmt|;
-comment|/** 	 * HT Capabilities over-rides. Only bits set in the mask will be used, 	 * and not all values are used by the kernel anyway. Currently, MCS, 	 * MPDU and MSDU fields are used. 	 */
+comment|/** 	 * htcaps - HT Capabilities over-rides 	 * 	 * Only bits set in the mask will be used, and not all values are used 	 * by the kernel anyway. Currently, MCS, MPDU and MSDU fields are used. 	 * 	 * Pointer to struct ieee80211_ht_capabilities. 	 */
 specifier|const
 name|u8
 modifier|*
 name|htcaps
 decl_stmt|;
-comment|/* struct ieee80211_ht_capabilities * */
+comment|/** 	 * htcaps_mask - HT Capabilities over-rides mask 	 * 	 * Pointer to struct ieee80211_ht_capabilities. 	 */
 specifier|const
 name|u8
 modifier|*
 name|htcaps_mask
 decl_stmt|;
-comment|/* struct ieee80211_ht_capabilities * */
+ifdef|#
+directive|ifdef
+name|CONFIG_VHT_OVERRIDES
+comment|/** 	 * disable_vht - Disable VHT for this connection 	 */
+name|int
+name|disable_vht
+decl_stmt|;
+comment|/** 	 * VHT capability overrides. 	 */
+specifier|const
+name|struct
+name|ieee80211_vht_capabilities
+modifier|*
+name|vhtcaps
+decl_stmt|;
+specifier|const
+name|struct
+name|ieee80211_vht_capabilities
+modifier|*
+name|vhtcaps_mask
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_VHT_OVERRIDES */
+comment|/** 	 * req_key_mgmt_offload - Request key management offload for connection 	 * 	 * Request key management offload for this connection if the device 	 * supports it. 	 */
+name|int
+name|req_key_mgmt_offload
+decl_stmt|;
+comment|/** 	 * Flag for indicating whether this association includes support for 	 * RRM (Radio Resource Measurements) 	 */
+name|int
+name|rrm_used
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -728,10 +1092,38 @@ end_enum
 
 begin_struct
 struct|struct
+name|wowlan_triggers
+block|{
+name|u8
+name|any
+decl_stmt|;
+name|u8
+name|disconnect
+decl_stmt|;
+name|u8
+name|magic_pkt
+decl_stmt|;
+name|u8
+name|gtk_rekey_failure
+decl_stmt|;
+name|u8
+name|eap_identity_req
+decl_stmt|;
+name|u8
+name|four_way_handshake
+decl_stmt|;
+name|u8
+name|rfkill_release
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|wpa_driver_ap_params
 block|{
 comment|/** 	 * head - Beacon head from IEEE 802.11 header to IEs before TIM IE 	 */
-specifier|const
 name|u8
 modifier|*
 name|head
@@ -741,7 +1133,6 @@ name|size_t
 name|head_len
 decl_stmt|;
 comment|/** 	 * tail - Beacon tail following TIM IE 	 */
-specifier|const
 name|u8
 modifier|*
 name|tail
@@ -764,7 +1155,6 @@ modifier|*
 name|basic_rates
 decl_stmt|;
 comment|/** 	 * proberesp - Probe Response template 	 * 	 * This is used by drivers that reply to Probe Requests internally in 	 * AP mode and require the full Probe Response template. 	 */
-specifier|const
 name|u8
 modifier|*
 name|proberesp
@@ -876,9 +1266,115 @@ comment|/** 	 * ap_max_inactivity - Timeout in seconds to detect STA's inactivit
 name|int
 name|ap_max_inactivity
 decl_stmt|;
+comment|/** 	 * ctwindow - Client Traffic Window (in TUs) 	 */
+name|u8
+name|p2p_go_ctwindow
+decl_stmt|;
+comment|/** 	 * smps_mode - SMPS mode 	 * 	 * SMPS mode to be used by the AP, specified as the relevant bits of 	 * ht_capab (i.e. HT_CAP_INFO_SMPS_*). 	 */
+name|unsigned
+name|int
+name|smps_mode
+decl_stmt|;
 comment|/** 	 * disable_dgaf - Whether group-addressed frames are disabled 	 */
 name|int
 name|disable_dgaf
+decl_stmt|;
+comment|/** 	 * osen - Whether OSEN security is enabled 	 */
+name|int
+name|osen
+decl_stmt|;
+comment|/** 	 * freq - Channel parameters for dynamic bandwidth changes 	 */
+name|struct
+name|hostapd_freq_params
+modifier|*
+name|freq
+decl_stmt|;
+comment|/** 	 * reenable - Whether this is to re-enable beaconing 	 */
+name|int
+name|reenable
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wpa_driver_mesh_bss_params
+block|{
+define|#
+directive|define
+name|WPA_DRIVER_MESH_CONF_FLAG_AUTO_PLINKS
+value|0x00000001
+comment|/* 	 * TODO: Other mesh configuration parameters would go here. 	 * See NL80211_MESHCONF_* for all the mesh config parameters. 	 */
+name|unsigned
+name|int
+name|flags
+decl_stmt|;
+name|int
+name|peer_link_timeout
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|wpa_driver_mesh_join_params
+block|{
+specifier|const
+name|u8
+modifier|*
+name|meshid
+decl_stmt|;
+name|int
+name|meshid_len
+decl_stmt|;
+specifier|const
+name|int
+modifier|*
+name|basic_rates
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|ies
+decl_stmt|;
+name|int
+name|ie_len
+decl_stmt|;
+name|struct
+name|hostapd_freq_params
+name|freq
+decl_stmt|;
+name|int
+name|beacon_int
+decl_stmt|;
+name|int
+name|max_peer_links
+decl_stmt|;
+name|struct
+name|wpa_driver_mesh_bss_params
+name|conf
+decl_stmt|;
+define|#
+directive|define
+name|WPA_DRIVER_MESH_FLAG_USER_MPM
+value|0x00000001
+define|#
+directive|define
+name|WPA_DRIVER_MESH_FLAG_DRIVER_MPM
+value|0x00000002
+define|#
+directive|define
+name|WPA_DRIVER_MESH_FLAG_SAE_AUTH
+value|0x00000004
+define|#
+directive|define
+name|WPA_DRIVER_MESH_FLAG_AMPE
+value|0x00000008
+name|unsigned
+name|int
+name|flags
 decl_stmt|;
 block|}
 struct|;
@@ -924,6 +1420,15 @@ define|#
 directive|define
 name|WPA_DRIVER_CAPA_KEY_MGMT_WAPI_PSK
 value|0x00000080
+define|#
+directive|define
+name|WPA_DRIVER_CAPA_KEY_MGMT_SUITE_B
+value|0x00000100
+define|#
+directive|define
+name|WPA_DRIVER_CAPA_KEY_MGMT_SUITE_B_192
+value|0x00000200
+comment|/** Bitfield of supported key management suites */
 name|unsigned
 name|int
 name|key_mgmt
@@ -952,6 +1457,35 @@ define|#
 directive|define
 name|WPA_DRIVER_CAPA_ENC_GCMP
 value|0x00000020
+define|#
+directive|define
+name|WPA_DRIVER_CAPA_ENC_GCMP_256
+value|0x00000040
+define|#
+directive|define
+name|WPA_DRIVER_CAPA_ENC_CCMP_256
+value|0x00000080
+define|#
+directive|define
+name|WPA_DRIVER_CAPA_ENC_BIP
+value|0x00000100
+define|#
+directive|define
+name|WPA_DRIVER_CAPA_ENC_BIP_GMAC_128
+value|0x00000200
+define|#
+directive|define
+name|WPA_DRIVER_CAPA_ENC_BIP_GMAC_256
+value|0x00000400
+define|#
+directive|define
+name|WPA_DRIVER_CAPA_ENC_BIP_CMAC_256
+value|0x00000800
+define|#
+directive|define
+name|WPA_DRIVER_CAPA_ENC_GTK_NOT_USED
+value|0x00001000
+comment|/** Bitfield of supported cipher suites */
 name|unsigned
 name|int
 name|enc
@@ -968,153 +1502,247 @@ define|#
 directive|define
 name|WPA_DRIVER_AUTH_LEAP
 value|0x00000004
+comment|/** Bitfield of supported IEEE 802.11 authentication algorithms */
 name|unsigned
 name|int
 name|auth
 decl_stmt|;
-comment|/* Driver generated WPA/RSN IE */
+comment|/** Driver generated WPA/RSN IE */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_DRIVER_IE
 value|0x00000001
-comment|/* Driver needs static WEP key setup after association command */
+comment|/** Driver needs static WEP key setup after association command */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_SET_KEYS_AFTER_ASSOC
 value|0x00000002
-comment|/* unused: 0x00000004 */
-comment|/* Driver takes care of RSN 4-way handshake internally; PMK is configured with  * struct wpa_driver_ops::set_key using alg = WPA_ALG_PMK */
+comment|/** Driver takes care of all DFS operations */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_DFS_OFFLOAD
+value|0x00000004
+comment|/** Driver takes care of RSN 4-way handshake internally; PMK is configured with  * struct wpa_driver_ops::set_key using alg = WPA_ALG_PMK */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_4WAY_HANDSHAKE
 value|0x00000008
+comment|/** Driver is for a wired Ethernet interface */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_WIRED
 value|0x00000010
-comment|/* Driver provides separate commands for authentication and association (SME in  * wpa_supplicant). */
+comment|/** Driver provides separate commands for authentication and association (SME in  * wpa_supplicant). */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_SME
 value|0x00000020
-comment|/* Driver supports AP mode */
+comment|/** Driver supports AP mode */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_AP
 value|0x00000040
-comment|/* Driver needs static WEP key setup after association has been completed */
+comment|/** Driver needs static WEP key setup after association has been completed */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_SET_KEYS_AFTER_ASSOC_DONE
 value|0x00000080
-comment|/* Driver takes care of P2P management operations */
+comment|/** Driver supports dynamic HT 20/40 MHz channel changes during BSS lifetime */
 define|#
 directive|define
-name|WPA_DRIVER_FLAGS_P2P_MGMT
+name|WPA_DRIVER_FLAGS_HT_2040_COEX
 value|0x00000100
-comment|/* Driver supports concurrent P2P operations */
+comment|/** Driver supports concurrent P2P operations */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_P2P_CONCURRENT
 value|0x00000200
-comment|/*  * Driver uses the initial interface as a dedicated management interface, i.e.,  * it cannot be used for P2P group operations or non-P2P purposes.  */
+comment|/**  * Driver uses the initial interface as a dedicated management interface, i.e.,  * it cannot be used for P2P group operations or non-P2P purposes.  */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_P2P_DEDICATED_INTERFACE
 value|0x00000400
-comment|/* This interface is P2P capable (P2P Device, GO, or P2P Client */
+comment|/** This interface is P2P capable (P2P GO or P2P Client) */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_P2P_CAPABLE
 value|0x00000800
-comment|/* Driver supports concurrent operations on multiple channels */
+comment|/** Driver supports station and key removal when stopping an AP */
 define|#
 directive|define
-name|WPA_DRIVER_FLAGS_MULTI_CHANNEL_CONCURRENT
+name|WPA_DRIVER_FLAGS_AP_TEARDOWN_SUPPORT
 value|0x00001000
-comment|/*  * Driver uses the initial interface for P2P management interface and non-P2P  * purposes (e.g., connect to infra AP), but this interface cannot be used for  * P2P group operations.  */
+comment|/**  * Driver uses the initial interface for P2P management interface and non-P2P  * purposes (e.g., connect to infra AP), but this interface cannot be used for  * P2P group operations.  */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_P2P_MGMT_AND_NON_P2P
 value|0x00002000
-comment|/*  * Driver is known to use sane error codes, i.e., when it indicates that  * something (e.g., association) fails, there was indeed a failure and the  * operation does not end up getting completed successfully later.  */
+comment|/**  * Driver is known to use sane error codes, i.e., when it indicates that  * something (e.g., association) fails, there was indeed a failure and the  * operation does not end up getting completed successfully later.  */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_SANE_ERROR_CODES
 value|0x00004000
-comment|/* Driver supports off-channel TX */
+comment|/** Driver supports off-channel TX */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_OFFCHANNEL_TX
 value|0x00008000
-comment|/* Driver indicates TX status events for EAPOL Data frames */
+comment|/** Driver indicates TX status events for EAPOL Data frames */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_EAPOL_TX_STATUS
 value|0x00010000
-comment|/* Driver indicates TX status events for Deauth/Disassoc frames */
+comment|/** Driver indicates TX status events for Deauth/Disassoc frames */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_DEAUTH_TX_STATUS
 value|0x00020000
-comment|/* Driver supports roaming (BSS selection) in firmware */
+comment|/** Driver supports roaming (BSS selection) in firmware */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_BSS_SELECTION
 value|0x00040000
-comment|/* Driver supports operating as a TDLS peer */
+comment|/** Driver supports operating as a TDLS peer */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_TDLS_SUPPORT
 value|0x00080000
-comment|/* Driver requires external TDLS setup/teardown/discovery */
+comment|/** Driver requires external TDLS setup/teardown/discovery */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_TDLS_EXTERNAL_SETUP
 value|0x00100000
-comment|/* Driver indicates support for Probe Response offloading in AP mode */
+comment|/** Driver indicates support for Probe Response offloading in AP mode */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_PROBE_RESP_OFFLOAD
 value|0x00200000
-comment|/* Driver supports U-APSD in AP mode */
+comment|/** Driver supports U-APSD in AP mode */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_AP_UAPSD
 value|0x00400000
-comment|/* Driver supports inactivity timer in AP mode */
+comment|/** Driver supports inactivity timer in AP mode */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_INACTIVITY_TIMER
 value|0x00800000
-comment|/* Driver expects user space implementation of MLME in AP mode */
+comment|/** Driver expects user space implementation of MLME in AP mode */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_AP_MLME
 value|0x01000000
-comment|/* Driver supports SAE with user space SME */
+comment|/** Driver supports SAE with user space SME */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_SAE
 value|0x02000000
-comment|/* Driver makes use of OBSS scan mechanism in wpa_supplicant */
+comment|/** Driver makes use of OBSS scan mechanism in wpa_supplicant */
 define|#
 directive|define
 name|WPA_DRIVER_FLAGS_OBSS_SCAN
 value|0x04000000
-name|unsigned
-name|int
+comment|/** Driver supports IBSS (Ad-hoc) mode */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_IBSS
+value|0x08000000
+comment|/** Driver supports radar detection */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_RADAR
+value|0x10000000
+comment|/** Driver supports a dedicated interface for P2P Device */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_DEDICATED_P2P_DEVICE
+value|0x20000000
+comment|/** Driver supports QoS Mapping */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_QOS_MAPPING
+value|0x40000000
+comment|/** Driver supports CSA in AP mode */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_AP_CSA
+value|0x80000000
+comment|/** Driver supports mesh */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_MESH
+value|0x0000000100000000ULL
+comment|/** Driver support ACS offload */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_ACS_OFFLOAD
+value|0x0000000200000000ULL
+comment|/** Driver supports key management offload */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_KEY_MGMT_OFFLOAD
+value|0x0000000400000000ULL
+comment|/** Driver supports TDLS channel switching */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_TDLS_CHANNEL_SWITCH
+value|0x0000000800000000ULL
+comment|/** Driver supports IBSS with HT datarates */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_HT_IBSS
+value|0x0000001000000000ULL
+comment|/** Driver supports IBSS with VHT datarates */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_VHT_IBSS
+value|0x0000002000000000ULL
+name|u64
 name|flags
 decl_stmt|;
+define|#
+directive|define
+name|WPA_DRIVER_SMPS_MODE_STATIC
+value|0x00000001
+define|#
+directive|define
+name|WPA_DRIVER_SMPS_MODE_DYNAMIC
+value|0x00000002
+name|unsigned
+name|int
+name|smps_modes
+decl_stmt|;
+name|unsigned
+name|int
+name|wmm_ac_supported
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
+name|mac_addr_rand_scan_supported
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
+name|mac_addr_rand_sched_scan_supported
+range|:
+literal|1
+decl_stmt|;
+comment|/** Maximum number of supported active probe SSIDs */
 name|int
 name|max_scan_ssids
 decl_stmt|;
+comment|/** Maximum number of supported active probe SSIDs for sched_scan */
 name|int
 name|max_sched_scan_ssids
 decl_stmt|;
+comment|/** Whether sched_scan (offloaded scanning) is supported */
 name|int
 name|sched_scan_supported
 decl_stmt|;
+comment|/** Maximum number of supported match sets for sched_scan */
 name|int
 name|max_match_sets
 decl_stmt|;
@@ -1129,22 +1757,22 @@ name|int
 name|max_stations
 decl_stmt|;
 comment|/** 	 * probe_resp_offloads - Bitmap of supported protocols by the driver 	 * for Probe Response offloading. 	 */
-comment|/* Driver Probe Response offloading support for WPS ver. 1 */
+comment|/** Driver Probe Response offloading support for WPS ver. 1 */
 define|#
 directive|define
 name|WPA_DRIVER_PROBE_RESP_OFFLOAD_WPS
 value|0x00000001
-comment|/* Driver Probe Response offloading support for WPS ver. 2 */
+comment|/** Driver Probe Response offloading support for WPS ver. 2 */
 define|#
 directive|define
 name|WPA_DRIVER_PROBE_RESP_OFFLOAD_WPS2
 value|0x00000002
-comment|/* Driver Probe Response offloading support for P2P */
+comment|/** Driver Probe Response offloading support for P2P */
 define|#
 directive|define
 name|WPA_DRIVER_PROBE_RESP_OFFLOAD_P2P
 value|0x00000004
-comment|/* Driver Probe Response offloading support for IEEE 802.11u (Interworking) */
+comment|/** Driver Probe Response offloading support for IEEE 802.11u (Interworking) */
 define|#
 directive|define
 name|WPA_DRIVER_PROBE_RESP_OFFLOAD_INTERWORKING
@@ -1152,6 +1780,55 @@ value|0x00000008
 name|unsigned
 name|int
 name|probe_resp_offloads
+decl_stmt|;
+name|unsigned
+name|int
+name|max_acl_mac_addrs
+decl_stmt|;
+comment|/** 	 * Number of supported concurrent channels 	 */
+name|unsigned
+name|int
+name|num_multichan_concurrent
+decl_stmt|;
+comment|/** 	 * extended_capa - extended capabilities in driver/device 	 * 	 * Must be allocated and freed by driver and the pointers must be 	 * valid for the lifetime of the driver, i.e., freed in deinit() 	 */
+specifier|const
+name|u8
+modifier|*
+name|extended_capa
+decl_stmt|,
+modifier|*
+name|extended_capa_mask
+decl_stmt|;
+name|unsigned
+name|int
+name|extended_capa_len
+decl_stmt|;
+name|struct
+name|wowlan_triggers
+name|wowlan_triggers
+decl_stmt|;
+comment|/** Driver adds the DS Params Set IE in Probe Request frames */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_DS_PARAM_SET_IE_IN_PROBES
+value|0x00000001
+comment|/** Driver adds the WFA TPC IE in Probe Request frames */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_WFA_TPC_IE_IN_PROBES
+value|0x00000002
+comment|/** Driver handles quiet period requests */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_QUIET
+value|0x00000004
+comment|/**  * Driver is capable of inserting the current TX power value into the body of  * transmitted frames.  * Background: Some Action frames include a TPC Report IE. This IE contains a  * TX power field, which has to be updated by lower layers. One such Action  * frame is Link Measurement Report (part of RRM). Another is TPC Report (part  * of spectrum management). Note that this insertion takes place at a fixed  * offset, namely the 6th byte in the Action frame body.  */
+define|#
+directive|define
+name|WPA_DRIVER_FLAGS_TX_POWER_INSERTION
+value|0x00000008
+name|u32
+name|rrm_flags
 decl_stmt|;
 block|}
 struct|;
@@ -1243,10 +1920,36 @@ name|ieee80211_ht_capabilities
 modifier|*
 name|ht_capabilities
 decl_stmt|;
+specifier|const
+name|struct
+name|ieee80211_vht_capabilities
+modifier|*
+name|vht_capabilities
+decl_stmt|;
+name|int
+name|vht_opmode_enabled
+decl_stmt|;
+name|u8
+name|vht_opmode
+decl_stmt|;
 name|u32
 name|flags
 decl_stmt|;
 comment|/* bitmask of WPA_STA_* flags */
+name|u32
+name|flags_mask
+decl_stmt|;
+comment|/* unset bits in flags */
+ifdef|#
+directive|ifdef
+name|CONFIG_MESH
+name|enum
+name|mesh_plink_state
+name|plink_state
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_MESH */
 name|int
 name|set
 decl_stmt|;
@@ -1254,30 +1957,66 @@ comment|/* Set STA parameters instead of add */
 name|u8
 name|qosinfo
 decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|ext_capab
+decl_stmt|;
+name|size_t
+name|ext_capab_len
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|supp_channels
+decl_stmt|;
+name|size_t
+name|supp_channels_len
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|supp_oper_classes
+decl_stmt|;
+name|size_t
+name|supp_oper_classes_len
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_struct
 struct|struct
-name|hostapd_freq_params
+name|mac_address
 block|{
-name|int
-name|mode
+name|u8
+name|addr
+index|[
+name|ETH_ALEN
+index|]
 decl_stmt|;
-name|int
-name|freq
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|hostapd_acl_params
+block|{
+name|u8
+name|acl_policy
 decl_stmt|;
+name|unsigned
 name|int
-name|channel
+name|num_mac_acl
 decl_stmt|;
-name|int
-name|ht_enabled
+name|struct
+name|mac_address
+name|mac_acl
+index|[
+literal|0
+index|]
 decl_stmt|;
-name|int
-name|sec_channel_offset
-decl_stmt|;
-comment|/* 0 = HT40 disabled, -1 = HT40 enabled, 				 * secondary channel below primary, 1 = HT40 				 * enabled, secondary channel above primary */
 block|}
 struct|;
 end_struct
@@ -1303,7 +2042,13 @@ name|WPA_IF_P2P_CLIENT
 block|,
 comment|/** 	 * WPA_IF_P2P_GROUP - P2P Group interface (will become either 	 * WPA_IF_P2P_GO or WPA_IF_P2P_CLIENT, but the role is not yet known) 	 */
 name|WPA_IF_P2P_GROUP
-block|}
+block|,
+comment|/** 	 * WPA_IF_P2P_DEVICE - P2P Device interface is used to indentify the 	 * abstracted P2P Device function in the driver 	 */
+name|WPA_IF_P2P_DEVICE
+block|,
+comment|/* 	 * WPA_IF_MESH - Mesh interface 	 */
+name|WPA_IF_MESH
+block|, }
 enum|;
 end_enum
 
@@ -1326,17 +2071,9 @@ modifier|*
 name|ifname
 decl_stmt|;
 specifier|const
-name|u8
-modifier|*
-name|ssid
-decl_stmt|;
-name|size_t
-name|ssid_len
-decl_stmt|;
-specifier|const
 name|char
 modifier|*
-name|test_socket
+name|driver_params
 decl_stmt|;
 name|int
 name|use_pae_group_addr
@@ -1433,44 +2170,12 @@ name|WPA_STA_TDLS_PEER
 value|BIT(4)
 end_define
 
-begin_comment
-comment|/**  * struct p2p_params - P2P parameters for driver-based P2P management  */
-end_comment
-
-begin_struct
-struct|struct
-name|p2p_params
-block|{
-specifier|const
-name|char
-modifier|*
-name|dev_name
-decl_stmt|;
-name|u8
-name|pri_dev_type
-index|[
-literal|8
-index|]
-decl_stmt|;
+begin_define
 define|#
 directive|define
-name|DRV_MAX_SEC_DEV_TYPES
-value|5
-name|u8
-name|sec_dev_type
-index|[
-name|DRV_MAX_SEC_DEV_TYPES
-index|]
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|size_t
-name|num_sec_dev_types
-decl_stmt|;
-block|}
-struct|;
-end_struct
+name|WPA_STA_AUTHENTICATED
+value|BIT(5)
+end_define
 
 begin_enum
 enum|enum
@@ -1530,6 +2235,31 @@ enum|;
 end_enum
 
 begin_comment
+comment|/* enum chan_width - Channel width definitions */
+end_comment
+
+begin_enum
+enum|enum
+name|chan_width
+block|{
+name|CHAN_WIDTH_20_NOHT
+block|,
+name|CHAN_WIDTH_20
+block|,
+name|CHAN_WIDTH_40
+block|,
+name|CHAN_WIDTH_80
+block|,
+name|CHAN_WIDTH_80P80
+block|,
+name|CHAN_WIDTH_160
+block|,
+name|CHAN_WIDTH_UNKNOWN
+block|}
+enum|;
+end_enum
+
+begin_comment
 comment|/**  * struct wpa_signal_info - Information about channel signal quality  */
 end_comment
 
@@ -1547,10 +2277,252 @@ name|int
 name|current_signal
 decl_stmt|;
 name|int
+name|avg_signal
+decl_stmt|;
+name|int
 name|current_noise
 decl_stmt|;
 name|int
 name|current_txrate
+decl_stmt|;
+name|enum
+name|chan_width
+name|chanwidth
+decl_stmt|;
+name|int
+name|center_frq1
+decl_stmt|;
+name|int
+name|center_frq2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/**  * struct beacon_data - Beacon data  * @head: Head portion of Beacon frame (before TIM IE)  * @tail: Tail portion of Beacon frame (after TIM IE)  * @beacon_ies: Extra information element(s) to add into Beacon frames or %NULL  * @proberesp_ies: Extra information element(s) to add into Probe Response  *	frames or %NULL  * @assocresp_ies: Extra information element(s) to add into (Re)Association  *	Response frames or %NULL  * @probe_resp: Probe Response frame template  * @head_len: Length of @head  * @tail_len: Length of @tail  * @beacon_ies_len: Length of beacon_ies in octets  * @proberesp_ies_len: Length of proberesp_ies in octets  * @proberesp_ies_len: Length of proberesp_ies in octets  * @probe_resp_len: Length of probe response template (@probe_resp)  */
+end_comment
+
+begin_struct
+struct|struct
+name|beacon_data
+block|{
+name|u8
+modifier|*
+name|head
+decl_stmt|,
+modifier|*
+name|tail
+decl_stmt|;
+name|u8
+modifier|*
+name|beacon_ies
+decl_stmt|;
+name|u8
+modifier|*
+name|proberesp_ies
+decl_stmt|;
+name|u8
+modifier|*
+name|assocresp_ies
+decl_stmt|;
+name|u8
+modifier|*
+name|probe_resp
+decl_stmt|;
+name|size_t
+name|head_len
+decl_stmt|,
+name|tail_len
+decl_stmt|;
+name|size_t
+name|beacon_ies_len
+decl_stmt|;
+name|size_t
+name|proberesp_ies_len
+decl_stmt|;
+name|size_t
+name|assocresp_ies_len
+decl_stmt|;
+name|size_t
+name|probe_resp_len
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/**  * struct csa_settings - Settings for channel switch command  * @cs_count: Count in Beacon frames (TBTT) to perform the switch  * @block_tx: 1 - block transmission for CSA period  * @freq_params: Next channel frequency parameter  * @beacon_csa: Beacon/probe resp/asooc resp info for CSA period  * @beacon_after: Next beacon/probe resp/asooc resp info  * @counter_offset_beacon: Offset to the count field in beacon's tail  * @counter_offset_presp: Offset to the count field in probe resp.  */
+end_comment
+
+begin_struct
+struct|struct
+name|csa_settings
+block|{
+name|u8
+name|cs_count
+decl_stmt|;
+name|u8
+name|block_tx
+decl_stmt|;
+name|struct
+name|hostapd_freq_params
+name|freq_params
+decl_stmt|;
+name|struct
+name|beacon_data
+name|beacon_csa
+decl_stmt|;
+name|struct
+name|beacon_data
+name|beacon_after
+decl_stmt|;
+name|u16
+name|counter_offset_beacon
+decl_stmt|;
+name|u16
+name|counter_offset_presp
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* TDLS peer capabilities for send_tdls_mgmt() */
+end_comment
+
+begin_enum
+enum|enum
+name|tdls_peer_capability
+block|{
+name|TDLS_PEER_HT
+init|=
+name|BIT
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|TDLS_PEER_VHT
+init|=
+name|BIT
+argument_list|(
+literal|1
+argument_list|)
+block|,
+name|TDLS_PEER_WMM
+init|=
+name|BIT
+argument_list|(
+literal|2
+argument_list|)
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/* valid info in the wmm_params struct */
+end_comment
+
+begin_enum
+enum|enum
+name|wmm_params_valid_info
+block|{
+name|WMM_PARAMS_UAPSD_QUEUES_INFO
+init|=
+name|BIT
+argument_list|(
+literal|0
+argument_list|)
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/**  * struct wmm_params - WMM parameterss configured for this association  * @info_bitmap: Bitmap of valid wmm_params info; indicates what fields  *	of the struct contain valid information.  * @uapsd_queues: Bitmap of ACs configured for uapsd (valid only if  *	%WMM_PARAMS_UAPSD_QUEUES_INFO is set)  */
+end_comment
+
+begin_struct
+struct|struct
+name|wmm_params
+block|{
+name|u8
+name|info_bitmap
+decl_stmt|;
+name|u8
+name|uapsd_queues
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_MACSEC
+end_ifdef
+
+begin_struct
+struct|struct
+name|macsec_init_params
+block|{
+name|Boolean
+name|always_include_sci
+decl_stmt|;
+name|Boolean
+name|use_es
+decl_stmt|;
+name|Boolean
+name|use_scb
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_MACSEC */
+end_comment
+
+begin_enum
+enum|enum
+name|drv_br_port_attr
+block|{
+name|DRV_BR_PORT_ATTR_PROXYARP
+block|,
+name|DRV_BR_PORT_ATTR_HAIRPIN_MODE
+block|, }
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|drv_br_net_param
+block|{
+name|DRV_BR_NET_PARAM_GARP_ACCEPT
+block|, }
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|drv_acs_params
+block|{
+comment|/* Selected mode (HOSTAPD_MODE_*) */
+name|enum
+name|hostapd_hw_mode
+name|hw_mode
+decl_stmt|;
+comment|/* Indicates whether HT is enabled */
+name|int
+name|ht_enabled
+decl_stmt|;
+comment|/* Indicates whether HT40 is enabled */
+name|int
+name|ht40_enabled
 decl_stmt|;
 block|}
 struct|;
@@ -1608,7 +2580,7 @@ modifier|*
 name|ssid
 parameter_list|)
 function_decl|;
-comment|/** 	 * set_key - Configure encryption key 	 * @ifname: Interface name (for multi-SSID/VLAN support) 	 * @priv: private driver interface data 	 * @alg: encryption algorithm (%WPA_ALG_NONE, %WPA_ALG_WEP, 	 *	%WPA_ALG_TKIP, %WPA_ALG_CCMP, %WPA_ALG_IGTK, %WPA_ALG_PMK, 	 *	%WPA_ALG_GCMP); 	 *	%WPA_ALG_NONE clears the key. 	 * @addr: Address of the peer STA (BSSID of the current AP when setting 	 *	pairwise key in station mode), ff:ff:ff:ff:ff:ff for 	 *	broadcast keys, %NULL for default keys that are used both for 	 *	broadcast and unicast; when clearing keys, %NULL is used to 	 *	indicate that both the broadcast-only and default key of the 	 *	specified key index is to be cleared 	 * @key_idx: key index (0..3), usually 0 for unicast keys; 0..4095 for 	 *	IGTK 	 * @set_tx: configure this key as the default Tx key (only used when 	 *	driver does not support separate unicast/individual key 	 * @seq: sequence number/packet number, seq_len octets, the next 	 *	packet number to be used for in replay protection; configured 	 *	for Rx keys (in most cases, this is only used with broadcast 	 *	keys and set to zero for unicast keys); %NULL if not set 	 * @seq_len: length of the seq, depends on the algorithm: 	 *	TKIP: 6 octets, CCMP/GCMP: 6 octets, IGTK: 6 octets 	 * @key: key buffer; TKIP: 16-byte temporal key, 8-byte Tx Mic key, 	 *	8-byte Rx Mic Key 	 * @key_len: length of the key buffer in octets (WEP: 5 or 13, 	 *	TKIP: 32, CCMP/GCMP: 16, IGTK: 16) 	 * 	 * Returns: 0 on success, -1 on failure 	 * 	 * Configure the given key for the kernel driver. If the driver 	 * supports separate individual keys (4 default keys + 1 individual), 	 * addr can be used to determine whether the key is default or 	 * individual. If only 4 keys are supported, the default key with key 	 * index 0 is used as the individual key. STA must be configured to use 	 * it as the default Tx key (set_tx is set) and accept Rx for all the 	 * key indexes. In most cases, WPA uses only key indexes 1 and 2 for 	 * broadcast keys, so key index 0 is available for this kind of 	 * configuration. 	 * 	 * Please note that TKIP keys include separate TX and RX MIC keys and 	 * some drivers may expect them in different order than wpa_supplicant 	 * is using. If the TX/RX keys are swapped, all TKIP encrypted packets 	 * will trigger Michael MIC errors. This can be fixed by changing the 	 * order of MIC keys by swapping te bytes 16..23 and 24..31 of the key 	 * in driver_*.c set_key() implementation, see driver_ndis.c for an 	 * example on how this can be done. 	 */
+comment|/** 	 * set_key - Configure encryption key 	 * @ifname: Interface name (for multi-SSID/VLAN support) 	 * @priv: private driver interface data 	 * @alg: encryption algorithm (%WPA_ALG_NONE, %WPA_ALG_WEP, 	 *	%WPA_ALG_TKIP, %WPA_ALG_CCMP, %WPA_ALG_IGTK, %WPA_ALG_PMK, 	 *	%WPA_ALG_GCMP, %WPA_ALG_GCMP_256, %WPA_ALG_CCMP_256, 	 *	%WPA_ALG_BIP_GMAC_128, %WPA_ALG_BIP_GMAC_256, 	 *	%WPA_ALG_BIP_CMAC_256); 	 *	%WPA_ALG_NONE clears the key. 	 * @addr: Address of the peer STA (BSSID of the current AP when setting 	 *	pairwise key in station mode), ff:ff:ff:ff:ff:ff for 	 *	broadcast keys, %NULL for default keys that are used both for 	 *	broadcast and unicast; when clearing keys, %NULL is used to 	 *	indicate that both the broadcast-only and default key of the 	 *	specified key index is to be cleared 	 * @key_idx: key index (0..3), usually 0 for unicast keys; 0..4095 for 	 *	IGTK 	 * @set_tx: configure this key as the default Tx key (only used when 	 *	driver does not support separate unicast/individual key 	 * @seq: sequence number/packet number, seq_len octets, the next 	 *	packet number to be used for in replay protection; configured 	 *	for Rx keys (in most cases, this is only used with broadcast 	 *	keys and set to zero for unicast keys); %NULL if not set 	 * @seq_len: length of the seq, depends on the algorithm: 	 *	TKIP: 6 octets, CCMP/GCMP: 6 octets, IGTK: 6 octets 	 * @key: key buffer; TKIP: 16-byte temporal key, 8-byte Tx Mic key, 	 *	8-byte Rx Mic Key 	 * @key_len: length of the key buffer in octets (WEP: 5 or 13, 	 *	TKIP: 32, CCMP/GCMP: 16, IGTK: 16) 	 * 	 * Returns: 0 on success, -1 on failure 	 * 	 * Configure the given key for the kernel driver. If the driver 	 * supports separate individual keys (4 default keys + 1 individual), 	 * addr can be used to determine whether the key is default or 	 * individual. If only 4 keys are supported, the default key with key 	 * index 0 is used as the individual key. STA must be configured to use 	 * it as the default Tx key (set_tx is set) and accept Rx for all the 	 * key indexes. In most cases, WPA uses only key indexes 1 and 2 for 	 * broadcast keys, so key index 0 is available for this kind of 	 * configuration. 	 * 	 * Please note that TKIP keys include separate TX and RX MIC keys and 	 * some drivers may expect them in different order than wpa_supplicant 	 * is using. If the TX/RX keys are swapped, all TKIP encrypted packets 	 * will trigger Michael MIC errors. This can be fixed by changing the 	 * order of MIC keys by swapping te bytes 16..23 and 24..31 of the key 	 * in driver_*.c set_key() implementation, see driver_ndis.c for an 	 * example on how this can be done. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -1868,34 +2840,6 @@ modifier|*
 name|priv
 parameter_list|)
 function_decl|;
-comment|/** 	 * send_eapol - Optional function for sending EAPOL packets 	 * @priv: private driver interface data 	 * @dest: Destination MAC address 	 * @proto: Ethertype 	 * @data: EAPOL packet starting with IEEE 802.1X header 	 * @data_len: Size of the EAPOL packet 	 * 	 * Returns: 0 on success, -1 on failure 	 * 	 * This optional function can be used to override l2_packet operations 	 * with driver specific functionality. If this function pointer is set, 	 * l2_packet module is not used at all and the driver interface code is 	 * responsible for receiving and sending all EAPOL packets. The 	 * received EAPOL packets are sent to core code with EVENT_EAPOL_RX 	 * event. The driver interface is required to implement get_mac_addr() 	 * handler if send_eapol() is used. 	 */
-name|int
-function_decl|(
-modifier|*
-name|send_eapol
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|dest
-parameter_list|,
-name|u16
-name|proto
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|data
-parameter_list|,
-name|size_t
-name|data_len
-parameter_list|)
-function_decl|;
 comment|/** 	 * set_operstate - Sets device operating state to DORMANT or UP 	 * @priv: private driver interface data 	 * @state: 0 = dormant, 1 = up 	 * Returns: 0 on success, -1 on failure 	 * 	 * This is an optional function that can be used on operating systems 	 * that support a concept of controlling network device state from user 	 * space applications. This function, if set, gets called with 	 * state = 1 when authentication has been completed and with state = 0 	 * when connection is lost. 	 */
 name|int
 function_decl|(
@@ -2004,34 +2948,6 @@ name|size_t
 name|ies_len
 parameter_list|)
 function_decl|;
-comment|/** 	 * send_ft_action - Send FT Action frame (IEEE 802.11r) 	 * @priv: Private driver interface data 	 * @action: Action field value 	 * @target_ap: Target AP address 	 * @ies: FT IEs (MDIE, FTIE, ...) (FT Request action frame body) 	 * @ies_len: Length of FT IEs in bytes 	 * Returns: 0 on success, -1 on failure 	 * 	 * The supplicant uses this callback to request the driver to transmit 	 * an FT Action frame (action category 6) for over-the-DS fast BSS 	 * transition. 	 */
-name|int
-function_decl|(
-modifier|*
-name|send_ft_action
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-name|u8
-name|action
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|target_ap
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|ies
-parameter_list|,
-name|size_t
-name|ies_len
-parameter_list|)
-function_decl|;
 comment|/** 	 * get_scan_results2 - Fetch the latest scan results 	 * @priv: private driver interface data 	 * 	 * Returns: Allocated buffer of scan results (caller is responsible for 	 * freeing the data structure) on success, NULL on failure 	 */
 name|struct
 name|wpa_scan_results
@@ -2058,6 +2974,22 @@ modifier|*
 name|priv
 parameter_list|,
 specifier|const
+name|char
+modifier|*
+name|alpha2
+parameter_list|)
+function_decl|;
+comment|/** 	 * get_country - Get country 	 * @priv: Private driver interface data 	 * @alpha2: Buffer for returning country code (at least 3 octets) 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|get_country
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
 name|char
 modifier|*
 name|alpha2
@@ -2169,6 +3101,23 @@ name|priv
 parameter_list|,
 name|struct
 name|wpa_driver_ap_params
+modifier|*
+name|params
+parameter_list|)
+function_decl|;
+comment|/** 	 * set_acl - Set ACL in AP mode 	 * @priv: Private driver interface data 	 * @params: Parameters to configure ACL 	 * Returns: 0 on success, -1 on failure 	 * 	 * This is used only for the drivers which support MAC address ACL. 	 */
+name|int
+function_decl|(
+modifier|*
+name|set_acl
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|struct
+name|hostapd_acl_params
 modifier|*
 name|params
 parameter_list|)
@@ -2627,7 +3576,7 @@ name|int
 name|burst_time
 parameter_list|)
 function_decl|;
-comment|/** 	 * if_add - Add a virtual interface 	 * @priv: Private driver interface data 	 * @type: Interface type 	 * @ifname: Interface name for the new virtual interface 	 * @addr: Local address to use for the interface or %NULL to use the 	 *	parent interface address 	 * @bss_ctx: BSS context for %WPA_IF_AP_BSS interfaces 	 * @drv_priv: Pointer for overwriting the driver context or %NULL if 	 *	not allowed (applies only to %WPA_IF_AP_BSS type) 	 * @force_ifname: Buffer for returning an interface name that the 	 *	driver ended up using if it differs from the requested ifname 	 * @if_addr: Buffer for returning the allocated interface address 	 *	(this may differ from the requested addr if the driver cannot 	 *	change interface address) 	 * @bridge: Bridge interface to use or %NULL if no bridge configured 	 * Returns: 0 on success, -1 on failure 	 */
+comment|/** 	 * if_add - Add a virtual interface 	 * @priv: Private driver interface data 	 * @type: Interface type 	 * @ifname: Interface name for the new virtual interface 	 * @addr: Local address to use for the interface or %NULL to use the 	 *	parent interface address 	 * @bss_ctx: BSS context for %WPA_IF_AP_BSS interfaces 	 * @drv_priv: Pointer for overwriting the driver context or %NULL if 	 *	not allowed (applies only to %WPA_IF_AP_BSS type) 	 * @force_ifname: Buffer for returning an interface name that the 	 *	driver ended up using if it differs from the requested ifname 	 * @if_addr: Buffer for returning the allocated interface address 	 *	(this may differ from the requested addr if the driver cannot 	 *	change interface address) 	 * @bridge: Bridge interface to use or %NULL if no bridge configured 	 * @use_existing: Whether to allow existing interface to be used 	 * Returns: 0 on success, -1 on failure 	 */
 name|int
 function_decl|(
 modifier|*
@@ -2673,6 +3622,9 @@ specifier|const
 name|char
 modifier|*
 name|bridge
+parameter_list|,
+name|int
+name|use_existing
 parameter_list|)
 function_decl|;
 comment|/** 	 * if_remove - Remove a virtual interface 	 * @priv: Private driver interface data 	 * @type: Interface type 	 * @ifname: Interface name of the virtual interface to be removed 	 * Returns: 0 on success, -1 on failure 	 */
@@ -2851,7 +3803,7 @@ name|int
 name|authorized
 parameter_list|)
 function_decl|;
-comment|/** 	 * set_wds_sta - Bind a station into a 4-address WDS (AP only) 	 * @priv: Private driver interface data 	 * @addr: MAC address of the associated station 	 * @aid: Association ID 	 * @val: 1 = bind to 4-address WDS; 0 = unbind 	 * @bridge_ifname: Bridge interface to use for the WDS station or %NULL 	 *	to indicate that bridge is not to be used 	 * Returns: 0 on success, -1 on failure 	 */
+comment|/** 	 * set_wds_sta - Bind a station into a 4-address WDS (AP only) 	 * @priv: Private driver interface data 	 * @addr: MAC address of the associated station 	 * @aid: Association ID 	 * @val: 1 = bind to 4-address WDS; 0 = unbind 	 * @bridge_ifname: Bridge interface to use for the WDS station or %NULL 	 *	to indicate that bridge is not to be used 	 * @ifname_wds: Buffer to return the interface name for the new WDS 	 *	station or %NULL to indicate name is not returned. 	 * Returns: 0 on success, -1 on failure 	 */
 name|int
 function_decl|(
 modifier|*
@@ -2877,6 +3829,10 @@ specifier|const
 name|char
 modifier|*
 name|bridge_ifname
+parameter_list|,
+name|char
+modifier|*
+name|ifname_wds
 parameter_list|)
 function_decl|;
 comment|/** 	 * send_action - Transmit an Action frame 	 * @priv: Private driver interface data 	 * @freq: Frequency (in MHz) of the channel 	 * @wait: Time to wait off-channel for a response (in ms), or zero 	 * @dst: Destination MAC address (Address 1) 	 * @src: Source MAC address (Address 2) 	 * @bssid: BSSID (Address 3) 	 * @data: Frame body 	 * @data_len: data length in octets 	 @ @no_cck: Whether CCK rates must not be used to transmit this frame 	 * Returns: 0 on success, -1 on failure 	 * 	 * This command can be used to request the driver to transmit an action 	 * frame to the specified destination. 	 * 	 * If the %WPA_DRIVER_FLAGS_OFFCHANNEL_TX flag is set, the frame will 	 * be transmitted on the given channel and the device will wait for a 	 * response on that channel for the given wait time. 	 * 	 * If the flag is not set, the wait time will be ignored. In this case, 	 * if a remain-on-channel duration is in progress, the frame must be 	 * transmitted on that channel; alternatively the frame may be sent on 	 * the current operational channel (if in associated state in station 	 * mode or while operating as an AP.) 	 */
@@ -2937,7 +3893,7 @@ modifier|*
 name|priv
 parameter_list|)
 function_decl|;
-comment|/** 	 * remain_on_channel - Remain awake on a channel 	 * @priv: Private driver interface data 	 * @freq: Frequency (in MHz) of the channel 	 * @duration: Duration in milliseconds 	 * Returns: 0 on success, -1 on failure 	 * 	 * This command is used to request the driver to remain awake on the 	 * specified channel for the specified duration and report received 	 * Action frames with EVENT_RX_ACTION events. Optionally, received 	 * Probe Request frames may also be requested to be reported by calling 	 * probe_req_report(). These will be reported with EVENT_RX_PROBE_REQ. 	 * 	 * The driver may not be at the requested channel when this function 	 * returns, i.e., the return code is only indicating whether the 	 * request was accepted. The caller will need to wait until the 	 * EVENT_REMAIN_ON_CHANNEL event indicates that the driver has 	 * completed the channel change. This may take some time due to other 	 * need for the radio and the caller should be prepared to timing out 	 * its wait since there are no guarantees on when this request can be 	 * executed. 	 */
+comment|/** 	 * remain_on_channel - Remain awake on a channel 	 * @priv: Private driver interface data 	 * @freq: Frequency (in MHz) of the channel 	 * @duration: Duration in milliseconds 	 * Returns: 0 on success, -1 on failure 	 * 	 * This command is used to request the driver to remain awake on the 	 * specified channel for the specified duration and report received 	 * Action frames with EVENT_RX_MGMT events. Optionally, received 	 * Probe Request frames may also be requested to be reported by calling 	 * probe_req_report(). These will be reported with EVENT_RX_PROBE_REQ. 	 * 	 * The driver may not be at the requested channel when this function 	 * returns, i.e., the return code is only indicating whether the 	 * request was accepted. The caller will need to wait until the 	 * EVENT_REMAIN_ON_CHANNEL event indicates that the driver has 	 * completed the channel change. This may take some time due to other 	 * need for the radio and the caller should be prepared to timing out 	 * its wait since there are no guarantees on when this request can be 	 * executed. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -2984,7 +3940,7 @@ name|int
 name|report
 parameter_list|)
 function_decl|;
-comment|/** 	 * deinit_ap - Deinitialize AP mode 	 * @priv: Private driver interface data 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 * 	 * This optional function can be used to disable AP mode related 	 * configuration and change the driver mode to station mode to allow 	 * normal station operations like scanning to be completed. 	 */
+comment|/** 	 * deinit_ap - Deinitialize AP mode 	 * @priv: Private driver interface data 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 * 	 * This optional function can be used to disable AP mode related 	 * configuration. If the interface was not dynamically added, 	 * change the driver mode to station mode to allow normal station 	 * operations like scanning to be completed. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -2996,7 +3952,7 @@ modifier|*
 name|priv
 parameter_list|)
 function_decl|;
-comment|/** 	 * deinit_p2p_cli - Deinitialize P2P client mode 	 * @priv: Private driver interface data 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 * 	 * This optional function can be used to disable P2P client mode. It 	 * can be used to change the interface type back to station mode. 	 */
+comment|/** 	 * deinit_p2p_cli - Deinitialize P2P client mode 	 * @priv: Private driver interface data 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 * 	 * This optional function can be used to disable P2P client mode. If the 	 * interface was not dynamically added, change the interface type back 	 * to station mode. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -3175,296 +4131,7 @@ modifier|*
 name|priv
 parameter_list|)
 function_decl|;
-comment|/** 	 * p2p_find - Start P2P Device Discovery 	 * @priv: Private driver interface data 	 * @timeout: Timeout for find operation in seconds or 0 for no timeout 	 * @type: Device Discovery type (enum p2p_discovery_type) 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function is only used if the driver implements P2P management, 	 * i.e., if it sets WPA_DRIVER_FLAGS_P2P_MGMT in 	 * struct wpa_driver_capa. 	 */
-name|int
-function_decl|(
-modifier|*
-name|p2p_find
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-name|unsigned
-name|int
-name|timeout
-parameter_list|,
-name|int
-name|type
-parameter_list|)
-function_decl|;
-comment|/** 	 * p2p_stop_find - Stop P2P Device Discovery 	 * @priv: Private driver interface data 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function is only used if the driver implements P2P management, 	 * i.e., if it sets WPA_DRIVER_FLAGS_P2P_MGMT in 	 * struct wpa_driver_capa. 	 */
-name|int
-function_decl|(
-modifier|*
-name|p2p_stop_find
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|)
-function_decl|;
-comment|/** 	 * p2p_listen - Start P2P Listen state for specified duration 	 * @priv: Private driver interface data 	 * @timeout: Listen state duration in milliseconds 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function can be used to request the P2P module to keep the 	 * device discoverable on the listen channel for an extended set of 	 * time. At least in its current form, this is mainly used for testing 	 * purposes and may not be of much use for normal P2P operations. 	 * 	 * This function is only used if the driver implements P2P management, 	 * i.e., if it sets WPA_DRIVER_FLAGS_P2P_MGMT in 	 * struct wpa_driver_capa. 	 */
-name|int
-function_decl|(
-modifier|*
-name|p2p_listen
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-name|unsigned
-name|int
-name|timeout
-parameter_list|)
-function_decl|;
-comment|/** 	 * p2p_connect - Start P2P group formation (GO negotiation) 	 * @priv: Private driver interface data 	 * @peer_addr: MAC address of the peer P2P client 	 * @wps_method: enum p2p_wps_method value indicating config method 	 * @go_intent: Local GO intent value (1..15) 	 * @own_interface_addr: Intended interface address to use with the 	 *	group 	 * @force_freq: The only allowed channel frequency in MHz or 0 	 * @persistent_group: Whether to create persistent group 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function is only used if the driver implements P2P management, 	 * i.e., if it sets WPA_DRIVER_FLAGS_P2P_MGMT in 	 * struct wpa_driver_capa. 	 */
-name|int
-function_decl|(
-modifier|*
-name|p2p_connect
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|peer_addr
-parameter_list|,
-name|int
-name|wps_method
-parameter_list|,
-name|int
-name|go_intent
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|own_interface_addr
-parameter_list|,
-name|unsigned
-name|int
-name|force_freq
-parameter_list|,
-name|int
-name|persistent_group
-parameter_list|)
-function_decl|;
-comment|/** 	 * wps_success_cb - Report successfully completed WPS provisioning 	 * @priv: Private driver interface data 	 * @peer_addr: Peer address 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function is used to report successfully completed WPS 	 * provisioning during group formation in both GO/Registrar and 	 * client/Enrollee roles. 	 * 	 * This function is only used if the driver implements P2P management, 	 * i.e., if it sets WPA_DRIVER_FLAGS_P2P_MGMT in 	 * struct wpa_driver_capa. 	 */
-name|int
-function_decl|(
-modifier|*
-name|wps_success_cb
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|peer_addr
-parameter_list|)
-function_decl|;
-comment|/** 	 * p2p_group_formation_failed - Report failed WPS provisioning 	 * @priv: Private driver interface data 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function is used to report failed group formation. This can 	 * happen either due to failed WPS provisioning or due to 15 second 	 * timeout during the provisioning phase. 	 * 	 * This function is only used if the driver implements P2P management, 	 * i.e., if it sets WPA_DRIVER_FLAGS_P2P_MGMT in 	 * struct wpa_driver_capa. 	 */
-name|int
-function_decl|(
-modifier|*
-name|p2p_group_formation_failed
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|)
-function_decl|;
-comment|/** 	 * p2p_set_params - Set P2P parameters 	 * @priv: Private driver interface data 	 * @params: P2P parameters 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function is only used if the driver implements P2P management, 	 * i.e., if it sets WPA_DRIVER_FLAGS_P2P_MGMT in 	 * struct wpa_driver_capa. 	 */
-name|int
-function_decl|(
-modifier|*
-name|p2p_set_params
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-specifier|const
-name|struct
-name|p2p_params
-modifier|*
-name|params
-parameter_list|)
-function_decl|;
-comment|/** 	 * p2p_prov_disc_req - Send Provision Discovery Request 	 * @priv: Private driver interface data 	 * @peer_addr: MAC address of the peer P2P client 	 * @config_methods: WPS Config Methods value (only one bit set) 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function can be used to request a discovered P2P peer to 	 * display a PIN (config_methods = WPS_CONFIG_DISPLAY) or be prepared 	 * to enter a PIN from us (config_methods = WPS_CONFIG_KEYPAD). The 	 * Provision Discovery Request frame is transmitted once immediately 	 * and if no response is received, the frame will be sent again 	 * whenever the target device is discovered during device dsicovery 	 * (start with a p2p_find() call). Response from the peer is indicated 	 * with the EVENT_P2P_PROV_DISC_RESPONSE event. 	 * 	 * This function is only used if the driver implements P2P management, 	 * i.e., if it sets WPA_DRIVER_FLAGS_P2P_MGMT in 	 * struct wpa_driver_capa. 	 */
-name|int
-function_decl|(
-modifier|*
-name|p2p_prov_disc_req
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|peer_addr
-parameter_list|,
-name|u16
-name|config_methods
-parameter_list|,
-name|int
-name|join
-parameter_list|)
-function_decl|;
-comment|/** 	 * p2p_sd_request - Schedule a service discovery query 	 * @priv: Private driver interface data 	 * @dst: Destination peer or %NULL to apply for all peers 	 * @tlvs: P2P Service Query TLV(s) 	 * Returns: Reference to the query or 0 on failure 	 * 	 * Response to the query is indicated with the 	 * EVENT_P2P_SD_RESPONSE driver event. 	 * 	 * This function is only used if the driver implements P2P management, 	 * i.e., if it sets WPA_DRIVER_FLAGS_P2P_MGMT in 	 * struct wpa_driver_capa. 	 */
-name|u64
-function_decl|(
-modifier|*
-name|p2p_sd_request
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|dst
-parameter_list|,
-specifier|const
-name|struct
-name|wpabuf
-modifier|*
-name|tlvs
-parameter_list|)
-function_decl|;
-comment|/** 	 * p2p_sd_cancel_request - Cancel a pending service discovery query 	 * @priv: Private driver interface data 	 * @req: Query reference from p2p_sd_request() 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function is only used if the driver implements P2P management, 	 * i.e., if it sets WPA_DRIVER_FLAGS_P2P_MGMT in 	 * struct wpa_driver_capa. 	 */
-name|int
-function_decl|(
-modifier|*
-name|p2p_sd_cancel_request
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-name|u64
-name|req
-parameter_list|)
-function_decl|;
-comment|/** 	 * p2p_sd_response - Send response to a service discovery query 	 * @priv: Private driver interface data 	 * @freq: Frequency from EVENT_P2P_SD_REQUEST event 	 * @dst: Destination address from EVENT_P2P_SD_REQUEST event 	 * @dialog_token: Dialog token from EVENT_P2P_SD_REQUEST event 	 * @resp_tlvs: P2P Service Response TLV(s) 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function is called as a response to the request indicated with 	 * the EVENT_P2P_SD_REQUEST driver event. 	 * 	 * This function is only used if the driver implements P2P management, 	 * i.e., if it sets WPA_DRIVER_FLAGS_P2P_MGMT in 	 * struct wpa_driver_capa. 	 */
-name|int
-function_decl|(
-modifier|*
-name|p2p_sd_response
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-name|int
-name|freq
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|dst
-parameter_list|,
-name|u8
-name|dialog_token
-parameter_list|,
-specifier|const
-name|struct
-name|wpabuf
-modifier|*
-name|resp_tlvs
-parameter_list|)
-function_decl|;
-comment|/** 	 * p2p_service_update - Indicate a change in local services 	 * @priv: Private driver interface data 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function needs to be called whenever there is a change in 	 * availability of the local services. This will increment the 	 * Service Update Indicator value which will be used in SD Request and 	 * Response frames. 	 * 	 * This function is only used if the driver implements P2P management, 	 * i.e., if it sets WPA_DRIVER_FLAGS_P2P_MGMT in 	 * struct wpa_driver_capa. 	 */
-name|int
-function_decl|(
-modifier|*
-name|p2p_service_update
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|)
-function_decl|;
-comment|/** 	 * p2p_reject - Reject peer device (explicitly block connections) 	 * @priv: Private driver interface data 	 * @addr: MAC address of the peer 	 * Returns: 0 on success, -1 on failure 	 */
-name|int
-function_decl|(
-modifier|*
-name|p2p_reject
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|addr
-parameter_list|)
-function_decl|;
-comment|/** 	 * p2p_invite - Invite a P2P Device into a group 	 * @priv: Private driver interface data 	 * @peer: Device Address of the peer P2P Device 	 * @role: Local role in the group 	 * @bssid: Group BSSID or %NULL if not known 	 * @ssid: Group SSID 	 * @ssid_len: Length of ssid in octets 	 * @go_dev_addr: Forced GO Device Address or %NULL if none 	 * @persistent_group: Whether this is to reinvoke a persistent group 	 * Returns: 0 on success, -1 on failure 	 */
-name|int
-function_decl|(
-modifier|*
-name|p2p_invite
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|priv
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|peer
-parameter_list|,
-name|int
-name|role
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|bssid
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|ssid
-parameter_list|,
-name|size_t
-name|ssid_len
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|go_dev_addr
-parameter_list|,
-name|int
-name|persistent_group
-parameter_list|)
-function_decl|;
-comment|/** 	 * send_tdls_mgmt - for sending TDLS management packets 	 * @priv: private driver interface data 	 * @dst: Destination (peer) MAC address 	 * @action_code: TDLS action code for the mssage 	 * @dialog_token: Dialog Token to use in the message (if needed) 	 * @status_code: Status Code or Reason Code to use (if needed) 	 * @buf: TDLS IEs to add to the message 	 * @len: Length of buf in octets 	 * Returns: 0 on success, negative (<0) on failure 	 * 	 * This optional function can be used to send packet to driver which is 	 * responsible for receiving and sending all TDLS packets. 	 */
+comment|/** 	 * send_tdls_mgmt - for sending TDLS management packets 	 * @priv: private driver interface data 	 * @dst: Destination (peer) MAC address 	 * @action_code: TDLS action code for the mssage 	 * @dialog_token: Dialog Token to use in the message (if needed) 	 * @status_code: Status Code or Reason Code to use (if needed) 	 * @peer_capab: TDLS peer capability (TDLS_PEER_* bitfield) 	 * @initiator: Is the current end the TDLS link initiator 	 * @buf: TDLS IEs to add to the message 	 * @len: Length of buf in octets 	 * Returns: 0 on success, negative (<0) on failure 	 * 	 * This optional function can be used to send packet to driver which is 	 * responsible for receiving and sending all TDLS packets. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -3488,6 +4155,12 @@ name|dialog_token
 parameter_list|,
 name|u16
 name|status_code
+parameter_list|,
+name|u32
+name|peer_capab
+parameter_list|,
+name|int
+name|initiator
 parameter_list|,
 specifier|const
 name|u8
@@ -3548,7 +4221,133 @@ modifier|*
 name|buf_len
 parameter_list|)
 function_decl|;
-comment|/** 	 * signal_poll - Get current connection information 	 * @priv: Private driver interface data 	 * @signal_info: Connection info structure          */
+comment|/** 	 * set_qos_map - Set QoS Map 	 * @priv: Private driver interface data 	 * @qos_map_set: QoS Map 	 * @qos_map_set_len: Length of QoS Map 	 */
+name|int
+function_decl|(
+modifier|*
+name|set_qos_map
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|qos_map_set
+parameter_list|,
+name|u8
+name|qos_map_set_len
+parameter_list|)
+function_decl|;
+comment|/** 	 * br_add_ip_neigh - Add a neigh to the bridge ip neigh table 	 * @priv: Private driver interface data 	 * @version: IP version of the IP address, 4 or 6 	 * @ipaddr: IP address for the neigh entry 	 * @prefixlen: IP address prefix length 	 * @addr: Corresponding MAC address 	 * Returns: 0 on success, negative (<0) on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|br_add_ip_neigh
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u8
+name|version
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|ipaddr
+parameter_list|,
+name|int
+name|prefixlen
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+comment|/** 	 * br_delete_ip_neigh - Remove a neigh from the bridge ip neigh table 	 * @priv: Private driver interface data 	 * @version: IP version of the IP address, 4 or 6 	 * @ipaddr: IP address for the neigh entry 	 * Returns: 0 on success, negative (<0) on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|br_delete_ip_neigh
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u8
+name|version
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|ipaddr
+parameter_list|)
+function_decl|;
+comment|/** 	 * br_port_set_attr - Set a bridge port attribute 	 * @attr: Bridge port attribute to set 	 * @val: Value to be set 	 * Returns: 0 on success, negative (<0) on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|br_port_set_attr
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|enum
+name|drv_br_port_attr
+name|attr
+parameter_list|,
+name|unsigned
+name|int
+name|val
+parameter_list|)
+function_decl|;
+comment|/** 	 * br_port_set_attr - Set a bridge network parameter 	 * @param: Bridge parameter to set 	 * @val: Value to be set 	 * Returns: 0 on success, negative (<0) on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|br_set_net_param
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|enum
+name|drv_br_net_param
+name|param
+parameter_list|,
+name|unsigned
+name|int
+name|val
+parameter_list|)
+function_decl|;
+comment|/** 	 * set_wowlan - Set wake-on-wireless triggers 	 * @priv: Private driver interface data 	 * @triggers: wowlan triggers 	 */
+name|int
+function_decl|(
+modifier|*
+name|set_wowlan
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+specifier|const
+name|struct
+name|wowlan_triggers
+modifier|*
+name|triggers
+parameter_list|)
+function_decl|;
+comment|/** 	 * signal_poll - Get current connection information 	 * @priv: Private driver interface data 	 * @signal_info: Connection info structure 	 */
 name|int
 function_decl|(
 modifier|*
@@ -3580,7 +4379,69 @@ name|int
 name|authmode
 parameter_list|)
 function_decl|;
-comment|/** 	 * set_rekey_info - Set rekey information 	 * @priv: Private driver interface data 	 * @kek: Current KEK 	 * @kck: Current KCK 	 * @replay_ctr: Current EAPOL-Key Replay Counter 	 * 	 * This optional function can be used to provide information for the 	 * driver/firmware to process EAPOL-Key frames in Group Key Handshake 	 * while the host (including wpa_supplicant) is sleeping. 	 */
+ifdef|#
+directive|ifdef
+name|ANDROID
+comment|/** 	 * driver_cmd - Execute driver-specific command 	 * @priv: Private driver interface data 	 * @cmd: Command to execute 	 * @buf: Return buffer 	 * @buf_len: Buffer length 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|driver_cmd
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|char
+modifier|*
+name|cmd
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|buf_len
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+comment|/* ANDROID */
+comment|/** 	 * vendor_cmd - Execute vendor specific command 	 * @priv: Private driver interface data 	 * @vendor_id: Vendor id 	 * @subcmd: Vendor command id 	 * @data: Vendor command parameters (%NULL if no parameters) 	 * @data_len: Data length 	 * @buf: Return buffer (%NULL to ignore reply) 	 * Returns: 0 on success, negative (<0) on failure 	 * 	 * This function handles vendor specific commands that are passed to 	 * the driver/device. The command is identified by vendor id and 	 * command id. Parameters can be passed as argument to the command 	 * in the data buffer. Reply (if any) will be filled in the supplied 	 * return buffer. 	 * 	 * The exact driver behavior is driver interface and vendor specific. As 	 * an example, this will be converted to a vendor specific cfg80211 	 * command in case of the nl80211 driver interface. 	 */
+name|int
+function_decl|(
+modifier|*
+name|vendor_cmd
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|unsigned
+name|int
+name|vendor_id
+parameter_list|,
+name|unsigned
+name|int
+name|subcmd
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|data_len
+parameter_list|,
+name|struct
+name|wpabuf
+modifier|*
+name|buf
+parameter_list|)
+function_decl|;
+comment|/** 	 * set_rekey_info - Set rekey information 	 * @priv: Private driver interface data 	 * @kek: Current KEK 	 * @kek_len: KEK length in octets 	 * @kck: Current KCK 	 * @kck_len: KCK length in octets 	 * @replay_ctr: Current EAPOL-Key Replay Counter 	 * 	 * This optional function can be used to provide information for the 	 * driver/firmware to process EAPOL-Key frames in Group Key Handshake 	 * while the host (including wpa_supplicant) is sleeping. 	 */
 name|void
 function_decl|(
 modifier|*
@@ -3596,10 +4457,16 @@ name|u8
 modifier|*
 name|kek
 parameter_list|,
+name|size_t
+name|kek_len
+parameter_list|,
 specifier|const
 name|u8
 modifier|*
 name|kck
+parameter_list|,
+name|size_t
+name|kck_len
 parameter_list|,
 specifier|const
 name|u8
@@ -3795,7 +4662,7 @@ name|int
 name|disabled
 parameter_list|)
 function_decl|;
-comment|/** 	 * switch_channel - Announce channel switch and migrate the GO to the 	 * given frequency 	 * @priv: Private driver interface data 	 * @freq: Frequency in MHz 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function is used to move the GO to the legacy STA channel to 	 * avoid frequency conflict in single channel concurrency. 	 */
+comment|/** 	 * switch_channel - Announce channel switch and migrate the GO to the 	 * given frequency 	 * @priv: Private driver interface data 	 * @settings: Settings for CSA period and new channel 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function is used to move the GO to the legacy STA channel to 	 * avoid frequency conflict in single channel concurrency. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -3806,9 +4673,670 @@ name|void
 modifier|*
 name|priv
 parameter_list|,
+name|struct
+name|csa_settings
+modifier|*
+name|settings
+parameter_list|)
+function_decl|;
+comment|/** 	 * add_tx_ts - Add traffic stream 	 * @priv: Private driver interface data 	 * @tsid: Traffic stream ID 	 * @addr: Receiver address 	 * @user_prio: User priority of the traffic stream 	 * @admitted_time: Admitted time for this TS in units of 	 *	32 microsecond periods (per second). 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|add_tx_ts
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u8
+name|tsid
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|addr
+parameter_list|,
+name|u8
+name|user_prio
+parameter_list|,
+name|u16
+name|admitted_time
+parameter_list|)
+function_decl|;
+comment|/** 	 * del_tx_ts - Delete traffic stream 	 * @priv: Private driver interface data 	 * @tsid: Traffic stream ID 	 * @addr: Receiver address 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|del_tx_ts
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u8
+name|tsid
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+comment|/** 	 * Enable channel-switching with TDLS peer 	 * @priv: Private driver interface data 	 * @addr: MAC address of the TDLS peer 	 * @oper_class: Operating class of the switch channel 	 * @params: Channel specification 	 * Returns: 0 on success, -1 on failure 	 * 	 * The function indicates to driver that it can start switching to a 	 * different channel with a specified TDLS peer. The switching is 	 * assumed on until canceled with tdls_disable_channel_switch(). 	 */
+name|int
+function_decl|(
+modifier|*
+name|tdls_enable_channel_switch
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|addr
+parameter_list|,
+name|u8
+name|oper_class
+parameter_list|,
+specifier|const
+name|struct
+name|hostapd_freq_params
+modifier|*
+name|params
+parameter_list|)
+function_decl|;
+comment|/** 	 * Disable channel switching with TDLS peer 	 * @priv: Private driver interface data 	 * @addr: MAC address of the TDLS peer 	 * Returns: 0 on success, -1 on failure 	 * 	 * This function indicates to the driver that it should stop switching 	 * with a given TDLS peer. 	 */
+name|int
+function_decl|(
+modifier|*
+name|tdls_disable_channel_switch
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+comment|/** 	 * start_dfs_cac - Listen for radar interference on the channel 	 * @priv: Private driver interface data 	 * @freq: Channel parameters 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|start_dfs_cac
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|struct
+name|hostapd_freq_params
+modifier|*
+name|freq
+parameter_list|)
+function_decl|;
+comment|/** 	 * stop_ap - Removes beacon from AP 	 * @priv: Private driver interface data 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 * 	 * This optional function can be used to disable AP mode related 	 * configuration. Unlike deinit_ap, it does not change to station 	 * mode. 	 */
+name|int
+function_decl|(
+modifier|*
+name|stop_ap
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|)
+function_decl|;
+comment|/** 	 * get_survey - Retrieve survey data 	 * @priv: Private driver interface data 	 * @freq: If set, survey data for the specified frequency is only 	 *	being requested. If not set, all survey data is requested. 	 * Returns: 0 on success, -1 on failure 	 * 	 * Use this to retrieve: 	 * 	 * - the observed channel noise floor 	 * - the amount of time we have spent on the channel 	 * - the amount of time during which we have spent on the channel that 	 *   the radio has determined the medium is busy and we cannot 	 *   transmit 	 * - the amount of time we have spent receiving data 	 * - the amount of time we have spent transmitting data 	 * 	 * This data can be used for spectrum heuristics. One example is 	 * Automatic Channel Selection (ACS). The channel survey data is 	 * kept on a linked list on the channel data, one entry is added 	 * for each survey. The min_nf of the channel is updated for each 	 * survey. 	 */
+name|int
+function_decl|(
+modifier|*
+name|get_survey
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
 name|unsigned
 name|int
 name|freq
+parameter_list|)
+function_decl|;
+comment|/** 	 * status - Get driver interface status information 	 * @priv: Private driver interface data 	 * @buf: Buffer for printing tou the status information 	 * @buflen: Maximum length of the buffer 	 * Returns: Length of written status information or -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|status
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|buflen
+parameter_list|)
+function_decl|;
+comment|/** 	 * roaming - Set roaming policy for driver-based BSS selection 	 * @priv: Private driver interface data 	 * @allowed: Whether roaming within ESS is allowed 	 * @bssid: Forced BSSID if roaming is disabled or %NULL if not set 	 * Returns: Length of written status information or -1 on failure 	 * 	 * This optional callback can be used to update roaming policy from the 	 * associate() command (bssid being set there indicates that the driver 	 * should not roam before getting this roaming() call to allow roaming. 	 * If the driver does not indicate WPA_DRIVER_FLAGS_BSS_SELECTION 	 * capability, roaming policy is handled within wpa_supplicant and there 	 * is no need to implement or react to this callback. 	 */
+name|int
+function_decl|(
+modifier|*
+name|roaming
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|int
+name|allowed
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|bssid
+parameter_list|)
+function_decl|;
+comment|/** 	 * set_mac_addr - Set MAC address 	 * @priv: Private driver interface data 	 * @addr: MAC address to use or %NULL for setting back to permanent 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|set_mac_addr
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+ifdef|#
+directive|ifdef
+name|CONFIG_MACSEC
+name|int
+function_decl|(
+modifier|*
+name|macsec_init
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|struct
+name|macsec_init_params
+modifier|*
+name|params
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|macsec_deinit
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|)
+function_decl|;
+comment|/** 	 * enable_protect_frames - Set protect frames status 	 * @priv: Private driver interface data 	 * @enabled: TRUE = protect frames enabled 	 *           FALSE = protect frames disabled 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 */
+name|int
+function_decl|(
+modifier|*
+name|enable_protect_frames
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|Boolean
+name|enabled
+parameter_list|)
+function_decl|;
+comment|/** 	 * set_replay_protect - Set replay protect status and window size 	 * @priv: Private driver interface data 	 * @enabled: TRUE = replay protect enabled 	 *           FALSE = replay protect disabled 	 * @window: replay window size, valid only when replay protect enabled 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 */
+name|int
+function_decl|(
+modifier|*
+name|set_replay_protect
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|Boolean
+name|enabled
+parameter_list|,
+name|u32
+name|window
+parameter_list|)
+function_decl|;
+comment|/** 	 * set_current_cipher_suite - Set current cipher suite 	 * @priv: Private driver interface data 	 * @cs: EUI64 identifier 	 * @cs_len: Length of the cs buffer in octets 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 */
+name|int
+function_decl|(
+modifier|*
+name|set_current_cipher_suite
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|cs
+parameter_list|,
+name|size_t
+name|cs_len
+parameter_list|)
+function_decl|;
+comment|/** 	 * enable_controlled_port - Set controlled port status 	 * @priv: Private driver interface data 	 * @enabled: TRUE = controlled port enabled 	 *           FALSE = controlled port disabled 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 */
+name|int
+function_decl|(
+modifier|*
+name|enable_controlled_port
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|Boolean
+name|enabled
+parameter_list|)
+function_decl|;
+comment|/** 	 * get_receive_lowest_pn - Get receive lowest pn 	 * @priv: Private driver interface data 	 * @channel: secure channel 	 * @an: association number 	 * @lowest_pn: lowest accept pn 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 */
+name|int
+function_decl|(
+modifier|*
+name|get_receive_lowest_pn
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+name|channel
+parameter_list|,
+name|u8
+name|an
+parameter_list|,
+name|u32
+modifier|*
+name|lowest_pn
+parameter_list|)
+function_decl|;
+comment|/** 	 * get_transmit_next_pn - Get transmit next pn 	 * @priv: Private driver interface data 	 * @channel: secure channel 	 * @an: association number 	 * @next_pn: next pn 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 */
+name|int
+function_decl|(
+modifier|*
+name|get_transmit_next_pn
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+name|channel
+parameter_list|,
+name|u8
+name|an
+parameter_list|,
+name|u32
+modifier|*
+name|next_pn
+parameter_list|)
+function_decl|;
+comment|/** 	 * set_transmit_next_pn - Set transmit next pn 	 * @priv: Private driver interface data 	 * @channel: secure channel 	 * @an: association number 	 * @next_pn: next pn 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 */
+name|int
+function_decl|(
+modifier|*
+name|set_transmit_next_pn
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+name|channel
+parameter_list|,
+name|u8
+name|an
+parameter_list|,
+name|u32
+name|next_pn
+parameter_list|)
+function_decl|;
+comment|/** 	 * get_available_receive_sc - get available receive channel 	 * @priv: Private driver interface data 	 * @channel: secure channel 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 */
+name|int
+function_decl|(
+modifier|*
+name|get_available_receive_sc
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+modifier|*
+name|channel
+parameter_list|)
+function_decl|;
+comment|/** 	 * create_receive_sc - create secure channel for receiving 	 * @priv: Private driver interface data 	 * @channel: secure channel 	 * @sci_addr: secure channel identifier - address 	 * @sci_port: secure channel identifier - port 	 * @conf_offset: confidentiality offset (0, 30, or 50) 	 * @validation: frame validation policy (0 = Disabled, 1 = Checked, 	 *	2 = Strict) 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 */
+name|int
+function_decl|(
+modifier|*
+name|create_receive_sc
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+name|channel
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|sci_addr
+parameter_list|,
+name|u16
+name|sci_port
+parameter_list|,
+name|unsigned
+name|int
+name|conf_offset
+parameter_list|,
+name|int
+name|validation
+parameter_list|)
+function_decl|;
+comment|/** 	 * delete_receive_sc - delete secure connection for receiving 	 * @priv: private driver interface data from init() 	 * @channel: secure channel 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|delete_receive_sc
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+name|channel
+parameter_list|)
+function_decl|;
+comment|/** 	 * create_receive_sa - create secure association for receive 	 * @priv: private driver interface data from init() 	 * @channel: secure channel 	 * @an: association number 	 * @lowest_pn: the lowest packet number can be received 	 * @sak: the secure association key 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|create_receive_sa
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+name|channel
+parameter_list|,
+name|u8
+name|an
+parameter_list|,
+name|u32
+name|lowest_pn
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|sak
+parameter_list|)
+function_decl|;
+comment|/** 	 * enable_receive_sa - enable the SA for receive 	 * @priv: private driver interface data from init() 	 * @channel: secure channel 	 * @an: association number 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|enable_receive_sa
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+name|channel
+parameter_list|,
+name|u8
+name|an
+parameter_list|)
+function_decl|;
+comment|/** 	 * disable_receive_sa - disable SA for receive 	 * @priv: private driver interface data from init() 	 * @channel: secure channel index 	 * @an: association number 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|disable_receive_sa
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+name|channel
+parameter_list|,
+name|u8
+name|an
+parameter_list|)
+function_decl|;
+comment|/** 	 * get_available_transmit_sc - get available transmit channel 	 * @priv: Private driver interface data 	 * @channel: secure channel 	 * Returns: 0 on success, -1 on failure (or if not supported) 	 */
+name|int
+function_decl|(
+modifier|*
+name|get_available_transmit_sc
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+modifier|*
+name|channel
+parameter_list|)
+function_decl|;
+comment|/** 	 * create_transmit_sc - create secure connection for transmit 	 * @priv: private driver interface data from init() 	 * @channel: secure channel 	 * @sci_addr: secure channel identifier - address 	 * @sci_port: secure channel identifier - port 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|create_transmit_sc
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+name|channel
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|sci_addr
+parameter_list|,
+name|u16
+name|sci_port
+parameter_list|,
+name|unsigned
+name|int
+name|conf_offset
+parameter_list|)
+function_decl|;
+comment|/** 	 * delete_transmit_sc - delete secure connection for transmit 	 * @priv: private driver interface data from init() 	 * @channel: secure channel 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|delete_transmit_sc
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+name|channel
+parameter_list|)
+function_decl|;
+comment|/** 	 * create_transmit_sa - create secure association for transmit 	 * @priv: private driver interface data from init() 	 * @channel: secure channel index 	 * @an: association number 	 * @next_pn: the packet number used as next transmit packet 	 * @confidentiality: True if the SA is to provide confidentiality 	 *                   as well as integrity 	 * @sak: the secure association key 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|create_transmit_sa
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+name|channel
+parameter_list|,
+name|u8
+name|an
+parameter_list|,
+name|u32
+name|next_pn
+parameter_list|,
+name|Boolean
+name|confidentiality
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|sak
+parameter_list|)
+function_decl|;
+comment|/** 	 * enable_transmit_sa - enable SA for transmit 	 * @priv: private driver interface data from init() 	 * @channel: secure channel 	 * @an: association number 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|enable_transmit_sa
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+name|channel
+parameter_list|,
+name|u8
+name|an
+parameter_list|)
+function_decl|;
+comment|/** 	 * disable_transmit_sa - disable SA for transmit 	 * @priv: private driver interface data from init() 	 * @channel: secure channel 	 * @an: association number 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|disable_transmit_sa
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|u32
+name|channel
+parameter_list|,
+name|u8
+name|an
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+comment|/* CONFIG_MACSEC */
+comment|/** 	 * init_mesh - Driver specific initialization for mesh 	 * @priv: Private driver interface data 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|init_mesh
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|)
+function_decl|;
+comment|/** 	 * join_mesh - Join a mesh network 	 * @priv: Private driver interface data 	 * @params: Mesh configuration parameters 	 * Returns: 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|join_mesh
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|struct
+name|wpa_driver_mesh_join_params
+modifier|*
+name|params
+parameter_list|)
+function_decl|;
+comment|/** 	 * leave_mesh - Leave a mesh network 	 * @priv: Private driver interface data 	 * Returns 0 on success, -1 on failure 	 */
+name|int
+function_decl|(
+modifier|*
+name|leave_mesh
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|)
+function_decl|;
+comment|/** 	 * do_acs - Automatically select channel 	 * @priv: Private driver interface data 	 * @params: Parameters for ACS 	 * Returns 0 on success, -1 on failure 	 * 	 * This command can be used to offload ACS to the driver if the driver 	 * indicates support for such offloading (WPA_DRIVER_FLAGS_ACS_OFFLOAD). 	 */
+name|int
+function_decl|(
+modifier|*
+name|do_acs
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|struct
+name|drv_acs_params
+modifier|*
+name|params
 parameter_list|)
 function_decl|;
 block|}
@@ -3871,9 +5399,6 @@ block|,
 comment|/** 	 * EVENT_ASSOC_TIMED_OUT - Association timed out 	 */
 name|EVENT_ASSOC_TIMED_OUT
 block|,
-comment|/** 	 * EVENT_FT_RRB_RX - FT (IEEE 802.11r) RRB frame received 	 */
-name|EVENT_FT_RRB_RX
-block|,
 comment|/** 	 * EVENT_WPS_BUTTON_PUSHED - Report hardware push button press for WPS 	 */
 name|EVENT_WPS_BUTTON_PUSHED
 block|,
@@ -3886,17 +5411,11 @@ block|,
 comment|/** 	 * EVENT_RX_MGMT - Report RX of a management frame 	 */
 name|EVENT_RX_MGMT
 block|,
-comment|/** 	 * EVENT_RX_ACTION - Action frame received 	 * 	 * This event is used to indicate when an Action frame has been 	 * received. Information about the received frame is included in 	 * union wpa_event_data::rx_action. 	 */
-name|EVENT_RX_ACTION
-block|,
 comment|/** 	 * EVENT_REMAIN_ON_CHANNEL - Remain-on-channel duration started 	 * 	 * This event is used to indicate when the driver has started the 	 * requested remain-on-channel duration. Information about the 	 * operation is included in union wpa_event_data::remain_on_channel. 	 */
 name|EVENT_REMAIN_ON_CHANNEL
 block|,
 comment|/** 	 * EVENT_CANCEL_REMAIN_ON_CHANNEL - Remain-on-channel timed out 	 * 	 * This event is used to indicate when the driver has completed 	 * remain-on-channel duration, i.e., may noot be available on the 	 * requested channel anymore. Information about the 	 * operation is included in union wpa_event_data::remain_on_channel. 	 */
 name|EVENT_CANCEL_REMAIN_ON_CHANNEL
-block|,
-comment|/** 	 * EVENT_MLME_RX - Report reception of frame for MLME (test use only) 	 * 	 * This event is used only by driver_test.c and userspace MLME. 	 */
-name|EVENT_MLME_RX
 block|,
 comment|/** 	 * EVENT_RX_PROBE_REQ - Indicate received Probe Request frame 	 * 	 * This event is used to indicate when a Probe Request frame has been 	 * received. Information about the received frame is included in 	 * union wpa_event_data::rx_probe_req. The driver is required to report 	 * these events only after successfully completed probe_req_report() 	 * commands to request the events (i.e., report parameter is non-zero) 	 * in station mode. In AP mode, Probe Request frames should always be 	 * reported. 	 */
 name|EVENT_RX_PROBE_REQ
@@ -3904,7 +5423,7 @@ block|,
 comment|/** 	 * EVENT_NEW_STA - New wired device noticed 	 * 	 * This event is used to indicate that a new device has been detected 	 * in a network that does not use association-like functionality (i.e., 	 * mainly wired Ethernet). This can be used to start EAPOL 	 * authenticator when receiving a frame from a device. The address of 	 * the device is included in union wpa_event_data::new_sta. 	 */
 name|EVENT_NEW_STA
 block|,
-comment|/** 	 * EVENT_EAPOL_RX - Report received EAPOL frame 	 * 	 * When in AP mode with hostapd, this event is required to be used to 	 * deliver the receive EAPOL frames from the driver. With 	 * %wpa_supplicant, this event is used only if the send_eapol() handler 	 * is used to override the use of l2_packet for EAPOL frame TX. 	 */
+comment|/** 	 * EVENT_EAPOL_RX - Report received EAPOL frame 	 * 	 * When in AP mode with hostapd, this event is required to be used to 	 * deliver the receive EAPOL frames from the driver. 	 */
 name|EVENT_EAPOL_RX
 block|,
 comment|/** 	 * EVENT_SIGNAL_CHANGE - Indicate change in signal strength 	 * 	 * This event is used to indicate changes in the signal strength 	 * observed in frames received from the current AP if signal strength 	 * monitoring has been enabled with signal_monitor(). 	 */
@@ -3919,7 +5438,7 @@ block|,
 comment|/** 	 * EVENT_CHANNEL_LIST_CHANGED - Channel list changed 	 * 	 * This event is used to indicate that the channel list has changed, 	 * e.g., because of a regulatory domain change triggered by scan 	 * results including an AP advertising a country code. 	 */
 name|EVENT_CHANNEL_LIST_CHANGED
 block|,
-comment|/** 	 * EVENT_INTERFACE_UNAVAILABLE - Notify that interface is unavailable 	 * 	 * This event is used to indicate that the driver cannot maintain this 	 * interface in its operation mode anymore. The most likely use for 	 * this is to indicate that AP mode operation is not available due to 	 * operating channel would need to be changed to a DFS channel when 	 * the driver does not support radar detection and another virtual 	 * interfaces caused the operating channel to change. Other similar 	 * resource conflicts could also trigger this for station mode 	 * interfaces. 	 */
+comment|/** 	 * EVENT_INTERFACE_UNAVAILABLE - Notify that interface is unavailable 	 * 	 * This event is used to indicate that the driver cannot maintain this 	 * interface in its operation mode anymore. The most likely use for 	 * this is to indicate that AP mode operation is not available due to 	 * operating channel would need to be changed to a DFS channel when 	 * the driver does not support radar detection and another virtual 	 * interfaces caused the operating channel to change. Other similar 	 * resource conflicts could also trigger this for station mode 	 * interfaces. This event can be propagated when channel switching 	 * fails. 	 */
 name|EVENT_INTERFACE_UNAVAILABLE
 block|,
 comment|/** 	 * EVENT_BEST_CHANNEL 	 * 	 * Driver generates this event whenever it detects a better channel 	 * (e.g., based on RSSI or channel use). This information can be used 	 * to improve channel selection for a new AP/P2P group. 	 */
@@ -3933,23 +5452,6 @@ name|EVENT_UNPROT_DISASSOC
 block|,
 comment|/** 	 * EVENT_STATION_LOW_ACK 	 * 	 * Driver generates this event whenever it detected that a particular 	 * station was lost. Detection can be through massive transmission 	 * failures for example. 	 */
 name|EVENT_STATION_LOW_ACK
-block|,
-comment|/** 	 * EVENT_P2P_DEV_FOUND - Report a discovered P2P device 	 * 	 * This event is used only if the driver implements P2P management 	 * internally. Event data is stored in 	 * union wpa_event_data::p2p_dev_found. 	 */
-name|EVENT_P2P_DEV_FOUND
-block|,
-comment|/** 	 * EVENT_P2P_GO_NEG_REQ_RX - Report reception of GO Negotiation Request 	 * 	 * This event is used only if the driver implements P2P management 	 * internally. Event data is stored in 	 * union wpa_event_data::p2p_go_neg_req_rx. 	 */
-name|EVENT_P2P_GO_NEG_REQ_RX
-block|,
-comment|/** 	 * EVENT_P2P_GO_NEG_COMPLETED - Report completion of GO Negotiation 	 * 	 * This event is used only if the driver implements P2P management 	 * internally. Event data is stored in 	 * union wpa_event_data::p2p_go_neg_completed. 	 */
-name|EVENT_P2P_GO_NEG_COMPLETED
-block|,
-name|EVENT_P2P_PROV_DISC_REQUEST
-block|,
-name|EVENT_P2P_PROV_DISC_RESPONSE
-block|,
-name|EVENT_P2P_SD_REQUEST
-block|,
-name|EVENT_P2P_SD_RESPONSE
 block|,
 comment|/** 	 * EVENT_IBSS_PEER_LOST - IBSS peer not reachable anymore 	 */
 name|EVENT_IBSS_PEER_LOST
@@ -3971,9 +5473,119 @@ name|EVENT_CH_SWITCH
 block|,
 comment|/** 	 * EVENT_WNM - Request WNM operation 	 * 	 * This event can be used to request a WNM operation to be performed. 	 */
 name|EVENT_WNM
-block|}
+block|,
+comment|/** 	 * EVENT_CONNECT_FAILED_REASON - Connection failure reason in AP mode 	 * 	 * This event indicates that the driver reported a connection failure 	 * with the specified client (for example, max client reached, etc.) in 	 * AP mode. 	 */
+name|EVENT_CONNECT_FAILED_REASON
+block|,
+comment|/** 	 * EVENT_DFS_RADAR_DETECTED - Notify of radar detection 	 * 	 * A radar has been detected on the supplied frequency, hostapd should 	 * react accordingly (e.g., change channel). 	 */
+name|EVENT_DFS_RADAR_DETECTED
+block|,
+comment|/** 	 * EVENT_DFS_CAC_FINISHED - Notify that channel availability check has been completed 	 * 	 * After a successful CAC, the channel can be marked clear and used. 	 */
+name|EVENT_DFS_CAC_FINISHED
+block|,
+comment|/** 	 * EVENT_DFS_CAC_ABORTED - Notify that channel availability check has been aborted 	 * 	 * The CAC was not successful, and the channel remains in the previous 	 * state. This may happen due to a radar beeing detected or other 	 * external influences. 	 */
+name|EVENT_DFS_CAC_ABORTED
+block|,
+comment|/** 	 * EVENT_DFS_NOP_FINISHED - Notify that non-occupancy period is over 	 * 	 * The channel which was previously unavailable is now available again. 	 */
+name|EVENT_DFS_NOP_FINISHED
+block|,
+comment|/** 	 * EVENT_SURVEY - Received survey data 	 * 	 * This event gets triggered when a driver query is issued for survey 	 * data and the requested data becomes available. The returned data is 	 * stored in struct survey_results. The results provide at most one 	 * survey entry for each frequency and at minimum will provide one 	 * survey entry for one frequency. The survey data can be os_malloc()'d 	 * and then os_free()'d, so the event callback must only copy data. 	 */
+name|EVENT_SURVEY
+block|,
+comment|/** 	 * EVENT_SCAN_STARTED - Scan started 	 * 	 * This indicates that driver has started a scan operation either based 	 * on a request from wpa_supplicant/hostapd or from another application. 	 * EVENT_SCAN_RESULTS is used to indicate when the scan has been 	 * completed (either successfully or by getting cancelled). 	 */
+name|EVENT_SCAN_STARTED
+block|,
+comment|/** 	 * EVENT_AVOID_FREQUENCIES - Received avoid frequency range 	 * 	 * This event indicates a set of frequency ranges that should be avoided 	 * to reduce issues due to interference or internal co-existence 	 * information in the driver. 	 */
+name|EVENT_AVOID_FREQUENCIES
+block|,
+comment|/** 	 * EVENT_NEW_PEER_CANDIDATE - new (unknown) mesh peer notification 	 */
+name|EVENT_NEW_PEER_CANDIDATE
+block|,
+comment|/** 	 * EVENT_ACS_CHANNEL_SELECTED - Received selected channels by ACS 	 * 	 * Indicates a pair of primary and secondary channels chosen by ACS 	 * in device. 	 */
+name|EVENT_ACS_CHANNEL_SELECTED
+block|,
+comment|/** 	 * EVENT_DFS_CAC_STARTED - Notify that channel availability check has 	 * been started. 	 * 	 * This event indicates that channel availability check has been started 	 * on a DFS frequency by a driver that supports DFS Offload. 	 */
+name|EVENT_DFS_CAC_STARTED
+block|, }
 enum|;
 end_enum
+
+begin_comment
+comment|/**  * struct freq_survey - Channel survey info  *  * @ifidx: Interface index in which this survey was observed  * @freq: Center of frequency of the surveyed channel  * @nf: Channel noise floor in dBm  * @channel_time: Amount of time in ms the radio spent on the channel  * @channel_time_busy: Amount of time in ms the radio detected some signal  *     that indicated to the radio the channel was not clear  * @channel_time_rx: Amount of time the radio spent receiving data  * @channel_time_tx: Amount of time the radio spent transmitting data  * @filled: bitmask indicating which fields have been reported, see  *     SURVEY_HAS_* defines.  * @list: Internal list pointers  */
+end_comment
+
+begin_struct
+struct|struct
+name|freq_survey
+block|{
+name|u32
+name|ifidx
+decl_stmt|;
+name|unsigned
+name|int
+name|freq
+decl_stmt|;
+name|s8
+name|nf
+decl_stmt|;
+name|u64
+name|channel_time
+decl_stmt|;
+name|u64
+name|channel_time_busy
+decl_stmt|;
+name|u64
+name|channel_time_rx
+decl_stmt|;
+name|u64
+name|channel_time_tx
+decl_stmt|;
+name|unsigned
+name|int
+name|filled
+decl_stmt|;
+name|struct
+name|dl_list
+name|list
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SURVEY_HAS_NF
+value|BIT(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SURVEY_HAS_CHAN_TIME
+value|BIT(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SURVEY_HAS_CHAN_TIME_BUSY
+value|BIT(2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SURVEY_HAS_CHAN_TIME_RX
+value|BIT(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SURVEY_HAS_CHAN_TIME_TX
+value|BIT(4)
+end_define
 
 begin_comment
 comment|/**  * union wpa_event_data - Additional data for wpa_supplicant_event() calls  */
@@ -4026,11 +5638,51 @@ name|unsigned
 name|int
 name|freq
 decl_stmt|;
+comment|/** 		 * wmm_params - WMM parameters used in this association. 		 */
+name|struct
+name|wmm_params
+name|wmm_params
+decl_stmt|;
 comment|/** 		 * addr - Station address (for AP mode) 		 */
 specifier|const
 name|u8
 modifier|*
 name|addr
+decl_stmt|;
+comment|/** 		 * The following is the key management offload information 		 * @authorized 		 * @key_replay_ctr 		 * @key_replay_ctr_len 		 * @ptk_kck 		 * @ptk_kek_len 		 * @ptk_kek 		 * @ptk_kek_len 		 */
+comment|/** 		 * authorized - Status of key management offload, 		 * 1 = successful 		 */
+name|int
+name|authorized
+decl_stmt|;
+comment|/** 		 * key_replay_ctr - Key replay counter value last used 		 * in a valid EAPOL-Key frame 		 */
+specifier|const
+name|u8
+modifier|*
+name|key_replay_ctr
+decl_stmt|;
+comment|/** 		 * key_replay_ctr_len - The length of key_replay_ctr 		 */
+name|size_t
+name|key_replay_ctr_len
+decl_stmt|;
+comment|/** 		 * ptk_kck - The derived PTK KCK 		 */
+specifier|const
+name|u8
+modifier|*
+name|ptk_kck
+decl_stmt|;
+comment|/** 		 * ptk_kek_len - The length of ptk_kck 		 */
+name|size_t
+name|ptk_kck_len
+decl_stmt|;
+comment|/** 		 * ptk_kek - The derived PTK KEK 		 */
+specifier|const
+name|u8
+modifier|*
+name|ptk_kek
+decl_stmt|;
+comment|/** 		 * ptk_kek_len - The length of ptk_kek 		 */
+name|size_t
+name|ptk_kek_len
 decl_stmt|;
 block|}
 name|assoc_info
@@ -4183,7 +5835,9 @@ block|{
 name|TDLS_REQUEST_SETUP
 block|,
 name|TDLS_REQUEST_TEARDOWN
-block|}
+block|,
+name|TDLS_REQUEST_DISCOVER
+block|, 		}
 name|oper
 enum|;
 name|u16
@@ -4355,26 +6009,6 @@ decl_stmt|;
 block|}
 name|timeout_event
 struct|;
-comment|/** 	 * struct ft_rrb_rx - Data for EVENT_FT_RRB_RX events 	 */
-struct|struct
-name|ft_rrb_rx
-block|{
-specifier|const
-name|u8
-modifier|*
-name|src
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|data
-decl_stmt|;
-name|size_t
-name|data_len
-decl_stmt|;
-block|}
-name|ft_rrb_rx
-struct|;
 comment|/** 	 * struct tx_status - Data for EVENT_TX_STATUS events 	 */
 struct|struct
 name|tx_status
@@ -4439,55 +6073,21 @@ decl_stmt|;
 name|u32
 name|datarate
 decl_stmt|;
-name|int
-name|ssi_signal
-decl_stmt|;
-comment|/* dBm */
-block|}
-name|rx_mgmt
-struct|;
-comment|/** 	 * struct rx_action - Data for EVENT_RX_ACTION events 	 */
-struct|struct
-name|rx_action
-block|{
-comment|/** 		 * da - Destination address of the received Action frame 		 */
-specifier|const
-name|u8
+comment|/** 		 * drv_priv - Pointer to store driver private BSS information 		 * 		 * If not set to NULL, this is used for comparison with 		 * hostapd_data->drv_priv to determine which BSS should process 		 * the frame. 		 */
+name|void
 modifier|*
-name|da
-decl_stmt|;
-comment|/** 		 * sa - Source address of the received Action frame 		 */
-specifier|const
-name|u8
-modifier|*
-name|sa
-decl_stmt|;
-comment|/** 		 * bssid - Address 3 of the received Action frame 		 */
-specifier|const
-name|u8
-modifier|*
-name|bssid
-decl_stmt|;
-comment|/** 		 * category - Action frame category 		 */
-name|u8
-name|category
-decl_stmt|;
-comment|/** 		 * data - Action frame body after category field 		 */
-specifier|const
-name|u8
-modifier|*
-name|data
-decl_stmt|;
-comment|/** 		 * len - Length of data in octets 		 */
-name|size_t
-name|len
+name|drv_priv
 decl_stmt|;
 comment|/** 		 * freq - Frequency (in MHz) on which the frame was received 		 */
 name|int
 name|freq
 decl_stmt|;
+comment|/** 		 * ssi_signal - Signal strength in dBm (or 0 if not available) 		 */
+name|int
+name|ssi_signal
+decl_stmt|;
 block|}
-name|rx_action
+name|rx_mgmt
 struct|;
 comment|/** 	 * struct remain_on_channel - Data for EVENT_REMAIN_ON_CHANNEL events 	 * 	 * This is also used with EVENT_CANCEL_REMAIN_ON_CHANNEL events. 	 */
 struct|struct
@@ -4533,30 +6133,6 @@ name|num_ssids
 decl_stmt|;
 block|}
 name|scan_info
-struct|;
-comment|/** 	 * struct mlme_rx - Data for EVENT_MLME_RX events 	 */
-struct|struct
-name|mlme_rx
-block|{
-specifier|const
-name|u8
-modifier|*
-name|buf
-decl_stmt|;
-name|size_t
-name|len
-decl_stmt|;
-name|int
-name|freq
-decl_stmt|;
-name|int
-name|channel
-decl_stmt|;
-name|int
-name|ssi
-decl_stmt|;
-block|}
-name|mlme_rx
 struct|;
 comment|/** 	 * struct rx_probe_req - Data for EVENT_RX_PROBE_REQ events 	 */
 struct|struct
@@ -4701,171 +6277,6 @@ decl_stmt|;
 block|}
 name|low_ack
 struct|;
-comment|/** 	 * struct p2p_dev_found - Data for EVENT_P2P_DEV_FOUND 	 */
-struct|struct
-name|p2p_dev_found
-block|{
-specifier|const
-name|u8
-modifier|*
-name|addr
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|dev_addr
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|pri_dev_type
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|dev_name
-decl_stmt|;
-name|u16
-name|config_methods
-decl_stmt|;
-name|u8
-name|dev_capab
-decl_stmt|;
-name|u8
-name|group_capab
-decl_stmt|;
-block|}
-name|p2p_dev_found
-struct|;
-comment|/** 	 * struct p2p_go_neg_req_rx - Data for EVENT_P2P_GO_NEG_REQ_RX 	 */
-struct|struct
-name|p2p_go_neg_req_rx
-block|{
-specifier|const
-name|u8
-modifier|*
-name|src
-decl_stmt|;
-name|u16
-name|dev_passwd_id
-decl_stmt|;
-block|}
-name|p2p_go_neg_req_rx
-struct|;
-comment|/** 	 * struct p2p_go_neg_completed - Data for EVENT_P2P_GO_NEG_COMPLETED 	 */
-struct|struct
-name|p2p_go_neg_completed
-block|{
-name|struct
-name|p2p_go_neg_results
-modifier|*
-name|res
-decl_stmt|;
-block|}
-name|p2p_go_neg_completed
-struct|;
-struct|struct
-name|p2p_prov_disc_req
-block|{
-specifier|const
-name|u8
-modifier|*
-name|peer
-decl_stmt|;
-name|u16
-name|config_methods
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|dev_addr
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|pri_dev_type
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|dev_name
-decl_stmt|;
-name|u16
-name|supp_config_methods
-decl_stmt|;
-name|u8
-name|dev_capab
-decl_stmt|;
-name|u8
-name|group_capab
-decl_stmt|;
-block|}
-name|p2p_prov_disc_req
-struct|;
-struct|struct
-name|p2p_prov_disc_resp
-block|{
-specifier|const
-name|u8
-modifier|*
-name|peer
-decl_stmt|;
-name|u16
-name|config_methods
-decl_stmt|;
-block|}
-name|p2p_prov_disc_resp
-struct|;
-struct|struct
-name|p2p_sd_req
-block|{
-name|int
-name|freq
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|sa
-decl_stmt|;
-name|u8
-name|dialog_token
-decl_stmt|;
-name|u16
-name|update_indic
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|tlvs
-decl_stmt|;
-name|size_t
-name|tlvs_len
-decl_stmt|;
-block|}
-name|p2p_sd_req
-struct|;
-struct|struct
-name|p2p_sd_resp
-block|{
-specifier|const
-name|u8
-modifier|*
-name|sa
-decl_stmt|;
-name|u16
-name|update_indic
-decl_stmt|;
-specifier|const
-name|u8
-modifier|*
-name|tlvs
-decl_stmt|;
-name|size_t
-name|tlvs_len
-decl_stmt|;
-block|}
-name|p2p_sd_resp
-struct|;
 comment|/** 	 * struct ibss_peer_lost - Data for EVENT_IBSS_PEER_LOST 	 */
 struct|struct
 name|ibss_peer_lost
@@ -4932,7 +6343,7 @@ decl_stmt|;
 block|}
 name|eapol_tx_status
 struct|;
-comment|/** 	 * struct ch_switch 	 * @freq: Frequency of new channel in MHz 	 * @ht_enabled: Whether this is an HT channel 	 * @ch_offset: Secondary channel offset 	 */
+comment|/** 	 * struct ch_switch 	 * @freq: Frequency of new channel in MHz 	 * @ht_enabled: Whether this is an HT channel 	 * @ch_offset: Secondary channel offset 	 * @ch_width: Channel width 	 * @cf1: Center frequency 1 	 * @cf2: Center frequency 2 	 */
 struct|struct
 name|ch_switch
 block|{
@@ -4945,8 +6356,140 @@ decl_stmt|;
 name|int
 name|ch_offset
 decl_stmt|;
+name|enum
+name|chan_width
+name|ch_width
+decl_stmt|;
+name|int
+name|cf1
+decl_stmt|;
+name|int
+name|cf2
+decl_stmt|;
 block|}
 name|ch_switch
+struct|;
+comment|/** 	 * struct connect_failed - Data for EVENT_CONNECT_FAILED_REASON 	 * @addr: Remote client address 	 * @code: Reason code for connection failure 	 */
+struct|struct
+name|connect_failed_reason
+block|{
+name|u8
+name|addr
+index|[
+name|ETH_ALEN
+index|]
+decl_stmt|;
+enum|enum
+block|{
+name|MAX_CLIENT_REACHED
+block|,
+name|BLOCKED_CLIENT
+block|}
+name|code
+enum|;
+block|}
+name|connect_failed_reason
+struct|;
+comment|/** 	 * struct dfs_event - Data for radar detected events 	 * @freq: Frequency of the channel in MHz 	 */
+struct|struct
+name|dfs_event
+block|{
+name|int
+name|freq
+decl_stmt|;
+name|int
+name|ht_enabled
+decl_stmt|;
+name|int
+name|chan_offset
+decl_stmt|;
+name|enum
+name|chan_width
+name|chan_width
+decl_stmt|;
+name|int
+name|cf1
+decl_stmt|;
+name|int
+name|cf2
+decl_stmt|;
+block|}
+name|dfs_event
+struct|;
+comment|/** 	 * survey_results - Survey result data for EVENT_SURVEY 	 * @freq_filter: Requested frequency survey filter, 0 if request 	 *	was for all survey data 	 * @survey_list: Linked list of survey data (struct freq_survey) 	 */
+struct|struct
+name|survey_results
+block|{
+name|unsigned
+name|int
+name|freq_filter
+decl_stmt|;
+name|struct
+name|dl_list
+name|survey_list
+decl_stmt|;
+comment|/* struct freq_survey */
+block|}
+name|survey_results
+struct|;
+comment|/** 	 * channel_list_changed - Data for EVENT_CHANNEL_LIST_CHANGED 	 * @initiator: Initiator of the regulatory change 	 * @type: Regulatory change type 	 * @alpha2: Country code (or "" if not available) 	 */
+struct|struct
+name|channel_list_changed
+block|{
+name|enum
+name|reg_change_initiator
+name|initiator
+decl_stmt|;
+name|enum
+name|reg_type
+name|type
+decl_stmt|;
+name|char
+name|alpha2
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+name|channel_list_changed
+struct|;
+comment|/** 	 * freq_range - List of frequency ranges 	 * 	 * This is used as the data with EVENT_AVOID_FREQUENCIES. 	 */
+name|struct
+name|wpa_freq_range_list
+name|freq_range
+decl_stmt|;
+comment|/** 	 * struct mesh_peer 	 * 	 * @peer: Peer address 	 * @ies: Beacon IEs 	 * @ie_len: Length of @ies 	 * 	 * Notification of new candidate mesh peer. 	 */
+struct|struct
+name|mesh_peer
+block|{
+specifier|const
+name|u8
+modifier|*
+name|peer
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|ies
+decl_stmt|;
+name|size_t
+name|ie_len
+decl_stmt|;
+block|}
+name|mesh_peer
+struct|;
+comment|/** 	 * struct acs_selected_channels - Data for EVENT_ACS_CHANNEL_SELECTED 	 * @pri_channel: Selected primary channel 	 * @sec_channel: Selected secondary channel 	 */
+struct|struct
+name|acs_selected_channels
+block|{
+name|u8
+name|pri_channel
+decl_stmt|;
+name|u8
+name|sec_channel
+decl_stmt|;
+block|}
+name|acs_selected_channels
 struct|;
 block|}
 union|;
@@ -5233,6 +6776,83 @@ name|event
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Convert chan_width to a string for logging and control interfaces */
+end_comment
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|channel_width_to_string
+parameter_list|(
+name|enum
+name|chan_width
+name|width
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ht_supported
+parameter_list|(
+specifier|const
+name|struct
+name|hostapd_hw_modes
+modifier|*
+name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vht_supported
+parameter_list|(
+specifier|const
+name|struct
+name|hostapd_hw_modes
+modifier|*
+name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|wowlan_triggers
+modifier|*
+name|wpa_get_wowlan_triggers
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|wowlan_triggers
+parameter_list|,
+specifier|const
+name|struct
+name|wpa_driver_capa
+modifier|*
+name|capa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* NULL terminated array of linked in driver wrappers */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|wpa_driver_ops
+modifier|*
+name|wpa_drivers
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

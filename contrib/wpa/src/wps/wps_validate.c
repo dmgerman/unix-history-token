@@ -1020,7 +1020,7 @@ if|if
 condition|(
 name|val
 operator|>
-literal|18
+literal|20
 condition|)
 block|{
 name|wpa_printf
@@ -1101,7 +1101,7 @@ if|if
 condition|(
 name|val
 operator|>=
-literal|0x0006
+literal|0x0008
 operator|&&
 name|val
 operator|<=

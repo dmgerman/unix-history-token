@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP peer state machines internal structures (RFC 4137)  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * EAP peer state machines internal structures (RFC 4137)  * Copyright (c) 2004-2014, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"wpabuf.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"utils/list.h"
 end_include
 
 begin_include
@@ -381,6 +387,65 @@ modifier|*
 name|len
 parameter_list|)
 function_decl|;
+comment|/** 	 * getSessionId - Get EAP method specific Session-Id 	 * @sm: Pointer to EAP state machine allocated with eap_peer_sm_init() 	 * @priv: Pointer to private EAP method data from eap_method::init() 	 * @len: Pointer to a variable to store Session-Id length 	 * Returns: Session-Id or %NULL if not available 	 * 	 * This function can be used to get the Session-Id from the EAP method. 	 * The Session-Id may already be stored in the method-specific private 	 * data or this function may derive the Session-Id. 	 */
+name|u8
+modifier|*
+function_decl|(
+modifier|*
+name|getSessionId
+function_decl|)
+parameter_list|(
+name|struct
+name|eap_sm
+modifier|*
+name|sm
+parameter_list|,
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|size_t
+modifier|*
+name|len
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|eap_erp_key
+block|{
+name|struct
+name|dl_list
+name|list
+decl_stmt|;
+name|size_t
+name|rRK_len
+decl_stmt|;
+name|size_t
+name|rIK_len
+decl_stmt|;
+name|u8
+name|rRK
+index|[
+name|ERP_MAX_KEY_LEN
+index|]
+decl_stmt|;
+name|u8
+name|rIK
+index|[
+name|ERP_MAX_KEY_LEN
+index|]
+decl_stmt|;
+name|u32
+name|next_seq
+decl_stmt|;
+name|char
+name|keyname_nai
+index|[]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -494,6 +559,15 @@ name|size_t
 name|eapKeyDataLen
 decl_stmt|;
 comment|/* peer to lower layer */
+name|u8
+modifier|*
+name|eapSessionId
+decl_stmt|;
+comment|/* peer to lower layer */
+name|size_t
+name|eapSessionIdLen
+decl_stmt|;
+comment|/* peer to lower layer */
 specifier|const
 name|struct
 name|eap_method
@@ -523,6 +597,13 @@ name|init_phase2
 decl_stmt|;
 name|int
 name|fast_reauth
+decl_stmt|;
+name|Boolean
+name|reauthInit
+decl_stmt|;
+comment|/* send EAP-Identity/Re-auth */
+name|u32
+name|erp_seq
 decl_stmt|;
 name|Boolean
 name|rxResp
@@ -591,6 +672,11 @@ name|int
 name|prev_failure
 decl_stmt|;
 name|struct
+name|eap_peer_config
+modifier|*
+name|last_config
+decl_stmt|;
+name|struct
 name|ext_password_data
 modifier|*
 name|ext_pw
@@ -600,6 +686,20 @@ name|wpabuf
 modifier|*
 name|ext_pw_buf
 decl_stmt|;
+name|int
+name|external_sim
+decl_stmt|;
+name|unsigned
+name|int
+name|expected_failure
+range|:
+literal|1
+decl_stmt|;
+name|struct
+name|dl_list
+name|erp_keys
+decl_stmt|;
+comment|/* struct eap_erp_key */
 block|}
 struct|;
 end_struct

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * RSN pre-authentication (supplicant)  * Copyright (c) 2003-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * RSN pre-authentication (supplicant)  * Copyright (c) 2003-2015, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -57,20 +57,11 @@ directive|include
 file|"wpa_i.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|IEEE8021X_EAPOL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|CONFIG_NO_WPA2
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -285,8 +276,9 @@ name|eapol_sm
 modifier|*
 name|eapol
 parameter_list|,
-name|int
-name|success
+name|enum
+name|eapol_supp_result
+name|result
 parameter_list|,
 name|void
 modifier|*
@@ -308,7 +300,9 @@ index|]
 decl_stmt|;
 if|if
 condition|(
-name|success
+name|result
+operator|==
+name|EAPOL_SUPP_RESULT_SUCCESS
 condition|)
 block|{
 name|int
@@ -387,6 +381,10 @@ name|pmk
 argument_list|,
 name|pmk_len
 argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
 name|sm
 operator|->
 name|preauth_bssid
@@ -419,9 +417,9 @@ literal|"RSN: failed to get master session key from "
 literal|"pre-auth EAPOL state machines"
 argument_list|)
 expr_stmt|;
-name|success
+name|result
 operator|=
-literal|0
+name|EAPOL_SUPP_RESULT_FAILURE
 expr_stmt|;
 block|}
 block|}
@@ -446,7 +444,9 @@ operator|->
 name|preauth_bssid
 argument_list|)
 argument_list|,
-name|success
+name|result
+operator|==
+name|EAPOL_SUPP_RESULT_SUCCESS
 condition|?
 literal|"completed successfully"
 else|:
@@ -675,6 +675,9 @@ name|eapol_ctx
 modifier|*
 name|ctx
 decl_stmt|;
+name|int
+name|ret
+decl_stmt|;
 if|if
 condition|(
 name|sm
@@ -797,10 +800,14 @@ literal|"packet processing (bridge) for "
 literal|"pre-authentication"
 argument_list|)
 expr_stmt|;
-return|return
+name|ret
+operator|=
 operator|-
 literal|2
-return|;
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 block|}
 name|ctx
@@ -828,10 +835,14 @@ argument_list|,
 literal|"Failed to allocate EAPOL context."
 argument_list|)
 expr_stmt|;
-return|return
+name|ret
+operator|=
 operator|-
 literal|4
-return|;
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|ctx
 operator|->
@@ -942,10 +953,14 @@ literal|"RSN: Failed to initialize EAPOL "
 literal|"state machines for pre-authentication"
 argument_list|)
 expr_stmt|;
-return|return
+name|ret
+operator|=
 operator|-
 literal|3
-return|;
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|os_memset
 argument_list|(
@@ -1065,6 +1080,45 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|0
+return|;
+name|fail
+label|:
+if|if
+condition|(
+name|sm
+operator|->
+name|l2_preauth_br
+condition|)
+block|{
+name|l2_packet_deinit
+argument_list|(
+name|sm
+operator|->
+name|l2_preauth_br
+argument_list|)
+expr_stmt|;
+name|sm
+operator|->
+name|l2_preauth_br
+operator|=
+name|NULL
+expr_stmt|;
+block|}
+name|l2_packet_deinit
+argument_list|(
+name|sm
+operator|->
+name|l2_preauth
+argument_list|)
+expr_stmt|;
+name|sm
+operator|->
+name|l2_preauth
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+name|ret
 return|;
 block|}
 end_function
@@ -1244,6 +1298,18 @@ operator|->
 name|key_mgmt
 operator|!=
 name|WPA_KEY_MGMT_IEEE8021X_SHA256
+operator|&&
+name|sm
+operator|->
+name|key_mgmt
+operator|!=
+name|WPA_KEY_MGMT_IEEE8021X_SUITE_B
+operator|&&
+name|sm
+operator|->
+name|key_mgmt
+operator|!=
+name|WPA_KEY_MGMT_IEEE8021X_SUITE_B_192
 operator|)
 condition|)
 block|{
@@ -1651,6 +1717,24 @@ operator|->
 name|priority
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|pos
+operator|->
+name|list
+operator|.
+name|prev
+condition|)
+block|{
+comment|/* 				 * This cannot really happen in pracrice since 				 * pos was fetched from the list and the prev 				 * pointer must be set. It looks like clang 				 * static analyzer gets confused with the 				 * dl_list_del(&cand->list) call above and ends 				 * up assuming pos->list.prev could be NULL. 				 */
+name|os_free
+argument_list|(
+name|cand
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|dl_list_add
 argument_list|(
 name|pos
@@ -1991,15 +2075,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|<
-literal|0
-operator|||
-name|ret
-operator|>=
+name|os_snprintf_error
+argument_list|(
 name|end
 operator|-
 name|pos
+argument_list|,
+name|ret
+argument_list|)
 condition|)
 return|return
 name|pos
@@ -2085,7 +2168,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IEEE8021X_EAPOL and !CONFIG_NO_WPA2 */
+comment|/* IEEE8021X_EAPOL */
 end_comment
 
 end_unit

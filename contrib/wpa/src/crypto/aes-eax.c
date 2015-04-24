@@ -317,9 +317,11 @@ literal|0
 expr_stmt|;
 name|fail
 label|:
-name|os_free
+name|bin_clear_free
 argument_list|(
 name|buf
+argument_list|,
+name|buf_len
 argument_list|)
 expr_stmt|;
 return|return

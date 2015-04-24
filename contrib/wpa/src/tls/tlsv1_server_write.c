@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * TLSv1 server - write handshake message  * Copyright (c) 2006-2011, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * TLSv1 server - write handshake message  * Copyright (c) 2006-2014, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -193,11 +193,11 @@ operator|=
 operator|*
 name|msgpos
 expr_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Send ServerHello"
+literal|"Send ServerHello"
 argument_list|)
 expr_stmt|;
 name|rhdr
@@ -469,12 +469,11 @@ operator|<
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: SessionTicket callback "
-literal|"indicated failure"
+literal|"SessionTicket callback indicated failure"
 argument_list|)
 expr_stmt|;
 name|tlsv1_server_alert
@@ -725,11 +724,11 @@ operator|=
 operator|*
 name|msgpos
 expr_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Send Certificate"
+literal|"Send Certificate"
 argument_list|)
 expr_stmt|;
 name|rhdr
@@ -1065,6 +1064,9 @@ name|hs_start
 decl_stmt|,
 modifier|*
 name|hs_length
+decl_stmt|,
+modifier|*
+name|server_params
 decl_stmt|;
 name|size_t
 name|rlen
@@ -1075,6 +1077,14 @@ name|dh_ys
 decl_stmt|;
 name|size_t
 name|dh_ys_len
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|dh_p
+decl_stmt|;
+name|size_t
+name|dh_p_len
 decl_stmt|;
 name|suite
 operator|=
@@ -1133,9 +1143,12 @@ condition|(
 name|keyx
 operator|!=
 name|TLS_KEY_X_DH_anon
+operator|&&
+name|keyx
+operator|!=
+name|TLS_KEY_X_DHE_RSA
 condition|)
 block|{
-comment|/* TODO? */
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -1189,6 +1202,17 @@ operator|-
 literal|1
 return|;
 block|}
+name|tlsv1_server_get_dh_p
+argument_list|(
+name|conn
+argument_list|,
+operator|&
+name|dh_p
+argument_list|,
+operator|&
+name|dh_p_len
+argument_list|)
+expr_stmt|;
 name|os_free
 argument_list|(
 name|conn
@@ -1200,10 +1224,6 @@ name|conn
 operator|->
 name|dh_secret_len
 operator|=
-name|conn
-operator|->
-name|cred
-operator|->
 name|dh_p_len
 expr_stmt|;
 name|conn
@@ -1305,10 +1325,6 @@ name|conn
 operator|->
 name|dh_secret
 argument_list|,
-name|conn
-operator|->
-name|cred
-operator|->
 name|dh_p
 argument_list|,
 name|conn
@@ -1415,10 +1431,6 @@ expr_stmt|;
 comment|/* Ys = g^secret mod p */
 name|dh_ys_len
 operator|=
-name|conn
-operator|->
-name|cred
-operator|->
 name|dh_p_len
 expr_stmt|;
 name|dh_ys
@@ -1481,16 +1493,8 @@ name|conn
 operator|->
 name|dh_secret_len
 argument_list|,
-name|conn
-operator|->
-name|cred
-operator|->
 name|dh_p
 argument_list|,
-name|conn
-operator|->
-name|cred
-operator|->
 name|dh_p_len
 argument_list|,
 name|dh_ys
@@ -1536,11 +1540,11 @@ operator|=
 operator|*
 name|msgpos
 expr_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Send ServerKeyExchange"
+literal|"Send ServerKeyExchange"
 argument_list|)
 expr_stmt|;
 name|rhdr
@@ -1574,6 +1578,10 @@ operator|+=
 literal|3
 expr_stmt|;
 comment|/* body - ServerDHParams */
+name|server_params
+operator|=
+name|pos
+expr_stmt|;
 comment|/* dh_p */
 if|if
 condition|(
@@ -1581,10 +1589,6 @@ name|pos
 operator|+
 literal|2
 operator|+
-name|conn
-operator|->
-name|cred
-operator|->
 name|dh_p_len
 operator|>
 name|end
@@ -1621,10 +1625,6 @@ name|WPA_PUT_BE16
 argument_list|(
 name|pos
 argument_list|,
-name|conn
-operator|->
-name|cred
-operator|->
 name|dh_p_len
 argument_list|)
 expr_stmt|;
@@ -1636,25 +1636,13 @@ name|os_memcpy
 argument_list|(
 name|pos
 argument_list|,
-name|conn
-operator|->
-name|cred
-operator|->
 name|dh_p
 argument_list|,
-name|conn
-operator|->
-name|cred
-operator|->
 name|dh_p_len
 argument_list|)
 expr_stmt|;
 name|pos
 operator|+=
-name|conn
-operator|->
-name|cred
-operator|->
 name|dh_p_len
 expr_stmt|;
 comment|/* dh_g */
@@ -1808,6 +1796,352 @@ argument_list|(
 name|dh_ys
 argument_list|)
 expr_stmt|;
+comment|/* 	 * select (SignatureAlgorithm) 	 * {   case anonymous: struct { }; 	 *     case rsa: 	 *         digitally-signed struct { 	 *             opaque md5_hash[16]; 	 *             opaque sha_hash[20]; 	 *         }; 	 *     case dsa: 	 *         digitally-signed struct { 	 *             opaque sha_hash[20]; 	 *         }; 	 * } Signature; 	 * 	 * md5_hash 	 *     MD5(ClientHello.random + ServerHello.random + ServerParams); 	 * 	 * sha_hash 	 *     SHA(ClientHello.random + ServerHello.random + ServerParams); 	 */
+if|if
+condition|(
+name|keyx
+operator|==
+name|TLS_KEY_X_DHE_RSA
+condition|)
+block|{
+name|u8
+name|hash
+index|[
+literal|100
+index|]
+decl_stmt|;
+name|u8
+modifier|*
+name|signed_start
+decl_stmt|;
+name|size_t
+name|clen
+decl_stmt|;
+name|int
+name|hlen
+decl_stmt|;
+if|if
+condition|(
+name|conn
+operator|->
+name|rl
+operator|.
+name|tls_version
+operator|>=
+name|TLS_VERSION_1_2
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|CONFIG_TLSV12
+name|hlen
+operator|=
+name|tlsv12_key_x_server_params_hash
+argument_list|(
+name|conn
+operator|->
+name|rl
+operator|.
+name|tls_version
+argument_list|,
+name|conn
+operator|->
+name|client_random
+argument_list|,
+name|conn
+operator|->
+name|server_random
+argument_list|,
+name|server_params
+argument_list|,
+name|pos
+operator|-
+name|server_params
+argument_list|,
+name|hash
+operator|+
+literal|19
+argument_list|)
+expr_stmt|;
+comment|/* 			 * RFC 5246, 4.7: 			 * TLS v1.2 adds explicit indication of the used 			 * signature and hash algorithms. 			 * 			 * struct { 			 *   HashAlgorithm hash; 			 *   SignatureAlgorithm signature; 			 * } SignatureAndHashAlgorithm; 			 */
+if|if
+condition|(
+name|hlen
+operator|<
+literal|0
+operator|||
+name|pos
+operator|+
+literal|2
+operator|>
+name|end
+condition|)
+block|{
+name|tlsv1_server_alert
+argument_list|(
+name|conn
+argument_list|,
+name|TLS_ALERT_LEVEL_FATAL
+argument_list|,
+name|TLS_ALERT_INTERNAL_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+operator|*
+name|pos
+operator|++
+operator|=
+name|TLS_HASH_ALG_SHA256
+expr_stmt|;
+operator|*
+name|pos
+operator|++
+operator|=
+name|TLS_SIGN_ALG_RSA
+expr_stmt|;
+comment|/* 			 * RFC 3447, A.2.4 RSASSA-PKCS1-v1_5 			 * 			 * DigestInfo ::= SEQUENCE { 			 *   digestAlgorithm DigestAlgorithm, 			 *   digest OCTET STRING 			 * } 			 * 			 * SHA-256 OID: sha256WithRSAEncryption ::= {pkcs-1 11} 			 * 			 * DER encoded DigestInfo for SHA256 per RFC 3447: 			 * 30 31 30 0d 06 09 60 86 48 01 65 03 04 02 01 05 00 			 * 04 20 || H 			 */
+name|hlen
+operator|+=
+literal|19
+expr_stmt|;
+name|os_memcpy
+argument_list|(
+name|hash
+argument_list|,
+literal|"\x30\x31\x30\x0d\x06\x09\x60\x86\x48\x01\x65"
+literal|"\x03\x04\x02\x01\x05\x00\x04\x20"
+argument_list|,
+literal|19
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* CONFIG_TLSV12 */
+name|tlsv1_server_alert
+argument_list|(
+name|conn
+argument_list|,
+name|TLS_ALERT_LEVEL_FATAL
+argument_list|,
+name|TLS_ALERT_INTERNAL_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+endif|#
+directive|endif
+comment|/* CONFIG_TLSV12 */
+block|}
+else|else
+block|{
+name|hlen
+operator|=
+name|tls_key_x_server_params_hash
+argument_list|(
+name|conn
+operator|->
+name|rl
+operator|.
+name|tls_version
+argument_list|,
+name|conn
+operator|->
+name|client_random
+argument_list|,
+name|conn
+operator|->
+name|server_random
+argument_list|,
+name|server_params
+argument_list|,
+name|pos
+operator|-
+name|server_params
+argument_list|,
+name|hash
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|hlen
+operator|<
+literal|0
+condition|)
+block|{
+name|tlsv1_server_alert
+argument_list|(
+name|conn
+argument_list|,
+name|TLS_ALERT_LEVEL_FATAL
+argument_list|,
+name|TLS_ALERT_INTERNAL_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|wpa_hexdump
+argument_list|(
+name|MSG_MSGDUMP
+argument_list|,
+literal|"TLS: ServerKeyExchange signed_params hash"
+argument_list|,
+name|hash
+argument_list|,
+name|hlen
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_TESTING_OPTIONS
+if|if
+condition|(
+name|conn
+operator|->
+name|test_flags
+operator|&
+name|TLS_BREAK_SRV_KEY_X_HASH
+condition|)
+block|{
+name|tlsv1_server_log
+argument_list|(
+name|conn
+argument_list|,
+literal|"TESTING: Break ServerKeyExchange signed params hash"
+argument_list|)
+expr_stmt|;
+name|hash
+index|[
+name|hlen
+operator|-
+literal|1
+index|]
+operator|^=
+literal|0x80
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* CONFIG_TESTING_OPTIONS */
+comment|/* 		 * RFC 2246, 4.7: 		 * In digital signing, one-way hash functions are used as input 		 * for a signing algorithm. A digitally-signed element is 		 * encoded as an opaque vector<0..2^16-1>, where the length is 		 * specified by the signing algorithm and key. 		 * 		 * In RSA signing, a 36-byte structure of two hashes (one SHA 		 * and one MD5) is signed (encrypted with the private key). It 		 * is encoded with PKCS #1 block type 0 or type 1 as described 		 * in [PKCS1]. 		 */
+name|signed_start
+operator|=
+name|pos
+expr_stmt|;
+comment|/* length to be filled */
+name|pos
+operator|+=
+literal|2
+expr_stmt|;
+name|clen
+operator|=
+name|end
+operator|-
+name|pos
+expr_stmt|;
+if|if
+condition|(
+name|conn
+operator|->
+name|cred
+operator|==
+name|NULL
+operator|||
+name|crypto_private_key_sign_pkcs1
+argument_list|(
+name|conn
+operator|->
+name|cred
+operator|->
+name|key
+argument_list|,
+name|hash
+argument_list|,
+name|hlen
+argument_list|,
+name|pos
+argument_list|,
+operator|&
+name|clen
+argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|wpa_printf
+argument_list|(
+name|MSG_DEBUG
+argument_list|,
+literal|"TLSv1: Failed to sign hash (PKCS #1)"
+argument_list|)
+expr_stmt|;
+name|tlsv1_server_alert
+argument_list|(
+name|conn
+argument_list|,
+name|TLS_ALERT_LEVEL_FATAL
+argument_list|,
+name|TLS_ALERT_INTERNAL_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|WPA_PUT_BE16
+argument_list|(
+name|signed_start
+argument_list|,
+name|clen
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_TESTING_OPTIONS
+if|if
+condition|(
+name|conn
+operator|->
+name|test_flags
+operator|&
+name|TLS_BREAK_SRV_KEY_X_SIGNATURE
+condition|)
+block|{
+name|tlsv1_server_log
+argument_list|(
+name|conn
+argument_list|,
+literal|"TESTING: Break ServerKeyExchange signed params signature"
+argument_list|)
+expr_stmt|;
+name|pos
+index|[
+name|clen
+operator|-
+literal|1
+index|]
+operator|^=
+literal|0x80
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* CONFIG_TESTING_OPTIONS */
+name|pos
+operator|+=
+name|clen
+expr_stmt|;
+block|}
 name|WPA_PUT_BE24
 argument_list|(
 name|hs_length
@@ -1961,11 +2295,11 @@ operator|=
 operator|*
 name|msgpos
 expr_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Send CertificateRequest"
+literal|"Send CertificateRequest"
 argument_list|)
 expr_stmt|;
 name|rhdr
@@ -2152,11 +2486,11 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Send ServerHelloDone"
+literal|"Send ServerHelloDone"
 argument_list|)
 expr_stmt|;
 comment|/* opaque fragment[TLSPlaintext.length] */
@@ -2292,11 +2626,11 @@ index|[
 literal|1
 index|]
 decl_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Send ChangeCipherSpec"
+literal|"Send ChangeCipherSpec"
 argument_list|)
 expr_stmt|;
 name|payload
@@ -2461,11 +2795,11 @@ operator|=
 operator|*
 name|msgpos
 expr_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Send Finished"
+literal|"Send Finished"
 argument_list|)
 expr_stmt|;
 comment|/* Encrypted Handshake Message: Finished */
@@ -2776,6 +3110,40 @@ argument_list|,
 name|TLS_VERIFY_DATA_LEN
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_TESTING_OPTIONS
+if|if
+condition|(
+name|conn
+operator|->
+name|test_flags
+operator|&
+name|TLS_BREAK_VERIFY_DATA
+condition|)
+block|{
+name|tlsv1_server_log
+argument_list|(
+name|conn
+argument_list|,
+literal|"TESTING: Break verify_data (server)"
+argument_list|)
+expr_stmt|;
+name|verify_data
+index|[
+literal|1
+operator|+
+literal|3
+operator|+
+literal|1
+index|]
+operator|^=
+literal|0x80
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* CONFIG_TESTING_OPTIONS */
 comment|/* Handshake */
 name|pos
 operator|=
@@ -3218,11 +3586,11 @@ name|pos
 operator|-
 name|msg
 expr_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Handshake completed successfully"
+literal|"Handshake completed successfully"
 argument_list|)
 expr_stmt|;
 name|conn
@@ -3300,12 +3668,11 @@ return|return
 name|NULL
 return|;
 block|}
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Unexpected state %d while "
-literal|"generating reply"
+literal|"Unexpected state %d while generating reply"
 argument_list|,
 name|conn
 operator|->
@@ -3350,11 +3717,11 @@ decl_stmt|,
 modifier|*
 name|length
 decl_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Send Alert(%d:%d)"
+literal|"Send Alert(%d:%d)"
 argument_list|,
 name|level
 argument_list|,

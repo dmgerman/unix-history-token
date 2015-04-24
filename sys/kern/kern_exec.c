@@ -4547,9 +4547,12 @@ condition|)
 block|{
 name|ssiz
 operator|=
+name|trunc_page
+argument_list|(
 name|imgp
 operator|->
 name|stack_sz
+argument_list|)
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(

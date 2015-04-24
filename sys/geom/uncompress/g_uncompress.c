@@ -78,13 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<geom/geom.h>
+file|<sys/zlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/zlib.h>
+file|<geom/geom.h>
 end_include
 
 begin_include
@@ -2857,6 +2857,10 @@ name|buf
 argument_list|,
 name|M_GEOM
 argument_list|)
+expr_stmt|;
+name|buf
+operator|=
+name|NULL
 expr_stmt|;
 name|DPRINTF
 argument_list|(

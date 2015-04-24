@@ -39,10 +39,20 @@ comment|/** 	 * auth_port - UDP port to listen to as an authentication server 	 
 name|int
 name|auth_port
 decl_stmt|;
+comment|/** 	 * acct_port - UDP port to listen to as an accounting server 	 */
+name|int
+name|acct_port
+decl_stmt|;
 comment|/** 	 * client_file - RADIUS client configuration file 	 * 	 * This file contains the RADIUS clients and the shared secret to be 	 * used with them in a format where each client is on its own line. The 	 * first item on the line is the IPv4 or IPv6 address of the client 	 * with an optional address mask to allow full network to be specified 	 * (e.g., 192.168.1.2 or 192.168.1.0/24). This is followed by white 	 * space (space or tabulator) and the shared secret. Lines starting 	 * with '#' are skipped and can be used as comments. 	 */
 name|char
 modifier|*
 name|client_file
+decl_stmt|;
+comment|/** 	 * sqlite_file - SQLite database for storing debug log information 	 */
+specifier|const
+name|char
+modifier|*
+name|sqlite_file
 decl_stmt|;
 comment|/** 	 * conf_ctx - Context pointer for callbacks 	 * 	 * This is used as the ctx argument in get_eap_user() calls. 	 */
 name|void
@@ -101,6 +111,21 @@ decl_stmt|;
 comment|/** 	 * pwd_group - EAP-pwd D-H group 	 * 	 * This is used to select which D-H group to use with EAP-pwd. 	 */
 name|u16
 name|pwd_group
+decl_stmt|;
+comment|/** 	 * server_id - Server identity 	 */
+specifier|const
+name|char
+modifier|*
+name|server_id
+decl_stmt|;
+comment|/** 	 * erp - Whether EAP Re-authentication Protocol (ERP) is enabled 	 * 	 * This controls whether the authentication server derives ERP key 	 * hierarchy (rRK and rIK) from full EAP authentication and allows 	 * these keys to be used to perform ERP to derive rMSK instead of full 	 * EAP authentication to derive MSK. 	 */
+name|int
+name|erp
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|erp_domain
 decl_stmt|;
 comment|/** 	 * wps - Wi-Fi Protected Setup context 	 * 	 * If WPS is used with an external RADIUS server (which is quite 	 * unlikely configuration), this is used to provide a pointer to WPS 	 * context data. Normally, this can be set to %NULL. 	 */
 name|struct
@@ -166,6 +191,13 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_RADIUS_TEST */
+name|char
+modifier|*
+name|subscr_remediation_url
+decl_stmt|;
+name|u8
+name|subscr_remediation_method
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -180,6 +212,18 @@ name|struct
 name|radius_server_conf
 modifier|*
 name|conf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|radius_server_erp_flush
+parameter_list|(
+name|struct
+name|radius_server_data
+modifier|*
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl

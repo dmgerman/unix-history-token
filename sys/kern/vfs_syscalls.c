@@ -9383,6 +9383,15 @@ begin_comment
 comment|/* COMPAT_43 */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+end_if
+
 begin_comment
 comment|/* Version with the 'pad' argument */
 end_comment
@@ -9448,6 +9457,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Check access permissions using passed credentials.  */
@@ -16915,6 +16929,15 @@ begin_comment
 comment|/* COMPAT_43 */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+end_if
+
 begin_comment
 comment|/* Versions with the pad argument */
 end_comment
@@ -17016,6 +17039,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Sync an open file.  */

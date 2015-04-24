@@ -30,7 +30,9 @@ block|,
 name|RADIUS_DAS_NAS_MISMATCH
 block|,
 name|RADIUS_DAS_SESSION_NOT_FOUND
-block|}
+block|,
+name|RADIUS_DAS_MULTI_SESSION_MATCH
+block|, }
 enum|;
 end_enum
 
@@ -38,6 +40,26 @@ begin_struct
 struct|struct
 name|radius_das_attrs
 block|{
+comment|/* NAS identification attributes */
+specifier|const
+name|u8
+modifier|*
+name|nas_ip_addr
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|nas_identifier
+decl_stmt|;
+name|size_t
+name|nas_identifier_len
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|nas_ipv6_addr
+decl_stmt|;
+comment|/* Session identification attributes */
 specifier|const
 name|u8
 modifier|*
@@ -58,6 +80,14 @@ name|acct_session_id
 decl_stmt|;
 name|size_t
 name|acct_session_id_len
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|acct_multi_session_id
+decl_stmt|;
+name|size_t
+name|acct_multi_session_id_len
 decl_stmt|;
 specifier|const
 name|u8

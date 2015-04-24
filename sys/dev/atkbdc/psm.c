@@ -12731,6 +12731,13 @@ operator|->
 name|synhw
 operator|.
 name|capMiddle
+operator|&&
+operator|!
+name|sc
+operator|->
+name|synhw
+operator|.
+name|capClickPad
 condition|)
 block|{
 comment|/* Middle Button */

@@ -2500,9 +2500,6 @@ modifier|*
 name|tlc
 decl_stmt|,
 modifier|*
-name|coord
-decl_stmt|,
-modifier|*
 name|file
 decl_stmt|,
 modifier|*
@@ -2634,8 +2631,7 @@ argument_list|,
 name|tlc
 argument_list|)
 expr_stmt|;
-name|coord
-operator|=
+comment|/* coord = */
 name|strsep
 argument_list|(
 operator|&

@@ -453,9 +453,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"setsockopt"
+name|MSG_ERROR
+argument_list|,
+literal|"setsockopt: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -721,9 +728,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"recv"
+name|MSG_ERROR
+argument_list|,
+literal|"recv: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -803,9 +817,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"recv"
+name|MSG_ERROR
+argument_list|,
+literal|"recv: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -967,9 +988,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket[PF_PACKET,SOCK_RAW]"
+name|MSG_ERROR
+argument_list|,
+literal|"socket[PF_PACKET,SOCK_RAW]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -995,9 +1023,11 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not register read socket\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not register read socket"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1053,9 +1083,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl(SIOCGIFINDEX)"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl(SIOCGIFINDEX): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1126,9 +1163,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"bind"
+name|MSG_ERROR
+argument_list|,
+literal|"bind: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1218,9 +1262,16 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl(SIOCGIFHWADDR)"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl(SIOCGIFHWADDR): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1239,9 +1290,11 @@ operator|!=
 name|ARPHRD_ETHER
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Invalid HW-addr family 0x%04x\n"
+name|MSG_INFO
+argument_list|,
+literal|"Invalid HW-addr family 0x%04x"
 argument_list|,
 name|ifr
 operator|.
@@ -1289,9 +1342,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket call failed for dhcp"
+name|MSG_ERROR
+argument_list|,
+literal|"socket call failed for dhcp: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1317,9 +1377,11 @@ name|NULL
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not register read socket\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not register read socket"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1392,9 +1454,16 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"setsockopt[SOL_SOCKET,SO_REUSEADDR]"
+name|MSG_ERROR
+argument_list|,
+literal|"setsockopt[SOL_SOCKET,SO_REUSEADDR]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1431,9 +1500,16 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"setsockopt[SOL_SOCKET,SO_BROADCAST]"
+name|MSG_ERROR
+argument_list|,
+literal|"setsockopt[SOL_SOCKET,SO_BROADCAST]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1497,9 +1573,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"setsockopt[SOL_SOCKET,SO_BINDTODEVICE]"
+name|MSG_ERROR
+argument_list|,
+literal|"setsockopt[SOL_SOCKET,SO_BINDTODEVICE]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1534,9 +1617,16 @@ operator|-
 literal|1
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"bind"
+name|MSG_ERROR
+argument_list|,
+literal|"bind: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1640,9 +1730,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"malloc() failed for wired_send_eapol(len=%lu)\n"
+name|MSG_INFO
+argument_list|,
+literal|"malloc() failed for wired_send_eapol(len=%lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -1745,20 +1837,22 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"wired_send_eapol: send"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"wired_send_eapol - packet len: %lu - failed\n"
+name|MSG_ERROR
+argument_list|,
+literal|"wired_send_eapol - packet len: %lu - failed: send: %s"
 argument_list|,
 operator|(
 name|unsigned
 name|long
 operator|)
 name|len
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1808,9 +1902,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not allocate memory for wired driver data\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not allocate memory for wired driver data"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1901,6 +1997,14 @@ name|sock
 operator|>=
 literal|0
 condition|)
+block|{
+name|eloop_unregister_read_sock
+argument_list|(
+name|drv
+operator|->
+name|sock
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|drv
@@ -1908,6 +2012,7 @@ operator|->
 name|sock
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|drv
@@ -1916,6 +2021,14 @@ name|dhcp_sock
 operator|>=
 literal|0
 condition|)
+block|{
+name|eloop_unregister_read_sock
+argument_list|(
+name|drv
+operator|->
+name|dhcp_sock
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|drv
@@ -1923,6 +2036,7 @@ operator|->
 name|dhcp_sock
 argument_list|)
 expr_stmt|;
+block|}
 name|os_free
 argument_list|(
 name|drv
@@ -2068,9 +2182,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket"
+name|MSG_ERROR
+argument_list|,
+literal|"socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2120,9 +2241,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOCGIFFLAGS]"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl[SIOCGIFFLAGS]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -2194,9 +2322,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket"
+name|MSG_ERROR
+argument_list|,
+literal|"socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2254,9 +2389,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOCSIFFLAGS]"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl[SIOCSIFFLAGS]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -2279,6 +2421,25 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD_kernel__
+argument_list|)
+end_if
 
 begin_function
 specifier|static
@@ -2320,9 +2481,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket"
+name|MSG_ERROR
+argument_list|,
+literal|"socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2372,9 +2540,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOCGIFMEDIA]"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl[SIOCGIFMEDIA]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -2418,6 +2593,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* defined(__FreeBSD__) || defined(__DragonFly__) || defined(FreeBSD_kernel__) */
+end_comment
 
 begin_function
 specifier|static
@@ -2473,9 +2657,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket"
+name|MSG_ERROR
+argument_list|,
+literal|"socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2711,9 +2902,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"ioctl[SIOC{ADD/DEL}MULTI]"
+name|MSG_ERROR
+argument_list|,
+literal|"ioctl[SIOC{ADD/DEL}MULTI]: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -2829,9 +3027,16 @@ name|pf_sock
 operator|<
 literal|0
 condition|)
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket(PF_PACKET)"
+name|MSG_ERROR
+argument_list|,
+literal|"socket(PF_PACKET): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 else|#
@@ -3060,6 +3265,26 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__FreeBSD_kernel__
+argument_list|)
+block|{
+name|int
+name|status
+decl_stmt|;
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
@@ -3090,6 +3315,10 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* defined(__FreeBSD__) || defined(__DragonFly__) || defined(FreeBSD_kernel__) */
 return|return
 name|drv
 return|;

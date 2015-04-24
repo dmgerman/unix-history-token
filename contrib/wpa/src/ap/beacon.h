@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / IEEE 802.11 Management: Beacon and Probe Request/Response  * Copyright (c) 2002-2004, Instant802 Networks, Inc.  * Copyright (c) 2005-2006, Devicescape Software, Inc.  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd / IEEE 802.11 Management: Beacon and Probe Request/Response  * Copyright (c) 2002-2004, Instant802 Networks, Inc.  * Copyright (c) 2005-2006, Devicescape Software, Inc.  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -46,7 +46,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ieee802_11_set_beacon
 parameter_list|(
 name|struct
@@ -58,7 +58,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ieee802_11_set_beacons
 parameter_list|(
 name|struct
@@ -70,13 +70,42 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|ieee802_11_update_beacons
 parameter_list|(
 name|struct
 name|hostapd_iface
 modifier|*
 name|iface
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ieee802_11_build_ap_params
+parameter_list|(
+name|struct
+name|hostapd_data
+modifier|*
+name|hapd
+parameter_list|,
+name|struct
+name|wpa_driver_ap_params
+modifier|*
+name|params
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ieee802_11_free_ap_params
+parameter_list|(
+name|struct
+name|wpa_driver_ap_params
+modifier|*
+name|params
 parameter_list|)
 function_decl|;
 end_function_decl

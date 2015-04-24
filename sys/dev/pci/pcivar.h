@@ -72,6 +72,33 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/* Config registers for PCI-PCI and PCI-Cardbus bridges. */
+end_comment
+
+begin_struct
+struct|struct
+name|pcicfg_bridge
+block|{
+name|uint8_t
+name|br_seclat
+decl_stmt|;
+name|uint8_t
+name|br_subbus
+decl_stmt|;
+name|uint8_t
+name|br_secbus
+decl_stmt|;
+name|uint8_t
+name|br_pribus
+decl_stmt|;
+name|uint16_t
+name|br_control
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* Interesting values for PCI power management */
 end_comment
 
@@ -587,6 +614,11 @@ name|size_t
 name|devinfo_size
 decl_stmt|;
 comment|/* Size of devinfo for this bus type. */
+name|struct
+name|pcicfg_bridge
+name|bridge
+decl_stmt|;
+comment|/* Bridges */
 name|struct
 name|pcicfg_pp
 name|pp

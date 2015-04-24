@@ -289,7 +289,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|_pthread_cleanup_info
+name|pthread_cleanup
 argument_list|)
 argument_list|)
 operator|)

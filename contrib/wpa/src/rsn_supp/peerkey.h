@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - PeerKey for Direct Link Setup (DLS)  * Copyright (c) 2006-2008, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * WPA Supplicant - PeerKey for Direct Link Setup (DLS)  * Copyright (c) 2006-2015, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -94,9 +94,6 @@ decl_stmt|;
 name|u32
 name|lifetime
 decl_stmt|;
-name|os_time_t
-name|expiration
-decl_stmt|;
 name|int
 name|cipher
 decl_stmt|;
@@ -111,9 +108,8 @@ name|int
 name|replay_counter_set
 decl_stmt|;
 name|int
-name|use_sha256
+name|akmp
 decl_stmt|;
-comment|/* whether AKMP indicate SHA256-based derivations */
 name|struct
 name|wpa_ptk
 name|stk
@@ -150,7 +146,7 @@ modifier|*
 name|peerkey
 parameter_list|,
 name|struct
-name|wpa_eapol_key
+name|wpa_eapol_key_192
 modifier|*
 name|key
 parameter_list|,
@@ -192,6 +188,14 @@ name|key_info
 parameter_list|,
 name|u16
 name|ver
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|key_data
+parameter_list|,
+name|size_t
+name|key_data_len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -314,6 +318,14 @@ name|key_info
 parameter_list|,
 name|u16
 name|ver
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|key_data
+parameter_list|,
+name|size_t
+name|key_data_len
 parameter_list|)
 block|{ }
 end_function

@@ -317,6 +317,13 @@ name|EAP_PAX_ICK_LEN
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|EAP_PAX_MID_LEN
+value|16
+end_define
+
 begin_function_decl
 name|int
 name|eap_pax_kdf
@@ -429,6 +436,10 @@ parameter_list|,
 name|u8
 modifier|*
 name|ick
+parameter_list|,
+name|u8
+modifier|*
+name|mid
 parameter_list|)
 function_decl|;
 end_function_decl

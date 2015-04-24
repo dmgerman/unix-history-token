@@ -2542,6 +2542,18 @@ argument_list|,
 name|format
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|vpanic
+argument_list|(
+name|format
+argument_list|,
+name|alist
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|dtrace_vpanic
 argument_list|(
 name|format
@@ -2549,6 +2561,8 @@ argument_list|,
 name|alist
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|va_end
 argument_list|(
 name|alist

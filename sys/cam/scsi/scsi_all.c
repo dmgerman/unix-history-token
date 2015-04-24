@@ -27015,10 +27015,8 @@ name|bzero
 argument_list|(
 name|rdma
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|rdma
-argument_list|)
+operator|*
+name|alloc_len
 argument_list|)
 expr_stmt|;
 name|rdma

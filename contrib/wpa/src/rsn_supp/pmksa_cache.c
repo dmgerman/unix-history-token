@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant - RSN PMKSA cache  * Copyright (c) 2004-2009, 2011-2012, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * WPA Supplicant - RSN PMKSA cache  * Copyright (c) 2004-2009, 2011-2015, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -45,20 +45,11 @@ directive|include
 file|"pmksa_cache.h"
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|IEEE8021X_EAPOL
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|CONFIG_NO_WPA2
-argument_list|)
-end_if
+end_ifdef
 
 begin_decl_stmt
 specifier|static
@@ -142,9 +133,15 @@ modifier|*
 name|entry
 parameter_list|)
 block|{
-name|os_free
+name|bin_clear_free
 argument_list|(
 name|entry
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|entry
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -233,10 +230,10 @@ init|=
 name|eloop_ctx
 decl_stmt|;
 name|struct
-name|os_time
+name|os_reltime
 name|now
 decl_stmt|;
-name|os_get_time
+name|os_get_reltime
 argument_list|(
 operator|&
 name|now
@@ -370,7 +367,7 @@ modifier|*
 name|entry
 decl_stmt|;
 name|struct
-name|os_time
+name|os_reltime
 name|now
 decl_stmt|;
 name|eloop_cancel_timeout
@@ -400,7 +397,7 @@ operator|==
 name|NULL
 condition|)
 return|return;
-name|os_get_time
+name|os_get_reltime
 argument_list|(
 operator|&
 name|now
@@ -517,7 +514,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * pmksa_cache_add - Add a PMKSA cache entry  * @pmksa: Pointer to PMKSA cache data from pmksa_cache_init()  * @pmk: The new pairwise master key  * @pmk_len: PMK length in bytes, usually PMK_LEN (32)  * @aa: Authenticator address  * @spa: Supplicant address  * @network_ctx: Network configuration context for this PMK  * @akmp: WPA_KEY_MGMT_* used in key derivation  * Returns: Pointer to the added PMKSA cache entry or %NULL on error  *  * This function create a PMKSA entry for a new PMK and adds it to the PMKSA  * cache. If an old entry is already in the cache for the same Authenticator,  * this entry will be replaced with the new entry. PMKID will be calculated  * based on the PMK and the driver interface is notified of the new PMKID.  */
+comment|/**  * pmksa_cache_add - Add a PMKSA cache entry  * @pmksa: Pointer to PMKSA cache data from pmksa_cache_init()  * @pmk: The new pairwise master key  * @pmk_len: PMK length in bytes, usually PMK_LEN (32)  * @kck: Key confirmation key or %NULL if not yet derived  * @kck_len: KCK length in bytes  * @aa: Authenticator address  * @spa: Supplicant address  * @network_ctx: Network configuration context for this PMK  * @akmp: WPA_KEY_MGMT_* used in key derivation  * Returns: Pointer to the added PMKSA cache entry or %NULL on error  *  * This function create a PMKSA entry for a new PMK and adds it to the PMKSA  * cache. If an old entry is already in the cache for the same Authenticator,  * this entry will be replaced with the new entry. PMKID will be calculated  * based on the PMK and the driver interface is notified of the new PMKID.  */
 end_comment
 
 begin_function
@@ -538,6 +535,14 @@ name|pmk
 parameter_list|,
 name|size_t
 name|pmk_len
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|kck
+parameter_list|,
+name|size_t
+name|kck_len
 parameter_list|,
 specifier|const
 name|u8
@@ -569,7 +574,7 @@ modifier|*
 name|prev
 decl_stmt|;
 name|struct
-name|os_time
+name|os_reltime
 name|now
 decl_stmt|;
 if|if
@@ -577,6 +582,19 @@ condition|(
 name|pmk_len
 operator|>
 name|PMK_LEN
+condition|)
+return|return
+name|NULL
+return|;
+if|if
+condition|(
+name|wpa_key_mgmt_suite_b
+argument_list|(
+name|akmp
+argument_list|)
+operator|&&
+operator|!
+name|kck
 condition|)
 return|return
 name|NULL
@@ -618,6 +636,51 @@ name|pmk_len
 operator|=
 name|pmk_len
 expr_stmt|;
+if|if
+condition|(
+name|akmp
+operator|==
+name|WPA_KEY_MGMT_IEEE8021X_SUITE_B_192
+condition|)
+name|rsn_pmkid_suite_b_192
+argument_list|(
+name|kck
+argument_list|,
+name|kck_len
+argument_list|,
+name|aa
+argument_list|,
+name|spa
+argument_list|,
+name|entry
+operator|->
+name|pmkid
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|wpa_key_mgmt_suite_b
+argument_list|(
+name|akmp
+argument_list|)
+condition|)
+name|rsn_pmkid_suite_b
+argument_list|(
+name|kck
+argument_list|,
+name|kck_len
+argument_list|,
+name|aa
+argument_list|,
+name|spa
+argument_list|,
+name|entry
+operator|->
+name|pmkid
+argument_list|)
+expr_stmt|;
+else|else
 name|rsn_pmkid
 argument_list|(
 name|pmk
@@ -638,7 +701,7 @@ name|akmp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|os_get_time
+name|os_get_reltime
 argument_list|(
 operator|&
 name|now
@@ -743,7 +806,7 @@ name|pmk_len
 operator|==
 name|pmk_len
 operator|&&
-name|os_memcmp
+name|os_memcmp_const
 argument_list|(
 name|pos
 operator|->
@@ -756,7 +819,7 @@ argument_list|)
 operator|==
 literal|0
 operator|&&
-name|os_memcmp
+name|os_memcmp_const
 argument_list|(
 name|pos
 operator|->
@@ -812,12 +875,36 @@ name|pos
 operator|->
 name|next
 expr_stmt|;
+comment|/* 			 * If OKC is used, there may be other PMKSA cache 			 * entries based on the same PMK. These needs to be 			 * flushed so that a new entry can be created based on 			 * the new PMK. Only clear other entries if they have a 			 * matching PMK and this PMK has been used successfully 			 * with the current AP, i.e., if opportunistic flag has 			 * been cleared in wpa_supplicant_key_neg_complete(). 			 */
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
 literal|"RSN: Replace PMKSA entry for "
-literal|"the current AP"
+literal|"the current AP and any PMKSA cache entry "
+literal|"that was based on the old PMK"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|pos
+operator|->
+name|opportunistic
+condition|)
+name|pmksa_cache_flush
+argument_list|(
+name|pmksa
+argument_list|,
+name|network_ctx
+argument_list|,
+name|pos
+operator|->
+name|pmk
+argument_list|,
+name|pos
+operator|->
+name|pmk_len
 argument_list|)
 expr_stmt|;
 name|pmksa_cache_free_entry
@@ -827,14 +914,6 @@ argument_list|,
 name|pos
 argument_list|,
 name|PMKSA_REPLACE
-argument_list|)
-expr_stmt|;
-comment|/* 			 * If OKC is used, there may be other PMKSA cache 			 * entries based on the same PMK. These needs to be 			 * flushed so that a new entry can be created based on 			 * the new PMK. 			 */
-name|pmksa_cache_flush
-argument_list|(
-name|pmksa
-argument_list|,
-name|network_ctx
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1073,7 +1152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * pmksa_cache_flush - Flush PMKSA cache entries for a specific network  * @pmksa: Pointer to PMKSA cache data from pmksa_cache_init()  * @network_ctx: Network configuration context or %NULL to flush all entries  */
+comment|/**  * pmksa_cache_flush - Flush PMKSA cache entries for a specific network  * @pmksa: Pointer to PMKSA cache data from pmksa_cache_init()  * @network_ctx: Network configuration context or %NULL to flush all entries  * @pmk: PMK to match for or %NYLL to match all PMKs  * @pmk_len: PMK length  */
 end_comment
 
 begin_function
@@ -1088,6 +1167,14 @@ parameter_list|,
 name|void
 modifier|*
 name|network_ctx
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|pmk
+parameter_list|,
+name|size_t
+name|pmk_len
 parameter_list|)
 block|{
 name|struct
@@ -1121,6 +1208,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
 name|entry
 operator|->
 name|network_ctx
@@ -1130,6 +1218,34 @@ operator|||
 name|network_ctx
 operator|==
 name|NULL
+operator|)
+operator|&&
+operator|(
+name|pmk
+operator|==
+name|NULL
+operator|||
+operator|(
+name|pmk_len
+operator|==
+name|entry
+operator|->
+name|pmk_len
+operator|&&
+name|os_memcmp
+argument_list|(
+name|pmk
+argument_list|,
+name|entry
+operator|->
+name|pmk
+argument_list|,
+name|pmk_len
+argument_list|)
+operator|==
+literal|0
+operator|)
+operator|)
 condition|)
 block|{
 name|wpa_printf
@@ -1448,6 +1564,10 @@ argument_list|,
 name|old_entry
 operator|->
 name|pmk_len
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|,
 name|aa
 argument_list|,
@@ -1916,10 +2036,10 @@ modifier|*
 name|entry
 decl_stmt|;
 name|struct
-name|os_time
+name|os_reltime
 name|now
 decl_stmt|;
-name|os_get_time
+name|os_get_reltime
 argument_list|(
 operator|&
 name|now
@@ -1943,17 +2063,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|<
-literal|0
-operator|||
-name|ret
-operator|>=
+name|os_snprintf_error
+argument_list|(
 name|buf
 operator|+
 name|len
 operator|-
 name|pos
+argument_list|,
+name|ret
+argument_list|)
 condition|)
 return|return
 name|pos
@@ -2010,17 +2129,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|<
-literal|0
-operator|||
-name|ret
-operator|>=
+name|os_snprintf_error
+argument_list|(
 name|buf
 operator|+
 name|len
 operator|-
 name|pos
+argument_list|,
+name|ret
+argument_list|)
 condition|)
 return|return
 name|pos
@@ -2084,17 +2202,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
-operator|<
-literal|0
-operator|||
-name|ret
-operator|>=
+name|os_snprintf_error
+argument_list|(
 name|buf
 operator|+
 name|len
 operator|-
 name|pos
+argument_list|,
+name|ret
+argument_list|)
 condition|)
 return|return
 name|pos
@@ -2212,7 +2329,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* IEEE8021X_EAPOL and !CONFIG_NO_WPA2 */
+comment|/* IEEE8021X_EAPOL */
 end_comment
 
 end_unit

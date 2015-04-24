@@ -694,23 +694,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-specifier|static
-name|void
-name|vpanic
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|fmt
-argument_list|,
-name|va_list
-name|ap
-argument_list|)
-name|__dead2
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* register various local shutdown events */
 end_comment
@@ -2740,7 +2723,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|vpanic
 parameter_list|(

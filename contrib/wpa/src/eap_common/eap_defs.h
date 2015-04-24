@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP server/peer: Shared EAP definitions  * Copyright (c) 2004-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * EAP server/peer: Shared EAP definitions  * Copyright (c) 2004-2014, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -107,6 +107,14 @@ block|,
 name|EAP_CODE_FAILURE
 init|=
 literal|4
+block|,
+name|EAP_CODE_INITIATE
+init|=
+literal|5
+block|,
+name|EAP_CODE_FINISH
+init|=
+literal|6
 block|}
 enum|;
 end_enum
@@ -114,6 +122,103 @@ end_enum
 begin_comment
 comment|/* EAP Request and Response data begins with one octet Type. Success and  * Failure do not have additional data. */
 end_comment
+
+begin_comment
+comment|/* Type field in EAP-Initiate and EAP-Finish messages */
+end_comment
+
+begin_enum
+enum|enum
+name|eap_erp_type
+block|{
+name|EAP_ERP_TYPE_REAUTH_START
+init|=
+literal|1
+block|,
+name|EAP_ERP_TYPE_REAUTH
+init|=
+literal|2
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/* ERP TV/TLV types */
+end_comment
+
+begin_enum
+enum|enum
+name|eap_erp_tlv_type
+block|{
+name|EAP_ERP_TLV_KEYNAME_NAI
+init|=
+literal|1
+block|,
+name|EAP_ERP_TV_RRK_LIFETIME
+init|=
+literal|2
+block|,
+name|EAP_ERP_TV_RMSK_LIFETIME
+init|=
+literal|3
+block|,
+name|EAP_ERP_TLV_DOMAIN_NAME
+init|=
+literal|4
+block|,
+name|EAP_ERP_TLV_CRYPTOSUITES
+init|=
+literal|5
+block|,
+name|EAP_ERP_TLV_AUTHORIZATION_INDICATION
+init|=
+literal|6
+block|,
+name|EAP_ERP_TLV_CALLED_STATION_ID
+init|=
+literal|128
+block|,
+name|EAP_ERP_TLV_CALLING_STATION_ID
+init|=
+literal|129
+block|,
+name|EAP_ERP_TLV_NAS_IDENTIFIER
+init|=
+literal|130
+block|,
+name|EAP_ERP_TLV_NAS_IP_ADDRESS
+init|=
+literal|131
+block|,
+name|EAP_ERP_TLV_NAS_IPV6_ADDRESS
+init|=
+literal|132
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/* ERP Cryptosuite */
+end_comment
+
+begin_enum
+enum|enum
+name|eap_erp_cryptosuite
+block|{
+name|EAP_ERP_CS_HMAC_SHA256_64
+init|=
+literal|1
+block|,
+name|EAP_ERP_CS_HMAC_SHA256_128
+init|=
+literal|2
+block|,
+name|EAP_ERP_CS_HMAC_SHA256_256
+init|=
+literal|3
+block|, }
+enum|;
+end_enum
 
 begin_comment
 comment|/*  * EAP Method Types as allocated by IANA:  * http://www.iana.org/assignments/eap-numbers  */
@@ -242,6 +347,11 @@ init|=
 literal|52
 comment|/* RFC 5931 */
 block|,
+name|EAP_TYPE_EKE
+init|=
+literal|53
+comment|/* RFC 6124 */
+block|,
 name|EAP_TYPE_EXPANDED
 init|=
 literal|254
@@ -270,12 +380,17 @@ block|,
 name|EAP_VENDOR_WFA
 init|=
 literal|0x00372A
-comment|/* Wi-Fi Alliance */
+comment|/* Wi-Fi Alliance (moved to WBA) */
 block|,
 name|EAP_VENDOR_HOSTAP
 init|=
 literal|39068
 comment|/* hostapd/wpa_supplicant project */
+block|,
+name|EAP_VENDOR_WFA_NEW
+init|=
+literal|40808
+comment|/* Wi-Fi Alliance */
 block|}
 enum|;
 end_enum
@@ -297,6 +412,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EAP_VENDOR_WFA_UNAUTH_TLS
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
 name|EAP_MSK_LEN
 value|64
 end_define
@@ -305,6 +427,20 @@ begin_define
 define|#
 directive|define
 name|EAP_EMSK_LEN
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|EAP_EMSK_NAME_LEN
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERP_MAX_KEY_LEN
 value|64
 end_define
 

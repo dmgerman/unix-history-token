@@ -1113,7 +1113,7 @@ argument_list|,
 name|mac_s
 argument_list|)
 operator|||
-name|memcmp
+name|os_memcmp_const
 argument_list|(
 name|mac_s
 argument_list|,
@@ -1708,7 +1708,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|os_memcmp
+name|os_memcmp_const
 argument_list|(
 name|mac_a
 argument_list|,

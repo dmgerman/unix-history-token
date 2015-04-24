@@ -94,20 +94,6 @@ file|"drivers/driver.h"
 end_include
 
 begin_decl_stmt
-specifier|extern
-name|int
-name|wpa_debug_level
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|wpa_debug_show_keys
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|struct
 name|wpa_driver_ops
 modifier|*
@@ -1427,6 +1413,8 @@ name|argv
 index|[
 literal|1
 index|]
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if

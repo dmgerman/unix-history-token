@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * TLSv1 server - read handshake message  * Copyright (c) 2006-2011, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * TLSv1 server - read handshake message  * Copyright (c) 2006-2014, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -122,6 +122,79 @@ end_function_decl
 begin_function
 specifier|static
 name|int
+name|testing_cipher_suite_filter
+parameter_list|(
+name|struct
+name|tlsv1_server
+modifier|*
+name|conn
+parameter_list|,
+name|u16
+name|suite
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|CONFIG_TESTING_OPTIONS
+if|if
+condition|(
+operator|(
+name|conn
+operator|->
+name|test_flags
+operator|&
+operator|(
+name|TLS_BREAK_SRV_KEY_X_HASH
+operator||
+name|TLS_BREAK_SRV_KEY_X_SIGNATURE
+operator||
+name|TLS_DHE_PRIME_511B
+operator||
+name|TLS_DHE_PRIME_767B
+operator||
+name|TLS_DHE_PRIME_15
+operator||
+name|TLS_DHE_PRIME_58B
+operator||
+name|TLS_DHE_NON_PRIME
+operator|)
+operator|)
+operator|&&
+name|suite
+operator|!=
+name|TLS_DHE_RSA_WITH_AES_256_CBC_SHA256
+operator|&&
+name|suite
+operator|!=
+name|TLS_DHE_RSA_WITH_AES_256_CBC_SHA
+operator|&&
+name|suite
+operator|!=
+name|TLS_DHE_RSA_WITH_AES_128_CBC_SHA256
+operator|&&
+name|suite
+operator|!=
+name|TLS_DHE_RSA_WITH_AES_128_CBC_SHA
+operator|&&
+name|suite
+operator|!=
+name|TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA
+condition|)
+return|return
+literal|1
+return|;
+endif|#
+directive|endif
+comment|/* CONFIG_TESTING_OPTIONS */
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|int
 name|tls_process_client_hello
 parameter_list|(
 name|struct
@@ -183,12 +256,11 @@ operator|!=
 name|TLS_CONTENT_TYPE_HANDSHAKE
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Expected Handshake; "
-literal|"received content type 0x%x"
+literal|"Expected Handshake; received content type 0x%x"
 argument_list|,
 name|ct
 argument_list|)
@@ -234,12 +306,11 @@ operator|!=
 name|TLS_HANDSHAKE_TYPE_CLIENT_HELLO
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Received unexpected handshake "
-literal|"message %d (expected ClientHello)"
+literal|"Received unexpected handshake message %d (expected ClientHello)"
 argument_list|,
 operator|*
 name|pos
@@ -259,11 +330,11 @@ operator|-
 literal|1
 return|;
 block|}
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Received ClientHello"
+literal|"Received ClientHello"
 argument_list|)
 expr_stmt|;
 name|pos
@@ -333,11 +404,11 @@ argument_list|(
 name|pos
 argument_list|)
 expr_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Client version %d.%d"
+literal|"Client version %d.%d"
 argument_list|,
 name|conn
 operator|->
@@ -361,12 +432,11 @@ operator|<
 name|TLS_VERSION_1
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Unexpected protocol version in "
-literal|"ClientHello %u.%u"
+literal|"Unexpected protocol version in ClientHello %u.%u"
 argument_list|,
 name|conn
 operator|->
@@ -464,11 +534,11 @@ name|conn
 operator|->
 name|client_version
 expr_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Using TLS v%s"
+literal|"Using TLS v%s"
 argument_list|,
 name|tls_version_str
 argument_list|(
@@ -654,6 +724,21 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|testing_cipher_suite_filter
+argument_list|(
+name|conn
+argument_list|,
+name|conn
+operator|->
+name|cipher_suites
+index|[
+name|i
+index|]
+argument_list|)
+condition|)
+continue|continue;
 name|c
 operator|=
 name|pos
@@ -719,12 +804,11 @@ operator|!
 name|cipher_suite
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_INFO
+name|conn
 argument_list|,
-literal|"TLSv1: No supported cipher suite "
-literal|"available"
+literal|"No supported cipher suite available"
 argument_list|)
 expr_stmt|;
 name|tlsv1_server_alert
@@ -861,12 +945,11 @@ operator|!
 name|compr_null_found
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_INFO
+name|conn
 argument_list|,
-literal|"TLSv1: Client does not accept NULL "
-literal|"compression"
+literal|"Client does not accept NULL compression"
 argument_list|)
 expr_stmt|;
 name|tlsv1_server_alert
@@ -892,12 +975,11 @@ operator|==
 literal|1
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Unexpected extra octet in the "
-literal|"end of ClientHello: 0x%02x"
+literal|"Unexpected extra octet in the end of ClientHello: 0x%02x"
 argument_list|,
 operator|*
 name|pos
@@ -928,12 +1010,11 @@ name|pos
 operator|+=
 literal|2
 expr_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: %u bytes of ClientHello "
-literal|"extensions"
+literal|"%u bytes of ClientHello extensions"
 argument_list|,
 name|ext_len
 argument_list|)
@@ -947,12 +1028,11 @@ operator|!=
 name|ext_len
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Invalid ClientHello "
-literal|"extension list length %u (expected %u)"
+literal|"Invalid ClientHello extension list length %u (expected %u)"
 argument_list|,
 name|ext_len
 argument_list|,
@@ -988,12 +1068,11 @@ operator|<
 literal|2
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Invalid "
-literal|"extension_type field"
+literal|"Invalid extension_type field"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1020,12 +1099,11 @@ operator|<
 literal|2
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Invalid "
-literal|"extension_data length field"
+literal|"Invalid extension_data length field"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1052,24 +1130,22 @@ operator|<
 name|ext_len
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Invalid "
-literal|"extension_data field"
+literal|"Invalid extension_data field"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|decode_error
 goto|;
 block|}
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: ClientHello Extension "
-literal|"type %u"
+literal|"ClientHello Extension type %u"
 argument_list|,
 name|ext_type
 argument_list|)
@@ -1148,12 +1224,11 @@ name|end
 operator|-
 name|in_data
 expr_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: ClientHello OK - proceed to "
-literal|"ServerHello"
+literal|"ClientHello OK - proceed to ServerHello"
 argument_list|)
 expr_stmt|;
 name|conn
@@ -1167,11 +1242,11 @@ literal|0
 return|;
 name|decode_error
 label|:
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Failed to decode ClientHello"
+literal|"Failed to decode ClientHello"
 argument_list|)
 expr_stmt|;
 name|tlsv1_server_alert
@@ -1260,12 +1335,11 @@ operator|!=
 name|TLS_CONTENT_TYPE_HANDSHAKE
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Expected Handshake; "
-literal|"received content type 0x%x"
+literal|"Expected Handshake; received content type 0x%x"
 argument_list|,
 name|ct
 argument_list|)
@@ -1300,12 +1374,11 @@ operator|<
 literal|4
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Too short Certificate message "
-literal|"(len=%lu)"
+literal|"Too short Certificate message (len=%lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -1356,12 +1429,11 @@ operator|>
 name|left
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Unexpected Certificate message "
-literal|"length (len=%lu != left=%lu)"
+literal|"Unexpected Certificate message length (len=%lu != left=%lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -1404,12 +1476,11 @@ operator|->
 name|verify_peer
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Client did not include "
-literal|"Certificate"
+literal|"Client did not include Certificate"
 argument_list|)
 expr_stmt|;
 name|tlsv1_server_alert
@@ -1446,13 +1517,11 @@ operator|!=
 name|TLS_HANDSHAKE_TYPE_CERTIFICATE
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Received unexpected handshake "
-literal|"message %d (expected Certificate/"
-literal|"ClientKeyExchange)"
+literal|"Received unexpected handshake message %d (expected Certificate/ClientKeyExchange)"
 argument_list|,
 name|type
 argument_list|)
@@ -1471,11 +1540,11 @@ operator|-
 literal|1
 return|;
 block|}
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Received Certificate (certificate_list len %lu)"
+literal|"Received Certificate (certificate_list len %lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -1500,12 +1569,11 @@ operator|<
 literal|3
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Too short Certificate "
-literal|"(left=%lu)"
+literal|"Too short Certificate (left=%lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -1553,12 +1621,11 @@ operator|!=
 name|list_len
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Unexpected certificate_list "
-literal|"length (len=%lu left=%lu)"
+literal|"Unexpected certificate_list length (len=%lu left=%lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -1611,12 +1678,11 @@ operator|<
 literal|3
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Failed to parse "
-literal|"certificate_list"
+literal|"Failed to parse certificate_list"
 argument_list|)
 expr_stmt|;
 name|tlsv1_server_alert
@@ -1663,12 +1729,11 @@ operator|<
 name|cert_len
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Unexpected certificate "
-literal|"length (len=%lu left=%lu)"
+literal|"Unexpected certificate length (len=%lu left=%lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -1706,11 +1771,11 @@ operator|-
 literal|1
 return|;
 block|}
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Certificate %lu (len %lu)"
+literal|"Certificate %lu (len %lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -1754,12 +1819,11 @@ name|client_rsa_key
 argument_list|)
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Failed to parse "
-literal|"the certificate"
+literal|"Failed to parse the certificate"
 argument_list|)
 expr_stmt|;
 name|tlsv1_server_alert
@@ -1798,12 +1862,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Failed to parse "
-literal|"the certificate"
+literal|"Failed to parse the certificate"
 argument_list|)
 expr_stmt|;
 name|tlsv1_server_alert
@@ -1878,12 +1941,11 @@ block|{
 name|int
 name|tls_reason
 decl_stmt|;
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Server certificate chain "
-literal|"validation failed (reason=%d)"
+literal|"Server certificate chain validation failed (reason=%d)"
 argument_list|,
 name|reason
 argument_list|)
@@ -2075,12 +2137,11 @@ operator|>
 name|end
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Invalid ClientKeyExchange "
-literal|"format: encr_len=%u left=%u"
+literal|"Invalid ClientKeyExchange format: encr_len=%u left=%u"
 argument_list|,
 name|encr_len
 argument_list|,
@@ -2207,12 +2268,11 @@ operator|!=
 name|TLS_PRE_MASTER_SECRET_LEN
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Unexpected PreMasterSecret "
-literal|"length %lu"
+literal|"Unexpected PreMasterSecret length %lu"
 argument_list|,
 operator|(
 name|unsigned
@@ -2241,13 +2301,11 @@ operator|->
 name|client_version
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Client version in "
-literal|"ClientKeyExchange does not match with version in "
-literal|"ClientHello"
+literal|"Client version in ClientKeyExchange does not match with version in ClientHello"
 argument_list|)
 expr_stmt|;
 name|use_random
@@ -2371,7 +2429,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|tls_process_client_key_exchange_dh_anon
+name|tls_process_client_key_exchange_dh
 parameter_list|(
 name|struct
 name|tlsv1_server
@@ -2407,7 +2465,22 @@ decl_stmt|;
 name|int
 name|res
 decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|dh_p
+decl_stmt|;
+name|size_t
+name|dh_p_len
+decl_stmt|;
 comment|/* 	 * struct { 	 *   select (PublicValueEncoding) { 	 *     case implicit: struct { }; 	 *     case explicit: opaque dh_Yc<1..2^16-1>; 	 *   } dh_public; 	 * } ClientDiffieHellmanPublic; 	 */
+name|tlsv1_server_log
+argument_list|(
+name|conn
+argument_list|,
+literal|"ClientDiffieHellmanPublic received"
+argument_list|)
+expr_stmt|;
 name|wpa_hexdump
 argument_list|(
 name|MSG_MSGDUMP
@@ -2459,12 +2532,11 @@ operator|<
 literal|3
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Invalid client public value "
-literal|"length"
+literal|"Invalid client public value length"
 argument_list|)
 expr_stmt|;
 name|tlsv1_server_alert
@@ -2496,19 +2568,18 @@ literal|2
 expr_stmt|;
 if|if
 condition|(
-name|dh_yc
-operator|+
 name|dh_yc_len
 operator|>
 name|end
+operator|-
+name|dh_yc
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Client public value overflow "
-literal|"(length %d)"
+literal|"Client public value overflow (length %d)"
 argument_list|,
 name|dh_yc_len
 argument_list|)
@@ -2582,12 +2653,19 @@ operator|-
 literal|1
 return|;
 block|}
+name|tlsv1_server_get_dh_p
+argument_list|(
+name|conn
+argument_list|,
+operator|&
+name|dh_p
+argument_list|,
+operator|&
+name|dh_p_len
+argument_list|)
+expr_stmt|;
 name|shared_len
 operator|=
-name|conn
-operator|->
-name|cred
-operator|->
 name|dh_p_len
 expr_stmt|;
 name|shared
@@ -2643,16 +2721,8 @@ name|conn
 operator|->
 name|dh_secret_len
 argument_list|,
-name|conn
-operator|->
-name|cred
-operator|->
 name|dh_p
 argument_list|,
-name|conn
-operator|->
-name|cred
-operator|->
 name|dh_p_len
 argument_list|,
 name|shared
@@ -2831,12 +2901,11 @@ operator|!=
 name|TLS_CONTENT_TYPE_HANDSHAKE
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Expected Handshake; "
-literal|"received content type 0x%x"
+literal|"Expected Handshake; received content type 0x%x"
 argument_list|,
 name|ct
 argument_list|)
@@ -2871,12 +2940,11 @@ operator|<
 literal|4
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Too short ClientKeyExchange "
-literal|"(Left=%lu)"
+literal|"Too short ClientKeyExchange (Left=%lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -2927,12 +2995,11 @@ operator|>
 name|left
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Mismatch in ClientKeyExchange "
-literal|"length (len=%lu != left=%lu)"
+literal|"Mismatch in ClientKeyExchange length (len=%lu != left=%lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -2974,12 +3041,11 @@ operator|!=
 name|TLS_HANDSHAKE_TYPE_CLIENT_KEY_EXCHANGE
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Received unexpected handshake "
-literal|"message %d (expected ClientKeyExchange)"
+literal|"Received unexpected handshake message %d (expected ClientKeyExchange)"
 argument_list|,
 name|type
 argument_list|)
@@ -2998,11 +3064,11 @@ operator|-
 literal|1
 return|;
 block|}
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Received ClientKeyExchange"
+literal|"Received ClientKeyExchange"
 argument_list|)
 expr_stmt|;
 name|wpa_hexdump
@@ -3046,11 +3112,17 @@ name|key_exchange
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|keyx
 operator|==
 name|TLS_KEY_X_DH_anon
+operator|||
+name|keyx
+operator|==
+name|TLS_KEY_X_DHE_RSA
+operator|)
 operator|&&
-name|tls_process_client_key_exchange_dh_anon
+name|tls_process_client_key_exchange_dh
 argument_list|(
 name|conn
 argument_list|,
@@ -3070,6 +3142,10 @@ condition|(
 name|keyx
 operator|!=
 name|TLS_KEY_X_DH_anon
+operator|&&
+name|keyx
+operator|!=
+name|TLS_KEY_X_DHE_RSA
 operator|&&
 name|tls_process_client_key_exchange_rsa
 argument_list|(
@@ -3146,8 +3222,6 @@ name|type
 decl_stmt|;
 name|size_t
 name|hlen
-decl_stmt|,
-name|buflen
 decl_stmt|;
 name|u8
 name|hash
@@ -3159,22 +3233,9 @@ index|]
 decl_stmt|,
 modifier|*
 name|hpos
-decl_stmt|,
-modifier|*
-name|buf
 decl_stmt|;
-enum|enum
-block|{
-name|SIGN_ALG_RSA
-block|,
-name|SIGN_ALG_DSA
-block|}
-name|alg
-init|=
-name|SIGN_ALG_RSA
-enum|;
-name|u16
-name|slen
+name|u8
+name|alert
 decl_stmt|;
 if|if
 condition|(
@@ -3190,12 +3251,11 @@ operator|->
 name|verify_peer
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Client did not include "
-literal|"CertificateVerify"
+literal|"Client did not include CertificateVerify"
 argument_list|)
 expr_stmt|;
 name|tlsv1_server_alert
@@ -3232,12 +3292,11 @@ operator|!=
 name|TLS_CONTENT_TYPE_HANDSHAKE
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Expected Handshake; "
-literal|"received content type 0x%x"
+literal|"Expected Handshake; received content type 0x%x"
 argument_list|,
 name|ct
 argument_list|)
@@ -3272,12 +3331,11 @@ operator|<
 literal|4
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Too short CertificateVerify "
-literal|"message (len=%lu)"
+literal|"Too short CertificateVerify message (len=%lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -3328,12 +3386,11 @@ operator|>
 name|left
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Unexpected CertificateVerify "
-literal|"message length (len=%lu != left=%lu)"
+literal|"Unexpected CertificateVerify message length (len=%lu != left=%lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -3375,12 +3432,11 @@ operator|!=
 name|TLS_HANDSHAKE_TYPE_CERTIFICATE_VERIFY
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Received unexpected handshake "
-literal|"message %d (expected CertificateVerify)"
+literal|"Received unexpected handshake message %d (expected CertificateVerify)"
 argument_list|,
 name|type
 argument_list|)
@@ -3399,11 +3455,11 @@ operator|-
 literal|1
 return|;
 block|}
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Received CertificateVerify"
+literal|"Received CertificateVerify"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * struct { 	 *   Signature signature; 	 * } CertificateVerify; 	 */
@@ -3569,13 +3625,6 @@ block|{
 endif|#
 directive|endif
 comment|/* CONFIG_TLSV12 */
-if|if
-condition|(
-name|alg
-operator|==
-name|SIGN_ALG_RSA
-condition|)
-block|{
 name|hlen
 operator|=
 name|MD5_MAC_LEN
@@ -3653,21 +3702,6 @@ block|}
 name|hpos
 operator|+=
 name|MD5_MAC_LEN
-expr_stmt|;
-block|}
-else|else
-name|crypto_hash_finish
-argument_list|(
-name|conn
-operator|->
-name|verify
-operator|.
-name|md5_cert
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
 expr_stmt|;
 name|conn
 operator|->
@@ -3738,12 +3772,6 @@ name|sha1_cert
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|alg
-operator|==
-name|SIGN_ALG_RSA
-condition|)
 name|hlen
 operator|+=
 name|MD5_MAC_LEN
@@ -3768,305 +3796,40 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|end
-operator|-
-name|pos
-operator|<
-literal|2
-condition|)
-block|{
-name|tlsv1_server_alert
+name|tls_verify_signature
 argument_list|(
-name|conn
-argument_list|,
-name|TLS_ALERT_LEVEL_FATAL
-argument_list|,
-name|TLS_ALERT_DECODE_ERROR
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-name|slen
-operator|=
-name|WPA_GET_BE16
-argument_list|(
-name|pos
-argument_list|)
-expr_stmt|;
-name|pos
-operator|+=
-literal|2
-expr_stmt|;
-if|if
-condition|(
-name|end
-operator|-
-name|pos
-operator|<
-name|slen
-condition|)
-block|{
-name|tlsv1_server_alert
-argument_list|(
-name|conn
-argument_list|,
-name|TLS_ALERT_LEVEL_FATAL
-argument_list|,
-name|TLS_ALERT_DECODE_ERROR
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-name|wpa_hexdump
-argument_list|(
-name|MSG_MSGDUMP
-argument_list|,
-literal|"TLSv1: Signature"
-argument_list|,
-name|pos
-argument_list|,
-name|end
-operator|-
-name|pos
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|conn
-operator|->
-name|client_rsa_key
-operator|==
-name|NULL
-condition|)
-block|{
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"TLSv1: No client public key to verify "
-literal|"signature"
-argument_list|)
-expr_stmt|;
-name|tlsv1_server_alert
-argument_list|(
-name|conn
-argument_list|,
-name|TLS_ALERT_LEVEL_FATAL
-argument_list|,
-name|TLS_ALERT_INTERNAL_ERROR
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-name|buflen
-operator|=
-name|end
-operator|-
-name|pos
-expr_stmt|;
-name|buf
-operator|=
-name|os_malloc
-argument_list|(
-name|end
-operator|-
-name|pos
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|crypto_public_key_decrypt_pkcs1
-argument_list|(
-name|conn
-operator|->
-name|client_rsa_key
-argument_list|,
-name|pos
-argument_list|,
-name|end
-operator|-
-name|pos
-argument_list|,
-name|buf
-argument_list|,
-operator|&
-name|buflen
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"TLSv1: Failed to decrypt signature"
-argument_list|)
-expr_stmt|;
-name|os_free
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-name|tlsv1_server_alert
-argument_list|(
-name|conn
-argument_list|,
-name|TLS_ALERT_LEVEL_FATAL
-argument_list|,
-name|TLS_ALERT_DECRYPT_ERROR
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-name|wpa_hexdump_key
-argument_list|(
-name|MSG_MSGDUMP
-argument_list|,
-literal|"TLSv1: Decrypted Signature"
-argument_list|,
-name|buf
-argument_list|,
-name|buflen
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CONFIG_TLSV12
-if|if
-condition|(
 name|conn
 operator|->
 name|rl
 operator|.
 name|tls_version
-operator|>=
-name|TLS_VERSION_1_2
-condition|)
-block|{
-comment|/* 		 * RFC 3447, A.2.4 RSASSA-PKCS1-v1_5 		 * 		 * DigestInfo ::= SEQUENCE { 		 *   digestAlgorithm DigestAlgorithm, 		 *   digest OCTET STRING 		 * } 		 * 		 * SHA-256 OID: sha256WithRSAEncryption ::= {pkcs-1 11} 		 * 		 * DER encoded DigestInfo for SHA256 per RFC 3447: 		 * 30 31 30 0d 06 09 60 86 48 01 65 03 04 02 01 05 00 04 20 || 		 * H 		 */
-if|if
-condition|(
-name|buflen
-operator|>=
-literal|19
-operator|+
-literal|32
-operator|&&
-name|os_memcmp
-argument_list|(
-name|buf
 argument_list|,
-literal|"\x30\x31\x30\x0d\x06\x09\x60\x86\x48\x01"
-literal|"\x65\x03\x04\x02\x01\x05\x00\x04\x20"
-argument_list|,
-literal|19
-argument_list|)
-operator|==
-literal|0
-condition|)
-block|{
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"TLSv1.2: DigestAlgorithn = "
-literal|"SHA-256"
-argument_list|)
-expr_stmt|;
-name|os_memmove
-argument_list|(
-name|buf
-argument_list|,
-name|buf
-operator|+
-literal|19
-argument_list|,
-name|buflen
-operator|-
-literal|19
-argument_list|)
-expr_stmt|;
-name|buflen
-operator|-=
-literal|19
-expr_stmt|;
-block|}
-else|else
-block|{
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"TLSv1.2: Unrecognized "
-literal|"DigestInfo"
-argument_list|)
-expr_stmt|;
-name|os_free
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
-name|tlsv1_server_alert
-argument_list|(
 name|conn
-argument_list|,
-name|TLS_ALERT_LEVEL_FATAL
-argument_list|,
-name|TLS_ALERT_DECRYPT_ERROR
-argument_list|)
-expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
-block|}
-block|}
-endif|#
-directive|endif
-comment|/* CONFIG_TLSV12 */
-if|if
-condition|(
-name|buflen
-operator|!=
-name|hlen
-operator|||
-name|os_memcmp
-argument_list|(
-name|buf
+operator|->
+name|client_rsa_key
 argument_list|,
 name|hash
 argument_list|,
-name|buflen
+name|hlen
+argument_list|,
+name|pos
+argument_list|,
+name|end
+operator|-
+name|pos
+argument_list|,
+operator|&
+name|alert
 argument_list|)
-operator|!=
+operator|<
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Invalid Signature in "
-literal|"CertificateVerify - did not match with calculated "
-literal|"hash"
-argument_list|)
-expr_stmt|;
-name|os_free
-argument_list|(
-name|buf
+literal|"Invalid Signature in CertificateVerify"
 argument_list|)
 expr_stmt|;
 name|tlsv1_server_alert
@@ -4075,7 +3838,7 @@ name|conn
 argument_list|,
 name|TLS_ALERT_LEVEL_FATAL
 argument_list|,
-name|TLS_ALERT_DECRYPT_ERROR
+name|alert
 argument_list|)
 expr_stmt|;
 return|return
@@ -4083,11 +3846,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|os_free
-argument_list|(
-name|buf
-argument_list|)
-expr_stmt|;
 operator|*
 name|in_len
 operator|=
@@ -4145,12 +3903,11 @@ operator|!=
 name|TLS_CONTENT_TYPE_CHANGE_CIPHER_SPEC
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Expected ChangeCipherSpec; "
-literal|"received content type 0x%x"
+literal|"Expected ChangeCipherSpec; received content type 0x%x"
 argument_list|,
 name|ct
 argument_list|)
@@ -4185,11 +3942,11 @@ operator|<
 literal|1
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Too short ChangeCipherSpec"
+literal|"Too short ChangeCipherSpec"
 argument_list|)
 expr_stmt|;
 name|tlsv1_server_alert
@@ -4214,12 +3971,11 @@ operator|!=
 name|TLS_CHANGE_CIPHER_SPEC
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Expected ChangeCipherSpec; "
-literal|"received data 0x%x"
+literal|"Expected ChangeCipherSpec; received data 0x%x"
 argument_list|,
 operator|*
 name|pos
@@ -4239,11 +3995,11 @@ operator|-
 literal|1
 return|;
 block|}
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Received ChangeCipherSpec"
+literal|"Received ChangeCipherSpec"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4354,6 +4110,196 @@ operator|+
 name|SHA1_MAC_LEN
 index|]
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_TESTING_OPTIONS
+if|if
+condition|(
+operator|(
+name|conn
+operator|->
+name|test_flags
+operator|&
+operator|(
+name|TLS_BREAK_SRV_KEY_X_HASH
+operator||
+name|TLS_BREAK_SRV_KEY_X_SIGNATURE
+operator|)
+operator|)
+operator|&&
+operator|!
+name|conn
+operator|->
+name|test_failure_reported
+condition|)
+block|{
+name|tlsv1_server_log
+argument_list|(
+name|conn
+argument_list|,
+literal|"TEST-FAILURE: Client Finished received after invalid ServerKeyExchange"
+argument_list|)
+expr_stmt|;
+name|conn
+operator|->
+name|test_failure_reported
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|conn
+operator|->
+name|test_flags
+operator|&
+name|TLS_DHE_PRIME_15
+operator|)
+operator|&&
+operator|!
+name|conn
+operator|->
+name|test_failure_reported
+condition|)
+block|{
+name|tlsv1_server_log
+argument_list|(
+name|conn
+argument_list|,
+literal|"TEST-FAILURE: Client Finished received after bogus DHE \"prime\" 15"
+argument_list|)
+expr_stmt|;
+name|conn
+operator|->
+name|test_failure_reported
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|conn
+operator|->
+name|test_flags
+operator|&
+name|TLS_DHE_PRIME_58B
+operator|)
+operator|&&
+operator|!
+name|conn
+operator|->
+name|test_failure_reported
+condition|)
+block|{
+name|tlsv1_server_log
+argument_list|(
+name|conn
+argument_list|,
+literal|"TEST-FAILURE: Client Finished received after short 58-bit DHE prime in long container"
+argument_list|)
+expr_stmt|;
+name|conn
+operator|->
+name|test_failure_reported
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|conn
+operator|->
+name|test_flags
+operator|&
+name|TLS_DHE_PRIME_511B
+operator|)
+operator|&&
+operator|!
+name|conn
+operator|->
+name|test_failure_reported
+condition|)
+block|{
+name|tlsv1_server_log
+argument_list|(
+name|conn
+argument_list|,
+literal|"TEST-WARNING: Client Finished received after short 511-bit DHE prime (insecure)"
+argument_list|)
+expr_stmt|;
+name|conn
+operator|->
+name|test_failure_reported
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|conn
+operator|->
+name|test_flags
+operator|&
+name|TLS_DHE_PRIME_767B
+operator|)
+operator|&&
+operator|!
+name|conn
+operator|->
+name|test_failure_reported
+condition|)
+block|{
+name|tlsv1_server_log
+argument_list|(
+name|conn
+argument_list|,
+literal|"TEST-NOTE: Client Finished received after 767-bit DHE prime (relatively insecure)"
+argument_list|)
+expr_stmt|;
+name|conn
+operator|->
+name|test_failure_reported
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|conn
+operator|->
+name|test_flags
+operator|&
+name|TLS_DHE_NON_PRIME
+operator|)
+operator|&&
+operator|!
+name|conn
+operator|->
+name|test_failure_reported
+condition|)
+block|{
+name|tlsv1_server_log
+argument_list|(
+name|conn
+argument_list|,
+literal|"TEST-NOTE: Client Finished received after non-prime claimed as DHE prime"
+argument_list|)
+expr_stmt|;
+name|conn
+operator|->
+name|test_failure_reported
+operator|=
+literal|1
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+comment|/* CONFIG_TESTING_OPTIONS */
 if|if
 condition|(
 name|ct
@@ -4361,12 +4307,11 @@ operator|!=
 name|TLS_CONTENT_TYPE_HANDSHAKE
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Expected Finished; "
-literal|"received content type 0x%x"
+literal|"Expected Finished; received content type 0x%x"
 argument_list|,
 name|ct
 argument_list|)
@@ -4401,12 +4346,11 @@ operator|<
 literal|4
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Too short record (left=%lu) for "
-literal|"Finished"
+literal|"Too short record (left=%lu) forFinished"
 argument_list|,
 operator|(
 name|unsigned
@@ -4490,12 +4434,11 @@ operator|>
 name|left
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Too short buffer for Finished "
-literal|"(len=%lu> left=%lu)"
+literal|"Too short buffer for Finished (len=%lu> left=%lu)"
 argument_list|,
 operator|(
 name|unsigned
@@ -4537,12 +4480,11 @@ operator|!=
 name|TLS_VERIFY_DATA_LEN
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Unexpected verify_data length "
-literal|"in Finished: %lu (expected %d)"
+literal|"Unexpected verify_data length in Finished: %lu (expected %d)"
 argument_list|,
 operator|(
 name|unsigned
@@ -4879,7 +4821,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|os_memcmp
+name|os_memcmp_const
 argument_list|(
 name|pos
 argument_list|,
@@ -4891,11 +4833,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_INFO
+name|conn
 argument_list|,
-literal|"TLSv1: Mismatch in verify_data"
+literal|"Mismatch in verify_data"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4903,11 +4845,11 @@ operator|-
 literal|1
 return|;
 block|}
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Received Finished"
+literal|"Received Finished"
 argument_list|)
 expr_stmt|;
 operator|*
@@ -4925,12 +4867,11 @@ name|use_session_ticket
 condition|)
 block|{
 comment|/* Abbreviated handshake using session ticket; RFC 4507 */
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Abbreviated handshake completed "
-literal|"successfully"
+literal|"Abbreviated handshake completed successfully"
 argument_list|)
 expr_stmt|;
 name|conn
@@ -4993,11 +4934,11 @@ operator|<
 literal|2
 condition|)
 block|{
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Alert underflow"
+literal|"Alert underflow"
 argument_list|)
 expr_stmt|;
 name|tlsv1_server_alert
@@ -5014,11 +4955,11 @@ operator|-
 literal|1
 return|;
 block|}
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Received alert %d:%d"
+literal|"Received alert %d:%d"
 argument_list|,
 name|buf
 index|[
@@ -5181,12 +5122,11 @@ literal|1
 return|;
 break|break;
 default|default:
-name|wpa_printf
+name|tlsv1_server_log
 argument_list|(
-name|MSG_DEBUG
+name|conn
 argument_list|,
-literal|"TLSv1: Unexpected state %d "
-literal|"while processing received message"
+literal|"Unexpected state %d while processing received message"
 argument_list|,
 name|conn
 operator|->

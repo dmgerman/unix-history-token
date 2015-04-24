@@ -84,6 +84,22 @@ comment|/** 	 * eap_disabled - Whether EAP is disabled 	 */
 name|int
 name|eap_disabled
 decl_stmt|;
+comment|/** 	 * external_sim - Use external processing for SIM/USIM operations 	 */
+name|int
+name|external_sim
+decl_stmt|;
+define|#
+directive|define
+name|EAPOL_LOCAL_WPS_IN_USE
+value|BIT(0)
+define|#
+directive|define
+name|EAPOL_PEER_IS_WPS20_AP
+value|BIT(1)
+comment|/** 	 * wps - Whether this connection is used for WPS 	 */
+name|int
+name|wps
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -99,6 +115,19 @@ struct_decl|struct
 name|wpa_config_blob
 struct_decl|;
 end_struct_decl
+
+begin_enum
+enum|enum
+name|eapol_supp_result
+block|{
+name|EAPOL_SUPP_RESULT_FAILURE
+block|,
+name|EAPOL_SUPP_RESULT_SUCCESS
+block|,
+name|EAPOL_SUPP_RESULT_EXPECTED_FAILURE
+block|}
+enum|;
+end_enum
 
 begin_comment
 comment|/**  * struct eapol_ctx - Global (for all networks) EAPOL state machine context  */
@@ -117,7 +146,7 @@ comment|/** 	 * preauth - IEEE 802.11i/RSN pre-authentication 	 * 	 * This EAPOL
 name|int
 name|preauth
 decl_stmt|;
-comment|/** 	 * cb - Function to be called when EAPOL negotiation has been completed 	 * @eapol: Pointer to EAPOL state machine data 	 * @success: Whether the authentication was completed successfully 	 * @ctx: Pointer to context data (cb_ctx) 	 * 	 * This optional callback function will be called when the EAPOL 	 * authentication has been completed. This allows the owner of the 	 * EAPOL state machine to process the key and terminate the EAPOL state 	 * machine. Currently, this is used only in RSN pre-authentication. 	 */
+comment|/** 	 * cb - Function to be called when EAPOL negotiation has been completed 	 * @eapol: Pointer to EAPOL state machine data 	 * @result: Whether the authentication was completed successfully 	 * @ctx: Pointer to context data (cb_ctx) 	 * 	 * This optional callback function will be called when the EAPOL 	 * authentication has been completed. This allows the owner of the 	 * EAPOL state machine to process the key and terminate the EAPOL state 	 * machine. Currently, this is used only in RSN pre-authentication. 	 */
 name|void
 function_decl|(
 modifier|*
@@ -129,8 +158,9 @@ name|eapol_sm
 modifier|*
 name|eapol
 parameter_list|,
-name|int
-name|success
+name|enum
+name|eapol_supp_result
+name|result
 parameter_list|,
 name|void
 modifier|*
@@ -285,6 +315,12 @@ name|char
 modifier|*
 name|pkcs11_module_path
 decl_stmt|;
+comment|/** 	 * openssl_ciphers - OpenSSL cipher string 	 * 	 * This is an OpenSSL specific configuration option for configuring the 	 * default ciphers. If not set, "DEFAULT:!EXP:!LOW" is used as the 	 * default. 	 */
+specifier|const
+name|char
+modifier|*
+name|openssl_ciphers
+decl_stmt|;
 comment|/** 	 * wps - WPS context data 	 * 	 * This is only used by EAP-WSC and can be left %NULL if not available. 	 */
 name|struct
 name|wps_context
@@ -327,7 +363,7 @@ name|int
 name|authorized
 parameter_list|)
 function_decl|;
-comment|/** 	 * cert_cb - Notification of a peer certificate 	 * @ctx: Callback context (ctx) 	 * @depth: Depth in certificate chain (0 = server) 	 * @subject: Subject of the peer certificate 	 * @cert_hash: SHA-256 hash of the certificate 	 * @cert: Peer certificate 	 */
+comment|/** 	 * cert_cb - Notification of a peer certificate 	 * @ctx: Callback context (ctx) 	 * @depth: Depth in certificate chain (0 = server) 	 * @subject: Subject of the peer certificate 	 * @altsubject: Select fields from AltSubject of the peer certificate 	 * @num_altsubject: Number of altsubject values 	 * @cert_hash: SHA-256 hash of the certificate 	 * @cert: Peer certificate 	 */
 name|void
 function_decl|(
 modifier|*
@@ -345,6 +381,15 @@ specifier|const
 name|char
 modifier|*
 name|subject
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|altsubject
+index|[]
+parameter_list|,
+name|int
+name|num_altsubject
 parameter_list|,
 specifier|const
 name|char
@@ -384,6 +429,24 @@ modifier|*
 name|parameter
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|CONFIG_EAP_PROXY
+comment|/** 	 * eap_proxy_cb - Callback signifying any updates from eap_proxy 	 * @ctx: eapol_ctx from eap_peer_sm_init() call 	 */
+name|void
+function_decl|(
+modifier|*
+name|eap_proxy_cb
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+comment|/* CONFIG_EAP_PROXY */
 comment|/** 	 * set_anon_id - Set or add anonymous identity 	 * @ctx: eapol_ctx from eap_peer_sm_init() call 	 * @id: Anonymous identity (e.g., EAP-SIM pseudonym) 	 * @len: Length of anonymous identity in octets 	 */
 name|void
 function_decl|(
@@ -669,6 +732,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|u8
+modifier|*
+name|eapol_sm_get_session_id
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|,
+name|size_t
+modifier|*
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|eapol_sm_notify_logoff
 parameter_list|(
@@ -703,9 +784,6 @@ name|struct
 name|eapol_sm
 modifier|*
 name|sm
-parameter_list|,
-name|int
-name|attempt
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -843,6 +921,38 @@ name|struct
 name|eapol_sm
 modifier|*
 name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|eapol_sm_erp_flush
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|eapol_sm_get_eap_proxy_imsi
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|,
+name|char
+modifier|*
+name|imsi
+parameter_list|,
+name|size_t
+modifier|*
+name|len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1159,6 +1269,30 @@ end_function
 begin_function
 specifier|static
 specifier|inline
+specifier|const
+name|u8
+modifier|*
+name|eapol_sm_get_session_id
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|,
+name|size_t
+modifier|*
+name|len
+parameter_list|)
+block|{
+return|return
+name|NULL
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
 name|void
 name|eapol_sm_notify_logoff
 parameter_list|(
@@ -1187,17 +1321,19 @@ parameter_list|)
 block|{ }
 end_function
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+specifier|inline
+name|void
 name|eapol_sm_notify_pmkid_attempt
 parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
 name|sm
-parameter_list|,
-name|attempt
 parameter_list|)
-value|do { } while (0)
-end_define
+block|{ }
+end_function
 
 begin_define
 define|#
@@ -1356,6 +1492,20 @@ return|return
 literal|0
 return|;
 block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|eapol_sm_erp_flush
+parameter_list|(
+name|struct
+name|eapol_sm
+modifier|*
+name|sm
+parameter_list|)
+block|{ }
 end_function
 
 begin_endif

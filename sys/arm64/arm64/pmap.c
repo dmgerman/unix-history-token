@@ -9358,9 +9358,28 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-name|panic
+name|VM_OBJECT_ASSERT_WLOCKED
 argument_list|(
-literal|"pmap_object_init_pt"
+name|object
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_DEVICE
+operator|||
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_SG
+argument_list|,
+operator|(
+literal|"pmap_object_init_pt: non-device object"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -12173,11 +12192,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|panic
-argument_list|(
-literal|"pmap_clear_modify"
-argument_list|)
-expr_stmt|;
+comment|/* TODO: We lack support for tracking if a page is modified */
 block|}
 end_function
 

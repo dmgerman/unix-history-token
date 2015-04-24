@@ -68,6 +68,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_CRYPTO_INTERNAL
+end_ifdef
+
 begin_comment
 comment|/**  * sha1_vector - SHA-1 hash for data vector  * @num_elem: Number of elements in the data vector  * @addr: Pointers to the data areas  * @len: Lengths of the data blocks  * @mac: Buffer for the hash  * Returns: 0 on success, -1 of failure  */
 end_comment
@@ -149,6 +155,15 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_CRYPTO_INTERNAL */
+end_comment
 
 begin_comment
 comment|/* ===== start - public domain SHA1 implementation ===== */

@@ -2976,7 +2976,7 @@ name|prf
 operator|->
 name|hash_len
 operator|||
-name|os_memcmp
+name|os_memcmp_const
 argument_list|(
 name|auth
 argument_list|,
@@ -4780,7 +4780,7 @@ argument_list|,
 name|pv
 argument_list|)
 expr_stmt|;
-name|os_free
+name|wpabuf_free
 argument_list|(
 name|pv
 argument_list|)
