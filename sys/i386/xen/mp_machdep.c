@@ -432,26 +432,6 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
-name|void
-name|assign_cpu_ids
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
-name|set_interrupt_apic_ids
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|start_all_aps
 parameter_list|(
@@ -512,29 +492,6 @@ name|uintptr_t
 parameter_list|)
 function_decl|;
 end_typedef
-
-begin_struct
-struct|struct
-name|cpu_info
-block|{
-name|int
-name|cpu_present
-range|:
-literal|1
-decl_stmt|;
-name|int
-name|cpu_bsp
-range|:
-literal|1
-decl_stmt|;
-name|int
-name|cpu_disabled
-range|:
-literal|1
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
@@ -605,7 +562,6 @@ comment|/* designated BSP */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|bootAP
 decl_stmt|;
@@ -687,7 +643,6 @@ comment|/* used to hold the AP's until we are ready to release them */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|mtx
 name|ap_boot_mtx
@@ -699,7 +654,6 @@ comment|/* Set to 1 once we're ready to let the APs out of the pen. */
 end_comment
 
 begin_decl_stmt
-specifier|static
 specifier|volatile
 name|int
 name|aps_ready
@@ -713,7 +667,6 @@ comment|/*  * Store data from cpu_add() until later in the boot when we actually
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|struct
 name|cpu_info
 name|cpu_info
@@ -750,7 +703,6 @@ comment|/* Holds pending bitmap based IPIs per CPU */
 end_comment
 
 begin_decl_stmt
-specifier|static
 specifier|volatile
 name|u_int
 name|cpu_ipi_pending
@@ -761,14 +713,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|cpu_logical
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|static
 name|int
 name|cpu_cores
 decl_stmt|;
@@ -2506,7 +2456,6 @@ comment|/*  * We tell the I/O APIC code about all the CPUs we want to receive  *
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|set_interrupt_apic_ids
 parameter_list|(
@@ -2595,7 +2544,6 @@ comment|/*  * Assign logical CPU IDs to local APICs.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|assign_cpu_ids
 parameter_list|(
@@ -4143,7 +4091,6 @@ comment|/*  * send an IPI to a specific CPU.  */
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|ipi_send_cpu
 parameter_list|(
