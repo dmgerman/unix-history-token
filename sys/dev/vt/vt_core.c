@@ -2685,12 +2685,6 @@ name|vd
 argument_list|)
 expr_stmt|;
 comment|/* XXX: kb_token lost */
-name|vd
-operator|->
-name|vd_keyboard
-operator|=
-name|idx0
-expr_stmt|;
 if|if
 condition|(
 name|idx0
@@ -2850,6 +2844,12 @@ name|vd
 argument_list|)
 expr_stmt|;
 block|}
+name|vd
+operator|->
+name|vd_keyboard
+operator|=
+name|idx0
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|20
