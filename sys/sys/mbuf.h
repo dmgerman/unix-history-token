@@ -630,6 +630,24 @@ value|M_dat.M_databuf
 end_define
 
 begin_comment
+comment|/*   * NOTE: forwards compatibility definitions for mbuf(9)  *  * These aren't 1:1 with the macros in r277203; in particular they're exposed  * to both userland and kernel, whereas this is exposed to just _KERNEL -- to  * avoid disruption with existing KBI/KPIs  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MHSIZE
+value|offsetof(struct mbuf, m_dat)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPKTHSIZE
+value|offsetof(struct mbuf, m_pktdat)
+end_define
+
+begin_comment
 comment|/*  * mbuf flags of global significance and layer crossing.  * Those of only protocol/layer specific significance are to be mapped  * to M_PROTO[1-12] and cleared at layer handoff boundaries.  * NB: Limited to the lower 24 bits.  */
 end_comment
 
