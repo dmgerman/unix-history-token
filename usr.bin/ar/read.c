@@ -820,9 +820,37 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* Disallow absolute paths. */
+if|if
+condition|(
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+condition|)
+block|{
+name|bsdar_warnc
+argument_list|(
+name|bsdar
+argument_list|,
+literal|0
+argument_list|,
+literal|"Absolute path '%s'"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* Basic path security flags. */
 name|flags
 operator|=
-literal|0
+name|ARCHIVE_EXTRACT_SECURE_SYMLINKS
+operator||
+expr|\
+name|ARCHIVE_EXTRACT_SECURE_NODOTDOT
 expr_stmt|;
 if|if
 condition|(
