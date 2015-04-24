@@ -458,15 +458,22 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_RX_COPY_HDR_PADDED
+value|((((MPKTHSIZE - 1) / 32) + 1) * 32)
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_RX_COPY_LEN
-value|160
+value|(MSIZE - IXGBE_RX_COPY_HDR_PADDED)
 end_define
 
 begin_define
 define|#
 directive|define
 name|IXGBE_RX_COPY_ALIGN
-value|(MHLEN - IXGBE_RX_COPY_LEN)
+value|(IXGBE_RX_COPY_HDR_PADDED - MPKTHSIZE)
 end_define
 
 begin_comment
