@@ -201,18 +201,15 @@ name|err
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* Which queue to use */
+comment|/* check if flowid is set */
 if|if
 condition|(
-operator|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
-operator|)
+argument_list|)
 operator|!=
-literal|0
+name|M_HASHTYPE_NONE
 condition|)
 name|i
 operator|=
@@ -7007,11 +7004,12 @@ name|que
 operator|->
 name|msix
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|sendmp
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 block|}
 name|next_desc

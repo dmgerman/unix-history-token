@@ -11588,7 +11588,7 @@ modifier|*
 name|high_tsn
 parameter_list|,
 name|uint8_t
-name|use_mflowid
+name|mflowtype
 parameter_list|,
 name|uint32_t
 name|mflowid
@@ -12035,7 +12035,7 @@ name|sh
 argument_list|,
 name|op_err
 argument_list|,
-name|use_mflowid
+name|mflowtype
 argument_list|,
 name|mflowid
 argument_list|,
@@ -12109,7 +12109,7 @@ name|sh
 argument_list|,
 name|op_err
 argument_list|,
-name|use_mflowid
+name|mflowtype
 argument_list|,
 name|mflowid
 argument_list|,
@@ -12336,7 +12336,7 @@ name|sh
 argument_list|,
 name|op_err
 argument_list|,
-name|use_mflowid
+name|mflowtype
 argument_list|,
 name|mflowid
 argument_list|,

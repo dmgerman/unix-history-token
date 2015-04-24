@@ -988,11 +988,11 @@ comment|/* sysctl tree oid */
 name|int
 name|use_flowid
 decl_stmt|;
-comment|/* use M_FLOWID */
+comment|/* enable use of flowid */
 name|int
 name|flowid_shift
 decl_stmt|;
-comment|/* shift the flowid */
+comment|/* set flowid shift*/
 block|}
 struct|;
 end_struct

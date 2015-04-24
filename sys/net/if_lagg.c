@@ -1332,7 +1332,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Default value for using M_FLOWID */
+comment|/* Default value for using flowid */
 end_comment
 
 begin_expr_stmt
@@ -1377,7 +1377,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Default value for using M_FLOWID */
+comment|/* Default value for using flow shift */
 end_comment
 
 begin_expr_stmt
@@ -9630,13 +9630,12 @@ name|sc
 operator|->
 name|use_flowid
 operator|&&
-operator|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
-operator|)
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 name|p
 operator|=

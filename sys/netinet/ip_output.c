@@ -567,13 +567,9 @@ if|if
 condition|(
 name|inp
 operator|->
-name|inp_flags
-operator|&
-operator|(
-name|INP_HW_FLOWID
-operator||
-name|INP_SW_FLOWID
-operator|)
+name|inp_flowtype
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 block|{
 name|m
@@ -586,11 +582,12 @@ name|inp
 operator|->
 name|inp_flowid
 expr_stmt|;
+name|M_HASHTYPE_SET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -3337,7 +3334,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* make sure the flowid is the same for the fragmented mbufs */
+comment|/* 		 * make sure the flowid and flowtype are the same for the 		 * fragmented mbufs 		 */
 name|M_HASHTYPE_SET
 argument_list|(
 name|m
@@ -3360,7 +3357,7 @@ name|m_pkthdr
 operator|.
 name|flowid
 expr_stmt|;
-comment|/* copy multicast and flowid flags, if any */
+comment|/* copy multicast flags, if any */
 name|m
 operator|->
 name|m_flags
@@ -3370,11 +3367,7 @@ name|m0
 operator|->
 name|m_flags
 operator|&
-operator|(
 name|M_MCAST
-operator||
-name|M_FLOWID
-operator|)
 operator|)
 expr_stmt|;
 comment|/* 		 * In the first mbuf, leave room for the link header, then 		 * copy the original IP header including options. The payload 		 * goes into an additional mbuf chain returned by m_copym(). 		 */
