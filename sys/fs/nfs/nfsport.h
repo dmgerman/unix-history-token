@@ -4235,7 +4235,7 @@ begin_define
 define|#
 directive|define
 name|NFS_MAXBSIZE
-value|MAXBSIZE
+value|MAXBCACHEBUF
 end_define
 
 begin_endif
