@@ -25,59 +25,81 @@ begin_struct
 struct|struct
 name|smbcmd
 block|{
-name|char
+name|u_char
 name|cmd
 decl_stmt|;
-name|int
-name|count
-decl_stmt|;
 name|u_char
-name|slave
+name|reserved
+decl_stmt|;
+name|u_short
+name|op
 decl_stmt|;
 union|union
 block|{
 name|char
 name|byte
 decl_stmt|;
+name|char
+name|buf
+index|[
+literal|2
+index|]
+decl_stmt|;
 name|short
 name|word
 decl_stmt|;
+block|}
+name|wdata
+union|;
+union|union
+block|{
+name|char
+name|byte
+decl_stmt|;
+name|char
+name|buf
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|short
+name|word
+decl_stmt|;
+block|}
+name|rdata
+union|;
+name|int
+name|slave
+decl_stmt|;
 name|char
 modifier|*
-name|byte_ptr
+name|wbuf
 decl_stmt|;
-name|short
+comment|/* use wdata if NULL */
+name|int
+name|wcount
+decl_stmt|;
+name|char
 modifier|*
-name|word_ptr
+name|rbuf
 decl_stmt|;
-struct|struct
-block|{
-name|short
-name|sdata
+comment|/* use rdata if NULL */
+name|int
+name|rcount
 decl_stmt|;
-name|short
-modifier|*
-name|rdata
-decl_stmt|;
-block|}
-name|process
-struct|;
-block|}
-name|data
-union|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/*  * SMBus spec 2.0 says block transfers may be at most 32 bytes.  */
+comment|/*  * SMBus spec 2.0 says block transfers may be at most 32 bytes.  * We use SMBus for i2c as well, make the size limit something more  * reasonable.  Keep in mind that a char buf array is declared on the  * kernel stack.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SMB_MAXBLOCKSIZE
-value|32
+value|1024
 end_define
 
 begin_define
@@ -162,6 +184,13 @@ define|#
 directive|define
 name|SMB_BREAD
 value|_IOWR('i', 11, struct smbcmd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMB_TRANS
+value|_IOWR('i', 12, struct smbcmd)
 end_define
 
 begin_endif
