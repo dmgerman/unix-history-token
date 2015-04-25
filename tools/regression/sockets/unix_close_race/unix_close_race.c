@@ -103,12 +103,15 @@ directive|include
 file|<err.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|UNIXSTR_PATH
-value|"/tmp/mytest.socket"
-end_define
+begin_decl_stmt
+specifier|static
+name|char
+name|socket_path
+index|[]
+init|=
+literal|"tmp.XXXXXXXX"
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -128,13 +131,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -216,6 +213,28 @@ argument_list|(
 literal|"SMP not present, test may be unable to trigger race"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|mkstemp
+argument_list|(
+name|socket_path
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"mkstemp failed"
+argument_list|)
+expr_stmt|;
+name|unlink
+argument_list|(
+name|socket_path
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create a UNIX domain socket that the child will repeatedly 	 * accept() from, and that the parent will repeatedly connect() to. 	 */
 if|if
 condition|(
@@ -246,7 +265,7 @@ name|void
 operator|)
 name|unlink
 argument_list|(
-name|UNIXSTR_PATH
+name|socket_path
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -272,7 +291,7 @@ name|servaddr
 operator|.
 name|sun_path
 argument_list|,
-name|UNIXSTR_PATH
+name|socket_path
 argument_list|)
 expr_stmt|;
 if|if
@@ -382,7 +401,7 @@ name|servaddr
 operator|.
 name|sun_path
 argument_list|,
-name|UNIXSTR_PATH
+name|socket_path
 argument_list|)
 expr_stmt|;
 for|for
