@@ -832,6 +832,12 @@ name|td_kstack
 operator|=
 literal|0
 expr_stmt|;
+name|td
+operator|->
+name|td_sel
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 literal|0
