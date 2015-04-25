@@ -91,6 +91,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_BDW1
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x160c)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_CPT
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x1c20)
 end_define
@@ -233,6 +240,13 @@ define|#
 directive|define
 name|HDA_INTEL_LPTLP2
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x9c21)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_INTEL_BDW2
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x9ca0)
 end_define
 
 begin_define
@@ -1261,6 +1275,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LENOVO_X120BS_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x2227)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LENOVO_X220_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(LENOVO, 0x21da)
 end_define
@@ -1791,6 +1812,13 @@ define|#
 directive|define
 name|HDA_CODEC_ALC276
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0276)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC292
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0292)
 end_define
 
 begin_define
@@ -3632,6 +3660,13 @@ define|#
 directive|define
 name|HDA_CODEC_INTELHSW
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2807)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELBDW
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2808)
 end_define
 
 begin_define

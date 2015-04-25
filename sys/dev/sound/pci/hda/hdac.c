@@ -280,6 +280,26 @@ literal|0
 block|}
 block|,
 block|{
+name|HDA_INTEL_BDW1
+block|,
+literal|"Intel Broadwell"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_BDW2
+block|,
+literal|"Intel Broadwell"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_INTEL_CPT
 block|,
 literal|"Intel Cougar Point"
