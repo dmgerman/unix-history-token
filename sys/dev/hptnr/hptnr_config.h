@@ -59,6 +59,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|debug_flag
+value|hptnr_debug_flag
+end_define
+
+begin_define
+define|#
+directive|define
 name|delay_between_spinup
 value|hptnr_delay_between_spinup
 end_define
@@ -614,6 +621,13 @@ define|#
 directive|define
 name|log_sector_repair
 value|hptnr_log_sector_repair
+end_define
+
+begin_define
+define|#
+directive|define
+name|msi
+value|hptnr_msi
 end_define
 
 begin_define

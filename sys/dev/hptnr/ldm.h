@@ -861,6 +861,9 @@ decl_stmt|;
 name|__HPT_RAW_LBA
 name|head_position
 decl_stmt|;
+name|HPT_U32
+name|logical_sector_size
+decl_stmt|;
 name|HPT_U16
 name|max_sectors_per_cmd
 decl_stmt|;
