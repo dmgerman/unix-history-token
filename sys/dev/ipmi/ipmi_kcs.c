@@ -2133,6 +2133,12 @@ name|ipmi_driver_request
 operator|=
 name|kcs_driver_request
 expr_stmt|;
+name|sc
+operator|->
+name|ipmi_driver_requests_polled
+operator|=
+literal|1
+expr_stmt|;
 comment|/* See if we can talk to the controller. */
 name|status
 operator|=

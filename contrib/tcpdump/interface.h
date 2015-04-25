@@ -862,20 +862,6 @@ end_include
 
 begin_function_decl
 specifier|extern
-name|void
-name|pfsync_ip_print
-parameter_list|(
-specifier|const
-name|u_char
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|q922_string

@@ -10286,6 +10286,12 @@ break|break;
 endif|#
 directive|endif
 default|default:
+name|KEY_FREESAV
+argument_list|(
+operator|&
+name|sav
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-

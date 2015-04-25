@@ -768,7 +768,9 @@ comment|/* 	 * This HAS to be the last item because we adjust the zone size 	 * 
 name|struct
 name|uma_cache
 name|uz_cpu
-index|[]
+index|[
+literal|1
+index|]
 decl_stmt|;
 comment|/* Per cpu caches */
 block|}
