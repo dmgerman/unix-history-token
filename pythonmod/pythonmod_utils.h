@@ -25,6 +25,12 @@ directive|include
 file|"util/module.h"
 end_include
 
+begin_struct_decl
+struct_decl|struct
+name|delegpt_addr
+struct_decl|;
+end_struct_decl
+
 begin_comment
 comment|/**  *  Store the reply_info and query_info pair in message cache (qstate->msg_cache)  *  * @param qstate: module environment  * @param qinfo: query info, the query for which answer is stored.  * @param msgrep: reply in dns_msg  * @param is_referral: If true, then the given message to be stored is a  *      referral. The cache implementation may use this as a hint.  *      It will store only the RRsets, not the message.  * @return 0 on alloc error (out of memory).  */
 end_comment
@@ -107,6 +113,29 @@ name|struct
 name|comm_reply
 modifier|*
 name|reply
+parameter_list|,
+name|char
+modifier|*
+name|dest
+parameter_list|,
+name|int
+name|maxlen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Convert target->addr to string */
+end_comment
+
+begin_function_decl
+name|void
+name|delegpt_addr_addr2str
+parameter_list|(
+name|struct
+name|delegpt_addr
+modifier|*
+name|target
 parameter_list|,
 name|char
 modifier|*

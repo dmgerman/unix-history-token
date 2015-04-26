@@ -186,6 +186,10 @@ comment|/** max number of hosts in the infra cache */
 name|size_t
 name|infra_cache_numhosts
 decl_stmt|;
+comment|/** min value for infra cache rtt */
+name|int
+name|infra_cache_min_rtt
+decl_stmt|;
 comment|/** delay close of udp-timeouted ports, if 0 no delayclose. in msec */
 name|int
 name|delay_close

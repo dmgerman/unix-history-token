@@ -2455,6 +2455,9 @@ literal|0
 index|]
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_CHOWN
 if|if
 condition|(
 name|chown
@@ -2505,6 +2508,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* HAVE_CHOWN */
 block|}
 block|}
 else|#
@@ -2516,6 +2522,7 @@ name|daemon
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* HAVE_KILL */
 comment|/* Set user context */
 ifdef|#
 directive|ifdef

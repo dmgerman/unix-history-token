@@ -2351,6 +2351,9 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
+name|HAVE_GETAUXVAL
+ifdef|#
+directive|ifdef
 name|AT_RANDOM
 comment|/* Not as random as you think but we take what we are given */
 name|p
@@ -2429,6 +2432,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+endif|#
+directive|endif
+comment|/* HAVE_GETAUXVAL */
 name|SHA512_Final
 argument_list|(
 name|results

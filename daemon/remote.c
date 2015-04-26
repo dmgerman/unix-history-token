@@ -1654,6 +1654,9 @@ operator|-
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HAVE_CHOWN
 if|if
 condition|(
 name|cfg
@@ -1698,6 +1701,15 @@ name|S_IWGRP
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|cfg
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 block|}
 else|else

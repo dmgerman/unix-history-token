@@ -5437,6 +5437,8 @@ argument_list|,
 name|worker
 operator|->
 name|scratchpad
+argument_list|,
+name|repinfo
 argument_list|)
 condition|)
 block|{
