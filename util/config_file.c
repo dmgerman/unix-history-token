@@ -155,6 +155,38 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/** from cfg username, after daemonise setup performed */
+end_comment
+
+begin_decl_stmt
+name|uid_t
+name|cfg_uid
+init|=
+operator|(
+name|uid_t
+operator|)
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/** from cfg username, after daemonise setup performed */
+end_comment
+
+begin_decl_stmt
+name|gid_t
+name|cfg_gid
+init|=
+operator|(
+name|gid_t
+operator|)
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/** global config during parsing */
 end_comment
 
@@ -580,26 +612,6 @@ condition|)
 goto|goto
 name|error_exit
 goto|;
-name|cfg
-operator|->
-name|uid
-operator|=
-operator|(
-name|uid_t
-operator|)
-operator|-
-literal|1
-expr_stmt|;
-name|cfg
-operator|->
-name|gid
-operator|=
-operator|(
-name|gid_t
-operator|)
-operator|-
-literal|1
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_CHROOT
@@ -7431,17 +7443,13 @@ operator|->
 name|username
 argument_list|)
 expr_stmt|;
-name|cfg
-operator|->
-name|uid
+name|cfg_uid
 operator|=
 name|pwd
 operator|->
 name|pw_uid
 expr_stmt|;
-name|cfg
-operator|->
-name|gid
+name|cfg_gid
 operator|=
 name|pwd
 operator|->

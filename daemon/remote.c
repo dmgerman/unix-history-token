@@ -1674,13 +1674,9 @@ name|chown
 argument_list|(
 name|ip
 argument_list|,
-name|cfg
-operator|->
-name|uid
+name|cfg_uid
 argument_list|,
-name|cfg
-operator|->
-name|gid
+name|cfg_gid
 argument_list|)
 expr_stmt|;
 name|chmod

@@ -416,6 +416,38 @@ operator|-
 literal|1
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|SYS_getrandom
+comment|/* try to use getrandom syscall introduced with kernel 3.17 */
+name|ret
+operator|=
+name|syscall
+argument_list|(
+name|SYS_getrandom
+argument_list|,
+name|buf
+argument_list|,
+name|len
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|!=
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+endif|#
+directive|endif
+comment|/* SYS_getrandom */
 comment|/* 	 * Try to get entropy with /dev/urandom 	 * 	 * This can fail if the process is inside a chroot or if file 	 * descriptors are exhausted. 	 */
 name|ret
 operator|=

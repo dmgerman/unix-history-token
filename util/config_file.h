@@ -339,12 +339,6 @@ name|char
 modifier|*
 name|username
 decl_stmt|;
-name|uid_t
-name|uid
-decl_stmt|;
-name|gid_t
-name|gid
-decl_stmt|;
 comment|/** working directory */
 name|char
 modifier|*
@@ -650,6 +644,28 @@ struct|;
 end_struct
 
 begin_comment
+comment|/** from cfg username, after daemonise setup performed */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|uid_t
+name|cfg_uid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/** from cfg username, after daemonise setup performed */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|gid_t
+name|cfg_gid
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/**  * Stub config options  */
 end_comment
 
@@ -856,7 +872,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Find username, sets uid and gid.  * @param config: the config structure.  */
+comment|/**  * Find username, sets cfg_uid and cfg_gid.  * @param config: the config structure.  */
 end_comment
 
 begin_function_decl
