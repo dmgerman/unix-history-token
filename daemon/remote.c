@@ -1669,6 +1669,14 @@ name|username
 index|[
 literal|0
 index|]
+operator|&&
+name|cfg_uid
+operator|!=
+operator|(
+name|uid_t
+operator|)
+operator|-
+literal|1
 condition|)
 name|chown
 argument_list|(

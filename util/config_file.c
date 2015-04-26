@@ -7431,18 +7431,10 @@ operator|->
 name|username
 argument_list|)
 operator|)
-operator|==
+operator|!=
 name|NULL
 condition|)
-name|log_err
-argument_list|(
-literal|"user '%s' does not exist."
-argument_list|,
-name|cfg
-operator|->
-name|username
-argument_list|)
-expr_stmt|;
+block|{
 name|cfg_uid
 operator|=
 name|pwd
@@ -7455,6 +7447,7 @@ name|pwd
 operator|->
 name|pw_gid
 expr_stmt|;
+block|}
 block|}
 else|#
 directive|else
