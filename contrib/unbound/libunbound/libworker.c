@@ -3540,6 +3540,8 @@ operator|->
 name|env
 operator|->
 name|scratch
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -3974,6 +3976,8 @@ operator|->
 name|env
 operator|->
 name|scratch
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
@@ -4736,6 +4740,8 @@ operator|->
 name|env
 operator|->
 name|scratch
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{
