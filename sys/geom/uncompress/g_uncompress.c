@@ -2780,6 +2780,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
