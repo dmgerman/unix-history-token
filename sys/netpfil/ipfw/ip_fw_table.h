@@ -118,42 +118,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/* Internal structures for handling sockopt data */
-end_comment
-
-begin_struct
-struct|struct
-name|tid_info
-block|{
-name|uint32_t
-name|set
-decl_stmt|;
-comment|/* table set */
-name|uint16_t
-name|uidx
-decl_stmt|;
-comment|/* table index */
-name|uint8_t
-name|type
-decl_stmt|;
-comment|/* table type */
-name|uint8_t
-name|atype
-decl_stmt|;
-name|void
-modifier|*
-name|tlvs
-decl_stmt|;
-comment|/* Pointer to first TLV */
-name|int
-name|tlen
-decl_stmt|;
-comment|/* Total TLV size block */
-block|}
-struct|;
-end_struct
-
 begin_struct_decl
 struct_decl|struct
 name|table_value
@@ -1292,23 +1256,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ipfw_rewrite_table_kidx
-parameter_list|(
-name|struct
-name|ip_fw_chain
-modifier|*
-name|chain
-parameter_list|,
-name|struct
-name|ip_fw_rule0
-modifier|*
-name|rule
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|ipfw_mark_table_kidx
 parameter_list|(
 name|struct
@@ -1361,6 +1308,20 @@ name|struct
 name|ip_fw
 modifier|*
 name|rule
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|namedobj_instance
+modifier|*
+name|ipfw_get_table_objhash
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|ch
 parameter_list|)
 function_decl|;
 end_function_decl
