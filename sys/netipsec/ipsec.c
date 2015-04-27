@@ -1350,6 +1350,22 @@ end_comment
 begin_function_decl
 specifier|static
 name|int
+name|ipsec_in_reject
+parameter_list|(
+name|struct
+name|secpolicy
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|ipsec_setspidx_inpcb
 parameter_list|(
 name|struct
@@ -6274,6 +6290,7 @@ comment|/*  * Check security policy requirements against the actual  * packet co
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ipsec_in_reject
 parameter_list|(
