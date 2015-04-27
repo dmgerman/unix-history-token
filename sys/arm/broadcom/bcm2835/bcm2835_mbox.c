@@ -1448,11 +1448,7 @@ name|map
 argument_list|,
 name|buf
 argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|msg_set_power_state
-argument_list|)
+name|len
 argument_list|,
 name|bcm2835_mbox_dma_cb
 argument_list|,
