@@ -9475,7 +9475,7 @@ return|;
 block|}
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
