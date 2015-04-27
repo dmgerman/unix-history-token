@@ -94,6 +94,16 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define if pthread_{,attr_}{g,s}etaffinity_np is supported. */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_PTHREAD_AFFINITY_NP
+end_undef
+
+begin_comment
 comment|/* Define to 1 if you have the<semaphore.h> header file. */
 end_comment
 
