@@ -812,7 +812,7 @@ condition|(
 name|db_validate_address
 argument_list|(
 operator|(
-name|u_int
+name|vm_offset_t
 operator|)
 name|src
 argument_list|)
@@ -893,7 +893,7 @@ condition|(
 name|db_validate_address
 argument_list|(
 operator|(
-name|u_int
+name|vm_offset_t
 operator|)
 name|dst
 argument_list|)
