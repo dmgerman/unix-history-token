@@ -115,6 +115,7 @@ comment|/*  * All activity occurs within a temporary directory created early in 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|temp_dir
 index|[
@@ -292,11 +293,6 @@ name|char
 modifier|*
 name|fifoname
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|testname
-parameter_list|,
 name|int
 modifier|*
 name|reader_fdp
@@ -405,11 +401,6 @@ specifier|const
 name|char
 modifier|*
 name|fifoname
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|testname
 parameter_list|,
 name|int
 modifier|*
@@ -788,8 +779,6 @@ name|openfifo
 argument_list|(
 literal|"testfifo"
 argument_list|,
-literal|"test_simpleio"
-argument_list|,
 operator|&
 name|reader_fd
 argument_list|,
@@ -1080,6 +1069,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|volatile
 name|int
 name|alarm_fired
 decl_stmt|;
@@ -1096,6 +1086,7 @@ name|sigalarm
 parameter_list|(
 name|int
 name|signum
+name|__unused
 parameter_list|)
 block|{
 name|alarm_fired
@@ -1540,8 +1531,6 @@ name|openfifo
 argument_list|(
 literal|"testfifo"
 argument_list|,
-name|__func__
-argument_list|,
 operator|&
 name|reader_fd
 argument_list|,
@@ -1850,8 +1839,6 @@ condition|(
 name|openfifo
 argument_list|(
 literal|"testfifo"
-argument_list|,
-name|__func__
 argument_list|,
 operator|&
 name|reader_fd
@@ -2219,8 +2206,6 @@ name|openfifo
 argument_list|(
 literal|"testfifo"
 argument_list|,
-name|__func__
-argument_list|,
 operator|&
 name|reader_fd
 argument_list|,
@@ -2560,8 +2545,6 @@ name|openfifo
 argument_list|(
 literal|"testfifo"
 argument_list|,
-name|__func__
-argument_list|,
 operator|&
 name|reader_fd
 argument_list|,
@@ -2843,8 +2826,6 @@ condition|(
 name|openfifo
 argument_list|(
 literal|"testfifo"
-argument_list|,
-name|__func__
 argument_list|,
 operator|&
 name|reader_fd
@@ -3172,8 +3153,6 @@ condition|(
 name|openfifo
 argument_list|(
 literal|"testfifo"
-argument_list|,
-name|__func__
 argument_list|,
 operator|&
 name|reader_fd
@@ -3545,8 +3524,6 @@ condition|(
 name|openfifo
 argument_list|(
 literal|"testfifo"
-argument_list|,
-name|__func__
 argument_list|,
 operator|&
 name|reader_fd
@@ -5068,8 +5045,6 @@ name|openfifo
 argument_list|(
 literal|"testfifo"
 argument_list|,
-name|__func__
-argument_list|,
 operator|&
 name|reader_fd
 argument_list|,
@@ -5335,8 +5310,6 @@ condition|(
 name|openfifo
 argument_list|(
 literal|"testfifo"
-argument_list|,
-name|__func__
 argument_list|,
 operator|&
 name|reader_fd
@@ -5793,8 +5766,6 @@ name|openfifo
 argument_list|(
 literal|"testfifo"
 argument_list|,
-name|__func__
-argument_list|,
 operator|&
 name|reader_fd
 argument_list|,
@@ -6223,8 +6194,6 @@ name|openfifo_rw
 argument_list|(
 literal|"testfifo"
 argument_list|,
-name|__func__
-argument_list|,
 operator|&
 name|fd
 argument_list|)
@@ -6556,20 +6525,14 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|strcpy
 argument_list|(
 name|temp_dir
 argument_list|,
-literal|"/tmp/fifo_io.XXXXXXXXXXX"
+literal|"fifo_io.XXXXXXXXXXX"
 argument_list|)
 expr_stmt|;
 if|if

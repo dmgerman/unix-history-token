@@ -88,6 +88,7 @@ comment|/*  * All activity occurs within a temporary directory created early in 
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|temp_dir
 index|[
@@ -1690,13 +1691,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 if|if
@@ -1718,7 +1713,7 @@ name|strcpy
 argument_list|(
 name|temp_dir
 argument_list|,
-literal|"/tmp/fifo_open.XXXXXXXXXXX"
+literal|"fifo_open.XXXXXXXXXXX"
 argument_list|)
 expr_stmt|;
 if|if
