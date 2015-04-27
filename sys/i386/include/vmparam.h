@@ -302,7 +302,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Level 0 reservations consist of 512 pages under PAE and 1024 pages  * otherwise.  */
+comment|/*  * Level 0 reservations consist of 512 pages when PAE pagetables are  * used, and 1024 pages otherwise.  */
 end_comment
 
 begin_ifndef
@@ -311,11 +311,19 @@ directive|ifndef
 name|VM_LEVEL_0_ORDER
 end_ifndef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PAE
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PAE_TABLES
+argument_list|)
+end_if
 
 begin_define
 define|#
