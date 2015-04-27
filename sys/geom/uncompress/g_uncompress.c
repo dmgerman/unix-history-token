@@ -2858,6 +2858,10 @@ argument_list|,
 name|M_GEOM
 argument_list|)
 expr_stmt|;
+name|buf
+operator|=
+name|NULL
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 operator|(
