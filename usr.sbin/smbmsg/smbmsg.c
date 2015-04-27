@@ -753,11 +753,15 @@ block|{
 comment|/* command + 1 byte input: read byte op. */
 name|c
 operator|.
-name|data
-operator|.
-name|byte_ptr
+name|rbuf
 operator|=
 name|ibuf
+expr_stmt|;
+name|c
+operator|.
+name|rcount
+operator|=
+name|iflag
 expr_stmt|;
 if|if
 condition|(
@@ -824,7 +828,7 @@ block|{
 comment|/* command + 1 byte output: write byte op. */
 name|c
 operator|.
-name|data
+name|wdata
 operator|.
 name|byte
 operator|=
@@ -865,12 +869,20 @@ block|{
 comment|/* command + 2 bytes input: read word op. */
 name|c
 operator|.
-name|data
-operator|.
-name|word_ptr
+name|rbuf
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|iword
+expr_stmt|;
+name|c
+operator|.
+name|rcount
+operator|=
+name|iflag
 expr_stmt|;
 if|if
 condition|(
@@ -936,7 +948,7 @@ block|{
 comment|/* command + 2 bytes output: write word op. */
 name|c
 operator|.
-name|data
+name|wdata
 operator|.
 name|word
 operator|=
@@ -973,24 +985,28 @@ block|{
 comment|/* 		 * command + 2 bytes output + 2 bytes input: 		 * "process call" op. 		 */
 name|c
 operator|.
-name|data
+name|wdata
 operator|.
-name|process
-operator|.
-name|sdata
+name|word
 operator|=
 name|oword
 expr_stmt|;
 name|c
 operator|.
-name|data
-operator|.
-name|process
-operator|.
-name|rdata
+name|rbuf
 operator|=
+operator|(
+name|char
+operator|*
+operator|)
 operator|&
 name|iword
+expr_stmt|;
+name|c
+operator|.
+name|rcount
+operator|=
+name|iflag
 expr_stmt|;
 if|if
 condition|(
@@ -1054,15 +1070,13 @@ block|{
 comment|/* command +> 1 bytes of input: block read */
 name|c
 operator|.
-name|data
-operator|.
-name|byte_ptr
+name|rbuf
 operator|=
 name|ibuf
 expr_stmt|;
 name|c
 operator|.
-name|count
+name|rcount
 operator|=
 name|iflag
 expr_stmt|;
@@ -1150,15 +1164,13 @@ block|{
 comment|/* command +> 1 bytes of output: block write */
 name|c
 operator|.
-name|data
-operator|.
-name|byte_ptr
+name|wbuf
 operator|=
 name|obuf
 expr_stmt|;
 name|c
 operator|.
-name|count
+name|wcount
 operator|=
 name|oflag
 expr_stmt|;

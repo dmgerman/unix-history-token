@@ -795,7 +795,7 @@ name|isr
 init|=
 name|NULL
 decl_stmt|;
-comment|/* 	 * when the kernel forwards a packet, it is not proper to apply 	 * IPsec transport mode to the packet is not proper.  this check 	 * avoid from this. 	 * at present, if there is even a transport mode SA request in the 	 * security policy, the kernel does not apply IPsec to the packet. 	 * this check is not enough because the following case is valid. 	 *      ipsec esp/tunnel/xxx-xxx/require esp/transport//require; 	 */
+comment|/* 	 * when the kernel forwards a packet, it is not proper to apply 	 * IPsec transport mode to the packet. This check avoid from this. 	 * at present, if there is even a transport mode SA request in the 	 * security policy, the kernel does not apply IPsec to the packet. 	 * this check is not enough because the following case is valid. 	 *      ipsec esp/tunnel/xxx-xxx/require esp/transport//require; 	 */
 for|for
 control|(
 name|isr
@@ -864,6 +864,13 @@ operator|->
 name|req
 argument_list|)
 expr_stmt|;
+comment|/* Release SP if an error occured */
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
 name|KEY_FREESP
 argument_list|(
 operator|&

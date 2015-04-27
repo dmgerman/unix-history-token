@@ -15,6 +15,20 @@ directive|define
 name|__SMBUS_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|SMBUS_ADDR_MIN
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMBUS_ADDR_MAX
+value|0x70
+end_define
+
 begin_struct
 struct|struct
 name|smbus_softc
@@ -26,6 +40,13 @@ comment|/* smbus owner device structure */
 name|struct
 name|mtx
 name|lock
+decl_stmt|;
+name|unsigned
+name|char
+name|addrs
+index|[
+name|SMBUS_ADDR_MAX
+index|]
 decl_stmt|;
 block|}
 struct|;

@@ -374,14 +374,14 @@ name|__arm__
 end_ifdef
 
 begin_comment
-comment|/* bogus */
+comment|/*  * At least on ARMv7, this appears to work quite well.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|PROF_ARTIFICIAL_FRAMES
-value|9
+value|10
 end_define
 
 begin_endif

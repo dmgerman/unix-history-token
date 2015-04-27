@@ -1217,6 +1217,22 @@ argument_list|(
 literal|"LibAliasRedirect* returned NULL\n"
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|r
+operator|->
+name|alink
+argument_list|,
+name|M_IPFW
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|r
+argument_list|,
+name|M_IPFW
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EINVAL
