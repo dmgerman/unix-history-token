@@ -5062,7 +5062,7 @@ name|bpage
 operator|->
 name|vaddr
 operator||=
-name|vaddr
+name|addr
 operator|&
 name|PAGE_MASK
 expr_stmt|;
@@ -5070,7 +5070,7 @@ name|bpage
 operator|->
 name|busaddr
 operator||=
-name|vaddr
+name|addr
 operator|&
 name|PAGE_MASK
 expr_stmt|;
