@@ -2761,6 +2761,17 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* Do the appropriate encapsulation, if necessary */
@@ -3468,6 +3479,17 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|ip6
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip6_hdr
+operator|*
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEV_ENC */

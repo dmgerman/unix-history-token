@@ -1818,6 +1818,17 @@ operator|(
 name|error
 operator|)
 return|;
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEV_ENC */
