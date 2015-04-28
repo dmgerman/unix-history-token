@@ -115,6 +115,12 @@ directive|include
 file|<atf-c.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"freebsd_test_suite/macros.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -189,33 +195,6 @@ name|int
 name|aio_timedout
 decl_stmt|;
 end_decl_stmt
-
-begin_function
-specifier|static
-name|void
-name|aio_available
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|modfind
-argument_list|(
-literal|"aio"
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|atf_tc_skip
-argument_list|(
-literal|"aio support not available in the kernel; "
-literal|"skipping testcases"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Each test run specifies a timeout in seconds.  Use the somewhat obsoleted  * signal(3) and alarm(3) APIs to set this up.  */
@@ -672,8 +651,10 @@ decl_stmt|;
 name|ssize_t
 name|len
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -887,8 +868,10 @@ decl_stmt|;
 name|ssize_t
 name|len
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -1228,8 +1211,10 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
@@ -1451,8 +1436,10 @@ name|struct
 name|aio_context
 name|ac
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
 comment|/* 	 * In theory, mkstemp() can return a name that is then collided with. 	 * Because this is a regression test, we treat that as a test failure 	 * rather than retrying. 	 */
 name|strcpy
@@ -1778,8 +1765,10 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_MSG
 argument_list|(
@@ -1982,8 +1971,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_MSG
 argument_list|(
@@ -2226,8 +2217,10 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
 name|ATF_REQUIRE_MSG
 argument_list|(
@@ -2523,8 +2516,10 @@ name|struct
 name|md_ioctl
 name|mdio
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
 name|mdctl_fd
 operator|=
