@@ -828,7 +828,7 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* record data transfer */
-comment|/* 	 * We're done with IPsec processing, transmit the packet using the 	 * appropriate network protocol (IP or IPv6). SPD lookup will be 	 * performed again there. 	 */
+comment|/* 	 * We're done with IPsec processing, transmit the packet using the 	 * appropriate network protocol (IP or IPv6). 	 */
 switch|switch
 condition|(
 name|saidx
