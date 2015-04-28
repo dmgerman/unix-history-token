@@ -25283,7 +25283,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  Clean L1 data cache range on a single page, which is not mapped yet.  */
+comment|/*  *  Clean L1 data cache range by physical address.  *  The range must be within a single page.  */
 end_comment
 
 begin_function
@@ -25305,9 +25305,6 @@ name|struct
 name|sysmaps
 modifier|*
 name|sysmaps
-decl_stmt|;
-name|vm_offset_t
-name|va
 decl_stmt|;
 name|KASSERT
 argument_list|(
@@ -25382,23 +25379,30 @@ name|ma
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|va
-operator|=
+name|tlb_flush_local
+argument_list|(
 operator|(
 name|vm_offset_t
 operator|)
 name|sysmaps
 operator|->
 name|CADDR3
-expr_stmt|;
-name|tlb_flush_local
-argument_list|(
-name|va
 argument_list|)
 expr_stmt|;
 name|dcache_wb_pou
 argument_list|(
-name|va
+operator|(
+name|vm_offset_t
+operator|)
+name|sysmaps
+operator|->
+name|CADDR3
+operator|+
+operator|(
+name|pa
+operator|&
+name|PAGE_MASK
+operator|)
 argument_list|,
 name|size
 argument_list|)
