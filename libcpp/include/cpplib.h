@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Definitions for CPP library.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,    2004, 2005    Free Software Foundation, Inc.    Written by Per Bothner, 1994-95.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
+comment|/* Definitions for CPP library.    Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,    2004, 2005, 2007    Free Software Foundation, Inc.    Written by Per Bothner, 1994-95.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
 end_comment
 
 begin_ifndef
@@ -232,6 +232,10 @@ block|,
 name|CLK_GNUCXX
 block|,
 name|CLK_CXX98
+block|,
+name|CLK_GNUCXX0X
+block|,
+name|CLK_CXX0X
 block|,
 name|CLK_ASM
 block|}
@@ -804,6 +808,10 @@ comment|/* True means error callback should be used for diagnostics.  */
 name|bool
 name|client_diagnostic
 decl_stmt|;
+comment|/* True disables tokenization outside of preprocessing directives. */
+name|bool
+name|directives_only
+decl_stmt|;
 block|}
 struct|;
 comment|/* Callback for header lookup for HEADER, which is the name of a    source file.  It is used as a method of last resort to find headers    that are not otherwise found during the normal include processing.    The return value is the malloced name of a header to try and open,    if any, or NULL otherwise.  This callback is called only if the    header is otherwise unfound.  */
@@ -1266,7 +1274,10 @@ name|BT_PRAGMA
 block|,
 comment|/* `_Pragma' operator */
 name|BT_TIMESTAMP
+block|,
 comment|/* `__TIMESTAMP__' */
+name|BT_COUNTER
+comment|/* `__COUNTER__' */
 block|}
 enum|;
 end_enum
@@ -1509,6 +1520,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Reset the cpp_reader's line_map.  This is only used after reading a    PCH file.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|cpp_set_line_map
+parameter_list|(
+name|cpp_reader
+modifier|*
+parameter_list|,
+name|struct
+name|line_maps
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Call this to change the selected language standard (e.g. because of    command line options).  */
 end_comment
 
@@ -1620,6 +1650,21 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Set up built-ins with special behavior.  Use cpp_init_builtins()    instead unless your know what you are doing.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|cpp_init_special_builtins
+parameter_list|(
+name|cpp_reader
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1865,6 +1910,22 @@ end_function_decl
 begin_function_decl
 specifier|extern
 specifier|const
+name|cpp_token
+modifier|*
+name|cpp_get_token_with_location
+parameter_list|(
+name|cpp_reader
+modifier|*
+parameter_list|,
+name|source_location
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2049,6 +2110,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|cpp_macro
+modifier|*
+name|cpp_push_definition
+parameter_list|(
+name|cpp_reader
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|cpp_pop_definition
+parameter_list|(
+name|cpp_reader
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|cpp_macro
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Undefine all macros and assertions.  */
 end_comment
@@ -2192,7 +2287,7 @@ value|0x0010
 end_define
 
 begin_comment
-comment|/* int, float.  */
+comment|/* int, float, shrot _Fract/Accum  */
 end_comment
 
 begin_define
@@ -2203,7 +2298,7 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* long, double.  */
+comment|/* long, double, long _Fract/_Accum.  */
 end_comment
 
 begin_define
@@ -2214,8 +2309,33 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/* long long, long double.  */
+comment|/* long long, long double, 				   long long _Fract/Accum.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|CPP_N_WIDTH_MD
+value|0xF0000
+end_define
+
+begin_comment
+comment|/* machine defined.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPP_N_MD_W
+value|0x10000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPP_N_MD_Q
+value|0x20000
+end_define
 
 begin_define
 define|#
@@ -2248,6 +2368,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPP_N_BINARY
+value|0x0800
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPP_N_UNSIGNED
 value|0x1000
 end_define
@@ -2269,6 +2396,28 @@ directive|define
 name|CPP_N_DFLOAT
 value|0x4000
 end_define
+
+begin_define
+define|#
+directive|define
+name|CPP_N_FRACT
+value|0x100000
+end_define
+
+begin_comment
+comment|/* Fract types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPP_N_ACCUM
+value|0x200000
+end_define
+
+begin_comment
+comment|/* Accum types.  */
+end_comment
 
 begin_comment
 comment|/* Classify a CPP_NUMBER token.  The return value is a combination of    the flags from the above sets.  */
@@ -2716,6 +2865,23 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|bool
+name|cpp_included_before
+parameter_list|(
+name|cpp_reader
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|source_location
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|cpp_make_system_header
 parameter_list|(
@@ -2821,6 +2987,17 @@ modifier|*
 name|cpp_get_prev
 parameter_list|(
 name|cpp_buffer
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|cpp_clear_file_cache
+parameter_list|(
+name|cpp_reader
 modifier|*
 parameter_list|)
 function_decl|;

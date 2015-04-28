@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* CPP Library.    Copyright (C) 1986, 1987, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.    Contributed by Per Bothner, 1994-95.    Based on CCCP program by Paul Rubin, June 1986    Adapted to ANSI C, Richard Stallman, Jan 1987  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* CPP Library.    Copyright (C) 1986, 1987, 1989, 1992, 1993, 1994, 1995, 1996, 1997, 1998,    1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.    Contributed by Per Bothner, 1994-95.    Based on CCCP program by Paul Rubin, June 1986    Adapted to ANSI C, Richard Stallman, Jan 1987  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_include
@@ -285,7 +285,7 @@ index|[]
 init|=
 block|{
 comment|/*              c99 c++ xnum xid std  //   digr  */
-comment|/* GNUC89 */
+comment|/* GNUC89   */
 block|{
 literal|0
 block|,
@@ -302,7 +302,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* GNUC99 */
+comment|/* GNUC99   */
 block|{
 literal|1
 block|,
@@ -319,7 +319,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* STDC89 */
+comment|/* STDC89   */
 block|{
 literal|0
 block|,
@@ -336,7 +336,7 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* STDC94 */
+comment|/* STDC94   */
 block|{
 literal|0
 block|,
@@ -353,7 +353,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* STDC99 */
+comment|/* STDC99   */
 block|{
 literal|1
 block|,
@@ -370,7 +370,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* GNUCXX */
+comment|/* GNUCXX   */
 block|{
 literal|0
 block|,
@@ -387,7 +387,7 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* CXX98  */
+comment|/* CXX98    */
 block|{
 literal|0
 block|,
@@ -404,7 +404,41 @@ block|,
 literal|1
 block|}
 block|,
-comment|/* ASM    */
+comment|/* GNUCXX0X */
+block|{
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|}
+block|,
+comment|/* CXX0X    */
+block|{
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|0
+block|,
+literal|1
+block|,
+literal|1
+block|,
+literal|1
+block|}
+block|,
+comment|/* ASM      */
 block|{
 literal|0
 block|,
@@ -420,7 +454,7 @@ literal|1
 block|,
 literal|0
 block|}
-comment|/* xid should be 1 for GNUC99, STDC99, GNUCXX and CXX98 when no      longer experimental (when all uses of identifiers in the compiler      have been audited for correct handling of extended      identifiers).  */
+comment|/* xid should be 1 for GNUC99, STDC99, GNUCXX, CXX98, GNUCXX0X, and      CXX0X when no longer experimental (when all uses of identifiers      in the compiler have been audited for correct handling of      extended identifiers).  */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1113,6 +1147,33 @@ block|}
 end_function
 
 begin_comment
+comment|/* Set the line_table entry in PFILE.  This is called after reading a    PCH file, as the old line_table will be incorrect.  */
+end_comment
+
+begin_function
+name|void
+name|cpp_set_line_map
+parameter_list|(
+name|cpp_reader
+modifier|*
+name|pfile
+parameter_list|,
+name|struct
+name|line_maps
+modifier|*
+name|line_table
+parameter_list|)
+block|{
+name|pfile
+operator|->
+name|line_table
+operator|=
+name|line_table
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Free resources used by PFILE.  Accessing PFILE after this function    returns leads to undefined behavior.  Returns the error count.  */
 end_comment
 
@@ -1439,6 +1500,13 @@ argument_list|,
 name|BT_INCLUDE_LEVEL
 argument_list|)
 block|,
+name|B
+argument_list|(
+literal|"__COUNTER__"
+argument_list|,
+name|BT_COUNTER
+argument_list|)
+block|,
 comment|/* Keep builtins not used for -traditional-cpp at the end, and      update init_builtins() if any more are added.  */
 name|B
 argument_list|(
@@ -1634,20 +1702,13 @@ block|}
 block|}
 end_function
 
-begin_comment
-comment|/* Read the builtins table above and enter them, and language-specific    macros, into the hash table.  HOSTED is true if this is a hosted    environment.  */
-end_comment
-
 begin_function
 name|void
-name|cpp_init_builtins
+name|cpp_init_special_builtins
 parameter_list|(
 name|cpp_reader
 modifier|*
 name|pfile
-parameter_list|,
-name|int
-name|hosted
 parameter_list|)
 block|{
 specifier|const
@@ -1695,18 +1756,9 @@ argument_list|,
 name|std
 argument_list|)
 condition|)
-block|{
 name|n
 operator|--
 expr_stmt|;
-name|_cpp_define_builtin
-argument_list|(
-name|pfile
-argument_list|,
-literal|"__STDC__ 1"
-argument_list|)
-expr_stmt|;
-block|}
 for|for
 control|(
 name|b
@@ -1769,6 +1821,64 @@ operator|->
 name|value
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* Read the builtins table above and enter them, and language-specific    macros, into the hash table.  HOSTED is true if this is a hosted    environment.  */
+end_comment
+
+begin_function
+name|void
+name|cpp_init_builtins
+parameter_list|(
+name|cpp_reader
+modifier|*
+name|pfile
+parameter_list|,
+name|int
+name|hosted
+parameter_list|)
+block|{
+name|cpp_init_special_builtins
+argument_list|(
+name|pfile
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|traditional
+argument_list|)
+operator|&&
+operator|(
+operator|!
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|stdc_0_in_system_headers
+argument_list|)
+operator|||
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|std
+argument_list|)
+operator|)
+condition|)
+name|_cpp_define_builtin
+argument_list|(
+name|pfile
+argument_list|,
+literal|"__STDC__ 1"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|CPP_OPTION
@@ -2870,6 +2980,16 @@ name|preprocessed
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+name|CPP_OPTION
+argument_list|(
+name|pfile
+argument_list|,
+name|directives_only
+argument_list|)
+condition|)
 name|pfile
 operator|->
 name|state

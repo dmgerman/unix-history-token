@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Part of CPP library.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005    Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+comment|/* Part of CPP library.    Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2007    Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
@@ -1010,6 +1010,14 @@ comment|/* Token generated while handling a directive, if any. */
 name|cpp_token
 name|directive_result
 decl_stmt|;
+comment|/* When expanding a macro at top-level, this is the location of the      macro invocation.  */
+name|source_location
+name|invocation_location
+decl_stmt|;
+comment|/* True if this call to cpp_get_token should consider setting      invocation_location.  */
+name|bool
+name|set_invocation_location
+decl_stmt|;
 comment|/* Search paths for include files.  */
 name|struct
 name|cpp_dir
@@ -1051,15 +1059,19 @@ modifier|*
 name|dir_hash
 decl_stmt|;
 name|struct
-name|file_hash_entry
+name|file_hash_entry_pool
 modifier|*
 name|file_hash_entries
 decl_stmt|;
-name|unsigned
-name|int
-name|file_hash_entries_allocated
-decl_stmt|,
-name|file_hash_entries_used
+comment|/* Negative path lookup hash table.  */
+name|struct
+name|htab
+modifier|*
+name|nonexistent_file_hash
+decl_stmt|;
+name|struct
+name|obstack
+name|nonexistent_file_ob
 decl_stmt|;
 comment|/* Nonzero means don't look for #include "foo" the source-file      directory.  */
 name|bool
@@ -1246,6 +1258,11 @@ name|struct
 name|cpp_savedstate
 modifier|*
 name|savedstate
+decl_stmt|;
+comment|/* Next value of __COUNTER__ macro. */
+name|unsigned
+name|int
+name|counter
 decl_stmt|;
 block|}
 struct|;
@@ -1454,6 +1471,41 @@ name|PF
 parameter_list|)
 value|CPP_OPTION (PF, warn_traditional)
 end_define
+
+begin_function_decl
+specifier|static
+specifier|inline
+name|int
+name|cpp_in_primary_file
+parameter_list|(
+name|cpp_reader
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|cpp_in_primary_file
+parameter_list|(
+name|cpp_reader
+modifier|*
+name|pfile
+parameter_list|)
+block|{
+return|return
+name|pfile
+operator|->
+name|line_table
+operator|->
+name|depth
+operator|==
+literal|1
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/* In errors.c  */
@@ -2117,7 +2169,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|_cpp_do__Pragma
 parameter_list|(
 name|cpp_reader
@@ -2178,6 +2230,59 @@ name|void
 name|_cpp_pop_buffer
 parameter_list|(
 name|cpp_reader
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* In directives.c */
+end_comment
+
+begin_struct
+struct|struct
+name|_cpp_dir_only_callbacks
+block|{
+comment|/* Called to print a block of lines. */
+name|void
+function_decl|(
+modifier|*
+name|print_lines
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|maybe_print_line
+function_decl|)
+parameter_list|(
+name|source_location
+parameter_list|)
+function_decl|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+specifier|extern
+name|void
+name|_cpp_preprocess_dir_only
+parameter_list|(
+name|cpp_reader
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|_cpp_dir_only_callbacks
 modifier|*
 parameter_list|)
 function_decl|;

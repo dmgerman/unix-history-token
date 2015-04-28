@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* Map logical line numbers to (source file, line number) pairs.    Copyright (C) 2001, 2003, 2004    Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
+comment|/* Map logical line numbers to (source file, line number) pairs.    Copyright (C) 2001, 2003, 2004, 2007    Free Software Foundation, Inc.  This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2, or (at your option) any later version.  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.   In other words, you are welcome to use, share and improve this program.  You are forbidden to forbid anyone else to use, share and improve  what you give them.   Help stamp out software-hoarding!  */
 end_comment
 
 begin_ifndef
@@ -14,6 +14,30 @@ define|#
 directive|define
 name|LIBCPP_LINE_MAP_H
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GTY
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GTY
+parameter_list|(
+name|x
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Reason for adding a line change with add_line_map ().  LC_ENTER is    when including a new file, e.g. a #include directive in C.    LC_LEAVE is when reaching a file's end.  LC_RENAME is when a file    name or line number changes for neither of the above reasons    (e.g. a #line directive in C).  */
@@ -51,12 +75,38 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* Memory allocation function typedef.  Works like xrealloc.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+modifier|*
+function_decl|(
+modifier|*
+name|line_map_realloc
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
 comment|/* Physical source file TO_FILE at line TO_LINE at column 0 is represented    by the logical START_LOCATION.  TO_LINE+L at column C is represented by    START_LOCATION+(L*(1<<column_bits))+C, as long as C<(1<<column_bits),    and the result_location is less than the next line_map's start_location.    (The top line is line 1 and the leftmost column is column 1; line/column 0    means "entire file/line" or "unknown line/column" or "not applicable".)    INCLUDED_FROM is an index into the set that gives the line mapping    at whose end the current one was included.  File(s) at the bottom    of the include stack have this set to -1.  REASON is the reason for    creation of this line map, SYSP is one for a system header, two for    a C system header file that therefore needs to be extern "C"    protected in C++, and zero otherwise.  */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|line_map
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 specifier|const
 name|char
@@ -94,20 +144,37 @@ range|:
 literal|8
 decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* A set of chronological line_map structures.  */
 end_comment
 
-begin_struct
-struct|struct
+begin_decl_stmt
+name|struct
 name|line_maps
+name|GTY
+argument_list|(
+operator|(
+operator|)
+argument_list|)
 block|{
 name|struct
 name|line_map
 modifier|*
+name|GTY
+argument_list|(
+operator|(
+name|length
+argument_list|(
+literal|"%h.used"
+argument_list|)
+operator|)
+argument_list|)
 name|maps
 decl_stmt|;
 name|unsigned
@@ -148,9 +215,16 @@ name|unsigned
 name|int
 name|max_column_hint
 decl_stmt|;
+comment|/* If non-null, the allocator to use when resizing 'maps'.  If null,      xrealloc is used.  */
+name|line_map_realloc
+name|reallocator
+decl_stmt|;
 block|}
-struct|;
-end_struct
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/* Initialize a line map set.  */

@@ -224,7 +224,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* This is how we write out a macro definition.      Suitable for being called by cpp_forall_identifiers.  */
+comment|/* This is how we write out a macro definition.    Suitable for being called by cpp_forall_identifiers.  */
 end_comment
 
 begin_function
@@ -1539,6 +1539,45 @@ name|savedstate
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* Save the next value of __COUNTER__. */
+if|if
+condition|(
+name|fwrite
+argument_list|(
+operator|&
+name|r
+operator|->
+name|counter
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|r
+operator|->
+name|counter
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|f
+argument_list|)
+operator|!=
+literal|1
+condition|)
+block|{
+name|cpp_errno
+argument_list|(
+name|r
+argument_list|,
+name|CPP_DL_ERROR
+argument_list|,
+literal|"while writing precompiled header"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 return|return
 literal|0
 return|;
@@ -1613,6 +1652,45 @@ name|r
 argument_list|,
 name|f
 argument_list|)
+condition|)
+block|{
+name|cpp_errno
+argument_list|(
+name|r
+argument_list|,
+name|CPP_DL_ERROR
+argument_list|,
+literal|"while writing precompiled header"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+comment|/* Save the next __COUNTER__ value.  When we include a precompiled header,      we need to start at the offset we would have if the header had been      included normally. */
+if|if
+condition|(
+name|fwrite
+argument_list|(
+operator|&
+name|r
+operator|->
+name|counter
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|r
+operator|->
+name|counter
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|f
+argument_list|)
+operator|!=
+literal|1
 condition|)
 block|{
 name|cpp_errno
@@ -1772,7 +1850,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Return nonzero if FD is a precompiled header which is consistent    with the preprocessor's current definitions.  It will be consistent    when:     - anything that was defined just before the PCH was generated       is defined the same way now; and    - anything that was not defined then, but is defined now, was not      used by the PCH.     NAME is used to print warnings if `warn_invalid_pch' is set in the    reader's flags. */
+comment|/* Return nonzero if FD is a precompiled header which is consistent    with the preprocessor's current definitions.  It will be consistent    when:     - anything that was defined just before the PCH was generated      is defined the same way now; and    - anything that was not defined then, but is defined now, was not      used by the PCH.     NAME is used to print warnings if `warn_invalid_pch' is set in the    reader's flags. */
 end_comment
 
 begin_function
@@ -1843,6 +1921,10 @@ decl_stmt|;
 name|unsigned
 name|int
 name|i
+decl_stmt|;
+name|unsigned
+name|int
+name|counter
 decl_stmt|;
 comment|/* Read in the list of identifiers that must be defined      Check that they are defined in the same way.  */
 for|for
@@ -2338,11 +2420,78 @@ operator|.
 name|defs
 argument_list|)
 expr_stmt|;
+name|nl
+operator|.
+name|defs
+operator|=
+name|NULL
+expr_stmt|;
 name|free
 argument_list|(
 name|undeftab
 argument_list|)
 expr_stmt|;
+name|undeftab
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* Read in the next value of __COUNTER__.      Check that (a) __COUNTER__ was not used in the pch or (b) __COUNTER__      has not been used in this translation unit. */
+if|if
+condition|(
+name|read
+argument_list|(
+name|fd
+argument_list|,
+operator|&
+name|counter
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|counter
+argument_list|)
+argument_list|)
+operator|!=
+sizeof|sizeof
+argument_list|(
+name|counter
+argument_list|)
+condition|)
+goto|goto
+name|error
+goto|;
+if|if
+condition|(
+name|counter
+operator|&&
+name|r
+operator|->
+name|counter
+condition|)
+block|{
+if|if
+condition|(
+name|CPP_OPTION
+argument_list|(
+name|r
+argument_list|,
+name|warn_invalid_pch
+argument_list|)
+condition|)
+name|cpp_error
+argument_list|(
+name|r
+argument_list|,
+name|CPP_DL_WARNING_SYSHDR
+argument_list|,
+literal|"%s: not used because `__COUNTER__' is invalid"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 comment|/* We win!  */
 return|return
 literal|0
@@ -2704,7 +2853,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Given a precompiled header that was previously determined to be valid,    apply all its definitions (and undefinitions) to the current state.     DEPNAME is passed to deps_restore.  */
+comment|/* Given a precompiled header that was previously determined to be valid,    apply all its definitions (and undefinitions) to the current state.    DEPNAME is passed to deps_restore.  */
 end_comment
 
 begin_function
@@ -2737,7 +2886,11 @@ name|struct
 name|lexer_state
 name|old_state
 decl_stmt|;
-comment|/* Restore spec_nodes, which will be full of references to the old       hashtable entries and so will now be invalid.  */
+name|unsigned
+name|int
+name|counter
+decl_stmt|;
+comment|/* Restore spec_nodes, which will be full of references to the old      hashtable entries and so will now be invalid.  */
 block|{
 name|struct
 name|spec_nodes
@@ -3038,6 +3191,41 @@ condition|)
 goto|goto
 name|error
 goto|;
+if|if
+condition|(
+name|fread
+argument_list|(
+operator|&
+name|counter
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|counter
+argument_list|)
+argument_list|,
+literal|1
+argument_list|,
+name|f
+argument_list|)
+operator|!=
+literal|1
+condition|)
+goto|goto
+name|error
+goto|;
+if|if
+condition|(
+operator|!
+name|r
+operator|->
+name|counter
+condition|)
+name|r
+operator|->
+name|counter
+operator|=
+name|counter
+expr_stmt|;
 return|return
 literal|0
 return|;
