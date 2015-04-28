@@ -200,6 +200,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<sys/sysctl.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_SYSCTL_H
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<sys/time.h> header file. */
 end_comment
 
