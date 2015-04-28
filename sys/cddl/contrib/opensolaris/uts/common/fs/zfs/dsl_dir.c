@@ -7788,7 +7788,7 @@ return|return
 operator|(
 name|SET_ERROR
 argument_list|(
-name|ENXIO
+name|EXDEV
 argument_list|)
 operator|)
 return|;
