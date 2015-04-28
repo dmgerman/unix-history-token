@@ -7115,11 +7115,6 @@ condition|)
 goto|goto
 name|bad_size
 goto|;
-name|ci
-operator|->
-name|object_opcodes
-operator|++
-expr_stmt|;
 goto|goto
 name|check_action
 goto|;

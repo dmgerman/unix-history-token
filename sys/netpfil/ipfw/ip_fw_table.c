@@ -14625,6 +14625,29 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|found
+operator|+
+name|unresolved
+operator|==
+name|ci
+operator|->
+name|object_opcodes
+argument_list|,
+operator|(
+literal|"refcount incosistency: found: %d unr: %d total: %d"
+operator|,
+name|found
+operator|,
+name|unresolved
+operator|,
+name|ci
+operator|->
+name|object_opcodes
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Perform auto-creation for non-existing objects */
 if|if
 condition|(
