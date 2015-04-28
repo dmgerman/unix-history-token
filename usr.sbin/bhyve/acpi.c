@@ -1644,7 +1644,7 @@ name|EFPRINTF
 argument_list|(
 name|fp
 argument_list|,
-literal|"[0001]\t\tRTC Century Index : 00\n"
+literal|"[0001]\t\tRTC Century Index : 32\n"
 argument_list|)
 expr_stmt|;
 name|EFPRINTF
