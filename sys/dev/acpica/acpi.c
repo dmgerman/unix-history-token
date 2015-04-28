@@ -3408,6 +3408,10 @@ comment|/* Only enable S4BIOS by default if the FACS says it is available. */
 if|if
 condition|(
 name|AcpiGbl_FACS
+operator|!=
+name|NULL
+operator|&&
+name|AcpiGbl_FACS
 operator|->
 name|Flags
 operator|&
