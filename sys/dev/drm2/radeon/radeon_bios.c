@@ -60,7 +60,8 @@ modifier|*
 name|rdev
 parameter_list|)
 block|{
-name|drm_local_map_t
+name|struct
+name|drm_local_map
 name|bios_map
 decl_stmt|;
 name|uint8_t
@@ -190,7 +191,7 @@ if|if
 condition|(
 name|bios_map
 operator|.
-name|virtual
+name|handle
 operator|==
 name|NULL
 condition|)
@@ -210,7 +211,7 @@ name|bios
 operator|=
 name|bios_map
 operator|.
-name|virtual
+name|handle
 expr_stmt|;
 name|size
 operator|=
@@ -312,7 +313,7 @@ name|size
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -518,9 +519,29 @@ name|size
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rdev
+operator|->
+name|bios
+operator|==
+name|NULL
+condition|)
+block|{
+name|vga_pci_unmap_bios
+argument_list|(
+name|vga_dev
+argument_list|,
+name|bios
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
 name|memcpy
 argument_list|(
 name|rdev
@@ -544,6 +565,12 @@ name|true
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_ACPI
+end_ifdef
 
 begin_comment
 comment|/* ATRM is used to get the BIOS on the discrete cards in  * dual-gpu systems.  */
@@ -821,7 +848,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 while|while
 condition|(
 operator|(
@@ -842,7 +869,7 @@ condition|)
 block|{
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 if|if
 condition|(
 operator|(
@@ -912,7 +939,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 if|if
 condition|(
 operator|!
@@ -921,7 +948,7 @@ condition|)
 continue|continue;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 if|if
 condition|(
 operator|!
@@ -964,11 +991,11 @@ name|true
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 break|break;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 else|else
 block|{
@@ -1004,7 +1031,7 @@ name|size
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1155,6 +1182,25 @@ return|return
 name|true
 return|;
 block|}
+else|#
+directive|else
+specifier|static
+specifier|inline
+name|bool
+name|radeon_atrm_get_bios
+parameter_list|(
+name|struct
+name|radeon_device
+modifier|*
+name|rdev
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+endif|#
+directive|endif
 specifier|static
 name|bool
 name|ni_read_disabled_bios
@@ -2860,6 +2906,9 @@ name|rdev
 argument_list|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|CONFIG_ACPI
 specifier|static
 name|bool
 name|radeon_acpi_vfct_bios
@@ -3160,9 +3209,15 @@ name|ImageLength
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rdev
+operator|->
+name|bios
+condition|)
 name|memcpy
 argument_list|(
 name|rdev
@@ -3193,6 +3248,25 @@ return|return
 name|ret
 return|;
 block|}
+else|#
+directive|else
+specifier|static
+specifier|inline
+name|bool
+name|radeon_acpi_vfct_bios
+parameter_list|(
+name|struct
+name|radeon_device
+modifier|*
+name|rdev
+parameter_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
+endif|#
+directive|endif
 name|bool
 name|radeon_get_bios
 parameter_list|(

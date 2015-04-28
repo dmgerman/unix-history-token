@@ -2649,7 +2649,7 @@ name|base
 operator|.
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|name
 argument_list|,
@@ -2693,6 +2693,7 @@ name|drm_encoder
 modifier|*
 name|encoder
 parameter_list|,
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -2800,17 +2801,6 @@ argument_list|,
 name|adjusted_mode
 argument_list|)
 expr_stmt|;
-comment|/* 		 * the mode->clock is used to calculate the Data&Link M/N 		 * of the pipe. For the eDP the fixed clock should be used. 		 */
-name|mode
-operator|->
-name|clock
-operator|=
-name|intel_dp
-operator|->
-name|panel_fixed_mode
-operator|->
-name|clock
-expr_stmt|;
 block|}
 name|DRM_DEBUG_KMS
 argument_list|(
@@ -2860,7 +2850,7 @@ name|mode_rate
 operator|=
 name|intel_dp_link_required
 argument_list|(
-name|mode
+name|adjusted_mode
 operator|->
 name|clock
 argument_list|,
@@ -9091,14 +9081,6 @@ argument_list|(
 name|edid
 argument_list|)
 expr_stmt|;
-name|connector
-operator|->
-name|display_info
-operator|.
-name|raw_edid
-operator|=
-name|NULL
-expr_stmt|;
 name|free
 argument_list|(
 name|edid
@@ -9384,14 +9366,6 @@ argument_list|(
 name|edid
 argument_list|)
 expr_stmt|;
-name|connector
-operator|->
-name|display_info
-operator|.
-name|raw_edid
-operator|=
-name|NULL
-expr_stmt|;
 name|free
 argument_list|(
 name|edid
@@ -9451,9 +9425,12 @@ name|ret
 decl_stmt|;
 name|ret
 operator|=
-name|drm_connector_property_set_value
+name|drm_object_property_set_value
 argument_list|(
+operator|&
 name|connector
+operator|->
+name|base
 argument_list|,
 name|property
 argument_list|,
@@ -9760,7 +9737,7 @@ name|device_delete_child
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|intel_dp
 operator|->

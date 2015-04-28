@@ -1474,7 +1474,7 @@ name|device_printf
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"taking over the fictitious range 0x%lx-0x%lx\n"
 argument_list|,

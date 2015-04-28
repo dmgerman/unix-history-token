@@ -3712,13 +3712,6 @@ operator|->
 name|dev
 argument_list|)
 expr_stmt|;
-name|DRM_MODE_CONFIG_ASSERT_LOCKED
-argument_list|(
-name|overlay
-operator|->
-name|dev
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|intel_overlay_release_old_vid
@@ -4253,13 +4246,6 @@ name|int
 name|ret
 decl_stmt|;
 name|DRM_LOCK_ASSERT
-argument_list|(
-name|overlay
-operator|->
-name|dev
-argument_list|)
-expr_stmt|;
-name|DRM_MODE_CONFIG_ASSERT_LOCKED
 argument_list|(
 name|overlay
 operator|->
@@ -7057,14 +7043,14 @@ name|overlay
 operator|=
 name|overlay
 expr_stmt|;
-name|DRM_INFO
-argument_list|(
-literal|"initialized overlay support\n"
-argument_list|)
-expr_stmt|;
 name|DRM_UNLOCK
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+name|DRM_INFO
+argument_list|(
+literal|"initialized overlay support\n"
 argument_list|)
 expr_stmt|;
 return|return;

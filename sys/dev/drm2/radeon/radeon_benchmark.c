@@ -599,6 +599,17 @@ literal|"dma"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|rdev
+operator|->
+name|asic
+operator|->
+name|copy
+operator|.
+name|blit
+condition|)
+block|{
 name|time
 operator|=
 name|radeon_benchmark_do_move
@@ -646,6 +657,7 @@ argument_list|,
 literal|"blit"
 argument_list|)
 expr_stmt|;
+block|}
 name|out_cleanup
 label|:
 if|if

@@ -56,7 +56,23 @@ begin_define
 define|#
 directive|define
 name|SAREA_MAX
-value|0x2000
+value|0x2000U
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|SAREA_MAX
+value|0x4000U
 end_define
 
 begin_elif
@@ -92,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|SAREA_MAX
-value|0x2000UL
+value|0x2000U
 end_define
 
 begin_endif

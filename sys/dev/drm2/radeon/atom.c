@@ -3538,7 +3538,7 @@ name|arg
 operator|==
 name|ATOM_UNIT_MICROSEC
 condition|)
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 name|count
 argument_list|)
@@ -3550,7 +3550,7 @@ operator|!
 name|drm_can_sleep
 argument_list|()
 condition|)
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 name|count
 argument_list|)
@@ -6937,9 +6937,9 @@ name|ws
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 else|else
@@ -7230,9 +7230,9 @@ literal|256
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 while|while
@@ -7326,9 +7326,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 decl_stmt|;
 name|char
@@ -8149,6 +8149,8 @@ name|DRM_DEBUG
 argument_list|(
 literal|"atom firmware requested %08x %dkb\n"
 argument_list|,
+name|le32_to_cpu
+argument_list|(
 name|firmware_usage
 operator|->
 name|asFirmwareVramReserveInfo
@@ -8157,7 +8159,10 @@ literal|0
 index|]
 operator|.
 name|ulStartAddrUsedByFirmware
+argument_list|)
 argument_list|,
+name|le16_to_cpu
+argument_list|(
 name|firmware_usage
 operator|->
 name|asFirmwareVramReserveInfo
@@ -8167,9 +8172,12 @@ index|]
 operator|.
 name|usFirmwareUseInKb
 argument_list|)
+argument_list|)
 expr_stmt|;
 name|usage_bytes
 operator|=
+name|le16_to_cpu
+argument_list|(
 name|firmware_usage
 operator|->
 name|asFirmwareVramReserveInfo
@@ -8178,6 +8186,7 @@ literal|0
 index|]
 operator|.
 name|usFirmwareUseInKb
+argument_list|)
 operator|*
 literal|1024
 expr_stmt|;
@@ -8211,9 +8220,9 @@ name|usage_bytes
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if

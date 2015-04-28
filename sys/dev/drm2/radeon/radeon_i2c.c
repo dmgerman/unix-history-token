@@ -1939,6 +1939,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
@@ -1987,6 +1988,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
@@ -2049,6 +2051,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
@@ -2100,6 +2103,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
@@ -2177,6 +2181,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
@@ -2192,6 +2197,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
@@ -2311,7 +2317,7 @@ name|k
 operator|++
 control|)
 block|{
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|10
 argument_list|)
@@ -2364,6 +2370,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EIO
 expr_stmt|;
 goto|goto
@@ -2506,7 +2513,7 @@ name|k
 operator|++
 control|)
 block|{
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|10
 argument_list|)
@@ -2559,6 +2566,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EIO
 expr_stmt|;
 goto|goto
@@ -2673,7 +2681,7 @@ name|k
 operator|++
 control|)
 block|{
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|10
 argument_list|)
@@ -2726,6 +2734,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EIO
 expr_stmt|;
 goto|goto
@@ -3189,7 +3198,7 @@ name|i
 operator|++
 control|)
 block|{
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|1
 argument_list|)
@@ -3219,6 +3228,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EBUSY
 expr_stmt|;
 goto|goto
@@ -3281,6 +3291,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EINVAL
 expr_stmt|;
 goto|goto
@@ -3333,7 +3344,7 @@ argument_list|,
 name|AVIVO_DC_I2C_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|1
 argument_list|)
@@ -3428,7 +3439,7 @@ name|j
 operator|++
 control|)
 block|{
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|50
 argument_list|)
@@ -3479,6 +3490,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EIO
 expr_stmt|;
 goto|goto
@@ -3571,7 +3583,7 @@ argument_list|,
 name|AVIVO_DC_I2C_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|1
 argument_list|)
@@ -3665,7 +3677,7 @@ name|j
 operator|++
 control|)
 block|{
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|50
 argument_list|)
@@ -3716,6 +3728,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EIO
 expr_stmt|;
 goto|goto
@@ -3804,7 +3817,7 @@ argument_list|,
 name|AVIVO_DC_I2C_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|1
 argument_list|)
@@ -3919,7 +3932,7 @@ name|j
 operator|++
 control|)
 block|{
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|50
 argument_list|)
@@ -3970,6 +3983,7 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EIO
 expr_stmt|;
 goto|goto
@@ -4010,7 +4024,7 @@ argument_list|,
 name|AVIVO_DC_I2C_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|1
 argument_list|)
@@ -4336,11 +4350,13 @@ argument_list|)
 expr_stmt|;
 name|ret
 operator|=
+operator|-
 name|EIO
 expr_stmt|;
 break|break;
 block|}
 return|return
+operator|-
 name|ret
 return|;
 block|}
@@ -4672,9 +4688,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4774,7 +4790,7 @@ name|device_add_child
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"radeon_hw_i2c"
 argument_list|,
@@ -4837,7 +4853,7 @@ name|device_delete_child
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|iicbus_dev
 argument_list|)
@@ -4878,7 +4894,7 @@ name|device_delete_child
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|iicbus_dev
 argument_list|)
@@ -4928,7 +4944,7 @@ name|device_add_child
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"radeon_atom_hw_i2c"
 argument_list|,
@@ -4991,7 +5007,7 @@ name|device_delete_child
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|iicbus_dev
 argument_list|)
@@ -5032,7 +5048,7 @@ name|device_delete_child
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|iicbus_dev
 argument_list|)
@@ -5072,7 +5088,7 @@ name|device_add_child
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"radeon_iicbb"
 argument_list|,
@@ -5135,7 +5151,7 @@ name|device_delete_child
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|iicbus_dev
 argument_list|)
@@ -5172,7 +5188,7 @@ name|device_delete_child
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|iicbus_dev
 argument_list|)
@@ -5213,7 +5229,7 @@ name|device_delete_child
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|iicbus_dev
 argument_list|)
@@ -5301,9 +5317,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -5352,7 +5368,7 @@ name|iic_dp_aux_add_bus
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|i2c
 operator|->
@@ -5449,7 +5465,7 @@ name|i2c
 operator|->
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 name|i2c
 operator|->

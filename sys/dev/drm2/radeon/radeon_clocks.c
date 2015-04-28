@@ -1950,7 +1950,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|10
 argument_list|)
@@ -1973,7 +1973,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|2
 argument_list|)
@@ -1996,7 +1996,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|200
 argument_list|)
@@ -2100,7 +2100,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|2
 argument_list|)
@@ -2124,7 +2124,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|200
 argument_list|)
@@ -2187,7 +2187,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|20
 argument_list|)
@@ -2210,7 +2210,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|10
 argument_list|)
@@ -2830,7 +2830,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|15
 argument_list|)
@@ -2901,7 +2901,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|15
 argument_list|)
@@ -2924,7 +2924,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|15
 argument_list|)
@@ -3095,7 +3095,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|15
 argument_list|)
@@ -3155,7 +3155,7 @@ name|tmp
 argument_list|)
 expr_stmt|;
 block|}
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|15
 argument_list|)
@@ -3193,7 +3193,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|15
 argument_list|)
@@ -3220,7 +3220,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|15
 argument_list|)
@@ -3750,7 +3750,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|16
 argument_list|)
@@ -3798,7 +3798,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|16
 argument_list|)
@@ -3836,7 +3836,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|16
 argument_list|)
@@ -3887,7 +3887,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|16
 argument_list|)
@@ -3926,7 +3926,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|16
 argument_list|)

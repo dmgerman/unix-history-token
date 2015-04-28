@@ -209,6 +209,7 @@ name|num
 argument_list|)
 expr_stmt|;
 return|return
+operator|-
 name|EINVAL
 return|;
 block|}
@@ -231,6 +232,34 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+ifdef|#
+directive|ifdef
+name|FREEBSD_WIP
+comment|/* FreeBSD: to please GCC 4.2. */
+if|if
+condition|(
+name|num
+operator|>
+name|ATOM_MAX_HW_I2C_READ
+condition|)
+block|{
+name|DRM_ERROR
+argument_list|(
+literal|"hw i2c: tried to read too many bytes (%d vs 255)\n"
+argument_list|,
+name|num
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+name|EINVAL
+return|;
+block|}
+endif|#
+directive|endif
 block|}
 name|args
 operator|.
@@ -302,6 +331,7 @@ literal|"hw_i2c error\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|-
 name|EIO
 return|;
 block|}
@@ -430,14 +460,17 @@ condition|(
 name|ret
 condition|)
 return|return
+operator|-
 name|ret
 return|;
+comment|/* "ret" is returned on Linux. */
 else|else
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+comment|/* "num" is returned on Linux. */
 block|}
 for|for
 control|(
@@ -549,8 +582,10 @@ condition|(
 name|ret
 condition|)
 return|return
+operator|-
 name|ret
 return|;
+comment|/* "ret" is returned on Linux. */
 name|remaining
 operator|-=
 name|current_count
@@ -566,6 +601,7 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* "num" is returned on Linux. */
 block|}
 end_function
 

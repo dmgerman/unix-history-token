@@ -502,7 +502,7 @@ name|r300
 operator|.
 name|reg_safe_bm_size
 operator|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|r420_reg_safe_bm
 argument_list|)

@@ -634,6 +634,7 @@ condition|)
 block|{
 return|return
 operator|(
+operator|-
 name|EALREADY
 operator|)
 return|;
@@ -699,6 +700,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|-
 name|ENOMEM
 operator|)
 return|;

@@ -25,9 +25,6 @@ begin_struct
 struct|struct
 name|drm_fb_helper_crtc
 block|{
-name|uint32_t
-name|crtc_id
-decl_stmt|;
 name|struct
 name|drm_mode_set
 name|mode_set
@@ -206,9 +203,6 @@ name|drm_fb_helper_funcs
 modifier|*
 name|funcs
 decl_stmt|;
-name|int
-name|conn_limit
-decl_stmt|;
 name|struct
 name|fb_info
 modifier|*
@@ -231,18 +225,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_struct_decl
-struct_decl|struct
-name|fb_var_screeninfo
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|fb_cmap
-struct_decl|;
-end_struct_decl
 
 begin_function_decl
 name|int
@@ -309,6 +291,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_NOTYET
+end_ifdef
+
 begin_function_decl
 name|int
 name|drm_fb_helper_pan_display
@@ -326,6 +314,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FREEBSD_NOTYET */
+end_comment
+
 begin_function_decl
 name|int
 name|drm_fb_helper_set_par
@@ -337,6 +334,12 @@ name|info
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_NOTYET
+end_ifdef
 
 begin_function_decl
 name|int
@@ -354,6 +357,15 @@ name|info
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FREEBSD_NOTYET */
+end_comment
 
 begin_function_decl
 name|int
@@ -444,6 +456,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_NOTYET
+end_ifdef
+
 begin_function_decl
 name|int
 name|drm_fb_helper_setcmap
@@ -460,6 +478,15 @@ name|info
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* FREEBSD_NOTYET */
+end_comment
 
 begin_function_decl
 name|int
@@ -520,15 +547,6 @@ name|struct
 name|fb_info
 modifier|*
 name|info
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|bool
-name|drm_fb_helper_force_kernel_mode
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

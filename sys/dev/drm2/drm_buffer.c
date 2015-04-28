@@ -267,6 +267,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_buffer_alloc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/**  * Copy the user data to the begin of the buffer and reset the processing  * iterator.  *  *   user_data: A pointer the data that is copied to the buffer.  *   size: The Number of bytes to copy.  */
 end_comment
@@ -405,6 +413,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_buffer_copy_from_user
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/**  * Free the drm buffer object  */
 end_comment
@@ -475,6 +491,14 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_buffer_free
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/**  * Read an object from buffer that may be split to multiple parts. If object  * is not split function just returns the pointer to object in buffer. But in  * case of split object data is copied to given stack object that is suplied  * by caller.  *  * The processing location of the buffer is also advanced to the next byte  * after the object.  *  *   objsize: The size of the objet in bytes.  *   stack_obj: A pointer to a memory location where object can be copied.  */
@@ -616,6 +640,14 @@ name|obj
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_buffer_read_object
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

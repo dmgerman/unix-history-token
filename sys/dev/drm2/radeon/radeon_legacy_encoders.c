@@ -353,7 +353,7 @@ argument_list|,
 name|lvds_pll_cntl
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|1
 argument_list|)
@@ -412,7 +412,7 @@ name|lvds_gen_cntl
 operator||=
 name|RADEON_LVDS_BL_MOD_EN
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 name|panel_pwr_delay
 argument_list|)
@@ -505,7 +505,7 @@ name|RADEON_LVDS_DIGON
 operator|)
 expr_stmt|;
 block|}
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 name|panel_pwr_delay
 argument_list|)
@@ -524,7 +524,7 @@ argument_list|,
 name|pixclks_cntl
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 name|panel_pwr_delay
 argument_list|)
@@ -1143,6 +1143,7 @@ name|drm_encoder
 modifier|*
 name|encoder
 parameter_list|,
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -1772,7 +1773,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3171,7 +3172,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|2
 argument_list|)
@@ -6189,7 +6190,7 @@ argument_list|(
 name|RADEON_TV_DAC_CNTL
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|4
 argument_list|)
@@ -6224,7 +6225,7 @@ argument_list|(
 name|RADEON_TV_DAC_CNTL
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|6
 argument_list|)
@@ -6552,7 +6553,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|3
 argument_list|)
@@ -6977,18 +6978,13 @@ condition|(
 name|found
 condition|)
 break|break;
-name|DRM_MDELAY
-argument_list|(
-literal|1
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
 name|drm_can_sleep
 argument_list|()
 condition|)
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|1
 argument_list|)
@@ -7673,7 +7669,7 @@ argument_list|,
 name|tmp
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|10
 argument_list|)
@@ -7931,9 +7927,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -8052,9 +8048,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -8176,9 +8172,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if

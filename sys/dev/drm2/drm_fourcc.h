@@ -15,12 +15,6 @@ directive|define
 name|DRM_FOURCC_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -34,7 +28,7 @@ name|c
 parameter_list|,
 name|d
 parameter_list|)
-value|((uint32_t)(a) | ((uint32_t)(b)<< 8) | \ 				 ((uint32_t)(c)<< 16) | ((uint32_t)(d)<< 24))
+value|((__u32)(a) | ((__u32)(b)<< 8) | \ 				 ((__u32)(c)<< 16) | ((__u32)(d)<< 24))
 end_define
 
 begin_define
@@ -604,19 +598,30 @@ begin_comment
 comment|/* 2x1 subsampled Cb:Cr plane */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DRM_FORMAT_NV24
+value|fourcc_code('N', 'V', '2', '4')
+end_define
+
 begin_comment
-comment|/* 2 non contiguous plane YCbCr */
+comment|/* non-subsampled Cr:Cb plane */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DRM_FORMAT_NV12M
-value|fourcc_code('N', 'M', '1', '2')
+name|DRM_FORMAT_NV42
+value|fourcc_code('N', 'V', '4', '2')
 end_define
 
 begin_comment
-comment|/* 2x2 subsampled Cr:Cb plane */
+comment|/* non-subsampled Cb:Cr plane */
+end_comment
+
+begin_comment
+comment|/* special NV12 tiled format */
 end_comment
 
 begin_define
@@ -742,21 +747,6 @@ end_define
 
 begin_comment
 comment|/* non-subsampled Cr (1) and Cb (2) planes */
-end_comment
-
-begin_comment
-comment|/* 3 non contiguous plane YCbCr */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_FORMAT_YUV420M
-value|fourcc_code('Y', 'M', '1', '2')
-end_define
-
-begin_comment
-comment|/* 2x2 subsampled Cb (1) and Cr (2) planes */
 end_comment
 
 begin_endif

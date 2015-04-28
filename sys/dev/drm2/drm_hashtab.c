@@ -117,6 +117,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_ht_create
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
 name|drm_ht_verbose_list
@@ -454,6 +462,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_ht_insert_item
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Just insert an item and return any "bits" bit key that hasn't been  * used before.  */
 end_comment
@@ -599,6 +615,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_ht_just_insert_please
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|drm_ht_find_item
@@ -652,6 +676,14 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_ht_find_item
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -732,6 +764,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_ht_remove_item
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
 name|drm_ht_remove
@@ -771,6 +811,14 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_ht_remove
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

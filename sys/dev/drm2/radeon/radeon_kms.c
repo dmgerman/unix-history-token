@@ -79,6 +79,17 @@ condition|)
 return|return
 literal|0
 return|;
+if|if
+condition|(
+name|rdev
+operator|->
+name|rmmio
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|done_free
+goto|;
 name|radeon_acpi_fini
 argument_list|(
 name|rdev
@@ -94,6 +105,8 @@ argument_list|(
 name|rdev
 argument_list|)
 expr_stmt|;
+name|done_free
+label|:
 name|free
 argument_list|(
 name|rdev
@@ -153,9 +166,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -183,7 +196,7 @@ expr_stmt|;
 comment|/* update BUS flag */
 if|if
 condition|(
-name|drm_device_is_agp
+name|drm_pci_device_is_agp
 argument_list|(
 name|dev
 argument_list|)
@@ -202,7 +215,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|drm_device_is_pcie
+name|drm_pci_device_is_pcie
 argument_list|(
 name|dev
 argument_list|)
@@ -251,7 +264,7 @@ name|dev_err
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"Fatal error during GPU init\n"
 argument_list|)
@@ -276,7 +289,7 @@ name|dev_err
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"Fatal error during modeset init\n"
 argument_list|)
@@ -303,7 +316,7 @@ name|dev_dbg
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"Error during ACPI methods call\n"
 argument_list|)
@@ -1703,13 +1716,13 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|vga_switcheroo_process_delayed_switch
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 end_function
 
@@ -1782,9 +1795,9 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_ZERO
+name|M_NOWAIT
 operator||
-name|M_WAITOK
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -3099,7 +3112,7 @@ begin_decl_stmt
 name|int
 name|radeon_max_kms_ioctl
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|radeon_ioctls_kms
 argument_list|)

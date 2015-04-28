@@ -171,6 +171,8 @@ name|alignment
 argument_list|,
 literal|0
 argument_list|,
+literal|0
+argument_list|,
 name|dev_priv
 operator|->
 name|mm
@@ -191,6 +193,8 @@ argument_list|,
 name|min_size
 argument_list|,
 name|alignment
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* First see if there is a large enough contiguous idle region... */

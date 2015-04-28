@@ -702,6 +702,11 @@ name|ret
 operator|==
 operator|-
 name|EINTR
+operator|||
+name|ret
+operator|==
+operator|-
+name|ERESTART
 condition|)
 name|ret
 operator|=
@@ -3826,7 +3831,7 @@ condition|(
 name|ret
 operator|!=
 operator|-
-name|ERESTART
+name|ERESTARTSYS
 condition|)
 block|{
 name|printf
@@ -3938,7 +3943,7 @@ condition|(
 name|ret
 operator|!=
 operator|-
-name|ERESTART
+name|ERESTARTSYS
 condition|)
 block|{
 name|printf
@@ -3987,7 +3992,7 @@ condition|(
 name|ret
 operator|!=
 operator|-
-name|ERESTART
+name|ERESTARTSYS
 condition|)
 name|printf
 argument_list|(
@@ -5129,7 +5134,7 @@ condition|(
 name|ret
 operator|==
 operator|-
-name|ERESTART
+name|ERESTARTSYS
 condition|)
 name|has_erestartsys
 operator|=
@@ -5143,7 +5148,7 @@ name|has_erestartsys
 operator|)
 condition|?
 operator|-
-name|ERESTART
+name|ERESTARTSYS
 else|:
 operator|-
 name|ENOMEM

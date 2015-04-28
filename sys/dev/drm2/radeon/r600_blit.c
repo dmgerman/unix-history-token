@@ -2716,7 +2716,7 @@ name|blit_vb
 operator|->
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|,
 name|dev_priv
 operator|->

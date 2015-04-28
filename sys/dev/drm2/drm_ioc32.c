@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (C) Paul Mackerras 2005.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS  * IN THE SOFTWARE.  *  * Authors:  *    Paul Mackerras<paulus@samba.org>  */
+comment|/*-  * Copyright (C) Paul Mackerras 2005.  * All Rights Reserved.  *  * Permission is hereby granted, free of charge, to any person obtaining a  * copy of this software and associated documentation files (the "Software"),  * to deal in the Software without restriction, including without limitation  * the rights to use, copy, modify, merge, publish, distribute, sublicense,  * and/or sell copies of the Software, and to permit persons to whom the  * Software is furnished to do so, subject to the following conditions:  *  * The above copyright notice and this permission notice (including the next  * paragraph) shall be included in all copies or substantial portions of the  * Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL  * THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS  * IN THE SOFTWARE.  */
 end_comment
 
 begin_include
@@ -40,10 +40,6 @@ include|#
 directive|include
 file|<dev/drm2/drm.h>
 end_include
-
-begin_comment
-comment|/** @file drm_ioc32.c  * 32-bit ioctl compatibility routines for the DRM.  */
-end_comment
 
 begin_define
 define|#
@@ -1754,7 +1750,7 @@ name|request
 condition|)
 return|return
 operator|-
-name|EFAULT
+name|ENOMEM
 return|;
 name|list
 operator|=
@@ -2079,7 +2075,7 @@ name|request
 condition|)
 return|return
 operator|-
-name|EFAULT
+name|ENOMEM
 return|;
 name|list
 operator|=
@@ -2695,6 +2691,26 @@ decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|dev
+operator|->
+name|driver
+operator|->
+name|dma_ioctl
+condition|)
+block|{
+name|DRM_DEBUG
+argument_list|(
+literal|"DMA ioctl on driver with no dma handler\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+name|EINVAL
+return|;
+block|}
 name|d
 operator|.
 name|context
@@ -2793,7 +2809,11 @@ name|request_sizes
 expr_stmt|;
 name|err
 operator|=
-name|drm_dma
+name|dev
+operator|->
+name|driver
+operator|->
+name|dma_ioctl
 argument_list|(
 name|dev
 argument_list|,
@@ -2835,6 +2855,12 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|__OS_HAS_AGP
+end_if
 
 begin_typedef
 typedef|typedef
@@ -3397,6 +3423,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __OS_HAS_AGP */
+end_comment
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -3566,6 +3601,20 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_X86
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_IA64
+argument_list|)
+end_if
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -3596,92 +3645,10 @@ name|drm_update_draw32_t
 typedef|;
 end_typedef
 
-begin_function
-specifier|static
-name|int
-name|compat_drm_update_draw
-parameter_list|(
-name|struct
-name|drm_device
-modifier|*
-name|dev
-parameter_list|,
-name|void
-modifier|*
-name|data
-parameter_list|,
-name|struct
-name|drm_file
-modifier|*
-name|file_priv
-parameter_list|)
-block|{
-name|drm_update_draw32_t
-modifier|*
-name|update32
-init|=
-name|data
-decl_stmt|;
-name|struct
-name|drm_update_draw
-name|request
-decl_stmt|;
-name|int
-name|err
-decl_stmt|;
-name|request
-operator|.
-name|handle
-operator|=
-name|update32
-operator|->
-name|handle
-expr_stmt|;
-name|request
-operator|.
-name|type
-operator|=
-name|update32
-operator|->
-name|type
-expr_stmt|;
-name|request
-operator|.
-name|num
-operator|=
-name|update32
-operator|->
-name|num
-expr_stmt|;
-name|request
-operator|.
-name|data
-operator|=
-name|update32
-operator|->
-name|data
-expr_stmt|;
-name|err
-operator|=
-name|drm_update_draw
-argument_list|(
-name|dev
-argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|request
-argument_list|,
-name|file_priv
-argument_list|)
-expr_stmt|;
-return|return
-name|err
-return|;
-block|}
-end_function
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -3889,7 +3856,8 @@ block|}
 end_function
 
 begin_decl_stmt
-name|drm_ioctl_desc_t
+name|struct
+name|drm_ioctl_desc
 name|drm_compat_ioctls
 index|[
 literal|256
@@ -3902,7 +3870,7 @@ name|DRM_IOCTL_VERSION32
 argument_list|,
 name|compat_drm_version
 argument_list|,
-literal|0
+name|DRM_UNLOCKED
 argument_list|)
 block|,
 name|DRM_IOCTL_DEF
@@ -3920,7 +3888,7 @@ name|DRM_IOCTL_GET_MAP32
 argument_list|,
 name|compat_drm_getmap
 argument_list|,
-literal|0
+name|DRM_UNLOCKED
 argument_list|)
 block|,
 name|DRM_IOCTL_DEF
@@ -3929,7 +3897,7 @@ name|DRM_IOCTL_GET_CLIENT32
 argument_list|,
 name|compat_drm_getclient
 argument_list|,
-literal|0
+name|DRM_UNLOCKED
 argument_list|)
 block|,
 name|DRM_IOCTL_DEF
@@ -3938,7 +3906,7 @@ name|DRM_IOCTL_GET_STATS32
 argument_list|,
 name|compat_drm_getstats
 argument_list|,
-literal|0
+name|DRM_UNLOCKED
 argument_list|)
 block|,
 name|DRM_IOCTL_DEF
@@ -4069,6 +4037,9 @@ argument_list|,
 name|DRM_AUTH
 argument_list|)
 block|,
+if|#
+directive|if
+name|__OS_HAS_AGP
 name|DRM_IOCTL_DEF
 argument_list|(
 name|DRM_IOCTL_AGP_ENABLE32
@@ -4143,6 +4114,8 @@ operator||
 name|DRM_ROOT_ONLY
 argument_list|)
 block|,
+endif|#
+directive|endif
 name|DRM_IOCTL_DEF
 argument_list|(
 name|DRM_IOCTL_SG_ALLOC32
@@ -4169,11 +4142,22 @@ operator||
 name|DRM_ROOT_ONLY
 argument_list|)
 block|,
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_X86
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_IA64
+argument_list|)
 name|DRM_IOCTL_DEF
 argument_list|(
 name|DRM_IOCTL_UPDATE_DRAW32
 argument_list|,
-name|compat_drm_update_draw
+name|drm_noop
 argument_list|,
 name|DRM_AUTH
 operator||
@@ -4182,6 +4166,8 @@ operator||
 name|DRM_ROOT_ONLY
 argument_list|)
 block|,
+endif|#
+directive|endif
 name|DRM_IOCTL_DEF
 argument_list|(
 name|DRM_IOCTL_WAIT_VBLANK32

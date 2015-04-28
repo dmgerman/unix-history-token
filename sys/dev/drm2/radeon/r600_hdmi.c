@@ -2630,11 +2630,10 @@ expr_stmt|;
 comment|/* Older chipsets require setting HDMI and routing manually */
 if|if
 condition|(
+name|ASIC_IS_DCE2
+argument_list|(
 name|rdev
-operator|->
-name|family
-operator|>=
-name|CHIP_R600
+argument_list|)
 operator|&&
 operator|!
 name|ASIC_IS_DCE3
@@ -2874,13 +2873,6 @@ operator|->
 name|afmt
 condition|)
 block|{
-name|DRM_ERROR
-argument_list|(
-literal|"%s: !dig || !dig->afmt"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 if|if
@@ -2927,11 +2919,10 @@ expr_stmt|;
 comment|/* Older chipsets not handled by AtomBIOS */
 if|if
 condition|(
+name|ASIC_IS_DCE2
+argument_list|(
 name|rdev
-operator|->
-name|family
-operator|>=
-name|CHIP_R600
+argument_list|)
 operator|&&
 operator|!
 name|ASIC_IS_DCE3

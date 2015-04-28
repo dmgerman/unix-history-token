@@ -732,6 +732,33 @@ name|radeon_max_ioctl
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|drm_ioctl_desc
+name|radeon_compat_ioctls
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|radeon_num_compat_ioctls
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|extern
 name|u32
@@ -2184,6 +2211,15 @@ begin_comment
 comment|/* atpx handler */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_VGA_SWITCHEROO
+argument_list|)
+end_if
+
 begin_function_decl
 name|void
 name|radeon_register_atpx_handler
@@ -2201,6 +2237,38 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|radeon_register_atpx_handler
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|radeon_unregister_atpx_handler
+parameter_list|(
+name|void
+parameter_list|)
+block|{}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Flags for stats.boxes  */
@@ -11443,7 +11511,7 @@ parameter_list|(
 name|dev_priv
 parameter_list|)
 define|\
-value|do {								\ 	struct drm_radeon_master_private *master_priv = file_priv->masterp->driver_priv;\ 	drm_radeon_sarea_t *sarea_priv = master_priv->sarea_priv;	\ 	if ( sarea_priv->last_dispatch>= RADEON_MAX_VB_AGE ) {		\ 		int __ret;						\ 		if ((dev_priv->flags& RADEON_FAMILY_MASK)>= CHIP_R600) \ 			__ret = r600_do_cp_idle(dev_priv);		\ 		else							\ 			__ret = radeon_do_cp_idle(dev_priv);		\ 		if ( __ret ) return __ret;				\ 		sarea_priv->last_dispatch = 0;				\ 		radeon_freelist_reset( dev );				\ 	}								\ } while (0)
+value|do {								\ 	struct drm_radeon_master_private *master_priv = file_priv->master->driver_priv;	\ 	drm_radeon_sarea_t *sarea_priv = master_priv->sarea_priv;	\ 	if ( sarea_priv->last_dispatch>= RADEON_MAX_VB_AGE ) {		\ 		int __ret;						\ 		if ((dev_priv->flags& RADEON_FAMILY_MASK)>= CHIP_R600) \ 			__ret = r600_do_cp_idle(dev_priv);		\ 		else							\ 			__ret = radeon_do_cp_idle(dev_priv);		\ 		if ( __ret ) return __ret;				\ 		sarea_priv->last_dispatch = 0;				\ 		radeon_freelist_reset( dev );				\ 	}								\ } while (0)
 end_define
 
 begin_define
