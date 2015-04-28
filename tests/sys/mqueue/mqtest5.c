@@ -69,6 +69,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"freebsd_test_suite/macros.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -147,6 +153,13 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
+name|PLAIN_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"mqueuefs"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|mq_unlink
 argument_list|(
 name|MQNAME
