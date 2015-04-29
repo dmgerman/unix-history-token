@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
@@ -157,6 +163,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_kdtrace.h>
 end_include
 
 begin_include
@@ -2285,6 +2297,13 @@ name|SIFTR_IPV6
 block|}
 endif|#
 directive|endif
+name|TCP_PROBE1
+argument_list|(
+name|siftr
+argument_list|,
+name|pkt_node
+argument_list|)
+expr_stmt|;
 name|alq_post_flags
 argument_list|(
 name|siftr_alq
