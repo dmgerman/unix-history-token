@@ -64,7 +64,7 @@ name|ATF_REQUIRE_KERNEL_MODULE
 parameter_list|(
 name|_mod_name
 parameter_list|)
-value|do {			\ 	if (modfind(_mod_name) == -1) {					\ 		atf_skip("module %s could not be resolved: %s",		\ 		    _mod_name, strerror(errno));			\ 	}								\ } while(0)
+value|do {			\ 	if (modfind(_mod_name) == -1) {					\ 		atf_tc_skip("module %s could not be resolved: %s",	\ 		    _mod_name, strerror(errno));			\ 	}								\ } while(0)
 end_define
 
 begin_define
