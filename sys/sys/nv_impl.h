@@ -87,7 +87,7 @@ name|nv_malloc
 parameter_list|(
 name|size
 parameter_list|)
-value|malloc((size), M_NVLIST, M_NOWAIT)
+value|malloc((size), M_NVLIST, M_WAITOK)
 end_define
 
 begin_define
@@ -99,7 +99,7 @@ name|n
 parameter_list|,
 name|size
 parameter_list|)
-value|malloc((n) * (size), M_NVLIST, \ 					    M_NOWAIT | M_ZERO)
+value|malloc((n) * (size), M_NVLIST, \ 					    M_WAITOK | M_ZERO)
 end_define
 
 begin_define
@@ -111,7 +111,7 @@ name|buf
 parameter_list|,
 name|size
 parameter_list|)
-value|realloc((buf), (size), M_NVLIST, \ 					    M_NOWAIT)
+value|realloc((buf), (size), M_NVLIST, \ 					    M_WAITOK)
 end_define
 
 begin_define
