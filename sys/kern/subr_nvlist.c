@@ -4374,7 +4374,7 @@ name|nvlh_size
 expr_stmt|;
 name|buf
 operator|=
-name|malloc
+name|nv_malloc
 argument_list|(
 name|size
 argument_list|)
@@ -4447,7 +4447,7 @@ condition|)
 block|{
 name|fds
 operator|=
-name|malloc
+name|nv_malloc
 argument_list|(
 name|nfds
 operator|*
