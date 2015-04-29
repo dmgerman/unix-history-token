@@ -156,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -758,7 +764,7 @@ expr_stmt|;
 if|if
 condition|(
 name|icmsg_vercnt
-operator|>=
+operator|>
 literal|2
 condition|)
 name|icmsg_vercnt
@@ -3292,12 +3298,17 @@ argument_list|)
 expr_stmt|;
 name|hv_kvp_log_info
 argument_list|(
-literal|"%s: read: context %p, pending_cnt %ju ret =%d, recvlen=%d\n"
+literal|"%s: read: context %p, pending_cnt %llu ret =%d, recvlen=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|context
 argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
 name|pending_cnt
 argument_list|,
 name|ret
