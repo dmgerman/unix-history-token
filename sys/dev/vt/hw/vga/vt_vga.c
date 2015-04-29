@@ -5636,7 +5636,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|vga_initialize
 parameter_list|(
 name|struct
@@ -5659,6 +5659,9 @@ name|vd_softc
 decl_stmt|;
 name|uint8_t
 name|x
+decl_stmt|;
+name|int
+name|timeout
 decl_stmt|;
 comment|/* Make sure the VGA adapter is not in monochrome emulation mode. */
 name|x
@@ -5713,8 +5716,17 @@ name|VGA_CRTC_VRE_PR
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Wait for the vertical retrace. 	 * NOTE: this code reads the VGA_GEN_INPUT_STAT_1 register, which has 	 * the side-effect of clearing the internal flip-flip of the attribute 	 * controller's write register. This means that because this code is 	 * here, we know for sure that the first write to the attribute 	 * controller will be a write to the address register. Removing this 	 * code therefore also removes that guarantee and appropriate measures 	 * need to be taken. 	 */
+name|timeout
+operator|=
+literal|10000
+expr_stmt|;
 do|do
 block|{
+name|DELAY
+argument_list|(
+literal|10
+argument_list|)
+expr_stmt|;
 name|x
 operator|=
 name|REG_READ1
@@ -5740,8 +5752,31 @@ name|VGA_GEN_IS1_VR
 operator||
 name|VGA_GEN_IS1_DE
 operator|)
+operator|&&
+operator|--
+name|timeout
+operator|!=
+literal|0
 condition|)
 do|;
+if|if
+condition|(
+name|timeout
+operator|==
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Timeout initializing vt_vga\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 comment|/* Now, disable the sync. signals. */
 name|REG_WRITE1
 argument_list|(
@@ -6615,6 +6650,11 @@ operator|=
 literal|0xff
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -6797,13 +6837,22 @@ operator|=
 name|VT_VGA_HEIGHT
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|vga_initialize
 argument_list|(
 name|vd
 argument_list|,
 name|textmode
 argument_list|)
-expr_stmt|;
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|CN_DEAD
+operator|)
+return|;
 name|sc
 operator|->
 name|vga_enabled
