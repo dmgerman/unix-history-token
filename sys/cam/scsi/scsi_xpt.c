@@ -8489,10 +8489,6 @@ argument_list|,
 name|M_CAMXPT
 argument_list|)
 expr_stmt|;
-name|scan_info
-operator|=
-name|NULL
-expr_stmt|;
 name|request_ccb
 operator|->
 name|ccb_h
@@ -8543,10 +8539,6 @@ name|scan_info
 argument_list|,
 name|M_CAMXPT
 argument_list|)
-expr_stmt|;
-name|scan_info
-operator|=
-name|NULL
 expr_stmt|;
 name|xpt_free_path
 argument_list|(
@@ -8636,13 +8628,6 @@ name|work_ccb
 argument_list|)
 expr_stmt|;
 block|}
-name|free
-argument_list|(
-name|scan_info
-argument_list|,
-name|M_CAMXPT
-argument_list|)
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 name|mtx
