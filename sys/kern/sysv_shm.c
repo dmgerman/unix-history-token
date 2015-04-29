@@ -3447,6 +3447,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -3526,6 +3531,7 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* 	 * We make sure that we have allocated a pager before we need 	 * to. 	 */
@@ -3560,6 +3566,11 @@ block|{
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -3596,6 +3607,7 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return

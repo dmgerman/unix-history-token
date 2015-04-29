@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/racct.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -576,6 +582,11 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -612,6 +623,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}

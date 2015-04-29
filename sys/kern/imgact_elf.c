@@ -6617,6 +6617,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -6658,6 +6663,7 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 block|}
 endif|#
 directive|endif
