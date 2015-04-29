@@ -5662,6 +5662,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -5669,6 +5670,7 @@ argument_list|,
 name|nvp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6213,6 +6215,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -6220,6 +6223,7 @@ argument_list|,
 name|nvp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6303,6 +6307,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -6310,6 +6315,7 @@ argument_list|,
 name|nvp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6393,6 +6399,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -6400,6 +6407,7 @@ argument_list|,
 name|nvp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6485,6 +6493,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -6492,6 +6501,7 @@ argument_list|,
 name|nvp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6577,6 +6587,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -6584,6 +6595,7 @@ argument_list|,
 name|nvp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -6772,6 +6784,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -6779,6 +6792,7 @@ argument_list|,
 name|nvp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -7174,6 +7188,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -7181,6 +7196,7 @@ argument_list|,
 name|nvp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -7283,6 +7299,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -7290,6 +7307,7 @@ argument_list|,
 name|nvp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -7487,6 +7505,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
 name|nvlist_move_nvpair
 argument_list|(
 name|nvl
@@ -7494,6 +7513,7 @@ argument_list|,
 name|nvp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
