@@ -12196,6 +12196,46 @@ comment|/* TODO: We lack support for tracking if a page is modified */
 block|}
 end_function
 
+begin_function
+name|void
+modifier|*
+name|pmap_mapbios
+parameter_list|(
+name|vm_paddr_t
+name|pa
+parameter_list|,
+name|vm_size_t
+name|size
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|void
+operator|*
+operator|)
+name|PHYS_TO_DMAP
+argument_list|(
+name|pa
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+name|pmap_unmapbios
+parameter_list|(
+name|vm_paddr_t
+name|pa
+parameter_list|,
+name|vm_size_t
+name|size
+parameter_list|)
+block|{ }
+end_function
+
 begin_comment
 comment|/*  * Sets the memory attribute for the specified page.  */
 end_comment
