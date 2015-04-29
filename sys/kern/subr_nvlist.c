@@ -4257,6 +4257,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|SAVE_ERRNO
+argument_list|(
+name|serrno
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -4276,6 +4281,11 @@ name|fds
 index|[
 name|i
 index|]
+argument_list|)
+expr_stmt|;
+name|RESTORE_ERRNO
+argument_list|(
+name|serrno
 argument_list|)
 expr_stmt|;
 goto|goto
