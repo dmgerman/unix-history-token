@@ -287,7 +287,6 @@ name|mbdata
 modifier|*
 name|mbp
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|src
@@ -469,7 +468,6 @@ name|mbdata
 modifier|*
 name|mbp
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|s

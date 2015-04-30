@@ -248,7 +248,6 @@ name|_index_t
 modifier|*
 name|idx
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -737,7 +736,6 @@ modifier|*
 name|__restrict
 name|pwc
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*

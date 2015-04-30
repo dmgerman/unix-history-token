@@ -1386,7 +1386,6 @@ modifier|*
 name|__restrict
 name|pwc
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -1414,7 +1413,6 @@ decl_stmt|,
 modifier|*
 name|m0
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|s0

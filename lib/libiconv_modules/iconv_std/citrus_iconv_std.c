@@ -341,7 +341,6 @@ name|_index_t
 modifier|*
 name|idx
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -2146,7 +2145,6 @@ modifier|*
 name|__restrict
 name|cv
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|__restrict
@@ -2207,7 +2205,6 @@ decl_stmt|;
 name|_index_t
 name|idx
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|tmpin
