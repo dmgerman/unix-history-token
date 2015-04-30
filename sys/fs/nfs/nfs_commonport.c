@@ -1311,13 +1311,13 @@ expr_stmt|;
 else|else
 name|pref
 operator|=
-name|NFS_MAXDATA
+name|NFS_SRVMAXIO
 expr_stmt|;
 name|sip
 operator|->
 name|fs_rtmax
 operator|=
-name|NFS_MAXDATA
+name|NFS_SRVMAXIO
 expr_stmt|;
 name|sip
 operator|->
@@ -1335,7 +1335,7 @@ name|sip
 operator|->
 name|fs_wtmax
 operator|=
-name|NFS_MAXDATA
+name|NFS_SRVMAXIO
 expr_stmt|;
 name|sip
 operator|->
