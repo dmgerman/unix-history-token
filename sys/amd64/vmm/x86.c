@@ -898,7 +898,7 @@ operator||
 name|CPUID_TM
 operator|)
 expr_stmt|;
-comment|/* 			 * Machine check handling is done in the host. 			 * Hide MTRR capability. 			 */
+comment|/* 			 * Machine check handling is done in the host. 			 */
 name|regs
 index|[
 literal|3
@@ -909,8 +909,6 @@ operator|(
 name|CPUID_MCA
 operator||
 name|CPUID_MCE
-operator||
-name|CPUID_MTRR
 operator|)
 expr_stmt|;
 comment|/*                         * Hide the debug store capability.                         */
