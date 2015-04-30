@@ -2537,6 +2537,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|nvlist_xpack
@@ -3413,6 +3414,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|nvlist_t
 modifier|*
 name|nvlist_xunpack
