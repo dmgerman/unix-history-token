@@ -5808,11 +5808,34 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|VCPU_CTR1
+argument_list|(
+name|vm
+argument_list|,
+name|vcpuid
+argument_list|,
+literal|"Error decoding instruction at %#lx"
+argument_list|,
+name|vme
+operator|->
+name|rip
+operator|+
+name|cs_base
+argument_list|)
+expr_stmt|;
+operator|*
+name|retu
+operator|=
+name|true
+expr_stmt|;
+comment|/* dump instruction bytes in userspace */
 return|return
 operator|(
-name|EFAULT
+literal|0
 operator|)
 return|;
+block|}
 comment|/* 	 * If the instruction length was not specified then update it now 	 * along with 'nextrip'. 	 */
 if|if
 condition|(
