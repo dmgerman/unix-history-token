@@ -149,21 +149,27 @@ end_define
 begin_define
 define|#
 directive|define
-name|SAVE_ERRNO
+name|ERRNO_SET
 parameter_list|(
 name|var
 parameter_list|)
-value|((void)(var))
+value|do { } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESTORE_ERRNO
-parameter_list|(
-name|var
-parameter_list|)
-value|((void)(var))
+name|ERRNO_SAVE
+parameter_list|()
+value|do { do { } while(0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERRNO_RESTORE
+parameter_list|()
+value|} while (0)
 end_define
 
 begin_define
@@ -248,21 +254,27 @@ end_define
 begin_define
 define|#
 directive|define
-name|SAVE_ERRNO
+name|ERRNO_SET
 parameter_list|(
 name|var
 parameter_list|)
-value|(var) = errno
+value|do { errno = (var); } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|RESTORE_ERRNO
-parameter_list|(
-name|var
-parameter_list|)
-value|errno = (var)
+name|ERRNO_SAVE
+parameter_list|()
+value|do {				\ 						int _serrno;		\ 									\ 						_serrno = errno
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERRNO_RESTORE
+parameter_list|()
+value|errno = _serrno;	\ 					} while (0)
 end_define
 
 begin_define
