@@ -13972,6 +13972,11 @@ argument_list|)
 expr_stmt|;
 name|MNT_KERN_FLAG
 argument_list|(
+name|MNTK_USES_BCACHE
+argument_list|)
+expr_stmt|;
+name|MNT_KERN_FLAG
+argument_list|(
 name|MNTK_NOASYNC
 argument_list|)
 expr_stmt|;
