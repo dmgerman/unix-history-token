@@ -868,6 +868,15 @@ case|case
 name|EM_ALPHA
 case|:
 break|break;
+ifndef|#
+directive|ifndef
+name|EM_AARCH64
+define|#
+directive|define
+name|EM_AARCH64
+value|183
+endif|#
+directive|endif
 case|case
 name|EM_AARCH64
 case|:
