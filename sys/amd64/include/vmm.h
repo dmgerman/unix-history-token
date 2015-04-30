@@ -1294,30 +1294,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|cpuset_t
-name|vm_active_cpus
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|cpuset_t
-name|vm_suspended_cpus
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|vm_exit
 modifier|*
@@ -1388,6 +1364,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS__CPUSET_H_
+end_ifdef
+
 begin_comment
 comment|/*  * Rendezvous all vcpus specified in 'dest' and execute 'func(arg)'.  * The rendezvous 'func(arg)' is not allowed to do anything that will  * cause the thread to be put to sleep.  *  * If the rendezvous is being initiated from a vcpu context then the  * 'vcpuid' must refer to that vcpu, otherwise it should be set to -1.  *  * The caller cannot hold any locks when initiating the rendezvous.  *  * The implementation of this API may cause vcpus other than those specified  * by 'dest' to be stalled. The caller should not rely on any vcpus making  * forward progress when the rendezvous is in progress.  */
 end_comment
@@ -1439,6 +1421,39 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|cpuset_t
+name|vm_active_cpus
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|cpuset_t
+name|vm_suspended_cpus
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS__CPUSET_H_ */
+end_comment
 
 begin_function
 specifier|static
