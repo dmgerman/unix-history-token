@@ -155,6 +155,20 @@ directive|include
 file|<machine/trap.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|void
+modifier|*
+name|fdt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|ofw_real_mode
+decl_stmt|;
+end_decl_stmt
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -176,20 +190,6 @@ specifier|extern
 name|void
 modifier|*
 name|openfirmware_entry
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|void
-modifier|*
-name|fdt
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|ofw_real_mode
 decl_stmt|;
 end_decl_stmt
 
@@ -1515,12 +1515,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|AIM
-end_ifdef
-
 begin_function
 name|void
 name|OF_initial_setup
@@ -1544,6 +1538,9 @@ modifier|*
 parameter_list|)
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|AIM
 name|ofmsr
 index|[
 literal|0
@@ -1569,6 +1566,10 @@ asm|__asm __volatile("mfsprg0 %0" : "=&r"(ofmsr[1]));
 asm|__asm __volatile("mfsprg1 %0" : "=&r"(ofmsr[2]));
 asm|__asm __volatile("mfsprg2 %0" : "=&r"(ofmsr[3]));
 asm|__asm __volatile("mfsprg3 %0" : "=&r"(ofmsr[4]));
+name|openfirmware_entry
+operator|=
+name|openfirm
+expr_stmt|;
 if|if
 condition|(
 name|ofmsr
@@ -1587,13 +1588,22 @@ name|ofw_real_mode
 operator|=
 literal|1
 expr_stmt|;
+name|ofw_save_trap_vec
+argument_list|(
+name|save_trap_init
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|ofw_real_mode
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 name|fdt
 operator|=
 name|fdt_ptr
-expr_stmt|;
-name|openfirmware_entry
-operator|=
-name|openfirm
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -1612,11 +1622,6 @@ name|fdt_static_dtb
 expr_stmt|;
 endif|#
 directive|endif
-name|ofw_save_trap_vec
-argument_list|(
-name|save_trap_init
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1630,6 +1635,9 @@ name|status
 init|=
 name|FALSE
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AIM
 if|if
 condition|(
 name|openfirmware_entry
@@ -1696,6 +1704,8 @@ argument_list|)
 expr_stmt|;
 block|}
 elseif|else
+endif|#
+directive|endif
 if|if
 condition|(
 name|fdt
@@ -1726,6 +1736,13 @@ argument_list|(
 name|fdt
 argument_list|)
 expr_stmt|;
+name|OF_interpret
+argument_list|(
+literal|"perform-fixup"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1734,6 +1751,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AIM
+end_ifdef
 
 begin_function
 name|void
