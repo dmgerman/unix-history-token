@@ -7256,17 +7256,12 @@ name|NULL
 condition|)
 return|return;
 comment|/* 	 * Local APIC must be registered before other PICs and pseudo PICs 	 * for proper suspend/resume order. 	 */
-ifndef|#
-directive|ifndef
-name|XEN
 name|intr_register_pic
 argument_list|(
 operator|&
 name|lapic_pic
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|retval
 operator|=
 name|best_enum
@@ -7291,12 +7286,6 @@ argument_list|,
 name|retval
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XEN
-return|return;
-endif|#
-directive|endif
 comment|/* 	 * Finish setting up the local APIC on the BSP once we know 	 * how to properly program the LINT pins.  In particular, this 	 * enables the EOI suppression mode, if LAPIC support it and 	 * user did not disabled the mode. 	 */
 name|lapic_setup
 argument_list|(

@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenpmap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/segments.h>
 end_include
 

@@ -661,30 +661,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XEN
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|pmap_kextract
-end_undef
-
-begin_define
-define|#
-directive|define
-name|pmap_kextract
-value|pmap_kextract_ma
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Allocate a device specific dma_tag.  */
 end_comment

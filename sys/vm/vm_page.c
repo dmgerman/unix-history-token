@@ -1648,22 +1648,6 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|XEN
-comment|/* 	 * There is no obvious reason why i386 PV Xen needs vm_page structs 	 * created for these pseudo-physical addresses.  XXX 	 */
-name|vm_phys_add_seg
-argument_list|(
-literal|0
-argument_list|,
-name|phys_avail
-index|[
-literal|0
-index|]
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|low_water
 operator|=
 name|phys_avail

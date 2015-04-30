@@ -74,50 +74,13 @@ define|\
 value|(FIRST_EVTCHN_INT + NUM_EVTCHN_INTS - 1)
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|XEN
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|<xen/xen-os.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|NUM_EVTCHN_INTS
-value|NR_EVENT_CHANNELS
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIRST_EVTCHN_INT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|LAST_EVTCHN_INT
-define|\
-value|(FIRST_EVTCHN_INT + NUM_EVTCHN_INTS - 1)
-end_define
-
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* !XEN&& !XENHVM */
+comment|/* !XENHVM */
 end_comment
 
 begin_define

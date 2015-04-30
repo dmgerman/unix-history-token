@@ -1119,9 +1119,6 @@ name|struct
 name|mtx
 name|lock
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|XENHVM
 comment|/** 	 * Resource representing allocated physical address space 	 * associated with our per-instance kva region. 	 */
 name|struct
 name|resource
@@ -1132,8 +1129,6 @@ comment|/** Resource id for allocated physical address space. */
 name|int
 name|pseudo_phys_res_id
 decl_stmt|;
-endif|#
-directive|endif
 comment|/** 	 * I/O statistics from BlockBack dispatch down.  These are 	 * coalesced requests, and we start them right before execution. 	 */
 name|struct
 name|devstat
@@ -8255,22 +8250,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|XENHVM
-name|kva_free
-argument_list|(
-name|xbb
-operator|->
-name|kva
-argument_list|,
-name|xbb
-operator|->
-name|kva_size
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|xbb
@@ -8304,8 +8283,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 block|}
 name|xbb
 operator|->
@@ -9336,44 +9313,6 @@ operator|->
 name|reqlist_kva_size
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|XENHVM
-name|xbb
-operator|->
-name|kva
-operator|=
-name|kva_alloc
-argument_list|(
-name|xbb
-operator|->
-name|kva_size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|xbb
-operator|->
-name|kva
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-name|xbb
-operator|->
-name|gnt_base_addr
-operator|=
-name|xbb
-operator|->
-name|kva
-expr_stmt|;
-else|#
-directive|else
-comment|/* XENHVM */
 comment|/* 	 * Reserve a range of pseudo physical memory that we can map 	 * into kva.  These pages will only be backed by machine 	 * pages ("real memory") during the lifetime of front-end requests 	 * via grant table operations. 	 */
 name|xbb
 operator|->
@@ -9456,9 +9395,6 @@ operator|->
 name|pseudo_phys_res
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* XENHVM */
 name|DPRINTF
 argument_list|(
 literal|"%s: kva: %#jx, gnt_base_addr: %#jx\n"
