@@ -14625,22 +14625,24 @@ argument_list|(
 name|ch
 argument_list|)
 expr_stmt|;
+name|found
+operator|=
+name|pidx
+operator|-
+name|oib
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|found
-operator|+
-name|unresolved
 operator|==
 name|ci
 operator|->
 name|object_opcodes
 argument_list|,
 operator|(
-literal|"refcount incosistency: found: %d unr: %d total: %d"
+literal|"refcount inconsistency: found: %d total: %d"
 operator|,
 name|found
-operator|,
-name|unresolved
 operator|,
 name|ci
 operator|->
