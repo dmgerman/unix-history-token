@@ -452,7 +452,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"ldns 1.6.16"
+value|"ldns 1.6.17"
 end_define
 
 begin_comment
@@ -485,7 +485,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.6.16"
+value|"1.6.17"
 end_define
 
 begin_comment

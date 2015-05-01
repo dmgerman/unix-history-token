@@ -277,6 +277,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_LPTLP
+value|0x9c228086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ID_WCPT
 value|0x8ca28086
 end_define
@@ -732,6 +739,17 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"Intel Lynx Point SMBus controller"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ID_LPTLP
+case|:
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"Intel Lynx Point-LP SMBus controller"
 argument_list|)
 expr_stmt|;
 break|break;

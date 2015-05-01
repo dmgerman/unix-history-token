@@ -99,18 +99,6 @@ block|,
 block|{
 name|IXGBE_INTEL_VENDOR_ID
 block|,
-name|IXGBE_DEV_ID_X550EM_A_VF
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|}
-block|,
-block|{
-name|IXGBE_INTEL_VENDOR_ID
-block|,
 name|IXGBE_DEV_ID_X550EM_X_VF
 block|,
 literal|0
@@ -3760,7 +3748,7 @@ decl_stmt|;
 operator|++
 name|adapter
 operator|->
-name|vector_irq
+name|link_irq
 expr_stmt|;
 comment|/* First get the cause */
 name|reg
@@ -9061,7 +9049,7 @@ argument_list|,
 literal|"TX Packets"
 argument_list|)
 expr_stmt|;
-name|SYSCTL_ADD_UQUAD
+name|SYSCTL_ADD_UINT
 argument_list|(
 name|ctx
 argument_list|,
@@ -9077,8 +9065,10 @@ operator|&
 operator|(
 name|txr
 operator|->
-name|tx_bytes
+name|bytes
 operator|)
+argument_list|,
+literal|0
 argument_list|,
 literal|"TX Bytes"
 argument_list|)
@@ -9350,7 +9340,7 @@ name|long
 operator|)
 name|adapter
 operator|->
-name|vector_irq
+name|link_irq
 argument_list|)
 expr_stmt|;
 return|return;

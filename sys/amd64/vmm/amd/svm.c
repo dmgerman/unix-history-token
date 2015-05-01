@@ -3695,6 +3695,7 @@ name|cs_d
 operator|=
 literal|0
 expr_stmt|;
+break|break;
 case|case
 name|CPU_MODE_PROTECTED
 case|:

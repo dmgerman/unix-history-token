@@ -13,21 +13,6 @@ name|dtrace_predcache_id
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|panic_quiesce
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|panic_stack
-index|[
-name|PANICSTKSIZE
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|boolean_t
 name|priv_policy_only

@@ -298,6 +298,9 @@ argument|ipmi_request
 argument_list|)
 name|ipmi_pending_requests
 expr_stmt|;
+name|int
+name|ipmi_driver_requests_polled
+decl_stmt|;
 name|eventhandler_tag
 name|ipmi_watchdog_tag
 decl_stmt|;

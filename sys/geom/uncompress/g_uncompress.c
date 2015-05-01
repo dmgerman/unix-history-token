@@ -78,13 +78,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<geom/geom.h>
+file|<sys/zlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<net/zlib.h>
+file|<geom/geom.h>
 end_include
 
 begin_include

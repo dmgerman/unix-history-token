@@ -373,6 +373,19 @@ literal|"null ISR"
 operator|)
 argument_list|)
 expr_stmt|;
+name|IPSEC_ASSERT
+argument_list|(
+name|isr
+operator|->
+name|sp
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"NULL isr->sp"
+operator|)
+argument_list|)
+expr_stmt|;
 name|sav
 operator|=
 name|isr
@@ -651,7 +664,7 @@ argument_list|,
 name|mtag
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If there's another (bundled) SA to apply, do so. 	 * Note that this puts a burden on the kernel stack size. 	 * If this is a problem we'll need to introduce a queue 	 * to set the packet on so we can unwind the stack before 	 * doing further processing. 	 */
+comment|/* 	 * If there's another (bundled) SA to apply, do so. 	 * Note that this puts a burden on the kernel stack size. 	 * If this is a problem we'll need to introduce a queue 	 * to set the packet on so we can unwind the stack before 	 * doing further processing. 	 * 	 * If ipsec[46]_process_packet() will successfully queue 	 * the request, we need to take additional reference to SP, 	 * because xform callback will release reference. 	 */
 if|if
 condition|(
 name|isr
@@ -682,7 +695,15 @@ argument_list|(
 name|ips_out_bundlesa
 argument_list|)
 expr_stmt|;
-return|return
+name|key_addref
+argument_list|(
+name|isr
+operator|->
+name|sp
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|ipsec4_process_packet
 argument_list|(
 name|m
@@ -691,6 +712,25 @@ name|isr
 operator|->
 name|next
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|KEY_FREESP
+argument_list|(
+operator|&
+name|isr
+operator|->
+name|sp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
 return|;
 comment|/* NOTREACHED */
 endif|#
@@ -710,7 +750,15 @@ argument_list|(
 name|ips_out_bundlesa
 argument_list|)
 expr_stmt|;
-return|return
+name|key_addref
+argument_list|(
+name|isr
+operator|->
+name|sp
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
 name|ipsec6_process_packet
 argument_list|(
 name|m
@@ -719,6 +767,25 @@ name|isr
 operator|->
 name|next
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|KEY_FREESP
+argument_list|(
+operator|&
+name|isr
+operator|->
+name|sp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
 return|;
 comment|/* NOTREACHED */
 endif|#
@@ -761,7 +828,7 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* record data transfer */
-comment|/* 	 * We're done with IPsec processing, transmit the packet using the 	 * appropriate network protocol (IP or IPv6). SPD lookup will be 	 * performed again there. 	 */
+comment|/* 	 * We're done with IPsec processing, transmit the packet using the 	 * appropriate network protocol (IP or IPv6). 	 */
 switch|switch
 condition|(
 name|saidx
@@ -2694,6 +2761,17 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* Do the appropriate encapsulation, if necessary */
@@ -3401,6 +3479,17 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|ip6
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip6_hdr
+operator|*
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEV_ENC */

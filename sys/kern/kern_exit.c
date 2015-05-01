@@ -3522,6 +3522,11 @@ comment|/* 	 * Destroy resource accounting information associated with the proce
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -3541,6 +3546,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|racct_proc_exit

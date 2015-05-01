@@ -3976,12 +3976,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|XEN
-end_ifndef
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -4381,11 +4375,6 @@ block|}
 block|}
 end_function
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Final stage of CPU identification.  */
 end_comment
@@ -4540,14 +4529,9 @@ index|]
 expr_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|XEN
 name|identify_hypervisor
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|cpu_vendor_id
 operator|=
 name|find_cpu_vendor_id

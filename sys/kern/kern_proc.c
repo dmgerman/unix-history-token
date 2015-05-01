@@ -14979,6 +14979,8 @@ name|args
 argument_list|,
 name|CTLFLAG_RW
 operator||
+name|CTLFLAG_CAPWR
+operator||
 name|CTLFLAG_ANYBODY
 operator||
 name|CTLFLAG_MPSAFE

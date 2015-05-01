@@ -44,12 +44,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/smp.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/vmm.h>
 end_include
 

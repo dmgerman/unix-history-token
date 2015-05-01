@@ -62,6 +62,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|TCP_PROBE1
+parameter_list|(
+name|probe
+parameter_list|,
+name|arg0
+parameter_list|)
+define|\
+value|SDT_PROBE1(tcp, , , probe, arg0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|TCP_PROBE5
 parameter_list|(
 name|probe
@@ -213,6 +226,16 @@ argument_list|(
 name|tcp
 argument_list|, , ,
 name|send
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DECLARE
+argument_list|(
+name|tcp
+argument_list|, , ,
+name|siftr
 argument_list|)
 expr_stmt|;
 end_expr_stmt

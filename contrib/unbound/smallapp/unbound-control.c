@@ -909,7 +909,7 @@ block|{
 name|struct
 name|sockaddr_un
 modifier|*
-name|sun
+name|usock
 init|=
 operator|(
 expr|struct
@@ -919,7 +919,7 @@ operator|)
 operator|&
 name|addr
 decl_stmt|;
-name|sun
+name|usock
 operator|->
 name|sun_family
 operator|=
@@ -928,16 +928,16 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|HAVE_STRUCT_SOCKADDR_UN_SUN_LEN
-name|sun
+name|usock
 operator|->
 name|sun_len
 operator|=
 operator|(
-name|sa_family_t
+name|socklen_t
 operator|)
 sizeof|sizeof
 argument_list|(
-name|sun
+name|usock
 argument_list|)
 expr_stmt|;
 endif|#
@@ -947,7 +947,7 @@ name|void
 operator|)
 name|strlcpy
 argument_list|(
-name|sun
+name|usock
 operator|->
 name|sun_path
 argument_list|,
@@ -955,7 +955,7 @@ name|svr
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|sun
+name|usock
 operator|->
 name|sun_path
 argument_list|)

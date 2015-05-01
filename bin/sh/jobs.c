@@ -5395,8 +5395,6 @@ if|if
 condition|(
 name|rootshell
 operator|&&
-name|iflag
-operator|&&
 name|propagate_int
 operator|&&
 name|WIFSIGNALED

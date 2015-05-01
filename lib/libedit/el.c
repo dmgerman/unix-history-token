@@ -347,7 +347,7 @@ name|setlocale
 argument_list|(
 name|LC_CTYPE
 argument_list|,
-literal|""
+name|NULL
 argument_list|)
 operator|!=
 name|NULL

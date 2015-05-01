@@ -217,29 +217,6 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|XEN
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<xen/xen-os.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<xen/hypervisor.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|DEV_ISA
 end_ifdef
 
@@ -719,33 +696,6 @@ begin_comment
 comment|/* __GNUCLIKE_ASM&& !lint */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XEN
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|start_emulating
-parameter_list|()
-value|(HYPERVISOR_fpu_taskswitch(1))
-end_define
-
-begin_define
-define|#
-directive|define
-name|stop_emulating
-parameter_list|()
-value|(HYPERVISOR_fpu_taskswitch(0))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -761,11 +711,6 @@ name|stop_emulating
 parameter_list|()
 value|clts()
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#

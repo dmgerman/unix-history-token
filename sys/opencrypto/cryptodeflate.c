@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2001 Jean-Jacques Bernard-Gundol (jj@wabbitt.org)  
 end_comment
 
 begin_comment
-comment|/*  * This file contains a wrapper around the deflate algo compression  * functions using the zlib library (see net/zlib.{c,h})  */
+comment|/*  * This file contains a wrapper around the deflate algo compression  * functions using the zlib library (see libkern/zlib.c and sys/zlib.h})  */
 end_comment
 
 begin_include
@@ -70,7 +70,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/zlib.h>
+file|<sys/zlib.h>
 end_include
 
 begin_include

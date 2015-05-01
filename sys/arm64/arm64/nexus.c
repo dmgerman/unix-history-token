@@ -871,7 +871,7 @@ break|break;
 default|default:
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}
@@ -900,7 +900,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 name|rman_set_rid
@@ -948,7 +948,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|NULL
 operator|)
 return|;
 block|}

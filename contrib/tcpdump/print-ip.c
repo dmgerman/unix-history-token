@@ -2347,6 +2347,8 @@ name|IPPROTO_PFSYNC
 case|:
 name|pfsync_ip_print
 argument_list|(
+name|ndo
+argument_list|,
 name|ipds
 operator|->
 name|cp

@@ -4974,14 +4974,12 @@ comment|/* Read TLB0 size and associativity. */
 name|tlb0_get_tlbconf
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Align kernel start and end address (kernel image). 	 * Note that kernel end does not necessarily relate to kernsize. 	 * kernsize is the size of the kernel that is actually mapped. 	 * Also note that "start - 1" is deliberate. With SMP, the 	 * entry point is exactly a page from the actual load address. 	 * As such, trunc_page() has no effect and we're off by a page. 	 * Since we always have the ELF header between the load address 	 * and the entry point, we can safely subtract 1 to compensate. 	 */
+comment|/* 	 * Align kernel start and end address (kernel image). 	 * Note that kernel end does not necessarily relate to kernsize. 	 * kernsize is the size of the kernel that is actually mapped. 	 */
 name|kernstart
 operator|=
 name|trunc_page
 argument_list|(
 name|start
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 name|data_start

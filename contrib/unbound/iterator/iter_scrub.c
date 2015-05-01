@@ -3174,6 +3174,20 @@ operator|->
 name|cfg
 operator|->
 name|harden_glue
+operator|&&
+operator|(
+name|rrset
+operator|->
+name|type
+operator|==
+name|LDNS_RR_TYPE_A
+operator|||
+name|rrset
+operator|->
+name|type
+operator|==
+name|LDNS_RR_TYPE_AAAA
+operator|)
 condition|)
 block|{
 comment|/* store in cache! Since it is relevant 				 * (from normalize) it will be picked up  				 * from the cache to be used later */

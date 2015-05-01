@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/racct.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -194,35 +200,6 @@ begin_include
 include|#
 directive|include
 file|<net/vnet.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XEN
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
 end_include
 
 begin_endif
@@ -380,14 +357,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XEN
-name|PT_UPDATES_FLUSH
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Check for misbehavior. 	 * 	 * In case there is a callchain tracing ongoing because of 	 * hwpmc(4), skip the scheduler pinning check. 	 * hwpmc(4) subsystem, infact, will collect callchain informations 	 * at ast() checkpoint, which is past userret(). 	 */
 name|WITNESS_WARN
 argument_list|(
@@ -576,6 +545,11 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -612,6 +586,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 block|}

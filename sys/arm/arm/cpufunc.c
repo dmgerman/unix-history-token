@@ -3643,6 +3643,8 @@ operator||
 name|CPU_CONTROL_SYST_ENABLE
 operator||
 name|CPU_CONTROL_IC_ENABLE
+operator||
+name|CPU_CONTROL_UNAL_ENABLE
 expr_stmt|;
 comment|/* 	 * "write as existing" bits 	 * inverse of this is mask 	 */
 name|cpuctrl_wax

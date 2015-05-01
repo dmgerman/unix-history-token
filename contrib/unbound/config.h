@@ -133,7 +133,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* Define to 1 if your system has a working `chown' function. */
+comment|/* Define to 1 if you have the `chown' function. */
 end_comment
 
 begin_define
@@ -447,6 +447,14 @@ directive|define
 name|HAVE_GETADDRINFO
 value|1
 end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `getauxval' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GETAUXVAL */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the `getentropy' function. */
@@ -1584,7 +1592,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"unbound 1.5.1"
+value|"unbound 1.5.3"
 end_define
 
 begin_comment
@@ -1617,7 +1625,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.5.1"
+value|"1.5.3"
 end_define
 
 begin_comment
@@ -1680,7 +1688,7 @@ begin_define
 define|#
 directive|define
 name|RSRC_PACKAGE_VERSION
-value|1,5,1,0
+value|1,5,3,0
 end_define
 
 begin_comment
@@ -2766,6 +2774,24 @@ define|#
 directive|define
 name|ARG_LL
 value|"%I64"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AF_LOCAL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AF_LOCAL
+value|AF_UNIX
 end_define
 
 begin_endif

@@ -1529,9 +1529,6 @@ comment|/** 	 * Preallocated grant table copy descriptor for TX operations. 	 * 
 name|gnttab_copy_table
 name|tx_gnttab
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|XENHVM
 comment|/** 	 * Resource representing allocated physical address space 	 * associated with our per-instance kva region. 	 */
 name|struct
 name|resource
@@ -1542,8 +1539,6 @@ comment|/** Resource id for allocated physical address space. */
 name|int
 name|pseudo_phys_res_id
 decl_stmt|;
-endif|#
-directive|endif
 comment|/** Ring mapping and interrupt configuration data. */
 name|struct
 name|xnb_ring_config
@@ -2266,22 +2261,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|XENHVM
-name|kva_free
-argument_list|(
-name|xnb
-operator|->
-name|kva
-argument_list|,
-name|xnb
-operator|->
-name|kva_size
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|xnb
@@ -2315,9 +2294,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* XENHVM */
 block|}
 name|xnb
 operator|->
@@ -3051,44 +3027,6 @@ operator|*
 name|PAGE_SIZE
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|XENHVM
-name|xnb
-operator|->
-name|kva
-operator|=
-name|kva_alloc
-argument_list|(
-name|xnb
-operator|->
-name|kva_size
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|xnb
-operator|->
-name|kva
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
-name|xnb
-operator|->
-name|gnt_base_addr
-operator|=
-name|xnb
-operator|->
-name|kva
-expr_stmt|;
-else|#
-directive|else
-comment|/* defined XENHVM */
 comment|/* 	 * Reserve a range of pseudo physical memory that we can map 	 * into kva.  These pages will only be backed by machine 	 * pages ("real memory") during the lifetime of front-end requests 	 * via grant table operations.  We will map the netif tx and rx rings 	 * into this space. 	 */
 name|xnb
 operator|->
@@ -3171,9 +3109,6 @@ operator|->
 name|pseudo_phys_res
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* !defined XENHVM */
 return|return
 operator|(
 literal|0

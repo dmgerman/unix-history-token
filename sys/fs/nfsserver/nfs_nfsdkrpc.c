@@ -356,6 +356,15 @@ operator|->
 name|rq_proc
 operator|>
 name|NFSV2PROC_STATFS
+operator|||
+name|newnfs_nfsv3_procid
+index|[
+name|rqst
+operator|->
+name|rq_proc
+index|]
+operator|==
+name|NFSPROC_NOOP
 condition|)
 block|{
 name|svcerr_noproc
