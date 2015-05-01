@@ -97,7 +97,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: soeliminate [-Crtv] [-I dir] [files]\n"
+literal|"usage: soelim [-Crtv] [-I dir] [files]\n"
 argument_list|)
 expr_stmt|;
 name|exit
