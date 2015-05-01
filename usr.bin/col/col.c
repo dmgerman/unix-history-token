@@ -1387,7 +1387,7 @@ name|CS_NORMAL
 condition|)
 name|PUTC
 argument_list|(
-literal|'\017'
+name|SI
 argument_list|)
 expr_stmt|;
 comment|/* flush out the last few blank lines */
@@ -1588,12 +1588,12 @@ condition|)
 block|{
 name|PUTC
 argument_list|(
-literal|'\033'
+name|ESC
 argument_list|)
 expr_stmt|;
 name|PUTC
 argument_list|(
-literal|'9'
+name|FHLF
 argument_list|)
 expr_stmt|;
 if|if
@@ -2103,7 +2103,7 @@ name|CS_NORMAL
 case|:
 name|PUTC
 argument_list|(
-literal|'\017'
+name|SI
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2112,7 +2112,7 @@ name|CS_ALTERNATE
 case|:
 name|PUTC
 argument_list|(
-literal|'\016'
+name|SO
 argument_list|)
 expr_stmt|;
 block|}
