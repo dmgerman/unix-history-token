@@ -213,33 +213,33 @@ begin_define
 define|#
 directive|define
 name|RLF
-value|'\007'
+value|'7'
 end_define
 
 begin_comment
-comment|/* ESC-07 reverse line feed */
+comment|/* ESC-7 reverse line feed */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RHLF
-value|'\010'
+value|'8'
 end_define
 
 begin_comment
-comment|/* ESC-010 reverse half-line feed */
+comment|/* ESC-8 reverse half-line feed */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FHLF
-value|'\011'
+value|'9'
 end_define
 
 begin_comment
-comment|/* ESC-011 forward half-line feed */
+comment|/* ESC-9 forward half-line feed */
 end_comment
 
 begin_comment
@@ -1593,7 +1593,7 @@ argument_list|)
 expr_stmt|;
 name|PUTC
 argument_list|(
-literal|'\011'
+literal|'9'
 argument_list|)
 expr_stmt|;
 if|if
