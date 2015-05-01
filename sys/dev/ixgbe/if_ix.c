@@ -1397,23 +1397,6 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Missing shared code prototype */
-end_comment
-
-begin_function_decl
-specifier|extern
-name|void
-name|ixgbe_stop_mac_link_on_d3_82599
-parameter_list|(
-name|struct
-name|ixgbe_hw
-modifier|*
-name|hw
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
 comment|/*********************************************************************  *  FreeBSD Device Interface Entry Points  *********************************************************************/
 end_comment
 
