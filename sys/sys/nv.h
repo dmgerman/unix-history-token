@@ -236,6 +236,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|nvlist_flags
+parameter_list|(
+specifier|const
+name|nvlist_t
+modifier|*
+name|nvl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|nvlist_set_error
 parameter_list|(
