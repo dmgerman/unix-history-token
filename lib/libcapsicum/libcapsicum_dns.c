@@ -2107,7 +2107,7 @@ argument_list|(
 name|nvlname
 argument_list|)
 argument_list|,
-literal|"type%u"
+literal|"family%u"
 argument_list|,
 name|i
 argument_list|)
