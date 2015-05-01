@@ -323,6 +323,9 @@ case|:
 case|case
 name|MSR_MTRR64kBase
 case|:
+case|case
+name|MSR_SYSCFG
+case|:
 operator|*
 name|result
 operator|=
@@ -418,6 +421,9 @@ literal|1
 case|:
 case|case
 name|MSR_MTRR64kBase
+case|:
+case|case
+name|MSR_SYSCFG
 case|:
 break|break;
 comment|/* Ignore writes */
