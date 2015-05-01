@@ -2213,23 +2213,25 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 modifier|*
 name|reallocf
-argument_list|(
+parameter_list|(
 name|void
-operator|*
-argument_list|,
+modifier|*
+parameter_list|,
 name|size_t
-argument_list|)
-name|__result_use_check
-name|__alloc_size
-argument_list|(
-literal|2
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|__alloc_size
+parameter_list|(
+function_decl|2
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
