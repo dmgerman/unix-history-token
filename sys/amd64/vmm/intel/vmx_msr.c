@@ -1463,6 +1463,18 @@ name|num
 condition|)
 block|{
 case|case
+name|MSR_MCG_CAP
+case|:
+case|case
+name|MSR_MCG_STATUS
+case|:
+operator|*
+name|val
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
 name|MSR_MTRRcap
 case|:
 case|case
@@ -1599,6 +1611,14 @@ condition|(
 name|num
 condition|)
 block|{
+case|case
+name|MSR_MCG_CAP
+case|:
+case|case
+name|MSR_MCG_STATUS
+case|:
+break|break;
+comment|/* ignore writes */
 case|case
 name|MSR_MTRRcap
 case|:

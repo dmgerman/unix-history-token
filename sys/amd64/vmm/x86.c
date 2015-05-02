@@ -892,20 +892,7 @@ operator||
 name|CPUID_TM
 operator|)
 expr_stmt|;
-comment|/* 			 * Machine check handling is done in the host. 			 */
-name|regs
-index|[
-literal|3
-index|]
-operator|&=
-operator|~
-operator|(
-name|CPUID_MCA
-operator||
-name|CPUID_MCE
-operator|)
-expr_stmt|;
-comment|/*                         * Hide the debug store capability.                         */
+comment|/* 			 * Hide the debug store capability. 			 */
 name|regs
 index|[
 literal|3
@@ -913,6 +900,20 @@ index|]
 operator|&=
 operator|~
 name|CPUID_DS
+expr_stmt|;
+comment|/* 			 * Advertise the Machine Check and MTRR capability. 			 * 			 * Some guest OSes (e.g. Windows) will not boot if 			 * these features are absent. 			 */
+name|regs
+index|[
+literal|3
+index|]
+operator||=
+operator|(
+name|CPUID_MCA
+operator||
+name|CPUID_MCE
+operator||
+name|CPUID_MTRR
+operator|)
 expr_stmt|;
 name|logical_cpus
 operator|=
