@@ -339,6 +339,8 @@ operator|=
 name|nvlist_recv
 argument_list|(
 name|sock
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|CHECK
