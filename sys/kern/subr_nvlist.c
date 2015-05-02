@@ -302,7 +302,7 @@ begin_define
 define|#
 directive|define
 name|NV_FLAG_PUBLIC_MASK
-value|(NV_FLAG_IGNORE_CASE)
+value|(NV_FLAG_IGNORE_CASE | NV_FLAG_NO_UNIQUE)
 end_define
 
 begin_define
@@ -4902,6 +4902,19 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|nvl
+operator|->
+name|nvl_flags
+operator|&
+name|NV_FLAG_NO_UNIQUE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|nvlist_exists
 argument_list|(
 name|nvl
@@ -4928,6 +4941,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 name|newnvp
 operator|=
@@ -5797,6 +5811,19 @@ return|return;
 block|}
 if|if
 condition|(
+operator|(
+name|nvl
+operator|->
+name|nvl_flags
+operator|&
+name|NV_FLAG_NO_UNIQUE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 name|nvlist_exists
 argument_list|(
 name|nvl
@@ -5827,6 +5854,7 @@ name|nvl_error
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 name|nvpair_insert
 argument_list|(

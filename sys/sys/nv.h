@@ -161,6 +161,17 @@ name|NV_FLAG_IGNORE_CASE
 value|0x01
 end_define
 
+begin_comment
+comment|/*  * Names don't have to be unique.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NV_FLAG_NO_UNIQUE
+value|0x02
+end_define
+
 begin_if
 if|#
 directive|if
