@@ -467,6 +467,17 @@ name|nvl
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|nvl
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 name|nvl
 operator|->
 name|nvl_error
