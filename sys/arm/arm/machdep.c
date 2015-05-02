@@ -4999,9 +4999,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
-name|len
-decl_stmt|;
 name|char
 modifier|*
 name|cp
@@ -5034,10 +5031,6 @@ name|uint32_t
 operator|)
 name|kern_envp
 argument_list|)
-expr_stmt|;
-name|len
-operator|=
-literal|0
 expr_stmt|;
 for|for
 control|(
