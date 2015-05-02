@@ -8482,42 +8482,18 @@ case|case
 name|IFT_ETHER
 case|:
 comment|/* RFC2464 */
-ifdef|#
-directive|ifdef
-name|IFT_PROPVIRTUAL
 case|case
 name|IFT_PROPVIRTUAL
 case|:
 comment|/* XXX: no RFC. treat it as ether */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|IFT_L2VLAN
 case|case
 name|IFT_L2VLAN
 case|:
 comment|/* ditto */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|IFT_IEEE80211
 case|case
 name|IFT_IEEE80211
 case|:
 comment|/* ditto */
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|IFT_MIP
-case|case
-name|IFT_MIP
-case|:
-comment|/* ditto */
-endif|#
-directive|endif
 case|case
 name|IFT_INFINIBAND
 case|:
