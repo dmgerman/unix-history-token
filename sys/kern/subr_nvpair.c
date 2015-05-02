@@ -3387,8 +3387,6 @@ operator|->
 name|nvp_name
 index|[
 name|namelen
-operator|+
-literal|1
 index|]
 operator|=
 literal|'\0'
