@@ -3822,13 +3822,14 @@ argument_list|(
 name|WPI_LIFETIME_INFINITE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX WPI_TX_AUTO_SEQ seems to be ignored - workaround this issue 	 * XXX by using WPI_TX_NEED_ACK instead (with some side effects). 	 */
 name|cmd
 operator|->
 name|flags
 operator|=
 name|htole32
 argument_list|(
-name|WPI_TX_AUTO_SEQ
+name|WPI_TX_NEED_ACK
 operator||
 name|WPI_TX_INSERT_TSTAMP
 argument_list|)
