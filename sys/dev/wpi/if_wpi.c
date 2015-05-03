@@ -9289,12 +9289,6 @@ name|sc
 argument_list|)
 operator|!=
 literal|0
-operator|&&
-name|vap
-operator|->
-name|iv_opmode
-operator|!=
-name|IEEE80211_M_STA
 condition|)
 block|{
 name|sc
