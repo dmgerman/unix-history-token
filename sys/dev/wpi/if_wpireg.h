@@ -2374,9 +2374,15 @@ decl_stmt|;
 name|uint16_t
 name|quiet_time
 decl_stmt|;
+comment|/* timeout in milliseconds */
+define|#
+directive|define
+name|WPI_QUIET_TIME_DEFAULT
+value|10
 name|uint16_t
 name|quiet_threshold
 decl_stmt|;
+comment|/* min # of packets */
 name|uint16_t
 name|crc_threshold
 decl_stmt|;
@@ -2522,6 +2528,13 @@ define|#
 directive|define
 name|WPI_PASSIVE_DWELL_BASE
 value|(100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|WPI_CHANNEL_TUNE_TIME
+value|(  6)
 end_define
 
 begin_comment

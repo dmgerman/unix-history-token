@@ -20353,7 +20353,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Limit the total dwell time to 85% of the beacon interval.  *  * Returns the dwell time in milliseconds.  */
+comment|/*  * Limit the total dwell time.  *  * Returns the dwell time in milliseconds.  */
 end_comment
 
 begin_function
@@ -20439,26 +20439,20 @@ return|return
 operator|(
 name|MIN
 argument_list|(
-name|WPI_PASSIVE_DWELL_BASE
+name|dwell_time
 argument_list|,
-operator|(
-operator|(
 name|bintval
+operator|-
+name|WPI_CHANNEL_TUNE_TIME
 operator|*
-literal|85
-operator|)
-operator|/
-literal|100
-operator|)
+literal|2
 argument_list|)
 operator|)
 return|;
 block|}
 comment|/* No association context? Default. */
 return|return
-operator|(
-name|WPI_PASSIVE_DWELL_BASE
-operator|)
+name|dwell_time
 return|;
 block|}
 end_function
@@ -20619,6 +20613,10 @@ modifier|*
 name|frm
 decl_stmt|;
 name|int
+name|bgscan
+decl_stmt|,
+name|bintval
+decl_stmt|,
 name|buflen
 decl_stmt|,
 name|error
@@ -20661,22 +20659,51 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|DPRINTF
+name|error
+operator|=
+name|EAGAIN
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
+name|bgscan
+operator|=
+name|wpi_check_bss_filter
 argument_list|(
 name|sc
-argument_list|,
-name|WPI_DEBUG_TRACE
-argument_list|,
-name|TRACE_STR_END_ERR
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|EAGAIN
-operator|)
-return|;
+name|bintval
+operator|=
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_intval
+expr_stmt|;
+if|if
+condition|(
+name|bgscan
+operator|!=
+literal|0
+operator|&&
+name|bintval
+operator|<
+name|WPI_QUIET_TIME_DEFAULT
+operator|+
+name|WPI_CHANNEL_TUNE_TIME
+operator|*
+literal|2
+condition|)
+block|{
+name|error
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|buf
 operator|=
@@ -20733,10 +20760,9 @@ name|quiet_time
 operator|=
 name|htole16
 argument_list|(
-literal|10
+name|WPI_QUIET_TIME_DEFAULT
 argument_list|)
 expr_stmt|;
-comment|/* timeout in milliseconds */
 name|hdr
 operator|->
 name|quiet_threshold
@@ -20746,7 +20772,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* min # of packets */
 comment|/* 	 * Max needs to be greater than active and passive and quiet! 	 * It's also in microseconds! 	 */
 name|hdr
 operator|->
@@ -21289,15 +21314,13 @@ expr_stmt|;
 comment|/* Make sure they're valid. */
 if|if
 condition|(
-name|dwell_passive
-operator|<=
 name|dwell_active
+operator|>
+name|dwell_passive
 condition|)
-name|dwell_passive
-operator|=
 name|dwell_active
-operator|+
-literal|1
+operator|=
+name|dwell_passive
 expr_stmt|;
 name|chan
 operator|->
