@@ -350,7 +350,7 @@ name|char
 modifier|*
 name|wpi_get_csr_string
 parameter_list|(
-name|int
+name|size_t
 name|csr
 parameter_list|)
 block|{
@@ -460,7 +460,7 @@ name|char
 modifier|*
 name|wpi_get_prph_string
 parameter_list|(
-name|int
+name|size_t
 name|prph
 parameter_list|)
 block|{

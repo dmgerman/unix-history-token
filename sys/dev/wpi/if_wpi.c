@@ -11374,6 +11374,8 @@ name|shared
 operator|->
 name|next
 argument_list|)
+operator|&
+literal|0xfff
 expr_stmt|;
 name|hw
 operator|=
@@ -12430,7 +12432,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 specifier|static
