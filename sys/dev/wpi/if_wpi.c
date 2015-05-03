@@ -10724,9 +10724,8 @@ name|stat
 operator|->
 name|ackfailcnt
 operator|/
-literal|2
+name|WPI_NTRIES_DEFAULT
 decl_stmt|;
-comment|/* wpi_mrr_setup() */
 name|KASSERT
 argument_list|(
 name|data
@@ -10784,6 +10783,8 @@ name|desc
 operator|->
 name|idx
 argument_list|,
+name|stat
+operator|->
 name|ackfailcnt
 argument_list|,
 name|stat
@@ -16724,7 +16725,7 @@ name|i
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Try one time at this rate before falling back to "next". */
+comment|/* Try twice at this rate before falling back to "next". */
 name|mrr
 operator|.
 name|rates
@@ -16734,7 +16735,7 @@ index|]
 operator|.
 name|ntries
 operator|=
-literal|1
+name|WPI_NTRIES_DEFAULT
 expr_stmt|;
 block|}
 comment|/* OFDM rates (not used with 802.11b). */
@@ -16812,7 +16813,7 @@ name|i
 operator|-
 literal|1
 expr_stmt|;
-comment|/* Try one time at this rate before falling back to "next". */
+comment|/* Try twice at this rate before falling back to "next". */
 name|mrr
 operator|.
 name|rates
@@ -16822,7 +16823,7 @@ index|]
 operator|.
 name|ntries
 operator|=
-literal|1
+name|WPI_NTRIES_DEFAULT
 expr_stmt|;
 block|}
 comment|/* Setup MRR for control frames. */

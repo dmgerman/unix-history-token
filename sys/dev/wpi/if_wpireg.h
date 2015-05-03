@@ -2142,6 +2142,10 @@ decl_stmt|;
 name|uint8_t
 name|ntries
 decl_stmt|;
+define|#
+directive|define
+name|WPI_NTRIES_DEFAULT
+value|2
 name|uint8_t
 name|next
 decl_stmt|;
