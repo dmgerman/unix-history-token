@@ -322,17 +322,6 @@ name|WPI_CMD_BT_COEX
 argument_list|)
 expr_stmt|;
 default|default:
-name|KASSERT
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"Unknown Command: %d\n"
-operator|,
-name|cmd
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 literal|"UNKNOWN CMD"
 return|;
@@ -438,7 +427,7 @@ expr_stmt|;
 default|default:
 name|KASSERT
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 operator|(
 literal|"Unknown CSR: %d\n"
@@ -493,7 +482,7 @@ expr_stmt|;
 default|default:
 name|KASSERT
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 operator|(
 literal|"Unknown register: %d\n"
