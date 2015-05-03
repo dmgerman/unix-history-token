@@ -376,6 +376,27 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|wv_recv_mgmt
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -554,6 +575,9 @@ decl_stmt|;
 name|struct
 name|wpi_rx_ring
 name|rxq
+decl_stmt|;
+name|uint64_t
+name|rx_tstamp
 decl_stmt|;
 comment|/* TX Thermal Callibration. */
 name|struct
