@@ -146,6 +146,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|wpabuf_clear_free
+parameter_list|(
+name|struct
+name|wpabuf
+modifier|*
+name|buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 modifier|*
 name|wpabuf_put
 parameter_list|(

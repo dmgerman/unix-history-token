@@ -37,6 +37,16 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|DL_LIST_HEAD_INIT
+parameter_list|(
+name|l
+parameter_list|)
+value|{&(l),&(l) }
+end_define
+
 begin_function
 specifier|static
 specifier|inline

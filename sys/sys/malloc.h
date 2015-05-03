@@ -537,6 +537,11 @@ name|vm_paddr_t
 name|boundary
 argument_list|)
 name|__malloc_like
+name|__result_use_check
+name|__alloc_size
+argument_list|(
+literal|1
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -574,6 +579,11 @@ name|int
 name|flags
 argument_list|)
 name|__malloc_like
+name|__result_use_check
+name|__alloc_size
+argument_list|(
+literal|1
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -651,29 +661,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 modifier|*
 name|realloc
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
+operator|*
 name|addr
-parameter_list|,
+argument_list|,
 name|unsigned
 name|long
 name|size
-parameter_list|,
-name|struct
+argument_list|,
+expr|struct
 name|malloc_type
-modifier|*
+operator|*
 name|type
-parameter_list|,
+argument_list|,
 name|int
 name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__result_use_check
+name|__alloc_size
+argument_list|(
+literal|2
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -696,8 +711,15 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|)
-function_decl|;
+function_decl|__alloc_size
+parameter_list|(
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|struct

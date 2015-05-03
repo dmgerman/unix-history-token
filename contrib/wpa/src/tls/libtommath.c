@@ -125,6 +125,16 @@ directive|define
 name|BN_FAST_S_MP_SQR_C
 end_define
 
+begin_comment
+comment|/* About 0.25 kB of code, but ~1.7kB of stack space! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BN_FAST_S_MP_MUL_DIGS_C
+end_define
+
 begin_else
 else|#
 directive|else
@@ -698,6 +708,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BN_FAST_S_MP_MUL_DIGS_C
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -720,6 +736,11 @@ name|digs
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -3362,6 +3383,15 @@ name|BN_MP_EXPTMOD_FAST_C
 block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|dr
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* avoid compiler warnings about possibly unused variable */
+block|}
 block|}
 end_function
 
@@ -11398,6 +11428,9 @@ decl_stmt|,
 modifier|*
 name|tmpy
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BN_FAST_S_MP_MUL_DIGS_C
 comment|/* can we use the fast multiplier? */
 if|if
 condition|(
@@ -11455,6 +11488,8 @@ name|digs
 argument_list|)
 return|;
 block|}
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -11677,6 +11712,12 @@ name|MP_OKAY
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BN_FAST_S_MP_MUL_DIGS_C
+end_ifdef
 
 begin_comment
 comment|/* Fast (comba) multiplier  *  * This is the fast column-array [comba] multiplier.  It is   * designed to compute the columns of the product first   * then handle the carries afterwards.  This has the effect   * of making the nested loops that compute the columns very  * simple and schedulable on super-scalar processors.  *  * This has been modified to produce a variable number of   * digits of output so if say only a half-product is required   * you don't have to compute the upper half (a feature   * required for fast Barrett reduction).  *  * Based on Algorithm 14.12 on pp.595 of HAC.  *  */
@@ -12004,6 +12045,15 @@ name|MP_OKAY
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BN_FAST_S_MP_MUL_DIGS_C */
+end_comment
 
 begin_comment
 comment|/* init an mp_init for a given size */

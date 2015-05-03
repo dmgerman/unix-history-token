@@ -943,6 +943,8 @@ name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address16
 operator|.
+name|Address
+operator|.
 name|Granularity
 argument_list|)
 block|,
@@ -957,6 +959,8 @@ block|,
 name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address16
+operator|.
+name|Address
 operator|.
 name|Minimum
 argument_list|)
@@ -973,6 +977,8 @@ name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address16
 operator|.
+name|Address
+operator|.
 name|Maximum
 argument_list|)
 block|,
@@ -988,6 +994,8 @@ name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address16
 operator|.
+name|Address
+operator|.
 name|TranslationOffset
 argument_list|)
 block|,
@@ -1002,6 +1010,8 @@ block|,
 name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address16
+operator|.
+name|Address
 operator|.
 name|AddressLength
 argument_list|)
@@ -1067,6 +1077,8 @@ name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address32
 operator|.
+name|Address
+operator|.
 name|Granularity
 argument_list|)
 block|,
@@ -1081,6 +1093,8 @@ block|,
 name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address32
+operator|.
+name|Address
 operator|.
 name|Minimum
 argument_list|)
@@ -1097,6 +1111,8 @@ name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address32
 operator|.
+name|Address
+operator|.
 name|Maximum
 argument_list|)
 block|,
@@ -1112,6 +1128,8 @@ name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address32
 operator|.
+name|Address
+operator|.
 name|TranslationOffset
 argument_list|)
 block|,
@@ -1126,6 +1144,8 @@ block|,
 name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address32
+operator|.
+name|Address
 operator|.
 name|AddressLength
 argument_list|)
@@ -1191,6 +1211,8 @@ name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address64
 operator|.
+name|Address
+operator|.
 name|Granularity
 argument_list|)
 block|,
@@ -1205,6 +1227,8 @@ block|,
 name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address64
+operator|.
+name|Address
 operator|.
 name|Minimum
 argument_list|)
@@ -1221,6 +1245,8 @@ name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address64
 operator|.
+name|Address
+operator|.
 name|Maximum
 argument_list|)
 block|,
@@ -1236,6 +1262,8 @@ name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address64
 operator|.
+name|Address
+operator|.
 name|TranslationOffset
 argument_list|)
 block|,
@@ -1250,6 +1278,8 @@ block|,
 name|ACPI_RSD_OFFSET
 argument_list|(
 name|Address64
+operator|.
+name|Address
 operator|.
 name|AddressLength
 argument_list|)
@@ -1315,6 +1345,8 @@ name|ACPI_RSD_OFFSET
 argument_list|(
 name|ExtAddress64
 operator|.
+name|Address
+operator|.
 name|Granularity
 argument_list|)
 block|,
@@ -1329,6 +1361,8 @@ block|,
 name|ACPI_RSD_OFFSET
 argument_list|(
 name|ExtAddress64
+operator|.
+name|Address
 operator|.
 name|Minimum
 argument_list|)
@@ -1345,6 +1379,8 @@ name|ACPI_RSD_OFFSET
 argument_list|(
 name|ExtAddress64
 operator|.
+name|Address
+operator|.
 name|Maximum
 argument_list|)
 block|,
@@ -1360,6 +1396,8 @@ name|ACPI_RSD_OFFSET
 argument_list|(
 name|ExtAddress64
 operator|.
+name|Address
+operator|.
 name|TranslationOffset
 argument_list|)
 block|,
@@ -1374,6 +1412,8 @@ block|,
 name|ACPI_RSD_OFFSET
 argument_list|(
 name|ExtAddress64
+operator|.
+name|Address
 operator|.
 name|AddressLength
 argument_list|)

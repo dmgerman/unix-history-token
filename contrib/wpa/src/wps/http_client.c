@@ -463,7 +463,7 @@ name|c
 operator|->
 name|sd
 argument_list|,
-name|wpabuf_head
+name|wpabuf_head_u8
 argument_list|(
 name|c
 operator|->

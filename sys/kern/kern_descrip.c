@@ -4062,6 +4062,11 @@ comment|/* 			 * The resource limits are here instead of e.g. 			 * fdalloc(), b
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -4109,6 +4114,7 @@ operator|(
 name|EMFILE
 operator|)
 return|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -7253,9 +7259,6 @@ name|p_fd
 decl_stmt|;
 name|int
 name|fd
-init|=
-operator|-
-literal|1
 decl_stmt|,
 name|maxfd
 decl_stmt|,
@@ -7343,6 +7346,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -7375,6 +7383,7 @@ operator|(
 name|EMFILE
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 comment|/* 		 * fd is already equal to first free descriptor>= minfd, so 		 * we only need to grow the table and we are done. 		 */
@@ -9306,6 +9315,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -9331,6 +9345,7 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 if|if
@@ -9798,9 +9813,9 @@ name|void
 name|fdclose
 parameter_list|(
 name|struct
-name|filedesc
+name|thread
 modifier|*
-name|fdp
+name|td
 parameter_list|,
 name|struct
 name|file
@@ -9809,13 +9824,19 @@ name|fp
 parameter_list|,
 name|int
 name|idx
-parameter_list|,
-name|struct
-name|thread
-modifier|*
-name|td
 parameter_list|)
 block|{
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+init|=
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_fd
+decl_stmt|;
 name|FILEDESC_XLOCK
 argument_list|(
 name|fdp

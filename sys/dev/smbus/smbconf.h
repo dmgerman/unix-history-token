@@ -178,19 +178,89 @@ value|0x1
 end_define
 
 begin_comment
-comment|/*  * ivars codes  */
+comment|/*  * smbus transction op with pass-thru capabilities  *  * This smbus function is capable of doing a smbus command transaction  * (read or write), and can be flagged to not issue the 'cmd' and/or  * issue or expect a count field as well as flagged for chaining (no STOP),  * which gives it an i2c pass-through capability.  *  * NOSTOP- Caller chaining transactions, do not issue STOP  * NOCMD-  Do not transmit the command field  * NOCNT-  Do not transmit (wr) or expect (rd) the count field  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SMBUS_IVAR_ADDR
-value|0x1
+name|SMB_TRANS_NOSTOP
+value|0x0001
 end_define
 
 begin_comment
-comment|/* slave address of the device */
+comment|/* do not send STOP at end */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SMB_TRANS_NOCMD
+value|0x0002
+end_define
+
+begin_comment
+comment|/* ignore cmd field (do not tx) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMB_TRANS_NOCNT
+value|0x0004
+end_define
+
+begin_comment
+comment|/* do not tx or rx count field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMB_TRANS_7BIT
+value|0x0008
+end_define
+
+begin_comment
+comment|/* change address mode to 7-bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMB_TRANS_10BIT
+value|0x0010
+end_define
+
+begin_comment
+comment|/* change address mode to 10-bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SMB_TRANS_NOREPORT
+value|0x0020
+end_define
+
+begin_comment
+comment|/* do not report errors */
+end_comment
+
+begin_comment
+comment|/*  * ivars codes  */
+end_comment
+
+begin_enum
+enum|enum
+name|smbus_ivars
+block|{
+name|SMBUS_IVAR_ADDR
+block|,
+comment|/* slave address of the device */
+block|}
+enum|;
+end_enum
 
 begin_function_decl
 name|int
@@ -255,14 +325,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|u_char
-name|smbus_get_addr
+begin_define
+define|#
+directive|define
+name|SMBUS_ACCESSOR
 parameter_list|(
-name|device_t
+name|var
+parameter_list|,
+name|ivar
+parameter_list|,
+name|type
 parameter_list|)
-function_decl|;
-end_function_decl
+define|\
+value|__BUS_ACCESSOR(smbus, var, SMBUS, ivar, type)
+end_define
+
+begin_macro
+name|SMBUS_ACCESSOR
+argument_list|(
+argument|addr
+argument_list|,
+argument|ADDR
+argument_list|,
+argument|int
+argument_list|)
+end_macro
+
+begin_undef
+undef|#
+directive|undef
+name|SMBUS_ACCESSOR
+end_undef
 
 begin_decl_stmt
 specifier|extern
@@ -446,6 +539,33 @@ name|buf
 parameter_list|)
 define|\
 value|(SMBUS_BREAD(device_get_parent(bus), slave, cmd, count, buf))
+end_define
+
+begin_define
+define|#
+directive|define
+name|smbus_trans
+parameter_list|(
+name|bus
+parameter_list|,
+name|slave
+parameter_list|,
+name|cmd
+parameter_list|,
+name|op
+parameter_list|,
+name|wbuf
+parameter_list|,
+name|wcount
+parameter_list|,
+name|rbuf
+parameter_list|,
+name|rcount
+parameter_list|,
+name|actualp
+parameter_list|)
+define|\
+value|(SMBUS_TRANS(device_get_parent(bus), slave, cmd, op, \ 	wbuf, wcount, rbuf, rcount, actualp))
 end_define
 
 begin_define

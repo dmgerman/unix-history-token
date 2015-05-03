@@ -101,90 +101,75 @@ directive|include
 file|"vi.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|v_ecl
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|v_ecl_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|v_ecl_log
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TEXT
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|v_ex_done
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|VICMD
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|v_exec_ex
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|VICMD
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|EXCMD
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * v_again --&  *	Repeat the previous substitution.  *  * PUBLIC: int v_again __P((SCR *, VICMD *));  */
+comment|/*  * v_again --&  *	Repeat the previous substitution.  *  * PUBLIC: int v_again(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -261,7 +246,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_exmode -- Q  *	Switch the editor into EX mode.  *  * PUBLIC: int v_exmode __P((SCR *, VICMD *));  */
+comment|/*  * v_exmode -- Q  *	Switch the editor into EX mode.  *  * PUBLIC: int v_exmode(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -396,7 +381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_join -- [count]J  *	Join lines together.  *  * PUBLIC: int v_join __P((SCR *, VICMD *));  */
+comment|/*  * v_join -- [count]J  *	Join lines together.  *  * PUBLIC: int v_join(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -499,7 +484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_shiftl -- [count]<motion  *	Shift lines left.  *  * PUBLIC: int v_shiftl __P((SCR *, VICMD *));  */
+comment|/*  * v_shiftl -- [count]<motion  *	Shift lines left.  *  * PUBLIC: int v_shiftl(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -576,7 +561,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_shiftr -- [count]>motion  *	Shift lines right.  *  * PUBLIC: int v_shiftr __P((SCR *, VICMD *));  */
+comment|/*  * v_shiftr -- [count]>motion  *	Shift lines right.  *  * PUBLIC: int v_shiftr(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -653,7 +638,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_suspend -- ^Z  *	Suspend vi.  *  * PUBLIC: int v_suspend __P((SCR *, VICMD *));  */
+comment|/*  * v_suspend -- ^Z  *	Suspend vi.  *  * PUBLIC: int v_suspend(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -728,7 +713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_switch -- ^^  *	Switch to the previous file.  *  * PUBLIC: int v_switch __P((SCR *, VICMD *));  */
+comment|/*  * v_switch -- ^^  *	Switch to the previous file.  *  * PUBLIC: int v_switch(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -869,7 +854,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_tagpush -- ^[  *	Do a tag search on the cursor keyword.  *  * PUBLIC: int v_tagpush __P((SCR *, VICMD *));  */
+comment|/*  * v_tagpush -- ^[  *	Do a tag search on the cursor keyword.  *  * PUBLIC: int v_tagpush(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -950,7 +935,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_tagpop -- ^T  *	Pop the tags stack.  *  * PUBLIC: int v_tagpop __P((SCR *, VICMD *));  */
+comment|/*  * v_tagpop -- ^T  *	Pop the tags stack.  *  * PUBLIC: int v_tagpop(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -1004,7 +989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_filter -- [count]!motion command(s)  *	Run range through shell commands, replacing text.  *  * PUBLIC: int v_filter __P((SCR *, VICMD *));  */
+comment|/*  * v_filter -- [count]!motion command(s)  *	Run range through shell commands, replacing text.  *  * PUBLIC: int v_filter(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -1391,7 +1376,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_ex -- :  *	Execute a colon command line.  *  * PUBLIC: int v_ex __P((SCR *, VICMD *));  */
+comment|/*  * v_ex -- :  *	Execute a colon command line.  *  * PUBLIC: int v_ex(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -2076,7 +2061,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_ecl_exec --  *	Execute a command from a colon command-line window.  *  * PUBLIC: int v_ecl_exec __P((SCR *));  */
+comment|/*  * v_ecl_exec --  *	Execute a command from a colon command-line window.  *  * PUBLIC: int v_ecl_exec(SCR *);  */
 end_comment
 
 begin_function

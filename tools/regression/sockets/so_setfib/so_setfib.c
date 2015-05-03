@@ -10,6 +10,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -576,6 +582,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|testno
+operator|++
+expr_stmt|;
 return|return;
 block|}
 comment|/* Test FIBs -2, -1, 0, .. n, n + 1, n + 2. */
@@ -673,6 +682,25 @@ decl_stmt|;
 name|size_t
 name|s
 decl_stmt|;
+if|if
+condition|(
+name|geteuid
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"1..0 # SKIP: must be root"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* Initalize randomness. */
 name|srandomdev
 argument_list|()
@@ -710,6 +738,35 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"sysctlbyname(net.fibs, ..)"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"1..%lu\n"
+argument_list|,
+operator|(
+name|nitems
+argument_list|(
+name|t_dom
+argument_list|)
+operator|-
+literal|1
+operator|)
+operator|*
+name|nitems
+argument_list|(
+name|t_type
+argument_list|)
+operator|*
+operator|(
+literal|2
+operator|+
+name|rt_numfibs
+operator|+
+literal|2
+operator|+
+literal|3
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Adjust from number to index. */

@@ -208,6 +208,10 @@ name|u_int
 name|uc_rclk
 decl_stmt|;
 comment|/* Default rclk for this device. */
+name|u_int
+name|uc_rshift
+decl_stmt|;
+comment|/* Default regshift for this device. */
 block|}
 struct|;
 end_struct

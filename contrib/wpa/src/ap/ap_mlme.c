@@ -45,6 +45,12 @@ directive|include
 file|"ap_mlme.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"hostapd.h"
+end_include
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -226,6 +232,15 @@ argument_list|,
 name|reason_code
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|hapd
+operator|->
+name|iface
+operator|->
+name|driver_ap_teardown
+condition|)
 name|mlme_deletekeys_request
 argument_list|(
 name|hapd
@@ -298,7 +313,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * mlme_reassociate_indication - Report the establishment of an reassociation  * with a specific peer MAC entity  * @hapd: BSS data  * @sta: peer STA data  *  * MLME calls this function as a result of the establishment of an  * reassociation with a specific peer MAC entity that resulted from a  * reassociation procedure that was initiated by that specific peer MAC entity.  *  * PeerSTAAddress = sta->addr  *  * sta->previous_ap contains the "Current AP" information from ReassocReq.  */
+comment|/**  * mlme_reassociate_indication - Report the establishment of an reassociation  * with a specific peer MAC entity  * @hapd: BSS data  * @sta: peer STA data  *  * MLME calls this function as a result of the establishment of an  * reassociation with a specific peer MAC entity that resulted from a  * reassociation procedure that was initiated by that specific peer MAC entity.  *  * PeerSTAAddress = sta->addr  */
 end_comment
 
 begin_function

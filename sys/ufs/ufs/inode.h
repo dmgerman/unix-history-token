@@ -137,6 +137,10 @@ comment|/* Collect expunged snapshot blocks. */
 block|}
 name|i_un
 union|;
+name|int
+name|i_nextclustercg
+decl_stmt|;
+comment|/* last cg searched for cluster */
 comment|/* 	 * Data for extended attribute modification.  	 */
 name|u_char
 modifier|*

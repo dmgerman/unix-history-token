@@ -639,7 +639,6 @@ modifier|*
 name|__restrict
 name|pwc
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -676,7 +675,6 @@ name|range_t
 modifier|*
 name|range
 decl_stmt|;
-specifier|const
 name|char
 modifier|*
 name|s0

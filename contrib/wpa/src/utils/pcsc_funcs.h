@@ -15,20 +15,6 @@ directive|define
 name|PCSC_FUNCS_H
 end_define
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|SCARD_GSM_SIM_ONLY
-block|,
-name|SCARD_USIM_ONLY
-block|,
-name|SCARD_TRY_BOTH
-block|}
-name|scard_sim_type
-typedef|;
-end_typedef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -41,9 +27,6 @@ name|scard_data
 modifier|*
 name|scard_init
 parameter_list|(
-name|scard_sim_type
-name|sim_type
-parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -227,8 +210,6 @@ define|#
 directive|define
 name|scard_init
 parameter_list|(
-name|s
-parameter_list|,
 name|r
 parameter_list|)
 value|NULL

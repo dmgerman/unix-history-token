@@ -338,6 +338,20 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|SDT_PROBE_DEFINE1_XLATE
+argument_list|(
+name|tcp
+argument_list|, , ,
+name|siftr
+argument_list|,
+literal|"struct pkt_node *"
+argument_list|,
+literal|"siftrinfo_t *"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SDT_PROBE_DEFINE6_XLATE
 argument_list|(
 name|tcp

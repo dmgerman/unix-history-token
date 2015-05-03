@@ -1000,7 +1000,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 name|struct
 name|xlocale_ctype
 name|__xlocale_C_ctype

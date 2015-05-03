@@ -101,22 +101,19 @@ directive|include
 file|"common.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|cb_rotate
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * cut --  *	Put a range of lines/columns into a TEXT buffer.  *  * There are two buffer areas, both found in the global structure.  The first  * is the linked list of all the buffers the user has named, the second is the  * unnamed buffer storage.  There is a pointer, too, which is the current  * default buffer, i.e. it may point to the unnamed buffer or a named buffer  * depending on into what buffer the last text was cut.  Logically, in both  * delete and yank operations, if the user names a buffer, the text is cut  * into it.  If it's a delete of information on more than a single line, the  * contents of the numbered buffers are rotated up one, the contents of the  * buffer named '9' are discarded, and the text is cut into the buffer named  * '1'.  The text is always cut into the unnamed buffer.  *  * In all cases, upper-case buffer names are the same as lower-case names,  * with the exception that they cause the buffer to be appended to instead  * of replaced.  Note, however, that if text is appended to a buffer, the  * default buffer only contains the appended text, not the entire contents  * of the buffer.  *  * !!!  * The contents of the default buffer would disappear after most operations  * in historic vi.  It's unclear that this is useful, so we don't bother.  *  * When users explicitly cut text into the numeric buffers, historic vi became  * genuinely strange.  I've never been able to figure out what was supposed to  * happen.  It behaved differently if you deleted text than if you yanked text,  * and, in the latter case, the text was appended to the buffer instead of  * replacing the contents.  Hopefully it's not worth getting right, and here  * we just treat the numeric buffers like any other named buffer.  *  * PUBLIC: int cut __P((SCR *, CHAR_T *, MARK *, MARK *, int));  */
+comment|/*  * cut --  *	Put a range of lines/columns into a TEXT buffer.  *  * There are two buffer areas, both found in the global structure.  The first  * is the linked list of all the buffers the user has named, the second is the  * unnamed buffer storage.  There is a pointer, too, which is the current  * default buffer, i.e. it may point to the unnamed buffer or a named buffer  * depending on into what buffer the last text was cut.  Logically, in both  * delete and yank operations, if the user names a buffer, the text is cut  * into it.  If it's a delete of information on more than a single line, the  * contents of the numbered buffers are rotated up one, the contents of the  * buffer named '9' are discarded, and the text is cut into the buffer named  * '1'.  The text is always cut into the unnamed buffer.  *  * In all cases, upper-case buffer names are the same as lower-case names,  * with the exception that they cause the buffer to be appended to instead  * of replaced.  Note, however, that if text is appended to a buffer, the  * default buffer only contains the appended text, not the entire contents  * of the buffer.  *  * !!!  * The contents of the default buffer would disappear after most operations  * in historic vi.  It's unclear that this is useful, so we don't bother.  *  * When users explicitly cut text into the numeric buffers, historic vi became  * genuinely strange.  I've never been able to figure out what was supposed to  * happen.  It behaved differently if you deleted text than if you yanked text,  * and, in the latter case, the text was appended to the buffer instead of  * replacing the contents.  Hopefully it's not worth getting right, and here  * we just treat the numeric buffers like any other named buffer.  *  * PUBLIC: int cut(SCR *, CHAR_T *, MARK *, MARK *, int);  */
 end_comment
 
 begin_function
@@ -805,7 +802,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cut_line --  *	Cut a portion of a single line.  *  * PUBLIC: int cut_line __P((SCR *, recno_t, size_t, size_t, CB *));  */
+comment|/*  * cut_line --  *	Cut a portion of a single line.  *  * PUBLIC: int cut_line(SCR *, recno_t, size_t, size_t, CB *);  */
 end_comment
 
 begin_function
@@ -958,7 +955,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cut_close --  *	Discard all cut buffers.  *  * PUBLIC: void cut_close __P((GS *));  */
+comment|/*  * cut_close --  *	Discard all cut buffers.  *  * PUBLIC: void cut_close(GS *);  */
 end_comment
 
 begin_function
@@ -1052,7 +1049,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * text_init --  *	Allocate a new TEXT structure.  *  * PUBLIC: TEXT *text_init __P((SCR *, const CHAR_T *, size_t, size_t));  */
+comment|/*  * text_init --  *	Allocate a new TEXT structure.  *  * PUBLIC: TEXT *text_init(SCR *, const CHAR_T *, size_t, size_t);  */
 end_comment
 
 begin_function
@@ -1200,7 +1197,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * text_lfree --  *	Free a chain of text structures.  *  * PUBLIC: void text_lfree __P((TEXTH *));  */
+comment|/*  * text_lfree --  *	Free a chain of text structures.  *  * PUBLIC: void text_lfree(TEXTH *);  */
 end_comment
 
 begin_function
@@ -1249,7 +1246,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * text_free --  *	Free a text structure.  *  * PUBLIC: void text_free __P((TEXT *));  */
+comment|/*  * text_free --  *	Free a text structure.  *  * PUBLIC: void text_free(TEXT *);  */
 end_comment
 
 begin_function

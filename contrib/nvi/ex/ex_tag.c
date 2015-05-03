@@ -137,261 +137,225 @@ directive|include
 file|"tag.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|binary_search
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|compare
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ctag_file
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TAGF
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|size_t
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ctag_search
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ctag_sfile
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TAGF
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TAGQ
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|TAGQ
 modifier|*
 name|ctag_slist
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|char
 modifier|*
 name|linear_search
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|tag_copy
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TAG
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TAG
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|tag_pop
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TAGQ
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|tagf_copy
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TAGF
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TAGF
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|tagf_free
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TAGF
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|tagq_copy
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TAGQ
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|TAGQ
-operator|*
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_tag_first --  *	The tag code can be entered from main, e.g., "vi -t tag".  *  * PUBLIC: int ex_tag_first __P((SCR *, CHAR_T *));  */
+comment|/*  * ex_tag_first --  *	The tag code can be entered from main, e.g., "vi -t tag".  *  * PUBLIC: int ex_tag_first(SCR *, CHAR_T *);  */
 end_comment
 
 begin_function
@@ -484,7 +448,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_tag_push -- ^]  *		  :tag[!] [string]  *  * Enter a new TAGQ context based on a ctag string.  *  * PUBLIC: int ex_tag_push __P((SCR *, EXCMD *));  */
+comment|/*  * ex_tag_push -- ^]  *		  :tag[!] [string]  *  * Enter a new TAGQ context based on a ctag string.  *  * PUBLIC: int ex_tag_push(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -718,7 +682,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * ex_tag_next --  *	Switch context to the next TAG.  *  * PUBLIC: int ex_tag_next __P((SCR *, EXCMD *));  */
+comment|/*   * ex_tag_next --  *	Switch context to the next TAG.  *  * PUBLIC: int ex_tag_next(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -948,7 +912,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * ex_tag_prev --  *	Switch context to the next TAG.  *  * PUBLIC: int ex_tag_prev __P((SCR *, EXCMD *));  */
+comment|/*   * ex_tag_prev --  *	Switch context to the next TAG.  *  * PUBLIC: int ex_tag_prev(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -1180,7 +1144,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_tag_nswitch --  *	Switch context to the specified TAG.  *  * PUBLIC: int ex_tag_nswitch __P((SCR *, TAG *, int));  */
+comment|/*  * ex_tag_nswitch --  *	Switch context to the specified TAG.  *  * PUBLIC: int ex_tag_nswitch(SCR *, TAG *, int);  */
 end_comment
 
 begin_function
@@ -1318,7 +1282,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_tag_Nswitch --  *	Switch context to the specified TAG in a new screen.  *  * PUBLIC: int ex_tag_Nswitch __P((SCR *, TAG *, int));  */
+comment|/*  * ex_tag_Nswitch --  *	Switch context to the specified TAG in a new screen.  *  * PUBLIC: int ex_tag_Nswitch(SCR *, TAG *, int);  */
 end_comment
 
 begin_function
@@ -1582,7 +1546,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_tag_pop -- ^T  *		 :tagp[op][!] [number | file]  *  *	Pop to a previous TAGQ context.  *  * PUBLIC: int ex_tag_pop __P((SCR *, EXCMD *));  */
+comment|/*  * ex_tag_pop -- ^T  *		 :tagp[op][!] [number | file]  *  *	Pop to a previous TAGQ context.  *  * PUBLIC: int ex_tag_pop(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -1961,7 +1925,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_tag_top -- :tagt[op][!]  *	Clear the tag stack.  *  * PUBLIC: int ex_tag_top __P((SCR *, EXCMD *));  */
+comment|/*  * ex_tag_top -- :tagt[op][!]  *	Clear the tag stack.  *  * PUBLIC: int ex_tag_top(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -2280,7 +2244,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_tag_display --  *	Display the list of tags.  *  * PUBLIC: int ex_tag_display __P((SCR *));  */
+comment|/*  * ex_tag_display --  *	Display the list of tags.  *  * PUBLIC: int ex_tag_display(SCR *);  */
 end_comment
 
 begin_function
@@ -2689,7 +2653,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_tag_copy --  *	Copy a screen's tag structures.  *  * PUBLIC: int ex_tag_copy __P((SCR *, SCR *));  */
+comment|/*  * ex_tag_copy --  *	Copy a screen's tag structures.  *  * PUBLIC: int ex_tag_copy(SCR *, SCR *);  */
 end_comment
 
 begin_function
@@ -3387,7 +3351,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * tagq_free --  *	Free a TAGQ structure (and associated TAG structures).  *  * PUBLIC: int tagq_free __P((SCR *, TAGQ *));  */
+comment|/*  * tagq_free --  *	Free a TAGQ structure (and associated TAG structures).  *  * PUBLIC: int tagq_free(SCR *, TAGQ *);  */
 end_comment
 
 begin_function
@@ -3486,7 +3450,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PUBLIC: int tagq_push __P((SCR*, TAGQ*, int, int ));  */
+comment|/*  * PUBLIC: int tagq_push(SCR*, TAGQ*, int, int );  */
 end_comment
 
 begin_function
@@ -3942,7 +3906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * tag_msg  *	A few common messages.  *  * PUBLIC: void tag_msg __P((SCR *, tagmsg_t, char *));  */
+comment|/*  * tag_msg  *	A few common messages.  *  * PUBLIC: void tag_msg(SCR *, tagmsg_t, char *);  */
 end_comment
 
 begin_function
@@ -4018,7 +3982,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_tagf_alloc --  *	Create a new list of ctag files.  *  * PUBLIC: int ex_tagf_alloc __P((SCR *, char *));  */
+comment|/*  * ex_tagf_alloc --  *	Create a new list of ctag files.  *  * PUBLIC: int ex_tagf_alloc(SCR *, char *);  */
 end_comment
 
 begin_function
@@ -4239,7 +4203,7 @@ comment|/* Free previous queue. */
 end_comment
 
 begin_comment
-comment|/*  * ex_tag_free --  *	Free the ex tag information.  *  * PUBLIC: int ex_tag_free __P((SCR *));  */
+comment|/*  * ex_tag_free --  *	Free the ex tag information.  *  * PUBLIC: int ex_tag_free(SCR *);  */
 end_comment
 
 begin_function
@@ -5905,23 +5869,19 @@ name|char
 modifier|*
 name|binary_search
 parameter_list|(
-specifier|register
 name|char
 modifier|*
 name|string
 parameter_list|,
-specifier|register
 name|char
 modifier|*
 name|front
 parameter_list|,
-specifier|register
 name|char
 modifier|*
 name|back
 parameter_list|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -6116,17 +6076,14 @@ specifier|static
 name|int
 name|compare
 parameter_list|(
-specifier|register
 name|char
 modifier|*
 name|s1
 parameter_list|,
-specifier|register
 name|char
 modifier|*
 name|s2
 parameter_list|,
-specifier|register
 name|char
 modifier|*
 name|back

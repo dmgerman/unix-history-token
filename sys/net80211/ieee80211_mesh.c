@@ -770,7 +770,7 @@ argument_list|,
 literal|"I"
 argument_list|,
 literal|"Backoff timeout (msec). This is to throutles peering forever when "
-literal|"not receving answer or is rejected by a neighbor"
+literal|"not receiving answer or is rejected by a neighbor"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -102,7 +102,7 @@ file|"../vi/vi.h"
 end_include
 
 begin_comment
-comment|/*  * ex_abbr -- :abbreviate [key replacement]  *	Create an abbreviation or display abbreviations.  *  * PUBLIC: int ex_abbr __P((SCR *, EXCMD *));  */
+comment|/*  * ex_abbr -- :abbreviate [key replacement]  *	Create an abbreviation or display abbreviations.  *  * PUBLIC: int ex_abbr(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -417,7 +417,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_unabbr -- :unabbreviate key  *      Delete an abbreviation.  *  * PUBLIC: int ex_unabbr __P((SCR *, EXCMD *));  */
+comment|/*  * ex_unabbr -- :unabbreviate key  *      Delete an abbreviation.  *  * PUBLIC: int ex_unabbr(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

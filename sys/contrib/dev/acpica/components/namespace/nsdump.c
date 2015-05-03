@@ -684,7 +684,7 @@ name|ACPI_TYPE_PROCESSOR
 case|:
 name|AcpiOsPrintf
 argument_list|(
-literal|"ID %02X Len %02X Addr %p\n"
+literal|"ID %02X Len %02X Addr %8.8X%8.8X\n"
 argument_list|,
 name|ObjDesc
 operator|->
@@ -698,10 +698,8 @@ name|Processor
 operator|.
 name|Length
 argument_list|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|ObjDesc
 operator|->
 name|Processor
@@ -965,7 +963,7 @@ name|AcpiOsPrintf
 argument_list|(
 literal|" Addr %8.8X%8.8X Len %.4X\n"
 argument_list|,
-name|ACPI_FORMAT_NATIVE_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|ObjDesc
 operator|->

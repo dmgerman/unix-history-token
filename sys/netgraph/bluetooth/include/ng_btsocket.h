@@ -605,7 +605,7 @@ end_comment
 
 begin_struct
 struct|struct
-name|sockaddr_l2cap
+name|sockaddr_l2cap_compat
 block|{
 name|u_char
 name|l2cap_len
@@ -626,6 +626,86 @@ comment|/* address */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|BDADDR_BREDR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|BDADDR_LE_PUBLIC
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|BDADDR_LE_RANDOM
+value|2
+end_define
+
+begin_struct
+struct|struct
+name|sockaddr_l2cap
+block|{
+name|u_char
+name|l2cap_len
+decl_stmt|;
+comment|/* total length */
+name|u_char
+name|l2cap_family
+decl_stmt|;
+comment|/* address family */
+name|u_int16_t
+name|l2cap_psm
+decl_stmt|;
+comment|/* PSM (Protocol/Service Multiplexor) */
+name|bdaddr_t
+name|l2cap_bdaddr
+decl_stmt|;
+comment|/* address */
+name|u_int16_t
+name|l2cap_cid
+decl_stmt|;
+comment|/*cid*/
+name|u_int8_t
+name|l2cap_bdaddr_type
+decl_stmt|;
+comment|/*address type*/
+block|}
+struct|;
+end_struct
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|L2CAP_SOCKET_CHECKED
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
+begin_warning
+warning|#
+directive|warning
+literal|"Make sure new member of socket address initialized"
+end_warning
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* L2CAP socket options */

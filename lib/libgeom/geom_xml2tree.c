@@ -1501,6 +1501,11 @@ name|config
 operator|=
 name|NULL
 expr_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 if|if

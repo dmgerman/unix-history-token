@@ -130,6 +130,30 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_IEEE80211R */
+ifdef|#
+directive|ifdef
+name|CONFIG_P2P
+specifier|const
+name|u8
+modifier|*
+name|ip_addr_req
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|ip_addr_alloc
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_P2P */
+specifier|const
+name|u8
+modifier|*
+name|osen
+decl_stmt|;
+name|size_t
+name|osen_len
+decl_stmt|;
 block|}
 struct|;
 end_struct

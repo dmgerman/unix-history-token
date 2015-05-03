@@ -1557,15 +1557,8 @@ decl_stmt|;
 name|int
 name|size
 decl_stmt|;
-name|int
-name|i
-decl_stmt|;
 for|for
 control|(
-name|i
-operator|=
-literal|0
-operator|,
 name|ubz
 operator|=
 operator|&
@@ -12764,7 +12757,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"uma_zone_set_init: Invalid zone type"
+literal|"uma_zone_set_fini: Invalid zone type"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -12936,7 +12929,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"uma_zone_set_init: Invalid zone type"
+literal|"uma_zone_set_freef: Invalid zone type"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -14911,11 +14904,7 @@ name|int
 name|error
 decl_stmt|,
 name|max
-decl_stmt|,
-name|old
 decl_stmt|;
-name|old
-operator|=
 name|max
 operator|=
 name|uma_zone_get_max
@@ -14949,17 +14938,6 @@ condition|)
 return|return
 operator|(
 name|error
-operator|)
-return|;
-if|if
-condition|(
-name|max
-operator|<
-name|old
-condition|)
-return|return
-operator|(
-name|EINVAL
 operator|)
 return|;
 name|uma_zone_set_max

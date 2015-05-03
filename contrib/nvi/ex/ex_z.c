@@ -90,7 +90,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_z -- :[line] z [^-.+=] [count] [flags]  *	Adjust window.  *  * PUBLIC: int ex_z __P((SCR *, EXCMD *));  */
+comment|/*  * ex_z -- :[line] z [^-.+=] [count] [flags]  *	Adjust window.  *  * PUBLIC: int ex_z(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -145,22 +145,6 @@ operator|->
 name|count
 expr_stmt|;
 else|else
-ifdef|#
-directive|ifdef
-name|HISTORICAL_PRACTICE
-name|cnt
-operator|=
-name|O_VAL
-argument_list|(
-name|sp
-argument_list|,
-name|O_SCROLL
-argument_list|)
-operator|*
-literal|2
-expr_stmt|;
-else|#
-directive|else
 name|cnt
 operator|=
 name|O_VAL
@@ -172,8 +156,6 @@ argument_list|)
 operator|-
 literal|1
 expr_stmt|;
-endif|#
-directive|endif
 name|equals
 operator|=
 literal|0

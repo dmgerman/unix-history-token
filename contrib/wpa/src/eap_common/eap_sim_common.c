@@ -1160,7 +1160,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|os_memcmp
+name|os_memcmp_const
 argument_list|(
 name|hmac
 argument_list|,
@@ -2208,7 +2208,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|os_memcmp
+name|os_memcmp_const
 argument_list|(
 name|hmac
 argument_list|,
@@ -4624,7 +4624,7 @@ literal|"EAP-AKA': Too many "
 literal|"AT_KDF attributes - ignore this"
 argument_list|)
 expr_stmt|;
-continue|continue;
+break|break;
 block|}
 name|attr
 operator|->
@@ -4941,9 +4941,6 @@ decl_stmt|,
 name|encr
 decl_stmt|;
 comment|/* index from buf */
-name|int
-name|type
-decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -5001,12 +4998,6 @@ condition|)
 return|return
 name|NULL
 return|;
-name|msg
-operator|->
-name|type
-operator|=
-name|type
-expr_stmt|;
 name|msg
 operator|->
 name|buf
@@ -5115,6 +5106,9 @@ name|eap_sim_msg
 modifier|*
 name|msg
 parameter_list|,
+name|int
+name|type
+parameter_list|,
 specifier|const
 name|u8
 modifier|*
@@ -5190,8 +5184,6 @@ name|msg
 operator|->
 name|mac
 operator|&&
-name|msg
-operator|->
 name|type
 operator|==
 name|EAP_TYPE_AKA_PRIME

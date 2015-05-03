@@ -2691,17 +2691,37 @@ name|ACPI_OP
 argument_list|(
 literal|"-ExtAccessField-"
 argument_list|,
-argument|ARGP_CONNECTFIELD_OP
+name|ARGP_CONNECTFIELD_OP
 argument_list|,
-argument|ARGI_CONNECTFIELD_OP
+name|ARGI_CONNECTFIELD_OP
+argument_list|,
+name|ACPI_TYPE_ANY
+argument_list|,
+name|AML_CLASS_INTERNAL
+argument_list|,
+name|AML_TYPE_BOGUS
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* ACPI 6.0 opcodes */
+comment|/* 81 */
+name|ACPI_OP
+argument_list|(
+literal|"External"
+argument_list|,
+argument|ARGP_EXTERNAL_OP
+argument_list|,
+argument|ARGI_EXTERNAL_OP
 argument_list|,
 argument|ACPI_TYPE_ANY
 argument_list|,
-argument|AML_CLASS_INTERNAL
+argument|AML_CLASS_EXECUTE
 argument_list|,
-argument|AML_TYPE_BOGUS
+comment|/* ? */
+argument|AML_TYPE_EXEC_3A_0T_0R
 argument_list|,
-literal|0
+argument|AML_FLAGS_EXEC_3A_0T_0R
 argument_list|)
 comment|/*! [End] no source code translation !*/
 block|}

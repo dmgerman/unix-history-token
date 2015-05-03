@@ -101,6 +101,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|AdStoreTable
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+parameter_list|,
+name|UINT32
+modifier|*
+name|TableIndex
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Stubs for ASL compiler */
 end_comment
@@ -664,7 +680,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|AcpiGbl_DbOpt_disasm
+name|AcpiGbl_DbOpt_Disasm
 condition|)
 block|{
 return|return
@@ -792,11 +808,6 @@ name|Status
 operator|=
 name|AE_ERROR
 expr_stmt|;
-name|ACPI_FREE
-argument_list|(
-name|DisasmFilename
-argument_list|)
-expr_stmt|;
 goto|goto
 name|Cleanup
 goto|;
@@ -812,8 +823,12 @@ name|OutFilename
 operator|=
 name|DisasmFilename
 expr_stmt|;
+comment|/* ForceAmlDisassembly means to assume the table contains valid AML */
 if|if
 condition|(
+operator|!
+name|AcpiGbl_ForceAmlDisassembly
+operator|&&
 operator|!
 name|AcpiUtIsAmlTable
 argument_list|(
@@ -824,6 +839,8 @@ block|{
 name|AdDisassemblerHeader
 argument_list|(
 name|Filename
+argument_list|,
+name|ACPI_IS_DATA_TABLE
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1182,7 +1199,7 @@ expr_stmt|;
 comment|/* Optional displays */
 if|if
 condition|(
-name|AcpiGbl_DbOpt_disasm
+name|AcpiGbl_DbOpt_Disasm
 condition|)
 block|{
 comment|/* This is the real disassembly */
@@ -1267,6 +1284,9 @@ condition|(
 name|Table
 operator|&&
 operator|!
+name|AcpiGbl_ForceAmlDisassembly
+operator|&&
+operator|!
 name|AcpiUtIsAmlTable
 argument_list|(
 name|Table
@@ -1328,7 +1348,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdDisassemblerHeader  *  * PARAMETERS:  Filename            - Input file for the table  *  * RETURN:      None  *  * DESCRIPTION: Create the disassembler header, including ACPICA signon with  *              current time and date.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdDisassemblerHeader  *  * PARAMETERS:  Filename            - Input file for the table  *              TableType           - Either AML or DataTable  *  * RETURN:      None  *  * DESCRIPTION: Create the disassembler header, including ACPICA signon with  *              current time and date.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1338,6 +1358,9 @@ parameter_list|(
 name|char
 modifier|*
 name|Filename
+parameter_list|,
+name|UINT8
+name|TableType
 parameter_list|)
 block|{
 name|time_t
@@ -1367,6 +1390,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|TableType
+operator|==
+name|ACPI_IS_AML_TABLE
+condition|)
+block|{
+if|if
+condition|(
 name|AcpiGbl_CstyleDisassembly
 condition|)
 block|{
@@ -1385,6 +1415,7 @@ literal|" * Disassembling to non-symbolic legacy ASL operators\n"
 literal|" *\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|AcpiOsPrintf
 argument_list|(
@@ -1436,6 +1467,8 @@ comment|/*      * Print file header and dump original table header      */
 name|AdDisassemblerHeader
 argument_list|(
 name|Filename
+argument_list|,
+name|ACPI_IS_AML_TABLE
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1759,7 +1792,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|AcpiGbl_DbOpt_verbose
+name|AcpiGbl_DbOpt_Verbose
 condition|)
 block|{
 name|AdCreateTableHeader
@@ -1784,7 +1817,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|AcpiGbl_DbOpt_verbose
+name|AcpiGbl_DbOpt_Verbose
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1844,6 +1877,83 @@ name|ACPI_UINT32_MAX
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AdStoreTable  *  * PARAMETERS:  Table               - Table header  *              TableIndex          - Where the table index is returned  *  * RETURN:      Status and table index.  *  * DESCRIPTION: Add an ACPI table to the global table list  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|ACPI_STATUS
+name|AdStoreTable
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+parameter_list|,
+name|UINT32
+modifier|*
+name|TableIndex
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_TABLE_DESC
+modifier|*
+name|TableDesc
+decl_stmt|;
+name|Status
+operator|=
+name|AcpiTbGetNextTableDescriptor
+argument_list|(
+name|TableIndex
+argument_list|,
+operator|&
+name|TableDesc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+comment|/* Initialize added table */
+name|AcpiTbInitTableDescriptor
+argument_list|(
+name|TableDesc
+argument_list|,
+name|ACPI_PTR_TO_PHYSADDR
+argument_list|(
+name|Table
+argument_list|)
+argument_list|,
+name|ACPI_TABLE_ORIGIN_INTERNAL_VIRTUAL
+argument_list|,
+name|Table
+argument_list|)
+expr_stmt|;
+name|AcpiTbValidateTable
+argument_list|(
+name|TableDesc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|AE_OK
@@ -1932,17 +2042,9 @@ expr_stmt|;
 comment|/* Store DSDT in the Table Manager */
 name|Status
 operator|=
-name|AcpiTbStoreTable
+name|AdStoreTable
 argument_list|(
-literal|0
-argument_list|,
 name|NewTable
-argument_list|,
-name|NewTable
-operator|->
-name|Length
-argument_list|,
-literal|0
 argument_list|,
 operator|&
 name|TableIndex
@@ -2201,20 +2303,9 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiTbStoreTable
+name|AdStoreTable
 argument_list|(
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
 name|Table
-argument_list|,
-name|Table
-argument_list|,
-name|Table
-operator|->
-name|Length
-argument_list|,
-name|ACPI_TABLE_ORIGIN_INTERNAL_VIRTUAL
 argument_list|,
 operator|&
 name|TableIndex

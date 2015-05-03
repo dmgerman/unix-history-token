@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * One-key CBC MAC (OMAC1) hash with AES-128  *  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * One-key CBC MAC (OMAC1) hash with AES  *  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -117,17 +117,20 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * omac1_aes_128_vector - One-Key CBC MAC (OMAC1) hash with AES-128  * @key: 128-bit key for the hash operation  * @num_elem: Number of elements in the data vector  * @addr: Pointers to the data areas  * @len: Lengths of the data blocks  * @mac: Buffer for MAC (128 bits, i.e., 16 bytes)  * Returns: 0 on success, -1 on failure  *  * This is a mode for using block cipher (AES in this case) for authentication.  * OMAC1 was standardized with the name CMAC by NIST in a Special Publication  * (SP) 800-38B.  */
+comment|/**  * omac1_aes_vector - One-Key CBC MAC (OMAC1) hash with AES  * @key: Key for the hash operation  * @key_len: Key length in octets  * @num_elem: Number of elements in the data vector  * @addr: Pointers to the data areas  * @len: Lengths of the data blocks  * @mac: Buffer for MAC (128 bits, i.e., 16 bytes)  * Returns: 0 on success, -1 on failure  *  * This is a mode for using block cipher (AES in this case) for authentication.  * OMAC1 was standardized with the name CMAC by NIST in a Special Publication  * (SP) 800-38B.  */
 end_comment
 
 begin_function
 name|int
-name|omac1_aes_128_vector
+name|omac1_aes_vector
 parameter_list|(
 specifier|const
 name|u8
 modifier|*
 name|key
+parameter_list|,
+name|size_t
+name|key_len
 parameter_list|,
 name|size_t
 name|num_elem
@@ -186,7 +189,7 @@ name|aes_encrypt_init
 argument_list|(
 name|key
 argument_list|,
-literal|16
+name|key_len
 argument_list|)
 expr_stmt|;
 if|if
@@ -293,6 +296,20 @@ operator|>=
 name|end
 condition|)
 block|{
+comment|/* 				 * Stop if there are no more bytes to process 				 * since there are no more entries in the array. 				 */
+if|if
+condition|(
+name|i
+operator|+
+literal|1
+operator|==
+name|AES_BLOCK_SIZE
+operator|&&
+name|left
+operator|==
+name|AES_BLOCK_SIZE
+condition|)
+break|break;
 name|e
 operator|++
 expr_stmt|;
@@ -396,6 +413,16 @@ operator|>=
 name|end
 condition|)
 block|{
+comment|/* 				 * Stop if there are no more bytes to process 				 * since there are no more entries in the array. 				 */
+if|if
+condition|(
+name|i
+operator|+
+literal|1
+operator|==
+name|left
+condition|)
+break|break;
 name|e
 operator|++
 expr_stmt|;
@@ -474,6 +501,57 @@ block|}
 end_function
 
 begin_comment
+comment|/**  * omac1_aes_128_vector - One-Key CBC MAC (OMAC1) hash with AES-128  * @key: 128-bit key for the hash operation  * @num_elem: Number of elements in the data vector  * @addr: Pointers to the data areas  * @len: Lengths of the data blocks  * @mac: Buffer for MAC (128 bits, i.e., 16 bytes)  * Returns: 0 on success, -1 on failure  *  * This is a mode for using block cipher (AES in this case) for authentication.  * OMAC1 was standardized with the name CMAC by NIST in a Special Publication  * (SP) 800-38B.  */
+end_comment
+
+begin_function
+name|int
+name|omac1_aes_128_vector
+parameter_list|(
+specifier|const
+name|u8
+modifier|*
+name|key
+parameter_list|,
+name|size_t
+name|num_elem
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|addr
+index|[]
+parameter_list|,
+specifier|const
+name|size_t
+modifier|*
+name|len
+parameter_list|,
+name|u8
+modifier|*
+name|mac
+parameter_list|)
+block|{
+return|return
+name|omac1_aes_vector
+argument_list|(
+name|key
+argument_list|,
+literal|16
+argument_list|,
+name|num_elem
+argument_list|,
+name|addr
+argument_list|,
+name|len
+argument_list|,
+name|mac
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/**  * omac1_aes_128 - One-Key CBC MAC (OMAC1) hash with AES-128 (aka AES-CMAC)  * @key: 128-bit key for the hash operation  * @data: Data buffer for which a MAC is determined  * @data_len: Length of data buffer in bytes  * @mac: Buffer for MAC (128 bits, i.e., 16 bytes)  * Returns: 0 on success, -1 on failure  *  * This is a mode for using block cipher (AES in this case) for authentication.  * OMAC1 was standardized with the name CMAC by NIST in a Special Publication  * (SP) 800-38B.  */
 end_comment
 
@@ -503,6 +581,53 @@ return|return
 name|omac1_aes_128_vector
 argument_list|(
 name|key
+argument_list|,
+literal|1
+argument_list|,
+operator|&
+name|data
+argument_list|,
+operator|&
+name|data_len
+argument_list|,
+name|mac
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * omac1_aes_256 - One-Key CBC MAC (OMAC1) hash with AES-256 (aka AES-CMAC)  * @key: 256-bit key for the hash operation  * @data: Data buffer for which a MAC is determined  * @data_len: Length of data buffer in bytes  * @mac: Buffer for MAC (128 bits, i.e., 16 bytes)  * Returns: 0 on success, -1 on failure  *  * This is a mode for using block cipher (AES in this case) for authentication.  * OMAC1 was standardized with the name CMAC by NIST in a Special Publication  * (SP) 800-38B.  */
+end_comment
+
+begin_function
+name|int
+name|omac1_aes_256
+parameter_list|(
+specifier|const
+name|u8
+modifier|*
+name|key
+parameter_list|,
+specifier|const
+name|u8
+modifier|*
+name|data
+parameter_list|,
+name|size_t
+name|data_len
+parameter_list|,
+name|u8
+modifier|*
+name|mac
+parameter_list|)
+block|{
+return|return
+name|omac1_aes_vector
+argument_list|(
+name|key
+argument_list|,
+literal|32
 argument_list|,
 literal|1
 argument_list|,

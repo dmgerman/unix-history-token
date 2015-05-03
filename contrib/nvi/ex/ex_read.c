@@ -108,7 +108,7 @@ file|"../vi/vi.h"
 end_include
 
 begin_comment
-comment|/*  * ex_read --	:read [file]  *		:read [!cmd]  *	Read from a file or utility.  *  * !!!  * Historical vi wouldn't undo a filter read, for no apparent reason.  *  * PUBLIC: int ex_read __P((SCR *, EXCMD *));  */
+comment|/*  * ex_read --	:read [file]  *		:read [!cmd]  *	Read from a file or utility.  *  * !!!  * Historical vi wouldn't undo a filter read, for no apparent reason.  *  * PUBLIC: int ex_read(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -1167,7 +1167,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_readfp --  *	Read lines into the file.  *  * PUBLIC: int ex_readfp __P((SCR *, char *, FILE *, MARK *, recno_t *, int));  */
+comment|/*  * ex_readfp --  *	Read lines into the file.  *  * PUBLIC: int ex_readfp(SCR *, char *, FILE *, MARK *, recno_t *, int);  */
 end_comment
 
 begin_function

@@ -661,7 +661,7 @@ name|AddressSpace
 operator|,
 name|Handler
 operator|,
-name|ACPI_FORMAT_NATIVE_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)

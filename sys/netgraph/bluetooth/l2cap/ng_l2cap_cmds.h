@@ -146,6 +146,21 @@ define|\
 value|do {									\ 	struct _cfg_rsp {						\ 		ng_l2cap_cmd_hdr_t	 hdr;				\ 		ng_l2cap_cfg_rsp_cp	 param;				\ 	} __attribute__ ((packed))	*c = NULL;			\ 									\ 	MGETHDR((_m), M_NOWAIT, MT_DATA);				\ 	if ((_m) == NULL) { 						\ 		NG_FREE_M((_data));					\ 		break;							\ 	}								\ 									\ 	(_m)->m_pkthdr.len = (_m)->m_len = sizeof(*c);			\ 									\ 	c = mtod((_m), struct _cfg_rsp *);				\ 	c->hdr.code = NG_L2CAP_CFG_RSP;					\ 	c->hdr.ident = (_ident);					\ 	c->hdr.length = sizeof(c->param);				\ 									\ 	c->param.scid = htole16((_scid));				\ 	c->param.flags = htole16((_flags));				\ 	c->param.result = htole16((_result));				\ 	if ((_data) != NULL) {						\ 		int	l = (_data)->m_pkthdr.len;			\ 									\ 		m_cat((_m), (_data));					\ 		c->hdr.length += l;					\ 		(_m)->m_pkthdr.len += l;				\ 	}								\ 									\ 	c->hdr.length = htole16(c->hdr.length);				\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|_ng_l2cap_cmd_urs
+parameter_list|(
+name|_m
+parameter_list|,
+name|_ident
+parameter_list|,
+name|_result
+parameter_list|)
+define|\
+value|do {									\ 	struct  _cmd_urs{						\ 		ng_l2cap_cmd_hdr_t	 hdr;				\ 		uint16_t	 result;				\ 	} __attribute__ ((packed))	*c = NULL;			\ 									\ 	MGETHDR((_m), M_NOWAIT, MT_DATA);				\ 									\ 	(_m)->m_pkthdr.len = (_m)->m_len = sizeof(*c);			\ 									\ 	c = mtod((_m), struct _cmd_urs *);				\ 	c->hdr.code = NG_L2CAP_CMD_PARAM_UPDATE_RESPONSE;		\ 	c->hdr.ident = (_ident);					\ 	c->hdr.length = sizeof(c->result);				\ 									\ 	c->result = htole16((_result));				\ } while (0)
+end_define
+
 begin_comment
 comment|/* Build configuration options */
 end_comment

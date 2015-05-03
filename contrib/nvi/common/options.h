@@ -312,26 +312,24 @@ decl_stmt|;
 comment|/* Name. */
 comment|/* Change function. */
 name|int
-argument_list|(
-argument|*func
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|func
+function_decl|)
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|OPTION
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_long
-operator|*
-operator|)
-argument_list|)
-expr_stmt|;
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* Type of object. */
 enum|enum
 block|{

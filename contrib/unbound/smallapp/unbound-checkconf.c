@@ -198,6 +198,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"-f 		output full pathname with chroot applied, eg. with -o pidfile.\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"-h		show this usage help.\n"
 argument_list|)
 expr_stmt|;
@@ -229,7 +234,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**   * Print given option to stdout   * @param cfg: config  * @param opt: option name without trailing :.   *	This is different from config_set_option.  */
+comment|/**   * Print given option to stdout   * @param cfg: config  * @param opt: option name without trailing :.   *	This is different from config_set_option.  * @param final: if final pathname with chroot applied has to be printed.  */
 end_comment
 
 begin_function
@@ -246,8 +251,43 @@ specifier|const
 name|char
 modifier|*
 name|opt
+parameter_list|,
+name|int
+name|final
 parameter_list|)
 block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|opt
+argument_list|,
+literal|"pidfile"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|final
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|fname_after_chroot
+argument_list|(
+name|cfg
+operator|->
+name|pidfile
+argument_list|,
+name|cfg
+argument_list|,
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 if|if
 condition|(
 operator|!
@@ -2539,6 +2579,9 @@ specifier|const
 name|char
 modifier|*
 name|opt
+parameter_list|,
+name|int
+name|final
 parameter_list|)
 block|{
 name|struct
@@ -2594,6 +2637,8 @@ argument_list|(
 name|cfg
 argument_list|,
 name|opt
+argument_list|,
+name|final
 argument_list|)
 expr_stmt|;
 name|config_delete
@@ -2718,6 +2763,11 @@ block|{
 name|int
 name|c
 decl_stmt|;
+name|int
+name|final
+init|=
+literal|0
+decl_stmt|;
 specifier|const
 name|char
 modifier|*
@@ -2791,7 +2841,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"ho:"
+literal|"fho:"
 argument_list|)
 operator|)
 operator|!=
@@ -2804,6 +2854,14 @@ condition|(
 name|c
 condition|)
 block|{
+case|case
+literal|'f'
+case|:
+name|final
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'o'
 case|:
@@ -2868,6 +2926,8 @@ argument_list|(
 name|f
 argument_list|,
 name|opt
+argument_list|,
+name|final
 argument_list|)
 expr_stmt|;
 name|checklock_stop

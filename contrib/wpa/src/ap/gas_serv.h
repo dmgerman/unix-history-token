@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Generic advertisement service (GAS) server  * Copyright (c) 2011-2012, Qualcomm Atheros, Inc.  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * Generic advertisement service (GAS) server  * Copyright (c) 2011-2013, Qualcomm Atheros, Inc.  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -127,27 +127,21 @@ define|\
 value|(0x10000<< HS20_STYPE_OPERATING_CLASS)
 end_define
 
-begin_comment
-comment|/* To account for latencies between hostapd and external ANQP processor */
-end_comment
-
 begin_define
 define|#
 directive|define
-name|GAS_SERV_COMEBACK_DELAY_FUDGE
-value|10
+name|ANQP_REQ_OSU_PROVIDERS_LIST
+define|\
+value|(0x10000<< HS20_STYPE_OSU_PROVIDERS_LIST)
 end_define
 
 begin_define
 define|#
 directive|define
-name|GAS_SERV_MIN_COMEBACK_DELAY
-value|100
+name|ANQP_REQ_ICON_REQUEST
+define|\
+value|(0x10000<< HS20_STYPE_ICON_REQUEST)
 end_define
-
-begin_comment
-comment|/* in TU */
-end_comment
 
 begin_struct
 struct|struct
@@ -155,9 +149,6 @@ name|gas_dialog_info
 block|{
 name|u8
 name|valid
-decl_stmt|;
-name|u8
-name|index
 decl_stmt|;
 name|struct
 name|wpabuf
@@ -175,21 +166,10 @@ comment|/* Offset in sd_resp */
 name|u8
 name|sd_frag_id
 decl_stmt|;
-name|u16
-name|comeback_delay
-decl_stmt|;
-name|unsigned
 name|int
-name|requested
+name|prot
 decl_stmt|;
-name|unsigned
-name|int
-name|received
-decl_stmt|;
-name|unsigned
-name|int
-name|all_requested
-decl_stmt|;
+comment|/* whether Protected Dual of Public Action frame is used */
 block|}
 struct|;
 end_struct
@@ -199,28 +179,6 @@ struct_decl|struct
 name|hostapd_data
 struct_decl|;
 end_struct_decl
-
-begin_function_decl
-name|void
-name|gas_serv_tx_gas_response
-parameter_list|(
-name|struct
-name|hostapd_data
-modifier|*
-name|hapd
-parameter_list|,
-specifier|const
-name|u8
-modifier|*
-name|dst
-parameter_list|,
-name|struct
-name|gas_dialog_info
-modifier|*
-name|dialog
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|struct

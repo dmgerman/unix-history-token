@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: lstRemove.c,v 1.14 2008/12/13 15:19:29 dsl Exp $	*/
+comment|/*	$NetBSD: lstRemove.c,v 1.16 2014/09/07 20:55:34 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -19,7 +19,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: lstRemove.c,v 1.14 2008/12/13 15:19:29 dsl Exp $"
+literal|"$NetBSD: lstRemove.c,v 1.16 2014/09/07 20:55:34 joerg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -55,7 +55,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: lstRemove.c,v 1.14 2008/12/13 15:19:29 dsl Exp $"
+literal|"$NetBSD: lstRemove.c,v 1.16 2014/09/07 20:55:34 joerg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

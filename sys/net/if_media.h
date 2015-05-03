@@ -319,11 +319,11 @@ comment|/*_KERNEL */
 end_comment
 
 begin_comment
-comment|/*  * if_media Options word:  *	Bits	Use  *	----	-------  *	0-4	Media variant  *	5-7	Media type  *	8-15	Type specific options  *	16-18	Mode (for multi-mode devices)  *	19	RFU  *	20-27	Shared (global) options  *	28-31	Instance  */
+comment|/*  * if_media Options word:  *	Bits	Use  *	----	-------  *	0-4	Media variant  *	5-7	Media type  *	8-15	Type specific options (includes added variant bits on Ethernet)  *	16-18	Mode (for multi-mode devices)  *	19	RFU  *	20-27	Shared (global) options  *	28-31	Instance  */
 end_comment
 
 begin_comment
-comment|/*  * Ethernet  */
+comment|/*  * Ethernet  * In order to use more than 31 subtypes, Ethernet uses some of the option  * bits as part of the subtype field.  See the options section below for  * relevant definitions  */
 end_comment
 
 begin_define
@@ -331,6 +331,60 @@ define|#
 directive|define
 name|IFM_ETHER
 value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_ETHER_SUBTYPE
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)& IFM_TMASK) | \ 	(((x)& (IFM_ETH_XTYPE>> IFM_ETH_XSHIFT))<< IFM_ETH_XSHIFT))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_X
+parameter_list|(
+name|x
+parameter_list|)
+value|IFM_ETHER_SUBTYPE(x)
+end_define
+
+begin_comment
+comment|/* internal shorthand */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_ETHER_SUBTYPE_SET
+parameter_list|(
+name|x
+parameter_list|)
+value|(IFM_ETHER_SUBTYPE(x) | IFM_ETHER)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_ETHER_SUBTYPE_GET
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& (IFM_TMASK|IFM_ETH_XTYPE))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_ETHER_IS_EXTENDED
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& IFM_ETH_XTYPE)
 end_define
 
 begin_define
@@ -630,12 +684,328 @@ begin_comment
 comment|/* 40GBase-LR4 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IFM_1000_KX
+value|30
+end_define
+
+begin_comment
+comment|/* 1000Base-KX backplane */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_OTHER
+value|31
+end_define
+
+begin_comment
+comment|/* Other: one of the following */
+end_comment
+
+begin_comment
+comment|/* following types are not visible to old binaries using only IFM_TMASK */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_10G_KX4
+value|IFM_X(32)
+end_define
+
+begin_comment
+comment|/* 10GBase-KX4 backplane */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_10G_KR
+value|IFM_X(33)
+end_define
+
+begin_comment
+comment|/* 10GBase-KR backplane */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_10G_CR1
+value|IFM_X(34)
+end_define
+
+begin_comment
+comment|/* 10GBase-CR1 Twinax splitter */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_20G_KR2
+value|IFM_X(35)
+end_define
+
+begin_comment
+comment|/* 20GBase-KR2 backplane */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_2500_KX
+value|IFM_X(36)
+end_define
+
+begin_comment
+comment|/* 2500Base-KX backplane */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_2500_T
+value|IFM_X(37)
+end_define
+
+begin_comment
+comment|/* 2500Base-T - RJ45 (NBaseT) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_5000_T
+value|IFM_X(38)
+end_define
+
+begin_comment
+comment|/* 5000Base-T - RJ45 (NBaseT) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_50G_PCIE
+value|IFM_X(39)
+end_define
+
+begin_comment
+comment|/* 50G Ethernet over PCIE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_25G_PCIE
+value|IFM_X(40)
+end_define
+
+begin_comment
+comment|/* 25G Ethernet over PCIE */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_1000_SGMII
+value|IFM_X(41)
+end_define
+
+begin_comment
+comment|/* 1G media interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_10G_SFI
+value|IFM_X(42)
+end_define
+
+begin_comment
+comment|/* 10G media interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_40G_XLPPI
+value|IFM_X(43)
+end_define
+
+begin_comment
+comment|/* 40G media interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_1000_CX_SGMII
+value|IFM_X(44)
+end_define
+
+begin_comment
+comment|/* 1000Base-CX-SGMII */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_40G_KR4
+value|IFM_X(45)
+end_define
+
+begin_comment
+comment|/* 40GBase-KR4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_10G_ER
+value|IFM_X(46)
+end_define
+
+begin_comment
+comment|/* 10GBase-ER */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_100G_CR4
+value|IFM_X(47)
+end_define
+
+begin_comment
+comment|/* 100GBase-CR4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_100G_SR4
+value|IFM_X(48)
+end_define
+
+begin_comment
+comment|/* 100GBase-SR4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_100G_KR4
+value|IFM_X(49)
+end_define
+
+begin_comment
+comment|/* 100GBase-KR4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_100G_LR4
+value|IFM_X(50)
+end_define
+
+begin_comment
+comment|/* 100GBase-LR4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_56G_R4
+value|IFM_X(51)
+end_define
+
+begin_comment
+comment|/* 56GBase-R4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_100_T
+value|IFM_X(52)
+end_define
+
+begin_comment
+comment|/* 100BaseT - RJ45 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_25G_CR
+value|IFM_X(53)
+end_define
+
+begin_comment
+comment|/* 25GBase-CR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_25G_KR
+value|IFM_X(54)
+end_define
+
+begin_comment
+comment|/* 25GBase-KR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_25G_SR
+value|IFM_X(55)
+end_define
+
+begin_comment
+comment|/* 25GBase-SR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_50G_CR2
+value|IFM_X(56)
+end_define
+
+begin_comment
+comment|/* 50GBase-CR2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_50G_KR2
+value|IFM_X(57)
+end_define
+
+begin_comment
+comment|/* 50GBase-KR2 */
+end_comment
+
 begin_comment
 comment|/*  * Please update ieee8023ad_lacp.c:lacp_compose_key()  * after adding new Ethernet media types.  */
 end_comment
 
 begin_comment
-comment|/* note 31 is the max! */
+comment|/* Note IFM_X(511) is the max! */
+end_comment
+
+begin_comment
+comment|/* Ethernet option values; includes bits used for extended variant field */
 end_comment
 
 begin_define
@@ -669,6 +1039,28 @@ end_define
 
 begin_comment
 comment|/* transmit PAUSE frames */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_ETH_XTYPE
+value|0x00007800
+end_define
+
+begin_comment
+comment|/* extended media variants */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IFM_ETH_XSHIFT
+value|6
+end_define
+
+begin_comment
+comment|/* shift XTYPE next to TMASK */
 end_comment
 
 begin_comment
@@ -1681,7 +2073,21 @@ name|IFM_SUBTYPE
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)& IFM_TMASK)
+define|\
+value|(IFM_TYPE(x) == IFM_ETHER ? IFM_ETHER_SUBTYPE_GET(x) : ((x)& IFM_TMASK))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IFM_TYPE_MATCH
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+define|\
+value|(IFM_TYPE(x) == IFM_TYPE(y)&& IFM_SUBTYPE(x) == IFM_SUBTYPE(y))
 end_define
 
 begin_define
@@ -1796,7 +2202,7 @@ begin_define
 define|#
 directive|define
 name|IFM_SUBTYPE_ETHERNET_DESCRIPTIONS
-value|{				\ 	{ IFM_10_T,	"10baseT/UTP" },				\ 	{ IFM_10_2,	"10base2/BNC" },				\ 	{ IFM_10_5,	"10base5/AUI" },				\ 	{ IFM_100_TX,	"100baseTX" },					\ 	{ IFM_100_FX,	"100baseFX" },					\ 	{ IFM_100_T4,	"100baseT4" },					\ 	{ IFM_100_VG,	"100baseVG" },					\ 	{ IFM_100_T2,	"100baseT2" },					\ 	{ IFM_10_STP,	"10baseSTP" },					\ 	{ IFM_10_FL,	"10baseFL" },					\ 	{ IFM_1000_SX,	"1000baseSX" },					\ 	{ IFM_1000_LX,	"1000baseLX" },					\ 	{ IFM_1000_CX,	"1000baseCX" },					\ 	{ IFM_1000_T,	"1000baseT" },					\ 	{ IFM_HPNA_1,	"homePNA" },					\ 	{ IFM_10G_LR,	"10Gbase-LR" },					\ 	{ IFM_10G_SR,	"10Gbase-SR" },					\ 	{ IFM_10G_CX4,	"10Gbase-CX4" },				\ 	{ IFM_2500_SX,	"2500BaseSX" },					\ 	{ IFM_10G_LRM,	"10Gbase-LRM" },				\ 	{ IFM_10G_TWINAX,	"10Gbase-Twinax" },			\ 	{ IFM_10G_TWINAX_LONG,	"10Gbase-Twinax-Long" },		\ 	{ IFM_UNKNOWN,	"Unknown" },					\ 	{ IFM_10G_T,	"10Gbase-T" },					\ 	{ IFM_40G_CR4,	"40Gbase-CR4" },				\ 	{ IFM_40G_SR4,	"40Gbase-SR4" },				\ 	{ IFM_40G_LR4,	"40Gbase-LR4" },				\ 	{ 0, NULL },							\ }
+value|{				\ 	{ IFM_10_T,	"10baseT/UTP" },				\ 	{ IFM_10_2,	"10base2/BNC" },				\ 	{ IFM_10_5,	"10base5/AUI" },				\ 	{ IFM_100_TX,	"100baseTX" },					\ 	{ IFM_100_FX,	"100baseFX" },					\ 	{ IFM_100_T4,	"100baseT4" },					\ 	{ IFM_100_VG,	"100baseVG" },					\ 	{ IFM_100_T2,	"100baseT2" },					\ 	{ IFM_10_STP,	"10baseSTP" },					\ 	{ IFM_10_FL,	"10baseFL" },					\ 	{ IFM_1000_SX,	"1000baseSX" },					\ 	{ IFM_1000_LX,	"1000baseLX" },					\ 	{ IFM_1000_CX,	"1000baseCX" },					\ 	{ IFM_1000_T,	"1000baseT" },					\ 	{ IFM_HPNA_1,	"homePNA" },					\ 	{ IFM_10G_LR,	"10Gbase-LR" },					\ 	{ IFM_10G_SR,	"10Gbase-SR" },					\ 	{ IFM_10G_CX4,	"10Gbase-CX4" },				\ 	{ IFM_2500_SX,	"2500BaseSX" },					\ 	{ IFM_10G_LRM,	"10Gbase-LRM" },				\ 	{ IFM_10G_TWINAX,	"10Gbase-Twinax" },			\ 	{ IFM_10G_TWINAX_LONG,	"10Gbase-Twinax-Long" },		\ 	{ IFM_UNKNOWN,	"Unknown" },					\ 	{ IFM_10G_T,	"10Gbase-T" },					\ 	{ IFM_40G_CR4,	"40Gbase-CR4" },				\ 	{ IFM_40G_SR4,	"40Gbase-SR4" },				\ 	{ IFM_40G_LR4,	"40Gbase-LR4" },				\ 	{ IFM_1000_KX,	"1000Base-KX" },				\ 	{ IFM_OTHER,	"Other" },					\ 	{ IFM_10G_KX4,	"10GBase-KX4" },				\ 	{ IFM_10G_KR,	"10GBase-KR" },					\ 	{ IFM_10G_CR1,	"10GBase-CR1" },				\ 	{ IFM_20G_KR2,	"20GBase-KR2" },				\ 	{ IFM_2500_KX,	"2500Base-KX" },				\ 	{ IFM_2500_T,	"2500Base-T" },					\ 	{ IFM_5000_T,	"5000Base-T" },					\ 	{ IFM_50G_PCIE,	"PCIExpress-50G" },				\ 	{ IFM_25G_PCIE,	"PCIExpress-25G" },				\ 	{ IFM_1000_SGMII,	"1000Base-SGMII" },			\ 	{ IFM_10G_SFI,	"10GBase-SFI" },				\ 	{ IFM_40G_XLPPI,	"40GBase-XLPPI" },			\ 	{ IFM_1000_CX_SGMII,	"1000Base-CX-SGMII" },			\ 	{ IFM_40G_KR4,	"40GBase-KR4" },				\ 	{ IFM_10G_ER,	"10GBase-ER" },					\ 	{ IFM_100G_CR4,	"100GBase-CR4" },				\ 	{ IFM_100G_SR4,	"100GBase-SR4" },				\ 	{ IFM_100G_KR4,	"100GBase-KR4" },				\ 	{ IFM_100G_LR4, "100GBase-LR4" },				\ 	{ IFM_56G_R4,	"56GBase-R4" },					\ 	{ IFM_100_T,	"100BaseT" },					\ 	{ IFM_25G_CR,	"25GBase-CR" },					\ 	{ IFM_25G_KR,	"25GBase-KR" },					\ 	{ IFM_25G_SR,	"25GBase-SR" },					\ 	{ IFM_50G_CR2,	"50GBase-CR2" },				\ 	{ IFM_50G_KR2,	"50GBase-KR2" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
@@ -1967,7 +2373,7 @@ begin_define
 define|#
 directive|define
 name|IFM_BAUDRATE_DESCRIPTIONS
-value|{					\ 	{ IFM_ETHER | IFM_10_T,		IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_10_2,		IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_10_5,		IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_100_TX,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_FX,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_T4,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_VG,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_T2,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_1000_SX,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_10_STP,	IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_10_FL,	IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_1000_LX,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_1000_CX,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_1000_T,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_HPNA_1,	IF_Mbps(1) },			\ 	{ IFM_ETHER | IFM_10G_LR,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_10G_SR,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_10G_CX4,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_2500_SX,	IF_Mbps(2500ULL) },		\ 	{ IFM_ETHER | IFM_10G_TWINAX,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_10G_TWINAX_LONG,	IF_Gbps(10ULL) },	\ 	{ IFM_ETHER | IFM_10G_LRM,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_10G_T,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_40G_CR4,	IF_Gbps(40ULL) },		\ 	{ IFM_ETHER | IFM_40G_SR4,	IF_Gbps(40ULL) },		\ 	{ IFM_ETHER | IFM_40G_LR4,	IF_Gbps(40ULL) },		\ 									\ 	{ IFM_TOKEN | IFM_TOK_STP4,	IF_Mbps(4) },			\ 	{ IFM_TOKEN | IFM_TOK_STP16,	IF_Mbps(16) },			\ 	{ IFM_TOKEN | IFM_TOK_UTP4,	IF_Mbps(4) },			\ 	{ IFM_TOKEN | IFM_TOK_UTP16,	IF_Mbps(16) },			\ 									\ 	{ IFM_FDDI | IFM_FDDI_SMF,	IF_Mbps(100) },			\ 	{ IFM_FDDI | IFM_FDDI_MMF,	IF_Mbps(100) },			\ 	{ IFM_FDDI | IFM_FDDI_UTP,	IF_Mbps(100) },			\ 									\ 	{ IFM_IEEE80211 | IFM_IEEE80211_FH1,	IF_Mbps(1) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_FH2,	IF_Mbps(2) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS2,	IF_Mbps(2) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS5,	IF_Kbps(5500) },	\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS11,	IF_Mbps(11) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS1,	IF_Mbps(1) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS22,	IF_Mbps(22) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM6,	IF_Mbps(6) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM9,	IF_Mbps(9) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM12,	IF_Mbps(12) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM18,	IF_Mbps(18) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM24,	IF_Mbps(24) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM36,	IF_Mbps(36) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM48,	IF_Mbps(48) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM54,	IF_Mbps(54) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM72,	IF_Mbps(72) },		\ 									\ 	{ 0, 0 },							\ }
+value|{					\ 	{ IFM_ETHER | IFM_10_T,		IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_10_2,		IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_10_5,		IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_100_TX,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_FX,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_T4,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_VG,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_100_T2,	IF_Mbps(100) },			\ 	{ IFM_ETHER | IFM_1000_SX,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_10_STP,	IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_10_FL,	IF_Mbps(10) },			\ 	{ IFM_ETHER | IFM_1000_LX,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_1000_CX,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_1000_T,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_HPNA_1,	IF_Mbps(1) },			\ 	{ IFM_ETHER | IFM_10G_LR,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_10G_SR,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_10G_CX4,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_2500_SX,	IF_Mbps(2500ULL) },		\ 	{ IFM_ETHER | IFM_10G_TWINAX,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_10G_TWINAX_LONG,	IF_Gbps(10ULL) },	\ 	{ IFM_ETHER | IFM_10G_LRM,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_10G_T,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_40G_CR4,	IF_Gbps(40ULL) },		\ 	{ IFM_ETHER | IFM_40G_SR4,	IF_Gbps(40ULL) },		\ 	{ IFM_ETHER | IFM_40G_LR4,	IF_Gbps(40ULL) },		\ 	{ IFM_ETHER | IFM_1000_KX,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_10G_KX4,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_10G_KR,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_10G_CR1,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_20G_KR2,	IF_Gbps(20ULL) },		\ 	{ IFM_ETHER | IFM_2500_KX,	IF_Mbps(2500) },		\ 	{ IFM_ETHER | IFM_2500_T,	IF_Mbps(2500) },		\ 	{ IFM_ETHER | IFM_5000_T,	IF_Mbps(5000) },		\ 	{ IFM_ETHER | IFM_50G_PCIE,	IF_Gbps(50ULL) },		\ 	{ IFM_ETHER | IFM_25G_PCIE,	IF_Gbps(25ULL) },		\ 	{ IFM_ETHER | IFM_1000_SGMII,	IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_10G_SFI,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_40G_XLPPI,	IF_Gbps(40ULL) },		\ 	{ IFM_ETHER | IFM_1000_CX_SGMII, IF_Mbps(1000) },		\ 	{ IFM_ETHER | IFM_40G_KR4,	IF_Gbps(40ULL) },		\ 	{ IFM_ETHER | IFM_10G_ER,	IF_Gbps(10ULL) },		\ 	{ IFM_ETHER | IFM_100G_CR4,	IF_Gbps(100ULL) },		\ 	{ IFM_ETHER | IFM_100G_SR4,	IF_Gbps(100ULL) },		\ 	{ IFM_ETHER | IFM_100G_KR4,	IF_Gbps(100ULL) },		\ 	{ IFM_ETHER | IFM_100G_LR4,	IF_Gbps(100ULL) },		\ 	{ IFM_ETHER | IFM_56G_R4,	IF_Gbps(56ULL) },		\ 	{ IFM_ETHER | IFM_100_T,	IF_Mbps(100ULL) },		\ 	{ IFM_ETHER | IFM_25G_CR,	IF_Gbps(25ULL) },		\ 	{ IFM_ETHER | IFM_25G_KR,	IF_Gbps(25ULL) },		\ 	{ IFM_ETHER | IFM_25G_SR,	IF_Gbps(25ULL) },		\ 	{ IFM_ETHER | IFM_50G_CR2,	IF_Gbps(50ULL) },		\ 	{ IFM_ETHER | IFM_50G_KR2,	IF_Gbps(50ULL) },		\ 									\ 	{ IFM_TOKEN | IFM_TOK_STP4,	IF_Mbps(4) },			\ 	{ IFM_TOKEN | IFM_TOK_STP16,	IF_Mbps(16) },			\ 	{ IFM_TOKEN | IFM_TOK_UTP4,	IF_Mbps(4) },			\ 	{ IFM_TOKEN | IFM_TOK_UTP16,	IF_Mbps(16) },			\ 									\ 	{ IFM_FDDI | IFM_FDDI_SMF,	IF_Mbps(100) },			\ 	{ IFM_FDDI | IFM_FDDI_MMF,	IF_Mbps(100) },			\ 	{ IFM_FDDI | IFM_FDDI_UTP,	IF_Mbps(100) },			\ 									\ 	{ IFM_IEEE80211 | IFM_IEEE80211_FH1,	IF_Mbps(1) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_FH2,	IF_Mbps(2) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS2,	IF_Mbps(2) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS5,	IF_Kbps(5500) },	\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS11,	IF_Mbps(11) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS1,	IF_Mbps(1) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_DS22,	IF_Mbps(22) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM6,	IF_Mbps(6) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM9,	IF_Mbps(9) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM12,	IF_Mbps(12) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM18,	IF_Mbps(18) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM24,	IF_Mbps(24) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM36,	IF_Mbps(36) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM48,	IF_Mbps(48) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM54,	IF_Mbps(54) },		\ 	{ IFM_IEEE80211 | IFM_IEEE80211_OFDM72,	IF_Mbps(72) },		\ 									\ 	{ 0, 0 },							\ }
 end_define
 
 begin_comment

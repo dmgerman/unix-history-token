@@ -171,6 +171,15 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|hci_command
+name|le_commands
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|hci_request

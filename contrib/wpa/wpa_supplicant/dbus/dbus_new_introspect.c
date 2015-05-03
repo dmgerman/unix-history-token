@@ -133,6 +133,15 @@ name|NULL
 return|;
 name|iface
 operator|->
+name|dbus_interface
+operator|=
+name|os_strdup
+argument_list|(
+name|dbus_interface
+argument_list|)
+expr_stmt|;
+name|iface
+operator|->
 name|xml
 operator|=
 name|wpabuf_alloc
@@ -144,11 +153,31 @@ if|if
 condition|(
 name|iface
 operator|->
+name|dbus_interface
+operator|==
+name|NULL
+operator|||
+name|iface
+operator|->
 name|xml
 operator|==
 name|NULL
 condition|)
 block|{
+name|os_free
+argument_list|(
+name|iface
+operator|->
+name|dbus_interface
+argument_list|)
+expr_stmt|;
+name|wpabuf_free
+argument_list|(
+name|iface
+operator|->
+name|xml
+argument_list|)
+expr_stmt|;
 name|os_free
 argument_list|(
 name|iface
@@ -177,15 +206,6 @@ operator|&
 name|iface
 operator|->
 name|list
-argument_list|)
-expr_stmt|;
-name|iface
-operator|->
-name|dbus_interface
-operator|=
-name|os_strdup
-argument_list|(
-name|dbus_interface
 argument_list|)
 expr_stmt|;
 return|return
@@ -811,9 +831,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_DEBUG
 argument_list|,
-literal|"dbus: Not enough room for "
-literal|"add_interfaces inspect data: tailroom %u, "
-literal|"add %u"
+literal|"dbus: Not enough room for add_interfaces inspect data: tailroom %u, add %u"
 argument_list|,
 operator|(
 name|unsigned

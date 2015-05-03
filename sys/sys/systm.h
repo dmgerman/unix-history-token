@@ -852,6 +852,26 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|void
+name|vpanic
+argument_list|(
+specifier|const
+name|char
+operator|*
+argument_list|,
+name|__va_list
+argument_list|)
+name|__dead2
+name|__printflike
+argument_list|(
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|cpu_boot

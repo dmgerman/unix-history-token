@@ -5498,6 +5498,8 @@ operator||
 name|MNTK_UNMAPPED_BUFS
 operator||
 name|MNTK_SUSPENDABLE
+operator||
+name|MNTK_USES_BCACHE
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
@@ -8428,6 +8430,13 @@ operator|->
 name|i_ea_refs
 operator|=
 literal|0
+expr_stmt|;
+name|ip
+operator|->
+name|i_nextclustercg
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 ifdef|#
 directive|ifdef

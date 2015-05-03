@@ -265,6 +265,10 @@ literal|0x3F
 operator|)
 argument_list|)
 expr_stmt|;
+name|j
+operator|+=
+literal|2
+expr_stmt|;
 block|}
 block|}
 block|}

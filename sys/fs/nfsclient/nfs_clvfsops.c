@@ -305,7 +305,7 @@ name|M_NEWNFSREQ
 argument_list|,
 literal|"newnfsclient_req"
 argument_list|,
-literal|"New NFS request header"
+literal|"NFS request header"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -317,7 +317,7 @@ name|M_NEWNFSMNT
 argument_list|,
 literal|"newnfsmnt"
 argument_list|,
-literal|"New NFS mount struct"
+literal|"NFS mount struct"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1116,13 +1116,13 @@ name|nmp
 operator|->
 name|nm_rsize
 operator|>
-name|MAXBSIZE
+name|NFS_MAXBSIZE
 condition|)
 name|nmp
 operator|->
 name|nm_rsize
 operator|=
-name|MAXBSIZE
+name|NFS_MAXBSIZE
 expr_stmt|;
 if|if
 condition|(
@@ -1188,13 +1188,13 @@ name|nmp
 operator|->
 name|nm_wsize
 operator|>
-name|MAXBSIZE
+name|NFS_MAXBSIZE
 condition|)
 name|nmp
 operator|->
 name|nm_wsize
 operator|=
-name|MAXBSIZE
+name|NFS_MAXBSIZE
 expr_stmt|;
 comment|/* 	 * Calculate the size used for io buffers.  Use the larger 	 * of the two sizes to minimise nfs requests but make sure 	 * that it is at least one VM page to avoid wasting buffer 	 * space. 	 */
 name|iosize
@@ -7166,6 +7166,8 @@ operator||=
 name|MNTK_LOOKUP_SHARED
 operator||
 name|MNTK_NO_IOPF
+operator||
+name|MNTK_USES_BCACHE
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
@@ -7778,32 +7780,41 @@ name|nm_readahead
 operator|=
 name|NFS_DEFRAHEAD
 expr_stmt|;
-if|if
+comment|/* This is empirical approximation of sqrt(hibufspace) * 256. */
+name|nmp
+operator|->
+name|nm_wcommitsize
+operator|=
+name|NFS_MAXBSIZE
+operator|/
+literal|256
+expr_stmt|;
+while|while
 condition|(
-name|desiredvnodes
-operator|>=
-literal|11000
+operator|(
+name|long
+operator|)
+name|nmp
+operator|->
+name|nm_wcommitsize
+operator|*
+name|nmp
+operator|->
+name|nm_wcommitsize
+operator|<
+name|hibufspace
 condition|)
 name|nmp
 operator|->
 name|nm_wcommitsize
-operator|=
-name|hibufspace
-operator|/
-operator|(
-name|desiredvnodes
-operator|/
-literal|1000
-operator|)
+operator|*=
+literal|2
 expr_stmt|;
-else|else
 name|nmp
 operator|->
 name|nm_wcommitsize
-operator|=
-name|hibufspace
-operator|/
-literal|10
+operator|*=
+literal|256
 expr_stmt|;
 if|if
 condition|(

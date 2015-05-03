@@ -376,89 +376,6 @@ argument_list|,
 name|IKEV2_SPI_LEN
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CCNS_PL
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__LITTLE_ENDIAN
-block|{
-name|int
-name|i
-decl_stmt|;
-name|u8
-modifier|*
-name|tmp
-init|=
-name|pos
-operator|-
-name|IKEV2_SPI_LEN
-decl_stmt|;
-comment|/* Incorrect byte re-ordering on little endian hosts.. */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|IKEV2_SPI_LEN
-condition|;
-name|i
-operator|++
-control|)
-operator|*
-name|tmp
-operator|++
-operator|=
-name|data
-operator|->
-name|i_spi
-index|[
-name|IKEV2_SPI_LEN
-operator|-
-literal|1
-operator|-
-name|i
-index|]
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|IKEV2_SPI_LEN
-condition|;
-name|i
-operator|++
-control|)
-operator|*
-name|tmp
-operator|++
-operator|=
-name|data
-operator|->
-name|r_spi
-index|[
-name|IKEV2_SPI_LEN
-operator|-
-literal|1
-operator|-
-name|i
-index|]
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-endif|#
-directive|endif
-comment|/* CCNS_PL */
 comment|/* SKEYSEED = prf(Ni | Nr, g^ir) */
 comment|/* Use zero-padding per RFC 4306, Sect. 2.14 */
 name|pad_len
@@ -474,17 +391,6 @@ argument_list|(
 name|shared
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CCNS_PL
-comment|/* Shared secret is not zero-padded correctly */
-name|pad_len
-operator|=
-literal|0
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* CCNS_PL */
 name|pad
 operator|=
 name|os_zalloc
@@ -951,34 +857,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
-name|CCNS_PL
-if|if
-condition|(
-name|WPA_GET_BE16
-argument_list|(
-name|pos
-argument_list|)
-operator|!=
-literal|0x001d
-comment|/* ?? */
-condition|)
-block|{
-name|wpa_printf
-argument_list|(
-name|MSG_DEBUG
-argument_list|,
-literal|"IKEV2: Not a "
-literal|"Key Size attribute for "
-literal|"AES"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-else|#
-directive|else
-comment|/* CCNS_PL */
 if|if
 condition|(
 name|WPA_GET_BE16
@@ -1000,9 +878,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-endif|#
-directive|endif
-comment|/* CCNS_PL */
 if|if
 condition|(
 name|WPA_GET_BE16
@@ -1201,11 +1076,11 @@ operator|*
 name|p
 argument_list|)
 operator|||
-name|pos
-operator|+
 name|proposal_len
 operator|>
 name|end
+operator|-
+name|pos
 condition|)
 block|{
 name|wpa_printf
@@ -1898,7 +1773,7 @@ name|wpa_printf
 argument_list|(
 name|MSG_INFO
 argument_list|,
-literal|"IKEV2: Too show Key Exchange Payload"
+literal|"IKEV2: Too short Key Exchange Payload"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2161,32 +2036,6 @@ operator|-
 literal|1
 return|;
 block|}
-ifdef|#
-directive|ifdef
-name|CCNS_PL
-comment|/* Zeros are removed incorrectly from the beginning of the nonces */
-while|while
-condition|(
-name|ni_len
-operator|>
-literal|1
-operator|&&
-operator|*
-name|ni
-operator|==
-literal|0
-condition|)
-block|{
-name|ni_len
-operator|--
-expr_stmt|;
-name|ni
-operator|++
-expr_stmt|;
-block|}
-endif|#
-directive|endif
-comment|/* CCNS_PL */
 name|data
 operator|->
 name|i_nonce_len
@@ -2807,7 +2656,7 @@ name|prf
 operator|->
 name|hash_len
 operator|||
-name|os_memcmp
+name|os_memcmp_const
 argument_list|(
 name|auth
 argument_list|,
@@ -4162,19 +4011,6 @@ name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CCNS_PL
-comment|/* Seems to require that the Proposal # is 1 even though RFC 4306 	 * Sect 3.3.1 has following requirement "When a proposal is accepted, 	 * all of the proposal numbers in the SA payload MUST be the same and 	 * MUST match the number on the proposal sent that was accepted.". 	 */
-name|p
-operator|->
-name|proposal_num
-operator|=
-literal|1
-expr_stmt|;
-else|#
-directive|else
-comment|/* CCNS_PL */
 name|p
 operator|->
 name|proposal_num
@@ -4185,9 +4021,6 @@ name|proposal
 operator|.
 name|proposal_num
 expr_stmt|;
-endif|#
-directive|endif
-comment|/* CCNS_PL */
 name|p
 operator|->
 name|protocol_id
@@ -4250,20 +4083,6 @@ name|ENCR_AES_CBC
 condition|)
 block|{
 comment|/* Transform Attribute: Key Len = 128 bits */
-ifdef|#
-directive|ifdef
-name|CCNS_PL
-name|wpabuf_put_be16
-argument_list|(
-name|msg
-argument_list|,
-literal|0x001d
-argument_list|)
-expr_stmt|;
-comment|/* ?? */
-else|#
-directive|else
-comment|/* CCNS_PL */
 name|wpabuf_put_be16
 argument_list|(
 name|msg
@@ -4272,9 +4091,6 @@ literal|0x800e
 argument_list|)
 expr_stmt|;
 comment|/* AF=1, AttrType=14 */
-endif|#
-directive|endif
-comment|/* CCNS_PL */
 name|wpabuf_put_be16
 argument_list|(
 name|msg
@@ -5264,20 +5080,6 @@ name|flags
 operator|=
 literal|0
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CCNS_PL
-name|wpabuf_put_u8
-argument_list|(
-name|msg
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-comment|/* Protocol ID: IKE_SA notification */
-else|#
-directive|else
-comment|/* CCNS_PL */
 name|wpabuf_put_u8
 argument_list|(
 name|msg
@@ -5286,9 +5088,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Protocol ID: no existing SA */
-endif|#
-directive|endif
-comment|/* CCNS_PL */
 name|wpabuf_put_u8
 argument_list|(
 name|msg
@@ -5492,33 +5291,6 @@ condition|)
 return|return
 name|NULL
 return|;
-ifdef|#
-directive|ifdef
-name|CCNS_PL
-comment|/* Zeros are removed incorrectly from the beginning of the nonces in 	 * key derivation; as a workaround, make sure Nr does not start with 	 * zero.. */
-if|if
-condition|(
-name|data
-operator|->
-name|r_nonce
-index|[
-literal|0
-index|]
-operator|==
-literal|0
-condition|)
-name|data
-operator|->
-name|r_nonce
-index|[
-literal|0
-index|]
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* CCNS_PL */
 name|wpa_hexdump
 argument_list|(
 name|MSG_DEBUG
@@ -6109,6 +5881,11 @@ return|return
 name|NULL
 return|;
 block|}
+name|wpabuf_free
+argument_list|(
+name|plain
+argument_list|)
+expr_stmt|;
 name|data
 operator|->
 name|state

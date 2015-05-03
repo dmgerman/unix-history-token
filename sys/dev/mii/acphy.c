@@ -398,10 +398,8 @@ directive|define
 name|ADD
 parameter_list|(
 name|m
-parameter_list|,
-name|c
 parameter_list|)
-value|ifmedia_add(&sc->mii_pdata->mii_media, (m), (c), NULL)
+value|ifmedia_add(&sc->mii_pdata->mii_media, (m), 0, NULL)
 if|if
 condition|(
 operator|(
@@ -438,8 +436,6 @@ name|sc
 operator|->
 name|mii_inst
 argument_list|)
-argument_list|,
-name|MII_MEDIA_100_TX
 argument_list|)
 expr_stmt|;
 name|printf
@@ -461,8 +457,6 @@ name|sc
 operator|->
 name|mii_inst
 argument_list|)
-argument_list|,
-name|MII_MEDIA_100_TX_FDX
 argument_list|)
 expr_stmt|;
 name|printf

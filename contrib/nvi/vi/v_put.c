@@ -83,25 +83,22 @@ directive|include
 file|"vi.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|inc_buf
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|VICMD
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * v_Put -- [buffer]P  *	Insert the contents of the buffer before the cursor.  *  * PUBLIC: int v_Put __P((SCR *, VICMD *));  */
+comment|/*  * v_Put -- [buffer]P  *	Insert the contents of the buffer before the cursor.  *  * PUBLIC: int v_Put(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -229,7 +226,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_put -- [buffer]p  *	Insert the contents of the buffer after the cursor.  *  * PUBLIC: int v_put __P((SCR *, VICMD *));  */
+comment|/*  * v_put -- [buffer]p  *	Insert the contents of the buffer after the cursor.  *  * PUBLIC: int v_put(SCR *, VICMD *);  */
 end_comment
 
 begin_function

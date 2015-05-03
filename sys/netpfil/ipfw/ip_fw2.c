@@ -11546,6 +11546,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* Init shared services hash table */
+name|ipfw_init_srv
+argument_list|(
+name|chain
+argument_list|)
+expr_stmt|;
+name|ipfw_init_obj_rewriter
+argument_list|()
+expr_stmt|;
 name|ipfw_init_counters
 argument_list|()
 expr_stmt|;
@@ -11951,6 +11960,11 @@ argument_list|(
 name|chain
 argument_list|)
 expr_stmt|;
+name|ipfw_destroy_srv
+argument_list|(
+name|chain
+argument_list|)
+expr_stmt|;
 name|IPFW_LOCK_DESTROY
 argument_list|(
 name|chain
@@ -11963,6 +11977,9 @@ argument_list|)
 expr_stmt|;
 comment|/* free the remaining parts */
 name|ipfw_destroy_counters
+argument_list|()
+expr_stmt|;
+name|ipfw_destroy_obj_rewriter
 argument_list|()
 expr_stmt|;
 return|return

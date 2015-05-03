@@ -653,6 +653,9 @@ case|case
 name|ACPI_DMT_BUFFER
 case|:
 case|case
+name|ACPI_DMT_RAW_BUFFER
+case|:
+case|case
 name|ACPI_DMT_BUF7
 case|:
 case|case
@@ -963,9 +966,6 @@ case|case
 name|ACPI_DMT_NAME4
 case|:
 case|case
-name|ACPI_DMT_SLIC
-case|:
-case|case
 name|ACPI_DMT_SIG
 case|:
 case|case
@@ -1096,6 +1096,9 @@ expr_stmt|;
 break|break;
 case|case
 name|ACPI_DMT_BUFFER
+case|:
+case|case
+name|ACPI_DMT_RAW_BUFFER
 case|:
 name|Value
 operator|=

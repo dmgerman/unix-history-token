@@ -89,11 +89,21 @@ define|#
 directive|define
 name|WPA_EVENT_EAP_PEER_CERT
 value|"CTRL-EVENT-EAP-PEER-CERT "
+comment|/** EAP peer certificate alternative subject name component from TLS */
+define|#
+directive|define
+name|WPA_EVENT_EAP_PEER_ALT
+value|"CTRL-EVENT-EAP-PEER-ALT "
 comment|/** EAP TLS certificate chain validation error */
 define|#
 directive|define
 name|WPA_EVENT_EAP_TLS_CERT_ERROR
 value|"CTRL-EVENT-EAP-TLS-CERT-ERROR "
+comment|/** EAP status */
+define|#
+directive|define
+name|WPA_EVENT_EAP_STATUS
+value|"CTRL-EVENT-EAP-STATUS "
 comment|/** EAP authentication completed successfully */
 define|#
 directive|define
@@ -114,11 +124,21 @@ define|#
 directive|define
 name|WPA_EVENT_REENABLED
 value|"CTRL-EVENT-SSID-REENABLED "
+comment|/** New scan started */
+define|#
+directive|define
+name|WPA_EVENT_SCAN_STARTED
+value|"CTRL-EVENT-SCAN-STARTED "
 comment|/** New scan results available */
 define|#
 directive|define
 name|WPA_EVENT_SCAN_RESULTS
 value|"CTRL-EVENT-SCAN-RESULTS "
+comment|/** Scan command failed */
+define|#
+directive|define
+name|WPA_EVENT_SCAN_FAILED
+value|"CTRL-EVENT-SCAN-FAILED "
 comment|/** wpa_supplicant state change */
 define|#
 directive|define
@@ -134,6 +154,31 @@ define|#
 directive|define
 name|WPA_EVENT_BSS_REMOVED
 value|"CTRL-EVENT-BSS-REMOVED "
+comment|/** Change in the signal level was reported by the driver */
+define|#
+directive|define
+name|WPA_EVENT_SIGNAL_CHANGE
+value|"CTRL-EVENT-SIGNAL-CHANGE "
+comment|/** Regulatory domain channel */
+define|#
+directive|define
+name|WPA_EVENT_REGDOM_CHANGE
+value|"CTRL-EVENT-REGDOM-CHANGE "
+comment|/** RSN IBSS 4-way handshakes completed with specified peer */
+define|#
+directive|define
+name|IBSS_RSN_COMPLETED
+value|"IBSS-RSN-COMPLETED "
+comment|/** Notification of frequency conflict due to a concurrent operation.  *  * The indicated network is disabled and needs to be re-enabled before it can  * be used again.  */
+define|#
+directive|define
+name|WPA_EVENT_FREQ_CONFLICT
+value|"CTRL-EVENT-FREQ-CONFLICT "
+comment|/** Frequency ranges that the driver recommends to avoid */
+define|#
+directive|define
+name|WPA_EVENT_AVOID_FREQ
+value|"CTRL-EVENT-AVOID-FREQ "
 comment|/** WPS overlap detected in PBC mode */
 define|#
 directive|define
@@ -184,6 +229,16 @@ define|#
 directive|define
 name|WPS_EVENT_TIMEOUT
 value|"WPS-TIMEOUT "
+comment|/* PBC mode was activated */
+define|#
+directive|define
+name|WPS_EVENT_ACTIVE
+value|"WPS-PBC-ACTIVE "
+comment|/* PBC mode was disabled */
+define|#
+directive|define
+name|WPS_EVENT_DISABLE
+value|"WPS-PBC-DISABLE "
 define|#
 directive|define
 name|WPS_EVENT_ENROLLEE_SEEN
@@ -217,6 +272,45 @@ define|#
 directive|define
 name|WPS_EVENT_ER_SET_SEL_REG
 value|"WPS-ER-AP-SET-SEL-REG "
+comment|/* MESH events */
+define|#
+directive|define
+name|MESH_GROUP_STARTED
+value|"MESH-GROUP-STARTED "
+define|#
+directive|define
+name|MESH_GROUP_REMOVED
+value|"MESH-GROUP-REMOVED "
+define|#
+directive|define
+name|MESH_PEER_CONNECTED
+value|"MESH-PEER-CONNECTED "
+define|#
+directive|define
+name|MESH_PEER_DISCONNECTED
+value|"MESH-PEER-DISCONNECTED "
+comment|/** Mesh SAE authentication failure. Wrong password suspected. */
+define|#
+directive|define
+name|MESH_SAE_AUTH_FAILURE
+value|"MESH-SAE-AUTH-FAILURE "
+define|#
+directive|define
+name|MESH_SAE_AUTH_BLOCKED
+value|"MESH-SAE-AUTH-BLOCKED "
+comment|/* WMM AC events */
+define|#
+directive|define
+name|WMM_AC_EVENT_TSPEC_ADDED
+value|"TSPEC-ADDED "
+define|#
+directive|define
+name|WMM_AC_EVENT_TSPEC_REMOVED
+value|"TSPEC-REMOVED "
+define|#
+directive|define
+name|WMM_AC_EVENT_TSPEC_REQ_FAILED
+value|"TSPEC-REQ-FAILED "
 comment|/** P2P device found */
 define|#
 directive|define
@@ -301,6 +395,10 @@ name|P2P_EVENT_SERV_DISC_RESP
 value|"P2P-SERV-DISC-RESP "
 define|#
 directive|define
+name|P2P_EVENT_SERV_ASP_RESP
+value|"P2P-SERV-ASP-RESP "
+define|#
+directive|define
 name|P2P_EVENT_INVITATION_RECEIVED
 value|"P2P-INVITATION-RECEIVED "
 define|#
@@ -313,16 +411,127 @@ name|P2P_EVENT_FIND_STOPPED
 value|"P2P-FIND-STOPPED "
 define|#
 directive|define
+name|P2P_EVENT_PERSISTENT_PSK_FAIL
+value|"P2P-PERSISTENT-PSK-FAIL id="
+define|#
+directive|define
+name|P2P_EVENT_PRESENCE_RESPONSE
+value|"P2P-PRESENCE-RESPONSE "
+define|#
+directive|define
+name|P2P_EVENT_NFC_BOTH_GO
+value|"P2P-NFC-BOTH-GO "
+define|#
+directive|define
+name|P2P_EVENT_NFC_PEER_CLIENT
+value|"P2P-NFC-PEER-CLIENT "
+define|#
+directive|define
+name|P2P_EVENT_NFC_WHILE_CLIENT
+value|"P2P-NFC-WHILE-CLIENT "
+define|#
+directive|define
+name|P2P_EVENT_FALLBACK_TO_GO_NEG
+value|"P2P-FALLBACK-TO-GO-NEG "
+define|#
+directive|define
+name|P2P_EVENT_FALLBACK_TO_GO_NEG_ENABLED
+value|"P2P-FALLBACK-TO-GO-NEG-ENABLED "
+comment|/* parameters:<PMF enabled><timeout in ms><Session Information URL> */
+define|#
+directive|define
+name|ESS_DISASSOC_IMMINENT
+value|"ESS-DISASSOC-IMMINENT "
+define|#
+directive|define
+name|P2P_EVENT_REMOVE_AND_REFORM_GROUP
+value|"P2P-REMOVE-AND-REFORM-GROUP "
+define|#
+directive|define
+name|P2P_EVENT_P2PS_PROVISION_START
+value|"P2PS-PROV-START "
+define|#
+directive|define
+name|P2P_EVENT_P2PS_PROVISION_DONE
+value|"P2PS-PROV-DONE "
+define|#
+directive|define
 name|INTERWORKING_AP
 value|"INTERWORKING-AP "
+define|#
+directive|define
+name|INTERWORKING_BLACKLISTED
+value|"INTERWORKING-BLACKLISTED "
 define|#
 directive|define
 name|INTERWORKING_NO_MATCH
 value|"INTERWORKING-NO-MATCH "
 define|#
 directive|define
+name|INTERWORKING_ALREADY_CONNECTED
+value|"INTERWORKING-ALREADY-CONNECTED "
+define|#
+directive|define
+name|INTERWORKING_SELECTED
+value|"INTERWORKING-SELECTED "
+comment|/* Credential block added; parameters:<id> */
+define|#
+directive|define
+name|CRED_ADDED
+value|"CRED-ADDED "
+comment|/* Credential block modified; parameters:<id><field> */
+define|#
+directive|define
+name|CRED_MODIFIED
+value|"CRED-MODIFIED "
+comment|/* Credential block removed; parameters:<id> */
+define|#
+directive|define
+name|CRED_REMOVED
+value|"CRED-REMOVED "
+define|#
+directive|define
 name|GAS_RESPONSE_INFO
 value|"GAS-RESPONSE-INFO "
+comment|/* parameters:<addr><dialog_token><freq> */
+define|#
+directive|define
+name|GAS_QUERY_START
+value|"GAS-QUERY-START "
+comment|/* parameters:<addr><dialog_token><freq><status_code><result> */
+define|#
+directive|define
+name|GAS_QUERY_DONE
+value|"GAS-QUERY-DONE "
+comment|/* parameters:<addr><result> */
+define|#
+directive|define
+name|ANQP_QUERY_DONE
+value|"ANQP-QUERY-DONE "
+define|#
+directive|define
+name|HS20_SUBSCRIPTION_REMEDIATION
+value|"HS20-SUBSCRIPTION-REMEDIATION "
+define|#
+directive|define
+name|HS20_DEAUTH_IMMINENT_NOTICE
+value|"HS20-DEAUTH-IMMINENT-NOTICE "
+define|#
+directive|define
+name|EXT_RADIO_WORK_START
+value|"EXT-RADIO-WORK-START "
+define|#
+directive|define
+name|EXT_RADIO_WORK_TIMEOUT
+value|"EXT-RADIO-WORK-TIMEOUT "
+define|#
+directive|define
+name|RRM_EVENT_NEIGHBOR_REP_RXED
+value|"RRM-NEIGHBOR-REP-RECEIVED "
+define|#
+directive|define
+name|RRM_EVENT_NEIGHBOR_REP_FAILED
+value|"RRM-NEIGHBOR-REP-REQUEST-FAILED "
 comment|/* hostapd control interface - fixed message prefixes */
 define|#
 directive|define
@@ -360,11 +569,76 @@ define|#
 directive|define
 name|AP_STA_DISCONNECTED
 value|"AP-STA-DISCONNECTED "
+define|#
+directive|define
+name|AP_REJECTED_MAX_STA
+value|"AP-REJECTED-MAX-STA "
+define|#
+directive|define
+name|AP_REJECTED_BLOCKED_STA
+value|"AP-REJECTED-BLOCKED-STA "
+define|#
+directive|define
+name|AP_EVENT_ENABLED
+value|"AP-ENABLED "
+define|#
+directive|define
+name|AP_EVENT_DISABLED
+value|"AP-DISABLED "
+define|#
+directive|define
+name|INTERFACE_ENABLED
+value|"INTERFACE-ENABLED "
+define|#
+directive|define
+name|INTERFACE_DISABLED
+value|"INTERFACE-DISABLED "
+define|#
+directive|define
+name|ACS_EVENT_STARTED
+value|"ACS-STARTED "
+define|#
+directive|define
+name|ACS_EVENT_COMPLETED
+value|"ACS-COMPLETED "
+define|#
+directive|define
+name|ACS_EVENT_FAILED
+value|"ACS-FAILED "
+define|#
+directive|define
+name|DFS_EVENT_RADAR_DETECTED
+value|"DFS-RADAR-DETECTED "
+define|#
+directive|define
+name|DFS_EVENT_NEW_CHANNEL
+value|"DFS-NEW-CHANNEL "
+define|#
+directive|define
+name|DFS_EVENT_CAC_START
+value|"DFS-CAC-START "
+define|#
+directive|define
+name|DFS_EVENT_CAC_COMPLETED
+value|"DFS-CAC-COMPLETED "
+define|#
+directive|define
+name|DFS_EVENT_NOP_FINISHED
+value|"DFS-NOP-FINISHED "
+define|#
+directive|define
+name|AP_CSA_FINISHED
+value|"AP-CSA-FINISHED "
+comment|/* BSS Transition Management Response frame received */
+define|#
+directive|define
+name|BSS_TM_RESP
+value|"BSS-TM-RESP "
 comment|/* BSS command information masks */
 define|#
 directive|define
 name|WPA_BSS_MASK_ALL
-value|0xFFFFFFFF
+value|0xFFFDFFFF
 define|#
 directive|define
 name|WPA_BSS_MASK_ID
@@ -433,6 +707,85 @@ define|#
 directive|define
 name|WPA_BSS_MASK_WIFI_DISPLAY
 value|BIT(16)
+define|#
+directive|define
+name|WPA_BSS_MASK_DELIM
+value|BIT(17)
+define|#
+directive|define
+name|WPA_BSS_MASK_MESH_SCAN
+value|BIT(18)
+define|#
+directive|define
+name|WPA_BSS_MASK_SNR
+value|BIT(19)
+define|#
+directive|define
+name|WPA_BSS_MASK_EST_THROUGHPUT
+value|BIT(20)
+comment|/* VENDOR_ELEM_* frame id values */
+enum|enum
+name|wpa_vendor_elem_frame
+block|{
+name|VENDOR_ELEM_PROBE_REQ_P2P
+init|=
+literal|0
+block|,
+name|VENDOR_ELEM_PROBE_RESP_P2P
+init|=
+literal|1
+block|,
+name|VENDOR_ELEM_PROBE_RESP_P2P_GO
+init|=
+literal|2
+block|,
+name|VENDOR_ELEM_BEACON_P2P_GO
+init|=
+literal|3
+block|,
+name|VENDOR_ELEM_P2P_PD_REQ
+init|=
+literal|4
+block|,
+name|VENDOR_ELEM_P2P_PD_RESP
+init|=
+literal|5
+block|,
+name|VENDOR_ELEM_P2P_GO_NEG_REQ
+init|=
+literal|6
+block|,
+name|VENDOR_ELEM_P2P_GO_NEG_RESP
+init|=
+literal|7
+block|,
+name|VENDOR_ELEM_P2P_GO_NEG_CONF
+init|=
+literal|8
+block|,
+name|VENDOR_ELEM_P2P_INV_REQ
+init|=
+literal|9
+block|,
+name|VENDOR_ELEM_P2P_INV_RESP
+init|=
+literal|10
+block|,
+name|VENDOR_ELEM_P2P_ASSOC_REQ
+init|=
+literal|11
+block|,
+name|VENDOR_ELEM_P2P_ASSOC_RESP
+init|=
+literal|12
+block|,
+name|VENDOR_ELEM_ASSOC_REQ
+init|=
+literal|13
+block|,
+name|NUM_VENDOR_ELEM_FRAMES
+block|}
+enum|;
 comment|/* wpa_supplicant/hostapd control interface access */
 comment|/**  * wpa_ctrl_open - Open a control interface to wpa_supplicant/hostapd  * @ctrl_path: Path for UNIX domain sockets; ignored if UDP sockets are used.  * Returns: Pointer to abstract control interface data or %NULL on failure  *  * This function is used to open a control interface to wpa_supplicant/hostapd.  * ctrl_path is usually /var/run/wpa_supplicant or /var/run/hostapd. This path  * is configured in wpa_supplicant/hostapd and other programs using the control  * interface need to use matching path configuration.  */
 name|struct
@@ -516,7 +869,7 @@ modifier|*
 name|ctrl
 parameter_list|)
 function_decl|;
-comment|/**  * wpa_ctrl_recv - Receive a pending control interface message  * @ctrl: Control interface data from wpa_ctrl_open()  * @reply: Buffer for the message data  * @reply_len: Length of the reply buffer  * Returns: 0 on success, -1 on failure  *  * This function will receive a pending control interface message. This  * function will block if no messages are available. The received response will  * be written to reply and reply_len is set to the actual length of the reply.  * wpa_ctrl_recv() is only used for event messages, i.e., wpa_ctrl_attach()  * must have been used to register the control interface as an event monitor.  */
+comment|/**  * wpa_ctrl_recv - Receive a pending control interface message  * @ctrl: Control interface data from wpa_ctrl_open()  * @reply: Buffer for the message data  * @reply_len: Length of the reply buffer  * Returns: 0 on success, -1 on failure  *  * This function will receive a pending control interface message. The received  * response will be written to reply and reply_len is set to the actual length  * of the reply.   * wpa_ctrl_recv() is only used for event messages, i.e., wpa_ctrl_attach()  * must have been used to register the control interface as an event monitor.  */
 name|int
 name|wpa_ctrl_recv
 parameter_list|(
@@ -547,16 +900,6 @@ function_decl|;
 comment|/**  * wpa_ctrl_get_fd - Get file descriptor used by the control interface  * @ctrl: Control interface data from wpa_ctrl_open()  * Returns: File descriptor used for the connection  *  * This function can be used to get the file descriptor that is used for the  * control interface connection. The returned value can be used, e.g., with  * select() while waiting for multiple events.  *  * The returned file descriptor must not be used directly for sending or  * receiving packets; instead, the library functions wpa_ctrl_request() and  * wpa_ctrl_recv() must be used for this.  */
 name|int
 name|wpa_ctrl_get_fd
-parameter_list|(
-name|struct
-name|wpa_ctrl
-modifier|*
-name|ctrl
-parameter_list|)
-function_decl|;
-name|char
-modifier|*
-name|wpa_ctrl_get_remote_ifname
 parameter_list|(
 name|struct
 name|wpa_ctrl
@@ -599,6 +942,16 @@ directive|define
 name|WPA_GLOBAL_CTRL_IFACE_PORT_LIMIT
 value|20
 comment|/* incremented from start */
+name|char
+modifier|*
+name|wpa_ctrl_get_remote_ifname
+parameter_list|(
+name|struct
+name|wpa_ctrl
+modifier|*
+name|ctrl
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 comment|/* CONFIG_CTRL_IFACE_UDP */

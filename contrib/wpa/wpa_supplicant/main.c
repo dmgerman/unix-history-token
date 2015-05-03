@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / main() function for UNIX like OSes and MinGW  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * WPA Supplicant / main() function for UNIX like OSes and MinGW  * Copyright (c) 2003-2013, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -48,15 +48,11 @@ directive|include
 file|"driver_i.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-modifier|*
-name|wpa_drivers
-index|[]
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"p2p_supplicant.h"
+end_include
 
 begin_function
 specifier|static
@@ -73,16 +69,48 @@ name|printf
 argument_list|(
 literal|"%s\n\n%s\n"
 literal|"usage:\n"
-literal|"  wpa_supplicant [-BddhKLqqstuvW] [-P<pid file>] "
+literal|"  wpa_supplicant [-BddhKLqq"
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_SYSLOG
+literal|"s"
+endif|#
+directive|endif
+comment|/* CONFIG_DEBUG_SYSLOG */
+literal|"t"
+ifdef|#
+directive|ifdef
+name|CONFIG_DBUS
+literal|"u"
+endif|#
+directive|endif
+comment|/* CONFIG_DBUS */
+literal|"vW] [-P<pid file>] "
 literal|"[-g<global ctrl>] \\\n"
+literal|"        [-G<group>] \\\n"
 literal|"        -i<ifname> -c<config file> [-C<ctrl>] [-D<driver>] "
 literal|"[-p<driver_param>] \\\n"
-literal|"        [-b<br_ifname>] [-f<debug file>] [-e<entropy file>] "
-literal|"\\\n"
+literal|"        [-b<br_ifname>] [-e<entropy file>]"
+ifdef|#
+directive|ifdef
+name|CONFIG_DEBUG_FILE
+literal|" [-f<debug file>]"
+endif|#
+directive|endif
+comment|/* CONFIG_DEBUG_FILE */
+literal|" \\\n"
 literal|"        [-o<override driver>] [-O<override ctrl>] \\\n"
 literal|"        [-N -i<ifname> -c<conf> [-C<ctrl>] "
 literal|"[-D<driver>] \\\n"
-literal|"        [-p<driver_param>] [-b<br_ifname>] ...]\n"
+ifdef|#
+directive|ifdef
+name|CONFIG_P2P
+literal|"        [-m<P2P Device config file>] \\\n"
+endif|#
+directive|endif
+comment|/* CONFIG_P2P */
+literal|"        [-p<driver_param>] [-b<br_ifname>] [-I<config file>] "
+literal|"...]\n"
 literal|"\n"
 literal|"drivers:\n"
 argument_list|,
@@ -137,6 +165,7 @@ literal|"  -B = run daemon in the background\n"
 literal|"  -c = Configuration file\n"
 literal|"  -C = ctrl_interface parameter (only used if -c is not)\n"
 literal|"  -i = interface name\n"
+literal|"  -I = additional configuration file\n"
 literal|"  -d = increase debugging verbosity (-dd even more)\n"
 literal|"  -D = driver name (can be multiple drivers: nl80211,wext)\n"
 literal|"  -e = entropy file\n"
@@ -156,6 +185,7 @@ comment|/* CONFIG_DEBUG_FILE */
 name|printf
 argument_list|(
 literal|"  -g = global ctrl_interface\n"
+literal|"  -G = global ctrl_interface group\n"
 literal|"  -K = include keys (passwords, etc.) in debug output\n"
 argument_list|)
 expr_stmt|;
@@ -213,6 +243,13 @@ name|printf
 argument_list|(
 literal|"  -v = show version\n"
 literal|"  -W = wait for a control interface monitor before starting\n"
+ifdef|#
+directive|ifdef
+name|CONFIG_P2P
+literal|"  -m = Configuration file for the P2P Device interface\n"
+endif|#
+directive|endif
+comment|/* CONFIG_P2P */
 literal|"  -N = start describing new interface\n"
 argument_list|)
 expr_stmt|;
@@ -223,17 +260,17 @@ literal|"  wpa_supplicant -D%s -iwlan0 -c/etc/wpa_supplicant.conf\n"
 argument_list|,
 name|wpa_drivers
 index|[
-name|i
+literal|0
 index|]
 condition|?
 name|wpa_drivers
 index|[
-name|i
+literal|0
 index|]
 operator|->
 name|name
 else|:
-literal|"wext"
+literal|"nl80211"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -539,7 +576,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"b:Bc:C:D:de:f:g:hi:KLNo:O:p:P:qsTtuvW"
+literal|"b:Bc:C:D:de:f:g:G:hi:I:KLm:No:O:p:P:qsTtuvW"
 argument_list|)
 expr_stmt|;
 if|if
@@ -668,6 +705,16 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'G'
+case|:
+name|params
+operator|.
+name|ctrl_interface_group
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'h'
 case|:
 name|usage
@@ -686,6 +733,16 @@ case|:
 name|iface
 operator|->
 name|ifname
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'I'
+case|:
+name|iface
+operator|->
+name|confanother
 operator|=
 name|optarg
 expr_stmt|;
@@ -712,6 +769,22 @@ expr_stmt|;
 goto|goto
 name|out
 goto|;
+ifdef|#
+directive|ifdef
+name|CONFIG_P2P
+case|case
+literal|'m'
+case|:
+name|iface
+operator|->
+name|conf_p2p_dev
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* CONFIG_P2P */
 case|case
 literal|'o'
 case|:
@@ -987,6 +1060,11 @@ name|i
 operator|++
 control|)
 block|{
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1046,8 +1124,8 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
+name|wpa_s
+operator|=
 name|wpa_supplicant_add_iface
 argument_list|(
 name|global
@@ -1057,15 +1135,24 @@ name|ifaces
 index|[
 name|i
 index|]
+argument_list|,
+name|NULL
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wpa_s
 operator|==
 name|NULL
 condition|)
+block|{
 name|exitcode
 operator|=
 operator|-
 literal|1
 expr_stmt|;
+break|break;
+block|}
 block|}
 if|if
 condition|(

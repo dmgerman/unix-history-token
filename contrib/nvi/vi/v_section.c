@@ -94,7 +94,7 @@ comment|/*  * !!!  * In historic vi, the section commands ignored empty lines, u
 end_comment
 
 begin_comment
-comment|/*  * v_sectionf -- [count]]]  *	Move forward count sections/functions.  *  * !!!  * Using ]] as a motion command was a bit special, historically.  It could  * match } as well as the usual { and section values.  If it matched a { or  * a section, it did NOT include the matched line.  If it matched a }, it  * did include the line.  No clue why.  *  * PUBLIC: int v_sectionf __P((SCR *, VICMD *));  */
+comment|/*  * v_sectionf -- [count]]]  *	Move forward count sections/functions.  *  * !!!  * Using ]] as a motion command was a bit special, historically.  It could  * match } as well as the usual { and section values.  If it matched a { or  * a section, it did NOT include the matched line.  If it matched a }, it  * did include the line.  No clue why.  *  * PUBLIC: int v_sectionf(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -603,7 +603,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_sectionb -- [count][[  *	Move backward count sections/functions.  *  * PUBLIC: int v_sectionb __P((SCR *, VICMD *));  */
+comment|/*  * v_sectionb -- [count][[  *	Move backward count sections/functions.  *  * PUBLIC: int v_sectionb(SCR *, VICMD *);  */
 end_comment
 
 begin_function

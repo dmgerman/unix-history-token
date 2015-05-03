@@ -529,7 +529,7 @@ name|type
 argument_list|,
 literal|"string"
 argument_list|)
-operator|==
+operator|>=
 literal|1
 condition|)
 name|f_print

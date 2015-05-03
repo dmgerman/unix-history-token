@@ -3064,7 +3064,7 @@ name|g_dev_destroy
 argument_list|,
 name|cp
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|,
 name|NULL
 argument_list|)

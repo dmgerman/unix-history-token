@@ -101,25 +101,22 @@ directive|include
 file|"../vi/vi.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ex_N_next
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|EXCMD
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_next -- :next [+cmd] [files]  *	Edit the next file, optionally setting the list of files.  *  * !!!  * The :next command behaved differently from the :rewind command in  * historic vi.  See nvi/docs/autowrite for details, but the basic  * idea was that it ignored the force flag if the autowrite flag was  * set.  This implementation handles them all identically.  *  * PUBLIC: int ex_next __P((SCR *, EXCMD *));  */
+comment|/*  * ex_next -- :next [+cmd] [files]  *	Edit the next file, optionally setting the list of files.  *  * !!!  * The :next command behaved differently from the :rewind command in  * historic vi.  See nvi/docs/autowrite for details, but the basic  * idea was that it ignored the force flag if the autowrite flag was  * set.  This implementation handles them all identically.  *  * PUBLIC: int ex_next(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -875,7 +872,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_prev -- :prev  *	Edit the previous file.  *  * PUBLIC: int ex_prev __P((SCR *, EXCMD *));  */
+comment|/*  * ex_prev -- :prev  *	Edit the previous file.  *  * PUBLIC: int ex_prev(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -1104,7 +1101,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_rew -- :rew  *	Re-edit the list of files.  *  * !!!  * Historic practice was that all files would start editing at the beginning  * of the file.  We don't get this right because we may have multiple screens  * and we can't clear the FR_CURSORSET bit for a single screen.  I don't see  * anyone noticing, but if they do, we'll have to put information into the SCR  * structure so we can keep track of it.  *  * PUBLIC: int ex_rew __P((SCR *, EXCMD *));  */
+comment|/*  * ex_rew -- :rew  *	Re-edit the list of files.  *  * !!!  * Historic practice was that all files would start editing at the beginning  * of the file.  We don't get this right because we may have multiple screens  * and we can't clear the FR_CURSORSET bit for a single screen.  I don't see  * anyone noticing, but if they do, we'll have to put information into the SCR  * structure so we can keep track of it.  *  * PUBLIC: int ex_rew(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -1258,7 +1255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_args -- :args  *	Display the list of files.  *  * PUBLIC: int ex_args __P((SCR *, EXCMD *));  */
+comment|/*  * ex_args -- :args  *	Display the list of files.  *  * PUBLIC: int ex_args(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -1495,7 +1492,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_buildargv --  *	Build a new file argument list.  *  * PUBLIC: char **ex_buildargv __P((SCR *, EXCMD *, char *));  */
+comment|/*  * ex_buildargv --  *	Build a new file argument list.  *  * PUBLIC: char **ex_buildargv(SCR *, EXCMD *, char *);  */
 end_comment
 
 begin_function

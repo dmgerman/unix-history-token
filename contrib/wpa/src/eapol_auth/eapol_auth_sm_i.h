@@ -114,6 +114,12 @@ decl_stmt|;
 name|u8
 name|default_wep_key_idx
 decl_stmt|;
+name|u32
+name|acct_multi_session_id_hi
+decl_stmt|;
+name|u32
+name|acct_multi_session_id_lo
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -506,6 +512,15 @@ modifier|*
 name|sta
 decl_stmt|;
 comment|/* station context pointer to use in callbacks */
+name|int
+name|remediation
+decl_stmt|;
+name|u32
+name|acct_multi_session_id_hi
+decl_stmt|;
+name|u32
+name|acct_multi_session_id_lo
+decl_stmt|;
 block|}
 struct|;
 end_struct

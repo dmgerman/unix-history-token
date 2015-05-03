@@ -28,7 +28,6 @@ parameter_list|(
 name|iconv_t
 name|a
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*

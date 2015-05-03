@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
@@ -157,6 +163,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_kdtrace.h>
 end_include
 
 begin_include
@@ -3396,6 +3408,14 @@ operator|&
 name|pn
 operator|->
 name|tval
+argument_list|)
+expr_stmt|;
+name|TCP_PROBE1
+argument_list|(
+name|siftr
+argument_list|,
+operator|&
+name|pn
 argument_list|)
 expr_stmt|;
 block|}

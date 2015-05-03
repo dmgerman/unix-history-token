@@ -224,6 +224,9 @@ decl_stmt|;
 name|vm_prot_t
 name|stack_prot
 decl_stmt|;
+name|u_long
+name|stack_sz
+decl_stmt|;
 block|}
 struct|;
 end_struct

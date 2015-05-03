@@ -248,7 +248,6 @@ name|__restrict
 name|ci
 name|__unused
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|__restrict

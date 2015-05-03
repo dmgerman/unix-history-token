@@ -1266,8 +1266,9 @@ decl_stmt|;
 name|uint32_t
 name|ah_tx_chainmask
 decl_stmt|;
-name|HAL_ANI_STATE
-name|ext_ani_state
+comment|/* Used to return ANI statistics to the diagnostic API */
+name|HAL_ANI_STATS
+name|ext_ani_stats
 decl_stmt|;
 block|}
 struct|;

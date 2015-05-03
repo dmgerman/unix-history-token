@@ -349,6 +349,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|EFI_SYSTEM_TABLE
 modifier|*
 name|systab
@@ -356,6 +357,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|EFI_HANDLE
 modifier|*
 name|image
@@ -620,6 +622,14 @@ sizeof|sizeof
 argument_list|(
 name|handles
 argument_list|)
+decl_stmt|,
+name|cols
+decl_stmt|,
+name|rows
+decl_stmt|,
+name|max_dim
+decl_stmt|,
+name|best_mode
 decl_stmt|;
 name|EFI_STATUS
 name|status
@@ -635,6 +645,12 @@ decl_stmt|;
 name|EFI_CONSOLE_CONTROL_PROTOCOL
 modifier|*
 name|ConsoleControl
+init|=
+name|NULL
+decl_stmt|;
+name|SIMPLE_TEXT_OUTPUT_INTERFACE
+modifier|*
+name|conout
 init|=
 name|NULL
 decl_stmt|;
@@ -696,9 +712,120 @@ argument_list|,
 name|EfiConsoleControlScreenText
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Reset the console and find the best text mode. 	 */
+name|conout
+operator|=
+name|systab
+operator|->
+name|ConOut
+expr_stmt|;
+name|conout
+operator|->
+name|Reset
+argument_list|(
+name|conout
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|max_dim
+operator|=
+name|best_mode
+operator|=
+literal|0
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|status
+operator|=
+name|conout
+operator|->
+name|QueryMode
+argument_list|(
+name|conout
+argument_list|,
+name|i
+argument_list|,
+operator|&
+name|cols
+argument_list|,
+operator|&
+name|rows
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|EFI_ERROR
+argument_list|(
+name|status
+argument_list|)
+condition|)
+break|break;
+if|if
+condition|(
+name|cols
+operator|*
+name|rows
+operator|>
+name|max_dim
+condition|)
+block|{
+name|max_dim
+operator|=
+name|cols
+operator|*
+name|rows
+expr_stmt|;
+name|best_mode
+operator|=
+name|i
+expr_stmt|;
+block|}
+block|}
+if|if
+condition|(
+name|max_dim
+operator|>
+literal|0
+condition|)
+name|conout
+operator|->
+name|SetMode
+argument_list|(
+name|conout
+argument_list|,
+name|best_mode
+argument_list|)
+expr_stmt|;
+name|conout
+operator|->
+name|EnableCursor
+argument_list|(
+name|conout
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+name|conout
+operator|->
+name|ClearScreen
+argument_list|(
+name|conout
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
-literal|" \n>> FreeBSD EFI boot block\n"
+literal|"\n"
+literal|">> FreeBSD EFI boot block\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -1657,7 +1784,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"LoadImage failed with error %d\n"
+literal|"LoadImage failed with error %lx\n"
 argument_list|,
 name|status
 argument_list|)
@@ -1693,7 +1820,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"HandleProtocol failed with error %d\n"
+literal|"HandleProtocol failed with error %lx\n"
 argument_list|,
 name|status
 argument_list|)
@@ -1728,7 +1855,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"StartImage failed with error %d\n"
+literal|"StartImage failed with error %lx\n"
 argument_list|,
 name|status
 argument_list|)

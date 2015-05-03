@@ -51,7 +51,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * wpa_supplicant_ctrl_iface_process - Process global ctrl_iface command  * @global: Pointer to global data from wpa_supplicant_init()  * @buf: Received command buffer (nul terminated string)  * @resp_len: Variable to be set to the response length  * Returns: Response (*resp_len bytes) or %NULL on failure  *  * Control interface backends call this function when receiving a message from  * the global ctrl_iface connection. The return response value is then sent to  * the external program that sent the command. Caller is responsible for  * freeing the buffer after this. If %NULL is returned, *resp_len can be set to  * two special values: 1 = send "FAIL\n" response, 2 = send "OK\n" response. If  * *resp_len has any other value, no response is sent.  */
+comment|/**  * wpa_supplicant_global_ctrl_iface_process - Process global ctrl_iface command  * @global: Pointer to global data from wpa_supplicant_init()  * @buf: Received command buffer (nul terminated string)  * @resp_len: Variable to be set to the response length  * Returns: Response (*resp_len bytes) or %NULL on failure  *  * Control interface backends call this function when receiving a message from  * the global ctrl_iface connection. The return response value is then sent to  * the external program that sent the command. Caller is responsible for  * freeing the buffer after this. If %NULL is returned, *resp_len can be set to  * two special values: 1 = send "FAIL\n" response, 2 = send "OK\n" response. If  * *resp_len has any other value, no response is sent.  */
 end_comment
 
 begin_function_decl
@@ -159,6 +159,18 @@ name|struct
 name|ctrl_iface_global_priv
 modifier|*
 name|priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|wpas_ctrl_radio_work_flush
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -283,6 +295,20 @@ name|struct
 name|ctrl_iface_global_priv
 modifier|*
 name|priv
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|wpas_ctrl_radio_work_flush
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
 parameter_list|)
 block|{ }
 end_function

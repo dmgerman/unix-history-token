@@ -120,7 +120,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * vs_line --  *	Update one line on the screen.  *  * PUBLIC: int vs_line __P((SCR *, SMAP *, size_t *, size_t *));  */
+comment|/*  * vs_line --  *	Update one line on the screen.  *  * PUBLIC: int vs_line(SCR *, SMAP *, size_t *, size_t *);  */
 end_comment
 
 begin_function
@@ -1805,7 +1805,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_number --  *	Repaint the numbers on all the lines.  *  * PUBLIC: int vs_number __P((SCR *));  */
+comment|/*  * vs_number --  *	Repaint the numbers on all the lines.  *  * PUBLIC: int vs_number(SCR *);  */
 end_comment
 
 begin_function

@@ -473,6 +473,8 @@ name|pmap_kenter_device
 parameter_list|(
 name|vm_offset_t
 parameter_list|,
+name|vm_size_t
+parameter_list|,
 name|vm_paddr_t
 parameter_list|)
 function_decl|;
@@ -499,6 +501,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pmap_kremove_device
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 modifier|*
 name|pmap_mapdev
 parameter_list|(
@@ -511,7 +524,30 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
+name|pmap_mapbios
+parameter_list|(
+name|vm_paddr_t
+parameter_list|,
+name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_unmapdev
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_unmapbios
 parameter_list|(
 name|vm_offset_t
 parameter_list|,

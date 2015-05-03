@@ -6287,12 +6287,33 @@ operator|>
 name|MAX_TARGET_COUNT
 condition|)
 block|{
+name|char
+name|s
+index|[
+name|LDNS_MAX_DOMAINLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|dname_str
+argument_list|(
+name|qstate
+operator|->
+name|qinfo
+operator|.
+name|qname
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
 name|verbose
 argument_list|(
 name|VERB_QUERY
 argument_list|,
-literal|"request has exceeded the maximum "
+literal|"request %s has exceeded the maximum "
 literal|"number of glue fetches %d"
+argument_list|,
+name|s
 argument_list|,
 name|iq
 operator|->
@@ -7345,12 +7366,33 @@ operator|>
 name|MAX_TARGET_COUNT
 condition|)
 block|{
+name|char
+name|s
+index|[
+name|LDNS_MAX_DOMAINLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|dname_str
+argument_list|(
+name|qstate
+operator|->
+name|qinfo
+operator|.
+name|qname
+argument_list|,
+name|s
+argument_list|)
+expr_stmt|;
 name|verbose
 argument_list|(
 name|VERB_QUERY
 argument_list|,
-literal|"request has exceeded the maximum "
+literal|"request %s has exceeded the maximum "
 literal|"number of glue fetches %d"
+argument_list|,
+name|s
 argument_list|,
 name|iq
 operator|->
@@ -13958,6 +14000,17 @@ operator|->
 name|caps_fallback
 condition|)
 block|{
+comment|/* for fallback we care about main answer, not additionals */
+comment|/* removing that makes comparison more likely to succeed */
+name|caps_strip_reply
+argument_list|(
+name|iq
+operator|->
+name|response
+operator|->
+name|rep
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!

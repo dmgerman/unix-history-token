@@ -13027,6 +13027,25 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+if|if
+condition|(
+name|nm_native_on
+argument_list|(
+name|NA
+argument_list|(
+name|sc
+operator|->
+name|vtnet_ifp
+argument_list|)
+argument_list|)
+condition|)
+return|return;
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 for|for
 control|(
 name|i

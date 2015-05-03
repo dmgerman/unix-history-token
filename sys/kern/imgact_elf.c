@@ -3937,6 +3937,17 @@ operator|.
 name|p_flags
 argument_list|)
 expr_stmt|;
+name|imgp
+operator|->
+name|stack_sz
+operator|=
+name|phdr
+index|[
+name|i
+index|]
+operator|.
+name|p_memsz
+expr_stmt|;
 break|break;
 block|}
 block|}
@@ -6606,6 +6617,11 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -6647,6 +6663,7 @@ expr_stmt|;
 goto|goto
 name|done
 goto|;
+block|}
 block|}
 endif|#
 directive|endif

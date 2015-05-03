@@ -2017,7 +2017,7 @@ name|md
 operator|->
 name|pmd_classdep
 index|[
-name|PMC_MDEP_CLASS_INDEX_PPC970
+name|PMC_MDEP_CLASS_INDEX_POWERPC
 index|]
 operator|.
 name|pcd_ri
@@ -2578,7 +2578,7 @@ name|pmc_mdep
 operator|->
 name|pmd_classdep
 index|[
-name|PMC_MDEP_CLASS_INDEX_PPC970
+name|PMC_MDEP_CLASS_INDEX_POWERPC
 index|]
 expr_stmt|;
 name|pcd

@@ -90,7 +90,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * vs_column --  *	Return the logical column of the cursor in the line.  *  * PUBLIC: int vs_column __P((SCR *, size_t *));  */
+comment|/*  * vs_column --  *	Return the logical column of the cursor in the line.  *  * PUBLIC: int vs_column(SCR *, size_t *);  */
 end_comment
 
 begin_function
@@ -175,7 +175,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_screens --  *	Return the screens necessary to display the line, or if specified,  *	the physical character column within the line, including space  *	required for the O_NUMBER and O_LIST options.  *  * PUBLIC: size_t vs_screens __P((SCR *, recno_t, size_t *));  */
+comment|/*  * vs_screens --  *	Return the screens necessary to display the line, or if specified,  *	the physical character column within the line, including space  *	required for the O_NUMBER and O_LIST options.  *  * PUBLIC: size_t vs_screens(SCR *, recno_t, size_t *);  */
 end_comment
 
 begin_function
@@ -341,7 +341,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_columns --  *	Return the screen columns necessary to display the line, or,  *	if specified, the physical character column within the line.  *  * PUBLIC: size_t vs_columns __P((SCR *, CHAR_T *, recno_t, size_t *, size_t *));  */
+comment|/*  * vs_columns --  *	Return the screen columns necessary to display the line, or,  *	if specified, the physical character column within the line.  *  * PUBLIC: size_t vs_columns(SCR *, CHAR_T *, recno_t, size_t *, size_t *);  */
 end_comment
 
 begin_function
@@ -625,7 +625,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_rcm --  *	Return the physical column from the line that will display a  *	character closest to the currently most attractive character  *	position (which is stored as a screen column).  *  * PUBLIC: size_t vs_rcm __P((SCR *, recno_t, int));  */
+comment|/*  * vs_rcm --  *	Return the physical column from the line that will display a  *	character closest to the currently most attractive character  *	position (which is stored as a screen column).  *  * PUBLIC: size_t vs_rcm(SCR *, recno_t, int);  */
 end_comment
 
 begin_function
@@ -717,7 +717,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vs_colpos --  *	Return the physical column from the line that will display a  *	character closest to the specified screen column.  *  * PUBLIC: size_t vs_colpos __P((SCR *, recno_t, size_t));  */
+comment|/*  * vs_colpos --  *	Return the physical column from the line that will display a  *	character closest to the specified screen column.  *  * PUBLIC: size_t vs_colpos(SCR *, recno_t, size_t);  */
 end_comment
 
 begin_function

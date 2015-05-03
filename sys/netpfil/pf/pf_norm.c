@@ -6260,6 +6260,12 @@ name|m_nextpkt
 operator|=
 name|NULL
 expr_stmt|;
+name|m
+operator|->
+name|m_flags
+operator||=
+name|M_SKIP_FIREWALL
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -9241,11 +9247,9 @@ name|flags
 operator|&
 name|TH_FIN
 condition|)
-name|flags
-operator|&=
-operator|~
-name|TH_FIN
-expr_stmt|;
+goto|goto
+name|tcp_drop
+goto|;
 block|}
 else|else
 block|{

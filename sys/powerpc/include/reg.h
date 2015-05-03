@@ -164,7 +164,7 @@ end_struct
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|COMPAT_FREEBSD32
+name|__LP64__
 end_ifdef
 
 begin_comment
@@ -235,6 +235,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|__HAVE_REG32
+end_define
 
 begin_endif
 endif|#

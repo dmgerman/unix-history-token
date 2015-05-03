@@ -105,6 +105,9 @@ name|EAPOL_altAccept
 block|,
 comment|/** 	 * EAPOL_altReject - Alternate indication of failure (RFC3748) 	 * 	 * EAP state machines reads this value. 	 */
 name|EAPOL_altReject
+block|,
+comment|/** 	 * EAPOL_eapTriggerStart - EAP-based trigger to send EAPOL-Start 	 * 	 * EAP state machine writes this value. 	 */
+name|EAPOL_eapTriggerStart
 block|}
 enum|;
 end_enum
@@ -301,7 +304,7 @@ modifier|*
 name|txt
 parameter_list|)
 function_decl|;
-comment|/** 	 * notify_cert - Notification of a peer certificate 	 * @ctx: eapol_ctx from eap_peer_sm_init() call 	 * @depth: Depth in certificate chain (0 = server) 	 * @subject: Subject of the peer certificate 	 * @cert_hash: SHA-256 hash of the certificate 	 * @cert: Peer certificate 	 */
+comment|/** 	 * notify_cert - Notification of a peer certificate 	 * @ctx: eapol_ctx from eap_peer_sm_init() call 	 * @depth: Depth in certificate chain (0 = server) 	 * @subject: Subject of the peer certificate 	 * @altsubject: Select fields from AltSubject of the peer certificate 	 * @num_altsubject: Number of altsubject values 	 * @cert_hash: SHA-256 hash of the certificate 	 * @cert: Peer certificate 	 */
 name|void
 function_decl|(
 modifier|*
@@ -319,6 +322,15 @@ specifier|const
 name|char
 modifier|*
 name|subject
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|altsubject
+index|[]
+parameter_list|,
+name|int
+name|num_altsubject
 parameter_list|,
 specifier|const
 name|char
@@ -354,6 +366,24 @@ modifier|*
 name|parameter
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|CONFIG_EAP_PROXY
+comment|/** 	 * eap_proxy_cb - Callback signifying any updates from eap_proxy 	 * @ctx: eapol_ctx from eap_peer_sm_init() call 	 */
+name|void
+function_decl|(
+modifier|*
+name|eap_proxy_cb
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+comment|/* CONFIG_EAP_PROXY */
 comment|/** 	 * set_anon_id - Set or add anonymous identity 	 * @ctx: eapol_ctx from eap_peer_sm_init() call 	 * @id: Anonymous identity (e.g., EAP-SIM pseudonym) or %NULL to clear 	 * @len: Length of anonymous identity in octets 	 */
 name|void
 function_decl|(
@@ -403,6 +433,12 @@ specifier|const
 name|char
 modifier|*
 name|pkcs11_module_path
+decl_stmt|;
+comment|/** 	 * openssl_ciphers - OpenSSL cipher string 	 * 	 * This is an OpenSSL specific configuration option for configuring the 	 * default ciphers. If not set, "DEFAULT:!EXP:!LOW" is used as the 	 * default. 	 */
+specifier|const
+name|char
+modifier|*
+name|openssl_ciphers
 decl_stmt|;
 comment|/** 	 * wps - WPS context data 	 * 	 * This is only used by EAP-WSC and can be left %NULL if not available. 	 */
 name|struct
@@ -619,6 +655,23 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|eap_sm_request_sim
+parameter_list|(
+name|struct
+name|eap_sm
+modifier|*
+name|sm
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|req
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|eap_sm_notify_ctrl_attached
 parameter_list|(
 name|struct
@@ -710,6 +763,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|eap_set_external_sim
+parameter_list|(
+name|struct
+name|eap_sm
+modifier|*
+name|sm
+parameter_list|,
+name|int
+name|external_sim
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|eap_key_available
 parameter_list|(
@@ -741,6 +809,24 @@ name|struct
 name|eap_sm
 modifier|*
 name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|u8
+modifier|*
+name|eap_get_eapSessionId
+parameter_list|(
+name|struct
+name|eap_sm
+modifier|*
+name|sm
+parameter_list|,
+name|size_t
+modifier|*
+name|len
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -868,6 +954,30 @@ name|id
 parameter_list|,
 name|size_t
 name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|eap_peer_was_failure_expected
+parameter_list|(
+name|struct
+name|eap_sm
+modifier|*
+name|sm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|eap_peer_erp_free_keys
+parameter_list|(
+name|struct
+name|eap_sm
+modifier|*
+name|sm
 parameter_list|)
 function_decl|;
 end_function_decl

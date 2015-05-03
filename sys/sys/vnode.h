@@ -1285,6 +1285,28 @@ begin_comment
 comment|/* not used */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VCREAT
+value|000400000000
+end_define
+
+begin_comment
+comment|/* creating new file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VVERIFY
+value|001000000000
+end_define
+
+begin_comment
+comment|/* verification required */
+end_comment
+
 begin_comment
 comment|/*  * Permissions that were traditionally granted only to the file owner.  */
 end_comment

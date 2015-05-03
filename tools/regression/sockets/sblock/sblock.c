@@ -63,6 +63,7 @@ name|signal_handler
 parameter_list|(
 name|int
 name|signum
+name|__unused
 parameter_list|)
 block|{
 name|interrupted
@@ -191,7 +192,7 @@ name|sleep
 argument_list|(
 literal|1
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 name|err
@@ -315,7 +316,7 @@ name|sleep
 argument_list|(
 literal|2
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 block|{
@@ -353,7 +354,7 @@ name|sleep
 argument_list|(
 literal|1
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 block|{
@@ -437,7 +438,7 @@ name|sleep
 argument_list|(
 literal|1
 argument_list|)
-operator|<
+operator|!=
 literal|0
 condition|)
 block|{
@@ -455,13 +456,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|int

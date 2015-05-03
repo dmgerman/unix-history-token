@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: parse.c,v 1.194 2014/02/15 00:17:17 christos Exp $	*/
+comment|/*	$NetBSD: parse.c,v 1.204 2014/09/18 08:06:13 dholland Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: parse.c,v 1.194 2014/02/15 00:17:17 christos Exp $"
+literal|"$NetBSD: parse.c,v 1.204 2014/09/18 08:06:13 dholland Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: parse.c,v 1.194 2014/02/15 00:17:17 christos Exp $"
+literal|"$NetBSD: parse.c,v 1.204 2014/09/18 08:06:13 dholland Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4005,8 +4005,11 @@ argument_list|(
 name|FALSE
 argument_list|)
 expr_stmt|;
+comment|/*      * First, grind through the targets.      */
 do|do
 block|{
+comment|/* 	 * Here LINE points to the beginning of the next word, and 	 * LSTART points to the actual beginning of the line. 	 */
+comment|/* Find the end of the next word. */
 for|for
 control|(
 name|cp
@@ -4108,6 +4111,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * If the word is followed by a left parenthesis, it's the 	 * name of an object file inside an archive (ar file). 	 */
 if|if
 condition|(
 operator|!
@@ -4155,14 +4159,10 @@ goto|;
 block|}
 else|else
 block|{
+comment|/* Done with this word; on to the next. */
 continue|continue;
 block|}
 block|}
-name|savec
-operator|=
-operator|*
-name|cp
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4170,7 +4170,7 @@ operator|*
 name|cp
 condition|)
 block|{
-comment|/* 	     * Ending a dependency line without an operator is a Bozo 	     * no-no.  As a heuristic, this is also often triggered by 	     * undetected conflicts from cvs/rcs merges. 	     */
+comment|/* 	     * We got to the end of the line while we were still 	     * looking at targets. 	     * 	     * Ending a dependency line without an operator is a Bozo 	     * no-no.  As a heuristic, this is also often triggered by 	     * undetected conflicts from cvs/rcs merges. 	     */
 if|if
 condition|(
 operator|(
@@ -4240,12 +4240,18 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* Insert a null terminator. */
+name|savec
+operator|=
+operator|*
+name|cp
+expr_stmt|;
 operator|*
 name|cp
 operator|=
 literal|'\0'
 expr_stmt|;
-comment|/* 	 * Have a word in line. See if it's a special target and set 	 * specType to match it. 	 */
+comment|/* 	 * Got the word. See if it's a special target and if so set 	 * specType to match it. 	 */
 if|if
 condition|(
 operator|*
@@ -4649,6 +4655,7 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Apply the targets. */
 while|while
 condition|(
 operator|!
@@ -4749,6 +4756,7 @@ name|line
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Don't need the inserted null terminator any more. */
 operator|*
 name|cp
 operator|=
@@ -5038,10 +5046,11 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* Advance beyond the operator */
 name|cp
 operator|++
 expr_stmt|;
-comment|/* Advance beyond operator */
+comment|/*      * Apply the operator to the target. This is how we remember which      * operator a target was defined with. It fails if the operator      * used isn't consistent across all references.      */
 name|Lst_ForEach
 argument_list|(
 name|targets
@@ -5052,7 +5061,7 @@ operator|&
 name|op
 argument_list|)
 expr_stmt|;
-comment|/*      * Get to the first source      */
+comment|/*      * Onward to the sources.      *      * LINE will now point to the first source word, if any, or the      * end of the string if not.      */
 while|while
 condition|(
 operator|*
@@ -6477,7 +6486,174 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  * ParseAddCmd  --  *	Lst_ForEach function to add a command line to all targets  *  * Input:  *	gnp		the node to which the command is to be added  *	cmd		the command to add  *  * Results:  *	Always 0  *  * Side Effects:  *	A new element is added to the commands list of the node.  */
+comment|/*  * ParseMaybeSubMake --  * 	Scan the command string to see if it a possible submake node  * Input:  *	cmd		the command to scan  * Results:  *	TRUE if the command is possibly a submake, FALSE if not.  */
+end_comment
+
+begin_function
+specifier|static
+name|Boolean
+name|ParseMaybeSubMake
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|cmd
+parameter_list|)
+block|{
+name|size_t
+name|i
+decl_stmt|;
+specifier|static
+struct|struct
+block|{
+specifier|const
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
+block|}
+name|vals
+index|[]
+init|=
+block|{
+define|#
+directive|define
+name|MKV
+parameter_list|(
+name|A
+parameter_list|)
+value|{	A, sizeof(A) - 1	}
+name|MKV
+argument_list|(
+literal|"${MAKE}"
+argument_list|)
+block|,
+name|MKV
+argument_list|(
+literal|"${.MAKE}"
+argument_list|)
+block|,
+name|MKV
+argument_list|(
+literal|"$(MAKE)"
+argument_list|)
+block|,
+name|MKV
+argument_list|(
+literal|"$(.MAKE)"
+argument_list|)
+block|,
+name|MKV
+argument_list|(
+literal|"make"
+argument_list|)
+block|,     }
+struct|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|vals
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|vals
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|char
+modifier|*
+name|ptr
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|ptr
+operator|=
+name|strstr
+argument_list|(
+name|cmd
+argument_list|,
+name|vals
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+continue|continue;
+if|if
+condition|(
+operator|(
+name|ptr
+operator|==
+name|cmd
+operator|||
+operator|!
+name|isalnum
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+name|ptr
+index|[
+operator|-
+literal|1
+index|]
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|isalnum
+argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
+name|ptr
+index|[
+name|vals
+index|[
+name|i
+index|]
+operator|.
+name|len
+index|]
+argument_list|)
+condition|)
+return|return
+name|TRUE
+return|;
+block|}
+return|return
+name|FALSE
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*-  * ParseAddCmd  --  *	Lst_ForEach function to add a command line to all targets  *  * Input:  *	gnp		the node to which the command is to be added  *	cmd		the command to add  *  * Results:  *	Always 0  *  * Side Effects:  *	A new element is added to the commands list of the node,  *	and the node can be marked as a submake node if the command is  *	determined to be that.  */
 end_comment
 
 begin_function
@@ -6563,6 +6739,19 @@ name|commands
 argument_list|,
 name|cmd
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ParseMaybeSubMake
+argument_list|(
+name|cmd
+argument_list|)
+condition|)
+name|gn
+operator|->
+name|type
+operator||=
+name|OP_SUBMAKE
 expr_stmt|;
 name|ParseMark
 argument_list|(

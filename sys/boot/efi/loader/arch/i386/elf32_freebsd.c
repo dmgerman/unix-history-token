@@ -142,8 +142,27 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|struct
+name|file_format
+modifier|*
+name|file_formats
+index|[]
+init|=
+block|{
+operator|&
+name|i386_elf
+block|,
+operator|&
+name|i386_elf_obj
+block|,
+name|NULL
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/*  * There is an ELF kernel and one or more ELF modules loaded.    * We wish to start executing the kernel image, so make such   * preparations as are required, and do so.  */
+comment|/*  * There is an ELF kernel and one or more ELF modules loaded.  * We wish to start executing the kernel image, so make such  * preparations as are required, and do so.  */
 end_comment
 
 begin_function

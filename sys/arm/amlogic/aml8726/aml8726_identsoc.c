@@ -103,7 +103,7 @@ begin_decl_stmt
 name|uint32_t
 name|aml8726_soc_hw_rev
 init|=
-literal|0xffffffff
+name|AML_SOC_HW_REV_UNKNOWN
 decl_stmt|;
 end_decl_stmt
 
@@ -111,7 +111,7 @@ begin_decl_stmt
 name|uint32_t
 name|aml8726_soc_metal_rev
 init|=
-literal|0xffffffff
+name|AML_SOC_METAL_REV_UNKNOWN
 decl_stmt|;
 end_decl_stmt
 
@@ -228,20 +228,12 @@ struct|;
 end_struct
 
 begin_function
-specifier|static
 name|void
 name|aml8726_identify_soc
-parameter_list|(
-name|void
-modifier|*
-name|dummy
-parameter_list|)
+parameter_list|()
 block|{
 name|int
 name|err
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|struct
 name|resource
@@ -328,6 +320,22 @@ argument_list|,
 literal|0x100000
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|aml8726_identify_announce_soc
+parameter_list|(
+name|void
+modifier|*
+name|dummy
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
 for|for
 control|(
 name|i
@@ -464,13 +472,13 @@ end_function
 begin_expr_stmt
 name|SYSINIT
 argument_list|(
-name|aml8726_identify_soc
+name|aml8726_identify_announce_soc
 argument_list|,
 name|SI_SUB_CPU
 argument_list|,
 name|SI_ORDER_SECOND
 argument_list|,
-name|aml8726_identify_soc
+name|aml8726_identify_announce_soc
 argument_list|,
 name|NULL
 argument_list|)

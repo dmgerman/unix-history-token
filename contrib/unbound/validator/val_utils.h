@@ -555,6 +555,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Remove rrset with index from reply, from the authority section.  * @param rep: reply to remove it from.  * @param index: rrset to remove, must be in the authority section.  */
+end_comment
+
+begin_function_decl
+name|void
+name|val_reply_remove_auth
+parameter_list|(
+name|struct
+name|reply_info
+modifier|*
+name|rep
+parameter_list|,
+name|size_t
+name|index
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Remove all unsigned or non-secure status rrsets from NS and AR sections.  * So that unsigned data does not get let through to clients, when we have  * found the data to be secure.  *  * @param ve: validator environment with cleaning options.  * @param rep: reply to dump all nonsecure stuff out of.  */
 end_comment
 

@@ -334,24 +334,87 @@ argument_list|()
 operator|==
 literal|0
 expr_stmt|;
+comment|// Create a pipe for the self-pipe trick. If pipe2() is available,
+comment|// we can avoid the fcntl() calls.
+ifdef|#
+directive|ifdef
+name|HAVE_PIPE2
+if|if
+condition|(
+name|pipe2
+argument_list|(
+name|user_abort_pipe
+argument_list|,
+name|O_NONBLOCK
+argument_list|)
+condition|)
+name|message_fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"Error creating a pipe: %s"
+argument_list|)
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 if|if
 condition|(
 name|pipe
 argument_list|(
 name|user_abort_pipe
 argument_list|)
-operator|||
+condition|)
+name|message_fatal
+argument_list|(
+name|_
+argument_list|(
+literal|"Error creating a pipe: %s"
+argument_list|)
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// Make both ends of the pipe non-blocking.
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+literal|2
+condition|;
+operator|++
+name|i
+control|)
+block|{
+name|int
+name|flags
+init|=
 name|fcntl
 argument_list|(
 name|user_abort_pipe
 index|[
-literal|0
+name|i
 index|]
 argument_list|,
-name|F_SETFL
-argument_list|,
-name|O_NONBLOCK
+name|F_GETFL
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|flags
 operator|==
 operator|-
 literal|1
@@ -360,11 +423,13 @@ name|fcntl
 argument_list|(
 name|user_abort_pipe
 index|[
-literal|1
+name|i
 index|]
 argument_list|,
 name|F_SETFL
 argument_list|,
+name|flags
+operator||
 name|O_NONBLOCK
 argument_list|)
 operator|==
@@ -384,6 +449,9 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
+endif|#
+directive|endif
 endif|#
 directive|endif
 ifdef|#
@@ -1603,7 +1671,11 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|// Enable O_NONBLOCK for stdin.
+comment|// Try to set stdin to non-blocking mode. It won't work
+comment|// e.g. on OpenBSD if stdout is e.g. /dev/null. In such
+comment|// case we proceed as if stdin were non-blocking anyway
+comment|// (in case of /dev/null it will be in practice). The
+comment|// same applies to stdout in io_open_dest_real().
 name|stdin_flags
 operator|=
 name|fcntl
@@ -1648,10 +1720,7 @@ name|O_NONBLOCK
 operator|)
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|fcntl
 argument_list|(
 name|STDIN_FILENO
@@ -1662,34 +1731,14 @@ name|stdin_flags
 operator||
 name|O_NONBLOCK
 argument_list|)
-operator|==
+operator|!=
 operator|-
 literal|1
 condition|)
-block|{
-name|message_error
-argument_list|(
-name|_
-argument_list|(
-literal|"Error setting O_NONBLOCK "
-literal|"on standard input: %s"
-argument_list|)
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
 name|restore_stdin_flags
 operator|=
 name|true
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 ifdef|#
@@ -2712,7 +2761,10 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|// Set O_NONBLOCK if it isn't already set.
+comment|// Try to set O_NONBLOCK if it isn't already set.
+comment|// If it fails, we assume that stdout is non-blocking
+comment|// in practice. See the comments in io_open_src_real()
+comment|// for similar situation with stdin.
 comment|//
 comment|// NOTE: O_APPEND may be unset later in this function
 comment|// and it relies on stdout_flags being set here.
@@ -2760,10 +2812,7 @@ name|O_NONBLOCK
 operator|)
 operator|==
 literal|0
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|fcntl
 argument_list|(
 name|STDOUT_FILENO
@@ -2774,34 +2823,14 @@ name|stdout_flags
 operator||
 name|O_NONBLOCK
 argument_list|)
-operator|==
+operator|!=
 operator|-
 literal|1
 condition|)
-block|{
-name|message_error
-argument_list|(
-name|_
-argument_list|(
-literal|"Error setting O_NONBLOCK "
-literal|"on standard output: %s"
-argument_list|)
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
 name|restore_stdout_flags
 operator|=
 name|true
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -2872,6 +2901,13 @@ operator|->
 name|dest_name
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|pair
+operator|->
+name|dest_name
+argument_list|)
+expr_stmt|;
 return|return
 name|true
 return|;
@@ -2905,6 +2941,13 @@ argument_list|(
 literal|"%s: Output file is the same "
 literal|"as the input file"
 argument_list|,
+name|pair
+operator|->
+name|dest_name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
 name|pair
 operator|->
 name|dest_name
@@ -3209,9 +3252,26 @@ condition|)
 return|return
 name|false
 return|;
-comment|// O_NONBLOCK was set earlier in this function
-comment|// so it must be kept here too. If this
-comment|// fcntl() call fails, we continue but won't
+comment|// Construct the new file status flags.
+comment|// If O_NONBLOCK was set earlier in this
+comment|// function, it must be kept here too.
+name|int
+name|flags
+init|=
+name|stdout_flags
+operator|&
+operator|~
+name|O_APPEND
+decl_stmt|;
+if|if
+condition|(
+name|restore_stdout_flags
+condition|)
+name|flags
+operator||=
+name|O_NONBLOCK
+expr_stmt|;
+comment|// If this fcntl() fails, we continue but won't
 comment|// try to create sparse output. The original
 comment|// flags will still be restored if needed (to
 comment|// unset O_NONBLOCK) when the file is finished.
@@ -3223,14 +3283,7 @@ name|STDOUT_FILENO
 argument_list|,
 name|F_SETFL
 argument_list|,
-operator|(
-name|stdout_flags
-operator||
-name|O_NONBLOCK
-operator|)
-operator|&
-operator|~
-name|O_APPEND
+name|flags
 argument_list|)
 operator|==
 operator|-
@@ -3241,10 +3294,8 @@ name|false
 return|;
 comment|// Disabling O_APPEND succeeded. Mark
 comment|// that the flags should be restored
-comment|// in io_close_dest(). This quite likely was
-comment|// already set when enabling O_NONBLOCK but
-comment|// just in case O_NONBLOCK was already set,
-comment|// set this again here.
+comment|// in io_close_dest(). (This may have already
+comment|// been set when enabling O_NONBLOCK.)
 name|restore_stdout_flags
 operator|=
 name|true

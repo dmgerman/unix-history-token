@@ -166,6 +166,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|eap_server_wfa_unauth_tls_register
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|eap_server_mschapv2_register
 parameter_list|(
 name|void
@@ -320,6 +329,15 @@ end_function_decl
 begin_function_decl
 name|int
 name|eap_server_pwd_register
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|eap_server_eke_register
 parameter_list|(
 name|void
 parameter_list|)

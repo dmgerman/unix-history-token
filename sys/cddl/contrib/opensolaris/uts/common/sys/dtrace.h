@@ -4071,11 +4071,15 @@ name|uint64_t
 name|dofhp_dof
 decl_stmt|;
 comment|/* address of helper DOF */
-ifndef|#
-directive|ifndef
-name|illumos
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|pid_t
+name|dofhp_pid
+decl_stmt|;
+comment|/* target process ID */
 name|int
-name|gen
+name|dofhp_gen
 decl_stmt|;
 endif|#
 directive|endif

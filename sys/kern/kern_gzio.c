@@ -44,7 +44,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/zutil.h>
+file|<sys/zutil.h>
 end_include
 
 begin_define

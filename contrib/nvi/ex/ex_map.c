@@ -96,7 +96,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_map -- :map[!] [input] [replacement]  *	Map a key/string or display mapped keys.  *  * Historical note:  *	Historic vi maps were fairly bizarre, and likely to differ in  *	very subtle and strange ways from this implementation.  Two  *	things worth noting are that vi would often hang or drop core  *	if the map was strange enough (ex: map X "xy$@x^V), or, simply  *	not work.  One trick worth remembering is that if you put a  *	mark at the start of the map, e.g. map X mx"xy ...), or if you  *	put the map in a .exrc file, things would often work much better.  *	No clue why.  *  * PUBLIC: int ex_map __P((SCR *, EXCMD *));  */
+comment|/*  * ex_map -- :map[!] [input] [replacement]  *	Map a key/string or display mapped keys.  *  * Historical note:  *	Historic vi maps were fairly bizarre, and likely to differ in  *	very subtle and strange ways from this implementation.  Two  *	things worth noting are that vi would often hang or drop core  *	if the map was strange enough (ex: map X "xy$@x^V), or, simply  *	not work.  One trick worth remembering is that if you put a  *	mark at the start of the map, e.g. map X mx"xy ...), or if you  *	put the map in a .exrc file, things would often work much better.  *	No clue why.  *  * PUBLIC: int ex_map(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -466,7 +466,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_unmap -- (:unmap[!] key)  *	Unmap a key.  *  * PUBLIC: int ex_unmap __P((SCR *, EXCMD *));  */
+comment|/*  * ex_unmap -- (:unmap[!] key)  *	Unmap a key.  *  * PUBLIC: int ex_unmap(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

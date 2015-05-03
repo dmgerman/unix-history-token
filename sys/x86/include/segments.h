@@ -48,28 +48,6 @@ begin_comment
 comment|/* priority level of a selector */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XEN
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|SEL_KPL
-value|1
-end_define
-
-begin_comment
-comment|/* kernel priority level */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -80,11 +58,6 @@ end_define
 begin_comment
 comment|/* kernel priority level */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -1463,35 +1436,12 @@ begin_comment
 comment|/* For the NDIS layer */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XEN
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NGDT
-value|9
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|NGDT
 value|19
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Entries in the Local Descriptor Table (LDT)  */

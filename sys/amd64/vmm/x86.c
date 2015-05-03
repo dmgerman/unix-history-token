@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/cpuset.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -734,7 +728,7 @@ operator|<<
 name|CPUID_0000_0001_APICID_SHIFT
 operator|)
 expr_stmt|;
-comment|/* 			 * Don't expose VMX, SpeedStep or TME capability. 			 * Advertise x2APIC capability and Hypervisor guest. 			 */
+comment|/* 			 * Don't expose VMX, SpeedStep, TME or SMX capability. 			 * Advertise x2APIC capability and Hypervisor guest. 			 */
 name|regs
 index|[
 literal|2
@@ -747,6 +741,16 @@ operator||
 name|CPUID2_EST
 operator||
 name|CPUID2_TM2
+operator|)
+expr_stmt|;
+name|regs
+index|[
+literal|2
+index|]
+operator|&=
+operator|~
+operator|(
+name|CPUID2_SMX
 operator|)
 expr_stmt|;
 name|regs
@@ -898,22 +902,7 @@ operator||
 name|CPUID_TM
 operator|)
 expr_stmt|;
-comment|/* 			 * Machine check handling is done in the host. 			 * Hide MTRR capability. 			 */
-name|regs
-index|[
-literal|3
-index|]
-operator|&=
-operator|~
-operator|(
-name|CPUID_MCA
-operator||
-name|CPUID_MCE
-operator||
-name|CPUID_MTRR
-operator|)
-expr_stmt|;
-comment|/*                         * Hide the debug store capability.                         */
+comment|/* 			 * Hide the debug store capability. 			 */
 name|regs
 index|[
 literal|3
@@ -921,6 +910,20 @@ index|]
 operator|&=
 operator|~
 name|CPUID_DS
+expr_stmt|;
+comment|/* 			 * Advertise the Machine Check and MTRR capability. 			 * 			 * Some guest OSes (e.g. Windows) will not boot if 			 * these features are absent. 			 */
+name|regs
+index|[
+literal|3
+index|]
+operator||=
+operator|(
+name|CPUID_MCA
+operator||
+name|CPUID_MCE
+operator||
+name|CPUID_MTRR
+operator|)
 expr_stmt|;
 name|logical_cpus
 operator|=

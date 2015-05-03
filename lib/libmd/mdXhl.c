@@ -419,7 +419,7 @@ expr_stmt|;
 if|if
 condition|(
 name|i
-operator|<
+operator|<=
 literal|0
 condition|)
 break|break;

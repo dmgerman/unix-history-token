@@ -6373,6 +6373,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|R_AARCH64_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* No relocation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|R_AARCH64_ABS64
 value|257
 end_define

@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/fdt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/freescale/imx/imx51_ccmvar.h>
 end_include
 

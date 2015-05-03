@@ -799,7 +799,7 @@ operator|=
 literal|1
 expr_stmt|;
 comment|//	bi.bi_boothowto = bi_getboothowto(fp->f_args);
-comment|/*  	 * Allow the environment variable 'rootdev' to override the supplied 	 * device. This should perhaps go to MI code and/or have $rootdev 	 * tested/set by MI code before launching the kernel. 	 */
+comment|/* 	 * Allow the environment variable 'rootdev' to override the supplied 	 * device. This should perhaps go to MI code and/or have $rootdev 	 * tested/set by MI code before launching the kernel. 	 */
 name|rootdevname
 operator|=
 name|getenv

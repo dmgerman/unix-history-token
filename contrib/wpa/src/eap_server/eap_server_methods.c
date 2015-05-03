@@ -456,7 +456,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * eap_server_get_name - Get EAP method name for the given EAP type  * @vendor: EAP Vendor-Id (0 = IETF)  * @type: EAP method type  * Returns: EAP method name, e.g., TLS, or %NULL if not found  *  * This function maps EAP type numbers into EAP type names based on the list of  * EAP methods included in the build.  */
+comment|/**  * eap_server_get_name - Get EAP method name for the given EAP type  * @vendor: EAP Vendor-Id (0 = IETF)  * @type: EAP method type  * Returns: EAP method name, e.g., TLS, or "unknown" if not found  *  * This function maps EAP type numbers into EAP type names based on the list of  * EAP methods included in the build.  */
 end_comment
 
 begin_function
@@ -526,7 +526,7 @@ name|name
 return|;
 block|}
 return|return
-name|NULL
+literal|"unknown"
 return|;
 block|}
 end_function

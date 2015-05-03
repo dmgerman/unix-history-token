@@ -285,6 +285,9 @@ index|[
 literal|17
 index|]
 decl_stmt|;
+name|int
+name|forced_ifname
+decl_stmt|;
 name|u8
 name|mac_addr
 index|[

@@ -216,6 +216,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|cpufunc_nullop
+parameter_list|()
+value|arm64_nullop()
+end_define
+
+begin_define
+define|#
+directive|define
 name|cpu_setttb
 parameter_list|(
 name|a

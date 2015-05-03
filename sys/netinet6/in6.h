@@ -2906,6 +2906,21 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|in6_ifhasaddr
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|in6_addrscope
 parameter_list|(
 specifier|const

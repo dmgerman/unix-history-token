@@ -108,7 +108,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * v_eof --  *	Vi end-of-file error.  *  * PUBLIC: void v_eof __P((SCR *, MARK *));  */
+comment|/*  * v_eof --  *	Vi end-of-file error.  *  * PUBLIC: void v_eof(SCR *, MARK *);  */
 end_comment
 
 begin_function
@@ -187,7 +187,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_eol --  *	Vi end-of-line error.  *  * PUBLIC: void v_eol __P((SCR *, MARK *));  */
+comment|/*  * v_eol --  *	Vi end-of-line error.  *  * PUBLIC: void v_eol(SCR *, MARK *);  */
 end_comment
 
 begin_function
@@ -276,7 +276,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_nomove --  *	Vi no cursor movement error.  *  * PUBLIC: void v_nomove __P((SCR *));  */
+comment|/*  * v_nomove --  *	Vi no cursor movement error.  *  * PUBLIC: void v_nomove(SCR *);  */
 end_comment
 
 begin_function
@@ -301,7 +301,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_sof --  *	Vi start-of-file error.  *  * PUBLIC: void v_sof __P((SCR *, MARK *));  */
+comment|/*  * v_sof --  *	Vi start-of-file error.  *  * PUBLIC: void v_sof(SCR *, MARK *);  */
 end_comment
 
 begin_function
@@ -352,7 +352,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_sol --  *	Vi start-of-line error.  *  * PUBLIC: void v_sol __P((SCR *));  */
+comment|/*  * v_sol --  *	Vi start-of-line error.  *  * PUBLIC: void v_sol(SCR *);  */
 end_comment
 
 begin_function
@@ -377,7 +377,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_isempty --  *	Return if the line contains nothing but white-space characters.  *  * PUBLIC: int v_isempty __P((CHAR_T *, size_t));  */
+comment|/*  * v_isempty --  *	Return if the line contains nothing but white-space characters.  *  * PUBLIC: int v_isempty(CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -424,7 +424,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_emsg --  *	Display a few common vi messages.  *  * PUBLIC: void v_emsg __P((SCR *, char *, vim_t));  */
+comment|/*  * v_emsg --  *	Display a few common vi messages.  *  * PUBLIC: void v_emsg(SCR *, char *, vim_t);  */
 end_comment
 
 begin_function

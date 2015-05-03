@@ -1856,6 +1856,15 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+end_if
+
 begin_function
 name|int
 name|freebsd6_mmap
@@ -1936,6 +1945,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -4597,6 +4611,11 @@ return|;
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|proc
@@ -4629,6 +4648,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 name|error
@@ -4651,6 +4671,8 @@ directive|ifdef
 name|RACCT
 if|if
 condition|(
+name|racct_enable
+operator|&&
 name|error
 operator|!=
 name|KERN_SUCCESS
@@ -4872,6 +4894,11 @@ block|}
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -4912,6 +4939,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 if|if
@@ -4996,6 +5024,8 @@ directive|ifdef
 name|RACCT
 if|if
 condition|(
+name|racct_enable
+operator|&&
 name|error
 operator|!=
 name|KERN_SUCCESS
@@ -5172,6 +5202,8 @@ directive|ifdef
 name|RACCT
 if|if
 condition|(
+name|racct_enable
+operator|&&
 name|error
 operator|==
 name|KERN_SUCCESS
@@ -5381,6 +5413,8 @@ directive|ifdef
 name|RACCT
 if|if
 condition|(
+name|racct_enable
+operator|&&
 name|error
 operator|==
 name|KERN_SUCCESS

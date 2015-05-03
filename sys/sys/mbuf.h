@@ -2647,9 +2647,11 @@ name|m
 parameter_list|,
 name|uma_zone_t
 name|zone
+name|__unused
 parameter_list|,
 name|int
 name|size
+name|__unused
 parameter_list|,
 name|int
 name|how
@@ -2963,21 +2965,25 @@ name|int
 name|how
 parameter_list|)
 block|{
-if|if
-condition|(
+name|KASSERT
+argument_list|(
+operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_EXT
-condition|)
-name|printf
-argument_list|(
-literal|"%s: %p mbuf already has external storage\n"
+operator|)
+operator|==
+literal|0
 argument_list|,
+operator|(
+literal|"%s: mbuf %p has M_EXT"
+operator|,
 name|__func__
-argument_list|,
+operator|,
 name|m
+operator|)
 argument_list|)
 expr_stmt|;
 name|m
@@ -3077,28 +3083,31 @@ decl_stmt|;
 if|if
 condition|(
 name|m
-operator|&&
+operator|!=
+name|NULL
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_EXT
-condition|)
-name|printf
-argument_list|(
-literal|"%s: %p mbuf already has external storage\n"
+operator|)
+operator|==
+literal|0
 argument_list|,
+operator|(
+literal|"%s: mbuf %p has M_EXT"
+operator|,
 name|__func__
-argument_list|,
+operator|,
 name|m
+operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|!=
-name|NULL
-condition|)
 name|m
 operator|->
 name|m_ext
@@ -3107,6 +3116,7 @@ name|ext_buf
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|zone
 operator|=
 name|m_getzone
@@ -5048,7 +5058,7 @@ name|m_tag
 operator|*
 name|m_tag_next
 argument_list|(
-argument|struct mbuf *m
+argument|struct mbuf *m __unused
 argument_list|,
 argument|struct m_tag *t
 argument_list|)
@@ -5334,8 +5344,8 @@ end_return
 
 begin_function
 unit|}  static
+name|__inline
 name|int
-specifier|inline
 name|rt_m_getfib
 parameter_list|(
 name|struct

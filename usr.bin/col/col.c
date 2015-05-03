@@ -65,7 +65,19 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/capsicum.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
 end_include
 
 begin_include
@@ -90,6 +102,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<termios.h>
 end_include
 
 begin_include
@@ -213,33 +231,33 @@ begin_define
 define|#
 directive|define
 name|RLF
-value|'\007'
+value|'7'
 end_define
 
 begin_comment
-comment|/* ESC-07 reverse line feed */
+comment|/* ESC-7 reverse line feed */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|RHLF
-value|'\010'
+value|'8'
 end_define
 
 begin_comment
-comment|/* ESC-010 reverse half-line feed */
+comment|/* ESC-8 reverse half-line feed */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|FHLF
-value|'\011'
+value|'9'
 end_define
 
 begin_comment
-comment|/* ESC-011 forward half-line feed */
+comment|/* ESC-9 forward half-line feed */
 end_comment
 
 begin_comment
@@ -572,6 +590,13 @@ name|warned
 decl_stmt|,
 name|width
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
+name|unsigned
+name|long
+name|cmd
+decl_stmt|;
 operator|(
 name|void
 operator|)
@@ -580,6 +605,122 @@ argument_list|(
 name|LC_CTYPE
 argument_list|,
 literal|""
+argument_list|)
+expr_stmt|;
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
+name|CAP_FSTAT
+argument_list|,
+name|CAP_READ
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cap_rights_limit
+argument_list|(
+name|STDIN_FILENO
+argument_list|,
+operator|&
+name|rights
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOSYS
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"unable to limit rights for stdin"
+argument_list|)
+expr_stmt|;
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
+name|CAP_FSTAT
+argument_list|,
+name|CAP_WRITE
+argument_list|,
+name|CAP_IOCTL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cap_rights_limit
+argument_list|(
+name|STDOUT_FILENO
+argument_list|,
+operator|&
+name|rights
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOSYS
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"unable to limit rights for stdout"
+argument_list|)
+expr_stmt|;
+name|cmd
+operator|=
+name|TIOCGETA
+expr_stmt|;
+comment|/* required by isatty(3) in printf(3) */
+if|if
+condition|(
+name|cap_ioctls_limit
+argument_list|(
+name|STDOUT_FILENO
+argument_list|,
+operator|&
+name|cmd
+argument_list|,
+literal|1
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOSYS
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"unable to limit ioctls for stdout"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cap_enter
+argument_list|()
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOSYS
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"unable to enter capability mode"
 argument_list|)
 expr_stmt|;
 name|max_bufd_lines
@@ -1387,7 +1528,7 @@ name|CS_NORMAL
 condition|)
 name|PUTC
 argument_list|(
-literal|'\017'
+name|SI
 argument_list|)
 expr_stmt|;
 comment|/* flush out the last few blank lines */
@@ -1588,12 +1729,12 @@ condition|)
 block|{
 name|PUTC
 argument_list|(
-literal|'\033'
+name|ESC
 argument_list|)
 expr_stmt|;
 name|PUTC
 argument_list|(
-literal|'\011'
+name|FHLF
 argument_list|)
 expr_stmt|;
 if|if
@@ -2103,7 +2244,7 @@ name|CS_NORMAL
 case|:
 name|PUTC
 argument_list|(
-literal|'\017'
+name|SI
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2112,7 +2253,7 @@ name|CS_ALTERNATE
 case|:
 name|PUTC
 argument_list|(
-literal|'\016'
+name|SO
 argument_list|)
 expr_stmt|;
 block|}

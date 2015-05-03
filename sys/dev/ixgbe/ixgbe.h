@@ -309,7 +309,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ixgbe_api.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ixgbe_common.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ixgbe_phy.h"
 end_include
 
 begin_include
@@ -437,11 +455,29 @@ name|IXGBE_TX_OP_THRESHOLD
 value|(adapter->num_tx_desc / 32)
 end_define
 
+begin_comment
+comment|/* These defines are used in MTU calculations */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IXGBE_MAX_FRAME_SIZE
-value|0x3F00
+value|9728
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MTU_HDR
+value|(ETHER_HDR_LEN + ETHER_CRC_LEN + \ 				 ETHER_VLAN_ENCAP_LEN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MAX_MTU
+value|(IXGBE_MAX_FRAME_SIZE - IXGBE_MTU_HDR)
 end_define
 
 begin_comment
@@ -860,6 +896,32 @@ value|2000
 end_define
 
 begin_comment
+comment|/* MAC type macros */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_IS_X550VF
+parameter_list|(
+name|_adapter
+parameter_list|)
+define|\
+value|((_adapter->hw.mac.type == ixgbe_mac_X550_vf) || \ 	 (_adapter->hw.mac.type == ixgbe_mac_X550EM_x_vf))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_IS_VF
+parameter_list|(
+name|_adapter
+parameter_list|)
+define|\
+value|(IXGBE_IS_X550VF(_adapter) || \ 	 (_adapter->hw.mac.type == ixgbe_mac_X540_vf) || \ 	 (_adapter->hw.mac.type == ixgbe_mac_82599_vf))
+end_define
+
+begin_comment
 comment|/*  *****************************************************************************  * vendor_info_array  *   * This array contains the list of Subvendor/Subdevice IDs on which the driver  * should load.  *   *****************************************************************************  */
 end_comment
 
@@ -1144,12 +1206,13 @@ name|u32
 name|packets
 decl_stmt|;
 comment|/* Soft Stats */
-name|u64
-name|tx_bytes
-decl_stmt|;
 name|unsigned
 name|long
 name|tso_tx
+decl_stmt|;
+name|unsigned
+name|long
+name|no_tx_map_avail
 decl_stmt|;
 name|unsigned
 name|long
@@ -1390,6 +1453,22 @@ decl_stmt|;
 name|u32
 name|vector
 decl_stmt|;
+name|u16
+name|dmac
+decl_stmt|;
+name|bool
+name|eee_support
+decl_stmt|;
+name|bool
+name|eee_enabled
+decl_stmt|;
+comment|/* Power management-related */
+name|bool
+name|wol_support
+decl_stmt|;
+name|u32
+name|wufc
+decl_stmt|;
 comment|/* Mbuf cluster size */
 name|u32
 name|rx_mbuf_sz
@@ -1425,6 +1504,11 @@ name|fdir_task
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|task
+name|phy_task
+decl_stmt|;
+comment|/* PHY intr tasklet */
 name|struct
 name|taskqueue
 modifier|*
@@ -1485,7 +1569,7 @@ name|watchdog_events
 decl_stmt|;
 name|unsigned
 name|long
-name|vector_irq
+name|link_irq
 decl_stmt|;
 union|union
 block|{
@@ -1999,6 +2083,24 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* External PHY register addresses */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHY_CURRENT_TEMP
+value|0xC820
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_PHY_OVERTEMP_STATUS
+value|0xC830
+end_define
+
+begin_comment
 comment|/* Sysctl help messages; displayed with sysctl -d */
 end_comment
 
@@ -2007,7 +2109,7 @@ define|#
 directive|define
 name|IXGBE_SYSCTL_DESC_ADV_SPEED
 define|\
-value|"\nControl advertised link speed using these flags:\n" \ 	"\t0x1 - advertise 100M\n" \ 	"\t0x2 - advertise 1G\n" \ 	"\t0x4 - advertise 10G"
+value|"\nControl advertised link speed using these flags:\n" \ 	"\t0x1 - advertise 100M\n" \ 	"\t0x2 - advertise 1G\n" \ 	"\t0x4 - advertise 10G\n\n" \ 	"\t100M is only supported on certain 10GBaseT adapters.\n"
 end_define
 
 begin_define

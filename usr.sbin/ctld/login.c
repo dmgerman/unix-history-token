@@ -32,18 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -3925,7 +3913,6 @@ operator|->
 name|conn_initiator_name
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: This doesn't work (does nothing) because of Capsicum. 	 */
 name|setproctitle
 argument_list|(
 literal|"%s (%s)"

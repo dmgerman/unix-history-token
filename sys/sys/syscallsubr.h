@@ -196,6 +196,9 @@ name|bufseg
 parameter_list|,
 name|u_int
 name|buflen
+parameter_list|,
+name|u_int
+name|path_max
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -860,6 +863,10 @@ name|buf
 parameter_list|,
 name|size_t
 name|bufsize
+parameter_list|,
+name|size_t
+modifier|*
+name|countp
 parameter_list|,
 name|enum
 name|uio_seg

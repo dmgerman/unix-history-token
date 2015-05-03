@@ -102,7 +102,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * v_Undo -- U  *	Undo changes to this line.  *  * PUBLIC: int v_Undo __P((SCR *, VICMD *));  */
+comment|/*  * v_Undo -- U  *	Undo changes to this line.  *  * PUBLIC: int v_Undo(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -157,7 +157,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_undo -- u  *	Undo the last change.  *  * PUBLIC: int v_undo __P((SCR *, VICMD *));  */
+comment|/*  * v_undo -- u  *	Undo the last change.  *  * PUBLIC: int v_undo(SCR *, VICMD *);  */
 end_comment
 
 begin_function

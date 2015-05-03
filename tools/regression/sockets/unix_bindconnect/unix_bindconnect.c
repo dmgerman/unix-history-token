@@ -83,12 +83,14 @@ value|1024
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|unwind_len
 decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 name|unwind
 block|{
@@ -344,6 +346,9 @@ argument_list|,
 name|socket_path
 argument_list|)
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|sun
@@ -858,6 +863,9 @@ argument_list|,
 name|socket_path
 argument_list|)
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|sun
@@ -1225,13 +1233,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|char

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * EAP peer method: Test method for vendor specific (expanded) EAP type  * Copyright (c) 2005-2006, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  *  * This file implements a vendor specific test method using EAP expanded types.  * This is only for test use and must not be used for authentication since no  * security is provided.  */
+comment|/*  * EAP peer method: Test method for vendor specific (expanded) EAP type  * Copyright (c) 2005-2015, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  *  * This file implements a vendor specific test method using EAP expanded types.  * This is only for test use and must not be used for authentication since no  * security is provided.  */
 end_comment
 
 begin_include
@@ -21,26 +21,11 @@ directive|include
 file|"eap_i.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TEST_PENDING_REQUEST
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|"eloop.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TEST_PENDING_REQUEST */
-end_comment
 
 begin_define
 define|#
@@ -55,10 +40,6 @@ directive|define
 name|EAP_VENDOR_TYPE
 value|0xfcfbfaf9
 end_define
-
-begin_comment
-comment|/* #define TEST_PENDING_REQUEST */
-end_comment
 
 begin_struct
 struct|struct
@@ -76,6 +57,9 @@ name|state
 enum|;
 name|int
 name|first_try
+decl_stmt|;
+name|int
+name|test_pending_req
 decl_stmt|;
 block|}
 struct|;
@@ -97,6 +81,14 @@ name|struct
 name|eap_vendor_test_data
 modifier|*
 name|data
+decl_stmt|;
+specifier|const
+name|u8
+modifier|*
+name|password
+decl_stmt|;
+name|size_t
+name|password_len
 decl_stmt|;
 name|data
 operator|=
@@ -129,6 +121,37 @@ operator|->
 name|first_try
 operator|=
 literal|1
+expr_stmt|;
+name|password
+operator|=
+name|eap_get_config_password
+argument_list|(
+name|sm
+argument_list|,
+operator|&
+name|password_len
+argument_list|)
+expr_stmt|;
+name|data
+operator|->
+name|test_pending_req
+operator|=
+name|password
+operator|&&
+name|password_len
+operator|==
+literal|7
+operator|&&
+name|os_memcmp
+argument_list|(
+name|password
+argument_list|,
+literal|"pending"
+argument_list|,
+literal|7
+argument_list|)
+operator|==
+literal|0
 expr_stmt|;
 return|return
 name|data
@@ -166,12 +189,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|TEST_PENDING_REQUEST
-end_ifdef
-
 begin_function
 specifier|static
 name|void
@@ -208,15 +225,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* TEST_PENDING_REQUEST */
-end_comment
 
 begin_function
 specifier|static
@@ -407,11 +415,12 @@ operator|==
 name|CONFIRM
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|TEST_PENDING_REQUEST
 if|if
 condition|(
+name|data
+operator|->
+name|test_pending_req
+operator|&&
 name|data
 operator|->
 name|first_try
@@ -454,9 +463,6 @@ return|return
 name|NULL
 return|;
 block|}
-endif|#
-directive|endif
-comment|/* TEST_PENDING_REQUEST */
 block|}
 name|ret
 operator|->

@@ -90,7 +90,7 @@ argument_list|)
 expr_stmt|;
 name|nconfigs
 operator|=
-name|OF_getprop_alloc
+name|OF_getencprop_alloc
 argument_list|(
 name|ofw_bus_get_node
 argument_list|(

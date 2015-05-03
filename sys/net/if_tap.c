@@ -731,19 +731,6 @@ begin_comment
 comment|/* enable devfs cloning */
 end_comment
 
-begin_decl_stmt
-specifier|static
-name|int
-name|tapclosedeladdrs
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* del addrs on close */
-end_comment
-
 begin_expr_stmt
 specifier|static
 name|SLIST_HEAD
@@ -895,28 +882,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enably legacy devfs interface creation"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_INT
-argument_list|(
-name|_net_link_tap
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|deladdrs_on_close
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|tapclosedeladdrs
-argument_list|,
-literal|0
-argument_list|,
-literal|"Delete addresses and routes when /dev/tap is "
-literal|"closed"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2624,13 +2589,9 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * do not bring the interface down, and do not anything with 	 * interface, if we are in VMnet mode. just close the device. 	 */
+comment|/* 	 * Do not bring the interface down, and do not anything with 	 * interface, if we are in VMnet mode. Just close the device. 	 */
 if|if
 condition|(
-name|tapclosedeladdrs
-operator|==
-literal|1
-operator|&&
 operator|(
 operator|(
 name|tp
@@ -2648,8 +2609,14 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
+operator|(
 name|IFF_UP
+operator||
+name|IFF_LINK0
 operator|)
+operator|)
+operator|==
+name|IFF_UP
 condition|)
 block|{
 name|mtx_unlock

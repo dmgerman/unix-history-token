@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * MD primitives supporting placement of module data   *  * XXX should check load address/size against memory top.  */
+comment|/*  * MD primitives supporting placement of module data  *  * XXX should check load address/size against memory top.  */
 end_comment
 
 begin_include

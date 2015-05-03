@@ -319,7 +319,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"amlogic,aml8726-i2c"
+literal|"amlogic,meson6-i2c"
 argument_list|)
 condition|)
 return|return

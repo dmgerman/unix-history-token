@@ -638,7 +638,7 @@ argument_list|(
 operator|(
 name|ACPI_DB_BFIELD
 operator|,
-literal|" Region [%s:%X], Width %X, ByteBase %X, Offset %X at %p\n"
+literal|" Region [%s:%X], Width %X, ByteBase %X, Offset %X at %8.8X%8.8X\n"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
@@ -669,11 +669,8 @@ name|BaseByteOffset
 operator|,
 name|FieldDatumByteOffset
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
-operator|(
 name|RgnDesc
 operator|->
 name|Region
@@ -681,7 +678,6 @@ operator|.
 name|Address
 operator|+
 name|RegionOffset
-operator|)
 argument_list|)
 operator|)
 argument_list|)

@@ -133,121 +133,103 @@ name|COMLOG
 argument_list|)
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ex_comlog
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|EXCMD
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|EXCMDLIST
 specifier|const
 modifier|*
 name|ex_comm_search
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|CHAR_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ex_discard
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ex_line
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|EXCMD
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|MARK
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ex_load
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|ex_unknown
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex --  *	Main ex loop.  *  * PUBLIC: int ex __P((SCR **));  */
+comment|/*  * ex --  *	Main ex loop.  *  * PUBLIC: int ex(SCR **);  */
 end_comment
 
 begin_function
@@ -773,7 +755,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_cmd --  *	The guts of the ex parser: parse and execute a string containing  *	ex commands.  *  * !!!  * This code MODIFIES the string that gets passed in, to delete quoting  * characters, etc.  The string cannot be readonly/text space, nor should  * you expect to use it again after ex_cmd() returns.  *  * !!!  * For the fun of it, if you want to see if a vi clone got the ex argument  * parsing right, try:  *  *	echo 'foo|bar'> file1; echo 'foo/bar'> file2;  *	vi  *	:edit +1|s/|/PIPE/|w file1| e file2|1 | s/\//SLASH/|wq  *  * or:	vi  *	:set|file|append|set|file  *  * For extra credit, try them in a startup .exrc file.  *  * PUBLIC: int ex_cmd __P((SCR *));  */
+comment|/*  * ex_cmd --  *	The guts of the ex parser: parse and execute a string containing  *	ex commands.  *  * !!!  * This code MODIFIES the string that gets passed in, to delete quoting  * characters, etc.  The string cannot be readonly/text space, nor should  * you expect to use it again after ex_cmd() returns.  *  * !!!  * For the fun of it, if you want to see if a vi clone got the ex argument  * parsing right, try:  *  *	echo 'foo|bar'> file1; echo 'foo/bar'> file2;  *	vi  *	:edit +1|s/|/PIPE/|w file1| e file2|1 | s/\//SLASH/|wq  *  * or:	vi  *	:set|file|append|set|file  *  * For extra credit, try them in a startup .exrc file.  *  * PUBLIC: int ex_cmd(SCR *);  */
 end_comment
 
 begin_function
@@ -6748,7 +6730,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_range --  *	Get a line range for ex commands, or perform a vi ex address search.  *  * PUBLIC: int ex_range __P((SCR *, EXCMD *, int *));  */
+comment|/*  * ex_range --  *	Get a line range for ex commands, or perform a vi ex address search.  *  * PUBLIC: int ex_range(SCR *, EXCMD *, int *);  */
 end_comment
 
 begin_function
@@ -7557,34 +7539,32 @@ name|int
 name|isneg
 decl_stmt|;
 name|int
-argument_list|(
-argument|*sf
-argument_list|)
-name|__P
-argument_list|(
-operator|(
+function_decl|(
+modifier|*
+name|sf
+function_decl|)
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|MARK
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|MARK
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|CHAR_T
 modifier|*
 name|endp
@@ -9366,7 +9346,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_is_abbrev -  *	The vi text input routine needs to know if ex thinks this is an  *	[un]abbreviate command, so it can turn off abbreviations.  See  *	the usual ranting in the vi/v_txt_ev.c:txt_abbrev() routine.  *  * PUBLIC: int ex_is_abbrev __P((CHAR_T *, size_t));  */
+comment|/*  * ex_is_abbrev -  *	The vi text input routine needs to know if ex thinks this is an  *	[un]abbreviate command, so it can turn off abbreviations.  See  *	the usual ranting in the vi/v_txt_ev.c:txt_abbrev() routine.  *  * PUBLIC: int ex_is_abbrev(CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -9424,7 +9404,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_is_unmap -  *	The vi text input routine needs to know if ex thinks this is an  *	unmap command, so it can turn off input mapping.  See the usual  *	ranting in the vi/v_txt_ev.c:txt_unmap() routine.  *  * PUBLIC: int ex_is_unmap __P((CHAR_T *, size_t));  */
+comment|/*  * ex_is_unmap -  *	The vi text input routine needs to know if ex thinks this is an  *	unmap command, so it can turn off input mapping.  See the usual  *	ranting in the vi/v_txt_ev.c:txt_unmap() routine.  *  * PUBLIC: int ex_is_unmap(CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -9594,7 +9574,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_badaddr --  *	Display a bad address message.  *  * PUBLIC: void ex_badaddr  * PUBLIC:    __P((SCR *, EXCMDLIST const *, enum badaddr, enum nresult));  */
+comment|/*  * ex_badaddr --  *	Display a bad address message.  *  * PUBLIC: void ex_badaddr  * PUBLIC:   (SCR *, EXCMDLIST const *, enum badaddr, enum nresult);  */
 end_comment
 
 begin_function

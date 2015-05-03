@@ -3408,6 +3408,10 @@ comment|/* Only enable S4BIOS by default if the FACS says it is available. */
 if|if
 condition|(
 name|AcpiGbl_FACS
+operator|!=
+name|NULL
+operator|&&
+name|AcpiGbl_FACS
 operator|->
 name|Flags
 operator|&
@@ -5360,18 +5364,15 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Fetch the NUMA domain for the given device.  *  * If a device has a _PXM method, map that to a NUMA domain.  *  * If none is found, then it'll call the parent method.  * If there's no domain, return ENOENT.  */
+comment|/*  * Fetch the VM domain for the given device 'dev'.  *  * Return 1 + domain if there's a domain, 0 if not found;  * -1 upon an error.  */
 end_comment
 
 begin_function
 name|int
-name|acpi_get_domain
+name|acpi_parse_pxm
 parameter_list|(
 name|device_t
 name|dev
-parameter_list|,
-name|device_t
-name|child
 parameter_list|,
 name|int
 modifier|*
@@ -5395,7 +5396,7 @@ name|h
 operator|=
 name|acpi_get_handle
 argument_list|(
-name|child
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -5435,7 +5436,8 @@ literal|0
 condition|)
 return|return
 operator|(
-name|ENOENT
+operator|-
+literal|1
 operator|)
 return|;
 operator|*
@@ -5445,12 +5447,76 @@ name|d
 expr_stmt|;
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
 endif|#
 directive|endif
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Fetch the NUMA domain for the given device.  *  * If a device has a _PXM method, map that to a NUMA domain.  *  * If none is found, then it'll call the parent method.  * If there's no domain, return ENOENT.  */
+end_comment
+
+begin_function
+name|int
+name|acpi_get_domain
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+modifier|*
+name|domain
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+name|acpi_parse_pxm
+argument_list|(
+name|child
+argument_list|,
+name|domain
+argument_list|)
+expr_stmt|;
+comment|/* Error */
+if|if
+condition|(
+name|ret
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+comment|/* Found */
+if|if
+condition|(
+name|ret
+operator|==
+literal|1
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* No _PXM node; go up a level */
 return|return
 operator|(
@@ -5732,7 +5798,11 @@ operator|=
 name|res
 expr_stmt|;
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|device_printf
 argument_list|(
 name|dev

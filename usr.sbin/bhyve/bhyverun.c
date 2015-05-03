@@ -1320,7 +1320,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Unhandled %s%c 0x%04x\n"
+literal|"Unhandled %s%c 0x%04x at 0x%lx\n"
 argument_list|,
 name|in
 condition|?
@@ -1345,6 +1345,10 @@ literal|'l'
 operator|)
 argument_list|,
 name|port
+argument_list|,
+name|vmexit
+operator|->
+name|rip
 argument_list|)
 expr_stmt|;
 return|return
@@ -3597,6 +3601,28 @@ block|{
 name|perror
 argument_list|(
 literal|"vm_open"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|guest_ncpus
+operator|<
+literal|1
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Invalid guest vCPUs (%d)\n"
+argument_list|,
+name|guest_ncpus
 argument_list|)
 expr_stmt|;
 name|exit

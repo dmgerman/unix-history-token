@@ -3760,7 +3760,14 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-comment|/* probe for watchdog */
+comment|/* 	 * Probe for watchdog, but only for backends which support 	 * polled driver requests. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|ipmi_driver_requests_polled
+condition|)
+block|{
 name|IPMI_INIT_DRIVER_REQUEST
 argument_list|(
 name|req
@@ -3820,6 +3827,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|sc
 operator|->

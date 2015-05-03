@@ -3799,10 +3799,7 @@ index|[
 name|nr_flips
 index|]
 operator|=
-name|PFNTOMFN
-argument_list|(
 name|pfn
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3814,13 +3811,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* Remove this page before passing 				 * back to Xen. 				 */
-name|set_phys_to_machine
-argument_list|(
-name|pfn
-argument_list|,
-name|INVALID_P2M_ENTRY
-argument_list|)
-expr_stmt|;
 name|MULTI_update_va_mapping
 argument_list|(
 operator|&
@@ -3851,10 +3841,7 @@ name|ref
 argument_list|,
 name|otherend_id
 argument_list|,
-name|PFNTOMFN
-argument_list|(
 name|pfn
-argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -3920,9 +3907,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We may have allocated buffers which have entries outstanding 	 * in the page * update queue -- make sure we flush those first! 	 */
-name|PT_UPDATES_FLUSH
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|nr_flips
@@ -6022,13 +6006,6 @@ name|val
 operator|=
 name|pfn
 expr_stmt|;
-name|set_phys_to_machine
-argument_list|(
-name|pfn
-argument_list|,
-name|mfn
-argument_list|)
-expr_stmt|;
 block|}
 name|pages_flipped
 operator|++
@@ -6410,10 +6387,6 @@ decl_stmt|;
 name|u_int
 name|nfrags
 decl_stmt|;
-name|netif_extra_info_t
-modifier|*
-name|extra
-decl_stmt|;
 name|int
 name|otherend_id
 decl_stmt|;
@@ -6565,10 +6538,6 @@ comment|/* 	 * Start packing the mbufs in this chain into 	 * the fragment point
 name|m
 operator|=
 name|m_head
-expr_stmt|;
-name|extra
-operator|=
-name|NULL
 expr_stmt|;
 name|otherend_id
 operator|=
@@ -8244,10 +8213,7 @@ operator|->
 name|xbdev
 argument_list|)
 argument_list|,
-name|PFNTOMFN
-argument_list|(
 name|pfn
-argument_list|)
 argument_list|,
 literal|0
 argument_list|)

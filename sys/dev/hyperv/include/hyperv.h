@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mutex.h>
 end_include
 
@@ -151,14 +157,49 @@ value|0x800704F7
 end_define
 
 begin_comment
-comment|/*  * A revision number of vmbus that is used for ensuring both ends on a  * partition are using compatible versions.  */
+comment|/*  * VMBUS version is 32 bit, upper 16 bit for major_number and lower  * 16 bit for minor_number.  *  * 0.13  --  Windows Server 2008  * 1.1   --  Windows 7  * 2.4   --  Windows 8  * 3.0   --  Windows 8.1  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|HV_VMBUS_REVISION_NUMBER
-value|13
+name|HV_VMBUS_VERSION_WS2008
+value|((0<< 16) | (13))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_VMBUS_VERSION_WIN7
+value|((1<< 16) | (1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_VMBUS_VERSION_WIN8
+value|((2<< 16) | (4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_VMBUS_VERSION_WIN8_1
+value|((3<< 16) | (0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_VMBUS_VERSION_INVALID
+value|-1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_VMBUS_VERSION_CURRENT
+value|HV_VMBUS_VERSION_WIN8_1
 end_define
 
 begin_comment
@@ -282,6 +323,30 @@ name|hv_guid
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|HV_NIC_GUID
+define|\
+value|.data = {0x63, 0x51, 0x61, 0xF8, 0x3E, 0xDF, 0xc5, 0x46,	\ 		0x91, 0x3F, 0xF2, 0xD2, 0xF9, 0x65, 0xED, 0x0E}
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_IDE_GUID
+define|\
+value|.data = {0x32, 0x26, 0x41, 0x32, 0xcb, 0x86, 0xa2, 0x44,	\ 		 0x9b, 0x5c, 0x50, 0xd1, 0x41, 0x73, 0x54, 0xf5}
+end_define
+
+begin_define
+define|#
+directive|define
+name|HV_SCSI_GUID
+define|\
+value|.data = {0xd9, 0x63, 0x61, 0xba, 0xa1, 0x04, 0x29, 0x4d,	\ 		 0xb6, 0x05, 0x72, 0xe2, 0xff, 0xb1, 0xdc, 0x7f}
+end_define
+
 begin_comment
 comment|/*  * At the center of the Channel Management library is  * the Channel Offer. This struct contains the  * fundamental information about an offer.  */
 end_comment
@@ -348,7 +413,11 @@ struct|;
 block|}
 name|u
 union|;
-name|uint32_t
+comment|/* 	 * Sub_channel_index, newly added in Win8. 	 */
+name|uint16_t
+name|sub_channel_index
+decl_stmt|;
+name|uint16_t
 name|padding
 decl_stmt|;
 block|}
@@ -913,8 +982,30 @@ decl_stmt|;
 name|uint8_t
 name|monitor_id
 decl_stmt|;
-name|hv_bool_uint8_t
+comment|/* 	 * This field has been split into a bit field on Win7 	 * and higher. 	 */
+name|uint8_t
 name|monitor_allocated
+range|:
+literal|1
+decl_stmt|;
+name|uint8_t
+name|reserved
+range|:
+literal|7
+decl_stmt|;
+comment|/* 	 * Following fields were added in win7 and higher. 	 * Make sure to check the version before accessing these fields. 	 * 	 * If "is_dedicated_interrupt" is set, we must not set the 	 * associated bit in the channel bitmap while sending the 	 * interrupt to the host. 	 * 	 * connection_id is used in signaling the host. 	 */
+name|uint16_t
+name|is_dedicated_interrupt
+range|:
+literal|1
+decl_stmt|;
+name|uint16_t
+name|reserved1
+range|:
+literal|15
+decl_stmt|;
+name|uint32_t
+name|connection_id
 decl_stmt|;
 block|}
 name|__packed
@@ -969,9 +1060,9 @@ comment|/*      * GPADL for the channel's ring buffer.      */
 name|hv_gpadl_handle
 name|ring_buffer_gpadl_handle
 decl_stmt|;
-comment|/*      * GPADL for the channel's server context save area.      */
-name|hv_gpadl_handle
-name|server_context_area_gpadl_handle
+comment|/*      * Before win8, all incoming channel interrupts are only      * delivered on cpu 0. Setting this value to 0 would      * preserve the earlier behavior.      */
+name|uint32_t
+name|target_vcpu
 decl_stmt|;
 comment|/*      * The upstream ring buffer begins at offset zero in the memory described      * by ring_buffer_gpadl_handle. The downstream ring buffer follows it at      * this offset (in pages).      */
 name|uint32_t
@@ -1743,6 +1834,21 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|hv_vmbus_sc_creation_callback
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 enum|enum
 block|{
 name|HV_CHANNEL_OFFER_STATE
@@ -1751,9 +1857,82 @@ name|HV_CHANNEL_OPENING_STATE
 block|,
 name|HV_CHANNEL_OPEN_STATE
 block|,
+name|HV_CHANNEL_OPENED_STATE
+block|,
 name|HV_CHANNEL_CLOSING_NONDESTRUCTIVE_STATE
 block|, }
 name|hv_vmbus_channel_state
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  *  Connection identifier type  */
+end_comment
+
+begin_typedef
+typedef|typedef
+union|union
+block|{
+name|uint32_t
+name|as_uint32_t
+decl_stmt|;
+struct|struct
+block|{
+name|uint32_t
+name|id
+range|:
+literal|24
+decl_stmt|;
+name|uint32_t
+name|reserved
+range|:
+literal|8
+decl_stmt|;
+block|}
+name|u
+struct|;
+block|}
+name|__packed
+name|hv_vmbus_connection_id
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Definition of the hv_vmbus_signal_event hypercall input structure  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|hv_vmbus_connection_id
+name|connection_id
+decl_stmt|;
+name|uint16_t
+name|flag_number
+decl_stmt|;
+name|uint16_t
+name|rsvd_z
+decl_stmt|;
+block|}
+name|__packed
+name|hv_vmbus_input_signal_event
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint64_t
+name|align8
+decl_stmt|;
+name|hv_vmbus_input_signal_event
+name|event
+decl_stmt|;
+block|}
+name|__packed
+name|hv_vmbus_input_signal_event_buffer
 typedef|;
 end_typedef
 
@@ -1823,10 +2002,91 @@ name|void
 modifier|*
 name|channel_callback_context
 decl_stmt|;
+comment|/* 	 * If batched_reading is set to "true", mask the interrupt 	 * and read until the channel is empty. 	 * If batched_reading is set to "false", the channel is not 	 * going to perform batched reading. 	 * 	 * Batched reading is enabled by default; specific 	 * drivers that don't want this behavior can turn it off. 	 */
+name|boolean_t
+name|batched_reading
+decl_stmt|;
+name|boolean_t
+name|is_dedicated_interrupt
+decl_stmt|;
+comment|/* 	 * Used as an input param for HV_CALL_SIGNAL_EVENT hypercall. 	 */
+name|hv_vmbus_input_signal_event_buffer
+name|signal_event_buffer
+decl_stmt|;
+comment|/* 	 * 8-bytes aligned of the buffer above 	 */
+name|hv_vmbus_input_signal_event
+modifier|*
+name|signal_event_param
+decl_stmt|;
+comment|/* 	 * From Win8, this field specifies the target virtual process 	 * on which to deliver the interupt from the host to guest. 	 * Before Win8, all channel interrupts would only be 	 * delivered on cpu 0. Setting this value to 0 would preserve 	 * the earlier behavior. 	 */
+name|uint32_t
+name|target_vcpu
+decl_stmt|;
+comment|/* The corresponding CPUID in the guest */
+name|uint32_t
+name|target_cpu
+decl_stmt|;
+comment|/* 	 * Support for multi-channels. 	 * The initial offer is considered the primary channel and this 	 * offer message will indicate if the host supports multi-channels. 	 * The guest is free to ask for multi-channels to be offerred and can 	 * open these multi-channels as a normal "primary" channel. However, 	 * all multi-channels will have the same type and instance guids as the 	 * primary channel. Requests sent on a given channel will result in a 	 * response on the same channel. 	 */
+comment|/* 	 * Multi-channel creation callback. This callback will be called in 	 * process context when a Multi-channel offer is received from the host. 	 * The guest can open the Multi-channel in the context of this callback. 	 */
+name|hv_vmbus_sc_creation_callback
+name|sc_creation_callback
+decl_stmt|;
+name|struct
+name|mtx
+name|sc_lock
+decl_stmt|;
+comment|/* 	 * Link list of all the multi-channels if this is a primary channel 	 */
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|hv_vmbus_channel
+argument_list|)
+name|sc_list_anchor
+expr_stmt|;
+name|TAILQ_ENTRY
+argument_list|(
+argument|hv_vmbus_channel
+argument_list|)
+name|sc_list_entry
+expr_stmt|;
+comment|/* 	 * The primary channel this sub-channle belongs to. 	 * This will be NULL for the primary channel. 	 */
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|primary_channel
+decl_stmt|;
+comment|/* 	 * Support per channel state for use by vmbus drivers. 	 */
+name|void
+modifier|*
+name|per_channel_state
+decl_stmt|;
 block|}
 name|hv_vmbus_channel
 typedef|;
 end_typedef
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|hv_set_channel_read_state
+parameter_list|(
+name|hv_vmbus_channel
+modifier|*
+name|channel
+parameter_list|,
+name|boolean_t
+name|state
+parameter_list|)
+block|{
+name|channel
+operator|->
+name|batched_reading
+operator|=
+name|state
+expr_stmt|;
+block|}
+end_function
 
 begin_typedef
 typedef|typedef
@@ -2063,6 +2323,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|vmbus_select_outgoing_channel
+parameter_list|(
+name|struct
+name|hv_vmbus_channel
+modifier|*
+name|promary
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Work abstraction defines  */
 end_comment
@@ -2289,6 +2563,13 @@ specifier|extern
 name|hv_vmbus_service
 name|service_table
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|uint32_t
+name|hv_vmbus_protocal_version
 decl_stmt|;
 end_decl_stmt
 

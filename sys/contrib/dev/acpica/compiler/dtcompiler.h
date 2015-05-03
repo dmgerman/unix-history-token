@@ -210,6 +210,10 @@ modifier|*
 name|Value
 decl_stmt|;
 comment|/* Field value (from name : value) */
+name|UINT32
+name|StringLength
+decl_stmt|;
+comment|/* Length of Value */
 name|struct
 name|dt_field
 modifier|*
@@ -1802,6 +1806,16 @@ specifier|const
 name|unsigned
 name|char
 name|TemplateMsct
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|unsigned
+name|char
+name|TemplateMsdm
 index|[]
 decl_stmt|;
 end_decl_stmt

@@ -200,6 +200,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|ieee802_1x_erp_flush
+parameter_list|(
+name|struct
+name|hostapd_data
+modifier|*
+name|hapd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|ieee802_1x_deinit
 parameter_list|(
 name|struct

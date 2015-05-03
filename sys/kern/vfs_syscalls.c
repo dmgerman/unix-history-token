@@ -1981,8 +1981,14 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
-return|return
-operator|(
+name|size_t
+name|count
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|error
+operator|=
 name|kern_getfsstat
 argument_list|(
 name|td
@@ -1996,12 +2002,34 @@ name|uap
 operator|->
 name|bufsize
 argument_list|,
+operator|&
+name|count
+argument_list|,
 name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
 name|flags
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|td
+operator|->
+name|td_retval
+index|[
+literal|0
+index|]
+operator|=
+name|count
+expr_stmt|;
+return|return
+operator|(
+name|error
 operator|)
 return|;
 block|}
@@ -2028,6 +2056,10 @@ name|buf
 parameter_list|,
 name|size_t
 name|bufsize
+parameter_list|,
+name|size_t
+modifier|*
+name|countp
 parameter_list|,
 name|enum
 name|uio_seg
@@ -2520,22 +2552,14 @@ name|count
 operator|>
 name|maxcount
 condition|)
-name|td
-operator|->
-name|td_retval
-index|[
-literal|0
-index|]
+operator|*
+name|countp
 operator|=
 name|maxcount
 expr_stmt|;
 else|else
-name|td
-operator|->
-name|td_retval
-index|[
-literal|0
-index|]
+operator|*
+name|countp
 operator|=
 name|count
 expr_stmt|;
@@ -2914,6 +2938,9 @@ name|buf
 argument_list|,
 name|size
 argument_list|,
+operator|&
+name|count
+argument_list|,
 name|UIO_SYSSPACE
 argument_list|,
 name|uap
@@ -2928,15 +2955,6 @@ operator|>
 literal|0
 condition|)
 block|{
-name|count
-operator|=
-name|td
-operator|->
-name|td_retval
-index|[
-literal|0
-index|]
-expr_stmt|;
 name|sp
 operator|=
 name|buf
@@ -2997,6 +3015,21 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
+name|td
+operator|->
+name|td_retval
+index|[
+literal|0
+index|]
+operator|=
+name|count
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -9350,6 +9383,15 @@ begin_comment
 comment|/* COMPAT_43 */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+end_if
+
 begin_comment
 comment|/* Version with the 'pad' argument */
 end_comment
@@ -9415,6 +9457,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Check access permissions using passed credentials.  */
@@ -16252,6 +16299,9 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -16294,7 +16344,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|NDINIT_AT
+name|NDINIT_ATRIGHTS
 argument_list|(
 operator|&
 name|nd
@@ -16320,6 +16370,14 @@ argument_list|,
 name|path
 argument_list|,
 name|fd
+argument_list|,
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|,
+name|CAP_FUTIMES
+argument_list|)
 argument_list|,
 name|td
 argument_list|)
@@ -16871,6 +16929,15 @@ begin_comment
 comment|/* COMPAT_43 */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+end_if
+
 begin_comment
 comment|/* Versions with the pad argument */
 end_comment
@@ -16972,6 +17039,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Sync an open file.  */

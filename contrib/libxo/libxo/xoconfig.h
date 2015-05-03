@@ -509,7 +509,15 @@ comment|/* #undef LIBXO_DEBUG */
 end_comment
 
 begin_comment
-comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+comment|/* Enable text-only rendering */
+end_comment
+
+begin_comment
+comment|/* #undef LIBXO_TEXT_ONLY */
+end_comment
+
+begin_comment
+comment|/* Define to the sub-directory where libtool stores uninstalled libraries. */
 end_comment
 
 begin_define
@@ -560,7 +568,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"libxo 0.2.0"
+value|"libxo 0.3.2"
 end_define
 
 begin_comment
@@ -593,7 +601,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.2.0"
+value|"0.3.2"
 end_define
 
 begin_comment
@@ -623,7 +631,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.2.0"
+value|"0.3.2"
 end_define
 
 begin_comment

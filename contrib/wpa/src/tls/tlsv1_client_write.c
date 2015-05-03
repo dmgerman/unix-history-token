@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * TLSv1 client - write handshake message  * Copyright (c) 2006-2011, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * TLSv1 client - write handshake message  * Copyright (c) 2006-2014, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -940,7 +940,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|tlsv1_key_x_anon_dh
+name|tlsv1_key_x_dh
 parameter_list|(
 name|struct
 name|tlsv1_client
@@ -1821,11 +1821,15 @@ condition|(
 name|keyx
 operator|==
 name|TLS_KEY_X_DH_anon
+operator|||
+name|keyx
+operator|==
+name|TLS_KEY_X_DHE_RSA
 condition|)
 block|{
 if|if
 condition|(
-name|tlsv1_key_x_anon_dh
+name|tlsv1_key_x_dh
 argument_list|(
 name|conn
 argument_list|,
@@ -2008,16 +2012,6 @@ decl_stmt|,
 modifier|*
 name|hpos
 decl_stmt|;
-enum|enum
-block|{
-name|SIGN_ALG_RSA
-block|,
-name|SIGN_ALG_DSA
-block|}
-name|alg
-init|=
-name|SIGN_ALG_RSA
-enum|;
 name|pos
 operator|=
 operator|*
@@ -2171,13 +2165,6 @@ block|{
 endif|#
 directive|endif
 comment|/* CONFIG_TLSV12 */
-if|if
-condition|(
-name|alg
-operator|==
-name|SIGN_ALG_RSA
-condition|)
-block|{
 name|hlen
 operator|=
 name|MD5_MAC_LEN
@@ -2256,21 +2243,6 @@ name|hpos
 operator|+=
 name|MD5_MAC_LEN
 expr_stmt|;
-block|}
-else|else
-name|crypto_hash_finish
-argument_list|(
-name|conn
-operator|->
-name|verify
-operator|.
-name|md5_cert
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|conn
 operator|->
 name|verify
@@ -2340,12 +2312,6 @@ name|sha1_cert
 operator|=
 name|NULL
 expr_stmt|;
-if|if
-condition|(
-name|alg
-operator|==
-name|SIGN_ALG_RSA
-condition|)
 name|hlen
 operator|+=
 name|MD5_MAC_LEN

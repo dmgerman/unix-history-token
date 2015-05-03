@@ -90,7 +90,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_copy -- :[line [,line]] co[py] line [flags]  *	Copy selected lines.  *  * PUBLIC: int ex_copy __P((SCR *, EXCMD *));  */
+comment|/*  * ex_copy -- :[line [,line]] co[py] line [flags]  *	Copy selected lines.  *  * PUBLIC: int ex_copy(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -304,7 +304,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_move -- :[line [,line]] mo[ve] line  *	Move selected lines.  *  * PUBLIC: int ex_move __P((SCR *, EXCMD *));  */
+comment|/*  * ex_move -- :[line [,line]] mo[ve] line  *	Move selected lines.  *  * PUBLIC: int ex_move(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

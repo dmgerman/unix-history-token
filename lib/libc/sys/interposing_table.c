@@ -89,7 +89,7 @@ name|SLOT
 argument_list|(
 name|fcntl
 argument_list|,
-name|__fcntl_compat
+name|__sys_fcntl
 argument_list|)
 block|,
 name|SLOT
@@ -307,6 +307,20 @@ argument_list|(
 name|kevent
 argument_list|,
 name|__sys_kevent
+argument_list|)
+block|,
+name|SLOT
+argument_list|(
+name|wait6
+argument_list|,
+name|__sys_wait6
+argument_list|)
+block|,
+name|SLOT
+argument_list|(
+name|ppoll
+argument_list|,
+name|__sys_ppoll
 argument_list|)
 block|, }
 decl_stmt|;

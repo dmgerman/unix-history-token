@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -711,6 +711,22 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * When doing RSS, map it to the same outbound queue 	 * as the incoming flow would be mapped to. 	 * 	 * If everything is setup correctly, it should be the 	 * same bucket that the current CPU we're on is. 	 */
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1100054
+if|if
+condition|(
+name|m
+operator|->
+name|m_flags
+operator|&
+name|M_FLOWID
+condition|)
+block|{
+else|#
+directive|else
 if|if
 condition|(
 name|M_HASHTYPE_GET
@@ -721,6 +737,8 @@ operator|!=
 name|M_HASHTYPE_NONE
 condition|)
 block|{
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|RSS
@@ -887,9 +905,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|ixgbe_mq_start_locked
 parameter_list|(
@@ -1112,7 +1127,8 @@ directive|if
 name|__FreeBSD_version
 operator|>=
 literal|1100036
-block|if (next->m_flags& M_MCAST) 			if_inc_counter(ifp, IFCOUNTER_OMCASTS, 1);
+comment|/* 		 * Since we're looking at the tx ring, we can check 		 * to see if we're a VF by examing our tail register 		 * address. 		 */
+block|if (txr->tail< IXGBE_TDT(0)&& next->m_flags& M_MCAST) 			if_inc_counter(ifp, IFCOUNTER_OMCASTS, 1);
 endif|#
 directive|endif
 endif|#
@@ -1243,7 +1259,7 @@ name|txr
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* ** Flush all ring buffers */
+comment|/*  * Flush all ring buffers  */
 name|void
 name|ixgbe_qflush
 parameter_list|(
@@ -1522,6 +1538,7 @@ name|remap
 operator|=
 name|FALSE
 expr_stmt|;
+comment|/* 				 * XXX: m_defrag will choke on 				 * non-MCLBYTES-sized clusters 				 */
 name|m
 operator|=
 name|m_defrag
@@ -1650,7 +1667,7 @@ operator|=
 operator|*
 name|m_headp
 expr_stmt|;
-comment|/* 	** Set up the appropriate offload context 	** this will consume the first descriptor 	*/
+comment|/* 	 * Set up the appropriate offload context 	 * this will consume the first descriptor 	 */
 name|error
 operator|=
 name|ixgbe_tx_ctx_setup
@@ -1742,10 +1759,6 @@ block|}
 block|}
 endif|#
 directive|endif
-name|olinfo_status
-operator||=
-name|IXGBE_ADVTXD_CC
-expr_stmt|;
 name|i
 operator|=
 name|txr
@@ -1894,7 +1907,7 @@ name|m_head
 operator|=
 name|m_head
 expr_stmt|;
-comment|/* 	** Here we swap the map so the last descriptor, 	** which gets the completion interrupt has the 	** real map, and the first descriptor gets the 	** unused map from this descriptor. 	*/
+comment|/* 	 * Here we swap the map so the last descriptor, 	 * which gets the completion interrupt has the 	 * real map, and the first descriptor gets the 	 * unused map from this descriptor. 	 */
 name|txr
 operator|->
 name|tx_buffers
@@ -2950,6 +2963,15 @@ name|olinfo_status
 parameter_list|)
 block|{
 name|struct
+name|adapter
+modifier|*
+name|adapter
+init|=
+name|txr
+operator|->
+name|adapter
+decl_stmt|;
+name|struct
 name|ixgbe_adv_tx_context_desc
 modifier|*
 name|TXD
@@ -3111,6 +3133,26 @@ name|IXGBE_ADVTXD_VLAN_SHIFT
 operator|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|IXGBE_IS_X550VF
+argument_list|(
+name|adapter
+argument_list|)
+operator|&&
+operator|(
+name|offload
+operator|==
+name|FALSE
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * Determine where frame payload starts. 	 * Jump over vlan headers if already present, 	 * helpful for QinQ too. 	 */
 name|eh
 operator|=
@@ -7203,7 +7245,7 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-comment|/*********************************************************************  *  *  This routine executes in interrupt context. It replenishes  *  the mbufs in the descriptor and sends data which has been  *  dma'ed into host memory to upper layer.  *  *  We loop at most count times if count is> 0, or until done if  *  count< 0.  *  *  Return TRUE for more work, FALSE for all clean.  *********************************************************************/
+comment|/*********************************************************************  *  *  This routine executes in interrupt context. It replenishes  *  the mbufs in the descriptor and sends data which has been  *  dma'ed into host memory to upper layer.  *  *  Return TRUE for more work, FALSE for all clean.  *********************************************************************/
 name|bool
 name|ixgbe_rxeof
 parameter_list|(
@@ -7551,16 +7593,25 @@ condition|)
 block|{
 if|#
 directive|if
-literal|0
-comment|// VF-only
-if|#
-directive|if
 name|__FreeBSD_version
 operator|>=
 literal|1100036
-block|if_inc_counter(ifp, IFCOUNTER_IERRORS, 1);
-endif|#
-directive|endif
+if|if
+condition|(
+name|IXGBE_IS_VF
+argument_list|(
+name|adapter
+argument_list|)
+condition|)
+name|if_inc_counter
+argument_list|(
+name|ifp
+argument_list|,
+name|IFCOUNTER_IERRORS
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|rxr
@@ -7990,6 +8041,19 @@ operator|.
 name|rss
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|1100054
+name|sendmp
+operator|->
+name|m_flags
+operator||=
+name|M_FLOWID
+expr_stmt|;
+endif|#
+directive|endif
 switch|switch
 condition|(
 name|pkt_info
@@ -8118,6 +8182,11 @@ name|que
 operator|->
 name|msix
 expr_stmt|;
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
+literal|1100054
 name|M_HASHTYPE_SET
 argument_list|(
 name|sendmp
@@ -8125,6 +8194,16 @@ argument_list|,
 name|M_HASHTYPE_OPAQUE
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|sendmp
+operator|->
+name|m_flags
+operator||=
+name|M_FLOWID
+expr_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 comment|/* RSS */
