@@ -2397,6 +2397,19 @@ name|uint32_t
 name|pause_svc
 decl_stmt|;
 comment|/* background scans */
+define|#
+directive|define
+name|WPI_PAUSE_MAX_TIME
+value|((1<< 20) - 1)
+define|#
+directive|define
+name|WPI_PAUSE_SCAN
+parameter_list|(
+name|nbeacons
+parameter_list|,
+name|time
+parameter_list|)
+value|((nbeacons<< 24) | time)
 name|uint32_t
 name|flags
 decl_stmt|;
