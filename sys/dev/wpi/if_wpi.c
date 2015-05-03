@@ -9205,7 +9205,7 @@ operator|==
 name|IEEE80211_S_RUN
 operator|&&
 name|nstate
-operator|!=
+operator|<
 name|IEEE80211_S_RUN
 condition|)
 block|{
@@ -9244,6 +9244,17 @@ return|return
 name|error
 return|;
 block|}
+name|wpi_set_led
+argument_list|(
+name|sc
+argument_list|,
+name|WPI_LED_LINK
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 block|}
 switch|switch
 condition|(
