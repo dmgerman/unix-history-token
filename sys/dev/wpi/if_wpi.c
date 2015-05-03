@@ -12078,6 +12078,9 @@ return|return;
 block|}
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|WPI_DEBUG
 case|case
 name|WPI_START_SCAN
 case|:
@@ -12097,9 +12100,6 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|WPI_DEBUG
 name|struct
 name|wpi_start_scan
 modifier|*
@@ -12138,10 +12138,10 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 block|}
+endif|#
+directive|endif
 case|case
 name|WPI_STOP_SCAN
 case|:
