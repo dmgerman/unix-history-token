@@ -10859,13 +10859,9 @@ expr_stmt|;
 comment|/* 	 * Update rate control statistics for the node. 	 */
 if|if
 condition|(
-operator|(
 name|status
 operator|&
-literal|0xff
-operator|)
-operator|!=
-literal|1
+name|WPI_TX_STATUS_FAIL
 condition|)
 block|{
 name|if_inc_counter
@@ -10927,10 +10923,10 @@ argument_list|,
 operator|(
 name|status
 operator|&
-literal|0xff
+name|WPI_TX_STATUS_FAIL
 operator|)
 operator|!=
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|WPI_TXQ_STATE_LOCK
