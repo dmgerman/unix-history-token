@@ -12407,13 +12407,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|COUNTOF
-parameter_list|(
-name|array
-parameter_list|)
-value|(sizeof(array) / sizeof(array[0]))
 name|int
 name|i
 decl_stmt|;
@@ -12490,7 +12483,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|COUNTOF
+name|nitems
 argument_list|(
 name|csr_tbl
 argument_list|)
@@ -12575,7 +12568,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|COUNTOF
+name|nitems
 argument_list|(
 name|prph_tbl
 argument_list|)
@@ -12660,9 +12653,6 @@ literal|"Cannot access internal registers.\n"
 argument_list|)
 expr_stmt|;
 block|}
-undef|#
-directive|undef
-name|COUNTOF
 block|}
 end_function
 
@@ -12696,27 +12686,6 @@ decl_stmt|,
 name|offset
 decl_stmt|,
 name|count
-decl_stmt|;
-specifier|const
-name|uint32_t
-name|size_errmsg
-init|=
-operator|(
-sizeof|sizeof
-argument_list|(
-name|wpi_fw_errmsg
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|(
-name|wpi_fw_errmsg
-operator|)
-index|[
-literal|0
-index|]
-argument_list|)
-operator|)
 decl_stmt|;
 comment|/* Check that the error log address is valid. */
 if|if
@@ -12883,7 +12852,10 @@ name|dump
 operator|.
 name|desc
 operator|<
-name|size_errmsg
+name|nitems
+argument_list|(
+name|wpi_fw_errmsg
+argument_list|)
 operator|)
 condition|?
 name|wpi_fw_errmsg
