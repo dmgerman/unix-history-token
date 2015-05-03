@@ -20174,6 +20174,45 @@ operator|=
 literal|0xff
 expr_stmt|;
 comment|/* not yet negotiated */
+comment|/* XXX Current configuration may be unusable. */
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_NOADHOC
+argument_list|(
+name|c
+argument_list|)
+operator|&&
+name|sc
+operator|->
+name|rxon
+operator|.
+name|mode
+operator|==
+name|WPI_MODE_IBSS
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: invalid channel (%d) selected for IBSS mode\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ieee80211_chan2ieee
+argument_list|(
+name|ic
+argument_list|,
+name|c
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+name|EINVAL
+return|;
+block|}
 if|if
 condition|(
 operator|(
