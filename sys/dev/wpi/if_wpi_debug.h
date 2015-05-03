@@ -313,6 +313,11 @@ argument_list|)
 expr_stmt|;
 name|WPI_DESC
 argument_list|(
+name|WPI_CMD_SCAN_ABORT
+argument_list|)
+expr_stmt|;
+name|WPI_DESC
+argument_list|(
 name|WPI_CMD_SET_BEACON
 argument_list|)
 expr_stmt|;

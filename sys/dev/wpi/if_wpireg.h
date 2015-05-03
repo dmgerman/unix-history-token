@@ -1504,6 +1504,10 @@ name|WPI_CMD_SCAN
 value|128
 define|#
 directive|define
+name|WPI_CMD_SCAN_ABORT
+value|129
+define|#
+directive|define
 name|WPI_CMD_SET_BEACON
 value|145
 define|#
@@ -2752,6 +2756,14 @@ decl_stmt|;
 name|uint8_t
 name|status
 decl_stmt|;
+define|#
+directive|define
+name|WPI_SCAN_COMPLETED
+value|1
+define|#
+directive|define
+name|WPI_SCAN_ABORTED
+value|2
 name|uint8_t
 name|reserved
 decl_stmt|;
