@@ -124,6 +124,11 @@ init|=
 literal|0x00080000
 block|,
 comment|/* print chipset register */
+name|WPI_DEBUG_BMISS
+init|=
+literal|0x00100000
+block|,
+comment|/* print number of missed beacons */
 name|WPI_DEBUG_ANY
 init|=
 literal|0xffffffff

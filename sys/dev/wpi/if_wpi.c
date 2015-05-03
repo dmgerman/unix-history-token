@@ -11631,7 +11631,7 @@ name|DPRINTF
 argument_list|(
 name|sc
 argument_list|,
-name|WPI_DEBUG_STATE
+name|WPI_DEBUG_BMISS
 argument_list|,
 literal|"%s: beacons missed %d/%d\n"
 argument_list|,
