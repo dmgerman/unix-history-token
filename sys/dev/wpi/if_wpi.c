@@ -9356,6 +9356,7 @@ comment|/* FALLTHROUGH */
 case|case
 name|IEEE80211_S_AUTH
 case|:
+comment|/* 		 * NB: do not optimize AUTH -> AUTH state transmission - 		 * this will break powersave with non-QoS AP! 		 */
 comment|/* 		 * The node must be registered in the firmware before auth. 		 * Also the associd must be cleared on RUN -> ASSOC 		 * transitions. 		 */
 if|if
 condition|(
@@ -20139,7 +20140,6 @@ break|break;
 case|case
 name|IEEE80211_M_AHDEMO
 case|:
-comment|/* XXX workaround for passive channels selection */
 name|sc
 operator|->
 name|rxon
