@@ -11668,7 +11668,7 @@ name|sc
 argument_list|,
 name|WPI_DEBUG_BMISS
 argument_list|,
-literal|"%s: beacons missed %d/%d\n"
+literal|"%s: beacons missed %u(%u) (received %u/%u)\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -11680,6 +11680,10 @@ name|miss
 operator|->
 name|total
 argument_list|)
+argument_list|,
+name|received
+argument_list|,
+name|expected
 argument_list|)
 expr_stmt|;
 if|if
