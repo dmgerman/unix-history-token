@@ -22811,21 +22811,6 @@ operator||
 name|WPI_RXON_24GHZ
 argument_list|)
 expr_stmt|;
-comment|/* Short preamble and slot time are negotiated when associating. */
-name|sc
-operator|->
-name|rxon
-operator|.
-name|flags
-operator|&=
-operator|~
-name|htole32
-argument_list|(
-name|WPI_RXON_SHPREAMBLE
-operator||
-name|WPI_RXON_SHSLOT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ic
