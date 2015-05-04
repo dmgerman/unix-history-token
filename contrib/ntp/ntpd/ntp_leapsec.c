@@ -3486,7 +3486,7 @@ block|{
 name|vint64
 name|ttime
 decl_stmt|,
-name|stime
+name|starttime
 decl_stmt|;
 name|struct
 name|calendar
@@ -3603,7 +3603,7 @@ name|second
 operator|=
 literal|0
 expr_stmt|;
-name|stime
+name|starttime
 operator|=
 name|ntpcal_date_to_ntp64
 argument_list|(
@@ -3640,7 +3640,7 @@ name|D_s
 operator|.
 name|lo
 operator|-
-name|stime
+name|starttime
 operator|.
 name|D_s
 operator|.
@@ -3726,7 +3726,7 @@ name|dynls
 parameter_list|)
 block|{
 name|vint64
-name|stime
+name|starttime
 decl_stmt|;
 name|struct
 name|calendar
@@ -3814,7 +3814,7 @@ name|month
 operator|--
 expr_stmt|;
 comment|/* was in range 1..12, no overflow here! */
-name|stime
+name|starttime
 operator|=
 name|ntpcal_date_to_ntp64
 argument_list|(
@@ -3839,7 +3839,7 @@ name|D_s
 operator|.
 name|lo
 operator|-
-name|stime
+name|starttime
 operator|.
 name|D_s
 operator|.

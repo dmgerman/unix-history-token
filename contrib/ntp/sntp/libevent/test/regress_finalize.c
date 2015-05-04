@@ -12,6 +12,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"evconfig-private.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"tinytest.h"
 end_include
 

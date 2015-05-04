@@ -234,6 +234,44 @@ name|parent
 decl_stmt|;
 block|}
 struct|;
+if|#
+directive|if
+name|EVENT__SIZEOF_OFF_T
+operator|<
+name|EVENT__SIZEOF_SIZE_T
+typedef|typedef
+name|ev_ssize_t
+name|ev_misalign_t
+typedef|;
+define|#
+directive|define
+name|EVBUFFER_CHAIN_MAX
+value|((size_t)EV_SSIZE_MAX)
+else|#
+directive|else
+typedef|typedef
+name|ev_off_t
+name|ev_misalign_t
+typedef|;
+if|#
+directive|if
+name|EVENT__SIZEOF_OFF_T
+operator|>
+name|EVENT__SIZEOF_SIZE_T
+define|#
+directive|define
+name|EVBUFFER_CHAIN_MAX
+value|EV_SIZE_MAX
+else|#
+directive|else
+define|#
+directive|define
+name|EVBUFFER_CHAIN_MAX
+value|((size_t)EV_SSIZE_MAX)
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/** A single item in an evbuffer. */
 struct|struct
 name|evbuffer_chain
@@ -249,7 +287,7 @@ name|size_t
 name|buffer_len
 decl_stmt|;
 comment|/** unused space at the beginning of buffer or an offset into a 	 * file for sendfile buffers. */
-name|ev_off_t
+name|ev_misalign_t
 name|misalign
 decl_stmt|;
 comment|/** Offset into buffer + misalign at which to start writing. 	 * In other words, the total number of bytes actually stored 	 * in buffer. */

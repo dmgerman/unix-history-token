@@ -1457,6 +1457,24 @@ case|case
 name|EINVAL
 case|:
 continue|continue;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|ENOTCAPABLE
+argument_list|)
+comment|/* 			 * This currently occurs if an FD is closed 			 * before the EV_DELETE makes it out via kevent(). 			 * The FreeBSD capabilities code sees the blank 			 * capability set and rejects the request to 			 * modify an event. 			 * 			 * To be strictly correct - when an FD is closed, 			 * all the registered events are also removed. 			 * Queuing EV_DELETE to a closed FD is wrong. 			 * The event(s) should just be deleted from 			 * the pending changelist. 			 */
+case|case
+name|ENOTCAPABLE
+case|:
+continue|continue;
+endif|#
+directive|endif
 comment|/* Can occur on a delete if the fd is closed. */
 case|case
 name|EBADF

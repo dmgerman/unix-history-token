@@ -118,6 +118,11 @@ define|#
 directive|define
 name|LEV_OPT_DEFERRED_ACCEPT
 value|(1u<<6)
+comment|/** Flag: Indicates that we ask to allow multiple servers (processes or  * threads) to bind to the same port if they each set the option.   *   * SO_REUSEPORT is what most people would expect SO_REUSEADDR to be, however  * SO_REUSEPORT does not imply SO_REUSEADDR.  *  * This is only available on Linux and kernel 3.9+  */
+define|#
+directive|define
+name|LEV_OPT_REUSEABLE_PORT
+value|(1u<<7)
 comment|/**    Allocate a new evconnlistener object to listen for incoming TCP connections    on a given file descriptor.     @param base The event base to associate the listener with.    @param cb A callback to be invoked when a new connection arrives.  If the       callback is NULL, the listener will be treated as disabled until the       callback is set.    @param ptr A user-supplied pointer to give to the callback.    @param flags Any number of LEV_OPT_* flags    @param backlog Passed to the listen() call to determine the length of the       acceptable connection backlog.  Set to -1 for a reasonable default.       Set to 0 if the socket is already listening.    @param fd The file descriptor to listen on.  It must be a nonblocking       file descriptor, and it should already be bound to an appropriate       port and address. */
 name|EVENT2_EXPORT_SYMBOL
 name|struct

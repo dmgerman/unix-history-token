@@ -73,6 +73,46 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|get_lsb_int16
+parameter_list|(
+name|_x_
+parameter_list|)
+value|((int16_t) get_lsb_short( _x_ ))
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_lsb_uint16
+parameter_list|(
+name|_x_
+parameter_list|)
+value|((uint16_t) get_lsb_short( _x_ ))
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_lsb_int32
+parameter_list|(
+name|_x_
+parameter_list|)
+value|((int32_t) get_lsb_long( _x_ ))
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_lsb_uint32
+parameter_list|(
+name|_x_
+parameter_list|)
+value|((uint32_t) get_lsb_long( _x_ ))
+end_define
+
 begin_function_decl
 name|long
 name|get_msb_short
@@ -124,6 +164,46 @@ name|long
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|get_msb_int16
+parameter_list|(
+name|_x_
+parameter_list|)
+value|((int16_t) get_msb_short( _x_ ))
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_msb_uint16
+parameter_list|(
+name|_x_
+parameter_list|)
+value|((uint16_t) get_msb_short( _x_ ))
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_msb_int32
+parameter_list|(
+name|_x_
+parameter_list|)
+value|((int32_t) get_msb_long( _x_ ))
+end_define
+
+begin_define
+define|#
+directive|define
+name|get_msb_uint32
+parameter_list|(
+name|_x_
+parameter_list|)
+value|((uint32_t) get_msb_long( _x_ ))
+end_define
 
 begin_endif
 endif|#

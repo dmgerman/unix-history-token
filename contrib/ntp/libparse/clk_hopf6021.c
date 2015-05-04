@@ -118,11 +118,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * hopf Funkuhr 6021   *      used with 9600,8N1,  *      UTC ueber serielle Schnittstelle   *      Sekundenvorlauf ON  *      ETX zum Sekundenvorlauf ON  *      Datenstring 6021  *      Ausgabe Uhrzeit und Datum  *      Senden mit Steuerzeichen  *      Senden sekuendlich  */
+comment|/*  * hopf Funkuhr 6021  *      used with 9600,8N1,  *      UTC ueber serielle Schnittstelle  *      Sekundenvorlauf ON  *      ETX zum Sekundenvorlauf ON  *      Datenstring 6021  *      Ausgabe Uhrzeit und Datum  *      Senden mit Steuerzeichen  *      Senden sekuendlich  */
 end_comment
 
 begin_comment
-comment|/*  *  Type 6021 Serial Output format  *  *      000000000011111111 / char  *      012345678901234567 \ position  *      sABHHMMSSDDMMYYnre  Actual  *       C4110046231195     Parse  *      s              enr  Check  *  *  s = STX (0x02), e = ETX (0x03)  *  n = NL  (0x0A), r = CR  (0x0D)  *  *  A B - Status and weekday  *  *  A - Status  *  *      8 4 2 1  *      x x x 0  - no announcement  *      x x x 1  - Summertime - wintertime - summertime announcement  *      x x 0 x  - Wintertime  *      x x 1 x  - Summertime  *      0 0 x x  - Time/Date invalid  *      0 1 x x  - Internal clock used   *      1 0 x x  - Radio clock  *      1 1 x x  - Radio clock highprecision  *  *  B - 8 4 2 1  *      0 x x x  - MESZ/MEZ  *      1 x x x  - UTC  *      x 0 0 1  - Monday  *      x 0 1 0  - Tuesday  *      x 0 1 1  - Wednesday  *      x 1 0 0  - Thursday  *      x 1 0 1  - Friday  *      x 1 1 0  - Saturday  *      x 1 1 1  - Sunday  */
+comment|/*  *  Type 6021 Serial Output format  *  *      000000000011111111 / char  *      012345678901234567 \ position  *      sABHHMMSSDDMMYYnre  Actual  *       C4110046231195     Parse  *      s              enr  Check  *  *  s = STX (0x02), e = ETX (0x03)  *  n = NL  (0x0A), r = CR  (0x0D)  *  *  A B - Status and weekday  *  *  A - Status  *  *      8 4 2 1  *      x x x 0  - no announcement  *      x x x 1  - Summertime - wintertime - summertime announcement  *      x x 0 x  - Wintertime  *      x x 1 x  - Summertime  *      0 0 x x  - Time/Date invalid  *      0 1 x x  - Internal clock used  *      1 0 x x  - Radio clock  *      1 1 x x  - Radio clock highprecision  *  *  B - 8 4 2 1  *      0 x x x  - MESZ/MEZ  *      1 x x x  - UTC  *      x 0 0 1  - Monday  *      x 0 1 0  - Tuesday  *      x 0 1 1  - Wednesday  *      x 1 0 0  - Thursday  *      x 1 0 1  - Friday  *      x 1 1 0  - Saturday  *      x 1 1 1  - Sunday  */
 end_comment
 
 begin_define
@@ -337,48 +337,19 @@ parameter_list|)
 value|(('0'<= (x)&& (x)<= '9') ? (x) - '0' : \ 		   ('a'<= (x)&& (x)<= 'f') ? (x) - 'a' + 10 : \ 		   ('A'<= (x)&& (x)<= 'F') ? (x) - 'A' + 10 : \ 		   -1)
 end_define
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|parse_cvt_fnc_t
 name|cvt_hopf6021
-parameter_list|(
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|format
-modifier|*
-parameter_list|,
-name|clocktime_t
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|parse_inp_fnc_t
 name|inp_hopf6021
-parameter_list|(
-name|parse_t
-modifier|*
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|,
-name|timestamp_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|clockformat_t
@@ -414,10 +385,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* parse_cvt_fnc_t cvt_hopf6021 */
+end_comment
+
 begin_function
 specifier|static
-name|unsigned
-name|long
+name|u_long
 name|cvt_hopf6021
 parameter_list|(
 name|unsigned
@@ -548,6 +522,9 @@ literal|0
 expr_stmt|;
 name|status
 operator|=
+operator|(
+name|u_char
+operator|)
 name|hexval
 argument_list|(
 name|buffer
@@ -561,6 +538,9 @@ argument_list|)
 expr_stmt|;
 name|weekday
 operator|=
+operator|(
+name|u_char
+operator|)
 name|hexval
 argument_list|(
 name|buffer
@@ -723,7 +703,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inp_hopf6021  *  * grep data from input stream  */
+comment|/*  * parse_inp_fnc_t inp_hopf6021  *  * grab data from input stream  */
 end_comment
 
 begin_function
@@ -735,8 +715,7 @@ name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-name|unsigned
-name|int
+name|char
 name|ch
 parameter_list|,
 name|timestamp_t

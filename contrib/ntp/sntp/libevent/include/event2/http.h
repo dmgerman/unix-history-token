@@ -1026,6 +1026,19 @@ name|short
 name|port
 parameter_list|)
 function_decl|;
+comment|/**  * Set family hint for DNS requests.  */
+name|void
+name|evhttp_connection_set_family
+parameter_list|(
+name|struct
+name|evhttp_connection
+modifier|*
+name|evcon
+parameter_list|,
+name|int
+name|family
+parameter_list|)
+function_decl|;
 comment|/** Takes ownership of the request object  *  * Can be used in a request callback to keep onto the request until  * evhttp_request_free() is explicitly called by the user.  */
 name|EVENT2_EXPORT_SYMBOL
 name|void
@@ -1104,6 +1117,17 @@ comment|/** Frees an http connection */
 name|EVENT2_EXPORT_SYMBOL
 name|void
 name|evhttp_connection_free
+parameter_list|(
+name|struct
+name|evhttp_connection
+modifier|*
+name|evcon
+parameter_list|)
+function_decl|;
+comment|/** Disowns a given connection object  *  * Can be used to tell libevent to free the connection object after  * the last request has completed or failed.  */
+name|EVENT2_EXPORT_SYMBOL
+name|void
+name|evhttp_connection_free_on_completion
 parameter_list|(
 name|struct
 name|evhttp_connection

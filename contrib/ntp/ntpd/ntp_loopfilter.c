@@ -290,7 +290,19 @@ end_comment
 
 begin_decl_stmt
 name|double
-name|clock_max
+name|clock_max_back
+init|=
+name|CLOCK_MAX
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* step threshold */
+end_comment
+
+begin_decl_stmt
+name|double
+name|clock_max_fwd
 init|=
 name|CLOCK_MAX
 decl_stmt|;
@@ -694,6 +706,16 @@ end_comment
 
 begin_decl_stmt
 name|int
+name|kernel_status
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* from ntp_adjtime */
+end_comment
+
+begin_decl_stmt
+name|int
 name|allow_panic
 init|=
 name|FALSE
@@ -701,7 +723,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* allow panic correction */
+comment|/* allow panic correction (-g) */
+end_comment
+
+begin_decl_stmt
+name|int
+name|force_step_once
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* always step time once at startup (-G) */
 end_comment
 
 begin_decl_stmt
@@ -713,7 +747,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* exit on first clock set */
+comment|/* exit on first clock set (-q) */
 end_comment
 
 begin_decl_stmt
@@ -1339,9 +1373,14 @@ name|TIME_OK
 case|case
 name|TIME_OK
 case|:
-comment|/* 0 no leap second warning */
-comment|/* OK means OK */
+comment|/* 0: synchronized, no leap second warning */
+comment|/* msyslog(LOG_INFO, "kernel reports time is synchronized normally"); */
 break|break;
+else|#
+directive|else
+warning|#
+directive|warning
+warning|TIME_OK is not defined
 endif|#
 directive|endif
 ifdef|#
@@ -1350,22 +1389,20 @@ name|TIME_INS
 case|case
 name|TIME_INS
 case|:
-comment|/* 1 positive leap second warning */
+comment|/* 1: positive leap second warning */
 name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: %s line %d: kernel reports positive leap second warning state"
-argument_list|,
-name|caller
-argument_list|,
-name|file_name
-argument_list|()
-argument_list|,
-name|line
+literal|"kernel reports leap second insertion scheduled"
 argument_list|)
 expr_stmt|;
 break|break;
+else|#
+directive|else
+warning|#
+directive|warning
+warning|TIME_INS is not defined
 endif|#
 directive|endif
 ifdef|#
@@ -1374,22 +1411,20 @@ name|TIME_DEL
 case|case
 name|TIME_DEL
 case|:
-comment|/* 2 negative leap second warning */
+comment|/* 2: negative leap second warning */
 name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: %s line %d: kernel reports negative leap second warning state"
-argument_list|,
-name|caller
-argument_list|,
-name|file_name
-argument_list|()
-argument_list|,
-name|line
+literal|"kernel reports leap second deletion scheduled"
 argument_list|)
 expr_stmt|;
 break|break;
+else|#
+directive|else
+warning|#
+directive|warning
+warning|TIME_DEL is not defined
 endif|#
 directive|endif
 ifdef|#
@@ -1398,22 +1433,20 @@ name|TIME_OOP
 case|case
 name|TIME_OOP
 case|:
-comment|/* 3 leap second in progress */
+comment|/* 3: leap second in progress */
 name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: %s line %d: kernel reports leap second in progress"
-argument_list|,
-name|caller
-argument_list|,
-name|file_name
-argument_list|()
-argument_list|,
-name|line
+literal|"kernel reports leap second in progress"
 argument_list|)
 expr_stmt|;
 break|break;
+else|#
+directive|else
+warning|#
+directive|warning
+warning|TIME_OOP is not defined
 endif|#
 directive|endif
 ifdef|#
@@ -1422,22 +1455,20 @@ name|TIME_WAIT
 case|case
 name|TIME_WAIT
 case|:
-comment|/* 4 leap second has occured */
+comment|/* 4: leap second has occured */
 name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"%s: %s line %d: kernel reports leap second has occured"
-argument_list|,
-name|caller
-argument_list|,
-name|file_name
-argument_list|()
-argument_list|,
-name|line
+literal|"kernel reports leap second has occurred"
 argument_list|)
 expr_stmt|;
 break|break;
+else|#
+directive|else
+warning|#
+directive|warning
+warning|TIME_WAIT is not defined
 endif|#
 directive|endif
 ifdef|#
@@ -1446,7 +1477,8 @@ name|TIME_ERROR
 case|case
 name|TIME_ERROR
 case|:
-comment|/* loss of synchronization */
+comment|/* 5: unsynchronized, or loss of synchronization */
+comment|/* error (see status word) */
 if|if
 condition|(
 name|pps_call
@@ -1491,7 +1523,36 @@ name|errno
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* 		 * This code may be returned when ntp_adjtime() has just 		 * been called for the first time, quite a while after 		 * startup, when ntpd just starts to discipline the kernel 		 * time. In this case the occurrence of this message 		 * can be pretty confusing. 		 * 		 * HMS: How about a message when we begin kernel processing: 		 *    Determining kernel clock state... 		 * so an initial TIME_ERROR message is less confising, 		 * or skipping the first message (ugh), 		 * or ??? 		 * msyslog(LOG_INFO, "kernel reports time synchronization lost"); 		 */
+name|errno
+operator|=
+name|saved_errno
+expr_stmt|;
+comment|/* may not be needed */
+name|msyslog
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"kernel reports TIME_ERROR: %#x: %s %m"
+argument_list|,
+name|ptimex
+operator|->
+name|status
+argument_list|,
+name|k_st_flags
+argument_list|(
+name|ptimex
+operator|->
+name|status
+argument_list|)
+argument_list|)
+expr_stmt|;
 break|break;
+else|#
+directive|else
+warning|#
+directive|warning
+warning|TIME_ERROR is not defined
 endif|#
 directive|endif
 default|default:
@@ -1674,16 +1735,26 @@ condition|)
 block|{
 if|if
 condition|(
-name|fabs
-argument_list|(
+operator|(
 name|fp_offset
-argument_list|)
 operator|>
-name|clock_max
+name|clock_max_fwd
 operator|&&
-name|clock_max
+name|clock_max_fwd
 operator|>
 literal|0
+operator|)
+operator|||
+operator|(
+operator|-
+name|fp_offset
+operator|>
+name|clock_max_back
+operator|&&
+name|clock_max_back
+operator|>
+literal|0
+operator|)
 condition|)
 block|{
 name|step_systime
@@ -1850,7 +1921,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * Clock state machine transition function which defines how the 	 * system reacts to large phase and frequency excursion. There 	 * are two main regimes: when the offset exceeds the step 	 * threshold (128 ms) and when it does not. Under certain 	 * conditions updates are suspended until the stepout theshold 	 * (900 s) is exceeded. See the documentation on how these 	 * thresholds interact with commands and command line options.  	 * 	 * Note the kernel is disabled if step is disabled or greater 	 * than 0.5 s or in ntpdate mode.  	 */
+comment|/* 	 * Clock state machine transition function which defines how the 	 * system reacts to large phase and frequency excursion. There 	 * are two main regimes: when the offset exceeds the step 	 * threshold (128 ms) and when it does not. Under certain 	 * conditions updates are suspended until the stepout theshold 	 * (900 s) is exceeded. See the documentation on how these 	 * thresholds interact with commands and command line options. 	 * 	 * Note the kernel is disabled if step is disabled or greater 	 * than 0.5 s or in ntpdate mode. 	 */
 name|osys_poll
 operator|=
 name|sys_poll
@@ -1899,18 +1970,48 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|fabs
-argument_list|(
+operator|(
 name|fp_offset
-argument_list|)
 operator|>
-name|clock_max
+name|clock_max_fwd
 operator|&&
-name|clock_max
+name|clock_max_fwd
 operator|>
 literal|0
+operator|)
+operator|||
+operator|(
+operator|-
+name|fp_offset
+operator|>
+name|clock_max_back
+operator|&&
+name|clock_max_back
+operator|>
+literal|0
+operator|)
+operator|||
+name|force_step_once
 condition|)
 block|{
+if|if
+condition|(
+name|force_step_once
+condition|)
+block|{
+name|force_step_once
+operator|=
+name|FALSE
+expr_stmt|;
+comment|/* we want this only once after startup */
+name|msyslog
+argument_list|(
+name|LOG_NOTICE
+argument_list|,
+literal|"Doing intital time step"
+argument_list|)
+expr_stmt|;
+block|}
 switch|switch
 condition|(
 name|state
@@ -2199,7 +2300,7 @@ argument_list|)
 operator|*
 name|CLOCK_FLL
 expr_stmt|;
-comment|/* 				 * The PLL frequency gain (numerator) depends on 				 * the minimum of the update interval and Allan 				 * intercept. This reduces the PLL gain when the  				 * FLL becomes effective. 				 */
+comment|/* 				 * The PLL frequency gain (numerator) depends on 				 * the minimum of the update interval and Allan 				 * intercept. This reduces the PLL gain when the 				 * FLL becomes effective. 				 */
 name|etemp
 operator|=
 name|min
@@ -2533,9 +2634,6 @@ name|STA_DEL
 expr_stmt|;
 block|}
 comment|/* 		 * Pass the stuff to the kernel. If it squeals, turn off 		 * the pps. In any case, fetch the kernel offset, 		 * frequency and jitter. 		 */
-if|if
-condition|(
-operator|(
 name|ntp_adj_ret
 operator|=
 name|ntp_adjtime
@@ -2543,11 +2641,27 @@ argument_list|(
 operator|&
 name|ntv
 argument_list|)
-operator|)
-operator|!=
+expr_stmt|;
+comment|/* 		 * A squeal is a return status< 0, or a state change. 		 */
+if|if
+condition|(
+operator|(
 literal|0
+operator|>
+name|ntp_adj_ret
+operator|)
+operator|||
+operator|(
+name|ntp_adj_ret
+operator|!=
+name|kernel_status
+operator|)
 condition|)
 block|{
+name|kernel_status
+operator|=
+name|ntp_adj_ret
+expr_stmt|;
 name|ntp_adjtime_error_handler
 argument_list|(
 name|__func__
@@ -3134,7 +3248,7 @@ name|clock_offset
 operator|-=
 name|offset_adj
 expr_stmt|;
-comment|/* 	 * Windows port adj_systime() must be called each second, 	 * even if the argument is zero, to ease emulation of  	 * adjtime() using Windows' slew API which controls the rate 	 * but does not automatically stop slewing when an offset 	 * has decayed to zero. 	 */
+comment|/* 	 * Windows port adj_systime() must be called each second, 	 * even if the argument is zero, to ease emulation of 	 * adjtime() using Windows' slew API which controls the rate 	 * but does not automatically stop slewing when an offset 	 * has decayed to zero. 	 */
 name|adj_systime
 argument_list|(
 name|offset_adj
@@ -4079,19 +4193,94 @@ case|case
 name|LOOP_MAX
 case|:
 comment|/* step threshold (step) */
-name|clock_max
+name|clock_max_fwd
+operator|=
+name|clock_max_back
 operator|=
 name|freq
 expr_stmt|;
 if|if
 condition|(
-name|clock_max
+name|freq
 operator|==
 literal|0
 operator|||
-name|clock_max
+name|freq
 operator|>
 literal|0.5
+condition|)
+name|select_loop
+argument_list|(
+name|FALSE
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LOOP_MAX_BACK
+case|:
+comment|/* step threshold (step) */
+name|clock_max_back
+operator|=
+name|freq
+expr_stmt|;
+comment|/* 		 * Leave using the kernel discipline code unless both 		 * limits are massive.  This assumes the reason to stop 		 * using it is that it's pointless, not that it goes wrong. 		 */
+if|if
+condition|(
+operator|(
+name|clock_max_back
+operator|==
+literal|0
+operator|||
+name|clock_max_back
+operator|>
+literal|0.5
+operator|)
+operator|||
+operator|(
+name|clock_max_fwd
+operator|==
+literal|0
+operator|||
+name|clock_max_fwd
+operator|>
+literal|0.5
+operator|)
+condition|)
+name|select_loop
+argument_list|(
+name|FALSE
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LOOP_MAX_FWD
+case|:
+comment|/* step threshold (step) */
+name|clock_max_fwd
+operator|=
+name|freq
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|clock_max_back
+operator|==
+literal|0
+operator|||
+name|clock_max_back
+operator|>
+literal|0.5
+operator|)
+operator|||
+operator|(
+name|clock_max_fwd
+operator|==
+literal|0
+operator|||
+name|clock_max_fwd
+operator|>
+literal|0.5
+operator|)
 condition|)
 name|select_loop
 argument_list|(

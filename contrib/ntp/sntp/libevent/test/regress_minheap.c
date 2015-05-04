@@ -33,6 +33,12 @@ directive|include
 file|"tinytest_macros.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"regress.h"
+end_include
+
 begin_function
 specifier|static
 name|void
@@ -50,7 +56,7 @@ name|ev_timeout
 operator|.
 name|tv_sec
 operator|=
-name|rand
+name|test_weakrand
 argument_list|()
 expr_stmt|;
 name|ev
@@ -59,7 +65,7 @@ name|ev_timeout
 operator|.
 name|tv_usec
 operator|=
-name|rand
+name|test_weakrand
 argument_list|()
 operator|&
 literal|0xfffff

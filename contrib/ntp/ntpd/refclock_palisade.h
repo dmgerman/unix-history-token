@@ -595,6 +595,10 @@ name|int
 name|type
 decl_stmt|;
 comment|/* Clock mode type */
+name|int
+name|month
+decl_stmt|;
+comment|/* for LEAP filter */
 block|}
 struct|;
 end_struct

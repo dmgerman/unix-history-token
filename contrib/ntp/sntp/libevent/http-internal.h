@@ -233,6 +233,11 @@ directive|define
 name|EVHTTP_CON_CLOSEDETECT
 value|0x0004
 comment|/* detecting if persistent close */
+define|#
+directive|define
+name|EVHTTP_CON_AUTOFREE
+value|0x0008
+comment|/* set when we want to auto free the connection */
 name|struct
 name|timeval
 name|timeout
@@ -318,6 +323,9 @@ name|struct
 name|evdns_base
 modifier|*
 name|dns_base
+decl_stmt|;
+name|int
+name|ai_family
 decl_stmt|;
 comment|/* Saved conn_addr, to extract IP address from it. 	 * 	 * Because some servers may reset/close connection without waiting clients, 	 * in that case we can't extract IP address even in close_cb. 	 * So we need to save it, just after we connected to remote server. */
 name|struct

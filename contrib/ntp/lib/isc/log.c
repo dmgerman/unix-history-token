@@ -4648,7 +4648,7 @@ block|{
 comment|/* XXXDCL HIGHLY NT */
 name|char
 modifier|*
-name|basename
+name|basenam
 decl_stmt|,
 modifier|*
 name|digit_end
@@ -4700,7 +4700,7 @@ name|ISC_LOG_TOFILE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * It is safe to DE_CONST the file.name because it was copied 	 * with isc_mem_strdup in isc_log_createchannel. 	 */
-name|basename
+name|basenam
 operator|=
 name|strrchr
 argument_list|(
@@ -4730,7 +4730,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-name|basename
+name|basenam
 operator|!=
 name|NULL
 operator|&&
@@ -4740,11 +4740,11 @@ name|NULL
 operator|&&
 name|basename2
 operator|>
-name|basename
+name|basenam
 operator|)
 operator|||
 operator|(
-name|basename
+name|basenam
 operator|==
 name|NULL
 operator|&&
@@ -4754,7 +4754,7 @@ name|NULL
 operator|)
 condition|)
 block|{
-name|basename
+name|basenam
 operator|=
 name|basename2
 expr_stmt|;
@@ -4767,13 +4767,13 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|basename
+name|basenam
 operator|!=
 name|NULL
 condition|)
 block|{
 operator|*
-name|basename
+name|basenam
 operator|++
 operator|=
 literal|'\0'
@@ -4795,7 +4795,7 @@ argument_list|(
 name|channel
 argument_list|)
 argument_list|,
-name|basename
+name|basenam
 argument_list|)
 expr_stmt|;
 name|dirname
@@ -4807,7 +4807,7 @@ name|basenamelen
 operator|=
 name|strlen
 argument_list|(
-name|basename
+name|basenam
 argument_list|)
 expr_stmt|;
 name|isc_dir_init
@@ -4829,7 +4829,7 @@ expr_stmt|;
 comment|/* 	 * Replace the file separator if it was taken out. 	 */
 if|if
 condition|(
-name|basename
+name|basenam
 operator|!=
 name|FILE_NAME
 argument_list|(
@@ -4838,7 +4838,7 @@ argument_list|)
 condition|)
 operator|*
 operator|(
-name|basename
+name|basenam
 operator|-
 literal|1
 operator|)
@@ -4886,7 +4886,7 @@ name|entry
 operator|.
 name|name
 argument_list|,
-name|basename
+name|basenam
 argument_list|,
 name|basenamelen
 argument_list|)

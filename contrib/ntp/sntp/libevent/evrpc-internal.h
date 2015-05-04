@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"event2/http.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"http-internal.h"
 end_include
 

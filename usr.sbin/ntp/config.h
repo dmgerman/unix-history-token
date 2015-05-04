@@ -4552,7 +4552,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"ntp 4.2.8p1"
+value|"ntp 4.2.8p2"
 end_define
 
 begin_comment
@@ -4585,7 +4585,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"4.2.8p1"
+value|"4.2.8p2"
 end_define
 
 begin_comment
@@ -5042,7 +5042,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"4.2.8p1"
+value|"4.2.8p2"
 end_define
 
 begin_comment
