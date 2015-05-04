@@ -3442,7 +3442,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 name|mid
+operator|)
 return|;
 if|if
 condition|(
@@ -3470,8 +3472,10 @@ name|bot
 expr_stmt|;
 comment|/* place it would have gone */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
