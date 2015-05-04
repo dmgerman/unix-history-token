@@ -80,6 +80,12 @@ directive|include
 file|<err.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|_WITH_GETLINE
+end_define
+
 begin_include
 include|#
 directive|include
@@ -1934,17 +1940,24 @@ literal|5
 index|]
 decl_stmt|;
 comment|/* The current macro or nroff command */
+name|char
+modifier|*
+name|line
+decl_stmt|;
+name|size_t
+name|linecap
+decl_stmt|;
 name|int
 name|pl
 decl_stmt|;
-specifier|static
-name|char
 name|line
-index|[
-literal|256
-index|]
-decl_stmt|;
-comment|/* the current line */
+operator|=
+name|NULL
+expr_stmt|;
+name|linecap
+operator|=
+literal|0
+expr_stmt|;
 name|stktop
 operator|=
 operator|-
@@ -1956,15 +1969,18 @@ name|lineno
 operator|=
 literal|1
 init|;
-name|fgets
+name|getline
 argument_list|(
+operator|&
 name|line
 argument_list|,
-sizeof|sizeof
-name|line
+operator|&
+name|linecap
 argument_list|,
 name|f
 argument_list|)
+operator|>
+literal|0
 condition|;
 name|lineno
 operator|++
@@ -2405,6 +2421,11 @@ block|}
 block|}
 block|}
 block|}
+name|free
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We've hit the end and look at all this stuff that hasn't been 	 * matched yet!  Complain, complain. 	 */
 for|for
 control|(
