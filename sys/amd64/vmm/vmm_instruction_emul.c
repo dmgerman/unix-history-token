@@ -654,11 +654,33 @@ name|VIE_OP_TYPE_AND
 block|, 	}
 block|,
 index|[
+literal|0x80
+index|]
+operator|=
+block|{
+comment|/* Group 1 extended opcode */
+operator|.
+name|op_byte
+operator|=
+literal|0x80
+block|,
+operator|.
+name|op_type
+operator|=
+name|VIE_OP_TYPE_GROUP1
+block|,
+operator|.
+name|op_flags
+operator|=
+name|VIE_OP_F_IMM8
+block|, 	}
+block|,
+index|[
 literal|0x81
 index|]
 operator|=
 block|{
-comment|/* XXX Group 1 extended opcode */
+comment|/* Group 1 extended opcode */
 operator|.
 name|op_byte
 operator|=
@@ -680,7 +702,7 @@ literal|0x83
 index|]
 operator|=
 block|{
-comment|/* XXX Group 1 extended opcode */
+comment|/* Group 1 extended opcode */
 operator|.
 name|op_byte
 operator|=
@@ -4351,12 +4373,29 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|0x80
+case|:
+case|case
 literal|0x81
 case|:
 case|case
 literal|0x83
 case|:
-comment|/* 		 * 81 /7		cmp r/m16, imm16 		 * 81 /7		cmp r/m32, imm32 		 * REX.W + 81 /7	cmp r/m64, imm32 sign-extended to 64 		 * 		 * 83 /7		cmp r/m16, imm8 sign-extended to 16 		 * 83 /7		cmp r/m32, imm8 sign-extended to 32 		 * REX.W + 83 /7	cmp r/m64, imm8 sign-extended to 64 		 * 		 * Compare mem (ModRM:r/m) with immediate and set 		 * status flags according to the results.  The 		 * comparison is performed by subtracting the 		 * immediate from the first operand and then setting 		 * the status flags. 		 * 		 */
+comment|/* 		 * 80 /7		cmp r/m8, imm8 		 * REX + 80 /7		cmp r/m8, imm8 		 * 		 * 81 /7		cmp r/m16, imm16 		 * 81 /7		cmp r/m32, imm32 		 * REX.W + 81 /7	cmp r/m64, imm32 sign-extended to 64 		 * 		 * 83 /7		cmp r/m16, imm8 sign-extended to 16 		 * 83 /7		cmp r/m32, imm8 sign-extended to 32 		 * REX.W + 83 /7	cmp r/m64, imm8 sign-extended to 64 		 * 		 * Compare mem (ModRM:r/m) with immediate and set 		 * status flags according to the results.  The 		 * comparison is performed by subtracting the 		 * immediate from the first operand and then setting 		 * the status flags. 		 * 		 */
+if|if
+condition|(
+name|vie
+operator|->
+name|op
+operator|.
+name|op_byte
+operator|==
+literal|0x80
+condition|)
+name|size
+operator|=
+literal|1
+expr_stmt|;
 comment|/* get the first operand */
 name|error
 operator|=
