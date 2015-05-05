@@ -69,37 +69,13 @@ block|}
 struct|;
 end_struct
 
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|_timer_fn
-parameter_list|(
-name|void
-modifier|*
-name|context
-parameter_list|)
-block|{
-name|struct
-name|timer_list
-modifier|*
-name|timer
+begin_decl_stmt
+specifier|extern
+name|unsigned
+name|long
+name|linux_timer_hz_mask
 decl_stmt|;
-name|timer
-operator|=
-name|context
-expr_stmt|;
-name|timer
-operator|->
-name|function
-argument_list|(
-name|timer
-operator|->
-name|data
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+end_decl_stmt
 
 begin_define
 define|#
@@ -127,29 +103,32 @@ define|\
 value|do {									\ 	(timer)->function = NULL;					\ 	(timer)->data = 0;						\ 	callout_init(&(timer)->timer_callout, CALLOUT_MPSAFE);		\ } while (0)
 end_define
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+specifier|extern
+name|void
 name|mod_timer
 parameter_list|(
-name|timer
+name|struct
+name|timer_list
+modifier|*
 parameter_list|,
-name|exp
+name|unsigned
+name|long
 parameter_list|)
-define|\
-value|do {									\ 	(timer)->expires = (exp);					\ 	callout_reset(&(timer)->timer_callout, (exp) - jiffies,		\ 	    _timer_fn, (timer));					\ } while (0)
-end_define
+function_decl|;
+end_function_decl
 
-begin_define
-define|#
-directive|define
+begin_function_decl
+specifier|extern
+name|void
 name|add_timer
 parameter_list|(
-name|timer
+name|struct
+name|timer_list
+modifier|*
 parameter_list|)
-define|\
-value|callout_reset(&(timer)->timer_callout,				\ 	    (timer)->expires - jiffies, _timer_fn, (timer))
-end_define
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
@@ -181,28 +160,16 @@ parameter_list|)
 value|callout_pending(&(timer)->timer_callout)
 end_define
 
-begin_function
-specifier|static
-specifier|inline
-name|unsigned
-name|long
+begin_define
+define|#
+directive|define
 name|round_jiffies
 parameter_list|(
-name|unsigned
-name|long
 name|j
 parameter_list|)
-block|{
-return|return
-name|roundup
-argument_list|(
-name|j
-argument_list|,
-name|hz
-argument_list|)
-return|;
-block|}
-end_function
+define|\
+value|((unsigned long)(((j) + linux_timer_hz_mask)& ~linux_timer_hz_mask))
+end_define
 
 begin_define
 define|#
@@ -211,6 +178,7 @@ name|round_jiffies_relative
 parameter_list|(
 name|j
 parameter_list|)
+define|\
 value|round_jiffies(j)
 end_define
 
