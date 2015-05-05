@@ -3014,6 +3014,7 @@ name|public_ifa6
 operator|=
 name|it6
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|public_ifa6
@@ -3028,7 +3029,6 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
-block|}
 name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
