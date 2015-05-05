@@ -818,21 +818,14 @@ begin_comment
 comment|/*  * Return the (numeric) option id.  * Numeric options look like  *	li#80  * i.e. the option string is separated from the numeric value by  * a # character.  If the option is not found we return -1.  * Note that we handle octal numbers beginning with 0.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tgetnum
-argument_list|(
-argument|id
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|id
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -969,7 +962,7 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Handle a flag option.  * Flag options are given "naked", i.e. followed by a : or the end  * of the buffer.  Return 1 if we find the option, or 0 if it is  * not given.  */
