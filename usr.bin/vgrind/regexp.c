@@ -165,30 +165,20 @@ begin_function
 name|int
 name|STRNCMP
 parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|,
-name|len
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|s1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|register
+name|char
+modifier|*
 name|s2
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 specifier|register
 name|int
 name|len
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -277,7 +267,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*	The following routine converts an irregular expression to  *	internal format.  *  *	Either meta symbols (\a \d or \p) or character strings or  *	operations ( alternation or perenthesizing ) can be  *	specified.  Each starts with a descriptor byte.  The descriptor  *	byte has STR set for strings, META set for meta symbols  *	and OPER set for operations.  *	The descriptor byte can also have the OPT bit set if the object  *	defined is optional.  Also ALT can be set to indicate an alternation.  *  *	For metasymbols the byte following the descriptor byte identities  *	the meta symbol (containing an ascii 'a', 'd', 'p', '|', or '(').  For  *	strings the byte after the descriptor is a character count for  *	the string:  *  *		meta symbols := descriptor  *				symbol  *  *		strings :=	descriptor  *				character count  *				the string  *  *		operatins :=	descriptor  *				symbol  *				character count  */
@@ -476,18 +466,19 @@ begin_comment
 comment|/* pointer current position in unconverted exp */
 end_comment
 
+begin_comment
+comment|/* re: unconverted irregular expression */
+end_comment
+
 begin_function
 name|char
 modifier|*
 name|convexp
 parameter_list|(
-name|re
-parameter_list|)
 name|char
 modifier|*
 name|re
-decl_stmt|;
-comment|/* unconverted irregular expression */
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -1214,35 +1205,30 @@ begin_comment
 comment|/*  *	The following routine recognises an irregular expresion  *	with the following special characters:  *  *		\?	-	means last match was optional  *		\a	-	matches any number of characters  *		\d	-	matches any number of spaces and tabs  *		\p	-	matches any number of alphanumeric  *				characters. The  *				characters matched will be copied into  *				the area pointed to by 'name'.  *		\|	-	alternation  *		\( \)	-	grouping used mostly for alternation and  *				optionality  *  *	The irregular expression must be translated to internal form  *	prior to calling this routine  *  *	The value returned is the pointer to the first non \a  *	character matched.  */
 end_comment
 
+begin_comment
+comment|/*  *  s: string to check for a match in  *  re: a converted irregular expression  *  mstring: where to put whatever matches a \p  */
+end_comment
+
 begin_function
 name|char
 modifier|*
 name|expmatch
 parameter_list|(
-name|s
-parameter_list|,
-name|re
-parameter_list|,
-name|mstring
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|s
-decl_stmt|;
-comment|/* string to check for a match in */
+parameter_list|,
 specifier|register
 name|char
 modifier|*
 name|re
-decl_stmt|;
-comment|/* a converted irregular expression */
+parameter_list|,
 specifier|register
 name|char
 modifier|*
 name|mstring
-decl_stmt|;
-comment|/* where to put whatever matches a \p */
+parameter_list|)
 block|{
 specifier|register
 name|char

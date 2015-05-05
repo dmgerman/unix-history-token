@@ -2966,31 +2966,26 @@ do|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * start: start of string to write  * end: end of string to write  * force: true if we should force nokeyw  */
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|putKcp
 parameter_list|(
-name|start
-parameter_list|,
-name|end
-parameter_list|,
-name|force
-parameter_list|)
 name|char
 modifier|*
 name|start
-decl_stmt|;
-comment|/* start of string to write */
+parameter_list|,
 name|char
 modifier|*
 name|end
-decl_stmt|;
-comment|/* end of string to write */
+parameter_list|,
 name|boolean
 name|force
-decl_stmt|;
-comment|/* true if we should force nokeyw */
+parameter_list|)
 block|{
 name|int
 name|i
@@ -3219,20 +3214,14 @@ specifier|static
 name|int
 name|tabs
 parameter_list|(
-name|s
-parameter_list|,
-name|os
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|os
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -3247,28 +3236,23 @@ literal|8
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
 name|int
 name|width
 parameter_list|(
-name|s
-parameter_list|,
-name|os
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|s
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|register
+name|char
+modifier|*
 name|os
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -3332,7 +3316,7 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
@@ -3493,12 +3477,10 @@ specifier|static
 name|boolean
 name|isproc
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|pname
 index|[
@@ -3553,13 +3535,11 @@ specifier|static
 name|int
 name|iskw
 parameter_list|(
-name|s
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char
