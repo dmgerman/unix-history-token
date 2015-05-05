@@ -217,40 +217,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* DMA doesn't yet work with the bcm3826 */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SOC_BCM2836
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PIO_MODE
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|PIO_MODE
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -265,7 +231,7 @@ specifier|static
 name|int
 name|bcm2835_sdhci_pio_mode
 init|=
-name|PIO_MODE
+literal|0
 decl_stmt|;
 end_decl_stmt
 
