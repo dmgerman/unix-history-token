@@ -667,6 +667,26 @@ parameter_list|)
 value|printf("%s", x)
 end_define
 
+begin_decl_stmt
+specifier|static
+name|char
+name|minus
+index|[]
+init|=
+literal|"-"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|minusn
+index|[]
+init|=
+literal|"-n"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
@@ -833,10 +853,7 @@ operator|-
 literal|1
 index|]
 operator|=
-name|strdup
-argument_list|(
-literal|"-"
-argument_list|)
+name|minus
 expr_stmt|;
 continue|continue;
 block|}
@@ -887,10 +904,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|strdup
-argument_list|(
-literal|"-n"
-argument_list|)
+name|minusn
 expr_stmt|;
 block|}
 comment|/* indicate no keywords */
