@@ -130,13 +130,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|NIL
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
 name|STANDARD
 value|0
 end_define
@@ -1301,7 +1294,7 @@ block|}
 operator|*
 name|cpp
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 block|}
 name|cgetustr
@@ -2147,7 +2140,7 @@ if|if
 condition|(
 name|nocomptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 if|if
 condition|(
@@ -2158,7 +2151,7 @@ name|comptr
 operator|||
 name|comptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2168,7 +2161,7 @@ name|acmptr
 operator|||
 name|acmptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 condition|)
 block|{
@@ -2195,7 +2188,7 @@ if|if
 condition|(
 name|comptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 if|if
 condition|(
@@ -2206,7 +2199,7 @@ name|strptr
 operator|||
 name|strptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2216,7 +2209,7 @@ name|acmptr
 operator|||
 name|acmptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2226,7 +2219,7 @@ name|chrptr
 operator|||
 name|chrptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2236,7 +2229,7 @@ name|blksptr
 operator|||
 name|blksptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2246,7 +2239,7 @@ name|blkeptr
 operator|||
 name|blkeptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 condition|)
 block|{
@@ -2296,7 +2289,7 @@ if|if
 condition|(
 name|acmptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 if|if
 condition|(
@@ -2307,7 +2300,7 @@ name|strptr
 operator|||
 name|strptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2317,7 +2310,7 @@ name|chrptr
 operator|||
 name|chrptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2327,7 +2320,7 @@ name|blksptr
 operator|||
 name|blksptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2337,7 +2330,7 @@ name|blkeptr
 operator|||
 name|blkeptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 condition|)
 block|{
@@ -2387,7 +2380,7 @@ if|if
 condition|(
 name|strptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 if|if
 condition|(
@@ -2398,7 +2391,7 @@ name|chrptr
 operator|||
 name|chrptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2408,7 +2401,7 @@ name|blksptr
 operator|||
 name|blksptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2418,7 +2411,7 @@ name|blkeptr
 operator|||
 name|blkeptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 condition|)
 block|{
@@ -2448,7 +2441,7 @@ if|if
 condition|(
 name|chrptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 if|if
 condition|(
@@ -2459,7 +2452,7 @@ name|blksptr
 operator|||
 name|blksptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2469,7 +2462,7 @@ name|blkeptr
 operator|||
 name|blkeptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 condition|)
 block|{
@@ -2499,7 +2492,7 @@ if|if
 condition|(
 name|blkeptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 if|if
@@ -2510,7 +2503,7 @@ name|blksptr
 operator|||
 name|blksptr
 operator|==
-name|NIL
+name|NULL
 condition|)
 block|{
 name|putKcp
@@ -2603,7 +2596,7 @@ if|if
 condition|(
 name|blksptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 name|putKcp
@@ -2668,7 +2661,7 @@ operator|&&
 operator|(
 name|comptr
 operator|!=
-name|NIL
+name|NULL
 operator|)
 operator|)
 operator|||
@@ -2682,7 +2675,7 @@ operator|&&
 operator|(
 name|acmptr
 operator|!=
-name|NIL
+name|NULL
 operator|)
 operator|)
 condition|)
@@ -2791,7 +2784,7 @@ name|dummy
 argument_list|)
 operator|)
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 name|putKcp
@@ -2867,7 +2860,7 @@ name|dummy
 argument_list|)
 operator|)
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 name|putKcp
@@ -3500,7 +3493,7 @@ argument_list|,
 name|pname
 argument_list|)
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 return|return

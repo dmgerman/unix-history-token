@@ -91,13 +91,6 @@ directive|include
 file|"extern.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|NIL
-value|0
-end_define
-
 begin_function_decl
 specifier|static
 name|void
@@ -483,11 +476,11 @@ if|if
 condition|(
 name|re
 operator|==
-name|NIL
+name|NULL
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 if|if
@@ -499,7 +492,7 @@ literal|'\0'
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 name|cre
@@ -593,18 +586,16 @@ decl_stmt|;
 comment|/* let the conversion begin */
 name|acs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 name|cs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 while|while
 condition|(
 operator|*
 name|ure
-operator|!=
-name|NIL
 condition|)
 block|{
 switch|switch
@@ -634,7 +625,7 @@ if|if
 condition|(
 name|cs
 operator|==
-name|NIL
+name|NULL
 operator|||
 operator|(
 operator|*
@@ -698,7 +689,7 @@ if|if
 condition|(
 name|acs
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|acs
 operator|!=
@@ -737,7 +728,7 @@ condition|)
 do|;
 name|acs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 block|}
 name|cs
@@ -777,7 +768,7 @@ if|if
 condition|(
 name|acs
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|acs
 operator|!=
@@ -816,7 +807,7 @@ condition|)
 do|;
 name|acs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 block|}
 name|cs
@@ -868,7 +859,7 @@ if|if
 condition|(
 name|acs
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|acs
 operator|!=
@@ -907,7 +898,7 @@ condition|)
 do|;
 name|acs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 block|}
 name|cs
@@ -955,7 +946,7 @@ if|if
 condition|(
 name|acs
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 do|do
@@ -990,7 +981,7 @@ condition|)
 do|;
 name|acs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 block|}
 name|cs
@@ -1027,7 +1018,7 @@ if|if
 condition|(
 name|acs
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|acs
 operator|!=
@@ -1091,7 +1082,7 @@ if|if
 condition|(
 name|cs
 operator|==
-name|NIL
+name|NULL
 operator|||
 operator|(
 operator|*
@@ -1147,7 +1138,7 @@ if|if
 condition|(
 name|acs
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 do|do
@@ -1182,7 +1173,7 @@ condition|)
 do|;
 name|acs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 block|}
 return|return;
@@ -1246,11 +1237,11 @@ if|if
 condition|(
 name|re
 operator|==
-name|NIL
+name|NULL
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 name|cs
@@ -1371,7 +1362,7 @@ block|{
 comment|/* no match, error return */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1436,7 +1427,7 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 comment|/* the subexpression matched */
@@ -1485,7 +1476,7 @@ block|{
 comment|/* no match, error return */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1540,7 +1531,7 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|s1
 operator|!=
@@ -1579,7 +1570,7 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 operator|(
 operator|*
@@ -1601,13 +1592,13 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 comment|/* not optional and we still matched */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1664,7 +1655,7 @@ operator|)
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 if|if
@@ -1697,7 +1688,7 @@ condition|)
 do|;
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 comment|/* try to match anything */
@@ -1729,7 +1720,7 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|s1
 operator|!=
@@ -1748,7 +1739,7 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 operator|(
 operator|*
@@ -1770,13 +1761,13 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 comment|/* not optional and we still matched */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1810,7 +1801,7 @@ condition|)
 do|;
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 comment|/* fail if we are currently _escaped */
@@ -1823,7 +1814,7 @@ name|_escaped
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 name|cs
@@ -1956,7 +1947,7 @@ else|else
 comment|/* no match, error return */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 break|break;
@@ -2041,7 +2032,7 @@ else|else
 comment|/* no match, error return */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 break|break;
@@ -2117,7 +2108,7 @@ else|else
 comment|/* no match, error return */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 break|break;
