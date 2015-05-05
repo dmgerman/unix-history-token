@@ -15934,7 +15934,7 @@ name|x
 decl_stmt|;
 name|DPRINTF
 argument_list|(
-literal|"Multi Process Interrupts\n"
+literal|"Disable Multi Process Interrupts\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -15962,7 +15962,7 @@ argument_list|(
 name|x
 argument_list|)
 argument_list|,
-name|DIEPMSK_XFERCOMPLMSK
+literal|0
 argument_list|)
 expr_stmt|;
 name|DWC_OTG_WRITE_4
@@ -15984,12 +15984,10 @@ name|sc
 argument_list|,
 name|DOTG_DEACHINTMSK
 argument_list|,
-literal|0xFFFF
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 name|DWC_OTG_WRITE_4
 argument_list|(
 name|sc
@@ -16017,7 +16015,6 @@ argument_list|,
 literal|0xFFFF
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
