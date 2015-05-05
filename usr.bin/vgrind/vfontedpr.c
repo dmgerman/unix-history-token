@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -120,20 +126,6 @@ include|#
 directive|include
 file|"extern.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|!(FALSE)
-end_define
 
 begin_define
 define|#
@@ -206,7 +198,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean
+name|bool
 name|isproc
 parameter_list|(
 name|char
@@ -226,7 +218,7 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|boolean
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -286,10 +278,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|filter
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -299,7 +291,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|inchr
 decl_stmt|;
 end_decl_stmt
@@ -310,7 +302,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|incomm
 decl_stmt|;
 end_decl_stmt
@@ -321,10 +313,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|idx
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -334,7 +326,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|instr
 decl_stmt|;
 end_decl_stmt
@@ -345,10 +337,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|nokeyw
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -358,10 +350,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|pass
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -447,7 +439,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|prccont
 decl_stmt|;
 end_decl_stmt
@@ -649,7 +641,7 @@ comment|/* delimiter for string constant */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bool
 name|l_toplex
 decl_stmt|;
 end_decl_stmt
@@ -826,7 +818,8 @@ argument_list|)
 condition|)
 block|{
 name|filter
-operator|++
+operator|=
+name|true
 expr_stmt|;
 name|argv
 index|[
@@ -893,7 +886,8 @@ argument_list|)
 condition|)
 block|{
 name|idx
-operator|++
+operator|=
+name|true
 expr_stmt|;
 name|argv
 index|[
@@ -922,7 +916,8 @@ argument_list|)
 condition|)
 block|{
 name|nokeyw
-operator|++
+operator|=
+name|true
 expr_stmt|;
 name|argc
 operator|--
@@ -1236,7 +1231,7 @@ literal|1
 condition|)
 name|nokeyw
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 else|else
 block|{
@@ -1554,19 +1549,19 @@ expr_stmt|;
 comment|/* initialize the program */
 name|incomm
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|instr
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|inchr
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|_escaped
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|blklevel
 operator|=
@@ -1778,7 +1773,7 @@ argument_list|)
 condition|)
 name|pass
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -1796,13 +1791,13 @@ argument_list|)
 condition|)
 name|pass
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 continue|continue;
 block|}
 name|prccont
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 if|if
 condition|(
@@ -1976,7 +1971,7 @@ expr_stmt|;
 comment|/* remember the start for expmatch */
 name|_escaped
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 if|if
 condition|(
@@ -2186,7 +2181,7 @@ name|nocomptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2263,7 +2258,7 @@ name|comptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2272,7 +2267,7 @@ name|comptr
 expr_stmt|;
 name|incomm
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|comtype
 operator|=
@@ -2354,7 +2349,7 @@ name|acmptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2363,7 +2358,7 @@ name|acmptr
 expr_stmt|;
 name|incomm
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|comtype
 operator|=
@@ -2435,7 +2430,7 @@ name|strptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2444,7 +2439,7 @@ name|strptr
 expr_stmt|;
 name|instr
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 continue|continue;
 block|}
@@ -2486,7 +2481,7 @@ name|chrptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2495,7 +2490,7 @@ name|chrptr
 expr_stmt|;
 name|inchr
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 continue|continue;
 block|}
@@ -2526,7 +2521,7 @@ name|blkeptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2591,7 +2586,7 @@ literal|0
 condition|)
 name|prccont
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 else|else
 name|psptr
@@ -2619,7 +2614,7 @@ name|blksptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2707,7 +2702,7 @@ name|comptr
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2725,7 +2720,7 @@ name|acmptr
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2735,7 +2730,7 @@ expr_stmt|;
 block|}
 name|incomm
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|ps
 argument_list|(
@@ -2759,7 +2754,7 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2807,7 +2802,7 @@ name|strptr
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2816,7 +2811,7 @@ name|strptr
 expr_stmt|;
 name|instr
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 continue|continue;
 block|}
@@ -2835,7 +2830,7 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2883,7 +2878,7 @@ name|chrptr
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2892,7 +2887,7 @@ name|chrptr
 expr_stmt|;
 name|inchr
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 continue|continue;
 block|}
@@ -2911,7 +2906,7 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2940,7 +2935,7 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2979,7 +2974,7 @@ name|char
 modifier|*
 name|end
 parameter_list|,
-name|boolean
+name|bool
 name|force
 parameter_list|)
 block|{
@@ -3470,7 +3465,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bool
 name|isproc
 parameter_list|(
 name|char
@@ -3510,13 +3505,13 @@ condition|)
 block|{
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 block|}

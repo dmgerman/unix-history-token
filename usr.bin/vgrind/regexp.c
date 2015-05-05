@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -84,20 +90,6 @@ include|#
 directive|include
 file|"extern.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|!(FALSE)
-end_define
 
 begin_define
 define|#
@@ -117,13 +109,13 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|boolean
+name|bool
 name|_escaped
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* true if we are currently _escaped */
+comment|/* true if we are currently x_escaped */
 end_comment
 
 begin_decl_stmt
@@ -138,7 +130,7 @@ comment|/* start of string */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bool
 name|l_onecase
 decl_stmt|;
 end_decl_stmt
@@ -1245,10 +1237,10 @@ modifier|*
 name|s1
 decl_stmt|;
 comment|/* temporary pointer */
-name|boolean
+name|bool
 name|matched
 decl_stmt|;
-comment|/* a temporary boolean */
+comment|/* a temporary bool */
 comment|/* initial conditions */
 if|if
 condition|(
@@ -1267,7 +1259,7 @@ name|re
 expr_stmt|;
 name|matched
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 comment|/* loop till expression string is exhausted (or at least pretty tired) */
 while|while
@@ -1665,7 +1657,7 @@ operator|(
 name|s1
 operator|++
 operator|,
-name|TRUE
+name|true
 operator|)
 operator|)
 operator|)
@@ -1686,14 +1678,14 @@ name|_escaped
 operator|=
 name|_escaped
 condition|?
-name|FALSE
+name|false
 else|:
-name|TRUE
+name|true
 expr_stmt|;
 else|else
 name|_escaped
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 do|while
@@ -1799,14 +1791,14 @@ name|_escaped
 operator|=
 name|_escaped
 condition|?
-name|FALSE
+name|false
 else|:
-name|TRUE
+name|true
 expr_stmt|;
 else|else
 name|_escaped
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 do|while
