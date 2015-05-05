@@ -2250,6 +2250,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|stktop
+operator|>=
+literal|0
+operator|&&
 name|stk
 index|[
 name|stktop
@@ -2350,6 +2354,10 @@ condition|)
 block|{
 if|if
 condition|(
+name|stktop
+operator|>=
+literal|0
+operator|&&
 name|stk
 index|[
 name|stktop
