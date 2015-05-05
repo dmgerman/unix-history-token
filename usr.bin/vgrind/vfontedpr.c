@@ -1914,12 +1914,10 @@ specifier|static
 name|void
 name|putScp
 parameter_list|(
-name|os
-parameter_list|)
 name|char
 modifier|*
 name|os
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -3321,12 +3319,10 @@ specifier|static
 name|void
 name|putcp
 parameter_list|(
-name|c
-parameter_list|)
 specifier|register
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
