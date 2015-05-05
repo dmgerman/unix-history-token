@@ -200,7 +200,7 @@ name|open
 argument_list|(
 name|filename
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
