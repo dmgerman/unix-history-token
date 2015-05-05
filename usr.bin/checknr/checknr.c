@@ -2300,7 +2300,7 @@ decl_stmt|;
 name|char
 name|mac
 index|[
-literal|5
+literal|512
 index|]
 decl_stmt|;
 comment|/* The current macro or nroff command */
