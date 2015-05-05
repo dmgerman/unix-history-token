@@ -175,10 +175,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|cp2
-decl_stmt|;
 name|int
 name|tf
 decl_stmt|;
@@ -1221,9 +1217,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|c
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|cp
 operator|=
