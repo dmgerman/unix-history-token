@@ -105,6 +105,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MRSAS_IOC_GET_PCI_INFO
+value|_IOR('M', 7, MRSAS_DRV_PCI_INFORMATION)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MRSAS_IOC_FIRMWARE_PASS_THROUGH64
 value|_IOWR('M', 1, struct mrsas_iocpacket)
 end_define
