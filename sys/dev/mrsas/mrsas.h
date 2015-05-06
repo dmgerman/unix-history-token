@@ -315,7 +315,7 @@ begin_define
 define|#
 directive|define
 name|MRSAS_VERSION
-value|"06.705.10.02-fbsd"
+value|"06.707.04.03-fbsd"
 end_define
 
 begin_define
