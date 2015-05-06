@@ -9671,6 +9671,11 @@ decl_stmt|;
 name|bus_addr_t
 name|evt_detail_phys_addr
 decl_stmt|;
+name|struct
+name|mrsas_ctrl_info
+modifier|*
+name|ctrl_info
+decl_stmt|;
 name|bus_dma_tag_t
 name|ctlr_info_tag
 decl_stmt|;
