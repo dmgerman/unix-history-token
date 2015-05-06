@@ -3404,6 +3404,10 @@ name|acpi_handle_reboot
 operator|=
 literal|1
 expr_stmt|;
+if|#
+directive|if
+operator|!
+name|ACPI_REDUCED_HARDWARE
 comment|/* Only enable S4BIOS by default if the FACS says it is available. */
 if|if
 condition|(
@@ -3423,6 +3427,8 @@ name|acpi_s4bios
 operator|=
 literal|1
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Probe all supported sleep states. */
 name|acpi_sleep_states
 index|[
