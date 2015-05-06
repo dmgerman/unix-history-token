@@ -359,6 +359,45 @@ name|AML_UART_MISC_RECV_IRQ_CNT_SHIFT
 value|0
 end_define
 
+begin_comment
+comment|/*  * The new baud rate register is available on the  * aml8726-m6 and later.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AML_UART_NEW_BAUD_REG
+value|20
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_UART_NEW_BAUD_USE_XTAL_CLK
+value|(1<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_UART_NEW_BAUD_RATE_EN
+value|(1<< 23)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_UART_NEW_BAUD_RATE_MASK
+value|(0x7fffff<< 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_UART_NEW_BAUD_RATE_SHIFT
+value|0
+end_define
+
 begin_endif
 endif|#
 directive|endif

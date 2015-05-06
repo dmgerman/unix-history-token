@@ -140,9 +140,7 @@ begin_define
 define|#
 directive|define
 name|EVP_md5
-parameter_list|(
-name|v
-parameter_list|)
+parameter_list|()
 value|NULL
 end_define
 

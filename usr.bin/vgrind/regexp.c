@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -84,27 +90,6 @@ include|#
 directive|include
 file|"extern.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|!(FALSE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NIL
-value|0
-end_define
 
 begin_function_decl
 specifier|static
@@ -117,13 +102,13 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|boolean
+name|bool
 name|_escaped
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* true if we are currently _escaped */
+comment|/* true if we are currently x_escaped */
 end_comment
 
 begin_decl_stmt
@@ -138,7 +123,7 @@ comment|/* start of string */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bool
 name|l_onecase
 decl_stmt|;
 end_decl_stmt
@@ -165,30 +150,20 @@ begin_function
 name|int
 name|STRNCMP
 parameter_list|(
-name|s1
-parameter_list|,
-name|s2
-parameter_list|,
-name|len
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|s1
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|register
+name|char
+modifier|*
 name|s2
-decl_stmt|;
-end_function
-
-begin_decl_stmt
+parameter_list|,
 specifier|register
 name|int
 name|len
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -277,7 +252,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*	The following routine converts an irregular expression to  *	internal format.  *  *	Either meta symbols (\a \d or \p) or character strings or  *	operations ( alternation or perenthesizing ) can be  *	specified.  Each starts with a descriptor byte.  The descriptor  *	byte has STR set for strings, META set for meta symbols  *	and OPER set for operations.  *	The descriptor byte can also have the OPT bit set if the object  *	defined is optional.  Also ALT can be set to indicate an alternation.  *  *	For metasymbols the byte following the descriptor byte identities  *	the meta symbol (containing an ascii 'a', 'd', 'p', '|', or '(').  For  *	strings the byte after the descriptor is a character count for  *	the string:  *  *		meta symbols := descriptor  *				symbol  *  *		strings :=	descriptor  *				character count  *				the string  *  *		operatins :=	descriptor  *				symbol  *				character count  */
@@ -476,18 +451,19 @@ begin_comment
 comment|/* pointer current position in unconverted exp */
 end_comment
 
+begin_comment
+comment|/* re: unconverted irregular expression */
+end_comment
+
 begin_function
 name|char
 modifier|*
 name|convexp
 parameter_list|(
-name|re
-parameter_list|)
 name|char
 modifier|*
 name|re
-decl_stmt|;
-comment|/* unconverted irregular expression */
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -500,11 +476,11 @@ if|if
 condition|(
 name|re
 operator|==
-name|NIL
+name|NULL
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 if|if
@@ -516,7 +492,7 @@ literal|'\0'
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 name|cre
@@ -610,18 +586,16 @@ decl_stmt|;
 comment|/* let the conversion begin */
 name|acs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 name|cs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 while|while
 condition|(
 operator|*
 name|ure
-operator|!=
-name|NIL
 condition|)
 block|{
 switch|switch
@@ -651,7 +625,7 @@ if|if
 condition|(
 name|cs
 operator|==
-name|NIL
+name|NULL
 operator|||
 operator|(
 operator|*
@@ -715,7 +689,7 @@ if|if
 condition|(
 name|acs
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|acs
 operator|!=
@@ -754,7 +728,7 @@ condition|)
 do|;
 name|acs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 block|}
 name|cs
@@ -794,7 +768,7 @@ if|if
 condition|(
 name|acs
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|acs
 operator|!=
@@ -833,7 +807,7 @@ condition|)
 do|;
 name|acs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 block|}
 name|cs
@@ -885,7 +859,7 @@ if|if
 condition|(
 name|acs
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|acs
 operator|!=
@@ -924,7 +898,7 @@ condition|)
 do|;
 name|acs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 block|}
 name|cs
@@ -972,7 +946,7 @@ if|if
 condition|(
 name|acs
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 do|do
@@ -1007,7 +981,7 @@ condition|)
 do|;
 name|acs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 block|}
 name|cs
@@ -1044,7 +1018,7 @@ if|if
 condition|(
 name|acs
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|acs
 operator|!=
@@ -1108,7 +1082,7 @@ if|if
 condition|(
 name|cs
 operator|==
-name|NIL
+name|NULL
 operator|||
 operator|(
 operator|*
@@ -1164,7 +1138,7 @@ if|if
 condition|(
 name|acs
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 do|do
@@ -1199,7 +1173,7 @@ condition|)
 do|;
 name|acs
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 block|}
 return|return;
@@ -1214,35 +1188,30 @@ begin_comment
 comment|/*  *	The following routine recognises an irregular expresion  *	with the following special characters:  *  *		\?	-	means last match was optional  *		\a	-	matches any number of characters  *		\d	-	matches any number of spaces and tabs  *		\p	-	matches any number of alphanumeric  *				characters. The  *				characters matched will be copied into  *				the area pointed to by 'name'.  *		\|	-	alternation  *		\( \)	-	grouping used mostly for alternation and  *				optionality  *  *	The irregular expression must be translated to internal form  *	prior to calling this routine  *  *	The value returned is the pointer to the first non \a  *	character matched.  */
 end_comment
 
+begin_comment
+comment|/*  *  s: string to check for a match in  *  re: a converted irregular expression  *  mstring: where to put whatever matches a \p  */
+end_comment
+
 begin_function
 name|char
 modifier|*
 name|expmatch
 parameter_list|(
-name|s
-parameter_list|,
-name|re
-parameter_list|,
-name|mstring
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|s
-decl_stmt|;
-comment|/* string to check for a match in */
+parameter_list|,
 specifier|register
 name|char
 modifier|*
 name|re
-decl_stmt|;
-comment|/* a converted irregular expression */
+parameter_list|,
 specifier|register
 name|char
 modifier|*
 name|mstring
-decl_stmt|;
-comment|/* where to put whatever matches a \p */
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -1259,20 +1228,20 @@ modifier|*
 name|s1
 decl_stmt|;
 comment|/* temporary pointer */
-name|boolean
+name|bool
 name|matched
 decl_stmt|;
-comment|/* a temporary boolean */
+comment|/* a temporary bool */
 comment|/* initial conditions */
 if|if
 condition|(
 name|re
 operator|==
-name|NIL
+name|NULL
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 name|cs
@@ -1281,7 +1250,7 @@ name|re
 expr_stmt|;
 name|matched
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 comment|/* loop till expression string is exhausted (or at least pretty tired) */
 while|while
@@ -1393,7 +1362,7 @@ block|{
 comment|/* no match, error return */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1458,7 +1427,7 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 comment|/* the subexpression matched */
@@ -1507,7 +1476,7 @@ block|{
 comment|/* no match, error return */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1562,7 +1531,7 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|s1
 operator|!=
@@ -1601,7 +1570,7 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 operator|(
 operator|*
@@ -1623,13 +1592,13 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 comment|/* not optional and we still matched */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1679,14 +1648,14 @@ operator|(
 name|s1
 operator|++
 operator|,
-name|TRUE
+name|true
 operator|)
 operator|)
 operator|)
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 if|if
@@ -1700,14 +1669,14 @@ name|_escaped
 operator|=
 name|_escaped
 condition|?
-name|FALSE
+name|false
 else|:
-name|TRUE
+name|true
 expr_stmt|;
 else|else
 name|_escaped
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 do|while
@@ -1719,7 +1688,7 @@ condition|)
 do|;
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 comment|/* try to match anything */
@@ -1751,7 +1720,7 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 name|s1
 operator|!=
@@ -1770,7 +1739,7 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 operator|&&
 operator|(
 operator|*
@@ -1792,13 +1761,13 @@ if|if
 condition|(
 name|ptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 comment|/* not optional and we still matched */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 block|}
@@ -1813,14 +1782,14 @@ name|_escaped
 operator|=
 name|_escaped
 condition|?
-name|FALSE
+name|false
 else|:
-name|TRUE
+name|true
 expr_stmt|;
 else|else
 name|_escaped
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 do|while
@@ -1832,7 +1801,7 @@ condition|)
 do|;
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 comment|/* fail if we are currently _escaped */
@@ -1845,7 +1814,7 @@ name|_escaped
 condition|)
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 name|cs
@@ -1978,7 +1947,7 @@ else|else
 comment|/* no match, error return */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 break|break;
@@ -2063,7 +2032,7 @@ else|else
 comment|/* no match, error return */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 break|break;
@@ -2139,7 +2108,7 @@ else|else
 comment|/* no match, error return */
 return|return
 operator|(
-name|NIL
+name|NULL
 operator|)
 return|;
 break|break;

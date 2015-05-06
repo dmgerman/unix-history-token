@@ -1810,7 +1810,7 @@ comment|/* unspecified */
 end_comment
 
 begin_comment
-comment|/*  * Values for peer.flags  */
+comment|/*  * Values for peer.flags (u_int)  */
 end_comment
 
 begin_define
@@ -2002,6 +2002,17 @@ end_endif
 
 begin_comment
 comment|/* OPENSSL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FLAG_TSTAMP_PPS
+value|0x10000
+end_define
+
+begin_comment
+comment|/* PPS source provides absolute timestamp */
 end_comment
 
 begin_comment
@@ -3563,14 +3574,36 @@ value|3
 end_define
 
 begin_comment
-comment|/* set step offset */
+comment|/* set both step offsets */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOP_MAX_BACK
+value|4
+end_define
+
+begin_comment
+comment|/* set bacward-step offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LOOP_MAX_FWD
+value|5
+end_define
+
+begin_comment
+comment|/* set forward-step offset */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|LOOP_PANIC
-value|4
+value|6
 end_define
 
 begin_comment
@@ -3581,7 +3614,7 @@ begin_define
 define|#
 directive|define
 name|LOOP_PHI
-value|5
+value|7
 end_define
 
 begin_comment
@@ -3592,7 +3625,7 @@ begin_define
 define|#
 directive|define
 name|LOOP_MINSTEP
-value|6
+value|8
 end_define
 
 begin_comment
@@ -3603,7 +3636,7 @@ begin_define
 define|#
 directive|define
 name|LOOP_MINPOLL
-value|7
+value|9
 end_define
 
 begin_comment
@@ -3614,7 +3647,7 @@ begin_define
 define|#
 directive|define
 name|LOOP_ALLAN
-value|8
+value|10
 end_define
 
 begin_comment
@@ -3625,7 +3658,7 @@ begin_define
 define|#
 directive|define
 name|LOOP_HUFFPUFF
-value|9
+value|11
 end_define
 
 begin_comment
@@ -3636,7 +3669,7 @@ begin_define
 define|#
 directive|define
 name|LOOP_FREQ
-value|10
+value|12
 end_define
 
 begin_comment
@@ -3647,7 +3680,7 @@ begin_define
 define|#
 directive|define
 name|LOOP_CODEC
-value|11
+value|13
 end_define
 
 begin_comment
@@ -3658,7 +3691,7 @@ begin_define
 define|#
 directive|define
 name|LOOP_LEAP
-value|12
+value|14
 end_define
 
 begin_comment
@@ -3669,7 +3702,7 @@ begin_define
 define|#
 directive|define
 name|LOOP_TICK
-value|13
+value|15
 end_define
 
 begin_comment

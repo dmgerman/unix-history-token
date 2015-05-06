@@ -161,6 +161,17 @@ name|NV_FLAG_IGNORE_CASE
 value|0x01
 end_define
 
+begin_comment
+comment|/*  * Names don't have to be unique.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NV_FLAG_NO_UNIQUE
+value|0x02
+end_define
+
 begin_if
 if|#
 directive|if
@@ -357,6 +368,9 @@ name|buf
 parameter_list|,
 name|size_t
 name|size
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -383,6 +397,9 @@ name|nvlist_recv
 parameter_list|(
 name|int
 name|sock
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -398,6 +415,9 @@ parameter_list|,
 name|nvlist_t
 modifier|*
 name|nvl
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

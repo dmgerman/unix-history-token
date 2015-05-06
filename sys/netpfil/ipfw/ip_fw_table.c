@@ -2442,18 +2442,17 @@ operator|&
 name|ta_buf_m
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-goto|goto
-name|cleanup
-goto|;
 name|IPFW_UH_WLOCK
 argument_list|(
 name|ch
+argument_list|)
+expr_stmt|;
+name|del_toperation_state
+argument_list|(
+name|ch
+argument_list|,
+operator|&
+name|ts
 argument_list|)
 expr_stmt|;
 comment|/* Drop reference we've used in first search */
@@ -2464,15 +2463,17 @@ operator|.
 name|refcnt
 operator|--
 expr_stmt|;
+comment|/* Check prepare_batch_buffer() error */
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+goto|goto
+name|cleanup
+goto|;
 comment|/* 	 * Check if table swap has happened. 	 * (so table algo might be changed). 	 * Restart operation to achieve consistent behavior. 	 */
-name|del_toperation_state
-argument_list|(
-name|ch
-argument_list|,
-operator|&
-name|ts
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ts

@@ -1652,6 +1652,8 @@ argument_list|,
 name|arg
 operator|->
 name|len
+argument_list|,
+name|NV_FLAG_IGNORE_CASE
 argument_list|)
 expr_stmt|;
 if|if

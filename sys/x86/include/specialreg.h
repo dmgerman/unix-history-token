@@ -379,6 +379,39 @@ begin_comment
 comment|/* SVM enable bit for AMD, reserved for Intel */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EFER_LMSLE
+value|0x000002000
+end_define
+
+begin_comment
+comment|/* Long Mode Segment Limit Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EFER_FFXSR
+value|0x000004000
+end_define
+
+begin_comment
+comment|/* Fast FXSAVE/FSRSTOR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EFER_TCE
+value|0x000008000
+end_define
+
+begin_comment
+comment|/* Translation Cache Extension */
+end_comment
+
 begin_comment
 comment|/*  * Intel Extended Features registers  */
 end_comment
@@ -1001,7 +1034,7 @@ begin_define
 define|#
 directive|define
 name|AMDID_FFXSR
-value|0x01000000
+value|0x02000000
 end_define
 
 begin_define

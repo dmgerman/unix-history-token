@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntpd-opts.c)  *  *  It has been AutoGen-ed  February  4, 2015 at 02:39:17 AM by AutoGen 5.18.5pre4  *  From the definitions    ntpd-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpd author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntpd program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware and Network Time Foundation makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
+comment|/*  *  EDIT THIS FILE WITH CAUTION  (ntpd-opts.c)  *  *  It has been AutoGen-ed  April  7, 2015 at 04:23:14 AM by AutoGen 5.18.5pre4  *  From the definitions    ntpd-opts.def  *  and the template file   options  *  * Generated from AutoOpts 41:0:16 templates.  *  *  AutoOpts is a copyrighted work.  This source file is not encumbered  *  by AutoOpts licensing, but is provided under the licensing terms chosen  *  by the ntpd author or copyright holder.  AutoOpts is  *  licensed under the terms of the LGPL.  The redistributable library  *  (``libopts'') is licensed under the terms of either the LGPL or, at the  *  users discretion, the BSD license.  See the AutoOpts and/or libopts sources  *  for details.  *  * The ntpd program is copyrighted and licensed  * under the following terms:  *  *  Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.  *  This is free software. It is licensed for use, modification and  *  redistribution under the terms of the NTP License, copies of which  *  can be seen at:  *<http://ntp.org/license>  *<http://opensource.org/licenses/ntp-license.php>  *  *  Permission to use, copy, modify, and distribute this software and its  *  documentation for any purpose with or without fee is hereby granted,  *  provided that the above copyright notice appears in all copies and that  *  both the copyright notice and this permission notice appear in  *  supporting documentation, and that the name The University of Delaware not be used in  *  advertising or publicity pertaining to distribution of the software  *  without specific, written prior permission. The University of Delaware and Network Time Foundation makes no  *  representations about the suitability this software for any purpose. It  *  is provided "as is" without express or implied warranty.  */
 end_comment
 
 begin_ifndef
@@ -125,11 +125,11 @@ name|char
 specifier|const
 name|ntpd_opt_strs
 index|[
-literal|3061
+literal|3129
 index|]
 init|=
 comment|/*     0 */
-literal|"ntpd 4.2.8p1\n"
+literal|"ntpd 4.2.8p2\n"
 literal|"Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.\n"
 literal|"This is free software. It is licensed for use, modification and\n"
 literal|"redistribution under the terms of the NTP License, copies of which\n"
@@ -208,175 +208,181 @@ literal|"PANICGATE\0"
 comment|/*  1507 */
 literal|"panicgate\0"
 comment|/*  1517 */
+literal|"Step any initial offset correction.\0"
+comment|/*  1553 */
+literal|"FORCE_STEP_ONCE\0"
+comment|/*  1569 */
+literal|"force-step-once\0"
+comment|/*  1585 */
 literal|"Jail directory\0"
-comment|/*  1532 */
+comment|/*  1600 */
 literal|"JAILDIR\0"
-comment|/*  1540 */
+comment|/*  1608 */
 literal|"jaildir\0"
-comment|/*  1548 */
+comment|/*  1616 */
 literal|"built without --enable-clockctl or --enable-linuxcaps or --enable-solarisprivs\0"
-comment|/*  1627 */
+comment|/*  1695 */
 literal|"Listen on an interface name or address\0"
-comment|/*  1666 */
+comment|/*  1734 */
 literal|"INTERFACE\0"
-comment|/*  1676 */
+comment|/*  1744 */
 literal|"interface\0"
-comment|/*  1686 */
-literal|"path to symmetric keys\0"
-comment|/*  1709 */
-literal|"KEYFILE\0"
-comment|/*  1717 */
-literal|"keyfile\0"
-comment|/*  1725 */
-literal|"path to the log file\0"
-comment|/*  1746 */
-literal|"LOGFILE\0"
 comment|/*  1754 */
+literal|"path to symmetric keys\0"
+comment|/*  1777 */
+literal|"KEYFILE\0"
+comment|/*  1785 */
+literal|"keyfile\0"
+comment|/*  1793 */
+literal|"path to the log file\0"
+comment|/*  1814 */
+literal|"LOGFILE\0"
+comment|/*  1822 */
 literal|"logfile\0"
-comment|/*  1762 */
+comment|/*  1830 */
 literal|"Do not listen to virtual interfaces\0"
-comment|/*  1798 */
+comment|/*  1866 */
 literal|"NOVIRTUALIPS\0"
-comment|/*  1811 */
+comment|/*  1879 */
 literal|"novirtualips\0"
-comment|/*  1824 */
+comment|/*  1892 */
 literal|"Modify Multimedia Timer (Windows only)\0"
-comment|/*  1863 */
+comment|/*  1931 */
 literal|"MODIFYMMTIMER\0"
-comment|/*  1877 */
+comment|/*  1945 */
 literal|"modifymmtimer\0"
-comment|/*  1891 */
+comment|/*  1959 */
 literal|"Do not fork\0"
-comment|/*  1903 */
+comment|/*  1971 */
 literal|"NOFORK\0"
-comment|/*  1910 */
+comment|/*  1978 */
 literal|"nofork\0"
-comment|/*  1917 */
-literal|"Run at high priority\0"
-comment|/*  1938 */
-literal|"NICE\0"
-comment|/*  1943 */
-literal|"nice\0"
-comment|/*  1948 */
-literal|"path to the PID file\0"
-comment|/*  1969 */
-literal|"PIDFILE\0"
-comment|/*  1977 */
-literal|"pidfile\0"
 comment|/*  1985 */
-literal|"Process priority\0"
-comment|/*  2002 */
-literal|"PRIORITY\0"
+literal|"Run at high priority\0"
+comment|/*  2006 */
+literal|"NICE\0"
 comment|/*  2011 */
+literal|"nice\0"
+comment|/*  2016 */
+literal|"path to the PID file\0"
+comment|/*  2037 */
+literal|"PIDFILE\0"
+comment|/*  2045 */
+literal|"pidfile\0"
+comment|/*  2053 */
+literal|"Process priority\0"
+comment|/*  2070 */
+literal|"PRIORITY\0"
+comment|/*  2079 */
 literal|"priority\0"
-comment|/*  2020 */
+comment|/*  2088 */
 literal|"Set the time and quit\0"
-comment|/*  2042 */
+comment|/*  2110 */
 literal|"QUIT\0"
-comment|/*  2047 */
+comment|/*  2115 */
 literal|"quit\0"
-comment|/*  2052 */
+comment|/*  2120 */
 literal|"Broadcast/propagation delay\0"
-comment|/*  2080 */
+comment|/*  2148 */
 literal|"PROPAGATIONDELAY\0"
-comment|/*  2097 */
+comment|/*  2165 */
 literal|"propagationdelay\0"
-comment|/*  2114 */
+comment|/*  2182 */
 literal|"Save parsed configuration and quit\0"
-comment|/*  2149 */
+comment|/*  2217 */
 literal|"SAVECONFIGQUIT\0"
-comment|/*  2164 */
+comment|/*  2232 */
 literal|"saveconfigquit\0"
-comment|/*  2179 */
+comment|/*  2247 */
 literal|"Statistics file location\0"
-comment|/*  2204 */
+comment|/*  2272 */
 literal|"STATSDIR\0"
-comment|/*  2213 */
+comment|/*  2281 */
 literal|"statsdir\0"
-comment|/*  2222 */
+comment|/*  2290 */
 literal|"Trusted key number\0"
-comment|/*  2241 */
+comment|/*  2309 */
 literal|"TRUSTEDKEY\0"
-comment|/*  2252 */
+comment|/*  2320 */
 literal|"trustedkey\0"
-comment|/*  2263 */
+comment|/*  2331 */
 literal|"Run as userid (or userid:groupid)\0"
-comment|/*  2297 */
+comment|/*  2365 */
 literal|"USER\0"
-comment|/*  2302 */
+comment|/*  2370 */
 literal|"user\0"
-comment|/*  2307 */
+comment|/*  2375 */
 literal|"interval in seconds between scans for new or dropped interfaces\0"
-comment|/*  2371 */
-literal|"UPDATEINTERVAL\0"
-comment|/*  2386 */
-literal|"updateinterval\0"
-comment|/*  2401 */
-literal|"make ARG an ntp variable (RW)\0"
-comment|/*  2431 */
-literal|"VAR\0"
-comment|/*  2435 */
-literal|"var\0"
 comment|/*  2439 */
+literal|"UPDATEINTERVAL\0"
+comment|/*  2454 */
+literal|"updateinterval\0"
+comment|/*  2469 */
+literal|"make ARG an ntp variable (RW)\0"
+comment|/*  2499 */
+literal|"VAR\0"
+comment|/*  2503 */
+literal|"var\0"
+comment|/*  2507 */
 literal|"make ARG an ntp variable (RW|DEF)\0"
-comment|/*  2473 */
+comment|/*  2541 */
 literal|"DVAR\0"
-comment|/*  2478 */
+comment|/*  2546 */
 literal|"dvar\0"
-comment|/*  2483 */
+comment|/*  2551 */
 literal|"Seconds to wait for first clock sync\0"
-comment|/*  2520 */
+comment|/*  2588 */
 literal|"WAIT_SYNC\0"
-comment|/*  2530 */
+comment|/*  2598 */
 literal|"wait-sync\0"
-comment|/*  2540 */
+comment|/*  2608 */
 literal|"Slew up to 600 seconds\0"
-comment|/*  2563 */
+comment|/*  2631 */
 literal|"SLEW\0"
-comment|/*  2568 */
+comment|/*  2636 */
 literal|"slew\0"
-comment|/*  2573 */
+comment|/*  2641 */
 literal|"Use CPU cycle counter (Windows only)\0"
-comment|/*  2610 */
+comment|/*  2678 */
 literal|"USEPCC\0"
-comment|/*  2617 */
+comment|/*  2685 */
 literal|"usepcc\0"
-comment|/*  2624 */
+comment|/*  2692 */
 literal|"Force CPU cycle counter use (Windows only)\0"
-comment|/*  2667 */
+comment|/*  2735 */
 literal|"PCCFREQ\0"
-comment|/*  2675 */
+comment|/*  2743 */
 literal|"pccfreq\0"
-comment|/*  2683 */
+comment|/*  2751 */
 literal|"Register with mDNS as a NTP server\0"
-comment|/*  2718 */
+comment|/*  2786 */
 literal|"MDNS\0"
-comment|/*  2723 */
+comment|/*  2791 */
 literal|"mdns\0"
-comment|/*  2728 */
+comment|/*  2796 */
 literal|"display extended usage information and exit\0"
-comment|/*  2772 */
+comment|/*  2840 */
 literal|"help\0"
-comment|/*  2777 */
+comment|/*  2845 */
 literal|"extended usage information passed thru pager\0"
-comment|/*  2822 */
+comment|/*  2890 */
 literal|"more-help\0"
-comment|/*  2832 */
+comment|/*  2900 */
 literal|"output version information and exit\0"
-comment|/*  2868 */
+comment|/*  2936 */
 literal|"version\0"
-comment|/*  2876 */
+comment|/*  2944 */
 literal|"NTPD\0"
-comment|/*  2881 */
-literal|"ntpd - NTP daemon program - Ver. 4.2.8p1\n"
+comment|/*  2949 */
+literal|"ntpd - NTP daemon program - Ver. 4.2.8p2\n"
 literal|"Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... \\\n"
 literal|"\t\t[<server1> ...<serverN> ]\n\0"
-comment|/*  3012 */
+comment|/*  3080 */
 literal|"http://bugs.ntp.org, bugs@ntp.org\0"
-comment|/*  3046 */
+comment|/*  3114 */
 literal|"\n\0"
-comment|/*  3048 */
-literal|"ntpd 4.2.8p1"
+comment|/*  3116 */
+literal|"ntpd 4.2.8p2"
 decl_stmt|;
 comment|/**  *  ipv4 option description with  *  "Must also have options" and "Incompatible options":  */
 comment|/** Descriptive text for the ipv4 option */
@@ -640,6 +646,27 @@ define|#
 directive|define
 name|PANICGATE_FLAGS
 value|(OPTST_DISABLED)
+comment|/**  *  force_step_once option description:  */
+comment|/** Descriptive text for the force_step_once option */
+define|#
+directive|define
+name|FORCE_STEP_ONCE_DESC
+value|(ntpd_opt_strs+1517)
+comment|/** Upper-cased name for the force_step_once option */
+define|#
+directive|define
+name|FORCE_STEP_ONCE_NAME
+value|(ntpd_opt_strs+1553)
+comment|/** Name string for the force_step_once option */
+define|#
+directive|define
+name|FORCE_STEP_ONCE_name
+value|(ntpd_opt_strs+1569)
+comment|/** Compiled in flag settings for the force_step_once option */
+define|#
+directive|define
+name|FORCE_STEP_ONCE_FLAGS
+value|(OPTST_DISABLED)
 comment|/**  *  jaildir option description:  */
 ifdef|#
 directive|ifdef
@@ -648,17 +675,17 @@ comment|/** Descriptive text for the jaildir option */
 define|#
 directive|define
 name|JAILDIR_DESC
-value|(ntpd_opt_strs+1517)
+value|(ntpd_opt_strs+1585)
 comment|/** Upper-cased name for the jaildir option */
 define|#
 directive|define
 name|JAILDIR_NAME
-value|(ntpd_opt_strs+1532)
+value|(ntpd_opt_strs+1600)
 comment|/** Name string for the jaildir option */
 define|#
 directive|define
 name|JAILDIR_name
-value|(ntpd_opt_strs+1540)
+value|(ntpd_opt_strs+1608)
 comment|/** Compiled in flag settings for the jaildir option */
 define|#
 directive|define
@@ -679,11 +706,11 @@ comment|/** Descriptive text for the jaildir option */
 define|#
 directive|define
 name|JAILDIR_DESC
-value|(ntpd_opt_strs+1548)
+value|(ntpd_opt_strs+1616)
 define|#
 directive|define
 name|JAILDIR_name
-value|(ntpd_opt_strs+1540)
+value|(ntpd_opt_strs+1608)
 endif|#
 directive|endif
 comment|/* HAVE_DROPROOT */
@@ -692,17 +719,17 @@ comment|/** Descriptive text for the interface option */
 define|#
 directive|define
 name|INTERFACE_DESC
-value|(ntpd_opt_strs+1627)
+value|(ntpd_opt_strs+1695)
 comment|/** Upper-cased name for the interface option */
 define|#
 directive|define
 name|INTERFACE_NAME
-value|(ntpd_opt_strs+1666)
+value|(ntpd_opt_strs+1734)
 comment|/** Name string for the interface option */
 define|#
 directive|define
 name|INTERFACE_name
-value|(ntpd_opt_strs+1676)
+value|(ntpd_opt_strs+1744)
 comment|/** Compiled in flag settings for the interface option */
 define|#
 directive|define
@@ -713,17 +740,17 @@ comment|/** Descriptive text for the keyfile option */
 define|#
 directive|define
 name|KEYFILE_DESC
-value|(ntpd_opt_strs+1686)
+value|(ntpd_opt_strs+1754)
 comment|/** Upper-cased name for the keyfile option */
 define|#
 directive|define
 name|KEYFILE_NAME
-value|(ntpd_opt_strs+1709)
+value|(ntpd_opt_strs+1777)
 comment|/** Name string for the keyfile option */
 define|#
 directive|define
 name|KEYFILE_name
-value|(ntpd_opt_strs+1717)
+value|(ntpd_opt_strs+1785)
 comment|/** Compiled in flag settings for the keyfile option */
 define|#
 directive|define
@@ -734,17 +761,17 @@ comment|/** Descriptive text for the logfile option */
 define|#
 directive|define
 name|LOGFILE_DESC
-value|(ntpd_opt_strs+1725)
+value|(ntpd_opt_strs+1793)
 comment|/** Upper-cased name for the logfile option */
 define|#
 directive|define
 name|LOGFILE_NAME
-value|(ntpd_opt_strs+1746)
+value|(ntpd_opt_strs+1814)
 comment|/** Name string for the logfile option */
 define|#
 directive|define
 name|LOGFILE_name
-value|(ntpd_opt_strs+1754)
+value|(ntpd_opt_strs+1822)
 comment|/** Compiled in flag settings for the logfile option */
 define|#
 directive|define
@@ -755,17 +782,17 @@ comment|/** Descriptive text for the novirtualips option */
 define|#
 directive|define
 name|NOVIRTUALIPS_DESC
-value|(ntpd_opt_strs+1762)
+value|(ntpd_opt_strs+1830)
 comment|/** Upper-cased name for the novirtualips option */
 define|#
 directive|define
 name|NOVIRTUALIPS_NAME
-value|(ntpd_opt_strs+1798)
+value|(ntpd_opt_strs+1866)
 comment|/** Name string for the novirtualips option */
 define|#
 directive|define
 name|NOVIRTUALIPS_name
-value|(ntpd_opt_strs+1811)
+value|(ntpd_opt_strs+1879)
 comment|/** Compiled in flag settings for the novirtualips option */
 define|#
 directive|define
@@ -779,17 +806,17 @@ comment|/** Descriptive text for the modifymmtimer option */
 define|#
 directive|define
 name|MODIFYMMTIMER_DESC
-value|(ntpd_opt_strs+1824)
+value|(ntpd_opt_strs+1892)
 comment|/** Upper-cased name for the modifymmtimer option */
 define|#
 directive|define
 name|MODIFYMMTIMER_NAME
-value|(ntpd_opt_strs+1863)
+value|(ntpd_opt_strs+1931)
 comment|/** Name string for the modifymmtimer option */
 define|#
 directive|define
 name|MODIFYMMTIMER_name
-value|(ntpd_opt_strs+1877)
+value|(ntpd_opt_strs+1945)
 comment|/** Compiled in flag settings for the modifymmtimer option */
 define|#
 directive|define
@@ -822,17 +849,17 @@ comment|/** Descriptive text for the nofork option */
 define|#
 directive|define
 name|NOFORK_DESC
-value|(ntpd_opt_strs+1891)
+value|(ntpd_opt_strs+1959)
 comment|/** Upper-cased name for the nofork option */
 define|#
 directive|define
 name|NOFORK_NAME
-value|(ntpd_opt_strs+1903)
+value|(ntpd_opt_strs+1971)
 comment|/** Name string for the nofork option */
 define|#
 directive|define
 name|NOFORK_name
-value|(ntpd_opt_strs+1910)
+value|(ntpd_opt_strs+1978)
 comment|/** Other options that appear in conjunction with the nofork option */
 specifier|static
 name|int
@@ -856,17 +883,17 @@ comment|/** Descriptive text for the nice option */
 define|#
 directive|define
 name|NICE_DESC
-value|(ntpd_opt_strs+1917)
+value|(ntpd_opt_strs+1985)
 comment|/** Upper-cased name for the nice option */
 define|#
 directive|define
 name|NICE_NAME
-value|(ntpd_opt_strs+1938)
+value|(ntpd_opt_strs+2006)
 comment|/** Name string for the nice option */
 define|#
 directive|define
 name|NICE_name
-value|(ntpd_opt_strs+1943)
+value|(ntpd_opt_strs+2011)
 comment|/** Compiled in flag settings for the nice option */
 define|#
 directive|define
@@ -877,17 +904,17 @@ comment|/** Descriptive text for the pidfile option */
 define|#
 directive|define
 name|PIDFILE_DESC
-value|(ntpd_opt_strs+1948)
+value|(ntpd_opt_strs+2016)
 comment|/** Upper-cased name for the pidfile option */
 define|#
 directive|define
 name|PIDFILE_NAME
-value|(ntpd_opt_strs+1969)
+value|(ntpd_opt_strs+2037)
 comment|/** Name string for the pidfile option */
 define|#
 directive|define
 name|PIDFILE_name
-value|(ntpd_opt_strs+1977)
+value|(ntpd_opt_strs+2045)
 comment|/** Compiled in flag settings for the pidfile option */
 define|#
 directive|define
@@ -898,17 +925,17 @@ comment|/** Descriptive text for the priority option */
 define|#
 directive|define
 name|PRIORITY_DESC
-value|(ntpd_opt_strs+1985)
+value|(ntpd_opt_strs+2053)
 comment|/** Upper-cased name for the priority option */
 define|#
 directive|define
 name|PRIORITY_NAME
-value|(ntpd_opt_strs+2002)
+value|(ntpd_opt_strs+2070)
 comment|/** Name string for the priority option */
 define|#
 directive|define
 name|PRIORITY_name
-value|(ntpd_opt_strs+2011)
+value|(ntpd_opt_strs+2079)
 comment|/** Compiled in flag settings for the priority option */
 define|#
 directive|define
@@ -919,17 +946,17 @@ comment|/** Descriptive text for the quit option */
 define|#
 directive|define
 name|QUIT_DESC
-value|(ntpd_opt_strs+2020)
+value|(ntpd_opt_strs+2088)
 comment|/** Upper-cased name for the quit option */
 define|#
 directive|define
 name|QUIT_NAME
-value|(ntpd_opt_strs+2042)
+value|(ntpd_opt_strs+2110)
 comment|/** Name string for the quit option */
 define|#
 directive|define
 name|QUIT_name
-value|(ntpd_opt_strs+2047)
+value|(ntpd_opt_strs+2115)
 comment|/** Other options that appear in conjunction with the quit option */
 specifier|static
 name|int
@@ -955,17 +982,17 @@ comment|/** Descriptive text for the propagationdelay option */
 define|#
 directive|define
 name|PROPAGATIONDELAY_DESC
-value|(ntpd_opt_strs+2052)
+value|(ntpd_opt_strs+2120)
 comment|/** Upper-cased name for the propagationdelay option */
 define|#
 directive|define
 name|PROPAGATIONDELAY_NAME
-value|(ntpd_opt_strs+2080)
+value|(ntpd_opt_strs+2148)
 comment|/** Name string for the propagationdelay option */
 define|#
 directive|define
 name|PROPAGATIONDELAY_name
-value|(ntpd_opt_strs+2097)
+value|(ntpd_opt_strs+2165)
 comment|/** Compiled in flag settings for the propagationdelay option */
 define|#
 directive|define
@@ -979,17 +1006,17 @@ comment|/** Descriptive text for the saveconfigquit option */
 define|#
 directive|define
 name|SAVECONFIGQUIT_DESC
-value|(ntpd_opt_strs+2114)
+value|(ntpd_opt_strs+2182)
 comment|/** Upper-cased name for the saveconfigquit option */
 define|#
 directive|define
 name|SAVECONFIGQUIT_NAME
-value|(ntpd_opt_strs+2149)
+value|(ntpd_opt_strs+2217)
 comment|/** Name string for the saveconfigquit option */
 define|#
 directive|define
 name|SAVECONFIGQUIT_name
-value|(ntpd_opt_strs+2164)
+value|(ntpd_opt_strs+2232)
 comment|/** Other options that appear in conjunction with the saveconfigquit option */
 specifier|static
 name|int
@@ -1041,17 +1068,17 @@ comment|/** Descriptive text for the statsdir option */
 define|#
 directive|define
 name|STATSDIR_DESC
-value|(ntpd_opt_strs+2179)
+value|(ntpd_opt_strs+2247)
 comment|/** Upper-cased name for the statsdir option */
 define|#
 directive|define
 name|STATSDIR_NAME
-value|(ntpd_opt_strs+2204)
+value|(ntpd_opt_strs+2272)
 comment|/** Name string for the statsdir option */
 define|#
 directive|define
 name|STATSDIR_name
-value|(ntpd_opt_strs+2213)
+value|(ntpd_opt_strs+2281)
 comment|/** Compiled in flag settings for the statsdir option */
 define|#
 directive|define
@@ -1062,17 +1089,17 @@ comment|/** Descriptive text for the trustedkey option */
 define|#
 directive|define
 name|TRUSTEDKEY_DESC
-value|(ntpd_opt_strs+2222)
+value|(ntpd_opt_strs+2290)
 comment|/** Upper-cased name for the trustedkey option */
 define|#
 directive|define
 name|TRUSTEDKEY_NAME
-value|(ntpd_opt_strs+2241)
+value|(ntpd_opt_strs+2309)
 comment|/** Name string for the trustedkey option */
 define|#
 directive|define
 name|TRUSTEDKEY_name
-value|(ntpd_opt_strs+2252)
+value|(ntpd_opt_strs+2320)
 comment|/** Compiled in flag settings for the trustedkey option */
 define|#
 directive|define
@@ -1086,17 +1113,17 @@ comment|/** Descriptive text for the user option */
 define|#
 directive|define
 name|USER_DESC
-value|(ntpd_opt_strs+2263)
+value|(ntpd_opt_strs+2331)
 comment|/** Upper-cased name for the user option */
 define|#
 directive|define
 name|USER_NAME
-value|(ntpd_opt_strs+2297)
+value|(ntpd_opt_strs+2365)
 comment|/** Name string for the user option */
 define|#
 directive|define
 name|USER_name
-value|(ntpd_opt_strs+2302)
+value|(ntpd_opt_strs+2370)
 comment|/** Compiled in flag settings for the user option */
 define|#
 directive|define
@@ -1117,11 +1144,11 @@ comment|/** Descriptive text for the user option */
 define|#
 directive|define
 name|USER_DESC
-value|(ntpd_opt_strs+1548)
+value|(ntpd_opt_strs+1616)
 define|#
 directive|define
 name|USER_name
-value|(ntpd_opt_strs+2302)
+value|(ntpd_opt_strs+2370)
 endif|#
 directive|endif
 comment|/* HAVE_DROPROOT */
@@ -1130,17 +1157,17 @@ comment|/** Descriptive text for the updateinterval option */
 define|#
 directive|define
 name|UPDATEINTERVAL_DESC
-value|(ntpd_opt_strs+2307)
+value|(ntpd_opt_strs+2375)
 comment|/** Upper-cased name for the updateinterval option */
 define|#
 directive|define
 name|UPDATEINTERVAL_NAME
-value|(ntpd_opt_strs+2371)
+value|(ntpd_opt_strs+2439)
 comment|/** Name string for the updateinterval option */
 define|#
 directive|define
 name|UPDATEINTERVAL_name
-value|(ntpd_opt_strs+2386)
+value|(ntpd_opt_strs+2454)
 comment|/** Compiled in flag settings for the updateinterval option */
 define|#
 directive|define
@@ -1151,17 +1178,17 @@ comment|/** Descriptive text for the var option */
 define|#
 directive|define
 name|VAR_DESC
-value|(ntpd_opt_strs+2401)
+value|(ntpd_opt_strs+2469)
 comment|/** Upper-cased name for the var option */
 define|#
 directive|define
 name|VAR_NAME
-value|(ntpd_opt_strs+2431)
+value|(ntpd_opt_strs+2499)
 comment|/** Name string for the var option */
 define|#
 directive|define
 name|VAR_name
-value|(ntpd_opt_strs+2435)
+value|(ntpd_opt_strs+2503)
 comment|/** Compiled in flag settings for the var option */
 define|#
 directive|define
@@ -1172,17 +1199,17 @@ comment|/** Descriptive text for the dvar option */
 define|#
 directive|define
 name|DVAR_DESC
-value|(ntpd_opt_strs+2439)
+value|(ntpd_opt_strs+2507)
 comment|/** Upper-cased name for the dvar option */
 define|#
 directive|define
 name|DVAR_NAME
-value|(ntpd_opt_strs+2473)
+value|(ntpd_opt_strs+2541)
 comment|/** Name string for the dvar option */
 define|#
 directive|define
 name|DVAR_name
-value|(ntpd_opt_strs+2478)
+value|(ntpd_opt_strs+2546)
 comment|/** Compiled in flag settings for the dvar option */
 define|#
 directive|define
@@ -1196,17 +1223,17 @@ comment|/** Descriptive text for the wait-sync option */
 define|#
 directive|define
 name|WAIT_SYNC_DESC
-value|(ntpd_opt_strs+2483)
+value|(ntpd_opt_strs+2551)
 comment|/** Upper-cased name for the wait-sync option */
 define|#
 directive|define
 name|WAIT_SYNC_NAME
-value|(ntpd_opt_strs+2520)
+value|(ntpd_opt_strs+2588)
 comment|/** Name string for the wait-sync option */
 define|#
 directive|define
 name|WAIT_SYNC_name
-value|(ntpd_opt_strs+2530)
+value|(ntpd_opt_strs+2598)
 comment|/** Other options that appear in conjunction with the wait-sync option */
 specifier|static
 name|int
@@ -1260,17 +1287,17 @@ comment|/** Descriptive text for the slew option */
 define|#
 directive|define
 name|SLEW_DESC
-value|(ntpd_opt_strs+2540)
+value|(ntpd_opt_strs+2608)
 comment|/** Upper-cased name for the slew option */
 define|#
 directive|define
 name|SLEW_NAME
-value|(ntpd_opt_strs+2563)
+value|(ntpd_opt_strs+2631)
 comment|/** Name string for the slew option */
 define|#
 directive|define
 name|SLEW_name
-value|(ntpd_opt_strs+2568)
+value|(ntpd_opt_strs+2636)
 comment|/** Compiled in flag settings for the slew option */
 define|#
 directive|define
@@ -1284,17 +1311,17 @@ comment|/** Descriptive text for the usepcc option */
 define|#
 directive|define
 name|USEPCC_DESC
-value|(ntpd_opt_strs+2573)
+value|(ntpd_opt_strs+2641)
 comment|/** Upper-cased name for the usepcc option */
 define|#
 directive|define
 name|USEPCC_NAME
-value|(ntpd_opt_strs+2610)
+value|(ntpd_opt_strs+2678)
 comment|/** Name string for the usepcc option */
 define|#
 directive|define
 name|USEPCC_name
-value|(ntpd_opt_strs+2617)
+value|(ntpd_opt_strs+2685)
 comment|/** Compiled in flag settings for the usepcc option */
 define|#
 directive|define
@@ -1330,17 +1357,17 @@ comment|/** Descriptive text for the pccfreq option */
 define|#
 directive|define
 name|PCCFREQ_DESC
-value|(ntpd_opt_strs+2624)
+value|(ntpd_opt_strs+2692)
 comment|/** Upper-cased name for the pccfreq option */
 define|#
 directive|define
 name|PCCFREQ_NAME
-value|(ntpd_opt_strs+2667)
+value|(ntpd_opt_strs+2735)
 comment|/** Name string for the pccfreq option */
 define|#
 directive|define
 name|PCCFREQ_name
-value|(ntpd_opt_strs+2675)
+value|(ntpd_opt_strs+2743)
 comment|/** Compiled in flag settings for the pccfreq option */
 define|#
 directive|define
@@ -1376,17 +1403,17 @@ comment|/** Descriptive text for the mdns option */
 define|#
 directive|define
 name|MDNS_DESC
-value|(ntpd_opt_strs+2683)
+value|(ntpd_opt_strs+2751)
 comment|/** Upper-cased name for the mdns option */
 define|#
 directive|define
 name|MDNS_NAME
-value|(ntpd_opt_strs+2718)
+value|(ntpd_opt_strs+2786)
 comment|/** Name string for the mdns option */
 define|#
 directive|define
 name|MDNS_name
-value|(ntpd_opt_strs+2723)
+value|(ntpd_opt_strs+2791)
 comment|/** Compiled in flag settings for the mdns option */
 define|#
 directive|define
@@ -1418,22 +1445,22 @@ comment|/*  *  Help/More_Help/Version option descriptions:  */
 define|#
 directive|define
 name|HELP_DESC
-value|(ntpd_opt_strs+2728)
+value|(ntpd_opt_strs+2796)
 define|#
 directive|define
 name|HELP_name
-value|(ntpd_opt_strs+2772)
+value|(ntpd_opt_strs+2840)
 ifdef|#
 directive|ifdef
 name|HAVE_WORKING_FORK
 define|#
 directive|define
 name|MORE_HELP_DESC
-value|(ntpd_opt_strs+2777)
+value|(ntpd_opt_strs+2845)
 define|#
 directive|define
 name|MORE_HELP_name
-value|(ntpd_opt_strs+2822)
+value|(ntpd_opt_strs+2890)
 define|#
 directive|define
 name|MORE_HELP_FLAGS
@@ -1472,11 +1499,11 @@ directive|endif
 define|#
 directive|define
 name|VER_DESC
-value|(ntpd_opt_strs+2832)
+value|(ntpd_opt_strs+2900)
 define|#
 directive|define
 name|VER_name
-value|(ntpd_opt_strs+2868)
+value|(ntpd_opt_strs+2936)
 comment|/**  *  Declare option callback procedures  */
 specifier|extern
 name|tOptProc
@@ -2086,10 +2113,66 @@ block|{
 comment|/* entry idx, value */
 literal|10
 block|,
-name|VALUE_OPT_JAILDIR
+name|VALUE_OPT_FORCE_STEP_ONCE
 block|,
 comment|/* equiv idx, value */
 literal|10
+block|,
+name|VALUE_OPT_FORCE_STEP_ONCE
+block|,
+comment|/* equivalenced to  */
+name|NO_EQUIVALENT
+block|,
+comment|/* min, max, act ct */
+literal|0
+block|,
+literal|1
+block|,
+literal|0
+block|,
+comment|/* opt state flags  */
+name|FORCE_STEP_ONCE_FLAGS
+block|,
+literal|0
+block|,
+comment|/* last opt argumnt */
+block|{
+name|NULL
+block|}
+block|,
+comment|/* --force_step_once */
+comment|/* arg list/cookie  */
+name|NULL
+block|,
+comment|/* must/cannot opts */
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* option proc      */
+name|NULL
+block|,
+comment|/* desc, NAME, name */
+name|FORCE_STEP_ONCE_DESC
+block|,
+name|FORCE_STEP_ONCE_NAME
+block|,
+name|FORCE_STEP_ONCE_name
+block|,
+comment|/* disablement strs */
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
+block|{
+comment|/* entry idx, value */
+literal|11
+block|,
+name|VALUE_OPT_JAILDIR
+block|,
+comment|/* equiv idx, value */
+literal|11
 block|,
 name|VALUE_OPT_JAILDIR
 block|,
@@ -2140,12 +2223,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|11
+literal|12
 block|,
 name|VALUE_OPT_INTERFACE
 block|,
 comment|/* equiv idx, value */
-literal|11
+literal|12
 block|,
 name|VALUE_OPT_INTERFACE
 block|,
@@ -2196,12 +2279,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|12
+literal|13
 block|,
 name|VALUE_OPT_KEYFILE
 block|,
 comment|/* equiv idx, value */
-literal|12
+literal|13
 block|,
 name|VALUE_OPT_KEYFILE
 block|,
@@ -2252,12 +2335,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|13
+literal|14
 block|,
 name|VALUE_OPT_LOGFILE
 block|,
 comment|/* equiv idx, value */
-literal|13
+literal|14
 block|,
 name|VALUE_OPT_LOGFILE
 block|,
@@ -2308,12 +2391,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|14
+literal|15
 block|,
 name|VALUE_OPT_NOVIRTUALIPS
 block|,
 comment|/* equiv idx, value */
-literal|14
+literal|15
 block|,
 name|VALUE_OPT_NOVIRTUALIPS
 block|,
@@ -2364,12 +2447,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|15
+literal|16
 block|,
 name|VALUE_OPT_MODIFYMMTIMER
 block|,
 comment|/* equiv idx, value */
-literal|15
+literal|16
 block|,
 name|VALUE_OPT_MODIFYMMTIMER
 block|,
@@ -2420,12 +2503,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|16
+literal|17
 block|,
 name|VALUE_OPT_NOFORK
 block|,
 comment|/* equiv idx, value */
-literal|16
+literal|17
 block|,
 name|VALUE_OPT_NOFORK
 block|,
@@ -2476,12 +2559,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|17
+literal|18
 block|,
 name|VALUE_OPT_NICE
 block|,
 comment|/* equiv idx, value */
-literal|17
+literal|18
 block|,
 name|VALUE_OPT_NICE
 block|,
@@ -2532,12 +2615,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|18
+literal|19
 block|,
 name|VALUE_OPT_PIDFILE
 block|,
 comment|/* equiv idx, value */
-literal|18
+literal|19
 block|,
 name|VALUE_OPT_PIDFILE
 block|,
@@ -2588,12 +2671,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|19
+literal|20
 block|,
 name|VALUE_OPT_PRIORITY
 block|,
 comment|/* equiv idx, value */
-literal|19
+literal|20
 block|,
 name|VALUE_OPT_PRIORITY
 block|,
@@ -2644,12 +2727,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|20
+literal|21
 block|,
 name|VALUE_OPT_QUIT
 block|,
 comment|/* equiv idx, value */
-literal|20
+literal|21
 block|,
 name|VALUE_OPT_QUIT
 block|,
@@ -2700,12 +2783,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|21
+literal|22
 block|,
 name|VALUE_OPT_PROPAGATIONDELAY
 block|,
 comment|/* equiv idx, value */
-literal|21
+literal|22
 block|,
 name|VALUE_OPT_PROPAGATIONDELAY
 block|,
@@ -2756,12 +2839,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|22
+literal|23
 block|,
 name|VALUE_OPT_SAVECONFIGQUIT
 block|,
 comment|/* equiv idx, value */
-literal|22
+literal|23
 block|,
 name|VALUE_OPT_SAVECONFIGQUIT
 block|,
@@ -2812,12 +2895,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|23
+literal|24
 block|,
 name|VALUE_OPT_STATSDIR
 block|,
 comment|/* equiv idx, value */
-literal|23
+literal|24
 block|,
 name|VALUE_OPT_STATSDIR
 block|,
@@ -2868,12 +2951,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|24
+literal|25
 block|,
 name|VALUE_OPT_TRUSTEDKEY
 block|,
 comment|/* equiv idx, value */
-literal|24
+literal|25
 block|,
 name|VALUE_OPT_TRUSTEDKEY
 block|,
@@ -2924,12 +3007,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|25
+literal|26
 block|,
 name|VALUE_OPT_USER
 block|,
 comment|/* equiv idx, value */
-literal|25
+literal|26
 block|,
 name|VALUE_OPT_USER
 block|,
@@ -2980,12 +3063,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|26
+literal|27
 block|,
 name|VALUE_OPT_UPDATEINTERVAL
 block|,
 comment|/* equiv idx, value */
-literal|26
+literal|27
 block|,
 name|VALUE_OPT_UPDATEINTERVAL
 block|,
@@ -3036,12 +3119,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|27
+literal|28
 block|,
 name|VALUE_OPT_VAR
 block|,
 comment|/* equiv idx, value */
-literal|27
+literal|28
 block|,
 name|VALUE_OPT_VAR
 block|,
@@ -3092,12 +3175,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|28
+literal|29
 block|,
 name|VALUE_OPT_DVAR
 block|,
 comment|/* equiv idx, value */
-literal|28
+literal|29
 block|,
 name|VALUE_OPT_DVAR
 block|,
@@ -3148,12 +3231,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|29
+literal|30
 block|,
 name|VALUE_OPT_WAIT_SYNC
 block|,
 comment|/* equiv idx, value */
-literal|29
+literal|30
 block|,
 name|VALUE_OPT_WAIT_SYNC
 block|,
@@ -3204,12 +3287,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|30
+literal|31
 block|,
 name|VALUE_OPT_SLEW
 block|,
 comment|/* equiv idx, value */
-literal|30
+literal|31
 block|,
 name|VALUE_OPT_SLEW
 block|,
@@ -3260,12 +3343,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|31
+literal|32
 block|,
 name|VALUE_OPT_USEPCC
 block|,
 comment|/* equiv idx, value */
-literal|31
+literal|32
 block|,
 name|VALUE_OPT_USEPCC
 block|,
@@ -3316,12 +3399,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|32
+literal|33
 block|,
 name|VALUE_OPT_PCCFREQ
 block|,
 comment|/* equiv idx, value */
-literal|32
+literal|33
 block|,
 name|VALUE_OPT_PCCFREQ
 block|,
@@ -3372,12 +3455,12 @@ block|}
 block|,
 block|{
 comment|/* entry idx, value */
-literal|33
+literal|34
 block|,
 name|VALUE_OPT_MDNS
 block|,
 comment|/* equiv idx, value */
-literal|33
+literal|34
 block|,
 name|VALUE_OPT_MDNS
 block|,
@@ -3599,12 +3682,12 @@ comment|/** Reference to the upper cased version of ntpd. */
 define|#
 directive|define
 name|zPROGNAME
-value|(ntpd_opt_strs+2876)
+value|(ntpd_opt_strs+2944)
 comment|/** Reference to the title line for ntpd usage. */
 define|#
 directive|define
 name|zUsageTitle
-value|(ntpd_opt_strs+2881)
+value|(ntpd_opt_strs+2949)
 comment|/** There is no ntpd configuration file. */
 define|#
 directive|define
@@ -3619,12 +3702,12 @@ comment|/** The ntpd program bug email address. */
 define|#
 directive|define
 name|zBugsAddr
-value|(ntpd_opt_strs+3012)
+value|(ntpd_opt_strs+3080)
 comment|/** Clarification/explanation of what ntpd does. */
 define|#
 directive|define
 name|zExplain
-value|(ntpd_opt_strs+3046)
+value|(ntpd_opt_strs+3114)
 comment|/** Extra detail explaining what ntpd does. */
 define|#
 directive|define
@@ -3634,7 +3717,7 @@ comment|/** The full version string for ntpd. */
 define|#
 directive|define
 name|zFullVersion
-value|(ntpd_opt_strs+3048)
+value|(ntpd_opt_strs+3116)
 comment|/* extracted from optcode.tlib near line 364 */
 if|#
 directive|if
@@ -3893,10 +3976,10 @@ name|NO_EQUIVALENT
 comment|/* index of default opt */
 block|}
 block|,
-literal|37
+literal|38
 comment|/* full option count */
 block|,
-literal|34
+literal|35
 comment|/* user option count */
 block|,
 name|ntpd_full_usage
@@ -4360,7 +4443,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpd 4.2.8p1\n\ Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
+literal|"ntpd 4.2.8p2\n\ Copyright (C) 1992-2015 The University of Delaware and Network Time Foundation, all rights reserved.\n\ This is free software. It is licensed for use, modification and\n\ redistribution under the terms of the NTP License, copies of which\n\ can be seen at:\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4468,6 +4551,15 @@ argument_list|(
 name|_
 argument_list|(
 literal|"Allow the first adjustment to be Big"
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* referenced via ntpdOptions.pOptDesc->pzText */
+name|puts
+argument_list|(
+name|_
+argument_list|(
+literal|"Step any initial offset correction."
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4737,7 +4829,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpd - NTP daemon program - Ver. 4.2.8p1\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... \\\n\ \t\t[<server1> ...<serverN> ]\n"
+literal|"ntpd - NTP daemon program - Ver. 4.2.8p2\n\ Usage:  %s [ -<flag> [<val>] | --<name>[{=| }<val>] ]... \\\n\ \t\t[<server1> ...<serverN> ]\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -4755,7 +4847,7 @@ name|puts
 argument_list|(
 name|_
 argument_list|(
-literal|"ntpd 4.2.8p1"
+literal|"ntpd 4.2.8p2"
 argument_list|)
 argument_list|)
 expr_stmt|;

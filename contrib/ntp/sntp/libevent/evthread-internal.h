@@ -933,6 +933,31 @@ name|int
 name|enable_locks
 parameter_list|)
 function_decl|;
+comment|/** Return current evthread_lock_callbacks */
+name|struct
+name|evthread_lock_callbacks
+modifier|*
+name|evthread_get_lock_callbacks
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/** Return current evthread_condition_callbacks */
+name|struct
+name|evthread_condition_callbacks
+modifier|*
+name|evthread_get_condition_callbacks
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/** Disable locking for internal usage (like global shutdown) */
+name|void
+name|evthreadimpl_disable_lock_debugging_
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 ifdef|#

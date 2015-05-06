@@ -1073,6 +1073,9 @@ name|ev_uint32_t
 name|u
 init|=
 operator|(
+operator|(
+name|ev_uint32_t
+operator|)
 name|in6
 operator|.
 name|s6_addr
@@ -1086,6 +1089,9 @@ literal|24
 operator|)
 operator||
 operator|(
+operator|(
+name|ev_uint32_t
+operator|)
 name|in6
 operator|.
 name|s6_addr
@@ -1101,6 +1107,9 @@ literal|16
 operator|)
 operator||
 operator|(
+operator|(
+name|ev_uint32_t
+operator|)
 name|in6
 operator|.
 name|s6_addr
@@ -1116,6 +1125,9 @@ literal|8
 operator|)
 operator||
 operator|(
+operator|(
+name|ev_uint32_t
+operator|)
 name|in6
 operator|.
 name|s6_addr
@@ -4107,9 +4119,7 @@ expr_stmt|;
 name|u64
 operator|++
 expr_stmt|;
-name|i64
-operator|++
-expr_stmt|;
+comment|/*	i64++; */
 name|tt_assert
 argument_list|(
 name|u64
@@ -4117,20 +4127,8 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|tt_assert
-argument_list|(
-name|i64
-operator|==
-name|EV_INT64_MIN
-argument_list|)
-expr_stmt|;
-name|tt_assert
-argument_list|(
-name|i64
-operator|<
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/*	tt_assert(i64 == EV_INT64_MIN); */
+comment|/*	tt_assert(i64< 0); */
 name|u32
 operator|=
 name|EV_UINT32_MAX
@@ -4156,9 +4154,7 @@ expr_stmt|;
 name|u32
 operator|++
 expr_stmt|;
-name|i32
-operator|++
-expr_stmt|;
+comment|/*	i32++; */
 name|tt_assert
 argument_list|(
 name|u32
@@ -4166,20 +4162,8 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|tt_assert
-argument_list|(
-name|i32
-operator|==
-name|EV_INT32_MIN
-argument_list|)
-expr_stmt|;
-name|tt_assert
-argument_list|(
-name|i32
-operator|<
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/*	tt_assert(i32 == EV_INT32_MIN); */
+comment|/*	tt_assert(i32< 0); */
 name|u16
 operator|=
 name|EV_UINT16_MAX
@@ -4205,9 +4189,7 @@ expr_stmt|;
 name|u16
 operator|++
 expr_stmt|;
-name|i16
-operator|++
-expr_stmt|;
+comment|/*	i16++; */
 name|tt_assert
 argument_list|(
 name|u16
@@ -4215,20 +4197,8 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|tt_assert
-argument_list|(
-name|i16
-operator|==
-name|EV_INT16_MIN
-argument_list|)
-expr_stmt|;
-name|tt_assert
-argument_list|(
-name|i16
-operator|<
-literal|0
-argument_list|)
-expr_stmt|;
+comment|/*	tt_assert(i16 == EV_INT16_MIN); */
+comment|/* 	tt_assert(i16< 0); */
 name|u8
 operator|=
 name|EV_UINT8_MAX
@@ -4254,9 +4224,7 @@ expr_stmt|;
 name|u8
 operator|++
 expr_stmt|;
-name|i8
-operator|++
-expr_stmt|;
+comment|/*	i8++;*/
 name|tt_assert
 argument_list|(
 name|u8
@@ -4264,48 +4232,9 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-name|tt_assert
-argument_list|(
-name|i8
-operator|==
-name|EV_INT8_MIN
-argument_list|)
-expr_stmt|;
-name|tt_assert
-argument_list|(
-name|i8
-operator|<
-literal|0
-argument_list|)
-expr_stmt|;
-name|ssize
-operator|=
-name|EV_SSIZE_MAX
-expr_stmt|;
-name|tt_assert
-argument_list|(
-name|ssize
-operator|>
-literal|0
-argument_list|)
-expr_stmt|;
-name|ssize
-operator|++
-expr_stmt|;
-name|tt_assert
-argument_list|(
-name|ssize
-operator|<
-literal|0
-argument_list|)
-expr_stmt|;
-name|tt_assert
-argument_list|(
-name|ssize
-operator|==
-name|EV_SSIZE_MIN
-argument_list|)
-expr_stmt|;
+comment|/*	tt_assert(i8 == EV_INT8_MIN); */
+comment|/*	tt_assert(i8< 0); */
+comment|/* 	ssize = EV_SSIZE_MAX; 	tt_assert(ssize> 0); 	ssize++; 	tt_assert(ssize< 0); 	tt_assert(ssize == EV_SSIZE_MIN); */
 name|ptr
 operator|=
 operator|&
@@ -6523,7 +6452,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|HANDLE
+name|HMODULE
 name|h
 init|=
 name|NULL

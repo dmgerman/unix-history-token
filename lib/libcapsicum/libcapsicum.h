@@ -279,6 +279,9 @@ specifier|const
 name|cap_channel_t
 modifier|*
 name|chan
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -300,6 +303,9 @@ parameter_list|,
 name|nvlist_t
 modifier|*
 name|nvl
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

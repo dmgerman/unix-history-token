@@ -942,7 +942,7 @@ function_decl|;
 ifdef|#
 directive|ifdef
 name|_WIN32
-name|HANDLE
+name|HMODULE
 name|evutil_load_windows_system_library_
 parameter_list|(
 specifier|const

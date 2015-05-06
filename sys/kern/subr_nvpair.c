@@ -502,6 +502,17 @@ argument_list|)
 expr_stmt|;
 name|PJDLOG_ASSERT
 argument_list|(
+operator|(
+name|nvlist_flags
+argument_list|(
+name|nvl
+argument_list|)
+operator|&
+name|NV_FLAG_NO_UNIQUE
+operator|)
+operator|!=
+literal|0
+operator|||
 operator|!
 name|nvlist_exists
 argument_list|(
@@ -3387,8 +3398,6 @@ operator|->
 name|nvp_name
 index|[
 name|namelen
-operator|+
-literal|1
 index|]
 operator|=
 literal|'\0'

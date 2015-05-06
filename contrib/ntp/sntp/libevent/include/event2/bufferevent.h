@@ -595,9 +595,9 @@ name|size_t
 name|highmark
 parameter_list|)
 function_decl|;
-comment|/**   Retrieves the watermarks for read or write events. Result is undefined if   events contains both EV_READ and EV_WRITE.    @param bufev the bufferevent to be examined   @param events EV_READ or EV_WRITE   @param lowmark receives the lower watermark if not NULL   @param highmark receives the high watermark if not NULL */
+comment|/**   Retrieves the watermarks for read or write events.   Returns non-zero if events contains not only EV_READ or EV_WRITE.   Returns zero if events equal EV_READ or EV_WRITE    @param bufev the bufferevent to be examined   @param events EV_READ or EV_WRITE   @param lowmark receives the lower watermark if not NULL   @param highmark receives the high watermark if not NULL */
 name|EVENT2_EXPORT_SYMBOL
-name|void
+name|int
 name|bufferevent_getwatermark
 parameter_list|(
 name|struct
@@ -694,7 +694,6 @@ comment|/** defer even if the callbacks are not */
 name|BEV_TRIG_DEFER_CALLBACKS
 init|=
 name|BEV_OPT_DEFER_CALLBACKS
-block|,
 comment|/* (Note: for internal reasons, these need to be disjoint from 	 * bufferevent_options, except when they mean the same thing. */
 block|}
 enum|;

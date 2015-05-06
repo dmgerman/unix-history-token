@@ -2800,7 +2800,7 @@ name|other_cpus
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We set stop_scheduler here and not in the block above, 	 * because we want to ensure that if panic has been called and 	 * stop_scheduler_on_panic is true, then stop_scheduler will 	 * always be set.  Even if panic has been entered from kdb. 	 */
+comment|/* 	 * Ensure that the scheduler is stopped while panicking, even if panic 	 * has been entered from kdb. 	 */
 name|td
 operator|->
 name|td_stopsched

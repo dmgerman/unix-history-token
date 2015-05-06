@@ -9192,6 +9192,9 @@ decl_stmt|;
 name|uint8_t
 name|memregs
 index|[
+literal|2
+index|]
+index|[
 name|DMEMSZ
 index|]
 decl_stmt|;
@@ -9330,6 +9333,26 @@ argument_list|(
 name|pi
 argument_list|,
 literal|1
+argument_list|,
+name|PCIBAR_MEM32
+argument_list|,
+name|DMEMSZ
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|error
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|pci_emul_alloc_bar
+argument_list|(
+name|pi
+argument_list|,
+literal|2
 argument_list|,
 name|PCIBAR_MEM32
 argument_list|,
@@ -9565,6 +9588,10 @@ condition|(
 name|baridx
 operator|==
 literal|1
+operator|||
+name|baridx
+operator|==
+literal|2
 condition|)
 block|{
 if|if
@@ -9587,6 +9614,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|i
+operator|=
+name|baridx
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 'memregs' index */
 if|if
 condition|(
 name|size
@@ -9597,6 +9631,9 @@ block|{
 name|sc
 operator|->
 name|memregs
+index|[
+name|i
+index|]
 index|[
 name|offset
 index|]
@@ -9622,6 +9659,9 @@ name|sc
 operator|->
 name|memregs
 index|[
+name|i
+index|]
+index|[
 name|offset
 index|]
 operator|=
@@ -9645,6 +9685,9 @@ operator|&
 name|sc
 operator|->
 name|memregs
+index|[
+name|i
+index|]
 index|[
 name|offset
 index|]
@@ -9670,6 +9713,9 @@ name|sc
 operator|->
 name|memregs
 index|[
+name|i
+index|]
+index|[
 name|offset
 index|]
 operator|=
@@ -9692,7 +9738,7 @@ if|if
 condition|(
 name|baridx
 operator|>
-literal|1
+literal|2
 condition|)
 block|{
 name|printf
@@ -9745,6 +9791,9 @@ name|pi_arg
 decl_stmt|;
 name|uint32_t
 name|value
+decl_stmt|;
+name|int
+name|i
 decl_stmt|;
 if|if
 condition|(
@@ -9858,6 +9907,10 @@ condition|(
 name|baridx
 operator|==
 literal|1
+operator|||
+name|baridx
+operator|==
+literal|2
 condition|)
 block|{
 if|if
@@ -9884,6 +9937,13 @@ literal|0
 operator|)
 return|;
 block|}
+name|i
+operator|=
+name|baridx
+operator|-
+literal|1
+expr_stmt|;
+comment|/* 'memregs' index */
 if|if
 condition|(
 name|size
@@ -9896,6 +9956,9 @@ operator|=
 name|sc
 operator|->
 name|memregs
+index|[
+name|i
+index|]
 index|[
 name|offset
 index|]
@@ -9921,6 +9984,9 @@ name|sc
 operator|->
 name|memregs
 index|[
+name|i
+index|]
+index|[
 name|offset
 index|]
 expr_stmt|;
@@ -9944,6 +10010,9 @@ operator|&
 name|sc
 operator|->
 name|memregs
+index|[
+name|i
+index|]
 index|[
 name|offset
 index|]
@@ -9969,6 +10038,9 @@ name|sc
 operator|->
 name|memregs
 index|[
+name|i
+index|]
+index|[
 name|offset
 index|]
 expr_stmt|;
@@ -9988,7 +10060,7 @@ if|if
 condition|(
 name|baridx
 operator|>
-literal|1
+literal|2
 condition|)
 block|{
 name|printf

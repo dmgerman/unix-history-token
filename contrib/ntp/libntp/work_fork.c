@@ -1581,6 +1581,8 @@ name|is_pipe
 decl_stmt|;
 name|int
 name|saved_errno
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|childpid

@@ -337,6 +337,8 @@ argument_list|(
 name|zygote_sock
 argument_list|,
 name|nvl
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -524,6 +526,8 @@ operator|=
 name|nvlist_recv
 argument_list|(
 name|sock
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

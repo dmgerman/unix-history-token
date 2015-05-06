@@ -1715,8 +1715,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|CS_WANDER_THRESH
+value|89
+end_define
+
+begin_define
+define|#
+directive|define
 name|CS_MAX_NOAUTOKEY
-value|CS_FUZZ
+value|CS_WANDER_THRESH
 end_define
 
 begin_ifdef
@@ -3184,6 +3191,15 @@ literal|"fuzz"
 block|}
 block|,
 comment|/* 88 */
+block|{
+name|CS_WANDER_THRESH
+block|,
+name|RO
+block|,
+literal|"clk_wander_threshold"
+block|}
+block|,
+comment|/* 89 */
 ifdef|#
 directive|ifdef
 name|AUTOKEY
@@ -5181,7 +5197,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * save_config - Implements ntpq -c "saveconfig<filename>"  *		 Writes current configuration including any runtime  *		 changes by ntpq's :config or config-from-file  */
+comment|/*  * save_config - Implements ntpq -c "saveconfig<filename>"  *		 Writes current configuration including any runtime  *		 changes by ntpq's :config or config-from-file  */
 end_comment
 
 begin_function
@@ -11306,6 +11322,24 @@ literal|1e3
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|CS_WANDER_THRESH
+case|:
+name|ctl_putdbl
+argument_list|(
+name|sys_var
+index|[
+name|varid
+index|]
+operator|.
+name|text
+argument_list|,
+name|wander_threshold
+operator|*
+literal|1e6
+argument_list|)
+expr_stmt|;
+break|break;
 ifdef|#
 directive|ifdef
 name|AUTOKEY
@@ -16119,7 +16153,7 @@ operator|->
 name|recv_srcadr
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Check if errors were reported. If not, output 'Config 	 * Succeeded'.  Else output the error count.  It would be nice 	 * to output any parser error messages. 	 */
+comment|/* 	 * Check if errors were reported. If not, output 'Config 	 * Succeeded'.  Else output the error count.  It would be nice 	 * to output any parser error messages. 	 */
 if|if
 condition|(
 literal|0
@@ -18275,7 +18309,7 @@ name|pch
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/*  		 * Move on to the first entry the client doesn't have, 		 * except in the special case of a limit of one.  In 		 * that case return the starting point entry. 		 */
+comment|/* 		 * Move on to the first entry the client doesn't have, 		 * except in the special case of a limit of one.  In 		 * that case return the starting point entry. 		 */
 if|if
 condition|(
 name|limit

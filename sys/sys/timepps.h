@@ -477,6 +477,42 @@ name|mtx
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|KCMODE_EDGEMASK
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|KCMODE_ABIFLAG
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Internal use: abi-aware driver. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PPS_ABI_VERSION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PPSFLAG_MTX_SPIN
+value|0x01
+end_define
+
+begin_comment
+comment|/* Driver mtx is MTX_SPIN type. */
+end_comment
+
 begin_struct
 struct|struct
 name|pps_state
@@ -497,12 +533,6 @@ name|capgen
 decl_stmt|;
 name|unsigned
 name|capcount
-decl_stmt|;
-comment|/* pointer to mutex protecting this state, if any */
-name|struct
-name|mtx
-modifier|*
-name|mtx
 decl_stmt|;
 comment|/* State information. */
 name|pps_params_t
@@ -530,6 +560,24 @@ name|ppscount
 index|[
 literal|3
 index|]
+decl_stmt|;
+comment|/* 	 * The following fields are valid if the driver calls pps_init_abi(). 	 */
+name|uint16_t
+name|driver_abi
+decl_stmt|;
+comment|/* Driver sets before pps_init_abi(). */
+name|uint16_t
+name|kernel_abi
+decl_stmt|;
+comment|/* Kernel sets during pps_init_abi(). */
+name|struct
+name|mtx
+modifier|*
+name|driver_mtx
+decl_stmt|;
+comment|/* Optional, valid if non-NULL. */
+name|uint32_t
+name|flags
 decl_stmt|;
 block|}
 struct|;
@@ -565,6 +613,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|pps_init
+parameter_list|(
+name|struct
+name|pps_state
+modifier|*
+name|pps
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pps_init_abi
 parameter_list|(
 name|struct
 name|pps_state
