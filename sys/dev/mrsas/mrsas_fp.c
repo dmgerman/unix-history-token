@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2014, LSI Corp. All rights reserved. Author: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer. 2. Redistributions  * in binary form must reproduce the above copyright notice, this list of  * conditions and the following disclaimer in the documentation and/or other  * materials provided with the distribution. 3. Neither the name of the  *<ORGANIZATION> nor the names of its contributors may be used to endorse or  * promote products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@lsi.com> Mail to: LSI Corporation, 1621  * Barber Lane, Milpitas, CA 95035 ATTN: MegaRaid FreeBSD  *  */
+comment|/*  * Copyright (c) 2015, AVAGO Tech. All rights reserved. Author: Marian Choy  * Copyright (c) 2014, LSI Corp. All rights reserved. Author: Marian Choy  * Support: freebsdraid@avagotech.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer. 2. Redistributions  * in binary form must reproduce the above copyright notice, this list of  * conditions and the following disclaimer in the documentation and/or other  * materials provided with the distribution. 3. Neither the name of the  *<ORGANIZATION> nor the names of its contributors may be used to endorse or  * promote products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@avagotech.com> Mail to: AVAGO TECHNOLOGIES, 1621  * Barber Lane, Milpitas, CA 95035 ATTN: MegaRaid FreeBSD  *  */
 end_comment
 
 begin_include
@@ -2718,7 +2718,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug : Strip 0x%llx, span_set_Strip 0x%llx, span_set_Row 0x%llx "
+literal|"AVAGO Debug : Strip 0x%llx, span_set_Strip 0x%llx, span_set_Row 0x%llx "
 literal|"data width 0x%llx span offset 0x%llx\n"
 argument_list|,
 operator|(
@@ -2765,7 +2765,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug : For strip 0x%llx row is 0x%llx\n"
+literal|"AVAGO Debug : For strip 0x%llx row is 0x%llx\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -3078,7 +3078,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug - get_strip_from_row: returns invalid "
+literal|"AVAGO Debug - get_strip_from_row: returns invalid "
 literal|"strip for ld=%x, row=%lx\n"
 argument_list|,
 name|ld
@@ -3294,7 +3294,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI PRL11: get_arm_from_strip: "
+literal|"AVAGO PRL11: get_arm_from_strip: "
 literal|"for ld=0x%x strip=0x%lx arm is  0x%x\n"
 argument_list|,
 name|ld
@@ -3327,7 +3327,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug: - get_arm_from_strip: returns invalid arm"
+literal|"AVAGO Debug: - get_arm_from_strip: returns invalid arm"
 literal|" for ld=%x strip=%lx\n"
 argument_list|,
 name|ld
@@ -4063,7 +4063,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug: raid->rowDataSize is 0, but has SPAN[0] rowDataSize = 0x%0x,"
+literal|"AVAGO Debug: raid->rowDataSize is 0, but has SPAN[0] rowDataSize = 0x%0x,"
 literal|" but there is _NO_ UnevenSpanSupport\n"
 argument_list|,
 name|MR_LdSpanPtrGet
@@ -4250,7 +4250,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug: return from %s %d. Send IO w/o region lock.\n"
+literal|"AVAGO Debug: return from %s %d. Send IO w/o region lock.\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4275,7 +4275,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug: return from %s %d for row 0x%llx,"
+literal|"AVAGO Debug: return from %s %d for row 0x%llx,"
 literal|"start strip %llx endSrip %llx\n"
 argument_list|,
 name|__func__
@@ -4326,7 +4326,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug: Check Span number from %s %d for row 0x%llx, "
+literal|"AVAGO Debug: Check Span number from %s %d for row 0x%llx, "
 literal|" start strip 0x%llx endSrip 0x%llx span 0x%x\n"
 argument_list|,
 name|__func__
@@ -4363,7 +4363,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug : 1. start_row 0x%llx endRow 0x%llx Start span 0x%x\n"
+literal|"AVAGO Debug : 1. start_row 0x%llx endRow 0x%llx Start span 0x%x\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -5221,7 +5221,7 @@ directive|if
 name|SPAN_DEBUG
 name|printf
 argument_list|(
-literal|"LSI Debug span %x rowDataSize %x\n"
+literal|"AVAGO Debug span %x rowDataSize %x\n"
 argument_list|,
 name|count
 argument_list|,
@@ -7415,7 +7415,7 @@ name|bestArm
 condition|)
 name|printf
 argument_list|(
-literal|"LSI Debug R1 Load balance occur - span 0x%x arm 0x%x bestArm 0x%x "
+literal|"AVAGO Debug R1 Load balance occur - span 0x%x arm 0x%x bestArm 0x%x "
 literal|"io_info->span_arm 0x%x\n"
 argument_list|,
 name|span
