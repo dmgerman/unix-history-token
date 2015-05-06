@@ -6080,7 +6080,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* get the Host number& the softc from data sent by the Application */
+comment|/* 		 * get the Host number& the softc from data sent by the 		 * Application 		 */
 name|sc
 operator|=
 name|mrsas_mgmt_info

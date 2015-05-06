@@ -4739,7 +4739,7 @@ literal|1
 operator|)
 index|]
 expr_stmt|;
-comment|/*      * Check if this is RW for system PD or      * it's a NON RW for sys PD and there is NO secure jbod FW support      */
+comment|/*          * Check if this is RW for system PD or          * it's a NON RW for sys PD and there is NO secure jbod FW support          */
 if|if
 condition|(
 name|cam_sim_bus
@@ -4947,7 +4947,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* FW path for SysPD or LD Non-RW (SCSI management commands)*/
+comment|/* FW path for SysPD or LD Non-RW (SCSI management commands) */
 name|io_request
 operator|->
 name|Function

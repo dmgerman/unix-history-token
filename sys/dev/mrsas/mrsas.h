@@ -8811,50 +8811,50 @@ block|{
 name|u_int16_t
 name|vendorID
 decl_stmt|;
-comment|// (ro)
+comment|//(ro)
 name|u_int16_t
 name|deviceID
 decl_stmt|;
-comment|// (ro)
+comment|//(ro)
 name|u_int16_t
 name|command
 decl_stmt|;
-comment|// Device control
+comment|//Device control
 name|u_int16_t
 name|status
 decl_stmt|;
 name|u_int8_t
 name|revisionID
 decl_stmt|;
-comment|// (ro)
+comment|//(ro)
 name|u_int8_t
 name|progIf
 decl_stmt|;
-comment|// (ro)
+comment|//(ro)
 name|u_int8_t
 name|subClass
 decl_stmt|;
-comment|// (ro)
+comment|//(ro)
 name|u_int8_t
 name|baseClass
 decl_stmt|;
-comment|// (ro)
+comment|//(ro)
 name|u_int8_t
 name|cacheLineSize
 decl_stmt|;
-comment|// (ro+)
+comment|//(ro +)
 name|u_int8_t
 name|latencyTimer
 decl_stmt|;
-comment|// (ro+)
+comment|//(ro +)
 name|u_int8_t
 name|headerType
 decl_stmt|;
-comment|// (ro)
+comment|//(ro)
 name|u_int8_t
 name|bist
 decl_stmt|;
-comment|// Built in self test
+comment|//Built in self test
 union|union
 block|{
 struct|struct
@@ -8896,19 +8896,19 @@ decl_stmt|;
 name|u_int8_t
 name|interruptPin
 decl_stmt|;
-comment|// (ro)
+comment|//(ro)
 name|u_int8_t
 name|minimumGrant
 decl_stmt|;
-comment|// (ro)
+comment|//(ro)
 name|u_int8_t
 name|maximumLatency
 decl_stmt|;
-comment|// (ro)
+comment|//(ro)
 block|}
 name|type0
 struct|;
-comment|/*          * PCI to PCI Bridge          */
+comment|/* 	         * PCI to PCI Bridge 	         */
 struct|struct
 name|_MRSAS_DRV_PCI_HEADER_TYPE_1
 block|{
@@ -8987,7 +8987,7 @@ decl_stmt|;
 block|}
 name|type1
 struct|;
-comment|/*          * PCI to CARDBUS Bridge          */
+comment|/* 	         * PCI to CARDBUS Bridge 	         */
 struct|struct
 name|_MRSAS_DRV_PCI_HEADER_TYPE_2
 block|{
