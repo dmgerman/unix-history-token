@@ -368,7 +368,7 @@ operator|->
 name|dd_seek
 condition|)
 return|return;
-comment|/* If it's within the same chunk of data, don't bother reloading */
+comment|/* If it's within the same chunk of data, don't bother reloading. */
 if|if
 condition|(
 name|lp
@@ -380,7 +380,7 @@ operator|->
 name|dd_seek
 condition|)
 block|{
-comment|/* 		 * If we go back to 0 don't make the next readdir 		 * trigger a call to getdirentries() 		 */
+comment|/* 		 * If we go back to 0 don't make the next readdir 		 * trigger a call to getdirentries(). 		 */
 if|if
 condition|(
 name|lp
@@ -478,7 +478,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * when we do a read and cross a boundary, any telldir we  * just did will have wrong information in it.  * We need to move it from "beyond the end of the previous chunk"  * to "the beginning of the new chunk"  */
+comment|/*  * A call to telldir after readdir returns the last entry in a block  * returns a location that is after the end of the last entry in that  * block.  However, that location doesn't refer to a valid directory  * entry.  Instead, these locations should refer to the first entry in  * the next block.  That location is not known until the next block is  * read, so readdir calls this function after fetching a new block to  * fix any such telldir locations.  */
 end_comment
 
 begin_function
