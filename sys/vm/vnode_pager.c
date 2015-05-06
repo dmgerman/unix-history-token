@@ -1422,19 +1422,26 @@ condition|(
 name|after
 condition|)
 block|{
-comment|/* 			 * The BMAP vop can report a partial block in the 			 * 'after', but must not count blocks after EOF. 			 * Assert the latter, and truncate 'after' in case 			 * of the former. 			 */
+comment|/* 			 * The BMAP vop can report a partial block in the 			 * 'after', but must not report blocks after EOF. 			 * Assert the latter, and truncate 'after' in case 			 * of the former. 			 */
 name|KASSERT
 argument_list|(
+operator|(
 name|reqblock
 operator|+
 operator|*
 name|after
-operator|<=
+operator|)
+operator|*
+name|pagesperblock
+operator|<
+name|roundup2
+argument_list|(
 name|object
 operator|->
 name|size
-operator|*
+argument_list|,
 name|pagesperblock
+argument_list|)
 argument_list|,
 operator|(
 literal|"%s: reqblock %jd after %d size %ju"
