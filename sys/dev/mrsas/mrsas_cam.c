@@ -653,6 +653,11 @@ specifier|extern
 name|u_int16_t
 name|mrsas_get_updated_dev_handle
 parameter_list|(
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
+parameter_list|,
 name|PLD_LOAD_BALANCE_INFO
 name|lbInfo
 parameter_list|,
@@ -4364,6 +4369,8 @@ name|devHandle
 operator|=
 name|mrsas_get_updated_dev_handle
 argument_list|(
+name|sc
+argument_list|,
 operator|&
 name|sc
 operator|->
@@ -4381,6 +4388,14 @@ operator|->
 name|load_balance
 operator|=
 name|MRSAS_LOAD_BALANCE_FLAG
+expr_stmt|;
+name|cmd
+operator|->
+name|pd_r1_lb
+operator|=
+name|io_info
+operator|.
+name|pd_after_lb
 expr_stmt|;
 block|}
 else|else
