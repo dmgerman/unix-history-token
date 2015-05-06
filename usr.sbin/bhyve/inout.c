@@ -363,6 +363,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
+name|fault
+decl_stmt|,
 name|retval
 decl_stmt|;
 name|enum
@@ -705,14 +707,14 @@ name|nitems
 argument_list|(
 name|iov
 argument_list|)
+argument_list|,
+operator|&
+name|fault
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 name|retval
@@ -726,9 +728,7 @@ block|}
 elseif|else
 if|if
 condition|(
-name|error
-operator|==
-literal|1
+name|fault
 condition|)
 block|{
 name|retval
