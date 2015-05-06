@@ -9501,6 +9501,9 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|uint8_t
+name|mask_interrupts
+decl_stmt|;
 name|struct
 name|mrsas_mpt_cmd
 modifier|*

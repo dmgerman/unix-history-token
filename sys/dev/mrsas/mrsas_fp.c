@@ -1779,11 +1779,6 @@ operator|->
 name|UnevenSpanSupport
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Updating span set\n\n"
-argument_list|)
-expr_stmt|;
 name|mr_update_span_set
 argument_list|(
 name|drv_map
