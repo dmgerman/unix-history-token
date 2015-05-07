@@ -160,6 +160,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|usb_error_t
+name|usb_dymo_eject
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|,
+name|uint8_t
+name|iface_index
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
