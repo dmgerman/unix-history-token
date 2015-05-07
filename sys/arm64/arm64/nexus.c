@@ -645,6 +645,19 @@ argument_list|(
 literal|"nexus_probe mem_rman"
 argument_list|)
 expr_stmt|;
+comment|/* Add the ofwbus device */
+comment|/* ARM64TODO: Alternatively add acpi */
+name|nexus_add_child
+argument_list|(
+name|dev
+argument_list|,
+literal|10
+argument_list|,
+literal|"ofwbus"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|/* 	 * First, deal with the children we know about already 	 */
 name|bus_generic_probe
 argument_list|(

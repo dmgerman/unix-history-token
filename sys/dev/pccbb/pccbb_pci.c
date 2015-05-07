@@ -2379,7 +2379,7 @@ break|break;
 case|case
 name|CB_TI12XX
 case|:
-comment|/* 		 * Some TI 12xx (and [14][45]xx) based pci cards 		 * sometimes have issues with the MFUNC register not 		 * being initialized due to a bad EEPROM on board. 		 * Laptops that this matters on have this register 		 * properly initialized. 		 * 		 * The TI125X parts have a different register. 		 */
+comment|/* 		 * Some TI 12xx (and [14][45]xx) based pci cards 		 * sometimes have issues with the MFUNC register not 		 * being initialized due to a bad EEPROM on board. 		 * Laptops that this matters on have this register 		 * properly initialized. 		 * 		 * The TI125X parts have a different register. 		 * 		 * Note: Only the lower two nibbles matter. When set 		 * to 0, the MFUNC{0,1} pins are GPIO, which isn't 		 * going to work out too well because we specifically 		 * program these parts to parallel interrupt signalling 		 * elsewhere. We preserve the upper bits of this 		 * register since changing them have subtle side effects 		 * for different variants of the card and are 		 * extremely difficult to exaustively test. 		 * 		 * Also, the TI 1510/1520 changed the default for the MFUNC 		 * register from 0x0 to 0x1000 to enable IRQSER by default. 		 * We want to be careful to avoid overriding that, and the 		 * below test will do that. Should this check prove to be 		 * too permissive, we should just check against 0 and 0x1000 		 * and not touch it otherwise. 		 */
 name|mux
 operator|=
 name|pci_read_config
@@ -2408,7 +2408,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|mux
+operator|&
+operator|(
+name|CBBM_MFUNC_PIN0
+operator||
+name|CBBM_MFUNC_PIN1
+operator|)
+operator|)
 operator|==
 literal|0
 condition|)
@@ -2463,7 +2471,7 @@ comment|/*FALLTHROUGH*/
 case|case
 name|CB_TI125X
 case|:
-comment|/* 		 * Disable zoom video.  Some machines initialize this 		 * improperly and exerpience has shown that this helps 		 * prevent strange behavior. 		 */
+comment|/* 		 * Disable zoom video.  Some machines initialize this 		 * improperly and exerpience has shown that this helps 		 * prevent strange behavior. We don't support zoom 		 * video anyway, so no harm can come from this. 		 */
 name|pci_write_config
 argument_list|(
 name|sc

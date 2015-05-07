@@ -337,6 +337,13 @@ directive|include
 file|"../event-internal.h"
 end_include
 
+begin_decl_stmt
+name|struct
+name|evutil_weakrand_state
+name|test_weakrand_state
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|long
 name|timeval_msec_diff
@@ -1990,6 +1997,14 @@ block|}
 name|tinytest_set_aliases
 argument_list|(
 name|testaliases
+argument_list|)
+expr_stmt|;
+name|evutil_weakrand_seed_
+argument_list|(
+operator|&
+name|test_weakrand_state
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

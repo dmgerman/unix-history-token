@@ -176,6 +176,22 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
+comment|/** Query the current monotonic time from a the timer for a struct  * event_base.  */
+name|EVENT2_EXPORT_SYMBOL
+name|int
+name|event_gettime_monotonic
+parameter_list|(
+name|struct
+name|event_base
+modifier|*
+name|base
+parameter_list|,
+name|struct
+name|timeval
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
 comment|/**    @name event type flag     Flags to pass to event_base_get_num_events() to specify the kinds of events    we want to aggregate counts for */
 comment|/**@{*/
 comment|/** count the number of active events, which have been triggered.*/
@@ -527,6 +543,13 @@ name|event_enable_debug_logging
 parameter_list|(
 name|ev_uint32_t
 name|which
+parameter_list|)
+function_decl|;
+name|EVENT2_EXPORT_SYMBOL
+name|void
+name|event_disable_debug_mode
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 comment|/**   Associate a different event base with an event.    The event to be associated must not be currently active or pending.    @param eb the event base   @param ev the event   @return 0 on success, -1 on failure.  */

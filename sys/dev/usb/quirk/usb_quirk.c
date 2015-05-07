@@ -4288,6 +4288,20 @@ name|UQ_MSC_NO_SYNC_CACHE
 argument_list|,
 name|UQ_MATCH_VENDOR_ONLY
 argument_list|)
+block|,
+comment|/* DYMO LabelManager Pnp */
+name|USB_QUIRK
+argument_list|(
+name|DYMO
+argument_list|,
+name|LABELMANAGERPNP
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_MSC_DYMO_EJECT
+argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -4698,6 +4712,12 @@ name|UQ_SINGLE_CMD_MIDI
 index|]
 operator|=
 literal|"UQ_SINGLE_CMD_MIDI"
+block|,
+index|[
+name|UQ_MSC_DYMO_EJECT
+index|]
+operator|=
+literal|"UQ_MSC_DYMO_EJECT"
 block|, }
 decl_stmt|;
 end_decl_stmt

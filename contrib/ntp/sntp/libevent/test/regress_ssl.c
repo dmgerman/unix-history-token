@@ -770,6 +770,11 @@ name|line
 operator|)
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|line
+argument_list|)
+expr_stmt|;
 name|TT_BLATHER
 argument_list|(
 operator|(

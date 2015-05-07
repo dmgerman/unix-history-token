@@ -207,6 +207,14 @@ name|DEBUG_IMAGE_INFO_TABLE_GUID
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|EFI_GUID
+name|fdtdtb
+init|=
+name|FDT_TABLE_GUID
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|EFI_STATUS
 name|main
@@ -1452,6 +1460,28 @@ condition|)
 name|printf
 argument_list|(
 literal|"Debug Image Info Table"
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|memcmp
+argument_list|(
+name|guid
+argument_list|,
+operator|&
+name|fdtdtb
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|EFI_GUID
+argument_list|)
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|"FDT Table"
 argument_list|)
 expr_stmt|;
 else|else

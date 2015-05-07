@@ -300,6 +300,25 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/** Implementation: Put a chunk of memory into hex. */
+end_comment
+
+begin_function_decl
+name|char
+modifier|*
+name|tinytest_format_hex_
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/** Set all tests in 'groups' matching the name 'named' to be skipped. */
 end_comment
 

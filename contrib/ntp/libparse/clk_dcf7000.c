@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp4-dev/libparse/clk_dcf7000.c,v 4.10 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *    * clk_dcf7000.c,v 4.10 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * ELV DCF7000 module  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * /src/NTP/ntp4-dev/libparse/clk_dcf7000.c,v 4.10 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * clk_dcf7000.c,v 4.10 2005/04/16 17:32:10 kardel RELEASE_20050508_A  *  * ELV DCF7000 module  *  * Copyright (c) 1995-2005 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifdef
@@ -182,47 +182,19 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|u_long
+name|parse_cvt_fnc_t
 name|cvt_dcf7000
-parameter_list|(
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|format
-modifier|*
-parameter_list|,
-name|clocktime_t
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|parse_inp_fnc_t
 name|inp_dcf7000
-parameter_list|(
-name|parse_t
-modifier|*
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|,
-name|timestamp_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|clockformat_t
@@ -253,13 +225,13 @@ literal|24
 block|,
 comment|/* string buffer */
 literal|0
-comment|/* no private data (complete pakets) */
+comment|/* no private data (complete packets) */
 block|}
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * cvt_dcf7000  *  * convert dcf7000 type format  */
+comment|/*  * parse_cvt_fnc_t cvt_dcf7000  *  * convert dcf7000 type format  */
 end_comment
 
 begin_function
@@ -623,7 +595,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inp_dcf700  *  * grep data from input stream  */
+comment|/*  * parse_inp_fnc_t inp_dcf700  *  * grab data from input stream  */
 end_comment
 
 begin_function
@@ -635,8 +607,7 @@ name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-name|unsigned
-name|int
+name|char
 name|ch
 parameter_list|,
 name|timestamp_t

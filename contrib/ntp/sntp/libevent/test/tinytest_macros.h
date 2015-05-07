@@ -334,7 +334,7 @@ parameter_list|,
 name|die_on_fail
 parameter_list|)
 define|\
-value|TT_STMT_BEGIN							\ 	type val1_ = (type)(a);						\ 	type val2_ = (type)(b);						\ 	int tt_status_ = (test);					\ 	if (!tt_status_ || tinytest_get_verbosity_()>1)	{		\ 		printf_type print_;					\ 		printf_type print1_;					\ 		printf_type print2_;					\ 		type value_ = val1_;					\ 		setup_block;						\ 		print1_ = print_;					\ 		value_ = val2_;						\ 		setup_block;						\ 		print2_ = print_;					\ 		TT_DECLARE(tt_status_?"	 OK":"FAIL",			\ 			   ("assert(%s): "printf_fmt" vs "printf_fmt,	\ 			    str_test, print1_, print2_));		\ 		print_ = print1_;					\ 		cleanup_block;						\ 		print_ = print2_;					\ 		cleanup_block;						\ 		if (!tt_status_) {					\ 			tinytest_set_test_failed_();			\ 			die_on_fail ;					\ 		}							\ 	}								\ 	TT_STMT_END
+value|TT_STMT_BEGIN							\ 	type val1_ = (a);						\ 	type val2_ = (b);						\ 	int tt_status_ = (test);					\ 	if (!tt_status_ || tinytest_get_verbosity_()>1)	{		\ 		printf_type print_;					\ 		printf_type print1_;					\ 		printf_type print2_;					\ 		type value_ = val1_;					\ 		setup_block;						\ 		print1_ = print_;					\ 		value_ = val2_;						\ 		setup_block;						\ 		print2_ = print_;					\ 		TT_DECLARE(tt_status_?"	 OK":"FAIL",			\ 			   ("assert(%s): "printf_fmt" vs "printf_fmt,	\ 			    str_test, print1_, print2_));		\ 		print_ = print1_;					\ 		cleanup_block;						\ 		print_ = print2_;					\ 		cleanup_block;						\ 		if (!tt_status_) {					\ 			tinytest_set_test_failed_();			\ 			die_on_fail ;					\ 		}							\ 	}								\ 	TT_STMT_END
 end_define
 
 begin_define
@@ -358,6 +358,29 @@ name|die_on_fail
 parameter_list|)
 define|\
 value|tt_assert_test_fmt_type(a,b,str_test,type,test,type,fmt,	\ 	    {print_=value_;},{},die_on_fail)
+end_define
+
+begin_define
+define|#
+directive|define
+name|tt_assert_test_type_opt
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|str_test
+parameter_list|,
+name|type
+parameter_list|,
+name|test
+parameter_list|,
+name|fmt
+parameter_list|,
+name|die_on_fail
+parameter_list|)
+define|\
+value|tt_assert_test_fmt_type(a,b,str_test,type,test,type,fmt,	\             {print_=value_?value_:"<NULL>";},{},die_on_fail)
 end_define
 
 begin_comment
@@ -425,7 +448,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|tt_assert_test_type(a,b,#a" "#op" "#b,void*,			\ 	    (val1_ op val2_),"%p",TT_EXIT_TEST_FUNCTION)
+value|tt_assert_test_type(a,b,#a" "#op" "#b,const void*,              \ 	    (val1_ op val2_),"%p",TT_EXIT_TEST_FUNCTION)
 end_define
 
 begin_define
@@ -440,7 +463,24 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|tt_assert_test_type(a,b,#a" "#op" "#b,const char *,		\ 	    (strcmp(val1_,val2_) op 0),"<%s>",TT_EXIT_TEST_FUNCTION)
+value|tt_assert_test_type_opt(a,b,#a" "#op" "#b,const char *,		\ 	    (val1_&& val2_&& strcmp(val1_,val2_) op 0),"<%s>",	\ 	    TT_EXIT_TEST_FUNCTION)
+end_define
+
+begin_define
+define|#
+directive|define
+name|tt_mem_op
+parameter_list|(
+name|expr1
+parameter_list|,
+name|op
+parameter_list|,
+name|expr2
+parameter_list|,
+name|len
+parameter_list|)
+define|\
+value|tt_assert_test_fmt_type(expr1,expr2,#expr1" "#op" "#expr2,            \ 			  const void *,                                 \ 			  (val1_&& val2_&& memcmp(val1_, val2_, len) op 0), \ 			  char *, "%s",					\ 			  { print_ = tinytest_format_hex_(value_, (len)); }, \ 			  { if (print_) free(print_); },		\ 			  TT_EXIT_TEST_FUNCTION				\                           );
 end_define
 
 begin_define
@@ -485,7 +525,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|tt_assert_test_type(a,b,#a" "#op" "#b,void*,			\ 	    (val1_ op val2_),"%p",(void)0)
+value|tt_assert_test_type(a,b,#a" "#op" "#b,const void*,			\ 	    (val1_ op val2_),"%p",(void)0)
 end_define
 
 begin_define

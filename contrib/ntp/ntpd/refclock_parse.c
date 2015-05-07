@@ -41,11 +41,11 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * This driver currently provides the support for  *   - Meinberg receiver DCF77 PZF 535 (TCXO version)       (DCF)  *   - Meinberg receiver DCF77 PZF 535 (OCXO version)       (DCF)  *   - Meinberg receiver DCF77 PZF 509                      (DCF)  *   - Meinberg receiver DCF77 AM receivers (e.g. C51)      (DCF)  *   - IGEL CLOCK                                           (DCF)  *   - ELV DCF7000                                          (DCF)  *   - Schmid clock                                         (DCF)  *   - Conrad DCF77 receiver module                         (DCF)  *   - FAU DCF77 NTP receiver (TimeBrick)                   (DCF)  *   - WHARTON 400A Series clock			    (DCF)  *  *   - Meinberg GPS166/GPS167                               (GPS)  *   - Trimble (TSIP and TAIP protocol)                     (GPS)  *  *   - RCC8000 MSF Receiver                                 (MSF)  *   - VARITEXT clock					    (MSF)  */
+comment|/*  * This driver currently provides the support for  *   - Meinberg receiver DCF77 PZF535 (TCXO version)        (DCF)  *   - Meinberg receiver DCF77 PZF535 (OCXO version)        (DCF)  *   - Meinberg receiver DCF77 PZF509                       (DCF)  *   - Meinberg receiver DCF77 AM receivers (e.g. C51)      (DCF)  *   - IGEL CLOCK                                           (DCF)  *   - ELV DCF7000                                          (DCF)  *   - Schmid clock                                         (DCF)  *   - Conrad DCF77 receiver module                         (DCF)  *   - FAU DCF77 NTP receiver (TimeBrick)                   (DCF)  *   - WHARTON 400A Series clock                            (DCF)  *  *   - Meinberg GPS receivers                               (GPS)  *   - Trimble (TSIP and TAIP protocol)                     (GPS)  *  *   - RCC8000 MSF Receiver                                 (MSF)  *   - VARITEXT clock                                       (MSF)  */
 end_comment
 
 begin_comment
-comment|/*  * Meinberg receivers are usually connected via a  * 9600 baud serial line  *  * The Meinberg GPS receivers also have a special NTP time stamp  * format. The firmware release is Uni-Erlangen.  *  * Meinberg generic receiver setup:  *	output time code every second  *	Baud rate 9600 7E2S  *  * Meinberg GPS16x setup:  *      output time code every second  *      Baudrate 19200 8N1  *  * This software supports the standard data formats used  * in Meinberg receivers.  *  * Special software versions are only sensible for the  * GPS 16x family of receivers.  *  * Meinberg can be reached via: http://www.meinberg.de/  */
+comment|/*  * Meinberg receivers are usually connected via a  * 9600/7E1 or 19200/8N1 serial line.  *  * The Meinberg GPS receivers also have a special NTP time stamp  * format. The firmware release is Uni-Erlangen.  *  * Meinberg generic receiver setup:  *      output time code every second  *      Baud rate 9600 7E2S  *  * Meinberg GPS receiver setup:  *      output time code every second  *      Baudrate 19200 8N1  *  * This software supports the standard data formats used  * in Meinberg receivers.  *  * Special software versions are only sensible for the  * oldest GPS receiver, GPS16x. For newer receiver types  * the output string format can be configured at the device,  * and the device name is generally GPSxxx instead of GPS16x.  *  * Meinberg can be reached via: http://www.meinberg.de/  */
 end_comment
 
 begin_include
@@ -387,7 +387,7 @@ name|_BUF
 parameter_list|,
 name|_PTR
 parameter_list|)
-value|((_BUF) + sizeof(_BUF) - (_PTR))
+value|((int)((_BUF) + sizeof(_BUF) - (_PTR)))
 end_define
 
 begin_define
@@ -401,7 +401,7 @@ name|_PTR
 parameter_list|,
 name|_SZ
 parameter_list|)
-value|((_BUF) + (_SZ) - (_PTR))
+value|((int)((_BUF) + (_SZ) - (_PTR)))
 end_define
 
 begin_comment
@@ -533,6 +533,48 @@ end_endif
 begin_comment
 comment|/* HAVE_PPSAPI */
 end_comment
+
+begin_comment
+comment|/*  * COND_DEF can be conditionally defined as DEF or 0. If defined as DEF  * then some more parse-specific variables are flagged to be printed with  * "ntpq -c cv<assid>". This can be lengthy, so by default COND_DEF  * should be defined as 0.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|COND_DEF
+value|DEF
+end_define
+
+begin_comment
+comment|// enable this for testing
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|COND_DEF
+value|0
+end_define
+
+begin_comment
+comment|// enable this by default
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -2200,7 +2242,7 @@ value|"Meinberg Standard"
 end_define
 
 begin_comment
-comment|/*  * Meinberg GPS16X receiver  */
+comment|/*  * Meinberg GPS receivers  */
 end_comment
 
 begin_function_decl
@@ -2256,7 +2298,7 @@ begin_define
 define|#
 directive|define
 name|GPS16X_DESCRIPTION
-value|"Meinberg GPS16x receiver"
+value|"Meinberg GPS receiver"
 end_define
 
 begin_define
@@ -3679,7 +3721,7 @@ value|3
 end_define
 
 begin_comment
-comment|/*  * Hopf Radio clock 6021 Format   *  */
+comment|/*  * Hopf Radio clock 6021 Format  *  */
 end_comment
 
 begin_define
@@ -8522,14 +8564,22 @@ name|fp
 operator|.
 name|l_ui
 operator|=
+call|(
+name|uint32_t
+call|)
+argument_list|(
 name|pts
 operator|.
 name|tv_sec
 operator|+
 name|JAN_1970
+argument_list|)
 expr_stmt|;
 name|dtemp
 operator|=
+operator|(
+name|double
+operator|)
 name|pts
 operator|.
 name|tv_nsec
@@ -8598,9 +8648,14 @@ name|fp
 operator|.
 name|l_uf
 operator|=
+call|(
+name|uint32_t
+call|)
+argument_list|(
 name|dtemp
 operator|*
 name|FRAC
+argument_list|)
 expr_stmt|;
 name|parse
 operator|->
@@ -9788,9 +9843,9 @@ literal|"LEAP SECOND"
 block|}
 block|,
 block|{
-name|PARSEB_ALTERNATE
+name|PARSEB_CALLBIT
 block|,
-literal|"ALTERNATE ANTENNA"
+literal|"CALL BIT"
 block|}
 block|,
 block|{
@@ -11275,8 +11330,13 @@ name|parse
 operator|->
 name|flags
 operator|&=
+call|(
+name|u_char
+call|)
+argument_list|(
 operator|~
 name|PARSE_PPSCLOCK
+argument_list|)
 expr_stmt|;
 comment|/* 	 * collect PPSAPI offset capability - should move into generic handling 	 */
 if|if
@@ -11439,10 +11499,15 @@ name|clear_offset
 operator|.
 name|tv_sec
 operator|=
+call|(
+name|time_t
+call|)
+argument_list|(
 operator|-
 name|parse
 operator|->
 name|ppsphaseadjust
+argument_list|)
 expr_stmt|;
 name|parse
 operator|->
@@ -11454,6 +11519,10 @@ name|clear_offset
 operator|.
 name|tv_nsec
 operator|=
+call|(
+name|long
+call|)
+argument_list|(
 operator|-
 literal|1e9
 operator|*
@@ -11463,12 +11532,16 @@ operator|->
 name|ppsphaseadjust
 operator|-
 operator|(
+name|double
+operator|)
+operator|(
 name|long
 operator|)
 name|parse
 operator|->
 name|ppsphaseadjust
 operator|)
+argument_list|)
 expr_stmt|;
 block|}
 if|if
@@ -11488,10 +11561,15 @@ name|assert_offset
 operator|.
 name|tv_sec
 operator|=
+call|(
+name|time_t
+call|)
+argument_list|(
 operator|-
 name|parse
 operator|->
 name|ppsphaseadjust
+argument_list|)
 expr_stmt|;
 name|parse
 operator|->
@@ -11503,6 +11581,10 @@ name|assert_offset
 operator|.
 name|tv_nsec
 operator|=
+call|(
+name|long
+call|)
+argument_list|(
 operator|-
 literal|1e9
 operator|*
@@ -11512,12 +11594,16 @@ operator|->
 name|ppsphaseadjust
 operator|-
 operator|(
+name|double
+operator|)
+operator|(
 name|long
 operator|)
 name|parse
 operator|->
 name|ppsphaseadjust
 operator|)
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -12392,6 +12478,9 @@ name|tio
 operator|.
 name|c_cflag
 operator|=
+operator|(
+name|tcflag_t
+operator|)
 name|parse_clockinfo
 index|[
 name|type
@@ -12403,6 +12492,9 @@ name|tio
 operator|.
 name|c_iflag
 operator|=
+operator|(
+name|tcflag_t
+operator|)
 name|parse_clockinfo
 index|[
 name|type
@@ -12414,6 +12506,9 @@ name|tio
 operator|.
 name|c_oflag
 operator|=
+operator|(
+name|tcflag_t
+operator|)
 name|parse_clockinfo
 index|[
 name|type
@@ -12425,6 +12520,9 @@ name|tio
 operator|.
 name|c_lflag
 operator|=
+operator|(
+name|tcflag_t
+operator|)
 name|parse_clockinfo
 index|[
 name|type
@@ -12443,6 +12541,9 @@ argument_list|(
 operator|&
 name|tio
 argument_list|,
+operator|(
+name|speed_t
+operator|)
 name|parse_clockinfo
 index|[
 name|type
@@ -12461,6 +12562,9 @@ argument_list|(
 operator|&
 name|tio
 argument_list|,
+operator|(
+name|speed_t
+operator|)
 name|parse_clockinfo
 index|[
 name|type
@@ -13061,6 +13165,9 @@ name|parseformat
 operator|.
 name|parse_count
 operator|=
+operator|(
+name|u_short
+operator|)
 name|strlen
 argument_list|(
 name|tmp_ctl
@@ -13496,6 +13603,17 @@ name|CLK_HAVEFLAG4
 operator|)
 condition|)
 block|{
+name|u_char
+name|mask
+init|=
+name|CLK_FLAG1
+operator||
+name|CLK_FLAG2
+operator||
+name|CLK_FLAG3
+operator||
+name|CLK_FLAG4
+decl_stmt|;
 name|parse
 operator|->
 name|flags
@@ -13505,16 +13623,13 @@ name|parse
 operator|->
 name|flags
 operator|&
+call|(
+name|u_char
+call|)
+argument_list|(
 operator|~
-operator|(
-name|CLK_FLAG1
-operator||
-name|CLK_FLAG2
-operator||
-name|CLK_FLAG3
-operator||
-name|CLK_FLAG4
-operator|)
+name|mask
+argument_list|)
 operator|)
 operator||
 operator|(
@@ -13522,15 +13637,7 @@ name|in
 operator|->
 name|flags
 operator|&
-operator|(
-name|CLK_FLAG1
-operator||
-name|CLK_FLAG2
-operator||
-name|CLK_FLAG3
-operator||
-name|CLK_FLAG4
-operator|)
+name|mask
 operator|)
 expr_stmt|;
 if|#
@@ -14820,6 +14927,9 @@ condition|(
 operator|(
 name|count
 operator|=
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|item
@@ -15022,6 +15132,9 @@ name|out
 operator|->
 name|lencode
 operator|=
+operator|(
+name|u_short
+operator|)
 name|strlen
 argument_list|(
 name|outstatus
@@ -16472,7 +16585,7 @@ argument_list|,
 name|ERR_INTERNAL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * and now stick it into the clock machine 	 * samples are only valid iff lastsync is not too old and 	 * we have seen the clock in sync at least once 	 * after the last time we didn't see an expected data telegram 	 * at startup being not in sync is also bad just like 	 * POWERUP state unless PARSE_F_POWERUPTRUST is set  	 * see the clock states section above for more reasoning 	 */
+comment|/* 	 * and now stick it into the clock machine 	 * samples are only valid iff lastsync is not too old and 	 * we have seen the clock in sync at least once 	 * after the last time we didn't see an expected data telegram 	 * at startup being not in sync is also bad just like 	 * POWERUP state unless PARSE_F_POWERUPTRUST is set 	 * see the clock states section above for more reasoning 	 */
 if|if
 condition|(
 operator|(
@@ -16720,7 +16833,11 @@ name|peer
 operator|->
 name|flags
 operator||=
+operator|(
 name|FLAG_PPS
+operator||
+name|FLAG_TSTAMP_PPS
+operator|)
 expr_stmt|;
 name|parse_hardpps
 argument_list|(
@@ -16749,10 +16866,14 @@ operator|->
 name|flags
 operator|&=
 operator|~
+operator|(
 name|FLAG_PPS
+operator||
+name|FLAG_TSTAMP_PPS
+operator|)
 expr_stmt|;
 block|}
-comment|/* 	 * ready, unless the machine wants a sample or  	 * we are in fast startup mode (peer->dist> MAXDISTANCE) 	 */
+comment|/* 	 * ready, unless the machine wants a sample or 	 * we are in fast startup mode (peer->dist> MAXDISTANCE) 	 */
 if|if
 condition|(
 operator|!
@@ -16801,9 +16922,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/**===========================================================================  ** special code for special clocks  **/
 end_comment
@@ -16817,6 +16935,7 @@ name|char
 modifier|*
 name|t
 parameter_list|,
+comment|// pointer to the output string buffer
 name|int
 name|wnt
 parameter_list|,
@@ -16834,148 +16953,173 @@ name|dtlsf
 parameter_list|,
 name|int
 name|size
+comment|// size of the output string buffer
 parameter_list|)
 block|{
-name|l_fp
-name|leapdate
-decl_stmt|;
-name|char
-modifier|*
-name|start
-init|=
-name|t
-decl_stmt|;
-name|snprintf
-argument_list|(
-name|t
-argument_list|,
-name|size
-argument_list|,
-literal|"current correction %d sec"
-argument_list|,
-name|dtls
-argument_list|)
-expr_stmt|;
-name|t
-operator|+=
-name|strlen
-argument_list|(
-name|t
-argument_list|)
-expr_stmt|;
+comment|/* 	 * The week number transmitted by the GPS satellites for the leap date 	 * is truncated to 8 bits only. If the nearest leap second date is off 	 * the current date by more than +/- 128 weeks then conversion to a 	 * calendar date is ambiguous. On the other hand, if a leap second is 	 * currently being announced (i.e. dtlsf != dtls) then the week number 	 * wnlsf is close enough, and we can unambiguously determine the date 	 * for which the leap second is scheduled. 	 */
 if|if
 condition|(
-name|wnlsf
-operator|<
-literal|990
-condition|)
-name|wnlsf
-operator|+=
-literal|1024
-expr_stmt|;
-if|if
-condition|(
-name|wnt
-operator|<
-literal|990
-condition|)
-name|wnt
-operator|+=
-literal|1024
-expr_stmt|;
-name|gpstolfp
-argument_list|(
-operator|(
-name|unsigned
-name|short
-operator|)
-name|wnlsf
-argument_list|,
-operator|(
-name|unsigned
-name|short
-operator|)
-name|dn
-argument_list|,
-literal|0
-argument_list|,
-operator|&
-name|leapdate
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
 name|dtlsf
 operator|!=
 name|dtls
-operator|)
-operator|&&
-operator|(
-operator|(
-name|wnlsf
-operator|-
-name|wnt
-operator|)
-operator|<
-literal|52
-operator|)
 condition|)
+block|{
+name|time_t
+name|t_ls
+decl_stmt|;
+name|struct
+name|tm
+modifier|*
+name|tm
+decl_stmt|;
+name|int
+name|n
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|wnlsf
+operator|<
+name|GPSWRAP
+condition|)
+name|wnlsf
+operator|+=
+name|GPSWEEKS
+expr_stmt|;
+if|if
+condition|(
+name|wnt
+operator|<
+name|GPSWRAP
+condition|)
+name|wnt
+operator|+=
+name|GPSWEEKS
+expr_stmt|;
+name|t_ls
+operator|=
+operator|(
+name|time_t
+operator|)
+name|wnlsf
+operator|*
+name|SECSPERWEEK
+operator|+
+operator|(
+name|time_t
+operator|)
+name|dn
+operator|*
+name|SECSPERDAY
+operator|+
+name|GPS_SEC_BIAS
+operator|-
+literal|1
+expr_stmt|;
+name|tm
+operator|=
+name|gmtime
+argument_list|(
+operator|&
+name|t_ls
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tm
+operator|==
+name|NULL
+condition|)
+comment|// gmtime() failed
 block|{
 name|snprintf
 argument_list|(
 name|t
 argument_list|,
-name|BUFFER_SIZES
-argument_list|(
-name|start
+name|size
 argument_list|,
+literal|"** (gmtime() failed in mk_utcinfo())"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|n
+operator|+=
+name|snprintf
+argument_list|(
 name|t
 argument_list|,
 name|size
-argument_list|)
 argument_list|,
-literal|", next correction %d sec on %s, new GPS-UTC offset %d"
+literal|"UTC offset transition from %is to %is due to leap second %s"
 argument_list|,
-name|dtlsf
-operator|-
 name|dtls
 argument_list|,
-name|gmprettydate
-argument_list|(
-operator|&
-name|leapdate
-argument_list|)
-argument_list|,
 name|dtlsf
+argument_list|,
+operator|(
+name|dtls
+operator|<
+name|dtlsf
+operator|)
+condition|?
+literal|"insertion"
+else|:
+literal|"deletion"
+argument_list|)
+expr_stmt|;
+name|n
+operator|+=
+name|snprintf
+argument_list|(
+name|t
+operator|+
+name|n
+argument_list|,
+name|size
+operator|-
+name|n
+argument_list|,
+literal|" at UTC midnight at the end of %s, %04i-%02i-%02i"
+argument_list|,
+name|daynames
+index|[
+name|tm
+operator|->
+name|tm_wday
+index|]
+argument_list|,
+name|tm
+operator|->
+name|tm_year
+operator|+
+literal|1900
+argument_list|,
+name|tm
+operator|->
+name|tm_mon
+operator|+
+literal|1
+argument_list|,
+name|tm
+operator|->
+name|tm_mday
 argument_list|)
 expr_stmt|;
 block|}
 else|else
-block|{
 name|snprintf
 argument_list|(
 name|t
 argument_list|,
-name|BUFFER_SIZES
-argument_list|(
-name|start
-argument_list|,
-name|t
-argument_list|,
 name|size
-argument_list|)
 argument_list|,
-literal|", last correction on %s"
+literal|"UTC offset parameter: %is, no leap second announced.\n"
 argument_list|,
-name|gmprettydate
-argument_list|(
-operator|&
-name|leapdate
-argument_list|)
+name|dtls
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -16986,11 +17130,11 @@ name|CLOCK_MEINBERG
 end_ifdef
 
 begin_comment
-comment|/**===========================================================================  ** Meinberg GPS166/GPS167 support  **/
+comment|/**===========================================================================  ** Meinberg GPS receiver support  **/
 end_comment
 
 begin_comment
-comment|/*------------------------------------------------------------  * gps16x_message - process GPS16x messages  */
+comment|/*------------------------------------------------------------  * gps16x_message - process messages from Meinberg GPS receiver  */
 end_comment
 
 begin_function
@@ -17119,7 +17263,7 @@ if|if
 condition|(
 name|header
 operator|.
-name|gps_hdr_csum
+name|hdr_csum
 operator|==
 name|mbg_csum
 argument_list|(
@@ -17135,14 +17279,14 @@ operator|&&
 operator|(
 name|header
 operator|.
-name|gps_len
+name|len
 operator|==
 literal|0
 operator|||
 operator|(
 name|header
 operator|.
-name|gps_len
+name|len
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -17153,7 +17297,7 @@ argument_list|)
 operator|&&
 name|header
 operator|.
-name|gps_data_csum
+name|data_csum
 operator|==
 name|mbg_csum
 argument_list|(
@@ -17161,7 +17305,7 @@ name|bufp
 argument_list|,
 name|header
 operator|.
-name|gps_len
+name|len
 argument_list|)
 operator|)
 operator|)
@@ -17172,7 +17316,7 @@ switch|switch
 condition|(
 name|header
 operator|.
-name|gps_cmd
+name|cmd
 condition|)
 block|{
 case|case
@@ -17264,19 +17408,17 @@ expr_stmt|;
 block|}
 break|break;
 case|case
-name|GPS_STAT
+name|GPS_BVAR_STAT
 case|:
 block|{
 specifier|static
 struct|struct
 name|state
 block|{
-name|unsigned
-name|short
+name|BVAR_STAT
 name|flag
 decl_stmt|;
 comment|/* status flag */
-name|unsigned
 specifier|const
 name|char
 modifier|*
@@ -17289,68 +17431,43 @@ index|[]
 init|=
 block|{
 block|{
-name|TM_ANT_DISCONN
+name|BVAR_CFGH_INVALID
 block|,
-operator|(
-specifier|const
-name|unsigned
-name|char
-operator|*
-operator|)
-literal|"ANTENNA FAULTY"
+literal|"Configuration/Health"
 block|}
 block|,
 block|{
-name|TM_SYN_FLAG
+name|BVAR_ALM_NOT_COMPLETE
 block|,
-operator|(
-specifier|const
-name|unsigned
-name|char
-operator|*
-operator|)
-literal|"NO SYNC SIGNAL"
+literal|"Almanachs"
 block|}
 block|,
 block|{
-name|TM_NO_SYNC
+name|BVAR_UTC_INVALID
 block|,
-operator|(
-specifier|const
-name|unsigned
-name|char
-operator|*
-operator|)
-literal|"NO SYNC POWERUP"
+literal|"UTC Correction"
 block|}
 block|,
 block|{
-name|TM_NO_POS
+name|BVAR_IONO_INVALID
 block|,
-operator|(
-specifier|const
-name|unsigned
-name|char
-operator|*
-operator|)
-literal|"NO POSITION"
+literal|"Ionospheric Correction"
+block|}
+block|,
+block|{
+name|BVAR_RCVR_POS_INVALID
+block|,
+literal|"Receiver Position"
 block|}
 block|,
 block|{
 literal|0
 block|,
-operator|(
-specifier|const
-name|unsigned
-name|char
-operator|*
-operator|)
 literal|""
 block|}
 block|}
 struct|;
-name|unsigned
-name|short
+name|BVAR_STAT
 name|status
 decl_stmt|;
 name|struct
@@ -17375,6 +17492,9 @@ name|b
 decl_stmt|;
 name|status
 operator|=
+operator|(
+name|BVAR_STAT
+operator|)
 name|get_lsb_short
 argument_list|(
 operator|&
@@ -17410,6 +17530,22 @@ condition|(
 name|status
 condition|)
 block|{
+name|p
+operator|=
+name|ap
+argument_list|(
+name|buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+name|p
+argument_list|,
+literal|"incomplete buffered data: "
+argument_list|)
+expr_stmt|;
 name|b
 operator|=
 name|p
@@ -17516,7 +17652,7 @@ argument_list|)
 argument_list|,
 name|p
 argument_list|,
-literal|"<OK>\""
+literal|"<all buffered data complete>\""
 argument_list|)
 expr_stmt|;
 block|}
@@ -17836,6 +17972,7 @@ block|{
 case|case
 name|ANT_INVALID
 case|:
+comment|// No other fields valid since antenna has not yet been disconnected
 name|p
 operator|=
 name|ap
@@ -17856,6 +17993,7 @@ break|break;
 case|case
 name|ANT_DISCONN
 case|:
+comment|// Antenna is disconnected, tm_reconn and delta_t not yet set
 name|q
 operator|=
 name|ap
@@ -17916,6 +18054,8 @@ name|buffer
 argument_list|,
 name|p
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 operator|*
@@ -17927,6 +18067,7 @@ break|break;
 case|case
 name|ANT_RECONN
 case|:
+comment|// Antenna had been disconnect, but receiver sync. after reconnect, so all fields valid
 name|p
 operator|=
 name|ap
@@ -17940,7 +18081,7 @@ argument_list|)
 argument_list|,
 name|p
 argument_list|,
-literal|"RECONNECTED on "
+literal|"SYNC AFTER RECONNECT on "
 argument_list|)
 expr_stmt|;
 name|mbg_tm_str
@@ -17959,6 +18100,8 @@ name|buffer
 argument_list|,
 name|p
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|p
@@ -17974,7 +18117,7 @@ argument_list|)
 argument_list|,
 name|p
 argument_list|,
-literal|", reconnect clockoffset %c%ld.%07ld s, disconnect time "
+literal|", clock offset at reconnect %c%ld.%07ld s, disconnect time "
 argument_list|,
 operator|(
 name|antinfo
@@ -17988,6 +18131,9 @@ literal|'-'
 else|:
 literal|'+'
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ABS
 argument_list|(
 name|antinfo
@@ -17997,6 +18143,9 @@ argument_list|)
 operator|/
 literal|10000
 argument_list|,
+operator|(
+name|long
+operator|)
 name|ABS
 argument_list|(
 name|antinfo
@@ -18023,6 +18172,8 @@ name|buffer
 argument_list|,
 name|p
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 operator|*
@@ -18128,6 +18279,14 @@ operator|.
 name|valid
 condition|)
 block|{
+specifier|const
+name|char
+modifier|*
+name|cp
+decl_stmt|;
+name|uint16_t
+name|tmp_val
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -18200,6 +18359,8 @@ name|buffer
 argument_list|)
 argument_list|,
 name|RO
+operator||
+name|COND_DEF
 argument_list|)
 expr_stmt|;
 name|p
@@ -18271,6 +18432,8 @@ name|buffer
 argument_list|)
 argument_list|,
 name|RO
+operator||
+name|COND_DEF
 argument_list|)
 expr_stmt|;
 name|p
@@ -18342,17 +18505,19 @@ name|buffer
 argument_list|)
 argument_list|,
 name|RO
+operator||
+name|COND_DEF
 argument_list|)
 expr_stmt|;
 for|for
 control|(
 name|i
 operator|=
-name|MIN_SVNO
+literal|0
 init|;
 name|i
 operator|<
-name|MAX_SVNO
+name|N_SVNO_GPS
 condition|;
 name|i
 operator|++
@@ -18375,425 +18540,125 @@ argument_list|)
 argument_list|,
 name|p
 argument_list|,
-literal|"gps_cfg[%d]=\"[0x%x] "
+literal|"sv_info[%d]=\"PRN%d"
 argument_list|,
 name|i
 argument_list|,
-name|cfgh
-operator|.
-name|cfg
-index|[
 name|i
-index|]
+operator|+
+name|N_SVNO_GPS
 argument_list|)
 expr_stmt|;
-switch|switch
-condition|(
-name|cfgh
-operator|.
-name|cfg
-index|[
-name|i
-index|]
-operator|&
-literal|0x7
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|p
+name|tmp_val
 operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"BLOCK I"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-name|p
-operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"BLOCK II"
-argument_list|)
-expr_stmt|;
-break|break;
-default|default:
-name|p
-operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"bad CFG"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-name|p
-operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"\""
-argument_list|)
-expr_stmt|;
-name|set_var
-argument_list|(
-operator|&
-name|parse
-operator|->
-name|kv
-argument_list|,
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|RO
-argument_list|)
-expr_stmt|;
-name|p
-operator|=
-name|buffer
-expr_stmt|;
-name|p
-operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"gps_health[%d]=\"[0x%x] "
-argument_list|,
-name|i
-argument_list|,
 name|cfgh
 operator|.
 name|health
 index|[
 name|i
 index|]
+expr_stmt|;
+comment|/* a 6 bit SV health code */
+name|p
+operator|=
+name|ap
+argument_list|(
+name|buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+name|p
+argument_list|,
+literal|"; health=0x%02x ("
+argument_list|,
+name|tmp_val
 argument_list|)
 expr_stmt|;
-switch|switch
+comment|/* "All Ones" has a special meaning" */
+if|if
 condition|(
+name|tmp_val
+operator|==
+literal|0x3F
+condition|)
+comment|/* satellite is unusable or doesn't even exist */
+name|cp
+operator|=
+literal|"SV UNAVAILABLE"
+expr_stmt|;
+else|else
+block|{
+comment|/* The MSB contains a summary of the 3 MSBs of the 8 bit health code, 								 * indicating if the data sent by the satellite is OK or not. */
+name|p
+operator|=
+name|ap
+argument_list|(
+name|buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+name|p
+argument_list|,
+literal|"DATA %s, "
+argument_list|,
 operator|(
-name|cfgh
-operator|.
-name|health
-index|[
-name|i
-index|]
-operator|>>
-literal|5
-operator|)
+name|tmp_val
 operator|&
-literal|0x7
-condition|)
-block|{
-case|case
-literal|0
-case|:
-name|p
-operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"OK;"
+literal|0x20
+operator|)
+condition|?
+literal|"BAD"
+else|:
+literal|"OK"
 argument_list|)
 expr_stmt|;
-break|break;
-case|case
-literal|1
-case|:
-name|p
-operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"PARITY;"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-name|p
-operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"TLM/HOW;"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|3
-case|:
-name|p
-operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"Z-COUNT;"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|4
-case|:
-name|p
-operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"SUBFRAME 1,2,3;"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|5
-case|:
-name|p
-operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"SUBFRAME 4,5;"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|6
-case|:
-name|p
-operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"UPLOAD BAD;"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|7
-case|:
-name|p
-operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"DATA BAD;"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
+comment|/* The 5 LSBs contain the status of the different signals sent by the satellite. */
 switch|switch
 condition|(
-name|cfgh
-operator|.
-name|health
-index|[
-name|i
-index|]
+name|tmp_val
 operator|&
 literal|0x1F
 condition|)
 block|{
 case|case
-literal|0
+literal|0x00
 case|:
-name|p
+name|cp
 operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
 literal|"SIGNAL OK"
-argument_list|)
 expr_stmt|;
 break|break;
+comment|/* codes 0x01 through 0x1B indicate that one or more 									 * specific signal components are weak or dead. 									 * We don't decode this here in detail. */
 case|case
 literal|0x1C
 case|:
-name|p
+name|cp
 operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"SV TEMP OUT"
-argument_list|)
+literal|"SV IS TEMP OUT"
 expr_stmt|;
 break|break;
 case|case
 literal|0x1D
 case|:
-name|p
+name|cp
 operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
 literal|"SV WILL BE TEMP OUT"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|0x1E
-case|:
-break|break;
-case|case
-literal|0x1F
-case|:
-name|p
-operator|=
-name|ap
-argument_list|(
-name|buffer
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|buffer
-argument_list|)
-argument_list|,
-name|p
-argument_list|,
-literal|"MULTIPLE ERRS"
-argument_list|)
 expr_stmt|;
 break|break;
 default|default:
+name|cp
+operator|=
+literal|"TRANSMISSION PROBLEMS"
+expr_stmt|;
+break|break;
+block|}
+block|}
 name|p
 operator|=
 name|ap
@@ -18807,8 +18672,90 @@ argument_list|)
 argument_list|,
 name|p
 argument_list|,
-literal|"TRANSMISSION PROBLEMS"
+literal|"%s)"
+argument_list|,
+name|cp
 argument_list|)
+expr_stmt|;
+name|tmp_val
+operator|=
+name|cfgh
+operator|.
+name|cfg
+index|[
+name|i
+index|]
+expr_stmt|;
+comment|/* a 4 bit SV configuration/type code */
+name|p
+operator|=
+name|ap
+argument_list|(
+name|buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+name|p
+argument_list|,
+literal|"; cfg=0x%02x ("
+argument_list|,
+name|tmp_val
+argument_list|)
+expr_stmt|;
+switch|switch
+condition|(
+name|tmp_val
+operator|&
+literal|0x7
+condition|)
+block|{
+case|case
+literal|0x00
+case|:
+name|cp
+operator|=
+literal|"(reserved)"
+expr_stmt|;
+break|break;
+case|case
+literal|0x01
+case|:
+name|cp
+operator|=
+literal|"BLOCK II/IIA/IIR"
+expr_stmt|;
+break|break;
+case|case
+literal|0x02
+case|:
+name|cp
+operator|=
+literal|"BLOCK IIR-M"
+expr_stmt|;
+break|break;
+case|case
+literal|0x03
+case|:
+name|cp
+operator|=
+literal|"BLOCK IIF"
+expr_stmt|;
+break|break;
+case|case
+literal|0x04
+case|:
+name|cp
+operator|=
+literal|"BLOCK III"
+expr_stmt|;
+break|break;
+default|default:
+name|cp
+operator|=
+literal|"unknown SV type"
 expr_stmt|;
 break|break;
 block|}
@@ -18825,7 +18772,48 @@ argument_list|)
 argument_list|,
 name|p
 argument_list|,
-literal|"\""
+literal|"%s"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tmp_val
+operator|&
+literal|0x08
+condition|)
+comment|/* A-S is on, P-code is encrypted */
+name|p
+operator|=
+name|ap
+argument_list|(
+name|buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+name|p
+argument_list|,
+literal|", A-S on"
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|ap
+argument_list|(
+name|buffer
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buffer
+argument_list|)
+argument_list|,
+name|p
+argument_list|,
+literal|")\""
 argument_list|)
 expr_stmt|;
 name|set_var
@@ -18843,6 +18831,8 @@ name|buffer
 argument_list|)
 argument_list|,
 name|RO
+operator||
+name|COND_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -19132,7 +19122,8 @@ name|msyslog
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"PARSE receiver #%d: gps16x_message: message checksum error: hdr_csum = 0x%x (expected 0x%lx), data_len = %d, data_csum = 0x%x (expected 0x%lx)"
+literal|"PARSE receiver #%d: gps16x_message: message checksum error: hdr_csum = 0x%x (expected 0x%x), "
+literal|"data_len = %d, data_csum = 0x%x (expected 0x%x)"
 argument_list|,
 name|CLK_UNIT
 argument_list|(
@@ -19143,7 +19134,7 @@ argument_list|)
 argument_list|,
 name|header
 operator|.
-name|gps_hdr_csum
+name|hdr_csum
 argument_list|,
 name|mbg_csum
 argument_list|(
@@ -19158,11 +19149,11 @@ argument_list|)
 argument_list|,
 name|header
 operator|.
-name|gps_len
+name|len
 argument_list|,
 name|header
 operator|.
-name|gps_data_csum
+name|data_csum
 argument_list|,
 name|mbg_csum
 argument_list|(
@@ -19175,7 +19166,7 @@ argument_list|(
 operator|(
 name|header
 operator|.
-name|gps_len
+name|len
 operator|<
 sizeof|sizeof
 argument_list|(
@@ -19187,7 +19178,7 @@ operator|)
 condition|?
 name|header
 operator|.
-name|gps_len
+name|len
 else|:
 literal|0
 argument_list|)
@@ -19243,7 +19234,7 @@ literal|0
 block|}
 block|,
 block|{
-name|GPS_STAT
+name|GPS_BVAR_STAT
 block|,
 literal|0
 block|,
@@ -19400,7 +19391,7 @@ operator|->
 name|localstate
 index|]
 operator|.
-name|gps_cmd
+name|cmd
 operator|==
 operator|(
 name|unsigned
@@ -19447,7 +19438,7 @@ literal|1
 expr_stmt|;
 name|header
 operator|->
-name|gps_hdr_csum
+name|hdr_csum
 operator|=
 operator|(
 name|short
@@ -19544,6 +19535,9 @@ endif|#
 directive|endif
 name|rtc
 operator|=
+operator|(
+name|int
+operator|)
 name|write
 argument_list|(
 name|parse
@@ -19748,9 +19742,6 @@ begin_comment
 comment|/* CLOCK_MEINBERG */
 end_comment
 
-begin_escape
-end_escape
-
 begin_comment
 comment|/**===========================================================================  ** clock polling support  **/
 end_comment
@@ -19770,7 +19761,7 @@ modifier|*
 name|parse
 parameter_list|)
 block|{
-name|int
+name|long
 name|rtc
 decl_stmt|;
 specifier|const
@@ -19792,7 +19783,7 @@ operator|)
 operator|->
 name|string
 decl_stmt|;
-name|int
+name|long
 name|ct
 init|=
 operator|(
@@ -19823,10 +19814,6 @@ name|fd
 argument_list|,
 name|ps
 argument_list|,
-operator|(
-name|unsigned
-name|long
-operator|)
 name|ct
 argument_list|)
 expr_stmt|;
@@ -19872,7 +19859,7 @@ name|msyslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"PARSE receiver #%d: poll_dpoll: failed to send cmd incomplete (%d of %d bytes sent)"
+literal|"PARSE receiver #%d: poll_dpoll: failed to send cmd incomplete (%ld of %ld bytes sent)"
 argument_list|,
 name|CLK_UNIT
 argument_list|(
@@ -20040,9 +20027,6 @@ literal|0
 return|;
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/**===========================================================================  ** Trimble support  **/
@@ -20254,6 +20238,9 @@ block|{
 name|int
 name|rtc
 init|=
+operator|(
+name|int
+operator|)
 name|write
 argument_list|(
 name|parse
@@ -20956,6 +20943,9 @@ name|uval
 operator|.
 name|fv
 operator|=
+operator|(
+name|float
+operator|)
 name|a
 expr_stmt|;
 ifdef|#
@@ -22311,6 +22301,9 @@ name|p
 parameter_list|)
 block|{
 return|return
+operator|(
+name|int
+operator|)
 name|get_msb_short
 argument_list|(
 operator|&
@@ -22489,7 +22482,7 @@ return|return;
 block|}
 else|else
 block|{
-name|int
+name|u_short
 name|var_flag
 decl_stmt|;
 name|trimble_t
@@ -22657,6 +22650,9 @@ return|return;
 block|}
 name|var_flag
 operator|=
+operator|(
+name|u_short
+operator|)
 name|s
 operator|->
 name|varmode
@@ -23622,6 +23618,9 @@ decl_stmt|;
 name|short
 name|wnt
 init|=
+operator|(
+name|short
+operator|)
 name|getshort
 argument_list|(
 operator|(
@@ -23639,6 +23638,9 @@ decl_stmt|;
 name|short
 name|dtls
 init|=
+operator|(
+name|short
+operator|)
 name|getshort
 argument_list|(
 operator|(
@@ -23656,6 +23658,9 @@ decl_stmt|;
 name|short
 name|wnlsf
 init|=
+operator|(
+name|short
+operator|)
 name|getshort
 argument_list|(
 operator|(
@@ -23673,6 +23678,9 @@ decl_stmt|;
 name|short
 name|dn
 init|=
+operator|(
+name|short
+operator|)
 name|getshort
 argument_list|(
 operator|(
@@ -23690,6 +23698,9 @@ decl_stmt|;
 name|short
 name|dtlsf
 init|=
+operator|(
+name|short
+operator|)
 name|getshort
 argument_list|(
 operator|(
@@ -24728,8 +24739,13 @@ argument_list|)
 expr_stmt|;
 name|var_flag
 operator|&=
+call|(
+name|u_short
+call|)
+argument_list|(
 operator|~
 name|DEF
+argument_list|)
 expr_stmt|;
 block|}
 else|else
@@ -24844,8 +24860,13 @@ condition|)
 block|{
 name|var_flag
 operator|&=
+call|(
+name|u_short
+call|)
+argument_list|(
 operator|~
 name|DEF
+argument_list|)
 expr_stmt|;
 name|t
 operator|=
@@ -25005,9 +25026,6 @@ expr_stmt|;
 block|}
 block|}
 end_function
-
-begin_escape
-end_escape
 
 begin_comment
 comment|/**============================================================  ** RAWDCF support  **/

@@ -94,6 +94,29 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Routines to get and set the arm clock root divisor register. */
+end_comment
+
+begin_function_decl
+name|uint32_t
+name|imx_ccm_get_cacrr
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|imx_ccm_set_cacrr
+parameter_list|(
+name|uint32_t
+name|_divisor
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

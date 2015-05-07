@@ -1620,6 +1620,8 @@ name|size_t
 name|count
 decl_stmt|,
 name|size
+decl_stmt|,
+name|copycount
 decl_stmt|;
 name|int
 name|error
@@ -1678,9 +1680,13 @@ name|sp
 operator|=
 name|buf
 expr_stmt|;
+name|copycount
+operator|=
+name|count
+expr_stmt|;
 while|while
 condition|(
-name|count
+name|copycount
 operator|>
 literal|0
 operator|&&
@@ -1722,7 +1728,7 @@ operator|->
 name|buf
 operator|++
 expr_stmt|;
-name|count
+name|copycount
 operator|--
 expr_stmt|;
 block|}

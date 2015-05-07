@@ -3624,6 +3624,15 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|memset
+argument_list|(
+name|buf
+argument_list|,
+literal|0
+argument_list|,
+name|bufsize
+argument_list|)
+expr_stmt|;
 name|print_flags_buffer
 argument_list|(
 name|buf

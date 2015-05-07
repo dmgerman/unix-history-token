@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/ntp4-dev/libparse/clk_rcc8000.c,v 4.9 2004/11/14 15:29:41 kardel RELEASE_20050508_A  *    * clk_rcc8000.c,v 4.9 2004/11/14 15:29:41 kardel RELEASE_20050508_A  *  * Radiocode Clocks Ltd RCC 8000 Intelligent Off-Air Master Clock support  *  * Created by R.E.Broughton from clk_trimtaip.c  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
+comment|/*  * /src/NTP/ntp4-dev/libparse/clk_rcc8000.c,v 4.9 2004/11/14 15:29:41 kardel RELEASE_20050508_A  *  * clk_rcc8000.c,v 4.9 2004/11/14 15:29:41 kardel RELEASE_20050508_A  *  * Radiocode Clocks Ltd RCC 8000 Intelligent Off-Air Master Clock support  *  * Created by R.E.Broughton from clk_trimtaip.c  *  * This program is distributed in the hope that it will be useful,  * but WITHOUT ANY WARRANTY; without even the implied warranty of  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  *  */
 end_comment
 
 begin_if
@@ -203,48 +203,19 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|parse_cvt_fnc_t
 name|cvt_rcc8000
-parameter_list|(
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|format
-modifier|*
-parameter_list|,
-name|clocktime_t
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|static
-name|unsigned
-name|long
+name|parse_inp_fnc_t
 name|inp_rcc8000
-parameter_list|(
-name|parse_t
-modifier|*
-parameter_list|,
-name|unsigned
-name|int
-parameter_list|,
-name|timestamp_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|clockformat_t
@@ -279,10 +250,13 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* parse_cvt_fnc_t cvt_rcc8000 */
+end_comment
+
 begin_function
 specifier|static
-name|unsigned
-name|long
+name|u_long
 name|cvt_rcc8000
 parameter_list|(
 name|unsigned
@@ -534,7 +508,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inp_rcc8000  *  * grep data from input stream  */
+comment|/*  * parse_inp_fnc_t inp_rcc8000  *  * grab data from input stream  */
 end_comment
 
 begin_function
@@ -546,8 +520,7 @@ name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-name|unsigned
-name|int
+name|char
 name|ch
 parameter_list|,
 name|timestamp_t

@@ -1217,7 +1217,9 @@ name|evbuffer_add_printf
 argument_list|(
 name|evb
 argument_list|,
+literal|"<!DOCTYPE html>\n"
 literal|"<html>\n<head>\n"
+literal|"<meta charset='utf-8'>\n"
 literal|"<title>%s</title>\n"
 literal|"<base href='%s%s'>\n"
 literal|"</head>\n"
@@ -1316,7 +1318,7 @@ empty_stmt|;
 ifdef|#
 directive|ifdef
 name|_WIN32
-name|CloseHandle
+name|FindClose
 argument_list|(
 name|d
 argument_list|)

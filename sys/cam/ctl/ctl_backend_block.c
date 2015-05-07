@@ -2456,6 +2456,10 @@ condition|(
 name|error
 operator|==
 name|ENOSPC
+operator|||
+name|error
+operator|==
+name|EDQUOT
 condition|)
 block|{
 name|ctl_set_space_alloc_fail
@@ -3536,6 +3540,10 @@ condition|(
 name|error
 operator|==
 name|ENOSPC
+operator|||
+name|error
+operator|==
+name|EDQUOT
 condition|)
 block|{
 name|ctl_set_space_alloc_fail
@@ -4538,6 +4546,10 @@ condition|(
 name|error
 operator|==
 name|ENOSPC
+operator|||
+name|error
+operator|==
+name|EDQUOT
 condition|)
 block|{
 name|ctl_set_space_alloc_fail

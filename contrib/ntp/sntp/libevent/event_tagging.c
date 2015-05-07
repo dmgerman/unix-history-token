@@ -615,6 +615,17 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|data
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 while|while
 condition|(
 name|count
@@ -630,11 +641,51 @@ operator|*
 name|data
 operator|++
 decl_stmt|;
+if|if
+condition|(
+name|shift
+operator|>=
+literal|28
+condition|)
+block|{
+comment|/* Make sure it fits into 32 bits */
+if|if
+condition|(
+name|shift
+operator|>
+literal|28
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+if|if
+condition|(
+operator|(
+name|lower
+operator|&
+literal|0x7f
+operator|)
+operator|>
+literal|15
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 name|number
 operator||=
 operator|(
 name|lower
 operator|&
+operator|(
+name|unsigned
+operator|)
 literal|0x7f
 operator|)
 operator|<<
@@ -1085,7 +1136,7 @@ parameter_list|)
 define|\
 value|do {									\ 	ev_uint8_t *data;						\ 	ev_ssize_t len = evbuffer_get_length(evbuf) - offset;		\ 	int nibbles = 0;						\ 									\ 	if (len<= 0)							\ 		return (-1);						\ 									\
 comment|/* XXX(niels): faster? */
-value|\ 	data = evbuffer_pullup(evbuf, offset + 1) + offset;		\ 									\ 	nibbles = ((data[0]& 0xf0)>> 4) + 1;				\ 	if (nibbles> maxnibbles || (nibbles>> 1) + 1> len)		\ 		return (-1);						\ 	len = (nibbles>> 1) + 1;					\ 									\ 	data = evbuffer_pullup(evbuf, offset + len) + offset;		\ 									\ 	while (nibbles> 0) {						\ 		number<<= 4;						\ 		if (nibbles& 0x1)					\ 			number |= data[nibbles>> 1]& 0x0f;		\ 		else							\ 			number |= (data[nibbles>> 1]& 0xf0)>> 4;	\ 		nibbles--;						\ 	}								\ 									\ 	*pnumber = number;						\ 									\ 	return (int)(len);						\ } while (0)
+value|\ 	data = evbuffer_pullup(evbuf, offset + 1) + offset;		\ 	if (!data)							\ 		return (-1);						\ 									\ 	nibbles = ((data[0]& 0xf0)>> 4) + 1;				\ 	if (nibbles> maxnibbles || (nibbles>> 1) + 1> len)		\ 		return (-1);						\ 	len = (nibbles>> 1) + 1;					\ 									\ 	data = evbuffer_pullup(evbuf, offset + len) + offset;		\ 	if (!data)							\ 		return (-1);						\ 									\ 	while (nibbles> 0) {						\ 		number<<= 4;						\ 		if (nibbles& 0x1)					\ 			number |= data[nibbles>> 1]& 0x0f;		\ 		else							\ 			number |= (data[nibbles>> 1]& 0xf0)>> 4;	\ 		nibbles--;						\ 	}								\ 									\ 	*pnumber = number;						\ 									\ 	return (int)(len);						\ } while (0)
 end_define
 
 begin_comment

@@ -100,6 +100,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -120,27 +126,6 @@ include|#
 directive|include
 file|"extern.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|FALSE
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|TRUE
-value|!(FALSE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NIL
-value|0
-end_define
 
 begin_define
 define|#
@@ -206,7 +191,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean
+name|bool
 name|isproc
 parameter_list|(
 name|char
@@ -226,7 +211,7 @@ parameter_list|,
 name|char
 modifier|*
 parameter_list|,
-name|boolean
+name|bool
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -286,10 +271,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|filter
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -299,7 +284,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|inchr
 decl_stmt|;
 end_decl_stmt
@@ -310,7 +295,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|incomm
 decl_stmt|;
 end_decl_stmt
@@ -321,10 +306,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|idx
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -334,7 +319,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|instr
 decl_stmt|;
 end_decl_stmt
@@ -345,10 +330,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|nokeyw
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -358,10 +343,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|pass
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -447,7 +432,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|boolean
+name|bool
 name|prccont
 decl_stmt|;
 end_decl_stmt
@@ -649,7 +634,7 @@ comment|/* delimiter for string constant */
 end_comment
 
 begin_decl_stmt
-name|boolean
+name|bool
 name|l_toplex
 decl_stmt|;
 end_decl_stmt
@@ -682,22 +667,38 @@ parameter_list|)
 value|printf("%s", x)
 end_define
 
+begin_decl_stmt
+specifier|static
+name|char
+name|minus
+index|[]
+init|=
+literal|"-"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+name|minusn
+index|[]
+init|=
+literal|"-n"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|int
 name|main
 parameter_list|(
-name|argc
-parameter_list|,
-name|argv
-parameter_list|)
 name|int
 name|argc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
+modifier|*
 name|argv
-index|[]
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|const
 name|char
@@ -830,7 +831,8 @@ argument_list|)
 condition|)
 block|{
 name|filter
-operator|++
+operator|=
+name|true
 expr_stmt|;
 name|argv
 index|[
@@ -851,10 +853,7 @@ operator|-
 literal|1
 index|]
 operator|=
-name|strdup
-argument_list|(
-literal|"-"
-argument_list|)
+name|minus
 expr_stmt|;
 continue|continue;
 block|}
@@ -897,17 +896,15 @@ argument_list|)
 condition|)
 block|{
 name|idx
-operator|++
+operator|=
+name|true
 expr_stmt|;
 name|argv
 index|[
 literal|0
 index|]
 operator|=
-name|strdup
-argument_list|(
-literal|"-n"
-argument_list|)
+name|minusn
 expr_stmt|;
 block|}
 comment|/* indicate no keywords */
@@ -926,7 +923,8 @@ argument_list|)
 condition|)
 block|{
 name|nokeyw
-operator|++
+operator|=
+name|true
 expr_stmt|;
 name|argc
 operator|--
@@ -1240,7 +1238,7 @@ literal|1
 condition|)
 name|nokeyw
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 else|else
 block|{
@@ -1310,7 +1308,7 @@ block|}
 operator|*
 name|cpp
 operator|=
-name|NIL
+name|NULL
 expr_stmt|;
 block|}
 name|cgetustr
@@ -1558,19 +1556,19 @@ expr_stmt|;
 comment|/* initialize the program */
 name|incomm
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|instr
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|inchr
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|_escaped
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|blklevel
 operator|=
@@ -1782,7 +1780,7 @@ argument_list|)
 condition|)
 name|pass
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 if|if
 condition|(
@@ -1800,13 +1798,13 @@ argument_list|)
 condition|)
 name|pass
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 continue|continue;
 block|}
 name|prccont
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 if|if
 condition|(
@@ -1916,12 +1914,10 @@ specifier|static
 name|void
 name|putScp
 parameter_list|(
-name|os
-parameter_list|)
 name|char
 modifier|*
 name|os
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -1980,7 +1976,7 @@ expr_stmt|;
 comment|/* remember the start for expmatch */
 name|_escaped
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 if|if
 condition|(
@@ -2156,7 +2152,7 @@ if|if
 condition|(
 name|nocomptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 if|if
 condition|(
@@ -2167,7 +2163,7 @@ name|comptr
 operator|||
 name|comptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2177,7 +2173,7 @@ name|acmptr
 operator|||
 name|acmptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 condition|)
 block|{
@@ -2190,7 +2186,7 @@ name|nocomptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2204,7 +2200,7 @@ if|if
 condition|(
 name|comptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 if|if
 condition|(
@@ -2215,7 +2211,7 @@ name|strptr
 operator|||
 name|strptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2225,7 +2221,7 @@ name|acmptr
 operator|||
 name|acmptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2235,7 +2231,7 @@ name|chrptr
 operator|||
 name|chrptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2245,7 +2241,7 @@ name|blksptr
 operator|||
 name|blksptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2255,7 +2251,7 @@ name|blkeptr
 operator|||
 name|blkeptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 condition|)
 block|{
@@ -2267,7 +2263,7 @@ name|comptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2276,7 +2272,7 @@ name|comptr
 expr_stmt|;
 name|incomm
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|comtype
 operator|=
@@ -2305,7 +2301,7 @@ if|if
 condition|(
 name|acmptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 if|if
 condition|(
@@ -2316,7 +2312,7 @@ name|strptr
 operator|||
 name|strptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2326,7 +2322,7 @@ name|chrptr
 operator|||
 name|chrptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2336,7 +2332,7 @@ name|blksptr
 operator|||
 name|blksptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2346,7 +2342,7 @@ name|blkeptr
 operator|||
 name|blkeptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 condition|)
 block|{
@@ -2358,7 +2354,7 @@ name|acmptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2367,7 +2363,7 @@ name|acmptr
 expr_stmt|;
 name|incomm
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|comtype
 operator|=
@@ -2396,7 +2392,7 @@ if|if
 condition|(
 name|strptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 if|if
 condition|(
@@ -2407,7 +2403,7 @@ name|chrptr
 operator|||
 name|chrptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2417,7 +2413,7 @@ name|blksptr
 operator|||
 name|blksptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2427,7 +2423,7 @@ name|blkeptr
 operator|||
 name|blkeptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 condition|)
 block|{
@@ -2439,7 +2435,7 @@ name|strptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2448,7 +2444,7 @@ name|strptr
 expr_stmt|;
 name|instr
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 continue|continue;
 block|}
@@ -2457,7 +2453,7 @@ if|if
 condition|(
 name|chrptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 if|if
 condition|(
@@ -2468,7 +2464,7 @@ name|blksptr
 operator|||
 name|blksptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 operator|&&
 operator|(
@@ -2478,7 +2474,7 @@ name|blkeptr
 operator|||
 name|blkeptr
 operator|==
-name|NIL
+name|NULL
 operator|)
 condition|)
 block|{
@@ -2490,7 +2486,7 @@ name|chrptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2499,7 +2495,7 @@ name|chrptr
 expr_stmt|;
 name|inchr
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 continue|continue;
 block|}
@@ -2508,7 +2504,7 @@ if|if
 condition|(
 name|blkeptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 if|if
@@ -2519,7 +2515,7 @@ name|blksptr
 operator|||
 name|blksptr
 operator|==
-name|NIL
+name|NULL
 condition|)
 block|{
 name|putKcp
@@ -2530,7 +2526,7 @@ name|blkeptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2595,7 +2591,7 @@ literal|0
 condition|)
 name|prccont
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 else|else
 name|psptr
@@ -2612,7 +2608,7 @@ if|if
 condition|(
 name|blksptr
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 name|putKcp
@@ -2623,7 +2619,7 @@ name|blksptr
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2677,7 +2673,7 @@ operator|&&
 operator|(
 name|comptr
 operator|!=
-name|NIL
+name|NULL
 operator|)
 operator|)
 operator|||
@@ -2691,7 +2687,7 @@ operator|&&
 operator|(
 name|acmptr
 operator|!=
-name|NIL
+name|NULL
 operator|)
 operator|)
 condition|)
@@ -2711,7 +2707,7 @@ name|comptr
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2729,7 +2725,7 @@ name|acmptr
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2739,7 +2735,7 @@ expr_stmt|;
 block|}
 name|incomm
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|ps
 argument_list|(
@@ -2763,7 +2759,7 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2800,7 +2796,7 @@ name|dummy
 argument_list|)
 operator|)
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 name|putKcp
@@ -2811,7 +2807,7 @@ name|strptr
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2820,7 +2816,7 @@ name|strptr
 expr_stmt|;
 name|instr
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 continue|continue;
 block|}
@@ -2839,7 +2835,7 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2876,7 +2872,7 @@ name|dummy
 argument_list|)
 operator|)
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 name|putKcp
@@ -2887,7 +2883,7 @@ name|chrptr
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2896,7 +2892,7 @@ name|chrptr
 expr_stmt|;
 name|inchr
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 continue|continue;
 block|}
@@ -2915,7 +2911,7 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|s
@@ -2944,7 +2940,7 @@ argument_list|)
 operator|-
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|s
@@ -2966,31 +2962,26 @@ do|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * start: start of string to write  * end: end of string to write  * force: true if we should force nokeyw  */
+end_comment
+
 begin_function
 specifier|static
 name|void
 name|putKcp
 parameter_list|(
+name|char
+modifier|*
 name|start
 parameter_list|,
+name|char
+modifier|*
 name|end
 parameter_list|,
+name|bool
 name|force
 parameter_list|)
-name|char
-modifier|*
-name|start
-decl_stmt|;
-comment|/* start of string to write */
-name|char
-modifier|*
-name|end
-decl_stmt|;
-comment|/* end of string to write */
-name|boolean
-name|force
-decl_stmt|;
-comment|/* true if we should force nokeyw */
 block|{
 name|int
 name|i
@@ -3219,20 +3210,14 @@ specifier|static
 name|int
 name|tabs
 parameter_list|(
-name|s
-parameter_list|,
-name|os
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 name|os
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -3247,28 +3232,23 @@ literal|8
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
 name|int
 name|width
 parameter_list|(
-name|s
-parameter_list|,
-name|os
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|s
-decl_stmt|,
-decl|*
+parameter_list|,
+specifier|register
+name|char
+modifier|*
 name|os
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -3332,19 +3312,17 @@ name|i
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_function
 specifier|static
 name|void
 name|putcp
 parameter_list|(
-name|c
-parameter_list|)
 specifier|register
 name|int
 name|c
-decl_stmt|;
+parameter_list|)
 block|{
 switch|switch
 condition|(
@@ -3490,15 +3468,13 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean
+name|bool
 name|isproc
 parameter_list|(
-name|s
-parameter_list|)
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 name|pname
 index|[
@@ -3527,18 +3503,18 @@ argument_list|,
 name|pname
 argument_list|)
 operator|!=
-name|NIL
+name|NULL
 condition|)
 block|{
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 block|}
@@ -3553,13 +3529,11 @@ specifier|static
 name|int
 name|iskw
 parameter_list|(
-name|s
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|s
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char

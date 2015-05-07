@@ -726,7 +726,7 @@ begin_define
 define|#
 directive|define
 name|PL310_POWER_CTRL
-value|0xF60
+value|0xF80
 end_define
 
 begin_define
