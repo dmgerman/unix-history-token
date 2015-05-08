@@ -1354,7 +1354,7 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -1411,7 +1411,7 @@ name|pm_perfctr
 argument_list|)
 expr_stmt|;
 comment|/* RDMSR serializes */
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -1466,7 +1466,7 @@ name|v
 operator|=
 name|tmp
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -1650,7 +1650,7 @@ argument_list|(
 name|v
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -1709,7 +1709,7 @@ name|pmc_hw
 modifier|*
 name|phw
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -1883,7 +1883,7 @@ name|void
 operator|)
 name|pc
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -1962,7 +1962,7 @@ operator|)
 name|pp
 expr_stmt|;
 comment|/* can be NULL */
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -2130,7 +2130,7 @@ name|pm
 operator|->
 name|pm_caps
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -2372,7 +2372,7 @@ operator|=
 name|config
 expr_stmt|;
 comment|/* save config value */
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -2675,7 +2675,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -2729,7 +2729,7 @@ name|pm_amd_evsel
 operator||
 name|AMD_PMC_ENABLE
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -2902,7 +2902,7 @@ name|pd_name
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -3009,7 +3009,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -3568,7 +3568,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -3788,7 +3788,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -4431,15 +4431,13 @@ name|pmd_npmc
 operator|+=
 name|AMD_NPMCS
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MDP
 argument_list|,
 name|INI
 argument_list|,
 literal|0
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"amd-initialize"
 argument_list|)

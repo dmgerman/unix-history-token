@@ -2608,15 +2608,13 @@ modifier|*
 name|pb
 parameter_list|)
 block|{
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|CPU
 argument_list|,
 name|BND
 argument_list|,
 literal|2
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"save-cpu"
 argument_list|)
@@ -2648,7 +2646,7 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|CPU
 argument_list|,
@@ -2681,7 +2679,7 @@ modifier|*
 name|pb
 parameter_list|)
 block|{
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|CPU
 argument_list|,
@@ -2731,15 +2729,13 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|CPU
 argument_list|,
 name|BND
 argument_list|,
 literal|2
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"restore-cpu done"
 argument_list|)
@@ -2798,7 +2794,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|CPU
 argument_list|,
@@ -2849,7 +2845,7 @@ name|td_oncpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|CPU
 argument_list|,
@@ -2966,7 +2962,7 @@ argument_list|,
 name|SX_XLOCKED
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|OWN
 argument_list|,
@@ -2999,7 +2995,7 @@ argument_list|,
 argument|tmp
 argument_list|)
 block|{
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|OWN
 argument_list|,
@@ -3109,7 +3105,7 @@ modifier|*
 name|po
 parameter_list|)
 block|{
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|OWN
 argument_list|,
@@ -3289,7 +3285,7 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|PRC
 argument_list|,
@@ -3555,7 +3551,7 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|PRC
 argument_list|,
@@ -3755,7 +3751,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|PRC
 argument_list|,
@@ -4024,7 +4020,7 @@ argument_list|,
 name|SX_XLOCKED
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG5
 argument_list|(
 name|PRC
 argument_list|,
@@ -4296,7 +4292,7 @@ argument_list|,
 name|SX_XLOCKED
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG5
 argument_list|(
 name|PRC
 argument_list|,
@@ -4546,7 +4542,7 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG6
 argument_list|(
 name|PRC
 argument_list|,
@@ -4753,7 +4749,7 @@ argument_list|,
 name|SX_XLOCKED
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG5
 argument_list|(
 name|PRC
 argument_list|,
@@ -5037,7 +5033,7 @@ name|cpuid
 argument_list|)
 expr_stmt|;
 comment|/* td->td_oncpu is invalid */
-name|PMCDBG
+name|PMCDBG5
 argument_list|(
 name|CSW
 argument_list|,
@@ -5353,7 +5349,7 @@ name|pm
 argument_list|)
 expr_stmt|;
 block|}
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|CSW
 argument_list|,
@@ -5500,7 +5496,7 @@ name|cpuid
 argument_list|)
 expr_stmt|;
 comment|/* td->td_oncpu is invalid */
-name|PMCDBG
+name|PMCDBG5
 argument_list|(
 name|CSW
 argument_list|,
@@ -5774,7 +5770,7 @@ argument_list|,
 name|ri
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|CSW
 argument_list|,
@@ -6461,7 +6457,7 @@ name|km
 operator|++
 control|)
 block|{
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|LOG
 argument_list|,
@@ -6662,7 +6658,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|LOG
 argument_list|,
@@ -6783,7 +6779,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|LOG
 argument_list|,
@@ -7252,7 +7248,7 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MOD
 argument_list|,
@@ -7571,7 +7567,7 @@ argument_list|,
 name|M_TEMP
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|PRC
 argument_list|,
@@ -8053,7 +8049,7 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|OWN
 argument_list|,
@@ -8093,7 +8089,7 @@ modifier|*
 name|po
 parameter_list|)
 block|{
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|OWN
 argument_list|,
@@ -8469,7 +8465,7 @@ operator|==
 name|p
 condition|)
 break|break;
-name|PMCDBG
+name|PMCDBG5
 argument_list|(
 name|OWN
 argument_list|,
@@ -8537,7 +8533,7 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|PMC
 argument_list|,
@@ -8835,7 +8831,7 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|PMC
 argument_list|,
@@ -8935,7 +8931,7 @@ name|pm
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|PMC
 argument_list|,
@@ -8966,7 +8962,7 @@ name|critical_exit
 argument_list|()
 expr_stmt|;
 block|}
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|PMC
 argument_list|,
@@ -9116,7 +9112,7 @@ name|pp
 argument_list|)
 expr_stmt|;
 comment|/* frees 'ptgt' */
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|PMC
 argument_list|,
@@ -9349,7 +9345,7 @@ argument_list|(
 name|pmc
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|PMC
 argument_list|,
@@ -9432,7 +9428,7 @@ name|pmc_process
 modifier|*
 name|pp
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG5
 argument_list|(
 name|PMC
 argument_list|,
@@ -9560,7 +9556,7 @@ condition|)
 return|return
 name|EEXIST
 return|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|PMC
 argument_list|,
@@ -9618,7 +9614,7 @@ argument_list|,
 name|SX_XLOCKED
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|PMC
 argument_list|,
@@ -9686,7 +9682,7 @@ return|return
 name|EBUSY
 return|;
 comment|/* 	 * All OK 	 */
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|PMC
 argument_list|,
@@ -9809,7 +9805,7 @@ name|pmc_owner
 modifier|*
 name|po
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|PMC
 argument_list|,
@@ -9858,7 +9854,7 @@ condition|)
 return|return
 name|EINVAL
 return|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|PMC
 argument_list|,
@@ -9969,7 +9965,7 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|PMC
 argument_list|,
@@ -10142,7 +10138,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|PMC
 argument_list|,
@@ -10339,7 +10335,7 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|PMC
 argument_list|,
@@ -10544,7 +10540,7 @@ argument_list|,
 name|po_ssnext
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|PMC
 argument_list|,
@@ -10698,7 +10694,7 @@ name|c
 operator|->
 name|pmop_data
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MOD
 argument_list|,
@@ -12569,7 +12565,7 @@ name|EOPNOTSUPP
 expr_stmt|;
 break|break;
 block|}
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|PMC
 argument_list|,
@@ -12908,7 +12904,7 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG5
 argument_list|(
 name|PMC
 argument_list|,
@@ -13963,7 +13959,7 @@ name|ri
 operator|=
 literal|0
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|PMC
 argument_list|,
@@ -14358,7 +14354,7 @@ name|pm_flags
 operator|&
 name|PMC_F_NEWVALUE
 condition|)
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|PMC
 argument_list|,
@@ -14386,7 +14382,7 @@ name|pm_flags
 operator|&
 name|PMC_F_OLDVALUE
 condition|)
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|PMC
 argument_list|,
@@ -15091,7 +15087,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG6
 argument_list|(
 name|SAM
 argument_list|,
@@ -15149,7 +15145,7 @@ name|done
 goto|;
 block|}
 comment|/* Fill in entry. */
-name|PMCDBG
+name|PMCDBG6
 argument_list|(
 name|SAM
 argument_list|,
@@ -15883,7 +15879,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|PMCDBG
+name|PMCDBG6
 argument_list|(
 name|SAM
 argument_list|,
@@ -16280,7 +16276,7 @@ return|return;
 name|PMC_GET_SX_XLOCK
 argument_list|()
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|PRC
 argument_list|,
@@ -16302,7 +16298,7 @@ name|p_comm
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Since this code is invoked by the last thread in an exiting 	 * process, we would have context switched IN at some prior 	 * point.  However, with PREEMPTION, kernel mode context 	 * switches may happen any time, so we want to disable a 	 * context switch OUT till we get any PMCs targetting this 	 * process off the hardware. 	 * 	 * We also need to atomically remove this process' 	 * entry from our target process hash table, using 	 * PMC_FLAG_REMOVE. 	 */
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|PRC
 argument_list|,
@@ -16349,7 +16345,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|PRC
 argument_list|,
@@ -16416,7 +16412,7 @@ operator|&
 name|pm
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|PRC
 argument_list|,
@@ -16447,7 +16443,7 @@ argument_list|)
 argument_list|)
 condition|)
 continue|continue;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|PRC
 argument_list|,
@@ -16935,7 +16931,7 @@ return|return;
 name|PMC_GET_SX_XLOCK
 argument_list|()
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|PMC
 argument_list|,
@@ -17677,7 +17673,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MOD
 argument_list|,
@@ -18565,7 +18561,7 @@ argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MOD
 argument_list|,
@@ -18788,15 +18784,13 @@ name|prh
 decl_stmt|;
 endif|#
 directive|endif
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MOD
 argument_list|,
 name|INI
 argument_list|,
 literal|0
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"cleanup"
 argument_list|)
@@ -18908,7 +18902,7 @@ name|po
 argument_list|)
 expr_stmt|;
 comment|/* send SIGBUS to owner processes */
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MOD
 argument_list|,
@@ -18996,15 +18990,13 @@ name|pmc_process
 modifier|*
 name|pp
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MOD
 argument_list|,
 name|INI
 argument_list|,
 literal|3
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"destroy process hash"
 argument_list|)
@@ -19034,7 +19026,7 @@ argument|prh
 argument_list|,
 argument|pp_next
 argument_list|)
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MOD
 argument_list|,
@@ -19072,15 +19064,13 @@ condition|(
 name|pmc_ownerhash
 condition|)
 block|{
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MOD
 argument_list|,
 name|INI
 argument_list|,
 literal|3
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"destroy owner hash"
 argument_list|)
@@ -19133,15 +19123,13 @@ operator|=
 name|pmc_cpu_max
 argument_list|()
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MOD
 argument_list|,
 name|INI
 argument_list|,
 literal|3
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"md cleanup"
 argument_list|)
@@ -19171,7 +19159,7 @@ name|cpu
 operator|++
 control|)
 block|{
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MOD
 argument_list|,
@@ -19556,7 +19544,7 @@ operator|!=
 literal|0
 condition|)
 break|break;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MOD
 argument_list|,
@@ -19582,15 +19570,13 @@ case|:
 name|pmc_cleanup
 argument_list|()
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MOD
 argument_list|,
 name|INI
 argument_list|,
 literal|1
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"unloaded"
 argument_list|)
