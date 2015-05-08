@@ -438,6 +438,10 @@ name|struct
 name|pcmchan_matrix
 name|matrix
 decl_stmt|;
+name|struct
+name|pcmchan_matrix
+name|matrix_scratch
+decl_stmt|;
 name|int
 name|volume
 index|[
