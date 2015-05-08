@@ -96,7 +96,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -1375,7 +1375,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 name|KASSERT
 argument_list|(
 name|pd
@@ -1609,7 +1609,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 name|KASSERT
 argument_list|(
 name|pd
@@ -2420,7 +2420,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 specifier|const
 name|struct
 name|amd_descr
@@ -2512,7 +2512,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 name|pd
 operator|=
 operator|&
@@ -3869,7 +3869,7 @@ name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 for|for
 control|(
 name|i
@@ -4155,7 +4155,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 name|amd_pmc_class
 operator|=
 name|class

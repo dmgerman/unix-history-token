@@ -549,7 +549,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 end_ifdef
 
 begin_function_decl
@@ -1276,7 +1276,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -1656,7 +1656,7 @@ end_expr_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 end_ifdef
 
 begin_enum
@@ -3308,7 +3308,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 name|LIST_FOREACH
 argument_list|(
 argument|pt
@@ -7190,7 +7190,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -7926,7 +7926,7 @@ break|break;
 default|default:
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 name|KASSERT
 argument_list|(
 literal|0
@@ -8666,7 +8666,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 specifier|volatile
 name|int
 name|maxloop
@@ -8696,7 +8696,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 name|maxloop
 operator|--
 expr_stmt|;
@@ -10570,7 +10570,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 end_ifdef
 
 begin_decl_stmt
@@ -14349,7 +14349,7 @@ name|arg
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 if|if
 condition|(
 name|prw
@@ -17646,7 +17646,7 @@ literal|0
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 comment|/* parse debug flags first */
 if|if
 condition|(
@@ -18780,7 +18780,7 @@ name|pb
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 name|struct
 name|pmc_processhash
 modifier|*
@@ -18990,7 +18990,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 name|struct
 name|pmc_process
 modifier|*

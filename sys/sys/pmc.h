@@ -2481,7 +2481,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DEBUG
+name|HWPMC_DEBUG
 argument_list|)
 end_if
 

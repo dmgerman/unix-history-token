@@ -983,7 +983,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 if|if
 condition|(
 name|plb
