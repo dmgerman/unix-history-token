@@ -441,6 +441,18 @@ name|object
 argument_list|)
 expr_stmt|;
 block|}
+name|object
+operator|->
+name|handle
+operator|=
+name|NULL
+expr_stmt|;
+name|object
+operator|->
+name|type
+operator|=
+name|OBJT_DEAD
+expr_stmt|;
 block|}
 end_function
 
