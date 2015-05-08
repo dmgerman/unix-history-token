@@ -239,6 +239,47 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Functions to allocate/free unused memory in order  * to map memory from other domains.  */
+end_comment
+
+begin_function_decl
+name|struct
+name|resource
+modifier|*
+name|xenmem_alloc
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+modifier|*
+name|res_id
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|xenmem_free
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|res_id
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|res
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Debug/emergency function, prints directly to hypervisor console */
 end_comment
 
