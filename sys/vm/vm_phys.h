@@ -103,6 +103,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|int
+modifier|*
+name|mem_locality
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|extern
 name|int
 name|vm_ndomains
