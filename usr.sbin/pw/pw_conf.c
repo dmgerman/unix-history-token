@@ -715,13 +715,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|LNBUFSZ
-value|1024
-end_define
-
 begin_function
 name|struct
 name|userconf
