@@ -6160,17 +6160,6 @@ argument_list|,
 literal|'d'
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|arg
-condition|)
-return|return
-name|arg
-operator|->
-name|val
-return|;
-else|else
-block|{
 specifier|static
 name|char
 name|home
@@ -6178,6 +6167,17 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|arg
+condition|)
+return|return
+operator|(
+name|arg
+operator|->
+name|val
+operator|)
+return|;
 if|if
 condition|(
 name|cnf
@@ -6200,9 +6200,14 @@ argument_list|,
 literal|"no base home directory set"
 argument_list|)
 expr_stmt|;
-name|sprintf
+name|snprintf
 argument_list|(
 name|home
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|home
+argument_list|)
 argument_list|,
 literal|"%s/%s"
 argument_list|,
@@ -6214,9 +6219,10 @@ name|user
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|home
+operator|)
 return|;
-block|}
 block|}
 end_function
 
