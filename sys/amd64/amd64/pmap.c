@@ -30157,6 +30157,13 @@ expr_stmt|;
 name|KASSERT
 argument_list|(
 name|pmap
+operator|->
+name|pm_pcids
+index|[
+name|cpuid
+index|]
+operator|.
+name|pm_pcid
 operator|!=
 name|PMAP_PCID_KERN
 operator|||
