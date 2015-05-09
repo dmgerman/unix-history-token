@@ -854,7 +854,7 @@ parameter_list|(
 name|n
 parameter_list|)
 define|\
-value|(((n)->nd_flag& (ND_NFSV3 | ND_NFSV4)) ? 		\ 		 NFS_MAXDATA : NFS_V2MAXDATA)
+value|(((n)->nd_flag& (ND_NFSV3 | ND_NFSV4)) ? 		\ 		 NFS_SRVMAXIO : NFS_V2MAXDATA)
 end_define
 
 begin_define

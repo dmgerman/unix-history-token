@@ -86,13 +86,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|NFS_MAXDATA
-value|NFS_MAXBSIZE
-end_define
-
-begin_define
-define|#
-directive|define
 name|NFS_MAXPATHLEN
 value|1024
 end_define
@@ -115,7 +108,7 @@ begin_define
 define|#
 directive|define
 name|NFS_MAXPACKET
-value|(NFS_MAXDATA + 2048)
+value|(NFS_SRVMAXIO + 2048)
 end_define
 
 begin_define
@@ -168,6 +161,17 @@ end_define
 begin_comment
 comment|/* Strings small enough for stack */
 end_comment
+
+begin_comment
+comment|/*  * This value isn't a fixed value in the RFCs.  * It is the maximum data size supported by NFSv3 or NFSv4 over TCP for  * the server.  It should be set to the I/O size preferred by ZFS or  * MAXBSIZE, whichever is greater.  * ZFS currently prefers 128K.  * It used to be called NFS_MAXDATA, but has been renamed to clarify that  * it refers to server side only and doesn't conflict with the NFS_MAXDATA  * defined in rpcsvc/nfs_prot.h for userland.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_SRVMAXIO
+value|(128 * 1024)
+end_define
 
 begin_comment
 comment|/* Stat numbers for rpc returns (version 2, 3 and 4) */
