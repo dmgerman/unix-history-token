@@ -797,6 +797,27 @@ name|ISA_HOLE_LENGTH
 value|(0x100000-ISA_HOLE_START)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PMAP_PCID_NONE
+value|0xffffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMAP_PCID_KERN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMAP_PCID_OVERMAX
+value|0x1000
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -1124,6 +1145,20 @@ block|}
 enum|;
 end_enum
 
+begin_struct
+struct|struct
+name|pmap_pcids
+block|{
+name|uint32_t
+name|pm_pcid
+decl_stmt|;
+name|uint32_t
+name|pm_gen
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * The kernel virtual address (KVA) of the level 4 page table page is always  * within the direct map (DMAP) region.  */
 end_comment
@@ -1156,14 +1191,6 @@ name|cpuset_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
-name|cpuset_t
-name|pm_save
-decl_stmt|;
-comment|/* Context valid on cpus mask */
-name|int
-name|pm_pcid
-decl_stmt|;
-comment|/* context id */
 name|enum
 name|pmap_type
 name|pm_type
@@ -1185,6 +1212,13 @@ decl_stmt|;
 comment|/* EPT pmap generation id */
 name|int
 name|pm_flags
+decl_stmt|;
+name|struct
+name|pmap_pcids
+name|pm_pcids
+index|[
+name|MAXCPU
+index|]
 decl_stmt|;
 block|}
 struct|;
@@ -1554,6 +1588,23 @@ name|sz
 parameter_list|)
 value|pmap_unmapdev((va), (sz))
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|thread
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|void
+name|pmap_activate_sw
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

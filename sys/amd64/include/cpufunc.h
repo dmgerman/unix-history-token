@@ -1650,15 +1650,14 @@ name|int
 name|type
 parameter_list|)
 block|{
-comment|/* invpcid (%rdx),%rax */
-asm|__asm __volatile(".byte 0x66,0x0f,0x38,0x82,0x02"
+asm|__asm __volatile("invpcid (%0),%1"
 block|: :
-literal|"d"
+literal|"r"
 operator|(
 name|d
 operator|)
 operator|,
-literal|"a"
+literal|"r"
 operator|(
 operator|(
 name|u_long
