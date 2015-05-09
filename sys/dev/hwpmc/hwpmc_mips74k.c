@@ -1389,7 +1389,7 @@ name|config
 operator||=
 name|MIPS74K_PMC_INTERRUPT_ENABLE
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
