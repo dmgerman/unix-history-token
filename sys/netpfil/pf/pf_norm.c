@@ -7712,11 +7712,9 @@ name|flags
 operator|&
 name|TH_FIN
 condition|)
-name|flags
-operator|&=
-operator|~
-name|TH_FIN
-expr_stmt|;
+goto|goto
+name|tcp_drop
+goto|;
 block|}
 else|else
 block|{
