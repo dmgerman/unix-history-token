@@ -30172,7 +30172,9 @@ operator|==
 name|kernel_pmap
 argument_list|,
 operator|(
-literal|"non-kernel pmap %p cpu %d pcid %#x"
+literal|"non-kernel pmap thread %p pmap %p cpu %d pcid %#x"
+operator|,
+name|td
 operator|,
 name|pmap
 operator|,
