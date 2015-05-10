@@ -2247,6 +2247,11 @@ name|ieee80211vap
 modifier|*
 name|vap
 parameter_list|,
+name|struct
+name|ieee80211_channel
+modifier|*
+name|curchan
+parameter_list|,
 specifier|const
 name|struct
 name|ieee80211_scanparams
@@ -2274,6 +2279,8 @@ operator|(
 name|ieee80211_swscan_add_scan
 argument_list|(
 name|vap
+argument_list|,
+name|curchan
 argument_list|,
 name|sp
 argument_list|,

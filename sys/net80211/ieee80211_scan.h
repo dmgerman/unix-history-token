@@ -451,6 +451,10 @@ name|struct
 name|ieee80211vap
 modifier|*
 parameter_list|,
+name|struct
+name|ieee80211_channel
+modifier|*
+parameter_list|,
 specifier|const
 name|struct
 name|ieee80211_scanparams
@@ -1037,6 +1041,10 @@ function_decl|)
 parameter_list|(
 name|struct
 name|ieee80211_scan_state
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_channel
 modifier|*
 parameter_list|,
 specifier|const

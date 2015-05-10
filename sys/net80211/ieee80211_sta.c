@@ -6023,6 +6023,10 @@ name|ieee80211_add_scan
 argument_list|(
 name|vap
 argument_list|,
+name|ic
+operator|->
+name|ic_curchan
+argument_list|,
 operator|&
 name|scan
 argument_list|,
@@ -6150,6 +6154,10 @@ block|}
 name|ieee80211_add_scan
 argument_list|(
 name|vap
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
 argument_list|,
 operator|&
 name|scan
