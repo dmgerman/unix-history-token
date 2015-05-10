@@ -1468,7 +1468,7 @@ name|IEEE80211_FC0_SUBTYPE_BEACON
 operator|||
 name|subtype
 operator|==
-name|IEEE80211_FC0_SUBTYPE_PROBE_REQ
+name|IEEE80211_FC0_SUBTYPE_PROBE_RESP
 operator|)
 operator|)
 operator|&&
