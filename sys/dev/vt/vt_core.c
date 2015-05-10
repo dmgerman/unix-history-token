@@ -3709,6 +3709,8 @@ operator|(
 name|vw
 operator|->
 name|vw_number
+operator|+
+name|VT_MAXWINDOWS
 operator|-
 literal|1
 operator|)
