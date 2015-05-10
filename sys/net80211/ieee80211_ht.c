@@ -12533,7 +12533,7 @@ operator|&=
 operator|~
 name|IEEE80211_HTCAP_CHWIDTH40
 expr_stmt|;
-comment|/* use advertised setting (XXX locally constraint) */
+comment|/* Start by using the advertised settings */
 name|rxmax
 operator|=
 name|MS
@@ -12555,6 +12555,36 @@ name|ni_htparam
 argument_list|,
 name|IEEE80211_HTCAP_MPDUDENSITY
 argument_list|)
+expr_stmt|;
+comment|/* Cap at VAP rxmax */
+if|if
+condition|(
+name|rxmax
+operator|>
+name|vap
+operator|->
+name|iv_ampdu_rxmax
+condition|)
+name|rxmax
+operator|=
+name|vap
+operator|->
+name|iv_ampdu_rxmax
+expr_stmt|;
+comment|/* 		 * If the VAP ampdu density value greater, use that. 		 * 		 * (Larger density value == larger minimum gap between A-MPDU 		 * subframes.) 		 */
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_ampdu_density
+operator|>
+name|density
+condition|)
+name|density
+operator|=
+name|vap
+operator|->
+name|iv_ampdu_density
 expr_stmt|;
 comment|/* 		 * NB: Hardware might support HT40 on some but not all 		 * channels. We can't determine this earlier because only 		 * after association the channel is upgraded to HT based 		 * on the negotiated capabilities. 		 */
 if|if
@@ -12619,6 +12649,7 @@ operator|&=
 operator|~
 name|IEEE80211_HTCAP_CHWIDTH40
 expr_stmt|;
+comment|/* XXX TODO should it start by using advertised settings? */
 name|rxmax
 operator|=
 name|vap
