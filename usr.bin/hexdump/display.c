@@ -1880,6 +1880,8 @@ block|}
 block|}
 if|if
 condition|(
+name|statok
+operator|&&
 name|S_ISREG
 argument_list|(
 name|sb
