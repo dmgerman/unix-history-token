@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<efi.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<bootstrap.h>
 end_include
 
@@ -256,37 +250,27 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * A simple relocator for EFI binaries.  */
+comment|/*  * A simple elf relocator.  */
 end_comment
 
 begin_function
-name|EFI_STATUS
-name|_reloc
+name|void
+name|self_reloc
 parameter_list|(
-name|unsigned
-name|long
-name|ImageBase
+name|Elf_Addr
+name|baseaddr
 parameter_list|,
 name|ElfW_Dyn
 modifier|*
 name|dynamic
-parameter_list|,
-name|EFI_HANDLE
-name|image_handle
-parameter_list|,
-name|EFI_SYSTEM_TABLE
-modifier|*
-name|system_table
 parameter_list|)
 block|{
-name|unsigned
-name|long
+name|Elf_Word
 name|relsz
 decl_stmt|,
 name|relent
 decl_stmt|;
-name|unsigned
-name|long
+name|Elf_Addr
 modifier|*
 name|newaddr
 decl_stmt|;
@@ -343,17 +327,13 @@ name|ElfW_Rel
 operator|*
 operator|)
 operator|(
-operator|(
-name|unsigned
-name|long
-operator|)
 name|dynp
 operator|->
 name|d_un
 operator|.
 name|d_ptr
 operator|+
-name|ImageBase
+name|baseaddr
 operator|)
 expr_stmt|;
 break|break;
@@ -426,22 +406,21 @@ comment|/* Address relative to the base address. */
 name|newaddr
 operator|=
 operator|(
-name|unsigned
-name|long
+name|Elf_Addr
 operator|*
 operator|)
 operator|(
-name|ImageBase
-operator|+
 name|rel
 operator|->
 name|r_offset
+operator|+
+name|baseaddr
 operator|)
 expr_stmt|;
 operator|*
 name|newaddr
 operator|+=
-name|ImageBase
+name|baseaddr
 expr_stmt|;
 comment|/* Add the addend when the ABI uses them */
 ifdef|#
@@ -477,11 +456,6 @@ name|relent
 operator|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|EFI_SUCCESS
-operator|)
-return|;
 block|}
 end_function
 
