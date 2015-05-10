@@ -971,6 +971,11 @@ name|getwchar
 argument_list|()
 condition|)
 block|{
+comment|/* 				 * In the input stream, accept both the 				 * XPG5 sequences ESC-digit and the 				 * traditional BSD sequences ESC-ctrl. 				 */
+case|case
+literal|'\007'
+case|:
+comment|/* FALLTHROUGH */
 case|case
 name|RLF
 case|:
@@ -985,6 +990,10 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'\010'
+case|:
+comment|/* FALLTHROUGH */
+case|case
 name|RHLF
 case|:
 name|addto_lineno
@@ -997,6 +1006,10 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'\011'
+case|:
+comment|/* FALLTHROUGH */
 case|case
 name|FHLF
 case|:
