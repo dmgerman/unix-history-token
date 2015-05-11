@@ -1776,6 +1776,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WEAK_REFS
+end_ifdef
+
+begin_comment
+comment|/* When building libmd, provide weak references. Note: this is not    activated in the context of compiling these sources for internal    use in libcrypt.  */
+end_comment
+
 begin_undef
 undef|#
 directive|undef
@@ -1840,21 +1850,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_undef
-undef|#
-directive|undef
-name|SHA256_version
-end_undef
-
-begin_expr_stmt
-name|__weak_reference
-argument_list|(
-name|_libmd_SHA256_version
-argument_list|,
-name|SHA256_version
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
