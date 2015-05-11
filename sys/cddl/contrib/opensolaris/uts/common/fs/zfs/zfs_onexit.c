@@ -405,7 +405,10 @@ literal|0
 condition|)
 return|return
 operator|(
-name|error
+name|SET_ERROR
+argument_list|(
+name|EBADF
+argument_list|)
 operator|)
 return|;
 return|return
