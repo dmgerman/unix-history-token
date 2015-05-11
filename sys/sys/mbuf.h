@@ -742,12 +742,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_UNUSED_8
+name|M_FLOWID
 value|0x00000100
 end_define
 
 begin_comment
-comment|/* --available-- */
+comment|/* deprecated: flowid is valid */
 end_comment
 
 begin_define
@@ -914,7 +914,7 @@ define|#
 directive|define
 name|M_COPYFLAGS
 define|\
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_PROMISC|M_VLANTAG| \      M_PROTOFLAGS)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_BCAST|M_MCAST|M_PROMISC|M_VLANTAG|M_FLOWID| \      M_PROTOFLAGS)
 end_define
 
 begin_comment
@@ -926,7 +926,7 @@ define|#
 directive|define
 name|M_FLAG_BITS
 define|\
-value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_BCAST\6M_MCAST" \     "\7M_PROMISC\10M_VLANTAG"
+value|"\20\1M_EXT\2M_PKTHDR\3M_EOR\4M_RDONLY\5M_BCAST\6M_MCAST" \     "\7M_PROMISC\10M_VLANTAG\11M_FLOWID"
 end_define
 
 begin_define
@@ -1042,6 +1042,10 @@ parameter_list|)
 value|((m)->m_pkthdr.rsstype = 0)
 end_define
 
+begin_comment
+comment|/*  * Handle M_FLOWID for legacy drivers still using them.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -1049,7 +1053,7 @@ name|M_HASHTYPE_GET
 parameter_list|(
 name|m
 parameter_list|)
-value|((m)->m_pkthdr.rsstype)
+value|((m->m_flags& M_FLOWID) ? M_HASHTYPE_OPAQUE \ 						    : (m)->m_pkthdr.rsstype)
 end_define
 
 begin_define
@@ -1061,7 +1065,7 @@ name|m
 parameter_list|,
 name|v
 parameter_list|)
-value|((m)->m_pkthdr.rsstype = (v))
+value|do {	    \ 	    if ((v) != M_HASHTYPE_NONE)	    \ 		m->m_flags |= M_FLOWID;	    \ 	    (m)->m_pkthdr.rsstype = (v);    \ } while (0)
 end_define
 
 begin_define
