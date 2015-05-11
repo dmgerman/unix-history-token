@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2013 by Delphix. All rights reserved.  * Copyright (c) 2013 by Saso Kiselkov. All rights reserved.  * Copyright (c) 2013, Joyent, Inc. All rights reserved.  * Copyright 2015 Nexenta Systems, Inc. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -3958,32 +3958,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* You can't clone across pools. */
-if|if
-condition|(
-name|pdd
-operator|->
-name|dd_pool
-operator|!=
-name|dp
-condition|)
-block|{
-name|dsl_dir_rele
-argument_list|(
-name|pdd
-argument_list|,
-name|FTAG
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|SET_ERROR
-argument_list|(
-name|EXDEV
-argument_list|)
-operator|)
-return|;
-block|}
 name|error
 operator|=
 name|dsl_fs_ss_limit_check
@@ -4058,34 +4032,6 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* You can't clone across pools. */
-if|if
-condition|(
-name|origin
-operator|->
-name|ds_dir
-operator|->
-name|dd_pool
-operator|!=
-name|dp
-condition|)
-block|{
-name|dsl_dataset_rele
-argument_list|(
-name|origin
-argument_list|,
-name|FTAG
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|SET_ERROR
-argument_list|(
-name|EXDEV
-argument_list|)
-operator|)
-return|;
-block|}
 comment|/* You can only clone snapshots, not the head datasets. */
 if|if
 condition|(
