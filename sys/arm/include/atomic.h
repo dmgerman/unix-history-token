@@ -411,10 +411,10 @@ name|exflag
 decl_stmt|;
 asm|__asm __volatile(
 literal|"1:          \n"
-literal|"   ldrexd   %[tmp], [%[ptr]]\n"
+literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
 literal|"   orr      %Q[tmp], %Q[val]\n"
 literal|"   orr      %R[tmp], %R[val]\n"
-literal|"   strexd   %[exf], %[tmp], [%[ptr]]\n"
+literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
 literal|"   teq      %[exf], #0\n"
 literal|"   it ne    \n"
 literal|"   bne      1b\n"
@@ -599,10 +599,10 @@ name|exflag
 decl_stmt|;
 asm|__asm __volatile(
 literal|"1:          \n"
-literal|"   ldrexd   %[tmp], [%[ptr]]\n"
+literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
 literal|"   bic      %Q[tmp], %Q[val]\n"
 literal|"   bic      %R[tmp], %R[val]\n"
-literal|"   strexd   %[exf], %[tmp], [%[ptr]]\n"
+literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
 literal|"   teq      %[exf], #0\n"
 literal|"   it ne    \n"
 literal|"   bne      1b\n"
@@ -802,13 +802,13 @@ name|ret
 decl_stmt|;
 asm|__asm __volatile(
 literal|"1:          \n"
-literal|"   ldrexd   %[tmp], [%[ptr]]\n"
+literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
 literal|"   teq      %Q[tmp], %Q[cmpval]\n"
 literal|"   itee eq  \n"
 literal|"   teqeq    %R[tmp], %R[cmpval]\n"
 literal|"   movne    %[ret], #0\n"
 literal|"   bne      2f\n"
-literal|"   strexd   %[ret], %[newval], [%[ptr]]\n"
+literal|"   strexd   %[ret], %Q[newval], %R[newval], [%[ptr]]\n"
 literal|"   teq      %[ret], #0\n"
 literal|"   it ne    \n"
 literal|"   bne      1b\n"
@@ -1266,10 +1266,10 @@ name|exflag
 decl_stmt|;
 asm|__asm __volatile(
 literal|"1:          \n"
-literal|"   ldrexd   %[tmp], [%[ptr]]\n"
+literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
 literal|"   adds     %Q[tmp], %Q[val]\n"
-literal|"   adc      %R[tmp], %R[val]\n"
-literal|"   strexd   %[exf], %[tmp], [%[ptr]]\n"
+literal|"   adc      %R[tmp], %R[tmp], %R[val]\n"
+literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
 literal|"   teq      %[exf], #0\n"
 literal|"   it ne    \n"
 literal|"   bne      1b\n"
@@ -1454,10 +1454,10 @@ name|exflag
 decl_stmt|;
 asm|__asm __volatile(
 literal|"1:          \n"
-literal|"   ldrexd   %[tmp], [%[ptr]]\n"
+literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
 literal|"   subs     %Q[tmp], %Q[val]\n"
-literal|"   sbc      %R[tmp], %R[val]\n"
-literal|"   strexd   %[exf], %[tmp], [%[ptr]]\n"
+literal|"   sbc      %R[tmp], %R[tmp], %R[val]\n"
+literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
 literal|"   teq      %[exf], #0\n"
 literal|"   it ne    \n"
 literal|"   bne      1b\n"
@@ -1850,10 +1850,10 @@ name|exflag
 decl_stmt|;
 asm|__asm __volatile(
 literal|"1:          \n"
-literal|"   ldrexd   %[ret], [%[ptr]]\n"
+literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
 literal|"   adds     %Q[tmp], %Q[ret], %Q[val]\n"
 literal|"   adc      %R[tmp], %R[ret], %R[val]\n"
-literal|"   strexd   %[exf], %[tmp], [%[ptr]]\n"
+literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
 literal|"   teq      %[exf], #0\n"
 literal|"   it ne    \n"
 literal|"   bne      1b\n"
@@ -1935,10 +1935,10 @@ name|exflag
 decl_stmt|;
 asm|__asm __volatile(
 literal|"1:          \n"
-literal|"   ldrexd   %[ret], [%[ptr]]\n"
+literal|"   ldrexd   %Q[ret], %R[ret], [%[ptr]]\n"
 literal|"   mov      %Q[tmp], #0\n"
 literal|"   mov      %R[tmp], #0\n"
-literal|"   strexd   %[exf], %[tmp], [%[ptr]]\n"
+literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
 literal|"   teq      %[exf], #0\n"
 literal|"   it ne    \n"
 literal|"   bne      1b\n"
@@ -2008,7 +2008,7 @@ decl_stmt|;
 comment|/* 	 * The only way to atomically load 64 bits is with LDREXD which puts the 	 * exclusive monitor into the exclusive state, so reset it to open state 	 * with CLREX because we don't actually need to store anything. 	 */
 asm|__asm __volatile(
 literal|"1:          \n"
-literal|"   ldrexd   %[ret], [%[ptr]]\n"
+literal|"   ldrexd   %Q[ret], %R[ret], [%[ptr]]\n"
 literal|"   clrex    \n"
 operator|:
 index|[
@@ -2099,8 +2099,8 @@ decl_stmt|;
 comment|/* 	 * The only way to atomically store 64 bits is with STREXD, which will 	 * succeed only if paired up with a preceeding LDREXD using the same 	 * address, so we read and discard the existing value before storing. 	 */
 asm|__asm __volatile(
 literal|"1:          \n"
-literal|"   ldrexd   %[tmp], [%[ptr]]\n"
-literal|"   strexd   %[exf], %[val], [%[ptr]]\n"
+literal|"   ldrexd   %Q[tmp], %R[tmp], [%[ptr]]\n"
+literal|"   strexd   %[exf], %Q[tmp], %R[tmp], [%[ptr]]\n"
 literal|"   teq      %[exf], #0\n"
 literal|"   it ne    \n"
 literal|"   bne      1b\n"
