@@ -384,6 +384,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* Helper to search for a child with a given compat prop */
+end_comment
+
+begin_function_decl
+name|phandle_t
+name|ofw_bus_find_compatible
+parameter_list|(
+name|phandle_t
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
