@@ -15,6 +15,27 @@ directive|define
 name|MACHINE_CPU_V6_H
 end_define
 
+begin_comment
+comment|/* There are no user serviceable parts here, they may change without notice */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|Only include this file in the kernel
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
@@ -2546,6 +2567,15 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
