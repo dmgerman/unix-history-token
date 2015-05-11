@@ -531,7 +531,7 @@ parameter_list|,
 name|pclabel
 parameter_list|)
 define|\
-value|ldr	got, gotsym;	\ 	pclabel: add	got, got, pc
+value|ldr	got, gotsym;	\ 	pclabel: add	got, pc
 end_define
 
 begin_ifdef
