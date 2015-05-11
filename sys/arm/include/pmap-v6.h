@@ -664,15 +664,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_lazyfix_action
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|pmap_tlb_flush
 parameter_list|(
 name|pmap_t

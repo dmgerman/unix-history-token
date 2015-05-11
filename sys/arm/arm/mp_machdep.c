@@ -1110,27 +1110,6 @@ name|cf_tlb_flushID
 argument_list|()
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|ARM_NEW_PMAP
-case|case
-name|IPI_LAZYPMAP
-case|:
-name|CTR1
-argument_list|(
-name|KTR_SMP
-argument_list|,
-literal|"%s: IPI_LAZYPMAP"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|pmap_lazyfix_action
-argument_list|()
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 default|default:
 name|panic
 argument_list|(
