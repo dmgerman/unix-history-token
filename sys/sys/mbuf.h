@@ -1053,7 +1053,7 @@ name|M_HASHTYPE_GET
 parameter_list|(
 name|m
 parameter_list|)
-value|((m->m_flags& M_FLOWID) ? M_HASHTYPE_OPAQUE \ 						    : (m)->m_pkthdr.rsstype)
+value|(((m->m_flags& M_FLOWID)&&	    \     (m)->m_pkthdr.rsstype == M_HASHTYPE_NONE) ? M_HASHTYPE_OPAQUE : \     (m)->m_pkthdr.rsstype)
 end_define
 
 begin_define
