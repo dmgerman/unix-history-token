@@ -11630,7 +11630,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* calculate the RTT */
 operator|(
 name|void
 operator|)
@@ -11656,6 +11655,7 @@ name|netp
 operator|)
 condition|)
 block|{
+comment|/* calculate the RTT and set the encaps port */
 operator|(
 operator|*
 name|netp
@@ -11681,6 +11681,15 @@ name|sctp_align_unsafe_makecopy
 argument_list|,
 name|SCTP_RTT_FROM_NON_DATA
 argument_list|)
+expr_stmt|;
+operator|(
+operator|*
+name|netp
+operator|)
+operator|->
+name|port
+operator|=
+name|port
 expr_stmt|;
 block|}
 comment|/* respond with a COOKIE-ACK */
