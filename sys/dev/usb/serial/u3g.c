@@ -3930,6 +3930,15 @@ name|U3G_DEV
 argument_list|(
 name|SIERRA
 argument_list|,
+name|MC7354
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|SIERRA
+argument_list|,
 name|MC8700
 argument_list|,
 literal|0
