@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/devmap.h>
 end_include
 
@@ -305,6 +311,29 @@ comment|/* 	 * The hardware mux used by clkmsr is unique to the SoC (though 	 * 
 name|aml8726_identify_soc
 argument_list|()
 expr_stmt|;
+comment|/* 	 * My aml8726-m3 development box which identifies the CPU as 	 * a Cortex A9-r2 rev 4 randomly locks up during boot when WFI 	 * is used. 	 */
+switch|switch
+condition|(
+name|aml8726_soc_hw_rev
+condition|)
+block|{
+case|case
+name|AML_SOC_HW_REV_M3
+case|:
+name|cpufuncs
+operator|.
+name|cf_sleep
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|cpufunc_nullop
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 comment|/* 	 * This FDT fixup should arguably be called through fdt_fixup_table, 	 * however currently there's no mechanism to specify a fixup which 	 * should always be invoked. 	 * 	 * It needs to be called prior to the console being initialized which 	 * is why it's called here, rather than from platform_late_init. 	 */
 name|aml8726_fixup_busfreq
 argument_list|()
