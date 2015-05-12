@@ -13598,6 +13598,13 @@ block|,
 literal|"discarding"
 block|}
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|ifp
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|V_log_stp
@@ -13623,6 +13630,9 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 block|}
 end_function
