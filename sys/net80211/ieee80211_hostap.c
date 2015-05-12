@@ -1748,13 +1748,6 @@ name|int
 name|nf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|HAS_SEQ
-parameter_list|(
-name|type
-parameter_list|)
-value|((type& 0x4) == 0)
 name|struct
 name|ieee80211vap
 modifier|*
@@ -2223,9 +2216,11 @@ name|nf
 expr_stmt|;
 if|if
 condition|(
-name|HAS_SEQ
+name|IEEE80211_HAS_SEQ
 argument_list|(
 name|type
+argument_list|,
+name|subtype
 argument_list|)
 condition|)
 block|{
