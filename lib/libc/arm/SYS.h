@@ -95,7 +95,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|_SYSCALL_NOERROR(x);						\ 	bcs PIC_SYM(CERROR, PLT)
+value|_SYSCALL_NOERROR(x);						\ 	it	cs;							\ 	bcs PIC_SYM(CERROR, PLT)
 end_define
 
 begin_define
@@ -117,7 +117,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|ENTRY(__CONCAT(__sys_, x));					\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	.set _C_LABEL(__CONCAT(_,x)),_C_LABEL(__CONCAT(__sys_,x));	\ 	SYSTRAP(x);							\ 	bcs PIC_SYM(CERROR, PLT);					\ 	RET
+value|ENTRY(__CONCAT(__sys_, x));					\ 	.weak _C_LABEL(__CONCAT(_,x));					\ 	.set _C_LABEL(__CONCAT(_,x)),_C_LABEL(__CONCAT(__sys_,x));	\ 	SYSTRAP(x);							\ 	it	cs;							\ 	bcs PIC_SYM(CERROR, PLT);					\ 	RET
 end_define
 
 begin_define
