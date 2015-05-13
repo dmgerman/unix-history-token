@@ -39,6 +39,12 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"freebsd_test_suite/macros.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -49,7 +55,9 @@ end_define
 begin_function
 name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|struct
 name|mq_attr
@@ -67,6 +75,13 @@ decl_stmt|;
 name|int
 name|status
 decl_stmt|;
+name|PLAIN_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"mqueuefs"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|attr
 operator|.
 name|mq_maxmsg

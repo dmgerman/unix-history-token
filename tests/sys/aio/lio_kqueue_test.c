@@ -67,11 +67,17 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"freebsd_test_suite/macros.h"
+end_include
+
 begin_define
 define|#
 directive|define
 name|PATH_TEMPLATE
-value|"/tmp/aio.XXXXXXXXXX"
+value|"aio.XXXXXXXXXX"
 end_define
 
 begin_define
@@ -84,7 +90,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|MAX
+name|MAX_IOCBS
 value|LIO_MAX * 16
 end_define
 
@@ -116,7 +122,7 @@ name|aiocb
 modifier|*
 name|iocb
 index|[
-name|MAX
+name|MAX_IOCBS
 index|]
 decl_stmt|;
 name|struct
@@ -203,6 +209,13 @@ name|failed
 init|=
 literal|0
 decl_stmt|;
+name|PLAIN_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|kq
@@ -378,7 +391,7 @@ name|aiocb
 operator|*
 argument_list|)
 operator|*
-name|MAX
+name|MAX_IOCBS
 operator|/
 name|LIO_MAX
 argument_list|)
@@ -391,7 +404,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|MAX
+name|MAX_IOCBS
 operator|/
 name|LIO_MAX
 condition|;
@@ -402,7 +415,7 @@ block|{
 name|k
 operator|=
 operator|(
-name|MAX
+name|MAX_IOCBS
 operator|/
 name|LIO_MAX
 operator|*
@@ -578,7 +591,7 @@ index|[
 name|j
 index|]
 argument_list|,
-name|MAX
+name|MAX_IOCBS
 operator|/
 name|LIO_MAX
 argument_list|,
@@ -1004,7 +1017,7 @@ literal|0
 init|;
 name|k
 operator|<
-name|MAX
+name|MAX_IOCBS
 operator|/
 name|LIO_MAX
 condition|;
@@ -1112,7 +1125,7 @@ literal|0
 init|;
 name|k
 operator|<
-name|MAX
+name|MAX_IOCBS
 operator|/
 name|LIO_MAX
 condition|;

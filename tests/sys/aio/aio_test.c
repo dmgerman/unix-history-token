@@ -109,11 +109,23 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<atf-c.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"freebsd_test_suite/macros.h"
+end_include
+
 begin_define
 define|#
 directive|define
 name|PATH_TEMPLATE
-value|"/tmp/aio.XXXXXXXXXX"
+value|"aio.XXXXXXXXXX"
 end_define
 
 begin_comment
@@ -138,11 +150,6 @@ begin_struct
 struct|struct
 name|aio_context
 block|{
-specifier|const
-name|char
-modifier|*
-name|ac_test
-decl_stmt|;
 name|int
 name|ac_read_fd
 decl_stmt|,
@@ -189,35 +196,6 @@ name|aio_timedout
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-specifier|static
-name|void
-name|aio_available
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-if|if
-condition|(
-name|modfind
-argument_list|(
-literal|"aio"
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|errx
-argument_list|(
-literal|0
-argument_list|,
-literal|"aio support not available in the kernel; skipping "
-literal|"testcases"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Each test run specifies a timeout in seconds.  Use the somewhat obsoleted  * signal(3) and alarm(3) APIs to set this up.  */
 end_comment
@@ -244,16 +222,6 @@ specifier|static
 name|void
 name|aio_timeout_start
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|string1
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|string2
-parameter_list|,
 name|int
 name|seconds
 parameter_list|)
@@ -262,26 +230,18 @@ name|aio_timedout
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
 name|aio_timeout_signal
 argument_list|)
-operator|==
+operator|!=
 name|SIG_ERR
-condition|)
-name|errx
-argument_list|(
-literal|1
 argument_list|,
-literal|"FAIL: %s: %s: aio_timeout_set: signal(SIGALRM): %s"
-argument_list|,
-name|string1
-argument_list|,
-name|string2
+literal|"failed to set SIGALRM handler: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -302,37 +262,21 @@ specifier|static
 name|void
 name|aio_timeout_stop
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|string1
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|string2
+name|void
 parameter_list|)
 block|{
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|signal
 argument_list|(
 name|SIGALRM
 argument_list|,
 name|NULL
 argument_list|)
-operator|==
+operator|!=
 name|SIG_ERR
-condition|)
-name|errx
-argument_list|(
-literal|1
 argument_list|,
-literal|"FAIL: %s: %s: aio_timeout_stop: signal(NULL): %s"
-argument_list|,
-name|string1
-argument_list|,
-name|string2
+literal|"failed to reset SIGALRM handler to default: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -500,11 +444,6 @@ name|aio_context
 modifier|*
 name|ac
 parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|test
-parameter_list|,
 name|int
 name|read_fd
 parameter_list|,
@@ -532,19 +471,17 @@ modifier|*
 name|cleanup_arg
 parameter_list|)
 block|{
-if|if
-condition|(
-name|buflen
-operator|>
-name|BUFFER_MAX
-condition|)
-name|errx
+name|ATF_REQUIRE_MSG
 argument_list|(
-literal|1
+name|buflen
+operator|<=
+name|BUFFER_MAX
 argument_list|,
-literal|"FAIL: %s: aio_context_init: buffer too large"
+literal|"aio_context_init: buffer too large (%d> %d)"
 argument_list|,
-name|test
+name|buflen
+argument_list|,
+name|BUFFER_MAX
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -557,12 +494,6 @@ operator|*
 name|ac
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|ac
-operator|->
-name|ac_test
-operator|=
-name|test
 expr_stmt|;
 name|ac
 operator|->
@@ -605,8 +536,8 @@ operator|->
 name|ac_seed
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|aio_test_buffer
 argument_list|(
 name|ac
@@ -619,17 +550,10 @@ name|ac
 operator|->
 name|ac_seed
 argument_list|)
-operator|==
+operator|!=
 literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
 argument_list|,
-literal|"%s: aio_context_init: aio_test_buffer: internal "
-literal|"error"
-argument_list|,
-name|test
+literal|"aio_test_buffer: internal error"
 argument_list|)
 expr_stmt|;
 name|ac
@@ -727,8 +651,10 @@ decl_stmt|;
 name|ssize_t
 name|len
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -775,12 +701,6 @@ name|aio_timeout_start
 argument_list|(
 name|ac
 operator|->
-name|ac_test
-argument_list|,
-literal|"aio_write_test"
-argument_list|,
-name|ac
-operator|->
 name|ac_seconds
 argument_list|)
 expr_stmt|;
@@ -812,16 +732,9 @@ argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: %s: aio_write_test: "
-literal|"aio_write: timed out"
-argument_list|,
-name|ac
-operator|->
-name|ac_test
+literal|"aio_write timed out"
 argument_list|)
 expr_stmt|;
 block|}
@@ -831,15 +744,9 @@ argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: %s: aio_write_test: aio_write: %s"
-argument_list|,
-name|ac
-operator|->
-name|ac_test
+literal|"aio_write failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -882,16 +789,9 @@ argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: %s: aio_write_test: "
-literal|"aio_waitcomplete: timed out"
-argument_list|,
-name|ac
-operator|->
-name|ac_test
+literal|"aio_waitcomplete timed out"
 argument_list|)
 expr_stmt|;
 block|}
@@ -901,15 +801,9 @@ argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: %s: aio_write_test: aio_waitcomplete: %s"
-argument_list|,
-name|ac
-operator|->
-name|ac_test
+literal|"aio_waitcomplete failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -919,13 +813,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|aio_timeout_stop
-argument_list|(
-name|ac
-operator|->
-name|ac_test
-argument_list|,
-literal|"aio_write_test"
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -941,16 +829,9 @@ argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: %s: aio_write_test: aio_waitcomplete: short "
-literal|"write (%jd)"
-argument_list|,
-name|ac
-operator|->
-name|ac_test
+literal|"aio_waitcomplete short write (%jd)"
 argument_list|,
 operator|(
 name|intmax_t
@@ -987,8 +868,10 @@ decl_stmt|;
 name|ssize_t
 name|len
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
 name|bzero
 argument_list|(
@@ -1046,12 +929,6 @@ name|aio_timeout_start
 argument_list|(
 name|ac
 operator|->
-name|ac_test
-argument_list|,
-literal|"aio_read_test"
-argument_list|,
-name|ac
-operator|->
 name|ac_seconds
 argument_list|)
 expr_stmt|;
@@ -1083,16 +960,9 @@ argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: %s: aio_read_test: "
-literal|"aio_read: timed out"
-argument_list|,
-name|ac
-operator|->
-name|ac_test
+literal|"aio_write timed out"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1102,15 +972,9 @@ argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: %s: aio_read_test: aio_read %s"
-argument_list|,
-name|ac
-operator|->
-name|ac_test
+literal|"aio_read failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1153,16 +1017,9 @@ argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: %s: aio_read_test: "
-literal|"aio_waitcomplete: timed out"
-argument_list|,
-name|ac
-operator|->
-name|ac_test
+literal|"aio_waitcomplete timed out"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1172,15 +1029,9 @@ argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: %s: aio_read_test: aio_waitcomplete: %s"
-argument_list|,
-name|ac
-operator|->
-name|ac_test
+literal|"aio_waitcomplete failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1190,13 +1041,7 @@ argument_list|)
 expr_stmt|;
 block|}
 name|aio_timeout_stop
-argument_list|(
-name|ac
-operator|->
-name|ac_test
-argument_list|,
-literal|"aio_read_test"
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1212,16 +1057,9 @@ argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: %s: aio_read_test: aio_waitcomplete: short "
-literal|"read (%jd)"
-argument_list|,
-name|ac
-operator|->
-name|ac_test
+literal|"aio_waitcomplete short read (%jd)"
 argument_list|,
 operator|(
 name|intmax_t
@@ -1255,15 +1093,9 @@ argument_list|(
 name|ac
 argument_list|)
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: %s: aio_read_test: buffer mismatch"
-argument_list|,
-name|ac
-operator|->
-name|ac_test
+literal|"buffer mismatched"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1343,13 +1175,24 @@ name|FILE_TIMEOUT
 value|30
 end_define
 
-begin_function
-specifier|static
-name|void
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|aio_file_test
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|aio_file_test
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|char
 name|pathname
@@ -1368,8 +1211,10 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
 name|strcpy
 argument_list|(
@@ -1385,18 +1230,14 @@ argument_list|(
 name|pathname
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|fd
-operator|==
+operator|!=
 operator|-
 literal|1
-condition|)
-name|errx
-argument_list|(
-literal|1
 argument_list|,
-literal|"FAIL: aio_file_test: mkstemp: %s"
+literal|"mkstemp failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1420,8 +1261,6 @@ name|aio_context_init
 argument_list|(
 operator|&
 name|ac
-argument_list|,
-literal|"aio_file_test"
 argument_list|,
 name|fd
 argument_list|,
@@ -1455,15 +1294,8 @@ operator|&
 name|arg
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"PASS: aio_file_test\n"
-argument_list|)
-expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_struct
 struct|struct
@@ -1558,13 +1390,24 @@ name|FIFO_TIMEOUT
 value|30
 end_define
 
-begin_function
-specifier|static
-name|void
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|aio_fifo_test
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|aio_fifo_test
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|error
@@ -1593,8 +1436,10 @@ name|struct
 name|aio_context
 name|ac
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
 comment|/* 	 * In theory, mkstemp() can return a name that is then collided with. 	 * Because this is a regression test, we treat that as a test failure 	 * rather than retrying. 	 */
 name|strcpy
@@ -1604,57 +1449,54 @@ argument_list|,
 name|PATH_TEMPLATE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|mkstemp
 argument_list|(
 name|pathname
 argument_list|)
-operator|==
+operator|!=
 operator|-
 literal|1
-condition|)
-name|err
-argument_list|(
-literal|1
 argument_list|,
-literal|"FAIL: aio_fifo_test: mkstemp failed"
+literal|"mkstemp failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|unlink
 argument_list|(
 name|pathname
 argument_list|)
 operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-literal|1
+literal|0
 argument_list|,
-literal|"FAIL: aio_fifo_test: unlink failed"
+literal|"unlink failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|mkfifo
 argument_list|(
 name|pathname
 argument_list|,
 literal|0600
 argument_list|)
-operator|==
+operator|!=
 operator|-
 literal|1
-condition|)
-name|errx
-argument_list|(
-literal|1
 argument_list|,
-literal|"FAIL: aio_fifo_test: mkfifo: %s"
+literal|"mkfifo failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1715,11 +1557,9 @@ name|errno
 operator|=
 name|error
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: aio_fifo_test: read_fd open: %s"
+literal|"read_fd open failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1765,11 +1605,9 @@ name|errno
 operator|=
 name|error
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: aio_fifo_test: write_fd open: %s"
+literal|"write_fd open failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1788,8 +1626,6 @@ name|aio_context_init
 argument_list|(
 operator|&
 name|ac
-argument_list|,
-literal|"aio_fifo_test"
 argument_list|,
 name|read_fd
 argument_list|,
@@ -1823,15 +1659,8 @@ operator|&
 name|arg
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"PASS: aio_fifo_test\n"
-argument_list|)
-expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_struct
 struct|struct
@@ -1903,13 +1732,24 @@ name|UNIX_SOCKETPAIR_TIMEOUT
 value|30
 end_define
 
-begin_function
-specifier|static
-name|void
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|aio_unix_socketpair_test
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|aio_unix_socketpair_test
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|aio_unix_socketpair_arg
@@ -1925,11 +1765,13 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|socketpair
 argument_list|(
 name|PF_UNIX
@@ -1940,14 +1782,11 @@ literal|0
 argument_list|,
 name|sockets
 argument_list|)
-operator|<
-literal|0
-condition|)
-name|errx
-argument_list|(
+operator|!=
+operator|-
 literal|1
 argument_list|,
-literal|"FAIL: aio_socketpair_test: socketpair: %s"
+literal|"socketpair failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1983,8 +1822,6 @@ name|aio_context_init
 argument_list|(
 operator|&
 name|ac
-argument_list|,
-literal|"aio_unix_socketpair_test"
 argument_list|,
 name|sockets
 index|[
@@ -2024,15 +1861,8 @@ operator|&
 name|arg
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"PASS: aio_unix_socketpair_test\n"
-argument_list|)
-expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_struct
 struct|struct
@@ -2102,13 +1932,24 @@ name|PTY_TIMEOUT
 value|30
 end_define
 
-begin_function
-specifier|static
-name|void
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|aio_pty_test
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|aio_pty_test
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|aio_pty_arg
@@ -2130,11 +1971,13 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|openpty
 argument_list|(
 operator|&
@@ -2149,14 +1992,10 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
-operator|<
+operator|==
 literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
 argument_list|,
-literal|"FAIL: aio_pty_test: openpty: %s"
+literal|"openpty failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2203,11 +2042,9 @@ name|errno
 operator|=
 name|error
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: aio_pty_test: tcgetattr: %s"
+literal|"tcgetattr failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2251,11 +2088,9 @@ name|errno
 operator|=
 name|error
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: aio_pty_test: tcsetattr: %s"
+literal|"tcsetattr failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2268,8 +2103,6 @@ name|aio_context_init
 argument_list|(
 operator|&
 name|ac
-argument_list|,
-literal|"aio_pty_test"
 argument_list|,
 name|read_fd
 argument_list|,
@@ -2303,15 +2136,8 @@ operator|&
 name|arg
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"PASS: aio_pty_test\n"
-argument_list|)
-expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_function
 specifier|static
@@ -2362,13 +2188,24 @@ name|PIPE_TIMEOUT
 value|30
 end_define
 
-begin_function
-specifier|static
-name|void
+begin_expr_stmt
+name|ATF_TC_WITHOUT_HEAD
+argument_list|(
 name|aio_pipe_test
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|aio_pipe_test
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|struct
 name|aio_context
@@ -2380,23 +2217,22 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-name|aio_available
-argument_list|()
+name|ATF_REQUIRE_KERNEL_MODULE
+argument_list|(
+literal|"aio"
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|pipe
 argument_list|(
 name|pipes
 argument_list|)
-operator|<
-literal|0
-condition|)
-name|errx
-argument_list|(
+operator|!=
+operator|-
 literal|1
 argument_list|,
-literal|"FAIL: aio_pipe_test: pipe: %s"
+literal|"pipe failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2408,8 +2244,6 @@ name|aio_context_init
 argument_list|(
 operator|&
 name|ac
-argument_list|,
-literal|"aio_file_test"
 argument_list|,
 name|pipes
 index|[
@@ -2447,15 +2281,8 @@ argument_list|(
 name|pipes
 argument_list|)
 expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"PASS: aio_pipe_test\n"
-argument_list|)
-expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_struct
 struct|struct
@@ -2564,8 +2391,9 @@ argument_list|,
 operator|&
 name|mdio
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|error
@@ -2583,9 +2411,9 @@ name|errno
 operator|=
 name|error
 expr_stmt|;
-name|warnx
+name|atf_tc_fail
 argument_list|(
-literal|"FAIL: aio_md_test: MDIOCDETACH: %s"
+literal|"ioctl MDIOCDETACH failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2619,13 +2447,47 @@ name|MD_TIMEOUT
 value|30
 end_define
 
-begin_function
-specifier|static
-name|void
+begin_expr_stmt
+name|ATF_TC
+argument_list|(
 name|aio_md_test
-parameter_list|(
-name|void
-parameter_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_macro
+name|ATF_TC_HEAD
+argument_list|(
+argument|aio_md_test
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|atf_tc_set_md_var
+argument_list|(
+name|tc
+argument_list|,
+literal|"require.user"
+argument_list|,
+literal|"root"
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_macro
+name|ATF_TC_BODY
+argument_list|(
+argument|aio_md_test
+argument_list|,
+argument|tc
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|int
 name|error
@@ -2654,27 +2516,11 @@ name|struct
 name|md_ioctl
 name|mdio
 decl_stmt|;
-name|aio_available
-argument_list|()
-expr_stmt|;
-if|if
-condition|(
-name|geteuid
-argument_list|()
-operator|!=
-literal|0
-condition|)
-block|{
-name|fprintf
+name|ATF_REQUIRE_KERNEL_MODULE
 argument_list|(
-name|stderr
-argument_list|,
-literal|"WARNING: aio_md_test: skipped as euid "
-literal|"!= 0\n"
+literal|"aio"
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
 name|mdctl_fd
 operator|=
 name|open
@@ -2687,17 +2533,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mdctl_fd
-operator|<
-literal|0
-condition|)
-name|errx
+name|ATF_REQUIRE_MSG
 argument_list|(
+name|mdctl_fd
+operator|!=
+operator|-
 literal|1
 argument_list|,
-literal|"FAIL: aio_md_test: open(/dev/%s): %s"
+literal|"opening /dev/%s failed: %s"
 argument_list|,
 name|MDCTL_NAME
 argument_list|,
@@ -2799,11 +2642,9 @@ name|errno
 operator|=
 name|error
 expr_stmt|;
-name|errx
+name|atf_tc_fail
 argument_list|(
-literal|1
-argument_list|,
-literal|"FAIL: aio_md_test: MDIOCATTACH: %s"
+literal|"ioctl MDIOCATTACH failed: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -2842,32 +2683,14 @@ argument_list|,
 name|O_RDWR
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|ATF_REQUIRE_MSG
+argument_list|(
 name|fd
-operator|<
-literal|0
-condition|)
-block|{
-name|error
-operator|=
-name|errno
-expr_stmt|;
-name|aio_md_cleanup
-argument_list|(
-operator|&
-name|arg
-argument_list|)
-expr_stmt|;
-name|errno
-operator|=
-name|error
-expr_stmt|;
-name|errx
-argument_list|(
+operator|!=
+operator|-
 literal|1
 argument_list|,
-literal|"FAIL: aio_md_test: open(%s): %s"
+literal|"opening %s failed: %s"
 argument_list|,
 name|pathname
 argument_list|,
@@ -2877,7 +2700,6 @@ name|errno
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 name|arg
 operator|.
 name|ama_fd
@@ -2888,8 +2710,6 @@ name|aio_context_init
 argument_list|(
 operator|&
 name|ac
-argument_list|,
-literal|"aio_md_test"
 argument_list|,
 name|fd
 argument_list|,
@@ -2923,48 +2743,68 @@ operator|&
 name|arg
 argument_list|)
 expr_stmt|;
-name|fprintf
+block|}
+end_block
+
+begin_macro
+name|ATF_TP_ADD_TCS
 argument_list|(
-name|stderr
+argument|tp
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
 argument_list|,
-literal|"PASS: aio_md_test\n"
+name|aio_file_test
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|int
-name|main
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|aio_file_test
-argument_list|()
-expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|aio_fifo_test
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|aio_unix_socketpair_test
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|aio_pty_test
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|aio_pipe_test
-argument_list|()
+argument_list|)
 expr_stmt|;
+name|ATF_TP_ADD_TC
+argument_list|(
+name|tp
+argument_list|,
 name|aio_md_test
-argument_list|()
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|atf_no_error
+argument_list|()
 operator|)
 return|;
 block|}
-end_function
+end_block
 
 end_unit
 
