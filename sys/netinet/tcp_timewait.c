@@ -1063,6 +1063,14 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+comment|/* 	 * For use only by DTrace.  We do not reference the state 	 * after this point so modifying it in place is not a problem. 	 */
+name|tcp_state_change
+argument_list|(
+name|tp
+argument_list|,
+name|TCPS_TIME_WAIT
+argument_list|)
+expr_stmt|;
 name|tw
 operator|=
 name|uma_zalloc
