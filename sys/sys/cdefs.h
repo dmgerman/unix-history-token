@@ -2331,7 +2331,7 @@ name|__GNUC_PREREQ__
 argument_list|(
 literal|4
 operator|,
-literal|2
+literal|0
 argument_list|)
 end_if
 
