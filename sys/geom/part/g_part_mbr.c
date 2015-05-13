@@ -763,6 +763,24 @@ name|DOSPTYP_VMKDIAG
 block|,
 name|G_PART_ALIAS_VMKDIAG
 block|}
+block|,
+block|{
+name|DOSPTYP_APPLE_UFS
+block|,
+name|G_PART_ALIAS_APPLE_UFS
+block|}
+block|,
+block|{
+name|DOSPTYP_APPLE_BOOT
+block|,
+name|G_PART_ALIAS_APPLE_BOOT
+block|}
+block|,
+block|{
+name|DOSPTYP_HFS
+block|,
+name|G_PART_ALIAS_APPLE_HFS
+block|}
 block|, }
 struct|;
 end_struct
