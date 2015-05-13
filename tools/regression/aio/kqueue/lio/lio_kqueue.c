@@ -10,30 +10,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<aio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<errno.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -47,6 +23,42 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<aio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string.h>
 end_include
 
 begin_include
@@ -84,6 +96,7 @@ value|300
 end_define
 
 begin_function
+name|int
 name|main
 parameter_list|(
 name|int
@@ -105,9 +118,6 @@ name|iocb
 index|[
 name|MAX
 index|]
-decl_stmt|,
-modifier|*
-name|kq_iocb
 decl_stmt|;
 name|struct
 name|aiocb
@@ -1040,7 +1050,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"FAIL: run %d, operation %d sub-opt %d  result %d (errno=%d) should be %d\n"
+literal|"FAIL: run %d, operation %d sub-opt %d  result %d (errno=%d) should be %zu\n"
 argument_list|,
 name|run
 argument_list|,
