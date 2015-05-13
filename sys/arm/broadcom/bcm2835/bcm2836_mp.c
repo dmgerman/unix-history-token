@@ -431,6 +431,12 @@ block|}
 name|wmb
 argument_list|()
 expr_stmt|;
+name|cpu_idcache_wbinv_all
+argument_list|()
+expr_stmt|;
+name|cpu_l2cache_wbinv_all
+argument_list|()
+expr_stmt|;
 comment|/* boot secondary CPUs */
 for|for
 control|(
@@ -538,12 +544,6 @@ name|all_cpus
 argument_list|)
 expr_stmt|;
 block|}
-name|cpu_idcache_wbinv_all
-argument_list|()
-expr_stmt|;
-name|cpu_l2cache_wbinv_all
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
