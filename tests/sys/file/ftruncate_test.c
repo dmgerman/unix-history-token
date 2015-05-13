@@ -193,7 +193,7 @@ name|struct
 name|stat
 name|sb
 decl_stmt|;
-name|size_t
+name|ssize_t
 name|size
 decl_stmt|;
 name|off_t
@@ -230,7 +230,7 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"makestemp"
+literal|"mkstemp"
 argument_list|)
 expr_stmt|;
 name|read_only_fd
@@ -355,8 +355,11 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"ftruncate(%llu) up"
+literal|"ftruncate(%jd) up"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -393,10 +396,16 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"fstat(%llu) returned len %llu up"
+literal|"fstat with len=%jd returned len %jd up"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|len
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|sb
 operator|.
 name|st_size
@@ -439,8 +448,11 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"pread on len %llu up"
+literal|"pread on len %jd up"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -458,8 +470,11 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"pread len %llu size %jd up"
+literal|"pread len %jd size %jd up"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|len
 argument_list|,
 operator|(
@@ -479,8 +494,11 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"pread length %llu size %jd ch %d up"
+literal|"pread length %jd size %jd ch %d up"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|len
 argument_list|,
 operator|(
@@ -532,8 +550,11 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"ftruncate(%llu) down"
+literal|"ftruncate(%jd) down"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|len
 argument_list|)
 expr_stmt|;
@@ -570,8 +591,11 @@ argument_list|(
 operator|-
 literal|1
 argument_list|,
-literal|"fstat(%llu) returned %llu down"
+literal|"fstat(%jd) returned %jd down"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|len
 argument_list|,
 name|sb
