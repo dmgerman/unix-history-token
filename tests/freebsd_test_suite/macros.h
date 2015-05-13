@@ -36,13 +36,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -58,7 +64,7 @@ name|ATF_REQUIRE_KERNEL_MODULE
 parameter_list|(
 name|_mod_name
 parameter_list|)
-value|do {			\ 	ATF_REQUIRE_MSG(modfind(_mod_name) != -1,			\ 	    "module %s could not be resolved: %s",			\ 	    _mod_name, strerror(errno));				\ } while(0)
+value|do {			\ 	if (modfind(_mod_name) == -1) {					\ 		atf_tc_skip("module %s could not be resolved: %s",	\ 		    _mod_name, strerror(errno));			\ 	}								\ } while(0)
 end_define
 
 begin_define
@@ -70,7 +76,7 @@ name|_mod_name
 parameter_list|,
 name|_exit_code
 parameter_list|)
-value|do {	\ 	if (modfind(_mod_name) == -1) {					\ 		err(_exit_code, "module %s could not be resolved",	\ 		    _mod_name);						\ 	}								\ } while(0)
+value|do {		\ 	if (modfind(_mod_name) == -1) {					\ 		printf("module %s could not be resolved: %s\n",		\ 		    _mod_name, strerror(errno));			\ 		_exit(_exit_code);					\ 	}								\ } while(0)
 end_define
 
 begin_endif
