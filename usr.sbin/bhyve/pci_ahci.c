@@ -1906,6 +1906,13 @@ literal|2
 index|]
 operator|==
 name|ATA_READ_FPDMA_QUEUED
+operator|||
+name|cfis
+index|[
+literal|2
+index|]
+operator|==
+name|ATA_SEND_FPDMA_QUEUED
 condition|)
 name|ncq
 operator|=
