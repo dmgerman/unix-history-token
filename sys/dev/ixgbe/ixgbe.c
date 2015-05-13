@@ -7774,7 +7774,7 @@ name|ifm_status
 operator||=
 name|IFM_ACTIVE
 expr_stmt|;
-comment|/*         * Not all NIC are 1000baseSX as an example X540T.         * We must set properly the media based on NIC model.         */
+comment|/* 	 * Not all NIC are 1000baseSX as an example X540T. 	 * We must set properly the media based on NIC model. 	 */
 switch|switch
 condition|(
 name|hw
