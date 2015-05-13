@@ -30,19 +30,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<errno.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<string.h>
 end_include
 
 begin_struct
+specifier|static
 specifier|const
 struct|struct
-name|tests
 block|{
 name|void
 modifier|*
@@ -214,6 +220,13 @@ block|, }
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|MAP_AT_ZERO
+value|"security.bsd.map_at_zero"
+end_define
+
 begin_function
 name|int
 name|main
@@ -262,7 +275,7 @@ if|if
 condition|(
 name|sysctlnametomib
 argument_list|(
-literal|"security.bsd.map_at_zero"
+name|MAP_AT_ZERO
 argument_list|,
 name|mib
 argument_list|,
@@ -273,13 +286,25 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|printf
 argument_list|(
-literal|1
+literal|"1..0 # SKIP: sysctlnametomib(\"%s\") failed: %s\n"
 argument_list|,
-literal|"sysctlnametomib(security.bsd.map_at_zero)"
+name|MAP_AT_ZERO
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 name|len
 operator|=
 sizeof|sizeof
@@ -309,19 +334,41 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|err
+block|{
+name|printf
 argument_list|(
-literal|1
+literal|"1..0 # SKIP: sysctl for %s failed: %s\n"
 argument_list|,
-literal|"sysctl(security.bsd.map_at_zero)"
+name|MAP_AT_ZERO
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* Normalize to 0 or 1 for array access. */
 name|map_at_zero
 operator|=
 operator|!
 operator|!
 name|map_at_zero
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"1..%zu\n"
+argument_list|,
+name|nitems
+argument_list|(
+name|tests
+argument_list|)
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -332,17 +379,12 @@ init|;
 name|i
 operator|<
 operator|(
-sizeof|sizeof
-argument_list|(
-name|tests
-argument_list|)
-operator|/
-sizeof|sizeof
-argument_list|(
-operator|*
-name|tests
-argument_list|)
+name|int
 operator|)
+name|nitems
+argument_list|(
+name|tests
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -405,11 +447,10 @@ condition|)
 name|error
 operator|++
 expr_stmt|;
-name|warnx
+name|printf
 argument_list|(
-literal|"%s: mmap(%p, ...) failed."
+literal|"%sok %d # mmap(%p, ...) failed\n"
 argument_list|,
-operator|(
 name|tests
 index|[
 name|i
@@ -421,11 +462,14 @@ name|map_at_zero
 index|]
 operator|==
 literal|0
-operator|)
 condition|?
-literal|"OK "
+literal|""
 else|:
-literal|"ERR"
+literal|"not "
+argument_list|,
+name|i
+operator|+
+literal|1
 argument_list|,
 name|tests
 index|[
@@ -455,11 +499,10 @@ condition|)
 name|error
 operator|++
 expr_stmt|;
-name|warnx
+name|printf
 argument_list|(
-literal|"%s: mmap(%p, ...) succeeded: p=%p"
+literal|"%sok %d # mmap(%p, ...) succeeded: p=%p\n"
 argument_list|,
-operator|(
 name|tests
 index|[
 name|i
@@ -471,11 +514,14 @@ name|map_at_zero
 index|]
 operator|==
 literal|1
-operator|)
 condition|?
-literal|"OK "
+literal|""
 else|:
-literal|"ERR"
+literal|"not "
+argument_list|,
+name|i
+operator|+
+literal|1
 argument_list|,
 name|tests
 index|[
@@ -489,19 +535,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|error
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"---\nERROR: %d unexpected results."
-argument_list|,
-name|error
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
