@@ -2554,7 +2554,7 @@ name|len
 operator|=
 name|OF_getprop_alloc
 argument_list|(
-name|node
+name|child
 argument_list|,
 literal|"compatible"
 argument_list|,
