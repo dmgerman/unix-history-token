@@ -650,6 +650,9 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|dma_tag
 decl_stmt|;
+name|bus_dma_tag_t
+name|dma_tag_payload
+decl_stmt|;
 name|bus_dmamap_t
 name|cmd_dma_map
 decl_stmt|;
@@ -1911,6 +1914,19 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|printf
+argument_list|(
+literal|"nvme_single_map err %d\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 operator|*
 name|bus_addr
 operator|=
