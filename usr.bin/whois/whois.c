@@ -569,7 +569,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aAbc:fgh:iIklmp:QrR6"
+literal|"aAbc:fgh:iIklmp:Qr"
 argument_list|)
 operator|)
 operator|!=
@@ -700,31 +700,6 @@ case|:
 name|host
 operator|=
 name|RNICHOST
-expr_stmt|;
-break|break;
-case|case
-literal|'R'
-case|:
-name|warnx
-argument_list|(
-literal|"-R is deprecated; use '-c ru' instead"
-argument_list|)
-expr_stmt|;
-name|country
-operator|=
-literal|"ru"
-expr_stmt|;
-break|break;
-comment|/* Remove in FreeBSD 10 */
-case|case
-literal|'6'
-case|:
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"-6 is deprecated; use -[aAflr] instead"
-argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -1384,21 +1359,22 @@ modifier|*
 name|p
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|,
 name|s
 init|=
 operator|-
 literal|1
+decl_stmt|;
+name|nfds_t
+name|i
 decl_stmt|,
-name|count
+name|j
 decl_stmt|;
 name|size_t
 name|c
 decl_stmt|,
 name|len
+decl_stmt|,
+name|count
 decl_stmt|;
 name|struct
 name|pollfd
@@ -2417,7 +2393,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whois [-aAbfgiIklmQrR6] [-c country-code | -h hostname] "
+literal|"usage: whois [-aAbfgiIklmQr] [-c country-code | -h hostname] "
 literal|"[-p port] name ...\n"
 argument_list|)
 expr_stmt|;
