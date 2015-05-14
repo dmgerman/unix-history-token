@@ -35,7 +35,7 @@ begin_define
 define|#
 directive|define
 name|BLOCKIF_IOV_MAX
-value|33
+value|67
 end_define
 
 begin_comment
