@@ -176,15 +176,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|NICHOST
-value|"whois.crsnic.net"
+name|ANICHOST
+value|"whois.arin.net"
 end_define
 
 begin_define
 define|#
 directive|define
-name|INICHOST
-value|"whois.networksolutions.com"
+name|BNICHOST
+value|"whois.registro.br"
+end_define
+
+begin_define
+define|#
+directive|define
+name|FNICHOST
+value|"whois.afrinic.net"
+end_define
+
+begin_define
+define|#
+directive|define
+name|GERMNICHOST
+value|"de.whois-servers.net"
 end_define
 
 begin_define
@@ -197,15 +211,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|ANICHOST
-value|"whois.arin.net"
+name|IANAHOST
+value|"whois.iana.org"
 end_define
 
 begin_define
 define|#
 directive|define
-name|LNICHOST
-value|"whois.lacnic.net"
+name|INICHOST
+value|"whois.networksolutions.com"
 end_define
 
 begin_define
@@ -218,15 +232,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|RNICHOST
-value|"whois.ripe.net"
-end_define
-
-begin_define
-define|#
-directive|define
-name|PNICHOST
-value|"whois.apnic.net"
+name|LNICHOST
+value|"whois.lacnic.net"
 end_define
 
 begin_define
@@ -234,6 +241,20 @@ define|#
 directive|define
 name|MNICHOST
 value|"whois.ra.net"
+end_define
+
+begin_define
+define|#
+directive|define
+name|NICHOST
+value|"whois.crsnic.net"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PNICHOST
+value|"whois.apnic.net"
 end_define
 
 begin_define
@@ -253,29 +274,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|BNICHOST
-value|"whois.registro.br"
-end_define
-
-begin_define
-define|#
-directive|define
-name|IANAHOST
-value|"whois.iana.org"
-end_define
-
-begin_define
-define|#
-directive|define
-name|GERMNICHOST
-value|"de.whois-servers.net"
-end_define
-
-begin_define
-define|#
-directive|define
-name|FNICHOST
-value|"whois.afrinic.net"
+name|RNICHOST
+value|"whois.ripe.net"
 end_define
 
 begin_define
