@@ -125,7 +125,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elfdump.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: elfdump.c 3189 2015-04-20 17:02:01Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5162,15 +5162,6 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
-name|av
-index|[
-name|i
-index|]
-operator|!=
-name|NULL
-condition|)
 block|{
 name|ed
 operator|->

@@ -66,7 +66,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: read.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: read.c 3180 2015-04-09 15:13:57Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -802,7 +802,6 @@ name|flags
 operator|=
 name|ARCHIVE_EXTRACT_SECURE_SYMLINKS
 operator||
-expr|\
 name|ARCHIVE_EXTRACT_SECURE_NODOTDOT
 expr_stmt|;
 if|if

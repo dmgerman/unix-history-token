@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: sections.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: sections.c 3185 2015-04-11 08:56:34Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6272,6 +6272,46 @@ operator|=
 name|ecp
 operator|->
 name|secndx
+index|[
+name|osh
+operator|.
+name|sh_info
+index|]
+expr_stmt|;
+comment|/* 		 * sh_info of SHT_GROUP section needs to point to the correct 		 * string in the symbol table. 		 */
+if|if
+condition|(
+name|s
+operator|->
+name|type
+operator|==
+name|SHT_GROUP
+operator|&&
+operator|(
+name|ecp
+operator|->
+name|flags
+operator|&
+name|SYMTAB_EXIST
+operator|)
+operator|&&
+operator|(
+name|ecp
+operator|->
+name|flags
+operator|&
+name|SYMTAB_INTACT
+operator|)
+operator|==
+literal|0
+condition|)
+name|osh
+operator|.
+name|sh_info
+operator|=
+name|ecp
+operator|->
+name|symndx
 index|[
 name|osh
 operator|.

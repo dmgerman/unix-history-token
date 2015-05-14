@@ -82,7 +82,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: ar.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: ar.c 3183 2015-04-10 16:18:42Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -324,7 +324,7 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Act like ranlib if our name ends in "ranlib"; this 	 * accomodates names like "arm-freebsd7.1-ranlib", 	 * "bsdranlib", etc. 	 */
+comment|/* 	 * Act like ranlib if our name ends in "ranlib"; this 	 * accommodates names like "arm-freebsd7.1-ranlib", 	 * "bsdranlib", etc. 	 */
 name|len
 operator|=
 name|strlen

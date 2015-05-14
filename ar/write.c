@@ -84,7 +84,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: write.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: write.c 3183 2015-04-10 16:18:42Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -363,7 +363,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Create an object from a file, and return the created object  * descriptor.  Return NULL if either an error occurs, or if the '-u'  * option was specifed and the member is not newer than the existing  * one in the archive.  */
+comment|/*  * Create an object from a file, and return the created object  * descriptor.  Return NULL if either an error occurs, or if the '-u'  * option was specified and the member is not newer than the existing  * one in the archive.  */
 end_comment
 
 begin_function
@@ -2005,7 +2005,7 @@ operator|==
 literal|'A'
 condition|)
 block|{
-comment|/* 		 * Read objects from the target archive of the 		 * 'ADDLIB' command.  If there are members spcified in 		 * 'argv', read those members only, otherwise the 		 * entire archive will be read. 		 */
+comment|/* 		 * Read objects from the target archive of the 		 * 'ADDLIB' command.  If there are members specified in 		 * 'argv', read those members only, otherwise the 		 * entire archive will be read. 		 */
 name|read_objs
 argument_list|(
 name|bsdar
@@ -2069,7 +2069,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 		 * If we cannot find the position specified by the 		 * user, sliently insert objects at the tail of the 		 * list. 		 */
+comment|/* 		 * If we cannot find the position specified by the 		 * user, silently insert objects at the tail of the 		 * list. 		 */
 if|if
 condition|(
 name|pos

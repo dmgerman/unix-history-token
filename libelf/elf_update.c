@@ -83,7 +83,7 @@ end_endif
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elf_update.c 3013 2014-03-23 06:16:59Z jkoshy $"
+literal|"$Id: elf_update.c 3190 2015-05-04 15:23:08Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -756,6 +756,15 @@ operator|||
 name|sh_size
 operator|<
 name|scn_size
+operator|||
+name|sh_offset
+operator|%
+name|_libelf_falign
+argument_list|(
+name|elftype
+argument_list|,
+name|ec
+argument_list|)
 condition|)
 block|{
 name|LIBELF_SET_ERROR
