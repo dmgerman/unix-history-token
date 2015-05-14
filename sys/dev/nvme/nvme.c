@@ -304,16 +304,6 @@ literal|"NVMe Controller"
 block|}
 block|,
 block|{
-name|CHATHAM_PCI_ID
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|"Chatham Prototype NVMe Controller"
-block|}
-block|,
-block|{
 name|IDT32_PCI_ID
 block|,
 literal|0
