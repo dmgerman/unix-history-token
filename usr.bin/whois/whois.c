@@ -253,6 +253,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PDBHOST
+value|"whois.peeringdb.com"
+end_define
+
+begin_define
+define|#
+directive|define
 name|PNICHOST
 value|"whois.apnic.net"
 end_define
@@ -576,7 +583,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aAbc:fgh:iIklmp:Qr"
+literal|"aAbc:fgh:iIklmp:PQr"
 argument_list|)
 operator|)
 operator|!=
@@ -691,6 +698,14 @@ case|:
 name|port
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|host
+operator|=
+name|PDBHOST
 expr_stmt|;
 break|break;
 case|case
@@ -2496,7 +2511,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: whois [-aAbfgiIklmQr] [-c country-code | -h hostname] "
+literal|"usage: whois [-aAbfgiIklmPQr] [-c country-code | -h hostname] "
 literal|"[-p port] name ...\n"
 argument_list|)
 expr_stmt|;
