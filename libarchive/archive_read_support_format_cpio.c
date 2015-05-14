@@ -4657,11 +4657,25 @@ name|h
 operator|==
 name|NULL
 condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+literal|0
+argument_list|,
+literal|"End of file trying to read next cpio header"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ARCHIVE_FATAL
 operator|)
 return|;
+block|}
 comment|/* Parse out binary fields. */
 name|header
 operator|=
@@ -4966,11 +4980,25 @@ name|h
 operator|==
 name|NULL
 condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+literal|0
+argument_list|,
+literal|"End of file trying to read next cpio header"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ARCHIVE_FATAL
 operator|)
 return|;
+block|}
 comment|/* Parse out binary fields. */
 name|header
 operator|=
