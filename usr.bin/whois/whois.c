@@ -1464,6 +1464,8 @@ name|s
 init|=
 operator|-
 literal|1
+decl_stmt|,
+name|f
 decl_stmt|;
 name|nfds_t
 name|i
@@ -1956,7 +1958,7 @@ comment|/* Restore default blocking behavior.  */
 if|if
 condition|(
 operator|(
-name|flags
+name|f
 operator|=
 name|fcntl
 argument_list|(
@@ -1970,7 +1972,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|flags
+name|f
 operator|&=
 operator|~
 name|O_NONBLOCK
@@ -1983,7 +1985,7 @@ name|s
 argument_list|,
 name|F_SETFL
 argument_list|,
-name|flags
+name|f
 argument_list|)
 operator|==
 operator|-
