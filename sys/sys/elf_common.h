@@ -1152,6 +1152,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|EM_IAMCU
+value|6
+end_define
+
+begin_comment
+comment|/* Intel MCU. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|EM_860
 value|7
 end_define
