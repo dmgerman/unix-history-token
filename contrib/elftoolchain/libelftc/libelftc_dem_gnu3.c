@@ -72,7 +72,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelftc_dem_gnu3.c 3123 2014-12-21 05:46:19Z kaiwang27 $"
+literal|"$Id: libelftc_dem_gnu3.c 3194 2015-05-05 17:55:16Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
