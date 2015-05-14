@@ -165,7 +165,7 @@ begin_define
 define|#
 directive|define
 name|SFXGE_CAP
-value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWCSUM |			\ 		   IFCAP_RXCSUM | IFCAP_TXCSUM | IFCAP_TSO |		\ 		   IFCAP_JUMBO_MTU | IFCAP_LRO |			\ 		   IFCAP_VLAN_HWTSO | IFCAP_LINKSTATE | IFCAP_HWSTATS)
+value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWCSUM |			\ 		   IFCAP_RXCSUM | IFCAP_TXCSUM | IFCAP_TSO |		\ 		   IFCAP_RXCSUM_IPV6 | IFCAP_TXCSUM_IPV6 |		\ 		   IFCAP_JUMBO_MTU | IFCAP_LRO |			\ 		   IFCAP_VLAN_HWTSO | IFCAP_LINKSTATE | IFCAP_HWSTATS)
 end_define
 
 begin_define
@@ -179,7 +179,7 @@ begin_define
 define|#
 directive|define
 name|SFXGE_CAP_FIXED
-value|(IFCAP_VLAN_MTU | IFCAP_RXCSUM | IFCAP_VLAN_HWCSUM | \ 			 IFCAP_JUMBO_MTU | IFCAP_LINKSTATE | IFCAP_HWSTATS)
+value|(IFCAP_VLAN_MTU | IFCAP_RXCSUM | IFCAP_VLAN_HWCSUM | \ 			 IFCAP_RXCSUM_IPV6 |				\ 			 IFCAP_JUMBO_MTU | IFCAP_LINKSTATE | IFCAP_HWSTATS)
 end_define
 
 begin_expr_stmt
@@ -1050,6 +1050,36 @@ name|ifp
 operator|->
 name|if_capenable
 operator|&
+name|IFCAP_TXCSUM_IPV6
+condition|)
+name|ifp
+operator|->
+name|if_hwassist
+operator||=
+operator|(
+name|CSUM_TCP_IPV6
+operator||
+name|CSUM_UDP_IPV6
+operator|)
+expr_stmt|;
+else|else
+name|ifp
+operator|->
+name|if_hwassist
+operator|&=
+operator|~
+operator|(
+name|CSUM_TCP_IPV6
+operator||
+name|CSUM_UDP_IPV6
+operator|)
+expr_stmt|;
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
 name|IFCAP_TSO
 condition|)
 name|ifp
@@ -1284,6 +1314,10 @@ operator||
 name|CSUM_IP
 operator||
 name|CSUM_TSO
+operator||
+name|CSUM_TCP_IPV6
+operator||
+name|CSUM_UDP_IPV6
 expr_stmt|;
 name|ether_ifattach
 argument_list|(
