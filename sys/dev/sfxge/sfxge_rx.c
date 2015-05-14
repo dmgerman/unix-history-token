@@ -1536,14 +1536,19 @@ operator|->
 name|mbuf
 decl_stmt|;
 name|int
+name|flags
+init|=
+name|rx_desc
+operator|->
+name|flags
+decl_stmt|;
+name|int
 name|csum_flags
 decl_stmt|;
 comment|/* Convert checksum flags */
 name|csum_flags
 operator|=
 operator|(
-name|rx_desc
-operator|->
 name|flags
 operator|&
 name|EFX_CKSUM_IPV4
@@ -1559,8 +1564,6 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|rx_desc
-operator|->
 name|flags
 operator|&
 name|EFX_CKSUM_TCPUDP
@@ -1573,8 +1576,6 @@ name|CSUM_PSEUDO_HDR
 expr_stmt|;
 if|if
 condition|(
-name|rx_desc
-operator|->
 name|flags
 operator|&
 operator|(
@@ -1609,8 +1610,6 @@ argument_list|(
 name|m
 argument_list|,
 operator|(
-name|rx_desc
-operator|->
 name|flags
 operator|&
 name|EFX_PKT_IPV4
@@ -1618,8 +1617,6 @@ operator|)
 condition|?
 operator|(
 operator|(
-name|rx_desc
-operator|->
 name|flags
 operator|&
 name|EFX_PKT_TCP
@@ -1632,8 +1629,6 @@ operator|)
 else|:
 operator|(
 operator|(
-name|rx_desc
-operator|->
 name|flags
 operator|&
 name|EFX_PKT_TCP
