@@ -1084,13 +1084,13 @@ name|nmp
 operator|->
 name|nm_rsize
 operator|>
-name|MAXBSIZE
+name|NFS_MAXBSIZE
 condition|)
 name|nmp
 operator|->
 name|nm_rsize
 operator|=
-name|MAXBSIZE
+name|NFS_MAXBSIZE
 expr_stmt|;
 if|if
 condition|(
@@ -1156,13 +1156,13 @@ name|nmp
 operator|->
 name|nm_wsize
 operator|>
-name|MAXBSIZE
+name|NFS_MAXBSIZE
 condition|)
 name|nmp
 operator|->
 name|nm_wsize
 operator|=
-name|MAXBSIZE
+name|NFS_MAXBSIZE
 expr_stmt|;
 comment|/* 	 * Calculate the size used for io buffers.  Use the larger 	 * of the two sizes to minimise nfs requests but make sure 	 * that it is at least one VM page to avoid wasting buffer 	 * space. 	 */
 name|iosize

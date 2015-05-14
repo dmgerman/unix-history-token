@@ -3291,6 +3291,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+name|CTASSERT
+argument_list|(
+name|MAXBCACHEBUF
+operator|>=
+name|MAXBSIZE
+argument_list|)
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -3506,7 +3513,7 @@ literal|4
 argument_list|,
 name|maxbufspace
 operator|-
-name|MAXBSIZE
+name|MAXBCACHEBUF
 operator|*
 literal|10
 argument_list|)
@@ -3515,7 +3522,7 @@ name|lobufspace
 operator|=
 name|hibufspace
 operator|-
-name|MAXBSIZE
+name|MAXBCACHEBUF
 expr_stmt|;
 comment|/* 	 * Note: The 16 MiB upper limit for hirunningspace was chosen 	 * arbitrarily and may need further tuning. It corresponds to 	 * 128 outstanding write IO requests (if IO size is 128 KiB), 	 * which fits with many RAID controllers' tagged queuing limits. 	 * The lower 1 MiB limit is the historical upper limit for 	 * hirunningspace. 	 */
 name|hirunningspace
@@ -3530,7 +3537,7 @@ name|hibufspace
 operator|/
 literal|64
 argument_list|,
-name|MAXBSIZE
+name|MAXBCACHEBUF
 argument_list|)
 argument_list|,
 literal|16
@@ -3557,7 +3564,7 @@ operator|)
 operator|/
 literal|3
 argument_list|,
-name|MAXBSIZE
+name|MAXBCACHEBUF
 argument_list|)
 expr_stmt|;
 comment|/*  * Limit the amount of malloc memory since it is wired permanently into  * the kernel space.  Even though this is accounted for in the buffer  * allocation, we don't want the malloced region to grow uncontrolled.  * The malloc scheme improves memory utilization significantly on average  * (small) directories.  */
@@ -12366,15 +12373,15 @@ if|if
 condition|(
 name|size
 operator|>
-name|MAXBSIZE
+name|MAXBCACHEBUF
 condition|)
 name|panic
 argument_list|(
-literal|"getblk: size(%d)> MAXBSIZE(%d)\n"
+literal|"getblk: size(%d)> MAXBCACHEBUF(%d)\n"
 argument_list|,
 name|size
 argument_list|,
-name|MAXBSIZE
+name|MAXBCACHEBUF
 argument_list|)
 expr_stmt|;
 if|if
