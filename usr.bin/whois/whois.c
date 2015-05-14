@@ -757,6 +757,17 @@ name|host
 operator|=
 name|getenv
 argument_list|(
+literal|"WHOIS_SERVER"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|host
+operator|=
+name|getenv
+argument_list|(
 literal|"RA_SERVER"
 argument_list|)
 operator|)
