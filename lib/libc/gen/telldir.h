@@ -130,6 +130,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|_fixtelldir
+parameter_list|(
+name|DIR
+modifier|*
+name|dirp
+parameter_list|,
+name|long
+name|oldseek
+parameter_list|,
+name|long
+name|oldloc
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
