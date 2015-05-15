@@ -1699,7 +1699,7 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* flush_brnchtgt_E     */
-name|armv7_sleep
+name|armv7_cpu_sleep
 block|,
 comment|/* sleep                */
 comment|/* Soft functions */
