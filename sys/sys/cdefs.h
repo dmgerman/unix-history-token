@@ -2043,9 +2043,7 @@ define|#
 directive|define
 name|__unreachable
 parameter_list|()
-value|do {} while (
-comment|/*CONSTCOND*/
-value|0)
+value|((void)0)
 end_define
 
 begin_endif
