@@ -62,6 +62,7 @@ name|char
 modifier|*
 name|cv_description
 decl_stmt|;
+specifier|volatile
 name|int
 name|cv_waiters
 decl_stmt|;
