@@ -125,18 +125,40 @@ directive|include
 file|"ifconfig.h"
 end_include
 
-begin_struct_decl
-struct_decl|struct
+begin_struct
+struct|struct
 name|i2c_info
-struct_decl|;
-end_struct_decl
-
-begin_typedef
-typedef|typedef
+block|{
 name|int
-function_decl|(
+name|fd
+decl_stmt|;
+comment|/* fd to issue SIOCGI2C */
+name|int
+name|error
+decl_stmt|;
+comment|/* Store first error */
+name|int
+name|qsfp
+decl_stmt|;
+comment|/* True if transceiver is QSFP */
+name|int
+name|do_diag
+decl_stmt|;
+comment|/* True if we need to request DDM */
+name|struct
+name|ifreq
+modifier|*
+name|ifr
+decl_stmt|;
+comment|/* Pointer to pre-filled ifreq */
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+specifier|static
+name|int
 name|read_i2c
-function_decl|)
 parameter_list|(
 name|struct
 name|i2c_info
@@ -152,59 +174,12 @@ parameter_list|,
 name|uint8_t
 name|len
 parameter_list|,
-name|caddr_t
+name|uint8_t
+modifier|*
 name|buf
 parameter_list|)
 function_decl|;
-end_typedef
-
-begin_struct
-struct|struct
-name|i2c_info
-block|{
-name|int
-name|s
-decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|int
-name|bshift
-decl_stmt|;
-name|int
-name|qsfp
-decl_stmt|;
-name|int
-name|do_diag
-decl_stmt|;
-name|struct
-name|ifreq
-modifier|*
-name|ifr
-decl_stmt|;
-name|read_i2c
-modifier|*
-name|f
-decl_stmt|;
-name|char
-modifier|*
-name|textbuf
-decl_stmt|;
-name|size_t
-name|bufsize
-decl_stmt|;
-name|int
-name|cfd
-decl_stmt|;
-name|int
-name|port_id
-decl_stmt|;
-name|int
-name|chip_id
-decl_stmt|;
-block|}
-struct|;
-end_struct
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -1211,9 +1186,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -1223,9 +1196,6 @@ name|SFF_8472_ID
 argument_list|,
 literal|1
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|data
 argument_list|)
@@ -1263,9 +1233,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -1275,9 +1243,6 @@ name|SFF_8472_CONNECTOR
 argument_list|,
 literal|1
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|data
 argument_list|)
@@ -1315,9 +1280,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -1327,9 +1290,6 @@ name|SFF_8436_ID
 argument_list|,
 literal|1
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|data
 argument_list|)
@@ -1367,9 +1327,7 @@ block|{
 name|uint8_t
 name|data
 decl_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -1379,9 +1337,6 @@ name|SFF_8436_CONNECTOR
 argument_list|,
 literal|1
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|data
 argument_list|)
@@ -1460,9 +1415,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Read bytes 3-10 at once */
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -1651,9 +1604,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -1664,15 +1615,14 @@ argument_list|,
 literal|8
 argument_list|,
 operator|(
-name|caddr_t
+name|uint8_t
+operator|*
 operator|)
 name|qbuf
 argument_list|)
 expr_stmt|;
 comment|/* Check 10G Ethernet/IB first */
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -1682,9 +1632,6 @@ name|SFF_8472_TRANS_START
 argument_list|,
 literal|1
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|code
 argument_list|)
@@ -1708,9 +1655,7 @@ name|NULL
 condition|)
 block|{
 comment|/* No match. Try Ethernet 1G */
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -1792,9 +1737,7 @@ name|uint8_t
 name|code
 decl_stmt|;
 comment|/* Check 10/40G Ethernet class only */
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -1804,9 +1747,6 @@ name|SFF_8436_CODE_E1040G
 argument_list|,
 literal|1
 argument_list|,
-operator|(
-name|caddr_t
-operator|)
 operator|&
 name|code
 argument_list|)
@@ -2008,9 +1948,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -2020,6 +1958,10 @@ name|SFF_8472_VENDOR_START
 argument_list|,
 literal|16
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|xbuf
 argument_list|)
 expr_stmt|;
@@ -2071,9 +2013,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -2083,6 +2023,10 @@ name|SFF_8472_PN_START
 argument_list|,
 literal|16
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|xbuf
 argument_list|)
 expr_stmt|;
@@ -2134,9 +2078,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -2146,6 +2088,10 @@ name|SFF_8472_SN_START
 argument_list|,
 literal|16
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|xbuf
 argument_list|)
 expr_stmt|;
@@ -2198,9 +2144,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Date code, see Table 3.8 for description */
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -2210,6 +2154,10 @@ name|SFF_8472_DATE_START
 argument_list|,
 literal|6
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|xbuf
 argument_list|)
 expr_stmt|;
@@ -2261,9 +2209,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -2273,6 +2219,10 @@ name|SFF_8436_VENDOR_START
 argument_list|,
 literal|16
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|xbuf
 argument_list|)
 expr_stmt|;
@@ -2324,9 +2274,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -2336,6 +2284,10 @@ name|SFF_8436_PN_START
 argument_list|,
 literal|16
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|xbuf
 argument_list|)
 expr_stmt|;
@@ -2387,9 +2339,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -2399,6 +2349,10 @@ name|SFF_8436_SN_START
 argument_list|,
 literal|16
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|xbuf
 argument_list|)
 expr_stmt|;
@@ -2450,9 +2404,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -2462,6 +2414,10 @@ name|SFF_8436_DATE_START
 argument_list|,
 literal|6
 argument_list|,
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|xbuf
 argument_list|)
 expr_stmt|;
@@ -2670,7 +2626,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|char
+name|uint8_t
 modifier|*
 name|xbuf
 parameter_list|)
@@ -2683,9 +2639,6 @@ operator|=
 operator|(
 name|double
 operator|)
-operator|(
-name|int8_t
-operator|)
 name|xbuf
 index|[
 literal|0
@@ -2695,9 +2648,6 @@ name|d
 operator|+=
 operator|(
 name|double
-operator|)
-operator|(
-name|uint8_t
 operator|)
 name|xbuf
 index|[
@@ -2736,7 +2686,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|char
+name|uint8_t
 modifier|*
 name|xbuf
 parameter_list|)
@@ -2751,9 +2701,6 @@ name|double
 call|)
 argument_list|(
 operator|(
-operator|(
-name|uint8_t
-operator|)
 name|xbuf
 index|[
 literal|0
@@ -2762,9 +2709,6 @@ operator|<<
 literal|8
 operator|)
 operator||
-operator|(
-name|uint8_t
-operator|)
 name|xbuf
 index|[
 literal|1
@@ -2808,7 +2752,7 @@ parameter_list|,
 name|size_t
 name|size
 parameter_list|,
-name|char
+name|uint8_t
 modifier|*
 name|xbuf
 parameter_list|)
@@ -2822,9 +2766,6 @@ decl_stmt|;
 name|mW
 operator|=
 operator|(
-operator|(
-name|uint8_t
-operator|)
 name|xbuf
 index|[
 literal|0
@@ -2833,9 +2774,6 @@ operator|<<
 literal|8
 operator|)
 operator|+
-operator|(
-name|uint8_t
-operator|)
 name|xbuf
 index|[
 literal|1
@@ -2901,7 +2839,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|char
+name|uint8_t
 name|xbuf
 index|[
 literal|2
@@ -2919,9 +2857,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -2964,7 +2900,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|char
+name|uint8_t
 name|xbuf
 index|[
 literal|2
@@ -2982,9 +2918,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -3027,7 +2961,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|char
+name|uint8_t
 name|xbuf
 index|[
 literal|2
@@ -3045,9 +2979,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -3090,7 +3022,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|char
+name|uint8_t
 name|xbuf
 index|[
 literal|2
@@ -3108,9 +3040,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -3153,7 +3083,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|char
+name|uint8_t
 name|xbuf
 index|[
 literal|2
@@ -3171,9 +3101,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -3218,7 +3146,7 @@ name|size_t
 name|size
 parameter_list|)
 block|{
-name|char
+name|uint8_t
 name|xbuf
 index|[
 literal|2
@@ -3236,9 +3164,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -3304,9 +3230,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -3380,9 +3304,7 @@ name|xbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -3418,13 +3340,13 @@ block|}
 end_function
 
 begin_comment
-comment|/* Generic handler */
+comment|/*  * Reads i2c data from opened kernel socket.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|read_i2c_generic
+name|read_i2c
 parameter_list|(
 name|struct
 name|i2c_info
@@ -3440,7 +3362,8 @@ parameter_list|,
 name|uint8_t
 name|len
 parameter_list|,
-name|caddr_t
+name|uint8_t
+modifier|*
 name|buf
 parameter_list|)
 block|{
@@ -3560,7 +3483,7 @@ name|ioctl
 argument_list|(
 name|ii
 operator|->
-name|s
+name|fd
 argument_list|,
 name|SIOCGI2C
 argument_list|,
@@ -3691,9 +3614,7 @@ argument_list|)
 else|:
 name|len
 expr_stmt|;
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -3806,9 +3727,7 @@ name|int
 name|i
 decl_stmt|;
 comment|/* Read diagnostic monitoring type */
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -4113,9 +4032,7 @@ decl_stmt|,
 name|flags
 decl_stmt|;
 comment|/* Read diagnostic monitoring type */
-name|ii
-operator|->
-name|f
+name|read_i2c
 argument_list|(
 name|ii
 argument_list|,
@@ -4392,6 +4309,7 @@ decl_stmt|;
 name|uint8_t
 name|id_byte
 decl_stmt|;
+comment|/* Prepare necessary into pass to i2c reader */
 name|memset
 argument_list|(
 operator|&
@@ -4405,10 +4323,9 @@ name|ii
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Prepare necessary into to pass to NIC handler */
 name|ii
 operator|.
-name|s
+name|fd
 operator|=
 name|s
 expr_stmt|;
@@ -4417,21 +4334,13 @@ operator|.
 name|ifr
 operator|=
 name|ifr
-expr_stmt|;
-name|ii
-operator|.
-name|f
-operator|=
-name|read_i2c_generic
 expr_stmt|;
 comment|/* 	 * Try to read byte 0 from i2c: 	 * Both SFF-8472 and SFF-8436 use it as 	 * 'identification byte'. 	 * Stop reading status on zero as value -  	 * this might happen in case of empty transceiver slot. 	 */
 name|id_byte
 operator|=
 literal|0
 expr_stmt|;
-name|ii
-operator|.
-name|f
+name|read_i2c
 argument_list|(
 operator|&
 name|ii
