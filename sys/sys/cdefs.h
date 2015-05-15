@@ -2761,6 +2761,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Compiler-dependent macros that rely on FreeBSD-specific extensions. */
 end_comment
