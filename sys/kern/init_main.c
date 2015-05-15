@@ -2557,15 +2557,6 @@ name|pstats_alloc
 argument_list|()
 expr_stmt|;
 comment|/* Allocate a prototype map so we have something to fork. */
-name|pmap_pinit0
-argument_list|(
-name|vmspace_pmap
-argument_list|(
-operator|&
-name|vmspace0
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|p
 operator|->
 name|p_vmspace
@@ -2578,6 +2569,15 @@ operator|.
 name|vm_refcnt
 operator|=
 literal|1
+expr_stmt|;
+name|pmap_pinit0
+argument_list|(
+name|vmspace_pmap
+argument_list|(
+operator|&
+name|vmspace0
+argument_list|)
+argument_list|)
 expr_stmt|;
 comment|/* 	 * proc0 is not expected to enter usermode, so there is no special 	 * handling for sv_minuser here, like is done for exec_new_vmspace(). 	 */
 name|vm_map_init
