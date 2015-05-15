@@ -649,6 +649,8 @@ operator|->
 name|opd_dinfo
 operator|.
 name|rl
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|device_set_ivars
