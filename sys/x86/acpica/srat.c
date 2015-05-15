@@ -1877,7 +1877,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* 	 * For now, assume 255 == "no locality information for 	 * this pairing. 	 */
+comment|/* 	 * For now, assume -1 == "no locality information for 	 * this pairing. 	 */
 for|for
 control|(
 name|i
