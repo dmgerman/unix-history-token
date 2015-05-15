@@ -2745,6 +2745,15 @@ name|__gnu_inline
 value|__attribute__((__gnu_inline__))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* artificial */
+end_comment
+
 begin_else
 else|#
 directive|else
@@ -2755,11 +2764,6 @@ define|#
 directive|define
 name|__gnu_inline
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
