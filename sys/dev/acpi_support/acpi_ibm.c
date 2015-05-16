@@ -3823,7 +3823,7 @@ return|;
 case|case
 name|ACPI_IBM_METHOD_FANSPEED
 case|:
-comment|/*  		 * Some models report the fan speed in levels from 0-7 		 * Newer models report it contiguously 		 */
+comment|/* 		 * Some models report the fan speed in levels from 0-7 		 * Newer models report it contiguously 		 */
 name|sc
 operator|->
 name|fan_levels
@@ -3875,7 +3875,7 @@ case|:
 case|case
 name|ACPI_IBM_METHOD_FANSTATUS
 case|:
-comment|/*  		 * Fan status is only supported on those models, 		 * which report fan RPM contiguously, not in levels 		 */
+comment|/* 		 * Fan status is only supported on those models, 		 * which report fan RPM contiguously, not in levels 		 */
 if|if
 condition|(
 name|sc
@@ -4042,7 +4042,7 @@ literal|'0'
 operator|+
 name|i
 expr_stmt|;
-comment|/*  		 * The TMPx methods seem to return +/- 128 or 0 		 * when the respecting sensor is not available  		 */
+comment|/* 		 * The TMPx methods seem to return +/- 128 or 0 		 * when the respecting sensor is not available 		 */
 if|if
 condition|(
 name|ACPI_FAILURE
