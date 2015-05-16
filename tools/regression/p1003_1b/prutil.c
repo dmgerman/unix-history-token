@@ -2,13 +2,13 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<errno.h>
 end_include
 
 begin_include
@@ -26,13 +26,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
@@ -58,6 +64,8 @@ block|{
 name|err
 argument_list|(
 name|errno
+argument_list|,
+literal|"%s"
 argument_list|,
 name|text
 argument_list|)
