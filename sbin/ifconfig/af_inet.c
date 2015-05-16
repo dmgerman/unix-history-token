@@ -32,7 +32,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -425,15 +425,6 @@ name|int
 name|which
 parameter_list|)
 block|{
-define|#
-directive|define
-name|MIN
-parameter_list|(
-name|a
-parameter_list|,
-name|b
-parameter_list|)
-value|((a)<(b)?(a):(b))
 name|struct
 name|sockaddr_in
 modifier|*
@@ -724,9 +715,6 @@ argument_list|,
 name|s
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|MIN
 block|}
 end_function
 
