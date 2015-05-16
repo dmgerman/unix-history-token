@@ -16218,11 +16218,15 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * We have code to do unmapped I/O. However, it isn't quite right  * an causes un-page-aligned I/O to devices to fail (most notably  * newfs or fsck). We give up a little performance to do this, but  * we trade that for rock-solid stability so it is a good trade.  */
+end_comment
+
 begin_decl_stmt
 name|int
 name|unmapped_buf_allowed
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
