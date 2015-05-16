@@ -266,6 +266,13 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|PCPU_INC
+argument_list|(
+name|cnt
+operator|.
+name|v_intr
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
