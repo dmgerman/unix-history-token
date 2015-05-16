@@ -180,17 +180,22 @@ name|DebugInfoKind
 block|{
 name|NoDebugInfo
 block|,
-comment|// Don't generate debug info.
+comment|/// Don't generate debug info.
 name|DebugLineTablesOnly
 block|,
-comment|// Emit only debug info necessary for generating
-comment|// line number tables (-gline-tables-only).
+comment|/// Emit only debug info necessary for generating
+comment|/// line number tables (-gline-tables-only).
 name|LimitedDebugInfo
 block|,
-comment|// Limit generated debug info to reduce size
-comment|// (-flimit-debug-info).
+comment|/// Limit generated debug info to reduce size
+comment|/// (-fno-standalone-debug). This emits
+comment|/// forward decls for types that could be
+comment|/// replaced with forward decls in the source
+comment|/// code. For dynamic C++ classes type info
+comment|/// is only emitted int the module that
+comment|/// contains the classe's vtable.
 name|FullDebugInfo
-comment|// Generate complete debug info.
+comment|/// Generate complete debug info.
 block|}
 block|;    enum
 name|TLSModel
