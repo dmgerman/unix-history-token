@@ -167,6 +167,10 @@ name|asection
 modifier|*
 name|bfd_section
 decl_stmt|;
+comment|/* If value is a variable, is it initialized or not.  */
+name|int
+name|initialized
+decl_stmt|;
 comment|/* Actual contents of the value.  For use of this value; setting        it uses the stuff above.  Not valid if lazy is nonzero.        Target byte-order.  We force it to be aligned properly for any        possible value.  Note that a value therefore extends beyond        what is declared here.  */
 union|union
 block|{
