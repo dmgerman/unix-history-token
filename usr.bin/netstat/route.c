@@ -1041,7 +1041,7 @@ block|{
 name|xo_emit
 argument_list|(
 literal|"{T:/%-*.*s} {T:/%-*.*s} {T:/%-*.*s} {T:/%*.*s} "
-literal|"{T:/%*.*s} {T:/%*.*s} {T:/%*.*s} {T:/%*s}\n"
+literal|"{T:/%*.*s} {T:/%*.*s} {T:/%*s}\n"
 argument_list|,
 name|wid_dst
 argument_list|,
