@@ -10057,7 +10057,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|illumos
+name|__FreeBSD__
 if|if
 condition|(
 operator|!
