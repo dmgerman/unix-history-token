@@ -36850,6 +36850,8 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 name|pd
 operator|.
 name|pf_mtag
@@ -36865,6 +36867,7 @@ operator|&=
 operator|~
 name|M_FASTFWD_OURS
 expr_stmt|;
+block|}
 block|}
 name|ip_divert_ptr
 argument_list|(
