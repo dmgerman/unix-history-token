@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: map.c,v 1.34 2014/07/06 18:15:34 christos Exp $	*/
+comment|/*	$NetBSD: map.c,v 1.35 2015/05/14 10:44:15 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: map.c,v 1.34 2014/07/06 18:15:34 christos Exp $"
+literal|"$NetBSD: map.c,v 1.35 2015/05/14 10:44:15 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5732,13 +5732,18 @@ name|el_errfile
 argument_list|,
 literal|""
 name|FSTR
-literal|": Invalid switch `%c'.\n"
+literal|": Invalid switch `"
+name|FCHAR
+literal|"'.\n"
 argument_list|,
 name|argv
 index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|Int
+operator|)
 name|p
 index|[
 literal|1

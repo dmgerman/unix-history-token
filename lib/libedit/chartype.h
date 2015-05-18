@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: chartype.h,v 1.10 2011/11/16 01:45:10 christos Exp $	*/
+comment|/*	$NetBSD: chartype.h,v 1.15 2015/05/17 13:14:41 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -56,6 +56,12 @@ argument_list|(
 name|__MACH__
 argument_list|)
 operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
 operator|&&
 operator|!
 name|defined
@@ -199,6 +205,13 @@ parameter_list|(
 name|type
 parameter_list|)
 value|type ## W
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCHAR
+value|"%lc"
 end_define
 
 begin_define
@@ -638,6 +651,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|FCHAR
+value|"%c"
+end_define
+
+begin_define
+define|#
+directive|define
 name|FSTR
 value|"%s"
 end_define
@@ -1063,13 +1083,24 @@ end_comment
 
 begin_function_decl
 name|protected
-name|void
-name|ct_conv_buff_resize
+name|int
+name|ct_conv_cbuff_resize
 parameter_list|(
 name|ct_buffer_t
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|ct_conv_wbuff_resize
+parameter_list|(
+name|ct_buffer_t
+modifier|*
 parameter_list|,
 name|size_t
 parameter_list|)
@@ -1157,14 +1188,25 @@ end_define
 begin_define
 define|#
 directive|define
-name|ct_conv_buff_resize
+name|ct_conv_cbuff_resize
 parameter_list|(
 name|b
 parameter_list|,
-name|os
-parameter_list|,
-name|ns
+name|s
 parameter_list|)
+value|((s) == (0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ct_conv_wbuff_resize
+parameter_list|(
+name|b
+parameter_list|,
+name|s
+parameter_list|)
+value|((s) == (0))
 end_define
 
 begin_define
