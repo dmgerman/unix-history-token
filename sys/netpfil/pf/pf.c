@@ -36553,6 +36553,8 @@ name|PFRES_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|pqid
@@ -36586,7 +36588,7 @@ name|r
 operator|->
 name|qid
 expr_stmt|;
-comment|/* add hints for ecn */
+comment|/* Add hints for ecn. */
 name|pd
 operator|.
 name|pf_mtag
@@ -36595,6 +36597,7 @@ name|hdr
 operator|=
 name|h
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
@@ -39251,6 +39254,8 @@ name|PFRES_MEMORY
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|pd
@@ -39280,7 +39285,7 @@ name|r
 operator|->
 name|qid
 expr_stmt|;
-comment|/* add hints for ecn */
+comment|/* Add hints for ecn. */
 name|pd
 operator|.
 name|pf_mtag
@@ -39289,6 +39294,7 @@ name|hdr
 operator|=
 name|h
 expr_stmt|;
+block|}
 block|}
 endif|#
 directive|endif
