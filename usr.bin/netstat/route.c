@@ -1089,7 +1089,7 @@ else|else
 block|{
 name|xo_emit
 argument_list|(
-literal|"{T:/%-*.*s} {T:/%-*.*s} {T:/%-*.*s}  {T:/%*.*s} "
+literal|"{T:/%-*.*s} {T:/%-*.*s} {T:/%-*.*s} {T:/%*.*s} "
 literal|"{T:/%*s}\n"
 argument_list|,
 name|wid_dst
@@ -1852,7 +1852,7 @@ argument_list|(
 name|buffer
 argument_list|)
 argument_list|,
-literal|"{[:-%d}{:flags/%%s}{]:}"
+literal|"{[:-%d}{:flags/%%s}{]:} "
 argument_list|,
 name|wid_flags
 argument_list|)
