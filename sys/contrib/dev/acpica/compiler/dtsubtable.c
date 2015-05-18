@@ -466,6 +466,14 @@ operator|=
 literal|9
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_DMT_IORTMEM
+case|:
+name|Step
+operator|=
+literal|10
+expr_stmt|;
+break|break;
 default|default:
 name|Step
 operator|=

@@ -2885,6 +2885,8 @@ literal|1
 index|]
 argument_list|,
 name|NULL
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 break|break;

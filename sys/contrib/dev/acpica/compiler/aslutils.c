@@ -97,13 +97,6 @@ begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    UtDisplaySupportedTables  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Print all supported ACPI table names.  *  ******************************************************************************/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ACPI_TABLE_HELP_FORMAT
-value|"%8u) %s    %s\n"
-end_define
-
 begin_function
 name|void
 name|UtDisplaySupportedTables
@@ -111,7 +104,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_DMTABLE_DATA
+specifier|const
+name|AH_TABLE
 modifier|*
 name|TableData
 decl_stmt|;
@@ -126,71 +120,21 @@ argument_list|,
 name|ACPI_CA_VERSION
 argument_list|)
 expr_stmt|;
-comment|/* Special tables */
+comment|/* All ACPI tables with the common table header */
 name|printf
 argument_list|(
-literal|"  Special tables and AML tables:\n"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-name|ACPI_TABLE_HELP_FORMAT
-argument_list|,
-literal|1
-argument_list|,
-name|ACPI_RSDP_NAME
-argument_list|,
-literal|"Root System Description Pointer"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-name|ACPI_TABLE_HELP_FORMAT
-argument_list|,
-literal|2
-argument_list|,
-name|ACPI_SIG_FACS
-argument_list|,
-literal|"Firmware ACPI Control Structure"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-name|ACPI_TABLE_HELP_FORMAT
-argument_list|,
-literal|3
-argument_list|,
-name|ACPI_SIG_DSDT
-argument_list|,
-literal|"Differentiated System Description Table"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-name|ACPI_TABLE_HELP_FORMAT
-argument_list|,
-literal|4
-argument_list|,
-name|ACPI_SIG_SSDT
-argument_list|,
-literal|"Secondary System Description Table"
-argument_list|)
-expr_stmt|;
-comment|/* All data tables with common table header */
-name|printf
-argument_list|(
-literal|"\n  Standard ACPI data tables:\n"
+literal|"\n  Supported ACPI tables:\n"
 argument_list|)
 expr_stmt|;
 for|for
 control|(
 name|TableData
 operator|=
-name|AcpiDmTableData
+name|AcpiSupportedTables
 operator|,
 name|i
 operator|=
-literal|5
+literal|1
 init|;
 name|TableData
 operator|->
@@ -205,7 +149,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-name|ACPI_TABLE_HELP_FORMAT
+literal|"%8u) %s    %s\n"
 argument_list|,
 name|i
 argument_list|,
@@ -215,7 +159,7 @@ name|Signature
 argument_list|,
 name|TableData
 operator|->
-name|Name
+name|Description
 argument_list|)
 expr_stmt|;
 block|}

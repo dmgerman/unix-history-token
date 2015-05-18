@@ -302,10 +302,6 @@ name|FlCheckForAscii
 argument_list|(
 name|Info
 operator|->
-name|Handle
-argument_list|,
-name|Info
-operator|->
 name|Filename
 argument_list|,
 name|TRUE
@@ -321,7 +317,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Non-ascii input file - %s\n"
+literal|"Invalid characters in input file - %s\n"
 argument_list|,
 name|Info
 operator|->

@@ -369,10 +369,6 @@ begin_function_decl
 name|ACPI_STATUS
 name|FlCheckForAscii
 parameter_list|(
-name|FILE
-modifier|*
-name|Handle
-parameter_list|,
 name|char
 modifier|*
 name|Filename
