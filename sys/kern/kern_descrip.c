@@ -3018,11 +3018,6 @@ name|l_start
 operator|)
 condition|)
 block|{
-name|FILEDESC_SUNLOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EOVERFLOW
@@ -3533,11 +3528,6 @@ name|l_start
 operator|)
 condition|)
 block|{
-name|FILEDESC_SUNLOCK
-argument_list|(
-name|fdp
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EOVERFLOW
