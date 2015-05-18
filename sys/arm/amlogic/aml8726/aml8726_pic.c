@@ -625,7 +625,7 @@ expr_stmt|;
 block|}
 ifndef|#
 directive|ifndef
-name|SMP
+name|DEV_GIC
 name|arm_post_filter
 operator|=
 name|aml8726_pic_eoi
@@ -753,7 +753,7 @@ end_expr_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SMP
+name|DEV_GIC
 end_ifndef
 
 begin_function

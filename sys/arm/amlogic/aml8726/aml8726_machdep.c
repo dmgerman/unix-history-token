@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/intr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/machdep.h>
 end_include
 
@@ -481,6 +487,12 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEV_GIC
+end_ifndef
+
 begin_function
 specifier|static
 name|int
@@ -506,22 +518,7 @@ modifier|*
 name|pol
 parameter_list|)
 block|{
-comment|/* 	 * The single core chips have just an Amlogic PIC.  However the 	 * multi core chips also have a GIC. 	 */
-ifdef|#
-directive|ifdef
-name|SMP
-if|if
-condition|(
-operator|!
-name|fdt_is_compatible_strict
-argument_list|(
-name|node
-argument_list|,
-literal|"arm,cortex-a9-gic"
-argument_list|)
-condition|)
-else|#
-directive|else
+comment|/* 	 * The single core chips have just an Amlogic PIC. 	 */
 if|if
 condition|(
 operator|!
@@ -532,8 +529,6 @@ argument_list|,
 literal|"amlogic,aml8726-pic"
 argument_list|)
 condition|)
-endif|#
-directive|endif
 return|return
 operator|(
 name|ENXIO
@@ -560,39 +555,6 @@ name|pol
 operator|=
 name|INTR_POLARITY_HIGH
 expr_stmt|;
-switch|switch
-condition|(
-operator|*
-name|interrupt
-condition|)
-block|{
-case|case
-literal|30
-case|:
-comment|/* INT_USB_A */
-case|case
-literal|31
-case|:
-comment|/* INT_USB_B */
-operator|*
-name|trig
-operator|=
-name|INTR_TRIGGER_LEVEL
-expr_stmt|;
-break|break;
-default|default:
-break|break;
-block|}
-ifdef|#
-directive|ifdef
-name|SMP
-operator|*
-name|interrupt
-operator|+=
-literal|32
-expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 literal|0
@@ -601,15 +563,30 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|fdt_pic_decode_t
 name|fdt_pic_table
 index|[]
 init|=
 block|{
+ifdef|#
+directive|ifdef
+name|DEV_GIC
+operator|&
+name|gic_decode_fdt
+block|,
+else|#
+directive|else
 operator|&
 name|fdt_pic_decode_ic
 block|,
+endif|#
+directive|endif
 name|NULL
 block|}
 decl_stmt|;
