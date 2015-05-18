@@ -38,7 +38,7 @@ begin_define
 define|#
 directive|define
 name|AH_SUPPORTED_OPTIONS
-value|"aehikmopsuv"
+value|"adehikmopstuv"
 end_define
 
 begin_comment
@@ -93,6 +93,25 @@ argument_list|)
 expr_stmt|;
 name|ACPI_USAGE_TEXT
 argument_list|(
+literal|"\nACPI Values:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-e [HexValue]"
+argument_list|,
+literal|"Decode ACPICA exception code"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-o [HexValue]"
+argument_list|,
+literal|"Decode hex AML opcode"
+argument_list|)
+expr_stmt|;
+name|ACPI_USAGE_TEXT
+argument_list|(
 literal|"\nASL (ACPI Source Language) Names and Symbols:\n"
 argument_list|)
 expr_stmt|;
@@ -131,28 +150,23 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
+literal|"-d"
+argument_list|,
+literal|"Display iASL Preprocessor directives"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-t"
+argument_list|,
+literal|"Display supported ACPI tables"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
 literal|"-u"
 argument_list|,
 literal|"Display ACPI-related UUIDs"
-argument_list|)
-expr_stmt|;
-name|ACPI_USAGE_TEXT
-argument_list|(
-literal|"\nACPI Values:\n"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-e [HexValue]"
-argument_list|,
-literal|"Decode ACPICA exception code"
-argument_list|)
-expr_stmt|;
-name|ACPI_OPTION
-argument_list|(
-literal|"-o [HexValue]"
-argument_list|,
-literal|"Decode hex AML opcode"
 argument_list|)
 expr_stmt|;
 name|ACPI_USAGE_TEXT
@@ -273,6 +287,14 @@ name|AH_DECODE_ASL_AML
 expr_stmt|;
 break|break;
 case|case
+literal|'d'
+case|:
+name|DecodeType
+operator|=
+name|AH_DISPLAY_DIRECTIVES
+expr_stmt|;
+break|break;
+case|case
 literal|'e'
 case|:
 name|DecodeType
@@ -326,6 +348,14 @@ case|:
 name|DecodeType
 operator|=
 name|AH_DECODE_ASL
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|DecodeType
+operator|=
+name|AH_DISPLAY_TABLES
 expr_stmt|;
 break|break;
 case|case
@@ -448,6 +478,20 @@ case|case
 name|AH_DISPLAY_UUIDS
 case|:
 name|AhDisplayUuids
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|AH_DISPLAY_TABLES
+case|:
+name|AhDisplayTables
+argument_list|()
+expr_stmt|;
+break|break;
+case|case
+name|AH_DISPLAY_DIRECTIVES
+case|:
+name|AhDisplayDirectives
 argument_list|()
 expr_stmt|;
 break|break;

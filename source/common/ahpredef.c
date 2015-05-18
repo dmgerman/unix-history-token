@@ -373,6 +373,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_BTH"
+argument_list|,
+literal|"Battery Throttle Limit"
+argument_list|,
+literal|"Thermal limit for charging and discharging"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_BTM"
 argument_list|,
 literal|"Battery Time"
@@ -441,6 +450,15 @@ argument_list|,
 literal|"Continuous Performance Control"
 argument_list|,
 literal|"Returns a list of performance control interfaces"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_CR3"
+argument_list|,
+literal|"Warm/Standby Temperature"
+argument_list|,
+literal|"Temperature for a fast low power state"
 argument_list|)
 block|,
 name|AH_PREDEF
@@ -1102,6 +1120,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_LPI"
+argument_list|,
+literal|"Low Power Idle States"
+argument_list|,
+literal|"Returns a list of supported low power idle states"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_MAF"
 argument_list|,
 literal|"Maximum Address Fixed"
@@ -1197,6 +1224,15 @@ argument_list|,
 literal|"Memory Set Monitoring"
 argument_list|,
 literal|"Sets bandwidth monitoring parameters for a memory device"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_MTL"
+argument_list|,
+literal|"Minimum Throttle Limit"
+argument_list|,
+literal|"Returns the minimum throttle limit for a thermal zone"
 argument_list|)
 block|,
 name|AH_PREDEF
@@ -1410,7 +1446,7 @@ name|AH_PREDEF
 argument_list|(
 literal|"_PPC"
 argument_list|,
-literal|"Performance Present Capabilites"
+literal|"Performance Present Capabilities"
 argument_list|,
 literal|"Returns a list of the performance states currently supported by the platform"
 argument_list|)
@@ -1494,6 +1530,15 @@ argument_list|,
 literal|"Power Source Redundancy List"
 argument_list|,
 literal|"Returns a list of power source devices in the same redundancy grouping"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_PRR"
+argument_list|,
+literal|"Power Resource for Reset"
+argument_list|,
+literal|"Execute a reset on a device"
 argument_list|)
 block|,
 name|AH_PREDEF
@@ -1705,6 +1750,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_RDI"
+argument_list|,
+literal|"Resource Dependencies for Idle"
+argument_list|,
+literal|"Returns a list of dependencies for idle states"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_REG"
 argument_list|,
 literal|"Region Availability"
@@ -1737,6 +1791,15 @@ argument_list|,
 literal|"Range"
 argument_list|,
 literal|"Memory range type, Resource Descriptor field"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_RST"
+argument_list|,
+literal|"Device Reset"
+argument_list|,
+literal|"Executes a reset on a device"
 argument_list|)
 block|,
 name|AH_PREDEF
@@ -2191,6 +2254,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_TFP"
+argument_list|,
+literal|"Thermal Fast Sampling Period"
+argument_list|,
+literal|"Returns the sampling period for passive cooling"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_TIP"
 argument_list|,
 literal|"Expired Timer Wake Policy"
@@ -2277,6 +2349,15 @@ argument_list|,
 literal|"Type-Specific Flags"
 argument_list|,
 literal|"Resource Descriptor field"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_TSN"
+argument_list|,
+literal|"Thermal Sensor Device"
+argument_list|,
+literal|"Returns a reference to a thermal sensor"
 argument_list|)
 block|,
 name|AH_PREDEF

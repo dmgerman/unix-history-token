@@ -52,24 +52,6 @@ argument_list|)
 end_macro
 
 begin_decl_stmt
-specifier|extern
-specifier|const
-name|UINT8
-name|AcpiGbl_ShortOpIndex
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-specifier|const
-name|UINT8
-name|AcpiGbl_LongOpIndex
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 specifier|static
 specifier|const
 name|UINT8

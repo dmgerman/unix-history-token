@@ -781,6 +781,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_PTYPE2_VAR_VAR
+case|:
+comment|/*          * Returns a variable list of packages, each with a variable list          * of objects.          */
+break|break;
+case|case
 name|ACPI_PTYPE2_UUID_PAIR
 case|:
 comment|/* The package must contain pairs of (UUID + type) */
@@ -1292,6 +1297,11 @@ name|Status
 operator|)
 return|;
 block|}
+break|break;
+case|case
+name|ACPI_PTYPE2_VAR_VAR
+case|:
+comment|/*              * Each subpackage has a fixed or variable number of elements              */
 break|break;
 case|case
 name|ACPI_PTYPE2_FIXED

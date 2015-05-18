@@ -1233,7 +1233,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* space */
+comment|/* space, tab, CR, LF, VT, FF */
 end_comment
 
 begin_define

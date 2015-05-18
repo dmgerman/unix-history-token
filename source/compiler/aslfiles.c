@@ -38,6 +38,7 @@ comment|/* Local prototypes */
 end_comment
 
 begin_function_decl
+specifier|static
 name|FILE
 modifier|*
 name|FlOpenIncludeWithPrefix
@@ -45,6 +46,10 @@ parameter_list|(
 name|char
 modifier|*
 name|PrefixDir
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
 parameter_list|,
 name|char
 modifier|*
@@ -588,6 +593,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|static
 name|FILE
 modifier|*
 name|FlOpenIncludeWithPrefix
@@ -595,6 +601,10 @@ parameter_list|(
 name|char
 modifier|*
 name|PrefixDir
+parameter_list|,
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
 parameter_list|,
 name|char
 modifier|*
@@ -664,6 +674,57 @@ name|NULL
 operator|)
 return|;
 block|}
+ifdef|#
+directive|ifdef
+name|_MUST_HANDLE_COMMENTS
+comment|/*      * Check entire include file for any # preprocessor directives.      * This is because there may be some confusion between the #include      * preprocessor directive and the ASL Include statement.      */
+while|while
+condition|(
+name|fgets
+argument_list|(
+name|Gbl_CurrentLineBuffer
+argument_list|,
+name|Gbl_LineBufferSize
+argument_list|,
+name|IncludeFile
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|Gbl_CurrentLineBuffer
+index|[
+literal|0
+index|]
+operator|==
+literal|'#'
+condition|)
+block|{
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_INCLUDE_FILE
+argument_list|,
+name|Op
+argument_list|,
+literal|"use #include instead"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+endif|#
+directive|endif
+comment|/* Must seek back to the start of the file */
+name|fseek
+argument_list|(
+name|IncludeFile
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
 comment|/* Push the include file on the open input file stack */
 name|AslPushInputFileStack
 argument_list|(
@@ -805,6 +866,8 @@ argument_list|(
 literal|""
 argument_list|,
 name|Op
+argument_list|,
+name|Op
 operator|->
 name|Asl
 operator|.
@@ -831,6 +894,8 @@ operator|=
 name|FlOpenIncludeWithPrefix
 argument_list|(
 name|Gbl_DirectoryPath
+argument_list|,
+name|Op
 argument_list|,
 name|Op
 operator|->
@@ -865,6 +930,8 @@ argument_list|(
 name|NextDir
 operator|->
 name|Dir
+argument_list|,
+name|Op
 argument_list|,
 name|Op
 operator|->

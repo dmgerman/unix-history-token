@@ -209,6 +209,54 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function
+name|void
+name|AhDisplayDirectives
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|const
+name|AH_DIRECTIVE_INFO
+modifier|*
+name|Info
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"iASL Preprocessor directives:\n\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|Info
+operator|=
+name|PreprocessorDirectives
+init|;
+name|Info
+operator|->
+name|Name
+condition|;
+name|Info
+operator|++
+control|)
+block|{
+name|printf
+argument_list|(
+literal|"%16s : %s\n"
+argument_list|,
+name|Info
+operator|->
+name|Name
+argument_list|,
+name|Info
+operator|->
+name|Operands
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AhFindPredefinedNames (entry point for predefined name search)  *  * PARAMETERS:  NamePrefix          - Name or prefix to find. Must start with  *                                    an underscore. NULL means "find all"  *  * RETURN:      None  *  * DESCRIPTION: Find and display all ACPI predefined names that match the  *              input name or prefix. Includes the required number of arguments  *              and the expected return type, if any.  *  ******************************************************************************/
 end_comment
@@ -244,7 +292,7 @@ name|Found
 operator|=
 name|AhDisplayPredefinedName
 argument_list|(
-name|Name
+name|NULL
 argument_list|,
 literal|0
 argument_list|)
@@ -370,6 +418,8 @@ name|Matched
 decl_stmt|;
 name|UINT32
 name|i
+init|=
+literal|0
 decl_stmt|;
 comment|/* Find/display all names that match the input name prefix */
 for|for
@@ -428,6 +478,9 @@ name|Info
 operator|->
 name|Name
 argument_list|)
+expr_stmt|;
+name|i
+operator|++
 expr_stmt|;
 continue|continue;
 block|}
@@ -514,6 +567,20 @@ name|Name
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+operator|!
+name|Name
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"\nFound %d Predefined ACPI Names\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -2054,6 +2121,73 @@ name|String
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AhDisplayTables  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display all known ACPI tables  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|void
+name|AhDisplayTables
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|const
+name|AH_TABLE
+modifier|*
+name|Info
+decl_stmt|;
+name|UINT32
+name|i
+init|=
+literal|0
+decl_stmt|;
+name|printf
+argument_list|(
+literal|"Known ACPI tables:\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|Info
+operator|=
+name|AcpiSupportedTables
+init|;
+name|Info
+operator|->
+name|Signature
+condition|;
+name|Info
+operator|++
+control|)
+block|{
+name|printf
+argument_list|(
+literal|"%8s : %s\n"
+argument_list|,
+name|Info
+operator|->
+name|Signature
+argument_list|,
+name|Info
+operator|->
+name|Description
+argument_list|)
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\nTotal %u ACPI tables\n\n"
+argument_list|,
+name|i
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

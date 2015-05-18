@@ -1576,6 +1576,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_SUB_PTR
+parameter_list|(
+name|t
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|ACPI_CAST_PTR (t, (ACPI_CAST_PTR (UINT8, (a)) - (ACPI_SIZE)(b)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_PTR_DIFF
 parameter_list|(
 name|a

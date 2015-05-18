@@ -631,6 +631,9 @@ literal|"Unknown pragma"
 block|,
 comment|/*    ASL_MSG_WARNING_DIRECTIVE */
 literal|"#warning"
+block|,
+comment|/*    ASL_MSG_INCLUDE_FILE */
+literal|"Found a # preprocessor directive in ASL Include() file"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -758,7 +761,7 @@ condition|)
 block|{
 return|return
 operator|(
-literal|"[Unknown Preprocesor exception ID]"
+literal|"[Unknown Preprocessor exception ID]"
 operator|)
 return|;
 block|}

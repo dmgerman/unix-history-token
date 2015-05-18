@@ -433,31 +433,12 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|ACPI_ASL_COMPILER
-name|Status
-operator|=
-name|FlCheckForAscii
-argument_list|(
-name|fp
-argument_list|,
-name|NULL
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_SUCCESS
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"File appears to be ASCII only, must be binary\n"
+literal|"File is corrupt or is ASCII text -- "
+literal|"it must be a binary file\n"
 argument_list|)
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 return|return
@@ -829,7 +810,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Loading Acpi table from file %10s - Length %.8u (%06X)\n"
+literal|"Reading ACPI table from file %10s - Length %.8u (0x%06X)\n"
 argument_list|,
 name|Filename
 argument_list|,

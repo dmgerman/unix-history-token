@@ -1080,6 +1080,9 @@ case|:
 break|break;
 default|default:
 case|case
+name|ACPI_PTYPE2_VAR_VAR
+case|:
+case|case
 name|ACPI_PTYPE1_FIXED
 case|:
 case|case

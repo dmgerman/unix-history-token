@@ -74,6 +74,7 @@ name|char
 modifier|*
 name|Signature
 parameter_list|,
+specifier|const
 name|ACPI_DMTABLE_DATA
 modifier|*
 name|TableData
@@ -163,6 +164,7 @@ modifier|*
 name|Signature
 parameter_list|)
 block|{
+specifier|const
 name|ACPI_DMTABLE_DATA
 modifier|*
 name|TableData
@@ -405,6 +407,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|const
 name|ACPI_DMTABLE_DATA
 modifier|*
 name|TableData
@@ -602,6 +605,7 @@ name|char
 modifier|*
 name|Signature
 parameter_list|,
+specifier|const
 name|ACPI_DMTABLE_DATA
 modifier|*
 name|TableData

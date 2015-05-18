@@ -200,8 +200,6 @@ decl_stmt|;
 name|ACPI_PCI_DEVICE
 modifier|*
 name|ListHead
-init|=
-name|NULL
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -300,13 +298,12 @@ name|ACPI_PCI_DEVICE
 modifier|*
 name|ListElement
 decl_stmt|;
-name|ACPI_PCI_DEVICE
-modifier|*
-name|ListHead
-init|=
-name|NULL
-decl_stmt|;
 comment|/*      * Ascend namespace branch until the RootPciDevice is reached, building      * a list of device nodes. Loop will exit when either the PCI device is      * found, or the root of the namespace is reached.      */
+operator|*
+name|ReturnListHead
+operator|=
+name|NULL
+expr_stmt|;
 name|CurrentDevice
 operator|=
 name|PciRegion
@@ -355,11 +352,6 @@ operator|==
 name|RootPciDevice
 condition|)
 block|{
-operator|*
-name|ReturnListHead
-operator|=
-name|ListHead
-expr_stmt|;
 return|return
 operator|(
 name|AE_OK
@@ -400,7 +392,8 @@ name|ListElement
 operator|->
 name|Next
 operator|=
-name|ListHead
+operator|*
+name|ReturnListHead
 expr_stmt|;
 name|ListElement
 operator|->
@@ -408,7 +401,8 @@ name|Device
 operator|=
 name|ParentDevice
 expr_stmt|;
-name|ListHead
+operator|*
+name|ReturnListHead
 operator|=
 name|ListElement
 expr_stmt|;

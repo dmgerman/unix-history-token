@@ -681,6 +681,9 @@ case|:
 case|case
 name|ACPI_DMT_HESTNTFY
 case|:
+case|case
+name|ACPI_DMT_IORTMEM
+case|:
 name|Type
 operator|=
 name|DT_FIELD_TYPE_INLINE_SUBTABLE
@@ -944,6 +947,9 @@ case|case
 name|ACPI_DMT_HEST
 case|:
 case|case
+name|ACPI_DMT_NFIT
+case|:
+case|case
 name|ACPI_DMT_PCI_PATH
 case|:
 name|ByteLength
@@ -1091,6 +1097,17 @@ operator|=
 sizeof|sizeof
 argument_list|(
 name|ACPI_HEST_NOTIFY
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_IORTMEM
+case|:
+name|ByteLength
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_IORT_MEMORY_ACCESS
 argument_list|)
 expr_stmt|;
 break|break;
