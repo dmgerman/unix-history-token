@@ -2155,7 +2155,7 @@ literal|1
 expr_stmt|;
 name|doadump
 argument_list|(
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 block|}

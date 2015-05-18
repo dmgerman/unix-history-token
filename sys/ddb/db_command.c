@@ -848,7 +848,7 @@ specifier|static
 name|boolean_t
 name|db_ed_style
 init|=
-name|TRUE
+name|true
 decl_stmt|;
 end_decl_stmt
 
@@ -1633,7 +1633,7 @@ decl_stmt|;
 name|boolean_t
 name|have_addr
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|int
 name|result
@@ -1665,7 +1665,7 @@ name|db_next
 expr_stmt|;
 name|have_addr
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 name|count
 operator|=
@@ -1925,7 +1925,7 @@ name|db_dot
 expr_stmt|;
 name|have_addr
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 else|else
@@ -1939,7 +1939,7 @@ name|db_dot
 expr_stmt|;
 name|have_addr
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 name|t
@@ -2294,7 +2294,7 @@ name|error
 operator|=
 name|doadump
 argument_list|(
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 if|if

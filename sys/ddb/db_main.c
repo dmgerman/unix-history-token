@@ -215,7 +215,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 block|}
@@ -683,7 +683,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 block|}

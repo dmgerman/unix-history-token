@@ -1403,7 +1403,7 @@ name|db_lookup_thread
 argument_list|(
 name|addr
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 else|else
@@ -1579,7 +1579,7 @@ argument_list|)
 expr_stmt|;
 name|comma
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 if|if
 condition|(
@@ -1596,7 +1596,7 @@ argument_list|)
 expr_stmt|;
 name|comma
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 if|if
@@ -1623,7 +1623,7 @@ argument_list|)
 expr_stmt|;
 name|comma
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 if|if
@@ -1650,7 +1650,7 @@ argument_list|)
 expr_stmt|;
 name|comma
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 if|if
@@ -1677,7 +1677,7 @@ argument_list|)
 expr_stmt|;
 name|comma
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 if|if

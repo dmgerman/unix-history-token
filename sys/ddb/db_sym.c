@@ -741,7 +741,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 if|if
@@ -768,7 +768,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 block|}
@@ -806,7 +806,7 @@ name|C_DB_SYM_NULL
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 name|db_symbol_values
@@ -821,7 +821,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -902,7 +902,7 @@ name|C_DB_SYM_NULL
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 name|db_symbol_values
@@ -928,7 +928,7 @@ name|DPCPU_STOP
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 operator|*
@@ -951,7 +951,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -1036,7 +1036,7 @@ name|C_DB_SYM_NULL
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 name|db_symbol_values
@@ -1062,7 +1062,7 @@ name|VNET_STOP
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 operator|*
@@ -1084,14 +1084,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 else|#
 directive|else
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 endif|#
@@ -1300,7 +1300,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If TRUE, check across symbol tables for multiple occurrences  * of a name.  Might slow things down quite a bit.  */
+comment|/*  * If true, check across symbol tables for multiple occurrences  * of a name.  Might slow things down quite a bit.  */
 end_comment
 
 begin_decl_stmt
@@ -1309,7 +1309,7 @@ specifier|volatile
 name|boolean_t
 name|db_qualify_ambiguous_names
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -1339,7 +1339,7 @@ specifier|register
 name|boolean_t
 name|found_once
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 if|if
 condition|(
@@ -1347,7 +1347,9 @@ operator|!
 name|db_qualify_ambiguous_names
 condition|)
 return|return
-name|FALSE
+operator|(
+name|false
+operator|)
 return|;
 name|db_symbol_values
 argument_list|(
@@ -1392,16 +1394,18 @@ condition|(
 name|found_once
 condition|)
 return|return
-name|TRUE
+name|true
 return|;
 name|found_once
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 block|}
 return|return
-name|FALSE
+operator|(
+name|false
+operator|)
 return|;
 block|}
 end_function

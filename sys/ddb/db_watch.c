@@ -84,7 +84,7 @@ specifier|static
 name|boolean_t
 name|db_watchpoints_inserted
 init|=
-name|TRUE
+name|true
 decl_stmt|;
 end_decl_stmt
 
@@ -460,7 +460,7 @@ name|watch
 expr_stmt|;
 name|db_watchpoints_inserted
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 end_function
@@ -648,7 +648,7 @@ argument|; 	db_skip_to_eol();  	db_set_watchpoint(db_map_addr(addr), addr, size)
 comment|/*  * At least one non-optional show-command must be implemented using  * DB_SHOW_COMMAND() so that db_show_cmd_set gets created.  Here is one.  */
 argument|DB_SHOW_COMMAND(watches, db_listwatch_cmd) { 	db_list_watchpoints(); 	db_md_list_watchpoints(); }  void db_set_watchpoints(void) { 	register db_watchpoint_t	watch;  	if (!db_watchpoints_inserted) { 	    for (watch = db_watchpoint_list; 	         watch !=
 literal|0
-argument|; 	         watch = watch->link) 		pmap_protect(watch->map->pmap, 			     trunc_page(watch->loaddr), 			     round_page(watch->hiaddr), 			     VM_PROT_READ);  	    db_watchpoints_inserted = TRUE; 	} }  void db_clear_watchpoints(void) { 	db_watchpoints_inserted = FALSE; }
+argument|; 	         watch = watch->link) 		pmap_protect(watch->map->pmap, 			     trunc_page(watch->loaddr), 			     round_page(watch->hiaddr), 			     VM_PROT_READ);  	    db_watchpoints_inserted = true; 	} }  void db_clear_watchpoints(void) { 	db_watchpoints_inserted = false; }
 ifdef|#
 directive|ifdef
 name|notused
@@ -656,9 +656,9 @@ argument|static boolean_t db_find_watchpoint(vm_map_t map, db_addr_t addr, db_re
 literal|0
 argument|;  	for (watch = db_watchpoint_list; 	     watch !=
 literal|0
-argument|; 	     watch = watch->link) 	    if (db_map_equal(watch->map, map)) { 		if ((watch->loaddr<= addr)&& 		    (addr< watch->hiaddr)) 		    return (TRUE); 		else if ((trunc_page(watch->loaddr)<= addr)&& 			 (addr< round_page(watch->hiaddr))) 		    found = watch; 	    }
+argument|; 	     watch = watch->link) 	    if (db_map_equal(watch->map, map)) { 		if ((watch->loaddr<= addr)&& 		    (addr< watch->hiaddr)) 		    return (true); 		else if ((trunc_page(watch->loaddr)<= addr)&& 			 (addr< round_page(watch->hiaddr))) 		    found = watch; 	    }
 comment|/* 	 *	We didn't hit exactly on a watchpoint, but we are 	 *	in a protected region.  We want to single-step 	 *	and then re-protect. 	 */
-argument|if (found) { 	    db_watchpoints_inserted = FALSE; 	    db_single_step(regs); 	}  	return (FALSE); }
+argument|if (found) { 	    db_watchpoints_inserted = false; 	    db_single_step(regs); 	}  	return (false); }
 endif|#
 directive|endif
 comment|/* Delete hardware watchpoint */

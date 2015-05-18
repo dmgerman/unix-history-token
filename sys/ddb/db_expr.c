@@ -172,7 +172,7 @@ comment|/*NOTREACHED*/
 block|}
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -193,7 +193,7 @@ name|db_tok_number
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -214,7 +214,7 @@ name|db_dot
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -235,7 +235,7 @@ name|db_prev
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -256,7 +256,7 @@ name|db_next
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -277,7 +277,7 @@ name|db_last_addr
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -298,12 +298,12 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -351,7 +351,7 @@ comment|/*NOTREACHED*/
 block|}
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -362,7 +362,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 block|}
@@ -418,7 +418,7 @@ name|valuep
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -463,12 +463,12 @@ name|void
 operator|*
 argument_list|)
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -517,7 +517,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 name|t
@@ -644,7 +644,7 @@ name|lhs
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -679,7 +679,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 name|t
@@ -748,7 +748,7 @@ name|lhs
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -783,7 +783,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 name|t
@@ -874,7 +874,7 @@ name|lhs
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}

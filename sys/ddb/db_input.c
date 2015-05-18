@@ -405,7 +405,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* returns TRUE at end-of-line */
+comment|/* returns true at end-of-line */
 end_comment
 
 begin_function

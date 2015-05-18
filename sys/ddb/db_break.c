@@ -574,7 +574,7 @@ specifier|static
 name|boolean_t
 name|db_breakpoints_inserted
 init|=
-name|TRUE
+name|true
 decl_stmt|;
 end_decl_stmt
 
@@ -594,7 +594,7 @@ parameter_list|,
 name|storage
 parameter_list|)
 define|\
-value|do {								\ 	*storage = db_get_value(addr, BKPT_SIZE, FALSE);	\ 	db_put_value(addr, BKPT_SIZE, BKPT_SET(*storage));	\ } while (0)
+value|do {								\ 	*storage = db_get_value(addr, BKPT_SIZE, false);	\ 	db_put_value(addr, BKPT_SIZE, BKPT_SET(*storage));	\ } while (0)
 end_define
 
 begin_endif
@@ -684,7 +684,7 @@ expr_stmt|;
 block|}
 name|db_breakpoints_inserted
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 block|}
@@ -747,7 +747,7 @@ expr_stmt|;
 block|}
 name|db_breakpoints_inserted
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 block|}

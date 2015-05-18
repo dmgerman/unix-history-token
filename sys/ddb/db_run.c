@@ -295,7 +295,7 @@ condition|)
 operator|*
 name|is_breakpoint
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 endif|#
 directive|endif
@@ -361,11 +361,11 @@ expr_stmt|;
 operator|*
 name|is_breakpoint
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 comment|/* stop here */
@@ -389,7 +389,7 @@ block|}
 operator|*
 name|is_breakpoint
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 if|if
 condition|(
@@ -404,7 +404,7 @@ name|STEP_CONTINUE
 expr_stmt|;
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 comment|/* continue */
@@ -418,7 +418,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 comment|/* continue */
@@ -461,7 +461,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 comment|/* continue */
@@ -489,7 +489,7 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -584,7 +584,7 @@ operator|++
 expr_stmt|;
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 comment|/* continue */
@@ -612,7 +612,7 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -638,7 +638,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 comment|/* continue */
@@ -650,7 +650,7 @@ name|STEP_NONE
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
@@ -710,7 +710,7 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 decl_stmt|;
 name|db_inst_count
@@ -763,7 +763,7 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|db_inst_count
@@ -873,7 +873,7 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 if|if
@@ -1045,7 +1045,7 @@ block|{
 name|boolean_t
 name|print
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 if|if
 condition|(
@@ -1069,7 +1069,7 @@ literal|'p'
 condition|)
 name|print
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|db_run_mode
 operator|=
@@ -1131,7 +1131,7 @@ block|{
 name|boolean_t
 name|print
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 if|if
 condition|(
@@ -1144,7 +1144,7 @@ literal|'p'
 condition|)
 name|print
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|db_run_mode
 operator|=
@@ -1198,7 +1198,7 @@ block|{
 name|boolean_t
 name|print
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 if|if
 condition|(
@@ -1211,7 +1211,7 @@ literal|'p'
 condition|)
 name|print
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 name|db_run_mode
 operator|=

@@ -95,7 +95,7 @@ decl_stmt|;
 name|boolean_t
 name|wrote_one
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 name|addr
 operator|=
@@ -164,7 +164,7 @@ name|addr
 argument_list|,
 name|size
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|db_printsym
@@ -204,7 +204,7 @@ name|size
 expr_stmt|;
 name|wrote_one
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 if|if
