@@ -155,50 +155,8 @@ directive|define
 name|__PMC_CLASSES
 parameter_list|()
 define|\
-value|__PMC_CLASS(TSC)
-comment|/* CPU Timestamp counter */
-value|\ 	__PMC_CLASS(K7)
-comment|/* AMD K7 performance counters */
-value|\ 	__PMC_CLASS(K8)
-comment|/* AMD K8 performance counters */
-value|\ 	__PMC_CLASS(P5)
-comment|/* Intel Pentium counters */
-value|\ 	__PMC_CLASS(P6)
-comment|/* Intel Pentium Pro counters */
-value|\ 	__PMC_CLASS(P4)
-comment|/* Intel Pentium-IV counters */
-value|\ 	__PMC_CLASS(IAF)
-comment|/* Intel Core2/Atom, fixed function */
-value|\ 	__PMC_CLASS(IAP)
-comment|/* Intel Core...Atom, programmable */
-value|\ 	__PMC_CLASS(UCF)
-comment|/* Intel Uncore fixed function */
-value|\ 	__PMC_CLASS(UCP)
-comment|/* Intel Uncore programmable */
-value|\ 	__PMC_CLASS(XSCALE)
-comment|/* Intel XScale counters */
-value|\ 	__PMC_CLASS(ARMV7)
-comment|/* ARMv7 */
-value|\ 	__PMC_CLASS(ARMV8)
-comment|/* ARMv8 */
-value|\ 	__PMC_CLASS(MIPS24K)
-comment|/* MIPS 24K */
-value|\ 	__PMC_CLASS(OCTEON)
-comment|/* Cavium Octeon */
-value|\ 	__PMC_CLASS(MIPS74K)
-comment|/* MIPS 74K */
-value|\ 	__PMC_CLASS(PPC7450)
-comment|/* Motorola MPC7450 class */
-value|\ 	__PMC_CLASS(PPC970)
-comment|/* IBM PowerPC 970 class */
-value|\ 	__PMC_CLASS(E500)
-comment|/* Freescale e500 class */
-value|\ 	__PMC_CLASS(SOFT)
+value|__PMC_CLASS(TSC,	0x000,	"CPU Timestamp counter")	\ 	__PMC_CLASS(K7,		0x100,	"AMD K7 performance counters")	\ 	__PMC_CLASS(K8,		0x101,	"AMD K8 performance counters")	\ 	__PMC_CLASS(P5,		0x102,	"Intel Pentium counters")	\ 	__PMC_CLASS(P6,		0x103,	"Intel Pentium Pro counters")	\ 	__PMC_CLASS(P4,		0x104,	"Intel Pentium-IV counters")	\ 	__PMC_CLASS(IAF,	0x105,	"Intel Core2/Atom, fixed function") \ 	__PMC_CLASS(IAP,	0x106,	"Intel Core...Atom, programmable") \ 	__PMC_CLASS(UCF,	0x107,	"Intel Uncore fixed function")	\ 	__PMC_CLASS(UCP,	0x108,	"Intel Uncore programmable")	\ 	__PMC_CLASS(XSCALE,	0x200,	"Intel XScale counters")	\ 	__PMC_CLASS(ARMV7,	0x201,	"ARMv7")			\ 	__PMC_CLASS(ARMV8,	0x202,	"ARMv8")			\ 	__PMC_CLASS(MIPS24K,	0x300,	"MIPS 24K")			\ 	__PMC_CLASS(OCTEON,	0x301,	"Cavium Octeon")		\ 	__PMC_CLASS(MIPS74K,	0x302,	"MIPS 74K")			\ 	__PMC_CLASS(PPC7450,	0x400,	"Motorola MPC7450 class")	\ 	__PMC_CLASS(PPC970,	0x401,	"IBM PowerPC 970 class")	\ 	__PMC_CLASS(E500,	0x402,	"Freescale e500 class")		\ 	__PMC_CLASS(SOFT,	0x8000,	"Software events")
 end_define
-
-begin_comment
-comment|/* Software events */
-end_comment
 
 begin_enum
 enum|enum
@@ -211,9 +169,13 @@ define|#
 directive|define
 name|__PMC_CLASS
 parameter_list|(
-name|N
+name|S
+parameter_list|,
+name|V
+parameter_list|,
+name|D
 parameter_list|)
-value|PMC_CLASS_##N ,
+value|PMC_CLASS_##S = V,
 name|__PMC_CLASSES
 argument_list|()
 block|}

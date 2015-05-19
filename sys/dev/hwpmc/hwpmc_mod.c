@@ -17321,14 +17321,22 @@ begin_comment
 comment|/*  * initialization  */
 end_comment
 
-begin_decl_stmt
+begin_function
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|pmc_name_of_pmcclass
-index|[]
-init|=
+parameter_list|(
+name|enum
+name|pmc_class
+name|class
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|class
+condition|)
 block|{
 undef|#
 directive|undef
@@ -17337,14 +17345,26 @@ define|#
 directive|define
 name|__PMC_CLASS
 parameter_list|(
-name|N
+name|S
+parameter_list|,
+name|V
+parameter_list|,
+name|D
 parameter_list|)
-value|#N ,
+define|\
+value|case PMC_CLASS_##S:						\ 		return #S;
 name|__PMC_CLASSES
 argument_list|()
+expr_stmt|;
+default|default:
+return|return
+operator|(
+literal|"<unknown>"
+operator|)
+return|;
 block|}
-decl_stmt|;
-end_decl_stmt
+block|}
+end_function
 
 begin_comment
 comment|/*  * Base class initializer: allocate structure and set default classes.  */
@@ -18697,11 +18717,11 @@ argument_list|(
 literal|" %s/%d/%d/0x%b"
 argument_list|,
 name|pmc_name_of_pmcclass
-index|[
+argument_list|(
 name|pcd
 operator|->
 name|pcd_class
-index|]
+argument_list|)
 argument_list|,
 name|pcd
 operator|->
