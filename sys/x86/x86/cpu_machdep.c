@@ -349,6 +349,27 @@ directive|include
 file|<vm/vm_param.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|STATE_RUNNING
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATE_MWAIT
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|STATE_SLEEPING
+value|0x2
+end_define
+
 begin_comment
 comment|/*  * Machine dependent boot() routine  *  * I haven't seen anything to put here yet  * Possibly some stuff might be grafted back here from boot()  */
 end_comment
@@ -406,6 +427,7 @@ name|int
 modifier|*
 name|state
 decl_stmt|;
+comment|/* 	 * XXXKIB.  Software coordination mode should be supported, 	 * but all Intel CPUs provide hardware coordination. 	 */
 name|state
 operator|=
 operator|(
@@ -417,7 +439,23 @@ argument_list|(
 name|monitorbuf
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXXKIB.  Software coordination mode should be supported, 	 * but all Intel CPUs provide hardware coordination. 	 */
+name|KASSERT
+argument_list|(
+operator|*
+name|state
+operator|==
+name|STATE_SLEEPING
+argument_list|,
+operator|(
+literal|"cpu_mwait_cx: wrong monitorbuf state"
+operator|)
+argument_list|)
+expr_stmt|;
+operator|*
+name|state
+operator|=
+name|STATE_MWAIT
+expr_stmt|;
 name|cpu_monitor
 argument_list|(
 name|state
@@ -427,12 +465,25 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|state
+operator|==
+name|STATE_MWAIT
+condition|)
 name|cpu_mwait
 argument_list|(
 name|MWAIT_INTRBREAK
 argument_list|,
 name|mwait_hint
 argument_list|)
+expr_stmt|;
+comment|/* 	 * We should exit on any event that interrupts mwait, because 	 * that event might be a wanted interrupt. 	 */
+operator|*
+name|state
+operator|=
+name|STATE_RUNNING
 expr_stmt|;
 block|}
 end_function
@@ -824,27 +875,6 @@ literal|"Use MONITOR/MWAIT for short idle"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|STATE_RUNNING
-value|0x0
-end_define
-
-begin_define
-define|#
-directive|define
-name|STATE_MWAIT
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|STATE_SLEEPING
-value|0x2
-end_define
 
 begin_ifndef
 ifndef|#
