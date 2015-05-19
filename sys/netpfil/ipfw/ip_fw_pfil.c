@@ -2214,8 +2214,7 @@ name|pfil_head
 modifier|*
 name|pfh
 decl_stmt|;
-name|void
-modifier|*
+name|pfil_func_t
 name|hook_func
 decl_stmt|;
 name|pfh
