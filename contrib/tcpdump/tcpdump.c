@@ -7028,18 +7028,6 @@ argument_list|(
 literal|"unable to enter the capability mode"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cap_sandboxed
-argument_list|()
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"capability mode sandbox enabled\n"
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* __FreeBSD__ */
