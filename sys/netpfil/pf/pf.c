@@ -632,6 +632,21 @@ name|pf_sendqueue_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|pf_sendqueue_mtx
+argument_list|,
+operator|&
+name|pf_sendqueue_mtx
+argument_list|,
+literal|"pf send queue"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -737,6 +752,21 @@ name|pf_overloadqueue_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|pf_overloadqueue_mtx
+argument_list|,
+operator|&
+name|pf_overloadqueue_mtx
+argument_list|,
+literal|"pf overload/flush queue"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
@@ -770,6 +800,21 @@ name|mtx
 name|pf_unlnkdrules_mtx
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|pf_unlnkdrules_mtx
+argument_list|,
+operator|&
+name|pf_unlnkdrules_mtx
+argument_list|,
+literal|"pf unlinked rules"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 specifier|static
@@ -4815,47 +4860,11 @@ argument_list|,
 name|curvnet
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|pf_sendqueue_mtx
-argument_list|,
-literal|"pf send queue"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|pf_overloadqueue_mtx
-argument_list|,
-literal|"pf overload/flush queue"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
 comment|/* Unlinked, but may be referenced rules. */
 name|TAILQ_INIT
 argument_list|(
 operator|&
 name|V_pf_unlinked_rules
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|pf_unlnkdrules_mtx
-argument_list|,
-literal|"pf unlinked rules"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 block|}
@@ -5078,24 +5087,6 @@ name|M_PFTEMP
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_destroy
-argument_list|(
-operator|&
-name|pf_sendqueue_mtx
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|pf_overloadqueue_mtx
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
-name|pf_unlnkdrules_mtx
-argument_list|)
-expr_stmt|;
 name|uma_zdestroy
 argument_list|(
 name|V_pf_sources_z
