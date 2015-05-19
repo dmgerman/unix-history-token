@@ -7061,7 +7061,7 @@ name|tp
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Unscale the window into a 32-bit value. 	 * For the SYN_SENT state the scale is zero. 	 */
+comment|/* 	 * Scale up the window into a 32-bit value. 	 * For the SYN_SENT state the scale is zero. 	 */
 name|tiwin
 operator|=
 name|th
