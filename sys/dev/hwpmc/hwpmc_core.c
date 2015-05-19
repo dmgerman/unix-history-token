@@ -19163,7 +19163,7 @@ name|pm_reloadcount
 expr_stmt|;
 name|v
 operator|=
-name|iaf_reload_count_to_perfctr_value
+name|iap_reload_count_to_perfctr_value
 argument_list|(
 name|v
 argument_list|)
