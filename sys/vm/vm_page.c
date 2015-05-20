@@ -6502,6 +6502,12 @@ name|object
 operator|=
 name|NULL
 expr_stmt|;
+name|m
+operator|->
+name|oflags
+operator|=
+name|VPO_UNMANAGED
+expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|m
