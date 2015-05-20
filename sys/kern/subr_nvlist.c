@@ -3823,6 +3823,11 @@ operator|->
 name|nvl_parent
 argument_list|)
 expr_stmt|;
+name|nvpair_free_structure
+argument_list|(
+name|nvp
+argument_list|)
+expr_stmt|;
 continue|continue;
 default|default:
 name|PJDLOG_ABORT
