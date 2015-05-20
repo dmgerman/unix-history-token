@@ -11498,7 +11498,7 @@ operator|->
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Scan the valid bits looking for invalid sections that 	 * must be zerod.  Invalid sub-DEV_BSIZE'd areas ( where the 	 * valid bit may be set ) have already been zerod by 	 * vm_page_set_validclean(). 	 */
+comment|/* 	 * Scan the valid bits looking for invalid sections that 	 * must be zeroed.  Invalid sub-DEV_BSIZE'd areas ( where the 	 * valid bit may be set ) have already been zeroed by 	 * vm_page_set_validclean(). 	 */
 for|for
 control|(
 name|b
