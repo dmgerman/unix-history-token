@@ -10603,7 +10603,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SADB_X_GET processing  * receive  *<base, policy(*)>  * from the user(?),  * and send,  *<base, address(SD), policy>  * to the ikmpd.  * policy(*) including direction of policy.  *  * m will always be freed.  */
+comment|/*  * SADB_X_SPDGET processing  * receive  *<base, policy(*)>  * from the user(?),  * and send,  *<base, address(SD), policy>  * to the ikmpd.  * policy(*) including direction of policy.  *  * m will always be freed.  */
 end_comment
 
 begin_function
@@ -10799,7 +10799,11 @@ name|sp
 argument_list|,
 name|SADB_X_SPDGET
 argument_list|,
-literal|0
+name|mhp
+operator|->
+name|msg
+operator|->
+name|sadb_msg_seq
 argument_list|,
 name|mhp
 operator|->
