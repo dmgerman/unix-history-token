@@ -2072,6 +2072,29 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+comment|/* Prevent switching to NULL */
+if|if
+condition|(
+name|vw
+operator|==
+name|NULL
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|30
+argument_list|,
+literal|"%s: Cannot switch: vw is NULL."
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+block|}
 name|vd
 operator|=
 name|vw
@@ -2084,6 +2107,7 @@ name|vd
 operator|->
 name|vd_curwindow
 expr_stmt|;
+comment|/* Check if virtual terminal is locked */
 if|if
 condition|(
 name|curvw
@@ -2097,6 +2121,81 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+comment|/* Check if switch already in progress */
+if|if
+condition|(
+name|curvw
+operator|->
+name|vw_flags
+operator|&
+name|VWF_SWWAIT_REL
+condition|)
+block|{
+comment|/* Check if switching to same window */
+if|if
+condition|(
+name|curvw
+operator|->
+name|vw_switch_to
+operator|==
+name|vw
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|30
+argument_list|,
+literal|"%s: Switch in progress to same vw."
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* success */
+block|}
+name|DPRINTF
+argument_list|(
+literal|30
+argument_list|,
+literal|"%s: Switch in progress to different vw."
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
+block|}
+comment|/* Avoid switching to already selected window */
+if|if
+condition|(
+name|vw
+operator|==
+name|curvw
+condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|30
+argument_list|,
+literal|"%s: Cannot switch: vw == curvw."
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* success */
+block|}
 comment|/* Ask current process permission to switch away. */
 if|if
 condition|(
@@ -3102,12 +3201,6 @@ operator|-
 name|F_SCR
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|vw
-operator|!=
-name|NULL
-condition|)
 name|vt_proc_window_switch
 argument_list|(
 name|vw
@@ -3533,12 +3626,6 @@ operator|-
 name|F_SCR
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|vw
-operator|!=
-name|NULL
-condition|)
 name|vt_proc_window_switch
 argument_list|(
 name|vw
@@ -3580,12 +3667,6 @@ index|[
 name|c
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|vw
-operator|!=
-name|NULL
-condition|)
 name|vt_proc_window_switch
 argument_list|(
 name|vw
@@ -3606,6 +3687,8 @@ operator|(
 name|vw
 operator|->
 name|vw_number
+operator|+
+name|VT_MAXWINDOWS
 operator|-
 literal|1
 operator|)
@@ -3621,12 +3704,6 @@ index|[
 name|c
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|vw
-operator|!=
-name|NULL
-condition|)
 name|vt_proc_window_switch
 argument_list|(
 name|vw
@@ -12991,15 +13068,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* Switch back to saved window */
-if|if
-condition|(
-name|vd
-operator|->
-name|vd_savedwindow
-operator|!=
-name|NULL
-condition|)
+comment|/* Switch back to saved window, if any */
 name|vt_proc_window_switch
 argument_list|(
 name|vd
