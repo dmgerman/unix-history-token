@@ -2464,9 +2464,6 @@ name|m
 parameter_list|)
 block|{
 name|int
-name|locked
-decl_stmt|;
-name|int
 name|rc
 decl_stmt|;
 if|if
@@ -2499,16 +2496,12 @@ name|fail
 goto|;
 block|}
 comment|/* 	 * Try to grab the txq lock.  If we are able to get the lock, 	 * the packet will be appended to the "get list" of the deferred 	 * packet list.  Otherwise, it will be pushed on the "put list". 	 */
-name|locked
-operator|=
+if|if
+condition|(
 name|SFXGE_TXQ_TRYLOCK
 argument_list|(
 name|txq
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|locked
 condition|)
 block|{
 comment|/* First swizzle put-list to get-list to keep order */
@@ -2542,6 +2535,13 @@ goto|goto
 name|fail
 goto|;
 block|}
+comment|/* Try to service the list. */
+name|sfxge_tx_qdpl_service
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
+comment|/* Lock has been dropped. */
 block|}
 else|else
 block|{
@@ -2564,20 +2564,14 @@ goto|goto
 name|fail
 goto|;
 comment|/* 		 * Try to grab the lock again. 		 * 		 * If we are able to get the lock, we need to process 		 * the deferred packet list.  If we are not able to get 		 * the lock, another thread is processing the list. 		 */
-name|locked
-operator|=
+if|if
+condition|(
 name|SFXGE_TXQ_TRYLOCK
 argument_list|(
 name|txq
 argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|locked
 condition|)
 block|{
-comment|/* Try to service the list. */
 name|sfxge_tx_qdpl_service
 argument_list|(
 name|txq
@@ -2585,6 +2579,12 @@ argument_list|)
 expr_stmt|;
 comment|/* Lock has been dropped. */
 block|}
+block|}
+name|SFXGE_TXQ_LOCK_ASSERT_NOTOWNED
+argument_list|(
+name|txq
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
