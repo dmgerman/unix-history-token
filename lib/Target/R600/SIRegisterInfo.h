@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"AMDGPUSubtarget.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Debug.h"
 end_include
 
@@ -355,6 +361,11 @@ comment|///        concurrent waves.
 name|unsigned
 name|getNumSGPRsAllowed
 argument_list|(
+name|AMDGPUSubtarget
+operator|::
+name|Generation
+name|gen
+argument_list|,
 name|unsigned
 name|WaveCount
 argument_list|)

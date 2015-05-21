@@ -105,24 +105,20 @@ argument_list|,
 argument|LAO
 argument_list|)
 block|{}
+comment|/// Emit a call to the target's stack probe function. This is required for all
+comment|/// large stack allocations on Windows. The caller is required to materialize
+comment|/// the number of bytes to probe in RAX/EAX.
 specifier|static
 name|void
-name|getStackProbeFunction
+name|emitStackProbeCall
 argument_list|(
-specifier|const
-name|X86Subtarget
-operator|&
-name|STI
+argument|MachineFunction&MF
 argument_list|,
-name|unsigned
-operator|&
-name|CallOp
+argument|MachineBasicBlock&MBB
 argument_list|,
-specifier|const
-name|char
-operator|*
-operator|&
-name|Symbol
+argument|MachineBasicBlock::iterator MBBI
+argument_list|,
+argument|DebugLoc DL
 argument_list|)
 block|;
 name|void
