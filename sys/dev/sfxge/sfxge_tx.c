@@ -2777,6 +2777,10 @@ operator|&
 operator|(
 name|CSUM_DELAY_DATA
 operator||
+name|CSUM_TCP_IPV6
+operator||
+name|CSUM_UDP_IPV6
+operator||
 name|CSUM_TSO
 operator|)
 condition|)
