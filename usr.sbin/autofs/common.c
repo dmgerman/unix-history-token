@@ -2827,7 +2827,16 @@ decl_stmt|;
 name|size_t
 name|tmplen
 decl_stmt|;
-comment|//log_debugx("looking up %s in %s", path, node->n_key);
+comment|//log_debugx("looking up %s in %s", path, node_path(node));
+if|if
+condition|(
+operator|!
+name|node_is_direct_key
+argument_list|(
+name|node
+argument_list|)
+condition|)
+block|{
 name|tmp
 operator|=
 name|node_path
@@ -2884,7 +2893,7 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-comment|/* 		 * If we have two map entries like 'foo' and 'foobar', make 		 * sure the search for 'foobar' won't match 'foo' instead. 		 */
+comment|/* 			 * If we have two map entries like 'foo' and 'foobar', make 			 * sure the search for 'foobar' won't match 'foo' instead. 			 */
 name|free
 argument_list|(
 name|tmp
@@ -2901,6 +2910,7 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+block|}
 name|TAILQ_FOREACH
 argument_list|(
 argument|child
@@ -2931,6 +2941,24 @@ name|found
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|node
+operator|->
+name|n_parent
+operator|==
+name|NULL
+operator|||
+name|node_is_direct_key
+argument_list|(
+name|node
+argument_list|)
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 return|return
 operator|(
 name|node
@@ -2961,6 +2989,15 @@ name|node
 modifier|*
 name|node
 decl_stmt|;
+name|assert
+argument_list|(
+name|root
+operator|->
+name|n_parent
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 name|node
 operator|=
 name|node_find_x
@@ -2973,14 +3010,16 @@ expr_stmt|;
 if|if
 condition|(
 name|node
-operator|==
-name|root
-condition|)
-return|return
-operator|(
+operator|!=
 name|NULL
-operator|)
-return|;
+condition|)
+name|assert
+argument_list|(
+name|node
+operator|!=
+name|root
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|node
