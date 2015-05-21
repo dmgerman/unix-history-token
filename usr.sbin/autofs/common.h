@@ -536,6 +536,11 @@ name|struct
 name|node
 modifier|*
 name|n
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cmdline_options
 parameter_list|)
 function_decl|;
 end_function_decl
