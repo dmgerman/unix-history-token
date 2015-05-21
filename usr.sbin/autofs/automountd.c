@@ -935,17 +935,18 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Append options from auto_master. 	 */
 name|options
 operator|=
 name|concat
 argument_list|(
-name|adr
-operator|->
-name|adr_options
+name|options
 argument_list|,
 literal|','
 argument_list|,
-name|options
+name|adr
+operator|->
+name|adr_options
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Prepend options passed via automountd(8) command line. 	 */
