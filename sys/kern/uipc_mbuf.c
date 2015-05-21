@@ -4821,6 +4821,13 @@ name|nsize
 operator|=
 name|MHLEN
 expr_stmt|;
+name|n
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_RDONLY
+expr_stmt|;
 block|}
 name|n
 operator|->
