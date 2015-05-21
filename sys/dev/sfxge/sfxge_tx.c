@@ -2477,10 +2477,6 @@ name|sc
 argument_list|)
 condition|)
 block|{
-name|rc
-operator|=
-name|ENETDOWN
-expr_stmt|;
 name|atomic_add_long
 argument_list|(
 operator|&
@@ -2491,9 +2487,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-goto|goto
-name|fail
-goto|;
+return|return
+operator|(
+name|ENETDOWN
+operator|)
+return|;
 block|}
 comment|/* 	 * Try to grab the txq lock.  If we are able to get the lock, 	 * the packet will be appended to the "get list" of the deferred 	 * packet list.  Otherwise, it will be pushed on the "put list". 	 */
 if|if
@@ -2531,9 +2529,11 @@ argument_list|(
 name|txq
 argument_list|)
 expr_stmt|;
-goto|goto
-name|fail
-goto|;
+return|return
+operator|(
+name|rc
+operator|)
+return|;
 block|}
 comment|/* Try to service the list. */
 name|sfxge_tx_qdpl_service
@@ -2560,9 +2560,11 @@ name|rc
 operator|!=
 literal|0
 condition|)
-goto|goto
-name|fail
-goto|;
+return|return
+operator|(
+name|rc
+operator|)
+return|;
 comment|/* 		 * Try to grab the lock again. 		 * 		 * If we are able to get the lock, we need to process 		 * the deferred packet list.  If we are not able to get 		 * the lock, another thread is processing the list. 		 */
 if|if
 condition|(
@@ -2588,18 +2590,6 @@ expr_stmt|;
 return|return
 operator|(
 literal|0
-operator|)
-return|;
-name|fail
-label|:
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|rc
 operator|)
 return|;
 block|}
@@ -2937,6 +2927,17 @@ name|sfxge_tx_packet_add
 argument_list|(
 name|txq
 argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|!=
+literal|0
+condition|)
+name|m_freem
+argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
