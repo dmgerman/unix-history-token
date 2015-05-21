@@ -1147,7 +1147,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|int64_t
 name|be4
 parameter_list|(
 specifier|const
@@ -1342,7 +1342,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|int64_t
 name|le4
 parameter_list|(
 specifier|const
@@ -4657,11 +4657,25 @@ name|h
 operator|==
 name|NULL
 condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+literal|0
+argument_list|,
+literal|"End of file trying to read next cpio header"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ARCHIVE_FATAL
 operator|)
 return|;
+block|}
 comment|/* Parse out binary fields. */
 name|header
 operator|=
@@ -4966,11 +4980,25 @@ name|h
 operator|==
 name|NULL
 condition|)
+block|{
+name|archive_set_error
+argument_list|(
+operator|&
+name|a
+operator|->
+name|archive
+argument_list|,
+literal|0
+argument_list|,
+literal|"End of file trying to read next cpio header"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ARCHIVE_FATAL
 operator|)
 return|;
+block|}
 comment|/* Parse out binary fields. */
 name|header
 operator|=
@@ -5309,7 +5337,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|int64_t
 name|le4
 parameter_list|(
 specifier|const
@@ -5331,10 +5359,15 @@ literal|16
 operator|)
 operator|+
 operator|(
+operator|(
+operator|(
+name|int64_t
+operator|)
 name|p
 index|[
 literal|1
 index|]
+operator|)
 operator|<<
 literal|24
 operator|)
@@ -5363,7 +5396,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|int64_t
 name|be4
 parameter_list|(
 specifier|const
@@ -5376,10 +5409,15 @@ block|{
 return|return
 operator|(
 operator|(
+operator|(
+operator|(
+name|int64_t
+operator|)
 name|p
 index|[
 literal|0
 index|]
+operator|)
 operator|<<
 literal|24
 operator|)
