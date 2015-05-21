@@ -144,7 +144,7 @@ comment|/*  * Exported global variables  */
 end_comment
 
 begin_decl_stmt
-name|boolean_t
+name|bool
 name|db_cmd_loop_done
 decl_stmt|;
 end_decl_stmt
@@ -845,7 +845,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean_t
+name|bool
 name|db_ed_style
 init|=
 name|true
@@ -1630,7 +1630,7 @@ name|addr
 decl_stmt|,
 name|count
 decl_stmt|;
-name|boolean_t
+name|bool
 name|have_addr
 init|=
 name|false
@@ -1695,9 +1695,9 @@ operator|)
 literal|0
 argument_list|,
 operator|(
-name|boolean_t
+name|bool
 operator|)
-literal|0
+name|false
 argument_list|,
 operator|(
 name|db_expr_t
@@ -2263,7 +2263,7 @@ parameter_list|(
 name|db_expr_t
 name|dummy
 parameter_list|,
-name|boolean_t
+name|bool
 name|dummy2
 parameter_list|,
 name|db_expr_t
@@ -2504,7 +2504,7 @@ parameter_list|(
 name|db_expr_t
 name|dummy1
 parameter_list|,
-name|boolean_t
+name|bool
 name|dummy2
 parameter_list|,
 name|db_expr_t
@@ -2706,7 +2706,7 @@ parameter_list|(
 name|db_expr_t
 name|dummy
 parameter_list|,
-name|boolean_t
+name|bool
 name|dummy2
 parameter_list|,
 name|db_expr_t
@@ -2731,7 +2731,7 @@ parameter_list|(
 name|db_expr_t
 name|dummy1
 parameter_list|,
-name|boolean_t
+name|bool
 name|dummy2
 parameter_list|,
 name|db_expr_t
@@ -2936,7 +2936,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t
@@ -3056,7 +3056,7 @@ parameter_list|(
 name|db_expr_t
 name|dummy1
 parameter_list|,
-name|boolean_t
+name|bool
 name|dummy2
 parameter_list|,
 name|db_expr_t
@@ -3158,7 +3158,7 @@ parameter_list|(
 name|db_expr_t
 name|dummy1
 parameter_list|,
-name|boolean_t
+name|bool
 name|dummy2
 parameter_list|,
 name|db_expr_t
@@ -3207,7 +3207,7 @@ parameter_list|(
 name|db_expr_t
 name|tid
 parameter_list|,
-name|boolean_t
+name|bool
 name|hastid
 parameter_list|,
 name|db_expr_t
@@ -3414,7 +3414,7 @@ parameter_list|(
 name|db_expr_t
 name|dummy
 parameter_list|,
-name|boolean_t
+name|bool
 name|dummy2
 parameter_list|,
 name|db_expr_t

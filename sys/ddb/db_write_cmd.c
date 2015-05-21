@@ -66,7 +66,7 @@ parameter_list|(
 name|db_expr_t
 name|address
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t
@@ -92,7 +92,7 @@ specifier|register
 name|int
 name|size
 decl_stmt|;
-name|boolean_t
+name|bool
 name|wrote_one
 init|=
 name|false

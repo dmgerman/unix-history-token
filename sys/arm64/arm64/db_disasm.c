@@ -36,7 +36,7 @@ parameter_list|(
 name|vm_offset_t
 name|loc
 parameter_list|,
-name|boolean_t
+name|bool
 name|altfmt
 parameter_list|)
 block|{

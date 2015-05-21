@@ -287,7 +287,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t
@@ -401,7 +401,7 @@ parameter_list|,
 name|_more
 parameter_list|)
 define|\
-value|static db_cmdfcn_t _func;					\ _DB_SET(_suffix, _name, _func, list, _flag, _more);		\ static void							\ _func(db_expr_t addr, boolean_t have_addr, db_expr_t count, char *modif)
+value|static db_cmdfcn_t _func;					\ _DB_SET(_suffix, _name, _func, list, _flag, _more);		\ static void							\ _func(db_expr_t addr, bool have_addr, db_expr_t count, char *modif)
 end_define
 
 begin_comment
@@ -613,7 +613,7 @@ parameter_list|(
 name|db_addr_t
 name|loc
 parameter_list|,
-name|boolean_t
+name|bool
 name|altfmt
 parameter_list|)
 function_decl|;
@@ -700,7 +700,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|check_pid
 parameter_list|)
 function_decl|;
@@ -718,7 +718,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|boolean_t
+name|bool
 name|db_map_current
 parameter_list|(
 name|struct
@@ -729,7 +729,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|boolean_t
+name|bool
 name|db_map_equal
 parameter_list|(
 name|struct
@@ -859,7 +859,7 @@ begin_function_decl
 name|void
 name|db_restart_at_pc
 parameter_list|(
-name|boolean_t
+name|bool
 name|watchpt
 parameter_list|)
 function_decl|;
@@ -894,10 +894,10 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|boolean_t
+name|bool
 name|db_stop_at_pc
 parameter_list|(
-name|boolean_t
+name|bool
 modifier|*
 name|is_breakpoint
 parameter_list|)
@@ -934,7 +934,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|bool
 name|db_value_of_name
 parameter_list|(
 specifier|const
@@ -950,7 +950,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|bool
 name|db_value_of_name_pcpu
 parameter_list|(
 specifier|const
@@ -966,7 +966,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|bool
 name|db_value_of_name_vnet
 parameter_list|(
 specifier|const

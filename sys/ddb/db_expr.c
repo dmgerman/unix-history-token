@@ -53,7 +53,7 @@ end_include
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|bool
 name|db_add_expr
 parameter_list|(
 name|db_expr_t
@@ -65,7 +65,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|bool
 name|db_mult_expr
 parameter_list|(
 name|db_expr_t
@@ -77,7 +77,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|bool
 name|db_shift_expr
 parameter_list|(
 name|db_expr_t
@@ -89,7 +89,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|bool
 name|db_term
 parameter_list|(
 name|db_expr_t
@@ -101,7 +101,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|bool
 name|db_unary
 parameter_list|(
 name|db_expr_t
@@ -113,7 +113,7 @@ end_function_decl
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|db_term
 parameter_list|(
 name|db_expr_t
@@ -370,7 +370,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|db_unary
 parameter_list|(
 name|db_expr_t
@@ -490,7 +490,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|db_mult_expr
 parameter_list|(
 name|db_expr_t
@@ -652,7 +652,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|db_add_expr
 parameter_list|(
 name|db_expr_t
@@ -756,7 +756,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|db_shift_expr
 parameter_list|(
 name|db_expr_t

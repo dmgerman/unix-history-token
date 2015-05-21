@@ -129,7 +129,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t
@@ -784,7 +784,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t
@@ -1014,7 +1014,7 @@ parameter_list|(
 name|db_expr_t
 name|dummy1
 parameter_list|,
-name|boolean_t
+name|bool
 name|dummy2
 parameter_list|,
 name|db_expr_t

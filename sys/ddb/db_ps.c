@@ -152,7 +152,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|hasaddr
 parameter_list|,
 name|db_expr_t
@@ -1389,7 +1389,7 @@ name|lock_object
 modifier|*
 name|lock
 decl_stmt|;
-name|boolean_t
+name|bool
 name|comma
 decl_stmt|;
 comment|/* Determine which thread to examine. */
@@ -2110,7 +2110,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t

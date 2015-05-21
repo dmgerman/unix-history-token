@@ -137,7 +137,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
-name|boolean_t
+name|bool
 name|db_sstep_print
 decl_stmt|;
 end_decl_stmt
@@ -242,10 +242,10 @@ directive|endif
 end_endif
 
 begin_function
-name|boolean_t
+name|bool
 name|db_stop_at_pc
 parameter_list|(
-name|boolean_t
+name|bool
 modifier|*
 name|is_breakpoint
 parameter_list|)
@@ -660,7 +660,7 @@ begin_function
 name|void
 name|db_restart_at_pc
 parameter_list|(
-name|boolean_t
+name|bool
 name|watchpt
 parameter_list|)
 block|{
@@ -840,7 +840,7 @@ name|SOFTWARE_SSTEP
 end_ifdef
 
 begin_comment
-comment|/*  *	Software implementation of single-stepping.  *	If your machine does not have a trace mode  *	similar to the vax or sun ones you can use  *	this implementation, done for the mips.  *	Just define the above conditional and provide  *	the functions/macros defined below.  *  * extern boolean_t  *	inst_branch(),		returns true if the instruction might branch  * extern unsigned  *	branch_taken(),		return the address the instruction might  *				branch to  *	db_getreg_val();	return the value of a user register,  *				as indicated in the hardware instruction  *				encoding, e.g. 8 for r8  *  * next_instr_address(pc,bd)	returns the address of the first  *				instruction following the one at "pc",  *				which is either in the taken path of  *				the branch (bd==1) or not.  This is  *				for machines (mips) with branch delays.  *  *	A single-step may involve at most 2 breakpoints -  *	one for branch-not-taken and one for branch taken.  *	If one of these addresses does not already have a breakpoint,  *	we allocate a breakpoint and save it here.  *	These breakpoints are deleted on return.  */
+comment|/*  *	Software implementation of single-stepping.  *	If your machine does not have a trace mode  *	similar to the vax or sun ones you can use  *	this implementation, done for the mips.  *	Just define the above conditional and provide  *	the functions/macros defined below.  *  * extern bool  *	inst_branch(),		returns true if the instruction might branch  * extern unsigned  *	branch_taken(),		return the address the instruction might  *				branch to  *	db_getreg_val();	return the value of a user register,  *				as indicated in the hardware instruction  *				encoding, e.g. 8 for r8  *  * next_instr_address(pc,bd)	returns the address of the first  *				instruction following the one at "pc",  *				which is either in the taken path of  *				the branch (bd==1) or not.  This is  *				for machines (mips) with branch delays.  *  *	A single-step may involve at most 2 breakpoints -  *	one for branch-not-taken and one for branch taken.  *	If one of these addresses does not already have a breakpoint,  *	we allocate a breakpoint and save it here.  *	These breakpoints are deleted on return.  */
 end_comment
 
 begin_function
@@ -1020,29 +1020,21 @@ begin_function
 name|void
 name|db_single_step_cmd
 parameter_list|(
-name|addr
-parameter_list|,
-name|have_addr
-parameter_list|,
-name|count
-parameter_list|,
-name|modif
-parameter_list|)
 name|db_expr_t
 name|addr
-decl_stmt|;
-name|boolean_t
+parameter_list|,
+name|bool
 name|have_addr
-decl_stmt|;
+parameter_list|,
 name|db_expr_t
 name|count
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 name|modif
-decl_stmt|;
+parameter_list|)
 block|{
-name|boolean_t
+name|bool
 name|print
 init|=
 name|false
@@ -1117,7 +1109,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t
@@ -1128,7 +1120,7 @@ modifier|*
 name|modif
 parameter_list|)
 block|{
-name|boolean_t
+name|bool
 name|print
 init|=
 name|false
@@ -1184,7 +1176,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t
@@ -1195,7 +1187,7 @@ modifier|*
 name|modif
 parameter_list|)
 block|{
-name|boolean_t
+name|bool
 name|print
 init|=
 name|false
@@ -1259,7 +1251,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t
