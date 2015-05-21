@@ -70,7 +70,7 @@ name|pi
 argument_list|,
 name|PCIR_HDRTYPE
 argument_list|,
-name|PCIM_HDRTYPE_BRIDGE
+name|PCIM_HDRTYPE_NORMAL
 argument_list|)
 expr_stmt|;
 name|pci_set_cfgdata8
