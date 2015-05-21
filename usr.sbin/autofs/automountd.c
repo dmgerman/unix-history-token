@@ -950,12 +950,6 @@ name|adr_options
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Prepend options passed via automountd(8) command line. 	 */
-if|if
-condition|(
-name|cmdline_options
-operator|!=
-name|NULL
-condition|)
 name|options
 operator|=
 name|concat
@@ -1762,23 +1756,6 @@ break|break;
 case|case
 literal|'o'
 case|:
-if|if
-condition|(
-name|options
-operator|==
-name|NULL
-condition|)
-block|{
-name|options
-operator|=
-name|checked_strdup
-argument_list|(
-name|optarg
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
 name|options
 operator|=
 name|concat
@@ -1790,7 +1767,6 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
-block|}
 break|break;
 case|case
 literal|'v'
