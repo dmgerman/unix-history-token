@@ -173,7 +173,7 @@ begin_define
 define|#
 directive|define
 name|SFXGE_CAP_FIXED
-value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWCSUM |		\ 			 IFCAP_JUMBO_MTU | IFCAP_LINKSTATE)
+value|(IFCAP_VLAN_MTU |				\ 			 IFCAP_JUMBO_MTU | IFCAP_LINKSTATE)
 end_define
 
 begin_expr_stmt
