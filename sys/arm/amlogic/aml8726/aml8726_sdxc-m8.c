@@ -2953,7 +2953,6 @@ name|ENXIO
 operator|)
 return|;
 comment|/* NOTREACHED */
-break|break;
 block|}
 name|node
 operator|=
