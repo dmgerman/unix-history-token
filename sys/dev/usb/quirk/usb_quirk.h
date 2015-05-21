@@ -221,6 +221,9 @@ comment|/* audio device uses vendor and not audio class */
 name|UQ_SINGLE_CMD_MIDI
 block|,
 comment|/* at most one command per USB packet */
+name|UQ_MSC_DYMO_EJECT
+block|,
+comment|/* ejects Dymo MSC device */
 name|USB_QUIRK_MAX
 block|}
 enum|;
