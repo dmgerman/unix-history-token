@@ -1333,6 +1333,16 @@ block|}
 end_function
 
 begin_comment
+comment|// __builtin_longjmp isn't supported on all platforms, so only test it on X86.
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__x86_64__
+end_ifdef
+
+begin_comment
 comment|// CHECK-LABEL: define void @test_builtin_longjmp
 end_comment
 
@@ -1358,6 +1368,11 @@ expr_stmt|;
 comment|// CHECK-NEXT: unreachable
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// CHECK-LABEL: define i64 @test_builtin_readcyclecounter

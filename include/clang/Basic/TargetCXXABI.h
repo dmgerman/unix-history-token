@@ -146,6 +146,12 @@ comment|///   - representation of member function pointers adjusted as in ARM.
 comment|///   - guard variables  are smaller.
 name|GenericAArch64
 block|,
+comment|/// The generic Mips ABI is a modified version of the Itanium ABI.
+comment|///
+comment|/// At the moment, only change from the generic ABI in this case is:
+comment|///   - representation of member function pointers adjusted as in ARM.
+name|GenericMIPS
+block|,
 comment|/// The Microsoft ABI is the ABI used by Microsoft Visual Studio (and
 comment|/// compatible compilers).
 comment|///
@@ -230,6 +236,9 @@ case|:
 case|case
 name|iOS64
 case|:
+case|case
+name|GenericMIPS
+case|:
 return|return
 name|true
 return|;
@@ -272,6 +281,9 @@ name|iOS
 case|:
 case|case
 name|iOS64
+case|:
+case|case
+name|GenericMIPS
 case|:
 return|return
 name|false
@@ -417,6 +429,9 @@ comment|// old iOS compilers did not follow this rule
 case|case
 name|Microsoft
 case|:
+case|case
+name|GenericMIPS
+case|:
 return|return
 name|true
 return|;
@@ -486,6 +501,9 @@ name|GenericARM
 case|:
 case|case
 name|iOS
+case|:
+case|case
+name|GenericMIPS
 case|:
 return|return
 name|UseTailPaddingUnlessPOD03

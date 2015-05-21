@@ -14920,7 +14920,7 @@ comment|// MIPS64BE:#define __SIZEOF_FLOAT__ 4
 end_comment
 
 begin_comment
-comment|// MIPS64BE-NOT:#define __SIZEOF_INT128__ 16
+comment|// MIPS64BE:#define __SIZEOF_INT128__ 16
 end_comment
 
 begin_comment
@@ -15752,7 +15752,7 @@ comment|// MIPS64EL:#define __SIZEOF_FLOAT__ 4
 end_comment
 
 begin_comment
-comment|// MIPS64EL-NOT:#define __SIZEOF_INT128__ 16
+comment|// MIPS64EL:#define __SIZEOF_INT128__ 16
 end_comment
 
 begin_comment

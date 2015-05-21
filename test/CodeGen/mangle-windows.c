@@ -8,11 +8,35 @@ comment|// RUN: %clang_cc1 -emit-llvm %s -o - -triple=i386-mingw32 | FileCheck %
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -emit-llvm %s -o - -triple=i386-pc-windows-msvc-elf | FileCheck %s --check-prefix=ELF32
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -emit-llvm %s -o - -triple=x86_64-pc-win32 | FileCheck %s --check-prefix=X64
 end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -emit-llvm %s -o - -triple=x86_64-mingw32 | FileCheck %s --check-prefix=X64
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -emit-llvm %s -o - -triple=x86_64-pc-windows-msvc-elf | FileCheck %s --check-prefix=ELF64
+end_comment
+
+begin_comment
+comment|// CHECK: target datalayout = "e-m:w-{{.*}}"
+end_comment
+
+begin_comment
+comment|// X64: target datalayout = "e-m:e-{{.*}}"
+end_comment
+
+begin_comment
+comment|// ELF32: target datalayout = "e-m:e-{{.*}}"
+end_comment
+
+begin_comment
+comment|// ELF64: target datalayout = "e-m:e-{{.*}}"
 end_comment
 
 begin_function
@@ -33,6 +57,14 @@ begin_comment
 comment|// X64: define void @f1(
 end_comment
 
+begin_comment
+comment|// ELF32: define x86_stdcallcc void @"\01_f1@0"
+end_comment
+
+begin_comment
+comment|// ELF64: define void @f1(
+end_comment
+
 begin_function
 name|void
 name|__fastcall
@@ -49,6 +81,14 @@ end_comment
 
 begin_comment
 comment|// X64: define void @f2(
+end_comment
+
+begin_comment
+comment|// ELF32: define x86_fastcallcc void @"\01@f2@0"
+end_comment
+
+begin_comment
+comment|// ELF64: define void @f2(
 end_comment
 
 begin_function
@@ -227,6 +267,14 @@ begin_comment
 comment|// X64: define x86_vectorcallcc void @"\01v1@@0"(
 end_comment
 
+begin_comment
+comment|// ELF32: define x86_vectorcallcc void @"\01v1@@0"(
+end_comment
+
+begin_comment
+comment|// ELF64: define x86_vectorcallcc void @"\01v1@@0"(
+end_comment
+
 begin_function
 name|void
 name|__vectorcall
@@ -244,6 +292,14 @@ end_comment
 
 begin_comment
 comment|// X64: define x86_vectorcallcc void @"\01v2@@8"(
+end_comment
+
+begin_comment
+comment|// ELF32: define x86_vectorcallcc void @"\01v2@@4"(
+end_comment
+
+begin_comment
+comment|// ELF64: define x86_vectorcallcc void @"\01v2@@8"(
 end_comment
 
 begin_function
