@@ -1536,14 +1536,19 @@ operator|->
 name|mbuf
 decl_stmt|;
 name|int
+name|flags
+init|=
+name|rx_desc
+operator|->
+name|flags
+decl_stmt|;
+name|int
 name|csum_flags
 decl_stmt|;
 comment|/* Convert checksum flags */
 name|csum_flags
 operator|=
 operator|(
-name|rx_desc
-operator|->
 name|flags
 operator|&
 name|EFX_CKSUM_IPV4
@@ -1559,8 +1564,6 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|rx_desc
-operator|->
 name|flags
 operator|&
 name|EFX_CKSUM_TCPUDP
@@ -1574,8 +1577,6 @@ expr_stmt|;
 comment|/* The hash covers a 4-tuple for TCP only */
 if|if
 condition|(
-name|rx_desc
-operator|->
 name|flags
 operator|&
 name|EFX_PKT_TCP
