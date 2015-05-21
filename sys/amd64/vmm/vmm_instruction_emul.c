@@ -377,6 +377,22 @@ name|VIE_OP_TYPE_SUB
 block|, 	}
 block|,
 index|[
+literal|0x39
+index|]
+operator|=
+block|{
+operator|.
+name|op_byte
+operator|=
+literal|0x39
+block|,
+operator|.
+name|op_type
+operator|=
+name|VIE_OP_TYPE_CMP
+block|, 	}
+block|,
+index|[
 literal|0x3B
 index|]
 operator|=
@@ -4312,6 +4328,10 @@ decl_stmt|,
 name|size
 decl_stmt|;
 name|uint64_t
+name|regop
+decl_stmt|,
+name|memop
+decl_stmt|,
 name|op1
 decl_stmt|,
 name|op2
@@ -4340,10 +4360,13 @@ name|op_byte
 condition|)
 block|{
 case|case
+literal|0x39
+case|:
+case|case
 literal|0x3B
 case|:
-comment|/* 		 * 3B/r		CMP r16, r/m16 		 * 3B/r		CMP r32, r/m32 		 * REX.W + 3B/r	CMP r64, r/m64 		 * 		 * Compare first operand (reg) with second operand (r/m) and 		 * set status flags in EFLAGS register. The comparison is 		 * performed by subtracting the second operand from the first 		 * operand and then setting the status flags. 		 */
-comment|/* Get the first operand */
+comment|/* 		 * 39/r		CMP r/m16, r16 		 * 39/r		CMP r/m32, r32 		 * REX.W 39/r	CMP r/m64, r64 		 * 		 * 3B/r		CMP r16, r/m16 		 * 3B/r		CMP r32, r/m32 		 * REX.W + 3B/r	CMP r64, r/m64 		 * 		 * Compare the first operand with the second operand and 		 * set status flags in EFLAGS register. The comparison is 		 * performed by subtracting the second operand from the first 		 * operand and then setting the status flags. 		 */
+comment|/* Get the register operand */
 name|reg
 operator|=
 name|gpr_map
@@ -4364,7 +4387,7 @@ argument_list|,
 name|reg
 argument_list|,
 operator|&
-name|op1
+name|regop
 argument_list|)
 expr_stmt|;
 if|if
@@ -4376,7 +4399,7 @@ operator|(
 name|error
 operator|)
 return|;
-comment|/* Get the second operand */
+comment|/* Get the memory operand */
 name|error
 operator|=
 name|memread
@@ -4388,7 +4411,7 @@ argument_list|,
 name|gpa
 argument_list|,
 operator|&
-name|op2
+name|memop
 argument_list|,
 name|size
 argument_list|,
@@ -4404,6 +4427,37 @@ operator|(
 name|error
 operator|)
 return|;
+if|if
+condition|(
+name|vie
+operator|->
+name|op
+operator|.
+name|op_byte
+operator|==
+literal|0x3B
+condition|)
+block|{
+name|op1
+operator|=
+name|regop
+expr_stmt|;
+name|op2
+operator|=
+name|memop
+expr_stmt|;
+block|}
+else|else
+block|{
+name|op1
+operator|=
+name|memop
+expr_stmt|;
+name|op2
+operator|=
+name|regop
+expr_stmt|;
+block|}
 name|rflags2
 operator|=
 name|getcc
