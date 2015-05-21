@@ -159,7 +159,7 @@ begin_define
 define|#
 directive|define
 name|SFXGE_CAP
-value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWCSUM |			\ 		   IFCAP_RXCSUM | IFCAP_TXCSUM |			\ 		   IFCAP_RXCSUM_IPV6 | IFCAP_TXCSUM_IPV6 |		\ 		   IFCAP_TSO4 | IFCAP_TSO6 |				\ 		   IFCAP_JUMBO_MTU | IFCAP_LRO |			\ 		   IFCAP_VLAN_HWTSO | IFCAP_LINKSTATE)
+value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWCSUM |			\ 		   IFCAP_RXCSUM | IFCAP_TXCSUM |			\ 		   IFCAP_RXCSUM_IPV6 | IFCAP_TXCSUM_IPV6 |		\ 		   IFCAP_TSO4 | IFCAP_TSO6 |				\ 		   IFCAP_JUMBO_MTU |					\ 		   IFCAP_VLAN_HWTSO | IFCAP_LINKSTATE)
 end_define
 
 begin_define
@@ -1446,6 +1446,23 @@ name|if_capenable
 operator|=
 name|SFXGE_CAP_ENABLE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
+name|ifp
+operator|->
+name|if_capabilities
+operator||=
+name|IFCAP_LRO
+expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator||=
+name|IFCAP_LRO
+expr_stmt|;
+endif|#
+directive|endif
 name|ifp
 operator|->
 name|if_hwassist
