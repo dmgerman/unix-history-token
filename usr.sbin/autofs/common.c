@@ -468,6 +468,19 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If s2 starts with separator - skip it; otherwise concatenating 	 * "/" and "/foo" would end up returning "//foo". 	 */
+if|if
+condition|(
+name|s2
+index|[
+literal|0
+index|]
+operator|==
+name|separator
+condition|)
+name|s2
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|s1
@@ -492,13 +505,6 @@ name|s1
 argument_list|)
 operator|-
 literal|1
-index|]
-operator|==
-name|separator
-operator|||
-name|s2
-index|[
-literal|0
 index|]
 operator|==
 name|separator
