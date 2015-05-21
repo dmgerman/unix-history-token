@@ -3244,6 +3244,15 @@ name|UFTDI_DEV
 argument_list|(
 name|FTDI
 argument_list|,
+name|SCX8_USB_PHOENIX
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FTDI
+argument_list|,
 name|SDMUSBQSS
 argument_list|,
 literal|0
