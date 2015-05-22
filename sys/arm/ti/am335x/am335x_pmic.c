@@ -685,7 +685,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"ti,am335x-pmic"
+literal|"ti,tps65217"
 argument_list|)
 condition|)
 return|return
@@ -706,6 +706,7 @@ name|sc_dev
 operator|=
 name|dev
 expr_stmt|;
+comment|/* Convert to 8-bit addressing */
 name|sc
 operator|->
 name|sc_addr
@@ -714,6 +715,8 @@ name|iicbus_get_addr
 argument_list|(
 name|dev
 argument_list|)
+operator|<<
+literal|1
 expr_stmt|;
 name|device_set_desc
 argument_list|(

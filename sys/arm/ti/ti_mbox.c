@@ -490,7 +490,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"ti,system-mbox"
+literal|"ti,omap4-mailbox"
 argument_list|)
 condition|)
 block|{

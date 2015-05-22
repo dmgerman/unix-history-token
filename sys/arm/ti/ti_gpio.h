@@ -37,6 +37,21 @@ name|MAX_GPIO_INTRS
 value|8
 end_define
 
+begin_struct
+struct|struct
+name|ti_gpio_mask_arg
+block|{
+name|void
+modifier|*
+name|softc
+decl_stmt|;
+name|int
+name|pin
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/**  *	Structure that stores the driver context.  *  *	This structure is allocated during driver attach.  */
 end_comment
@@ -63,28 +78,30 @@ modifier|*
 name|sc_irq_polarity
 decl_stmt|;
 name|int
+name|sc_bank
+decl_stmt|;
+name|int
 name|sc_maxpin
 decl_stmt|;
 name|struct
 name|mtx
 name|sc_mtx
 decl_stmt|;
-comment|/* 	 * The memory resource(s) for the PRCM register set, when the device is 	 * created the caller can assign up to 6 memory regions depending on 	 * the SoC type. 	 */
+name|int
+name|sc_mem_rid
+decl_stmt|;
 name|struct
 name|resource
 modifier|*
 name|sc_mem_res
-index|[
-name|MAX_GPIO_BANKS
-index|]
+decl_stmt|;
+name|int
+name|sc_irq_rid
 decl_stmt|;
 name|struct
 name|resource
 modifier|*
 name|sc_irq_res
-index|[
-name|MAX_GPIO_INTRS
-index|]
 decl_stmt|;
 comment|/* Interrupt events. */
 name|struct
@@ -93,13 +110,15 @@ modifier|*
 modifier|*
 name|sc_events
 decl_stmt|;
+name|struct
+name|ti_gpio_mask_arg
+modifier|*
+name|sc_mask_args
+decl_stmt|;
 comment|/* The handle for the register IRQ handlers. */
 name|void
 modifier|*
 name|sc_irq_hdl
-index|[
-name|MAX_GPIO_INTRS
-index|]
 decl_stmt|;
 block|}
 struct|;

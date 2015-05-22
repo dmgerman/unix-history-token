@@ -17,7 +17,7 @@ end_define
 
 begin_function_decl
 name|int
-name|am335x_pwm_config_ecas
+name|am335x_pwm_config_ecap
 parameter_list|(
 name|int
 name|unit

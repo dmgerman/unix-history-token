@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/ti/ti_hwmods.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/ti/ti_i2c.h>
 end_include
 
@@ -164,8 +170,8 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
-name|uint32_t
-name|device_id
+name|clk_ident_t
+name|clk_id
 decl_stmt|;
 name|struct
 name|resource
@@ -2136,9 +2142,6 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|clk_ident_t
-name|clk
-decl_stmt|;
 name|int
 name|err
 decl_stmt|;
@@ -2160,19 +2163,13 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* 	 * 1. Enable the functional and interface clocks (see Section 	 * 23.1.5.1.1.1.1). 	 */
-name|clk
-operator|=
-name|I2C0_CLK
-operator|+
-name|sc
-operator|->
-name|device_id
-expr_stmt|;
 name|err
 operator|=
 name|ti_prcm_clk_enable
 argument_list|(
-name|clk
+name|sc
+operator|->
+name|clk_id
 argument_list|)
 expr_stmt|;
 if|if
@@ -2219,9 +2216,6 @@ name|device_get_softc
 argument_list|(
 name|dev
 argument_list|)
-decl_stmt|;
-name|clk_ident_t
-name|clk
 decl_stmt|;
 comment|/* Disable the controller - cancel all transactions. */
 name|ti_i2c_write_2
@@ -2349,17 +2343,11 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* Finally disable the functional and interface clocks. */
-name|clk
-operator|=
-name|I2C0_CLK
-operator|+
-name|sc
-operator|->
-name|device_id
-expr_stmt|;
 name|ti_prcm_clk_disable
 argument_list|(
-name|clk
+name|sc
+operator|->
+name|clk_id
 argument_list|)
 expr_stmt|;
 block|}
@@ -2606,7 +2594,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"ti,i2c"
+literal|"ti,omap4-i2c"
 argument_list|)
 condition|)
 return|return
@@ -2685,37 +2673,30 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* i2c ti,hwmods bindings is special: it start with index 1 */
+name|sc
+operator|->
+name|clk_id
+operator|=
+name|ti_hwmods_get_clock
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
-operator|(
-name|OF_getencprop
-argument_list|(
-name|node
-argument_list|,
-literal|"i2c-device-id"
-argument_list|,
-operator|&
 name|sc
 operator|->
-name|device_id
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|sc
-operator|->
-name|device_id
-argument_list|)
-argument_list|)
-operator|)
-operator|<=
-literal|0
+name|clk_id
+operator|==
+name|INVALID_CLK_IDENT
 condition|)
 block|{
 name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"missing i2c-device-id attribute in FDT\n"
+literal|"failed to get device id using ti,hwmod\n"
 argument_list|)
 expr_stmt|;
 return|return

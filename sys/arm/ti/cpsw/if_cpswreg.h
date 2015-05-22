@@ -639,6 +639,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPSW_MEMWINDOW_SIZE
+value|0x4000
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPDMA_BD_SOP
 value|(1<<15)
 end_define

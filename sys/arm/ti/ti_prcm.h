@@ -23,6 +23,10 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|INVALID_CLK_IDENT
+init|=
+literal|0
+block|,
 comment|/* System clocks, typically you can only call ti_prcm_clk_get_source_freq() 	 * on these clocks as they are enabled by default. 	 */
 name|SYS_CLK
 init|=
@@ -34,11 +38,9 @@ init|=
 literal|20
 block|,
 comment|/* MMC modules */
-name|MMC0_CLK
+name|MMC1_CLK
 init|=
 literal|100
-block|,
-name|MMC1_CLK
 block|,
 name|MMC2_CLK
 block|,
@@ -48,18 +50,20 @@ name|MMC4_CLK
 block|,
 name|MMC5_CLK
 block|,
+name|MMC6_CLK
+block|,
 comment|/* I2C modules */
-name|I2C0_CLK
+name|I2C1_CLK
 init|=
 literal|200
-block|,
-name|I2C1_CLK
 block|,
 name|I2C2_CLK
 block|,
 name|I2C3_CLK
 block|,
 name|I2C4_CLK
+block|,
+name|I2C5_CLK
 block|,
 comment|/* USB module(s) */
 name|USBTLL_CLK
@@ -83,11 +87,9 @@ block|,
 name|USBP2_HSIC_CLK
 block|,
 comment|/* UART modules */
-name|UART0_CLK
+name|UART1_CLK
 init|=
 literal|400
-block|,
-name|UART1_CLK
 block|,
 name|UART2_CLK
 block|,
@@ -103,32 +105,34 @@ name|UART7_CLK
 block|,
 name|UART8_CLK
 block|,
+name|UART9_CLK
+block|,
 comment|/* General purpose timer modules */
-name|GPTIMER1_CLK
+name|TIMER1_CLK
 init|=
 literal|500
 block|,
-name|GPTIMER2_CLK
+name|TIMER2_CLK
 block|,
-name|GPTIMER3_CLK
+name|TIMER3_CLK
 block|,
-name|GPTIMER4_CLK
+name|TIMER4_CLK
 block|,
-name|GPTIMER5_CLK
+name|TIMER5_CLK
 block|,
-name|GPTIMER6_CLK
+name|TIMER6_CLK
 block|,
-name|GPTIMER7_CLK
+name|TIMER7_CLK
 block|,
-name|GPTIMER8_CLK
+name|TIMER8_CLK
 block|,
-name|GPTIMER9_CLK
+name|TIMER9_CLK
 block|,
-name|GPTIMER10_CLK
+name|TIMER10_CLK
 block|,
-name|GPTIMER11_CLK
+name|TIMER11_CLK
 block|,
-name|GPTIMER12_CLK
+name|TIMER12_CLK
 block|,
 comment|/* McBSP module(s) */
 name|MCBSP1_CLK
@@ -144,11 +148,9 @@ block|,
 name|MCBSP5_CLK
 block|,
 comment|/* General purpose I/O modules */
-name|GPIO0_CLK
+name|GPIO1_CLK
 init|=
 literal|700
-block|,
-name|GPIO1_CLK
 block|,
 name|GPIO2_CLK
 block|,
@@ -160,29 +162,12 @@ name|GPIO5_CLK
 block|,
 name|GPIO6_CLK
 block|,
+name|GPIO7_CLK
+block|,
 comment|/* sDMA module */
 name|SDMA_CLK
 init|=
 literal|800
-block|,
-comment|/* DMTimer modules */
-name|DMTIMER0_CLK
-init|=
-literal|900
-block|,
-name|DMTIMER1_CLK
-block|,
-name|DMTIMER2_CLK
-block|,
-name|DMTIMER3_CLK
-block|,
-name|DMTIMER4_CLK
-block|,
-name|DMTIMER5_CLK
-block|,
-name|DMTIMER6_CLK
-block|,
-name|DMTIMER7_CLK
 block|,
 comment|/* CPSW modules */
 name|CPSW_CLK
@@ -241,9 +226,7 @@ comment|/* RTC module */
 name|RTC_CLK
 init|=
 literal|1900
-block|,
-name|INVALID_CLK_IDENT
-block|}
+block|, }
 name|clk_ident_t
 typedef|;
 end_typedef

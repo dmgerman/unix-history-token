@@ -896,18 +896,10 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|resource_spec
-name|res_spec
+name|irq_res_spec
 index|[]
 init|=
 block|{
-block|{
-name|SYS_RES_MEMORY
-block|,
-literal|0
-block|,
-name|RF_ACTIVE
-block|}
-block|,
 block|{
 name|SYS_RES_IRQ
 block|,
@@ -1427,7 +1419,7 @@ name|sc
 parameter_list|,
 name|reg
 parameter_list|)
-value|bus_read_4(sc->res[0], reg)
+value|bus_read_4(sc->mem_res, reg)
 end_define
 
 begin_define
@@ -1441,7 +1433,7 @@ name|reg
 parameter_list|,
 name|val
 parameter_list|)
-value|bus_write_4(sc->res[0], reg, val)
+value|bus_write_4(sc->mem_res, reg, val)
 end_define
 
 begin_define
@@ -1464,7 +1456,7 @@ parameter_list|,
 name|slot
 parameter_list|)
 define|\
-value|BUS_SPACE_PHYSADDR(sc->res[0], slot->bd_offset)
+value|BUS_SPACE_PHYSADDR(sc->mem_res, slot->bd_offset)
 end_define
 
 begin_define
@@ -1479,7 +1471,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_read_region_4(sc->res[0], slot->bd_offset, (uint32_t *) val, 4)
+value|bus_read_region_4(sc->mem_res, slot->bd_offset, (uint32_t *) val, 4)
 end_define
 
 begin_define
@@ -1494,7 +1486,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_write_region_4(sc->res[0], slot->bd_offset, (uint32_t *) val, 4)
+value|bus_write_region_4(sc->mem_res, slot->bd_offset, (uint32_t *) val, 4)
 end_define
 
 begin_define
@@ -1522,7 +1514,7 @@ parameter_list|,
 name|slot
 parameter_list|)
 define|\
-value|bus_read_2(sc->res[0], slot->bd_offset + 14)
+value|bus_read_2(sc->mem_res, slot->bd_offset + 14)
 end_define
 
 begin_define
@@ -2555,19 +2547,32 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|void
-modifier|*
-name|phy_sc
-decl_stmt|;
 name|int
-name|error
-decl_stmt|,
 name|phy
 decl_stmt|,
 name|nsegs
+decl_stmt|,
+name|error
 decl_stmt|;
 name|uint32_t
 name|reg
+decl_stmt|;
+name|pcell_t
+name|phy_id
+index|[
+literal|3
+index|]
+decl_stmt|;
+name|u_long
+name|mem_base
+decl_stmt|,
+name|mem_size
+decl_stmt|;
+name|phandle_t
+name|child
+decl_stmt|;
+name|int
+name|len
 decl_stmt|;
 name|CPSW_DEBUGF
 argument_list|(
@@ -2599,27 +2604,85 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* Get phy address from fdt */
-if|if
-condition|(
-name|fdt_get_phyaddr
+comment|/* TODO: handle multiple slaves */
+name|phy
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Find any slave with phy_id */
+for|for
+control|(
+name|child
+operator|=
+name|OF_child
 argument_list|(
 name|sc
 operator|->
 name|node
-argument_list|,
-name|sc
-operator|->
-name|dev
-argument_list|,
-operator|&
-name|phy
-argument_list|,
-operator|&
-name|phy_sc
 argument_list|)
+init|;
+name|child
 operator|!=
 literal|0
+condition|;
+name|child
+operator|=
+name|OF_peer
+argument_list|(
+name|child
+argument_list|)
+control|)
+block|{
+name|len
+operator|=
+name|OF_getproplen
+argument_list|(
+name|child
+argument_list|,
+literal|"phy_id"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<=
+literal|0
+condition|)
+continue|continue;
+comment|/* Get phy address from fdt */
+if|if
+condition|(
+name|OF_getencprop
+argument_list|(
+name|child
+argument_list|,
+literal|"phy_id"
+argument_list|,
+name|phy_id
+argument_list|,
+name|len
+argument_list|)
+operator|<=
+literal|0
+condition|)
+continue|continue;
+name|phy
+operator|=
+name|phy_id
+index|[
+literal|1
+index|]
+expr_stmt|;
+comment|/* TODO: get memory window for MDIO */
+break|break;
+block|}
+if|if
+condition|(
+name|phy
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|device_printf
@@ -2627,6 +2690,47 @@ argument_list|(
 name|dev
 argument_list|,
 literal|"failed to get PHY address from FDT\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+name|mem_base
+operator|=
+literal|0
+expr_stmt|;
+name|mem_size
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|fdt_regsize
+argument_list|(
+name|sc
+operator|->
+name|node
+argument_list|,
+operator|&
+name|mem_base
+argument_list|,
+operator|&
+name|mem_size
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"no regs property in cpsw node\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2674,18 +2778,18 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* Allocate IO and IRQ resources */
+comment|/* Allocate IRQ resources */
 name|error
 operator|=
 name|bus_alloc_resources
 argument_list|(
 name|dev
 argument_list|,
-name|res_spec
+name|irq_res_spec
 argument_list|,
 name|sc
 operator|->
-name|res
+name|irq_res
 argument_list|)
 expr_stmt|;
 if|if
@@ -2697,7 +2801,70 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"could not allocate resources\n"
+literal|"could not allocate IRQ resources\n"
+argument_list|)
+expr_stmt|;
+name|cpsw_detach
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
+name|sc
+operator|->
+name|mem_rid
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|mem_res
+operator|=
+name|bus_alloc_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|mem_rid
+argument_list|,
+name|mem_base
+argument_list|,
+name|mem_base
+operator|+
+name|CPSW_MEMWINDOW_SIZE
+operator|-
+literal|1
+argument_list|,
+name|CPSW_MEMWINDOW_SIZE
+argument_list|,
+name|RF_ACTIVE
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mem_res
+operator|==
+name|NULL
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|,
+literal|"failed to allocate memory resource\n"
 argument_list|)
 expr_stmt|;
 name|cpsw_detach
@@ -3426,9 +3593,9 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|res
+name|irq_res
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 name|cpsw_intr_rx_thresh
@@ -3442,9 +3609,9 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|res
+name|irq_res
 index|[
-literal|2
+literal|1
 index|]
 argument_list|,
 name|cpsw_intr_rx
@@ -3458,9 +3625,9 @@ name|sc
 argument_list|,
 name|sc
 operator|->
-name|res
+name|irq_res
 index|[
-literal|4
+literal|3
 index|]
 argument_list|,
 name|cpsw_intr_misc
@@ -3798,15 +3965,30 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Free IO memory handler */
+name|bus_release_resource
+argument_list|(
+name|dev
+argument_list|,
+name|SYS_RES_MEMORY
+argument_list|,
+name|sc
+operator|->
+name|mem_rid
+argument_list|,
+name|sc
+operator|->
+name|mem_res
+argument_list|)
+expr_stmt|;
 name|bus_release_resources
 argument_list|(
 name|dev
 argument_list|,
-name|res_spec
+name|irq_res_spec
 argument_list|,
 name|sc
 operator|->
-name|res
+name|irq_res
 argument_list|)
 expr_stmt|;
 if|if
