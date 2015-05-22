@@ -1931,7 +1931,7 @@ name|ha
 operator|->
 name|tx_callout
 argument_list|,
-name|TRUE
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* create ioctl device interface */

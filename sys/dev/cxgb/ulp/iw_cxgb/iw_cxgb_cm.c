@@ -812,7 +812,7 @@ name|ep
 operator|->
 name|timer
 argument_list|,
-name|TRUE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -7175,7 +7175,7 @@ name|ep
 operator|->
 name|timer
 argument_list|,
-name|TRUE
+literal|1
 argument_list|)
 expr_stmt|;
 name|ep
@@ -8935,7 +8935,7 @@ name|child_ep
 operator|->
 name|timer
 argument_list|,
-name|TRUE
+literal|1
 argument_list|)
 expr_stmt|;
 name|state_set

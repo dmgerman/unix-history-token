@@ -2627,7 +2627,7 @@ name|sc
 operator|->
 name|susp_force_to
 argument_list|,
-name|TRUE
+literal|1
 argument_list|)
 expr_stmt|;
 name|error

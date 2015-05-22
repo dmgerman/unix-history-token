@@ -1339,7 +1339,7 @@ name|prof
 operator|->
 name|prof_cyclic
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2654,7 +2654,7 @@ name|pcpu
 operator|->
 name|profc_cyclic
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset_sbt_on

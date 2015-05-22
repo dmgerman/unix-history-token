@@ -6251,7 +6251,7 @@ name|rxq
 operator|->
 name|refill_callout
 argument_list|,
-name|B_TRUE
+literal|1
 argument_list|)
 expr_stmt|;
 name|rxq
