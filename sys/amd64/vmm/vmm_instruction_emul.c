@@ -9973,42 +9973,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Verify that all the bytes in the instruction buffer were consumed.  */
-end_comment
-
-begin_function
-specifier|static
-name|int
-name|verify_inst_length
-parameter_list|(
-name|struct
-name|vie
-modifier|*
-name|vie
-parameter_list|)
-block|{
-if|if
-condition|(
-name|vie
-operator|->
-name|num_processed
-condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|else
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Verify that the 'guest linear address' provided as collateral of the nested  * page table fault matches with our instruction decoding.  */
 end_comment
 
@@ -10361,19 +10325,6 @@ return|;
 if|if
 condition|(
 name|decode_moffset
-argument_list|(
-name|vie
-argument_list|)
-condition|)
-return|return
-operator|(
-operator|-
-literal|1
-operator|)
-return|;
-if|if
-condition|(
-name|verify_inst_length
 argument_list|(
 name|vie
 argument_list|)
