@@ -255,7 +255,7 @@ name|db_stack_trace_all
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|, }
 decl_stmt|;
@@ -299,7 +299,7 @@ name|db_show_regs
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -309,7 +309,7 @@ name|db_listbreak_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -319,7 +319,7 @@ name|db_show_threads
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|, }
 decl_stmt|;
@@ -352,7 +352,7 @@ name|db_print_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -362,7 +362,7 @@ name|db_print_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -372,7 +372,7 @@ name|db_examine_cmd
 block|,
 name|CS_SET_DOT
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -382,7 +382,7 @@ name|db_examine_cmd
 block|,
 name|CS_SET_DOT
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -394,7 +394,7 @@ name|CS_OWN
 operator||
 name|CS_SET_DOT
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -404,7 +404,7 @@ name|db_set_cmd
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -416,7 +416,7 @@ name|CS_MORE
 operator||
 name|CS_SET_DOT
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -428,7 +428,7 @@ name|CS_MORE
 operator||
 name|CS_SET_DOT
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -438,7 +438,7 @@ name|db_delete_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -448,7 +448,7 @@ name|db_delete_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -458,7 +458,7 @@ name|db_dump
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -468,7 +468,7 @@ name|db_breakpoint_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -478,7 +478,7 @@ name|db_breakpoint_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -488,7 +488,7 @@ name|db_deletewatch_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -498,7 +498,7 @@ name|db_watchpoint_cmd
 block|,
 name|CS_MORE
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -508,7 +508,7 @@ name|db_deletehwatch_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -518,7 +518,7 @@ name|db_hwatchpoint_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -528,7 +528,7 @@ name|db_single_step_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -538,7 +538,7 @@ name|db_single_step_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -548,7 +548,7 @@ name|db_continue_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -558,7 +558,7 @@ name|db_continue_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -568,7 +568,7 @@ name|db_trace_until_call_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -578,7 +578,7 @@ name|db_trace_until_matching_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -588,7 +588,7 @@ name|db_trace_until_matching_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -598,7 +598,7 @@ name|db_stack_trace
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -608,7 +608,7 @@ name|db_stack_trace
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 comment|/* XXX alias for all trace */
@@ -619,7 +619,7 @@ name|db_stack_trace_all
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -629,7 +629,7 @@ name|db_stack_trace
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -639,7 +639,7 @@ name|db_stack_trace
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -649,7 +649,7 @@ name|db_fncall
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -670,7 +670,7 @@ name|db_ps
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -680,7 +680,7 @@ name|db_gdb
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -690,7 +690,7 @@ name|db_halt
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -700,7 +700,7 @@ name|db_reset
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -710,7 +710,7 @@ name|db_reset
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -720,7 +720,7 @@ name|db_kill
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -730,7 +730,7 @@ name|db_watchdog
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -740,7 +740,7 @@ name|db_set_thread
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -750,7 +750,7 @@ name|db_run_cmd
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -760,7 +760,7 @@ name|db_script_cmd
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -770,7 +770,7 @@ name|db_scripts_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -780,7 +780,7 @@ name|db_unscript_cmd
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -790,7 +790,7 @@ name|db_capture_cmd
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -800,7 +800,7 @@ name|db_textdump_cmd
 block|,
 name|CS_OWN
 block|,
-literal|0
+name|NULL
 block|}
 block|,
 block|{
@@ -810,7 +810,7 @@ name|db_findstack_cmd
 block|,
 literal|0
 block|,
-literal|0
+name|NULL
 block|}
 block|, }
 decl_stmt|;
