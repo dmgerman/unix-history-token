@@ -5076,7 +5076,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|AT_EHDREFLAGS
+name|AT_EHDRFLAGS
 name|AUXARGS_ENTRY
 argument_list|(
 name|pos
