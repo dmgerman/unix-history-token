@@ -425,77 +425,6 @@ name|HV_HYPERCALL_PARAM_ALIGN
 value|sizeof(uint64_t)
 end_define
 
-begin_comment
-comment|/*  *  Connection identifier type  */
-end_comment
-
-begin_typedef
-typedef|typedef
-union|union
-block|{
-name|uint32_t
-name|as_uint32_t
-decl_stmt|;
-struct|struct
-block|{
-name|uint32_t
-name|id
-range|:
-literal|24
-decl_stmt|;
-name|uint32_t
-name|reserved
-range|:
-literal|8
-decl_stmt|;
-block|}
-name|u
-struct|;
-block|}
-name|__packed
-name|hv_vmbus_connection_id
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * Definition of the hv_vmbus_signal_event hypercall input structure  */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|hv_vmbus_connection_id
-name|connection_id
-decl_stmt|;
-name|uint16_t
-name|flag_number
-decl_stmt|;
-name|uint16_t
-name|rsvd_z
-decl_stmt|;
-block|}
-name|__packed
-name|hv_vmbus_input_signal_event
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|uint64_t
-name|align8
-decl_stmt|;
-name|hv_vmbus_input_signal_event
-name|event
-decl_stmt|;
-block|}
-name|__packed
-name|hv_vmbus_input_signal_event_buffer
-typedef|;
-end_typedef
-
 begin_typedef
 typedef|typedef
 struct|struct
@@ -510,16 +439,6 @@ decl_stmt|;
 name|hv_bool_uint8_t
 name|syn_ic_initialized
 decl_stmt|;
-comment|/* 	 * This is used as an input param to HV_CALL_SIGNAL_EVENT hypercall. 	 * The input param is immutable  in our usage and 	 * must be dynamic mem (vs stack or global). 	 */
-name|hv_vmbus_input_signal_event_buffer
-modifier|*
-name|signal_event_buffer
-decl_stmt|;
-comment|/* 	 * 8-bytes aligned of the buffer above 	 */
-name|hv_vmbus_input_signal_event
-modifier|*
-name|signal_event_param
-decl_stmt|;
 name|hv_vmbus_handle
 name|syn_ic_msg_page
 index|[
@@ -531,6 +450,49 @@ name|syn_ic_event_page
 index|[
 name|MAXCPU
 index|]
+decl_stmt|;
+comment|/* 	 * For FreeBSD cpuid to Hyper-V vcpuid mapping. 	 */
+name|uint32_t
+name|hv_vcpu_index
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+comment|/* 	 * Each cpu has its own software interrupt handler for channel 	 * event and msg handling. 	 */
+name|struct
+name|intr_event
+modifier|*
+name|hv_event_intr_event
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+name|struct
+name|intr_event
+modifier|*
+name|hv_msg_intr_event
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+name|void
+modifier|*
+name|event_swintr
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+name|void
+modifier|*
+name|msg_swintr
+index|[
+name|MAXCPU
+index|]
+decl_stmt|;
+comment|/* 	 * Host use this vector to intrrupt guest for vmbus channel 	 * event and msg. 	 */
+name|unsigned
+name|int
+name|hv_cb_vector
 decl_stmt|;
 block|}
 name|hv_vmbus_context
@@ -834,7 +796,7 @@ name|struct
 name|mtx
 name|channel_msg_lock
 decl_stmt|;
-comment|/** 	 * List of channels 	 */
+comment|/** 	 * List of primary channels. Sub channels will be linked 	 * under their primary channel. 	 */
 name|TAILQ_HEAD
 argument_list|(
 argument_list|,
@@ -1347,6 +1309,17 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* MSR used to provide vcpu index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HV_X64_MSR_VP_INDEX
+value|(0x40000002)
+end_define
+
+begin_comment
 comment|/*  * Define synthetic interrupt controller model specific registers  */
 end_comment
 
@@ -1582,6 +1555,10 @@ index|[]
 parameter_list|,
 name|uint32_t
 name|sg_buff_count
+parameter_list|,
+name|boolean_t
+modifier|*
+name|need_sig
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1647,6 +1624,28 @@ parameter_list|,
 name|char
 modifier|*
 name|prefix
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|hv_ring_buffer_read_begin
+parameter_list|(
+name|hv_vmbus_ring_buffer_info
+modifier|*
+name|ring_info
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|hv_ring_buffer_read_end
+parameter_list|(
+name|hv_vmbus_ring_buffer_info
+modifier|*
+name|ring_info
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1744,6 +1743,8 @@ name|uint16_t
 name|hv_vmbus_signal_event
 parameter_list|(
 name|void
+modifier|*
+name|con_id
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1873,8 +1874,9 @@ begin_function_decl
 name|int
 name|hv_vmbus_set_event
 parameter_list|(
-name|uint32_t
-name|child_rel_id
+name|hv_vmbus_channel
+modifier|*
+name|channel
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1997,6 +1999,8 @@ modifier|*
 name|page_buffers
 index|[
 literal|2
+operator|*
+name|MAXCPU
 index|]
 decl_stmt|;
 block|}
