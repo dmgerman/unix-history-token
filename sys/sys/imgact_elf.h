@@ -79,6 +79,10 @@ decl_stmt|;
 name|Elf_Size
 name|entry
 decl_stmt|;
+name|Elf_Word
+name|hdr_eflags
+decl_stmt|;
+comment|/* e_flags field from ehdr */
 block|}
 name|__ElfN
 typedef|(
