@@ -5598,8 +5598,6 @@ decl_stmt|,
 name|error
 decl_stmt|,
 name|fault
-decl_stmt|,
-name|length
 decl_stmt|;
 name|vcpu
 operator|=
@@ -5617,6 +5615,25 @@ operator|&
 name|vcpu
 operator|->
 name|exitinfo
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|vme
+operator|->
+name|inst_length
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: invalid inst_length %d"
+operator|,
+name|__func__
+operator|,
+name|vme
+operator|->
+name|inst_length
+operator|)
+argument_list|)
 expr_stmt|;
 name|gla
 operator|=
@@ -5707,19 +5724,6 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * If the instruction length is not known then assume a 		 * maximum size instruction. 		 */
-name|length
-operator|=
-name|vme
-operator|->
-name|inst_length
-condition|?
-name|vme
-operator|->
-name|inst_length
-else|:
-name|VIE_INST_SIZE
-expr_stmt|;
 name|error
 operator|=
 name|vmm_fetch_instruction
@@ -5736,7 +5740,7 @@ name|rip
 operator|+
 name|cs_base
 argument_list|,
-name|length
+name|VIE_INST_SIZE
 argument_list|,
 name|vie
 argument_list|,
@@ -5813,16 +5817,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * If the instruction length was not specified then update it now 	 * along with 'nextrip'. 	 */
-if|if
-condition|(
-name|vme
-operator|->
-name|inst_length
-operator|==
-literal|0
-condition|)
-block|{
+comment|/* 	 * Update 'nextrip' based on the length of the emulated instruction. 	 */
 name|vme
 operator|->
 name|inst_length
@@ -5839,7 +5834,20 @@ name|vie
 operator|->
 name|num_processed
 expr_stmt|;
-block|}
+name|VCPU_CTR1
+argument_list|(
+name|vm
+argument_list|,
+name|vcpuid
+argument_list|,
+literal|"nextrip updated to %#lx after instruction "
+literal|"decoding"
+argument_list|,
+name|vcpu
+operator|->
+name|nextrip
+argument_list|)
+expr_stmt|;
 comment|/* return to userland unless this is an in-kernel emulated device */
 if|if
 condition|(
