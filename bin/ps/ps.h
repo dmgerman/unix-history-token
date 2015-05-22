@@ -180,6 +180,12 @@ modifier|*
 name|alias
 decl_stmt|;
 comment|/* aliases */
+specifier|const
+name|char
+modifier|*
+name|field
+decl_stmt|;
+comment|/* xo field name */
 define|#
 directive|define
 name|COMM
