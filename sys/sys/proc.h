@@ -5797,23 +5797,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|thread_unsuspend_one
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|thread_wait
 parameter_list|(
