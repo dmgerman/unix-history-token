@@ -3289,11 +3289,6 @@ argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 comment|/* 	 * If we got the child via a ptrace 'attach', we need to give it back 	 * to the old parent. 	 */
 if|if
 condition|(
@@ -3302,8 +3297,23 @@ operator|->
 name|p_oppid
 operator|!=
 literal|0
+operator|&&
+name|p
+operator|->
+name|p_oppid
+operator|!=
+name|p
+operator|->
+name|p_pptr
+operator|->
+name|p_pid
 condition|)
 block|{
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|t
 operator|=
 name|proc_realparent
@@ -3376,6 +3386,17 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|p
+operator|->
+name|p_oppid
+operator|=
+literal|0
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Remove other references to this process to ensure we have an 	 * exclusive reference. 	 */
 name|sx_xlock
 argument_list|(
