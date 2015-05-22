@@ -883,7 +883,7 @@ literal|1
 operator|<<
 name|PFID_CPUBITS
 operator|)
-operator|>
+operator|>=
 name|MAXCPU
 argument_list|)
 expr_stmt|;
