@@ -580,6 +580,16 @@ argument_list|(
 name|best_cn
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EARLY_PRINTF
+comment|/* 	 * Release early console. 	 */
+name|early_putc
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
