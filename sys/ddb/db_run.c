@@ -250,11 +250,9 @@ modifier|*
 name|is_breakpoint
 parameter_list|)
 block|{
-specifier|register
 name|db_addr_t
 name|pc
 decl_stmt|;
-specifier|register
 name|db_breakpoint_t
 name|bkpt
 decl_stmt|;
@@ -532,7 +530,6 @@ name|ins
 argument_list|)
 condition|)
 block|{
-specifier|register
 name|int
 name|i
 decl_stmt|;
@@ -664,7 +661,6 @@ name|bool
 name|watchpt
 parameter_list|)
 block|{
-specifier|register
 name|db_addr_t
 name|pc
 init|=

@@ -1556,7 +1556,6 @@ modifier|*
 name|table
 parameter_list|)
 block|{
-specifier|register
 name|struct
 name|command
 modifier|*

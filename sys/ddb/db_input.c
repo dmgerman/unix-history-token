@@ -326,7 +326,6 @@ name|int
 name|bwd
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1056,7 +1055,6 @@ operator|<=
 literal|'~'
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1326,7 +1324,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;

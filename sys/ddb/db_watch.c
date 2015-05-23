@@ -236,7 +236,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|db_watchpoint_t
 name|watch
 decl_stmt|;
@@ -337,7 +336,6 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-specifier|register
 name|db_watchpoint_t
 name|watch
 decl_stmt|;
@@ -477,11 +475,9 @@ name|db_addr_t
 name|addr
 parameter_list|)
 block|{
-specifier|register
 name|db_watchpoint_t
 name|watch
 decl_stmt|;
-specifier|register
 name|db_watchpoint_t
 modifier|*
 name|prev
@@ -567,7 +563,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|db_watchpoint_t
 name|watch
 decl_stmt|;
@@ -646,13 +641,13 @@ argument|void db_watchpoint_cmd(db_expr_t addr, bool have_addr, db_expr_t count,
 literal|4
 argument|; 	db_skip_to_eol();  	db_set_watchpoint(db_map_addr(addr), addr, size); }
 comment|/*  * At least one non-optional show-command must be implemented using  * DB_SHOW_COMMAND() so that db_show_cmd_set gets created.  Here is one.  */
-argument|DB_SHOW_COMMAND(watches, db_listwatch_cmd) { 	db_list_watchpoints(); 	db_md_list_watchpoints(); }  void db_set_watchpoints(void) { 	register db_watchpoint_t	watch;  	if (!db_watchpoints_inserted) { 	    for (watch = db_watchpoint_list; 	         watch !=
+argument|DB_SHOW_COMMAND(watches, db_listwatch_cmd) { 	db_list_watchpoints(); 	db_md_list_watchpoints(); }  void db_set_watchpoints(void) { 	db_watchpoint_t	watch;  	if (!db_watchpoints_inserted) { 	    for (watch = db_watchpoint_list; 	         watch !=
 literal|0
 argument|; 	         watch = watch->link) 		pmap_protect(watch->map->pmap, 			     trunc_page(watch->loaddr), 			     round_page(watch->hiaddr), 			     VM_PROT_READ);  	    db_watchpoints_inserted = true; 	} }  void db_clear_watchpoints(void) { 	db_watchpoints_inserted = false; }
 ifdef|#
 directive|ifdef
 name|notused
-argument|static bool db_find_watchpoint(vm_map_t map, db_addr_t addr, db_regs_t regs) { 	register db_watchpoint_t watch; 	db_watchpoint_t found =
+argument|static bool db_find_watchpoint(vm_map_t map, db_addr_t addr, db_regs_t regs) { 	db_watchpoint_t watch; 	db_watchpoint_t found =
 literal|0
 argument|;  	for (watch = db_watchpoint_list; 	     watch !=
 literal|0
