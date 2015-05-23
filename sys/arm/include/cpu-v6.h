@@ -46,6 +46,28 @@ name|CPU_ASID_KERNEL
 value|0
 end_define
 
+begin_function_decl
+name|vm_offset_t
+name|dcache_wb_pou_checked
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|vm_offset_t
+name|icache_inv_pou_checked
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Macros to generate CP15 (system control processor) read/write functions.  */
 end_comment
@@ -1551,7 +1573,9 @@ name|eva
 condition|;
 name|va
 operator|+=
-name|arm_dcache_align
+name|cpuinfo
+operator|.
+name|dcache_line_size
 control|)
 block|{
 if|#
@@ -1648,6 +1672,46 @@ block|}
 end_function
 
 begin_comment
+comment|/* Invalidate branch predictor buffer */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|bpb_inv_all
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|7
+operator|&&
+name|defined
+name|SMP
+name|_CP15_BPIALLIS
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
+name|_CP15_BPIALL
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+name|dsb
+argument_list|()
+expr_stmt|;
+name|isb
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/* Write back D-cache to PoU */
 end_comment
 
@@ -1689,7 +1753,9 @@ name|eva
 condition|;
 name|va
 operator|+=
-name|arm_dcache_align
+name|cpuinfo
+operator|.
+name|dcache_line_size
 control|)
 block|{
 if|#
@@ -1764,7 +1830,9 @@ name|eva
 condition|;
 name|va
 operator|+=
-name|arm_dcache_align
+name|cpuinfo
+operator|.
+name|dcache_line_size
 control|)
 block|{
 name|_CP15_DCIMVAC
@@ -1800,7 +1868,9 @@ name|eva
 condition|;
 name|va
 operator|+=
-name|arm_dcache_align
+name|cpuinfo
+operator|.
+name|dcache_line_size
 control|)
 block|{
 name|_CP15_DCIMVAC
@@ -1860,7 +1930,9 @@ name|eva
 condition|;
 name|va
 operator|+=
-name|arm_dcache_align
+name|cpuinfo
+operator|.
+name|dcache_line_size
 control|)
 block|{
 name|_CP15_DCCMVAC
@@ -1928,7 +2000,9 @@ name|eva
 condition|;
 name|va
 operator|+=
-name|arm_dcache_align
+name|cpuinfo
+operator|.
+name|dcache_line_size
 control|)
 block|{
 name|_CP15_DCCMVAC
@@ -1961,7 +2035,9 @@ name|eva
 condition|;
 name|va
 operator|+=
-name|arm_dcache_align
+name|cpuinfo
+operator|.
+name|dcache_line_size
 control|)
 block|{
 name|_CP15_DCIMVAC
