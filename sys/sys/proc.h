@@ -3239,7 +3239,7 @@ value|0x2000000
 end_define
 
 begin_comment
-comment|/* Stopped in proc_stop_total. */
+comment|/* Stopped in stop_all_proc. */
 end_comment
 
 begin_define
