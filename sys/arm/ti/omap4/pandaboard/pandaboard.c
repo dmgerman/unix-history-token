@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/ti/omap4/omap4var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/ti/omap4/omap4_reg.h>
 end_include
 
