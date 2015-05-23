@@ -2005,7 +2005,7 @@ block|{
 name|uint64_t
 name|ret
 decl_stmt|;
-comment|/* 	 * The only way to atomically load 64 bits is with LDREXD which puts the 	 * exclusive monitor into the open state, so reset it with CLREX because 	 * we don't actually need to store anything. 	 */
+comment|/* 	 * The only way to atomically load 64 bits is with LDREXD which puts the 	 * exclusive monitor into the exclusive state, so reset it to open state 	 * with CLREX because we don't actually need to store anything. 	 */
 asm|__asm __volatile(
 literal|"1:          \n"
 literal|"   ldrexd   %[ret], [%[ptr]]\n"
