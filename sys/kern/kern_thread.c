@@ -3397,28 +3397,9 @@ operator|(
 name|ERESTART
 operator|)
 return|;
-comment|/* 		 * Ignore suspend requests for stop signals if they 		 * are deferred. 		 */
+comment|/* 		 * Ignore suspend requests if they are deferred. 		 */
 if|if
 condition|(
-operator|(
-name|P_SHOULDSTOP
-argument_list|(
-name|p
-argument_list|)
-operator|==
-name|P_STOPPED_SIG
-operator|||
-operator|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_TOTAL_STOP
-operator|)
-operator|!=
-literal|0
-operator|)
-operator|&&
 operator|(
 name|td
 operator|->
