@@ -2838,7 +2838,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Wake the page daemon when we exhaust KVA.  It will call the lowmem handler  * and uma_reclaim() callbacks in a context that is safe.  */
+comment|/*  * Wake the uma reclamation pagedaemon thread when we exhaust KVA.  It  * will call the lowmem handler and uma_reclaim() callbacks in a  * context that is safe.  */
 end_comment
 
 begin_function
@@ -2854,6 +2854,9 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|uma_reclaim_wakeup
+argument_list|()
+expr_stmt|;
 name|pagedaemon_wakeup
 argument_list|()
 expr_stmt|;
