@@ -215,7 +215,7 @@ operator|(
 name|uintptr_t
 operator|)
 operator|&
-name|uart_s3c2410_class
+name|uart_exynos4210_class
 block|}
 block|,
 block|{
