@@ -150,6 +150,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|FR_TXFF
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* Transmit FIFO/reg full */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|FR_RXFF
 value|(1<< 6)
 end_define
@@ -946,10 +957,9 @@ name|int
 name|c
 parameter_list|)
 block|{
+comment|/* Wait when TX FIFO full. Push character otherwise. */
 while|while
 condition|(
-operator|!
-operator|(
 name|__uart_getreg
 argument_list|(
 name|bas
@@ -957,8 +967,7 @@ argument_list|,
 name|UART_FR
 argument_list|)
 operator|&
-name|FR_TXFE
-operator|)
+name|FR_TXFF
 condition|)
 empty_stmt|;
 name|__uart_setreg
