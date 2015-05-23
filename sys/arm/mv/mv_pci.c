@@ -5895,10 +5895,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+operator|*
 name|irqs
-index|[
-name|i
-index|]
+operator|++
 operator|=
 name|MSI_IRQ
 operator|+
