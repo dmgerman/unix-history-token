@@ -708,9 +708,22 @@ comment|/* Spin until the BSP releases the APs */
 while|while
 condition|(
 operator|!
+name|atomic_load_acq_int
+argument_list|(
+operator|&
 name|aps_ready
+argument_list|)
 condition|)
-empty_stmt|;
+block|{
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|7
+asm|__asm __volatile("wfe");
+endif|#
+directive|endif
+block|}
 comment|/* Initialize curthread */
 name|KASSERT
 argument_list|(
@@ -1252,6 +1265,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Wake the other threads up */
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|7
+name|armv7_sev
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"Release APs\n"
