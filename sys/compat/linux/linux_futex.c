@@ -5336,13 +5336,41 @@ case|case
 name|LINUX_FUTEX_LOCK_PI
 case|:
 comment|/* not yet implemented */
+name|pem
+operator|=
+name|pem_find
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pem
+operator|->
+name|flags
+operator|&
+name|LINUX_XUNSUP_FUTEXPIOP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|linux_msg
 argument_list|(
 name|td
 argument_list|,
 literal|"linux_sys_futex: "
-literal|"op LINUX_FUTEX_LOCK_PI not implemented\n"
+literal|"unsupported futex_pi op\n"
 argument_list|)
+expr_stmt|;
+name|pem
+operator|->
+name|flags
+operator||=
+name|LINUX_XUNSUP_FUTEXPIOP
 expr_stmt|;
 name|LIN_SDT_PROBE0
 argument_list|(
@@ -5353,6 +5381,7 @@ argument_list|,
 name|unimplemented_lock_pi
 argument_list|)
 expr_stmt|;
+block|}
 name|LIN_SDT_PROBE1
 argument_list|(
 argument|futex
@@ -5373,13 +5402,41 @@ case|case
 name|LINUX_FUTEX_UNLOCK_PI
 case|:
 comment|/* not yet implemented */
+name|pem
+operator|=
+name|pem_find
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pem
+operator|->
+name|flags
+operator|&
+name|LINUX_XUNSUP_FUTEXPIOP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|linux_msg
 argument_list|(
 name|td
 argument_list|,
 literal|"linux_sys_futex: "
-literal|"op LINUX_FUTEX_UNLOCK_PI not implemented\n"
+literal|"unsupported futex_pi op\n"
 argument_list|)
+expr_stmt|;
+name|pem
+operator|->
+name|flags
+operator||=
+name|LINUX_XUNSUP_FUTEXPIOP
 expr_stmt|;
 name|LIN_SDT_PROBE0
 argument_list|(
@@ -5390,6 +5447,7 @@ argument_list|,
 name|unimplemented_unlock_pi
 argument_list|)
 expr_stmt|;
+block|}
 name|LIN_SDT_PROBE1
 argument_list|(
 argument|futex
@@ -5410,13 +5468,41 @@ case|case
 name|LINUX_FUTEX_TRYLOCK_PI
 case|:
 comment|/* not yet implemented */
+name|pem
+operator|=
+name|pem_find
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pem
+operator|->
+name|flags
+operator|&
+name|LINUX_XUNSUP_FUTEXPIOP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|linux_msg
 argument_list|(
 name|td
 argument_list|,
 literal|"linux_sys_futex: "
-literal|"op LINUX_FUTEX_TRYLOCK_PI not implemented\n"
+literal|"unsupported futex_pi op\n"
 argument_list|)
+expr_stmt|;
+name|pem
+operator|->
+name|flags
+operator||=
+name|LINUX_XUNSUP_FUTEXPIOP
 expr_stmt|;
 name|LIN_SDT_PROBE0
 argument_list|(
@@ -5427,6 +5513,7 @@ argument_list|,
 name|unimplemented_trylock_pi
 argument_list|)
 expr_stmt|;
+block|}
 name|LIN_SDT_PROBE1
 argument_list|(
 argument|futex
@@ -5513,13 +5600,41 @@ case|case
 name|LINUX_FUTEX_WAIT_REQUEUE_PI
 case|:
 comment|/* not yet implemented */
+name|pem
+operator|=
+name|pem_find
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pem
+operator|->
+name|flags
+operator|&
+name|LINUX_XUNSUP_FUTEXPIOP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|linux_msg
 argument_list|(
 name|td
 argument_list|,
 literal|"linux_sys_futex: "
-literal|"op FUTEX_WAIT_REQUEUE_PI not implemented\n"
+literal|"unsupported futex_pi op\n"
 argument_list|)
+expr_stmt|;
+name|pem
+operator|->
+name|flags
+operator||=
+name|LINUX_XUNSUP_FUTEXPIOP
 expr_stmt|;
 name|LIN_SDT_PROBE0
 argument_list|(
@@ -5530,6 +5645,7 @@ argument_list|,
 name|unimplemented_wait_requeue_pi
 argument_list|)
 expr_stmt|;
+block|}
 name|LIN_SDT_PROBE1
 argument_list|(
 argument|futex
@@ -5550,13 +5666,41 @@ case|case
 name|LINUX_FUTEX_CMP_REQUEUE_PI
 case|:
 comment|/* not yet implemented */
+name|pem
+operator|=
+name|pem_find
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|pem
+operator|->
+name|flags
+operator|&
+name|LINUX_XUNSUP_FUTEXPIOP
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|linux_msg
 argument_list|(
 name|td
 argument_list|,
 literal|"linux_sys_futex: "
-literal|"op LINUX_FUTEX_CMP_REQUEUE_PI not implemented\n"
+literal|"unsupported futex_pi op\n"
 argument_list|)
+expr_stmt|;
+name|pem
+operator|->
+name|flags
+operator||=
+name|LINUX_XUNSUP_FUTEXPIOP
 expr_stmt|;
 name|LIN_SDT_PROBE0
 argument_list|(
@@ -5567,6 +5711,7 @@ argument_list|,
 name|unimplemented_cmp_requeue_pi
 argument_list|)
 expr_stmt|;
+block|}
 name|LIN_SDT_PROBE1
 argument_list|(
 argument|futex
