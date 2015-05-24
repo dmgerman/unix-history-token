@@ -10502,7 +10502,7 @@ name|req
 operator|.
 name|bmRequestType
 operator|=
-name|UT_WRITE_VENDOR_DEVICE
+name|UT_READ_VENDOR_DEVICE
 expr_stmt|;
 name|req
 operator|.
@@ -10710,7 +10710,7 @@ name|req
 operator|.
 name|bmRequestType
 operator|=
-name|UT_WRITE_VENDOR_DEVICE
+name|UT_READ_VENDOR_DEVICE
 expr_stmt|;
 name|req
 operator|.
