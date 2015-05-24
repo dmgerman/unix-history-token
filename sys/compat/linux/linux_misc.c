@@ -4955,7 +4955,7 @@ name|ARGS
 argument_list|(
 name|mknod
 argument_list|,
-literal|"%s, %d, %d"
+literal|"%s, %d, %ju"
 argument_list|)
 argument_list|,
 name|path
@@ -4964,6 +4964,9 @@ name|args
 operator|->
 name|mode
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|args
 operator|->
 name|dev
@@ -9007,25 +9010,37 @@ name|ARGS
 argument_list|(
 name|prctl
 argument_list|,
-literal|"%d, %d, %d, %d, %d"
+literal|"%d, %ju, %ju, %ju, %ju"
 argument_list|)
 argument_list|,
 name|args
 operator|->
 name|option
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|args
 operator|->
 name|arg2
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|args
 operator|->
 name|arg3
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|args
 operator|->
 name|arg4
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|args
 operator|->
 name|arg5

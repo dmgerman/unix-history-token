@@ -2645,9 +2645,12 @@ name|ARGS
 argument_list|(
 name|ustat
 argument_list|,
-literal|"%d, *"
+literal|"%ju, *"
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|args
 operator|->
 name|dev
