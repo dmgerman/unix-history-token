@@ -1782,7 +1782,7 @@ name|proc
 modifier|*
 name|p
 decl_stmt|;
-comment|/* 	 * Calculate string base and vector table pointers. 	 * Also deal with signal trampoline code for this exec type. 	 */
+comment|/* 	 * Calculate string base and vector table pointers. 	 */
 name|p
 operator|=
 name|imgp
