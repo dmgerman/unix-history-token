@@ -1415,14 +1415,6 @@ name|p_flag
 operator||=
 name|P_HADTHREADS
 expr_stmt|;
-name|newtd
-operator|->
-name|td_sigmask
-operator|=
-name|td
-operator|->
-name|td_sigmask
-expr_stmt|;
 name|bcopy
 argument_list|(
 name|p
