@@ -11201,7 +11201,7 @@ name|p
 operator|->
 name|mask
 expr_stmt|;
-comment|/* l_osigset_t * */
+comment|/* l_sigset_t * */
 operator|*
 name|n_args
 operator|=
@@ -19664,7 +19664,7 @@ literal|4
 case|:
 name|p
 operator|=
-literal|"l_osigset_t *"
+literal|"l_sigset_t *"
 expr_stmt|;
 break|break;
 default|default:
