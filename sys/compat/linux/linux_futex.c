@@ -206,34 +206,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Linuxulator-global DTrace probes */
-end_comment
-
-begin_expr_stmt
-name|LIN_SDT_PROBE_DECLARE
-argument_list|(
-name|locks
-argument_list|,
-name|emul_lock
-argument_list|,
-name|locked
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|LIN_SDT_PROBE_DECLARE
-argument_list|(
-name|locks
-argument_list|,
-name|emul_lock
-argument_list|,
-name|unlock
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/**  * Futex part for the special DTrace module "locks".  */
 end_comment
 
@@ -1271,7 +1243,7 @@ name|handle_futex_death
 argument_list|,
 name|entry
 argument_list|,
-literal|"struct proc *"
+literal|"struct linux_emuldata *"
 argument_list|,
 literal|"uint32_t *"
 argument_list|,
@@ -1361,7 +1333,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_expr_stmt
-name|LIN_SDT_PROBE_DEFINE1
+name|LIN_SDT_PROBE_DEFINE2
 argument_list|(
 name|futex
 argument_list|,
@@ -1369,7 +1341,9 @@ name|release_futexes
 argument_list|,
 name|entry
 argument_list|,
-literal|"struct proc *"
+literal|"struct thread *"
+argument_list|,
+literal|"struct linux_emuldata *"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5504,10 +5478,6 @@ operator|=
 name|em_find
 argument_list|(
 name|td
-operator|->
-name|td_proc
-argument_list|,
-name|EMUL_DONTLOCK
 argument_list|)
 expr_stmt|;
 if|if
@@ -5775,10 +5745,6 @@ operator|=
 name|em_find
 argument_list|(
 name|td
-operator|->
-name|td_proc
-argument_list|,
-name|EMUL_DOLOCK
 argument_list|)
 expr_stmt|;
 name|em
@@ -5788,12 +5754,6 @@ operator|=
 name|args
 operator|->
 name|head
-expr_stmt|;
-name|EMUL_UNLOCK
-argument_list|(
-operator|&
-name|emul_lock
-argument_list|)
 expr_stmt|;
 name|LIN_SDT_PROBE1
 argument_list|(
@@ -5848,6 +5808,11 @@ expr|struct
 name|linux_robust_list_head
 argument_list|)
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td2
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -5879,10 +5844,17 @@ operator|=
 name|em_find
 argument_list|(
 name|td
-operator|->
-name|td_proc
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|em
+operator|!=
+name|NULL
 argument_list|,
-name|EMUL_DONTLOCK
+operator|(
+literal|"get_robust_list: emuldata notfound.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 name|head
@@ -5894,23 +5866,21 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
-name|p
+name|td2
 operator|=
-name|pfind
+name|tdfind
 argument_list|(
 name|args
 operator|->
 name|pid
+argument_list|,
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|p
+name|td2
 operator|==
 name|NULL
 condition|)
@@ -5936,9 +5906,18 @@ name|em
 operator|=
 name|em_find
 argument_list|(
-name|p
+name|td2
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|em
+operator|!=
+name|NULL
 argument_list|,
-name|EMUL_DONTLOCK
+operator|(
+literal|"get_robust_list: emuldata notfound.\n"
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* XXX: ptrace? */
@@ -5962,13 +5941,17 @@ name|p_candebug
 argument_list|(
 name|td
 argument_list|,
-name|p
+name|td2
+operator|->
+name|td_proc
 argument_list|)
 condition|)
 block|{
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|td2
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|LIN_SDT_PROBE1
@@ -5996,7 +5979,9 @@ name|robust_futexes
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|td2
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 block|}
@@ -6109,9 +6094,9 @@ name|int
 name|handle_futex_death
 parameter_list|(
 name|struct
-name|proc
+name|linux_emuldata
 modifier|*
-name|p
+name|em
 parameter_list|,
 name|uint32_t
 modifier|*
@@ -6145,7 +6130,7 @@ name|handle_futex_death
 argument_list|,
 name|entry
 argument_list|,
-name|p
+name|em
 argument_list|,
 name|uaddr
 argument_list|,
@@ -6207,9 +6192,9 @@ operator|&
 name|FUTEX_TID_MASK
 operator|)
 operator|==
-name|p
+name|em
 operator|->
-name|p_pid
+name|em_tid
 condition|)
 block|{
 name|mval
@@ -6508,9 +6493,14 @@ name|void
 name|release_futexes
 parameter_list|(
 name|struct
-name|proc
+name|thread
 modifier|*
-name|p
+name|td
+parameter_list|,
+name|struct
+name|linux_emuldata
+modifier|*
+name|em
 parameter_list|)
 block|{
 name|struct
@@ -6543,11 +6533,6 @@ name|next_pi
 decl_stmt|,
 name|pip
 decl_stmt|;
-name|struct
-name|linux_emuldata
-modifier|*
-name|em
-decl_stmt|;
 name|l_long
 name|futex_offset
 decl_stmt|;
@@ -6556,7 +6541,7 @@ name|rc
 decl_stmt|,
 name|error
 decl_stmt|;
-name|LIN_SDT_PROBE1
+name|LIN_SDT_PROBE2
 argument_list|(
 name|futex
 argument_list|,
@@ -6564,16 +6549,9 @@ name|release_futexes
 argument_list|,
 name|entry
 argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
-name|em
-operator|=
-name|em_find
-argument_list|(
-name|p
+name|td
 argument_list|,
-name|EMUL_DONTLOCK
+name|em
 argument_list|)
 expr_stmt|;
 name|head
@@ -6748,7 +6726,7 @@ if|if
 condition|(
 name|handle_futex_death
 argument_list|(
-name|p
+name|em
 argument_list|,
 operator|(
 name|uint32_t
@@ -6821,7 +6799,7 @@ name|pending
 condition|)
 name|handle_futex_death
 argument_list|(
-name|p
+name|em
 argument_list|,
 operator|(
 name|uint32_t

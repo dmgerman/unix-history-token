@@ -562,6 +562,13 @@ name|linux_exec_tag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|eventhandler_tag
+name|linux_thread_dtor_tag
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Linux syscalls return negative errno's, we do positive and map them  * Reference:  *   FreeBSD: src/sys/sys/errno.h  *   Linux:   linux-2.6.17.8/include/asm-generic/errno-base.h  *            linux-2.6.17.8/include/asm-generic/errno.h  */
 end_comment
@@ -5478,6 +5485,11 @@ operator|.
 name|sv_schedtail
 operator|=
 name|linux_schedtail
+block|,
+operator|.
+name|sv_thread_detach
+operator|=
+name|linux_thread_detach
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -5908,26 +5920,6 @@ operator|*
 name|ldhp
 argument_list|)
 expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|emul_lock
-argument_list|,
-literal|"emuldata lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|sx_init
-argument_list|(
-operator|&
-name|emul_shared_lock
-argument_list|,
-literal|"emuldata->shared lock"
-argument_list|)
-expr_stmt|;
 name|LIST_INIT
 argument_list|(
 operator|&
@@ -5970,6 +5962,19 @@ argument_list|,
 name|NULL
 argument_list|,
 literal|1000
+argument_list|)
+expr_stmt|;
+name|linux_thread_dtor_tag
+operator|=
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|thread_dtor
+argument_list|,
+name|linux_thread_dtor
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_ANY
 argument_list|)
 expr_stmt|;
 name|linux_szplatform
@@ -6127,18 +6132,6 @@ expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
-name|emul_lock
-argument_list|)
-expr_stmt|;
-name|sx_destroy
-argument_list|(
-operator|&
-name|emul_shared_lock
-argument_list|)
-expr_stmt|;
-name|mtx_destroy
-argument_list|(
-operator|&
 name|futex_mtx
 argument_list|)
 expr_stmt|;
@@ -6154,6 +6147,13 @@ argument_list|(
 name|process_exec
 argument_list|,
 name|linux_exec_tag
+argument_list|)
+expr_stmt|;
+name|EVENTHANDLER_DEREGISTER
+argument_list|(
+name|thread_dtor
+argument_list|,
+name|linux_thread_dtor_tag
 argument_list|)
 expr_stmt|;
 name|linux_osd_jail_deregister
