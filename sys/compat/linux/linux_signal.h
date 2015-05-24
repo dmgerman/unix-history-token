@@ -15,12 +15,97 @@ directive|define
 name|_LINUX_SIGNAL_H_
 end_define
 
+begin_comment
+comment|/*  * si_code values  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_USER
+value|0
+end_define
+
+begin_comment
+comment|/* sent by kill, sigsend, raise */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_KERNEL
+value|0x80
+end_define
+
+begin_comment
+comment|/* sent by the kernel from somewhere */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_QUEUE
+value|-1
+end_define
+
+begin_comment
+comment|/* sent by sigqueue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_TIMER
+value|-2
+end_define
+
+begin_comment
+comment|/* sent by timer expiration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_MESGQ
+value|-3
+end_define
+
+begin_comment
+comment|/* sent by real time mesq state change */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_ASYNCIO
+value|-4
+end_define
+
+begin_comment
+comment|/* sent by AIO completion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_SIGIO
+value|-5
+end_define
+
+begin_comment
+comment|/* sent by queued SIGIO */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|LINUX_SI_TKILL
-value|-6;
+value|-6
 end_define
+
+begin_comment
+comment|/* sent by tkill system call */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -87,9 +172,29 @@ begin_function_decl
 name|void
 name|ksiginfo_to_lsiginfo
 parameter_list|(
+specifier|const
 name|ksiginfo_t
 modifier|*
 name|ksi
+parameter_list|,
+name|l_siginfo_t
+modifier|*
+name|lsi
+parameter_list|,
+name|l_int
+name|sig
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|siginfo_to_lsiginfo
+parameter_list|(
+specifier|const
+name|siginfo_t
+modifier|*
+name|si
 parameter_list|,
 name|l_siginfo_t
 modifier|*
