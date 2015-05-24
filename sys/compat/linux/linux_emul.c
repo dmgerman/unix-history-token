@@ -507,6 +507,23 @@ name|SV_ABI_LINUX
 argument_list|)
 condition|)
 return|return;
+name|LINUX_CTR3
+argument_list|(
+name|proc_exit
+argument_list|,
+literal|"thread(%d) proc(%d) p %p"
+argument_list|,
+name|td
+operator|->
+name|td_tid
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 name|pem
 operator|=
 name|pem_find
@@ -933,9 +950,9 @@ name|NULL
 expr_stmt|;
 name|LINUX_CTR1
 argument_list|(
-name|exit
+name|thread_dtor
 argument_list|,
-literal|"thread dtor(%d)"
+literal|"thread(%d)"
 argument_list|,
 name|em
 operator|->
@@ -1039,9 +1056,9 @@ argument_list|)
 expr_stmt|;
 name|LINUX_CTR4
 argument_list|(
-name|clone
+name|schedtail
 argument_list|,
-literal|"schedtail(%d) %p stored %d error %d"
+literal|"thread(%d) %p stored %d error %d"
 argument_list|,
 name|td
 operator|->
@@ -1060,9 +1077,9 @@ block|}
 else|else
 name|LINUX_CTR1
 argument_list|(
-name|clone
+name|schedtail
 argument_list|,
-literal|"schedtail(%d)"
+literal|"thread(%d)"
 argument_list|,
 name|em
 operator|->
