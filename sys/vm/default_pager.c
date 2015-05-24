@@ -348,6 +348,12 @@ name|object
 decl_stmt|;
 block|{
 comment|/* 	 * OBJT_DEFAULT objects have no special resources allocated to them. 	 */
+name|object
+operator|->
+name|type
+operator|=
+name|OBJT_DEAD
+expr_stmt|;
 block|}
 end_function
 

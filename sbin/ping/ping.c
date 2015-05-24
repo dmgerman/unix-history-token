@@ -3971,18 +3971,6 @@ argument_list|,
 literal|"cap_enter"
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cap_sandboxed
-argument_list|()
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"capability mode sandbox enabled\n"
-argument_list|)
-expr_stmt|;
 name|cap_rights_init
 argument_list|(
 operator|&

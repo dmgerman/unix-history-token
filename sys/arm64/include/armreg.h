@@ -484,6 +484,72 @@ comment|/* Breakpoint */
 end_comment
 
 begin_comment
+comment|/* ICC_CTLR_EL1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICC_CTLR_EL1_EOIMODE
+value|(1U<< 1)
+end_define
+
+begin_comment
+comment|/* ICC_IAR1_EL1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICC_IAR1_EL1_SPUR
+value|(0x03ff)
+end_define
+
+begin_comment
+comment|/* ICC_IGRPEN0_EL1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICC_IGRPEN0_EL1_EN
+value|(1U<< 0)
+end_define
+
+begin_comment
+comment|/* ICC_PMR_EL1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICC_PMR_EL1_PRIO_MASK
+value|(0xFFUL)
+end_define
+
+begin_comment
+comment|/* ICC_SRE_EL1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICC_SRE_EL1_SRE
+value|(1U<< 0)
+end_define
+
+begin_comment
+comment|/* ICC_SRE_EL2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ICC_SRE_EL2_EN
+value|(1U<< 3)
+end_define
+
+begin_comment
 comment|/* ID_AA64PFR0_EL1 */
 end_comment
 
@@ -554,8 +620,33 @@ end_define
 begin_define
 define|#
 directive|define
+name|ID_AA64PFR0_GIC_SHIFT
+value|(24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64PFR0_GIC_BITS
+value|(0x4)
+end_define
+
+begin_comment
+comment|/* Number of bits in GIC field */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ID_AA64PFR0_GIC_MASK
-value|(0xf<< 24)
+value|(0xf<< ID_AA64PFR0_GIC_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ID_AA64PFR0_GIC_CPUIF_EN
+value|(0x1<< ID_AA64PFR0_GIC_SHIFT)
 end_define
 
 begin_comment
@@ -1009,6 +1100,162 @@ define|#
 directive|define
 name|DBG_MDSCR_MDE
 value|(0x1<< 15)
+end_define
+
+begin_comment
+comment|/* Perfomance Monitoring Counters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMCR_E
+value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Enable all counters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMCR_P
+value|(1<< 1)
+end_define
+
+begin_comment
+comment|/* Reset all counters */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMCR_C
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* Clock counter reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMCR_D
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* CNTR counts every 64 clk cycles */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMCR_X
+value|(1<< 4)
+end_define
+
+begin_comment
+comment|/* Export to ext. monitoring (ETM) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMCR_DP
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* Disable CCNT if non-invasive debug*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMCR_LC
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* Long cycle count enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMCR_IMP_SHIFT
+value|24
+end_define
+
+begin_comment
+comment|/* Implementer code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMCR_IMP_MASK
+value|(0xff<< PMCR_IMP_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCR_IDCODE_SHIFT
+value|16
+end_define
+
+begin_comment
+comment|/* Identification code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMCR_IDCODE_MASK
+value|(0xff<< PMCR_IDCODE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCR_IDCODE_CORTEX_A57
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCR_IDCODE_CORTEX_A72
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCR_IDCODE_CORTEX_A53
+value|0x03
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCR_N_SHIFT
+value|11
+end_define
+
+begin_comment
+comment|/* Number of counters implemented */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMCR_N_MASK
+value|(0x1f<< PMCR_N_SHIFT)
 end_define
 
 begin_endif

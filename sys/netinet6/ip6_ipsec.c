@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_inet6.h"
+file|"opt_sctp.h"
 end_include
 
 begin_include
@@ -167,17 +167,28 @@ directive|include
 file|<netinet/ip_options.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SCTP
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/sctp_crc32.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
 file|<machine/in_cksum.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
 
 begin_include
 include|#
@@ -236,15 +247,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*IPSEC*/
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -265,18 +267,6 @@ name|inet6sw
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|IPSEC
-end_ifdef
 
 begin_ifdef
 ifdef|#
@@ -361,24 +351,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* IPSEC */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INET6 */
-end_comment
-
 begin_comment
 comment|/*  * Check if we have to jump over firewall processing for this packet.  * Called from ip6_input().  * 1 = jump over firewall, 0 = packet goes through firewall.  */
 end_comment
@@ -393,9 +365,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC
 comment|/* 	 * Bypass packet filtering for packets previously handled by IPsec. 	 */
 if|if
 condition|(
@@ -414,12 +383,14 @@ operator|!=
 name|NULL
 condition|)
 return|return
+operator|(
 literal|1
+operator|)
 return|;
-endif|#
-directive|endif
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -438,9 +409,6 @@ modifier|*
 name|m
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC
 return|return
 operator|(
 name|ipsec6_in_reject
@@ -451,16 +419,6 @@ name|NULL
 argument_list|)
 operator|)
 return|;
-else|#
-directive|else
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
-comment|/* !IPSEC */
 block|}
 end_function
 
@@ -481,9 +439,6 @@ name|int
 name|nxt
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC
 comment|/* 	 * enforce IPsec policy checking if we are seeing last header. 	 * note that we do not visit this with protocols with pcb layer 	 * code - like udp/tcp/raw ip. 	 */
 if|if
 condition|(
@@ -513,9 +468,6 @@ name|NULL
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
-comment|/* IPSEC */
 return|return
 operator|(
 literal|0
@@ -548,9 +500,6 @@ modifier|*
 name|error
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|IPSEC
 name|struct
 name|secpolicy
 modifier|*
@@ -866,13 +815,9 @@ name|sp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|1
-return|;
-endif|#
-directive|endif
-comment|/* IPSEC */
-return|return
-literal|0
+operator|)
 return|;
 block|}
 end_function

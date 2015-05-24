@@ -137,6 +137,43 @@ comment|/* Non-zero if the result is in a register.  The register number      wi
 name|int
 name|in_reg
 decl_stmt|;
+comment|/* Initialization status of variable: Non-zero if variable has been      initialized; zero otherwise.  */
+name|int
+name|initialized
+decl_stmt|;
+comment|/* An array of pieces.  PIECES points to its first element;      NUM_PIECES is its length.       Each time DW_OP_piece is executed, we add a new element to the      end of this array, recording the current top of the stack, the      current in_reg flag, and the size given as the operand to      DW_OP_piece.  We then pop the top value from the stack, clear the      in_reg flag, and resume evaluation.       The Dwarf spec doesn't say whether DW_OP_piece pops the top value      from the stack.  We do, ensuring that clients of this interface      expecting to see a value left on the top of the stack (say, code      evaluating frame base expressions or CFA's specified with      DW_CFA_def_cfa_expression) will get an error if the expression      actually marks all the values it computes as pieces.       If an expression never uses DW_OP_piece, num_pieces will be zero.      (It would be nice to present these cases as expressions yielding      a single piece, with in_reg clear, so that callers need not      distinguish between the no-DW_OP_piece and one-DW_OP_piece cases.      But expressions with no DW_OP_piece operations have no value to      place in a piece's 'size' field; the size comes from the      surrounding data.  So the two cases need to be handled      separately.)  */
+name|int
+name|num_pieces
+decl_stmt|;
+name|struct
+name|dwarf_expr_piece
+modifier|*
+name|pieces
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* A piece of an object, as recorded by DW_OP_piece or DW_OP_bit_piece.  */
+end_comment
+
+begin_struct
+struct|struct
+name|dwarf_expr_piece
+block|{
+comment|/* If IN_REG is zero, then the piece is in memory, and VALUE is its address.      If IN_REG is non-zero, then the piece is in a register, and VALUE      is the register number.  */
+name|int
+name|in_reg
+decl_stmt|;
+comment|/* This piece's address or register number.  */
+name|CORE_ADDR
+name|value
+decl_stmt|;
+comment|/* The length of the piece, in bytes.  */
+name|ULONGEST
+name|size
+decl_stmt|;
 block|}
 struct|;
 end_struct

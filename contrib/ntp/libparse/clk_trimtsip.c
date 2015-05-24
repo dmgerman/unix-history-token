@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/libparse/clk_trimtsip.c,v 4.19 2009/11/01 10:47:49 kardel RELEASE_20091101_A  *  * clk_trimtsip.c,v 4.19 2009/11/01 10:47:49 kardel RELEASE_20091101_A  *  * Trimble TSIP support  * Thanks to Sven Dietrich for providing test hardware  *  * Copyright (c) 1995-2009 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universität Erlangen-Nürnberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * /src/NTP/REPOSITORY/ntp4-dev/libparse/clk_trimtsip.c,v 4.19 2009/11/01 10:47:49 kardel RELEASE_20091101_A  *  * clk_trimtsip.c,v 4.19 2009/11/01 10:47:49 kardel RELEASE_20091101_A  *  * Trimble TSIP support  * Thanks to Sven Dietrich for providing test hardware  *  * Copyright (c) 1995-2009 by Frank Kardel<kardel<AT> ntp.org>  * Copyright (c) 1989-1994 by Frank Kardel, Friedrich-Alexander Universitaet Erlangen-Nuernberg, Germany  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_ifdef
@@ -262,8 +262,7 @@ parameter_list|(
 name|parse_t
 modifier|*
 parameter_list|,
-name|unsigned
-name|int
+name|char
 parameter_list|,
 name|timestamp_t
 modifier|*
@@ -353,8 +352,7 @@ name|parse_t
 modifier|*
 name|parseio
 parameter_list|,
-name|unsigned
-name|int
+name|char
 name|ch
 parameter_list|,
 name|timestamp_t
@@ -640,11 +638,16 @@ name|parseio
 operator|->
 name|parse_ldsize
 operator|=
+call|(
+name|u_short
+call|)
+argument_list|(
 name|parseio
 operator|->
 name|parse_index
 operator|+
 literal|1
+argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -755,7 +758,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|short
 name|getshort
 parameter_list|(
 name|unsigned
@@ -765,6 +768,9 @@ name|p
 parameter_list|)
 block|{
 return|return
+operator|(
+name|short
+operator|)
 name|get_msb_short
 argument_list|(
 operator|&
@@ -1013,12 +1019,12 @@ if|if
 condition|(
 name|week
 operator|<
-literal|990
+name|GPSWRAP
 condition|)
 block|{
 name|week
 operator|+=
-literal|1024
+name|GPSWEEKS
 expr_stmt|;
 block|}
 comment|/* time OK */
@@ -1299,6 +1305,9 @@ name|t
 operator|->
 name|t_gpsutc
 operator|=
+operator|(
+name|u_short
+operator|)
 name|getshort
 argument_list|(
 operator|(
@@ -1321,6 +1330,9 @@ name|t
 operator|->
 name|t_gpsutcleap
 operator|=
+operator|(
+name|u_short
+operator|)
 name|getshort
 argument_list|(
 operator|(
@@ -1340,6 +1352,9 @@ name|t
 operator|->
 name|t_weekleap
 operator|=
+operator|(
+name|u_short
+operator|)
 name|getshort
 argument_list|(
 operator|(
@@ -1361,18 +1376,30 @@ name|t
 operator|->
 name|t_weekleap
 operator|<
-literal|990
+name|GPSWRAP
 condition|)
 name|t
 operator|->
 name|t_weekleap
-operator|+=
-literal|1024
+operator|=
+call|(
+name|u_short
+call|)
+argument_list|(
+name|t
+operator|->
+name|t_weekleap
+operator|+
+name|GPSWEEKS
+argument_list|)
 expr_stmt|;
 name|t
 operator|->
 name|t_dayleap
 operator|=
+operator|(
+name|u_short
+operator|)
 name|getshort
 argument_list|(
 operator|(
@@ -1392,6 +1419,9 @@ name|t
 operator|->
 name|t_week
 operator|=
+operator|(
+name|u_short
+operator|)
 name|getshort
 argument_list|(
 operator|(
@@ -1413,13 +1443,22 @@ name|t
 operator|->
 name|t_week
 operator|<
-literal|990
+name|GPSWRAP
 condition|)
 name|t
 operator|->
 name|t_week
-operator|+=
-literal|1024
+operator|=
+call|(
+name|u_short
+call|)
+argument_list|(
+name|t
+operator|->
+name|t_weekleap
+operator|+
+name|GPSWEEKS
+argument_list|)
 expr_stmt|;
 name|lbp
 operator|=

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2011 The FreeBSD Foundation  * Copyright (c) 2013 R
 end_comment
 
 begin_comment
-comment|/**  *      Cortex-A15 (and probably A7) Generic Timer  */
+comment|/**  *      Cortex-A7, Cortex-A15, ARMv8 and later Generic Timer  */
 end_comment
 
 begin_include

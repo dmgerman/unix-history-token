@@ -2111,6 +2111,23 @@ end_comment
 begin_define
 define|#
 directive|define
+name|CPUV7_L2CTLR_NPROC_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|CPUV7_L2CTLR_NPROC
+parameter_list|(
+name|r
+parameter_list|)
+value|((((r)>> CPUV7_L2CTLR_NPROC_SHIFT)& 3) + 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPU_CLIDR_CTYPE
 parameter_list|(
 name|reg

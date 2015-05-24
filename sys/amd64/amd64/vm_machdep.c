@@ -854,14 +854,6 @@ argument_list|)
 expr_stmt|;
 name|pcb2
 operator|->
-name|pcb_cr3
-operator|=
-name|pmap2
-operator|->
-name|pm_cr3
-expr_stmt|;
-name|pcb2
-operator|->
 name|pcb_r12
 operator|=
 operator|(
@@ -1801,7 +1793,7 @@ name|register_t
 operator|)
 name|fork_trampoline
 expr_stmt|;
-comment|/* 	 * If we didn't copy the pcb, we'd need to do the following registers: 	 * pcb2->pcb_cr3:	cloned above. 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase: cloned above 	 */
+comment|/* 	 * If we didn't copy the pcb, we'd need to do the following registers: 	 * pcb2->pcb_dr*:	cloned above. 	 * pcb2->pcb_savefpu:	cloned above. 	 * pcb2->pcb_onfault:	cloned above (always NULL here?). 	 * pcb2->pcb_[fg]sbase: cloned above 	 */
 comment|/* Setup to release spin count in fork_exit(). */
 name|td
 operator|->

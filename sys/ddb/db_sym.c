@@ -169,7 +169,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|bool
 name|db_symbol_is_ambiguous
 parameter_list|(
 name|c_db_sym_t
@@ -180,7 +180,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|bool
 name|db_line_at_pc
 parameter_list|(
 name|c_db_sym_t
@@ -712,7 +712,7 @@ block|}
 end_function
 
 begin_function
-name|boolean_t
+name|bool
 name|db_eqname
 parameter_list|(
 specifier|const
@@ -741,7 +741,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 if|if
@@ -768,14 +768,14 @@ operator|)
 return|;
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 block|}
 end_function
 
 begin_function
-name|boolean_t
+name|bool
 name|db_value_of_name
 parameter_list|(
 specifier|const
@@ -806,7 +806,7 @@ name|C_DB_SYM_NULL
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 name|db_symbol_values
@@ -821,14 +821,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
 end_function
 
 begin_function
-name|boolean_t
+name|bool
 name|db_value_of_name_pcpu
 parameter_list|(
 specifier|const
@@ -902,7 +902,7 @@ name|C_DB_SYM_NULL
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 name|db_symbol_values
@@ -928,7 +928,7 @@ name|DPCPU_STOP
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 operator|*
@@ -951,14 +951,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 block|}
 end_function
 
 begin_function
-name|boolean_t
+name|bool
 name|db_value_of_name_vnet
 parameter_list|(
 specifier|const
@@ -1036,7 +1036,7 @@ name|C_DB_SYM_NULL
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 name|db_symbol_values
@@ -1062,7 +1062,7 @@ name|VNET_STOP
 condition|)
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 operator|*
@@ -1084,14 +1084,14 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|TRUE
+name|true
 operator|)
 return|;
 else|#
 directive|else
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 endif|#
@@ -1300,16 +1300,16 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * If TRUE, check across symbol tables for multiple occurrences  * of a name.  Might slow things down quite a bit.  */
+comment|/*  * If true, check across symbol tables for multiple occurrences  * of a name.  Might slow things down quite a bit.  */
 end_comment
 
 begin_decl_stmt
 specifier|static
 specifier|volatile
-name|boolean_t
+name|bool
 name|db_qualify_ambiguous_names
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 end_decl_stmt
 
@@ -1319,7 +1319,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|db_symbol_is_ambiguous
 parameter_list|(
 name|c_db_sym_t
@@ -1336,10 +1336,10 @@ name|int
 name|i
 decl_stmt|;
 specifier|register
-name|boolean_t
+name|bool
 name|found_once
 init|=
-name|FALSE
+name|false
 decl_stmt|;
 if|if
 condition|(
@@ -1347,7 +1347,9 @@ operator|!
 name|db_qualify_ambiguous_names
 condition|)
 return|return
-name|FALSE
+operator|(
+name|false
+operator|)
 return|;
 name|db_symbol_values
 argument_list|(
@@ -1392,16 +1394,20 @@ condition|(
 name|found_once
 condition|)
 return|return
-name|TRUE
+operator|(
+name|true
+operator|)
 return|;
 name|found_once
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 block|}
 return|return
-name|FALSE
+operator|(
+name|false
+operator|)
 return|;
 block|}
 end_function
@@ -1807,7 +1813,7 @@ end_function
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|db_line_at_pc
 parameter_list|(
 name|c_db_sym_t
@@ -1827,6 +1833,7 @@ name|pc
 parameter_list|)
 block|{
 return|return
+operator|(
 name|X_db_line_at_pc
 argument_list|(
 name|db_last_symtab
@@ -1839,12 +1846,13 @@ name|linenum
 argument_list|,
 name|pc
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
 
 begin_function
-name|int
+name|bool
 name|db_sym_numargs
 parameter_list|(
 name|c_db_sym_t
@@ -1861,6 +1869,7 @@ name|argnames
 parameter_list|)
 block|{
 return|return
+operator|(
 name|X_db_sym_numargs
 argument_list|(
 name|db_last_symtab
@@ -1871,6 +1880,7 @@ name|nargp
 argument_list|,
 name|argnames
 argument_list|)
+operator|)
 return|;
 block|}
 end_function

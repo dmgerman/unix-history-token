@@ -3239,7 +3239,7 @@ value|0x2000000
 end_define
 
 begin_comment
-comment|/* Stopped in proc_stop_total. */
+comment|/* Stopped in stop_all_proc. */
 end_comment
 
 begin_define
@@ -5925,23 +5925,6 @@ begin_function_decl
 name|void
 name|thread_unsuspend
 parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|thread_unsuspend_one
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
 name|struct
 name|proc
 modifier|*

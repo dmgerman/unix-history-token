@@ -478,6 +478,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * Remove unused bits from the reply if possible.  * So that caps-for-id (0x20) fallback is more likely to be successful.  * This removes like, the additional section, and NS record in the authority  * section if those records are gratuitous (not for a referral).  * @param rep: the reply to strip stuff out of.  */
+end_comment
+
+begin_function_decl
+name|void
+name|caps_strip_reply
+parameter_list|(
+name|struct
+name|reply_info
+modifier|*
+name|rep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * Store parent-side rrset in seperate rrset cache entries for later   * last-resort * lookups in case the child-side versions of this information   * fails.  * @param env: environment with cache, time, ...  * @param rrset: the rrset to store (copied).  * Failure to store is logged, but otherwise ignored.  */
 end_comment
 

@@ -5108,7 +5108,7 @@ operator|->
 name|timer
 operator|)
 argument_list|,
-name|TRUE
+literal|1
 argument_list|)
 expr_stmt|;
 name|CTR6

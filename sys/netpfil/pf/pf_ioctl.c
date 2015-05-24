@@ -20566,6 +20566,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|PF_RULES_WUNLOCK
+argument_list|()
+expr_stmt|;
 name|pf_normalize_cleanup
 argument_list|()
 expr_stmt|;
@@ -20589,9 +20592,6 @@ name|curvnet
 argument_list|)
 condition|)
 name|pf_mtag_cleanup
-argument_list|()
-expr_stmt|;
-name|PF_RULES_WUNLOCK
 argument_list|()
 expr_stmt|;
 name|destroy_dev

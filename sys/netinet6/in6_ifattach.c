@@ -1195,14 +1195,9 @@ case|:
 case|case
 name|IFT_IEEE1394
 case|:
-ifdef|#
-directive|ifdef
-name|IFT_IEEE80211
 case|case
 name|IFT_IEEE80211
 case|:
-endif|#
-directive|endif
 comment|/* IEEE802/EUI64 cases - what others? */
 comment|/* IEEE1394 uses 16byte length address starting with EUI64 */
 if|if
@@ -1498,14 +1493,9 @@ break|break;
 case|case
 name|IFT_GIF
 case|:
-ifdef|#
-directive|ifdef
-name|IFT_STF
 case|case
 name|IFT_STF
 case|:
-endif|#
-directive|endif
 comment|/* 		 * RFC2893 says: "SHOULD use IPv4 address as ifid source". 		 * however, IPv4 address is not very suitable as unique 		 * identifier source (can be renumbered). 		 * we don't do this. 		 */
 name|IF_ADDR_RUNLOCK
 argument_list|(

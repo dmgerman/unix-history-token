@@ -828,7 +828,7 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* record data transfer */
-comment|/* 	 * We're done with IPsec processing, transmit the packet using the 	 * appropriate network protocol (IP or IPv6). SPD lookup will be 	 * performed again there. 	 */
+comment|/* 	 * We're done with IPsec processing, transmit the packet using the 	 * appropriate network protocol (IP or IPv6). 	 */
 switch|switch
 condition|(
 name|saidx
@@ -2761,6 +2761,17 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|ip
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip
+operator|*
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* Do the appropriate encapsulation, if necessary */
@@ -3468,6 +3479,17 @@ condition|)
 goto|goto
 name|bad
 goto|;
+name|ip6
+operator|=
+name|mtod
+argument_list|(
+name|m
+argument_list|,
+expr|struct
+name|ip6_hdr
+operator|*
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* DEV_ENC */

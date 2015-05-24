@@ -3066,7 +3066,7 @@ name|sc
 operator|->
 name|cxgb_tick_ch
 argument_list|,
-name|TRUE
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -5194,7 +5194,7 @@ name|p
 operator|->
 name|link_check_ch
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|TASK_INIT

@@ -185,6 +185,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libxo/xo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ps.h"
 end_include
 
@@ -288,12 +294,9 @@ operator|==
 name|NULL
 condition|)
 comment|/* last one */
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s"
+literal|"{T:/%s}"
 argument_list|,
 name|vent
 operator|->
@@ -301,12 +304,9 @@ name|header
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%-*s"
+literal|"{T:/%-*s}"
 argument_list|,
 name|v
 operator|->
@@ -319,12 +319,9 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%*s"
+literal|"{T:/%*s}"
 argument_list|,
 name|v
 operator|->
@@ -346,21 +343,15 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
-name|putchar
+name|xo_emit
 argument_list|(
-literal|' '
+literal|"{P: }"
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -406,7 +397,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -608,7 +599,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -672,7 +663,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1080,7 +1071,7 @@ name|buf
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1963,7 +1954,7 @@ name|buf
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2128,7 +2119,7 @@ name|buf
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3974,7 +3965,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -4188,7 +4179,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"mac_prepare_process_label"
 argument_list|)

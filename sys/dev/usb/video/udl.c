@@ -1218,19 +1218,34 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|uint8_t
+modifier|*
+name|ptr
+init|=
+operator|(
+operator|(
+name|uint8_t
+operator|*
+operator|)
+name|buf
+operator|)
+operator|-
+name|size
+decl_stmt|;
 comment|/* wipe and recycle buffer */
 name|memset
 argument_list|(
-name|buf
+name|ptr
 argument_list|,
 literal|0
 argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+comment|/* return buffer pointer */
 return|return
 operator|(
-name|buf
+name|ptr
 operator|)
 return|;
 block|}
@@ -1240,6 +1255,12 @@ operator|(
 name|malloc
 argument_list|(
 name|size
+operator|+
+sizeof|sizeof
+argument_list|(
+operator|*
+name|buf
+argument_list|)
 argument_list|,
 name|M_USB_DL
 argument_list|,
@@ -1270,6 +1291,15 @@ name|udl_buffer
 modifier|*
 name|buf
 decl_stmt|;
+comment|/* check for NULL pointer */
+if|if
+condition|(
+name|_buf
+operator|==
+name|NULL
+condition|)
+return|return;
+comment|/* compute pointer to recycle list */
 name|buf
 operator|=
 operator|(
@@ -1277,15 +1307,18 @@ expr|struct
 name|udl_buffer
 operator|*
 operator|)
+operator|(
+operator|(
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|_buf
+operator|)
+operator|+
+name|size
+operator|)
 expr_stmt|;
-if|if
-condition|(
-name|buf
-operator|==
-name|NULL
-condition|)
-return|return;
 comment|/* 	 * Memory mapped buffers should never be freed. 	 * Put display buffer into a recycle list. 	 */
 name|mtx_lock
 argument_list|(

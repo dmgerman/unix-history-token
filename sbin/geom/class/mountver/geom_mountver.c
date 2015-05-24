@@ -83,7 +83,7 @@ block|{
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-v] dev ..."
+literal|"[-v] prov ..."
 block|}
 block|,
 block|{
@@ -107,7 +107,7 @@ block|,
 name|G_OPT_SENTINEL
 block|}
 block|,
-literal|"[-fv] prov ..."
+literal|"[-fv] name"
 block|}
 block|,
 name|G_CMD_SENTINEL

@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/cpuset.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -1806,7 +1800,7 @@ index|]
 operator|.
 name|callout
 argument_list|,
-name|true
+literal|1
 argument_list|)
 expr_stmt|;
 name|arg

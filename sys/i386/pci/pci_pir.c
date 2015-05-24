@@ -590,12 +590,6 @@ decl_stmt|,
 modifier|*
 name|cv
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|XEN
-return|return;
-else|#
-directive|else
 comment|/* Don't try if we've already found a table. */
 if|if
 condition|(
@@ -648,8 +642,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-endif|#
-directive|endif
 comment|/* If we found something, check the checksum and length. */
 comment|/* XXX - Use pmap_mapdev()? */
 name|pt
@@ -2080,16 +2072,6 @@ operator|+
 name|pin
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XEN
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-else|#
-directive|else
 return|return
 operator|(
 name|bios32
@@ -2110,8 +2092,6 @@ argument_list|)
 argument_list|)
 operator|)
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 

@@ -7115,11 +7115,6 @@ condition|)
 goto|goto
 name|bad_size
 goto|;
-name|ci
-operator|->
-name|object_opcodes
-operator|++
-expr_stmt|;
 goto|goto
 name|check_action
 goto|;
@@ -9475,7 +9470,7 @@ return|;
 block|}
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -12266,7 +12261,7 @@ parameter_list|,
 name|uint8_t
 name|version
 parameter_list|,
-name|void
+name|sopt_handler_f
 modifier|*
 name|handler
 parameter_list|)

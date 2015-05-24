@@ -205,6 +205,36 @@ parameter_list|)
 value|.global x
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__thumb__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_FUNC_MODE
+value|.code 16; .thumb_func
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_FUNC_MODE
+value|.code 32
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -212,7 +242,7 @@ name|_LEENTRY
 parameter_list|(
 name|x
 parameter_list|)
-value|.type x,_ASM_TYPE_FUNCTION; x:
+value|.type x,_ASM_TYPE_FUNCTION; _FUNC_MODE; x:
 end_define
 
 begin_define
@@ -531,7 +561,7 @@ parameter_list|,
 name|pclabel
 parameter_list|)
 define|\
-value|ldr	got, gotsym;	\ 	pclabel: add	got, got, pc
+value|ldr	got, gotsym;	\ 	pclabel: add	got, pc
 end_define
 
 begin_ifdef

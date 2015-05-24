@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: readline.h,v 1.31 2010/08/04 20:29:18 christos Exp $	*/
+comment|/*	$NetBSD: readline.h,v 1.34 2013/05/28 00:10:34 christos Exp $	*/
 end_comment
 
 begin_comment

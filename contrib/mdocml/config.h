@@ -85,7 +85,7 @@ begin_define
 define|#
 directive|define
 name|HAVE_REALLOCARRAY
-value|0
+value|1
 end_define
 
 begin_define

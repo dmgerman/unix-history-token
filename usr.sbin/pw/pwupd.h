@@ -661,25 +661,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extendline
-parameter_list|(
-name|char
-modifier|*
-modifier|*
-name|buf
-parameter_list|,
-name|int
-modifier|*
-name|buflen
-parameter_list|,
-name|int
-name|needed
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|extendarray
 parameter_list|(
 name|char
@@ -701,13 +682,6 @@ end_function_decl
 begin_macro
 name|__END_DECLS
 end_macro
-
-begin_define
-define|#
-directive|define
-name|PWBUFSZ
-value|1024
-end_define
 
 begin_endif
 endif|#

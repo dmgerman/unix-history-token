@@ -124,6 +124,11 @@ init|=
 literal|0x00080000
 block|,
 comment|/* print chipset register */
+name|WPI_DEBUG_BMISS
+init|=
+literal|0x00100000
+block|,
+comment|/* print number of missed beacons */
 name|WPI_DEBUG_ANY
 init|=
 literal|0xffffffff
@@ -308,6 +313,11 @@ argument_list|)
 expr_stmt|;
 name|WPI_DESC
 argument_list|(
+name|WPI_CMD_SCAN_ABORT
+argument_list|)
+expr_stmt|;
+name|WPI_DESC
+argument_list|(
 name|WPI_CMD_SET_BEACON
 argument_list|)
 expr_stmt|;
@@ -322,17 +332,6 @@ name|WPI_CMD_BT_COEX
 argument_list|)
 expr_stmt|;
 default|default:
-name|KASSERT
-argument_list|(
-literal|1
-argument_list|,
-operator|(
-literal|"Unknown Command: %d\n"
-operator|,
-name|cmd
-operator|)
-argument_list|)
-expr_stmt|;
 return|return
 literal|"UNKNOWN CMD"
 return|;
@@ -351,7 +350,7 @@ name|char
 modifier|*
 name|wpi_get_csr_string
 parameter_list|(
-name|int
+name|size_t
 name|csr
 parameter_list|)
 block|{
@@ -438,7 +437,7 @@ expr_stmt|;
 default|default:
 name|KASSERT
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 operator|(
 literal|"Unknown CSR: %d\n"
@@ -461,7 +460,7 @@ name|char
 modifier|*
 name|wpi_get_prph_string
 parameter_list|(
-name|int
+name|size_t
 name|prph
 parameter_list|)
 block|{
@@ -493,7 +492,7 @@ expr_stmt|;
 default|default:
 name|KASSERT
 argument_list|(
-literal|1
+literal|0
 argument_list|,
 operator|(
 literal|"Unknown register: %d\n"

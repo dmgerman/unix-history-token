@@ -607,6 +607,8 @@ operator|&
 name|dinfo
 operator|->
 name|mdi_resources
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|cdev

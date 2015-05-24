@@ -966,7 +966,7 @@ operator|&
 name|pmc_bufferlist_mtx
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|LOG
 argument_list|,
@@ -983,7 +983,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DEBUG
+name|HWPMC_DEBUG
 if|if
 condition|(
 name|plb
@@ -1177,7 +1177,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|LOG
 argument_list|,
@@ -1374,7 +1374,7 @@ name|pmc_kthread_mtx
 argument_list|)
 expr_stmt|;
 comment|/* process the request */
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|LOG
 argument_list|,
@@ -1530,7 +1530,7 @@ operator|=
 name|error
 expr_stmt|;
 comment|/* save for flush log */
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|LOG
 argument_list|,
@@ -1766,7 +1766,7 @@ operator|->
 name|po_mtx
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|LOG
 argument_list|,
@@ -1814,7 +1814,7 @@ name|struct
 name|timespec
 name|ts
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|LOG
 argument_list|,
@@ -2330,7 +2330,7 @@ name|plb_fence
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|LOG
 argument_list|,
@@ -2510,7 +2510,7 @@ argument_list|,
 name|SA_UNLOCKED
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|LOG
 argument_list|,
@@ -2801,7 +2801,7 @@ name|pmclog_buffer
 modifier|*
 name|lb
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|LOG
 argument_list|,
@@ -3042,7 +3042,7 @@ name|pmclog_buffer
 modifier|*
 name|lb
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|LOG
 argument_list|,
@@ -3174,7 +3174,7 @@ modifier|*
 name|po
 parameter_list|)
 block|{
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|LOG
 argument_list|,
@@ -3276,7 +3276,7 @@ name|pmc_owner
 modifier|*
 name|po
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|LOG
 argument_list|,
@@ -3647,7 +3647,7 @@ name|pm
 operator|->
 name|pm_owner
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|LOG
 argument_list|,
@@ -3819,7 +3819,7 @@ name|pmc_owner
 modifier|*
 name|po
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|LOG
 argument_list|,
@@ -3916,7 +3916,7 @@ name|pmc_owner
 modifier|*
 name|po
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|LOG
 argument_list|,
@@ -4012,7 +4012,7 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|LOG
 argument_list|,
@@ -4109,7 +4109,7 @@ name|pathlen
 decl_stmt|,
 name|recordlen
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|LOG
 argument_list|,
@@ -4221,7 +4221,7 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|LOG
 argument_list|,
@@ -4420,7 +4420,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|LOG
 argument_list|,

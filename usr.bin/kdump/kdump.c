@@ -1956,18 +1956,6 @@ argument_list|(
 name|STDERR_FILENO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cap_sandboxed
-argument_list|()
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"capability mode sandbox enabled\n"
-argument_list|)
-expr_stmt|;
 name|TAILQ_INIT
 argument_list|(
 operator|&

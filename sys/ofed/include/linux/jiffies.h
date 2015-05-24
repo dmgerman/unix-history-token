@@ -80,6 +80,8 @@ argument_list|(
 operator|&
 name|tv
 argument_list|)
+operator|-
+literal|1
 operator|)
 return|;
 block|}

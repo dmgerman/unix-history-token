@@ -667,6 +667,8 @@ operator|->
 name|opd_dinfo
 operator|.
 name|rl
+argument_list|,
+name|NULL
 argument_list|)
 operator|!=
 literal|0

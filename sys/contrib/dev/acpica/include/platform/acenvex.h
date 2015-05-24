@@ -47,6 +47,21 @@ directive|include
 file|"aclinuxex.h"
 end_include
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__DragonFly__
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|"acdragonflyex.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif

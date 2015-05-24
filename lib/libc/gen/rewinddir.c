@@ -128,6 +128,14 @@ operator|->
 name|dd_lock
 argument_list|)
 expr_stmt|;
+name|dirp
+operator|->
+name|dd_flags
+operator|&=
+operator|~
+name|__DTF_SKIPREAD
+expr_stmt|;
+comment|/* current contents are invalid */
 if|if
 condition|(
 name|dirp

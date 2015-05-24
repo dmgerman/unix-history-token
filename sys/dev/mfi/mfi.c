@@ -4241,7 +4241,7 @@ name|sc
 operator|->
 name|mfi_watchdog_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset

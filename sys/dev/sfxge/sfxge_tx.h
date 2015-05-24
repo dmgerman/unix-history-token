@@ -343,6 +343,17 @@ define|\
 value|mtx_assert(&(_txq)->lock, MA_OWNED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|SFXGE_TXQ_LOCK_ASSERT_NOTOWNED
+parameter_list|(
+name|_txq
+parameter_list|)
+define|\
+value|mtx_assert(&(_txq)->lock, MA_NOTOWNED)
+end_define
+
 begin_struct
 struct|struct
 name|sfxge_txq

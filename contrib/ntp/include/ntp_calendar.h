@@ -353,6 +353,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DAYSPERWEEK
+value|(7)
+end_define
+
+begin_comment
+comment|/* days per week */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DAYSPERYEAR
 value|(365)
 end_define
@@ -373,6 +384,13 @@ define|#
 directive|define
 name|SECSPERDAY
 value|(SECSPERHR * HRSPERDAY)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SECSPERWEEK
+value|(DAYSPERWEEK * SECSPERDAY)
 end_define
 
 begin_define

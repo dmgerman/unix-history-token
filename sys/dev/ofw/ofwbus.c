@@ -137,12 +137,23 @@ block|}
 struct|;
 end_struct
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__aarch64__
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|device_identify_t
 name|ofwbus_identify
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -187,6 +198,9 @@ index|[]
 init|=
 block|{
 comment|/* Device interface */
+ifndef|#
+directive|ifndef
+name|__aarch64__
 name|DEVMETHOD
 argument_list|(
 name|device_identify
@@ -194,6 +208,8 @@ argument_list|,
 name|ofwbus_identify
 argument_list|)
 block|,
+endif|#
+directive|endif
 name|DEVMETHOD
 argument_list|(
 name|device_probe
@@ -294,6 +310,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__aarch64__
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -347,6 +369,11 @@ expr_stmt|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|int
@@ -356,6 +383,25 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__aarch64__
+if|if
+condition|(
+name|OF_peer
+argument_list|(
+literal|0
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+endif|#
+directive|endif
 name|device_set_desc
 argument_list|(
 name|dev

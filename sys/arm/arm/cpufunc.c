@@ -272,16 +272,6 @@ name|arm_cache_loc
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* 1 == use cpu_sleep(), 0 == don't */
-end_comment
-
-begin_decl_stmt
-name|int
-name|cpu_do_powersave
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|int
 name|ctrl
@@ -1709,7 +1699,7 @@ operator|)
 name|cpufunc_nullop
 block|,
 comment|/* flush_brnchtgt_E     */
-name|armv7_sleep
+name|armv7_cpu_sleep
 block|,
 comment|/* sleep                */
 comment|/* Soft functions */
@@ -2502,7 +2492,6 @@ name|cputype
 operator|&=
 name|CPU_ID_CPU_MASK
 expr_stmt|;
-comment|/* 	 * NOTE: cpu_do_powersave defaults to off.  If we encounter a 	 * CPU type where we want to use it by default, then we set it. 	 */
 ifdef|#
 directive|ifdef
 name|CPU_ARM9
@@ -2811,11 +2800,6 @@ expr_stmt|;
 name|pmap_pte_init_mmu_v6
 argument_list|()
 expr_stmt|;
-comment|/* Use powersave on this CPU. */
-name|cpu_do_powersave
-operator|=
-literal|1
-expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -2892,11 +2876,6 @@ argument_list|()
 expr_stmt|;
 name|pmap_pte_init_generic
 argument_list|()
-expr_stmt|;
-comment|/* Use powersave on this CPU. */
-name|cpu_do_powersave
-operator|=
-literal|1
 expr_stmt|;
 goto|goto
 name|out
@@ -3048,11 +3027,6 @@ argument_list|()
 expr_stmt|;
 name|pmap_pte_init_xscale
 argument_list|()
-expr_stmt|;
-comment|/* Use powersave on this CPU. */
-name|cpu_do_powersave
-operator|=
-literal|1
 expr_stmt|;
 goto|goto
 name|out

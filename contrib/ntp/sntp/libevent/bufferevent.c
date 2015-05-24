@@ -2677,7 +2677,7 @@ name|bufev
 operator|->
 name|input
 argument_list|)
-operator|>
+operator|>=
 name|highmark
 condition|)
 name|bufferevent_wm_suspend_read
@@ -2741,7 +2741,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|bufferevent_getwatermark
 parameter_list|(
 name|struct
@@ -2761,11 +2761,6 @@ modifier|*
 name|highmark
 parameter_list|)
 block|{
-name|BEV_LOCK
-argument_list|(
-name|bufev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|events
@@ -2773,6 +2768,11 @@ operator|==
 name|EV_WRITE
 condition|)
 block|{
+name|BEV_LOCK
+argument_list|(
+name|bufev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lowmark
@@ -2799,6 +2799,14 @@ name|wm_write
 operator|.
 name|high
 expr_stmt|;
+name|BEV_UNLOCK
+argument_list|(
+name|bufev
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
 block|}
 if|if
 condition|(
@@ -2807,6 +2815,11 @@ operator|==
 name|EV_READ
 condition|)
 block|{
+name|BEV_LOCK
+argument_list|(
+name|bufev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lowmark
@@ -2833,12 +2846,19 @@ name|wm_read
 operator|.
 name|high
 expr_stmt|;
-block|}
 name|BEV_UNLOCK
 argument_list|(
 name|bufev
 argument_list|)
 expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+return|return
+operator|-
+literal|1
+return|;
 block|}
 end_function
 

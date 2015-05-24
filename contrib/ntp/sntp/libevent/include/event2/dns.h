@@ -491,7 +491,7 @@ modifier|*
 name|val
 parameter_list|)
 function_decl|;
-comment|/**   Parse a resolv.conf file.    The 'flags' parameter determines what information is parsed from the   resolv.conf file. See the man page for resolv.conf for the format of this   file.    The following directives are not parsed from the file: sortlist, rotate,   no-check-names, inet6, debug.    If this function encounters an error, the possible return values are: 1 =   failed to open file, 2 = failed to stat file, 3 = file too large, 4 = out of   memory, 5 = short read from file, 6 = no nameservers listed in the file    @param base the evdns_base to which to apply this operation   @param flags any of DNS_OPTION_NAMESERVERS|DNS_OPTION_SEARCH|DNS_OPTION_MISC|     DNS_OPTIONS_HOSTSFILE|DNS_OPTIONS_ALL   @param filename the path to the resolv.conf file   @return 0 if successful, or various positive error codes if an error     occurred (see above)   @see resolv.conf(3), evdns_config_windows_nameservers()  */
+comment|/**   Parse a resolv.conf file.    The 'flags' parameter determines what information is parsed from the   resolv.conf file. See the man page for resolv.conf for the format of this   file.    The following directives are not parsed from the file: sortlist, rotate,   no-check-names, inet6, debug.    If this function encounters an error, the possible return values are: 1 =   failed to open file, 2 = failed to stat file, 3 = file too large, 4 = out of   memory, 5 = short read from file, 6 = no nameservers listed in the file    @param base the evdns_base to which to apply this operation   @param flags any of DNS_OPTION_NAMESERVERS|DNS_OPTION_SEARCH|DNS_OPTION_MISC|     DNS_OPTION_HOSTSFILE|DNS_OPTIONS_ALL   @param filename the path to the resolv.conf file   @return 0 if successful, or various positive error codes if an error     occurred (see above)   @see resolv.conf(3), evdns_config_windows_nameservers()  */
 name|EVENT2_EXPORT_SYMBOL
 name|int
 name|evdns_base_resolv_conf_parse
@@ -1046,6 +1046,28 @@ name|struct
 name|evdns_getaddrinfo_request
 modifier|*
 name|req
+parameter_list|)
+function_decl|;
+comment|/**    Retrieve the address of the 'idx'th configured nameserver.     @param base The evdns_base to examine.    @param idx The index of the nameserver to get the address of.    @param sa A location to receive the server's address.    @param len The number of bytes available at sa.     @return the number of bytes written into sa on success.  On failure, returns      -1 if idx is greater than the number of configured nameservers, or a      value greater than 'len' if len was not high enough.  */
+name|EVENT2_EXPORT_SYMBOL
+name|int
+name|evdns_base_get_nameserver_addr
+parameter_list|(
+name|struct
+name|evdns_base
+modifier|*
+name|base
+parameter_list|,
+name|int
+name|idx
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|,
+name|ev_socklen_t
+name|len
 parameter_list|)
 function_decl|;
 ifdef|#

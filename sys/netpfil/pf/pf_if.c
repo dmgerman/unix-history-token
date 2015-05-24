@@ -575,6 +575,21 @@ name|pfi_unlnkdkifs_mtx
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|MTX_SYSINIT
+argument_list|(
+name|pfi_unlnkdkifs_mtx
+argument_list|,
+operator|&
+name|pfi_unlnkdkifs_mtx
+argument_list|,
+literal|"pf unlinked interfaces"
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
 name|pfi_initialize
@@ -616,18 +631,6 @@ argument_list|,
 name|PFI_MTYPE
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|pfi_unlnkdkifs_mtx
-argument_list|,
-literal|"pf unlinked interfaces"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|kif
@@ -892,12 +895,6 @@ name|PFI_MTYPE
 argument_list|)
 expr_stmt|;
 block|}
-name|mtx_destroy
-argument_list|(
-operator|&
-name|pfi_unlnkdkifs_mtx
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|V_pfi_buffer

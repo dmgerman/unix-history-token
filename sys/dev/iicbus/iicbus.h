@@ -86,6 +86,10 @@ block|{
 name|uint32_t
 name|addr
 decl_stmt|;
+name|struct
+name|resource_list
+name|rl
+decl_stmt|;
 name|bool
 name|nostop
 decl_stmt|;

@@ -5289,22 +5289,12 @@ case|:
 case|case
 name|IFT_IEEE1394
 case|:
-ifdef|#
-directive|ifdef
-name|IFT_L2VLAN
 case|case
 name|IFT_L2VLAN
 case|:
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|IFT_IEEE80211
 case|case
 name|IFT_IEEE80211
 case|:
-endif|#
-directive|endif
 case|case
 name|IFT_INFINIBAND
 case|:
@@ -6612,7 +6602,7 @@ operator|->
 name|dad_loopbackprobe
 condition|)
 block|{
-comment|/* 			 * A looped back probe is detected, 			 * Sec. 4.1 in draft-ietf-6man-enhanced-dad-13 			 * requires transmission of additional probes until 			 * the loopback condition becomes clear. 			 */
+comment|/* 			 * Sec. 4.1 in RFC 7527 requires transmission of 			 * additional probes until the loopback condition 			 * becomes clear when a looped back probe is detected. 			 */
 name|log
 argument_list|(
 name|LOG_ERR
@@ -6646,26 +6636,6 @@ operator|=
 name|dp
 operator|->
 name|dad_ns_lcount
-expr_stmt|;
-comment|/* 			 * An interface with IGNORELOOP is one which a 			 * loopback is permanently expected while regular 			 * traffic works.  In that case, stop DAD after 			 * MAX_MULTICAST_SOLICIT number of NS messages 			 * regardless of the number of received loopback NS 			 * by increasing dad_loopbackprobe in advance. 			 */
-if|if
-condition|(
-name|ND_IFINFO
-argument_list|(
-name|ifa
-operator|->
-name|ifa_ifp
-argument_list|)
-operator|->
-name|flags
-operator|&
-name|ND6_IFF_IGNORELOOP
-condition|)
-name|dp
-operator|->
-name|dad_loopbackprobe
-operator|+=
-name|V_nd6_mmaxtries
 expr_stmt|;
 comment|/* 			 * Send an NS immediately and increase dad_count by 			 * V_nd6_mmaxtries - 1. 			 */
 name|nd6_dad_ns_output
@@ -6991,14 +6961,9 @@ case|:
 case|case
 name|IFT_IEEE1394
 case|:
-ifdef|#
-directive|ifdef
-name|IFT_IEEE80211
 case|case
 name|IFT_IEEE80211
 case|:
-endif|#
-directive|endif
 case|case
 name|IFT_INFINIBAND
 case|:

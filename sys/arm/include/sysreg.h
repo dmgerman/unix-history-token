@@ -1363,6 +1363,20 @@ end_elif
 begin_define
 define|#
 directive|define
+name|CP15_L2CTLR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 1, rr,  c9, c0,  2
+end_define
+
+begin_comment
+comment|/* L2 Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CP15_PMCR
 parameter_list|(
 name|rr

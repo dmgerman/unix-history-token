@@ -760,6 +760,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|IEEE80211_HAS_SEQ
+parameter_list|(
+name|type
+parameter_list|,
+name|subtype
+parameter_list|)
+define|\
+value|((type) != IEEE80211_FC0_TYPE_CTL&& \ 	!((type) == IEEE80211_FC0_TYPE_DATA&& \ 	 ((subtype)& IEEE80211_FC0_SUBTYPE_QOS_NULL) == \ 		      IEEE80211_FC0_SUBTYPE_QOS_NULL))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_SEQ_FRAG_MASK
 value|0x000f
 end_define

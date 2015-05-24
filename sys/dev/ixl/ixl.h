@@ -1571,7 +1571,7 @@ name|vsi
 parameter_list|,
 name|count
 parameter_list|)
-value|(vsi)->iqdrops = (count)
+value|(vsi)->oqdrops = (count)
 end_define
 
 begin_define

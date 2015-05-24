@@ -882,6 +882,9 @@ name|ACPI_TABLE_HEADER
 modifier|*
 modifier|*
 name|Table
+parameter_list|,
+name|BOOLEAN
+name|MustBeAmlTable
 parameter_list|)
 function_decl|;
 end_function_decl

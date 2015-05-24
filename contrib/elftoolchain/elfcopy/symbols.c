@@ -48,7 +48,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: symbols.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: symbols.c 3191 2015-05-04 17:07:01Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -5533,7 +5533,7 @@ for|for
 control|(
 name|hash
 operator|=
-literal|2166136261
+literal|2166136261UL
 init|;
 operator|*
 name|s

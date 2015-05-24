@@ -54,7 +54,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: segments.c 3177 2015-03-30 18:19:41Z emaste $"
+literal|"$Id: segments.c 3196 2015-05-12 17:33:48Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2022,9 +2022,17 @@ name|seg
 operator|->
 name|fsz
 operator|=
+name|s
+operator|->
+name|off
+operator|+
+name|s
+operator|->
+name|sz
+operator|-
 name|seg
 operator|->
-name|msz
+name|off
 expr_stmt|;
 block|}
 block|}

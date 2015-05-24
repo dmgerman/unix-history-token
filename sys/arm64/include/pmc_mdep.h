@@ -15,6 +15,23 @@ directive|define
 name|_MACHINE_PMC_MDEP_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|PMC_MDEP_CLASS_INDEX_ARMV8
+value|1
+end_define
+
+begin_comment
+comment|/*  * On the ARMv8 platform we support the following PMCs.  *  * ARMV8	ARM Cortex-A53/57/72 processors  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<dev/hwpmc/hwpmc_arm64.h>
+end_include
+
 begin_union
 union|union
 name|pmc_md_op_pmcallocate
@@ -56,9 +73,49 @@ end_ifdef
 begin_union
 union|union
 name|pmc_md_pmc
-block|{ }
+block|{
+name|struct
+name|pmc_md_arm64_pmc
+name|pm_arm64
+decl_stmt|;
+block|}
 union|;
 end_union
+
+begin_define
+define|#
+directive|define
+name|PMC_IN_KERNEL_STACK
+parameter_list|(
+name|S
+parameter_list|,
+name|START
+parameter_list|,
+name|END
+parameter_list|)
+define|\
+value|((S)>= (START)&& (S)< (END))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_IN_KERNEL
+parameter_list|(
+name|va
+parameter_list|)
+value|INKERNEL((va))
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_IN_USERSPACE
+parameter_list|(
+name|va
+parameter_list|)
+value|((va)<= VM_MAXUSER_ADDRESS)
+end_define
 
 begin_define
 define|#
@@ -67,12 +124,8 @@ name|PMC_TRAPFRAME_TO_PC
 parameter_list|(
 name|TF
 parameter_list|)
-value|(0)
+value|((TF)->tf_lr)
 end_define
-
-begin_comment
-comment|/* Stubs */
-end_comment
 
 begin_define
 define|#
@@ -81,18 +134,35 @@ name|PMC_TRAPFRAME_TO_FP
 parameter_list|(
 name|TF
 parameter_list|)
-value|(0)
+value|((TF)->tf_x[29])
 end_define
 
-begin_define
-define|#
-directive|define
-name|PMC_TRAPFRAME_TO_SP
+begin_comment
+comment|/*  * Prototypes  */
+end_comment
+
+begin_function_decl
+name|struct
+name|pmc_mdep
+modifier|*
+name|pmc_arm64_initialize
 parameter_list|(
-name|TF
+name|void
 parameter_list|)
-value|(0)
-end_define
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmc_arm64_finalize
+parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|_md
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -613,7 +613,7 @@ modifier|*
 name|default_text
 decl_stmt|;
 name|int
-name|index
+name|idx
 decl_stmt|;
 name|initialize
 argument_list|()
@@ -666,7 +666,7 @@ operator|->
 name|last
 condition|)
 block|{
-name|index
+name|idx
 operator|=
 call|(
 name|int
@@ -685,10 +685,10 @@ name|table
 operator|->
 name|text
 index|[
-name|index
+name|idx
 index|]
 expr_stmt|;
-comment|/* 			 * Note: we use 'index + 1' as the message number 			 * instead of index because isc_msgcat_get() requires 			 * the message number to be> 0. 			 */
+comment|/* 			 * Note: we use 'idx + 1' as the message number 			 * instead of idx because isc_msgcat_get() requires 			 * the message number to be> 0. 			 */
 name|txt
 operator|=
 name|isc_msgcat_get
@@ -701,7 +701,7 @@ name|table
 operator|->
 name|set
 argument_list|,
-name|index
+name|idx
 operator|+
 literal|1
 argument_list|,

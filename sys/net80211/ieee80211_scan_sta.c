@@ -1012,6 +1012,11 @@ name|ieee80211_scan_state
 modifier|*
 name|ss
 parameter_list|,
+name|struct
+name|ieee80211_channel
+modifier|*
+name|curchan
+parameter_list|,
 specifier|const
 name|struct
 name|ieee80211_scanparams
@@ -1546,9 +1551,7 @@ name|sp
 operator|->
 name|chan
 argument_list|,
-name|ic
-operator|->
-name|ic_curchan
+name|curchan
 operator|->
 name|ic_flags
 argument_list|)
@@ -1582,9 +1585,7 @@ name|ise
 operator|->
 name|se_chan
 operator|=
-name|ic
-operator|->
-name|ic_curchan
+name|curchan
 expr_stmt|;
 block|}
 block|}
@@ -1593,9 +1594,7 @@ name|ise
 operator|->
 name|se_chan
 operator|=
-name|ic
-operator|->
-name|ic_curchan
+name|curchan
 expr_stmt|;
 if|if
 condition|(

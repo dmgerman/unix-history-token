@@ -129,7 +129,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t
@@ -375,7 +375,7 @@ name|addr
 argument_list|,
 name|size
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|addr
@@ -407,7 +407,7 @@ name|addr
 argument_list|,
 name|size
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|addr
@@ -439,7 +439,7 @@ name|addr
 argument_list|,
 name|size
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|addr
@@ -471,7 +471,7 @@ name|addr
 argument_list|,
 name|size
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 name|addr
@@ -503,7 +503,7 @@ name|addr
 argument_list|,
 name|size
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|addr
@@ -535,7 +535,7 @@ name|addr
 argument_list|,
 name|size
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|addr
@@ -567,7 +567,7 @@ name|addr
 argument_list|,
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|addr
@@ -624,7 +624,7 @@ name|addr
 argument_list|,
 literal|1
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|addr
@@ -687,7 +687,7 @@ name|void
 operator|*
 argument_list|)
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 name|addr
@@ -716,7 +716,7 @@ name|db_disasm
 argument_list|(
 name|addr
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 break|break;
@@ -730,7 +730,7 @@ name|db_disasm
 argument_list|(
 name|addr
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 break|break;
@@ -784,7 +784,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t
@@ -997,7 +997,7 @@ name|db_disasm
 argument_list|(
 name|loc
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 block|}
@@ -1014,7 +1014,7 @@ parameter_list|(
 name|db_expr_t
 name|dummy1
 parameter_list|,
-name|boolean_t
+name|bool
 name|dummy2
 parameter_list|,
 name|db_expr_t
@@ -1306,7 +1306,7 @@ name|addr
 argument_list|,
 name|size
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 operator|&
 name|mask

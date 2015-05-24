@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: gnum4.c,v 1.46 2014/07/10 14:12:31 espie Exp $ */
+comment|/* $OpenBSD: gnum4.c,v 1.50 2015/04/29 00:13:26 millert Exp $ */
 end_comment
 
 begin_comment
@@ -24,12 +24,6 @@ end_expr_stmt
 begin_comment
 comment|/*  * functions needed to support gnu-m4 extensions, including a fake freezing  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
-end_include
 
 begin_include
 include|#
@@ -82,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -101,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -243,23 +249,9 @@ name|n
 operator|->
 name|name
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|dirname
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|n
-operator|->
-name|name
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"out of memory"
 argument_list|)
 expr_stmt|;
 name|n
@@ -373,21 +365,9 @@ return|return;
 comment|/* for portability: getenv result is read-only */
 name|envpath
 operator|=
-name|strdup
+name|xstrdup
 argument_list|(
 name|envpath
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|envpath
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"out of memory"
 argument_list|)
 expr_stmt|;
 for|for
@@ -445,7 +425,7 @@ block|{
 name|char
 name|path
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|struct
@@ -1035,11 +1015,31 @@ name|bufsize
 operator|=
 literal|1024
 expr_stmt|;
-else|else
+elseif|else
+if|if
+condition|(
+name|bufsize
+operator|<=
+name|SIZE_MAX
+operator|/
+literal|2
+condition|)
+block|{
 name|bufsize
 operator|*=
 literal|2
 expr_stmt|;
+block|}
+else|else
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"size overflow"
+argument_list|)
+expr_stmt|;
+block|}
 name|buffer
 operator|=
 name|xrealloc

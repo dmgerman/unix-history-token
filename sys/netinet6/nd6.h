@@ -262,15 +262,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ND6_IFF_IGNORELOOP
-value|0x100
-end_define
-
-begin_define
-define|#
-directive|define
 name|ND6_IFF_NO_DAD
-value|0x200
+value|0x100
 end_define
 
 begin_define

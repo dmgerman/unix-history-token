@@ -126,7 +126,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: readelf.c 3178 2015-03-30 18:29:13Z emaste $"
+literal|"$Id: readelf.c 3189 2015-04-20 17:02:01Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -14745,6 +14745,8 @@ name|phdr
 decl_stmt|;
 name|size_t
 name|phnum
+decl_stmt|,
+name|size
 decl_stmt|;
 name|int
 name|i
@@ -15006,7 +15008,8 @@ name|re
 operator|->
 name|elf
 argument_list|,
-name|NULL
+operator|&
+name|size
 argument_list|)
 operator|)
 operator|==
@@ -15022,6 +15025,22 @@ argument_list|(
 operator|-
 literal|1
 argument_list|)
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+name|phdr
+operator|.
+name|p_offset
+operator|>=
+name|size
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"invalid program header offset"
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -24035,6 +24054,22 @@ operator|<
 name|pe
 condition|)
 block|{
+if|if
+condition|(
+name|pe
+operator|-
+name|p
+operator|<
+literal|8
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"Truncated MIPS option header"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|kind
 operator|=
 name|re
@@ -24083,6 +24118,32 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|size
+operator|<
+literal|8
+operator|||
+name|size
+operator|-
+literal|8
+operator|>
+name|pe
+operator|-
+name|p
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"Malformed MIPS option header"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|size
+operator|-=
+literal|8
+expr_stmt|;
 switch|switch
 condition|(
 name|kind
@@ -24098,8 +24159,6 @@ argument_list|,
 name|p
 argument_list|,
 name|size
-operator|-
-literal|8
 argument_list|)
 expr_stmt|;
 break|break;
@@ -24302,8 +24361,6 @@ block|}
 name|p
 operator|+=
 name|size
-operator|-
-literal|8
 expr_stmt|;
 block|}
 block|}
@@ -40624,15 +40681,6 @@ condition|;
 name|i
 operator|++
 control|)
-if|if
-condition|(
-name|argv
-index|[
-name|i
-index|]
-operator|!=
-name|NULL
-condition|)
 block|{
 name|re
 operator|->

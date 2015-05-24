@@ -695,6 +695,77 @@ name|evutil_socket_t
 value|int
 endif|#
 directive|endif
+comment|/**  * Structure to hold information about a monotonic timer  *  * Use this with evutil_configure_monotonic_time() and  * evutil_gettime_monotonic().  *  * This is an opaque structure; you can allocate one using  * evutil_monotonic_timer_new().  *  * @see evutil_monotonic_timer_new(), evutil_monotonic_timer_free(),  * evutil_configure_monotonic_time(), evutil_gettime_monotonic()  */
+struct|struct
+name|evutil_monotonic_timer
+ifdef|#
+directive|ifdef
+name|EVENT_IN_DOXYGEN_
+block|{
+comment|/*Empty body so that doxygen will generate documentation here.*/
+block|}
+endif|#
+directive|endif
+struct|;
+define|#
+directive|define
+name|EV_MONOT_PRECISE
+value|1
+define|#
+directive|define
+name|EV_MONOT_FALLBACK
+value|2
+comment|/** Allocate a new struct evutil_monotonic_timer for use with the  * evutil_configure_monotonic_time() and evutil_gettime_monotonic()  * functions.  You must configure the timer with  * evutil_configure_monotonic_time() before using it.  */
+name|EVENT2_EXPORT_SYMBOL
+name|struct
+name|evutil_monotonic_timer
+modifier|*
+name|evutil_monotonic_timer_new
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/** Free a struct evutil_monotonic_timer that was allocated using  * evutil_monotonic_timer_new().  */
+name|EVENT2_EXPORT_SYMBOL
+name|void
+name|evutil_monotonic_timer_free
+parameter_list|(
+name|struct
+name|evutil_monotonic_timer
+modifier|*
+name|timer
+parameter_list|)
+function_decl|;
+comment|/** Set up a struct evutil_monotonic_timer; flags can include  * EV_MONOT_PRECISE and EV_MONOT_FALLBACK.  */
+name|EVENT2_EXPORT_SYMBOL
+name|int
+name|evutil_configure_monotonic_time
+parameter_list|(
+name|struct
+name|evutil_monotonic_timer
+modifier|*
+name|timer
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+function_decl|;
+comment|/** Query the current monotonic time from a struct evutil_monotonic_timer  * previously configured with evutil_configure_monotonic_time().  Monotonic  * time is guaranteed never to run in reverse, but is not necessarily epoch-  * based, or relative to any other definite point.  Use it to make reliable  * measurements of elapsed time between events even when the system time  * may be changed.  *  * It is not safe to use this funtion on the same timer from multiple  * threads.  */
+name|EVENT2_EXPORT_SYMBOL
+name|int
+name|evutil_gettime_monotonic
+parameter_list|(
+name|struct
+name|evutil_monotonic_timer
+modifier|*
+name|timer
+parameter_list|,
+name|struct
+name|timeval
+modifier|*
+name|tp
+parameter_list|)
+function_decl|;
 comment|/** Create two new sockets that are connected to each other.      On Unix, this simply calls socketpair().  On Windows, it uses the     loopback network interface on 127.0.0.1, and only     AF_INET,SOCK_STREAM are supported.      (This may fail on some Windows hosts where firewall software has cleverly     decided to keep 127.0.0.1 from talking to itself.)      Parameters and return values are as for socketpair() */
 name|EVENT2_EXPORT_SYMBOL
 name|int
@@ -729,6 +800,15 @@ comment|/** Do platform-specific operations to make a listener socket reusable. 
 name|EVENT2_EXPORT_SYMBOL
 name|int
 name|evutil_make_listen_socket_reuseable
+parameter_list|(
+name|evutil_socket_t
+name|sock
+parameter_list|)
+function_decl|;
+comment|/** Do platform-specific operations to make a listener port reusable.      Specifically, we want to make sure that multiple programs which also     set the same socket option will be able to bind, listen at the same time.      This is a feature available only to Linux 3.9+      @param sock The socket to make reusable     @return 0 on success, -1 on failure  */
+name|EVENT2_EXPORT_SYMBOL
+name|int
+name|evutil_make_listen_socket_reuseable_port
 parameter_list|(
 name|evutil_socket_t
 name|sock

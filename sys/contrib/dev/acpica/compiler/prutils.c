@@ -373,12 +373,22 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|FILE
+modifier|*
 name|PrOpenIncludeFile
 parameter_list|(
 name|char
 modifier|*
 name|Filename
+parameter_list|,
+name|char
+modifier|*
+name|OpenMode
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|FullPathname
 parameter_list|)
 block|{
 name|FILE
@@ -432,6 +442,10 @@ argument_list|(
 literal|""
 argument_list|,
 name|Filename
+argument_list|,
+name|OpenMode
+argument_list|,
+name|FullPathname
 argument_list|)
 expr_stmt|;
 if|if
@@ -444,7 +458,11 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-return|return;
+return|return
+operator|(
+name|IncludeFile
+operator|)
+return|;
 block|}
 comment|/*      * The include filename is not an absolute path.      *      * First, search for the file within the "local" directory -- meaning      * the same directory that contains the source file.      *      * Construct the file pathname from the global directory name.      */
 name|IncludeFile
@@ -454,6 +472,10 @@ argument_list|(
 name|Gbl_DirectoryPath
 argument_list|,
 name|Filename
+argument_list|,
+name|OpenMode
+argument_list|,
+name|FullPathname
 argument_list|)
 expr_stmt|;
 if|if
@@ -461,7 +483,11 @@ condition|(
 name|IncludeFile
 condition|)
 block|{
-return|return;
+return|return
+operator|(
+name|IncludeFile
+operator|)
+return|;
 block|}
 comment|/*      * Second, search for the file within the (possibly multiple)      * directories specified by the -I option on the command line.      */
 name|NextDir
@@ -482,6 +508,10 @@ operator|->
 name|Dir
 argument_list|,
 name|Filename
+argument_list|,
+name|OpenMode
+argument_list|,
+name|FullPathname
 argument_list|)
 expr_stmt|;
 if|if
@@ -489,7 +519,11 @@ condition|(
 name|IncludeFile
 condition|)
 block|{
-return|return;
+return|return
+operator|(
+name|IncludeFile
+operator|)
+return|;
 block|}
 name|NextDir
 operator|=
@@ -524,6 +558,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
@@ -543,6 +582,15 @@ parameter_list|,
 name|char
 modifier|*
 name|Filename
+parameter_list|,
+name|char
+modifier|*
+name|OpenMode
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|FullPathname
 parameter_list|)
 block|{
 name|FILE
@@ -582,7 +630,7 @@ name|fopen
 argument_list|(
 name|Pathname
 argument_list|,
-literal|"r"
+name|OpenMode
 argument_list|)
 expr_stmt|;
 if|if
@@ -613,6 +661,11 @@ name|IncludeFile
 argument_list|,
 name|Pathname
 argument_list|)
+expr_stmt|;
+operator|*
+name|FullPathname
+operator|=
+name|Pathname
 expr_stmt|;
 return|return
 operator|(

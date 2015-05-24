@@ -31208,7 +31208,7 @@ name|intel_crtc
 operator|->
 name|idle_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -33957,7 +33957,7 @@ name|dev_priv
 operator|->
 name|idle_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

@@ -489,13 +489,6 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|ofw_real_mode
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Map of physical memory regions.  */
 end_comment
@@ -4519,9 +4512,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|ofw_real_mode
-operator|&&
 name|chosen
 operator|!=
 operator|-

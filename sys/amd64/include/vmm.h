@@ -1294,30 +1294,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|cpuset_t
-name|vm_active_cpus
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|cpuset_t
-name|vm_suspended_cpus
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|vm_exit
 modifier|*
@@ -1388,6 +1364,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS__CPUSET_H_
+end_ifdef
+
 begin_comment
 comment|/*  * Rendezvous all vcpus specified in 'dest' and execute 'func(arg)'.  * The rendezvous 'func(arg)' is not allowed to do anything that will  * cause the thread to be put to sleep.  *  * If the rendezvous is being initiated from a vcpu context then the  * 'vcpuid' must refer to that vcpu, otherwise it should be set to -1.  *  * The caller cannot hold any locks when initiating the rendezvous.  *  * The implementation of this API may cause vcpus other than those specified  * by 'dest' to be stalled. The caller should not rely on any vcpus making  * forward progress when the rendezvous is in progress.  */
 end_comment
@@ -1439,6 +1421,39 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|cpuset_t
+name|vm_active_cpus
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|cpuset_t
+name|vm_suspended_cpus
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS__CPUSET_H_ */
+end_comment
 
 begin_function
 specifier|static
@@ -1637,8 +1652,8 @@ name|int
 name|vcpu
 parameter_list|)
 block|{
-return|return
-operator|(
+if|if
+condition|(
 name|curthread
 operator|->
 name|td_flags
@@ -1648,6 +1663,28 @@ name|TDF_ASTPENDING
 operator||
 name|TDF_NEEDRESCHED
 operator|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+name|curthread
+operator|->
+name|td_owepreempt
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+else|else
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -1937,7 +1974,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Set up 'copyinfo[]' to copy to/from guest linear address space starting  * at 'gla' and 'len' bytes long. The 'prot' should be set to PROT_READ for  * a copyin or PROT_WRITE for a copyout.   *  * Returns 0 on success.  * Returns 1 if an exception was injected into the guest.  * Returns -1 otherwise.  *  * The 'copyinfo[]' can be passed to 'vm_copyin()' or 'vm_copyout()' only if  * the return value is 0. The 'copyinfo[]' resources should be freed by calling  * 'vm_copy_teardown()' after the copy is done.  */
+comment|/*  * Set up 'copyinfo[]' to copy to/from guest linear address space starting  * at 'gla' and 'len' bytes long. The 'prot' should be set to PROT_READ for  * a copyin or PROT_WRITE for a copyout.   *  * retval	is_fault	Intepretation  *   0		   0		Success  *   0		   1		An exception was injected into the guest  * EFAULT	  N/A		Unrecoverable error  *  * The 'copyinfo[]' can be passed to 'vm_copyin()' or 'vm_copyout()' only if  * the return value is 0. The 'copyinfo[]' resources should be freed by calling  * 'vm_copy_teardown()' after the copy is done.  */
 end_comment
 
 begin_function_decl
@@ -1973,6 +2010,10 @@ name|copyinfo
 parameter_list|,
 name|int
 name|num_copyinfo
+parameter_list|,
+name|int
+modifier|*
+name|is_fault
 parameter_list|)
 function_decl|;
 end_function_decl

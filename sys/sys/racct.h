@@ -280,6 +280,21 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|racct_enable
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|ASSERT_RACCT_ENABLED
+parameter_list|()
+value|KASSERT(racct_enable, \ 				    ("%s called with !racct_enable", __func__))
+end_define
+
 begin_comment
 comment|/*  * Amount stored in c_resources[] is 10**6 times bigger than what's  * visible to the userland.  It gets fixed up when retrieving resource  * usage or adding rules.  */
 end_comment

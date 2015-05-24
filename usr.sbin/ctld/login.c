@@ -3913,7 +3913,6 @@ operator|->
 name|conn_initiator_name
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: This doesn't work (does nothing) because of Capsicum. 	 */
 name|setproctitle
 argument_list|(
 literal|"%s (%s)"

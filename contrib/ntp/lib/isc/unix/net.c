@@ -430,6 +430,17 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|ISC_PLATFORM_HAVEIPV6
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|WANT_IPV6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
 name|ISC_PLATFORM_HAVEIN6PKTINFO
 argument_list|)
 end_if

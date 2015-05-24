@@ -59,10 +59,10 @@ name|uint32_t
 name|fdd
 decl_stmt|;
 name|uint32_t
-name|invert_line_clock
+name|hsync_active
 decl_stmt|;
 name|uint32_t
-name|invert_frm_clock
+name|vsync_active
 decl_stmt|;
 name|uint32_t
 name|sync_edge
@@ -74,7 +74,7 @@ name|uint32_t
 name|panel_pxl_clk
 decl_stmt|;
 name|uint32_t
-name|panel_invert_pxl_clk
+name|pixelclk_active
 decl_stmt|;
 block|}
 struct|;

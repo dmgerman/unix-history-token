@@ -391,6 +391,9 @@ modifier|*
 parameter_list|,
 name|vm_offset_t
 modifier|*
+parameter_list|,
+name|vm_offset_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1607,6 +1610,8 @@ name|fmp
 decl_stmt|;
 name|vm_offset_t
 name|mdp
+decl_stmt|,
+name|dtbp
 decl_stmt|;
 name|Elf_Addr
 name|entry
@@ -1662,6 +1667,9 @@ name|f_args
 argument_list|,
 operator|&
 name|mdp
+argument_list|,
+operator|&
+name|dtbp
 argument_list|)
 operator|)
 operator|!=

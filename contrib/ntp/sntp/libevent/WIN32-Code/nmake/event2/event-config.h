@@ -799,7 +799,7 @@ begin_define
 define|#
 directive|define
 name|EVENT__NUMERIC_VERSION
-value|0x02010301
+value|0x02010500
 end_define
 
 begin_comment
@@ -1018,7 +1018,7 @@ begin_define
 define|#
 directive|define
 name|EVENT__VERSION
-value|"2.1.3-alpha-dev"
+value|"2.1.5-beta"
 end_define
 
 begin_comment

@@ -262,6 +262,8 @@ argument_list|,
 name|cpusetsize
 argument_list|,
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 name|SYSCTL_NULL_INT_PTR
 argument_list|,

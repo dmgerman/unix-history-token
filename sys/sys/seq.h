@@ -86,6 +86,7 @@ name|int
 name|atomic_load_rmb_int
 parameter_list|(
 specifier|volatile
+specifier|const
 name|u_int
 modifier|*
 name|p
@@ -121,6 +122,7 @@ name|int
 name|atomic_rmb_load_int
 parameter_list|(
 specifier|volatile
+specifier|const
 name|u_int
 modifier|*
 name|p
@@ -239,6 +241,7 @@ name|__inline
 name|seq_t
 name|seq_read
 parameter_list|(
+specifier|const
 name|seq_t
 modifier|*
 name|seqp
@@ -289,6 +292,7 @@ name|__inline
 name|seq_t
 name|seq_consistent
 parameter_list|(
+specifier|const
 name|seq_t
 modifier|*
 name|seqp

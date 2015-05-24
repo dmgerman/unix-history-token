@@ -521,18 +521,11 @@ argument_list|,
 argument|object_list
 argument_list|)
 block|{
-if|if
-condition|(
-operator|!
-name|VM_OBJECT_TRYWLOCK
+name|VM_OBJECT_WLOCK
 argument_list|(
 name|object
 argument_list|)
-condition|)
-block|{
-comment|/* 			 * Avoid a lock-order reversal.  Consequently, 			 * the reported number of active pages may be 			 * greater than the actual number. 			 */
-continue|continue;
-block|}
+expr_stmt|;
 name|vm_object_clear_flag
 argument_list|(
 name|object
@@ -841,7 +834,7 @@ argument_list|,
 argument|object_list
 argument_list|)
 block|{
-comment|/* 		 * Perform unsynchronized reads on the object to avoid 		 * a lock-order reversal.  In this case, the lack of 		 * synchronization should not impair the accuracy of 		 * the reported statistics.  		 */
+comment|/* 		 * Perform unsynchronized reads on the object.  In 		 * this case, the lack of synchronization should not 		 * impair the accuracy of the reported statistics. 		 */
 if|if
 condition|(
 operator|(

@@ -211,6 +211,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libxo/xo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ps.h"
 end_include
 
@@ -1066,8 +1072,19 @@ name|xkeep
 decl_stmt|,
 name|xkeep_implied
 decl_stmt|;
+name|int
+name|fwidthmin
+decl_stmt|,
+name|fwidthmax
+decl_stmt|;
 name|char
 name|errbuf
+index|[
+name|_POSIX2_LINE_MAX
+index|]
+decl_stmt|;
+name|char
+name|fmtbuf
 index|[
 name|_POSIX2_LINE_MAX
 index|]
@@ -1374,6 +1391,26 @@ expr_stmt|;
 name|nlistf
 operator|=
 name|NULL
+expr_stmt|;
+name|argc
+operator|=
+name|xo_parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+name|exit
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1759,7 +1796,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -1972,14 +2009,9 @@ operator|*
 name|argv
 condition|)
 block|{
-name|fprintf
+name|xo_warnx
 argument_list|(
-name|stderr
-argument_list|,
-literal|"%s: illegal argument: %s\n"
-argument_list|,
-name|getprogname
-argument_list|()
+literal|"illegal argument: %s\n"
 argument_list|,
 operator|*
 name|argv
@@ -2031,7 +2063,7 @@ name|kd
 operator|==
 literal|0
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2083,7 +2115,7 @@ name|ptr
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2405,7 +2437,7 @@ operator|<
 literal|0
 operator|)
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -2447,7 +2479,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -3002,10 +3034,33 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Print header. 	 */
+name|xo_open_container
+argument_list|(
+literal|"process-information"
+argument_list|)
+expr_stmt|;
 name|printheader
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|xo_get_style
+argument_list|(
+name|NULL
+argument_list|)
+operator|!=
+name|XO_STYLE_TEXT
+condition|)
+name|termwidth
+operator|=
+name|UNLIMITED
+expr_stmt|;
 comment|/* 	 * Output formatted lines. 	 */
+name|xo_open_list
+argument_list|(
+literal|"process"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -3025,6 +3080,11 @@ block|{
 name|linelen
 operator|=
 literal|0
+expr_stmt|;
+name|xo_open_instance
+argument_list|(
+literal|"process"
+argument_list|)
 expr_stmt|;
 name|STAILQ_FOREACH
 argument_list|(
@@ -3081,6 +3141,10 @@ name|ks_next
 argument_list|)
 expr_stmt|;
 comment|/* Truncate rightmost column if necessary.  */
+name|fwidthmax
+operator|=
+name|_POSIX2_LINE_MAX
+expr_stmt|;
 if|if
 condition|(
 name|STAILQ_NEXT
@@ -3127,14 +3191,9 @@ operator|->
 name|ks_str
 argument_list|)
 condition|)
-name|ks
-operator|->
-name|ks_str
-index|[
-name|left
-index|]
+name|fwidthmax
 operator|=
-literal|'\0'
+name|left
 expr_stmt|;
 block|}
 name|str
@@ -3154,8 +3213,17 @@ operator|=
 literal|"-"
 expr_stmt|;
 comment|/* No padding for the last column, if it's LJUST. */
-if|if
-condition|(
+name|fwidthmin
+operator|=
+operator|(
+name|xo_get_style
+argument_list|(
+name|NULL
+argument_list|)
+operator|!=
+name|XO_STYLE_TEXT
+operator|||
+operator|(
 name|STAILQ_NEXT
 argument_list|(
 name|vent
@@ -3165,6 +3233,7 @@ argument_list|)
 operator|==
 name|NULL
 operator|&&
+operator|(
 name|vent
 operator|->
 name|var
@@ -3172,33 +3241,71 @@ operator|->
 name|flag
 operator|&
 name|LJUST
-condition|)
-name|linelen
-operator|+=
-name|printf
-argument_list|(
-name|fmtstr
-argument_list|,
+operator|)
+operator|)
+operator|)
+condition|?
 literal|0
-argument_list|,
-name|str
-argument_list|)
-expr_stmt|;
-else|else
-name|linelen
-operator|+=
-name|printf
-argument_list|(
-name|fmtstr
-argument_list|,
+else|:
 name|vent
 operator|->
 name|var
 operator|->
 name|width
+expr_stmt|;
+name|snprintf
+argument_list|(
+name|fmtbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|fmtbuf
+argument_list|)
+argument_list|,
+literal|"{:%s/%%%s%d..%ds}"
+argument_list|,
+name|vent
+operator|->
+name|var
+operator|->
+name|field
+condition|?
+else|:
+name|vent
+operator|->
+name|var
+operator|->
+name|name
+argument_list|,
+operator|(
+name|vent
+operator|->
+name|var
+operator|->
+name|flag
+operator|&
+name|LJUST
+operator|)
+condition|?
+literal|"-"
+else|:
+literal|""
+argument_list|,
+name|fwidthmin
+argument_list|,
+name|fwidthmax
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+name|fmtbuf
 argument_list|,
 name|str
 argument_list|)
+expr_stmt|;
+name|linelen
+operator|+=
+name|fwidthmin
 expr_stmt|;
 if|if
 condition|(
@@ -3244,12 +3351,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|putchar
+name|xo_emit
 argument_list|(
-literal|' '
+literal|"{P: }"
 argument_list|)
 expr_stmt|;
 name|linelen
@@ -3257,12 +3361,14 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"process"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3277,12 +3383,9 @@ operator|-
 literal|4
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 name|printheader
@@ -3294,6 +3397,19 @@ literal|0
 expr_stmt|;
 block|}
 block|}
+name|xo_close_list
+argument_list|(
+literal|"process"
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"process-information"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
+expr_stmt|;
 name|free_list
 argument_list|(
 operator|&
@@ -3435,7 +3551,7 @@ name|elem
 operator|==
 literal|'\0'
 condition|)
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"Invalid (zero-length) %s name"
 argument_list|,
@@ -3445,7 +3561,7 @@ name|lname
 argument_list|)
 expr_stmt|;
 else|else
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"%s name too long: %s"
 argument_list|,
@@ -3543,7 +3659,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"No %s %s '%s'"
 argument_list|,
@@ -3755,7 +3871,7 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"Invalid (zero-length) process id"
 argument_list|)
@@ -3803,7 +3919,7 @@ operator|==
 name|endp
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"Invalid %s: %s"
 argument_list|,
@@ -3831,7 +3947,7 @@ operator|>
 name|pid_max
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"%s too large: %s"
 argument_list|,
@@ -4211,7 +4327,7 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s, %s, and %s"
 argument_list|,
@@ -4223,7 +4339,7 @@ name|ttypath
 argument_list|)
 expr_stmt|;
 else|else
-name|warn
+name|xo_warn
 argument_list|(
 literal|"%s"
 argument_list|,
@@ -4260,7 +4376,7 @@ index|]
 operator|!=
 literal|'\0'
 condition|)
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"%s, %s, and %s: Not a terminal"
 argument_list|,
@@ -4272,7 +4388,7 @@ name|ttypath
 argument_list|)
 expr_stmt|;
 else|else
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"%s: Not a terminal"
 argument_list|,
@@ -4381,7 +4497,7 @@ name|elem
 operator|==
 literal|'\0'
 condition|)
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"Invalid (zero-length) %s name"
 argument_list|,
@@ -4391,7 +4507,7 @@ name|lname
 argument_list|)
 expr_stmt|;
 else|else
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"%s name too long: %s"
 argument_list|,
@@ -4458,7 +4574,7 @@ name|bigtemp
 operator|>
 name|UID_MAX
 condition|)
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"No %s named '%s'"
 argument_list|,
@@ -4488,7 +4604,7 @@ name|pwd
 operator|==
 name|NULL
 condition|)
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"No %s name or ID matches '%s'"
 argument_list|,
@@ -4760,7 +4876,7 @@ condition|)
 name|argp
 operator|++
 expr_stmt|;
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"Value too long: %.*s"
 argument_list|,
@@ -5362,7 +5478,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -5671,7 +5787,7 @@ operator|.
 name|ptr
 argument_list|)
 expr_stmt|;
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -6029,7 +6145,7 @@ name|ks
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -6389,7 +6505,7 @@ name|ki_args
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -6464,7 +6580,7 @@ name|ki_env
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -6930,7 +7046,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|errx
+name|xo_errx
 argument_list|(
 literal|1
 argument_list|,
@@ -7046,7 +7162,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"unable to read kern.pid_max"
 argument_list|)
@@ -7074,10 +7190,8 @@ value|"[-aCcde" OPT_LAZY_f "HhjlmrSTuvwXxZ]"
 operator|(
 name|void
 operator|)
-name|fprintf
+name|xo_error
 argument_list|(
-name|stderr
-argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
 literal|"usage: ps "

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -260,6 +260,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_SUBDEV_ID_82599_SFP_LOM
+value|0x06EE
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_DEV_ID_82599_BACKPLANE_FCOE
 value|0x152A
 end_define
@@ -390,17 +397,6 @@ name|IXGBE_DEV_ID_X550T
 value|0x1563
 end_define
 
-begin_comment
-comment|/* Placeholder value, pending official value. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IXGBE_DEV_ID_X550EM_A_KR
-value|0xABCD
-end_define
-
 begin_define
 define|#
 directive|define
@@ -453,20 +449,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_DEV_ID_X550EM_A_VF
-value|0x15B3
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_DEV_ID_X550EM_A_VF_HV
-value|0x15B4
-end_define
-
-begin_define
-define|#
-directive|define
 name|IXGBE_DEV_ID_X550EM_X_VF
 value|0x15A8
 end_define
@@ -476,6 +458,30 @@ define|#
 directive|define
 name|IXGBE_DEV_ID_X550EM_X_VF_HV
 value|0x15A9
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CAT
+parameter_list|(
+name|r
+parameter_list|,
+name|m
+parameter_list|)
+value|IXGBE_##r##m
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_BY_MAC
+parameter_list|(
+name|_hw
+parameter_list|,
+name|r
+parameter_list|)
+value|((_hw)->mvals[IXGBE_CAT(r, _IDX)])
 end_define
 
 begin_comment
@@ -527,8 +533,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_I2CCTL
+value|IXGBE_I2CCTL_82599
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2CCTL_X540
+value|IXGBE_I2CCTL_82599
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_I2CCTL_X550
 value|0x15F5C
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2CCTL_X550EM_x
+value|IXGBE_I2CCTL_X550
 end_define
 
 begin_define
@@ -538,7 +565,7 @@ name|IXGBE_I2CCTL_BY_MAC
 parameter_list|(
 name|_hw
 parameter_list|)
-value|((((_hw)->mac.type>= ixgbe_mac_X550) ? \ 				 IXGBE_I2CCTL_X550 : IXGBE_I2CCTL_82599))
+value|IXGBE_BY_MAC((_hw), I2CCTL)
 end_define
 
 begin_define
@@ -625,6 +652,37 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_EEC_X540
+value|IXGBE_EEC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EEC_X550
+value|IXGBE_EEC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EEC_X550EM_x
+value|IXGBE_EEC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EEC_BY_MAC
+parameter_list|(
+name|_hw
+parameter_list|)
+value|IXGBE_EEC
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_EERD
 value|0x10014
 end_define
@@ -641,6 +699,37 @@ define|#
 directive|define
 name|IXGBE_FLA
 value|0x1001C
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FLA_X540
+value|IXGBE_FLA
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FLA_X550
+value|IXGBE_FLA
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FLA_X550EM_x
+value|IXGBE_FLA
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FLA_BY_MAC
+parameter_list|(
+name|_hw
+parameter_list|)
+value|IXGBE_FLA
 end_define
 
 begin_define
@@ -695,8 +784,70 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_GRC_X540
+value|IXGBE_GRC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_GRC_X550
+value|IXGBE_GRC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_GRC_X550EM_x
+value|IXGBE_GRC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_GRC_BY_MAC
+parameter_list|(
+name|_hw
+parameter_list|)
+value|IXGBE_GRC
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_SRAMREL
 value|0x10210
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SRAMREL_X540
+value|IXGBE_SRAMREL
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SRAMREL_X550
+value|IXGBE_SRAMREL
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SRAMREL_X550EM_x
+value|IXGBE_SRAMREL
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SRAMREL_BY_MAC
+parameter_list|(
+name|_hw
+parameter_list|)
+value|IXGBE_SRAMREL
 end_define
 
 begin_define
@@ -753,11 +904,67 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_I2C_CLK_IN
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_CLK_IN_X540
+value|IXGBE_I2C_CLK_IN
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_CLK_IN_X550
+value|0x00004000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_CLK_IN_X550EM_x
+value|IXGBE_I2C_CLK_IN_X550
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_I2C_CLK_IN_BY_MAC
 parameter_list|(
 name|_hw
 parameter_list|)
-value|(((_hw)->mac.type)>= ixgbe_mac_X550 ? \ 					0x00004000 : 0x00000001)
+value|IXGBE_BY_MAC((_hw), I2C_CLK_IN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_CLK_OUT
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_CLK_OUT_X540
+value|IXGBE_I2C_CLK_OUT
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_CLK_OUT_X550
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_CLK_OUT_X550EM_x
+value|IXGBE_I2C_CLK_OUT_X550
 end_define
 
 begin_define
@@ -767,7 +974,35 @@ name|IXGBE_I2C_CLK_OUT_BY_MAC
 parameter_list|(
 name|_hw
 parameter_list|)
-value|(((_hw)->mac.type)>= ixgbe_mac_X550 ? \ 					0x00000200 : 0x00000002)
+value|IXGBE_BY_MAC((_hw), I2C_CLK_OUT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_DATA_IN
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_DATA_IN_X540
+value|IXGBE_I2C_DATA_IN
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_DATA_IN_X550
+value|0x00001000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_DATA_IN_X550EM_x
+value|IXGBE_I2C_DATA_IN_X550
 end_define
 
 begin_define
@@ -777,7 +1012,35 @@ name|IXGBE_I2C_DATA_IN_BY_MAC
 parameter_list|(
 name|_hw
 parameter_list|)
-value|(((_hw)->mac.type)>= ixgbe_mac_X550 ? \ 					0x00001000 : 0x00000004)
+value|IXGBE_BY_MAC((_hw), I2C_DATA_IN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_DATA_OUT
+value|0x00000008
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_DATA_OUT_X540
+value|IXGBE_I2C_DATA_OUT
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_DATA_OUT_X550
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_DATA_OUT_X550EM_x
+value|IXGBE_I2C_DATA_OUT_X550
 end_define
 
 begin_define
@@ -787,17 +1050,35 @@ name|IXGBE_I2C_DATA_OUT_BY_MAC
 parameter_list|(
 name|_hw
 parameter_list|)
-value|(((_hw)->mac.type)>= ixgbe_mac_X550 ? \ 					0x00000400 : 0x00000008)
+value|IXGBE_BY_MAC((_hw), I2C_DATA_OUT)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_I2C_BB_EN_BY_MAC
-parameter_list|(
-name|hw
-parameter_list|)
-value|((hw)->mac.type>= ixgbe_mac_X550 ? \ 				    0x00000100 : 0)
+name|IXGBE_I2C_DATA_OE_N_EN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_DATA_OE_N_EN_X540
+value|IXGBE_I2C_DATA_OE_N_EN
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_DATA_OE_N_EN_X550
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_DATA_OE_N_EN_X550EM_x
+value|IXGBE_I2C_DATA_OE_N_EN_X550
 end_define
 
 begin_define
@@ -805,9 +1086,75 @@ define|#
 directive|define
 name|IXGBE_I2C_DATA_OE_N_EN_BY_MAC
 parameter_list|(
-name|hw
+name|_hw
 parameter_list|)
-value|((hw)->mac.type>= ixgbe_mac_X550 ? \ 					   0x00000800 : 0)
+value|IXGBE_BY_MAC((_hw), I2C_DATA_OE_N_EN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_BB_EN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_BB_EN_X540
+value|IXGBE_I2C_BB_EN
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_BB_EN_X550
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_BB_EN_X550EM_x
+value|IXGBE_I2C_BB_EN_X550
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_BB_EN_BY_MAC
+parameter_list|(
+name|_hw
+parameter_list|)
+value|IXGBE_BY_MAC((_hw), I2C_BB_EN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_CLK_OE_N_EN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_CLK_OE_N_EN_X540
+value|IXGBE_I2C_CLK_OE_N_EN
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_CLK_OE_N_EN_X550
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_I2C_CLK_OE_N_EN_X550EM_x
+value|IXGBE_I2C_CLK_OE_N_EN_X550
 end_define
 
 begin_define
@@ -815,9 +1162,9 @@ define|#
 directive|define
 name|IXGBE_I2C_CLK_OE_N_EN_BY_MAC
 parameter_list|(
-name|hw
+name|_hw
 parameter_list|)
-value|((hw)->mac.type>= ixgbe_mac_X550 ? \ 					  0x00002000 : 0)
+value|IXGBE_BY_MAC((_hw), I2C_CLK_OE_N_EN)
 end_define
 
 begin_define
@@ -3792,6 +4139,13 @@ end_define
 begin_comment
 comment|/* EEE Set up */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EEE_SU_TEEE_DLY_SHIFT
+value|26
+end_define
 
 begin_define
 define|#
@@ -6844,6 +7198,37 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_FACTPS_X540
+value|IXGBE_FACTPS
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FACTPS_X550
+value|IXGBE_FACTPS
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FACTPS_X550EM_x
+value|IXGBE_FACTPS
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FACTPS_BY_MAC
+parameter_list|(
+name|_hw
+parameter_list|)
+value|IXGBE_FACTPS
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_PCIEANACTL
 value|0x11040
 end_define
@@ -6858,8 +7243,108 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_SWSM_X540
+value|IXGBE_SWSM
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SWSM_X550
+value|IXGBE_SWSM
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SWSM_X550EM_x
+value|IXGBE_SWSM
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SWSM_BY_MAC
+parameter_list|(
+name|_hw
+parameter_list|)
+value|IXGBE_SWSM
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_FWSM
 value|0x10148
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FWSM_X540
+value|IXGBE_FWSM
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FWSM_X550
+value|IXGBE_FWSM
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FWSM_X550EM_x
+value|IXGBE_FWSM
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FWSM_BY_MAC
+parameter_list|(
+name|_hw
+parameter_list|)
+value|IXGBE_FWSM
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SWFW_SYNC
+value|IXGBE_GSSR
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SWFW_SYNC_X540
+value|IXGBE_SWFW_SYNC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SWFW_SYNC_X550
+value|IXGBE_SWFW_SYNC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SWFW_SYNC_X550EM_x
+value|IXGBE_SWFW_SYNC
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SWFW_SYNC_BY_MAC
+parameter_list|(
+name|_hw
+parameter_list|)
+value|IXGBE_SWFW_SYNC
 end_define
 
 begin_define
@@ -6888,13 +7373,6 @@ define|#
 directive|define
 name|IXGBE_DCA_CTRL
 value|0x11074
-end_define
-
-begin_define
-define|#
-directive|define
-name|IXGBE_SWFW_SYNC
-value|IXGBE_GSSR
 end_define
 
 begin_comment
@@ -6967,15 +7445,43 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_CIAA_82599
+name|IXGBE_CIAA
 value|0x11088
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_CIAD_82599
+name|IXGBE_CIAD
 value|0x1108C
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CIAA_82599
+value|IXGBE_CIAA
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CIAD_82599
+value|IXGBE_CIAD
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CIAA_X540
+value|IXGBE_CIAA
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CIAD_X540
+value|IXGBE_CIAD
 end_define
 
 begin_define
@@ -6995,11 +7501,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXGBE_CIAA_X550EM_x
+value|IXGBE_CIAA_X550
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_CIAD_X550EM_x
+value|IXGBE_CIAD_X550
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_CIAA_BY_MAC
 parameter_list|(
 name|_hw
 parameter_list|)
-value|((((_hw)->mac.type>= ixgbe_mac_X550) ? \ 				 IXGBE_CIAA_X550 : IXGBE_CIAA_82599))
+value|IXGBE_BY_MAC((_hw), CIAA)
 end_define
 
 begin_define
@@ -7009,7 +7529,7 @@ name|IXGBE_CIAD_BY_MAC
 parameter_list|(
 name|_hw
 parameter_list|)
-value|((((_hw)->mac.type>= ixgbe_mac_X550) ? \ 				 IXGBE_CIAD_X550 : IXGBE_CIAD_82599))
+value|IXGBE_BY_MAC((_hw), CIAD)
 end_define
 
 begin_define
@@ -9695,6 +10215,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_MDIO_AUTO_NEG_VENDOR_TX_ALARM2
+value|0xCC01
+end_define
+
+begin_comment
+comment|/* AUTO_NEG Vendor Tx Reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_AUTO_NEG_VEN_LSC
+value|0x1
+end_define
+
+begin_comment
+comment|/* AUTO_NEG Vendor Tx LSC */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_MDIO_AUTO_NEG_ADVT
 value|0x10
 end_define
@@ -9992,6 +10534,138 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_MDIO_GLOBAL_INT_CHIP_STD_MASK
+value|0xFF00
+end_define
+
+begin_comment
+comment|/* int std mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_GLOBAL_CHIP_STD_INT_FLAG
+value|0xFC00
+end_define
+
+begin_comment
+comment|/* chip std int flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_GLOBAL_INT_CHIP_VEN_MASK
+value|0xFF01
+end_define
+
+begin_comment
+comment|/* int chip-wide mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_GLOBAL_INT_CHIP_VEN_FLAG
+value|0xFC01
+end_define
+
+begin_comment
+comment|/* int chip-wide mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_GLOBAL_ALARM_1
+value|0xCC00
+end_define
+
+begin_comment
+comment|/* Global alarm 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_GLOBAL_ALM_1_HI_TMP_FAIL
+value|0x4000
+end_define
+
+begin_comment
+comment|/* high temp failure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_GLOBAL_INT_MASK
+value|0xD400
+end_define
+
+begin_comment
+comment|/* Global int mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_GLOBAL_AN_VEN_ALM_INT_EN
+value|0x1000
+end_define
+
+begin_comment
+comment|/* autoneg vendor alarm int enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_GLOBAL_ALARM_1_INT
+value|0x4
+end_define
+
+begin_comment
+comment|/* int in Global alarm 1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_GLOBAL_VEN_ALM_INT_EN
+value|0x1
+end_define
+
+begin_comment
+comment|/* vendor alarm int enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_GLOBAL_STD_ALM2_INT
+value|0x200
+end_define
+
+begin_comment
+comment|/* vendor alarm2 int mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_GLOBAL_INT_HI_TEMP_EN
+value|0x4000
+end_define
+
+begin_comment
+comment|/* int high temp enable */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IXGBE_MDIO_PMA_PMD_CONTROL_ADDR
 value|0x0000
 end_define
@@ -10031,6 +10705,28 @@ end_define
 
 begin_comment
 comment|/* PHY_XS SDA/SCL Status Reg */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_PMA_TX_VEN_LASI_INT_MASK
+value|0xD401
+end_define
+
+begin_comment
+comment|/* PHY TX Vendor LASI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IXGBE_MDIO_PMA_TX_VEN_LASI_INT_EN
+value|0x1
+end_define
+
+begin_comment
+comment|/* PHY TX Vendor LASI enable */
 end_comment
 
 begin_define
@@ -10655,11 +11351,53 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_SDP0_GPIEN_X550
+value|IXGBE_SDP0_GPIEN_X540
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SDP1_GPIEN_X550
+value|IXGBE_SDP1_GPIEN_X540
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SDP2_GPIEN_X550
+value|IXGBE_SDP2_GPIEN_X540
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SDP0_GPIEN_X550EM_x
+value|IXGBE_SDP0_GPIEN_X540
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SDP1_GPIEN_X550EM_x
+value|IXGBE_SDP1_GPIEN_X540
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_SDP2_GPIEN_X550EM_x
+value|IXGBE_SDP2_GPIEN_X540
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_SDP0_GPIEN_BY_MAC
 parameter_list|(
 name|_hw
 parameter_list|)
-value|((_hw)->mac.type>= ixgbe_mac_X540 ? \ 				      IXGBE_SDP0_GPIEN_X540 : IXGBE_SDP0_GPIEN)
+value|IXGBE_BY_MAC((_hw), SDP0_GPIEN)
 end_define
 
 begin_define
@@ -10669,7 +11407,7 @@ name|IXGBE_SDP1_GPIEN_BY_MAC
 parameter_list|(
 name|_hw
 parameter_list|)
-value|((_hw)->mac.type>= ixgbe_mac_X540 ? \ 				      IXGBE_SDP1_GPIEN_X540 : IXGBE_SDP1_GPIEN)
+value|IXGBE_BY_MAC((_hw), SDP1_GPIEN)
 end_define
 
 begin_define
@@ -10679,7 +11417,7 @@ name|IXGBE_SDP2_GPIEN_BY_MAC
 parameter_list|(
 name|_hw
 parameter_list|)
-value|((_hw)->mac.type>= ixgbe_mac_X540 ? \ 				      IXGBE_SDP2_GPIEN_X540 : IXGBE_SDP2_GPIEN)
+value|IXGBE_BY_MAC((_hw), SDP2_GPIEN)
 end_define
 
 begin_define
@@ -11989,11 +12727,53 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IXGBE_EICR_GPI_SDP0_X550
+value|IXGBE_EICR_GPI_SDP0_X540
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EICR_GPI_SDP1_X550
+value|IXGBE_EICR_GPI_SDP1_X540
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EICR_GPI_SDP2_X550
+value|IXGBE_EICR_GPI_SDP2_X540
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EICR_GPI_SDP0_X550EM_x
+value|IXGBE_EICR_GPI_SDP0_X540
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EICR_GPI_SDP1_X550EM_x
+value|IXGBE_EICR_GPI_SDP1_X540
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_EICR_GPI_SDP2_X550EM_x
+value|IXGBE_EICR_GPI_SDP2_X540
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXGBE_EICR_GPI_SDP0_BY_MAC
 parameter_list|(
 name|_hw
 parameter_list|)
-value|((_hw)->mac.type>= ixgbe_mac_X540 ? \ 					 IXGBE_EICR_GPI_SDP0_X540 : \ 					 IXGBE_EICR_GPI_SDP0)
+value|IXGBE_BY_MAC((_hw), EICR_GPI_SDP0)
 end_define
 
 begin_define
@@ -12003,7 +12783,7 @@ name|IXGBE_EICR_GPI_SDP1_BY_MAC
 parameter_list|(
 name|_hw
 parameter_list|)
-value|((_hw)->mac.type>= ixgbe_mac_X540 ? \ 					 IXGBE_EICR_GPI_SDP1_X540 : \ 					 IXGBE_EICR_GPI_SDP1)
+value|IXGBE_BY_MAC((_hw), EICR_GPI_SDP1)
 end_define
 
 begin_define
@@ -12013,7 +12793,7 @@ name|IXGBE_EICR_GPI_SDP2_BY_MAC
 parameter_list|(
 name|_hw
 parameter_list|)
-value|((_hw)->mac.type>= ixgbe_mac_X540 ? \ 					 IXGBE_EICR_GPI_SDP2_X540 : \ 					 IXGBE_EICR_GPI_SDP2)
+value|IXGBE_BY_MAC((_hw), EICR_GPI_SDP2)
 end_define
 
 begin_define
@@ -13835,6 +14615,27 @@ parameter_list|(
 name|_i
 parameter_list|)
 value|IXGBE_LED_OFFSET(IXGBE_LED_MODE_MASK_BASE, _i)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_X557_LED_MANUAL_SET_MASK
+value|(1<< 8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_X557_MAX_LED_INDEX
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_X557_LED_PROVISIONING
+value|0xC430
 end_define
 
 begin_comment
@@ -20048,6 +20849,17 @@ begin_comment
 comment|/* Process Apply command limit */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IXGBE_HI_PHY_MGMT_REQ_TIMEOUT
+value|2000
+end_define
+
+begin_comment
+comment|/* Wait up to 2 seconds */
+end_comment
+
 begin_comment
 comment|/* CEM Support */
 end_comment
@@ -20184,6 +20996,13 @@ define|#
 directive|define
 name|FW_DISABLE_RXEN_LEN
 value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|FW_PHY_MGMT_REQ_CMD
+value|0x20
 end_define
 
 begin_comment
@@ -21955,6 +22774,31 @@ block|}
 union|;
 end_union
 
+begin_define
+define|#
+directive|define
+name|IXGBE_MVALS_INIT
+parameter_list|(
+name|m
+parameter_list|)
+define|\
+value|IXGBE_CAT(EEC, m),		\ 	IXGBE_CAT(FLA, m),		\ 	IXGBE_CAT(GRC, m),		\ 	IXGBE_CAT(SRAMREL, m),		\ 	IXGBE_CAT(FACTPS, m),		\ 	IXGBE_CAT(SWSM, m),		\ 	IXGBE_CAT(FWSM, m),		\ 	IXGBE_CAT(SDP0_GPIEN, m),	\ 	IXGBE_CAT(SDP1_GPIEN, m),	\ 	IXGBE_CAT(SDP2_GPIEN, m),	\ 	IXGBE_CAT(EICR_GPI_SDP0, m),	\ 	IXGBE_CAT(EICR_GPI_SDP1, m),	\ 	IXGBE_CAT(EICR_GPI_SDP2, m),	\ 	IXGBE_CAT(CIAA, m),		\ 	IXGBE_CAT(CIAD, m),		\ 	IXGBE_CAT(I2C_CLK_IN, m),	\ 	IXGBE_CAT(I2C_CLK_OUT, m),	\ 	IXGBE_CAT(I2C_DATA_IN, m),	\ 	IXGBE_CAT(I2C_DATA_OUT, m),	\ 	IXGBE_CAT(I2C_DATA_OE_N_EN, m),	\ 	IXGBE_CAT(I2C_BB_EN, m),	\ 	IXGBE_CAT(I2C_CLK_OE_N_EN, m),	\ 	IXGBE_CAT(I2CCTL, m)
+end_define
+
+begin_enum
+enum|enum
+name|ixgbe_mvals
+block|{
+name|IXGBE_MVALS_INIT
+argument_list|(
+name|_IDX
+argument_list|)
+block|,
+name|IXGBE_MVALS_IDX_LIMIT
+block|}
+enum|;
+end_enum
+
 begin_comment
 comment|/*  * Unavailable: The FCoE Boot Option ROM is not present in the flash.  * Disabled: Present; boot order is not set for any targets on the port.  * Enabled: Present; boot order is set for at least one target on the port.  */
 end_comment
@@ -22014,18 +22858,13 @@ name|ixgbe_mac_X540
 block|,
 name|ixgbe_mac_X540_vf
 block|,
-comment|/* 	 * X550EM MAC type decoder: 	 * ixgbe_mac_X550EM_x: "x" = Xeon 	 * ixgbe_mac_X550EM_a: "a" = Atom 	 */
 name|ixgbe_mac_X550
 block|,
 name|ixgbe_mac_X550EM_x
 block|,
-name|ixgbe_mac_X550EM_a
-block|,
 name|ixgbe_mac_X550_vf
 block|,
 name|ixgbe_mac_X550EM_x_vf
-block|,
-name|ixgbe_mac_X550EM_a_vf
 block|,
 name|ixgbe_num_macs
 block|}
@@ -22151,6 +22990,14 @@ block|,
 name|ixgbe_sfp_type_1g_sx_core1
 init|=
 literal|12
+block|,
+name|ixgbe_sfp_type_1g_lx_core0
+init|=
+literal|13
+block|,
+name|ixgbe_sfp_type_1g_lx_core1
+init|=
+literal|14
 block|,
 name|ixgbe_sfp_type_not_present
 init|=
@@ -24309,6 +25156,100 @@ name|ixgbe_hw
 modifier|*
 parameter_list|)
 function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|handle_lasi
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|read_i2c_combined_unlocked
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u8
+name|addr
+parameter_list|,
+name|u16
+name|reg
+parameter_list|,
+name|u16
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|write_i2c_combined_unlocked
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u8
+name|addr
+parameter_list|,
+name|u16
+name|reg
+parameter_list|,
+name|u16
+name|value
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|read_i2c_byte_unlocked
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u8
+name|offset
+parameter_list|,
+name|u8
+name|addr
+parameter_list|,
+name|u8
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+name|s32
+function_decl|(
+modifier|*
+name|write_i2c_byte_unlocked
+function_decl|)
+parameter_list|(
+name|struct
+name|ixgbe_hw
+modifier|*
+parameter_list|,
+name|u8
+name|offset
+parameter_list|,
+name|u8
+name|addr
+parameter_list|,
+name|u8
+name|value
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -24517,6 +25458,9 @@ name|reset_if_overtemp
 decl_stmt|;
 name|bool
 name|qsfp_shared_i2c_bus
+decl_stmt|;
+name|u32
+name|nw_mng_if_sel
 decl_stmt|;
 block|}
 struct|;
@@ -24750,6 +25694,11 @@ decl_stmt|;
 name|struct
 name|ixgbe_mbx_info
 name|mbx
+decl_stmt|;
+specifier|const
+name|u32
+modifier|*
+name|mvals
 decl_stmt|;
 name|u16
 name|device_id
@@ -25070,6 +26019,30 @@ define|#
 directive|define
 name|IXGBE_NOT_IMPLEMENTED
 value|0x7FFFFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FUSES0_GROUP
+parameter_list|(
+name|_i
+parameter_list|)
+value|(0x11158 + ((_i) * 4))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FUSES0_300MHZ
+value|(1<< 5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_FUSES0_REV1
+value|(1<< 6)
 end_define
 
 begin_define
@@ -25489,22 +26462,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|IXGBE_SB_IOSF_TARGET_KX4_UNIPHY
+name|IXGBE_SB_IOSF_TARGET_KX4_PHY
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_SB_IOSF_TARGET_KX4_PCS0
+name|IXGBE_SB_IOSF_TARGET_KX4_PCS
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|IXGBE_SB_IOSF_TARGET_KX4_PCS1
-value|3
+name|IXGBE_NW_MNG_IF_SEL
+value|0x00011178
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_NW_MNG_IF_SEL_INT_PHY_MODE
+value|(1<< 24)
 end_define
 
 begin_endif

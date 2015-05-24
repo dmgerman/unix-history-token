@@ -111,6 +111,24 @@ begin_comment
 comment|/******************************************************************************  *  * Parser interfaces  *  *****************************************************************************/
 end_comment
 
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|UINT8
+name|AcpiGbl_ShortOpIndex
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|UINT8
+name|AcpiGbl_LongOpIndex
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * psxface - Parser external interfaces  */
 end_comment

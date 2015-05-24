@@ -3664,7 +3664,7 @@ index|[
 name|unit
 index|]
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|s
@@ -3983,7 +3983,7 @@ name|d
 operator|->
 name|timeout_handle
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -13112,7 +13112,7 @@ argument_list|(
 operator|&
 name|timeout_handle
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset

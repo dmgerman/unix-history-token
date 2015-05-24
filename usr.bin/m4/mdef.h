@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: mdef.h,v 1.31 2011/09/27 07:24:02 espie Exp $	*/
+comment|/*	$OpenBSD: mdef.h,v 1.32 2014/12/21 09:33:12 espie Exp $	*/
 end_comment
 
 begin_comment
@@ -718,6 +718,27 @@ end_struct
 begin_define
 define|#
 directive|define
+name|STORAGE_STRSPACE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|STORAGE_MACRO
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|STORAGE_OTHER
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
 name|CURRENT_NAME
 value|(infile[ilevel].name)
 end_define
@@ -749,7 +770,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do {				\ 		if (++sp == (int)STACKMAX)	\ 			enlarge_stack();\ 		mstack[sp].sfra = (x);	\ 		sstack[sp] = 0; \ 	} while (0)
+value|do {				\ 		if (++sp == (int)STACKMAX)	\ 			enlarge_stack();\ 		mstack[sp].sfra = (x);	\ 		sstack[sp] = STORAGE_OTHER; \ 	} while (0)
 end_define
 
 begin_define
@@ -760,7 +781,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do {				\ 		if (++sp == (int)STACKMAX)	\ 			enlarge_stack();\ 		mstack[sp].sstr = (x);	\ 		sstack[sp] = 1; \ 	} while (0)
+value|do {				\ 		if (++sp == (int)STACKMAX)	\ 			enlarge_stack();\ 		mstack[sp].sstr = (x);	\ 		sstack[sp] = STORAGE_STRSPACE; \ 	} while (0)
 end_define
 
 begin_define
@@ -771,7 +792,18 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do {				\ 		if (++sp == (int)STACKMAX)	\ 			enlarge_stack();\ 		mstack[sp].sstr = (x);	\ 		sstack[sp] = 0; \ 	} while (0)
+value|do {				\ 		if (++sp == (int)STACKMAX)	\ 			enlarge_stack();\ 		mstack[sp].sstr = (x);	\ 		sstack[sp] = STORAGE_OTHER; \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|pushdef
+parameter_list|(
+name|p
+parameter_list|)
+define|\
+value|do {				\ 		if (++sp == (int)STACKMAX)	\ 			enlarge_stack();\ 		mstack[sp].sstr = macro_getdef(p)->defn;\ 		sstack[sp] = STORAGE_MACRO; \ 	} while (0)
 end_define
 
 begin_comment
