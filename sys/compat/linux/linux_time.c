@@ -771,38 +771,6 @@ end_empty_stmt
 
 begin_function_decl
 specifier|static
-name|void
-name|native_to_linux_timespec
-parameter_list|(
-name|struct
-name|l_timespec
-modifier|*
-parameter_list|,
-name|struct
-name|timespec
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|linux_to_native_timespec
-parameter_list|(
-name|struct
-name|timespec
-modifier|*
-parameter_list|,
-name|struct
-name|l_timespec
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|linux_to_native_clockid
 parameter_list|(
@@ -815,7 +783,6 @@ function_decl|;
 end_function_decl
 
 begin_function
-specifier|static
 name|void
 name|native_to_linux_timespec
 parameter_list|(
@@ -872,7 +839,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|linux_to_native_timespec
 parameter_list|(
