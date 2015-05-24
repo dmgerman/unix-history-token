@@ -564,7 +564,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGI2C
-value|_IOWR('i', 61, struct ifstat)
+value|_IOWR('i', 61, struct ifreq)
 end_define
 
 begin_comment
