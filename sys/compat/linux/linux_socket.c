@@ -243,6 +243,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<compat/linux/linux_file.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<compat/linux/linux_socket.h>
 end_include
 
