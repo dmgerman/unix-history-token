@@ -120,6 +120,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/freescale/imx/imx_ccmvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/freescale/imx/imx6_anatopreg.h>
 end_include
 
@@ -291,7 +297,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Table of "operating points".  * These are combinations of frequency and voltage blessed by Freescale.  */
+comment|/*  * Table of "operating points".  * These are combinations of frequency and voltage blessed by Freescale.  * While the datasheet says the ARM voltage can be as low as 925mV at  * 396MHz, it also says that the ARM and SOC voltages can't differ by  * more than 200mV, and the minimum SOC voltage is 1150mV, so that  * dictates the 950mV entry in this table.  */
 end_comment
 
 begin_struct
@@ -310,7 +316,12 @@ name|imx6_oppt_table
 index|[]
 init|=
 block|{
-comment|/*      { 396,	 925},  XXX: need functional ccm code for this speed */
+block|{
+literal|396
+block|,
+literal|950
+block|}
+block|,
 block|{
 literal|792
 block|,
@@ -464,6 +475,8 @@ block|{
 name|int
 name|newtarg
 decl_stmt|,
+name|newtargSoc
+decl_stmt|,
 name|oldtarg
 decl_stmt|;
 name|uint32_t
@@ -477,7 +490,7 @@ name|init_done
 init|=
 name|false
 decl_stmt|;
-comment|/* 	 * The datasheet says VDD_PU and VDD_SOC must be equal, and VDD_ARM 	 * can't be more than 50mV above or 200mV below them.  For now to keep 	 * things simple we set all three to the same value. 	 */
+comment|/* 	 * The datasheet says VDD_PU and VDD_SOC must be equal, and VDD_ARM 	 * can't be more than 50mV above or 200mV below them.  We keep them the 	 * same except in the case of the lowest operating point, which is 	 * handled as a special case below. 	 */
 name|pmureg
 operator|=
 name|imx6_anatop_read_4
@@ -524,7 +537,20 @@ operator|)
 operator|/
 literal|25
 expr_stmt|;
-comment|/* 	 * The first time through the 3 voltages might not be equal so use a 	 * long conservative delay.  After that we need to delay 3uS for every 	 * 25mV step upward.  No need to delay at all when lowering. 	 */
+comment|/* 	 * The SOC voltage can't go below 1150mV, and thus because of the 200mV 	 * rule, the ARM voltage can't go below 950mV.  The 950 is encoded in 	 * our oppt table, here we handle the SOC 1150 rule as a special case. 	 * (1150-700/25=18). 	 */
+name|newtargSoc
+operator|=
+operator|(
+name|newtarg
+operator|<
+literal|18
+operator|)
+condition|?
+literal|18
+else|:
+name|newtarg
+expr_stmt|;
+comment|/* 	 * The first time through the 3 voltages might not be equal so use a 	 * long conservative delay.  After that we need to delay 3uS for every 	 * 25mV step upward; we actually delay 6uS because empirically, it works 	 * and the 3uS per step recommended by the docs doesn't (3uS fails when 	 * going from 400->1200, but works for smaller changes). 	 */
 if|if
 condition|(
 name|init_done
@@ -552,7 +578,7 @@ operator|-
 name|oldtarg
 operator|)
 operator|*
-literal|3
+literal|6
 expr_stmt|;
 else|else
 name|delay
@@ -564,11 +590,13 @@ else|else
 block|{
 name|delay
 operator|=
+operator|(
 literal|700
 operator|/
 literal|25
+operator|)
 operator|*
-literal|3
+literal|6
 expr_stmt|;
 name|init_done
 operator|=
@@ -601,7 +629,7 @@ name|IMX6_ANALOG_PMU_REG1_TARG_SHIFT
 expr_stmt|;
 name|pmureg
 operator||=
-name|newtarg
+name|newtargSoc
 operator|<<
 name|IMX6_ANALOG_PMU_REG2_TARG_SHIFT
 expr_stmt|;
@@ -642,19 +670,30 @@ modifier|*
 name|sc
 parameter_list|,
 name|uint32_t
-name|div
+name|corediv
+parameter_list|,
+name|uint32_t
+name|plldiv
 parameter_list|)
 block|{
 return|return
+operator|(
 operator|(
 name|sc
 operator|->
 name|refosc_mhz
 operator|*
 operator|(
-name|div
+name|plldiv
 operator|/
 literal|2
+operator|)
+operator|)
+operator|/
+operator|(
+name|corediv
+operator|+
+literal|1
 operator|)
 operator|)
 return|;
@@ -664,7 +703,7 @@ end_function
 begin_function
 specifier|static
 specifier|inline
-name|uint32_t
+name|void
 name|cpufreq_mhz_to_div
 parameter_list|(
 name|struct
@@ -674,11 +713,42 @@ name|sc
 parameter_list|,
 name|uint32_t
 name|cpu_mhz
+parameter_list|,
+name|uint32_t
+modifier|*
+name|corediv
+parameter_list|,
+name|uint32_t
+modifier|*
+name|plldiv
 parameter_list|)
 block|{
-return|return
+operator|*
+name|corediv
+operator|=
 operator|(
 name|cpu_mhz
+operator|<
+literal|650
+operator|)
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+operator|*
+name|plldiv
+operator|=
+operator|(
+operator|(
+operator|*
+name|corediv
+operator|+
+literal|1
+operator|)
+operator|*
+name|cpu_mhz
+operator|)
 operator|/
 operator|(
 name|sc
@@ -687,8 +757,7 @@ name|refosc_mhz
 operator|/
 literal|2
 operator|)
-operator|)
-return|;
+expr_stmt|;
 block|}
 end_function
 
@@ -707,18 +776,33 @@ name|uint32_t
 name|cpu_mhz
 parameter_list|)
 block|{
+name|uint32_t
+name|corediv
+decl_stmt|,
+name|plldiv
+decl_stmt|;
+name|cpufreq_mhz_to_div
+argument_list|(
+name|sc
+argument_list|,
+name|cpu_mhz
+argument_list|,
+operator|&
+name|corediv
+argument_list|,
+operator|&
+name|plldiv
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|cpufreq_mhz_from_div
 argument_list|(
 name|sc
 argument_list|,
-name|cpufreq_mhz_to_div
-argument_list|(
-name|sc
+name|corediv
 argument_list|,
-name|cpu_mhz
-argument_list|)
+name|plldiv
 argument_list|)
 operator|)
 return|;
@@ -860,6 +944,10 @@ name|op
 parameter_list|)
 block|{
 name|uint32_t
+name|corediv
+decl_stmt|,
+name|plldiv
+decl_stmt|,
 name|timeout
 decl_stmt|,
 name|wrk32
@@ -887,6 +975,21 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * I can't find a documented procedure for changing the ARM PLL divisor, 	 * but some trial and error came up with this: 	 *  - Set the bypass clock source to REF_CLK_24M (source #0). 	 *  - Set the PLL into bypass mode; cpu should now be running at 24mhz. 	 *  - Change the divisor. 	 *  - Wait for the LOCK bit to come on; it takes ~50 loop iterations. 	 *  - Turn off bypass mode; cpu should now be running at the new speed. 	 */
+name|cpufreq_mhz_to_div
+argument_list|(
+name|sc
+argument_list|,
+name|op
+operator|->
+name|mhz
+argument_list|,
+operator|&
+name|corediv
+argument_list|,
+operator|&
+name|plldiv
+argument_list|)
+expr_stmt|;
 name|imx6_anatop_write_4
 argument_list|(
 name|IMX6_ANALOG_CCM_PLL_ARM_CLR
@@ -915,14 +1018,7 @@ name|IMX6_ANALOG_CCM_PLL_ARM_DIV_MASK
 expr_stmt|;
 name|wrk32
 operator||=
-name|cpufreq_mhz_to_div
-argument_list|(
-name|sc
-argument_list|,
-name|op
-operator|->
-name|mhz
-argument_list|)
+name|plldiv
 expr_stmt|;
 name|imx6_anatop_write_4
 argument_list|(
@@ -965,6 +1061,11 @@ argument_list|(
 name|IMX6_ANALOG_CCM_PLL_ARM_CLR
 argument_list|,
 name|IMX6_ANALOG_CCM_PLL_ARM_BYPASS
+argument_list|)
+expr_stmt|;
+name|imx_ccm_set_cacrr
+argument_list|(
+name|corediv
 argument_list|)
 expr_stmt|;
 comment|/* If lowering the frequency, it is now safe to lower the voltage. */
@@ -2797,9 +2898,16 @@ name|imx6_get_cpu_clock
 parameter_list|()
 block|{
 name|uint32_t
-name|div
+name|corediv
+decl_stmt|,
+name|plldiv
 decl_stmt|;
-name|div
+name|corediv
+operator|=
+name|imx_ccm_get_cacrr
+argument_list|()
+expr_stmt|;
+name|plldiv
 operator|=
 name|imx6_anatop_read_4
 argument_list|(
@@ -2814,7 +2922,9 @@ name|cpufreq_mhz_from_div
 argument_list|(
 name|imx6_anatop_sc
 argument_list|,
-name|div
+name|corediv
+argument_list|,
+name|plldiv
 argument_list|)
 operator|)
 return|;
