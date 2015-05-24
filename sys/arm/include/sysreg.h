@@ -1341,6 +1341,34 @@ end_if
 begin_define
 define|#
 directive|define
+name|CP15_PMUSERENR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr, c15,  c9, 0
+end_define
+
+begin_comment
+comment|/* Access Validation Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CP15_PMCR
+parameter_list|(
+name|rr
+parameter_list|)
+value|p15, 0, rr, c15, c12, 0
+end_define
+
+begin_comment
+comment|/* Performance Monitor Control Register */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|CP15_PMCCNTR
 parameter_list|(
 name|rr
