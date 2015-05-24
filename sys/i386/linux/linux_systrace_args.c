@@ -10657,20 +10657,10 @@ operator|->
 name|amode
 expr_stmt|;
 comment|/* l_int */
-name|iarg
-index|[
-literal|3
-index|]
-operator|=
-name|p
-operator|->
-name|flag
-expr_stmt|;
-comment|/* l_int */
 operator|*
 name|n_args
 operator|=
-literal|4
+literal|3
 expr_stmt|;
 break|break;
 block|}
@@ -18892,14 +18882,6 @@ expr_stmt|;
 break|break;
 case|case
 literal|2
-case|:
-name|p
-operator|=
-literal|"l_int"
-expr_stmt|;
-break|break;
-case|case
-literal|3
 case|:
 name|p
 operator|=
