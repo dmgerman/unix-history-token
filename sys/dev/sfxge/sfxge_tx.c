@@ -3704,6 +3704,7 @@ name|th_seq
 argument_list|)
 expr_stmt|;
 comment|/* These flags must not be duplicated */
+comment|/* 	 * RST should not be duplicated as well, but FreeBSD kernel 	 * generates TSO packets with RST flag. So, do not assert 	 * its absence. 	 */
 name|KASSERT
 argument_list|(
 operator|!
@@ -3716,13 +3717,21 @@ operator|(
 name|TH_URG
 operator||
 name|TH_SYN
-operator||
-name|TH_RST
 operator|)
 operator|)
 argument_list|,
 operator|(
-literal|"incompatible TCP flag on TSO packet"
+literal|"incompatible TCP flag 0x%x on TSO packet"
+operator|,
+name|th
+operator|->
+name|th_flags
+operator|&
+operator|(
+name|TH_URG
+operator||
+name|TH_SYN
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
