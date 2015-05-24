@@ -210,6 +210,11 @@ name|epoll_emuldata
 modifier|*
 name|emd
 decl_stmt|;
+name|struct
+name|proc
+modifier|*
+name|p
+decl_stmt|;
 if|if
 condition|(
 name|newtd
@@ -217,6 +222,12 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|p
+operator|=
+name|newtd
+operator|->
+name|td_proc
+expr_stmt|;
 comment|/* non-exec call */
 name|em
 operator|=
@@ -270,9 +281,7 @@ name|proc_init
 argument_list|,
 literal|"fork newtd(%d)"
 argument_list|,
-name|newtd
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_pid
 argument_list|)
@@ -281,9 +290,7 @@ name|em
 operator|->
 name|em_tid
 operator|=
-name|newtd
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_pid
 expr_stmt|;
@@ -314,9 +321,7 @@ argument_list|,
 literal|"lpemlk"
 argument_list|)
 expr_stmt|;
-name|newtd
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_emuldata
 operator|=
@@ -332,6 +337,12 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|p
+operator|=
+name|td
+operator|->
+name|td_proc
+expr_stmt|;
 comment|/* exec */
 name|LINUX_CTR1
 argument_list|(
@@ -339,9 +350,7 @@ name|proc_init
 argument_list|,
 literal|"exec newtd(%d)"
 argument_list|,
-name|td
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_pid
 argument_list|)
@@ -369,9 +378,7 @@ name|em
 operator|->
 name|em_tid
 operator|=
-name|td
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_pid
 expr_stmt|;
@@ -410,9 +417,7 @@ name|pem
 operator|=
 name|pem_find
 argument_list|(
-name|td
-operator|->
-name|td_proc
+name|p
 argument_list|)
 expr_stmt|;
 name|KASSERT
