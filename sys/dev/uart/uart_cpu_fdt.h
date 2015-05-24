@@ -79,6 +79,34 @@ define|\
 value|DATA_SET(uart_fdt_class_set, data)
 end_define
 
+begin_function_decl
+name|int
+name|uart_fdt_get_clock
+parameter_list|(
+name|phandle_t
+name|node
+parameter_list|,
+name|pcell_t
+modifier|*
+name|cell
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|uart_fdt_get_shift
+parameter_list|(
+name|phandle_t
+name|node
+parameter_list|,
+name|pcell_t
+modifier|*
+name|cell
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
