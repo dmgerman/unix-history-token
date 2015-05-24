@@ -378,6 +378,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|linux_to_native_clockid
+parameter_list|(
+name|clockid_t
+modifier|*
+parameter_list|,
+name|clockid_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

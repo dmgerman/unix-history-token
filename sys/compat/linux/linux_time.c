@@ -769,19 +769,6 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
-begin_function_decl
-specifier|static
-name|int
-name|linux_to_native_clockid
-parameter_list|(
-name|clockid_t
-modifier|*
-parameter_list|,
-name|clockid_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|void
 name|native_to_linux_timespec
@@ -937,7 +924,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|linux_to_native_clockid
 parameter_list|(
