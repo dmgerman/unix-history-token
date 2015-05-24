@@ -1386,26 +1386,6 @@ name|LINUX_SS_DISABLE
 value|2
 end_define
 
-begin_function_decl
-name|int
-name|linux_to_bsd_sigaltstack
-parameter_list|(
-name|int
-name|lsa
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|bsd_to_linux_sigaltstack
-parameter_list|(
-name|int
-name|bsa
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_typedef
 typedef|typedef
 name|l_uintptr_t

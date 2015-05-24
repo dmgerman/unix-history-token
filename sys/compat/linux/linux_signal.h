@@ -124,6 +124,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|int
+name|linux_to_bsd_sigaltstack
+parameter_list|(
+name|int
+name|lsa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bsd_to_linux_sigaltstack
+parameter_list|(
+name|int
+name|bsa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|linux_to_bsd_sigset
 parameter_list|(
