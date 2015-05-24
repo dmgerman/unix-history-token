@@ -1380,7 +1380,7 @@ name|native
 decl_stmt|;
 name|timings_node
 operator|=
-name|fdt_find_child
+name|ofw_bus_find_child
 argument_list|(
 name|node
 argument_list|,
@@ -1765,7 +1765,7 @@ name|panel_info_node
 decl_stmt|;
 name|panel_info_node
 operator|=
-name|fdt_find_child
+name|ofw_bus_find_child
 argument_list|(
 name|node
 argument_list|,
