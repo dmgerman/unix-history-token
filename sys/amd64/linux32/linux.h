@@ -2082,14 +2082,6 @@ name|__packed
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|sysentvec
-name|elf_linux_sysvec
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * open/fcntl flags  */
 end_comment
