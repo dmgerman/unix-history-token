@@ -1015,6 +1015,11 @@ name|int
 name|td_ma_cnt
 decl_stmt|;
 comment|/* (k) size of *td_ma */
+name|void
+modifier|*
+name|td_emuldata
+decl_stmt|;
+comment|/* Emulator state data */
 block|}
 struct|;
 end_struct
