@@ -77,6 +77,22 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_FUTEX
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_FUTEX_WP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 specifier|const
