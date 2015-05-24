@@ -184,6 +184,17 @@ begin_comment
 comment|/* uses deprecated 						   futex REQUEUE op*/
 end_comment
 
+begin_define
+define|#
+directive|define
+name|LINUX_XUNSUP_EPOLL
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* unsupported epoll events */
+end_comment
+
 begin_struct
 struct|struct
 name|linux_pemuldata
@@ -197,6 +208,11 @@ name|sx
 name|pem_sx
 decl_stmt|;
 comment|/* lock for this struct */
+name|void
+modifier|*
+name|epoll
+decl_stmt|;
+comment|/* epoll data */
 block|}
 struct|;
 end_struct
