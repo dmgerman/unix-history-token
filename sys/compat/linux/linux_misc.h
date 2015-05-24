@@ -219,6 +219,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LINUX_AT_RANDOM
+value|25
+end_define
+
+begin_comment
+comment|/* address of random bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LINUX_AT_EXECFN
 value|31
 end_define
@@ -247,6 +258,17 @@ end_define
 
 begin_comment
 comment|/* vdso header */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_AT_RANDOM_LEN
+value|16
+end_define
+
+begin_comment
+comment|/* size of random bytes */
 end_comment
 
 begin_comment

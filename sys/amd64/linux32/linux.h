@@ -443,7 +443,7 @@ begin_define
 define|#
 directive|define
 name|LINUX_AT_COUNT
-value|18
+value|20
 end_define
 
 begin_comment
