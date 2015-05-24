@@ -537,14 +537,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|DUMMY
-argument_list|(
-name|eventfd
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* linux 2.6.23: */
 end_comment
@@ -585,14 +577,6 @@ begin_expr_stmt
 name|DUMMY
 argument_list|(
 name|signalfd4
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|DUMMY
-argument_list|(
-name|eventfd2
 argument_list|)
 expr_stmt|;
 end_expr_stmt
