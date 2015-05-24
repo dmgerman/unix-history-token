@@ -156,6 +156,13 @@ name|LINUX_SCM_CREDENTIALS
 value|0x02
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_SCM_TIMESTAMP
+value|0x1D
+end_define
+
 begin_struct
 struct|struct
 name|l_msghdr
