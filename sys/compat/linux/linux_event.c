@@ -1188,6 +1188,21 @@ name|kev_flags
 operator||=
 name|EV_CLEAR
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|levents
+operator|&
+name|LINUX_EPOLLERR
+operator|)
+operator|!=
+literal|0
+condition|)
+operator|*
+name|kev_flags
+operator||=
+name|EV_ERROR
+expr_stmt|;
 comment|/* flags related to what event is registered */
 if|if
 condition|(
@@ -1405,7 +1420,15 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|l_event
+operator|->
+name|events
+operator|=
+name|LINUX_EPOLLERR
+expr_stmt|;
 return|return;
+block|}
 switch|switch
 condition|(
 name|kevent
