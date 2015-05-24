@@ -147,7 +147,7 @@ specifier|extern
 specifier|const
 name|char
 modifier|*
-name|linux_platform
+name|linux_kplatform
 decl_stmt|;
 end_decl_stmt
 

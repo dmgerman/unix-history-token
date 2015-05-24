@@ -551,7 +551,7 @@ begin_decl_stmt
 specifier|const
 name|char
 modifier|*
-name|linux_platform
+name|linux_kplatform
 decl_stmt|;
 end_decl_stmt
 
@@ -1835,7 +1835,7 @@ expr_stmt|;
 comment|/* 	 * install LINUX_PLATFORM 	 */
 name|copyout
 argument_list|(
-name|linux_platform
+name|linux_kplatform
 argument_list|,
 operator|(
 operator|(
@@ -6033,7 +6033,7 @@ expr_stmt|;
 name|linux_get_machine
 argument_list|(
 operator|&
-name|linux_platform
+name|linux_kplatform
 argument_list|)
 expr_stmt|;
 name|linux_szplatform
@@ -6042,7 +6042,7 @@ name|roundup
 argument_list|(
 name|strlen
 argument_list|(
-name|linux_platform
+name|linux_kplatform
 argument_list|)
 operator|+
 literal|1
