@@ -1572,6 +1572,13 @@ argument_list|,
 name|list
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|state
+operator|!=
+operator|-
+literal|1
+condition|)
 name|sc
 operator|->
 name|func

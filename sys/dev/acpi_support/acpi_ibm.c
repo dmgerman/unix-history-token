@@ -2126,9 +2126,15 @@ name|sc
 argument_list|,
 literal|"thinklight"
 argument_list|,
+operator|(
 name|sc
 operator|->
 name|light_val
+condition|?
+literal|1
+else|:
+literal|0
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
