@@ -3582,10 +3582,7 @@ name|act
 operator|.
 name|lsa_mask
 operator|.
-name|__bits
-index|[
-literal|0
-index|]
+name|__mask
 operator|=
 name|osa
 operator|.
@@ -3665,10 +3662,7 @@ name|oact
 operator|.
 name|lsa_mask
 operator|.
-name|__bits
-index|[
-literal|0
-index|]
+name|__mask
 expr_stmt|;
 name|error
 operator|=
@@ -3758,10 +3752,7 @@ argument_list|)
 expr_stmt|;
 name|mask
 operator|.
-name|__bits
-index|[
-literal|0
-index|]
+name|__mask
 operator|=
 name|args
 operator|->

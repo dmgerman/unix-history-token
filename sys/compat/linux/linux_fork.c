@@ -162,12 +162,6 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<compat/linux/linux_signal.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<compat/linux/linux_emul.h>
 end_include
 
@@ -625,21 +619,12 @@ name|exit_signal
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|exit_signal
-operator|<=
-name|LINUX_SIGTBLSZ
-condition|)
 name|exit_signal
 operator|=
 name|linux_to_bsd_signal
-index|[
-name|_SIG_IDX
 argument_list|(
 name|exit_signal
 argument_list|)
-index|]
 expr_stmt|;
 block|}
 elseif|else
