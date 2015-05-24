@@ -109,7 +109,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * fiq_installhandler:  *  *	Actually install the FIQ handler down at the FIQ vector.  *	  *	The FIQ vector is fixed by the hardware definition as the  *	seventh 32-bit word in the vector page.  *  *	Note: If the FIQ is invoked via an extra layer of  *	indirection, the actual FIQ code store lives in the  *	data segment, so there is no need to manipulate  *	the vector page's protection.  */
+comment|/*  * fiq_installhandler:  *  *	Actually install the FIQ handler down at the FIQ vector.  *  *	The FIQ vector is fixed by the hardware definition as the  *	seventh 32-bit word in the vector page.  *  *	Note: If the FIQ is invoked via an extra layer of  *	indirection, the actual FIQ code store lives in the  *	data segment, so there is no need to manipulate  *	the vector page's protection.  */
 end_comment
 
 begin_function

@@ -1226,7 +1226,7 @@ operator|++
 control|)
 block|{
 comment|/* 		 * IPI handler 		 */
-comment|/*  		 * Use 0xdeadbeef as the argument value for irq 0, 		 * if we used 0, the intr code will give the trap frame 		 * pointer instead. 		 */
+comment|/* 		 * Use 0xdeadbeef as the argument value for irq 0, 		 * if we used 0, the intr code will give the trap frame 		 * pointer instead. 		 */
 name|arm_setup_irqhandler
 argument_list|(
 literal|"ipi"

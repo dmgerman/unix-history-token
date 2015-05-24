@@ -1603,7 +1603,7 @@ comment|/* Faultstatus          */
 name|cpufunc_faultaddress
 block|,
 comment|/* Faultaddress         */
-comment|/*  	 * TLB functions.  ARMv7 does all TLB ops based on a unified TLB model 	 * whether the hardware implements separate I+D or not, so we use the 	 * same 'ID' functions for all 3 variations. 	 */
+comment|/* 	 * TLB functions.  ARMv7 does all TLB ops based on a unified TLB model 	 * whether the hardware implements separate I+D or not, so we use the 	 * same 'ID' functions for all 3 variations. 	 */
 name|armv7_tlb_flushID
 block|,
 comment|/* tlb_flushID          */
@@ -1650,7 +1650,7 @@ comment|/* idcache_wbinv_all    */
 name|armv7_idcache_wbinv_range
 block|,
 comment|/* idcache_wbinv_range  */
-comment|/*  	 * Note: For CPUs using the PL310 the L2 ops are filled in when the 	 * L2 cache controller is actually enabled. 	 */
+comment|/* 	 * Note: For CPUs using the PL310 the L2 ops are filled in when the 	 * L2 cache controller is actually enabled. 	 */
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_all    */
