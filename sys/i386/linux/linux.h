@@ -366,6 +366,13 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|l_ulong
+name|l_fd_mask
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 struct|struct
 block|{
 name|l_int
