@@ -1016,10 +1016,6 @@ name|em
 operator|->
 name|em_tid
 argument_list|,
-operator|(
-name|int
-operator|*
-operator|)
 name|child_set_tid
 argument_list|,
 sizeof|sizeof
