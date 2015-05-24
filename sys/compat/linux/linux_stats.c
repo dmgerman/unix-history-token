@@ -1126,6 +1126,27 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
+operator|)
+end_if
+
 begin_function
 specifier|static
 name|int
@@ -1589,6 +1610,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ || (__amd64__&& COMPAT_LINUX32) */
+end_comment
 
 begin_struct
 struct|struct
@@ -2170,6 +2200,27 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|COMPAT_LINUX32
+argument_list|)
+operator|)
+end_if
+
 begin_function
 specifier|static
 name|void
@@ -2426,6 +2477,15 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __i386__ || (__amd64__&& COMPAT_LINUX32) */
+end_comment
 
 begin_function
 name|int
