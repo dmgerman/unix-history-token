@@ -2343,6 +2343,12 @@ name|ifp
 expr_stmt|;
 name|ic
 operator|->
+name|ic_softc
+operator|=
+name|sc
+expr_stmt|;
+name|ic
+operator|->
 name|ic_name
 operator|=
 name|device_get_nameunit
