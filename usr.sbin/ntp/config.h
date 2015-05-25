@@ -31,12 +31,9 @@ begin_comment
 comment|/* Support NTP Autokey protocol? */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|AUTOKEY
-value|1
-end_define
+begin_comment
+comment|/* #define AUTOKEY 1 */
+end_comment
 
 begin_comment
 comment|/* why not HAVE_P_S? */
@@ -5169,12 +5166,9 @@ begin_comment
 comment|/* Use OpenSSL's crypto random functions */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USE_OPENSSL_CRYPTO_RAND
-value|1
-end_define
+begin_comment
+comment|/* #define USE_OPENSSL_CRYPTO_RAND 1 */
+end_comment
 
 begin_comment
 comment|/* OK to use snprintb()? */
