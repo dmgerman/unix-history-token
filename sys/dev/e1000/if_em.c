@@ -7956,6 +7956,17 @@ if|if
 condition|(
 name|reg_icr
 operator|&
+name|E1000_ICR_RXO
+condition|)
+name|adapter
+operator|->
+name|rx_overruns
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|reg_icr
+operator|&
 operator|(
 name|E1000_ICR_RXSEQ
 operator||
