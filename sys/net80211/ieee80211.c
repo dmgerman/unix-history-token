@@ -1276,14 +1276,14 @@ name|void
 name|null_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
-name|if_printf
+name|ic_printf
 argument_list|(
-name|ifp
+name|ic
 argument_list|,
 literal|"need multicast update callback\n"
 argument_list|)
@@ -1297,14 +1297,14 @@ name|void
 name|null_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
-name|if_printf
+name|ic_printf
 argument_list|(
-name|ifp
+name|ic
 argument_list|,
 literal|"need promiscuous mode update callback\n"
 argument_list|)

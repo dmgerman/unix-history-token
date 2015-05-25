@@ -1453,7 +1453,7 @@ name|void
 name|uath_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1465,7 +1465,7 @@ name|void
 name|uath_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -9782,9 +9782,9 @@ name|void
 name|uath_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -9792,9 +9792,9 @@ name|uath_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|UATH_LOCK
 argument_list|(
@@ -9812,7 +9812,9 @@ name|UATH_FLAG_INVALID
 operator|)
 operator|||
 operator|(
-name|ifp
+name|ic
+operator|->
+name|ic_ifp
 operator|->
 name|if_drv_flags
 operator|&
@@ -9860,9 +9862,9 @@ name|void
 name|uath_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -9870,9 +9872,9 @@ name|uath_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|UATH_LOCK
 argument_list|(
@@ -9890,7 +9892,9 @@ name|UATH_FLAG_INVALID
 operator|)
 operator|||
 operator|(
-name|ifp
+name|ic
+operator|->
+name|ic_ifp
 operator|->
 name|if_drv_flags
 operator|&

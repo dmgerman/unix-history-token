@@ -1007,7 +1007,7 @@ name|ic_updateslot
 function_decl|)
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1019,7 +1019,7 @@ name|ic_update_mcast
 function_decl|)
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1031,7 +1031,7 @@ name|ic_update_promisc
 function_decl|)
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;

@@ -1468,7 +1468,7 @@ name|void
 name|wpi_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1480,7 +1480,7 @@ name|void
 name|wpi_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -18980,9 +18980,9 @@ name|void
 name|wpi_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -18990,9 +18990,9 @@ name|wpi_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|WPI_RXON_LOCK
 argument_list|(
@@ -19044,9 +19044,9 @@ name|void
 name|wpi_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 comment|/* Ignore */

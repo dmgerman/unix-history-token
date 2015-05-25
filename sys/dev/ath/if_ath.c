@@ -722,7 +722,7 @@ name|void
 name|ath_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -734,7 +734,7 @@ name|void
 name|ath_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -746,7 +746,7 @@ name|void
 name|ath_updateslot
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -13312,9 +13312,9 @@ name|void
 name|ath_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -13322,9 +13322,9 @@ name|ath_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|u_int32_t
 name|rfilt
@@ -13640,9 +13640,9 @@ name|void
 name|ath_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -13650,9 +13650,9 @@ name|ath_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|ATH_LOCK
 argument_list|(
@@ -13979,9 +13979,9 @@ name|void
 name|ath_updateslot
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -13989,18 +13989,9 @@ name|ath_softc
 modifier|*
 name|sc
 init|=
-name|ifp
-operator|->
-name|if_softc
-decl_stmt|;
-name|struct
-name|ieee80211com
-modifier|*
 name|ic
-init|=
-name|ifp
 operator|->
-name|if_l2com
+name|ic_softc
 decl_stmt|;
 comment|/* 	 * When not coordinating the BSS, change the hardware 	 * immediately.  For other operation we defer the change 	 * until beacon updates have propagated to the stations. 	 * 	 * XXX sc_updateslot isn't changed behind a lock? 	 */
 if|if

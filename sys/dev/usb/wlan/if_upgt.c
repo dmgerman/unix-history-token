@@ -833,7 +833,7 @@ name|void
 name|upgt_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -5921,9 +5921,9 @@ name|void
 name|upgt_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -5931,9 +5931,9 @@ name|upgt_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|upgt_set_multi
 argument_list|(

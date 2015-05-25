@@ -1321,7 +1321,7 @@ name|void
 name|rum_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1333,7 +1333,7 @@ name|void
 name|rum_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -10641,9 +10641,9 @@ name|void
 name|rum_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -10651,14 +10651,16 @@ name|rum_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 if|if
 condition|(
 operator|(
-name|ifp
+name|ic
+operator|->
+name|ic_ifp
 operator|->
 name|if_drv_flags
 operator|&
@@ -10692,9 +10694,9 @@ name|void
 name|rum_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 specifier|static
@@ -10708,9 +10710,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|if_printf
+name|ic_printf
 argument_list|(
-name|ifp
+name|ic
 argument_list|,
 literal|"need to implement %s\n"
 argument_list|,

@@ -964,7 +964,7 @@ name|void
 name|rt2661_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -989,7 +989,7 @@ name|void
 name|rt2661_update_slot
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -9359,7 +9359,7 @@ block|}
 else|else
 name|rt2661_update_promisc
 argument_list|(
-name|ifp
+name|ic
 argument_list|)
 expr_stmt|;
 block|}
@@ -11212,9 +11212,9 @@ name|void
 name|rt2661_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -11222,9 +11222,9 @@ name|rt2661_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|uint32_t
 name|tmp
@@ -11247,7 +11247,9 @@ if|if
 condition|(
 operator|!
 operator|(
-name|ifp
+name|ic
+operator|->
+name|ic_ifp
 operator|->
 name|if_flags
 operator|&
@@ -11274,7 +11276,9 @@ argument_list|,
 literal|"%s promiscuous mode\n"
 argument_list|,
 operator|(
-name|ifp
+name|ic
+operator|->
+name|ic_ifp
 operator|->
 name|if_flags
 operator|&
@@ -11518,9 +11522,9 @@ name|void
 name|rt2661_update_slot
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -11528,18 +11532,9 @@ name|rt2661_softc
 modifier|*
 name|sc
 init|=
-name|ifp
-operator|->
-name|if_softc
-decl_stmt|;
-name|struct
-name|ieee80211com
-modifier|*
 name|ic
-init|=
-name|ifp
 operator|->
-name|if_l2com
+name|ic_softc
 decl_stmt|;
 name|uint8_t
 name|slottime

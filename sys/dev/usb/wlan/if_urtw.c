@@ -5688,7 +5688,7 @@ name|void
 name|urtw_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -6807,7 +6807,7 @@ name|void
 name|urtw_updateslot
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -11346,9 +11346,9 @@ name|void
 name|urtw_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 comment|/* XXX do nothing?  */
@@ -26151,9 +26151,9 @@ name|void
 name|urtw_updateslot
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -26161,18 +26161,9 @@ name|urtw_softc
 modifier|*
 name|sc
 init|=
-name|ifp
-operator|->
-name|if_softc
-decl_stmt|;
-name|struct
-name|ieee80211com
-modifier|*
 name|ic
-init|=
-name|ifp
 operator|->
-name|if_l2com
+name|ic_softc
 decl_stmt|;
 name|ieee80211_runtask
 argument_list|(
