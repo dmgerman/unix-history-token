@@ -4496,14 +4496,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|preload_addr_relocate
-operator|=
-name|KERNVIRTADDR
-operator|-
-name|abp
-operator|->
-name|abp_physaddr
-expr_stmt|;
 return|return
 name|lastaddr
 return|;
