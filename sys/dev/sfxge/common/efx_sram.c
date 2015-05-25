@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2007-2009 Solarflare Communications Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007-2015 Solarflare Communications Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright notice,  *    this list of conditions and the following disclaimer in the documentation  *    and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing official  * policies, either expressed or implied, of the FreeBSD Project.  */
 end_comment
 
 begin_include
@@ -121,6 +121,28 @@ argument_list|,
 name|EFX_MOD_NIC
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|EFSYS_OPT_HUNTINGTON
+if|if
+condition|(
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_HUNTINGTON
+condition|)
+block|{
+comment|/* 		 * FIXME: the efx_sram_buf_tbl_*() functionality needs to be 		 * pulled inside the Falcon/Siena queue create/destroy code, 		 * and then the original functions can be removed (see bug30834 		 * comment #1).  But, for now, we just ensure that they are 		 * no-ops for Huntington, to allow bringing up existing drivers 		 * without modification. 		 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_HUNTINGTON */
 if|if
 condition|(
 name|stop
@@ -583,6 +605,24 @@ argument_list|,
 name|EFX_MOD_NIC
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|EFSYS_OPT_HUNTINGTON
+if|if
+condition|(
+name|enp
+operator|->
+name|en_family
+operator|==
+name|EFX_FAMILY_HUNTINGTON
+condition|)
+block|{
+comment|/* 		 * FIXME: the efx_sram_buf_tbl_*() functionality needs to be 		 * pulled inside the Falcon/Siena queue create/destroy code, 		 * and then the original functions can be removed (see bug30834 		 * comment #1).  But, for now, we just ensure that they are 		 * no-ops for Huntington, to allow bringing up existing drivers 		 * without modification. 		 */
+return|return;
+block|}
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_HUNTINGTON */
 name|EFSYS_ASSERT3U
 argument_list|(
 name|stop
@@ -1060,7 +1100,6 @@ end_function
 
 begin_decl_stmt
 name|efx_sram_pattern_fn_t
-name|__cs
 name|__efx_sram_pattern_fns
 index|[]
 init|=

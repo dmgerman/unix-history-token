@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010-2011 Solarflare Communications, Inc.  * All rights reserved.  *  * This software was developed in part by Philip Paeps under contract for  * Solarflare Communications, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2010-2015 Solarflare Communications Inc.  * All rights reserved.  *  * This software was developed in part by Philip Paeps under contract for  * Solarflare Communications, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright notice,  *    this list of conditions and the following disclaimer in the documentation  *    and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing official  * policies, either expressed or implied, of the FreeBSD Project.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -85,6 +85,10 @@ name|EFSYS_USE_UINT64
 value|0
 endif|#
 directive|endif
+define|#
+directive|define
+name|EFSYS_HAS_SSE2_M128
+value|0
 if|#
 directive|if
 name|_BYTE_ORDER
@@ -191,6 +195,20 @@ parameter_list|,
 name|align
 parameter_list|)
 value|(-(-(x)& -(align)))
+endif|#
+directive|endif
+ifndef|#
+directive|ifndef
+name|P2ALIGN
+define|#
+directive|define
+name|P2ALIGN
+parameter_list|(
+name|_x
+parameter_list|,
+name|_a
+parameter_list|)
+value|((_x)& -(_a))
 endif|#
 directive|endif
 ifndef|#
@@ -453,13 +471,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* Modifiers used for DOS builds */
-define|#
-directive|define
-name|__cs
-define|#
-directive|define
-name|__far
 comment|/* Modifiers used for Windows builds */
 define|#
 directive|define
@@ -594,6 +605,10 @@ define|#
 directive|define
 name|EFSYS_OPT_SIENA
 value|1
+define|#
+directive|define
+name|EFSYS_OPT_HUNTINGTON
+value|1
 ifdef|#
 directive|ifdef
 name|DEBUG
@@ -643,7 +658,7 @@ name|EFSYS_OPT_MON_MAX6647
 value|0
 define|#
 directive|define
-name|EFSYS_OPT_MON_SIENA
+name|EFSYS_OPT_MON_MCDI
 value|0
 define|#
 directive|define
@@ -667,10 +682,6 @@ name|EFSYS_OPT_PHY_TXC43128
 value|0
 define|#
 directive|define
-name|EFSYS_OPT_PHY_PM8358
-value|0
-define|#
-directive|define
 name|EFSYS_OPT_PHY_SFT9001
 value|0
 define|#
@@ -688,6 +699,10 @@ value|0
 define|#
 directive|define
 name|EFSYS_OPT_PHY_BIST
+value|0
+define|#
+directive|define
+name|EFSYS_OPT_BIST
 value|1
 define|#
 directive|define
@@ -744,7 +759,11 @@ value|1
 define|#
 directive|define
 name|EFSYS_OPT_FILTER
-value|0
+value|1
+define|#
+directive|define
+name|EFSYS_OPT_MCAST_FILTER_LIST
+value|1
 define|#
 directive|define
 name|EFSYS_OPT_RX_SCATTER
@@ -1432,6 +1451,14 @@ name|_esmp
 parameter_list|)
 define|\
 value|((_esmp)->esm_addr)
+define|#
+directive|define
+name|EFSYS_MEM_IS_NULL
+parameter_list|(
+name|_esmp
+parameter_list|)
+define|\
+value|((_esmp)->esm_base == NULL)
 comment|/* BAR */
 define|#
 directive|define
@@ -1634,6 +1661,21 @@ comment|/*							\ 		 * It should be guaranteed that the last dword comes	\ 		 *
 value|\ 		bus_space_barrier((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), sizeof (efx_qword_t),			\ 		    BUS_SPACE_BARRIER_WRITE);				\ 		bus_space_write_stream_4((_esbp)->esb_tag,		\ 		    (_esbp)->esb_handle,				\ 		    (_offset) + 4, (_eqp)->eq_u32[1]);			\ 									\ 		SFXGE_BAR_UNLOCK(_esbp);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 endif|#
 directive|endif
+comment|/*  * Guarantees 64bit aligned 64bit writes to write combined BAR mapping  * (required by PIO hardware)  */
+define|#
+directive|define
+name|EFSYS_BAR_WC_WRITEQ
+parameter_list|(
+name|_esbp
+parameter_list|,
+name|_offset
+parameter_list|,
+name|_eqp
+parameter_list|)
+define|\
+value|do {								\ 		_NOTE(CONSTANTCONDITION)				\ 		KASSERT(IS_P2ALIGNED(_offset, sizeof (efx_qword_t)),	\ 		    ("not power of 2 aligned"));			\ 									\ 		(void) (_esbp);						\ 									\
+comment|/* FIXME: Perform a 64-bit write */
+value|\ 		KASSERT(0, ("not implemented"));			\ 									\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 if|#
 directive|if
 name|defined
@@ -1680,6 +1722,19 @@ comment|/*							\ 		 * It should be guaranteed that the last dword comes	\ 		 *
 value|\ 		bus_space_barrier((_esbp)->esb_tag, (_esbp)->esb_handle,\ 		    (_offset), sizeof (efx_oword_t),			\ 		    BUS_SPACE_BARRIER_WRITE);				\ 		bus_space_write_stream_4((_esbp)->esb_tag,		\ 		    (_esbp)->esb_handle,				\ 		    (_offset) + 12, (_eop)->eo_u32[3]);			\ 									\ 		_NOTE(CONSTANTCONDITION)				\ 		if (_lock)						\ 			SFXGE_BAR_UNLOCK(_esbp);			\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 endif|#
 directive|endif
+comment|/* Use the standard octo-word write for doorbell writes */
+define|#
+directive|define
+name|EFSYS_BAR_DOORBELL_WRITEO
+parameter_list|(
+name|_esbp
+parameter_list|,
+name|_offset
+parameter_list|,
+name|_eop
+parameter_list|)
+define|\
+value|do {								\ 		EFSYS_BAR_WRITEO((_esbp), (_offset), (_eop), B_FALSE);	\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 comment|/* SPIN */
 define|#
 directive|define
@@ -1703,6 +1758,31 @@ define|#
 directive|define
 name|EFSYS_PIO_WRITE_BARRIER
 parameter_list|()
+comment|/* DMA SYNC */
+define|#
+directive|define
+name|EFSYS_DMA_SYNC_FOR_KERNEL
+parameter_list|(
+name|_esmp
+parameter_list|,
+name|_offset
+parameter_list|,
+name|_size
+parameter_list|)
+define|\
+value|do {								\ 		bus_dmamap_sync((_esmp)->esm_tag,			\ 		    (_esmp)->esm_map,					\ 		    BUS_DMASYNC_POSTREAD);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
+define|#
+directive|define
+name|EFSYS_DMA_SYNC_FOR_DEVICE
+parameter_list|(
+name|_esmp
+parameter_list|,
+name|_offset
+parameter_list|,
+name|_size
+parameter_list|)
+define|\
+value|do {								\ 		bus_dmamap_sync((_esmp)->esm_tag,			\ 		    (_esmp)->esm_map,					\ 		    BUS_DMASYNC_PREWRITE);				\ 	_NOTE(CONSTANTCONDITION)					\ 	} while (B_FALSE)
 comment|/* TIMESTAMP */
 typedef|typedef
 name|clock_t
@@ -1963,7 +2043,7 @@ name|EFSYS_ASSERT
 parameter_list|(
 name|_exp
 parameter_list|)
-value|do {						\ 	if (!(_exp))							\ 		panic(#_exp);						\ 	} while (0)
+value|do {						\ 	if (!(_exp))							\ 		panic("%s", #_exp);					\ 	} while (0)
 define|#
 directive|define
 name|EFSYS_ASSERT3
@@ -2010,6 +2090,11 @@ parameter_list|,
 name|_y
 parameter_list|)
 value|EFSYS_ASSERT3(_x, _op, _y, uintptr_t)
+comment|/* ROTATE */
+define|#
+directive|define
+name|EFSYS_HAS_ROTL_DWORD
+value|0
 ifdef|#
 directive|ifdef
 name|__cplusplus
