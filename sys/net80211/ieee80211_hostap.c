@@ -3895,7 +3895,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ni
 operator|->
@@ -8816,7 +8816,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ni
 operator|->

@@ -489,7 +489,7 @@ expr|struct
 name|tkip_ctx
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -499,9 +499,9 @@ argument_list|)
 argument_list|,
 name|M_80211_CRYPTO
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -558,7 +558,7 @@ name|k
 operator|->
 name|wk_private
 decl_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ctx
 argument_list|,

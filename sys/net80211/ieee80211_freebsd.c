@@ -283,7 +283,7 @@ name|ic
 decl_stmt|;
 name|ic
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -293,9 +293,9 @@ argument_list|)
 argument_list|,
 name|M_80211_COM
 argument_list|,
-name|M_WAITOK
+name|IEEE80211_M_WAITOK
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 name|ic
@@ -325,7 +325,7 @@ name|u_char
 name|type
 parameter_list|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ic
 argument_list|,
@@ -1094,7 +1094,7 @@ expr|struct
 name|sysctl_ctx_list
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1104,9 +1104,9 @@ argument_list|)
 argument_list|,
 name|M_DEVBUF
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1617,7 +1617,7 @@ operator|->
 name|iv_sysctl
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|vap
 operator|->

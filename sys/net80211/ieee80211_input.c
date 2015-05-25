@@ -2161,13 +2161,13 @@ operator|(
 name|uint32_t
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|IEEE80211_CHALLENGE_LEN
 argument_list|,
 name|M_80211_NODE
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if

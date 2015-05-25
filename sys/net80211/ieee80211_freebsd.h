@@ -2271,6 +2271,53 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Malloc API.  Other BSD operating systems have slightly  * different malloc/free namings (eg DragonflyBSD.)  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MALLOC
+value|malloc
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_FREE
+value|free
+end_define
+
+begin_comment
+comment|/* XXX TODO: get rid of WAITOK, fix all the users of it? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_M_NOWAIT
+value|M_NOWAIT
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_M_WAITOK
+value|M_WAITOK
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_M_ZERO
+value|M_ZERO
+end_define
+
+begin_comment
+comment|/* XXX TODO: the type fields */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

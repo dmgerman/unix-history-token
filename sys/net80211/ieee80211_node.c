@@ -786,7 +786,7 @@ operator|(
 name|uint32_t
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|howmany
 argument_list|(
@@ -804,9 +804,9 @@ argument_list|)
 argument_list|,
 name|M_80211_NODE
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -920,7 +920,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|vap
 operator|->
@@ -4199,7 +4199,7 @@ expr|struct
 name|ieee80211_node
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -4209,9 +4209,9 @@ argument_list|)
 argument_list|,
 name|M_80211_NODE
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 return|return
@@ -4274,7 +4274,7 @@ name|len
 condition|)
 block|{
 comment|/* data size changed */
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ies
 operator|->
@@ -4307,13 +4307,15 @@ operator|(
 name|uint8_t
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|len
 argument_list|,
 name|M_80211_NODE_IE
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
+operator||
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4382,7 +4384,7 @@ name|data
 operator|!=
 name|NULL
 condition|)
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ies
 operator|->
@@ -4776,7 +4778,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ni
 operator|->
@@ -4900,7 +4902,7 @@ operator|->
 name|ni_psq
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ni
 argument_list|,
@@ -8713,7 +8715,7 @@ name|ieee80211_node
 operator|*
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|keyixmax
 operator|*
@@ -8726,9 +8728,9 @@ argument_list|)
 argument_list|,
 name|M_80211_NODE
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -9005,7 +9007,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|nt
 operator|->
@@ -9957,15 +9959,15 @@ name|ieee80211_node
 operator|*
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|size
 argument_list|,
 name|M_80211_NODE
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -10042,7 +10044,7 @@ expr_stmt|;
 block|}
 name|done
 label|:
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ni_arr
 argument_list|,

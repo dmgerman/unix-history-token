@@ -710,7 +710,7 @@ expr|struct
 name|sta_table
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -720,9 +720,9 @@ argument_list|)
 argument_list|,
 name|M_80211_SCAN
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -828,7 +828,7 @@ operator|->
 name|st_scanlock
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|st
 argument_list|,
@@ -971,7 +971,7 @@ operator|.
 name|se_ies
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|se
 argument_list|,
@@ -1151,7 +1151,7 @@ expr|struct
 name|sta_entry
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1161,9 +1161,9 @@ argument_list|)
 argument_list|,
 name|M_80211_SCAN
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -7983,7 +7983,7 @@ operator|.
 name|se_ies
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|se
 argument_list|,

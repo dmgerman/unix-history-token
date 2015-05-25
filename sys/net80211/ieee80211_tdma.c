@@ -729,7 +729,7 @@ expr|struct
 name|ieee80211_tdma_state
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -739,9 +739,9 @@ argument_list|)
 argument_list|,
 name|M_80211_VAP
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -995,7 +995,7 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|vap
 operator|->

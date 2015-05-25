@@ -294,7 +294,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ic
 operator|->
@@ -1355,15 +1355,15 @@ name|nruns
 decl_stmt|;
 name|aie
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|IEEE80211_COUNTRY_MAX_SIZE
 argument_list|,
 name|M_80211_NODE_IE
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2420,7 +2420,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ic
 operator|->

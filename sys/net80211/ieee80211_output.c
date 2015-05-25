@@ -8504,7 +8504,7 @@ name|ic_countryie
 operator|!=
 name|NULL
 condition|)
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ic
 operator|->

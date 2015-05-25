@@ -1124,7 +1124,7 @@ name|FREEAPPIE
 parameter_list|(
 name|ie
 parameter_list|)
-value|do { \ 	if (ie != NULL) \ 		free(ie, M_80211_NODE_IE); \ } while (0)
+value|do { \ 	if (ie != NULL) \ 		IEEE80211_FREE(ie, M_80211_NODE_IE); \ } while (0)
 comment|/* 	 * Detach operating mode module. 	 */
 if|if
 condition|(

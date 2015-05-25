@@ -1889,15 +1889,15 @@ expr_stmt|;
 comment|/* XXX M_WAITOK after driver lock released */
 name|p
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|space
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1950,7 +1950,7 @@ operator|->
 name|i_len
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|p
 argument_list|,
@@ -2872,15 +2872,15 @@ expr_stmt|;
 comment|/* XXX M_WAITOK after driver lock released */
 name|p
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|space
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -2963,7 +2963,7 @@ operator|->
 name|i_len
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|p
 argument_list|,
@@ -4119,7 +4119,7 @@ expr|struct
 name|ieee80211_devcaps_req
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|IEEE80211_DEVCAPS_SIZE
 argument_list|(
@@ -4128,9 +4128,9 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4237,7 +4237,7 @@ name|dc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|dc
 argument_list|,
@@ -8990,7 +8990,7 @@ argument_list|)
 expr_stmt|;
 name|list
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|ireq
 operator|->
@@ -9000,9 +9000,9 @@ name|IEEE80211_CHAN_BYTES
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -9034,7 +9034,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|list
 argument_list|,
@@ -9136,7 +9136,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|list
 argument_list|,
@@ -9189,7 +9189,7 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|list
 argument_list|,
@@ -11139,7 +11139,7 @@ expr|struct
 name|ieee80211_regdomain_req
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|IEEE80211_REGDOMAIN_SIZE
 argument_list|(
@@ -11148,7 +11148,9 @@ argument_list|)
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
+operator||
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -11245,7 +11247,7 @@ name|reg
 argument_list|)
 expr_stmt|;
 block|}
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|reg
 argument_list|,
@@ -11879,7 +11881,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* XXX racey */
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|app
 argument_list|,
@@ -11919,7 +11921,7 @@ expr|struct
 name|ieee80211_appie
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -11933,7 +11935,7 @@ name|i_len
 argument_list|,
 name|M_80211_NODE_IE
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -11968,7 +11970,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|napp
 argument_list|,
@@ -11998,7 +12000,7 @@ name|app
 operator|!=
 name|NULL
 condition|)
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|app
 argument_list|,

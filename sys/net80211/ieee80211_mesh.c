@@ -1249,7 +1249,7 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|ALIGN
 argument_list|(
@@ -1268,9 +1268,9 @@ name|mpp_privlen
 argument_list|,
 name|M_80211_MESH_RT
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1983,7 +1983,7 @@ operator|->
 name|rt_lock
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|rt
 argument_list|,
@@ -3367,7 +3367,7 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|vap
 operator|->
@@ -3433,7 +3433,7 @@ name|mesh_recv_ctl
 expr_stmt|;
 name|ms
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -3443,9 +3443,9 @@ argument_list|)
 argument_list|,
 name|M_80211_VAP
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -4278,7 +4278,7 @@ argument_list|)
 expr_stmt|;
 name|gr
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|ALIGN
 argument_list|(
@@ -4291,9 +4291,9 @@ argument_list|)
 argument_list|,
 name|M_80211_MESH_GT_RT
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 name|IEEE80211_ADDR_COPY
@@ -12490,7 +12490,7 @@ argument_list|)
 expr_stmt|;
 name|gr
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|ALIGN
 argument_list|(
@@ -12503,9 +12503,9 @@ argument_list|)
 argument_list|,
 name|M_80211_MESH_GT_RT
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 name|IEEE80211_ADDR_COPY
@@ -16631,15 +16631,15 @@ expr_stmt|;
 comment|/* XXX M_WAIT? */
 name|p
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|len
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -16788,7 +16788,7 @@ operator|->
 name|i_len
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|p
 argument_list|,
