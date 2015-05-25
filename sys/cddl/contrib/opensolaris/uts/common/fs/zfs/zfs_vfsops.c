@@ -6015,29 +6015,6 @@ argument_list|,
 name|osname
 argument_list|)
 expr_stmt|;
-comment|/* Grab extra reference. */
-name|VERIFY
-argument_list|(
-name|VFS_ROOT
-argument_list|(
-name|vfsp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|,
-operator|&
-name|vp
-argument_list|)
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -8409,7 +8386,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ZFS_ENTER_NOERROR
+name|ZFS_ENTER
 argument_list|(
 name|zfsvfs
 argument_list|)
@@ -9067,7 +9044,7 @@ name|vflush
 argument_list|(
 name|vfsp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|(
 name|fflag

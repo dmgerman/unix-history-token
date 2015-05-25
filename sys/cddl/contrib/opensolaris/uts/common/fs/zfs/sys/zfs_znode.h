@@ -754,15 +754,6 @@ name|zfsvfs
 parameter_list|)
 define|\
 value|{ \ 		rrw_enter_read(&(zfsvfs)->z_teardown_lock, FTAG); \ 		if ((zfsvfs)->z_unmounted) { \ 			ZFS_EXIT(zfsvfs); \ 			return (EIO); \ 		} \ 	}
-comment|/* Called on entry to each ZFS vnode and vfs operation that can not return EIO */
-define|#
-directive|define
-name|ZFS_ENTER_NOERROR
-parameter_list|(
-name|zfsvfs
-parameter_list|)
-define|\
-value|rrw_enter(&(zfsvfs)->z_teardown_lock, RW_READER, FTAG)
 comment|/* Must be called before exiting the vop */
 define|#
 directive|define
