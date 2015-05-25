@@ -2926,6 +2926,15 @@ name|ifp
 expr_stmt|;
 name|ic
 operator|->
+name|ic_name
+operator|=
+name|device_get_nameunit
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+name|ic
+operator|->
 name|ic_phytype
 operator|=
 name|IEEE80211_T_OFDM

@@ -3038,6 +3038,15 @@ name|ifp
 expr_stmt|;
 name|ic
 operator|->
+name|ic_name
+operator|=
+name|device_get_nameunit
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+name|ic
+operator|->
 name|ic_caps
 operator|=
 name|IEEE80211_C_STA

@@ -11629,6 +11629,17 @@ name|ic_ifp
 operator|=
 name|ifp
 expr_stmt|;
+name|ic
+operator|->
+name|ic_name
+operator|=
+name|device_get_nameunit
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+expr_stmt|;
 comment|/* XXX not right but it's not used anywhere important */
 name|ic
 operator|->

@@ -468,6 +468,12 @@ modifier|*
 name|ic_ifp
 decl_stmt|;
 comment|/* associated device */
+specifier|const
+name|char
+modifier|*
+name|ic_name
+decl_stmt|;
+comment|/* usually device name */
 name|ieee80211_com_lock_t
 name|ic_comlock
 decl_stmt|;

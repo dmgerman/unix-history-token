@@ -3416,6 +3416,14 @@ name|ifp
 expr_stmt|;
 name|ic
 operator|->
+name|ic_name
+operator|=
+name|sc
+operator|->
+name|name
+expr_stmt|;
+name|ic
+operator|->
 name|ic_phytype
 operator|=
 name|IEEE80211_T_DS
