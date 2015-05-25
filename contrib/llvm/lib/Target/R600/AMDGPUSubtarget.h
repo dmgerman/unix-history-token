@@ -169,6 +169,12 @@ name|SEA_ISLANDS
 block|,
 name|VOLCANIC_ISLANDS
 block|,   }
+block|;    enum
+block|{
+name|FIXED_SGPR_COUNT_FOR_INIT_BUG
+operator|=
+literal|80
+block|}
 block|;
 name|private
 operator|:
@@ -233,6 +239,9 @@ name|LocalMemorySize
 block|;
 name|bool
 name|EnableVGPRSpilling
+block|;
+name|bool
+name|SGPRInitBug
 block|;
 specifier|const
 name|DataLayout
@@ -704,6 +713,18 @@ specifier|const
 block|{
 return|return
 name|LocalMemorySize
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|hasSGPRInitBug
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SGPRInitBug
 return|;
 block|}
 end_expr_stmt

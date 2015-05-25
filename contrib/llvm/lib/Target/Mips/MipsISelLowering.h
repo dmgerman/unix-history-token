@@ -1726,6 +1726,16 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|shouldSignExtendTypeInLibCall
+argument_list|(
+argument|EVT Type
+argument_list|,
+argument|bool IsSigned
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|// Inline asm support
 name|ConstraintType
 name|getConstraintType

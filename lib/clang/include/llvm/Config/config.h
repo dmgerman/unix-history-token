@@ -1473,6 +1473,14 @@ comment|/* #undef HAVE___CHKSTK */
 end_comment
 
 begin_comment
+comment|/* Have host's __chkstk_ms */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___CHKSTK_MS */
+end_comment
+
+begin_comment
 comment|/* Have host's __cmpdi2 */
 end_comment
 
@@ -1859,7 +1867,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_PATCH
-value|0
+value|1
 end_define
 
 begin_comment
@@ -1870,7 +1878,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"3.6.0"
+value|"3.6.1"
 end_define
 
 begin_comment
@@ -1922,7 +1930,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.6.0"
+value|"LLVM 3.6.1"
 end_define
 
 begin_comment
@@ -1944,7 +1952,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.6.0"
+value|"3.6.1"
 end_define
 
 begin_comment

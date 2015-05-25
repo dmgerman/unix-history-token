@@ -828,6 +828,16 @@ condition|)
 return|return
 name|this
 return|;
+comment|// Save the current scope from SemaRef since the LocalInstantiationScope
+comment|// will overwrite it on construction
+name|LocalInstantiationScope
+modifier|*
+name|oldScope
+init|=
+name|SemaRef
+operator|.
+name|CurrentInstantiationScope
+decl_stmt|;
 name|LocalInstantiationScope
 modifier|*
 name|newScope
@@ -1009,6 +1019,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|// Restore the saved scope to SemaRef
+name|SemaRef
+operator|.
+name|CurrentInstantiationScope
+operator|=
+name|oldScope
+expr_stmt|;
 return|return
 name|newScope
 return|;

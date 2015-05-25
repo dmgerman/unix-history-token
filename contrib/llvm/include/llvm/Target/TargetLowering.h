@@ -9548,6 +9548,29 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// Returns true if arguments should be sign-extended in lib calls.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|bool
+name|shouldSignExtendTypeInLibCall
+argument_list|(
+name|EVT
+name|Type
+argument_list|,
+name|bool
+name|IsSigned
+argument_list|)
+decl|const
+block|{
+return|return
+name|IsSigned
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 unit|};
 comment|/// Given an LLVM IR type and return type attributes, compute the return value
 end_comment
