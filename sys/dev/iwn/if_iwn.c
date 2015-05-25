@@ -13803,11 +13803,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|if_printf
+name|ic_printf
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
 literal|"%s: invalid channel %u freq %u/0x%x\n"
 argument_list|,
@@ -25665,9 +25663,9 @@ operator|==
 literal|0
 condition|)
 block|{
-name|if_printf
+name|ic_printf
 argument_list|(
-name|ifp
+name|ic
 argument_list|,
 literal|"device timeout\n"
 argument_list|)
