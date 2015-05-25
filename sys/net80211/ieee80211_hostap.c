@@ -1294,11 +1294,6 @@ operator|->
 name|iv_ifp
 decl_stmt|;
 comment|/* clear driver/net80211 flags before passing up */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1000046
 name|m
 operator|->
 name|m_flags
@@ -1315,23 +1310,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-operator|(
-name|M_80211_RX
-operator||
-name|M_MCAST
-operator||
-name|M_BCAST
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
 name|KASSERT
 argument_list|(
 name|vap
