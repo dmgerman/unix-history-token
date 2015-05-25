@@ -4266,15 +4266,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|sc
-operator|->
-name|stbd_list
-operator|!=
-name|NULL
-condition|)
-block|{
 name|bus_dmamap_unload
 argument_list|(
 name|sc
@@ -4301,7 +4292,6 @@ operator|->
 name|tbd_map
 argument_list|)
 expr_stmt|;
-block|}
 name|bus_dma_tag_destroy
 argument_list|(
 name|sc
