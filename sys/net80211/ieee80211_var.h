@@ -468,6 +468,11 @@ modifier|*
 name|ic_ifp
 decl_stmt|;
 comment|/* associated device */
+name|void
+modifier|*
+name|ic_softc
+decl_stmt|;
+comment|/* driver softc */
 specifier|const
 name|char
 modifier|*
