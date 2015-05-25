@@ -973,6 +973,11 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+parameter_list|,
 name|int
 parameter_list|,
 name|int
@@ -9337,6 +9342,12 @@ parameter_list|,
 name|int
 name|subtype
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
+parameter_list|,
 name|int
 name|rssi
 parameter_list|,
@@ -9390,6 +9401,8 @@ argument_list|,
 name|m
 argument_list|,
 name|subtype
+argument_list|,
+name|rxs
 argument_list|,
 name|rssi
 argument_list|,
