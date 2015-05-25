@@ -1373,11 +1373,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|if_printf
+name|ic_printf
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
 literal|"%s: unable to allocate memory for country ie\n"
 argument_list|,
@@ -1418,14 +1416,11 @@ operator|==
 literal|'\0'
 condition|)
 block|{
-name|if_printf
+name|ic_printf
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
-literal|"no ISO country string for cc %d; "
-literal|"using blanks\n"
+literal|"no ISO country string for cc %d; using blanks\n"
 argument_list|,
 name|rd
 operator|->
@@ -1672,11 +1667,9 @@ operator|==
 name|IEEE80211_COUNTRY_MAX_BANDS
 condition|)
 block|{
-name|if_printf
+name|ic_printf
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
 literal|"%s: country ie too big, "
 literal|"runs> max %d, truncating\n"

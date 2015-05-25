@@ -481,20 +481,11 @@ modifier|*
 name|params
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
+name|ic_printf
+argument_list|(
 name|ni
 operator|->
 name|ni_ic
-operator|->
-name|ic_ifp
-decl_stmt|;
-name|if_printf
-argument_list|(
-name|ifp
 argument_list|,
 literal|"missing ic_raw_xmit callback, drop frame\n"
 argument_list|)

@@ -8638,15 +8638,6 @@ name|int
 name|keyixmax
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|ic
-operator|->
-name|ic_ifp
-decl_stmt|;
 name|nt
 operator|->
 name|nt_ic
@@ -8657,18 +8648,18 @@ name|IEEE80211_NODE_LOCK_INIT
 argument_list|(
 name|nt
 argument_list|,
-name|ifp
+name|ic
 operator|->
-name|if_xname
+name|ic_name
 argument_list|)
 expr_stmt|;
 name|IEEE80211_NODE_ITERATE_LOCK_INIT
 argument_list|(
 name|nt
 argument_list|,
-name|ifp
+name|ic
 operator|->
-name|if_xname
+name|ic_name
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
@@ -8748,11 +8739,9 @@ name|nt_keyixmap
 operator|==
 name|NULL
 condition|)
-name|if_printf
+name|ic_printf
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
 literal|"Cannot allocate key index map with %u entries\n"
 argument_list|,
@@ -9791,13 +9780,11 @@ name|ret
 operator|=
 name|E2BIG
 expr_stmt|;
-name|if_printf
+name|ic_printf
 argument_list|(
 name|nt
 operator|->
 name|nt_ic
-operator|->
-name|ic_ifp
 argument_list|,
 literal|"Node array overflow: max=%u"
 argument_list|,
