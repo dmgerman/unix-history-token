@@ -299,6 +299,39 @@ begin_comment
 comment|/* RX'ed packet is 40mhz, pilots 4,5 valid */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_FREQ
+value|0x0000080
+end_define
+
+begin_comment
+comment|/* Freq value populated, MHz */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_IEEE
+value|0x0000100
+end_define
+
+begin_comment
+comment|/* IEEE value populated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_R_BAND
+value|0x0000200
+end_define
+
+begin_comment
+comment|/* Frequency band populated */
+end_comment
+
 begin_struct
 struct|struct
 name|ieee80211_rx_stats
@@ -357,6 +390,12 @@ name|IEEE80211_MAX_EVM_PILOTS
 index|]
 decl_stmt|;
 comment|/* per-chain, per-pilot EVM values */
+name|uint16_t
+name|c_freq
+decl_stmt|;
+name|uint8_t
+name|c_ieee
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -375,7 +414,7 @@ parameter_list|,
 name|nf
 parameter_list|)
 define|\
-value|((ni)->ni_vap->iv_input(ni, m, rssi, nf))
+value|((ni)->ni_vap->iv_input(ni, m, NULL, rssi, nf))
 end_define
 
 begin_function_decl

@@ -351,12 +351,19 @@ argument_list|,
 name|rx
 argument_list|)
 expr_stmt|;
+comment|//return ieee80211_input(ni, m, rx->rssi, rx->nf);
 return|return
-name|ieee80211_input
+name|ni
+operator|->
+name|ni_vap
+operator|->
+name|iv_input
 argument_list|(
 name|ni
 argument_list|,
 name|m
+argument_list|,
+name|rx
 argument_list|,
 name|rx
 operator|->
@@ -2222,6 +2229,11 @@ modifier|*
 name|m
 parameter_list|,
 name|struct
+name|ieee80211_channel
+modifier|*
+name|rxchan
+parameter_list|,
+name|struct
 name|ieee80211_scanparams
 modifier|*
 name|scan
@@ -2377,9 +2389,7 @@ name|ieee80211_chan2ieee
 argument_list|(
 name|ic
 argument_list|,
-name|ic
-operator|->
-name|ic_curchan
+name|rxchan
 argument_list|)
 expr_stmt|;
 name|scan
@@ -2982,11 +2992,15 @@ name|wh
 argument_list|,
 name|NULL
 argument_list|,
-literal|"for off-channel %u"
+literal|"for off-channel %u (bchan=%u)"
 argument_list|,
 name|scan
 operator|->
 name|chan
+argument_list|,
+name|scan
+operator|->
+name|bchan
 argument_list|)
 expr_stmt|;
 name|vap

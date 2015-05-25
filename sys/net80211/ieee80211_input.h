@@ -925,6 +925,10 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|struct
+name|ieee80211_channel
+modifier|*
+parameter_list|,
+name|struct
 name|ieee80211_scanparams
 modifier|*
 parameter_list|)

@@ -504,6 +504,12 @@ parameter_list|,
 name|int
 name|subtype
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
+parameter_list|,
 name|int
 name|rssi
 parameter_list|,
@@ -1555,6 +1561,12 @@ parameter_list|,
 name|int
 name|subtype
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
+parameter_list|,
 name|int
 name|rssi
 parameter_list|,
@@ -1624,6 +1636,7 @@ name|struct
 name|ieee80211_scanparams
 name|scan
 decl_stmt|;
+comment|/* XXX TODO: use rxstatus to determine off-channel beacons */
 if|if
 condition|(
 name|ieee80211_parse_beacon
@@ -1631,6 +1644,10 @@ argument_list|(
 name|ni
 argument_list|,
 name|m0
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
 argument_list|,
 operator|&
 name|scan
@@ -1817,6 +1834,8 @@ argument_list|,
 name|m0
 argument_list|,
 name|subtype
+argument_list|,
+name|rxs
 argument_list|,
 name|rssi
 argument_list|,

@@ -241,6 +241,11 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+parameter_list|,
 name|int
 name|rssi
 parameter_list|,
@@ -285,6 +290,12 @@ modifier|*
 parameter_list|,
 name|int
 name|subtype
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
 parameter_list|,
 name|int
 name|rssi
@@ -1740,6 +1751,12 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
 parameter_list|,
 name|int
 name|rssi
@@ -3669,6 +3686,8 @@ argument_list|,
 name|m
 argument_list|,
 name|subtype
+argument_list|,
+name|rxs
 argument_list|,
 name|rssi
 argument_list|,
@@ -7212,6 +7231,12 @@ parameter_list|,
 name|int
 name|subtype
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
+parameter_list|,
 name|int
 name|rssi
 parameter_list|,
@@ -7366,6 +7391,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* NB: accept off-channel frames */
+comment|/* XXX TODO: use rxstatus to determine off-channel details */
 if|if
 condition|(
 name|ieee80211_parse_beacon
@@ -7373,6 +7399,10 @@ argument_list|(
 name|ni
 argument_list|,
 name|m0
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
 argument_list|,
 operator|&
 name|scan
