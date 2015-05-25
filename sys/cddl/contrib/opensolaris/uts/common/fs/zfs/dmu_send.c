@@ -5978,6 +5978,14 @@ argument_list|,
 name|tx
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|drba
+operator|->
+name|drba_snapobj
+operator|!=
+literal|0
+condition|)
 name|dsl_dataset_rele
 argument_list|(
 name|snap
