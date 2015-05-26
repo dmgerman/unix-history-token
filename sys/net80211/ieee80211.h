@@ -3938,7 +3938,7 @@ value|0x7f
 end_define
 
 begin_comment
-comment|/* EPR information element flags */
+comment|/* ERP information element flags */
 end_comment
 
 begin_define
