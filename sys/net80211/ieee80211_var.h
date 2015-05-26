@@ -555,6 +555,14 @@ name|task
 name|ic_chw_task
 decl_stmt|;
 comment|/* deferred HT CHW update */
+name|counter_u64_t
+name|ic_ierrors
+decl_stmt|;
+comment|/* input errors */
+name|counter_u64_t
+name|ic_oerrors
+decl_stmt|;
+comment|/* output errors */
 name|uint32_t
 name|ic_flags
 decl_stmt|;
