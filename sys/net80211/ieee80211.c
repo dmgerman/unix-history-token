@@ -1628,9 +1628,9 @@ name|PI_NET
 argument_list|,
 literal|"%s net80211 taskq"
 argument_list|,
-name|ifp
+name|ic
 operator|->
-name|if_xname
+name|ic_name
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Fill in 802.11 available channel set, mark all 	 * available channels as active, and pick a default 	 * channel if not already specified. 	 */
