@@ -2505,6 +2505,21 @@ comment|/* Processor-specific semantics. */
 end_comment
 
 begin_comment
+comment|/* Flags for section groups. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GRP_COMDAT
+value|0x1
+end_define
+
+begin_comment
+comment|/* COMDAT semantics. */
+end_comment
+
+begin_comment
 comment|/* Values for p_type. */
 end_comment
 
