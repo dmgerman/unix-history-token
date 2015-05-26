@@ -6354,10 +6354,13 @@ block|{
 name|BIOCGSTATS
 block|}
 decl_stmt|;
+comment|/* 		 * The various libpcap devices use a combination of 		 * read (bpf), ioctl (bpf, netmap), poll (netmap). 		 * Grant the relevant access rights, sorted by name. 		 */
 name|cap_rights_init
 argument_list|(
 operator|&
 name|rights
+argument_list|,
+name|CAP_EVENT
 argument_list|,
 name|CAP_IOCTL
 argument_list|,
