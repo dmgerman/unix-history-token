@@ -1222,7 +1222,7 @@ begin_decl_stmt
 name|int
 name|pmap_pcid_enabled
 init|=
-literal|0
+literal|1
 decl_stmt|;
 end_decl_stmt
 
