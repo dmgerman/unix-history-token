@@ -400,6 +400,13 @@ modifier|*
 name|createBarrierNoopPass
 parameter_list|()
 function_decl|;
+comment|/// \brief This pass lowers bitset metadata and the llvm.bitset.test intrinsic
+comment|/// to bitsets.
+name|ModulePass
+modifier|*
+name|createLowerBitSetsPass
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

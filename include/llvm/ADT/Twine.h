@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -77,17 +83,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
-name|class
-name|StringRef
-decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
@@ -176,6 +171,9 @@ block|,
 comment|/// A pointer to a StringRef instance.
 name|StringRefKind
 block|,
+comment|/// A pointer to a SmallString instance.
+name|SmallStringKind
+block|,
 comment|/// A char value reinterpreted as a pointer, to render as a character.
 name|CharKind
 block|,
@@ -231,6 +229,14 @@ name|StringRef
 modifier|*
 name|stringRef
 decl_stmt|;
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|smallString
+expr_stmt|;
 name|char
 name|character
 decl_stmt|;
@@ -326,12 +332,12 @@ argument_list|(
 specifier|const
 name|Twine
 operator|&
-name|_LHS
+name|LHS
 argument_list|,
 specifier|const
 name|Twine
 operator|&
-name|_RHS
+name|RHS
 argument_list|)
 operator|:
 name|LHSKind
@@ -344,19 +350,23 @@ argument_list|(
 argument|TwineKind
 argument_list|)
 block|{
+name|this
+operator|->
 name|LHS
 operator|.
 name|twine
 operator|=
 operator|&
-name|_LHS
+name|LHS
 block|;
+name|this
+operator|->
 name|RHS
 operator|.
 name|twine
 operator|=
 operator|&
-name|_RHS
+name|RHS
 block|;
 name|assert
 argument_list|(
@@ -370,33 +380,33 @@ comment|/// Construct a twine from explicit values.
 name|explicit
 name|Twine
 argument_list|(
-argument|Child _LHS
+argument|Child LHS
 argument_list|,
-argument|NodeKind _LHSKind
+argument|NodeKind LHSKind
 argument_list|,
-argument|Child _RHS
+argument|Child RHS
 argument_list|,
-argument|NodeKind _RHSKind
+argument|NodeKind RHSKind
 argument_list|)
 operator|:
 name|LHS
 argument_list|(
-name|_LHS
+name|LHS
 argument_list|)
 operator|,
 name|RHS
 argument_list|(
-name|_RHS
+name|RHS
 argument_list|)
 operator|,
 name|LHSKind
 argument_list|(
-name|_LHSKind
+name|LHSKind
 argument_list|)
 operator|,
 name|RHSKind
 argument_list|(
-argument|_RHSKind
+argument|RHSKind
 argument_list|)
 block|{
 name|assert
@@ -419,9 +429,10 @@ name|Twine
 operator|&
 name|Other
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
-comment|/// isNull - Check for the null twine.
+comment|/// Check for the null twine.
 name|bool
 name|isNull
 argument_list|()
@@ -434,7 +445,7 @@ operator|==
 name|NullKind
 return|;
 block|}
-comment|/// isEmpty - Check for the empty twine.
+comment|/// Check for the empty twine.
 name|bool
 name|isEmpty
 argument_list|()
@@ -447,7 +458,7 @@ operator|==
 name|EmptyKind
 return|;
 block|}
-comment|/// isNullary - Check if this is a nullary twine (null or empty).
+comment|/// Check if this is a nullary twine (null or empty).
 name|bool
 name|isNullary
 argument_list|()
@@ -461,7 +472,7 @@ name|isEmpty
 argument_list|()
 return|;
 block|}
-comment|/// isUnary - Check if this is a unary twine.
+comment|/// Check if this is a unary twine.
 name|bool
 name|isUnary
 argument_list|()
@@ -478,7 +489,7 @@ name|isNullary
 argument_list|()
 return|;
 block|}
-comment|/// isBinary - Check if this is a binary twine.
+comment|/// Check if this is a binary twine.
 name|bool
 name|isBinary
 argument_list|()
@@ -496,7 +507,7 @@ operator|!=
 name|EmptyKind
 return|;
 block|}
-comment|/// isValid - Check if this is a valid twine (satisfying the invariants on
+comment|/// Check if this is a valid twine (satisfying the invariants on
 comment|/// order and number of arguments).
 name|bool
 name|isValid
@@ -585,7 +596,7 @@ return|return
 name|true
 return|;
 block|}
-comment|/// getLHSKind - Get the NodeKind of the left-hand side.
+comment|/// Get the NodeKind of the left-hand side.
 name|NodeKind
 name|getLHSKind
 argument_list|()
@@ -595,7 +606,7 @@ return|return
 name|LHSKind
 return|;
 block|}
-comment|/// getRHSKind - Get the NodeKind of the right-hand side.
+comment|/// Get the NodeKind of the right-hand side.
 name|NodeKind
 name|getRHSKind
 argument_list|()
@@ -605,7 +616,7 @@ return|return
 name|RHSKind
 return|;
 block|}
-comment|/// printOneChild - Print one child from a twine.
+comment|/// Print one child from a twine.
 name|void
 name|printOneChild
 argument_list|(
@@ -621,7 +632,7 @@ name|Kind
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// printOneChildRepr - Print the representation of one child from a twine.
+comment|/// Print the representation of one child from a twine.
 name|void
 name|printOneChildRepr
 argument_list|(
@@ -664,6 +675,15 @@ operator|&&
 literal|"Invalid twine!"
 argument_list|)
 block|;     }
+name|Twine
+argument_list|(
+specifier|const
+name|Twine
+operator|&
+argument_list|)
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Construct from a C string.
 comment|///
 comment|/// We take care here to optimize "" into the empty twine -- this will be
@@ -787,6 +807,44 @@ block|{
 name|LHS
 operator|.
 name|stringRef
+operator|=
+operator|&
+name|Str
+block|;
+name|assert
+argument_list|(
+name|isValid
+argument_list|()
+operator|&&
+literal|"Invalid twine!"
+argument_list|)
+block|;     }
+comment|/// Construct from a SmallString.
+comment|/*implicit*/
+name|Twine
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Str
+argument_list|)
+operator|:
+name|LHSKind
+argument_list|(
+name|SmallStringKind
+argument_list|)
+operator|,
+name|RHSKind
+argument_list|(
+argument|EmptyKind
+argument_list|)
+block|{
+name|LHS
+operator|.
+name|smallString
 operator|=
 operator|&
 name|Str
@@ -1036,12 +1094,12 @@ argument_list|(
 specifier|const
 name|char
 operator|*
-name|_LHS
+name|LHS
 argument_list|,
 specifier|const
 name|StringRef
 operator|&
-name|_RHS
+name|RHS
 argument_list|)
 operator|:
 name|LHSKind
@@ -1054,18 +1112,22 @@ argument_list|(
 argument|StringRefKind
 argument_list|)
 block|{
+name|this
+operator|->
 name|LHS
 operator|.
 name|cString
 operator|=
-name|_LHS
+name|LHS
 block|;
+name|this
+operator|->
 name|RHS
 operator|.
 name|stringRef
 operator|=
 operator|&
-name|_RHS
+name|RHS
 block|;
 name|assert
 argument_list|(
@@ -1082,12 +1144,12 @@ argument_list|(
 specifier|const
 name|StringRef
 operator|&
-name|_LHS
+name|LHS
 argument_list|,
 specifier|const
 name|char
 operator|*
-name|_RHS
+name|RHS
 argument_list|)
 operator|:
 name|LHSKind
@@ -1100,18 +1162,22 @@ argument_list|(
 argument|CStringKind
 argument_list|)
 block|{
+name|this
+operator|->
 name|LHS
 operator|.
 name|stringRef
 operator|=
 operator|&
-name|_LHS
+name|LHS
 block|;
+name|this
+operator|->
 name|RHS
 operator|.
 name|cString
 operator|=
-name|_RHS
+name|RHS
 block|;
 name|assert
 argument_list|(
@@ -1210,11 +1276,11 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|/// isTriviallyEmpty - Check if this twine is trivially empty; a false
+comment|/// Check if this twine is trivially empty; a false return value does not
 end_comment
 
 begin_comment
-comment|/// return value does not necessarily mean the twine is empty.
+comment|/// necessarily mean the twine is empty.
 end_comment
 
 begin_expr_stmt
@@ -1231,11 +1297,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isSingleStringRef - Return true if this twine can be dynamically
+comment|/// Return true if this twine can be dynamically accessed as a single
 end_comment
 
 begin_comment
-comment|/// accessed as a single StringRef value with getSingleStringRef().
+comment|/// StringRef value with getSingleStringRef().
 end_comment
 
 begin_expr_stmt
@@ -1274,6 +1340,9 @@ name|StdStringKind
 case|:
 case|case
 name|StringRefKind
+case|:
+case|case
+name|SmallStringKind
 case|:
 return|return
 name|true
@@ -1324,7 +1393,7 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|/// str - Return the twine contents as a std::string.
+comment|/// Return the twine contents as a std::string.
 end_comment
 
 begin_expr_stmt
@@ -1338,11 +1407,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// toVector - Write the concatenated string into the given SmallString or
-end_comment
-
-begin_comment
-comment|/// SmallVector.
+comment|/// Append the concatenated string into the given SmallString or SmallVector.
 end_comment
 
 begin_decl_stmt
@@ -1361,11 +1426,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// getSingleStringRef - This returns the twine as a single StringRef.  This
+comment|/// This returns the twine as a single StringRef.  This method is only valid
 end_comment
 
 begin_comment
-comment|/// method is only valid if isSingleStringRef() is true.
+comment|/// if isSingleStringRef() is true.
 end_comment
 
 begin_expr_stmt
@@ -1433,12 +1498,33 @@ name|LHS
 operator|.
 name|stringRef
 return|;
+case|case
+name|SmallStringKind
+case|:
+return|return
+name|StringRef
+argument_list|(
+name|LHS
+operator|.
+name|smallString
+operator|->
+name|data
+argument_list|()
+argument_list|,
+name|LHS
+operator|.
+name|smallString
+operator|->
+name|size
+argument_list|()
+argument_list|)
+return|;
 block|}
 end_expr_stmt
 
 begin_comment
 unit|}
-comment|/// toStringRef - This returns the twine as a single StringRef if it can be
+comment|/// This returns the twine as a single StringRef if it can be
 end_comment
 
 begin_comment
@@ -1457,25 +1543,53 @@ argument|SmallVectorImpl<char>&Out
 argument_list|)
 end_macro
 
-begin_decl_stmt
+begin_expr_stmt
 specifier|const
-decl_stmt|;
-end_decl_stmt
+block|{
+if|if
+condition|(
+name|isSingleStringRef
+argument_list|()
+condition|)
+return|return
+name|getSingleStringRef
+argument_list|()
+return|;
+name|toVector
+argument_list|(
+name|Out
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|StringRef
+argument_list|(
+name|Out
+operator|.
+name|data
+argument_list|()
+argument_list|,
+name|Out
+operator|.
+name|size
+argument_list|()
+argument_list|)
+return|;
+end_return
 
 begin_comment
-comment|/// toNullTerminatedStringRef - This returns the twine as a single null
+unit|}
+comment|/// This returns the twine as a single null terminated StringRef if it
 end_comment
 
 begin_comment
-comment|/// terminated StringRef if it can be represented as such. Otherwise the
+comment|/// can be represented as such. Otherwise the twine is written into the
 end_comment
 
 begin_comment
-comment|/// twine is written into the given SmallVector and a StringRef to the
-end_comment
-
-begin_comment
-comment|/// SmallVector's data is returned.
+comment|/// given SmallVector and a StringRef to the SmallVector's data is returned.
 end_comment
 
 begin_comment
@@ -1486,18 +1600,16 @@ begin_comment
 comment|/// The returned StringRef's size does not include the null terminator.
 end_comment
 
-begin_decl_stmt
-name|StringRef
+begin_macro
+unit|StringRef
 name|toNullTerminatedStringRef
 argument_list|(
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|Out
+argument|SmallVectorImpl<char>&Out
 argument_list|)
-decl|const
+end_macro
+
+begin_decl_stmt
+specifier|const
 decl_stmt|;
 end_decl_stmt
 

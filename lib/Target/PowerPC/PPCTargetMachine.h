@@ -95,6 +95,20 @@ range|:
 name|public
 name|LLVMTargetMachine
 block|{
+name|public
+operator|:
+expr|enum
+name|PPCABI
+block|{
+name|PPC_ABI_UNKNOWN
+block|,
+name|PPC_ABI_ELFv1
+block|,
+name|PPC_ABI_ELFv2
+block|}
+block|;
+name|private
+operator|:
 name|std
 operator|::
 name|unique_ptr
@@ -103,8 +117,8 @@ name|TargetLoweringObjectFile
 operator|>
 name|TLOF
 block|;
-name|PPCSubtarget
-name|Subtarget
+name|PPCABI
+name|TargetABI
 block|;
 name|mutable
 name|StringMap
@@ -147,19 +161,6 @@ specifier|const
 name|PPCSubtarget
 operator|*
 name|getSubtargetImpl
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|Subtarget
-return|;
-block|}
-specifier|const
-name|PPCSubtarget
-operator|*
-name|getSubtargetImpl
 argument_list|(
 argument|const Function&F
 argument_list|)
@@ -175,12 +176,9 @@ argument|PassManagerBase&PM
 argument_list|)
 name|override
 block|;
-comment|/// \brief Register PPC analysis passes with a pass manager.
-name|void
-name|addAnalysisPasses
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|)
+name|TargetIRAnalysis
+name|getTargetIRAnalysis
+argument_list|()
 name|override
 block|;
 name|TargetLoweringObjectFile
@@ -197,13 +195,58 @@ name|get
 argument_list|()
 return|;
 block|}
-expr|}
+name|bool
+name|isELFv2ABI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetABI
+operator|==
+name|PPC_ABI_ELFv2
+return|;
+block|}
+name|bool
+name|isPPC64
+argument_list|()
+specifier|const
+block|{
+name|Triple
+name|TT
+argument_list|(
+name|getTargetTriple
+argument_list|()
+argument_list|)
 block|;
+return|return
+operator|(
+name|TT
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|ppc64
+operator|||
+name|TT
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|ppc64le
+operator|)
+return|;
+block|}
+block|; }
+decl_stmt|;
 comment|/// PPC32TargetMachine - PowerPC 32-bit target machine.
 comment|///
 name|class
 name|PPC32TargetMachine
-operator|:
+range|:
 name|public
 name|PPCTargetMachine
 block|{
@@ -233,12 +276,12 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-block|;
+decl_stmt|;
 comment|/// PPC64TargetMachine - PowerPC 64-bit target machine.
 comment|///
 name|class
 name|PPC64TargetMachine
-operator|:
+range|:
 name|public
 name|PPCTargetMachine
 block|{
@@ -268,7 +311,8 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-block|;  }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

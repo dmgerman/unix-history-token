@@ -199,9 +199,9 @@ label|:
 name|VLIWResourceModel
 argument_list|(
 specifier|const
-name|TargetMachine
+name|TargetSubtargetInfo
 operator|&
-name|TM
+name|STI
 argument_list|,
 specifier|const
 name|TargetSchedModel
@@ -221,21 +221,14 @@ argument_list|)
 block|{
 name|ResourcesModel
 operator|=
-name|TM
+name|STI
 operator|.
-name|getSubtargetImpl
-argument_list|()
-operator|->
 name|getInstrInfo
 argument_list|()
 operator|->
 name|CreateTargetScheduleState
 argument_list|(
-operator|*
-name|TM
-operator|.
-name|getSubtargetImpl
-argument_list|()
+name|STI
 argument_list|)
 block|;
 comment|// This hard requirement could be relaxed,

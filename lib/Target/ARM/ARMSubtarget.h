@@ -198,6 +198,10 @@ name|CortexA15
 block|,
 name|CortexA17
 block|,
+name|CortexR4
+block|,
+name|CortexR4F
+block|,
 name|CortexR5
 block|,
 name|Swift
@@ -207,7 +211,7 @@ block|,
 name|CortexA57
 block|,
 name|Krait
-block|,    }
+block|,   }
 block|;   enum
 name|ARMProcClassEnum
 block|{
@@ -229,7 +233,7 @@ name|ARMProcClassEnum
 name|ARMProcClass
 block|;
 comment|/// HasV4TOps, HasV5TOps, HasV5TEOps,
-comment|/// HasV6Ops, HasV6MOps, HasV6T2Ops, HasV7Ops, HasV8Ops -
+comment|/// HasV6Ops, HasV6MOps, HasV6KOps, HasV6T2Ops, HasV7Ops, HasV8Ops -
 comment|/// Specify whether target support specific ARM ISA variants.
 name|bool
 name|HasV4TOps
@@ -247,6 +251,9 @@ name|bool
 name|HasV6MOps
 block|;
 name|bool
+name|HasV6KOps
+block|;
+name|bool
 name|HasV6T2Ops
 block|;
 name|bool
@@ -254,6 +261,9 @@ name|HasV7Ops
 block|;
 name|bool
 name|HasV8Ops
+block|;
+name|bool
+name|HasV8_1aOps
 block|;
 comment|/// HasVFPv2, HasVFPv3, HasVFPv4, HasFPARMv8, HasNEON - Specify what
 comment|/// floating point ISAs are supported.
@@ -300,6 +310,10 @@ block|;
 comment|/// InThumbMode - True if compiling for Thumb, false for ARM.
 name|bool
 name|InThumbMode
+block|;
+comment|/// UseSoftFloat - True if we're using software floating point features.
+name|bool
+name|UseSoftFloat
 block|;
 comment|/// HasThumb2 - True if Thumb2 instructions are supported.
 name|bool
@@ -524,19 +538,6 @@ argument|StringRef FS
 argument_list|)
 block|;
 specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|DL
-return|;
-block|}
-specifier|const
 name|ARMSelectionDAGInfo
 operator|*
 name|getSelectionDAGInfo
@@ -610,12 +611,17 @@ return|;
 block|}
 name|private
 operator|:
-specifier|const
-name|DataLayout
-name|DL
-block|;
 name|ARMSelectionDAGInfo
 name|TSInfo
+block|;
+comment|// Either Thumb1FrameLowering or ARMFrameLowering.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ARMFrameLowering
+operator|>
+name|FrameLowering
 block|;
 comment|// Either Thumb1InstrInfo or Thumb2InstrInfo.
 name|std
@@ -629,21 +635,21 @@ block|;
 name|ARMTargetLowering
 name|TLInfo
 block|;
-comment|// Either Thumb1FrameLowering or ARMFrameLowering.
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|ARMFrameLowering
-operator|>
-name|FrameLowering
-block|;
 name|void
 name|initializeEnvironment
 argument_list|()
 block|;
 name|void
 name|initSubtargetFeatures
+argument_list|(
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|)
+block|;
+name|ARMFrameLowering
+operator|*
+name|initializeFrameLowering
 argument_list|(
 argument|StringRef CPU
 argument_list|,
@@ -702,6 +708,15 @@ name|HasV6MOps
 return|;
 block|}
 name|bool
+name|hasV6KOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasV6KOps
+return|;
+block|}
+name|bool
 name|hasV6T2Ops
 argument_list|()
 specifier|const
@@ -726,6 +741,15 @@ specifier|const
 block|{
 return|return
 name|HasV8Ops
+return|;
+block|}
+name|bool
+name|hasV8_1aOps
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasV8_1aOps
 return|;
 block|}
 name|bool
@@ -1426,6 +1450,15 @@ argument_list|()
 specifier|const
 block|;
 name|bool
+name|useSoftFloat
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseSoftFloat
+return|;
+block|}
+name|bool
 name|isThumb
 argument_list|()
 specifier|const
@@ -1640,7 +1673,13 @@ argument_list|,
 argument|Reloc::Model RelocM
 argument_list|)
 specifier|const
-block|;  }
+block|;
+comment|/// True if fast-isel is used.
+name|bool
+name|useFastISel
+argument_list|()
+specifier|const
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

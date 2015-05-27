@@ -11830,6 +11830,50 @@ block|}
 end_function
 
 begin_comment
+comment|/* lltype -> string -> llbuilder -> value */
+end_comment
+
+begin_function
+name|CAMLprim
+name|LLVMValueRef
+name|llvm_build_empty_phi
+parameter_list|(
+name|LLVMTypeRef
+name|Type
+parameter_list|,
+name|value
+name|Name
+parameter_list|,
+name|value
+name|B
+parameter_list|)
+block|{
+name|LLVMValueRef
+name|PhiNode
+decl_stmt|;
+return|return
+name|LLVMBuildPhi
+argument_list|(
+name|Builder_val
+argument_list|(
+name|B
+argument_list|)
+argument_list|,
+name|Type
+argument_list|,
+name|String_val
+argument_list|(
+name|Name
+argument_list|)
+argument_list|)
+return|;
+return|return
+name|PhiNode
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/* llvalue -> llvalue array -> string -> llbuilder -> llvalue */
 end_comment
 

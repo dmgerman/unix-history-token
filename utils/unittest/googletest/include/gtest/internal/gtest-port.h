@@ -2397,7 +2397,7 @@ comment|// Allows the user to #include
 end_comment
 
 begin_comment
-comment|//<tr1/functional> if he chooses to.
+comment|//<tr1/functional> if they choose to.
 end_comment
 
 begin_else
@@ -5035,6 +5035,7 @@ block|;   }
 operator|~
 name|ThreadWithParam
 argument_list|()
+name|override
 block|{
 name|Join
 argument_list|()
@@ -5066,11 +5067,17 @@ expr_stmt|;
 block|}
 end_expr_stmt
 
-begin_function
-unit|}    virtual
-name|void
+begin_macro
+unit|}    void
 name|Run
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_macro
+name|override
+end_macro
+
+begin_block
 block|{
 if|if
 condition|(
@@ -5089,7 +5096,7 @@ name|param_
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_label
 name|private

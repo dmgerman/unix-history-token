@@ -131,7 +131,9 @@ specifier|const
 name|HexagonSubtarget
 operator|*
 name|getSubtargetImpl
-argument_list|()
+argument_list|(
+argument|const Function&
+argument_list|)
 specifier|const
 name|override
 block|{

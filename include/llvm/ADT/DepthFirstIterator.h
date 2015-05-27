@@ -599,18 +599,6 @@ if|if
 condition|(
 name|Next
 operator|&&
-operator|!
-name|this
-operator|->
-name|Visited
-operator|.
-name|count
-argument_list|(
-name|Next
-argument_list|)
-condition|)
-block|{
-comment|// No, do it now.
 name|this
 operator|->
 name|Visited
@@ -619,7 +607,11 @@ name|insert
 argument_list|(
 name|Next
 argument_list|)
-expr_stmt|;
+operator|.
+name|second
+condition|)
+block|{
+comment|// No, do it now.
 name|VisitStack
 operator|.
 name|push_back
@@ -663,26 +655,13 @@ name|empty
 argument_list|()
 condition|)
 empty_stmt|;
-do|}  public:   typedef typename super::pointer pointer;   typedef df_iterator<GraphT
-operator|,
-do|SetType
-operator|,
-do|ExtStorage
-operator|,
-do|GT> _Self;
+do|}  public:   typedef typename super::pointer pointer;
 comment|// Provide static begin and end methods as our public "constructors"
-do|static
-specifier|inline
-namespace|_Self
-name|begin
-namespace|(const
-name|GraphT
-namespace|&
-name|G
+do|static df_iterator begin(const GraphT&G
 block|)
 block|{
 return|return
-name|_Self
+name|df_iterator
 argument_list|(
 name|GT
 operator|::
@@ -694,31 +673,29 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
-name|_Self
+name|df_iterator
 name|end
 argument_list|(
-argument|const GraphT& G
+argument|const GraphT&G
 argument_list|)
 block|{
 return|return
-name|_Self
+name|df_iterator
 argument_list|()
 return|;
 block|}
 comment|// Static begin and end methods as our public ctors for external iterators
 specifier|static
-specifier|inline
-name|_Self
+name|df_iterator
 name|begin
 argument_list|(
-argument|const GraphT& G
+argument|const GraphT&G
 argument_list|,
 argument|SetType&S
 argument_list|)
 block|{
 return|return
-name|_Self
+name|df_iterator
 argument_list|(
 name|GT
 operator|::
@@ -732,29 +709,27 @@ argument_list|)
 return|;
 block|}
 specifier|static
-specifier|inline
-name|_Self
+name|df_iterator
 name|end
 argument_list|(
-argument|const GraphT& G
+argument|const GraphT&G
 argument_list|,
 argument|SetType&S
 argument_list|)
 block|{
 return|return
-name|_Self
+name|df_iterator
 argument_list|(
 name|S
 argument_list|)
 return|;
 block|}
-specifier|inline
 name|bool
 name|operator
 operator|==
 operator|(
 specifier|const
-name|_Self
+name|df_iterator
 operator|&
 name|x
 operator|)
@@ -768,13 +743,12 @@ operator|.
 name|VisitStack
 return|;
 block|}
-specifier|inline
 name|bool
 name|operator
 operator|!=
 operator|(
 specifier|const
-name|_Self
+name|df_iterator
 operator|&
 name|x
 operator|)
@@ -782,14 +756,14 @@ specifier|const
 block|{
 return|return
 operator|!
-name|operator
-operator|==
 operator|(
+operator|*
+name|this
+operator|==
 name|x
 operator|)
 return|;
 block|}
-specifier|inline
 name|pointer
 name|operator
 operator|*
@@ -813,7 +787,6 @@ comment|// This is a nonstandard operator-> that dereferences the pointer an ext
 comment|// time... so that you can actually call methods ON the Node, because
 comment|// the contained type is a pointer.  This allows BBIt->getTerminator() f.e.
 comment|//
-specifier|inline
 name|NodeType
 operator|*
 name|operator
@@ -822,14 +795,12 @@ block|()
 specifier|const
 block|{
 return|return
-name|operator
 operator|*
-operator|(
-operator|)
+operator|*
+name|this
 return|;
 block|}
-specifier|inline
-name|_Self
+name|df_iterator
 operator|&
 name|operator
 operator|++
@@ -845,10 +816,11 @@ operator|*
 name|this
 return|;
 block|}
-comment|// skips all children of the current node and traverses to next node
-comment|//
-specifier|inline
-name|_Self
+comment|/// \brief Skips all children of the current node and traverses to next node
+comment|///
+comment|/// Note: This function takes care of incrementing the iterator. If you
+comment|/// always increment and call this function, you risk walking off the end.
+name|df_iterator
 modifier|&
 name|skipChildren
 parameter_list|()
@@ -874,8 +846,7 @@ operator|*
 name|this
 return|;
 block|}
-specifier|inline
-name|_Self
+name|df_iterator
 name|operator
 operator|++
 operator|(
@@ -883,7 +854,7 @@ name|int
 operator|)
 block|{
 comment|// Postincrement
-name|_Self
+name|df_iterator
 name|tmp
 operator|=
 operator|*
@@ -901,7 +872,6 @@ comment|// nodeVisited - return true if this iterator has already visited the
 comment|// specified node.  This is public, and will probably be used to iterate over
 comment|// nodes that a depth first iteration did not find: ie unreachable nodes.
 comment|//
-specifier|inline
 name|bool
 name|nodeVisited
 argument_list|(
@@ -1056,23 +1026,18 @@ argument|const T& G
 argument_list|)
 block|{
 return|return
-name|iterator_range
-operator|<
-name|df_iterator
-operator|<
-name|T
-operator|>>
-operator|(
+name|make_range
+argument_list|(
 name|df_begin
 argument_list|(
 name|G
 argument_list|)
-operator|,
+argument_list|,
 name|df_end
 argument_list|(
 name|G
 argument_list|)
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1252,29 +1217,22 @@ argument|SetTy&S
 argument_list|)
 block|{
 return|return
-name|iterator_range
-operator|<
-name|df_ext_iterator
-operator|<
-name|T
-operator|,
-name|SetTy
-operator|>>
-operator|(
+name|make_range
+argument_list|(
 name|df_ext_begin
 argument_list|(
 name|G
 argument_list|,
 name|S
 argument_list|)
-operator|,
+argument_list|,
 name|df_ext_end
 argument_list|(
 name|G
 argument_list|,
 name|S
 argument_list|)
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1458,23 +1416,18 @@ argument|const T& G
 argument_list|)
 block|{
 return|return
-name|iterator_range
-operator|<
-name|idf_iterator
-operator|<
-name|T
-operator|>>
-operator|(
+name|make_range
+argument_list|(
 name|idf_begin
 argument_list|(
 name|G
 argument_list|)
-operator|,
+argument_list|,
 name|idf_end
 argument_list|(
 name|G
 argument_list|)
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -1696,29 +1649,22 @@ argument|SetTy&S
 argument_list|)
 block|{
 return|return
-name|iterator_range
-operator|<
-name|idf_ext_iterator
-operator|<
-name|T
-operator|,
-name|SetTy
-operator|>>
-operator|(
+name|make_range
+argument_list|(
 name|idf_ext_begin
 argument_list|(
 name|G
 argument_list|,
 name|S
 argument_list|)
-operator|,
+argument_list|,
 name|idf_ext_end
 argument_list|(
 name|G
 argument_list|,
 name|S
 argument_list|)
-operator|)
+argument_list|)
 return|;
 block|}
 end_expr_stmt

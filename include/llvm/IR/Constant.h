@@ -111,13 +111,17 @@ specifier|const
 name|Constant
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|Constant
 argument_list|(
-argument|const Constant&
+specifier|const
+name|Constant
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|anchor

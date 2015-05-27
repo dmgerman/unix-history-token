@@ -92,12 +92,7 @@ name|public
 name|AMDGPURegisterInfo
 block|{
 name|SIRegisterInfo
-argument_list|(
-specifier|const
-name|AMDGPUSubtarget
-operator|&
-name|st
-argument_list|)
+argument_list|()
 block|;
 name|BitVector
 name|getReservedRegs
@@ -110,6 +105,8 @@ block|;
 name|unsigned
 name|getRegPressureSetLimit
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|unsigned Idx
 argument_list|)
 specifier|const

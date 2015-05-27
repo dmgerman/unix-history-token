@@ -94,7 +94,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Triple.h"
 end_include
 
 begin_include
@@ -168,6 +180,9 @@ comment|/// }
 name|class
 name|DebugMap
 block|{
+name|Triple
+name|BinaryTriple
+decl_stmt|;
 typedef|typedef
 name|std
 operator|::
@@ -186,6 +201,19 @@ name|Objects
 decl_stmt|;
 name|public
 label|:
+name|DebugMap
+argument_list|(
+specifier|const
+name|Triple
+operator|&
+name|BinaryTriple
+argument_list|)
+operator|:
+name|BinaryTriple
+argument_list|(
+argument|BinaryTriple
+argument_list|)
+block|{}
 typedef|typedef
 name|ObjectContainer
 operator|::
@@ -245,6 +273,17 @@ name|StringRef
 name|ObjectFilePath
 parameter_list|)
 function_decl|;
+specifier|const
+name|Triple
+operator|&
+name|getTriple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BinaryTriple
+return|;
+block|}
 name|void
 name|print
 argument_list|(
@@ -284,11 +323,16 @@ decl_stmt|;
 name|uint64_t
 name|BinaryAddress
 decl_stmt|;
+name|uint32_t
+name|Size
+decl_stmt|;
 name|SymbolMapping
 argument_list|(
 argument|uint64_t ObjectAddress
 argument_list|,
 argument|uint64_t BinaryAddress
+argument_list|,
+argument|uint32_t Size
 argument_list|)
 block|:
 name|ObjectAddress
@@ -298,11 +342,23 @@ argument_list|)
 operator|,
 name|BinaryAddress
 argument_list|(
-argument|BinaryAddress
+name|BinaryAddress
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+argument|Size
 argument_list|)
 block|{}
 block|}
 struct|;
+typedef|typedef
+name|StringMapEntry
+operator|<
+name|SymbolMapping
+operator|>
+name|DebugMapEntry
+expr_stmt|;
 comment|/// \brief Adds a symbol mapping to this DebugMapObject.
 comment|/// \returns false if the symbol was already registered. The request
 comment|/// is discarded in this case.
@@ -319,17 +375,32 @@ name|ObjectAddress
 argument_list|,
 name|uint64_t
 name|LinkedAddress
+argument_list|,
+name|uint32_t
+name|Size
 argument_list|)
 decl_stmt|;
 comment|/// \brief Lookup a symbol mapping.
 comment|/// \returns null if the symbol isn't found.
 specifier|const
-name|SymbolMapping
+name|DebugMapEntry
 modifier|*
 name|lookupSymbol
 argument_list|(
 name|StringRef
 name|SymbolName
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Lookup an objectfile address.
+comment|/// \returns null if the address isn't found.
+specifier|const
+name|DebugMapEntry
+modifier|*
+name|lookupObjectAddress
+argument_list|(
+name|uint64_t
+name|Address
 argument_list|)
 decl|const
 decl_stmt|;
@@ -342,6 +413,34 @@ specifier|const
 block|{
 return|return
 name|Filename
+return|;
+block|}
+name|iterator_range
+operator|<
+name|StringMap
+operator|<
+name|SymbolMapping
+operator|>
+operator|::
+name|const_iterator
+operator|>
+name|symbols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|make_range
+argument_list|(
+name|Symbols
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Symbols
+operator|.
+name|end
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|void
@@ -385,6 +484,15 @@ operator|<
 name|SymbolMapping
 operator|>
 name|Symbols
+expr_stmt|;
+name|DenseMap
+operator|<
+name|uint64_t
+operator|,
+name|DebugMapEntry
+operator|*
+operator|>
+name|AddressToMapping
 expr_stmt|;
 block|}
 empty_stmt|;

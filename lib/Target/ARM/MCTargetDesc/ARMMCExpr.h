@@ -87,19 +87,19 @@ block|;
 name|explicit
 name|ARMMCExpr
 argument_list|(
-argument|VariantKind _Kind
+argument|VariantKind Kind
 argument_list|,
-argument|const MCExpr *_Expr
+argument|const MCExpr *Expr
 argument_list|)
 operator|:
 name|Kind
 argument_list|(
-name|_Kind
+name|Kind
 argument_list|)
 block|,
 name|Expr
 argument_list|(
-argument|_Expr
+argument|Expr
 argument_list|)
 block|{}
 name|public
@@ -221,7 +221,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|FindAssociatedSection

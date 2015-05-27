@@ -246,42 +246,10 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|getRegClassForNode
-argument_list|(
-argument|SelectionDAG&DAG
-argument_list|,
-argument|const SDValue&Op
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|fitsRegClass
-argument_list|(
-argument|SelectionDAG&DAG
-argument_list|,
-argument|const SDValue&Op
-argument_list|,
-argument|unsigned RegClass
-argument_list|)
-specifier|const
-block|;
 name|void
 name|adjustWritemask
 argument_list|(
 argument|MachineSDNode *&N
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|MachineSDNode
-operator|*
-name|AdjustRegClass
-argument_list|(
-argument|MachineSDNode *N
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -359,6 +327,11 @@ argument_list|(
 name|TargetMachine
 operator|&
 name|tm
+argument_list|,
+specifier|const
+name|AMDGPUSubtarget
+operator|&
+name|STI
 argument_list|)
 block|;
 name|bool
@@ -464,6 +437,14 @@ argument_list|(
 argument|MachineInstr * MI
 argument_list|,
 argument|MachineBasicBlock * BB
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|enableAggressiveFMAFusion
+argument_list|(
+argument|EVT VT
 argument_list|)
 specifier|const
 name|override
@@ -602,6 +583,40 @@ argument_list|,
 argument|SDLoc DL
 argument_list|,
 argument|SDValue Ptr
+argument_list|)
+specifier|const
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+operator|>
+name|getRegForInlineAsmConstraint
+argument_list|(
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|const std::string&Constraint
+argument_list|,
+argument|MVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
+name|SDValue
+name|copyToM0
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SDValue V
 argument_list|)
 specifier|const
 block|; }

@@ -109,6 +109,8 @@ block|{
 comment|// ARM Specific DAG Nodes
 enum|enum
 name|NodeType
+enum|:
+name|unsigned
 block|{
 comment|// Start the numbering where the builtin ops and target ops leave off.
 name|FIRST_NUMBER
@@ -187,18 +189,6 @@ block|,
 name|RBIT
 block|,
 comment|// ARM bitreverse instruction
-name|FTOSI
-block|,
-comment|// FP to sint within a FP register.
-name|FTOUI
-block|,
-comment|// FP to uint within a FP register.
-name|SITOF
-block|,
-comment|// sint to FP within a FP register.
-name|UITOF
-block|,
-comment|// uint to FP within a FP register.
 name|SRL_FLAG
 block|,
 comment|// V,Flag = srl_flag X -> srl X, 1 + save carry out.
@@ -506,10 +496,21 @@ specifier|const
 name|TargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|ARMSubtarget
+operator|&
+name|STI
 argument_list|)
 block|;
 name|unsigned
 name|getJumpTableEncoding
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|useSoftFloat
 argument_list|()
 specifier|const
 name|override
@@ -680,6 +681,14 @@ specifier|const
 name|override
 block|;
 name|bool
+name|isVectorLoadExtDesirable
+argument_list|(
+argument|SDValue ExtVal
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
 name|allowTruncateForTailCall
 argument_list|(
 argument|Type *Ty1
@@ -830,6 +839,8 @@ operator|*
 operator|>
 name|getRegForInlineAsmConstraint
 argument_list|(
+argument|const TargetRegisterInfo *TRI
+argument_list|,
 argument|const std::string&Constraint
 argument_list|,
 argument|MVT VT
@@ -855,6 +866,21 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|unsigned
+name|getInlineAsmMemConstraint
+argument_list|(
+argument|const std::string&ConstraintCode
+argument_list|)
+specifier|const
+name|override
+block|{
+comment|// FIXME: Map different constraints differently.
+return|return
+name|InlineAsm
+operator|::
+name|Constraint_m
+return|;
+block|}
 specifier|const
 name|ARMSubtarget
 operator|*
@@ -878,14 +904,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// getMaximalGlobalOffset - Returns the maximal possible offset which can
-comment|/// be used for loads / stores from the global.
-name|unsigned
-name|getMaximalGlobalOffset
-argument_list|()
-specifier|const
-name|override
-block|;
 comment|/// Returns true if a cast between SrcAS and DestAS is a noop.
 name|bool
 name|isNoopAddrSpaceCast
@@ -902,6 +920,18 @@ return|return
 name|true
 return|;
 block|}
+name|bool
+name|shouldAlignPointerArgs
+argument_list|(
+argument|CallInst *CI
+argument_list|,
+argument|unsigned&MinSize
+argument_list|,
+argument|unsigned&PrefAlign
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|/// createFastISel - This method returns a target specific FastISel object,
 comment|/// or null if the target does not support "fast" ISel.
 name|FastISel
@@ -1084,7 +1114,9 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|bool
+name|TargetLoweringBase
+operator|::
+name|AtomicRMWExpansionKind
 name|shouldExpandAtomicRMWInIR
 argument_list|(
 argument|AtomicRMWInst *AI
@@ -1124,6 +1156,8 @@ name|uint8_t
 operator|>
 name|findRepresentativeClass
 argument_list|(
+argument|const TargetRegisterInfo *TRI
+argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
@@ -1875,23 +1909,11 @@ argument_list|,
 name|unsigned
 name|InRegsParamRecordIdx
 argument_list|,
-name|unsigned
-name|OffsetFromOrigArg
-argument_list|,
-name|unsigned
+name|int
 name|ArgOffset
 argument_list|,
 name|unsigned
 name|ArgSize
-argument_list|,
-name|bool
-name|ForceMutable
-argument_list|,
-name|unsigned
-name|ByValStoreOffset
-argument_list|,
-name|unsigned
-name|TotalArgRegsSaveSize
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1923,33 +1945,6 @@ name|bool
 name|ForceMutable
 operator|=
 name|false
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|computeRegArea
-argument_list|(
-name|CCState
-operator|&
-name|CCInfo
-argument_list|,
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-name|unsigned
-name|InRegsParamRecordIdx
-argument_list|,
-name|unsigned
-name|ArgSize
-argument_list|,
-name|unsigned
-operator|&
-name|ArgRegsSize
-argument_list|,
-name|unsigned
-operator|&
-name|ArgRegsSaveSize
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2261,8 +2256,7 @@ name|FI
 argument_list|)
 decl|const
 decl_stmt|;
-name|MachineBasicBlock
-modifier|*
+name|void
 name|EmitSjLjDispatchBlock
 argument_list|(
 name|MachineInstr

@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/DwarfStringPoolEntry.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Dwarf.h"
 end_include
 
@@ -337,7 +343,7 @@ comment|///
 name|void
 name|Emit
 argument_list|(
-argument|AsmPrinter *AP
+argument|const AsmPrinter *AP
 argument_list|)
 specifier|const
 block|;
@@ -777,11 +783,6 @@ comment|///
 name|class
 name|DIEValue
 block|{
-name|virtual
-name|void
-name|anchor
-parameter_list|()
-function_decl|;
 name|public
 label|:
 enum|enum
@@ -808,13 +809,15 @@ block|,
 name|isLocList
 block|,   }
 enum|;
-name|protected
+name|private
 label|:
 comment|/// Ty - Type of data stored in the value.
 comment|///
 name|Type
 name|Ty
 decl_stmt|;
+name|protected
+label|:
 name|explicit
 name|DIEValue
 argument_list|(
@@ -826,7 +829,6 @@ argument_list|(
 argument|T
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|DIEValue
 argument_list|()
@@ -845,10 +847,10 @@ return|;
 block|}
 comment|/// EmitValue - Emit value via the Dwarf writer.
 comment|///
-name|virtual
 name|void
 name|EmitValue
 argument_list|(
+specifier|const
 name|AsmPrinter
 operator|*
 name|AP
@@ -859,15 +861,13 @@ name|Form
 name|Form
 argument_list|)
 decl|const
-init|=
-literal|0
 decl_stmt|;
 comment|/// SizeOf - Return the size of a value in bytes.
 comment|///
-name|virtual
 name|unsigned
 name|SizeOf
 argument_list|(
+specifier|const
 name|AsmPrinter
 operator|*
 name|AP
@@ -878,13 +878,10 @@ name|Form
 name|Form
 argument_list|)
 decl|const
-init|=
-literal|0
 decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
-name|virtual
 name|void
 name|print
 argument_list|(
@@ -893,8 +890,6 @@ operator|&
 name|O
 argument_list|)
 decl|const
-init|=
-literal|0
 decl_stmt|;
 name|void
 name|dump
@@ -914,6 +909,9 @@ range|:
 name|public
 name|DIEValue
 block|{
+name|friend
+name|DIEValue
+block|;
 name|uint64_t
 name|Integer
 block|;
@@ -1056,18 +1054,6 @@ operator|::
 name|DW_FORM_data8
 return|;
 block|}
-comment|/// EmitValue - Emit integer of appropriate size.
-comment|///
-name|void
-name|EmitValue
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|;
 name|uint64_t
 name|getValue
 argument_list|()
@@ -1077,18 +1063,16 @@ return|return
 name|Integer
 return|;
 block|}
-comment|/// SizeOf - Determine size of integer value in bytes.
-comment|///
-name|unsigned
-name|SizeOf
+name|void
+name|setValue
 argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
+argument|uint64_t Val
 argument_list|)
-specifier|const
-name|override
-block|;
+block|{
+name|Integer
+operator|=
+name|Val
+block|; }
 comment|// Implement isa/cast/dyncast.
 specifier|static
 name|bool
@@ -1106,16 +1090,35 @@ operator|==
 name|isInteger
 return|;
 block|}
+name|private
+operator|:
+name|void
+name|EmitValueImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|SizeOfImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|void
-name|print
+name|printImpl
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
-name|override
 block|;
 endif|#
 directive|endif
@@ -1130,6 +1133,10 @@ range|:
 name|public
 name|DIEValue
 block|{
+name|friend
+name|class
+name|DIEValue
+block|;
 specifier|const
 name|MCExpr
 operator|*
@@ -1156,18 +1163,6 @@ argument_list|(
 argument|E
 argument_list|)
 block|{}
-comment|/// EmitValue - Emit expression value.
-comment|///
-name|void
-name|EmitValue
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|;
 comment|/// getValue - Get MCExpr.
 comment|///
 specifier|const
@@ -1181,18 +1176,6 @@ return|return
 name|Expr
 return|;
 block|}
-comment|/// SizeOf - Determine size of expression value in bytes.
-comment|///
-name|unsigned
-name|SizeOf
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
 name|bool
@@ -1210,16 +1193,35 @@ operator|==
 name|isExpr
 return|;
 block|}
+name|private
+operator|:
+name|void
+name|EmitValueImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|SizeOfImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|void
-name|print
+name|printImpl
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
-name|override
 block|;
 endif|#
 directive|endif
@@ -1234,6 +1236,10 @@ range|:
 name|public
 name|DIEValue
 block|{
+name|friend
+name|class
+name|DIEValue
+block|;
 specifier|const
 name|MCSymbol
 operator|*
@@ -1260,18 +1266,6 @@ argument_list|(
 argument|L
 argument_list|)
 block|{}
-comment|/// EmitValue - Emit label value.
-comment|///
-name|void
-name|EmitValue
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|;
 comment|/// getValue - Get MCSymbol.
 comment|///
 specifier|const
@@ -1285,18 +1279,6 @@ return|return
 name|Label
 return|;
 block|}
-comment|/// SizeOf - Determine size of label value in bytes.
-comment|///
-name|unsigned
-name|SizeOf
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
 name|bool
@@ -1314,16 +1296,35 @@ operator|==
 name|isLabel
 return|;
 block|}
+name|private
+operator|:
+name|void
+name|EmitValueImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|SizeOfImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|void
-name|print
+name|printImpl
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
-name|override
 block|;
 endif|#
 directive|endif
@@ -1338,6 +1339,10 @@ range|:
 name|public
 name|DIEValue
 block|{
+name|friend
+name|class
+name|DIEValue
+block|;
 specifier|const
 name|MCSymbol
 operator|*
@@ -1378,30 +1383,6 @@ argument_list|(
 argument|Lo
 argument_list|)
 block|{}
-comment|/// EmitValue - Emit delta value.
-comment|///
-name|void
-name|EmitValue
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|;
-comment|/// SizeOf - Determine size of delta value in bytes.
-comment|///
-name|unsigned
-name|SizeOf
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
 name|bool
@@ -1419,16 +1400,35 @@ operator|==
 name|isDelta
 return|;
 block|}
+name|private
+operator|:
+name|void
+name|EmitValueImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|SizeOfImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|void
-name|print
+name|printImpl
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
-name|override
 block|;
 endif|#
 directive|endif
@@ -1443,21 +1443,18 @@ range|:
 name|public
 name|DIEValue
 block|{
-specifier|const
+name|friend
+name|class
 name|DIEValue
-operator|*
-name|Access
 block|;
-name|StringRef
-name|Str
+name|DwarfStringPoolEntryRef
+name|S
 block|;
 name|public
 operator|:
 name|DIEString
 argument_list|(
-argument|const DIEValue *Acc
-argument_list|,
-argument|StringRef S
+argument|DwarfStringPoolEntryRef S
 argument_list|)
 operator|:
 name|DIEValue
@@ -1465,12 +1462,7 @@ argument_list|(
 name|isString
 argument_list|)
 block|,
-name|Access
-argument_list|(
-name|Acc
-argument_list|)
-block|,
-name|Str
+name|S
 argument_list|(
 argument|S
 argument_list|)
@@ -1482,33 +1474,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Str
+name|S
+operator|.
+name|getString
+argument_list|()
 return|;
 block|}
-comment|/// EmitValue - Emit delta value.
-comment|///
-name|void
-name|EmitValue
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|;
-comment|/// SizeOf - Determine size of delta value in bytes.
-comment|///
-name|unsigned
-name|SizeOf
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
 name|bool
@@ -1526,16 +1497,35 @@ operator|==
 name|isString
 return|;
 block|}
+name|private
+operator|:
+name|void
+name|EmitValueImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|SizeOfImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|void
-name|print
+name|printImpl
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
-name|override
 block|;
 endif|#
 directive|endif
@@ -1551,6 +1541,10 @@ range|:
 name|public
 name|DIEValue
 block|{
+name|friend
+name|class
+name|DIEValue
+block|;
 name|DIE
 operator|&
 name|Entry
@@ -1585,53 +1579,12 @@ return|return
 name|Entry
 return|;
 block|}
-comment|/// EmitValue - Emit debug information entry offset.
-comment|///
-name|void
-name|EmitValue
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|;
-comment|/// SizeOf - Determine size of debug information entry in bytes.
-comment|///
-name|unsigned
-name|SizeOf
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|{
-return|return
-name|Form
-operator|==
-name|dwarf
-operator|::
-name|DW_FORM_ref_addr
-operator|?
-name|getRefAddrSize
-argument_list|(
-name|AP
-argument_list|)
-operator|:
-sizeof|sizeof
-argument_list|(
-name|int32_t
-argument_list|)
-return|;
-block|}
 comment|/// Returns size of a ref_addr entry.
 specifier|static
 name|unsigned
 name|getRefAddrSize
 argument_list|(
+specifier|const
 name|AsmPrinter
 operator|*
 name|AP
@@ -1654,16 +1607,53 @@ operator|==
 name|isEntry
 return|;
 block|}
+name|private
+operator|:
+name|void
+name|EmitValueImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|SizeOfImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Form
+operator|==
+name|dwarf
+operator|::
+name|DW_FORM_ref_addr
+operator|?
+name|getRefAddrSize
+argument_list|(
+name|AP
+argument_list|)
+operator|:
+sizeof|sizeof
+argument_list|(
+name|int32_t
+argument_list|)
+return|;
+block|}
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|void
-name|print
+name|printImpl
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
-name|override
 block|;
 endif|#
 directive|endif
@@ -1677,6 +1667,10 @@ range|:
 name|public
 name|DIEValue
 block|{
+name|friend
+name|class
+name|DIEValue
+block|;
 specifier|const
 name|DwarfTypeUnit
 operator|&
@@ -1703,41 +1697,6 @@ argument_list|(
 argument|Unit
 argument_list|)
 block|{}
-comment|/// \brief Emit type unit signature.
-name|void
-name|EmitValue
-argument_list|(
-argument|AsmPrinter *Asm
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|;
-comment|/// Returns size of a ref_sig8 entry.
-name|unsigned
-name|SizeOf
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|{
-name|assert
-argument_list|(
-name|Form
-operator|==
-name|dwarf
-operator|::
-name|DW_FORM_ref_sig8
-argument_list|)
-block|;
-return|return
-literal|8
-return|;
-block|}
 comment|// \brief Implement isa/cast/dyncast.
 specifier|static
 name|bool
@@ -1755,20 +1714,47 @@ operator|==
 name|isTypeSignature
 return|;
 block|}
+name|private
+operator|:
+name|void
+name|EmitValueImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|SizeOfImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Form
+operator|==
+name|dwarf
+operator|::
+name|DW_FORM_ref_sig8
+argument_list|)
+block|;
+return|return
+literal|8
+return|;
+block|}
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|void
-name|print
+name|printImpl
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
-specifier|const
-name|override
-block|;
-name|void
-name|dump
-argument_list|()
 specifier|const
 block|;
 endif|#
@@ -1787,6 +1773,10 @@ decl_stmt|,
 name|public
 name|DIE
 block|{
+name|friend
+name|class
+name|DIEValue
+decl_stmt|;
 name|mutable
 name|unsigned
 name|Size
@@ -1812,7 +1802,7 @@ comment|///
 name|unsigned
 name|ComputeSize
 argument_list|(
-argument|AsmPrinter *AP
+argument|const AsmPrinter *AP
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -1890,40 +1880,6 @@ operator|::
 name|DW_FORM_block
 return|;
 block|}
-comment|/// EmitValue - Emit location data.
-comment|///
-name|void
-name|EmitValue
-argument_list|(
-name|AsmPrinter
-operator|*
-name|AP
-argument_list|,
-name|dwarf
-operator|::
-name|Form
-name|Form
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-comment|/// SizeOf - Determine size of location data in bytes.
-comment|///
-name|unsigned
-name|SizeOf
-argument_list|(
-name|AsmPrinter
-operator|*
-name|AP
-argument_list|,
-name|dwarf
-operator|::
-name|Form
-name|Form
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
 name|bool
@@ -1944,18 +1900,49 @@ operator|==
 name|isLoc
 return|;
 block|}
+name|private
+label|:
+name|void
+name|EmitValueImpl
+argument_list|(
+specifier|const
+name|AsmPrinter
+operator|*
+name|AP
+argument_list|,
+name|dwarf
+operator|::
+name|Form
+name|Form
+argument_list|)
+decl|const
+decl_stmt|;
+name|unsigned
+name|SizeOfImpl
+argument_list|(
+specifier|const
+name|AsmPrinter
+operator|*
+name|AP
+argument_list|,
+name|dwarf
+operator|::
+name|Form
+name|Form
+argument_list|)
+decl|const
+decl_stmt|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|void
-name|print
+name|printImpl
 argument_list|(
 name|raw_ostream
 operator|&
 name|O
 argument_list|)
 decl|const
-name|override
 decl_stmt|;
 endif|#
 directive|endif
@@ -1988,6 +1975,10 @@ decl_stmt|,
 name|public
 name|DIE
 block|{
+name|friend
+name|class
+name|DIEValue
+decl_stmt|;
 name|mutable
 name|unsigned
 name|Size
@@ -2013,7 +2004,7 @@ comment|///
 name|unsigned
 name|ComputeSize
 argument_list|(
-argument|AsmPrinter *AP
+argument|const AsmPrinter *AP
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -2080,58 +2071,6 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// EmitValue - Emit location data.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
-name|void
-name|EmitValue
-argument_list|(
-name|AsmPrinter
-operator|*
-name|AP
-argument_list|,
-name|dwarf
-operator|::
-name|Form
-name|Form
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// SizeOf - Determine size of location data in bytes.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|SizeOf
-argument_list|(
-name|AsmPrinter
-operator|*
-name|AP
-argument_list|,
-name|dwarf
-operator|::
-name|Form
-name|Form
-argument_list|)
-decl|const
-name|override
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Implement isa/cast/dyncast.
 end_comment
 
@@ -2157,6 +2096,47 @@ return|;
 block|}
 end_function
 
+begin_label
+name|private
+label|:
+end_label
+
+begin_decl_stmt
+name|void
+name|EmitValueImpl
+argument_list|(
+specifier|const
+name|AsmPrinter
+operator|*
+name|AP
+argument_list|,
+name|dwarf
+operator|::
+name|Form
+name|Form
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|SizeOfImpl
+argument_list|(
+specifier|const
+name|AsmPrinter
+operator|*
+name|AP
+argument_list|,
+name|dwarf
+operator|::
+name|Form
+name|Form
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2165,14 +2145,13 @@ end_ifndef
 
 begin_decl_stmt
 name|void
-name|print
+name|printImpl
 argument_list|(
 name|raw_ostream
 operator|&
 name|O
 argument_list|)
 decl|const
-name|override
 decl_stmt|;
 end_decl_stmt
 
@@ -2205,6 +2184,10 @@ range|:
 name|public
 name|DIEValue
 block|{
+name|friend
+name|class
+name|DIEValue
+block|;
 comment|// Index into the .debug_loc vector.
 name|size_t
 name|Index
@@ -2236,30 +2219,6 @@ return|return
 name|Index
 return|;
 block|}
-comment|/// EmitValue - Emit location data.
-comment|///
-name|void
-name|EmitValue
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|;
-comment|/// SizeOf - Determine size of location data in bytes.
-comment|///
-name|unsigned
-name|SizeOf
-argument_list|(
-argument|AsmPrinter *AP
-argument_list|,
-argument|dwarf::Form Form
-argument_list|)
-specifier|const
-name|override
-block|;
 comment|// Implement isa/cast/dyncast.
 specifier|static
 name|bool
@@ -2277,16 +2236,35 @@ operator|==
 name|isLocList
 return|;
 block|}
+name|private
+operator|:
+name|void
+name|EmitValueImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|SizeOfImpl
+argument_list|(
+argument|const AsmPrinter *AP
+argument_list|,
+argument|dwarf::Form Form
+argument_list|)
+specifier|const
+block|;
 ifndef|#
 directive|ifndef
 name|NDEBUG
 name|void
-name|print
+name|printImpl
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
-name|override
 block|;
 endif|#
 directive|endif

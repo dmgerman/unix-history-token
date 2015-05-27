@@ -103,7 +103,7 @@ begin_define
 define|#
 directive|define
 name|LTO_API_VERSION
-value|11
+value|15
 end_define
 
 begin_comment
@@ -378,7 +378,7 @@ name|size_t
 name|length
 parameter_list|)
 function_decl|;
-comment|/**  * Loads an object file from memory with an extra path argument.  * Returns NULL on error (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=9  */
+comment|/**  * Loads an object file from memory with an extra path argument.  * Returns NULL on error (check lto_get_error_message() for details).  *  * \since LTO_API_VERSION=9  */
 specifier|extern
 name|lto_module_t
 name|lto_module_create_from_memory_with_path
@@ -693,6 +693,18 @@ name|lto_module_t
 name|mod
 parameter_list|)
 function_decl|;
+comment|/**  * Sets the object module for code generation. This will transfer the ownship of  * the module to code generator.  *  * \c cg and \c mod must both be in the same context.  *  * \since LTO_API_VERSION=13  */
+specifier|extern
+name|void
+name|lto_codegen_set_module
+parameter_list|(
+name|lto_code_gen_t
+name|cg
+parameter_list|,
+name|lto_module_t
+name|mod
+parameter_list|)
+function_decl|;
 comment|/**  * Sets if debug info should be generated.  * Returns true on error (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 name|lto_bool_t
@@ -789,7 +801,7 @@ modifier|*
 name|path
 parameter_list|)
 function_decl|;
-comment|/**  * Generates code for all added modules into one native object file.  * On success returns a pointer to a generated mach-o/ELF buffer and  * length set to the buffer size.  The buffer is owned by the  * lto_code_gen_t and will be freed when lto_codegen_dispose()  * is called, or lto_codegen_compile() is called again.  * On failure, returns NULL (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=3  */
+comment|/**  * Generates code for all added modules into one native object file.  * This calls lto_codegen_optimize then lto_codegen_compile_optimized.  *  * On success returns a pointer to a generated mach-o/ELF buffer and  * length set to the buffer size.  The buffer is owned by the  * lto_code_gen_t and will be freed when lto_codegen_dispose()  * is called, or lto_codegen_compile() is called again.  * On failure, returns NULL (check lto_get_error_message() for details).  *  * \since prior to LTO_API_VERSION=3  */
 specifier|extern
 specifier|const
 name|void
@@ -804,7 +816,7 @@ modifier|*
 name|length
 parameter_list|)
 function_decl|;
-comment|/**  * Generates code for all added modules into one native object file.  * The name of the file is written to name. Returns true on error.  *  * \since LTO_API_VERSION=5  */
+comment|/**  * Generates code for all added modules into one native object file.  * This calls lto_codegen_optimize then lto_codegen_compile_optimized (instead  * of returning a generated mach-o/ELF buffer, it writes to a file).  *  * The name of the file is written to name. Returns true on error.  *  * \since LTO_API_VERSION=5  */
 specifier|extern
 name|lto_bool_t
 name|lto_codegen_compile_to_file
@@ -817,6 +829,39 @@ name|char
 modifier|*
 modifier|*
 name|name
+parameter_list|)
+function_decl|;
+comment|/**  * Runs optimization for the merged module. Returns true on error.  *  * \since LTO_API_VERSION=12  */
+specifier|extern
+name|lto_bool_t
+name|lto_codegen_optimize
+parameter_list|(
+name|lto_code_gen_t
+name|cg
+parameter_list|)
+function_decl|;
+comment|/**  * Generates code for the optimized merged module into one native object file.  * It will not run any IR optimizations on the merged module.  *  * On success returns a pointer to a generated mach-o/ELF buffer and length set  * to the buffer size.  The buffer is owned by the lto_code_gen_t and will be  * freed when lto_codegen_dispose() is called, or  * lto_codegen_compile_optimized() is called again. On failure, returns NULL  * (check lto_get_error_message() for details).  *  * \since LTO_API_VERSION=12  */
+specifier|extern
+specifier|const
+name|void
+modifier|*
+name|lto_codegen_compile_optimized
+parameter_list|(
+name|lto_code_gen_t
+name|cg
+parameter_list|,
+name|size_t
+modifier|*
+name|length
+parameter_list|)
+function_decl|;
+comment|/**  * Returns the runtime API version.  *  * \since LTO_API_VERSION=12  */
+specifier|extern
+name|unsigned
+name|int
+name|lto_api_version
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 comment|/**  * Sets options to help debug codegen bugs.  *  * \since prior to LTO_API_VERSION=3  */
@@ -838,6 +883,30 @@ name|void
 name|lto_initialize_disassembler
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+comment|/**  * Sets if we should run internalize pass during optimization and code  * generation.  *  * \since LTO_API_VERSION=14  */
+specifier|extern
+name|void
+name|lto_codegen_set_should_internalize
+parameter_list|(
+name|lto_code_gen_t
+name|cg
+parameter_list|,
+name|lto_bool_t
+name|ShouldInternalize
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Set whether to embed uselists in bitcode.  *  * Sets whether \a lto_codegen_write_merged_modules() should embed uselists in  * output bitcode.  This should be turned on for all -save-temps output.  *  * \since LTO_API_VERSION=15  */
+specifier|extern
+name|void
+name|lto_codegen_set_should_embed_uselists
+parameter_list|(
+name|lto_code_gen_t
+name|cg
+parameter_list|,
+name|lto_bool_t
+name|ShouldEmbedUselists
 parameter_list|)
 function_decl|;
 ifdef|#

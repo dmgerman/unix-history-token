@@ -69,18 +69,18 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// tool_output_file - This class contains a raw_fd_ostream and adds a
-comment|/// few extra features commonly needed for compiler-like tool output files:
+comment|/// This class contains a raw_fd_ostream and adds a few extra features commonly
+comment|/// needed for compiler-like tool output files:
 comment|///   - The file is automatically deleted if the process is killed.
 comment|///   - The file is automatically deleted when the tool_output_file
 comment|///     object is destroyed unless the client calls keep().
 name|class
 name|tool_output_file
 block|{
-comment|/// Installer - This class is declared before the raw_fd_ostream so that
-comment|/// it is constructed before the raw_fd_ostream is constructed and
-comment|/// destructed after the raw_fd_ostream is destructed. It installs
-comment|/// cleanups in its constructor and uninstalls them in its destructor.
+comment|/// This class is declared before the raw_fd_ostream so that it is constructed
+comment|/// before the raw_fd_ostream is constructed and destructed after the
+comment|/// raw_fd_ostream is destructed. It installs cleanups in its constructor and
+comment|/// uninstalls them in its destructor.
 name|class
 name|CleanupInstaller
 block|{
@@ -110,8 +110,7 @@ expr_stmt|;
 block|}
 name|Installer
 expr_stmt|;
-comment|/// OS - The contained stream. This is intentionally declared after
-comment|/// Installer.
+comment|/// The contained stream. This is intentionally declared after Installer.
 name|raw_fd_ostream
 name|OS
 decl_stmt|;
@@ -135,7 +134,7 @@ argument_list|,
 argument|int FD
 argument_list|)
 empty_stmt|;
-comment|/// os - Return the contained raw_fd_ostream.
+comment|/// Return the contained raw_fd_ostream.
 name|raw_fd_ostream
 modifier|&
 name|os
@@ -145,8 +144,8 @@ return|return
 name|OS
 return|;
 block|}
-comment|/// keep - Indicate that the tool's job wrt this output file has been
-comment|/// successful and the file should not be deleted.
+comment|/// Indicate that the tool's job wrt this output file has been successful and
+comment|/// the file should not be deleted.
 name|void
 name|keep
 parameter_list|()

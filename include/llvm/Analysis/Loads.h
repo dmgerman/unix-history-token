@@ -95,13 +95,6 @@ name|ScanFrom
 parameter_list|,
 name|unsigned
 name|Align
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// FindAvailableLoadedValue - Scan the ScanBB block backwards (starting at

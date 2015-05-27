@@ -66,22 +66,18 @@ range|:
 name|public
 name|TargetLoweringObjectFileELF
 block|{
-specifier|const
 name|MCSection
 operator|*
 name|BSSSectionLarge
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|DataSectionLarge
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|ReadOnlySectionLarge
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|DataRelROSectionLarge
@@ -97,7 +93,6 @@ argument|const TargetMachine&TM
 argument_list|)
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|getExplicitSectionGlobal
@@ -113,7 +108,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|SelectSectionForGlobal
@@ -129,7 +123,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|getSectionForConstant

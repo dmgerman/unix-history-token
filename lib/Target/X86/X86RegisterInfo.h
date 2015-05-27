@@ -82,13 +82,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Type
-decl_stmt|;
-name|class
-name|TargetInstrInfo
-decl_stmt|;
-name|class
-name|X86Subtarget
+name|Triple
 decl_stmt|;
 name|class
 name|X86RegisterInfo
@@ -97,13 +91,6 @@ range|:
 name|public
 name|X86GenRegisterInfo
 block|{
-name|public
-operator|:
-specifier|const
-name|X86Subtarget
-operator|&
-name|Subtarget
-block|;
 name|private
 operator|:
 comment|/// Is64Bit - Is the target 64-bits.
@@ -142,9 +129,9 @@ operator|:
 name|X86RegisterInfo
 argument_list|(
 specifier|const
-name|X86Subtarget
+name|Triple
 operator|&
-name|STI
+name|TT
 argument_list|)
 block|;
 comment|// FIXME: This should be tablegen'd like getDwarfRegNum is
@@ -200,6 +187,8 @@ operator|*
 name|getLargestLegalSuperClass
 argument_list|(
 argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 name|override
@@ -259,6 +248,8 @@ name|uint32_t
 operator|*
 name|getCallPreservedMask
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|CallingConv::ID
 argument_list|)
 specifier|const

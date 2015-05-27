@@ -97,6 +97,8 @@ name|XCoreISD
 block|{
 enum|enum
 name|NodeType
+enum|:
+name|unsigned
 block|{
 comment|// Start the numbering where the builtin ops and target ops leave off.
 name|FIRST_NUMBER
@@ -180,6 +182,11 @@ specifier|const
 name|TargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|XCoreSubtarget
+operator|&
+name|Subtarget
 argument_list|)
 block|;
 name|using
@@ -571,6 +578,8 @@ operator|*
 operator|>
 name|getRegForInlineAsmConstraint
 argument_list|(
+argument|const TargetRegisterInfo *TRI
+argument_list|,
 argument|const std::string&Constraint
 argument_list|,
 argument|MVT VT

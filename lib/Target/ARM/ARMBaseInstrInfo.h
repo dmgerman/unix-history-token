@@ -1568,10 +1568,10 @@ operator|&
 name|PredReg
 argument_list|)
 expr_stmt|;
-name|int
+name|unsigned
 name|getMatchingCondBranchOpcode
 parameter_list|(
-name|int
+name|unsigned
 name|Opc
 parameter_list|)
 function_decl|;

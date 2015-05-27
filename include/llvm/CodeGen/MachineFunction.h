@@ -448,9 +448,12 @@ name|HasInlineAsm
 decl_stmt|;
 name|MachineFunction
 argument_list|(
-argument|const MachineFunction&
+specifier|const
+name|MachineFunction
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -460,7 +463,8 @@ specifier|const
 name|MachineFunction
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
@@ -570,6 +574,34 @@ name|STI
 operator|=
 name|ST
 expr_stmt|;
+block|}
+comment|/// getSubtarget - This method returns a pointer to the specified type of
+comment|/// TargetSubtargetInfo.  In debug builds, it verifies that the object being
+comment|/// returned is of the correct type.
+name|template
+operator|<
+name|typename
+name|STC
+operator|>
+specifier|const
+name|STC
+operator|&
+name|getSubtarget
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|static_cast
+operator|<
+specifier|const
+name|STC
+operator|*
+operator|>
+operator|(
+name|STI
+operator|)
+return|;
 block|}
 comment|/// getRegInfo - Return information about the registers currently in use.
 comment|///

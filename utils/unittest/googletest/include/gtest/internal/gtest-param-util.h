@@ -1335,12 +1335,11 @@ argument_list|,
 argument|end
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|ValuesInIteratorRangeGenerator
 argument_list|()
+name|override
 block|{}
-name|virtual
 name|ParamIteratorInterface
 operator|<
 name|T
@@ -1349,6 +1348,7 @@ operator|*
 name|Begin
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|new
@@ -1363,7 +1363,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|virtual
 name|ParamIteratorInterface
 operator|<
 name|T
@@ -1372,6 +1371,7 @@ operator|*
 name|End
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|new
@@ -1436,12 +1436,11 @@ argument_list|(
 argument|iterator
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|Iterator
 argument_list|()
+name|override
 block|{}
-name|virtual
 specifier|const
 name|ParamGeneratorInterface
 operator|<
@@ -1451,15 +1450,16 @@ operator|*
 name|BaseGenerator
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|base_
 return|;
 block|}
-name|virtual
 name|void
 name|Advance
 argument_list|()
+name|override
 block|{
 operator|++
 name|iterator_
@@ -1469,7 +1469,6 @@ operator|.
 name|reset
 argument_list|()
 block|;     }
-name|virtual
 name|ParamIteratorInterface
 operator|<
 name|T
@@ -1478,6 +1477,7 @@ operator|*
 name|Clone
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|new
@@ -1495,13 +1495,13 @@ comment|// value_ is updated here and not in Advance() because Advance()
 comment|// can advance iterator_ beyond the end of the range, and we cannot
 comment|// detect that fact. The client code, on the other hand, is
 comment|// responsible for not calling Current() on an out-of-range iterator.
-name|virtual
 specifier|const
 name|T
 operator|*
 name|Current
 argument_list|()
 specifier|const
+name|override
 block|{
 if|if
 condition|(
@@ -1529,7 +1529,6 @@ block|}
 end_decl_stmt
 
 begin_decl_stmt
-name|virtual
 name|bool
 name|Equals
 argument_list|(
@@ -1542,6 +1541,7 @@ operator|&
 name|other
 argument_list|)
 decl|const
+name|override
 block|{
 comment|// Having the same base generator guarantees that the other
 comment|// iterator is of the same type and we can downcast.
@@ -1750,11 +1750,11 @@ argument_list|(
 argument|parameter
 argument_list|)
 block|{}
-name|virtual
 name|Test
 operator|*
 name|CreateTest
 argument_list|()
+name|override
 block|{
 name|TestClass
 operator|::
@@ -1900,13 +1900,13 @@ expr_stmt|;
 name|TestMetaFactory
 argument_list|()
 block|{}
-name|virtual
 name|TestFactoryBase
 operator|*
 name|CreateTestFactory
 argument_list|(
 argument|ParamType parameter
 argument_list|)
+name|override
 block|{
 return|return
 name|new
@@ -2126,13 +2126,13 @@ argument|name
 argument_list|)
 block|{}
 comment|// Test case base name for display purposes.
-name|virtual
 specifier|const
 name|string
 operator|&
 name|GetTestCaseName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|test_case_name_
@@ -2145,11 +2145,11 @@ comment|// Test case id to verify identity.
 end_comment
 
 begin_expr_stmt
-name|virtual
 name|TypeId
 name|GetTestCaseTypeId
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|GetTypeId
@@ -2305,10 +2305,10 @@ comment|// UnitTest has a guard to prevent from calling this method more then on
 end_comment
 
 begin_function
-name|virtual
 name|void
 name|RegisterTests
 parameter_list|()
+function|override
 block|{
 for|for
 control|(

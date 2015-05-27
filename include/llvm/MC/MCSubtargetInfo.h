@@ -97,6 +97,12 @@ name|string
 name|TargetTriple
 expr_stmt|;
 comment|// Target triple
+name|std
+operator|::
+name|string
+name|CPU
+expr_stmt|;
+comment|// CPU being targeted.
 name|ArrayRef
 operator|<
 name|SubtargetFeatureKV
@@ -153,7 +159,7 @@ modifier|*
 name|ForwardingPaths
 decl_stmt|;
 comment|// Forwarding paths
-name|uint64_t
+name|FeatureBitset
 name|FeatureBits
 decl_stmt|;
 comment|// Feature bits for current CPU + FS
@@ -229,9 +235,21 @@ return|return
 name|TargetTriple
 return|;
 block|}
+comment|/// getCPU - Return the CPU string.
+name|StringRef
+name|getCPU
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CPU
+return|;
+block|}
 comment|/// getFeatureBits - Return the feature bits.
 comment|///
-name|uint64_t
+specifier|const
+name|FeatureBitset
+operator|&
 name|getFeatureBits
 argument_list|()
 specifier|const
@@ -245,7 +263,8 @@ comment|///
 name|void
 name|setFeatureBits
 parameter_list|(
-name|uint64_t
+name|FeatureBitset
+modifier|&
 name|FeatureBits_
 parameter_list|)
 block|{
@@ -276,7 +295,7 @@ parameter_list|)
 function_decl|;
 comment|/// ToggleFeature - Toggle a feature and returns the re-computed feature
 comment|/// bits. This version does not change the implied bits.
-name|uint64_t
+name|FeatureBitset
 name|ToggleFeature
 parameter_list|(
 name|uint64_t
@@ -284,8 +303,19 @@ name|FB
 parameter_list|)
 function_decl|;
 comment|/// ToggleFeature - Toggle a feature and returns the re-computed feature
-comment|/// bits. This version will also change all implied bits.
-name|uint64_t
+comment|/// bits. This version does not change the implied bits.
+name|FeatureBitset
+name|ToggleFeature
+parameter_list|(
+specifier|const
+name|FeatureBitset
+modifier|&
+name|FB
+parameter_list|)
+function_decl|;
+comment|/// ToggleFeature - Toggle a set of features and returns the re-computed
+comment|/// feature bits. This version will also change all implied bits.
+name|FeatureBitset
 name|ToggleFeature
 parameter_list|(
 name|StringRef

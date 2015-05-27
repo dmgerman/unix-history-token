@@ -218,6 +218,14 @@ name|getDereferenceableBytes
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief If this argument has the dereferenceable_or_null attribute on
+comment|/// it in its containing function, return the number of bytes known to be
+comment|/// dereferenceable. Otherwise, zero is returned.
+name|uint64_t
+name|getDereferenceableOrNullBytes
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Return true if this argument has the byval attribute on it in its
 comment|/// containing function.
 name|bool

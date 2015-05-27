@@ -211,7 +211,7 @@ name|RegisterReference
 operator|>
 name|RegRefs
 expr_stmt|;
-comment|/// The index of the most recent kill (proceding bottom-up),
+comment|/// The index of the most recent kill (proceeding bottom-up),
 comment|/// or ~0u if the register is not live.
 name|std
 operator|::
@@ -221,7 +221,7 @@ name|unsigned
 operator|>
 name|KillIndices
 expr_stmt|;
-comment|/// The index of the most recent complete def (proceding bottom
+comment|/// The index of the most recent complete def (proceeding bottom
 comment|/// up), or ~0u if the register is live.
 name|std
 operator|::
@@ -421,6 +421,7 @@ block|;
 operator|~
 name|AggressiveAntiDepBreaker
 argument_list|()
+name|override
 block|;
 comment|/// Initialize anti-dep breaking for a new basic block.
 name|void

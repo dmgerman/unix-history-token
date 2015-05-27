@@ -131,10 +131,8 @@ name|I
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
+modifier|&
+name|DL
 parameter_list|,
 specifier|const
 name|TargetLibraryInfo
@@ -158,10 +156,8 @@ name|CE
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
+modifier|&
+name|DL
 parameter_list|,
 specifier|const
 name|TargetLibraryInfo
@@ -197,10 +193,8 @@ name|Ops
 argument_list|,
 specifier|const
 name|DataLayout
-operator|*
-name|TD
-operator|=
-name|nullptr
+operator|&
+name|DL
 argument_list|,
 specifier|const
 name|TargetLibraryInfo
@@ -231,10 +225,8 @@ name|RHS
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
+modifier|&
+name|DL
 parameter_list|,
 specifier|const
 name|TargetLibraryInfo
@@ -279,10 +271,8 @@ name|C
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
+modifier|&
+name|DL
 parameter_list|)
 function_decl|;
 comment|/// ConstantFoldLoadThroughGEPConstantExpr - Given a constant and a

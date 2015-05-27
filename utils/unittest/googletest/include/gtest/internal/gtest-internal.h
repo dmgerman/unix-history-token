@@ -1617,11 +1617,11 @@ name|TestFactoryBase
 block|{
 name|public
 operator|:
-name|virtual
 name|Test
 operator|*
 name|CreateTest
 argument_list|()
+name|override
 block|{
 return|return
 name|new

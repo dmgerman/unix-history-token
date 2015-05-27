@@ -154,30 +154,15 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|HexagonSubtarget
-decl_stmt|;
-name|class
-name|HexagonInstrInfo
-decl_stmt|;
-name|class
-name|Type
-decl_stmt|;
-name|struct
 name|HexagonRegisterInfo
 range|:
 name|public
 name|HexagonGenRegisterInfo
 block|{
-name|HexagonSubtarget
-operator|&
-name|Subtarget
-block|;
+name|public
+operator|:
 name|HexagonRegisterInfo
-argument_list|(
-name|HexagonSubtarget
-operator|&
-name|st
-argument_list|)
+argument_list|()
 block|;
 comment|/// Code Generation virtual methods...
 specifier|const
@@ -185,21 +170,10 @@ name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF = nullptr
+argument|const MachineFunction *MF
 argument_list|)
 specifier|const
 name|override
-block|;
-specifier|const
-name|TargetRegisterClass
-operator|*
-specifier|const
-operator|*
-name|getCalleeSavedRegClasses
-argument_list|(
-argument|const MachineFunction *MF = nullptr
-argument_list|)
-specifier|const
 block|;
 name|BitVector
 name|getReservedRegs
@@ -223,17 +197,8 @@ argument_list|)
 specifier|const
 name|override
 block|;
-comment|/// determineFrameLayout - Determine the size of the frame and maximum call
-comment|/// frame size.
-name|void
-name|determineFrameLayout
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-comment|/// requiresRegisterScavenging - returns true since we may need scavenging for
-comment|/// a temporary register when generating hardware loop instructions.
+comment|/// Returns true since we may need scavenging for a temporary register
+comment|/// when generating hardware loop instructions.
 name|bool
 name|requiresRegisterScavenging
 argument_list|(
@@ -246,6 +211,37 @@ return|return
 name|true
 return|;
 block|}
+comment|/// Returns true. Spill code for predicate registers might need an extra
+comment|/// register.
+name|bool
+name|requiresFrameIndexScavenging
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|needsStackRealignment
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Returns true if the frame pointer is valid.
+name|bool
+name|useFPForScavengingIndex
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
 name|bool
 name|trackLivenessAfterRegAlloc
 argument_list|(
@@ -280,6 +276,34 @@ block|;
 name|unsigned
 name|getStackRegister
 argument_list|()
+specifier|const
+block|;
+specifier|const
+name|MCPhysReg
+operator|*
+name|getCallerSavedRegs
+argument_list|(
+argument|const MachineFunction *MF
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getFirstCallerSavedNonParamReg
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isEHReturnCalleeSaveReg
+argument_list|(
+argument|unsigned Reg
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isCalleeSaveReg
+argument_list|(
+argument|unsigned Reg
+argument_list|)
 specifier|const
 block|; }
 decl_stmt|;

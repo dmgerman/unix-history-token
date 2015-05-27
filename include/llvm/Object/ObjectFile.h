@@ -129,6 +129,16 @@ decl_stmt|;
 name|class
 name|symbol_iterator
 decl_stmt|;
+name|class
+name|SectionRef
+decl_stmt|;
+typedef|typedef
+name|content_iterator
+operator|<
+name|SectionRef
+operator|>
+name|section_iterator
+expr_stmt|;
 comment|/// RelocationRef - This is a value type class that represents a single
 comment|/// relocation in the list of relocations in the object file.
 name|class
@@ -194,6 +204,11 @@ specifier|const
 expr_stmt|;
 name|symbol_iterator
 name|getSymbol
+argument_list|()
+specifier|const
+expr_stmt|;
+name|section_iterator
+name|getSection
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -266,16 +281,6 @@ name|relocation_iterator
 expr_stmt|;
 comment|/// SectionRef - This is a value type class that represents a single section in
 comment|/// the list of sections in the object file.
-name|class
-name|SectionRef
-decl_stmt|;
-typedef|typedef
-name|content_iterator
-operator|<
-name|SectionRef
-operator|>
-name|section_iterator
-expr_stmt|;
 name|class
 name|SectionRef
 block|{
@@ -694,13 +699,18 @@ argument_list|()
 block|;
 name|ObjectFile
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|ObjectFile
 argument_list|(
-argument|const ObjectFile&other
+specifier|const
+name|ObjectFile
+operator|&
+name|other
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:
@@ -1057,6 +1067,16 @@ block|;
 name|virtual
 name|symbol_iterator
 name|getRelocationSymbol
+argument_list|(
+argument|DataRefImpl Rel
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|section_iterator
+name|getRelocationSection
 argument_list|(
 argument|DataRefImpl Rel
 argument_list|)
@@ -2081,6 +2101,23 @@ return|return
 name|OwningObject
 operator|->
 name|getRelocationSymbol
+argument_list|(
+name|RelocationPimpl
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|section_iterator
+name|RelocationRef
+operator|::
+name|getSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OwningObject
+operator|->
+name|getRelocationSection
 argument_list|(
 name|RelocationPimpl
 argument_list|)

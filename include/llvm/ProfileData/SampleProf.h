@@ -296,7 +296,7 @@ return|return
 literal|100
 return|;
 block|}
-comment|/// \brief Represents the relative location of an instruction.
+comment|/// Represents the relative location of an instruction.
 comment|///
 comment|/// Instruction locations are specified by the line offset from the
 comment|/// beginning of the function (marked by the line where the function
@@ -500,7 +500,7 @@ begin_decl_stmt
 name|namespace
 name|sampleprof
 block|{
-comment|/// \brief Representation of a single sample record.
+comment|/// Representation of a single sample record.
 comment|///
 comment|/// A sample record is represented by a positive integer value, which
 comment|/// indicates how frequently was the associated line location executed.
@@ -533,7 +533,7 @@ operator|,
 name|CallTargets
 argument_list|()
 block|{}
-comment|/// \brief Increment the number of samples for this record by \p S.
+comment|/// Increment the number of samples for this record by \p S.
 comment|///
 comment|/// Sample counts accumulate using saturating arithmetic, to avoid wrapping
 comment|/// around unsigned integers.
@@ -577,7 +577,7 @@ name|max
 argument_list|()
 expr_stmt|;
 block|}
-comment|/// \brief Add called function \p F with samples \p S.
+comment|/// Add called function \p F with samples \p S.
 comment|///
 comment|/// Sample counts accumulate using saturating arithmetic, to avoid wrapping
 comment|/// around unsigned integers.
@@ -634,7 +634,7 @@ name|max
 argument_list|()
 expr_stmt|;
 block|}
-comment|/// \brief Return true if this sample record contains function calls.
+comment|/// Return true if this sample record contains function calls.
 name|bool
 name|hasCalls
 argument_list|()
@@ -669,7 +669,7 @@ return|return
 name|CallTargets
 return|;
 block|}
-comment|/// \brief Merge the samples in \p Other into this record.
+comment|/// Merge the samples in \p Other into this record.
 name|void
 name|merge
 parameter_list|(
@@ -731,7 +731,7 @@ name|SampleRecord
 operator|>
 name|BodySampleMap
 expr_stmt|;
-comment|/// \brief Representation of the samples collected for a function.
+comment|/// Representation of the samples collected for a function.
 comment|///
 comment|/// This data structure contains all the collected samples for the body
 comment|/// of a function. Each sample corresponds to a LineLocation instance
@@ -882,7 +882,7 @@ name|Num
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// \brief Return the sample record at the given location.
+comment|/// Return the sample record at the given location.
 comment|/// Each location is specified by \p LineOffset and \p Discriminator.
 name|SampleRecord
 modifier|&
@@ -901,7 +901,7 @@ name|Loc
 index|]
 return|;
 block|}
-comment|/// \brief Return the number of samples collected at the given location.
+comment|/// Return the number of samples collected at the given location.
 comment|/// Each location is specified by \p LineOffset and \p Discriminator.
 name|unsigned
 name|samplesAt
@@ -940,7 +940,7 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// \brief Return the total number of samples collected inside the function.
+comment|/// Return the total number of samples collected inside the function.
 name|unsigned
 name|getTotalSamples
 argument_list|()
@@ -950,7 +950,7 @@ return|return
 name|TotalSamples
 return|;
 block|}
-comment|/// \brief Return the total number of samples collected at the head of the
+comment|/// Return the total number of samples collected at the head of the
 comment|/// function.
 name|unsigned
 name|getHeadSamples
@@ -961,7 +961,7 @@ return|return
 name|TotalHeadSamples
 return|;
 block|}
-comment|/// \brief Return all the samples collected in the body of the function.
+comment|/// Return all the samples collected in the body of the function.
 specifier|const
 name|BodySampleMap
 operator|&
@@ -973,7 +973,7 @@ return|return
 name|BodySamples
 return|;
 block|}
-comment|/// \brief Merge the samples in \p Other into this one.
+comment|/// Merge the samples in \p Other into this one.
 name|void
 name|merge
 parameter_list|(
@@ -1044,18 +1044,20 @@ block|}
 block|}
 name|private
 label|:
-comment|/// \brief Total number of samples collected inside this function.
+comment|/// Total number of samples collected inside this function.
 comment|///
 comment|/// Samples are cumulative, they include all the samples collected
 comment|/// inside this function and all its inlined callees.
 name|unsigned
 name|TotalSamples
 decl_stmt|;
-comment|/// \brief Total number of samples collected at the head of the function.
+comment|/// Total number of samples collected at the head of the function.
+comment|/// This is an approximation of the number of calls made to this function
+comment|/// at runtime.
 name|unsigned
 name|TotalHeadSamples
 decl_stmt|;
-comment|/// \brief Map instruction locations to collected samples.
+comment|/// Map instruction locations to collected samples.
 comment|///
 comment|/// Each entry in this map contains the number of samples
 comment|/// collected at the corresponding line offset. All line locations

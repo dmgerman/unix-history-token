@@ -149,11 +149,23 @@ comment|/// @name Platform Dependent Data
 comment|/// @{
 name|private
 label|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|LLVM_ENABLE_THREADS
+argument_list|)
+operator|&&
+name|LLVM_ENABLE_THREADS
+operator|!=
+literal|0
 name|void
 modifier|*
 name|data_
 decl_stmt|;
 comment|///< We don't know what the data will be
+endif|#
+directive|endif
 comment|/// @}
 comment|/// @name Do Not Implement
 comment|/// @{
@@ -161,9 +173,12 @@ name|private
 label|:
 name|MutexImpl
 argument_list|(
-argument|const MutexImpl&
+specifier|const
+name|MutexImpl
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -173,7 +188,8 @@ specifier|const
 name|MutexImpl
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 comment|/// @}
 block|}

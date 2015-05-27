@@ -447,9 +447,11 @@ argument|T Value
 argument_list|,
 argument|ArrayRef<EnumEntry<TFlag>> Flags
 argument_list|,
-argument|TFlag EnumMask = TFlag(
-literal|0
-argument|)
+argument|TFlag EnumMask1 = {}
+argument_list|,
+argument|TFlag EnumMask2 = {}
+argument_list|,
+argument|TFlag EnumMask3 = {}
 argument_list|)
 block|{
 typedef|typedef
@@ -490,6 +492,48 @@ operator|==
 literal|0
 condition|)
 continue|continue;
+name|TFlag
+name|EnumMask
+block|{}
+empty_stmt|;
+if|if
+condition|(
+name|Flag
+operator|.
+name|Value
+operator|&
+name|EnumMask1
+condition|)
+name|EnumMask
+operator|=
+name|EnumMask1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|Flag
+operator|.
+name|Value
+operator|&
+name|EnumMask2
+condition|)
+name|EnumMask
+operator|=
+name|EnumMask2
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|Flag
+operator|.
+name|Value
+operator|&
+name|EnumMask3
+condition|)
+name|EnumMask
+operator|=
+name|EnumMask3
+expr_stmt|;
 name|bool
 name|IsEnum
 init|=

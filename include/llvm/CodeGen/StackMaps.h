@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Debug.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<map>
 end_include
 
@@ -305,11 +311,15 @@ comment|/// Statepoint operands take the form:
 end_comment
 
 begin_comment
-comment|///<num call arguments>,<call target>, [call arguments],
+comment|///<id>,<num patch bytes>,<num call arguments>,<call target>,
 end_comment
 
 begin_comment
-comment|///<StackMaps::ConstantOp>,<flags>,
+comment|///   [call arguments],<StackMaps::ConstantOp>,<calling convention>,
+end_comment
+
+begin_comment
+comment|///<StackMaps::ConstantOp>,<statepoint flags>,
 end_comment
 
 begin_comment
@@ -326,15 +336,36 @@ name|StatepointOpers
 block|{
 name|private
 label|:
+comment|// These values are aboolute offsets into the operands of the statepoint
+comment|// instruction.
 enum|enum
 block|{
+name|IDPos
+block|,
+name|NBytesPos
+block|,
 name|NCallArgsPos
-init|=
-literal|0
 block|,
 name|CallTargetPos
+block|,
+name|MetaEnd
+block|}
+enum|;
+comment|// These values are relative offests from the start of the statepoint meta
+comment|// arguments (i.e. the end of the call arguments).
+enum|enum
+block|{
+name|CCOffset
 init|=
 literal|1
+block|,
+name|FlagsOffset
+init|=
+literal|3
+block|,
+name|NumVMSArgsOffset
+init|=
+literal|5
 block|}
 enum|;
 name|public
@@ -354,7 +385,7 @@ argument|MI
 argument_list|)
 block|{ }
 comment|/// Get starting index of non call related arguments
-comment|/// (statepoint flags, vm state and gc state).
+comment|/// (calling convention, statepoint flags, vm state and gc state).
 name|unsigned
 name|getVarIdx
 argument_list|()
@@ -371,28 +402,12 @@ operator|.
 name|getImm
 argument_list|()
 operator|+
-literal|2
+name|MetaEnd
 return|;
 block|}
-comment|/// Returns the index of the operand containing the number of non-gc non-call
-comment|/// arguments.
-name|unsigned
-name|getNumVMSArgsIdx
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getVarIdx
-argument_list|()
-operator|+
-literal|3
-return|;
-block|}
-comment|/// Returns the number of non-gc non-call arguments attached to the
-comment|/// statepoint.  Note that this is the number of arguments, not the number of
-comment|/// operands required to represent those arguments.
-name|unsigned
-name|getNumVMSArgs
+comment|/// Return the ID for the given statepoint.
+name|uint64_t
+name|getID
 argument_list|()
 specifier|const
 block|{
@@ -401,8 +416,25 @@ name|MI
 operator|->
 name|getOperand
 argument_list|(
-name|getNumVMSArgsIdx
+name|IDPos
+argument_list|)
+operator|.
+name|getImm
 argument_list|()
+return|;
+block|}
+comment|/// Return the number of patchable bytes the given statepoint should emit.
+name|uint32_t
+name|getNumPatchBytes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MI
+operator|->
+name|getOperand
+argument_list|(
+name|NBytesPos
 argument_list|)
 operator|.
 name|getImm
@@ -961,13 +993,27 @@ parameter_list|(
 name|MCStreamer
 modifier|&
 name|OS
-parameter_list|,
-specifier|const
-name|TargetRegisterInfo
-modifier|*
-name|TRI
 parameter_list|)
 function_decl|;
+name|void
+name|print
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
+name|void
+name|debug
+parameter_list|()
+block|{
+name|print
+argument_list|(
+name|dbgs
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_decl_stmt
 

@@ -724,7 +724,9 @@ name|I
 expr_stmt|;
 name|iterator_adaptor_base
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|template
 operator|<
 name|typename
@@ -1083,7 +1085,9 @@ operator|>
 block|{
 name|pointee_iterator
 argument_list|()
-block|{}
+operator|=
+expr|default
+block|;
 name|template
 operator|<
 name|typename

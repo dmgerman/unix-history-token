@@ -190,6 +190,8 @@ comment|/// OpKind - Specify what kind of operand this is.  This discriminates t
 comment|/// union.
 name|MachineOperandType
 name|OpKind
+range|:
+literal|8
 decl_stmt|;
 comment|/// Subregister number for MO_Register.  A value of 0 indicates the
 comment|/// MO_Register has no subReg.
@@ -576,9 +578,9 @@ operator|&
 name|os
 argument_list|,
 specifier|const
-name|TargetMachine
+name|TargetRegisterInfo
 operator|*
-name|TM
+name|TRI
 operator|=
 name|nullptr
 argument_list|)
@@ -1944,6 +1946,31 @@ specifier|const
 name|ConstantFP
 modifier|*
 name|FPImm
+parameter_list|)
+function_decl|;
+comment|/// ChangeToES - Replace this operand with a new external symbol operand.
+name|void
+name|ChangeToES
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|SymName
+parameter_list|,
+name|unsigned
+name|char
+name|TargetFlags
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// ChangeToMCSymbol - Replace this operand with a new MC symbol operand.
+name|void
+name|ChangeToMCSymbol
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Sym
 parameter_list|)
 function_decl|;
 comment|/// ChangeToRegister - Replace this operand with a new register operand of

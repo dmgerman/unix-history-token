@@ -461,9 +461,12 @@ name|StringMapEntryBase
 block|{
 name|StringMapEntry
 argument_list|(
-argument|StringMapEntry&E
+name|StringMapEntry
+operator|&
+name|E
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:

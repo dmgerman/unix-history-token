@@ -74,12 +74,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 
@@ -147,9 +141,12 @@ argument_list|)
 empty_stmt|;
 name|Regex
 argument_list|(
-argument|const Regex&
+specifier|const
+name|Regex
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|Regex
 modifier|&

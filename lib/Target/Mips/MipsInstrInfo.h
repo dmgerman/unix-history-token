@@ -128,6 +128,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MipsSubtarget
+decl_stmt|;
+name|class
 name|MipsInstrInfo
 range|:
 name|public
@@ -415,6 +418,22 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|,
 argument|int64_t Offset
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+name|void
+name|adjustStackPtr
+argument_list|(
+argument|unsigned SP
+argument_list|,
+argument|int64_t Amount
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
 argument_list|)
 specifier|const
 operator|=

@@ -1010,29 +1010,6 @@ name|x
 operator|)
 return|;
 block|}
-specifier|const
-name|iterator
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|iterator
-operator|&
-name|I
-operator|)
-block|{
-name|CurNode
-operator|=
-name|I
-operator|.
-name|CurNode
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 name|value_type
 operator|&
 name|operator
@@ -1241,9 +1218,13 @@ argument_list|)
 block|{   }
 name|AliasSet
 argument_list|(
-argument|const AliasSet&AS
+specifier|const
+name|AliasSet
+operator|&
+name|AS
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -1257,7 +1238,8 @@ name|AliasSet
 operator|&
 name|AS
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 
@@ -1550,6 +1532,7 @@ begin_decl_stmt
 name|bool
 name|aliasesUnknownInst
 argument_list|(
+specifier|const
 name|Instruction
 operator|*
 name|Inst
@@ -1917,6 +1900,7 @@ name|AliasSet
 modifier|*
 name|getAliasSetForPointerIfExists
 parameter_list|(
+specifier|const
 name|Value
 modifier|*
 name|P
@@ -1947,6 +1931,7 @@ comment|/// alias sets.
 name|bool
 name|containsPointer
 argument_list|(
+specifier|const
 name|Value
 operator|*
 name|P
@@ -1966,6 +1951,7 @@ comment|/// members in any of the sets.
 name|bool
 name|containsUnknown
 argument_list|(
+specifier|const
 name|Instruction
 operator|*
 name|I

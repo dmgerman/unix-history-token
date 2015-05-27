@@ -1071,7 +1071,7 @@ operator|=
 name|nullptr
 argument_list|)
 decl_stmt|;
-comment|/// dump - print the current interval maping to dbgs().
+comment|/// dump - print the current interval mapping to dbgs().
 name|void
 name|dump
 argument_list|()

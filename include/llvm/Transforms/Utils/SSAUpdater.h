@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -307,13 +313,17 @@ specifier|const
 name|SSAUpdater
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|SSAUpdater
 argument_list|(
-argument|const SSAUpdater&
+specifier|const
+name|SSAUpdater
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 block|}
 empty_stmt|;
@@ -338,7 +348,7 @@ name|public
 label|:
 name|LoadAndStorePromoter
 argument_list|(
-argument|const SmallVectorImpl<Instruction*>&Insts
+argument|ArrayRef<const Instruction*> Insts
 argument_list|,
 argument|SSAUpdater&S
 argument_list|,

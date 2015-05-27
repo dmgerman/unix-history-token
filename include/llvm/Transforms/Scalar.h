@@ -80,6 +80,9 @@ name|class
 name|FunctionPass
 decl_stmt|;
 name|class
+name|ModulePass
+decl_stmt|;
+name|class
 name|Pass
 decl_stmt|;
 name|class
@@ -171,6 +174,16 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// BitTrackingDCE - This pass uses a bit-tracking DCE algorithm in order to
+comment|// remove computations of dead bits.
+comment|//
+name|FunctionPass
+modifier|*
+name|createBitTrackingDCEPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// SROA - Replace aggregates or pieces of aggregates with scalar SSA values.
 comment|//
 name|FunctionPass
@@ -224,6 +237,16 @@ parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// InductiveRangeCheckElimination - Transform loops to elide range checks on
+comment|// linear functions of the induction variable.
+comment|//
+name|Pass
+modifier|*
+name|createInductiveRangeCheckEliminationPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// InductionVariableSimplify - Transform induction variables in a program to all
 comment|// use a single canonical induction variable per loop.
 comment|//
@@ -260,6 +283,16 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// LoopInterchange - This pass interchanges loops to provide a more
+comment|// cache-friendly memory access patterns.
+comment|//
+name|Pass
+modifier|*
+name|createLoopInterchangePass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// LoopStrengthReduce - This pass is strength reduces GEP instructions that use
 comment|// a loop's canonical induction variable as one of their indices.
 comment|//
@@ -276,8 +309,9 @@ specifier|const
 name|TargetMachine
 modifier|*
 name|TM
-init|=
-name|nullptr
+parameter_list|,
+name|unsigned
+name|MaximalOffset
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -761,11 +795,81 @@ parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// SpeculativeExecution - Aggressively hoist instructions to enable
+comment|// speculative execution on targets where branches are expensive.
+comment|//
+name|FunctionPass
+modifier|*
+name|createSpeculativeExecutionPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// LoadCombine - Combine loads into bigger loads.
 comment|//
 name|BasicBlockPass
 modifier|*
 name|createLoadCombinePass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// StraightLineStrengthReduce - This pass strength-reduces some certain
+comment|// instruction patterns in straight-line code.
+comment|//
+name|FunctionPass
+modifier|*
+name|createStraightLineStrengthReducePass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// PlaceSafepoints - Rewrite any IR calls to gc.statepoints and insert any
+comment|// safepoint polls (method entry, backedge) that might be required.  This pass
+comment|// does not generate explicit relocation sequences - that's handled by
+comment|// RewriteStatepointsForGC which can be run at an arbitrary point in the pass
+comment|// order following this pass.
+comment|//
+name|FunctionPass
+modifier|*
+name|createPlaceSafepointsPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// RewriteStatepointsForGC - Rewrite any gc.statepoints which do not yet have
+comment|// explicit relocations to include explicit relocations.
+comment|//
+name|FunctionPass
+modifier|*
+name|createRewriteStatepointsForGCPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// Float2Int - Demote floats to ints where possible.
+comment|//
+name|FunctionPass
+modifier|*
+name|createFloat2IntPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// NaryReassociate - Simplify n-ary operations by reassociation.
+comment|//
+name|FunctionPass
+modifier|*
+name|createNaryReassociatePass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LoopDistribute - Distribute loops.
+comment|//
+name|FunctionPass
+modifier|*
+name|createLoopDistributePass
 parameter_list|()
 function_decl|;
 block|}

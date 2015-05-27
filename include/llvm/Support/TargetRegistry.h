@@ -100,7 +100,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/FormattedStream.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -115,12 +127,6 @@ name|llvm
 block|{
 name|class
 name|AsmPrinter
-decl_stmt|;
-name|class
-name|Module
-decl_stmt|;
-name|class
-name|MCAssembler
 decl_stmt|;
 name|class
 name|MCAsmBackend
@@ -174,6 +180,9 @@ name|class
 name|MCTargetOptions
 decl_stmt|;
 name|class
+name|MCTargetStreamer
+decl_stmt|;
+name|class
 name|TargetMachine
 decl_stmt|;
 name|class
@@ -181,6 +190,9 @@ name|TargetOptions
 decl_stmt|;
 name|class
 name|raw_ostream
+decl_stmt|;
+name|class
+name|raw_pwrite_stream
 decl_stmt|;
 name|class
 name|formatted_raw_ostream
@@ -197,35 +209,96 @@ function_decl|;
 name|MCStreamer
 modifier|*
 name|createAsmStreamer
+argument_list|(
+name|MCContext
+operator|&
+name|Ctx
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|formatted_raw_ostream
+operator|>
+name|OS
+argument_list|,
+name|bool
+name|isVerboseAsm
+argument_list|,
+name|bool
+name|useDwarfDirectory
+argument_list|,
+name|MCInstPrinter
+operator|*
+name|InstPrint
+argument_list|,
+name|MCCodeEmitter
+operator|*
+name|CE
+argument_list|,
+name|MCAsmBackend
+operator|*
+name|TAB
+argument_list|,
+name|bool
+name|ShowInst
+argument_list|)
+decl_stmt|;
+comment|/// Takes ownership of \p TAB and \p CE.
+name|MCStreamer
+modifier|*
+name|createELFStreamer
 parameter_list|(
 name|MCContext
 modifier|&
 name|Ctx
 parameter_list|,
-name|formatted_raw_ostream
+name|MCAsmBackend
+modifier|&
+name|TAB
+parameter_list|,
+name|raw_pwrite_stream
 modifier|&
 name|OS
-parameter_list|,
-name|bool
-name|isVerboseAsm
-parameter_list|,
-name|bool
-name|useDwarfDirectory
-parameter_list|,
-name|MCInstPrinter
-modifier|*
-name|InstPrint
 parameter_list|,
 name|MCCodeEmitter
 modifier|*
 name|CE
 parameter_list|,
-name|MCAsmBackend
+name|bool
+name|RelaxAll
+parameter_list|)
+function_decl|;
+name|MCStreamer
 modifier|*
+name|createMachOStreamer
+parameter_list|(
+name|MCContext
+modifier|&
+name|Ctx
+parameter_list|,
+name|MCAsmBackend
+modifier|&
 name|TAB
 parameter_list|,
+name|raw_pwrite_stream
+modifier|&
+name|OS
+parameter_list|,
+name|MCCodeEmitter
+modifier|*
+name|CE
+parameter_list|,
 name|bool
-name|ShowInst
+name|RelaxAll
+parameter_list|,
+name|bool
+name|DWARFMustBeAtTheEnd
+parameter_list|,
+name|bool
+name|LabelSections
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|MCRelocationInfo
@@ -243,29 +316,34 @@ function_decl|;
 name|MCSymbolizer
 modifier|*
 name|createMCSymbolizer
-parameter_list|(
+argument_list|(
 name|StringRef
 name|TT
-parameter_list|,
+argument_list|,
 name|LLVMOpInfoCallback
 name|GetOpInfo
-parameter_list|,
+argument_list|,
 name|LLVMSymbolLookupCallback
 name|SymbolLookUp
-parameter_list|,
+argument_list|,
 name|void
-modifier|*
+operator|*
 name|DisInfo
-parameter_list|,
+argument_list|,
 name|MCContext
-modifier|*
+operator|*
 name|Ctx
-parameter_list|,
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MCRelocationInfo
-modifier|*
+operator|>
+operator|&&
 name|RelInfo
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Target - Wrapper for Target specific information.
 comment|///
 comment|/// For registration purposes, this is a POD type so that targets can be
@@ -437,439 +515,514 @@ name|Level
 name|OL
 operator|)
 expr_stmt|;
+comment|// If it weren't for layering issues (this header is in llvm/Support, but
+comment|// depends on MC?) this should take the Streamer by value rather than rvalue
+comment|// reference.
 typedef|typedef
 name|AsmPrinter
-modifier|*
-function_decl|(
+argument_list|*
+call|(
 modifier|*
 name|AsmPrinterCtorTy
-function_decl|)
-parameter_list|(
+call|)
+argument_list|(
 name|TargetMachine
-modifier|&
+operator|&
 name|TM
-parameter_list|,
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MCStreamer
-modifier|&
+operator|>
+operator|&&
 name|Streamer
-parameter_list|)
-function_decl|;
-typedef|typedef
+argument_list|)
+argument_list|;   typedef
 name|MCAsmBackend
-modifier|*
-function_decl|(
-modifier|*
+operator|*
+operator|(
+operator|*
 name|MCAsmBackendCtorTy
-function_decl|)
-parameter_list|(
+operator|)
+operator|(
 specifier|const
 name|Target
-modifier|&
+operator|&
 name|T
-parameter_list|,
+operator|,
 specifier|const
 name|MCRegisterInfo
-modifier|&
+operator|&
 name|MRI
-parameter_list|,
+operator|,
 name|StringRef
 name|TT
-parameter_list|,
+operator|,
 name|StringRef
 name|CPU
-parameter_list|)
-function_decl|;
-typedef|typedef
+operator|)
+argument_list|;   typedef
 name|MCTargetAsmParser
-modifier|*
-function_decl|(
+operator|*
+call|(
 modifier|*
 name|MCAsmParserCtorTy
-function_decl|)
-parameter_list|(
+call|)
+argument_list|(
 name|MCSubtargetInfo
-modifier|&
+operator|&
 name|STI
-parameter_list|,
+argument_list|,
 name|MCAsmParser
-modifier|&
+operator|&
 name|P
-parameter_list|,
+argument_list|,
 specifier|const
 name|MCInstrInfo
-modifier|&
+operator|&
 name|MII
-parameter_list|,
+argument_list|,
 specifier|const
 name|MCTargetOptions
-modifier|&
+operator|&
 name|Options
-parameter_list|)
-function_decl|;
-typedef|typedef
+argument_list|)
+argument_list|;   typedef
 name|MCDisassembler
-modifier|*
-function_decl|(
+operator|*
+call|(
 modifier|*
 name|MCDisassemblerCtorTy
-function_decl|)
-parameter_list|(
+call|)
+argument_list|(
 specifier|const
 name|Target
-modifier|&
+operator|&
 name|T
-parameter_list|,
+argument_list|,
 specifier|const
 name|MCSubtargetInfo
-modifier|&
+operator|&
 name|STI
-parameter_list|,
+argument_list|,
 name|MCContext
-modifier|&
+operator|&
 name|Ctx
-parameter_list|)
-function_decl|;
-typedef|typedef
+argument_list|)
+argument_list|;   typedef
 name|MCInstPrinter
-modifier|*
-function_decl|(
-modifier|*
+operator|*
+operator|(
+operator|*
 name|MCInstPrinterCtorTy
-function_decl|)
-parameter_list|(
+operator|)
+operator|(
 specifier|const
-name|Target
-modifier|&
+name|Triple
+operator|&
 name|T
-parameter_list|,
+operator|,
 name|unsigned
 name|SyntaxVariant
-parameter_list|,
+operator|,
 specifier|const
 name|MCAsmInfo
-modifier|&
+operator|&
 name|MAI
-parameter_list|,
+operator|,
 specifier|const
 name|MCInstrInfo
-modifier|&
+operator|&
 name|MII
-parameter_list|,
+operator|,
 specifier|const
 name|MCRegisterInfo
-modifier|&
+operator|&
 name|MRI
-parameter_list|,
-specifier|const
-name|MCSubtargetInfo
-modifier|&
-name|STI
-parameter_list|)
-function_decl|;
-typedef|typedef
+operator|)
+argument_list|;   typedef
 name|MCCodeEmitter
-modifier|*
-function_decl|(
+operator|*
+call|(
 modifier|*
 name|MCCodeEmitterCtorTy
-function_decl|)
-parameter_list|(
+call|)
+argument_list|(
 specifier|const
 name|MCInstrInfo
-modifier|&
+operator|&
 name|II
-parameter_list|,
+argument_list|,
 specifier|const
 name|MCRegisterInfo
-modifier|&
+operator|&
 name|MRI
-parameter_list|,
-specifier|const
-name|MCSubtargetInfo
-modifier|&
-name|STI
-parameter_list|,
+argument_list|,
 name|MCContext
-modifier|&
+operator|&
 name|Ctx
-parameter_list|)
-function_decl|;
-typedef|typedef
+argument_list|)
+argument_list|;   typedef
 name|MCStreamer
-modifier|*
-function_decl|(
-modifier|*
-name|MCObjectStreamerCtorTy
-function_decl|)
-parameter_list|(
+operator|*
+operator|(
+operator|*
+name|ELFStreamerCtorTy
+operator|)
+operator|(
 specifier|const
-name|Target
-modifier|&
+name|Triple
+operator|&
 name|T
-parameter_list|,
-name|StringRef
-name|TT
-parameter_list|,
+operator|,
 name|MCContext
-modifier|&
+operator|&
 name|Ctx
-parameter_list|,
+operator|,
 name|MCAsmBackend
-modifier|&
+operator|&
 name|TAB
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|_OS
-parameter_list|,
+operator|,
+name|raw_pwrite_stream
+operator|&
+name|OS
+operator|,
 name|MCCodeEmitter
-modifier|*
-name|_Emitter
-parameter_list|,
-specifier|const
-name|MCSubtargetInfo
-modifier|&
-name|STI
-parameter_list|,
+operator|*
+name|Emitter
+operator|,
 name|bool
 name|RelaxAll
-parameter_list|)
-function_decl|;
-typedef|typedef
+operator|)
+argument_list|;   typedef
 name|MCStreamer
-modifier|*
-function_decl|(
-modifier|*
-name|AsmStreamerCtorTy
-function_decl|)
-parameter_list|(
+operator|*
+operator|(
+operator|*
+name|MachOStreamerCtorTy
+operator|)
+operator|(
 name|MCContext
-modifier|&
+operator|&
 name|Ctx
-parameter_list|,
-name|formatted_raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-name|bool
-name|isVerboseAsm
-parameter_list|,
-name|bool
-name|useDwarfDirectory
-parameter_list|,
-name|MCInstPrinter
-modifier|*
-name|InstPrint
-parameter_list|,
-name|MCCodeEmitter
-modifier|*
-name|CE
-parameter_list|,
+operator|,
 name|MCAsmBackend
-modifier|*
+operator|&
 name|TAB
-parameter_list|,
+operator|,
+name|raw_pwrite_stream
+operator|&
+name|OS
+operator|,
+name|MCCodeEmitter
+operator|*
+name|Emitter
+operator|,
 name|bool
-name|ShowInst
-parameter_list|)
-function_decl|;
-typedef|typedef
+name|RelaxAll
+operator|,
+name|bool
+name|DWARFMustBeAtTheEnd
+operator|)
+argument_list|;   typedef
 name|MCStreamer
-modifier|*
-function_decl|(
-modifier|*
-name|NullStreamerCtorTy
-function_decl|)
-parameter_list|(
+operator|*
+operator|(
+operator|*
+name|COFFStreamerCtorTy
+operator|)
+operator|(
 name|MCContext
-modifier|&
+operator|&
 name|Ctx
-parameter_list|)
-function_decl|;
-typedef|typedef
+operator|,
+name|MCAsmBackend
+operator|&
+name|TAB
+operator|,
+name|raw_pwrite_stream
+operator|&
+name|OS
+operator|,
+name|MCCodeEmitter
+operator|*
+name|Emitter
+operator|,
+name|bool
+name|RelaxAll
+operator|)
+argument_list|;   typedef
+name|MCTargetStreamer
+operator|*
+call|(
+modifier|*
+name|NullTargetStreamerCtorTy
+call|)
+argument_list|(
+name|MCStreamer
+operator|&
+name|S
+argument_list|)
+argument_list|;   typedef
+name|MCTargetStreamer
+operator|*
+operator|(
+operator|*
+name|AsmTargetStreamerCtorTy
+operator|)
+operator|(
+name|MCStreamer
+operator|&
+name|S
+operator|,
+name|formatted_raw_ostream
+operator|&
+name|OS
+operator|,
+name|MCInstPrinter
+operator|*
+name|InstPrint
+operator|,
+name|bool
+name|IsVerboseAsm
+operator|)
+argument_list|;   typedef
+name|MCTargetStreamer
+operator|*
+call|(
+modifier|*
+name|ObjectTargetStreamerCtorTy
+call|)
+argument_list|(
+name|MCStreamer
+operator|&
+name|S
+argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|)
+argument_list|;   typedef
 name|MCRelocationInfo
-modifier|*
-function_decl|(
-modifier|*
+operator|*
+operator|(
+operator|*
 name|MCRelocationInfoCtorTy
-function_decl|)
-parameter_list|(
+operator|)
+operator|(
 name|StringRef
 name|TT
-parameter_list|,
+operator|,
 name|MCContext
-modifier|&
+operator|&
 name|Ctx
-parameter_list|)
-function_decl|;
-typedef|typedef
+operator|)
+argument_list|;   typedef
 name|MCSymbolizer
-modifier|*
-function_decl|(
-modifier|*
+operator|*
+operator|(
+operator|*
 name|MCSymbolizerCtorTy
-function_decl|)
-parameter_list|(
+operator|)
+operator|(
 name|StringRef
 name|TT
-parameter_list|,
+operator|,
 name|LLVMOpInfoCallback
 name|GetOpInfo
-parameter_list|,
+operator|,
 name|LLVMSymbolLookupCallback
 name|SymbolLookUp
-parameter_list|,
+operator|,
 name|void
-modifier|*
+operator|*
 name|DisInfo
-parameter_list|,
+operator|,
 name|MCContext
-modifier|*
+operator|*
 name|Ctx
-parameter_list|,
+operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MCRelocationInfo
-modifier|*
+operator|>
+operator|&&
 name|RelInfo
-parameter_list|)
-function_decl|;
+operator|)
+argument_list|;
 name|private
-label|:
+operator|:
 comment|/// Next - The next registered target in the linked list, maintained by the
 comment|/// TargetRegistry.
 name|Target
-modifier|*
+operator|*
 name|Next
-decl_stmt|;
+argument_list|;
 comment|/// The target function for checking if an architecture is supported.
 name|ArchMatchFnTy
 name|ArchMatchFn
-decl_stmt|;
+argument_list|;
 comment|/// Name - The target name.
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Name
-decl_stmt|;
+argument_list|;
 comment|/// ShortDesc - A short description of the target.
 specifier|const
 name|char
-modifier|*
+operator|*
 name|ShortDesc
-decl_stmt|;
+argument_list|;
 comment|/// HasJIT - Whether this target supports the JIT.
 name|bool
 name|HasJIT
-decl_stmt|;
+argument_list|;
 comment|/// MCAsmInfoCtorFn - Constructor function for this target's MCAsmInfo, if
 comment|/// registered.
 name|MCAsmInfoCtorFnTy
 name|MCAsmInfoCtorFn
-decl_stmt|;
+argument_list|;
 comment|/// MCCodeGenInfoCtorFn - Constructor function for this target's
 comment|/// MCCodeGenInfo, if registered.
 name|MCCodeGenInfoCtorFnTy
 name|MCCodeGenInfoCtorFn
-decl_stmt|;
+argument_list|;
 comment|/// MCInstrInfoCtorFn - Constructor function for this target's MCInstrInfo,
 comment|/// if registered.
 name|MCInstrInfoCtorFnTy
 name|MCInstrInfoCtorFn
-decl_stmt|;
+argument_list|;
 comment|/// MCInstrAnalysisCtorFn - Constructor function for this target's
 comment|/// MCInstrAnalysis, if registered.
 name|MCInstrAnalysisCtorFnTy
 name|MCInstrAnalysisCtorFn
-decl_stmt|;
+argument_list|;
 comment|/// MCRegInfoCtorFn - Constructor function for this target's MCRegisterInfo,
 comment|/// if registered.
 name|MCRegInfoCtorFnTy
 name|MCRegInfoCtorFn
-decl_stmt|;
+argument_list|;
 comment|/// MCSubtargetInfoCtorFn - Constructor function for this target's
 comment|/// MCSubtargetInfo, if registered.
 name|MCSubtargetInfoCtorFnTy
 name|MCSubtargetInfoCtorFn
-decl_stmt|;
+argument_list|;
 comment|/// TargetMachineCtorFn - Construction function for this target's
 comment|/// TargetMachine, if registered.
 name|TargetMachineCtorTy
 name|TargetMachineCtorFn
-decl_stmt|;
+argument_list|;
 comment|/// MCAsmBackendCtorFn - Construction function for this target's
 comment|/// MCAsmBackend, if registered.
 name|MCAsmBackendCtorTy
 name|MCAsmBackendCtorFn
-decl_stmt|;
+argument_list|;
 comment|/// MCAsmParserCtorFn - Construction function for this target's
 comment|/// MCTargetAsmParser, if registered.
 name|MCAsmParserCtorTy
 name|MCAsmParserCtorFn
-decl_stmt|;
+argument_list|;
 comment|/// AsmPrinterCtorFn - Construction function for this target's AsmPrinter,
 comment|/// if registered.
 name|AsmPrinterCtorTy
 name|AsmPrinterCtorFn
-decl_stmt|;
+argument_list|;
 comment|/// MCDisassemblerCtorFn - Construction function for this target's
 comment|/// MCDisassembler, if registered.
 name|MCDisassemblerCtorTy
 name|MCDisassemblerCtorFn
-decl_stmt|;
+argument_list|;
 comment|/// MCInstPrinterCtorFn - Construction function for this target's
 comment|/// MCInstPrinter, if registered.
 name|MCInstPrinterCtorTy
 name|MCInstPrinterCtorFn
-decl_stmt|;
+argument_list|;
 comment|/// MCCodeEmitterCtorFn - Construction function for this target's
 comment|/// CodeEmitter, if registered.
 name|MCCodeEmitterCtorTy
 name|MCCodeEmitterCtorFn
-decl_stmt|;
-comment|/// MCObjectStreamerCtorFn - Construction function for this target's
-comment|/// MCObjectStreamer, if registered.
-name|MCObjectStreamerCtorTy
-name|MCObjectStreamerCtorFn
-decl_stmt|;
-comment|/// AsmStreamerCtorFn - Construction function for this target's
-comment|/// AsmStreamer, if registered (default = llvm::createAsmStreamer).
-name|AsmStreamerCtorTy
-name|AsmStreamerCtorFn
-decl_stmt|;
-comment|/// Construction function for this target's NullStreamer, if registered
-comment|/// (default = llvm::createNullStreamer).
-name|NullStreamerCtorTy
-name|NullStreamerCtorFn
-decl_stmt|;
+argument_list|;
+comment|// Construction functions for the various object formats, if registered.
+name|COFFStreamerCtorTy
+name|COFFStreamerCtorFn
+argument_list|;
+name|MachOStreamerCtorTy
+name|MachOStreamerCtorFn
+argument_list|;
+name|ELFStreamerCtorTy
+name|ELFStreamerCtorFn
+argument_list|;
+comment|/// Construction function for this target's null TargetStreamer, if
+comment|/// registered (default = nullptr).
+name|NullTargetStreamerCtorTy
+name|NullTargetStreamerCtorFn
+argument_list|;
+comment|/// Construction function for this target's asm TargetStreamer, if
+comment|/// registered (default = nullptr).
+name|AsmTargetStreamerCtorTy
+name|AsmTargetStreamerCtorFn
+argument_list|;
+comment|/// Construction function for this target's obj TargetStreamer, if
+comment|/// registered (default = nullptr).
+name|ObjectTargetStreamerCtorTy
+name|ObjectTargetStreamerCtorFn
+argument_list|;
 comment|/// MCRelocationInfoCtorFn - Construction function for this target's
 comment|/// MCRelocationInfo, if registered (default = llvm::createMCRelocationInfo)
 name|MCRelocationInfoCtorTy
 name|MCRelocationInfoCtorFn
-decl_stmt|;
+argument_list|;
 comment|/// MCSymbolizerCtorFn - Construction function for this target's
 comment|/// MCSymbolizer, if registered (default = llvm::createMCSymbolizer)
 name|MCSymbolizerCtorTy
 name|MCSymbolizerCtorFn
-decl_stmt|;
+argument_list|;
 name|public
-label|:
+operator|:
 name|Target
 argument_list|()
 operator|:
-name|AsmStreamerCtorFn
+name|COFFStreamerCtorFn
 argument_list|(
 name|nullptr
 argument_list|)
-operator|,
-name|NullStreamerCtorFn
+argument_list|,
+name|MachOStreamerCtorFn
 argument_list|(
 name|nullptr
 argument_list|)
-operator|,
+argument_list|,
+name|ELFStreamerCtorFn
+argument_list|(
+name|nullptr
+argument_list|)
+argument_list|,
+name|NullTargetStreamerCtorFn
+argument_list|(
+name|nullptr
+argument_list|)
+argument_list|,
+name|AsmTargetStreamerCtorFn
+argument_list|(
+name|nullptr
+argument_list|)
+argument_list|,
+name|ObjectTargetStreamerCtorFn
+argument_list|(
+name|nullptr
+argument_list|)
+argument_list|,
 name|MCRelocationInfoCtorFn
 argument_list|(
 name|nullptr
 argument_list|)
-operator|,
+argument_list|,
 name|MCSymbolizerCtorFn
 argument_list|(
 argument|nullptr
@@ -1341,8 +1494,13 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MCStreamer
-operator|&
+operator|>
+operator|&&
 name|Streamer
 argument_list|)
 decl|const
@@ -1360,7 +1518,12 @@ name|AsmPrinterCtorFn
 argument_list|(
 name|TM
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|Streamer
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -1403,6 +1566,11 @@ name|MCInstPrinter
 modifier|*
 name|createMCInstPrinter
 argument_list|(
+specifier|const
+name|Triple
+operator|&
+name|T
+argument_list|,
 name|unsigned
 name|SyntaxVariant
 argument_list|,
@@ -1420,11 +1588,6 @@ specifier|const
 name|MCRegisterInfo
 operator|&
 name|MRI
-argument_list|,
-specifier|const
-name|MCSubtargetInfo
-operator|&
-name|STI
 argument_list|)
 decl|const
 block|{
@@ -1439,8 +1602,7 @@ return|;
 return|return
 name|MCInstPrinterCtorFn
 argument_list|(
-operator|*
-name|this
+name|T
 argument_list|,
 name|SyntaxVariant
 argument_list|,
@@ -1449,8 +1611,6 @@ argument_list|,
 name|MII
 argument_list|,
 name|MRI
-argument_list|,
-name|STI
 argument_list|)
 return|;
 block|}
@@ -1469,11 +1629,6 @@ name|MCRegisterInfo
 operator|&
 name|MRI
 argument_list|,
-specifier|const
-name|MCSubtargetInfo
-operator|&
-name|STI
-argument_list|,
 name|MCContext
 operator|&
 name|Ctx
@@ -1495,26 +1650,26 @@ name|II
 argument_list|,
 name|MRI
 argument_list|,
-name|STI
-argument_list|,
 name|Ctx
 argument_list|)
 return|;
 block|}
-comment|/// createMCObjectStreamer - Create a target specific MCStreamer.
+comment|/// Create a target specific MCStreamer.
 comment|///
-comment|/// \param TT The target triple.
+comment|/// \param T The target triple.
 comment|/// \param Ctx The target context.
 comment|/// \param TAB The target assembler backend object. Takes ownership.
-comment|/// \param _OS The stream object.
-comment|/// \param _Emitter The target independent assembler object.Takes ownership.
+comment|/// \param OS The stream object.
+comment|/// \param Emitter The target independent assembler object.Takes ownership.
 comment|/// \param RelaxAll Relax all fixups?
 name|MCStreamer
 modifier|*
 name|createMCObjectStreamer
 argument_list|(
-name|StringRef
-name|TT
+specifier|const
+name|Triple
+operator|&
+name|T
 argument_list|,
 name|MCContext
 operator|&
@@ -1524,13 +1679,13 @@ name|MCAsmBackend
 operator|&
 name|TAB
 argument_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 operator|&
-name|_OS
+name|OS
 argument_list|,
 name|MCCodeEmitter
 operator|*
-name|_Emitter
+name|Emitter
 argument_list|,
 specifier|const
 name|MCSubtargetInfo
@@ -1539,40 +1694,166 @@ name|STI
 argument_list|,
 name|bool
 name|RelaxAll
+argument_list|,
+name|bool
+name|DWARFMustBeAtTheEnd
 argument_list|)
 decl|const
 block|{
+name|MCStreamer
+modifier|*
+name|S
+decl_stmt|;
+switch|switch
+condition|(
+name|T
+operator|.
+name|getObjectFormat
+argument_list|()
+condition|)
+block|{
+default|default:
+name|llvm_unreachable
+argument_list|(
+literal|"Unknown object format"
+argument_list|)
+expr_stmt|;
+case|case
+name|Triple
+operator|::
+name|COFF
+case|:
+name|assert
+argument_list|(
+name|T
+operator|.
+name|isOSWindows
+argument_list|()
+operator|&&
+literal|"only Windows COFF is supported"
+argument_list|)
+expr_stmt|;
+name|S
+operator|=
+name|COFFStreamerCtorFn
+argument_list|(
+name|Ctx
+argument_list|,
+name|TAB
+argument_list|,
+name|OS
+argument_list|,
+name|Emitter
+argument_list|,
+name|RelaxAll
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Triple
+operator|::
+name|MachO
+case|:
 if|if
 condition|(
-operator|!
-name|MCObjectStreamerCtorFn
+name|MachOStreamerCtorFn
 condition|)
-return|return
-name|nullptr
-return|;
-return|return
-name|MCObjectStreamerCtorFn
+name|S
+operator|=
+name|MachOStreamerCtorFn
 argument_list|(
-operator|*
-name|this
+name|Ctx
 argument_list|,
-name|TT
+name|TAB
+argument_list|,
+name|OS
+argument_list|,
+name|Emitter
+argument_list|,
+name|RelaxAll
+argument_list|,
+name|DWARFMustBeAtTheEnd
+argument_list|)
+expr_stmt|;
+else|else
+name|S
+operator|=
+name|createMachOStreamer
+argument_list|(
+name|Ctx
+argument_list|,
+name|TAB
+argument_list|,
+name|OS
+argument_list|,
+name|Emitter
+argument_list|,
+name|RelaxAll
+argument_list|,
+name|DWARFMustBeAtTheEnd
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|Triple
+operator|::
+name|ELF
+case|:
+if|if
+condition|(
+name|ELFStreamerCtorFn
+condition|)
+name|S
+operator|=
+name|ELFStreamerCtorFn
+argument_list|(
+name|T
 argument_list|,
 name|Ctx
 argument_list|,
 name|TAB
 argument_list|,
-name|_OS
+name|OS
 argument_list|,
-name|_Emitter
-argument_list|,
-name|STI
+name|Emitter
 argument_list|,
 name|RelaxAll
 argument_list|)
+expr_stmt|;
+else|else
+name|S
+operator|=
+name|createELFStreamer
+argument_list|(
+name|Ctx
+argument_list|,
+name|TAB
+argument_list|,
+name|OS
+argument_list|,
+name|Emitter
+argument_list|,
+name|RelaxAll
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|ObjectTargetStreamerCtorFn
+condition|)
+name|ObjectTargetStreamerCtorFn
+argument_list|(
+operator|*
+name|S
+argument_list|,
+name|STI
+argument_list|)
+expr_stmt|;
+return|return
+name|S
 return|;
 block|}
-comment|/// createAsmStreamer - Create a target specific MCStreamer.
 name|MCStreamer
 modifier|*
 name|createAsmStreamer
@@ -1581,15 +1862,19 @@ name|MCContext
 operator|&
 name|Ctx
 argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|formatted_raw_ostream
-operator|&
+operator|>
 name|OS
 argument_list|,
 name|bool
-name|isVerboseAsm
+name|IsVerboseAsm
 argument_list|,
 name|bool
-name|useDwarfDirectory
+name|UseDwarfDirectory
 argument_list|,
 name|MCInstPrinter
 operator|*
@@ -1608,42 +1893,33 @@ name|ShowInst
 argument_list|)
 decl|const
 block|{
-if|if
-condition|(
-name|AsmStreamerCtorFn
-condition|)
-return|return
-name|AsmStreamerCtorFn
-argument_list|(
-name|Ctx
-argument_list|,
+name|formatted_raw_ostream
+modifier|&
+name|OSRef
+init|=
+operator|*
 name|OS
-argument_list|,
-name|isVerboseAsm
-argument_list|,
-name|useDwarfDirectory
-argument_list|,
-name|InstPrint
-argument_list|,
-name|CE
-argument_list|,
-name|TAB
-argument_list|,
-name|ShowInst
-argument_list|)
-return|;
-return|return
+decl_stmt|;
+name|MCStreamer
+modifier|*
+name|S
+init|=
 name|llvm
 operator|::
 name|createAsmStreamer
 argument_list|(
 name|Ctx
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|OS
+argument_list|)
 argument_list|,
-name|isVerboseAsm
+name|IsVerboseAsm
 argument_list|,
-name|useDwarfDirectory
+name|UseDwarfDirectory
 argument_list|,
 name|InstPrint
 argument_list|,
@@ -1653,6 +1929,62 @@ name|TAB
 argument_list|,
 name|ShowInst
 argument_list|)
+decl_stmt|;
+name|createAsmTargetStreamer
+argument_list|(
+operator|*
+name|S
+argument_list|,
+name|OSRef
+argument_list|,
+name|InstPrint
+argument_list|,
+name|IsVerboseAsm
+argument_list|)
+expr_stmt|;
+return|return
+name|S
+return|;
+block|}
+name|MCTargetStreamer
+modifier|*
+name|createAsmTargetStreamer
+argument_list|(
+name|MCStreamer
+operator|&
+name|S
+argument_list|,
+name|formatted_raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|MCInstPrinter
+operator|*
+name|InstPrint
+argument_list|,
+name|bool
+name|IsVerboseAsm
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|AsmTargetStreamerCtorFn
+condition|)
+return|return
+name|AsmTargetStreamerCtorFn
+argument_list|(
+name|S
+argument_list|,
+name|OS
+argument_list|,
+name|InstPrint
+argument_list|,
+name|IsVerboseAsm
+argument_list|)
+return|;
+return|return
+name|nullptr
 return|;
 block|}
 name|MCStreamer
@@ -1665,23 +1997,49 @@ name|Ctx
 argument_list|)
 decl|const
 block|{
-if|if
-condition|(
-name|NullStreamerCtorFn
-condition|)
-return|return
-name|NullStreamerCtorFn
-argument_list|(
-name|Ctx
-argument_list|)
-return|;
-return|return
+name|MCStreamer
+modifier|*
+name|S
+init|=
 name|llvm
 operator|::
 name|createNullStreamer
 argument_list|(
 name|Ctx
 argument_list|)
+decl_stmt|;
+name|createNullTargetStreamer
+argument_list|(
+operator|*
+name|S
+argument_list|)
+expr_stmt|;
+return|return
+name|S
+return|;
+block|}
+name|MCTargetStreamer
+modifier|*
+name|createNullTargetStreamer
+argument_list|(
+name|MCStreamer
+operator|&
+name|S
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|NullTargetStreamerCtorFn
+condition|)
+return|return
+name|NullTargetStreamerCtorFn
+argument_list|(
+name|S
+argument_list|)
+return|;
+return|return
+name|nullptr
 return|;
 block|}
 comment|/// createMCRelocationInfo - Create a target specific MCRelocationInfo.
@@ -1724,12 +2082,15 @@ block|}
 comment|/// createMCSymbolizer - Create a target specific MCSymbolizer.
 comment|///
 comment|/// \param TT The target triple.
-comment|/// \param GetOpInfo The function to get the symbolic information for operands.
+comment|/// \param GetOpInfo The function to get the symbolic information for
+comment|/// operands.
 comment|/// \param SymbolLookUp The function to lookup a symbol name.
-comment|/// \param DisInfo The pointer to the block of symbolic information for above call
+comment|/// \param DisInfo The pointer to the block of symbolic information for above
+comment|/// call
 comment|/// back.
 comment|/// \param Ctx The target context.
-comment|/// \param RelInfo The relocation information for this target. Takes ownership.
+comment|/// \param RelInfo The relocation information for this target. Takes
+comment|/// ownership.
 name|MCSymbolizer
 modifier|*
 name|createMCSymbolizer
@@ -1751,8 +2112,13 @@ name|MCContext
 operator|*
 name|Ctx
 argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MCRelocationInfo
-operator|*
+operator|>
+operator|&&
 name|RelInfo
 argument_list|)
 decl|const
@@ -1781,7 +2147,12 @@ name|DisInfo
 argument_list|,
 name|Ctx
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|RelInfo
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -1801,8 +2172,31 @@ begin_struct
 struct|struct
 name|TargetRegistry
 block|{
+comment|// FIXME: Make this a namespace, probably just move all the Register*
+comment|// functions into Target (currently they all just set members on the Target
+comment|// anyway, and Target friends this class so those functions can...
+comment|// function).
+name|TargetRegistry
+argument_list|()
+operator|=
+name|delete
+expr_stmt|;
 name|class
 name|iterator
+range|:
+name|public
+name|std
+operator|::
+name|iterator
+operator|<
+name|std
+operator|::
+name|forward_iterator_tag
+decl_stmt|,
+name|Target
+decl_stmt|,
+name|ptrdiff_t
+decl|>
 block|{
 specifier|const
 name|Target
@@ -1991,26 +2385,16 @@ begin_comment
 comment|/// @{
 end_comment
 
-begin_function_decl
+begin_expr_stmt
 specifier|static
+name|iterator_range
+operator|<
 name|iterator
-name|begin
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function
-specifier|static
-name|iterator
-name|end
-parameter_list|()
-block|{
-return|return
-name|iterator
+operator|>
+name|targets
 argument_list|()
-return|;
-block|}
-end_function
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// lookupTarget - Lookup a target based on a target triple.
@@ -2978,46 +3362,10 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_comment
-comment|/// RegisterMCObjectStreamer - Register a object code MCStreamer
-end_comment
-
-begin_comment
-comment|/// implementation for the given target.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Clients are responsible for ensuring that registration doesn't occur
-end_comment
-
-begin_comment
-comment|/// while another thread is attempting to access the registry. Typically
-end_comment
-
-begin_comment
-comment|/// this is done by initializing all targets at program startup.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param T - The target being registered.
-end_comment
-
-begin_comment
-comment|/// @param Fn - A function to construct an MCStreamer for the target.
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|void
-name|RegisterMCObjectStreamer
+name|RegisterCOFFStreamer
 argument_list|(
 name|Target
 operator|&
@@ -3025,73 +3373,13 @@ name|T
 argument_list|,
 name|Target
 operator|::
-name|MCObjectStreamerCtorTy
+name|COFFStreamerCtorTy
 name|Fn
 argument_list|)
 block|{
 name|T
 operator|.
-name|MCObjectStreamerCtorFn
-operator|=
-name|Fn
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// RegisterAsmStreamer - Register an assembly MCStreamer implementation
-end_comment
-
-begin_comment
-comment|/// for the given target.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Clients are responsible for ensuring that registration doesn't occur
-end_comment
-
-begin_comment
-comment|/// while another thread is attempting to access the registry. Typically
-end_comment
-
-begin_comment
-comment|/// this is done by initializing all targets at program startup.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param T - The target being registered.
-end_comment
-
-begin_comment
-comment|/// @param Fn - A function to construct an MCStreamer for the target.
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|void
-name|RegisterAsmStreamer
-argument_list|(
-name|Target
-operator|&
-name|T
-argument_list|,
-name|Target
-operator|::
-name|AsmStreamerCtorTy
-name|Fn
-argument_list|)
-block|{
-name|T
-operator|.
-name|AsmStreamerCtorFn
+name|COFFStreamerCtorFn
 operator|=
 name|Fn
 expr_stmt|;
@@ -3101,7 +3389,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|void
-name|RegisterNullStreamer
+name|RegisterMachOStreamer
 argument_list|(
 name|Target
 operator|&
@@ -3109,13 +3397,109 @@ name|T
 argument_list|,
 name|Target
 operator|::
-name|NullStreamerCtorTy
+name|MachOStreamerCtorTy
 name|Fn
 argument_list|)
 block|{
 name|T
 operator|.
-name|NullStreamerCtorFn
+name|MachOStreamerCtorFn
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterELFStreamer
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|ELFStreamerCtorTy
+name|Fn
+argument_list|)
+block|{
+name|T
+operator|.
+name|ELFStreamerCtorFn
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterNullTargetStreamer
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|NullTargetStreamerCtorTy
+name|Fn
+argument_list|)
+block|{
+name|T
+operator|.
+name|NullTargetStreamerCtorFn
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterAsmTargetStreamer
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|AsmTargetStreamerCtorTy
+name|Fn
+argument_list|)
+block|{
+name|T
+operator|.
+name|AsmTargetStreamerCtorFn
+operator|=
+name|Fn
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|void
+name|RegisterObjectTargetStreamer
+argument_list|(
+name|Target
+operator|&
+name|T
+argument_list|,
+name|Target
+operator|::
+name|ObjectTargetStreamerCtorTy
+name|Fn
+argument_list|)
+block|{
+name|T
+operator|.
+name|ObjectTargetStreamerCtorFn
 operator|=
 name|Fn
 expr_stmt|;
@@ -3331,7 +3715,7 @@ name|getArchMatch
 argument_list|,
 name|HasJIT
 argument_list|)
-block|;     }
+block|;   }
 specifier|static
 name|bool
 name|getArchMatch
@@ -3403,7 +3787,7 @@ argument_list|,
 operator|&
 name|Allocator
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 specifier|static
@@ -3486,7 +3870,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|/// RegisterMCCodeGenInfo - Helper template for registering a target codegen info
+comment|/// RegisterMCCodeGenInfo - Helper template for registering a target codegen
+end_comment
+
+begin_comment
+comment|/// info
 end_comment
 
 begin_comment
@@ -3540,7 +3928,7 @@ argument_list|,
 operator|&
 name|Allocator
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 specifier|static
@@ -3682,7 +4070,7 @@ argument_list|,
 operator|&
 name|Allocator
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 specifier|static
@@ -3812,7 +4200,7 @@ argument_list|,
 operator|&
 name|Allocator
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 specifier|static
@@ -3946,7 +4334,7 @@ argument_list|,
 operator|&
 name|Allocator
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 specifier|static
@@ -4079,7 +4467,7 @@ argument_list|,
 operator|&
 name|Allocator
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 specifier|static
@@ -4218,7 +4606,7 @@ argument_list|,
 operator|&
 name|Allocator
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 specifier|static
@@ -4319,7 +4707,7 @@ argument_list|,
 operator|&
 name|Allocator
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 specifier|static
@@ -4408,7 +4796,7 @@ argument_list|,
 operator|&
 name|Allocator
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 specifier|static
@@ -4497,7 +4885,7 @@ argument_list|,
 operator|&
 name|Allocator
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 specifier|static
@@ -4507,7 +4895,7 @@ name|Allocator
 argument_list|(
 argument|TargetMachine&TM
 argument_list|,
-argument|MCStreamer&Streamer
+argument|std::unique_ptr<MCStreamer>&&Streamer
 argument_list|)
 block|{
 return|return
@@ -4516,7 +4904,12 @@ name|AsmPrinterImpl
 argument_list|(
 name|TM
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|Streamer
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -4578,7 +4971,7 @@ argument_list|,
 operator|&
 name|Allocator
 argument_list|)
-block|;     }
+block|;   }
 name|private
 operator|:
 specifier|static
@@ -4591,9 +4984,6 @@ comment|/*II*/
 argument_list|,
 argument|const MCRegisterInfo&
 comment|/*MRI*/
-argument_list|,
-argument|const MCSubtargetInfo&
-comment|/*STI*/
 argument_list|,
 argument|MCContext&
 comment|/*Ctx*/
@@ -4608,7 +4998,7 @@ block|}
 end_expr_stmt
 
 begin_endif
-unit|};  }
+unit|}; }
 endif|#
 directive|endif
 end_endif

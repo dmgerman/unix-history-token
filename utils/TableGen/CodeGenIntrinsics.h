@@ -226,6 +226,10 @@ comment|/// isNoReturn - True if the intrinsic is no-return.
 name|bool
 name|isNoReturn
 decl_stmt|;
+comment|/// isConvergent - True if the intrinsic is marked as convergent.
+name|bool
+name|isConvergent
+decl_stmt|;
 enum|enum
 name|ArgAttribute
 block|{

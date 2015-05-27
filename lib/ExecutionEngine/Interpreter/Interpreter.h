@@ -519,6 +519,7 @@ decl_stmt|;
 operator|~
 name|Interpreter
 argument_list|()
+name|override
 expr_stmt|;
 comment|/// runAtExitHandlers - Run any functions registered by the program's calls to
 comment|/// atexit(3), which we intercept and store in AtExitHandlers.

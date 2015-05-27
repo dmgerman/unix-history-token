@@ -1737,18 +1737,6 @@ argument_list|(
 literal|"armv7"
 argument_list|)
 block|;
-comment|// The operating systems below are known to be incompatible with MCJIT as
-comment|// they are copied from the test/ExecutionEngine/MCJIT/lit.local.cfg and
-comment|// should be kept in sync.
-name|UnsupportedOSs
-operator|.
-name|push_back
-argument_list|(
-name|Triple
-operator|::
-name|Darwin
-argument_list|)
-block|;
 name|UnsupportedEnvironments
 operator|.
 name|push_back

@@ -168,9 +168,12 @@ name|LiveRegs
 expr_stmt|;
 name|LivePhysRegs
 argument_list|(
-argument|const LivePhysRegs&
+specifier|const
+name|LivePhysRegs
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|LivePhysRegs
 modifier|&
@@ -181,7 +184,8 @@ specifier|const
 name|LivePhysRegs
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
@@ -232,19 +236,21 @@ comment|/// \brief Clear and initialize the LivePhysRegs set.
 name|void
 name|init
 argument_list|(
-argument|const TargetRegisterInfo *_TRI
+argument|const TargetRegisterInfo *TRI
 argument_list|)
 block|{
 name|assert
 argument_list|(
-name|_TRI
+name|TRI
 operator|&&
 literal|"Invalid TargetRegisterInfo pointer."
 argument_list|)
 block|;
+name|this
+operator|->
 name|TRI
 operator|=
-name|_TRI
+name|TRI
 block|;
 name|LiveRegs
 operator|.
@@ -431,13 +437,28 @@ block|}
 comment|/// \brief Removes physical registers clobbered by the regmask operand @p MO.
 name|void
 name|removeRegsInMask
-parameter_list|(
+argument_list|(
 specifier|const
 name|MachineOperand
-modifier|&
+operator|&
 name|MO
-parameter_list|)
-function_decl|;
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+argument_list|,
+specifier|const
+name|MachineOperand
+operator|*
+operator|>>
+operator|*
+name|Clobbers
+argument_list|)
+decl_stmt|;
 comment|/// \brief Returns true if register @p Reg is contained in the set. This also
 comment|/// works if only the super register of @p Reg has been defined, because we
 comment|/// always add also all sub-registers to the set.
@@ -474,15 +495,33 @@ comment|/// \brief Simulates liveness when stepping forward over an
 comment|/// instruction(bundle): Remove killed-uses, add defs. This is the not
 comment|/// recommended way, because it depends on accurate kill flags. If possible
 comment|/// use stepBackwards() instead of this function.
+comment|/// The clobbers set will be the list of registers either defined or clobbered
+comment|/// by a regmask.  The operand will identify whether this is a regmask or
+comment|/// register operand.
 name|void
 name|stepForward
-parameter_list|(
+argument_list|(
 specifier|const
 name|MachineInstr
-modifier|&
+operator|&
 name|MI
-parameter_list|)
-function_decl|;
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+argument_list|,
+specifier|const
+name|MachineOperand
+operator|*
+operator|>>
+operator|&
+name|Clobbers
+argument_list|)
+decl_stmt|;
 comment|/// \brief Adds all live-in registers of basic block @p MBB.
 name|void
 name|addLiveIns

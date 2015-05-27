@@ -130,6 +130,10 @@ comment|/// ReturnAddrIndex - FrameIndex for return slot.
 name|int
 name|ReturnAddrIndex
 block|;
+comment|/// \brief FrameIndex for return slot.
+name|int
+name|FrameAddrIndex
+block|;
 comment|/// TailCallReturnAddrDelta - The number of bytes by which return address
 comment|/// stack slot is moved as the result of tail call optimization.
 name|int
@@ -171,6 +175,11 @@ block|;
 comment|/// NumLocalDynamics - Number of local-dynamic TLS accesses.
 name|unsigned
 name|NumLocalDynamics
+block|;
+comment|/// HasPushSequences - Keeps track of whether this function uses sequences
+comment|/// of pushes to pass function parameters.
+name|bool
+name|HasPushSequences
 block|;
 name|private
 operator|:
@@ -214,6 +223,11 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
+name|FrameAddrIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|TailCallReturnAddrDelta
 argument_list|(
 literal|0
@@ -257,6 +271,11 @@ block|,
 name|NumLocalDynamics
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|HasPushSequences
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 name|explicit
@@ -292,6 +311,11 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
+name|FrameAddrIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|TailCallReturnAddrDelta
 argument_list|(
 literal|0
@@ -336,6 +360,11 @@ name|NumLocalDynamics
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|HasPushSequences
+argument_list|(
+argument|false
+argument_list|)
 block|{}
 name|bool
 name|getForceFramePointer
@@ -355,6 +384,25 @@ block|{
 name|ForceFramePointer
 operator|=
 name|forceFP
+block|; }
+name|bool
+name|getHasPushSequences
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasPushSequences
+return|;
+block|}
+name|void
+name|setHasPushSequences
+argument_list|(
+argument|bool HasPush
+argument_list|)
+block|{
+name|HasPushSequences
+operator|=
+name|HasPush
 block|; }
 name|bool
 name|getRestoreBasePointer
@@ -439,6 +487,25 @@ argument|int Index
 argument_list|)
 block|{
 name|ReturnAddrIndex
+operator|=
+name|Index
+block|; }
+name|int
+name|getFAIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FrameAddrIndex
+return|;
+block|}
+name|void
+name|setFAIndex
+argument_list|(
+argument|int Index
+argument_list|)
+block|{
+name|FrameAddrIndex
 operator|=
 name|Index
 block|; }

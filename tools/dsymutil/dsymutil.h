@@ -102,6 +102,32 @@ block|{
 name|namespace
 name|dsymutil
 block|{
+struct|struct
+name|LinkOptions
+block|{
+name|bool
+name|Verbose
+decl_stmt|;
+comment|///< Verbosity
+name|bool
+name|NoOutput
+decl_stmt|;
+comment|///< Skip emitting output
+name|LinkOptions
+argument_list|()
+operator|:
+name|Verbose
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|NoOutput
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+block|}
+struct|;
 comment|/// \brief Extract the DebugMap from the given file.
 comment|/// The file has to be a MachO object file.
 name|llvm
@@ -138,10 +164,10 @@ name|DebugMap
 modifier|&
 name|DM
 parameter_list|,
-name|bool
-name|Verbose
-init|=
-name|false
+specifier|const
+name|LinkOptions
+modifier|&
+name|Options
 parameter_list|)
 function_decl|;
 block|}

@@ -86,12 +86,7 @@ name|RegClassWeight
 name|RCW
 block|;
 name|R600RegisterInfo
-argument_list|(
-specifier|const
-name|AMDGPUSubtarget
-operator|&
-name|st
-argument_list|)
+argument_list|()
 block|;
 name|BitVector
 name|getReservedRegs

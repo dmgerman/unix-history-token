@@ -203,25 +203,22 @@ argument|TestPartResultArray* result
 argument_list|)
 block|;
 comment|// The d'tor restores the previous test part result reporter.
-name|virtual
 operator|~
 name|ScopedFakeTestPartResultReporter
 argument_list|()
+name|override
 block|;
 comment|// Appends the TestPartResult object to the TestPartResultArray
 comment|// received in the constructor.
 comment|//
 comment|// This method is from the TestPartResultReporterInterface
 comment|// interface.
-name|virtual
 name|void
 name|ReportTestPartResult
 argument_list|(
-specifier|const
-name|TestPartResult
-operator|&
-name|result
+argument|const TestPartResult&result
 argument_list|)
+name|override
 block|;
 name|private
 operator|:

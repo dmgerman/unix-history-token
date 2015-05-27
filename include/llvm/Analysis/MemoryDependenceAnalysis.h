@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/PredIteratorCache.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/ValueHandle.h"
 end_include
 
@@ -122,9 +128,6 @@ name|AliasAnalysis
 decl_stmt|;
 name|class
 name|AssumptionCache
-decl_stmt|;
-name|class
-name|DataLayout
 decl_stmt|;
 name|class
 name|MemoryDependenceAnalysis
@@ -1266,14 +1269,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
-name|DataLayout
-modifier|*
-name|DL
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|DominatorTree
 modifier|*
 name|DT
@@ -1287,16 +1282,11 @@ name|AC
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|std
-operator|::
-name|unique_ptr
-operator|<
+begin_decl_stmt
 name|PredIteratorCache
-operator|>
 name|PredCache
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_label
 name|public
@@ -1313,6 +1303,7 @@ begin_expr_stmt
 operator|~
 name|MemoryDependenceAnalysis
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -1705,11 +1696,6 @@ specifier|const
 name|LoadInst
 modifier|*
 name|LI
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|&
-name|DL
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1745,6 +1731,10 @@ begin_decl_stmt
 name|bool
 name|getNonLocalPointerDepFromBB
 argument_list|(
+name|Instruction
+operator|*
+name|QueryInst
+argument_list|,
 specifier|const
 name|PHITransAddr
 operator|&
@@ -1794,6 +1784,10 @@ begin_decl_stmt
 name|MemDepResult
 name|GetNonLocalInfoForBlock
 argument_list|(
+name|Instruction
+operator|*
+name|QueryInst
+argument_list|,
 specifier|const
 name|AliasAnalysis
 operator|::

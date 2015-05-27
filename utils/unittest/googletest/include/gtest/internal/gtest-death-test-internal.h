@@ -460,20 +460,20 @@ name|DeathTestFactory
 block|{
 name|public
 operator|:
-name|virtual
 name|bool
 name|Create
 argument_list|(
-argument|const char* statement
+argument|const char *statement
 argument_list|,
-argument|const RE* regex
+argument|const RE *regex
 argument_list|,
-argument|const char* file
+argument|const char *file
 argument_list|,
 argument|int line
 argument_list|,
-argument|DeathTest** test
+argument|DeathTest **test
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 comment|// Returns true if exit_status describes a process that was terminated

@@ -99,6 +99,9 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+name|class
+name|raw_pwrite_stream
+decl_stmt|;
 specifier|extern
 name|Target
 name|TheMipsTarget
@@ -129,11 +132,6 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-specifier|const
-name|MCSubtargetInfo
-modifier|&
-name|STI
-parameter_list|,
 name|MCContext
 modifier|&
 name|Ctx
@@ -152,11 +150,6 @@ specifier|const
 name|MCRegisterInfo
 modifier|&
 name|MRI
-parameter_list|,
-specifier|const
-name|MCSubtargetInfo
-modifier|&
-name|STI
 parameter_list|,
 name|MCContext
 modifier|&
@@ -251,7 +244,7 @@ name|MCObjectWriter
 modifier|*
 name|createMipsELFObjectWriter
 parameter_list|(
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,
@@ -265,6 +258,20 @@ name|bool
 name|Is64Bit
 parameter_list|)
 function_decl|;
+name|namespace
+name|MIPS_MC
+block|{
+name|StringRef
+name|selectMipsCPU
+parameter_list|(
+name|StringRef
+name|TT
+parameter_list|,
+name|StringRef
+name|CPU
+parameter_list|)
+function_decl|;
+block|}
 block|}
 end_decl_stmt
 

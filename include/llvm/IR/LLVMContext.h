@@ -210,7 +210,17 @@ comment|// "llvm.mem.parallel_loop_access"
 name|MD_nonnull
 init|=
 literal|11
+block|,
 comment|// "nonnull"
+name|MD_dereferenceable
+init|=
+literal|12
+block|,
+comment|// "dereferenceable"
+name|MD_dereferenceable_or_null
+init|=
+literal|13
+comment|// "dereferenceable_or_null"
 block|}
 enum|;
 comment|/// getMDKindID - Return a unique non-zero ID for the specified metadata kind.
@@ -513,9 +523,11 @@ name|private
 label|:
 name|LLVMContext
 argument_list|(
-argument|LLVMContext&
+name|LLVMContext
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -524,7 +536,8 @@ operator|(
 name|LLVMContext
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 comment|/// addModule - Register a module as being instantiated in this context.  If
 comment|/// the context is deleted, the module will be deleted as well.

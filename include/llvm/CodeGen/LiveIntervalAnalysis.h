@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/CommandLine.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
@@ -147,6 +153,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+extern|extern cl::opt<bool> UseSegmentSetForPhysRegs;
 name|class
 name|AliasAnalysis
 decl_stmt|;
@@ -317,10 +324,10 @@ comment|// Pass identification, replacement for typeid
 name|LiveIntervals
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|LiveIntervals
 argument_list|()
+name|override
 block|;
 comment|// Calculate the spill weight to assign to a single instruction.
 specifier|static
@@ -582,19 +589,6 @@ name|void
 name|pruneValue
 argument_list|(
 argument|LiveRange&LR
-argument_list|,
-argument|SlotIndex Kill
-argument_list|,
-argument|SmallVectorImpl<SlotIndex> *EndPoints
-argument_list|)
-block|;
-comment|/// Subregister aware variant of pruneValue(LiveRange&LR, SlotIndex Kill,
-comment|/// SmallVectorImpl<SlotIndex>&EndPoints). Prunes the value in the main
-comment|/// range and all sub ranges.
-name|void
-name|pruneValue
-argument_list|(
-argument|LiveInterval&LI
 argument_list|,
 argument|SlotIndex Kill
 argument_list|,
@@ -1231,6 +1225,7 @@ name|LR
 condition|)
 block|{
 comment|// Compute missing ranges on demand.
+comment|// Use segment set to speed-up initial computation of the live range.
 name|RegUnitRanges
 index|[
 name|Unit
@@ -1240,7 +1235,9 @@ name|LR
 operator|=
 name|new
 name|LiveRange
-argument_list|()
+argument_list|(
+name|UseSegmentSetForPhysRegs
+argument_list|)
 expr_stmt|;
 name|computeRegUnitRange
 argument_list|(
@@ -1288,6 +1285,27 @@ name|Unit
 index|]
 return|;
 block|}
+comment|/// Remove value numbers and related live segments starting at position
+comment|/// @p Pos that are part of any liverange of physical register @p Reg or one
+comment|/// of its subregisters.
+name|void
+name|removePhysRegDefAt
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|SlotIndex Pos
+argument_list|)
+block|;
+comment|/// Remove value number and related live segments of @p LI and its subranges
+comment|/// that start at position @p Pos.
+name|void
+name|removeVRegDefAt
+argument_list|(
+argument|LiveInterval&LI
+argument_list|,
+argument|SlotIndex Pos
+argument_list|)
+block|;
 name|private
 operator|:
 comment|/// Compute live intervals for all virtual registers.

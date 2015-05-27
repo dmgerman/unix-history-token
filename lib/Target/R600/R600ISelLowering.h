@@ -89,6 +89,11 @@ argument_list|(
 name|TargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|AMDGPUSubtarget
+operator|&
+name|STI
 argument_list|)
 block|;
 name|MachineBasicBlock
@@ -207,6 +212,8 @@ argument_list|,
 argument|SDValue Swz[]
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc DL
 argument_list|)
 specifier|const
 block|;
@@ -306,6 +313,19 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerUADDSUBO
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|unsigned mainop
+argument_list|,
+argument|unsigned ovf
 argument_list|)
 specifier|const
 block|;

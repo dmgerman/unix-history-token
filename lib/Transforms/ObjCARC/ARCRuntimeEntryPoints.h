@@ -104,6 +104,30 @@ block|{
 name|namespace
 name|objcarc
 block|{
+name|enum
+name|class
+name|ARCRuntimeEntryPointKind
+block|{
+name|AutoreleaseRV
+operator|,
+name|Release
+operator|,
+name|Retain
+operator|,
+name|RetainBlock
+operator|,
+name|Autorelease
+operator|,
+name|StoreStrong
+operator|,
+name|RetainRV
+operator|,
+name|RetainAutorelease
+operator|,
+name|RetainAutoreleaseRV
+operator|,
+block|}
+empty_stmt|;
 comment|/// Declarations for ObjC runtime functions and constants. These are initialized
 comment|/// lazily to avoid cluttering up the Module with unused declarations.
 name|class
@@ -111,28 +135,6 @@ name|ARCRuntimeEntryPoints
 block|{
 name|public
 label|:
-enum|enum
-name|EntryPointType
-block|{
-name|EPT_AutoreleaseRV
-block|,
-name|EPT_Release
-block|,
-name|EPT_Retain
-block|,
-name|EPT_RetainBlock
-block|,
-name|EPT_Autorelease
-block|,
-name|EPT_StoreStrong
-block|,
-name|EPT_RetainRV
-block|,
-name|EPT_RetainAutorelease
-block|,
-name|EPT_RetainAutoreleaseRV
-block|}
-enum|;
 name|ARCRuntimeEntryPoints
 argument_list|()
 operator|:
@@ -186,12 +188,8 @@ argument_list|(
 argument|nullptr
 argument_list|)
 block|{ }
-operator|~
-name|ARCRuntimeEntryPoints
-argument_list|()
-block|{ }
 name|void
-name|Initialize
+name|init
 argument_list|(
 argument|Module *M
 argument_list|)
@@ -240,7 +238,7 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-argument|const EntryPointType entry
+argument|ARCRuntimeEntryPointKind kind
 argument_list|)
 block|{
 name|assert
@@ -254,11 +252,13 @@ argument_list|)
 block|;
 switch|switch
 condition|(
-name|entry
+name|kind
 condition|)
 block|{
 case|case
-name|EPT_AutoreleaseRV
+name|ARCRuntimeEntryPointKind
+operator|::
+name|AutoreleaseRV
 case|:
 return|return
 name|getI8XRetI8XEntryPoint
@@ -271,7 +271,9 @@ name|true
 argument_list|)
 return|;
 case|case
-name|EPT_Release
+name|ARCRuntimeEntryPointKind
+operator|::
+name|Release
 case|:
 return|return
 name|getVoidRetI8XEntryPoint
@@ -282,7 +284,9 @@ literal|"objc_release"
 argument_list|)
 return|;
 case|case
-name|EPT_Retain
+name|ARCRuntimeEntryPointKind
+operator|::
+name|Retain
 case|:
 return|return
 name|getI8XRetI8XEntryPoint
@@ -295,7 +299,9 @@ name|true
 argument_list|)
 return|;
 case|case
-name|EPT_RetainBlock
+name|ARCRuntimeEntryPointKind
+operator|::
+name|RetainBlock
 case|:
 return|return
 name|getI8XRetI8XEntryPoint
@@ -308,7 +314,9 @@ name|false
 argument_list|)
 return|;
 case|case
-name|EPT_Autorelease
+name|ARCRuntimeEntryPointKind
+operator|::
+name|Autorelease
 case|:
 return|return
 name|getI8XRetI8XEntryPoint
@@ -321,7 +329,9 @@ name|true
 argument_list|)
 return|;
 case|case
-name|EPT_StoreStrong
+name|ARCRuntimeEntryPointKind
+operator|::
+name|StoreStrong
 case|:
 return|return
 name|getI8XRetI8XXI8XEntryPoint
@@ -332,7 +342,9 @@ literal|"objc_storeStrong"
 argument_list|)
 return|;
 case|case
-name|EPT_RetainRV
+name|ARCRuntimeEntryPointKind
+operator|::
+name|RetainRV
 case|:
 return|return
 name|getI8XRetI8XEntryPoint
@@ -345,7 +357,9 @@ name|true
 argument_list|)
 return|;
 case|case
-name|EPT_RetainAutorelease
+name|ARCRuntimeEntryPointKind
+operator|::
+name|RetainAutorelease
 case|:
 return|return
 name|getI8XRetI8XEntryPoint
@@ -358,7 +372,9 @@ name|true
 argument_list|)
 return|;
 case|case
-name|EPT_RetainAutoreleaseRV
+name|ARCRuntimeEntryPointKind
+operator|::
+name|RetainAutoreleaseRV
 case|:
 return|return
 name|getI8XRetI8XEntryPoint

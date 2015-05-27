@@ -233,11 +233,11 @@ name|protected
 label|:
 name|OptTable
 argument_list|(
-argument|const Info *_OptionInfos
+argument|const Info *OptionInfos
 argument_list|,
-argument|unsigned _NumOptionInfos
+argument|unsigned NumOptionInfos
 argument_list|,
-argument|bool _IgnoreCase = false
+argument|bool IgnoreCase = false
 argument_list|)
 empty_stmt|;
 name|public

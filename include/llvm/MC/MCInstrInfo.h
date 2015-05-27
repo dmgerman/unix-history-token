@@ -76,9 +76,7 @@ name|namespace
 name|llvm
 block|{
 comment|//---------------------------------------------------------------------------
-comment|///
-comment|/// MCInstrInfo - Interface to description of machine instruction set
-comment|///
+comment|/// \brief Interface to description of machine instruction set.
 name|class
 name|MCInstrInfo
 block|{
@@ -106,8 +104,8 @@ decl_stmt|;
 comment|// Number of entries in the desc array
 name|public
 label|:
-comment|/// InitMCInstrInfo - Initialize MCInstrInfo, called by TableGen
-comment|/// auto-generated routines. *DO NOT USE*.
+comment|/// \brief Initialize MCInstrInfo, called by TableGen auto-generated routines.
+comment|/// *DO NOT USE*.
 name|void
 name|InitMCInstrInfo
 parameter_list|(
@@ -156,9 +154,8 @@ return|return
 name|NumOpcodes
 return|;
 block|}
-comment|/// get - Return the machine instruction descriptor that corresponds to the
+comment|/// \brief Return the machine instruction descriptor that corresponds to the
 comment|/// specified instruction opcode.
-comment|///
 specifier|const
 name|MCInstrDesc
 modifier|&
@@ -185,7 +182,7 @@ name|Opcode
 index|]
 return|;
 block|}
-comment|/// getName - Returns the name for the instructions with the given opcode.
+comment|/// \brief Returns the name for the instructions with the given opcode.
 specifier|const
 name|char
 modifier|*

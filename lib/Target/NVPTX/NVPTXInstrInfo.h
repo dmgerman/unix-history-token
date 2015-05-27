@@ -112,11 +112,7 @@ name|public
 operator|:
 name|explicit
 name|NVPTXInstrInfo
-argument_list|(
-name|NVPTXSubtarget
-operator|&
-name|STI
-argument_list|)
+argument_list|()
 block|;
 specifier|const
 name|NVPTXRegisterInfo

@@ -145,6 +145,16 @@ name|unsigned
 name|ResourceLCM
 decl_stmt|;
 comment|// Resource units per cycle. Latency normalization factor.
+name|unsigned
+name|computeInstrLatency
+argument_list|(
+specifier|const
+name|MCSchedClassDesc
+operator|&
+name|SCDesc
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 name|TargetSchedModel

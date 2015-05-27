@@ -256,13 +256,17 @@ specifier|const
 name|Pass
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|Pass
 argument_list|(
-argument|const Pass&
+specifier|const
+name|Pass
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|public
 label|:
@@ -729,10 +733,10 @@ argument|pid
 argument_list|)
 block|{}
 comment|// Force out-of-line virtual method.
-name|virtual
 operator|~
 name|ModulePass
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -796,10 +800,10 @@ argument|pid
 argument_list|)
 block|{}
 comment|// Force out-of-line virtual method.
-name|virtual
 operator|~
 name|ImmutablePass
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//

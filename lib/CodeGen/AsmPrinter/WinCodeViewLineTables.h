@@ -463,6 +463,7 @@ expr_stmt|;
 operator|~
 name|WinCodeViewLineTables
 argument_list|()
+name|override
 block|{
 for|for
 control|(

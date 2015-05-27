@@ -252,6 +252,7 @@ expr_stmt|;
 operator|~
 name|CriticalAntiDepBreaker
 argument_list|()
+name|override
 expr_stmt|;
 comment|/// Initialize anti-dep breaking for a new basic block.
 name|void

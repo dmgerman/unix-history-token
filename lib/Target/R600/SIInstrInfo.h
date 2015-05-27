@@ -246,6 +246,16 @@ name|RI
 return|;
 block|}
 name|bool
+name|isReallyTriviallyReMaterializable
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|AliasAnalysis *AA
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
 name|areLoadsFromSameBasePtr
 argument_list|(
 argument|SDNode *Load1
@@ -379,7 +389,7 @@ block|;
 name|unsigned
 name|commuteOpcode
 argument_list|(
-argument|unsigned Opcode
+argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
@@ -458,6 +468,30 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|bool
+name|FoldImmediate
+argument_list|(
+argument|MachineInstr *UseMI
+argument_list|,
+argument|MachineInstr *DefMI
+argument_list|,
+argument|unsigned Reg
+argument_list|,
+argument|MachineRegisterInfo *MRI
+argument_list|)
+specifier|const
+name|final
+block|;
+name|unsigned
+name|getMachineCSELookAheadLimit
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+literal|500
+return|;
+block|}
 name|bool
 name|isSALU
 argument_list|(
@@ -819,6 +853,26 @@ name|WQM
 return|;
 block|}
 name|bool
+name|isVGPRSpill
+argument_list|(
+argument|uint16_t Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|(
+name|Opcode
+argument_list|)
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|VGPRSpill
+return|;
+block|}
+name|bool
 name|isInlineConstant
 argument_list|(
 argument|const APInt&Imm
@@ -829,6 +883,8 @@ name|bool
 name|isInlineConstant
 argument_list|(
 argument|const MachineOperand&MO
+argument_list|,
+argument|unsigned OpSize
 argument_list|)
 specifier|const
 block|;
@@ -836,6 +892,8 @@ name|bool
 name|isLiteralConstant
 argument_list|(
 argument|const MachineOperand&MO
+argument_list|,
+argument|unsigned OpSize
 argument_list|)
 specifier|const
 block|;
@@ -847,17 +905,6 @@ argument_list|,
 argument|unsigned OpNo
 argument_list|,
 argument|const MachineOperand&MO
-argument_list|)
-specifier|const
-block|;
-comment|/// \brief Return true if the given offset Size in bytes can be folded into
-comment|/// the immediate offsets of a memory instruction for the given address space.
-name|bool
-name|canFoldOffset
-argument_list|(
-argument|unsigned OffsetSize
-argument_list|,
-argument|unsigned AS
 argument_list|)
 specifier|const
 block|;
@@ -877,6 +924,8 @@ argument_list|(
 argument|const MachineRegisterInfo&MRI
 argument_list|,
 argument|const MachineOperand&MO
+argument_list|,
+argument|unsigned OpSize
 argument_list|)
 specifier|const
 block|;

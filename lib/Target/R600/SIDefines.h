@@ -167,6 +167,12 @@ init|=
 literal|1
 operator|<<
 literal|20
+block|,
+name|VGPRSpill
+init|=
+literal|1
+operator|<<
+literal|21
 block|}
 enum|;
 block|}

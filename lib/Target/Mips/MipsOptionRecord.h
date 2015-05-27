@@ -148,11 +148,6 @@ argument_list|,
 name|MCContext
 operator|&
 name|Context
-argument_list|,
-specifier|const
-name|MCSubtargetInfo
-operator|&
-name|STI
 argument_list|)
 operator|:
 name|Streamer
@@ -162,12 +157,7 @@ argument_list|)
 block|,
 name|Context
 argument_list|(
-name|Context
-argument_list|)
-block|,
-name|STI
-argument_list|(
-argument|STI
+argument|Context
 argument_list|)
 block|{
 name|ri_gprmask
@@ -325,6 +315,7 @@ block|;   }
 operator|~
 name|MipsRegInfoRecord
 argument_list|()
+name|override
 block|{}
 name|void
 name|EmitMipsOptionRecord
@@ -348,11 +339,6 @@ block|;
 name|MCContext
 operator|&
 name|Context
-block|;
-specifier|const
-name|MCSubtargetInfo
-operator|&
-name|STI
 block|;
 specifier|const
 name|MCRegisterClass

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Instruction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -106,11 +112,14 @@ decl_stmt|;
 name|class
 name|TargetLibraryInfo
 decl_stmt|;
+name|class
+name|LoopInfo
+decl_stmt|;
 comment|/// Determine which bits of V are known to be either zero or one and return
 comment|/// them in the KnownZero/KnownOne bit sets.
 comment|///
 comment|/// This function is defined on values with integer type, values with pointer
-comment|/// type (but only if TD is non-null), and vectors of integers.  In the case
+comment|/// type, and vectors of integers.  In the case
 comment|/// where V is a vector, the known zero and known one values are the
 comment|/// same width as the vector element, and the bit is set only if it is true
 comment|/// for all of the elements in the vector.
@@ -131,10 +140,8 @@ name|KnownOne
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
+modifier|&
+name|DL
 parameter_list|,
 name|unsigned
 name|Depth
@@ -177,6 +184,44 @@ modifier|&
 name|KnownZero
 parameter_list|)
 function_decl|;
+comment|/// Returns true if LHS and RHS have no common bits set.
+name|bool
+name|haveNoCommonBitsSet
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 comment|/// ComputeSignBit - Determine whether the sign bit is known to be zero or
 comment|/// one.  Convenience wrapper around computeKnownBits.
 name|void
@@ -196,10 +241,8 @@ name|KnownOne
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
+modifier|&
+name|DL
 parameter_list|,
 name|unsigned
 name|Depth
@@ -238,6 +281,11 @@ parameter_list|(
 name|Value
 modifier|*
 name|V
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
 parameter_list|,
 name|bool
 name|OrZero
@@ -283,10 +331,8 @@ name|V
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
+modifier|&
+name|DL
 parameter_list|,
 name|unsigned
 name|Depth
@@ -319,7 +365,7 @@ comment|/// this predicate to simplify operations downstream.  Mask is known to 
 comment|/// zero for bits that V cannot have.
 comment|///
 comment|/// This function is defined on values with integer type, values with pointer
-comment|/// type (but only if TD is non-null), and vectors of integers.  In the case
+comment|/// type, and vectors of integers.  In the case
 comment|/// where V is a vector, the mask, known zero, and known one values are the
 comment|/// same width as the vector element, and the bit is set only if it is true
 comment|/// for all of the elements in the vector.
@@ -337,10 +383,8 @@ name|Mask
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
+modifier|&
+name|DL
 parameter_list|,
 name|unsigned
 name|Depth
@@ -385,10 +429,8 @@ name|Op
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
+modifier|&
+name|DL
 parameter_list|,
 name|unsigned
 name|Depth
@@ -464,6 +506,23 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// CannotBeOrderedLessThanZero - Return true if we can prove that the
+comment|/// specified FP value is either a NaN or never less than 0.0.
+comment|///
+name|bool
+name|CannotBeOrderedLessThanZero
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+name|unsigned
+name|Depth
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// isBytewiseValue - If the specified value can be set by repeating the same
 comment|/// byte in memory, return the i8 value that it is represented with.  This is
 comment|/// true for all i8 values obviously, but is also true for i32 0, i32 -1,
@@ -522,8 +581,8 @@ name|Offset
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
-name|TD
+modifier|&
+name|DL
 parameter_list|)
 function_decl|;
 specifier|static
@@ -544,8 +603,8 @@ name|Offset
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
-name|TD
+modifier|&
+name|DL
 parameter_list|)
 block|{
 return|return
@@ -562,7 +621,7 @@ operator|)
 argument_list|,
 name|Offset
 argument_list|,
-name|TD
+name|DL
 argument_list|)
 return|;
 block|}
@@ -620,10 +679,8 @@ name|V
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
+modifier|&
+name|DL
 parameter_list|,
 name|unsigned
 name|MaxLookup
@@ -645,10 +702,8 @@ name|V
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
-name|TD
-init|=
-name|nullptr
+modifier|&
+name|DL
 parameter_list|,
 name|unsigned
 name|MaxLookup
@@ -668,15 +723,40 @@ operator|(
 name|V
 operator|)
 argument_list|,
-name|TD
+name|DL
 argument_list|,
 name|MaxLookup
 argument_list|)
 return|;
 block|}
-comment|/// GetUnderlyingObjects - This method is similar to GetUnderlyingObject
-comment|/// except that it can look through phi and select instructions and return
-comment|/// multiple objects.
+comment|/// \brief This method is similar to GetUnderlyingObject except that it can
+comment|/// look through phi and select instructions and return multiple objects.
+comment|///
+comment|/// If LoopInfo is passed, loop phis are further analyzed.  If a pointer
+comment|/// accesses different objects in each iteration, we don't look through the
+comment|/// phi node. E.g. consider this loop nest:
+comment|///
+comment|///   int **A;
+comment|///   for (i)
+comment|///     for (j) {
+comment|///        A[i][j] = A[i-1][j] * B[j]
+comment|///     }
+comment|///
+comment|/// This is transformed by Load-PRE to stash away A[i] for the next iteration
+comment|/// of the outer loop:
+comment|///
+comment|///   Curr = A[0];          // Prev_0
+comment|///   for (i: 1..N) {
+comment|///     Prev = Curr;        // Prev = PHI (Prev_0, Curr)
+comment|///     Curr = A[i];
+comment|///     for (j: 0..N) {
+comment|///        Curr[j] = Prev[j] * B[j]
+comment|///     }
+comment|///   }
+comment|///
+comment|/// Since A[i] and A[i-1] are independent pointers, getUnderlyingObjects
+comment|/// should not assume that Curr and Prev share the same underlying object thus
+comment|/// it shouldn't look through the phi above.
 name|void
 name|GetUnderlyingObjects
 argument_list|(
@@ -694,8 +774,12 @@ name|Objects
 argument_list|,
 specifier|const
 name|DataLayout
+operator|&
+name|DL
+argument_list|,
+name|LoopInfo
 operator|*
-name|TD
+name|LI
 operator|=
 name|nullptr
 argument_list|,
@@ -716,6 +800,45 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
+comment|/// isDereferenceablePointer - Return true if this is always a dereferenceable
+comment|/// pointer. If the context instruction is specified perform context-sensitive
+comment|/// analysis and return true if the pointer is dereferenceable at the
+comment|/// specified instruction.
+name|bool
+name|isDereferenceablePointer
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|&
+name|DL
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CtxI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
 comment|/// isSafeToSpeculativelyExecute - Return true if the instruction does not
 comment|/// have any effects besides calculating the result and does not have
 comment|/// undefined behavior.
@@ -729,10 +852,16 @@ comment|/// for malloc and alloca because speculatively executing them might cau
 comment|/// memory leak. It also returns false for instructions related to control
 comment|/// flow, specifically terminators and PHI nodes.
 comment|///
-comment|/// This method only looks at the instruction itself and its operands, so if
-comment|/// this method returns true, it is safe to move the instruction as long as
-comment|/// the correct dominance relationships for the operands and users hold.
-comment|/// However, this method can return true for instructions that read memory;
+comment|/// If the CtxI is specified this method performs context-sensitive analysis
+comment|/// and returns true if it is safe to execute the instruction immediately
+comment|/// before the CtxI.
+comment|///
+comment|/// If the CtxI is NOT specified this method only looks at the instruction
+comment|/// itself and its operands, so if this method returns true, it is safe to
+comment|/// move the instruction as long as the correct dominance relationships for
+comment|/// the operands and users hold.
+comment|///
+comment|/// This method can return true for instructions that read memory;
 comment|/// for such instructions, moving them may change the resulting value.
 name|bool
 name|isSafeToSpeculativelyExecute
@@ -743,9 +872,23 @@ modifier|*
 name|V
 parameter_list|,
 specifier|const
-name|DataLayout
+name|Instruction
 modifier|*
-name|TD
+name|CtxI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
 init|=
 name|nullptr
 parameter_list|)
@@ -760,6 +903,40 @@ specifier|const
 name|Value
 modifier|*
 name|V
+parameter_list|,
+specifier|const
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// isKnownNonNullAt - Return true if this pointer couldn't possibly be null.
+comment|/// If the context instruction is specified perform context-sensitive analysis
+comment|/// and return true if the pointer couldn't possibly be null at the specified
+comment|/// instruction.
+name|bool
+name|isKnownNonNullAt
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CtxI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
 parameter_list|,
 specifier|const
 name|TargetLibraryInfo
@@ -784,13 +961,6 @@ specifier|const
 name|Instruction
 modifier|*
 name|CxtI
-parameter_list|,
-specifier|const
-name|DataLayout
-modifier|*
-name|DL
-init|=
-name|nullptr
 parameter_list|,
 specifier|const
 name|DominatorTree
@@ -824,7 +994,7 @@ name|RHS
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
+modifier|&
 name|DL
 parameter_list|,
 name|AssumptionCache
@@ -855,7 +1025,7 @@ name|RHS
 parameter_list|,
 specifier|const
 name|DataLayout
-modifier|*
+modifier|&
 name|DL
 parameter_list|,
 name|AssumptionCache
@@ -873,6 +1043,74 @@ modifier|*
 name|DT
 parameter_list|)
 function_decl|;
+comment|/// \brief Specific patterns of select instructions we can match.
+enum|enum
+name|SelectPatternFlavor
+block|{
+name|SPF_UNKNOWN
+init|=
+literal|0
+block|,
+name|SPF_SMIN
+block|,
+comment|// Signed minimum
+name|SPF_UMIN
+block|,
+comment|// Unsigned minimum
+name|SPF_SMAX
+block|,
+comment|// Signed maximum
+name|SPF_UMAX
+block|,
+comment|// Unsigned maximum
+name|SPF_ABS
+block|,
+comment|// Absolute value
+name|SPF_NABS
+comment|// Negated absolute value
+block|}
+enum|;
+comment|/// Pattern match integer [SU]MIN, [SU]MAX and ABS idioms, returning the kind
+comment|/// and providing the out parameter results if we successfully match.
+comment|///
+comment|/// If CastOp is not nullptr, also match MIN/MAX idioms where the type does
+comment|/// not match that of the original select. If this is the case, the cast
+comment|/// operation (one of Trunc,SExt,Zext) that must be done to transform the
+comment|/// type of LHS and RHS into the type of V is returned in CastOp.
+comment|///
+comment|/// For example:
+comment|///   %1 = icmp slt i32 %a, i32 4
+comment|///   %2 = sext i32 %a to i64
+comment|///   %3 = select i1 %1, i64 %2, i64 4
+comment|///
+comment|/// -> LHS = %a, RHS = i32 4, *CastOp = Instruction::SExt
+comment|///
+name|SelectPatternFlavor
+name|matchSelectPattern
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|,
+name|Value
+operator|*
+operator|&
+name|LHS
+argument_list|,
+name|Value
+operator|*
+operator|&
+name|RHS
+argument_list|,
+name|Instruction
+operator|::
+name|CastOps
+operator|*
+name|CastOp
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

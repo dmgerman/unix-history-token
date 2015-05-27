@@ -159,11 +159,6 @@ block|;
 name|bool
 name|UsePopc
 block|;
-specifier|const
-name|DataLayout
-name|DL
-block|;
-comment|// Calculates type size& alignment
 name|SparcInstrInfo
 name|InstrInfo
 block|;
@@ -257,19 +252,6 @@ block|{
 return|return
 operator|&
 name|TSInfo
-return|;
-block|}
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|DL
 return|;
 block|}
 name|bool

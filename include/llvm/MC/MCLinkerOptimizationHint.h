@@ -389,8 +389,8 @@ literal|3
 operator|>
 name|Args
 expr_stmt|;
-comment|/// Emit this directive in @p OutStream using the information available
-comment|/// in the given @p ObjWriter and @p Layout to get the address of the
+comment|/// Emit this directive in \p OutStream using the information available
+comment|/// in the given \p ObjWriter and \p Layout to get the address of the
 comment|/// arguments within the object file.
 name|void
 name|Emit_impl
@@ -505,8 +505,8 @@ name|Layout
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Get the size in bytes of this directive if emitted in @p ObjWriter with
-comment|/// the given @p Layout.
+comment|/// Get the size in bytes of this directive if emitted in \p ObjWriter with
+comment|/// the given \p Layout.
 name|uint64_t
 name|getEmitSize
 argument_list|(
@@ -567,6 +567,7 @@ block|{}
 operator|~
 name|raw_counting_ostream
 argument_list|()
+name|override
 block|{
 name|flush
 argument_list|()
@@ -641,8 +642,8 @@ return|return
 name|Directives
 return|;
 block|}
-comment|/// Add the directive of the given kind @p Kind with the given arguments
-comment|/// @p Args to the container.
+comment|/// Add the directive of the given kind \p Kind with the given arguments
+comment|/// \p Args to the container.
 name|void
 name|addDirective
 argument_list|(

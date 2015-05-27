@@ -87,6 +87,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|SparcSubtarget
+decl_stmt|;
 comment|/// SPII - This namespace holds all of the target specific flags that
 comment|/// instruction info tracks.
 comment|///

@@ -96,9 +96,12 @@ name|locked
 block|;
 name|unique_lock
 argument_list|(
-argument|const unique_lock&
+specifier|const
+name|unique_lock
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -108,7 +111,8 @@ specifier|const
 name|unique_lock
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:

@@ -303,8 +303,19 @@ name|I
 parameter_list|)
 block|{
 comment|// Add all of the nodes in I as new nodes in Int.
-name|copy
+name|Int
+operator|->
+name|Nodes
+operator|.
+name|insert
 argument_list|(
+name|Int
+operator|->
+name|Nodes
+operator|.
+name|end
+argument_list|()
+argument_list|,
 name|I
 operator|->
 name|Nodes
@@ -318,13 +329,6 @@ name|Nodes
 operator|.
 name|end
 argument_list|()
-argument_list|,
-name|back_inserter
-argument_list|(
-name|Int
-operator|->
-name|Nodes
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -400,15 +404,6 @@ comment|// See file header for conditions of use
 name|public
 operator|:
 typedef|typedef
-name|IntervalIterator
-operator|<
-name|NodeTy
-operator|,
-name|OrigContainer_t
-operator|>
-name|_Self
-expr_stmt|;
-typedef|typedef
 name|std
 operator|::
 name|forward_iterator_tag
@@ -424,7 +419,7 @@ argument|Function *M
 argument_list|,
 argument|bool OwnMemory
 argument_list|)
-block|:
+operator|:
 name|IOwnMem
 argument_list|(
 argument|OwnMemory
@@ -433,7 +428,7 @@ block|{
 name|OrigContainer
 operator|=
 name|M
-expr_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -456,11 +451,60 @@ block|}
 block|}
 name|IntervalIterator
 argument_list|(
+name|IntervalIterator
+operator|&&
+name|x
+argument_list|)
+operator|:
+name|IntStack
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|x
+operator|.
+name|IntStack
+argument_list|)
+argument_list|)
+operator|,
+name|Visited
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|x
+operator|.
+name|Visited
+argument_list|)
+argument_list|)
+operator|,
+name|OrigContainer
+argument_list|(
+name|x
+operator|.
+name|OrigContainer
+argument_list|)
+operator|,
+name|IOwnMem
+argument_list|(
+argument|x.IOwnMem
+argument_list|)
+block|{
+name|x
+operator|.
+name|IOwnMem
+operator|=
+name|false
+block|;   }
+name|IntervalIterator
+argument_list|(
 argument|IntervalPartition&IP
 argument_list|,
 argument|bool OwnMemory
 argument_list|)
-block|:
+operator|:
 name|IOwnMem
 argument_list|(
 argument|OwnMemory
@@ -470,7 +514,7 @@ name|OrigContainer
 operator|=
 operator|&
 name|IP
-expr_stmt|;
+block|;
 if|if
 condition|(
 operator|!
@@ -490,7 +534,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-specifier|inline
 operator|~
 name|IntervalIterator
 argument_list|()
@@ -518,13 +561,12 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-specifier|inline
 name|bool
 name|operator
 operator|==
 operator|(
 specifier|const
-name|_Self
+name|IntervalIterator
 operator|&
 name|x
 operator|)
@@ -538,13 +580,12 @@ operator|.
 name|IntStack
 return|;
 block|}
-specifier|inline
 name|bool
 name|operator
 operator|!=
 operator|(
 specifier|const
-name|_Self
+name|IntervalIterator
 operator|&
 name|x
 operator|)
@@ -552,14 +593,14 @@ specifier|const
 block|{
 return|return
 operator|!
-name|operator
-operator|==
 operator|(
+operator|*
+name|this
+operator|==
 name|x
 operator|)
 return|;
 block|}
-specifier|inline
 specifier|const
 name|Interval
 operator|*
@@ -578,7 +619,6 @@ operator|.
 name|first
 return|;
 block|}
-specifier|inline
 name|Interval
 modifier|*
 name|operator
@@ -594,7 +634,6 @@ operator|.
 name|first
 return|;
 block|}
-specifier|inline
 specifier|const
 name|Interval
 operator|*
@@ -614,7 +653,6 @@ block|}
 end_decl_stmt
 
 begin_expr_stmt
-specifier|inline
 name|Interval
 operator|*
 name|operator
@@ -635,7 +673,7 @@ block|}
 end_block
 
 begin_expr_stmt
-name|_Self
+name|IntervalIterator
 operator|&
 name|operator
 operator|++
@@ -772,8 +810,7 @@ return|;
 end_return
 
 begin_expr_stmt
-unit|}   inline
-name|_Self
+unit|}   IntervalIterator
 name|operator
 operator|++
 operator|(
@@ -781,7 +818,7 @@ name|int
 operator|)
 block|{
 comment|// Postincrement
-name|_Self
+name|IntervalIterator
 name|tmp
 operator|=
 operator|*

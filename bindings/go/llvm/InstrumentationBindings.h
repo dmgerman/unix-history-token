@@ -114,10 +114,14 @@ parameter_list|(
 name|LLVMPassManagerRef
 name|PM
 parameter_list|,
+name|int
+name|ABIListFilesNum
+parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|ABIListFile
+modifier|*
+name|ABIListFiles
 parameter_list|)
 function_decl|;
 ifdef|#

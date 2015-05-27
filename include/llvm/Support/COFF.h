@@ -2063,7 +2063,7 @@ block|}
 block|}
 struct|;
 enum|enum
-name|CodeViewLineTableIdentifiers
+name|CodeViewIdentifiers
 block|{
 name|DEBUG_SECTION_MAGIC
 init|=

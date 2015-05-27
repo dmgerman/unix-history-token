@@ -75,6 +75,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_SUPPORT_WINDOWSSUPPORT_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_SUPPORT_WINDOWSSUPPORT_H
+end_define
+
 begin_comment
 comment|// mingw-w64 tends to define it as 0x0502 in its headers.
 end_comment
@@ -450,7 +462,7 @@ comment|// True if Handle is valid.
 end_comment
 
 begin_expr_stmt
-unit|LLVM_EXPLICIT
+unit|explicit
 name|operator
 name|bool
 argument_list|()
@@ -795,6 +807,11 @@ end_decl_stmt
 begin_comment
 comment|// end namespace llvm.
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

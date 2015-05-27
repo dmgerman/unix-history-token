@@ -130,7 +130,9 @@ specifier|const
 name|MSP430Subtarget
 operator|*
 name|getSubtargetImpl
-argument_list|()
+argument_list|(
+argument|const Function&F
+argument_list|)
 specifier|const
 name|override
 block|{

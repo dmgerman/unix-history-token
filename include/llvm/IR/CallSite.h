@@ -202,8 +202,6 @@ name|bool
 operator|>
 name|I
 block|;
-name|public
-operator|:
 name|CallSiteBase
 argument_list|()
 operator|:
@@ -252,6 +250,7 @@ argument_list|(
 name|II
 argument_list|)
 block|; }
+name|explicit
 name|CallSiteBase
 argument_list|(
 argument|ValTy *II
@@ -265,7 +264,7 @@ argument_list|(
 name|II
 argument_list|)
 block|; }
-name|protected
+name|private
 operator|:
 comment|/// CallSiteBase::get - This static method is sort of like a constructor.  It
 comment|/// will create an appropriate call site for a Call or Invoke instruction, but
@@ -412,7 +411,7 @@ name|getPointer
 argument_list|()
 return|;
 block|}
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -877,6 +876,33 @@ name|CC
 argument_list|)
 argument_list|)
 block|;   }
+name|FunctionType
+operator|*
+name|getFunctionType
+argument_list|()
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getFunctionType
+argument_list|()
+argument_list|)
+block|;   }
+name|void
+name|mutateFunctionType
+argument_list|(
+argument|FunctionType *Ty
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_SETTER
+argument_list|(
+name|mutateFunctionType
+argument_list|(
+name|Ty
+argument_list|)
+argument_list|)
+block|;   }
 comment|/// getAttributes/setAttributes - get or set the parameter attributes of
 comment|/// the call.
 specifier|const
@@ -970,6 +996,23 @@ block|{
 name|CALLSITE_DELEGATE_GETTER
 argument_list|(
 name|getDereferenceableBytes
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// @brief Extract the number of dereferenceable_or_null bytes for a call or
+comment|/// parameter (0=unknown).
+name|uint64_t
+name|getDereferenceableOrNullBytes
+argument_list|(
+argument|uint16_t i
+argument_list|)
+specifier|const
+block|{
+name|CALLSITE_DELEGATE_GETTER
+argument_list|(
+name|getDereferenceableOrNullBytes
 argument_list|(
 name|i
 argument_list|)
@@ -1488,27 +1531,6 @@ decl|::
 name|op_iterator
 decl|>
 block|{
-typedef|typedef
-name|CallSiteBase
-operator|<
-name|Function
-operator|,
-name|Value
-operator|,
-name|User
-operator|,
-name|Instruction
-operator|,
-name|CallInst
-operator|,
-name|InvokeInst
-operator|,
-name|User
-operator|::
-name|op_iterator
-operator|>
-name|Base
-expr_stmt|;
 name|public
 label|:
 name|CallSite
@@ -1516,24 +1538,12 @@ argument_list|()
 block|{}
 name|CallSite
 argument_list|(
-argument|Base B
+argument|CallSiteBase B
 argument_list|)
 block|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|B
-argument_list|)
-block|{}
-name|CallSite
-argument_list|(
-name|Value
-operator|*
-name|V
-argument_list|)
-operator|:
-name|Base
-argument_list|(
-argument|V
 argument_list|)
 block|{}
 name|CallSite
@@ -1543,7 +1553,7 @@ operator|*
 name|CI
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|CI
 argument_list|)
@@ -1555,11 +1565,12 @@ operator|*
 name|II
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|II
 argument_list|)
 block|{}
+name|explicit
 name|CallSite
 argument_list|(
 name|Instruction
@@ -1567,9 +1578,22 @@ operator|*
 name|II
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|II
+argument_list|)
+block|{}
+name|explicit
+name|CallSite
+argument_list|(
+name|Value
+operator|*
+name|V
+argument_list|)
+operator|:
+name|CallSiteBase
+argument_list|(
+argument|V
 argument_list|)
 block|{}
 name|bool
@@ -1660,26 +1684,10 @@ name|CallSiteBase
 operator|<
 operator|>
 block|{
-typedef|typedef
-name|CallSiteBase
-operator|<
-operator|>
-name|Base
-expr_stmt|;
 name|public
 operator|:
 name|ImmutableCallSite
-argument_list|(
-specifier|const
-name|Value
-operator|*
-name|V
-argument_list|)
-operator|:
-name|Base
-argument_list|(
-argument|V
-argument_list|)
+argument_list|()
 block|{}
 name|ImmutableCallSite
 argument_list|(
@@ -1689,7 +1697,7 @@ operator|*
 name|CI
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|CI
 argument_list|)
@@ -1702,11 +1710,12 @@ operator|*
 name|II
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|II
 argument_list|)
 block|{}
+name|explicit
 name|ImmutableCallSite
 argument_list|(
 specifier|const
@@ -1715,9 +1724,23 @@ operator|*
 name|II
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|II
+argument_list|)
+block|{}
+name|explicit
+name|ImmutableCallSite
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+operator|:
+name|CallSiteBase
+argument_list|(
+argument|V
 argument_list|)
 block|{}
 name|ImmutableCallSite
@@ -1725,15 +1748,17 @@ argument_list|(
 argument|CallSite CS
 argument_list|)
 operator|:
-name|Base
+name|CallSiteBase
 argument_list|(
 argument|CS.getInstruction()
 argument_list|)
 block|{}
+block|}
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
-unit|};  }
+unit|}
 comment|// End llvm namespace
 end_comment
 

@@ -203,53 +203,53 @@ argument_list|()
 block|{}
 name|AsmToken
 argument_list|(
-argument|TokenKind _Kind
+argument|TokenKind Kind
 argument_list|,
-argument|StringRef _Str
+argument|StringRef Str
 argument_list|,
-argument|APInt _IntVal
+argument|APInt IntVal
 argument_list|)
 block|:
 name|Kind
 argument_list|(
-name|_Kind
+name|Kind
 argument_list|)
 operator|,
 name|Str
 argument_list|(
-name|_Str
+name|Str
 argument_list|)
 operator|,
 name|IntVal
 argument_list|(
-argument|_IntVal
+argument|IntVal
 argument_list|)
 block|{}
 name|AsmToken
 argument_list|(
-argument|TokenKind _Kind
+argument|TokenKind Kind
 argument_list|,
-argument|StringRef _Str
+argument|StringRef Str
 argument_list|,
-argument|int64_t _IntVal =
+argument|int64_t IntVal =
 literal|0
 argument_list|)
 operator|:
 name|Kind
 argument_list|(
-name|_Kind
+name|Kind
 argument_list|)
 operator|,
 name|Str
 argument_list|(
-name|_Str
+name|Str
 argument_list|)
 operator|,
 name|IntVal
 argument_list|(
 literal|64
 argument_list|,
-argument|_IntVal
+argument|IntVal
 argument_list|,
 argument|true
 argument_list|)
@@ -457,9 +457,12 @@ name|Err
 expr_stmt|;
 name|MCAsmLexer
 argument_list|(
-argument|const MCAsmLexer&
+specifier|const
+name|MCAsmLexer
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -469,7 +472,8 @@ specifier|const
 name|MCAsmLexer
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:

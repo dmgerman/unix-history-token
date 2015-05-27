@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"Thumb2RegisterInfo.h"
+file|"ThumbRegisterInfo.h"
 end_include
 
 begin_decl_stmt
@@ -87,7 +87,7 @@ range|:
 name|public
 name|ARMBaseInstrInfo
 block|{
-name|Thumb2RegisterInfo
+name|ThumbRegisterInfo
 name|RI
 block|;
 name|public
@@ -201,7 +201,7 @@ comment|/// such, whenever a client has an instance of instruction info, it shou
 comment|/// always be able to get register info as well (through this method).
 comment|///
 specifier|const
-name|Thumb2RegisterInfo
+name|ThumbRegisterInfo
 operator|&
 name|getRegisterInfo
 argument_list|()

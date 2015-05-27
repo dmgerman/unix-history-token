@@ -139,9 +139,13 @@ expr_stmt|;
 comment|// Noncopyable.
 name|RandomNumberGenerator
 argument_list|(
-argument|const RandomNumberGenerator&other
+specifier|const
+name|RandomNumberGenerator
+operator|&
+name|other
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|RandomNumberGenerator
 modifier|&
@@ -153,7 +157,8 @@ name|RandomNumberGenerator
 operator|&
 name|other
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|friend
 name|class

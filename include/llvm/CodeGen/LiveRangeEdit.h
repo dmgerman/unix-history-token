@@ -469,6 +469,7 @@ block|;   }
 operator|~
 name|LiveRangeEdit
 argument_list|()
+name|override
 block|{
 name|MRI
 operator|.

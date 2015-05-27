@@ -115,14 +115,46 @@ range|:
 name|public
 name|MCCodeEmitter
 block|{
-name|MCSubtargetInfo
-specifier|const
-operator|&
-name|MST
-block|;
 name|MCContext
 operator|&
 name|MCT
+block|;
+name|MCInstrInfo
+specifier|const
+operator|&
+name|MCII
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|unsigned
+operator|>
+name|Addend
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|bool
+operator|>
+name|Extended
+block|;
+comment|// helper routine for getMachineOpValue()
+name|unsigned
+name|getExprOpValue
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|const MCOperand&MO
+argument_list|,
+argument|const MCExpr *ME
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|)
+specifier|const
 block|;
 name|public
 operator|:
@@ -132,11 +164,6 @@ name|MCInstrInfo
 specifier|const
 operator|&
 name|aMII
-argument_list|,
-name|MCSubtargetInfo
-specifier|const
-operator|&
-name|aMST
 argument_list|,
 name|MCContext
 operator|&
@@ -151,7 +178,7 @@ argument_list|()
 specifier|const
 block|;
 name|void
-name|EncodeInstruction
+name|encodeInstruction
 argument_list|(
 argument|MCInst const&MI
 argument_list|,
@@ -195,9 +222,12 @@ name|private
 operator|:
 name|HexagonMCCodeEmitter
 argument_list|(
-argument|HexagonMCCodeEmitter const&
+name|HexagonMCCodeEmitter
+specifier|const
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -207,7 +237,8 @@ name|HexagonMCCodeEmitter
 specifier|const
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|; }
 decl_stmt|;
 comment|// class HexagonMCCodeEmitter

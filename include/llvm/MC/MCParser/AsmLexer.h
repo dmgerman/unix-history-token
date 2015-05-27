@@ -124,13 +124,17 @@ specifier|const
 name|AsmLexer
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|AsmLexer
 argument_list|(
-argument|const AsmLexer&
+specifier|const
+name|AsmLexer
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:
@@ -153,6 +157,7 @@ block|;
 operator|~
 name|AsmLexer
 argument_list|()
+name|override
 block|;
 name|void
 name|setBuffer

@@ -307,8 +307,12 @@ name|TargetMachine
 operator|&
 name|TM
 argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MCStreamer
-operator|&
+operator|>
 name|Streamer
 argument_list|)
 block|;
@@ -346,11 +350,23 @@ argument|Module&M
 argument_list|)
 name|override
 block|;
+name|bool
+name|PrintAsmOperand
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|unsigned AsmVariant
+argument_list|,
+argument|const char *ExtraCode
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+name|override
+block|;
 name|protected
 operator|:
-name|bool
-name|DisasmEnabled
-block|;
 name|std
 operator|::
 name|vector

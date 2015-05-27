@@ -106,15 +106,12 @@ block|,
 name|rparen
 block|,
 comment|// (  )
-name|backslash
-block|,
-comment|// \    (not /)
 name|exclaim
 block|,
 comment|// !
-name|hash
+name|bar
 block|,
-comment|// #
+comment|// |
 name|kw_x
 block|,
 name|kw_true
@@ -322,7 +319,11 @@ name|kw_inalloca
 block|,
 name|kw_cold
 block|,
+name|kw_convergent
+block|,
 name|kw_dereferenceable
+block|,
+name|kw_dereferenceable_or_null
 block|,
 name|kw_inlinehint
 block|,
@@ -620,6 +621,24 @@ comment|// !foo
 name|StringConstant
 block|,
 comment|// "foo"
+name|DwarfTag
+block|,
+comment|// DW_TAG_foo
+name|DwarfAttEncoding
+block|,
+comment|// DW_ATE_foo
+name|DwarfVirtuality
+block|,
+comment|// DW_VIRTUALITY_foo
+name|DwarfLang
+block|,
+comment|// DW_LANG_foo
+name|DwarfOp
+block|,
+comment|// DW_OP_foo
+name|DIFlag
+block|,
+comment|// DIFlagFoo
 comment|// Type valued tokens (TyVal).
 name|Type
 block|,

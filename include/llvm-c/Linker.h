@@ -33,7 +33,7 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-comment|/* Note: LLVMLinkerPreserveSource has no effect. */
+comment|/* This enum is provided for backwards-compatibility only. It has no effect. */
 typedef|typedef
 enum|enum
 block|{
@@ -41,15 +41,15 @@ name|LLVMLinkerDestroySource
 init|=
 literal|0
 block|,
-comment|/* Allow source module to be destroyed. */
-name|LLVMLinkerPreserveSource
+comment|/* This is the default behavior. */
+name|LLVMLinkerPreserveSource_Removed
 init|=
 literal|1
-comment|/* Preserve the source module. */
+comment|/* This option has been deprecated and                                           should not be used. */
 block|}
 name|LLVMLinkerMode
 typedef|;
-comment|/* Links the source module into the destination module, taking ownership  * of the source module away from the caller. Optionally returns a  * human-readable description of any errors that occurred in linking.  * OutMessage must be disposed with LLVMDisposeMessage. The return value  * is true if an error occurred, false otherwise. */
+comment|/* Links the source module into the destination module, taking ownership  * of the source module away from the caller. Optionally returns a  * human-readable description of any errors that occurred in linking.  * OutMessage must be disposed with LLVMDisposeMessage. The return value  * is true if an error occurred, false otherwise.  *  * Note that the linker mode parameter \p Unused is no longer used, and has  * no effect. */
 name|LLVMBool
 name|LLVMLinkModules
 parameter_list|(
@@ -60,7 +60,7 @@ name|LLVMModuleRef
 name|Src
 parameter_list|,
 name|LLVMLinkerMode
-name|Mode
+name|Unused
 parameter_list|,
 name|char
 modifier|*

@@ -122,11 +122,11 @@ name|MipsAsmBackend
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|Triple::OSType _OSType
+argument|Triple::OSType OSType
 argument_list|,
-argument|bool _isLittle
+argument|bool IsLittle
 argument_list|,
-argument|bool _is64Bit
+argument|bool Is64Bit
 argument_list|)
 operator|:
 name|MCAsmBackend
@@ -134,24 +134,24 @@ argument_list|()
 block|,
 name|OSType
 argument_list|(
-name|_OSType
+name|OSType
 argument_list|)
 block|,
 name|IsLittle
 argument_list|(
-name|_isLittle
+name|IsLittle
 argument_list|)
 block|,
 name|Is64Bit
 argument_list|(
-argument|_is64Bit
+argument|Is64Bit
 argument_list|)
 block|{}
 name|MCObjectWriter
 operator|*
 name|createObjectWriter
 argument_list|(
-argument|raw_ostream&OS
+argument|raw_pwrite_stream&OS
 argument_list|)
 specifier|const
 name|override

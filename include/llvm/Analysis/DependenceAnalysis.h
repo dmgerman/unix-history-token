@@ -717,11 +717,12 @@ block|;
 operator|~
 name|FullDependence
 argument_list|()
+name|override
 block|{
 name|delete
 index|[]
 name|DV
-block|;     }
+block|; }
 comment|/// isLoopIndependent - Returns true if this is a loop-independent
 comment|/// dependence.
 name|bool
@@ -872,13 +873,17 @@ specifier|const
 name|DependenceAnalysis
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|DependenceAnalysis
 argument_list|(
-argument|const DependenceAnalysis&
+specifier|const
+name|DependenceAnalysis
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:

@@ -427,17 +427,6 @@ return|;
 block|}
 name|private
 operator|:
-comment|// No implementation - assignment is unsupported.
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|ValueArray2
-operator|&
-name|other
-operator|)
-block|;
 specifier|const
 name|T1
 name|v1_

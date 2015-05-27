@@ -733,9 +733,12 @@ name|private
 label|:
 name|Query
 argument_list|(
-argument|const Query&
+specifier|const
+name|Query
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -745,7 +748,8 @@ specifier|const
 name|Query
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 block|}
 empty_stmt|;

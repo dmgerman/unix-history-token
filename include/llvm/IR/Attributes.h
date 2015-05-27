@@ -203,6 +203,9 @@ comment|///< Pass structure in an alloca
 name|Cold
 block|,
 comment|///< Marks function as being in a cold path.
+name|Convergent
+block|,
+comment|///< Can only be moved to control-equivalent blocks
 name|InlineHint
 block|,
 comment|///< Source said inlining was desirable
@@ -249,6 +252,9 @@ comment|///< Pointer is known to be not null
 name|Dereferenceable
 block|,
 comment|///< Pointer is known to be dereferenceable
+name|DereferenceableOrNull
+block|,
+comment|///< Pointer is either null or dereferenceable
 name|NoRedZone
 block|,
 comment|///< Disable redzone
@@ -416,6 +422,18 @@ name|uint64_t
 name|Bytes
 parameter_list|)
 function_decl|;
+specifier|static
+name|Attribute
+name|getWithDereferenceableOrNullBytes
+parameter_list|(
+name|LLVMContext
+modifier|&
+name|Context
+parameter_list|,
+name|uint64_t
+name|Bytes
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Attribute Accessors
 comment|//===--------------------------------------------------------------------===//
@@ -504,6 +522,13 @@ comment|/// \brief Returns the number of dereferenceable bytes from the
 comment|/// dereferenceable attribute (or zero if unknown).
 name|uint64_t
 name|getDereferenceableBytes
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Returns the number of dereferenceable_or_null bytes from the
+comment|/// dereferenceable_or_null attribute (or zero if unknown).
+name|uint64_t
+name|getDereferenceableOrNullBytes
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -793,7 +818,7 @@ modifier|&
 name|B
 parameter_list|)
 function_decl|;
-comment|/// \brief Add an attribute to the attribute set at the given index. Since
+comment|/// \brief Add an attribute to the attribute set at the given index. Because
 comment|/// attribute sets are immutable, this returns a new set.
 name|AttributeSet
 name|addAttribute
@@ -812,7 +837,7 @@ name|Attr
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Add an attribute to the attribute set at the given index. Since
+comment|/// \brief Add an attribute to the attribute set at the given index. Because
 comment|/// attribute sets are immutable, this returns a new set.
 name|AttributeSet
 name|addAttribute
@@ -847,7 +872,7 @@ name|Value
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Add attributes to the attribute set at the given index. Since
+comment|/// \brief Add attributes to the attribute set at the given index. Because
 comment|/// attribute sets are immutable, this returns a new set.
 name|AttributeSet
 name|addAttributes
@@ -865,8 +890,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Remove the specified attribute at the specified index from this
-comment|/// attribute list. Since attribute lists are immutable, this returns the new
-comment|/// list.
+comment|/// attribute list. Because attribute lists are immutable, this returns the
+comment|/// new list.
 name|AttributeSet
 name|removeAttribute
 argument_list|(
@@ -885,8 +910,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// \brief Remove the specified attributes at the specified index from this
-comment|/// attribute list. Since attribute lists are immutable, this returns the new
-comment|/// list.
+comment|/// attribute list. Because attribute lists are immutable, this returns the
+comment|/// new list.
 name|AttributeSet
 name|removeAttributes
 argument_list|(
@@ -899,6 +924,61 @@ name|Index
 argument_list|,
 name|AttributeSet
 name|Attrs
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Remove the specified attributes at the specified index from this
+comment|/// attribute list. Because attribute lists are immutable, this returns the
+comment|/// new list.
+name|AttributeSet
+name|removeAttributes
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|unsigned
+name|Index
+argument_list|,
+specifier|const
+name|AttrBuilder
+operator|&
+name|Attrs
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Add the dereferenceable attribute to the attribute set at the given
+comment|/// index. Because attribute sets are immutable, this returns a new set.
+name|AttributeSet
+name|addDereferenceableAttr
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|unsigned
+name|Index
+argument_list|,
+name|uint64_t
+name|Bytes
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Add the dereferenceable_or_null attribute to the attribute set at
+comment|/// the given index. Because attribute sets are immutable, this returns a new
+comment|/// set.
+name|AttributeSet
+name|addDereferenceableOrNullAttr
+argument_list|(
+name|LLVMContext
+operator|&
+name|C
+argument_list|,
+name|unsigned
+name|Index
+argument_list|,
+name|uint64_t
+name|Bytes
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1027,6 +1107,16 @@ decl_stmt|;
 comment|/// \brief Get the number of dereferenceable bytes (or zero if unknown).
 name|uint64_t
 name|getDereferenceableBytes
+argument_list|(
+name|unsigned
+name|Index
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Get the number of dereferenceable_or_null bytes (or zero if
+comment|/// unknown).
+name|uint64_t
+name|getDereferenceableOrNullBytes
 argument_list|(
 name|unsigned
 name|Index
@@ -1370,6 +1460,9 @@ block|;
 name|uint64_t
 name|DerefBytes
 block|;
+name|uint64_t
+name|DerefOrNullBytes
+block|;
 name|public
 operator|:
 name|AttrBuilder
@@ -1391,6 +1484,11 @@ literal|0
 argument_list|)
 block|,
 name|DerefBytes
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|DerefOrNullBytes
 argument_list|(
 literal|0
 argument_list|)
@@ -1417,6 +1515,11 @@ literal|0
 argument_list|)
 block|,
 name|DerefBytes
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|DerefOrNullBytes
 argument_list|(
 literal|0
 argument_list|)
@@ -1450,6 +1553,11 @@ literal|0
 argument_list|)
 block|,
 name|DerefBytes
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|DerefOrNullBytes
 argument_list|(
 literal|0
 argument_list|)
@@ -1532,6 +1640,26 @@ name|AttrBuilder
 operator|&
 name|B
 argument_list|)
+block|;
+comment|/// \brief Remove the attributes from the builder.
+name|AttrBuilder
+operator|&
+name|remove
+argument_list|(
+specifier|const
+name|AttrBuilder
+operator|&
+name|B
+argument_list|)
+block|;
+comment|/// \brief Return true if the builder has any attribute that's in the
+comment|/// specified builder.
+name|bool
+name|overlaps
+argument_list|(
+argument|const AttrBuilder&B
+argument_list|)
+specifier|const
 block|;
 comment|/// \brief Return true if the builder has the specified attribute.
 name|bool
@@ -1625,6 +1753,17 @@ return|return
 name|DerefBytes
 return|;
 block|}
+comment|/// \brief Retrieve the number of dereferenceable_or_null bytes, if the
+comment|/// dereferenceable_or_null attribute exists (zero is returned otherwise).
+name|uint64_t
+name|getDereferenceableOrNullBytes
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DerefOrNullBytes
+return|;
+block|}
 comment|/// \brief This turns an int alignment (which must be a power of 2) into the
 comment|/// form used internally in Attribute.
 name|AttrBuilder
@@ -1648,6 +1787,15 @@ comment|/// internally in Attribute.
 name|AttrBuilder
 operator|&
 name|addDereferenceableAttr
+argument_list|(
+argument|uint64_t Bytes
+argument_list|)
+block|;
+comment|/// \brief This turns the number of dereferenceable_or_null bytes into the
+comment|/// form used internally in Attribute.
+name|AttrBuilder
+operator|&
+name|addDereferenceableOrNullAttr
 argument_list|(
 argument|uint64_t Bytes
 argument_list|)
@@ -1875,15 +2023,13 @@ name|namespace
 name|AttributeFuncs
 block|{
 comment|/// \brief Which attributes cannot be applied to a type.
-name|AttributeSet
+name|AttrBuilder
 name|typeIncompatible
 parameter_list|(
+specifier|const
 name|Type
 modifier|*
 name|Ty
-parameter_list|,
-name|uint64_t
-name|Index
 parameter_list|)
 function_decl|;
 block|}

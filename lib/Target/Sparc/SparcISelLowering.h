@@ -86,6 +86,9 @@ name|namespace
 name|SPISD
 block|{
 enum|enum
+name|NodeType
+enum|:
+name|unsigned
 block|{
 name|FIRST_NUMBER
 init|=
@@ -173,6 +176,11 @@ argument_list|(
 name|TargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|SparcSubtarget
+operator|&
+name|STI
 argument_list|)
 block|;
 name|SDValue
@@ -270,6 +278,8 @@ operator|*
 operator|>
 name|getRegForInlineAsmConstraint
 argument_list|(
+argument|const TargetRegisterInfo *TRI
+argument_list|,
 argument|const std::string&Constraint
 argument_list|,
 argument|MVT VT

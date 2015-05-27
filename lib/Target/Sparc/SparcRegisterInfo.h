@@ -81,31 +81,14 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|SparcSubtarget
-decl_stmt|;
-name|class
-name|TargetInstrInfo
-decl_stmt|;
-name|class
-name|Type
-decl_stmt|;
 name|struct
 name|SparcRegisterInfo
 range|:
 name|public
 name|SparcGenRegisterInfo
 block|{
-name|SparcSubtarget
-operator|&
-name|Subtarget
-block|;
 name|SparcRegisterInfo
-argument_list|(
-name|SparcSubtarget
-operator|&
-name|st
-argument_list|)
+argument_list|()
 block|;
 comment|/// Code Generation virtual methods...
 specifier|const
@@ -113,7 +96,7 @@ name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF =nullptr
+argument|const MachineFunction *MF
 argument_list|)
 specifier|const
 name|override
@@ -123,6 +106,8 @@ name|uint32_t
 operator|*
 name|getCallPreservedMask
 argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
 argument|CallingConv::ID CC
 argument_list|)
 specifier|const

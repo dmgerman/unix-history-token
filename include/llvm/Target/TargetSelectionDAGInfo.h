@@ -80,9 +80,6 @@ block|{
 name|class
 name|DataLayout
 decl_stmt|;
-name|class
-name|TargetMachine
-decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// TargetSelectionDAGInfo - Targets can subclass this to parameterize the
 comment|/// SelectionDAG lowering and instruction selection process.
@@ -92,9 +89,12 @@ name|TargetSelectionDAGInfo
 block|{
 name|TargetSelectionDAGInfo
 argument_list|(
-argument|const TargetSelectionDAGInfo&
+specifier|const
+name|TargetSelectionDAGInfo
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -104,7 +104,8 @@ specifier|const
 name|TargetSelectionDAGInfo
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 specifier|const
 name|DataLayout

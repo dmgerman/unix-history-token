@@ -92,6 +92,7 @@ block|;
 operator|~
 name|SparcSelectionDAGInfo
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
 block|}

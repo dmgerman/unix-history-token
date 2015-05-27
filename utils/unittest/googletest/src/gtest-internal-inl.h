@@ -1629,7 +1629,6 @@ argument_list|(
 argument|NULL
 argument_list|)
 block|{}
-name|virtual
 name|String
 name|CurrentStackTrace
 argument_list|(
@@ -1637,11 +1636,12 @@ argument|int max_depth
 argument_list|,
 argument|int skip_count
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|UponLeavingGTest
 argument_list|()
+name|override
 block|;
 comment|// This string is inserted in place of stack frames that are part of
 comment|// Google Test's implementation.
@@ -1709,15 +1709,12 @@ argument_list|)
 block|;
 comment|// Implements the TestPartResultReporterInterface. Reports the test part
 comment|// result in the current test.
-name|virtual
 name|void
 name|ReportTestPartResult
 argument_list|(
-specifier|const
-name|TestPartResult
-operator|&
-name|result
+argument|const TestPartResult&result
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -1752,15 +1749,12 @@ argument_list|)
 block|;
 comment|// Implements the TestPartResultReporterInterface. The implementation just
 comment|// delegates to the current global test part result reporter of *unit_test_.
-name|virtual
 name|void
 name|ReportTestPartResult
 argument_list|(
-specifier|const
-name|TestPartResult
-operator|&
-name|result
+argument|const TestPartResult&result
 argument_list|)
+name|override
 block|;
 name|private
 operator|:

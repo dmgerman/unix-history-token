@@ -200,6 +200,9 @@ enum|;
 block|}
 comment|// end namespace PPCII
 name|class
+name|PPCSubtarget
+decl_stmt|;
+name|class
 name|PPCInstrInfo
 range|:
 name|public

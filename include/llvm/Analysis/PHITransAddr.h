@@ -105,10 +105,10 @@ name|Value
 modifier|*
 name|Addr
 decl_stmt|;
-comment|/// The DataLayout we are playing with if known, otherwise null.
+comment|/// The DataLayout we are playing with.
 specifier|const
 name|DataLayout
-modifier|*
+modifier|&
 name|DL
 decl_stmt|;
 comment|/// TLI - The target library info if known, otherwise null.
@@ -142,7 +142,7 @@ name|addr
 argument_list|,
 specifier|const
 name|DataLayout
-operator|*
+operator|&
 name|DL
 argument_list|,
 name|AssumptionCache

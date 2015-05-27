@@ -86,12 +86,7 @@ block|;
 name|public
 operator|:
 name|ARMRegisterInfo
-argument_list|(
-specifier|const
-name|ARMSubtarget
-operator|&
-name|STI
-argument_list|)
+argument_list|()
 block|; }
 decl_stmt|;
 block|}

@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"RuntimeDyld.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm-c/ExecutionEngine.h"
 end_include
 
@@ -97,6 +103,37 @@ name|class
 name|ObjectFile
 decl_stmt|;
 block|}
+name|class
+name|MCJITMemoryManager
+range|:
+name|public
+name|RuntimeDyld
+operator|::
+name|MemoryManager
+block|{
+name|public
+operator|:
+comment|/// This method is called after an object has been loaded into memory but
+comment|/// before relocations are applied to the loaded sections.  The object load
+comment|/// may have been initiated by MCJIT to resolve an external symbol for another
+comment|/// object that is being finalized.  In that case, the object about which
+comment|/// the memory manager is being notified will be finalized immediately after
+comment|/// the memory manager returns from this call.
+comment|///
+comment|/// Memory managers which are preparing code for execution in an external
+comment|/// address space can use this call to remap the section addresses for the
+comment|/// newly loaded object.
+name|virtual
+name|void
+name|notifyObjectLoaded
+argument_list|(
+argument|ExecutionEngine *EE
+argument_list|,
+argument|const object::ObjectFile&
+argument_list|)
+block|{}
+block|}
+decl_stmt|;
 comment|// RuntimeDyld clients often want to handle the memory management of
 comment|// what gets placed where. For JIT clients, this is the subset of
 comment|// JITMemoryManager required for dynamic loading of binaries.
@@ -105,12 +142,23 @@ comment|// FIXME: As the RuntimeDyld fills out, additional routines will be need
 comment|//        for the varying types of objects to be allocated.
 name|class
 name|RTDyldMemoryManager
+range|:
+name|public
+name|MCJITMemoryManager
+decl_stmt|,
+name|public
+name|RuntimeDyld
+decl|::
+name|SymbolResolver
 block|{
 name|RTDyldMemoryManager
 argument_list|(
-argument|const RTDyldMemoryManager&
+specifier|const
+name|RTDyldMemoryManager
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -120,136 +168,49 @@ specifier|const
 name|RTDyldMemoryManager
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
 name|RTDyldMemoryManager
 argument_list|()
 block|{}
-name|virtual
 operator|~
 name|RTDyldMemoryManager
 argument_list|()
+name|override
 expr_stmt|;
-comment|/// Allocate a memory block of (at least) the given size suitable for
-comment|/// executable code. The SectionID is a unique identifier assigned by the JIT
-comment|/// engine, and optionally recorded by the memory manager to access a loaded
-comment|/// section.
-name|virtual
-name|uint8_t
-modifier|*
-name|allocateCodeSection
-parameter_list|(
-name|uintptr_t
-name|Size
-parameter_list|,
-name|unsigned
-name|Alignment
-parameter_list|,
-name|unsigned
-name|SectionID
-parameter_list|,
-name|StringRef
-name|SectionName
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// Allocate a memory block of (at least) the given size suitable for data.
-comment|/// The SectionID is a unique identifier assigned by the JIT engine, and
-comment|/// optionally recorded by the memory manager to access a loaded section.
-name|virtual
-name|uint8_t
-modifier|*
-name|allocateDataSection
-parameter_list|(
-name|uintptr_t
-name|Size
-parameter_list|,
-name|unsigned
-name|Alignment
-parameter_list|,
-name|unsigned
-name|SectionID
-parameter_list|,
-name|StringRef
-name|SectionName
-parameter_list|,
-name|bool
-name|IsReadOnly
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-comment|/// Inform the memory manager about the total amount of memory required to
-comment|/// allocate all sections to be loaded:
-comment|/// \p CodeSize - the total size of all code sections
-comment|/// \p DataSizeRO - the total size of all read-only data sections
-comment|/// \p DataSizeRW - the total size of all read-write data sections
-comment|///
-comment|/// Note that by default the callback is disabled. To enable it
-comment|/// redefine the method needsToReserveAllocationSpace to return true.
-name|virtual
-name|void
-name|reserveAllocationSpace
-parameter_list|(
-name|uintptr_t
-name|CodeSize
-parameter_list|,
-name|uintptr_t
-name|DataSizeRO
-parameter_list|,
-name|uintptr_t
-name|DataSizeRW
-parameter_list|)
-block|{ }
-comment|/// Override to return true to enable the reserveAllocationSpace callback.
-name|virtual
-name|bool
-name|needsToReserveAllocationSpace
-parameter_list|()
-block|{
-return|return
-name|false
-return|;
-block|}
-comment|/// Register the EH frames with the runtime so that c++ exceptions work.
-comment|///
-comment|/// \p Addr parameter provides the local address of the EH frame section
-comment|/// data, while \p LoadAddr provides the address of the data in the target
-comment|/// address space.  If the section has not been remapped (which will usually
-comment|/// be the case for local execution) these two values will be the same.
-name|virtual
 name|void
 name|registerEHFrames
-parameter_list|(
+argument_list|(
 name|uint8_t
-modifier|*
+operator|*
 name|Addr
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|LoadAddr
-parameter_list|,
+argument_list|,
 name|size_t
 name|Size
-parameter_list|)
-function_decl|;
-name|virtual
+argument_list|)
+name|override
+decl_stmt|;
 name|void
 name|deregisterEHFrames
-parameter_list|(
+argument_list|(
 name|uint8_t
-modifier|*
+operator|*
 name|Addr
-parameter_list|,
+argument_list|,
 name|uint64_t
 name|LoadAddr
-parameter_list|,
+argument_list|,
 name|size_t
 name|Size
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// This method returns the address of the specified function or variable in
 comment|/// the current process.
 specifier|static
@@ -264,6 +225,8 @@ operator|&
 name|Name
 argument_list|)
 decl_stmt|;
+comment|/// Legacy symbol lookup - DEPRECATED! Please override findSymbol instead.
+comment|///
 comment|/// This method returns the address of the specified function or variable.
 comment|/// It is used to resolve symbols during module linking.
 name|virtual
@@ -282,6 +245,97 @@ return|return
 name|getSymbolAddressInProcess
 argument_list|(
 name|Name
+argument_list|)
+return|;
+block|}
+comment|/// This method returns a RuntimeDyld::SymbolInfo for the specified function
+comment|/// or variable. It is used to resolve symbols during module linking.
+comment|///
+comment|/// By default this falls back on the legacy lookup method:
+comment|/// 'getSymbolAddress'. The address returned by getSymbolAddress is treated as
+comment|/// a strong, exported symbol, consistent with historical treatment by
+comment|/// RuntimeDyld.
+comment|///
+comment|/// Clients writing custom RTDyldMemoryManagers are encouraged to override
+comment|/// this method and return a SymbolInfo with the flags set correctly. This is
+comment|/// necessary for RuntimeDyld to correctly handle weak and non-exported symbols.
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+name|findSymbol
+argument_list|(
+argument|const std::string&Name
+argument_list|)
+name|override
+block|{
+return|return
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+argument_list|(
+name|getSymbolAddress
+argument_list|(
+name|Name
+argument_list|)
+argument_list|,
+name|JITSymbolFlags
+operator|::
+name|Exported
+argument_list|)
+return|;
+block|}
+comment|/// Legacy symbol lookup -- DEPRECATED! Please override
+comment|/// findSymbolInLogicalDylib instead.
+comment|///
+comment|/// Default to treating all modules as separate.
+name|virtual
+name|uint64_t
+name|getSymbolAddressInLogicalDylib
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+comment|/// Default to treating all modules as separate.
+comment|///
+comment|/// By default this falls back on the legacy lookup method:
+comment|/// 'getSymbolAddressInLogicalDylib'. The address returned by
+comment|/// getSymbolAddressInLogicalDylib is treated as a strong, exported symbol,
+comment|/// consistent with historical treatment by RuntimeDyld.
+comment|///
+comment|/// Clients writing custom RTDyldMemoryManagers are encouraged to override
+comment|/// this method and return a SymbolInfo with the flags set correctly. This is
+comment|/// necessary for RuntimeDyld to correctly handle weak and non-exported symbols.
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+name|findSymbolInLogicalDylib
+argument_list|(
+argument|const std::string&Name
+argument_list|)
+name|override
+block|{
+return|return
+name|RuntimeDyld
+operator|::
+name|SymbolInfo
+argument_list|(
+name|getSymbolAddressInLogicalDylib
+argument_list|(
+name|Name
+argument_list|)
+argument_list|,
+name|JITSymbolFlags
+operator|::
+name|Exported
 argument_list|)
 return|;
 block|}
@@ -311,55 +365,6 @@ name|AbortOnFailure
 operator|=
 name|true
 argument_list|)
-decl_stmt|;
-comment|/// This method is called after an object has been loaded into memory but
-comment|/// before relocations are applied to the loaded sections.  The object load
-comment|/// may have been initiated by MCJIT to resolve an external symbol for another
-comment|/// object that is being finalized.  In that case, the object about which
-comment|/// the memory manager is being notified will be finalized immediately after
-comment|/// the memory manager returns from this call.
-comment|///
-comment|/// Memory managers which are preparing code for execution in an external
-comment|/// address space can use this call to remap the section addresses for the
-comment|/// newly loaded object.
-name|virtual
-name|void
-name|notifyObjectLoaded
-argument_list|(
-name|ExecutionEngine
-operator|*
-name|EE
-argument_list|,
-specifier|const
-name|object
-operator|::
-name|ObjectFile
-operator|&
-argument_list|)
-block|{}
-comment|/// This method is called when object loading is complete and section page
-comment|/// permissions can be applied.  It is up to the memory manager implementation
-comment|/// to decide whether or not to act on this method.  The memory manager will
-comment|/// typically allocate all sections as read-write and then apply specific
-comment|/// permissions when this method is called.  Code sections cannot be executed
-comment|/// until this function has been called.  In addition, any cache coherency
-comment|/// operations needed to reliably use the memory are also performed.
-comment|///
-comment|/// Returns true if an error occurred, false otherwise.
-name|virtual
-name|bool
-name|finalizeMemory
-argument_list|(
-name|std
-operator|::
-name|string
-operator|*
-name|ErrMsg
-operator|=
-name|nullptr
-argument_list|)
-init|=
-literal|0
 decl_stmt|;
 block|}
 empty_stmt|;

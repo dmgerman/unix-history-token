@@ -92,6 +92,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -99,12 +105,6 @@ begin_include
 include|#
 directive|include
 file|<functional>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
 end_include
 
 begin_decl_stmt
@@ -136,12 +136,15 @@ operator|::
 name|argument_type
 name|IndexT
 expr_stmt|;
+comment|// Prefer SmallVector with zero inline storage over std::vector. IndexedMaps
+comment|// can grow very large and SmallVector grows more efficiently as long as T
+comment|// is trivially copyable.
 typedef|typedef
-name|std
-operator|::
-name|vector
+name|SmallVector
 operator|<
 name|T
+operator|,
+literal|0
 operator|>
 name|StorageT
 expr_stmt|;

@@ -648,7 +648,7 @@ argument_list|(
 argument|std::forward<T&&>(Allocator)
 argument_list|)
 block|{}
-comment|// Manually implement a move constructor as we must clear the old allocators
+comment|// Manually implement a move constructor as we must clear the old allocator's
 comment|// slabs as a matter of correctness.
 name|BumpPtrAllocatorImpl
 argument_list|(
@@ -875,6 +875,14 @@ name|void
 name|Reset
 argument_list|()
 block|{
+name|DeallocateCustomSizedSlabs
+argument_list|()
+block|;
+name|CustomSizedSlabs
+operator|.
+name|clear
+argument_list|()
+block|;
 if|if
 condition|(
 name|Slabs
@@ -905,7 +913,7 @@ name|CurPtr
 operator|+
 name|SlabSize
 block|;
-comment|// Deallocate all but the first slab, and all custome sized slabs.
+comment|// Deallocate all but the first slab, and deallocate all custom-sized slabs.
 name|DeallocateSlabs
 argument_list|(
 name|std
@@ -943,17 +951,10 @@ operator|.
 name|end
 argument_list|()
 argument_list|)
-block|;
-name|DeallocateCustomSizedSlabs
-argument_list|()
-block|;
-name|CustomSizedSlabs
-operator|.
-name|clear
-argument_list|()
 block|;   }
 comment|/// \brief Allocate space at the specified alignment.
 name|LLVM_ATTRIBUTE_RETURNS_NONNULL
+name|LLVM_ATTRIBUTE_RETURNS_NOALIAS
 name|void
 operator|*
 name|Allocate
@@ -1607,43 +1608,6 @@ name|I
 argument_list|)
 argument_list|)
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
-comment|// Poison the memory so stale pointers crash sooner.  Note we must
-comment|// preserve the Size and NextPtr fields at the beginning.
-if|if
-condition|(
-name|AllocatedSlabSize
-operator|!=
-literal|0
-condition|)
-block|{
-name|sys
-operator|::
-name|Memory
-operator|::
-name|setRangeWritable
-argument_list|(
-operator|*
-name|I
-argument_list|,
-name|AllocatedSlabSize
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-operator|*
-name|I
-argument_list|,
-literal|0xCD
-argument_list|,
-name|AllocatedSlabSize
-argument_list|)
-expr_stmt|;
-block|}
-endif|#
-directive|endif
 name|Allocator
 operator|.
 name|Deallocate
@@ -1691,33 +1655,6 @@ name|PtrAndSize
 operator|.
 name|second
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|NDEBUG
-comment|// Poison the memory so stale pointers crash sooner.  Note we must
-comment|// preserve the Size and NextPtr fields at the beginning.
-name|sys
-operator|::
-name|Memory
-operator|::
-name|setRangeWritable
-argument_list|(
-name|Ptr
-argument_list|,
-name|Size
-argument_list|)
-expr_stmt|;
-name|memset
-argument_list|(
-name|Ptr
-argument_list|,
-literal|0xCD
-argument_list|,
-name|Size
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|Allocator
 operator|.
 name|Deallocate

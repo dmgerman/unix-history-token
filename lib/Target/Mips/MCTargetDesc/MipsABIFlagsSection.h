@@ -49,6 +49,18 @@ directive|include
 file|"llvm/MC/MCStreamer.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MipsABIFlags.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -59,230 +71,7 @@ decl_stmt|;
 struct|struct
 name|MipsABIFlagsSection
 block|{
-comment|// Values for the xxx_size bytes of an ABI flags structure.
-enum|enum
-name|AFL_REG
-block|{
-name|AFL_REG_NONE
-init|=
-literal|0x00
-block|,
-comment|// No registers.
-name|AFL_REG_32
-init|=
-literal|0x01
-block|,
-comment|// 32-bit registers.
-name|AFL_REG_64
-init|=
-literal|0x02
-block|,
-comment|// 64-bit registers.
-name|AFL_REG_128
-init|=
-literal|0x03
-comment|// 128-bit registers.
-block|}
-enum|;
-comment|// Masks for the ases word of an ABI flags structure.
-enum|enum
-name|AFL_ASE
-block|{
-name|AFL_ASE_DSP
-init|=
-literal|0x00000001
-block|,
-comment|// DSP ASE.
-name|AFL_ASE_DSPR2
-init|=
-literal|0x00000002
-block|,
-comment|// DSP R2 ASE.
-name|AFL_ASE_EVA
-init|=
-literal|0x00000004
-block|,
-comment|// Enhanced VA Scheme.
-name|AFL_ASE_MCU
-init|=
-literal|0x00000008
-block|,
-comment|// MCU (MicroController) ASE.
-name|AFL_ASE_MDMX
-init|=
-literal|0x00000010
-block|,
-comment|// MDMX ASE.
-name|AFL_ASE_MIPS3D
-init|=
-literal|0x00000020
-block|,
-comment|// MIPS-3D ASE.
-name|AFL_ASE_MT
-init|=
-literal|0x00000040
-block|,
-comment|// MT ASE.
-name|AFL_ASE_SMARTMIPS
-init|=
-literal|0x00000080
-block|,
-comment|// SmartMIPS ASE.
-name|AFL_ASE_VIRT
-init|=
-literal|0x00000100
-block|,
-comment|// VZ ASE.
-name|AFL_ASE_MSA
-init|=
-literal|0x00000200
-block|,
-comment|// MSA ASE.
-name|AFL_ASE_MIPS16
-init|=
-literal|0x00000400
-block|,
-comment|// MIPS16 ASE.
-name|AFL_ASE_MICROMIPS
-init|=
-literal|0x00000800
-block|,
-comment|// MICROMIPS ASE.
-name|AFL_ASE_XPA
-init|=
-literal|0x00001000
-comment|// XPA ASE.
-block|}
-enum|;
-comment|// Values for the isa_ext word of an ABI flags structure.
-enum|enum
-name|AFL_EXT
-block|{
-name|AFL_EXT_XLR
-init|=
-literal|1
-block|,
-comment|// RMI Xlr instruction.
-name|AFL_EXT_OCTEON2
-init|=
-literal|2
-block|,
-comment|// Cavium Networks Octeon2.
-name|AFL_EXT_OCTEONP
-init|=
-literal|3
-block|,
-comment|// Cavium Networks OcteonP.
-name|AFL_EXT_LOONGSON_3A
-init|=
-literal|4
-block|,
-comment|// Loongson 3A.
-name|AFL_EXT_OCTEON
-init|=
-literal|5
-block|,
-comment|// Cavium Networks Octeon.
-name|AFL_EXT_5900
-init|=
-literal|6
-block|,
-comment|// MIPS R5900 instruction.
-name|AFL_EXT_4650
-init|=
-literal|7
-block|,
-comment|// MIPS R4650 instruction.
-name|AFL_EXT_4010
-init|=
-literal|8
-block|,
-comment|// LSI R4010 instruction.
-name|AFL_EXT_4100
-init|=
-literal|9
-block|,
-comment|// NEC VR4100 instruction.
-name|AFL_EXT_3900
-init|=
-literal|10
-block|,
-comment|// Toshiba R3900 instruction.
-name|AFL_EXT_10000
-init|=
-literal|11
-block|,
-comment|// MIPS R10000 instruction.
-name|AFL_EXT_SB1
-init|=
-literal|12
-block|,
-comment|// Broadcom SB-1 instruction.
-name|AFL_EXT_4111
-init|=
-literal|13
-block|,
-comment|// NEC VR4111/VR4181 instruction.
-name|AFL_EXT_4120
-init|=
-literal|14
-block|,
-comment|// NEC VR4120 instruction.
-name|AFL_EXT_5400
-init|=
-literal|15
-block|,
-comment|// NEC VR5400 instruction.
-name|AFL_EXT_5500
-init|=
-literal|16
-block|,
-comment|// NEC VR5500 instruction.
-name|AFL_EXT_LOONGSON_2E
-init|=
-literal|17
-block|,
-comment|// ST Microelectronics Loongson 2E.
-name|AFL_EXT_LOONGSON_2F
-init|=
-literal|18
-comment|// ST Microelectronics Loongson 2F.
-block|}
-enum|;
-comment|// Values for the fp_abi word of an ABI flags structure.
-enum|enum
-name|Val_GNU_MIPS_ABI
-block|{
-name|Val_GNU_MIPS_ABI_FP_ANY
-init|=
-literal|0
-block|,
-name|Val_GNU_MIPS_ABI_FP_DOUBLE
-init|=
-literal|1
-block|,
-name|Val_GNU_MIPS_ABI_FP_XX
-init|=
-literal|5
-block|,
-name|Val_GNU_MIPS_ABI_FP_64
-init|=
-literal|6
-block|,
-name|Val_GNU_MIPS_ABI_FP_64A
-init|=
-literal|7
-block|}
-enum|;
-enum|enum
-name|AFL_FLAGS1
-block|{
-name|AFL_FLAGS1_ODDSPREG
-init|=
-literal|1
-block|}
-enum|;
-comment|// Internal representation of the values used in .module fp=value
+comment|// Internal representation of the fp_abi related values used in .module.
 name|enum
 name|class
 name|FpABIKind
@@ -294,6 +83,8 @@ operator|,
 name|S32
 operator|,
 name|S64
+operator|,
+name|SOFT
 block|}
 empty_stmt|;
 comment|// Version of flags structure.
@@ -309,17 +100,23 @@ name|uint8_t
 name|ISARevision
 decl_stmt|;
 comment|// The size of general purpose registers.
+name|Mips
+operator|::
 name|AFL_REG
 name|GPRSize
-decl_stmt|;
+expr_stmt|;
 comment|// The size of co-processor 1 registers.
+name|Mips
+operator|::
 name|AFL_REG
 name|CPR1Size
-decl_stmt|;
+expr_stmt|;
 comment|// The size of co-processor 2 registers.
+name|Mips
+operator|::
 name|AFL_REG
 name|CPR2Size
-decl_stmt|;
+expr_stmt|;
 comment|// Processor-specific extension.
 name|uint32_t
 name|ISAExtensionSet
@@ -362,16 +159,22 @@ argument_list|)
 operator|,
 name|GPRSize
 argument_list|(
+name|Mips
+operator|::
 name|AFL_REG_NONE
 argument_list|)
 operator|,
 name|CPR1Size
 argument_list|(
+name|Mips
+operator|::
 name|AFL_REG_NONE
 argument_list|)
 operator|,
 name|CPR2Size
 argument_list|(
+name|Mips
+operator|::
 name|AFL_REG_NONE
 argument_list|)
 operator|,
@@ -503,6 +306,8 @@ operator||=
 operator|(
 name|uint32_t
 operator|)
+name|Mips
+operator|::
 name|AFL_FLAGS1_ODDSPREG
 expr_stmt|;
 return|return
@@ -590,6 +395,30 @@ if|if
 condition|(
 name|P
 operator|.
+name|hasMips64r5
+argument_list|()
+condition|)
+name|ISARevision
+operator|=
+literal|5
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|P
+operator|.
+name|hasMips64r3
+argument_list|()
+condition|)
+name|ISARevision
+operator|=
+literal|3
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|P
+operator|.
 name|hasMips64r2
 argument_list|()
 condition|)
@@ -626,6 +455,30 @@ condition|)
 name|ISARevision
 operator|=
 literal|6
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|P
+operator|.
+name|hasMips32r5
+argument_list|()
+condition|)
+name|ISARevision
+operator|=
+literal|5
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|P
+operator|.
+name|hasMips32r3
+argument_list|()
+condition|)
+name|ISARevision
+operator|=
+literal|3
 expr_stmt|;
 elseif|else
 if|if
@@ -736,8 +589,12 @@ operator|.
 name|isGP64bit
 argument_list|()
 operator|?
+name|Mips
+operator|::
 name|AFL_REG_64
 operator|:
+name|Mips
+operator|::
 name|AFL_REG_32
 block|;   }
 name|template
@@ -755,11 +612,13 @@ if|if
 condition|(
 name|P
 operator|.
-name|abiUsesSoftFloat
+name|useSoftFloat
 argument_list|()
 condition|)
 name|CPR1Size
 operator|=
+name|Mips
+operator|::
 name|AFL_REG_NONE
 expr_stmt|;
 elseif|else
@@ -772,6 +631,8 @@ argument_list|()
 condition|)
 name|CPR1Size
 operator|=
+name|Mips
+operator|::
 name|AFL_REG_128
 expr_stmt|;
 else|else
@@ -782,8 +643,12 @@ operator|.
 name|isFP64bit
 argument_list|()
 condition|?
+name|Mips
+operator|::
 name|AFL_REG_64
 else|:
+name|Mips
+operator|::
 name|AFL_REG_32
 expr_stmt|;
 block|}
@@ -811,6 +676,8 @@ argument_list|()
 condition|)
 name|ASESet
 operator||=
+name|Mips
+operator|::
 name|AFL_ASE_DSP
 expr_stmt|;
 if|if
@@ -822,6 +689,8 @@ argument_list|()
 condition|)
 name|ASESet
 operator||=
+name|Mips
+operator|::
 name|AFL_ASE_DSPR2
 expr_stmt|;
 if|if
@@ -833,6 +702,8 @@ argument_list|()
 condition|)
 name|ASESet
 operator||=
+name|Mips
+operator|::
 name|AFL_ASE_MSA
 expr_stmt|;
 if|if
@@ -844,6 +715,8 @@ argument_list|()
 condition|)
 name|ASESet
 operator||=
+name|Mips
+operator|::
 name|AFL_ASE_MICROMIPS
 expr_stmt|;
 if|if
@@ -855,6 +728,8 @@ argument_list|()
 condition|)
 name|ASESet
 operator||=
+name|Mips
+operator|::
 name|AFL_ASE_MIPS16
 expr_stmt|;
 block|}
@@ -885,6 +760,20 @@ name|FpABIKind
 operator|::
 name|ANY
 expr_stmt|;
+if|if
+condition|(
+name|P
+operator|.
+name|useSoftFloat
+argument_list|()
+condition|)
+name|FpABI
+operator|=
+name|FpABIKind
+operator|::
+name|SOFT
+expr_stmt|;
+elseif|else
 if|if
 condition|(
 name|P

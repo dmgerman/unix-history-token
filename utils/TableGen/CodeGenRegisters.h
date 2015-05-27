@@ -84,7 +84,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SetVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SparseBitVector.h"
 end_include
 
 begin_include
@@ -180,6 +192,7 @@ specifier|const
 name|MaskRolPair
 name|Other
 operator|)
+specifier|const
 block|{
 return|return
 name|Mask
@@ -203,6 +216,7 @@ specifier|const
 name|MaskRolPair
 name|Other
 operator|)
+specifier|const
 block|{
 return|return
 name|Mask
@@ -318,45 +332,6 @@ name|getQualifiedName
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|// Order CodeGenSubRegIndex pointers by EnumValue.
-struct|struct
-name|Less
-block|{
-name|bool
-name|operator
-argument_list|()
-operator|(
-specifier|const
-name|CodeGenSubRegIndex
-operator|*
-name|A
-operator|,
-specifier|const
-name|CodeGenSubRegIndex
-operator|*
-name|B
-operator|)
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|A
-operator|&&
-name|B
-argument_list|)
-block|;
-return|return
-name|A
-operator|->
-name|EnumValue
-operator|<
-name|B
-operator|->
-name|EnumValue
-return|;
-block|}
-block|}
-struct|;
 comment|// Map of composite subreg indices.
 typedef|typedef
 name|std
@@ -369,8 +344,12 @@ operator|,
 name|CodeGenSubRegIndex
 operator|*
 operator|,
-name|Less
-operator|>
+name|deref
+operator|<
+name|llvm
+operator|::
+name|less
+operator|>>
 name|CompMap
 expr_stmt|;
 comment|// Returns the subreg index that results from composing this with Idx.
@@ -575,6 +554,32 @@ name|Composed
 decl_stmt|;
 block|}
 empty_stmt|;
+specifier|inline
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|CodeGenSubRegIndex
+operator|&
+name|A
+operator|,
+specifier|const
+name|CodeGenSubRegIndex
+operator|&
+name|B
+operator|)
+block|{
+return|return
+name|A
+operator|.
+name|EnumValue
+operator|<
+name|B
+operator|.
+name|EnumValue
+return|;
+block|}
 comment|/// CodeGenRegister - Represents a register definition.
 struct|struct
 name|CodeGenRegister
@@ -592,6 +597,9 @@ decl_stmt|;
 name|bool
 name|CoveredBySubRegs
 decl_stmt|;
+name|bool
+name|HasDisjunctSubRegs
+decl_stmt|;
 comment|// Map SubRegIndex -> Register.
 typedef|typedef
 name|std
@@ -604,10 +612,12 @@ operator|,
 name|CodeGenRegister
 operator|*
 operator|,
-name|CodeGenSubRegIndex
+name|deref
+operator|<
+name|llvm
 operator|::
-name|Less
-operator|>
+name|less
+operator|>>
 name|SubRegMap
 expr_stmt|;
 name|CodeGenRegister
@@ -792,11 +802,8 @@ return|;
 block|}
 comment|// List of register units in ascending order.
 typedef|typedef
-name|SmallVector
+name|SparseBitVector
 operator|<
-name|unsigned
-operator|,
-literal|16
 operator|>
 name|RegUnitList
 expr_stmt|;
@@ -810,8 +817,8 @@ operator|>
 name|RegUnitLaneMaskList
 expr_stmt|;
 comment|// How many entries in RegUnitList are native?
-name|unsigned
-name|NumNativeRegUnits
+name|RegUnitList
+name|NativeRegUnits
 decl_stmt|;
 comment|// Get the list of register units.
 comment|// This is only valid after computeSubRegs() completes.
@@ -844,31 +851,21 @@ name|slice
 argument_list|(
 literal|0
 argument_list|,
-name|NumNativeRegUnits
+name|NativeRegUnits
+operator|.
+name|count
+argument_list|()
 argument_list|)
 return|;
 block|}
 comment|// Get the native register units. This is a prefix of getRegUnits().
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
+name|RegUnitList
 name|getNativeRegUnits
 argument_list|()
 specifier|const
 block|{
 return|return
-name|makeArrayRef
-argument_list|(
-name|RegUnits
-argument_list|)
-operator|.
-name|slice
-argument_list|(
-literal|0
-argument_list|,
-name|NumNativeRegUnits
-argument_list|)
+name|NativeRegUnits
 return|;
 block|}
 name|void
@@ -896,7 +893,7 @@ name|RegBank
 parameter_list|)
 function_decl|;
 comment|// Adopt a register unit for pressure tracking.
-comment|// A unit is adopted iff its unit number is>= NumNativeRegUnits.
+comment|// A unit is adopted iff its unit number is>= NativeRegUnits.count().
 name|void
 name|adoptRegUnit
 parameter_list|(
@@ -906,7 +903,7 @@ parameter_list|)
 block|{
 name|RegUnits
 operator|.
-name|push_back
+name|set
 argument_list|(
 name|RUID
 argument_list|)
@@ -923,58 +920,17 @@ name|RegBank
 argument_list|)
 decl|const
 decl_stmt|;
-comment|// Order CodeGenRegister pointers by EnumValue.
-struct|struct
-name|Less
-block|{
-name|bool
-name|operator
-argument_list|()
-operator|(
-specifier|const
-name|CodeGenRegister
-operator|*
-name|A
-operator|,
-specifier|const
-name|CodeGenRegister
-operator|*
-name|B
-operator|)
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|A
-operator|&&
-name|B
-argument_list|)
-block|;
-return|return
-name|A
-operator|->
-name|EnumValue
-operator|<
-name|B
-operator|->
-name|EnumValue
-return|;
-block|}
-block|}
-struct|;
 comment|// Canonically ordered set.
 typedef|typedef
 name|std
 operator|::
-name|set
+name|vector
 operator|<
 specifier|const
 name|CodeGenRegister
 operator|*
-operator|,
-name|Less
 operator|>
-name|Set
+name|Vec
 expr_stmt|;
 name|private
 label|:
@@ -1045,12 +1001,64 @@ name|RegUnitLaneMasks
 decl_stmt|;
 block|}
 struct|;
+specifier|inline
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|CodeGenRegister
+operator|&
+name|A
+operator|,
+specifier|const
+name|CodeGenRegister
+operator|&
+name|B
+operator|)
+block|{
+return|return
+name|A
+operator|.
+name|EnumValue
+operator|<
+name|B
+operator|.
+name|EnumValue
+return|;
+block|}
+specifier|inline
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|CodeGenRegister
+operator|&
+name|A
+operator|,
+specifier|const
+name|CodeGenRegister
+operator|&
+name|B
+operator|)
+block|{
+return|return
+name|A
+operator|.
+name|EnumValue
+operator|==
+name|B
+operator|.
+name|EnumValue
+return|;
+block|}
 name|class
 name|CodeGenRegisterClass
 block|{
 name|CodeGenRegister
 operator|::
-name|Set
+name|Vec
 name|Members
 expr_stmt|;
 comment|// Allocation orders. Order[0] always contains all registers in Members.
@@ -1176,9 +1184,16 @@ operator|::
 name|string
 name|AltOrderSelect
 expr_stmt|;
+name|uint8_t
+name|AllocationPriority
+decl_stmt|;
 comment|/// Contains the combination of the lane masks of all subregisters.
 name|unsigned
 name|LaneMask
+decl_stmt|;
+comment|/// True if there are at least 2 subregisters which do not interfere.
+name|bool
+name|HasDisjunctSubRegs
 decl_stmt|;
 comment|// Return the Record that defined this class, or NULL if the class was
 comment|// created by TableGen.
@@ -1460,7 +1475,7 @@ comment|// getOrder(0).
 specifier|const
 name|CodeGenRegister
 operator|::
-name|Set
+name|Vec
 operator|&
 name|getMembers
 argument_list|()
@@ -1516,7 +1531,7 @@ block|{
 specifier|const
 name|CodeGenRegister
 operator|::
-name|Set
+name|Vec
 operator|*
 name|Members
 expr_stmt|;
@@ -1528,7 +1543,7 @@ name|SpillAlignment
 decl_stmt|;
 name|Key
 argument_list|(
-argument|const CodeGenRegister::Set *M
+argument|const CodeGenRegister::Vec *M
 argument_list|,
 argument|unsigned S =
 literal|0
@@ -2035,7 +2050,7 @@ argument_list|,
 specifier|const
 name|CodeGenRegister
 operator|::
-name|Set
+name|Vec
 operator|*
 name|Membs
 argument_list|,

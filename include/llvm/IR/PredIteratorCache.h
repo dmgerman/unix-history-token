@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -118,7 +124,7 @@ comment|/// Memory - This is the space that holds cached preds.
 name|BumpPtrAllocator
 name|Memory
 decl_stmt|;
-name|public
+name|private
 label|:
 comment|/// GetPreds - Get a cached list for the null-terminated predecessor list of
 comment|/// the specified block.  This can be used in a loop like this:
@@ -249,6 +255,48 @@ name|BlockToPredCountMap
 index|[
 name|BB
 index|]
+return|;
+block|}
+name|public
+label|:
+name|size_t
+name|size
+parameter_list|(
+name|BasicBlock
+modifier|*
+name|BB
+parameter_list|)
+block|{
+return|return
+name|GetNumPreds
+argument_list|(
+name|BB
+argument_list|)
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+name|get
+argument_list|(
+argument|BasicBlock *BB
+argument_list|)
+block|{
+return|return
+name|makeArrayRef
+argument_list|(
+name|GetPreds
+argument_list|(
+name|BB
+argument_list|)
+argument_list|,
+name|GetNumPreds
+argument_list|(
+name|BB
+argument_list|)
+argument_list|)
 return|;
 block|}
 comment|/// clear - Remove all information.

@@ -314,7 +314,7 @@ comment|// If the user's ::std::string and ::string are the same class due to
 end_comment
 
 begin_comment
-comment|// aliasing, he should define GTEST_HAS_GLOBAL_STRING to 0.
+comment|// aliasing, they should define GTEST_HAS_GLOBAL_STRING to 0.
 end_comment
 
 begin_comment
@@ -3128,15 +3128,14 @@ argument_list|()
 block|;
 name|public
 operator|:
-name|virtual
 name|void
 name|OnTestProgramStart
 argument_list|(
 argument|const UnitTest&
 comment|/*unit_test*/
 argument_list|)
+name|override
 block|{}
-name|virtual
 name|void
 name|OnTestIterationStart
 argument_list|(
@@ -3146,80 +3145,80 @@ argument_list|,
 argument|int
 comment|/*iteration*/
 argument_list|)
+name|override
 block|{}
-name|virtual
 name|void
 name|OnEnvironmentsSetUpStart
 argument_list|(
 argument|const UnitTest&
 comment|/*unit_test*/
 argument_list|)
+name|override
 block|{}
-name|virtual
 name|void
 name|OnEnvironmentsSetUpEnd
 argument_list|(
 argument|const UnitTest&
 comment|/*unit_test*/
 argument_list|)
+name|override
 block|{}
-name|virtual
 name|void
 name|OnTestCaseStart
 argument_list|(
 argument|const TestCase&
 comment|/*test_case*/
 argument_list|)
+name|override
 block|{}
-name|virtual
 name|void
 name|OnTestStart
 argument_list|(
 argument|const TestInfo&
 comment|/*test_info*/
 argument_list|)
+name|override
 block|{}
-name|virtual
 name|void
 name|OnTestPartResult
 argument_list|(
 argument|const TestPartResult&
 comment|/*test_part_result*/
 argument_list|)
-block|{}
-name|virtual
+name|override
+block|{    }
 name|void
 name|OnTestEnd
 argument_list|(
 argument|const TestInfo&
 comment|/*test_info*/
 argument_list|)
+name|override
 block|{}
-name|virtual
 name|void
 name|OnTestCaseEnd
 argument_list|(
 argument|const TestCase&
 comment|/*test_case*/
 argument_list|)
+name|override
 block|{}
-name|virtual
 name|void
 name|OnEnvironmentsTearDownStart
 argument_list|(
 argument|const UnitTest&
 comment|/*unit_test*/
 argument_list|)
+name|override
 block|{}
-name|virtual
 name|void
 name|OnEnvironmentsTearDownEnd
 argument_list|(
 argument|const UnitTest&
 comment|/*unit_test*/
 argument_list|)
+name|override
 block|{}
-name|virtual
 name|void
 name|OnTestIterationEnd
 argument_list|(
@@ -3229,14 +3228,15 @@ argument_list|,
 argument|int
 comment|/*iteration*/
 argument_list|)
+name|override
 block|{}
-name|virtual
 name|void
 name|OnTestProgramEnd
 argument_list|(
 argument|const UnitTest&
 comment|/*unit_test*/
 argument_list|)
+name|override
 block|{}
 block|}
 decl_stmt|;

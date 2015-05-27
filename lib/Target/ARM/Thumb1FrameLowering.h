@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"Thumb1RegisterInfo.h"
+file|"ThumbRegisterInfo.h"
 end_include
 
 begin_include
@@ -110,6 +110,8 @@ name|void
 name|emitPrologue
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 name|override

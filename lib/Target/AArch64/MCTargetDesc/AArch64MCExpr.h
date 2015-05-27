@@ -486,13 +486,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|static_cast
-operator|<
-name|VariantKind
-operator|>
-operator|(
 name|Kind
-operator|)
 return|;
 block|}
 comment|/// Get the expression this modifier applies to.
@@ -585,7 +579,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|FindAssociatedSection

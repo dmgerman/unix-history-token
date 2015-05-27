@@ -196,7 +196,6 @@ decl_stmt|;
 name|void
 name|EmitZerofill
 argument_list|(
-specifier|const
 name|MCSection
 operator|*
 name|Section

@@ -454,7 +454,7 @@ argument|MachineFunction&MF
 argument_list|,
 argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
+argument|ArrayRef<unsigned> Ops
 argument_list|,
 argument|int FrameIndex
 argument_list|)

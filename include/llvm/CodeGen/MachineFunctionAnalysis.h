@@ -115,6 +115,7 @@ block|;
 operator|~
 name|MachineFunctionAnalysis
 argument_list|()
+name|override
 block|;
 name|MachineFunction
 operator|&
