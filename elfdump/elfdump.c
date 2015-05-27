@@ -125,7 +125,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: elfdump.c 3189 2015-04-20 17:02:01Z emaste $"
+literal|"$Id: elfdump.c 3198 2015-05-14 18:36:19Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1140,6 +1140,12 @@ return|return
 literal|"EM_88K"
 return|;
 case|case
+name|EM_IAMCU
+case|:
+return|return
+literal|"EM_IAMCU"
+return|;
+case|case
 name|EM_860
 case|:
 return|return
@@ -1903,6 +1909,9 @@ literal|""
 return|;
 case|case
 name|EM_386
+case|:
+case|case
+name|EM_IAMCU
 case|:
 switch|switch
 condition|(
