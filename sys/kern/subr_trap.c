@@ -230,6 +230,18 @@ directive|include
 file|<security/mac/mac_framework.h>
 end_include
 
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|softdep_ast_cleanup
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Define the code needed before returning to user mode, for trap and  * syscall.  */
 end_comment
@@ -314,6 +326,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|softdep_ast_cleanup
+operator|!=
+name|NULL
+condition|)
+name|softdep_ast_cleanup
+argument_list|()
+expr_stmt|;
 comment|/* 	 * If this thread tickled GEOM, we need to wait for the giggling to 	 * stop before we return to userland 	 */
 if|if
 condition|(
@@ -494,6 +515,19 @@ literal|0
 argument_list|,
 operator|(
 literal|"userret: Returning with stop signals deferred"
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|td
+operator|->
+name|td_su
+operator|==
+name|NULL
+argument_list|,
+operator|(
+literal|"userret: Returning with SU cleanup request not handled"
 operator|)
 argument_list|)
 expr_stmt|;
