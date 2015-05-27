@@ -24,7 +24,7 @@ name|int64x2_t
 name|a2
 parameter_list|)
 block|{
-comment|// CHECK: test_vtstq_s64
+comment|// CHECK-LABEL: test_vtstq_s64
 return|return
 name|vtstq_s64
 argument_list|(
@@ -33,7 +33,7 @@ argument_list|,
 name|a2
 argument_list|)
 return|;
-comment|// CHECK: [[COMMONBITS:%[A-Za-z0-9.]+]] = and<2 x i64> %a1, %a2
+comment|// CHECK: [[COMMONBITS:%[A-Za-z0-9.]+]] = and<2 x i64> {{%a1, %a2|%a2, %a1}}
 comment|// CHECK: [[MASK:%[A-Za-z0-9.]+]] = icmp ne<2 x i64> [[COMMONBITS]], zeroinitializer
 comment|// CHECK: [[RES:%[A-Za-z0-9.]+]] = sext<2 x i1> [[MASK]] to<2 x i64>
 comment|// CHECK: ret<2 x i64> [[RES]]
@@ -51,7 +51,7 @@ name|uint64x2_t
 name|a2
 parameter_list|)
 block|{
-comment|// CHECK: test_vtstq_u64
+comment|// CHECK-LABEL: test_vtstq_u64
 return|return
 name|vtstq_u64
 argument_list|(
@@ -60,7 +60,7 @@ argument_list|,
 name|a2
 argument_list|)
 return|;
-comment|// CHECK: [[COMMONBITS:%[A-Za-z0-9.]+]] = and<2 x i64> %a1, %a2
+comment|// CHECK: [[COMMONBITS:%[A-Za-z0-9.]+]] = and<2 x i64> {{%a1, %a2|%a2, %a1}}
 comment|// CHECK: [[MASK:%[A-Za-z0-9.]+]] = icmp ne<2 x i64> [[COMMONBITS]], zeroinitializer
 comment|// CHECK: [[RES:%[A-Za-z0-9.]+]] = sext<2 x i1> [[MASK]] to<2 x i64>
 comment|// CHECK: ret<2 x i64> [[RES]]

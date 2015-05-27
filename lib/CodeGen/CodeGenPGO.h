@@ -108,11 +108,7 @@ block|{
 name|namespace
 name|CodeGen
 block|{
-name|class
-name|RegionCounter
-decl_stmt|;
-comment|/// Per-function PGO state. This class should generally not be used directly,
-comment|/// but instead through the CodeGenFunction and RegionCounter types.
+comment|/// Per-function PGO state.
 name|class
 name|CodeGenPGO
 block|{
@@ -262,33 +258,16 @@ operator|=
 name|Count
 expr_stmt|;
 block|}
-comment|/// Indicate that the current region is never reached, and thus should have a
-comment|/// counter value of zero. This is important so that subsequent regions can
-comment|/// correctly track their parent counts.
-name|void
-name|setCurrentRegionUnreachable
-parameter_list|()
-block|{
-name|setCurrentRegionCount
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// Check if an execution count is known for a given statement. If so, return
 comment|/// true and put the value in Count; else return false.
-name|bool
-name|getStmtCount
-parameter_list|(
-specifier|const
-name|Stmt
-modifier|*
-name|S
-parameter_list|,
+name|Optional
+operator|<
 name|uint64_t
-modifier|&
-name|Count
-parameter_list|)
+operator|>
+name|getStmtCount
+argument_list|(
+argument|const Stmt *S
+argument_list|)
 block|{
 if|if
 condition|(
@@ -296,20 +275,9 @@ operator|!
 name|StmtCountMap
 condition|)
 return|return
-name|false
+name|None
 return|;
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|Stmt
-operator|*
-operator|,
-name|uint64_t
-operator|>
-operator|::
-name|const_iterator
+name|auto
 name|I
 operator|=
 name|StmtCountMap
@@ -329,16 +297,12 @@ name|end
 argument_list|()
 condition|)
 return|return
-name|false
+name|None
 return|;
-name|Count
-operator|=
+return|return
 name|I
 operator|->
 name|second
-expr_stmt|;
-return|return
-name|true
 return|;
 block|}
 comment|/// If the execution count for the current statement is known, record that
@@ -352,65 +316,23 @@ modifier|*
 name|S
 parameter_list|)
 block|{
-name|uint64_t
-name|Count
-decl_stmt|;
 if|if
 condition|(
+name|auto
+name|Count
+init|=
 name|getStmtCount
 argument_list|(
 name|S
-argument_list|,
-name|Count
 argument_list|)
 condition|)
 name|setCurrentRegionCount
 argument_list|(
+operator|*
 name|Count
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// Calculate branch weights appropriate for PGO data
-name|llvm
-operator|::
-name|MDNode
-operator|*
-name|createBranchWeights
-argument_list|(
-argument|uint64_t TrueCount
-argument_list|,
-argument|uint64_t FalseCount
-argument_list|)
-expr_stmt|;
-name|llvm
-operator|::
-name|MDNode
-operator|*
-name|createBranchWeights
-argument_list|(
-name|ArrayRef
-operator|<
-name|uint64_t
-operator|>
-name|Weights
-argument_list|)
-expr_stmt|;
-name|llvm
-operator|::
-name|MDNode
-operator|*
-name|createLoopWeights
-argument_list|(
-specifier|const
-name|Stmt
-operator|*
-name|Cond
-argument_list|,
-name|RegionCounter
-operator|&
-name|Cnt
-argument_list|)
-expr_stmt|;
 comment|/// Check if we need to emit coverage mapping for a given declaration
 name|void
 name|checkGlobalDecl
@@ -556,7 +478,8 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
-comment|/// Emit code to increment the counter at the given index
+name|public
+label|:
 name|void
 name|emitCounterIncrement
 parameter_list|(
@@ -564,14 +487,15 @@ name|CGBuilderTy
 modifier|&
 name|Builder
 parameter_list|,
-name|unsigned
-name|Counter
+specifier|const
+name|Stmt
+modifier|*
+name|S
 parameter_list|)
 function_decl|;
-comment|/// Return the region counter for the given statement. This should only be
-comment|/// called on statements that have a dedicated counter.
-name|unsigned
-name|getRegionCounter
+comment|/// Return the region count for the counter at the given index.
+name|uint64_t
+name|getRegionCount
 parameter_list|(
 specifier|const
 name|Stmt
@@ -587,24 +511,6 @@ condition|)
 return|return
 literal|0
 return|;
-return|return
-operator|(
-operator|*
-name|RegionCounterMap
-operator|)
-index|[
-name|S
-index|]
-return|;
-block|}
-comment|/// Return the region count for the counter at the given index.
-name|uint64_t
-name|getRegionCount
-parameter_list|(
-name|unsigned
-name|Counter
-parameter_list|)
-block|{
 if|if
 condition|(
 operator|!
@@ -617,335 +523,27 @@ return|;
 return|return
 name|RegionCounts
 index|[
-name|Counter
+operator|(
+operator|*
+name|RegionCounterMap
+operator|)
+index|[
+name|S
+index|]
 index|]
 return|;
 block|}
-name|friend
-name|class
-name|RegionCounter
-decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// A counter for a particular region. This is the primary interface through
-comment|/// which clients manage PGO counters and their values.
-name|class
-name|RegionCounter
-block|{
-name|CodeGenPGO
-modifier|*
-name|PGO
-decl_stmt|;
-name|unsigned
-name|Counter
-decl_stmt|;
-name|uint64_t
-name|Count
-decl_stmt|;
-name|uint64_t
-name|ParentCount
-decl_stmt|;
-name|uint64_t
-name|RegionCount
-decl_stmt|;
-name|int64_t
-name|Adjust
-decl_stmt|;
-name|RegionCounter
-argument_list|(
-argument|CodeGenPGO&PGO
-argument_list|,
-argument|unsigned CounterIndex
-argument_list|)
-block|:
-name|PGO
-argument_list|(
-operator|&
-name|PGO
-argument_list|)
-operator|,
-name|Counter
-argument_list|(
-name|CounterIndex
-argument_list|)
-operator|,
-name|Count
-argument_list|(
-name|PGO
-operator|.
-name|getRegionCount
-argument_list|(
-name|Counter
-argument_list|)
-argument_list|)
-operator|,
-name|ParentCount
-argument_list|(
-name|PGO
-operator|.
-name|getCurrentRegionCount
-argument_list|()
-argument_list|)
-operator|,
-name|Adjust
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|public
-operator|:
-name|RegionCounter
-argument_list|(
-name|CodeGenPGO
-operator|&
-name|PGO
-argument_list|,
-specifier|const
-name|Stmt
-operator|*
-name|S
-argument_list|)
-operator|:
-name|PGO
-argument_list|(
-operator|&
-name|PGO
-argument_list|)
-operator|,
-name|Counter
-argument_list|(
-name|PGO
-operator|.
-name|getRegionCounter
-argument_list|(
-name|S
-argument_list|)
-argument_list|)
-operator|,
-name|Count
-argument_list|(
-name|PGO
-operator|.
-name|getRegionCount
-argument_list|(
-name|Counter
-argument_list|)
-argument_list|)
-operator|,
-name|ParentCount
-argument_list|(
-name|PGO
-operator|.
-name|getCurrentRegionCount
-argument_list|()
-argument_list|)
-operator|,
-name|Adjust
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-comment|/// Get the value of the counter. In most cases this is the number of times
-comment|/// the region of the counter was entered, but for switch labels it's the
-comment|/// number of direct jumps to that label.
-name|uint64_t
-name|getCount
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Count
-return|;
-block|}
-comment|/// Get the value of the counter with adjustments applied. Adjustments occur
-comment|/// when control enters or leaves the region abnormally; i.e., if there is a
-comment|/// jump to a label within the region, or if the function can return from
-comment|/// within the region. The adjusted count, then, is the value of the counter
-comment|/// at the end of the region.
-name|uint64_t
-name|getAdjustedCount
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Count
-operator|+
-name|Adjust
-return|;
-block|}
-comment|/// Get the value of the counter in this region's parent, i.e., the region
-comment|/// that was active when this region began. This is useful for deriving
-comment|/// counts in implicitly counted regions, like the false case of a condition
-comment|/// or the normal exits of a loop.
-name|uint64_t
-name|getParentCount
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ParentCount
-return|;
-block|}
-comment|/// Activate the counter by emitting an increment and starting to track
-comment|/// adjustments. If AddIncomingFallThrough is true, the current region count
-comment|/// will be added to the counter for the purposes of tracking the region.
-name|void
-name|beginRegion
-parameter_list|(
-name|CGBuilderTy
-modifier|&
-name|Builder
-parameter_list|,
-name|bool
-name|AddIncomingFallThrough
-init|=
-name|false
-parameter_list|)
-block|{
-name|beginRegion
-argument_list|(
-name|AddIncomingFallThrough
-argument_list|)
-expr_stmt|;
-name|PGO
-operator|->
-name|emitCounterIncrement
-argument_list|(
-name|Builder
-argument_list|,
-name|Counter
-argument_list|)
-expr_stmt|;
-block|}
-name|void
-name|beginRegion
-parameter_list|(
-name|bool
-name|AddIncomingFallThrough
-init|=
-name|false
-parameter_list|)
-block|{
-name|RegionCount
-operator|=
-name|Count
-expr_stmt|;
-if|if
-condition|(
-name|AddIncomingFallThrough
-condition|)
-name|RegionCount
-operator|+=
-name|PGO
-operator|->
-name|getCurrentRegionCount
-argument_list|()
-expr_stmt|;
-name|PGO
-operator|->
-name|setCurrentRegionCount
-argument_list|(
-name|RegionCount
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// For counters on boolean branches, begins tracking adjustments for the
-comment|/// uncounted path.
-name|void
-name|beginElseRegion
-parameter_list|()
-block|{
-name|RegionCount
-operator|=
-name|ParentCount
-operator|-
-name|Count
-expr_stmt|;
-name|PGO
-operator|->
-name|setCurrentRegionCount
-argument_list|(
-name|RegionCount
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// Reset the current region count.
-name|void
-name|setCurrentRegionCount
-parameter_list|(
-name|uint64_t
-name|CurrentCount
-parameter_list|)
-block|{
-name|RegionCount
-operator|=
-name|CurrentCount
-expr_stmt|;
-name|PGO
-operator|->
-name|setCurrentRegionCount
-argument_list|(
-name|RegionCount
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// Adjust for non-local control flow after emitting a subexpression or
-comment|/// substatement. This must be called to account for constructs such as gotos,
-comment|/// labels, and returns, so that we can ensure that our region's count is
-comment|/// correct in the code that follows.
-name|void
-name|adjustForControlFlow
-parameter_list|()
-block|{
-name|Adjust
-operator|+=
-name|PGO
-operator|->
-name|getCurrentRegionCount
-argument_list|()
-operator|-
-name|RegionCount
-expr_stmt|;
-comment|// Reset the region count in case this is called again later.
-name|RegionCount
-operator|=
-name|PGO
-operator|->
-name|getCurrentRegionCount
-argument_list|()
-expr_stmt|;
-block|}
-comment|/// Commit all adjustments to the current region. If the region is a loop,
-comment|/// the LoopAdjust value should be the count of all the breaks and continues
-comment|/// from the loop, to compensate for those counts being deducted from the
-comment|/// adjustments for the body of the loop.
-name|void
-name|applyAdjustmentsToRegion
-parameter_list|(
-name|uint64_t
-name|LoopAdjust
-parameter_list|)
-block|{
-name|PGO
-operator|->
-name|setCurrentRegionCount
-argument_list|(
-name|ParentCount
-operator|+
-name|Adjust
-operator|+
-name|LoopAdjust
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-empty_stmt|;
-block|}
-comment|// end namespace CodeGen
 block|}
 end_decl_stmt
 
 begin_comment
+comment|// end namespace CodeGen
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

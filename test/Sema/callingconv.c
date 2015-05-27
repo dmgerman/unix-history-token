@@ -546,27 +546,6 @@ name|void
 name|__attribute__
 argument_list|(
 operator|(
-name|pnaclcall
-operator|)
-argument_list|)
-name|pnaclfunc
-argument_list|(
-name|float
-operator|*
-name|a
-argument_list|)
-block|{}
-end_decl_stmt
-
-begin_comment
-comment|// expected-warning {{calling convention 'pnaclcall' ignored for this target}}
-end_comment
-
-begin_decl_stmt
-name|void
-name|__attribute__
-argument_list|(
-operator|(
 name|intel_ocl_bicc
 operator|)
 argument_list|)

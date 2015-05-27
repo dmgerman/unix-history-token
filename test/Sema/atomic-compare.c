@@ -149,5 +149,36 @@ comment|// expected-warning {{comparison of constant -1 with boolean expression 
 block|}
 end_function
 
+begin_typedef
+typedef|typedef
+atomic|_Atomic
+argument_list|(
+name|int
+argument_list|)
+name|Ty
+typedef|;
+end_typedef
+
+begin_function
+name|void
+name|PR23638
+parameter_list|(
+name|Ty
+modifier|*
+name|a
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|*
+name|a
+operator|==
+literal|1
+condition|)
+block|{}
+comment|// no warning
+block|}
+end_function
+
 end_unit
 

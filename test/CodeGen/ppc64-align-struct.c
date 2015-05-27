@@ -289,11 +289,11 @@ comment|// CHECK: define void @test1va(%struct.test1* noalias sret %agg.result, 
 end_comment
 
 begin_comment
-comment|// CHECK: %[[CUR:[^ ]+]] = load i8** %ap
+comment|// CHECK: %[[CUR:[^ ]+]] = load i8*, i8** %ap
 end_comment
 
 begin_comment
-comment|// CHECK: %[[NEXT:[^ ]+]] = getelementptr i8* %[[CUR]], i64 8
+comment|// CHECK: %[[NEXT:[^ ]+]] = getelementptr i8, i8* %[[CUR]], i64 8
 end_comment
 
 begin_comment
@@ -355,7 +355,7 @@ comment|// CHECK: define void @test2va(%struct.test2* noalias sret %agg.result, 
 end_comment
 
 begin_comment
-comment|// CHECK: %[[CUR:[^ ]+]] = load i8** %ap
+comment|// CHECK: %[[CUR:[^ ]+]] = load i8*, i8** %ap
 end_comment
 
 begin_comment
@@ -375,7 +375,7 @@ comment|// CHECK: %[[ALIGN:[^ ]+]] = inttoptr i64 %[[TMP2]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK: %[[NEXT:[^ ]+]] = getelementptr i8* %[[ALIGN]], i64 16
+comment|// CHECK: %[[NEXT:[^ ]+]] = getelementptr i8, i8* %[[ALIGN]], i64 16
 end_comment
 
 begin_comment
@@ -437,7 +437,7 @@ comment|// CHECK: define void @test3va(%struct.test3* noalias sret %agg.result, 
 end_comment
 
 begin_comment
-comment|// CHECK: %[[CUR:[^ ]+]] = load i8** %ap
+comment|// CHECK: %[[CUR:[^ ]+]] = load i8*, i8** %ap
 end_comment
 
 begin_comment
@@ -457,7 +457,7 @@ comment|// CHECK: %[[ALIGN:[^ ]+]] = inttoptr i64 %[[TMP2]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK: %[[NEXT:[^ ]+]] = getelementptr i8* %[[ALIGN]], i64 32
+comment|// CHECK: %[[NEXT:[^ ]+]] = getelementptr i8, i8* %[[ALIGN]], i64 32
 end_comment
 
 begin_comment
@@ -519,11 +519,11 @@ comment|// CHECK: define void @test4va(%struct.test4* noalias sret %agg.result, 
 end_comment
 
 begin_comment
-comment|// CHECK: %[[CUR:[^ ]+]] = load i8** %ap
+comment|// CHECK: %[[CUR:[^ ]+]] = load i8*, i8** %ap
 end_comment
 
 begin_comment
-comment|// CHECK: %[[NEXT:[^ ]+]] = getelementptr i8* %[[CUR]], i64 16
+comment|// CHECK: %[[NEXT:[^ ]+]] = getelementptr i8, i8* %[[CUR]], i64 16
 end_comment
 
 begin_comment
@@ -585,11 +585,11 @@ comment|// CHECK: define void @testva_longdouble(%struct.test_longdouble* noalia
 end_comment
 
 begin_comment
-comment|// CHECK: %[[CUR:[^ ]+]] = load i8** %ap
+comment|// CHECK: %[[CUR:[^ ]+]] = load i8*, i8** %ap
 end_comment
 
 begin_comment
-comment|// CHECK: %[[NEXT:[^ ]+]] = getelementptr i8* %[[CUR]], i64 16
+comment|// CHECK: %[[NEXT:[^ ]+]] = getelementptr i8, i8* %[[CUR]], i64 16
 end_comment
 
 begin_comment
@@ -663,7 +663,7 @@ comment|// CHECK: define void @testva_vector(%struct.test_vector* noalias sret %
 end_comment
 
 begin_comment
-comment|// CHECK: %[[CUR:[^ ]+]] = load i8** %ap
+comment|// CHECK: %[[CUR:[^ ]+]] = load i8*, i8** %ap
 end_comment
 
 begin_comment
@@ -683,7 +683,7 @@ comment|// CHECK: %[[ALIGN:[^ ]+]] = inttoptr i64 %[[TMP2]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK: %[[NEXT:[^ ]+]] = getelementptr i8* %[[ALIGN]], i64 16
+comment|// CHECK: %[[NEXT:[^ ]+]] = getelementptr i8, i8* %[[ALIGN]], i64 16
 end_comment
 
 begin_comment

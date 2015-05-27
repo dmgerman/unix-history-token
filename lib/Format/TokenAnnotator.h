@@ -168,6 +168,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|IsMultiVariableDeclStmt
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Affected
 argument_list|(
 name|false
@@ -285,43 +290,21 @@ argument_list|()
 expr_stmt|;
 for|for
 control|(
-name|SmallVectorImpl
-operator|<
-name|UnwrappedLine
-operator|>
-operator|::
-name|const_iterator
-name|I
-operator|=
+specifier|const
+specifier|auto
+modifier|&
+name|Child
+range|:
 name|Node
 operator|.
 name|Children
-operator|.
-name|begin
-argument_list|()
-operator|,
-name|E
-operator|=
-name|Node
-operator|.
-name|Children
-operator|.
-name|end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
 control|)
 block|{
 name|Children
 operator|.
 name|push_back
 argument_list|(
-argument|new AnnotatedLine(*I)
+argument|new AnnotatedLine(Child)
 argument_list|)
 expr_stmt|;
 name|Current
@@ -382,11 +365,43 @@ name|i
 index|]
 decl_stmt|;
 block|}
+name|FormatToken
+modifier|*
+name|Current
+init|=
+name|First
+decl_stmt|;
+while|while
+condition|(
+name|Current
+condition|)
+block|{
+name|Current
+operator|->
+name|Children
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|Current
+operator|->
+name|Role
+operator|.
+name|reset
+argument_list|()
+expr_stmt|;
+name|Current
+operator|=
+name|Current
+operator|->
+name|Next
+expr_stmt|;
+block|}
 block|}
 name|FormatToken
-operator|*
+modifier|*
 name|First
-expr_stmt|;
+decl_stmt|;
 name|FormatToken
 modifier|*
 name|Last
@@ -415,6 +430,9 @@ decl_stmt|;
 name|bool
 name|MightBeFunctionDecl
 decl_stmt|;
+name|bool
+name|IsMultiVariableDeclStmt
+decl_stmt|;
 comment|/// \c True if this line should be formatted, i.e. intersects directly or
 comment|/// indirectly with one of the input ranges.
 name|bool
@@ -434,9 +452,12 @@ label|:
 comment|// Disallow copying.
 name|AnnotatedLine
 argument_list|(
-argument|const AnnotatedLine&
+specifier|const
+name|AnnotatedLine
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -446,12 +467,25 @@ specifier|const
 name|AnnotatedLine
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Determines extra information about the tokens comprising an
+end_comment
+
+begin_comment
 comment|/// \c UnwrappedLine.
+end_comment
+
+begin_decl_stmt
 name|class
 name|TokenAnnotator
 block|{
@@ -620,11 +654,14 @@ modifier|&
 name|Keywords
 decl_stmt|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// end namespace format
 end_comment
 

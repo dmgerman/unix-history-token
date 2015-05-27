@@ -76,11 +76,11 @@ comment|// CHECK1-LABEL: define void @testC
 end_comment
 
 begin_comment
-comment|// CHECK1-LABEL: define available_externally void @gnu_ei_inline()
+comment|// CHECK1-LABEL: define available_externally i32 @ei()
 end_comment
 
 begin_comment
-comment|// CHECK1-LABEL: define available_externally i32 @ei()
+comment|// CHECK1-LABEL: define available_externally void @gnu_ei_inline()
 end_comment
 
 begin_comment
@@ -160,11 +160,11 @@ comment|// CHECK2-LABEL: define void @testC
 end_comment
 
 begin_comment
-comment|// CHECK2-LABEL: define available_externally void @gnu_ei_inline()
+comment|// CHECK2-LABEL: define available_externally i32 @foo()
 end_comment
 
 begin_comment
-comment|// CHECK2-LABEL: define available_externally i32 @foo()
+comment|// CHECK2-LABEL: define available_externally void @gnu_ei_inline()
 end_comment
 
 begin_comment
@@ -193,6 +193,10 @@ end_comment
 
 begin_comment
 comment|// CHECK3-LABEL: define available_externally void @_Z13gnu_ei_inlinev()
+end_comment
+
+begin_comment
+comment|// CHECK3-NOT: @_Z5testCv
 end_comment
 
 begin_comment
@@ -228,11 +232,11 @@ comment|// CHECK4-LABEL: define void @gnu_inline()
 end_comment
 
 begin_comment
-comment|// CHECK4-LABEL: define available_externally void @gnu_ei_inline()
+comment|// CHECK4-LABEL: define linkonce_odr i32 @foo()
 end_comment
 
 begin_comment
-comment|// CHECK4-LABEL: define linkonce_odr i32 @foo()
+comment|// CHECK4-LABEL: define available_externally void @gnu_ei_inline()
 end_comment
 
 begin_function

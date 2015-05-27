@@ -20,7 +20,7 @@ comment|// CHECK: @__llvm_profile_counters_foo = linkonce_odr hidden global [1 x
 end_comment
 
 begin_comment
-comment|// CHECK: @__llvm_profile_data_foo = linkonce_odr hidden constant { i32, i32, i64, i8*, i64* } { i32 3, i32 1, i64 {{[0-9]+}}, i8* getelementptr inbounds ([3 x i8]* @__llvm_profile_name_foo, i32 0, i32 0), i64* getelementptr inbounds ([1 x i64]* @__llvm_profile_counters_foo, i32 0, i32 0) }, section "__DATA,__llvm_prf_data", align 8
+comment|// CHECK: @__llvm_profile_data_foo = linkonce_odr hidden constant { i32, i32, i64, i8*, i64* } { i32 3, i32 1, i64 {{[0-9]+}}, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @__llvm_profile_name_foo, i32 0, i32 0), i64* getelementptr inbounds ([1 x i64], [1 x i64]* @__llvm_profile_counters_foo, i32 0, i32 0) }, section "__DATA,__llvm_prf_data", align 8
 end_comment
 
 begin_function

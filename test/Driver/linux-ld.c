@@ -292,6 +292,66 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
+comment|// RUN:     --target=arm-linux-androideabi \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_android_tree/sysroot \
+end_comment
+
+begin_comment
+comment|// RUN:     --rtlib=compiler-rt \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LD-RT-ANDROID %s
+end_comment
+
+begin_comment
+comment|// CHECK-LD-RT-ANDROID-NOT: warning:
+end_comment
+
+begin_comment
+comment|// CHECK-LD-RT-ANDROID: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-RT-ANDROID: "--eh-frame-hdr"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-RT-ANDROID: "-m" "armelf_linux_eabi"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-RT-ANDROID: "-dynamic-linker"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-RT-ANDROID: libclang_rt.builtins-arm-android.a" "-lgcc_s"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-RT-ANDROID: "-lc"
+end_comment
+
+begin_comment
+comment|// CHECK-LD-RT-ANDROID: libclang_rt.builtins-arm-android.a" "-lgcc_s"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
 comment|// RUN:     --target=x86_64-unknown-linux \
 end_comment
 
@@ -1616,6 +1676,74 @@ comment|//
 end_comment
 
 begin_comment
+comment|// Test that we can use -stdlib=libc++ in a build system even when it
+end_comment
+
+begin_comment
+comment|// occasionally links C code instead of C++ code.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes -x c %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     -stdlib=libc++ \
+end_comment
+
+begin_comment
+comment|// RUN:     -ccc-install-dir %S/Inputs/basic_linux_libcxx_tree/usr/bin \
+end_comment
+
+begin_comment
+comment|// RUN:     --gcc-toolchain="" \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_libcxx_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-BASIC-LIBCXX-C-LINK %s
+end_comment
+
+begin_comment
+comment|// CHECK-BASIC-LIBCXX-C-LINK-NOT: warning:
+end_comment
+
+begin_comment
+comment|// CHECK-BASIC-LIBCXX-C-LINK: "{{[^"]*}}clang{{[^"]*}}" "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-BASIC-LIBCXX-C-LINK: "-isysroot" "[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-BASIC-LIBCXX-C-LINK-NOT: "-internal-isystem" "[[SYSROOT]]/usr/bin/../include/c++/v1"
+end_comment
+
+begin_comment
+comment|// CHECK-BASIC-LIBCXX-C-LINK: "-internal-isystem" "[[SYSROOT]]/usr/local/include"
+end_comment
+
+begin_comment
+comment|// CHECK-BASIC-LIBCXX-C-LINK: "--sysroot=[[SYSROOT]]"
+end_comment
+
+begin_comment
+comment|// CHECK-BASIC-LIBCXX-C-LINK: "-L[[SYSROOT]]/usr/bin/../lib"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// Test a very broken version of multiarch that shipped in Ubuntu 11.04.
 end_comment
 
@@ -2416,6 +2544,18 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-PPC64-ELFv1 %s
 end_comment
 
 begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=powerpc64-linux-gnu -mabi=elfv1-qpx \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-PPC64-ELFv1 %s
+end_comment
+
+begin_comment
 comment|// CHECK-PPC64-ELFv1: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
@@ -2892,7 +3032,7 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=sparc-linux-gnu \
+comment|// RUN:     --target=sparc-unknown-linux-gnu \
 end_comment
 
 begin_comment
@@ -2920,7 +3060,35 @@ comment|// RUN: %clang %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     --target=sparcv9-linux-gnu \
+comment|// RUN:     --target=sparcel-unknown-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SPARCV8EL %s
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV8EL: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV8EL: "-m" "elf32_sparc"
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV8EL: "-dynamic-linker" "/lib/ld-linux.so.2"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=sparcv9-unknown-linux-gnu \
 end_comment
 
 begin_comment
@@ -4309,6 +4477,106 @@ end_comment
 
 begin_comment
 comment|// CHECK-ANDROID-PIE: "{{.*}}{{/|\\\\}}crtend_android.o"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=arm-linux-androideabi \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-NO-DEFAULT-PIE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=arm-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-NO-DEFAULT-PIE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=aarch64-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-NO-DEFAULT-PIE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=arm64-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-NO-DEFAULT-PIE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=mipsel-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-NO-DEFAULT-PIE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=mips64el-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-NO-DEFAULT-PIE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=i686-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-NO-DEFAULT-PIE %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     --target=x86_64-linux-android \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ANDROID-NO-DEFAULT-PIE %s
+end_comment
+
+begin_comment
+comment|// CHECK-ANDROID-NO-DEFAULT-PIE-NOT: -pie
 end_comment
 
 begin_comment

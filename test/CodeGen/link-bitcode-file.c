@@ -11,6 +11,18 @@ begin_comment
 comment|// RUN: not %clang_cc1 -triple i386-pc-linux-gnu -DBITCODE -mlink-bitcode-file %t.bc -O3 -emit-llvm -o - %s 2>&1 | FileCheck -check-prefix=CHECK-BC %s
 end_comment
 
+begin_comment
+comment|// Make sure we deal with failure to load the file.
+end_comment
+
+begin_comment
+comment|// RUN: not %clang_cc1 -triple i386-pc-linux-gnu -mlink-bitcode-file no-such-file.bc \
+end_comment
+
+begin_comment
+comment|// RUN:    -emit-llvm -o - %s 2>&1 | FileCheck -check-prefix=CHECK-NO-FILE %s
+end_comment
+
 begin_function_decl
 name|int
 name|f
@@ -78,6 +90,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// CHECK-NO-FILE: fatal error: cannot open file 'no-such-file.bc'
+end_comment
 
 end_unit
 

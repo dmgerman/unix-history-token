@@ -307,6 +307,36 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_enum
+enum|enum
+block|{
+name|x
+init|=
+literal|18446744073709551615ULL
+block|}
+name|g7
+enum|;
+end_enum
+
+begin_decl_stmt
+name|short
+name|chk1
+index|[
+name|__alignof__
+argument_list|(
+name|g7
+argument_list|)
+operator|==
+literal|8
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|// PR5637
 end_comment

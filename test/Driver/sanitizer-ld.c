@@ -608,11 +608,15 @@ comment|// CHECK-TSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.tsan-x86_64
 end_comment
 
 begin_comment
-comment|// CHECK-TSAN-LINUX-CXX-NOT: "-export-dynamic"
+comment|// CHECK-TSAN-LINUX-CXX: "--dynamic-list={{.*}}libclang_rt.tsan-x86_64.a.syms"
 end_comment
 
 begin_comment
-comment|// CHECK-TSAN-LINUX-CXX: "--dynamic-list={{.*}}libclang_rt.tsan-x86_64.a.syms"
+comment|// CHECK-TSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.tsan_cxx-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-LINUX-CXX: "--dynamic-list={{.*}}libclang_rt.tsan_cxx-x86_64.a.syms"
 end_comment
 
 begin_comment
@@ -672,11 +676,15 @@ comment|// CHECK-MSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.msan-x86_64
 end_comment
 
 begin_comment
-comment|// CHECK-MSAN-LINUX-CXX-NOT: "-export-dynamic"
+comment|// CHECK-MSAN-LINUX-CXX: "--dynamic-list={{.*}}libclang_rt.msan-x86_64.a.syms"
 end_comment
 
 begin_comment
-comment|// CHECK-MSAN-LINUX-CXX: "--dynamic-list={{.*}}libclang_rt.msan-x86_64.a.syms"
+comment|// CHECK-MSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.msan_cxx-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-LINUX-CXX: "--dynamic-list={{.*}}libclang_rt.msan_cxx-x86_64.a.syms"
 end_comment
 
 begin_comment
@@ -724,23 +732,11 @@ comment|// CHECK-UBSAN-LINUX-NOT: libclang_rt.asan
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN-LINUX-NOT: libclang_rt.ubsan_cxx
+comment|// CHECK-UBSAN-LINUX-NOT: libclang_rt.ubsan_standalone_cxx
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN-LINUX: "-whole-archive" "{{.*}}libclang_rt.san-i386.a" "-no-whole-archive"
-end_comment
-
-begin_comment
-comment|// CHECK-UBSAN-LINUX-NOT: libclang_rt.asan
-end_comment
-
-begin_comment
-comment|// CHECK-UBSAN-LINUX-NOT: libclang_rt.ubsan_cxx
-end_comment
-
-begin_comment
-comment|// CHECK-UBSAN-LINUX: "-whole-archive" "{{.*}}libclang_rt.ubsan-i386.a" "-no-whole-archive"
+comment|// CHECK-UBSAN-LINUX: "-whole-archive" "{{.*}}libclang_rt.ubsan_standalone-i386.a" "-no-whole-archive"
 end_comment
 
 begin_comment
@@ -748,7 +744,7 @@ comment|// CHECK-UBSAN-LINUX-NOT: libclang_rt.asan
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN-LINUX-NOT: libclang_rt.ubsan_cxx
+comment|// CHECK-UBSAN-LINUX-NOT: libclang_rt.ubsan_standalone_cxx
 end_comment
 
 begin_comment
@@ -780,7 +776,7 @@ comment|// CHECK-UBSAN-LINUX-LINK-CXX-NOT: "-lstdc++"
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN-LINUX-LINK-CXX: "-whole-archive" "{{.*}}libclang_rt.ubsan_cxx-i386.a" "-no-whole-archive"
+comment|// CHECK-UBSAN-LINUX-LINK-CXX: "-whole-archive" "{{.*}}libclang_rt.ubsan_standalone_cxx-i386.a" "-no-whole-archive"
 end_comment
 
 begin_comment
@@ -816,7 +812,7 @@ comment|// CHECK-UBSAN-LINUX-CXX-NOT: libclang_rt.asan
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.san-i386.a" "-no-whole-archive"
+comment|// CHECK-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.ubsan_standalone-i386.a" "-no-whole-archive"
 end_comment
 
 begin_comment
@@ -824,31 +820,7 @@ comment|// CHECK-UBSAN-LINUX-CXX-NOT: libclang_rt.asan
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.ubsan-i386.a" "-no-whole-archive"
-end_comment
-
-begin_comment
-comment|// CHECK-UBSAN-LINUX-CXX-NOT: libclang_rt.asan
-end_comment
-
-begin_comment
-comment|// CHECK-UBSAN-LINUX-CXX: "--dynamic-list={{.*}}libclang_rt.ubsan-i386.a.syms"
-end_comment
-
-begin_comment
-comment|// CHECK-UBSAN-LINUX-CXX-NOT: libclang_rt.asan
-end_comment
-
-begin_comment
-comment|// CHECK-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.ubsan_cxx-i386.a" "-no-whole-archive"
-end_comment
-
-begin_comment
-comment|// CHECK-UBSAN-LINUX-CXX-NOT: libclang_rt.asan
-end_comment
-
-begin_comment
-comment|// CHECK-UBSAN-LINUX-CXX: "--dynamic-list={{.*}}libclang_rt.ubsan_cxx-i386.a.syms"
+comment|// CHECK-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.ubsan_standalone_cxx-i386.a" "-no-whole-archive"
 end_comment
 
 begin_comment
@@ -888,23 +860,11 @@ comment|// CHECK-ASAN-UBSAN-LINUX: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
 begin_comment
-comment|// CHECK-ASAN-UBSAN-LINUX-NOT: libclang_rt.san
-end_comment
-
-begin_comment
 comment|// CHECK-ASAN-UBSAN-LINUX: "-whole-archive" "{{.*}}libclang_rt.asan-i386.a" "-no-whole-archive"
 end_comment
 
 begin_comment
-comment|// CHECK-ASAN-UBSAN-LINUX-NOT: libclang_rt.san
-end_comment
-
-begin_comment
-comment|// CHECK-ASAN-UBSAN-LINUX: "-whole-archive" "{{.*}}libclang_rt.ubsan-i386.a" "-no-whole-archive"
-end_comment
-
-begin_comment
-comment|// CHECK-ASAN-UBSAN-LINUX-NOT: libclang_rt.ubsan_cxx
+comment|// CHECK-ASAN-UBSAN-LINUX-NOT: libclang_rt.ubsan
 end_comment
 
 begin_comment
@@ -936,23 +896,15 @@ comment|// CHECK-ASAN-UBSAN-LINUX-CXX: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
 begin_comment
-comment|// CHECK-ASAN-UBSAN-LINUX-CXX-NOT: libclang_rt.san
-end_comment
-
-begin_comment
 comment|// CHECK-ASAN-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.asan-i386.a" "-no-whole-archive"
 end_comment
 
 begin_comment
-comment|// CHECK-ASAN-UBSAN-LINUX-CXX-NOT: libclang_rt.san
+comment|// CHECK-ASAN-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.asan_cxx-i386.a" "-no-whole-archive"
 end_comment
 
 begin_comment
-comment|// CHECK-ASAN-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.ubsan-i386.a" "-no-whole-archive"
-end_comment
-
-begin_comment
-comment|// CHECK-ASAN-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.ubsan_cxx-i386.a" "-no-whole-archive"
+comment|// CHECK-ASAN-UBSAN-LINUX-CXX-NOT: libclang_rt.ubsan
 end_comment
 
 begin_comment
@@ -961,6 +913,62 @@ end_comment
 
 begin_comment
 comment|// CHECK-ASAN-UBSAN-LINUX-CXX: "-lpthread"
+end_comment
+
+begin_comment
+comment|// RUN: %clangxx -fsanitize=memory,undefined %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MSAN-UBSAN-LINUX-CXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-UBSAN-LINUX-CXX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.msan-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-MSAN-UBSAN-LINUX-CXX-NOT: libclang_rt.ubsan
+end_comment
+
+begin_comment
+comment|// RUN: %clangxx -fsanitize=thread,undefined %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-TSAN-UBSAN-LINUX-CXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-UBSAN-LINUX-CXX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-UBSAN-LINUX-CXX: "-whole-archive" "{{.*}}libclang_rt.tsan-x86_64.a" "-no-whole-archive"
+end_comment
+
+begin_comment
+comment|// CHECK-TSAN-UBSAN-LINUX-CXX-NOT: libclang_rt.ubsan
 end_comment
 
 begin_comment
@@ -1000,15 +1008,7 @@ comment|// CHECK-UBSAN-LINUX-SHARED-NOT: --dynamic-list
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN-LINUX-SHARED-NOT: libclang_rt.ubsan-i386.a"
-end_comment
-
-begin_comment
-comment|// CHECK-UBSAN-LINUX-SHARED-NOT: --export-dynamic
-end_comment
-
-begin_comment
-comment|// CHECK-UBSAN-LINUX-SHARED-NOT: --dynamic-list
+comment|// CHECK-UBSAN-LINUX-SHARED-NOT: libclang_rt.ubsan
 end_comment
 
 begin_comment
@@ -1052,54 +1052,6 @@ comment|// CHECK-LSAN-LINUX: "-ldl"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsanitize=leak,undefined %s -### -o %t.o 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:     -target x86_64-unknown-linux \
-end_comment
-
-begin_comment
-comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck --check-prefix=CHECK-LSAN-UBSAN-LINUX %s
-end_comment
-
-begin_comment
-comment|// CHECK-LSAN-UBSAN-LINUX: "{{.*}}ld{{(.exe)?}}"
-end_comment
-
-begin_comment
-comment|// CHECK-LSAN-UBSAN-LINUX-NOT: libclang_rt.san
-end_comment
-
-begin_comment
-comment|// CHECK-LSAN-UBSAN-LINUX: "-whole-archive" "{{.*}}libclang_rt.lsan-x86_64.a" "-no-whole-archive"
-end_comment
-
-begin_comment
-comment|// CHECK-LSAN-UBSAN-LINUX-NOT: libclang_rt.san
-end_comment
-
-begin_comment
-comment|// CHECK-LSAN-UBSAN-LINUX: "-whole-archive" "{{.*}}libclang_rt.ubsan-x86_64.a" "-no-whole-archive"
-end_comment
-
-begin_comment
-comment|// CHECK-LSAN-UBSAN-LINUX-NOT: libclang_rt.ubsan_cxx
-end_comment
-
-begin_comment
-comment|// CHECK-LSAN-UBSAN-LINUX-NOT: "-lstdc++"
-end_comment
-
-begin_comment
-comment|// CHECK-LSAN-UBSAN-LINUX: "-lpthread"
-end_comment
-
-begin_comment
 comment|// RUN: %clang -fsanitize=leak,address %s -### -o %t.o 2>&1 \
 end_comment
 
@@ -1129,6 +1081,38 @@ end_comment
 
 begin_comment
 comment|// CHECK-LSAN-ASAN-LINUX-NOT: libclang_rt.lsan
+end_comment
+
+begin_comment
+comment|// RUN: %clangxx -fsanitize=address %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -mmacosx-version-min=10.6 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-apple-darwin13.4.0 \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-ASAN-DARWIN106-CXX %s
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-DARWIN106-CXX: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-DARWIN106-CXX: libclang_rt.asan_osx_dynamic.dylib
+end_comment
+
+begin_comment
+comment|// CHECK-ASAN-DARWIN106-CXX-NOT: -lc++abi
 end_comment
 
 end_unit

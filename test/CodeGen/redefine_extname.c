@@ -68,7 +68,7 @@ comment|// Check that this also works with variables names
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* @alias
+comment|// CHECK:   load i32, i32* @alias
 end_comment
 
 end_unit

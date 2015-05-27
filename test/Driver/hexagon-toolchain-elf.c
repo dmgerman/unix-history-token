@@ -1884,34 +1884,6 @@ comment|// RUN:   | FileCheck -check-prefix=CHECK024 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -target hexagon-unknown-elf     \
-end_comment
-
-begin_comment
-comment|// RUN:   -ccc-install-dir %S/Inputs/hexagon_tree/qc/bin \
-end_comment
-
-begin_comment
-comment|// RUN:   --gcc-toolchain="" \
-end_comment
-
-begin_comment
-comment|// RUN:   -fPIC \
-end_comment
-
-begin_comment
-comment|// RUN:   -msmall-data-threshold=8 \
-end_comment
-
-begin_comment
-comment|// RUN:   %s 2>&1 \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck -check-prefix=CHECK024 %s
-end_comment
-
-begin_comment
 comment|// CHECK024:      "-cc1"
 end_comment
 

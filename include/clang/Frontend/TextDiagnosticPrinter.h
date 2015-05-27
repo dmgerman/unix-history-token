@@ -147,10 +147,10 @@ argument_list|,
 argument|bool OwnsOutputStream = false
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|TextDiagnosticPrinter
 argument_list|()
+name|override
 block|;
 comment|/// setPrefix - Set the diagnostic printer prefix string, which will be
 comment|/// printed at the start of any diagnostics. If empty, no prefix string is

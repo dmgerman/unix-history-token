@@ -8,19 +8,19 @@ comment|// Test to check number of lexical scope identified in debug info.
 end_comment
 
 begin_comment
-comment|// CHECK: DW_TAG_lexical_block
+comment|// CHECK: !DILexicalBlock(
 end_comment
 
 begin_comment
-comment|// CHECK: DW_TAG_lexical_block
+comment|// CHECK: !DILexicalBlock(
 end_comment
 
 begin_comment
-comment|// CHECK: DW_TAG_lexical_block
+comment|// CHECK: !DILexicalBlock(
 end_comment
 
 begin_comment
-comment|// CHECK: DW_TAG_lexical_block
+comment|// CHECK: !DILexicalBlock(
 end_comment
 
 begin_function_decl

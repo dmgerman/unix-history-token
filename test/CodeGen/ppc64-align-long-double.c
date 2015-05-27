@@ -45,7 +45,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: %{{[0-9]}} = load ppc_fp128* %{{[a-zA-Z0-9]+}}, align 16
+comment|// CHECK: %{{[0-9]}} = load ppc_fp128, ppc_fp128* %{{[a-zA-Z0-9]+}}, align 16
 end_comment
 
 end_unit

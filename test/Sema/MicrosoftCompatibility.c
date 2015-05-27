@@ -151,5 +151,11 @@ begin_comment
 comment|/* expected-warning {{__declspec attribute '__noreturn__' is not supported}} */
 end_comment
 
+begin_decl_stmt
+name|size_t
+name|x
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

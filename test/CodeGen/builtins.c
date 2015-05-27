@@ -344,8 +344,6 @@ literal|1.0l
 operator|)
 argument_list|)
 expr_stmt|;
-comment|// FIXME:
-comment|//  P(isinf_sign, (1.0));
 name|Q
 argument_list|(
 name|nan
@@ -481,6 +479,24 @@ operator|(
 literal|1.
 operator|,
 literal|2.
+operator|)
+argument_list|)
+expr_stmt|;
+name|P
+argument_list|(
+name|isinf
+argument_list|,
+operator|(
+literal|1.
+operator|)
+argument_list|)
+expr_stmt|;
+name|P
+argument_list|(
+name|isinf_sign
+argument_list|,
+operator|(
+literal|1.
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1216,6 +1232,45 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK:  call x86_fp80 @llvm.fabs.f80(x86_fp80
 comment|// CHECK:  fcmp oeq x86_fp80 {{.*}}, 0xK7FFF8000000000000000
+name|res
+operator|=
+name|__builtin_isinf_sign
+argument_list|(
+name|F
+argument_list|)
+expr_stmt|;
+comment|// CHECK:  %[[ABS:.*]] = call float @llvm.fabs.f32(float %[[ARG:.*]])
+comment|// CHECK:  %[[ISINF:.*]] = fcmp oeq float %[[ABS]], 0x7FF0000000000000
+comment|// CHECK:  %[[BITCAST:.*]] = bitcast float %[[ARG]] to i32
+comment|// CHECK:  %[[ISNEG:.*]] = icmp slt i32 %[[BITCAST]], 0
+comment|// CHECK:  %[[SIGN:.*]] = select i1 %[[ISNEG]], i32 -1, i32 1
+comment|// CHECK:  select i1 %[[ISINF]], i32 %[[SIGN]], i32 0
+name|res
+operator|=
+name|__builtin_isinf_sign
+argument_list|(
+name|D
+argument_list|)
+expr_stmt|;
+comment|// CHECK:  %[[ABS:.*]] = call double @llvm.fabs.f64(double %[[ARG:.*]])
+comment|// CHECK:  %[[ISINF:.*]] = fcmp oeq double %[[ABS]], 0x7FF0000000000000
+comment|// CHECK:  %[[BITCAST:.*]] = bitcast double %[[ARG]] to i64
+comment|// CHECK:  %[[ISNEG:.*]] = icmp slt i64 %[[BITCAST]], 0
+comment|// CHECK:  %[[SIGN:.*]] = select i1 %[[ISNEG]], i32 -1, i32 1
+comment|// CHECK:  select i1 %[[ISINF]], i32 %[[SIGN]], i32 0
+name|res
+operator|=
+name|__builtin_isinf_sign
+argument_list|(
+name|LD
+argument_list|)
+expr_stmt|;
+comment|// CHECK:  %[[ABS:.*]] = call x86_fp80 @llvm.fabs.f80(x86_fp80 %[[ARG:.*]])
+comment|// CHECK:  %[[ISINF:.*]] = fcmp oeq x86_fp80 %[[ABS]], 0xK7FFF8000000000000000
+comment|// CHECK:  %[[BITCAST:.*]] = bitcast x86_fp80 %[[ARG]] to i80
+comment|// CHECK:  %[[ISNEG:.*]] = icmp slt i80 %[[BITCAST]], 0
+comment|// CHECK:  %[[SIGN:.*]] = select i1 %[[ISNEG]], i32 -1, i32 1
+comment|// CHECK:  select i1 %[[ISINF]], i32 %[[SIGN]], i32 0
 name|res
 operator|=
 name|__builtin_isfinite

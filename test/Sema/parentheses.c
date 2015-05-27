@@ -318,6 +318,10 @@ name|y
 parameter_list|,
 name|_Bool
 name|b
+parameter_list|,
+name|void
+modifier|*
+name|p
 parameter_list|)
 block|{
 call|(
@@ -437,6 +441,82 @@ literal|2
 argument_list|)
 expr_stmt|;
 comment|// no warning
+call|(
+name|void
+call|)
+argument_list|(
+name|x
+operator|+
+name|p
+condition|?
+literal|1
+else|:
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{operator '?:' has lower precedence than '+'}} expected-note 2{{place parentheses}}
+call|(
+name|void
+call|)
+argument_list|(
+name|p
+operator|+
+name|x
+condition|?
+literal|1
+else|:
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// no warning
+call|(
+name|void
+call|)
+argument_list|(
+name|p
+operator|+
+name|b
+condition|?
+literal|1
+else|:
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{operator '?:' has lower precedence than '+'}} expected-note 2{{place parentheses}}
+call|(
+name|void
+call|)
+argument_list|(
+name|x
+operator|+
+name|y
+operator|>
+literal|0
+condition|?
+literal|1
+else|:
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// no warning
+call|(
+name|void
+call|)
+argument_list|(
+name|x
+operator|+
+operator|(
+name|y
+operator|>
+literal|0
+operator|)
+condition|?
+literal|1
+else|:
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{operator '?:' has lower precedence than '+'}} expected-note 2{{place parentheses}}
 block|}
 end_function
 

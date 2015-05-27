@@ -127,5 +127,32 @@ name|Aliased
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+struct|struct
+name|InhCtorA
+block|{
+name|InhCtorA
+argument_list|(
+name|int
+argument_list|)
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|InhCtorB
+range|:
+name|InhCtorA
+block|{
+name|using
+name|InhCtorA
+operator|::
+name|InhCtorA
+block|; }
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

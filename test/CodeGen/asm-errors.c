@@ -15,6 +15,30 @@ begin_comment
 comment|// UN: FileCheck %s< %t
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -emit-llvm-bc %s -o %t.bc
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -emit-obj %t.bc -o /dev/null 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck --check-prefix=CRASH-REPORT %s
+end_comment
+
+begin_comment
+comment|// CRASH-REPORT:<inline asm>:
+end_comment
+
+begin_comment
+comment|// CRASH-REPORT: error: invalid instruction mnemonic 'abc'
+end_comment
+
+begin_comment
+comment|// CRASH-REPORT-NOT: note: diagnostic msg:
+end_comment
+
 begin_function
 name|int
 name|test1

@@ -273,7 +273,8 @@ specifier|const
 name|NestedNameSpecifier
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 comment|/// \brief Either find or insert the given nested name specifier
 comment|/// mockup in the given context.
@@ -751,7 +752,7 @@ argument_list|)
 block|{ }
 comment|/// \brief Evalutes true when this nested-name-specifier location is
 comment|/// non-empty.
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()

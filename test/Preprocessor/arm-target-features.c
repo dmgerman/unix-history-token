@@ -824,6 +824,62 @@ comment|// A53-THUMB:#define __ARM_FEATURE_DSP
 end_comment
 
 begin_comment
+comment|// Test whether predefines are as expected when targeting cortex-r4.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mcpu=cortex-r4 -x c -E -dM %s -o - | FileCheck --check-prefix=R4-ARM %s
+end_comment
+
+begin_comment
+comment|// R4-ARM-NOT:#define __ARM_ARCH_EXT_IDIV__
+end_comment
+
+begin_comment
+comment|// R4-ARM:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-r4 -x c -E -dM %s -o - | FileCheck --check-prefix=R4-THUMB %s
+end_comment
+
+begin_comment
+comment|// R4-THUMB:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// R4-THUMB:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
+comment|// Test whether predefines are as expected when targeting cortex-r4f.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mcpu=cortex-r4f -x c -E -dM %s -o - | FileCheck --check-prefix=R4F-ARM %s
+end_comment
+
+begin_comment
+comment|// R4F-ARM-NOT:#define __ARM_ARCH_EXT_IDIV__
+end_comment
+
+begin_comment
+comment|// R4F-ARM:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-r4f -x c -E -dM %s -o - | FileCheck --check-prefix=R4F-THUMB %s
+end_comment
+
+begin_comment
+comment|// R4F-THUMBT:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// R4F-THUMB:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// Test whether predefines are as expected when targeting cortex-r5.
 end_comment
 
@@ -852,11 +908,51 @@ comment|// R5-THUMB:#define __ARM_FEATURE_DSP
 end_comment
 
 begin_comment
+comment|// Test whether predefines are as expected when targeting cortex-r7.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mcpu=cortex-r7 -x c -E -dM %s -o - | FileCheck --check-prefix=R7-ARM %s
+end_comment
+
+begin_comment
+comment|// R7-ARM:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// R7-ARM:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-r7 -x c -E -dM %s -o - | FileCheck --check-prefix=R7-THUMB %s
+end_comment
+
+begin_comment
+comment|// R7-THUMB:#define __ARM_ARCH_EXT_IDIV__ 1
+end_comment
+
+begin_comment
+comment|// R7-THUMB:#define __ARM_FEATURE_DSP
+end_comment
+
+begin_comment
 comment|// Test whether predefines are as expected when targeting cortex-m0.
 end_comment
 
 begin_comment
 comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-m0 -x c -E -dM %s -o - | FileCheck --check-prefix=M0-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-m0plus -x c -E -dM %s -o - | FileCheck --check-prefix=M0-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-m1 -x c -E -dM %s -o - | FileCheck --check-prefix=M0-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mthumb -mcpu=sc000 -x c -E -dM %s -o - | FileCheck --check-prefix=M0-THUMB %s
 end_comment
 
 begin_comment
@@ -873,6 +969,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang -target armv7 -mthumb -mcpu=cortex-m3 -x c -E -dM %s -o - | FileCheck --check-prefix=M3-THUMB %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv7 -mthumb -mcpu=sc300 -x c -E -dM %s -o - | FileCheck --check-prefix=M3-THUMB %s
 end_comment
 
 begin_comment
@@ -949,6 +1049,22 @@ end_comment
 
 begin_comment
 comment|// KRAIT-THUMB:#define  __ARM_VFPV4__ 1
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armv8.1a-none-none-eabi -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-V81A %s
+end_comment
+
+begin_comment
+comment|// CHECK-V81A: __ARM_ARCH 8
+end_comment
+
+begin_comment
+comment|// CHECK-V81A: __ARM_ARCH_8_1A__ 1
+end_comment
+
+begin_comment
+comment|// CHECK-V81A: #define __ARM_ARCH_PROFILE 'A'
 end_comment
 
 end_unit

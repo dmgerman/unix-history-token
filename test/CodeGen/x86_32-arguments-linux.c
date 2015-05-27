@@ -40,7 +40,7 @@ comment|// CHECK:<4 x double> %a12, %struct.s56_6* byval align 4)
 end_comment
 
 begin_comment
-comment|// CHECK: call void (i32, ...)* @f56_0(i32 1,
+comment|// CHECK: call void (i32, ...) @f56_0(i32 1,
 end_comment
 
 begin_comment

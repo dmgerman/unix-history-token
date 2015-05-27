@@ -87,6 +87,22 @@ begin_comment
 comment|// OMIT_LEAF: "-momit-leaf-frame-pointer"
 end_comment
 
+begin_comment
+comment|// On the PS4, we default to omitting the frame pointer on leaf functions
+end_comment
+
+begin_comment
+comment|// (OMIT_LEAF check line is above)
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -target x86_64-scei-ps4 -S %s 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck --check-prefix=OMIT_LEAF %s
+end_comment
+
 begin_function
 name|void
 name|f0

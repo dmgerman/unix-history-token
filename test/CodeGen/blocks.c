@@ -431,7 +431,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: [[ZERO:%.*]] = load void (...)** @b
+comment|// CHECK: [[ZERO:%.*]] = load void (...)*, void (...)** @b
 end_comment
 
 begin_comment

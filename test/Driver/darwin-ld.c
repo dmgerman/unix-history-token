@@ -707,5 +707,25 @@ begin_comment
 comment|// LINK_IOS_SIMULATOR_VERSION_MIN: -ios_simulator_version_min
 end_comment
 
+begin_comment
+comment|// Check -iframework gets forward to ld as -F
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin %s -iframework Bar -framework Foo -### 2>&1 | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck --check-prefix=LINK-IFRAMEWORK %s
+end_comment
+
+begin_comment
+comment|// LINK-IFRAMEWORK: {{ld(.exe)?"}}
+end_comment
+
+begin_comment
+comment|// LINK-IFRAMEWORK: "-FBar"
+end_comment
+
 end_unit
 

@@ -74,44 +74,44 @@ name|struct
 name|test
 name|var
 decl_stmt|;
-comment|// CHECK: getelementptr inbounds %struct.test* %var, i32 0, i32 1
-comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2* %{{.*}}, i32 0, i32 0
-comment|// CHECK-NEXT: load i32* %{{.*}}, align 4
+comment|// CHECK: getelementptr inbounds %struct.test, %struct.test* %var, i32 0, i32 1
+comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2, %struct.nested2* %{{.*}}, i32 0, i32 0
+comment|// CHECK-NEXT: load i32, i32* %{{.*}}, align 4
 name|var
 operator|.
 name|a
 expr_stmt|;
-comment|// CHECK-NEXT: getelementptr inbounds %struct.test* %var, i32 0, i32 1
-comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2* %{{.*}}, i32 0, i32 2
-comment|// CHECK-NEXT: load i32* %{{.*}}, align 4
+comment|// CHECK-NEXT: getelementptr inbounds %struct.test, %struct.test* %var, i32 0, i32 1
+comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2, %struct.nested2* %{{.*}}, i32 0, i32 2
+comment|// CHECK-NEXT: load i32, i32* %{{.*}}, align 4
 name|var
 operator|.
 name|b
 expr_stmt|;
-comment|// CHECK-NEXT: getelementptr inbounds %struct.test* %var, i32 0, i32 1
-comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2* %{{.*}}, i32 0, i32 1
-comment|// CHECK-NEXT: getelementptr inbounds %struct.nested1* %{{.*}}, i32 0, i32 0
-comment|// CHECK-NEXT: load i32* %{{.*}}, align 4
+comment|// CHECK-NEXT: getelementptr inbounds %struct.test, %struct.test* %var, i32 0, i32 1
+comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2, %struct.nested2* %{{.*}}, i32 0, i32 1
+comment|// CHECK-NEXT: getelementptr inbounds %struct.nested1, %struct.nested1* %{{.*}}, i32 0, i32 0
+comment|// CHECK-NEXT: load i32, i32* %{{.*}}, align 4
 name|var
 operator|.
 name|a1
 expr_stmt|;
-comment|// CHECK-NEXT: getelementptr inbounds %struct.test* %{{.*}}var, i32 0, i32 1
-comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2* %{{.*}}, i32 0, i32 1
-comment|// CHECK-NEXT: getelementptr inbounds %struct.nested1* %{{.*}}, i32 0, i32 1
-comment|// CHECK-NEXT: load i32* %{{.*}}, align 4
+comment|// CHECK-NEXT: getelementptr inbounds %struct.test, %struct.test* %{{.*}}var, i32 0, i32 1
+comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2, %struct.nested2* %{{.*}}, i32 0, i32 1
+comment|// CHECK-NEXT: getelementptr inbounds %struct.nested1, %struct.nested1* %{{.*}}, i32 0, i32 1
+comment|// CHECK-NEXT: load i32, i32* %{{.*}}, align 4
 name|var
 operator|.
 name|b1
 expr_stmt|;
-comment|// CHECK-NEXT: getelementptr inbounds %struct.test* %var, i32 0, i32 0
-comment|// CHECK-NEXT: load i32* %{{.*}}, align 4
+comment|// CHECK-NEXT: getelementptr inbounds %struct.test, %struct.test* %var, i32 0, i32 0
+comment|// CHECK-NEXT: load i32, i32* %{{.*}}, align 4
 name|var
 operator|.
 name|x
 expr_stmt|;
-comment|// CHECK-NEXT: getelementptr inbounds %struct.test* %var, i32 0, i32 2
-comment|// CHECK-NEXT: load i32* %{{.*}}, align 4
+comment|// CHECK-NEXT: getelementptr inbounds %struct.test, %struct.test* %var, i32 0, i32 2
+comment|// CHECK-NEXT: load i32, i32* %{{.*}}, align 4
 name|var
 operator|.
 name|y
@@ -131,50 +131,50 @@ parameter_list|)
 block|{
 comment|// CHECK: alloca %struct.test*, align
 comment|// CHECK-NEXT: store %struct.test* %var, %struct.test** %{{.*}}, align
-comment|// CHECK-NEXT: load %struct.test** %{{.*}}, align
-comment|// CHECK-NEXT: getelementptr inbounds %struct.test* %{{.*}}, i32 0, i32 1
-comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2* %{{.*}}, i32 0, i32 0
-comment|// CHECK-NEXT: load i32* %{{.*}}, align 4
+comment|// CHECK-NEXT: load %struct.test*, %struct.test** %{{.*}}, align
+comment|// CHECK-NEXT: getelementptr inbounds %struct.test, %struct.test* %{{.*}}, i32 0, i32 1
+comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2, %struct.nested2* %{{.*}}, i32 0, i32 0
+comment|// CHECK-NEXT: load i32, i32* %{{.*}}, align 4
 name|var
 operator|->
 name|a
 expr_stmt|;
-comment|// CHECK-NEXT: load %struct.test** %{{.*}}, align
-comment|// CHECK-NEXT: getelementptr inbounds %struct.test* %{{.*}}, i32 0, i32 1
-comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2* %{{.*}}, i32 0, i32 2
-comment|// CHECK-NEXT: load i32* %{{.*}}, align 4
+comment|// CHECK-NEXT: load %struct.test*, %struct.test** %{{.*}}, align
+comment|// CHECK-NEXT: getelementptr inbounds %struct.test, %struct.test* %{{.*}}, i32 0, i32 1
+comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2, %struct.nested2* %{{.*}}, i32 0, i32 2
+comment|// CHECK-NEXT: load i32, i32* %{{.*}}, align 4
 name|var
 operator|->
 name|b
 expr_stmt|;
-comment|// CHECK-NEXT: load %struct.test** %{{.*}}, align
-comment|// CHECK-NEXT: getelementptr inbounds %struct.test* %{{.*}}, i32 0, i32 1
-comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2* %{{.*}}, i32 0, i32 1
-comment|// CHECK-NEXT: getelementptr inbounds %struct.nested1* %{{.*}}, i32 0, i32 0
-comment|// CHECK-NEXT: load i32* %{{.*}}, align 4
+comment|// CHECK-NEXT: load %struct.test*, %struct.test** %{{.*}}, align
+comment|// CHECK-NEXT: getelementptr inbounds %struct.test, %struct.test* %{{.*}}, i32 0, i32 1
+comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2, %struct.nested2* %{{.*}}, i32 0, i32 1
+comment|// CHECK-NEXT: getelementptr inbounds %struct.nested1, %struct.nested1* %{{.*}}, i32 0, i32 0
+comment|// CHECK-NEXT: load i32, i32* %{{.*}}, align 4
 name|var
 operator|->
 name|a1
 expr_stmt|;
-comment|// CHECK-NEXT: load %struct.test** %{{.*}}, align
-comment|// CHECK-NEXT: getelementptr inbounds %struct.test* %{{.*}}, i32 0, i32 1
-comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2* %{{.*}}, i32 0, i32 1
-comment|// CHECK-NEXT: getelementptr inbounds %struct.nested1* %{{.*}}, i32 0, i32 1
-comment|// CHECK-NEXT: load i32* %{{.*}}, align 4
+comment|// CHECK-NEXT: load %struct.test*, %struct.test** %{{.*}}, align
+comment|// CHECK-NEXT: getelementptr inbounds %struct.test, %struct.test* %{{.*}}, i32 0, i32 1
+comment|// CHECK-NEXT: getelementptr inbounds %struct.nested2, %struct.nested2* %{{.*}}, i32 0, i32 1
+comment|// CHECK-NEXT: getelementptr inbounds %struct.nested1, %struct.nested1* %{{.*}}, i32 0, i32 1
+comment|// CHECK-NEXT: load i32, i32* %{{.*}}, align 4
 name|var
 operator|->
 name|b1
 expr_stmt|;
-comment|// CHECK-NEXT: load %struct.test** %{{.*}}, align
-comment|// CHECK-NEXT: getelementptr inbounds %struct.test* %{{.*}}, i32 0, i32 0
-comment|// CHECK-NEXT: load i32* %{{.*}}, align 4
+comment|// CHECK-NEXT: load %struct.test*, %struct.test** %{{.*}}, align
+comment|// CHECK-NEXT: getelementptr inbounds %struct.test, %struct.test* %{{.*}}, i32 0, i32 0
+comment|// CHECK-NEXT: load i32, i32* %{{.*}}, align 4
 name|var
 operator|->
 name|x
 expr_stmt|;
-comment|// CHECK-NEXT: load %struct.test** %{{.*}}, align
-comment|// CHECK-NEXT: getelementptr inbounds %struct.test* %{{.*}}, i32 0, i32 2
-comment|// CHECK-NEXT: load i32* %{{.*}}, align 4
+comment|// CHECK-NEXT: load %struct.test*, %struct.test** %{{.*}}, align
+comment|// CHECK-NEXT: getelementptr inbounds %struct.test, %struct.test* %{{.*}}, i32 0, i32 2
+comment|// CHECK-NEXT: load i32, i32* %{{.*}}, align 4
 name|var
 operator|->
 name|y

@@ -38,7 +38,7 @@ comment|// CHECK-LABEL: define i32 @g1
 end_comment
 
 begin_comment
-comment|// CHECK: load i32* %x, align 4
+comment|// CHECK: load i32, i32* %x, align 4
 end_comment
 
 begin_comment

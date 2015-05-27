@@ -430,6 +430,23 @@ comment|// expected-error {{variable length array must be bound in function defi
 block|{ }
 end_function
 
+begin_decl_stmt
+name|void
+name|pr23151
+argument_list|(
+name|int
+argument_list|(
+operator|*
+name|p1
+argument_list|)
+index|[
+operator|*
+index|]
+argument_list|)
+comment|// expected-error {{variable length array must be bound in function definition}}
+block|{}
+end_decl_stmt
+
 begin_comment
 comment|// Make sure this isn't treated as an error
 end_comment

@@ -188,10 +188,6 @@ argument_list|(
 argument|LiveDecls
 argument_list|)
 block|{}
-operator|~
-name|LivenessValues
-argument_list|()
-block|{}
 name|bool
 name|isLive
 argument_list|(
@@ -250,10 +246,10 @@ argument_list|)
 block|{}
 block|}
 block|;
-name|virtual
 operator|~
 name|LiveVariables
 argument_list|()
+name|override
 block|;
 comment|/// Compute the liveness information for a given CFG.
 specifier|static

@@ -63,6 +63,24 @@ directive|define
 name|LLVM_CLANG_BASIC_LINKAGE_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang

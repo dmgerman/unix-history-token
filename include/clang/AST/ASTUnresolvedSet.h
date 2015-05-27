@@ -427,11 +427,11 @@ name|C
 argument_list|,
 name|I
 operator|.
-name|ir
+name|I
 argument_list|,
 name|E
 operator|.
-name|ir
+name|I
 argument_list|)
 expr_stmt|;
 block|}

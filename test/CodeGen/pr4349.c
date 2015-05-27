@@ -99,7 +99,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @svars2 = global [1 x %struct.svar] [%struct.svar { i8* getelementptr (i8* bitcast (%struct.cpu* @cpu to i8*), i64 1) }]
+comment|// CHECK: @svars2 = global [1 x %struct.svar] [%struct.svar { i8* getelementptr (i8, i8* bitcast (%struct.cpu* @cpu to i8*), i64 1) }]
 end_comment
 
 begin_decl_stmt
@@ -132,7 +132,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @svars3 = global [1 x %struct.svar] [%struct.svar { i8* getelementptr (i8* bitcast (%struct.cpu* @cpu to i8*), i64 2) }]
+comment|// CHECK: @svars3 = global [1 x %struct.svar] [%struct.svar { i8* getelementptr (i8, i8* bitcast (%struct.cpu* @cpu to i8*), i64 2) }]
 end_comment
 
 begin_decl_stmt
@@ -162,7 +162,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @svars4 = global [1 x %struct.svar] [%struct.svar { i8* getelementptr (i8* bitcast (%struct.cpu* @cpu to i8*), i64 3) }]
+comment|// CHECK: @svars4 = global [1 x %struct.svar] [%struct.svar { i8* getelementptr (i8, i8* bitcast (%struct.cpu* @cpu to i8*), i64 3) }]
 end_comment
 
 begin_decl_stmt

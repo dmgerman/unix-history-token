@@ -21,8 +21,8 @@ name|ptr2
 parameter_list|)
 block|{
 comment|// CHECK: clear
-comment|// CHECK: load i8**
-comment|// CHECK: load i8**
+comment|// CHECK: load i8*, i8**
+comment|// CHECK: load i8*, i8**
 name|__clear_cache
 argument_list|(
 name|ptr

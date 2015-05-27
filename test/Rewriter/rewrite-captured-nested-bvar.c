@@ -118,7 +118,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK 2: (__Block_byref_BYREF_VAR_CHECK_0 *)BYREF_VAR_CHECK
+comment|// CHECK: (__Block_byref_BYREF_VAR_CHECK_0 *)BYREF_VAR_CHECK
 end_comment
 
 begin_comment

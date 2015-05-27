@@ -3,52 +3,37 @@ begin_comment
 comment|// RUN: %clang_cc1 -fprofile-instr-generate -fcoverage-mapping -dump-coverage-mapping -emit-llvm-only -main-file-name loopmacro.c %s | FileCheck %s
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HASH_BITS
-value|15
-end_define
+begin_comment
+comment|// CHECK: main
+end_comment
 
-begin_define
-define|#
-directive|define
-name|MIN_MATCH
-value|3
-end_define
+begin_comment
+comment|// CHECK-NEXT: File 0, {{[0-9]+}}:12 -> {{[0-9]+}}:2 = #0
+end_comment
 
-begin_define
-define|#
-directive|define
-name|H_SHIFT
-value|((HASH_BITS+MIN_MATCH-1)/MIN_MATCH)
-end_define
+begin_comment
+comment|// CHECK-NEXT: File 0, {{[0-9]+}}:6 -> {{[0-9]+}}:4 = (#0 + #1)
+end_comment
 
-begin_define
-define|#
-directive|define
-name|WMASK
-value|0xFFFF
-end_define
+begin_comment
+comment|// CHECK-NEXT: Expansion,File 0, {{[0-9]+}}:7 -> {{[0-9]+}}:20 = (#0 + #1)
+end_comment
 
-begin_define
-define|#
-directive|define
-name|HASH_MASK
-value|0xFFFF
-end_define
+begin_comment
+comment|// CHECK-NEXT: File 0, {{[0-9]+}}:12 -> {{[0-9]+}}:30 = (#0 + #1)
+end_comment
 
-begin_define
-define|#
-directive|define
-name|UPDATE_HASH
-parameter_list|(
-name|h
-parameter_list|,
-name|c
-parameter_list|)
-value|(h = (((h)<<H_SHIFT) ^ (c))& HASH_MASK)
-end_define
+begin_comment
+comment|// CHECK-NEXT: File 1, [[@LINE+4]]:4 -> [[@LINE+6]]:23 = (#0 + #1)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: Expansion,File 1, [[@LINE+3]]:5 -> [[@LINE+3]]:16 = (#0 + #1)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: Expansion,File 1, [[@LINE+3]]:16 -> [[@LINE+3]]:21 = (#0 + #1)
+end_comment
 
 begin_define
 define|#
@@ -63,12 +48,106 @@ define|\
 value|(UPDATE_HASH(ins_h, window[(s) + MIN_MATCH-1]), \     prev[(s)& WMASK] = match_head = head[ins_h], \     head[ins_h] = (s))
 end_define
 
+begin_comment
+comment|// CHECK-NEXT: File 2, [[@LINE+3]]:26 -> [[@LINE+3]]:66 = (#0 + #1)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: Expansion,File 2, [[@LINE+2]]:38 -> [[@LINE+2]]:45 = (#0 + #1)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: Expansion,File 2, [[@LINE+1]]:56 -> [[@LINE+1]]:65 = (#0 + #1)
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UPDATE_HASH
+parameter_list|(
+name|h
+parameter_list|,
+name|c
+parameter_list|)
+value|(h = (((h)<<H_SHIFT) ^ (c))& HASH_MASK)
+end_define
+
+begin_comment
+comment|// CHECK-NEXT: File 3, [[@LINE+1]]:15 -> [[@LINE+1]]:21 = (#0 + #1)
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WMASK
+value|0xFFFF
+end_define
+
+begin_comment
+comment|// CHECK-NEXT: File 4, [[@LINE+4]]:18 -> [[@LINE+4]]:53 = (#0 + #1)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: Expansion,File 4, [[@LINE+3]]:20 -> [[@LINE+3]]:29 = (#0 + #1)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: Expansion,File 4, [[@LINE+2]]:30 -> [[@LINE+2]]:39 = (#0 + #1)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: Expansion,File 4, [[@LINE+1]]:43 -> [[@LINE+1]]:52 = (#0 + #1)
+end_comment
+
+begin_define
+define|#
+directive|define
+name|H_SHIFT
+value|((HASH_BITS+MIN_MATCH-1)/MIN_MATCH)
+end_define
+
+begin_comment
+comment|// CHECK-NEXT: File 5, [[@LINE+1]]:19 -> [[@LINE+1]]:25 = (#0 + #1)
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASH_MASK
+value|0xFFFF
+end_define
+
+begin_comment
+comment|// CHECK-NEXT: File 6, [[@LINE+1]]:20 -> [[@LINE+1]]:22 = (#0 + #1)
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HASH_BITS
+value|15
+end_define
+
+begin_comment
+comment|// CHECK-NEXT: File 7, [[@LINE+2]]:20 -> [[@LINE+2]]:21 = (#0 + #1)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: File 8, [[@LINE+1]]:20 -> [[@LINE+1]]:21 = (#0 + #1)
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MIN_MATCH
+value|3
+end_define
+
 begin_function
 name|int
 name|main
 parameter_list|()
 block|{
-comment|// CHECK: File 0, [[@LINE]]:12 -> [[@LINE+12]]:2 = #0 (HasCodeBefore = 0)
 name|int
 name|strstart
 init|=
@@ -93,6 +172,8 @@ name|int
 name|prev
 index|[
 literal|32
+operator|<<
+literal|10
 index|]
 init|=
 block|{
@@ -103,6 +184,8 @@ name|int
 name|head
 index|[
 literal|32
+operator|<<
+literal|10
 index|]
 init|=
 block|{
@@ -121,7 +204,6 @@ block|}
 decl_stmt|;
 do|do
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:6 -> [[@LINE+3]]:30 = (#0 + #1) (HasCodeBefore = 0)
 name|strstart
 operator|++
 expr_stmt|;
@@ -132,7 +214,6 @@ argument_list|,
 name|hash_head
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: Expansion,File 0, [[@LINE]]:7 -> [[@LINE]]:20 = (#0 + #1) (HasCodeBefore = 0, Expanded file = 1)
 block|}
 do|while
 condition|(
@@ -144,62 +225,6 @@ condition|)
 do|;
 block|}
 end_function
-
-begin_comment
-comment|// CHECK-NEXT: File 0, 24:21 -> 24:29 = (#0 + #1) (HasCodeBefore = 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: File 0, 24:21 -> 24:29 = (#0 + #1) (HasCodeBefore = 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: File 0, 24:21 -> 24:29 = (#0 + #1) (HasCodeBefore = 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: File 0, 24:31 -> 24:40 = (#0 + #1) (HasCodeBefore = 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: File 1, 10:4 -> 12:23 = (#0 + #1) (HasCodeBefore = 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: Expansion,File 1, 10:5 -> 10:16 = (#0 + #1) (HasCodeBefore = 0, Expanded file = 2)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: File 1, 10:17 -> 10:22 = (#0 + #1) (HasCodeBefore = 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: File 1, 10:17 -> 10:22 = (#0 + #1) (HasCodeBefore = 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: File 1, 10:24 -> 10:32 = (#0 + #1) (HasCodeBefore = 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: File 1, 10:33 -> 10:36 = (#0 + #1) (HasCodeBefore = 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: File 1, 10:46 -> 10:49 = (#0 + #1) (HasCodeBefore = 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: File 2, 8:26 -> 8:66 = (#0 + #1) (HasCodeBefore = 0)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: Expansion,File 2, 8:38 -> 8:45 = (#0 + #1) (HasCodeBefore = 0, Expanded file = 3)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: File 3, 5:18 -> 5:53 = (#0 + #1) (HasCodeBefore = 0)
-end_comment
 
 end_unit
 

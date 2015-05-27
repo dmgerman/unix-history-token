@@ -178,7 +178,7 @@ name|b
 parameter_list|)
 block|{
 comment|// Check if the mask is correct
-comment|// CHECK: @llvm.x86.avx.vperm2f128.pd.256
+comment|// CHECK: shufflevector{{.*}}<i32 2, i32 3, i32 6, i32 7>
 return|return
 name|_mm256_permute2f128_pd
 argument_list|(
@@ -204,7 +204,7 @@ name|b
 parameter_list|)
 block|{
 comment|// Check if the mask is correct
-comment|// CHECK: @llvm.x86.avx.vperm2f128.ps.256
+comment|// CHECK: shufflevector{{.*}}<i32 4, i32 5, i32 6, i32 7, i32 12, i32 13, i32 14, i32 15>
 return|return
 name|_mm256_permute2f128_ps
 argument_list|(
@@ -230,7 +230,7 @@ name|b
 parameter_list|)
 block|{
 comment|// Check if the mask is correct
-comment|// CHECK: @llvm.x86.avx.vperm2f128.si.256
+comment|// CHECK: shufflevector{{.*}}<8 x i32><i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
 return|return
 name|_mm256_permute2f128_si256
 argument_list|(
@@ -315,6 +315,440 @@ return|return
 name|_mm256_broadcast_ss
 argument_list|(
 name|__a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// Make sure we have the correct mask for each insertf128 case.
+end_comment
+
+begin_function
+name|__m256
+name|test_mm256_insertf128_ps_0
+parameter_list|(
+name|__m256
+name|a
+parameter_list|,
+name|__m128
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_insertf128_ps_0
+comment|// CHECK: shufflevector{{.*}}<i32 8, i32 9, i32 10, i32 11, i32 4, i32 5, i32 6, i32 7>
+return|return
+name|_mm256_insertf128_ps
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256d
+name|test_mm256_insertf128_pd_0
+parameter_list|(
+name|__m256d
+name|a
+parameter_list|,
+name|__m128d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_insertf128_pd_0
+comment|// CHECK: shufflevector{{.*}}<i32 4, i32 5, i32 2, i32 3>
+return|return
+name|_mm256_insertf128_pd
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_insertf128_si256_0
+parameter_list|(
+name|__m256i
+name|a
+parameter_list|,
+name|__m128i
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_insertf128_si256_0
+comment|// CHECK: shufflevector{{.*}}<i32 4, i32 5, i32 2, i32 3>
+return|return
+name|_mm256_insertf128_si256
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256
+name|test_mm256_insertf128_ps_1
+parameter_list|(
+name|__m256
+name|a
+parameter_list|,
+name|__m128
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_insertf128_ps_1
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1, i32 2, i32 3, i32 8, i32 9, i32 10, i32 11>
+return|return
+name|_mm256_insertf128_ps
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256d
+name|test_mm256_insertf128_pd_1
+parameter_list|(
+name|__m256d
+name|a
+parameter_list|,
+name|__m128d
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_insertf128_pd_1
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1, i32 4, i32 5>
+return|return
+name|_mm256_insertf128_pd
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_insertf128_si256_1
+parameter_list|(
+name|__m256i
+name|a
+parameter_list|,
+name|__m128i
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_insertf128_si256_1
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1, i32 4, i32 5>
+return|return
+name|_mm256_insertf128_si256
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// Make sure we have the correct mask for each extractf128 case.
+end_comment
+
+begin_function
+name|__m128
+name|test_mm256_extractf128_ps_0
+parameter_list|(
+name|__m256
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_extractf128_ps_0
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1, i32 2, i32 3>
+return|return
+name|_mm256_extractf128_ps
+argument_list|(
+name|a
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128d
+name|test_mm256_extractf128_pd_0
+parameter_list|(
+name|__m256d
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_extractf128_pd_0
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1>
+return|return
+name|_mm256_extractf128_pd
+argument_list|(
+name|a
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test_mm256_extractf128_si256_0
+parameter_list|(
+name|__m256i
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_extractf128_si256_0
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1>
+return|return
+name|_mm256_extractf128_si256
+argument_list|(
+name|a
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm256_extractf128_ps_1
+parameter_list|(
+name|__m256
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_extractf128_ps_1
+comment|// CHECK: shufflevector{{.*}}<i32 4, i32 5, i32 6, i32 7>
+return|return
+name|_mm256_extractf128_ps
+argument_list|(
+name|a
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128d
+name|test_mm256_extractf128_pd_1
+parameter_list|(
+name|__m256d
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_extractf128_pd_1
+comment|// CHECK: shufflevector{{.*}}<i32 2, i32 3>
+return|return
+name|_mm256_extractf128_pd
+argument_list|(
+name|a
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test_mm256_extractf128_si256_1
+parameter_list|(
+name|__m256i
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_extractf128_si256_1
+comment|// CHECK: shufflevector{{.*}}<i32 2, i32 3>
+return|return
+name|_mm256_extractf128_si256
+argument_list|(
+name|a
+argument_list|,
+literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256
+name|test_mm256_set_m128
+parameter_list|(
+name|__m128
+name|hi
+parameter_list|,
+name|__m128
+name|lo
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_set_m128
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+return|return
+name|_mm256_set_m128
+argument_list|(
+name|hi
+argument_list|,
+name|lo
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256d
+name|test_mm256_set_m128d
+parameter_list|(
+name|__m128d
+name|hi
+parameter_list|,
+name|__m128d
+name|lo
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_set_m128d
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+return|return
+name|_mm256_set_m128d
+argument_list|(
+name|hi
+argument_list|,
+name|lo
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_set_m128i
+parameter_list|(
+name|__m128i
+name|hi
+parameter_list|,
+name|__m128i
+name|lo
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_set_m128i
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+return|return
+name|_mm256_set_m128i
+argument_list|(
+name|hi
+argument_list|,
+name|lo
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256
+name|test_mm256_setr_m128
+parameter_list|(
+name|__m128
+name|hi
+parameter_list|,
+name|__m128
+name|lo
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_setr_m128
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+return|return
+name|_mm256_setr_m128
+argument_list|(
+name|lo
+argument_list|,
+name|hi
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256d
+name|test_mm256_setr_m128d
+parameter_list|(
+name|__m128d
+name|hi
+parameter_list|,
+name|__m128d
+name|lo
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_setr_m128d
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+return|return
+name|_mm256_setr_m128d
+argument_list|(
+name|lo
+argument_list|,
+name|hi
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_setr_m128i
+parameter_list|(
+name|__m128i
+name|hi
+parameter_list|,
+name|__m128i
+name|lo
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_setr_m128i
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7>
+return|return
+name|_mm256_setr_m128i
+argument_list|(
+name|lo
+argument_list|,
+name|hi
 argument_list|)
 return|;
 block|}

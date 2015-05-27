@@ -138,7 +138,7 @@ argument_list|,
 literal|"annotation_a"
 argument_list|)
 decl_stmt|;
-comment|// CHECK: load i32* @intfoo
+comment|// CHECK: load i32, i32* @intfoo
 comment|// CHECK-NEXT: call i32 @llvm.annotation.i32
 comment|// CHECK-NEXT: store
 name|short

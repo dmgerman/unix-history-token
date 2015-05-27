@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-pc-win32 %s -emit-llvm -fms-compatibility -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -triple i386-pc-win32 -emit-llvm -fms-compatibility -o -< %s | FileCheck %s
 end_comment
 
 begin_decl_stmt
@@ -91,6 +91,45 @@ end_decl_stmt
 
 begin_comment
 comment|// CHECK-DAG: @redef = global i32 8, align 32
+end_comment
+
+begin_struct
+struct|struct
+name|__declspec
+argument_list|(
+argument|align(
+literal|64
+argument|)
+argument_list|)
+name|S
+block|{
+name|char
+name|fd
+decl_stmt|;
+block|}
+name|s
+struct|;
+end_struct
+
+begin_comment
+comment|// CHECK-DAG: @s = global %struct.S zeroinitializer, align 64
+end_comment
+
+begin_struct
+struct|struct
+name|Wrap
+block|{
+name|struct
+name|S
+name|x
+decl_stmt|;
+block|}
+name|w
+struct|;
+end_struct
+
+begin_comment
+comment|// CHECK-DAG: @w = global %struct.Wrap zeroinitializer, align 64
 end_comment
 
 end_unit

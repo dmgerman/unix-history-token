@@ -260,36 +260,55 @@ expr_stmt|;
 block|}
 block|}
 empty_stmt|;
-name|struct
+name|class
 name|FilesMade
-range|:
-name|public
+block|{
+name|llvm
+operator|::
+name|BumpPtrAllocator
+name|Alloc
+expr_stmt|;
 name|llvm
 operator|::
 name|FoldingSet
 operator|<
 name|PDFileEntry
 operator|>
-block|{
-name|llvm
-operator|::
-name|BumpPtrAllocator
-name|Alloc
-block|;
+name|Set
+expr_stmt|;
+name|public
+label|:
 operator|~
 name|FilesMade
 argument_list|()
-block|;
+expr_stmt|;
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Set
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
 name|void
 name|addDiagnostic
-argument_list|(
-argument|const PathDiagnostic&PD
-argument_list|,
-argument|StringRef ConsumerName
-argument_list|,
-argument|StringRef fileName
-argument_list|)
-block|;
+parameter_list|(
+specifier|const
+name|PathDiagnostic
+modifier|&
+name|PD
+parameter_list|,
+name|StringRef
+name|ConsumerName
+parameter_list|,
+name|StringRef
+name|fileName
+parameter_list|)
+function_decl|;
 name|PDFileEntry
 operator|::
 name|ConsumerFiles
@@ -301,8 +320,9 @@ name|PathDiagnostic
 operator|&
 name|PD
 argument_list|)
-block|;   }
-decl_stmt|;
+expr_stmt|;
+block|}
+empty_stmt|;
 name|private
 label|:
 name|virtual
@@ -1489,13 +1509,18 @@ name|ranges
 block|;
 name|PathDiagnosticPiece
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|PathDiagnosticPiece
 argument_list|(
-argument|const PathDiagnosticPiece&P
+specifier|const
+name|PathDiagnosticPiece
+operator|&
+name|P
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -1506,7 +1531,8 @@ name|PathDiagnosticPiece
 operator|&
 name|P
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:
@@ -1528,10 +1554,10 @@ argument_list|)
 block|;
 name|public
 operator|:
-name|virtual
 operator|~
 name|PathDiagnosticPiece
 argument_list|()
+name|override
 block|;
 name|StringRef
 name|getString
@@ -2006,10 +2032,10 @@ argument_list|(
 argument|M
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|StackHintGeneratorForSymbol
 argument_list|()
+name|override
 block|{}
 comment|/// \brief Search the call expression for the symbol Sym and dispatch the
 comment|/// 'getMessageForX()' methods to construct a specific message.
@@ -2117,6 +2143,7 @@ block|{}
 operator|~
 name|PathDiagnosticEventPiece
 argument_list|()
+name|override
 block|;
 comment|/// Mark the diagnostic piece as being potentially prunable.  This
 comment|/// flag may have been previously set, at which point it will not
@@ -2343,10 +2370,10 @@ block|;
 name|PathPieces
 name|path
 block|;
-name|virtual
 operator|~
 name|PathDiagnosticCallPiece
 argument_list|()
+name|override
 block|;
 specifier|const
 name|Decl
@@ -2636,6 +2663,7 @@ block|;     }
 operator|~
 name|PathDiagnosticControlFlowPiece
 argument_list|()
+name|override
 block|;
 name|PathDiagnosticLocation
 name|getStartLocation
@@ -2907,6 +2935,7 @@ block|{}
 operator|~
 name|PathDiagnosticMacroPiece
 argument_list|()
+name|override
 block|;
 name|PathPieces
 name|subPieces
@@ -3084,7 +3113,8 @@ name|UniqueingDecl
 block|;
 name|PathDiagnostic
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:

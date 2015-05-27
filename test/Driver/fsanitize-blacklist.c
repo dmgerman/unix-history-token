@@ -12,7 +12,27 @@ comment|// REQUIRES: clang-driver, shell
 end_comment
 
 begin_comment
+comment|// Make sure we don't match the -NOT lines with the linker invocation.
+end_comment
+
+begin_comment
+comment|// Delimiters match the start of the cc1 and the start of the linker lines
+end_comment
+
+begin_comment
+comment|// for fragile tests.
+end_comment
+
+begin_comment
+comment|// DELIMITERS: {{^ *"}}
+end_comment
+
+begin_comment
 comment|// RUN: echo "fun:foo"> %t.good
+end_comment
+
+begin_comment
+comment|// RUN: echo "fun:bar"> %t.second
 end_comment
 
 begin_comment
@@ -20,11 +40,15 @@ comment|// RUN: echo "badline"> %t.bad
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsanitize=address -fsanitize-blacklist=%t.good %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-BLACKLIST
+comment|// RUN: %clang -fsanitize=address -fsanitize-blacklist=%t.good -fsanitize-blacklist=%t.second %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-BLACKLIST
 end_comment
 
 begin_comment
-comment|// CHECK-BLACKLIST: -fsanitize-blacklist
+comment|// CHECK-BLACKLIST: -fsanitize-blacklist={{.*}}.good
+end_comment
+
+begin_comment
+comment|// CHECK-BLACKLIST: -fsanitize-blacklist={{.*}}.second
 end_comment
 
 begin_comment
@@ -32,7 +56,7 @@ comment|// Ignore -fsanitize-blacklist flag if there is no -fsanitize flag.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsanitize-blacklist=%t.good %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-SANITIZE
+comment|// RUN: %clang -fsanitize-blacklist=%t.good %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-SANITIZE --check-prefix=DELIMITERS
 end_comment
 
 begin_comment
@@ -44,7 +68,7 @@ comment|// Flag -fno-sanitize-blacklist wins if it is specified later.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsanitize=address -fsanitize-blacklist=%t.good -fno-sanitize-blacklist %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-BLACKLIST
+comment|// RUN: %clang -fsanitize=address -fsanitize-blacklist=%t.good -fno-sanitize-blacklist %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-NO-BLACKLIST --check-prefix=DELIMITERS
 end_comment
 
 begin_comment
@@ -68,11 +92,35 @@ comment|// Driver properly reports malformed blacklist files.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsanitize=address -fsanitize-blacklist=%t.bad %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-BAD-BLACKLIST
+comment|// RUN: %clang -fsanitize=address -fsanitize-blacklist=%t.second -fsanitize-blacklist=%t.bad -fsanitize-blacklist=%t.good %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-BAD-BLACKLIST
 end_comment
 
 begin_comment
-comment|// CHECK-BAD-BLACKLIST: error: malformed sanitizer blacklist
+comment|// CHECK-BAD-BLACKLIST: error: malformed sanitizer blacklist: 'error parsing file '{{.*}}.bad': malformed line 1: 'badline''
+end_comment
+
+begin_comment
+comment|// -fno-sanitize-blacklist disables all blacklists specified earlier.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -fsanitize=address -fsanitize-blacklist=%t.good -fno-sanitize-blacklist -fsanitize-blacklist=%t.second %s -### 2>&1 | FileCheck %s --check-prefix=CHECK-ONLY-FIRST-DISABLED
+end_comment
+
+begin_comment
+comment|// CHECK-ONLY_FIRST-DISABLED-NOT: good
+end_comment
+
+begin_comment
+comment|// CHECK-ONLY-FIRST-DISABLED: -fsanitize-blacklist={{.*}}.second
+end_comment
+
+begin_comment
+comment|// CHECK-ONLY_FIRST-DISABLED-NOT: good
+end_comment
+
+begin_comment
+comment|// DELIMITERS: {{^ *"}}
 end_comment
 
 end_unit

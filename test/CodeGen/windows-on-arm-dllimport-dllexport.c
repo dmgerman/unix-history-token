@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Werror -triple thumbv7-windows-itanium -mfloat-abi hard -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -Werror -triple thumbv7-windows-itanium -mfloat-abi hard -fms-extensions -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_macro

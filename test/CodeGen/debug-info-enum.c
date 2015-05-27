@@ -4,7 +4,11 @@ comment|// RUN: %clang_cc1 -emit-llvm -g %s -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: [[TEST3_ENUMS:![0-9]*]], null, null, null} ; [ DW_TAG_enumeration_type ] [e]
+comment|// CHECK: !DICompositeType(tag: DW_TAG_enumeration_type, name: "e"
+end_comment
+
+begin_comment
+comment|// CHECK-SAME:             elements: [[TEST3_ENUMS:![0-9]*]]
 end_comment
 
 begin_comment
@@ -12,7 +16,7 @@ comment|// CHECK: [[TEST3_ENUMS]] = !{[[TEST3_E:![0-9]*]]}
 end_comment
 
 begin_comment
-comment|// CHECK: [[TEST3_E]] = !{!"0x28\00E\00-1"} ; [ DW_TAG_enumerator ] [E :: -1]
+comment|// CHECK: [[TEST3_E]] = !DIEnumerator(name: "E", value: -1)
 end_comment
 
 begin_enum_decl

@@ -923,12 +923,13 @@ operator|=
 lambda|^
 block|{ }
 expr_stmt|;
+comment|// expected-note {{variable 'blockA' declared const here}}
 name|blockA
 operator|=
 lambda|^
 block|{ }
 expr_stmt|;
-comment|// expected-error {{read-only variable is not assignable}}
+comment|// expected-error {{cannot assign to variable 'blockA' with const-qualified type 'void (^const)(void)}}
 block|}
 end_function
 

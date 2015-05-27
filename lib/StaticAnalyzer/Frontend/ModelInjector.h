@@ -176,21 +176,17 @@ name|Stmt
 operator|*
 name|getBody
 argument_list|(
-specifier|const
-name|FunctionDecl
-operator|*
-name|D
+argument|const FunctionDecl *D
 argument_list|)
+name|override
 block|;
 name|Stmt
 operator|*
 name|getBody
 argument_list|(
-specifier|const
-name|ObjCMethodDecl
-operator|*
-name|D
+argument|const ObjCMethodDecl *D
 argument_list|)
+name|override
 block|;
 name|private
 operator|:

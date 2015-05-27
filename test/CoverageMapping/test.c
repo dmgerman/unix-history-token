@@ -27,8 +27,8 @@ name|int
 name|main
 parameter_list|()
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:12 -> [[@LINE+7]]:2 = #0 (HasCodeBefore = 0)
-comment|// CHECK-NEXT: File 0, [[@LINE+1]]:18 -> [[@LINE+1]]:24 = (#0 + #1) (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:12 -> [[@LINE+7]]:2 = #0
+comment|// CHECK-NEXT: File 0, [[@LINE+1]]:18 -> [[@LINE+1]]:24 = (#0 + #1)
 for|for
 control|(
 name|int
@@ -44,11 +44,11 @@ operator|++
 name|i
 control|)
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:26 -> [[@LINE]]:29 = #1 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:26 -> [[@LINE]]:29 = #1
 name|bar
 argument_list|()
 expr_stmt|;
-comment|// CHECK-NEXT: File 0, [[@LINE-1]]:31 -> [[@LINE+1]]:4 = #1 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE-1]]:31 -> [[@LINE+1]]:4 = #1
 block|}
 name|static_func
 argument_list|()
@@ -68,13 +68,14 @@ name|void
 name|foo
 parameter_list|()
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:12 -> [[@LINE+4]]:2 = #0 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:12 -> [[@LINE+5]]:2 = #0
+comment|// CHECK-NEXT: File 0, [[@LINE+1]]:6 -> [[@LINE+1]]:7 = #0
 if|if
 condition|(
 literal|1
 condition|)
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:9 -> [[@LINE+2]]:4 = #1 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:9 -> [[@LINE+2]]:4 = #1
 name|int
 name|i
 init|=
@@ -93,7 +94,7 @@ name|void
 name|bar
 parameter_list|()
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:12 -> [[@LINE+1]]:2 = #0 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:12 -> [[@LINE+1]]:2 = #0
 block|}
 end_function
 
@@ -109,7 +110,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: File 0, [[@LINE]]:20 -> [[@LINE]]:23 = #0 (HasCodeBefore = 0)
+comment|// CHECK: File 0, [[@LINE]]:20 -> [[@LINE]]:23 = #0
 end_comment
 
 begin_comment
@@ -125,7 +126,7 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: File 0, [[@LINE]]:20 -> [[@LINE]]:23 = 0 (HasCodeBefore = 0)
+comment|// CHECK: File 0, [[@LINE]]:20 -> [[@LINE]]:23 = 0
 end_comment
 
 end_unit

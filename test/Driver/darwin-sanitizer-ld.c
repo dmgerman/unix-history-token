@@ -116,11 +116,19 @@ comment|// CHECK-UBSAN: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN: libclang_rt.ubsan_osx.a"
+comment|// CHECK-UBSAN: stdc++
 end_comment
 
 begin_comment
-comment|// CHECK-UBSAN: stdc++
+comment|// CHECK-UBSAN: libclang_rt.ubsan_osx_dynamic.dylib"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN: "-rpath" "@executable_path"
+end_comment
+
+begin_comment
+comment|// CHECK-UBSAN: "-rpath" "{{.*}}lib{{.*}}darwin"
 end_comment
 
 begin_comment
@@ -168,7 +176,15 @@ comment|// CHECK-DYN-UBSAN: "-dylib"
 end_comment
 
 begin_comment
-comment|// CHECK-DYN-UBSAN: libclang_rt.ubsan_osx.a
+comment|// CHECK-DYN-UBSAN: libclang_rt.ubsan_osx_dynamic.dylib"
+end_comment
+
+begin_comment
+comment|// CHECK-DYN-UBSAN: "-rpath" "@executable_path"
+end_comment
+
+begin_comment
+comment|// CHECK-DYN-UBSAN: "-rpath" "{{.*}}lib{{.*}}darwin"
 end_comment
 
 begin_comment
@@ -192,7 +208,7 @@ comment|// CHECK-DYN-BOUNDS: "{{.*}}ld{{(.exe)?}}"
 end_comment
 
 begin_comment
-comment|// CHECK-DYN-BOUNDS-NOT: libclang_rt.ubsan_osx.a
+comment|// CHECK-DYN-BOUNDS-NOT: ubsan_osx
 end_comment
 
 end_unit

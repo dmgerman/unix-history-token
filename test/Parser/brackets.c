@@ -56,7 +56,7 @@ block|,
 literal|16
 block|}
 decl_stmt|;
-comment|// expected-error@-1{{brackets go after the identifier}}
+comment|// expected-error@-1{{brackets are not allowed here; to declare an array, place the brackets after the identifier}}
 comment|// CHECK: {{^}}  int []b = {0,1,4,9,16};
 comment|// CHECK: {{^}}      ~~ ^
 comment|// CHECK: {{^}}         []
@@ -108,7 +108,7 @@ literal|1
 index|]
 name|x
 decl_stmt|;
-comment|// expected-error@-1{{brackets go after the identifier}}
+comment|// expected-error@-1{{brackets are not allowed here; to declare an array, place the brackets after the identifier}}
 comment|// CHECK: {{^}}  int [1][1]x;
 comment|// CHECK: {{^}}      ~~~~~~ ^
 comment|// CHECK: {{^}}             [1][1]
@@ -169,7 +169,7 @@ comment|// expected-error@-1{{expected identifier or '('}}
 comment|// CHECK: {{^}}  int [5] *;
 comment|// CHECK: {{^}}           ^
 comment|// CHECK-NOT: fix-it
-comment|// expected-error@-5{{brackets go after the identifier}}
+comment|// expected-error@-5{{brackets are not allowed here; to declare an array, place the brackets after the identifier}}
 comment|// CHECK: {{^}}  int [5] *;
 comment|// CHECK: {{^}}      ~~~~ ^
 comment|// CHECK: {{^}}          ()[5]
@@ -183,7 +183,7 @@ index|]
 modifier|*
 name|a
 decl_stmt|;
-comment|// expected-error@-1{{brackets go after the identifier}}
+comment|// expected-error@-1{{brackets are not allowed here; to declare an array, place the brackets after the identifier}}
 comment|// CHECK: {{^}}  int [5] * a;
 comment|// CHECK: {{^}}      ~~~~   ^
 comment|// CHECK: {{^}}          (  )[5]

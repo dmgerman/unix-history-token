@@ -24,7 +24,23 @@ comment|// Test that we get an array type that's also a vector out of debug.
 end_comment
 
 begin_comment
-comment|// CHECK: [ DW_TAG_array_type ] [line 0, size 128, align 128, offset 0] [vector] [from int]
+comment|// CHECK: !DICompositeType(tag: DW_TAG_array_type,
+end_comment
+
+begin_comment
+comment|// CHECK-SAME:             baseType: ![[INT:[0-9]+]]
+end_comment
+
+begin_comment
+comment|// CHECK-SAME:             size: 128, align: 128
+end_comment
+
+begin_comment
+comment|// CHECK-SAME:             DIFlagVector
+end_comment
+
+begin_comment
+comment|// CHECK: ![[INT]] = !DIBasicType(name: "int"
 end_comment
 
 end_unit

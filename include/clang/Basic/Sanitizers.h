@@ -63,13 +63,41 @@ directive|define
 name|LLVM_CLANG_BASIC_SANITIZERS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
-name|enum
-name|class
+typedef|typedef
+name|uint64_t
+name|SanitizerMask
+typedef|;
+name|namespace
 name|SanitizerKind
+block|{
+comment|// Assign ordinals to possible values of -fsanitize= flag, which we will use as
+comment|// bit positions.
+enum|enum
+name|SanitizerOrdinal
+enum|:
+name|uint64_t
 block|{
 define|#
 directive|define
@@ -79,39 +107,72 @@ name|NAME
 parameter_list|,
 name|ID
 parameter_list|)
-value|ID,
+value|SO_##ID,
+define|#
+directive|define
+name|SANITIZER_GROUP
+parameter_list|(
+name|NAME
+parameter_list|,
+name|ID
+parameter_list|,
+name|ALIAS
+parameter_list|)
+value|SO_##ID##Group,
 include|#
 directive|include
 file|"clang/Basic/Sanitizers.def"
-name|Unknown
+name|SO_Count
 block|}
-empty_stmt|;
-name|class
+enum|;
+comment|// Define the set of sanitizer kinds, as well as the set of sanitizers each
+comment|// sanitizer group expands into.
+define|#
+directive|define
+name|SANITIZER
+parameter_list|(
+name|NAME
+parameter_list|,
+name|ID
+parameter_list|)
+define|\
+value|const SanitizerMask ID = 1ULL<< SO_##ID;
+define|#
+directive|define
+name|SANITIZER_GROUP
+parameter_list|(
+name|NAME
+parameter_list|,
+name|ID
+parameter_list|,
+name|ALIAS
+parameter_list|)
+define|\
+value|const SanitizerMask ID = ALIAS; \   const SanitizerMask ID##Group = 1ULL<< SO_##ID##Group;
+include|#
+directive|include
+file|"clang/Basic/Sanitizers.def"
+block|}
+struct|struct
 name|SanitizerSet
 block|{
-comment|/// \brief Bitmask of enabled sanitizers.
-name|unsigned
-name|Kinds
-decl_stmt|;
-name|public
-label|:
 name|SanitizerSet
 argument_list|()
 expr_stmt|;
-comment|/// \brief Check if a certain sanitizer is enabled.
+comment|/// \brief Check if a certain (single) sanitizer is enabled.
 name|bool
 name|has
 argument_list|(
-name|SanitizerKind
+name|SanitizerMask
 name|K
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Enable or disable a certain sanitizer.
+comment|/// \brief Enable or disable a certain (single) sanitizer.
 name|void
 name|set
 parameter_list|(
-name|SanitizerKind
+name|SanitizerMask
 name|K
 parameter_list|,
 name|bool
@@ -129,8 +190,33 @@ name|empty
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Bitmask of enabled sanitizers.
+name|SanitizerMask
+name|Mask
+decl_stmt|;
 block|}
-empty_stmt|;
+struct|;
+comment|/// Parse a single value from a -fsanitize= or -fno-sanitize= value list.
+comment|/// Returns a non-zero SanitizerMask, or \c 0 if \p Value is not known.
+name|SanitizerMask
+name|parseSanitizerValue
+parameter_list|(
+name|StringRef
+name|Value
+parameter_list|,
+name|bool
+name|AllowGroups
+parameter_list|)
+function_decl|;
+comment|/// For each sanitizer group bit set in \p Kinds, set the bits for sanitizers
+comment|/// this group enables.
+name|SanitizerMask
+name|expandSanitizerGroups
+parameter_list|(
+name|SanitizerMask
+name|Kinds
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

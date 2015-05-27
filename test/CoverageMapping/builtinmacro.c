@@ -23,7 +23,7 @@ modifier|*
 name|name
 parameter_list|)
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:41 -> [[@LINE+3]]:2 = #0 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:41 -> [[@LINE+3]]:2 = #0
 specifier|static
 specifier|const
 name|char

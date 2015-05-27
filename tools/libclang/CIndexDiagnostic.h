@@ -396,10 +396,10 @@ argument_list|(
 argument|LangOpts
 argument_list|)
 block|{ }
-name|virtual
 operator|~
 name|CXStoredDiagnostic
 argument_list|()
+name|override
 block|{}
 comment|/// \brief Return the severity of the diagnostic.
 name|CXDiagnosticSeverity

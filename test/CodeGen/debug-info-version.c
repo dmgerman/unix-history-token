@@ -21,7 +21,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:  i32 2, !"Debug Info Version", i32 2}
+comment|// CHECK:  i32 2, !"Debug Info Version", i32 3}
 end_comment
 
 begin_comment

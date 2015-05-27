@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-win32     -fsyntax-only -verify -std=c99 -DMS %s
+comment|// RUN: %clang_cc1 -triple i686-win32     -fsyntax-only -fms-extensions -verify -std=c99 -DMS %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-win32   -fsyntax-only -verify -std=c11 -DMS %s
+comment|// RUN: %clang_cc1 -triple x86_64-win32   -fsyntax-only -fms-extensions -verify -std=c11 -DMS %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i686-mingw32   -fsyntax-only -verify -std=c11 -DGNU %s
+comment|// RUN: %clang_cc1 -triple i686-mingw32   -fsyntax-only -fms-extensions -verify -std=c11 -DGNU %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-mingw32 -fsyntax-only -verify -std=c99 -DGNU %s
+comment|// RUN: %clang_cc1 -triple x86_64-mingw32 -fsyntax-only -fms-extensions -verify -std=c99 -DGNU %s
 end_comment
 
 begin_comment

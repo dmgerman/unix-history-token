@@ -66,7 +66,7 @@ name|int
 name|main
 parameter_list|()
 block|{
-comment|// CHECK: getelementptr inbounds ([5 x i8]* @.str, i32 0, i32 0), i32 0
+comment|// CHECK: getelementptr inbounds ([5 x i8], [5 x i8]* @.str, i32 0, i32 0), i32 0
 name|printf
 argument_list|(
 literal|"%ld\n"
@@ -77,7 +77,7 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// CHECK: getelementptr inbounds ([5 x i8]* @.str, i32 0, i32 0), i32 1
+comment|// CHECK: getelementptr inbounds ([5 x i8], [5 x i8]* @.str, i32 0, i32 0), i32 1
 name|printf
 argument_list|(
 literal|"%ld\n"
@@ -88,7 +88,7 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// CHECK: getelementptr inbounds ([5 x i8]* @.str, i32 0, i32 0), i32 4
+comment|// CHECK: getelementptr inbounds ([5 x i8], [5 x i8]* @.str, i32 0, i32 0), i32 4
 name|printf
 argument_list|(
 literal|"%ld\n"
@@ -99,7 +99,7 @@ name|b
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|// CHECK: getelementptr inbounds ([5 x i8]* @.str, i32 0, i32 0), i32 4
+comment|// CHECK: getelementptr inbounds ([5 x i8], [5 x i8]* @.str, i32 0, i32 0), i32 4
 name|printf
 argument_list|(
 literal|"%ld\n"

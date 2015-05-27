@@ -7,6 +7,14 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -triple i386-apple-darwin10 -verify -fasm-blocks
 end_comment
 
+begin_comment
+comment|// Disabling gnu inline assembly should have no effect on this testcase
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple i386-apple-darwin10 -verify -fasm-blocks -fno-gnu-inline-asm
+end_comment
+
 begin_define
 define|#
 directive|define

@@ -54,7 +54,7 @@ name|i
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @fi1
-comment|// CHECK: load atomic i32* {{.*}} seq_cst
+comment|// CHECK: load atomic i32, i32* {{.*}} seq_cst
 return|return
 name|__c11_atomic_load
 argument_list|(
@@ -76,7 +76,7 @@ name|i
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @fi1a
-comment|// CHECK: load atomic i32* {{.*}} seq_cst
+comment|// CHECK: load atomic i32, i32* {{.*}} seq_cst
 name|int
 name|v
 decl_stmt|;
@@ -106,7 +106,7 @@ name|i
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @fi1b
-comment|// CHECK: load atomic i32* {{.*}} seq_cst
+comment|// CHECK: load atomic i32, i32* {{.*}} seq_cst
 return|return
 name|__atomic_load_n
 argument_list|(
@@ -128,7 +128,7 @@ name|i
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @fi1c
-comment|// CHECK: load atomic i32* {{.*}} seq_cst
+comment|// CHECK: load atomic i32, i32* {{.*}} seq_cst
 return|return
 name|atomic_load
 argument_list|(
@@ -559,7 +559,7 @@ name|d
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @ff1
-comment|// CHECK: load atomic i32* {{.*}} monotonic
+comment|// CHECK: load atomic i32, i32* {{.*}} monotonic
 return|return
 name|__c11_atomic_load
 argument_list|(
@@ -690,11 +690,11 @@ comment|// CHECK:      [[A_ADDR:%.*]] = alloca %struct.S*, align 4
 comment|// CHECK-NEXT: [[B_ADDR:%.*]] = alloca %struct.S*, align 4
 comment|// CHECK-NEXT: store %struct.S* %a, %struct.S** [[A_ADDR]], align 4
 comment|// CHECK-NEXT: store %struct.S* %b, %struct.S** [[B_ADDR]], align 4
-comment|// CHECK-NEXT: [[LOAD_A_PTR:%.*]] = load %struct.S** [[A_ADDR]], align 4
-comment|// CHECK-NEXT: [[LOAD_B_PTR:%.*]] = load %struct.S** [[B_ADDR]], align 4
+comment|// CHECK-NEXT: [[LOAD_A_PTR:%.*]] = load %struct.S*, %struct.S** [[A_ADDR]], align 4
+comment|// CHECK-NEXT: [[LOAD_B_PTR:%.*]] = load %struct.S*, %struct.S** [[B_ADDR]], align 4
 comment|// CHECK-NEXT: [[COERCED_A:%.*]] = bitcast %struct.S* [[LOAD_A_PTR]] to i8*
 comment|// CHECK-NEXT: [[COERCED_B:%.*]] = bitcast %struct.S* [[LOAD_B_PTR]] to i64*
-comment|// CHECK-NEXT: [[LOAD_B:%.*]] = load i64* [[COERCED_B]], align 4
+comment|// CHECK-NEXT: [[LOAD_B:%.*]] = load i64, i64* [[COERCED_B]], align 4
 comment|// CHECK-NEXT: call void @__atomic_store_8(i8* [[COERCED_A]], i64 [[LOAD_B]],
 comment|// CHECK-NEXT: ret void
 name|__atomic_store
@@ -736,12 +736,12 @@ comment|// CHECK-NEXT: [[C_ADDR:%.*]] = alloca %struct.S*, align 4
 comment|// CHECK-NEXT: store %struct.S* %a, %struct.S** [[A_ADDR]], align 4
 comment|// CHECK-NEXT: store %struct.S* %b, %struct.S** [[B_ADDR]], align 4
 comment|// CHECK-NEXT: store %struct.S* %c, %struct.S** [[C_ADDR]], align 4
-comment|// CHECK-NEXT: [[LOAD_A_PTR:%.*]] = load %struct.S** [[A_ADDR]], align 4
-comment|// CHECK-NEXT: [[LOAD_B_PTR:%.*]] = load %struct.S** [[B_ADDR]], align 4
-comment|// CHECK-NEXT: [[LOAD_C_PTR:%.*]] = load %struct.S** [[C_ADDR]], align 4
+comment|// CHECK-NEXT: [[LOAD_A_PTR:%.*]] = load %struct.S*, %struct.S** [[A_ADDR]], align 4
+comment|// CHECK-NEXT: [[LOAD_B_PTR:%.*]] = load %struct.S*, %struct.S** [[B_ADDR]], align 4
+comment|// CHECK-NEXT: [[LOAD_C_PTR:%.*]] = load %struct.S*, %struct.S** [[C_ADDR]], align 4
 comment|// CHECK-NEXT: [[COERCED_A:%.*]] = bitcast %struct.S* [[LOAD_A_PTR]] to i8*
 comment|// CHECK-NEXT: [[COERCED_B:%.*]] = bitcast %struct.S* [[LOAD_B_PTR]] to i64*
-comment|// CHECK-NEXT: [[LOAD_B:%.*]] = load i64* [[COERCED_B]], align 4
+comment|// CHECK-NEXT: [[LOAD_B:%.*]] = load i64, i64* [[COERCED_B]], align 4
 comment|// CHECK-NEXT: [[CALL:%.*]] = call i64 @__atomic_exchange_8(i8* [[COERCED_A]], i64 [[LOAD_B]],
 comment|// CHECK-NEXT: [[COERCED_C:%.*]] = bitcast %struct.S* [[LOAD_C_PTR]] to i64*
 comment|// CHECK-NEXT: store i64 [[CALL]], i64* [[COERCED_C]], align 4
@@ -786,13 +786,13 @@ comment|// CHECK-NEXT: [[C_ADDR:%.*]] = alloca %struct.S*, align 4
 comment|// CHECK:      store %struct.S* %a, %struct.S** [[A_ADDR]], align 4
 comment|// CHECK-NEXT: store %struct.S* %b, %struct.S** [[B_ADDR]], align 4
 comment|// CHECK-NEXT: store %struct.S* %c, %struct.S** [[C_ADDR]], align 4
-comment|// CHECK-NEXT: [[LOAD_A_PTR:%.*]] = load %struct.S** [[A_ADDR]], align 4
-comment|// CHECK-NEXT: [[LOAD_B_PTR:%.*]] = load %struct.S** [[B_ADDR]], align 4
-comment|// CHECK-NEXT: [[LOAD_C_PTR:%.*]] = load %struct.S** [[C_ADDR]], align 4
+comment|// CHECK-NEXT: [[LOAD_A_PTR:%.*]] = load %struct.S*, %struct.S** [[A_ADDR]], align 4
+comment|// CHECK-NEXT: [[LOAD_B_PTR:%.*]] = load %struct.S*, %struct.S** [[B_ADDR]], align 4
+comment|// CHECK-NEXT: [[LOAD_C_PTR:%.*]] = load %struct.S*, %struct.S** [[C_ADDR]], align 4
 comment|// CHECK-NEXT: [[COERCED_A:%.*]] = bitcast %struct.S* [[LOAD_A_PTR]] to i8*
 comment|// CHECK-NEXT: [[COERCED_B:%.*]] = bitcast %struct.S* [[LOAD_B_PTR]] to i8*
 comment|// CHECK-NEXT: [[COERCED_C:%.*]] = bitcast %struct.S* [[LOAD_C_PTR]] to i64*
-comment|// CHECK-NEXT: [[LOAD_C:%.*]] = load i64* [[COERCED_C]], align 4
+comment|// CHECK-NEXT: [[LOAD_C:%.*]] = load i64, i64* [[COERCED_C]], align 4
 comment|// CHECK-NEXT: [[CALL:%.*]] = call zeroext i1 @__atomic_compare_exchange_8(i8* [[COERCED_A]], i8* [[COERCED_B]], i64 [[LOAD_C]]
 comment|// CHECK-NEXT: ret i1 [[CALL]]
 return|return
@@ -829,7 +829,7 @@ name|p
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @fp1
-comment|// CHECK: load atomic i32* {{.*}} seq_cst
+comment|// CHECK: load atomic i32, i32* {{.*}} seq_cst
 return|return
 name|__c11_atomic_load
 argument_list|(
@@ -1486,7 +1486,7 @@ decl_stmt|;
 comment|// CHECK: %[[call1:.*]] = call zeroext i1 @__atomic_compare_exchange(i32 3, {{.*}} @smallThing{{.*}} @thing1{{.*}} @thing2
 comment|// CHECK: %[[zext1:.*]] = zext i1 %[[call1]] to i8
 comment|// CHECK: store i8 %[[zext1]], i8* %[[x_mem]], align 1
-comment|// CHECK: %[[x:.*]] = load i8* %[[x_mem]]
+comment|// CHECK: %[[x:.*]] = load i8, i8* %[[x_mem]]
 comment|// CHECK: %[[x_bool:.*]] = trunc i8 %[[x]] to i1
 comment|// CHECK: %[[conv1:.*]] = zext i1 %[[x_bool]] to i32
 name|struct
@@ -1920,11 +1920,11 @@ return|;
 comment|// CHECK: %[[atomictmp:.*]] = alloca i32, align 4
 comment|// CHECK: %[[atomicdst:.*]] = alloca i32, align 4
 comment|// CHECK: store i32 1, i32* %[[atomictmp]]
-comment|// CHECK: %[[one:.*]] = load i32* %[[atomictmp]], align 4
+comment|// CHECK: %[[one:.*]] = load i32, i32* %[[atomictmp]], align 4
 comment|// CHECK: %[[old:.*]] = atomicrmw or i32 addrspace(257)* inttoptr (i32 776 to i32 addrspace(257)*), i32 %[[one]] monotonic
 comment|// CHECK: %[[new:.*]] = or i32 %[[old]], %[[one]]
 comment|// CHECK: store i32 %[[new]], i32* %[[atomicdst]], align 4
-comment|// CHECK: %[[ret:.*]] = load i32* %[[atomicdst]], align 4
+comment|// CHECK: %[[ret:.*]] = load i32, i32* %[[atomicdst]], align 4
 comment|// CHECK: ret i32 %[[ret]]
 block|}
 end_function
@@ -1946,10 +1946,10 @@ comment|// CHECK-LABEL: @PR17306_1
 comment|// CHECK:      %[[i_addr:.*]] = alloca i32
 comment|// CHECK-NEXT: %[[atomicdst:.*]] = alloca i32
 comment|// CHECK-NEXT: store i32* %i, i32** %[[i_addr]]
-comment|// CHECK-NEXT: %[[addr:.*]] = load i32** %[[i_addr]]
-comment|// CHECK-NEXT: %[[res:.*]] = load atomic volatile i32* %[[addr]] seq_cst
+comment|// CHECK-NEXT: %[[addr:.*]] = load i32*, i32** %[[i_addr]]
+comment|// CHECK-NEXT: %[[res:.*]] = load atomic volatile i32, i32* %[[addr]] seq_cst
 comment|// CHECK-NEXT: store i32 %[[res]], i32* %[[atomicdst]]
-comment|// CHECK-NEXT: %[[retval:.*]] = load i32* %[[atomicdst]]
+comment|// CHECK-NEXT: %[[retval:.*]] = load i32, i32* %[[atomicdst]]
 comment|// CHECK-NEXT: ret i32 %[[retval]]
 return|return
 name|__c11_atomic_load
@@ -1982,14 +1982,14 @@ comment|// CHECK-NEXT: %[[atomictmp:.*]] = alloca i32
 comment|// CHECK-NEXT: %[[atomicdst:.*]] = alloca i32
 comment|// CHECK-NEXT: store i32* %i, i32** %[[i_addr]]
 comment|// CHECK-NEXT: store i32 %value, i32* %[[value_addr]]
-comment|// CHECK-NEXT: %[[i_lval:.*]] = load i32** %[[i_addr]]
-comment|// CHECK-NEXT: %[[value:.*]] = load i32* %[[value_addr]]
+comment|// CHECK-NEXT: %[[i_lval:.*]] = load i32*, i32** %[[i_addr]]
+comment|// CHECK-NEXT: %[[value:.*]] = load i32, i32* %[[value_addr]]
 comment|// CHECK-NEXT: store i32 %[[value]], i32* %[[atomictmp]]
-comment|// CHECK-NEXT: %[[value_lval:.*]] = load i32* %[[atomictmp]]
+comment|// CHECK-NEXT: %[[value_lval:.*]] = load i32, i32* %[[atomictmp]]
 comment|// CHECK-NEXT: %[[old_val:.*]] = atomicrmw volatile add i32* %[[i_lval]], i32 %[[value_lval]] seq_cst
 comment|// CHECK-NEXT: %[[new_val:.*]] = add i32 %[[old_val]], %[[value_lval]]
 comment|// CHECK-NEXT: store i32 %[[new_val]], i32* %[[atomicdst]]
-comment|// CHECK-NEXT: %[[retval:.*]] = load i32* %[[atomicdst]]
+comment|// CHECK-NEXT: %[[retval:.*]] = load i32, i32* %[[atomicdst]]
 comment|// CHECK-NEXT: ret i32 %[[retval]]
 return|return
 name|__atomic_add_fetch

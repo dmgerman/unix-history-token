@@ -128,11 +128,11 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-VFP3-D16 %s
 end_comment
 
 begin_comment
-comment|// CHECK-VFP3-D16: "-target-feature" "+vfp3"
+comment|// CHECK-VFP3-D16: "-target-feature" "+d16"
 end_comment
 
 begin_comment
-comment|// CHECK-VFP3-D16: "-target-feature" "+d16"
+comment|// CHECK-VFP3-D16: "-target-feature" "+vfp3"
 end_comment
 
 begin_comment
@@ -180,11 +180,11 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-VFP4-D16 %s
 end_comment
 
 begin_comment
-comment|// CHECK-VFP4-D16: "-target-feature" "+vfp4"
+comment|// CHECK-VFP4-D16: "-target-feature" "+d16"
 end_comment
 
 begin_comment
-comment|// CHECK-VFP4-D16: "-target-feature" "+d16"
+comment|// CHECK-VFP4-D16: "-target-feature" "+vfp4"
 end_comment
 
 begin_comment
@@ -208,7 +208,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-FP4-SP-D16 %s
 end_comment
 
 begin_comment
-comment|// CHECK-FP4-SP-D16: "-target-feature" "+vfp4"
+comment|// CHECK-FP4-SP-D16: "-target-feature" "+fp-only-sp"
 end_comment
 
 begin_comment
@@ -216,7 +216,7 @@ comment|// CHECK-FP4-SP-D16: "-target-feature" "+d16"
 end_comment
 
 begin_comment
-comment|// CHECK-FP4-SP-D16: "-target-feature" "+fp-only-sp"
+comment|// CHECK-FP4-SP-D16: "-target-feature" "+vfp4"
 end_comment
 
 begin_comment
@@ -240,15 +240,15 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-FP5-SP-D16 %s
 end_comment
 
 begin_comment
-comment|// CHECK-FP5-SP-D16: "-target-feature" "+fp-armv8"
-end_comment
-
-begin_comment
 comment|// CHECK-FP5-SP-D16: "-target-feature" "+fp-only-sp"
 end_comment
 
 begin_comment
 comment|// CHECK-FP5-SP-D16: "-target-feature" "+d16"
+end_comment
+
+begin_comment
+comment|// CHECK-FP5-SP-D16: "-target-feature" "+fp-armv8"
 end_comment
 
 begin_comment
@@ -276,11 +276,11 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-FP5-DP-D16 %s
 end_comment
 
 begin_comment
-comment|// CHECK-FP5-DP-D16: "-target-feature" "+fp-armv8"
+comment|// CHECK-FP5-DP-D16: "-target-feature" "+d16"
 end_comment
 
 begin_comment
-comment|// CHECK-FP5-DP-D16: "-target-feature" "+d16"
+comment|// CHECK-FP5-DP-D16: "-target-feature" "+fp-armv8"
 end_comment
 
 begin_comment
@@ -309,10 +309,6 @@ end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-NEON-VFPV3 %s
-end_comment
-
-begin_comment
-comment|// CHECK-NEON-VFPV3: "-target-feature" "+vfp3"
 end_comment
 
 begin_comment
@@ -488,7 +484,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-HF %s
 end_comment
 
 begin_comment
-comment|// CHECK-HF: "-target-cpu" "arm1136jf-s"
+comment|// CHECK-HF: "-target-cpu" "arm1176jzf-s"
 end_comment
 
 begin_comment

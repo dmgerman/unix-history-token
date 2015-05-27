@@ -2206,6 +2206,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Improper use of&apos;open&apos;</st
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -2798,6 +2802,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Improper use of&apos;dispatch_once&
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>osx.API</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -3115,6 +3123,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Improper use of&apos;pthread_once&apos;</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
@@ -3438,6 +3450,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Undefined allocation of 0 bytes (CE
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -3755,6 +3771,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Undefined allocation of 0 bytes (CERT MEM04-C; CWE-131)</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
@@ -4078,6 +4098,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Undefined allocation of 0 bytes (CE
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -4395,6 +4419,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Undefined allocation of 0 bytes (CERT MEM04-C; CWE-131)</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
@@ -4718,6 +4746,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Undefined allocation of 0 bytes (CE
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -5035,6 +5067,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Undefined allocation of 0 bytes (CERT MEM04-C; CWE-131)</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
 end_comment
 
 begin_comment
@@ -5358,6 +5394,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Undefined allocation of 0 bytes (CE
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -5678,6 +5718,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Undefined allocation of 0 bytes (CE
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.API</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -5995,6 +6039,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Improper use of&apos;dispatch_once&apos;</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>osx.API</string>
 end_comment
 
 begin_comment
@@ -7634,6 +7682,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Dereference of null pointer</string
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>location</key>
 end_comment
 
@@ -9175,6 +9227,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Dereference of null pointer</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>core.NullDereference</string>
 end_comment
 
 begin_comment

@@ -119,5 +119,48 @@ begin_comment
 comment|// CHECK: abc(baz(q))
 end_comment
 
+begin_define
+define|#
+directive|define
+name|str
+parameter_list|(
+name|x
+parameter_list|)
+value|#x
+end_define
+
+begin_define
+define|#
+directive|define
+name|collapse_spaces
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|,
+name|c
+parameter_list|,
+name|d
+parameter_list|)
+value|str(a ## - ## b ## - ## c ## d)
+end_define
+
+begin_macro
+name|collapse_spaces
+argument_list|(
+literal|1a
+argument_list|,
+argument|b2
+argument_list|,
+literal|3c
+argument_list|,
+argument|d4
+argument_list|)
+end_macro
+
+begin_comment
+comment|// CHECK: "1a-b2-3cd4"
+end_comment
+
 end_unit
 

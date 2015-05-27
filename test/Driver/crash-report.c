@@ -76,7 +76,15 @@ comment|// CHECKSRC: FOO
 end_comment
 
 begin_comment
-comment|// CHECKSH: "-cc1"
+comment|// CHECKSH: # Crash reproducer
+end_comment
+
+begin_comment
+comment|// CHECKSH-NEXT: # Original command: {{.*$}}
+end_comment
+
+begin_comment
+comment|// CHECKSH-NEXT: "-cc1"
 end_comment
 
 begin_comment

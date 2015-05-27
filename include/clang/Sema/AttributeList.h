@@ -652,9 +652,12 @@ return|;
 block|}
 name|AttributeList
 argument_list|(
-argument|const AttributeList&
+specifier|const
+name|AttributeList
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -664,21 +667,24 @@ specifier|const
 name|AttributeList
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|void
 name|operator
 name|delete
-argument_list|(
+parameter_list|(
 name|void
-operator|*
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
+modifier|*
+parameter_list|)
+init|=
+name|delete
+function_decl|;
 operator|~
 name|AttributeList
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|size_t
 name|allocated_size
@@ -3211,9 +3217,12 @@ argument_list|)
 block|{   }
 name|ParsedAttributes
 argument_list|(
-argument|const ParsedAttributes&
+specifier|const
+name|ParsedAttributes
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|AttributePool
 operator|&
@@ -3900,6 +3909,8 @@ name|ExpectedFunctionMethodOrParameter
 block|,
 name|ExpectedClass
 block|,
+name|ExpectedEnum
+block|,
 name|ExpectedVariable
 block|,
 name|ExpectedMethod
@@ -3939,6 +3950,8 @@ block|,
 name|ExpectedObjectiveCProtocol
 block|,
 name|ExpectedFunctionGlobalVarMethodOrProperty
+block|,
+name|ExpectedStructOrUnionOrTypedef
 block|,
 name|ExpectedStructOrTypedef
 block|,

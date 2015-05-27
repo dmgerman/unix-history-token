@@ -355,7 +355,7 @@ comment|// CHECK: call i32 asm "foo $1,$0", "=r,X[[CLOBBERS]](i32 {{[a-zA-Z0-9@%
 asm|asm("foo %1,%0" : "=r" (out0) : "X" (min1));
 comment|// CHECK: call i32 asm "foo $1,$0", "=r,X[[CLOBBERS]](i32 1)
 asm|asm("foo %1,%0" : "=r" (out0) : "X" (1));
-comment|// CHECK: call i32 asm "foo $1,$0", "=r,X[[CLOBBERS]](i32* getelementptr inbounds ([2 x i32]* {{[a-zA-Z0-9@%]+}}, i32 0, i32 0))
+comment|// CHECK: call i32 asm "foo $1,$0", "=r,X[[CLOBBERS]](i32* getelementptr inbounds ([2 x i32], [2 x i32]* {{[a-zA-Z0-9@%]+}}, i32 0, i32 0))
 asm|asm("foo %1,%0" : "=r" (out0) : "X" (marray));
 comment|// CHECK: call i32 asm "foo $1,$0", "=r,X[[CLOBBERS]](double {{[0-9.eE+-]+}})
 asm|asm("foo %1,%0" : "=r" (out0) : "X" (1.0e+01));
@@ -380,7 +380,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|// Constraint converted differently on different platforms moved to platform-specific.
-comment|// : call i32 asm "foo $1,$0", "=r,im[[CLOBBERS]](i32* getelementptr inbounds ([2 x i32]* {{[a-zA-Z0-9@%]+}}, i32 0, i32 0))
+comment|// : call i32 asm "foo $1,$0", "=r,im[[CLOBBERS]](i32* getelementptr inbounds ([2 x i32], [2 x i32]* {{[a-zA-Z0-9@%]+}}, i32 0, i32 0))
 asm|asm("foo %1,%0" : "=r" (out0) : "p" (marray));
 block|}
 end_function
@@ -676,7 +676,7 @@ comment|// CHECK: call i32 asm "foo $1,$0", "=r|r,r|X[[CLOBBERS]](i32 {{[a-zA-Z0
 asm|asm("foo %1,%0" : "=r,r" (out0) : "r,X" (min1));
 comment|// CHECK: call i32 asm "foo $1,$0", "=r|r,r|X[[CLOBBERS]](i32 1)
 asm|asm("foo %1,%0" : "=r,r" (out0) : "r,X" (1));
-comment|// CHECK: call i32 asm "foo $1,$0", "=r|r,r|X[[CLOBBERS]](i32* getelementptr inbounds ([2 x i32]* {{[a-zA-Z0-9@%]+}}, i32 0, i32 0))
+comment|// CHECK: call i32 asm "foo $1,$0", "=r|r,r|X[[CLOBBERS]](i32* getelementptr inbounds ([2 x i32], [2 x i32]* {{[a-zA-Z0-9@%]+}}, i32 0, i32 0))
 asm|asm("foo %1,%0" : "=r,r" (out0) : "r,X" (marray));
 comment|// CHECK: call i32 asm "foo $1,$0", "=r|r,r|X[[CLOBBERS]](double {{[0-9.eE+-]+}})
 asm|asm("foo %1,%0" : "=r,r" (out0) : "r,X" (1.0e+01));
@@ -701,7 +701,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|// Constraint converted differently on different platforms moved to platform-specific.
-comment|// : call i32 asm "foo $1,$0", "=r|r,r|im[[CLOBBERS]](i32* getelementptr inbounds ([2 x i32]* {{[a-zA-Z0-9@%]+}}, i32 0, i32 0))
+comment|// : call i32 asm "foo $1,$0", "=r|r,r|im[[CLOBBERS]](i32* getelementptr inbounds ([2 x i32], [2 x i32]* {{[a-zA-Z0-9@%]+}}, i32 0, i32 0))
 asm|asm("foo %1,%0" : "=r,r" (out0) : "r,p" (marray));
 block|}
 end_function

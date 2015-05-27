@@ -40,6 +40,11 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
+name|__PS4__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|SHORT_WCHAR
 argument_list|)
 end_if

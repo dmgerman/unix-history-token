@@ -27,7 +27,7 @@ lambda|^
 parameter_list|()
 block|{
 comment|// expected-warning {{block pointer variable 'arc_fail' is uninitialized when captured by block}} \
-comment|// expected-note {{maybe you meant to use __block 'arc_fail'}}
+comment|// expected-note {{did you mean to use __block 'arc_fail'}}
 name|arc_fail
 argument_list|()
 function_decl|;

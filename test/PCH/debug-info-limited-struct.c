@@ -8,7 +8,15 @@ comment|// RUN: %clang_cc1 -include-pch %t -emit-llvm %s -g -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK-DAG: [ DW_TAG_structure_type ] [foo] {{.*}} [def]
+comment|// CHECK: !DICompositeType(tag: DW_TAG_structure_type, name: "foo"
+end_comment
+
+begin_comment
+comment|// CHECK-NOT:              flags: {{[^,]*}}FlagFwdDecl
+end_comment
+
+begin_comment
+comment|// CHECK-SAME:             {{$}}
 end_comment
 
 end_unit

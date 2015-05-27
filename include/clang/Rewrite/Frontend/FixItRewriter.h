@@ -254,6 +254,7 @@ comment|/// \brief Destroy the fix-it rewriter.
 operator|~
 name|FixItRewriter
 argument_list|()
+name|override
 expr_stmt|;
 comment|/// \brief Check whether there are modifications for a given file.
 name|bool

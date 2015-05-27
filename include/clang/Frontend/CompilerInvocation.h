@@ -221,7 +221,8 @@ specifier|const
 name|CompilerInvocationBase
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:

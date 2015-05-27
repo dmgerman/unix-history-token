@@ -719,9 +719,9 @@ name|X
 index|]
 return|;
 comment|// CHECK: [[Xaddr:%[^ ]+]] = alloca i64, align 8
-comment|// CHECK: load {{.*}}* [[Xaddr]]
-comment|// CHECK-NEXT: getelementptr inbounds [100 x i32]* %A, i32 0,
-comment|// CHECK-NEXT: load i32*
+comment|// CHECK: load {{.*}}, {{.*}}* [[Xaddr]]
+comment|// CHECK-NEXT: getelementptr inbounds [100 x i32], [100 x i32]* %A, i32 0,
+comment|// CHECK-NEXT: load i32, i32*
 block|}
 end_function
 
@@ -966,6 +966,54 @@ expr_stmt|;
 comment|// CHECK: add nsw i128 %{{.}}, -1
 block|}
 end_function
+
+begin_comment
+comment|// PR23597: We should evaluate union cast operands even if the cast is unused.
+end_comment
+
+begin_typedef
+typedef|typedef
+union|union
+name|u
+block|{
+name|int
+name|i
+decl_stmt|;
+block|}
+name|strct
+typedef|;
+end_typedef
+
+begin_function_decl
+name|int
+name|returns_int
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|f18
+parameter_list|()
+block|{
+operator|(
+name|strct
+operator|)
+name|returns_int
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define void @f18()
+end_comment
+
+begin_comment
+comment|// CHECK: call i32 @returns_int()
+end_comment
 
 end_unit
 

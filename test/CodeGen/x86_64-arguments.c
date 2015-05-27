@@ -1,10 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -emit-llvm -o - %s| FileCheck %s
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -emit-llvm -o - %s | \
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -emit-llvm -o - %s -target-feature +avx | FileCheck %s -check-prefix=AVX
+comment|// RUN:   FileCheck %s -check-prefix=CHECK -check-prefix=SSE
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -emit-llvm -o - %s -target-feature +avx | \
+end_comment
+
+begin_comment
+comment|// RUN:   FileCheck %s -check-prefix=CHECK -check-prefix=AVX
 end_comment
 
 begin_include
@@ -1416,11 +1424,11 @@ comment|// AVX: declare void @f37(<8 x float>)
 end_comment
 
 begin_comment
-comment|// CHECK: declare void @f38(%struct.s256* byval align 32)
+comment|// SSE: declare void @f38(%struct.s256* byval align 32)
 end_comment
 
 begin_comment
-comment|// CHECK: declare void @f37(<8 x float>* byval align 32)
+comment|// SSE: declare void @f37(<8 x float>* byval align 32)
 end_comment
 
 begin_typedef
@@ -2101,15 +2109,15 @@ comment|// CHECK-LABEL:    define void @test49(
 end_comment
 
 begin_comment
-comment|// CHECK:      [[T0:%.*]] = load double*
+comment|// CHECK:      [[T0:%.*]] = load double, double*
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T1:%.*]] = load double*
+comment|// CHECK-NEXT: [[T1:%.*]] = load double, double*
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: call void (double, ...)* @test49_helper(double [[T0]], double [[T1]])
+comment|// CHECK-NEXT: call void (double, ...) @test49_helper(double [[T0]], double [[T1]])
 end_comment
 
 begin_function_decl
@@ -2145,15 +2153,15 @@ comment|// CHECK-LABEL:    define void @test50(
 end_comment
 
 begin_comment
-comment|// CHECK:      [[T0:%.*]] = load double*
+comment|// CHECK:      [[T0:%.*]] = load double, double*
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T1:%.*]] = load double*
+comment|// CHECK-NEXT: [[T1:%.*]] = load double, double*
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: call void (double, double, ...)* bitcast (void (...)* @test50_helper to void (double, double, ...)*)(double [[T0]], double [[T1]])
+comment|// CHECK-NEXT: call void (double, double, ...) bitcast (void (...)* @test50_helper to void (double, double, ...)*)(double [[T0]], double [[T1]])
 end_comment
 
 begin_struct
@@ -2211,11 +2219,11 @@ comment|// CHECK: [[REG_SAVE_AREA_PTR:%.*]] = getelementptr inbounds {{.*}}, i32
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[REG_SAVE_AREA:%.*]] = load i8** [[REG_SAVE_AREA_PTR]]
+comment|// CHECK-NEXT: [[REG_SAVE_AREA:%.*]] = load i8*, i8** [[REG_SAVE_AREA_PTR]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[VALUE_ADDR:%.*]] = getelementptr i8* [[REG_SAVE_AREA]], i32 {{.*}}
+comment|// CHECK-NEXT: [[VALUE_ADDR:%.*]] = getelementptr i8, i8* [[REG_SAVE_AREA]], i32 {{.*}}
 end_comment
 
 begin_comment

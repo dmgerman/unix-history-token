@@ -158,6 +158,7 @@ operator|:
 operator|~
 name|CodeGenAction
 argument_list|()
+name|override
 block|;
 comment|/// setLinkModule - Set the link module to be used by this action.  If a link
 comment|/// module is not provided, and CodeGenOptions::LinkBitcodeFile is non-empty,

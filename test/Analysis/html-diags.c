@@ -32,10 +32,6 @@ comment|// RUN: ls %T/dir/testrelative | grep report
 end_comment
 
 begin_comment
-comment|// REQUIRES: shell
-end_comment
-
-begin_comment
 comment|// Currently this test mainly checks that the HTML diagnostics doesn't crash
 end_comment
 

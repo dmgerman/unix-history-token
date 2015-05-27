@@ -626,7 +626,7 @@ comment|// CHECK: define i64 @f24()
 end_comment
 
 begin_comment
-comment|// CHECK: define i128 @f25()
+comment|// CHECK: define [2 x i64] @f25()
 end_comment
 
 begin_comment
@@ -915,7 +915,7 @@ comment|// CHECK: @g34(%struct.s34* %s)
 end_comment
 
 begin_comment
-comment|// CHECK: %[[a:.*]] = load i8* %{{.*}}
+comment|// CHECK: %[[a:.*]] = load i8, i8* %{{.*}}
 end_comment
 
 begin_comment
@@ -1247,9 +1247,9 @@ comment|// CHECK: define<4 x float> @f35(i32 %i, [4 x float] %s1.coerce, [4 x fl
 comment|// CHECK: %s1 = alloca %struct.s35, align 16
 comment|// CHECK: %s2 = alloca %struct.s35, align 16
 comment|// CHECK: %[[a:.*]] = bitcast %struct.s35* %s1 to<4 x float>*
-comment|// CHECK: load<4 x float>* %[[a]], align 16
+comment|// CHECK: load<4 x float>,<4 x float>* %[[a]], align 16
 comment|// CHECK: %[[b:.*]] = bitcast %struct.s35* %s2 to<4 x float>*
-comment|// CHECK: load<4 x float>* %[[b]], align 16
+comment|// CHECK: load<4 x float>,<4 x float>* %[[b]], align 16
 name|float32x4_t
 name|v
 init|=
@@ -1343,9 +1343,9 @@ comment|// CHECK: %s2 = alloca %struct.s36, align 16
 comment|// CHECK: store i128 %s1.coerce, i128* %{{.*}}, align 1
 comment|// CHECK: store i128 %s2.coerce, i128* %{{.*}}, align 1
 comment|// CHECK: %[[a:.*]] = bitcast %struct.s36* %s1 to<4 x i32>*
-comment|// CHECK: load<4 x i32>* %[[a]], align 16
+comment|// CHECK: load<4 x i32>,<4 x i32>* %[[a]], align 16
 comment|// CHECK: %[[b:.*]] = bitcast %struct.s36* %s2 to<4 x i32>*
-comment|// CHECK: load<4 x i32>* %[[b]], align 16
+comment|// CHECK: load<4 x i32>,<4 x i32>* %[[b]], align 16
 name|int32x4_t
 name|v
 init|=
@@ -1422,9 +1422,9 @@ parameter_list|)
 block|{
 comment|// CHECK: define<4 x i32> @f37(i32 %i, %struct.s37* %s1, %struct.s37* %s2)
 comment|// CHECK: %[[a:.*]] = bitcast %struct.s37* %s1 to<4 x i32>*
-comment|// CHECK: load<4 x i32>* %[[a]], align 16
+comment|// CHECK: load<4 x i32>,<4 x i32>* %[[a]], align 16
 comment|// CHECK: %[[b:.*]] = bitcast %struct.s37* %s2 to<4 x i32>*
-comment|// CHECK: load<4 x i32>* %[[b]], align 16
+comment|// CHECK: load<4 x i32>,<4 x i32>* %[[b]], align 16
 name|int32x4_t
 name|v
 init|=
@@ -1555,10 +1555,10 @@ comment|// CHECK: %s1 = alloca %struct.s38, align 8
 comment|// CHECK: %s2 = alloca %struct.s38, align 8
 comment|// CHECK: store i64 %s1.coerce, i64* %{{.*}}, align 1
 comment|// CHECK: store i64 %s2.coerce, i64* %{{.*}}, align 1
-comment|// CHECK: getelementptr inbounds %struct.s38* %s1, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s38* %s2, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s38* %s1, i32 0, i32 1
-comment|// CHECK: getelementptr inbounds %struct.s38* %s2, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s38, %struct.s38* %s1, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s38, %struct.s38* %s2, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s38, %struct.s38* %s1, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s38, %struct.s38* %s2, i32 0, i32 1
 return|return
 name|s1
 operator|.
@@ -1599,8 +1599,8 @@ name|caller38
 parameter_list|()
 block|{
 comment|// CHECK: define i32 @caller38()
-comment|// CHECK: %[[a:.*]] = load i64* bitcast (%struct.s38* @g38 to i64*), align 1
-comment|// CHECK: %[[b:.*]] = load i64* bitcast (%struct.s38* @g38_2 to i64*), align 1
+comment|// CHECK: %[[a:.*]] = load i64, i64* bitcast (%struct.s38* @g38 to i64*), align 1
+comment|// CHECK: %[[b:.*]] = load i64, i64* bitcast (%struct.s38* @g38_2 to i64*), align 1
 comment|// CHECK: call i32 @f38(i32 3, i64 %[[a]], i64 %[[b]])
 return|return
 name|f38
@@ -1669,10 +1669,10 @@ comment|// CHECK: %s1 = alloca %struct.s38, align 8
 comment|// CHECK: %s2 = alloca %struct.s38, align 8
 comment|// CHECK: store i64 %s1.coerce, i64* %{{.*}}, align 1
 comment|// CHECK: store i64 %s2.coerce, i64* %{{.*}}, align 1
-comment|// CHECK: getelementptr inbounds %struct.s38* %s1, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s38* %s2, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s38* %s1, i32 0, i32 1
-comment|// CHECK: getelementptr inbounds %struct.s38* %s2, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s38, %struct.s38* %s1, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s38, %struct.s38* %s2, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s38, %struct.s38* %s1, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s38, %struct.s38* %s2, i32 0, i32 1
 return|return
 name|s1
 operator|.
@@ -1717,8 +1717,8 @@ name|caller38_stack
 parameter_list|()
 block|{
 comment|// CHECK: define i32 @caller38_stack()
-comment|// CHECK: %[[a:.*]] = load i64* bitcast (%struct.s38* @g38 to i64*), align 1
-comment|// CHECK: %[[b:.*]] = load i64* bitcast (%struct.s38* @g38_2 to i64*), align 1
+comment|// CHECK: %[[a:.*]] = load i64, i64* bitcast (%struct.s38* @g38 to i64*), align 1
+comment|// CHECK: %[[b:.*]] = load i64, i64* bitcast (%struct.s38* @g38_2 to i64*), align 1
 comment|// CHECK: call i32 @f38_stack(i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i64 %[[a]], i64 %[[b]])
 return|return
 name|f38_stack
@@ -1814,10 +1814,10 @@ comment|// CHECK: %s1 = alloca %struct.s39, align 16
 comment|// CHECK: %s2 = alloca %struct.s39, align 16
 comment|// CHECK: store i128 %s1.coerce, i128* %{{.*}}, align 1
 comment|// CHECK: store i128 %s2.coerce, i128* %{{.*}}, align 1
-comment|// CHECK: getelementptr inbounds %struct.s39* %s1, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s39* %s2, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s39* %s1, i32 0, i32 1
-comment|// CHECK: getelementptr inbounds %struct.s39* %s2, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s39, %struct.s39* %s1, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s39, %struct.s39* %s2, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s39, %struct.s39* %s1, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s39, %struct.s39* %s2, i32 0, i32 1
 return|return
 name|s1
 operator|.
@@ -1858,8 +1858,8 @@ name|caller39
 parameter_list|()
 block|{
 comment|// CHECK: define i32 @caller39()
-comment|// CHECK: %[[a:.*]] = load i128* bitcast (%struct.s39* @g39 to i128*), align 1
-comment|// CHECK: %[[b:.*]] = load i128* bitcast (%struct.s39* @g39_2 to i128*), align 1
+comment|// CHECK: %[[a:.*]] = load i128, i128* bitcast (%struct.s39* @g39 to i128*), align 1
+comment|// CHECK: %[[b:.*]] = load i128, i128* bitcast (%struct.s39* @g39_2 to i128*), align 1
 comment|// CHECK: call i32 @f39(i32 3, i128 %[[a]], i128 %[[b]])
 return|return
 name|f39
@@ -1928,10 +1928,10 @@ comment|// CHECK: %s1 = alloca %struct.s39, align 16
 comment|// CHECK: %s2 = alloca %struct.s39, align 16
 comment|// CHECK: store i128 %s1.coerce, i128* %{{.*}}, align 1
 comment|// CHECK: store i128 %s2.coerce, i128* %{{.*}}, align 1
-comment|// CHECK: getelementptr inbounds %struct.s39* %s1, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s39* %s2, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s39* %s1, i32 0, i32 1
-comment|// CHECK: getelementptr inbounds %struct.s39* %s2, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s39, %struct.s39* %s1, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s39, %struct.s39* %s2, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s39, %struct.s39* %s1, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s39, %struct.s39* %s2, i32 0, i32 1
 return|return
 name|s1
 operator|.
@@ -1976,8 +1976,8 @@ name|caller39_stack
 parameter_list|()
 block|{
 comment|// CHECK: define i32 @caller39_stack()
-comment|// CHECK: %[[a:.*]] = load i128* bitcast (%struct.s39* @g39 to i128*), align 1
-comment|// CHECK: %[[b:.*]] = load i128* bitcast (%struct.s39* @g39_2 to i128*), align 1
+comment|// CHECK: %[[a:.*]] = load i128, i128* bitcast (%struct.s39* @g39 to i128*), align 1
+comment|// CHECK: %[[b:.*]] = load i128, i128* bitcast (%struct.s39* @g39_2 to i128*), align 1
 comment|// CHECK: call i32 @f39_stack(i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i128 %[[a]], i128 %[[b]])
 return|return
 name|f39_stack
@@ -2070,10 +2070,10 @@ comment|// CHECK: %s1 = alloca %struct.s40, align 8
 comment|// CHECK: %s2 = alloca %struct.s40, align 8
 comment|// CHECK: store [2 x i64] %s1.coerce, [2 x i64]* %{{.*}}, align 1
 comment|// CHECK: store [2 x i64] %s2.coerce, [2 x i64]* %{{.*}}, align 1
-comment|// CHECK: getelementptr inbounds %struct.s40* %s1, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s40* %s2, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s40* %s1, i32 0, i32 1
-comment|// CHECK: getelementptr inbounds %struct.s40* %s2, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s40, %struct.s40* %s1, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s40, %struct.s40* %s2, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s40, %struct.s40* %s1, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s40, %struct.s40* %s2, i32 0, i32 1
 return|return
 name|s1
 operator|.
@@ -2114,8 +2114,8 @@ name|caller40
 parameter_list|()
 block|{
 comment|// CHECK: define i32 @caller40()
-comment|// CHECK: %[[a:.*]] = load [2 x i64]* bitcast (%struct.s40* @g40 to [2 x i64]*), align 1
-comment|// CHECK: %[[b:.*]] = load [2 x i64]* bitcast (%struct.s40* @g40_2 to [2 x i64]*), align 1
+comment|// CHECK: %[[a:.*]] = load [2 x i64], [2 x i64]* bitcast (%struct.s40* @g40 to [2 x i64]*), align 1
+comment|// CHECK: %[[b:.*]] = load [2 x i64], [2 x i64]* bitcast (%struct.s40* @g40_2 to [2 x i64]*), align 1
 comment|// CHECK: call i32 @f40(i32 3, [2 x i64] %[[a]], [2 x i64] %[[b]])
 return|return
 name|f40
@@ -2184,10 +2184,10 @@ comment|// CHECK: %s1 = alloca %struct.s40, align 8
 comment|// CHECK: %s2 = alloca %struct.s40, align 8
 comment|// CHECK: store [2 x i64] %s1.coerce, [2 x i64]* %{{.*}}, align 1
 comment|// CHECK: store [2 x i64] %s2.coerce, [2 x i64]* %{{.*}}, align 1
-comment|// CHECK: getelementptr inbounds %struct.s40* %s1, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s40* %s2, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s40* %s1, i32 0, i32 1
-comment|// CHECK: getelementptr inbounds %struct.s40* %s2, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s40, %struct.s40* %s1, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s40, %struct.s40* %s2, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s40, %struct.s40* %s1, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s40, %struct.s40* %s2, i32 0, i32 1
 return|return
 name|s1
 operator|.
@@ -2232,8 +2232,8 @@ name|caller40_stack
 parameter_list|()
 block|{
 comment|// CHECK: define i32 @caller40_stack()
-comment|// CHECK: %[[a:.*]] = load [2 x i64]* bitcast (%struct.s40* @g40 to [2 x i64]*), align 1
-comment|// CHECK: %[[b:.*]] = load [2 x i64]* bitcast (%struct.s40* @g40_2 to [2 x i64]*), align 1
+comment|// CHECK: %[[a:.*]] = load [2 x i64], [2 x i64]* bitcast (%struct.s40* @g40 to [2 x i64]*), align 1
+comment|// CHECK: %[[b:.*]] = load [2 x i64], [2 x i64]* bitcast (%struct.s40* @g40_2 to [2 x i64]*), align 1
 comment|// CHECK: call i32 @f40_stack(i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, [2 x i64] %[[a]], [2 x i64] %[[b]])
 return|return
 name|f40_stack
@@ -2335,10 +2335,10 @@ comment|// CHECK: %s1 = alloca %struct.s41, align 16
 comment|// CHECK: %s2 = alloca %struct.s41, align 16
 comment|// CHECK: store i128 %s1.coerce, i128* %{{.*}}, align 1
 comment|// CHECK: store i128 %s2.coerce, i128* %{{.*}}, align 1
-comment|// CHECK: getelementptr inbounds %struct.s41* %s1, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s41* %s2, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s41* %s1, i32 0, i32 1
-comment|// CHECK: getelementptr inbounds %struct.s41* %s2, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s41, %struct.s41* %s1, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s41, %struct.s41* %s2, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s41, %struct.s41* %s1, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s41, %struct.s41* %s2, i32 0, i32 1
 return|return
 name|s1
 operator|.
@@ -2379,8 +2379,8 @@ name|caller41
 parameter_list|()
 block|{
 comment|// CHECK: define i32 @caller41()
-comment|// CHECK: %[[a:.*]] = load i128* bitcast (%struct.s41* @g41 to i128*), align 1
-comment|// CHECK: %[[b:.*]] = load i128* bitcast (%struct.s41* @g41_2 to i128*), align 1
+comment|// CHECK: %[[a:.*]] = load i128, i128* bitcast (%struct.s41* @g41 to i128*), align 1
+comment|// CHECK: %[[b:.*]] = load i128, i128* bitcast (%struct.s41* @g41_2 to i128*), align 1
 comment|// CHECK: call i32 @f41(i32 3, i128 %[[a]], i128 %[[b]])
 return|return
 name|f41
@@ -2449,10 +2449,10 @@ comment|// CHECK: %s1 = alloca %struct.s41, align 16
 comment|// CHECK: %s2 = alloca %struct.s41, align 16
 comment|// CHECK: store i128 %s1.coerce, i128* %{{.*}}, align 1
 comment|// CHECK: store i128 %s2.coerce, i128* %{{.*}}, align 1
-comment|// CHECK: getelementptr inbounds %struct.s41* %s1, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s41* %s2, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s41* %s1, i32 0, i32 1
-comment|// CHECK: getelementptr inbounds %struct.s41* %s2, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s41, %struct.s41* %s1, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s41, %struct.s41* %s2, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s41, %struct.s41* %s1, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s41, %struct.s41* %s2, i32 0, i32 1
 return|return
 name|s1
 operator|.
@@ -2497,8 +2497,8 @@ name|caller41_stack
 parameter_list|()
 block|{
 comment|// CHECK: define i32 @caller41_stack()
-comment|// CHECK: %[[a:.*]] = load i128* bitcast (%struct.s41* @g41 to i128*), align 1
-comment|// CHECK: %[[b:.*]] = load i128* bitcast (%struct.s41* @g41_2 to i128*), align 1
+comment|// CHECK: %[[a:.*]] = load i128, i128* bitcast (%struct.s41* @g41 to i128*), align 1
+comment|// CHECK: %[[b:.*]] = load i128, i128* bitcast (%struct.s41* @g41_2 to i128*), align 1
 comment|// CHECK: call i32 @f41_stack(i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i128 %[[a]], i128 %[[b]])
 return|return
 name|f41_stack
@@ -2593,10 +2593,10 @@ name|s2
 parameter_list|)
 block|{
 comment|// CHECK: define i32 @f42(i32 %i, %struct.s42* %s1, %struct.s42* %s2)
-comment|// CHECK: getelementptr inbounds %struct.s42* %s1, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s42* %s2, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s42* %s1, i32 0, i32 1
-comment|// CHECK: getelementptr inbounds %struct.s42* %s2, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s42, %struct.s42* %s1, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s42, %struct.s42* %s2, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s42, %struct.s42* %s1, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s42, %struct.s42* %s2, i32 0, i32 1
 return|return
 name|s1
 operator|.
@@ -2707,10 +2707,10 @@ name|s2
 parameter_list|)
 block|{
 comment|// CHECK: define i32 @f42_stack(i32 %i, i32 %i2, i32 %i3, i32 %i4, i32 %i5, i32 %i6, i32 %i7, i32 %i8, i32 %i9, %struct.s42* %s1, %struct.s42* %s2)
-comment|// CHECK: getelementptr inbounds %struct.s42* %s1, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s42* %s2, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s42* %s1, i32 0, i32 1
-comment|// CHECK: getelementptr inbounds %struct.s42* %s2, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s42, %struct.s42* %s1, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s42, %struct.s42* %s2, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s42, %struct.s42* %s1, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s42, %struct.s42* %s2, i32 0, i32 1
 return|return
 name|s1
 operator|.
@@ -2864,10 +2864,10 @@ name|s2
 parameter_list|)
 block|{
 comment|// CHECK: define i32 @f43(i32 %i, %struct.s43* %s1, %struct.s43* %s2)
-comment|// CHECK: getelementptr inbounds %struct.s43* %s1, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s43* %s2, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s43* %s1, i32 0, i32 1
-comment|// CHECK: getelementptr inbounds %struct.s43* %s2, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s43, %struct.s43* %s1, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s43, %struct.s43* %s2, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s43, %struct.s43* %s1, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s43, %struct.s43* %s2, i32 0, i32 1
 return|return
 name|s1
 operator|.
@@ -2978,10 +2978,10 @@ name|s2
 parameter_list|)
 block|{
 comment|// CHECK: define i32 @f43_stack(i32 %i, i32 %i2, i32 %i3, i32 %i4, i32 %i5, i32 %i6, i32 %i7, i32 %i8, i32 %i9, %struct.s43* %s1, %struct.s43* %s2)
-comment|// CHECK: getelementptr inbounds %struct.s43* %s1, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s43* %s2, i32 0, i32 0
-comment|// CHECK: getelementptr inbounds %struct.s43* %s1, i32 0, i32 1
-comment|// CHECK: getelementptr inbounds %struct.s43* %s2, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s43, %struct.s43* %s1, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s43, %struct.s43* %s2, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.s43, %struct.s43* %s1, i32 0, i32 1
+comment|// CHECK: getelementptr inbounds %struct.s43, %struct.s43* %s2, i32 0, i32 1
 return|return
 name|s1
 operator|.
@@ -3315,9 +3315,9 @@ parameter_list|)
 block|{
 comment|// CHECK-LABEL: define float @test_hfa(i32 %n, ...)
 comment|// CHECK: [[THELIST:%.*]] = alloca i8*
-comment|// CHECK: [[CURLIST:%.*]] = load i8** [[THELIST]]
+comment|// CHECK: [[CURLIST:%.*]] = load i8*, i8** [[THELIST]]
 comment|// HFA is not indirect, so occupies its full 16 bytes on the stack.
-comment|// CHECK: [[NEXTLIST:%.*]] = getelementptr i8* [[CURLIST]], i32 16
+comment|// CHECK: [[NEXTLIST:%.*]] = getelementptr i8, i8* [[CURLIST]], i32 16
 comment|// CHECK: store i8* [[NEXTLIST]], i8** [[THELIST]]
 comment|// CHECK: bitcast i8* [[CURLIST]] to %struct.HFA*
 name|__builtin_va_list
@@ -3361,7 +3361,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: define float @test_hfa_call(%struct.HFA* %a)
-comment|// CHECK: call float (i32, ...)* @test_hfa(i32 1, [4 x float] {{.*}})
+comment|// CHECK: call float (i32, ...) @test_hfa(i32 1, [4 x float] {{.*}})
 name|test_hfa
 argument_list|(
 literal|1
@@ -3404,13 +3404,13 @@ parameter_list|)
 block|{
 comment|// CHECK-LABEL: define float @test_toobig_hfa(i32 %n, ...)
 comment|// CHECK: [[THELIST:%.*]] = alloca i8*
-comment|// CHECK: [[CURLIST:%.*]] = load i8** [[THELIST]]
+comment|// CHECK: [[CURLIST:%.*]] = load i8*, i8** [[THELIST]]
 comment|// TooBigHFA is not actually an HFA, so gets passed indirectly. Only 8 bytes
 comment|// of stack consumed.
-comment|// CHECK: [[NEXTLIST:%.*]] = getelementptr i8* [[CURLIST]], i32 8
+comment|// CHECK: [[NEXTLIST:%.*]] = getelementptr i8, i8* [[CURLIST]], i32 8
 comment|// CHECK: store i8* [[NEXTLIST]], i8** [[THELIST]]
 comment|// CHECK: [[HFAPTRPTR:%.*]] = bitcast i8* [[CURLIST]] to i8**
-comment|// CHECK: [[HFAPTR:%.*]] = load i8** [[HFAPTRPTR]]
+comment|// CHECK: [[HFAPTR:%.*]] = load i8*, i8** [[HFAPTRPTR]]
 comment|// CHECK: bitcast i8* [[HFAPTR]] to %struct.TooBigHFA*
 name|__builtin_va_list
 name|thelist
@@ -3467,14 +3467,14 @@ parameter_list|)
 block|{
 comment|// CHECK-LABEL: define<4 x i32> @test_hva(i32 %n, ...)
 comment|// CHECK: [[THELIST:%.*]] = alloca i8*
-comment|// CHECK: [[CURLIST:%.*]] = load i8** [[THELIST]]
+comment|// CHECK: [[CURLIST:%.*]] = load i8*, i8** [[THELIST]]
 comment|// HVA is not indirect, so occupies its full 16 bytes on the stack. but it
 comment|// must be properly aligned.
-comment|// CHECK: [[ALIGN0:%.*]] = getelementptr i8* [[CURLIST]], i32 15
+comment|// CHECK: [[ALIGN0:%.*]] = getelementptr i8, i8* [[CURLIST]], i32 15
 comment|// CHECK: [[ALIGN1:%.*]] = ptrtoint i8* [[ALIGN0]] to i64
 comment|// CHECK: [[ALIGN2:%.*]] = and i64 [[ALIGN1]], -16
 comment|// CHECK: [[ALIGNED_LIST:%.*]] = inttoptr i64 [[ALIGN2]] to i8*
-comment|// CHECK: [[NEXTLIST:%.*]] = getelementptr i8* [[ALIGNED_LIST]], i32 32
+comment|// CHECK: [[NEXTLIST:%.*]] = getelementptr i8, i8* [[ALIGNED_LIST]], i32 32
 comment|// CHECK: store i8* [[NEXTLIST]], i8** [[THELIST]]
 comment|// CHECK: bitcast i8* [[ALIGNED_LIST]] to %struct.HVA*
 name|__builtin_va_list
@@ -3538,13 +3538,13 @@ parameter_list|)
 block|{
 comment|// CHECK-LABEL: define<4 x i32> @test_toobig_hva(i32 %n, ...)
 comment|// CHECK: [[THELIST:%.*]] = alloca i8*
-comment|// CHECK: [[CURLIST:%.*]] = load i8** [[THELIST]]
+comment|// CHECK: [[CURLIST:%.*]] = load i8*, i8** [[THELIST]]
 comment|// TooBigHVA is not actually an HVA, so gets passed indirectly. Only 8 bytes
 comment|// of stack consumed.
-comment|// CHECK: [[NEXTLIST:%.*]] = getelementptr i8* [[CURLIST]], i32 8
+comment|// CHECK: [[NEXTLIST:%.*]] = getelementptr i8, i8* [[CURLIST]], i32 8
 comment|// CHECK: store i8* [[NEXTLIST]], i8** [[THELIST]]
 comment|// CHECK: [[HVAPTRPTR:%.*]] = bitcast i8* [[CURLIST]] to i8**
-comment|// CHECK: [[HVAPTR:%.*]] = load i8** [[HVAPTRPTR]]
+comment|// CHECK: [[HVAPTR:%.*]] = load i8*, i8** [[HVAPTRPTR]]
 comment|// CHECK: bitcast i8* [[HVAPTR]] to %struct.TooBigHVA*
 name|__builtin_va_list
 name|thelist

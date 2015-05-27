@@ -115,7 +115,7 @@ name|class
 name|LabelStmt
 decl_stmt|;
 name|class
-name|MacroDefinition
+name|MacroDefinitionRecord
 decl_stmt|;
 name|class
 name|MacroExpansion
@@ -560,7 +560,7 @@ name|CXCursor
 name|MakeMacroDefinitionCursor
 parameter_list|(
 specifier|const
-name|MacroDefinition
+name|MacroDefinitionRecord
 modifier|*
 parameter_list|,
 name|CXTranslationUnit
@@ -570,7 +570,7 @@ function_decl|;
 comment|/// \brief Unpack a given macro definition cursor to retrieve its
 comment|/// source range.
 specifier|const
-name|MacroDefinition
+name|MacroDefinitionRecord
 modifier|*
 name|getCursorMacroDefinition
 parameter_list|(
@@ -594,7 +594,7 @@ comment|/// and a source location.
 name|CXCursor
 name|MakeMacroExpansionCursor
 parameter_list|(
-name|MacroDefinition
+name|MacroDefinitionRecord
 modifier|*
 parameter_list|,
 name|SourceLocation
@@ -634,7 +634,7 @@ name|nullptr
 return|;
 block|}
 specifier|const
-name|MacroDefinition
+name|MacroDefinitionRecord
 operator|*
 name|getAsMacroDefinition
 argument_list|()
@@ -650,7 +650,7 @@ return|return
 name|static_cast
 operator|<
 specifier|const
-name|MacroDefinition
+name|MacroDefinitionRecord
 operator|*
 operator|>
 operator|(
@@ -749,7 +749,7 @@ argument_list|()
 specifier|const
 expr_stmt|;
 specifier|const
-name|MacroDefinition
+name|MacroDefinitionRecord
 operator|*
 name|getDefinition
 argument_list|()

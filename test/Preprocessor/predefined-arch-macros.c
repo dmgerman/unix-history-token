@@ -6671,5 +6671,309 @@ begin_comment
 comment|//
 end_comment
 
+begin_comment
+comment|// RUN: %clang -mcrypto -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target powerpc64-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PPC_CRYPTO_M64
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK_PPC_CRYPTO_M64: #define __CRYPTO__
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mcpu=pwr8 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target powerpc64-unknown-unknown \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PPC_GCC_ATOMICS
+end_comment
+
+begin_comment
+comment|// RUN: %clang -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target powerpc64le-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_PPC_GCC_ATOMICS
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK_PPC_GCC_ATOMICS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_1
+end_comment
+
+begin_comment
+comment|// CHECK_PPC_GCC_ATOMICS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_2
+end_comment
+
+begin_comment
+comment|// CHECK_PPC_GCC_ATOMICS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+end_comment
+
+begin_comment
+comment|// CHECK_PPC_GCC_ATOMICS: #define __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// End PPC/GCC/Linux tests ------------------
+end_comment
+
+begin_comment
+comment|// Begin Sparc/GCC/Linux tests ----------------
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target sparc-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SPARC
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK_SPARC: #define __BIG_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SPARC: #define __sparc 1
+end_comment
+
+begin_comment
+comment|// CHECK_SPARC: #define __sparc__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SPARC: #define __sparcv8 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target sparcel-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SPARCEL
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK_SPARCEL: #define __LITTLE_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SPARCEL: #define __sparc 1
+end_comment
+
+begin_comment
+comment|// CHECK_SPARCEL: #define __sparc__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SPARCEL: #define __sparcv8 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target sparcv9-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SPARCV9
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK_SPARCV9: #define __BIG_ENDIAN__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SPARCV9: #define __sparc 1
+end_comment
+
+begin_comment
+comment|// CHECK_SPARCV9: #define __sparc64__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SPARCV9: #define __sparc__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SPARCV9: #define __sparc_v9__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SPARCV9: #define __sparcv9 1
+end_comment
+
+begin_comment
+comment|// CHECK_SPARCV9: #define __sparcv9__ 1
+end_comment
+
+begin_comment
+comment|// Begin SystemZ/GCC/Linux tests ----------------
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -march=z10 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target s390x-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SYSTEMZ_Z10
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_Z10: #define __LONG_DOUBLE_128__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_Z10: #define __s390__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_Z10: #define __s390x__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_Z10: #define __zarch__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -march=zEC12 -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target s390x-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SYSTEMZ_ZEC12
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_ZEC12: #define __HTM__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_ZEC12: #define __LONG_DOUBLE_128__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_ZEC12: #define __s390__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_ZEC12: #define __s390x__ 1
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_ZEC12: #define __zarch__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -mhtm -E -dM %s -o - 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target s390x-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s -check-prefix=CHECK_SYSTEMZ_HTM
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK_SYSTEMZ_HTM: #define __HTM__ 1
+end_comment
+
 end_unit
 

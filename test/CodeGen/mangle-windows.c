@@ -24,11 +24,11 @@ comment|// RUN: %clang_cc1 -emit-llvm %s -o - -triple=x86_64-pc-windows-msvc-elf
 end_comment
 
 begin_comment
-comment|// CHECK: target datalayout = "e-m:w-{{.*}}"
+comment|// CHECK: target datalayout = "e-m:x-{{.*}}"
 end_comment
 
 begin_comment
-comment|// X64: target datalayout = "e-m:e-{{.*}}"
+comment|// X64: target datalayout = "e-m:w-{{.*}}"
 end_comment
 
 begin_comment

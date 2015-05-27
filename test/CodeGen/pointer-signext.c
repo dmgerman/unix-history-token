@@ -16,11 +16,11 @@ comment|// CHECK:      [[P:%.*]] = add i64 %param, -8
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[Q:%.*]] = inttoptr i64 [[P]] to [[R:%.*\*]]
+comment|// CHECK-NEXT: [[Q:%.*]] = inttoptr i64 [[P]] to [[R:%.*]]*
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: {{%.*}} = getelementptr inbounds [[R]] [[Q]], i64 0, i32 0
+comment|// CHECK-NEXT: {{%.*}} = getelementptr inbounds [[R]], [[R]]* [[Q]], i64 0, i32 0
 end_comment
 
 begin_define

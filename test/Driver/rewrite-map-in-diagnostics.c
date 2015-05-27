@@ -32,6 +32,10 @@ comment|// CHECK: note: diagnostic msg: {{.*}}rewrite.map
 end_comment
 
 begin_comment
+comment|// REQUIRES: crash-recovery
+end_comment
+
+begin_comment
 comment|// FIXME: This doesn't fail on "env clang". Investigating.
 end_comment
 

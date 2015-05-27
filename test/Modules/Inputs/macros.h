@@ -88,5 +88,11 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"macros-indirect.h"
+end_include
+
 end_unit
 

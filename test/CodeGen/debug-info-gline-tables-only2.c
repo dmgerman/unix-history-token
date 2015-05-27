@@ -28,15 +28,15 @@ comment|// CHECK: !llvm.dbg.cu = !{!0}
 end_comment
 
 begin_comment
-comment|// CHECK: DW_TAG_compile_unit
+comment|// CHECK: !DICompileUnit(
 end_comment
 
 begin_comment
-comment|// CHECK: {{.*main.* DW_TAG_subprogram}}
+comment|// CHECK: !DISubprogram(
 end_comment
 
 begin_comment
-comment|// CHECK: DW_TAG_file_type
+comment|// CHECK: !DIFile(
 end_comment
 
 end_unit

@@ -265,29 +265,29 @@ name|i
 operator|=
 name|S
 expr_stmt|;
-comment|// CHECK: load i32* @S
+comment|// CHECK: load i32, i32* @S
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
 name|vS
 expr_stmt|;
-comment|// CHECK: load volatile i32* @vS
+comment|// CHECK: load volatile i32, i32* @vS
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
 operator|*
 name|pS
 expr_stmt|;
-comment|// CHECK: [[PS_VAL:%[a-zA-Z0-9_.]+]] = load i32** @pS
-comment|// CHECK: load i32* [[PS_VAL]]
+comment|// CHECK: [[PS_VAL:%[a-zA-Z0-9_.]+]] = load i32*, i32** @pS
+comment|// CHECK: load i32, i32* [[PS_VAL]]
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
 operator|*
 name|pvS
 expr_stmt|;
-comment|// CHECK: [[PVS_VAL:%[a-zA-Z0-9_.]+]] = load i32** @pvS
-comment|// CHECK: load volatile i32* [[PVS_VAL]]
+comment|// CHECK: [[PVS_VAL:%[a-zA-Z0-9_.]+]] = load i32*, i32** @pvS
+comment|// CHECK: load volatile i32, i32* [[PVS_VAL]]
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -296,7 +296,7 @@ index|[
 literal|2
 index|]
 expr_stmt|;
-comment|// CHECK: load i32* getelementptr {{.*}} @A
+comment|// CHECK: load i32, i32* getelementptr {{.*}} @A
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -305,7 +305,7 @@ index|[
 literal|2
 index|]
 expr_stmt|;
-comment|// CHECK: load volatile i32* getelementptr {{.*}} @vA
+comment|// CHECK: load volatile i32, i32* getelementptr {{.*}} @vA
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -313,7 +313,7 @@ name|F
 operator|.
 name|x
 expr_stmt|;
-comment|// CHECK: load i32* getelementptr {{.*}} @F
+comment|// CHECK: load i32, i32* getelementptr {{.*}} @F
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -321,7 +321,7 @@ name|vF
 operator|.
 name|x
 expr_stmt|;
-comment|// CHECK: load volatile i32* getelementptr {{.*}} @vF
+comment|// CHECK: load volatile i32, i32* getelementptr {{.*}} @vF
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -329,7 +329,7 @@ name|F2
 operator|.
 name|x
 expr_stmt|;
-comment|// CHECK: load i32* getelementptr {{.*}} @F2
+comment|// CHECK: load i32, i32* getelementptr {{.*}} @F2
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -337,7 +337,7 @@ name|vF2
 operator|.
 name|x
 expr_stmt|;
-comment|// CHECK: load volatile i32* getelementptr {{.*}} @vF2
+comment|// CHECK: load volatile i32, i32* getelementptr {{.*}} @vF2
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -345,9 +345,9 @@ name|vpF2
 operator|->
 name|x
 expr_stmt|;
-comment|// CHECK: [[VPF2_VAL:%[a-zA-Z0-9_.]+]] = load {{%[a-zA-Z0-9_.]+}}** @vpF2
+comment|// CHECK: [[VPF2_VAL:%[a-zA-Z0-9_.]+]] = load {{%[a-zA-Z0-9_.]+}}*, {{%[a-zA-Z0-9_.]+}}** @vpF2
 comment|// CHECK: [[ELT:%[a-zA-Z0-9_.]+]] = getelementptr {{.*}} [[VPF2_VAL]]
-comment|// CHECK: load volatile i32* [[ELT]]
+comment|// CHECK: load volatile i32, i32* [[ELT]]
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -357,7 +357,7 @@ name|x
 operator|.
 name|y
 expr_stmt|;
-comment|// CHECK: load i32* getelementptr {{.*}} @F3
+comment|// CHECK: load i32, i32* getelementptr {{.*}} @F3
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -367,7 +367,7 @@ name|x
 operator|.
 name|y
 expr_stmt|;
-comment|// CHECK: load volatile i32* getelementptr {{.*}} @vF3
+comment|// CHECK: load volatile i32, i32* getelementptr {{.*}} @vF3
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -375,8 +375,8 @@ name|BF
 operator|.
 name|x
 expr_stmt|;
-comment|// CHECK-IT: load i8* getelementptr {{.*}} @BF
-comment|// CHECK-MS: load i32* getelementptr {{.*}} @BF
+comment|// CHECK-IT: load i8, i8* getelementptr {{.*}} @BF
+comment|// CHECK-MS: load i32, i32* getelementptr {{.*}} @BF
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -384,8 +384,8 @@ name|vBF
 operator|.
 name|x
 expr_stmt|;
-comment|// CHECK-IT: load volatile i8* getelementptr {{.*}} @vBF
-comment|// CHECK-MS: load volatile i32* getelementptr {{.*}} @vBF
+comment|// CHECK-IT: load volatile i8, i8* getelementptr {{.*}} @vBF
+comment|// CHECK-MS: load volatile i32, i32* getelementptr {{.*}} @vBF
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -394,7 +394,7 @@ index|[
 literal|3
 index|]
 expr_stmt|;
-comment|// CHECK: load<4 x i32>* @V
+comment|// CHECK: load<4 x i32>,<4 x i32>* @V
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -403,7 +403,7 @@ index|[
 literal|3
 index|]
 expr_stmt|;
-comment|// CHECK: load volatile<4 x i32>* @vV
+comment|// CHECK: load volatile<4 x i32>,<4 x i32>* @vV
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -414,7 +414,7 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|// CHECK: load<4 x i32>* @VE
+comment|// CHECK: load<4 x i32>,<4 x i32>* @VE
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -425,7 +425,7 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-comment|// CHECK: load volatile<4 x i32>* @vVE
+comment|// CHECK: load volatile<4 x i32>,<4 x i32>* @vVE
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|=
@@ -444,36 +444,36 @@ name|i
 operator|=
 name|vtS
 expr_stmt|;
-comment|// CHECK: load volatile i32* @vtS
+comment|// CHECK: load volatile i32, i32* @vtS
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 comment|// store
 name|S
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
+comment|// CHECK: load i32, i32* [[I]]
 comment|// CHECK: store i32 {{.*}}, i32* @S
 name|vS
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
+comment|// CHECK: load i32, i32* [[I]]
 comment|// CHECK: store volatile i32 {{.*}}, i32* @vS
 operator|*
 name|pS
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
-comment|// CHECK: [[PS_VAL:%[a-zA-Z0-9_.]+]] = load i32** @pS
+comment|// CHECK: load i32, i32* [[I]]
+comment|// CHECK: [[PS_VAL:%[a-zA-Z0-9_.]+]] = load i32*, i32** @pS
 comment|// CHECK: store i32 {{.*}}, i32* [[PS_VAL]]
 operator|*
 name|pvS
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
-comment|// CHECK: [[PVS_VAL:%[a-zA-Z0-9_.]+]] = load i32** @pvS
+comment|// CHECK: load i32, i32* [[I]]
+comment|// CHECK: [[PVS_VAL:%[a-zA-Z0-9_.]+]] = load i32*, i32** @pvS
 comment|// CHECK: store volatile i32 {{.*}}, i32* [[PVS_VAL]]
 name|A
 index|[
@@ -482,7 +482,7 @@ index|]
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
+comment|// CHECK: load i32, i32* [[I]]
 comment|// CHECK: store i32 {{.*}}, i32* getelementptr {{.*}} @A
 name|vA
 index|[
@@ -491,7 +491,7 @@ index|]
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
+comment|// CHECK: load i32, i32* [[I]]
 comment|// CHECK: store volatile i32 {{.*}}, i32* getelementptr {{.*}} @vA
 name|F
 operator|.
@@ -499,7 +499,7 @@ name|x
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
+comment|// CHECK: load i32, i32* [[I]]
 comment|// CHECK: store i32 {{.*}}, i32* getelementptr {{.*}} @F
 name|vF
 operator|.
@@ -507,7 +507,7 @@ name|x
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
+comment|// CHECK: load i32, i32* [[I]]
 comment|// CHECK: store volatile i32 {{.*}}, i32* getelementptr {{.*}} @vF
 name|F2
 operator|.
@@ -515,7 +515,7 @@ name|x
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
+comment|// CHECK: load i32, i32* [[I]]
 comment|// CHECK: store i32 {{.*}}, i32* getelementptr {{.*}} @F2
 name|vF2
 operator|.
@@ -523,7 +523,7 @@ name|x
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
+comment|// CHECK: load i32, i32* [[I]]
 comment|// CHECK: store volatile i32 {{.*}}, i32* getelementptr {{.*}} @vF2
 name|vpF2
 operator|->
@@ -531,8 +531,8 @@ name|x
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
-comment|// CHECK: [[VPF2_VAL:%[a-zA-Z0-9_.]+]] = load {{%[a-zA-Z0-9._]+}}** @vpF2
+comment|// CHECK: load i32, i32* [[I]]
+comment|// CHECK: [[VPF2_VAL:%[a-zA-Z0-9_.]+]] = load {{%[a-zA-Z0-9._]+}}*, {{%[a-zA-Z0-9._]+}}** @vpF2
 comment|// CHECK: [[ELT:%[a-zA-Z0-9_.]+]] = getelementptr {{.*}} [[VPF2_VAL]]
 comment|// CHECK: store volatile i32 {{.*}}, i32* [[ELT]]
 name|vF3
@@ -543,7 +543,7 @@ name|y
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
+comment|// CHECK: load i32, i32* [[I]]
 comment|// CHECK: store volatile i32 {{.*}}, i32* getelementptr {{.*}} @vF3
 name|BF
 operator|.
@@ -551,9 +551,9 @@ name|x
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
-comment|// CHECK-IT: load i8* getelementptr {{.*}} @BF
-comment|// CHECK-MS: load i32* getelementptr {{.*}} @BF
+comment|// CHECK: load i32, i32* [[I]]
+comment|// CHECK-IT: load i8, i8* getelementptr {{.*}} @BF
+comment|// CHECK-MS: load i32, i32* getelementptr {{.*}} @BF
 comment|// CHECK-IT: store i8 {{.*}}, i8* getelementptr {{.*}} @BF
 comment|// CHECK-MS: store i32 {{.*}}, i32* getelementptr {{.*}} @BF
 name|vBF
@@ -562,9 +562,9 @@ name|x
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
-comment|// CHECK-IT: load volatile i8* getelementptr {{.*}} @vBF
-comment|// CHECK-MS: load volatile i32* getelementptr {{.*}} @vBF
+comment|// CHECK: load i32, i32* [[I]]
+comment|// CHECK-IT: load volatile i8, i8* getelementptr {{.*}} @vBF
+comment|// CHECK-MS: load volatile i32, i32* getelementptr {{.*}} @vBF
 comment|// CHECK-IT: store volatile i8 {{.*}}, i8* getelementptr {{.*}} @vBF
 comment|// CHECK-MS: store volatile i32 {{.*}}, i32* getelementptr {{.*}} @vBF
 name|V
@@ -574,8 +574,8 @@ index|]
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
-comment|// CHECK: load<4 x i32>* @V
+comment|// CHECK: load i32, i32* [[I]]
+comment|// CHECK: load<4 x i32>,<4 x i32>* @V
 comment|// CHECK: store<4 x i32> {{.*}},<4 x i32>* @V
 name|vV
 index|[
@@ -584,44 +584,44 @@ index|]
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
-comment|// CHECK: load volatile<4 x i32>* @vV
+comment|// CHECK: load i32, i32* [[I]]
+comment|// CHECK: load volatile<4 x i32>,<4 x i32>* @vV
 comment|// CHECK: store volatile<4 x i32> {{.*}},<4 x i32>* @vV
 name|vtS
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK: load i32* [[I]]
+comment|// CHECK: load i32, i32* [[I]]
 comment|// CHECK: store volatile i32 {{.*}}, i32* @vtS
 comment|// other ops:
 operator|++
 name|S
 expr_stmt|;
-comment|// CHECK: load i32* @S
+comment|// CHECK: load i32, i32* @S
 comment|// CHECK: store i32 {{.*}}, i32* @S
 operator|++
 name|vS
 expr_stmt|;
-comment|// CHECK: load volatile i32* @vS
+comment|// CHECK: load volatile i32, i32* @vS
 comment|// CHECK: store volatile i32 {{.*}}, i32* @vS
 name|i
 operator|+=
 name|S
 expr_stmt|;
-comment|// CHECK: load i32* @S
-comment|// CHECK: load i32* [[I]]
+comment|// CHECK: load i32, i32* @S
+comment|// CHECK: load i32, i32* [[I]]
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 name|i
 operator|+=
 name|vS
 expr_stmt|;
-comment|// CHECK: load volatile i32* @vS
-comment|// CHECK: load i32* [[I]]
+comment|// CHECK: load volatile i32, i32* @vS
+comment|// CHECK: load i32, i32* [[I]]
 comment|// CHECK: store i32 {{.*}}, i32* [[I]]
 operator|++
 name|vtS
 expr_stmt|;
-comment|// CHECK: load volatile i32* @vtS
+comment|// CHECK: load volatile i32, i32* @vtS
 comment|// CHECK: store volatile i32 {{.*}}, i32* @vtS
 operator|(
 name|void

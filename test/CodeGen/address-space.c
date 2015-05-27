@@ -4,14 +4,6 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -emit-llvm< %s | FileChec
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -emit-llvm< %s | grep 'load.*addrspace(2).. @A'
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -emit-llvm< %s | grep 'load.*addrspace(2).. @B'
-end_comment
-
-begin_comment
 comment|// CHECK: @foo = common addrspace(1) global
 end_comment
 
@@ -57,7 +49,7 @@ comment|// CHECK-LABEL: define i32 @test1()
 end_comment
 
 begin_comment
-comment|// CHECK: load i32 addrspace(1)* @foo
+comment|// CHECK: load i32, i32 addrspace(1)* @foo
 end_comment
 
 begin_function
@@ -76,7 +68,7 @@ comment|// CHECK-LABEL: define i32 @test2(i32 %i)
 end_comment
 
 begin_comment
-comment|// CHECK: load i32 addrspace(1)*
+comment|// CHECK: load i32, i32 addrspace(1)*
 end_comment
 
 begin_comment
@@ -128,15 +120,15 @@ comment|// CHECK-LABEL: define void @test3()
 end_comment
 
 begin_comment
-comment|// CHECK: load i32 addrspace(2)** @B
+comment|// CHECK: load i32 addrspace(2)*, i32 addrspace(2)** @B
 end_comment
 
 begin_comment
-comment|// CHECK: load i32 addrspace(2)*
+comment|// CHECK: load i32, i32 addrspace(2)*
 end_comment
 
 begin_comment
-comment|// CHECK: load i32 addrspace(2)** @A
+comment|// CHECK: load i32 addrspace(2)*, i32 addrspace(2)** @A
 end_comment
 
 begin_comment

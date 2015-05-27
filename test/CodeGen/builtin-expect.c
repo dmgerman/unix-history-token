@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -emit-llvm -o - %s | FileCheck %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-unknown-unknown -emit-llvm -o - %s -O0 | FileCheck %s --check-prefix=CHECK_O0
+end_comment
+
 begin_decl_stmt
 name|int
 name|x
@@ -30,7 +34,10 @@ name|void
 name|FUNC
 parameter_list|()
 block|{
+comment|// CHECK-LABEL: define void @FUNC()
 comment|// CHECK: [[call:%.*]] = call i32 @y
+comment|// CHECK_O0: [[call:%.*]] = call i32 @y
+comment|// CHECK_O0-NOT: call i64 @llvm.expect
 if|if
 condition|(
 name|__builtin_expect
@@ -92,15 +99,31 @@ block|}
 end_function
 
 begin_comment
+comment|// CHECK-LABEL: define i32 @main()
+end_comment
+
+begin_comment
 comment|// CHECK: call void @isigprocmask()
 end_comment
 
 begin_comment
-comment|// CHECK: [[C:%.*]] = call i64 (...)* @bar()
+comment|// CHECK: [[C:%.*]] = call i64 (...) @bar()
 end_comment
 
 begin_comment
-comment|// CHECK: @test1
+comment|// CHECK_O0: call void @isigprocmask()
+end_comment
+
+begin_comment
+comment|// CHECK_O0: [[C:%.*]] = call i64 (...) @bar()
+end_comment
+
+begin_comment
+comment|// CHECK_O0-NOT: call i64 @llvm.expect
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: define i32 @test1
 end_comment
 
 begin_function
@@ -111,7 +134,7 @@ name|int
 name|x
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.expect
+comment|// CHECK_O0-NOT: call i64 @llvm.expect
 if|if
 condition|(
 name|__builtin_expect
@@ -131,7 +154,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @test2
+comment|// CHECK: define i32 @test2
 end_comment
 
 begin_function
@@ -142,7 +165,7 @@ name|int
 name|x
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.expect
+comment|// CHECK_O0-NOT: call i64 @llvm.expect
 switch|switch
 condition|(
 name|__builtin_expect

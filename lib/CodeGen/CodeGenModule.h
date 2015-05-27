@@ -906,9 +906,12 @@ name|CodeGenTypeCache
 block|{
 name|CodeGenModule
 argument_list|(
-argument|const CodeGenModule&
+specifier|const
+name|CodeGenModule
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -918,7 +921,8 @@ specifier|const
 name|CodeGenModule
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -1338,7 +1342,7 @@ name|StringMap
 operator|<
 name|llvm
 operator|::
-name|Constant
+name|GlobalVariable
 operator|*
 operator|>
 name|CFConstantStringMap
@@ -1524,7 +1528,8 @@ expr_stmt|;
 comment|/// When a C++ decl with an initializer is deferred, null is
 comment|/// appended to CXXGlobalInits, and the index of that null is placed
 comment|/// here so that the initializer will be performed in the correct
-comment|/// order.
+comment|/// order. Once the decl is emitted, the index is replaced with ~0U to ensure
+comment|/// that we don't re-emit the initializer.
 name|llvm
 operator|::
 name|DenseMap
@@ -2379,6 +2384,24 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|void
+name|maybeSetTrivialComdat
+argument_list|(
+specifier|const
+name|Decl
+operator|&
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|GlobalObject
+operator|&
+name|GO
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|CGCXXABI
 operator|&
@@ -3061,6 +3084,20 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getAddrOfCXXCatchHandlerType
+argument_list|(
+argument|QualType Ty
+argument_list|,
+argument|QualType CatchHandlerType
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/// Get the address of a uuid descriptor .
 end_comment
@@ -3398,7 +3435,7 @@ end_comment
 begin_expr_stmt
 name|llvm
 operator|::
-name|Constant
+name|GlobalVariable
 operator|*
 name|GetAddrOfConstantString
 argument_list|(
@@ -4474,9 +4511,6 @@ parameter_list|(
 name|CXXRecordDecl
 modifier|*
 name|Class
-parameter_list|,
-name|bool
-name|DefinitionRequired
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5049,6 +5083,46 @@ name|D
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// Emit bit set entries for the given vtable using the given layout if
+end_comment
+
+begin_comment
+comment|/// vptr CFI is enabled.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitVTableBitSetEntries
+argument_list|(
+name|llvm
+operator|::
+name|GlobalVariable
+operator|*
+name|VTable
+argument_list|,
+specifier|const
+name|VTableLayout
+operator|&
+name|VTLayout
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \breif Get the declaration of std::terminate for the platform.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|getTerminateFn
+argument_list|()
+expr_stmt|;
+end_expr_stmt
 
 begin_label
 name|private

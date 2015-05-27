@@ -62,19 +62,19 @@ comment|// CHECK:  [[C1:%.*]] = alloca { double, double }, align 8
 end_comment
 
 begin_comment
-comment|// CHECK:  [[RP:%.*]] = getelementptr inbounds { double, double }* [[C1]], i32 0, i32 0
+comment|// CHECK:  [[RP:%.*]] = getelementptr inbounds { double, double }, { double, double }* [[C1]], i32 0, i32 0
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [[R:%.*]] = load double* [[RP]]
+comment|// CHECK-NEXT:  [[R:%.*]] = load double, double* [[RP]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [[IP:%.*]] = getelementptr inbounds { double, double }* [[C1]], i32 0, i32 1
+comment|// CHECK-NEXT:  [[IP:%.*]] = getelementptr inbounds { double, double }, { double, double }* [[C1]], i32 0, i32 1
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT:  [[I:%.*]] = load double* [[IP]]
+comment|// CHECK-NEXT:  [[I:%.*]] = load double, double* [[IP]]
 end_comment
 
 end_unit

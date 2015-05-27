@@ -572,7 +572,10 @@ name|CXXForRangeStmt
 range|:
 name|public
 name|Stmt
-block|{   enum
+block|{
+name|SourceLocation
+name|ForLoc
+block|;   enum
 block|{
 name|RANGE
 block|,
@@ -597,9 +600,6 @@ name|SubExprs
 index|[
 name|END
 index|]
-block|;
-name|SourceLocation
-name|ForLoc
 block|;
 name|SourceLocation
 name|ColonLoc

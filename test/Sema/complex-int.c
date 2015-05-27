@@ -36,6 +36,15 @@ name|aa
 init|=
 literal|1 + 1.0iF
 decl_stmt|;
+name|int
+name|bb
+init|=
+literal|0
+decl_stmt|;
+name|bb
+operator|+=
+literal|1i
+expr_stmt|;
 name|result
 operator|=
 name|arr

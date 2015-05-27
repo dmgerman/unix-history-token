@@ -103,7 +103,7 @@ name|y
 parameter_list|)
 block|{
 comment|// CHECK: define {{.*}} @test_loadl_pi
-comment|// CHECK: load<2 x float>* {{.*}}, align 1{{$}}
+comment|// CHECK: load<2 x float>,<2 x float>* {{.*}}, align 1{{$}}
 comment|// CHECK: shufflevector {{.*}}<4 x i32><i32 0, i32 1
 comment|// CHECK: shufflevector {{.*}}<4 x i32><i32 4, i32 5, i32 2, i32 3>
 return|return
@@ -130,7 +130,7 @@ name|y
 parameter_list|)
 block|{
 comment|// CHECK: define {{.*}} @test_loadh_pi
-comment|// CHECK: load<2 x float>* {{.*}}, align 1{{$}}
+comment|// CHECK: load<2 x float>,<2 x float>* {{.*}}, align 1{{$}}
 comment|// CHECK: shufflevector {{.*}}<4 x i32><i32 0, i32 1
 comment|// CHECK: shufflevector {{.*}}<4 x i32><i32 0, i32 1, i32 4, i32 5>
 return|return
@@ -154,7 +154,7 @@ name|y
 parameter_list|)
 block|{
 comment|// CHECK: define {{.*}} @test_load_ss
-comment|// CHECK: load float* {{.*}}, align 1{{$}}
+comment|// CHECK: load float, float* {{.*}}, align 1{{$}}
 return|return
 name|_mm_load_ss
 argument_list|(
@@ -174,7 +174,7 @@ name|y
 parameter_list|)
 block|{
 comment|// CHECK: define {{.*}} @test_load1_ps
-comment|// CHECK: load float* {{.*}}, align 1{{$}}
+comment|// CHECK: load float, float* {{.*}}, align 1{{$}}
 return|return
 name|_mm_load1_ps
 argument_list|(
@@ -221,7 +221,7 @@ name|y
 parameter_list|)
 block|{
 comment|// CHECK: define {{.*}} @test_load1_pd
-comment|// CHECK: load double* {{.*}}, align 1{{$}}
+comment|// CHECK: load double, double* {{.*}}, align 1{{$}}
 return|return
 name|_mm_load1_pd
 argument_list|(
@@ -244,7 +244,7 @@ name|y
 parameter_list|)
 block|{
 comment|// CHECK: define {{.*}} @test_loadr_pd
-comment|// CHECK: load<2 x double>* {{.*}}, align 16{{$}}
+comment|// CHECK: load<2 x double>,<2 x double>* {{.*}}, align 16{{$}}
 return|return
 name|_mm_loadr_pd
 argument_list|(
@@ -264,7 +264,7 @@ name|y
 parameter_list|)
 block|{
 comment|// CHECK: define {{.*}} @test_load_sd
-comment|// CHECK: load double* {{.*}}, align 1{{$}}
+comment|// CHECK: load double, double* {{.*}}, align 1{{$}}
 return|return
 name|_mm_load_sd
 argument_list|(
@@ -287,7 +287,7 @@ name|y
 parameter_list|)
 block|{
 comment|// CHECK: define {{.*}} @test_loadh_pd
-comment|// CHECK: load double* {{.*}}, align 1{{$}}
+comment|// CHECK: load double, double* {{.*}}, align 1{{$}}
 return|return
 name|_mm_loadh_pd
 argument_list|(
@@ -312,7 +312,7 @@ name|y
 parameter_list|)
 block|{
 comment|// CHECK: define {{.*}} @test_loadl_pd
-comment|// CHECK: load double* {{.*}}, align 1{{$}}
+comment|// CHECK: load double, double* {{.*}}, align 1{{$}}
 return|return
 name|_mm_loadl_pd
 argument_list|(
@@ -455,7 +455,7 @@ name|y
 parameter_list|)
 block|{
 comment|// CHECK: define {{.*}} @test_loadl_epi64
-comment|// CHECK: load i64* {{.*}}, align 1{{$}}
+comment|// CHECK: load i64, i64* {{.*}}, align 1{{$}}
 return|return
 name|_mm_loadl_epi64
 argument_list|(
@@ -2087,6 +2087,140 @@ argument_list|(
 name|__a
 argument_list|,
 name|__b
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_slli_si128
+parameter_list|(
+name|__m128
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_slli_si128
+comment|// CHECK: shufflevector<16 x i8> {{.*}},<16 x i8> {{.*}},<16 x i32><i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26>
+return|return
+name|_mm_slli_si128
+argument_list|(
+name|a
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_bslli_si128
+parameter_list|(
+name|__m128
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_bslli_si128
+comment|// CHECK: shufflevector<16 x i8> {{.*}},<16 x i8> {{.*}},<16 x i32><i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26>
+return|return
+name|_mm_bslli_si128
+argument_list|(
+name|a
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_srli_si128
+parameter_list|(
+name|__m128
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_srli_si128
+comment|// CHECK: shufflevector<16 x i8> {{.*}},<16 x i8> {{.*}},<16 x i32><i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20>
+return|return
+name|_mm_srli_si128
+argument_list|(
+name|a
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128
+name|test_mm_bsrli_si128
+parameter_list|(
+name|__m128
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm_bsrli_si128
+comment|// CHECK: shufflevector<16 x i8> {{.*}},<16 x i8> {{.*}},<16 x i32><i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17, i32 18, i32 19, i32 20>
+return|return
+name|_mm_bsrli_si128
+argument_list|(
+name|a
+argument_list|,
+literal|5
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test_mm_alignr_epi8
+parameter_list|(
+name|__m128i
+name|a
+parameter_list|,
+name|__m128i
+name|b
+parameter_list|)
+block|{
+comment|// CHECK: shufflevector<16 x i8> %{{.*}},<16 x i8> %{{.*}},<16 x i32><i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16, i32 17>
+return|return
+name|_mm_alignr_epi8
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|2
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test2_mm_alignr_epi8
+parameter_list|(
+name|__m128i
+name|a
+parameter_list|,
+name|__m128i
+name|b
+parameter_list|)
+block|{
+comment|// CHECK: shufflevector<16 x i8> %{{.*}},<16 x i8> zeroinitializer,<16 x i32><i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 16>
+return|return
+name|_mm_alignr_epi8
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|17
 argument_list|)
 return|;
 block|}

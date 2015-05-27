@@ -778,7 +778,7 @@ name|void
 name|PR20473
 parameter_list|()
 block|{
-comment|// CHECK: memcpy{{.*}}([2 x i8]* @
+comment|// CHECK: memcpy{{.*}}getelementptr inbounds ([2 x i8], [2 x i8]* @
 name|bar
 argument_list|(
 operator|(
@@ -792,7 +792,7 @@ literal|""
 block|}
 argument_list|)
 expr_stmt|;
-comment|// CHECK: memcpy{{.*}}([3 x i8]* @
+comment|// CHECK: memcpy{{.*}}getelementptr inbounds ([3 x i8], [3 x i8]* @
 name|bar
 argument_list|(
 operator|(

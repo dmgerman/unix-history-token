@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -emit-llvm %s -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: getelementptr inbounds i32* %{{vla|[0-9]}}
+comment|// CHECK: getelementptr inbounds i32, i32* %{{vla|[0-9]}}
 end_comment
 
 begin_function_decl

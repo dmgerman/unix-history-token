@@ -98,8 +98,8 @@ name|a
 expr_stmt|;
 comment|// DEFAULT: add nsw i32 {{.*}}, -1
 comment|// WRAPV: add i32 {{.*}}, -1
-comment|// TRAPV: llvm.sadd.with.overflow.i32({{.*}}, i32 -1)
-comment|// CATCH_UB: llvm.sadd.with.overflow.i32({{.*}}, i32 -1)
+comment|// TRAPV: llvm.ssub.with.overflow.i32({{.*}}, i32 1)
+comment|// CATCH_UB: llvm.ssub.with.overflow.i32({{.*}}, i32 1)
 comment|// TRAPV_HANDLER: foo(
 operator|--
 name|a
@@ -113,10 +113,10 @@ decl_stmt|;
 operator|++
 name|P
 expr_stmt|;
-comment|// DEFAULT: getelementptr inbounds i32*
-comment|// WRAPV: getelementptr i32*
-comment|// TRAPV: getelementptr inbounds i32*
-comment|// CATCH_UB: getelementptr inbounds i32*
+comment|// DEFAULT: getelementptr inbounds i32, i32*
+comment|// WRAPV: getelementptr i32, i32*
+comment|// TRAPV: getelementptr inbounds i32, i32*
+comment|// CATCH_UB: getelementptr inbounds i32, i32*
 comment|// PR9350: char increment never overflows.
 specifier|extern
 specifier|volatile

@@ -28,23 +28,23 @@ comment|// CHECK:  store %struct.S addrspace(2)* %p2, %struct.S addrspace(2)** [
 end_comment
 
 begin_comment
-comment|// CHECK:  [[t0:%.*]] = load %struct.S addrspace(2)** [[p2addr]], align 8
+comment|// CHECK:  [[t0:%.*]] = load %struct.S addrspace(2)*, %struct.S addrspace(2)** [[p2addr]], align 8
 end_comment
 
 begin_comment
-comment|// CHECK:  [[t1:%.*]] = getelementptr inbounds %struct.S addrspace(2)* [[t0]], i32 0, i32 1
+comment|// CHECK:  [[t1:%.*]] = getelementptr inbounds %struct.S, %struct.S addrspace(2)* [[t0]], i32 0, i32 1
 end_comment
 
 begin_comment
-comment|// CHECK:  [[t2:%.*]] = load i32 addrspace(2)* [[t1]], align 4
+comment|// CHECK:  [[t2:%.*]] = load i32, i32 addrspace(2)* [[t1]], align 4
 end_comment
 
 begin_comment
-comment|// CHECK:  [[t3:%.*]] = load %struct.S addrspace(1)** [[p1addr]], align 8
+comment|// CHECK:  [[t3:%.*]] = load %struct.S addrspace(1)*, %struct.S addrspace(1)** [[p1addr]], align 8
 end_comment
 
 begin_comment
-comment|// CHECK:  [[t4:%.*]] = getelementptr inbounds %struct.S addrspace(1)* [[t3]], i32 0, i32 0
+comment|// CHECK:  [[t4:%.*]] = getelementptr inbounds %struct.S, %struct.S addrspace(1)* [[t3]], i32 0, i32 0
 end_comment
 
 begin_comment
@@ -52,23 +52,23 @@ comment|// CHECK:  store i32 [[t2]], i32 addrspace(1)* [[t4]], align 4
 end_comment
 
 begin_comment
-comment|// CHECK:  [[t5:%.*]] = load %struct.S addrspace(2)** [[p2addr]], align 8
+comment|// CHECK:  [[t5:%.*]] = load %struct.S addrspace(2)*, %struct.S addrspace(2)** [[p2addr]], align 8
 end_comment
 
 begin_comment
-comment|// CHECK:  [[t6:%.*]] = getelementptr inbounds %struct.S addrspace(2)* [[t5]], i32 0, i32 0
+comment|// CHECK:  [[t6:%.*]] = getelementptr inbounds %struct.S, %struct.S addrspace(2)* [[t5]], i32 0, i32 0
 end_comment
 
 begin_comment
-comment|// CHECK:  [[t7:%.*]] = load i32 addrspace(2)* [[t6]], align 4
+comment|// CHECK:  [[t7:%.*]] = load i32, i32 addrspace(2)* [[t6]], align 4
 end_comment
 
 begin_comment
-comment|// CHECK:  [[t8:%.*]] = load %struct.S addrspace(1)** [[p1addr]], align 8
+comment|// CHECK:  [[t8:%.*]] = load %struct.S addrspace(1)*, %struct.S addrspace(1)** [[p1addr]], align 8
 end_comment
 
 begin_comment
-comment|// CHECK:  [[t9:%.*]] = getelementptr inbounds %struct.S addrspace(1)* [[t8]], i32 0, i32 1
+comment|// CHECK:  [[t9:%.*]] = getelementptr inbounds %struct.S, %struct.S addrspace(1)* [[t8]], i32 0, i32 1
 end_comment
 
 begin_comment

@@ -39,8 +39,8 @@ literal|3.0
 expr_stmt|;
 comment|// CHECK:  [[VA:%.*]] = alloca<4 x float>
 comment|// CHECK:  [[CONV:%.*]] = bitcast<4 x float>* [[VA]] to float*
-comment|// CHECK:  [[ADD:%.*]] = getelementptr inbounds float* [[CONV]], i64 2
-comment|// CHECK:  [[ARRIDX:%.*]] = getelementptr inbounds float* [[ADD]], i64 0
+comment|// CHECK:  [[ADD:%.*]] = getelementptr inbounds float, float* [[CONV]], i64 2
+comment|// CHECK:  [[ARRIDX:%.*]] = getelementptr inbounds float, float* [[ADD]], i64 0
 comment|// CHECK:   store float 3.000000e+00, float* [[ARRIDX]]
 block|}
 end_function

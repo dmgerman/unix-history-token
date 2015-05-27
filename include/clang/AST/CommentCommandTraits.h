@@ -440,9 +440,12 @@ name|private
 label|:
 name|CommandTraits
 argument_list|(
-argument|const CommandTraits&
+specifier|const
+name|CommandTraits
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -452,7 +455,8 @@ specifier|const
 name|CommandTraits
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 specifier|const
 name|CommandInfo

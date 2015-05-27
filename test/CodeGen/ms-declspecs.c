@@ -32,11 +32,47 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|// CHECK: @x1 = weak_odr global i32 1, align 4
+comment|// CHECK: @x1 = weak_odr global i32 1, comdat, align 4
 end_comment
 
 begin_comment
-comment|// CHECK: @x2 = weak_odr constant i32 2, align 4
+comment|// CHECK: @x2 = weak_odr constant i32 2, comdat, align 4
+end_comment
+
+begin_comment
+comment|// selectany turns extern variable declarations into definitions.
+end_comment
+
+begin_macro
+name|__declspec
+argument_list|(
+argument|selectany
+argument_list|)
+end_macro
+
+begin_decl_stmt
+name|int
+name|x3
+decl_stmt|;
+end_decl_stmt
+
+begin_extern
+extern|extern __declspec(selectany
+end_extern
+
+begin_decl_stmt
+unit|)
+name|int
+name|x4
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// CHECK: @x3 = weak_odr global i32 0, comdat, align 4
+end_comment
+
+begin_comment
+comment|// CHECK: @x4 = weak_odr global i32 0, comdat, align 4
 end_comment
 
 begin_struct

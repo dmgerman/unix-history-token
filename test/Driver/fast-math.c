@@ -108,6 +108,126 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -### -fno-signed-zeros -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-SIGNED-ZEROS %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-SIGNED-ZEROS: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-SIGNED-ZEROS: "-fno-signed-zeros"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-fast-math -fno-signed-zeros -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-FAST-MATH-NO-SIGNED-ZEROS %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH-NO-SIGNED-ZEROS: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH-NO-SIGNED-ZEROS: "-fno-signed-zeros"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-signed-zeros -fno-fast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-SIGNED-ZEROS-NO-FAST-MATH %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-SIGNED-ZEROS-NO-FAST-MATH: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-SIGNED-ZEROS-NO-FAST-MATH-NOT: "-fno-signed-zeros"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -freciprocal-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-RECIPROCAL-MATH %s
+end_comment
+
+begin_comment
+comment|// CHECK-RECIPROCAL-MATH: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-RECIPROCAL-MATH: "-freciprocal-math"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-fast-math -freciprocal-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-FAST-MATH-RECIPROCAL-MATH %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH-RECIPROCAL-MATH: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FAST-MATH-RECIPROCAL-MATH: "-freciprocal-math"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -freciprocal-math -fno-fast-math -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-RECIPROCAL-MATH-NO-FAST-MATH %s
+end_comment
+
+begin_comment
+comment|// CHECK-RECIPROCAL-MATH-NO-FAST-MATH: "-cc1"
+end_comment
+
+begin_comment
+comment|// CHECK-RECIPROCAL-MATH-NO-FAST-MATH-NOT: "-freciprocal-math"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -### -fno-honor-nans -c %s 2>&1 \
 end_comment
 

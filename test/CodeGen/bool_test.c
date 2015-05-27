@@ -49,7 +49,7 @@ comment|// CHECK-LABEL: define void @f(
 end_comment
 
 begin_comment
-comment|// CHECK: [[FROMMEM:%.*]] = load i32* %
+comment|// CHECK: [[FROMMEM:%.*]] = load i32, i32* %
 end_comment
 
 begin_comment

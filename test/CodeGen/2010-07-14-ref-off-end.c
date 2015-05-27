@@ -77,8 +77,8 @@ begin_function
 name|main
 parameter_list|()
 block|{
-comment|// CHECK:  getelementptr inbounds [1 x %struct.T]* %s, i32 0, i32 0
-comment|// CHECK:  getelementptr inbounds [1 x %struct.T]* %s, i32 0, i32 0
+comment|// CHECK:  getelementptr inbounds [1 x %struct.T], [1 x %struct.T]* %s, i32 0, i32 0
+comment|// CHECK:  getelementptr inbounds [1 x %struct.T], [1 x %struct.T]* %s, i32 0, i32 0
 name|struct
 name|T
 name|t

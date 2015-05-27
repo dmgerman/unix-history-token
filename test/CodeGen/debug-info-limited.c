@@ -16,7 +16,15 @@ comment|// in whatever TU actually uses/requires the definition of 'foo'.
 end_comment
 
 begin_comment
-comment|// CHECK: ; [ DW_TAG_structure_type ] [foo] {{.*}} [def]
+comment|// CHECK: !DICompositeType(tag: DW_TAG_structure_type, name: "foo",
+end_comment
+
+begin_comment
+comment|// CHECK-NOT:              DIFlagFwdDecl
+end_comment
+
+begin_comment
+comment|// CHECK-SAME:             ){{$}}
 end_comment
 
 begin_struct

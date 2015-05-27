@@ -76,7 +76,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{'capability' attribute only applies to structs or typedefs}}
+comment|// expected-error {{'capability' attribute only applies to structs and typedefs}}
 end_comment
 
 begin_decl_stmt
@@ -95,7 +95,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{'shared_capability' attribute only applies to structs or typedefs}}
+comment|// expected-error {{'shared_capability' attribute only applies to structs and typedefs}}
 end_comment
 
 begin_decl_stmt

@@ -8,8 +8,8 @@ name|int
 name|main
 parameter_list|()
 block|{
-comment|// CHECK: File 0, [[@LINE]]:12 -> [[@LINE+4]]:2 = #0 (HasCodeBefore = 0)
-comment|// CHECK-NEXT: File 0, [[@LINE+1]]:41 -> [[@LINE+1]]:54 = #1 (HasCodeBefore = 0)
+comment|// CHECK: File 0, [[@LINE]]:12 -> [[@LINE+4]]:2 = #0
+comment|// CHECK-NEXT: File 0, [[@LINE+1]]:41 -> [[@LINE+1]]:54 = #1
 name|int
 name|window_size
 init|=
@@ -29,7 +29,7 @@ else|:
 literal|1024
 operator|)
 decl_stmt|;
-comment|// CHECK-NEXT: File 0, [[@LINE]]:57 -> [[@LINE]]:61 = (#0 - #1) (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:57 -> [[@LINE]]:61 = (#0 - #1)
 return|return
 literal|0
 return|;

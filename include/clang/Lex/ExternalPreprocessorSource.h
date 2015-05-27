@@ -70,6 +70,9 @@ block|{
 name|class
 name|IdentifierInfo
 decl_stmt|;
+name|class
+name|Module
+decl_stmt|;
 comment|/// \brief Abstract interface for external sources of preprocessor
 comment|/// information.
 comment|///
@@ -101,6 +104,18 @@ parameter_list|(
 name|IdentifierInfo
 modifier|&
 name|II
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// \brief Map a module ID to a module.
+name|virtual
+name|Module
+modifier|*
+name|getModule
+parameter_list|(
+name|unsigned
+name|ModuleID
 parameter_list|)
 init|=
 literal|0

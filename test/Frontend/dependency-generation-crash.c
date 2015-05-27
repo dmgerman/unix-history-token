@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: touch %t
+comment|// RUN: not %clang_cc1 -E -dependency-file bla -MT %t/doesnotexist/bla.o -MP -o %t/doesnotexist/bla.o -x c /dev/null 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: chmod 0 %t
-end_comment
-
-begin_comment
-comment|// %clang -E -dependency-file bla -MT %t -MP -o %t -x c /dev/null
+comment|// CHECK: error: unable to open output file
 end_comment
 
 begin_comment

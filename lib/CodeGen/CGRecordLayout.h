@@ -274,9 +274,12 @@ name|CodeGenTypes
 decl_stmt|;
 name|CGRecordLayout
 argument_list|(
-argument|const CGRecordLayout&
+specifier|const
+name|CGRecordLayout
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -286,7 +289,8 @@ specifier|const
 name|CGRecordLayout
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|private
 label|:

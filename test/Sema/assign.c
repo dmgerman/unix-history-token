@@ -31,13 +31,14 @@ operator|*
 name|x
 argument_list|)
 block|{
+comment|// expected-note@-1 {{variable 'x' declared const here}}
 name|x
 operator|->
 name|a
 operator|=
 literal|10
 expr_stmt|;
-comment|// expected-error {{read-only variable is not assignable}}
+comment|// expected-error-re@-1 {{cannot assign to variable 'x' with const-qualified type 'const struct (anonymous struct at {{.*}}assign.c:5:19) *'}}
 block|}
 end_decl_stmt
 

@@ -52,7 +52,7 @@ comment|// CHECK: xcc" "-o"
 end_comment
 
 begin_comment
-comment|// CHECK-EXCEP-NOT: "-fexceptions"
+comment|// CHECK-NOT: "-fexceptions"
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|// CHECK: xcc" "-o"
 end_comment
 
 begin_comment
-comment|// CHECK-EXCEP-NOT: "-fexceptions"
+comment|// CHECK-NOT: "-fexceptions"
 end_comment
 
 begin_comment

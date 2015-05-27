@@ -12,7 +12,7 @@ name|void
 name|func
 parameter_list|()
 block|{
-comment|// CHECK: File 0, [[@LINE]]:13 -> [[@LINE+5]]:2 = #0 (HasCodeBefore = 0)
+comment|// CHECK: File 0, [[@LINE]]:13 -> [[@LINE+5]]:2 = #0
 name|int
 name|i
 init|=
@@ -21,7 +21,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|MACRO
-comment|// CHECK-NEXT: Skipped,File 0, [[@LINE]]:2 -> [[@LINE+2]]:2 = 0 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: Skipped,File 0, [[@LINE]]:2 -> [[@LINE+2]]:2 = 0
 name|int
 name|x
 init|=
@@ -53,7 +53,7 @@ name|int
 name|main
 parameter_list|()
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:12 -> [[@LINE+19]]:2 = #0 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:12 -> {{[0-9]+}}:2 = #0
 name|int
 name|i
 init|=
@@ -62,13 +62,14 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-comment|// CHECK-NEXT: Skipped,File 0, [[@LINE]]:2 -> [[@LINE+4]]:2 = 0 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: Skipped,File 0, [[@LINE]]:2 -> [[@LINE+4]]:2 = 0
 block|if(i == 0) {     i = 1;   }
 endif|#
 directive|endif
 if|#
 directive|if
 literal|1
+comment|// CHECK-NEXT: File 0, [[@LINE+1]]:6 -> [[@LINE+1]]:12 = #0
 if|if
 condition|(
 name|i
@@ -76,7 +77,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:14 -> [[@LINE+2]]:4 = #1 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:14 -> [[@LINE+2]]:4 = #1
 name|i
 operator|=
 literal|1
@@ -84,7 +85,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|// CHECK-NEXT: Skipped,File 0, [[@LINE]]:2 -> [[@LINE+5]]:2 = 0 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: Skipped,File 0, [[@LINE]]:2 -> [[@LINE+5]]:2 = 0
 if|if
 condition|(
 name|i

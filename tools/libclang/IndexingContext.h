@@ -883,9 +883,12 @@ name|ref_cnt
 block|;
 name|AttrListInfo
 argument_list|(
-argument|const AttrListInfo&
+specifier|const
+name|AttrListInfo
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -895,7 +898,8 @@ specifier|const
 name|AttrListInfo
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:

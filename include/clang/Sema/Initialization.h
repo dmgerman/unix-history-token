@@ -2461,6 +2461,45 @@ comment|/// \brief The incomplete type that caused a failure.
 name|QualType
 name|FailedIncompleteType
 decl_stmt|;
+comment|/// \brief The fixit that needs to be applied to make this initialization
+comment|/// succeed.
+name|std
+operator|::
+name|string
+name|ZeroInitializationFixit
+expr_stmt|;
+name|SourceLocation
+name|ZeroInitializationFixitLoc
+decl_stmt|;
+name|public
+label|:
+comment|/// \brief Call for initializations are invalid but that would be valid
+comment|/// zero initialzations if Fixit was applied.
+name|void
+name|SetZeroInitializationFixit
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Fixit
+argument_list|,
+name|SourceLocation
+name|L
+argument_list|)
+block|{
+name|ZeroInitializationFixit
+operator|=
+name|Fixit
+expr_stmt|;
+name|ZeroInitializationFixitLoc
+operator|=
+name|L
+expr_stmt|;
+block|}
+name|private
+label|:
 comment|/// \brief Prints a follow-up note that highlights the location of
 comment|/// the initialized entity, if it's remote.
 name|void
@@ -2639,7 +2678,7 @@ name|SK
 expr_stmt|;
 block|}
 comment|/// \brief Determine whether the initialization sequence is valid.
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()

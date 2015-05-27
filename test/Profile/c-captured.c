@@ -12,15 +12,15 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-cap
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[DCC:__llvm_profile_counters_debug_captured]] = hidden global [3 x i64] zeroinitializer
+comment|// PGOGEN: @[[DCC:__llvm_profile_counters_debug_captured]] = private global [3 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[CSC:"__llvm_profile_counters_c-captured.c:__captured_stmt"]] = internal global [2 x i64] zeroinitializer
+comment|// PGOGEN: @[[CSC:"__llvm_profile_counters_c-captured.c:__captured_stmt"]] = private global [2 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[C1C:"__llvm_profile_counters_c-captured.c:__captured_stmt1"]] = internal global [3 x i64] zeroinitializer
+comment|// PGOGEN: @[[C1C:"__llvm_profile_counters_c-captured.c:__captured_stmt.1"]] = private global [3 x i64] zeroinitializer
 end_comment
 
 begin_comment
@@ -70,7 +70,7 @@ name|x
 condition|)
 block|{}
 comment|// This is DC1. Checked above.
-comment|// PGOALL-LABEL: define internal void @__captured_stmt1(
+comment|// PGOALL-LABEL: define internal void @__captured_stmt.1(
 comment|// PGOGEN: store {{.*}} @[[C1C]], i64 0, i64 0
 pragma|#
 directive|pragma

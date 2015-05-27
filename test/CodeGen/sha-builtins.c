@@ -38,7 +38,7 @@ name|a
 argument_list|,
 name|b
 argument_list|,
-literal|8
+literal|3
 argument_list|)
 return|;
 block|}

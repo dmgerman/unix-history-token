@@ -188,7 +188,6 @@ argument_list|(
 argument|FindResultVerifier
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|run
 argument_list|(
@@ -277,6 +276,9 @@ argument_list|,
 argument|llvm::StringRef CompileArg
 argument_list|,
 argument|const FileContentMappings&VirtualMappedFiles = FileContentMappings()
+argument_list|,
+argument|const std::string&Filename =
+literal|"input.cc"
 argument_list|)
 block|{
 name|bool
@@ -365,10 +367,27 @@ operator|::
 name|string
 operator|>
 name|Args
+expr_stmt|;
+name|Args
+operator|.
+name|push_back
 argument_list|(
-literal|1
-argument_list|,
 name|CompileArg
+argument_list|)
+expr_stmt|;
+comment|// Some tests need rtti/exceptions on
+name|Args
+operator|.
+name|push_back
+argument_list|(
+literal|"-frtti"
+argument_list|)
+expr_stmt|;
+name|Args
+operator|.
+name|push_back
+argument_list|(
+literal|"-fexceptions"
 argument_list|)
 expr_stmt|;
 if|if
@@ -385,7 +404,7 @@ name|Code
 argument_list|,
 name|Args
 argument_list|,
-literal|"input.cc"
+name|Filename
 argument_list|,
 name|VirtualMappedFiles
 argument_list|)
@@ -531,6 +550,72 @@ argument_list|,
 name|false
 argument_list|,
 literal|"-std=c++11"
+argument_list|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|testing
+operator|::
+name|AssertionResult
+name|matchesObjC
+argument_list|(
+argument|const std::string&Code
+argument_list|,
+argument|const T&AMatcher
+argument_list|)
+block|{
+return|return
+name|matchesConditionally
+argument_list|(
+name|Code
+argument_list|,
+name|AMatcher
+argument_list|,
+name|true
+argument_list|,
+literal|""
+argument_list|,
+name|FileContentMappings
+argument_list|()
+argument_list|,
+literal|"input.m"
+argument_list|)
+return|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|testing
+operator|::
+name|AssertionResult
+name|notMatchesObjC
+argument_list|(
+argument|const std::string&Code
+argument_list|,
+argument|const T&AMatcher
+argument_list|)
+block|{
+return|return
+name|matchesConditionally
+argument_list|(
+name|Code
+argument_list|,
+name|AMatcher
+argument_list|,
+name|false
+argument_list|,
+literal|""
+argument_list|,
+name|FileContentMappings
+argument_list|()
+argument_list|,
+literal|"input.m"
 argument_list|)
 return|;
 block|}

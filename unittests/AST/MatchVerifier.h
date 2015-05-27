@@ -247,17 +247,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|void
 name|run
 argument_list|(
-specifier|const
-name|MatchFinder
-operator|::
-name|MatchResult
-operator|&
-name|Result
+argument|const MatchFinder::MatchResult&Result
 argument_list|)
+name|override
 block|;
 name|virtual
 name|void
@@ -691,6 +686,7 @@ argument|const MatchFinder::MatchResult&Result
 argument_list|,
 argument|const NodeType&Node
 argument_list|)
+name|override
 block|{
 name|SourceLocation
 name|Loc
@@ -867,6 +863,7 @@ argument|const MatchFinder::MatchResult&Result
 argument_list|,
 argument|const NodeType&Node
 argument_list|)
+name|override
 block|{
 name|SourceRange
 name|R
@@ -1095,6 +1092,7 @@ argument|const MatchFinder::MatchResult&Result
 argument_list|,
 argument|const ast_type_traits::DynTypedNode&Node
 argument_list|)
+name|override
 block|{
 name|std
 operator|::
@@ -1221,6 +1219,7 @@ argument|const MatchFinder::MatchResult&Result
 argument_list|,
 argument|const ast_type_traits::DynTypedNode&Node
 argument_list|)
+name|override
 block|{
 name|std
 operator|::

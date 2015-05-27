@@ -11,7 +11,10 @@ name|int
 name|s
 parameter_list|)
 block|{
-comment|// CHECK:  !"0x100\00vla\00[[@LINE+1]]\008192", {{.*}}, {{.*}}, {{.*}}} ; [ DW_TAG_auto_variable ] [vla] [line [[@LINE+1]]]
+comment|// CHECK: dbg.declare
+comment|// CHECK: dbg.declare({{.*}}, metadata ![[VAR:.*]], metadata ![[EXPR:.*]])
+comment|// CHECK: ![[VAR]] = !DILocalVariable(tag: DW_TAG_auto_variable, name: "vla",{{.*}} line: [[@LINE+2]]
+comment|// CHECK: ![[EXPR]] = !DIExpression(DW_OP_deref)
 name|int
 name|vla
 index|[

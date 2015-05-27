@@ -108,9 +108,12 @@ name|Parser
 block|{
 name|Parser
 argument_list|(
-argument|const Parser&
+specifier|const
+name|Parser
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -120,7 +123,8 @@ specifier|const
 name|Parser
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|friend
 name|class

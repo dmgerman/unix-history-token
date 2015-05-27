@@ -67,7 +67,7 @@ argument_list|,
 name|memory_order_seq_cst
 argument_list|)
 expr_stmt|;
-comment|// CHECK: load atomic i32* {{.*}} seq_cst
+comment|// CHECK: load atomic i32, i32* {{.*}} seq_cst
 name|int
 name|r
 decl_stmt|;

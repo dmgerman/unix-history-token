@@ -102,7 +102,7 @@ name|TextDiagnosticFormat
 block|{
 name|Clang
 block|,
-name|Msvc
+name|MSVC
 block|,
 name|Vi
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only -verify  -triple x86_64-pc-linux-gnu
+comment|// RUN: %clang_cc1 %s -fsyntax-only -verify  -triple x86_64-pc-linux-gnu -Wno-unevaluated-expression
 end_comment
 
 begin_typedef
@@ -454,6 +454,71 @@ literal|1
 return|;
 end_return
 
+begin_comment
 unit|}
+comment|// In PR22849, we considered __ptr to be a static data member of the anonymous
+end_comment
+
+begin_comment
+comment|// union. Now we declare it in the parent DeclContext.
+end_comment
+
+begin_macro
+unit|void
+name|test_pr22849
+argument_list|()
+end_macro
+
+begin_block
+block|{
+struct|struct
+name|Bug
+block|{
+name|typeof
+argument_list|(
+argument|({ unsigned long __ptr; (int *)(
+literal|0
+argument|); })
+argument_list|)
+name|__val
+expr_stmt|;
+union|union
+name|Nested
+block|{
+name|typeof
+argument_list|(
+argument|({ unsigned long __ptr; (int *)(
+literal|0
+argument|); })
+argument_list|)
+name|__val
+expr_stmt|;
+block|}
+name|n
+union|;
+block|}
+struct|;
+enum|enum
+name|E
+block|{
+name|SIZE
+init|=
+expr|sizeof
+operator|(
+operator|(
+block|{
+name|unsigned
+name|long
+name|__ptr
+block|;
+name|__ptr
+block|;}
+operator|)
+operator|)
+block|}
+enum|;
+block|}
+end_block
+
 end_unit
 

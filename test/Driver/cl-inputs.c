@@ -191,6 +191,22 @@ begin_comment
 comment|// LIBINPUT2-NOT: "cl-test2.lib"
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cl -### -- %s /nonexisting.lib 2>&1 | FileCheck -check-prefix=LIBINPUT3 %s
+end_comment
+
+begin_comment
+comment|// LIBINPUT3: error: no such file or directory: '/nonexisting.lib'
+end_comment
+
+begin_comment
+comment|// LIBINPUT3: link.exe"
+end_comment
+
+begin_comment
+comment|// LIBINPUT3-NOT: "/nonexisting.lib"
+end_comment
+
 begin_function_decl
 name|void
 name|f

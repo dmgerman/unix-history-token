@@ -38,9 +38,9 @@ name|push
 argument_list|)
 argument_list|)
 comment|// CHECK: #pragma pack(push)
-comment|// CHECK-NEXT: #line 11 "{{.*}}_Pragma-location.c"
+comment|// CHECK-NEXT: # 11 "{{.*}}_Pragma-location.c"
 comment|// CHECK-NEXT: #pragma pack(push)
-comment|// CHECK-NEXT: #line 11 "{{.*}}_Pragma-location.c"
+comment|// CHECK-NEXT: # 11 "{{.*}}_Pragma-location.c"
 comment|// CHECK-NEXT: #pragma pack(push)
 define|#
 directive|define
@@ -87,7 +87,7 @@ comment|// CHECK-NEXT:   1;
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: #line 24 "{{.*}}_Pragma-location.c"
+comment|// CHECK-NEXT: # 24 "{{.*}}_Pragma-location.c"
 end_comment
 
 begin_comment
@@ -107,7 +107,7 @@ comment|// CHECK:   2;
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: #line 28 "{{.*}}_Pragma-location.c"
+comment|// CHECK-NEXT: # 28 "{{.*}}_Pragma-location.c"
 end_comment
 
 begin_comment
@@ -115,7 +115,7 @@ comment|// CHECK-NEXT: #pragma clang diagnostic push
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: #line 28 "{{.*}}_Pragma-location.c"
+comment|// CHECK-NEXT: # 28 "{{.*}}_Pragma-location.c"
 end_comment
 
 begin_comment
@@ -127,7 +127,7 @@ comment|// CHECK-NEXT:   3;
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: #line 29 "{{.*}}_Pragma-location.c"
+comment|// CHECK-NEXT: # 29 "{{.*}}_Pragma-location.c"
 end_comment
 
 begin_comment

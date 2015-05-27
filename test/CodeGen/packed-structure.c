@@ -100,7 +100,7 @@ comment|// CHECK-FUNCTIONS-LABEL: define i32 @s0_load_x
 end_comment
 
 begin_comment
-comment|// CHECK-FUNCTIONS: [[s0_load_x:%.*]] = load i32* {{.*}}, align 4
+comment|// CHECK-FUNCTIONS: [[s0_load_x:%.*]] = load i32, i32* {{.*}}, align 4
 end_comment
 
 begin_comment
@@ -146,7 +146,7 @@ comment|// CHECK-FUNCTIONS-LABEL: define i32 @s0_load_y
 end_comment
 
 begin_comment
-comment|// CHECK-FUNCTIONS: [[s0_load_y:%.*]] = load i32* {{.*}}, align 1
+comment|// CHECK-FUNCTIONS: [[s0_load_y:%.*]] = load i32, i32* {{.*}}, align 1
 end_comment
 
 begin_comment
@@ -296,7 +296,7 @@ comment|// CHECK-FUNCTIONS-LABEL: define i32 @s1_load_x
 end_comment
 
 begin_comment
-comment|// CHECK-FUNCTIONS: [[s1_load_x:%.*]] = load i32* {{.*}}, align 1
+comment|// CHECK-FUNCTIONS: [[s1_load_x:%.*]] = load i32, i32* {{.*}}, align 1
 end_comment
 
 begin_comment
@@ -326,7 +326,7 @@ comment|// CHECK-FUNCTIONS-LABEL: define i32 @s1_load_y
 end_comment
 
 begin_comment
-comment|// CHECK-FUNCTIONS: [[s1_load_y:%.*]] = load i32* {{.*}}, align 1
+comment|// CHECK-FUNCTIONS: [[s1_load_y:%.*]] = load i32, i32* {{.*}}, align 1
 end_comment
 
 begin_comment
@@ -490,7 +490,7 @@ comment|// CHECK-FUNCTIONS-LABEL: define i32 @s2_load_x
 end_comment
 
 begin_comment
-comment|// CHECK-FUNCTIONS: [[s2_load_y:%.*]] = load i32* {{.*}}, align 2
+comment|// CHECK-FUNCTIONS: [[s2_load_y:%.*]] = load i32, i32* {{.*}}, align 2
 end_comment
 
 begin_comment
@@ -520,7 +520,7 @@ comment|// CHECK-FUNCTIONS-LABEL: define i32 @s2_load_y
 end_comment
 
 begin_comment
-comment|// CHECK-FUNCTIONS: [[s2_load_y:%.*]] = load i32* {{.*}}, align 2
+comment|// CHECK-FUNCTIONS: [[s2_load_y:%.*]] = load i32, i32* {{.*}}, align 2
 end_comment
 
 begin_comment
@@ -633,8 +633,8 @@ modifier|*
 name|ptr
 parameter_list|)
 block|{
-comment|// CHECK-FUNCTIONS:      [[PTR:%.*]] = getelementptr inbounds {{%.*}}* {{%.*}}, i32 0, i32 1
-comment|// CHECK-FUNCTIONS-NEXT: load i32* [[PTR]], align 1
+comment|// CHECK-FUNCTIONS:      [[PTR:%.*]] = getelementptr inbounds {{%.*}}, {{%.*}}* {{%.*}}, i32 0, i32 1
+comment|// CHECK-FUNCTIONS-NEXT: load i32, i32* [[PTR]], align 1
 return|return
 name|ptr
 operator|->

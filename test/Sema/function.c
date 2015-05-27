@@ -687,5 +687,34 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_function_decl
+name|void
+specifier|const
+name|Bar
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// ok on decl
+end_comment
+
+begin_comment
+comment|// PR 20146
+end_comment
+
+begin_function
+name|void
+specifier|const
+name|Bar
+parameter_list|(
+name|void
+parameter_list|)
+comment|// expected-warning {{function cannot return qualified void type 'const void'}}
+block|{ }
+end_function
+
 end_unit
 

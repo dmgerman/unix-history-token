@@ -84,6 +84,42 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
+comment|// RUN:     -target x86_64-unknown-linux -fprofile-instr-generate -nostdlib \
+end_comment
+
+begin_comment
+comment|// RUN:     -resource-dir=%S/Inputs/resource_dir \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/basic_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-LINUX-NOSTDLIB-X86-64 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-LINUX-NOSTDLIB-X86-64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-LINUX-NOSTDLIB-X86-64: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}linux{{/|\\\\}}libclang_rt.profile-x86_64.a"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
 comment|// RUN:     -target x86_64-unknown-freebsd -fprofile-instr-generate \
 end_comment
 
@@ -229,6 +265,102 @@ end_comment
 
 begin_comment
 comment|// CHECK-FREEBSD-X86-64-SHARED: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}freebsd{{/|\\\\}}libclang_rt.profile-x86_64.a"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-apple-darwin14 -fprofile-instr-generate \
+end_comment
+
+begin_comment
+comment|// RUN:     -resource-dir=%S/Inputs/resource_dir \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DARWIN-X86-64 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-DARWIN-X86-64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-DARWIN-X86-64: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}darwin{{/|\\\\}}libclang_rt.profile_osx.a"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-apple-darwin14 -fprofile-instr-generate -nostdlib \
+end_comment
+
+begin_comment
+comment|// RUN:     -resource-dir=%S/Inputs/resource_dir \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DARWIN-NOSTDLIB-X86-64 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-DARWIN-NOSTDLIB-X86-64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-DARWIN-NOSTDLIB-X86-64: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}darwin{{/|\\\\}}libclang_rt.profile_osx.a"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target arm64-apple-ios -fprofile-instr-generate \
+end_comment
+
+begin_comment
+comment|// RUN:     -resource-dir=%S/Inputs/resource_dir \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DARWIN-ARM64 %s
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK-DARWIN-ARM64: "{{(.*[^-.0-9A-Z_a-z])?}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-DARWIN-ARM64: "{{.*}}/Inputs/resource_dir{{/|\\\\}}lib{{/|\\\\}}darwin{{/|\\\\}}libclang_rt.profile_ios.a"
 end_comment
 
 end_unit

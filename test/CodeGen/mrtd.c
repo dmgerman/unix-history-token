@@ -99,7 +99,7 @@ comment|// CHECK-LABEL: define x86_stdcallcc void @quux
 end_comment
 
 begin_comment
-comment|// CHECK: call void (i32, ...)* @qux
+comment|// CHECK: call void (i32, ...) @qux
 end_comment
 
 begin_comment

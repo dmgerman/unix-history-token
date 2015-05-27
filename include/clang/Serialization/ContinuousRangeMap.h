@@ -549,9 +549,12 @@ name|Self
 decl_stmt|;
 name|Builder
 argument_list|(
-argument|const Builder&
+specifier|const
+name|Builder
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|Builder
 modifier|&
@@ -562,7 +565,8 @@ specifier|const
 name|Builder
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:

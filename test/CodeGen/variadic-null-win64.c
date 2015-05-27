@@ -71,7 +71,7 @@ comment|// WINDOWS: define void @f(i8* %f)
 end_comment
 
 begin_comment
-comment|// WINDOWS: call void (i8*, ...)* @v(i8* {{.*}}, i32 1, i32 2, i32 3, i64 0)
+comment|// WINDOWS: call void (i8*, ...) @v(i8* {{.*}}, i32 1, i32 2, i32 3, i64 0)
 end_comment
 
 begin_comment
@@ -79,7 +79,7 @@ comment|// LINUX: define void @f(i8* %f)
 end_comment
 
 begin_comment
-comment|// LINUX: call void (i8*, ...)* @v(i8* {{.*}}, i32 1, i32 2, i32 3, i32 0)
+comment|// LINUX: call void (i8*, ...) @v(i8* {{.*}}, i32 1, i32 2, i32 3, i32 0)
 end_comment
 
 end_unit

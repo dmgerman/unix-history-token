@@ -75,7 +75,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: = load i32*
+comment|// CHECK: = load i32, i32*
 name|callee_ibt0f
 argument_list|(
 name|ibt15

@@ -61,7 +61,7 @@ decl_stmt|;
 asm|__asm__
 specifier|__volatile__
 asm|(							\ 		       "ldrexd%[_rl], %[_rh], [%[_p]]"			\ 		       : [_rl] "=&r" (rl), [_rh] "=&r" (rh)		\ 		       : [_p] "p" (p) : "memory");
-comment|// CHECK: call { i32, i32 } asm sideeffect "ldrexd$0, $1, [$2]", "={r1},={r2},r,~{memory}"(i64*
+comment|// CHECK: call { i32, i32 } asm sideeffect "ldrexd$0, $1, [$2]", "=&{r1},=&{r2},r,~{memory}"(i64*
 return|return
 name|r
 return|;

@@ -333,8 +333,8 @@ return|return
 name|f
 return|;
 comment|// CHECK: define void @test_f128(fp128* noalias nocapture sret [[DEST:%.*]], fp128* nocapture readonly, fp128* nocapture readonly)
-comment|// CHECK: %f = load fp128* %0
-comment|// CHECK: %g = load fp128* %1
+comment|// CHECK: %f = load fp128, fp128* %0
+comment|// CHECK: %g = load fp128, fp128* %1
 comment|// CHECK: [[RESULT:%.*]] = tail call fp128 asm "axbr $0, $2", "=f,0,f"(fp128 %f, fp128 %g)
 comment|// CHECK: store fp128 [[RESULT]], fp128* [[DEST]]
 block|}

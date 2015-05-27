@@ -3,6 +3,26 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -ffreestanding -triple x86_64-apple-macosx10.9.0 -emit-llvm -o - | FileCheck %s
 end_comment
 
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: rm -rf %t
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 %s -ffreestanding -triple x86_64-apple-macosx10.9.0 -emit-llvm -o - \
+end_comment
+
+begin_comment
+comment|// RUN:     -fmodules -fmodules-cache-path=%t -isystem %S/Inputs/include \
+end_comment
+
+begin_comment
+comment|// RUN:     | FileCheck %s
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -37,6 +57,36 @@ return|return
 name|_mm_cvtps_pi16
 argument_list|(
 name|a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// Make sure that including<xmmintrin.h> also makes<emmintrin.h>'s content available.
+end_comment
+
+begin_comment
+comment|// This is an ugly hack for GCC compatibility.
+end_comment
+
+begin_function
+name|__m128
+name|test_xmmintrin_provides_emmintrin
+parameter_list|(
+name|__m128d
+name|__a
+parameter_list|,
+name|__m128d
+name|__b
+parameter_list|)
+block|{
+return|return
+name|_mm_add_sd
+argument_list|(
+name|__a
+argument_list|,
+name|__b
 argument_list|)
 return|;
 block|}

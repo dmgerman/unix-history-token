@@ -44,7 +44,7 @@ modifier|*
 name|s
 parameter_list|)
 block|{
-comment|// CHECK: load %struct.s**{{.*}}align 8
+comment|// CHECK: load %struct.s*, %struct.s**{{.*}}align 8
 name|s
 operator|->
 name|word

@@ -428,7 +428,7 @@ comment|// -mnan=2008
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+comment|// RUN: %clang -target mips-linux-gnu -march=mips32r3 -### -c %s \
 end_comment
 
 begin_comment
@@ -452,7 +452,7 @@ comment|// -mnan=legacy
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target mips-linux-gnu -### -c %s \
+comment|// RUN: %clang -target mips-linux-gnu -march=mips32r3 -### -c %s \
 end_comment
 
 begin_comment

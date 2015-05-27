@@ -293,6 +293,10 @@ name|SuitableAlign
 block|;
 name|unsigned
 name|char
+name|DefaultAlignForAttributeAligned
+block|;
+name|unsigned
+name|char
 name|MinGlobalAlign
 block|;
 name|unsigned
@@ -1037,6 +1041,17 @@ specifier|const
 block|{
 return|return
 name|SuitableAlign
+return|;
+block|}
+comment|/// \brief Return the default alignment for __attribute__((aligned)) on
+comment|/// this target, to be used if no alignment value is specified.
+name|unsigned
+name|getDefaultAlignForAttributeAligned
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DefaultAlignForAttributeAligned
 return|;
 block|}
 comment|/// getMinGlobalAlign - Return the minimum alignment of a global variable,
@@ -2167,6 +2182,18 @@ name|Constraint
 argument_list|)
 return|;
 block|}
+comment|/// \brief Returns true if NaN encoding is IEEE 754-2008.
+comment|/// Only MIPS allows a different encoding.
+name|virtual
+name|bool
+name|isNan2008
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// \brief Returns a string of target-specific clobbers, in LLVM format.
 name|virtual
 specifier|const
@@ -2657,7 +2684,9 @@ block|{
 name|CCCR_OK
 block|,
 name|CCCR_Warning
-block|}
+block|,
+name|CCCR_Ignore
+block|,   }
 enum|;
 comment|/// \brief Determines whether a given calling convention is valid for the
 comment|/// target. A calling convention can either be accepted, produce a warning

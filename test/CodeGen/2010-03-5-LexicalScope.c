@@ -4,11 +4,11 @@ comment|// RUN: %clang_cc1 -emit-llvm -g %s -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: DW_TAG_lexical_block
+comment|// CHECK: !DILexicalBlock(
 end_comment
 
 begin_comment
-comment|// CHECK: DW_TAG_lexical_block
+comment|// CHECK: !DILexicalBlock(
 end_comment
 
 begin_function

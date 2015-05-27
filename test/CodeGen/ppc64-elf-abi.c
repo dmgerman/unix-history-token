@@ -28,6 +28,14 @@ comment|// RUN: %clang_cc1 -triple powerpc64-unknown-linux-gnu -emit-llvm -o - %
 end_comment
 
 begin_comment
+comment|// RUN:   -target-abi elfv1-qpx | FileCheck %s --check-prefix=CHECK-ELFv1
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple powerpc64-unknown-linux-gnu -emit-llvm -o - %s \
+end_comment
+
+begin_comment
 comment|// RUN:   -target-abi elfv2 | FileCheck %s --check-prefix=CHECK-ELFv2
 end_comment
 
@@ -92,66 +100,6 @@ name|x
 return|;
 block|}
 end_function
-
-begin_comment
-comment|// Verify ABI choice is passed on to the back end
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc64-unknown-linux-gnu -S -o - %s \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-ASM-ELFv1
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc64-unknown-linux-gnu -S -o - %s \
-end_comment
-
-begin_comment
-comment|// RUN:   -target-abi elfv1 | FileCheck %s --check-prefix=CHECK-ASM-ELFv1
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc64-unknown-linux-gnu -S -o - %s \
-end_comment
-
-begin_comment
-comment|// RUN:   -target-abi elfv2 | FileCheck %s --check-prefix=CHECK-ASM-ELFv2
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc64le-unknown-linux-gnu -S -o - %s \
-end_comment
-
-begin_comment
-comment|// RUN:   | FileCheck %s --check-prefix=CHECK-ASM-ELFv2
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc64le-unknown-linux-gnu -S -o - %s \
-end_comment
-
-begin_comment
-comment|// RUN:   -target-abi elfv1 | FileCheck %s --check-prefix=CHECK-ASM-ELFv1
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc64le-unknown-linux-gnu -S -o - %s \
-end_comment
-
-begin_comment
-comment|// RUN:   -target-abi elfv2 | FileCheck %s --check-prefix=CHECK-ASM-ELFv2
-end_comment
-
-begin_comment
-comment|// CHECK-ASM-ELFv2: .abiversion 2
-end_comment
-
-begin_comment
-comment|// CHECK-ASM-ELFv1-NOT: .abiversion 2
-end_comment
 
 end_unit
 

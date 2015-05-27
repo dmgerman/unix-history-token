@@ -134,7 +134,7 @@ comment|// CHECK: @test1a(
 end_comment
 
 begin_comment
-comment|// CHECK: load i32* {{.*}}, align 1
+comment|// CHECK: load i32, i32* {{.*}}, align 1
 end_comment
 
 begin_comment

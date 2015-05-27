@@ -32,7 +32,7 @@ comment|// RUN:     FileCheck --check-prefix=I686-WIN32 %s
 end_comment
 
 begin_comment
-comment|// I686-WIN32: target datalayout = "e-m:w-p:32:32-i64:64-f80:32-n8:16:32-S32"
+comment|// I686-WIN32: target datalayout = "e-m:x-p:32:32-i64:64-f80:32-n8:16:32-a:0:32-S32"
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ comment|// RUN:     FileCheck --check-prefix=I686-CYGWIN %s
 end_comment
 
 begin_comment
-comment|// I686-CYGWIN: target datalayout = "e-m:w-p:32:32-i64:64-f80:32-n8:16:32-S32"
+comment|// I686-CYGWIN: target datalayout = "e-m:x-p:32:32-i64:64-f80:32-n8:16:32-a:0:32-S32"
 end_comment
 
 begin_comment
@@ -204,7 +204,7 @@ comment|// X86_64-NACL: target datalayout = "e-m:e-p:32:32-i64:64-n8:16:32:64-S1
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple arm-nacl-gnueabi -o - -emit-llvm %s | \
+comment|// RUN: %clang_cc1 -triple arm-nacl -o - -emit-llvm %s | \
 end_comment
 
 begin_comment
@@ -372,6 +372,22 @@ comment|// R600SI: target datalayout = "e-p:32:32-p1:64:64-p2:64:64-p3:32:32-p4:
 end_comment
 
 begin_comment
+comment|// Test default -target-cpu
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple amdgcn-unknown -o - -emit-llvm %s \
+end_comment
+
+begin_comment
+comment|// RUN: | FileCheck %s -check-prefix=R600SIDefault
+end_comment
+
+begin_comment
+comment|// R600SIDefault: target datalayout = "e-p:32:32-p1:64:64-p2:64:64-p3:32:32-p4:64:64-p5:32:32-p24:64:64-i64:64-v16:16-v24:32-v32:32-v48:64-v96:128-v192:256-v256:256-v512:512-v1024:1024-v2048:2048-n32:64"
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cc1 -triple arm64-unknown -o - -emit-llvm %s | \
 end_comment
 
@@ -453,6 +469,18 @@ end_comment
 
 begin_comment
 comment|// SYSTEMZ: target datalayout = "E-m:e-i1:8:16-i8:8:16-i64:64-f128:64-a:8:16-n32:64"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -triple s390x-unknown -target-cpu z13 -o - -emit-llvm %s | \
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck %s -check-prefix=SYSTEMZ-VECTOR
+end_comment
+
+begin_comment
+comment|// SYSTEMZ-VECTOR: target datalayout = "E-m:e-i1:8:16-i8:8:16-i64:64-f128:64-v128:64-a:8:16-n32:64"
 end_comment
 
 begin_comment

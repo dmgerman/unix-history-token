@@ -54,7 +54,15 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: !"0x34\00b\00b\00\00{{.*}}",
+comment|// CHECK: !DIGlobalVariable(name: "b",
+end_comment
+
+begin_comment
+comment|// CHECK-NOT:               linkageName:
+end_comment
+
+begin_comment
+comment|// CHECK-SAME:              ){{$}}
 end_comment
 
 end_unit

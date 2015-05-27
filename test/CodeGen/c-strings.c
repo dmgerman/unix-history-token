@@ -24,15 +24,15 @@ comment|// ITANIUM: @.str = private unnamed_addr constant [6 x i8] c"hello\00"
 end_comment
 
 begin_comment
-comment|// MSABI: @"\01??_C@_05CJBACGMB@hello?$AA@" = linkonce_odr unnamed_addr constant [6 x i8] c"hello\00", align 1
+comment|// MSABI: @"\01??_C@_05CJBACGMB@hello?$AA@" = linkonce_odr unnamed_addr constant [6 x i8] c"hello\00", comdat, align 1
 end_comment
 
 begin_comment
-comment|// ITANIUM: @f1.x = internal global i8* getelementptr inbounds ([6 x i8]* @.str, i32 0, i32 0)
+comment|// ITANIUM: @f1.x = internal global i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str, i32 0, i32 0)
 end_comment
 
 begin_comment
-comment|// MSABI: @f1.x = internal global i8* getelementptr inbounds ([6 x i8]* @"\01??_C@_05CJBACGMB@hello?$AA@", i32 0, i32 0)
+comment|// MSABI: @f1.x = internal global i8* getelementptr inbounds ([6 x i8], [6 x i8]* @"\01??_C@_05CJBACGMB@hello?$AA@", i32 0, i32 0)
 end_comment
 
 begin_comment
@@ -44,11 +44,11 @@ comment|// CHECK: @f3.x = internal global [8 x i8] c"hello\00\00\00", align [[AL
 end_comment
 
 begin_comment
-comment|// ITANIUM: @f4.x = internal global %struct.s { i8* getelementptr inbounds ([6 x i8]* @.str, i32 0, i32 0) }
+comment|// ITANIUM: @f4.x = internal global %struct.s { i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str, i32 0, i32 0) }
 end_comment
 
 begin_comment
-comment|// MSABI: @f4.x = internal global %struct.s { i8* getelementptr inbounds ([6 x i8]* @"\01??_C@_05CJBACGMB@hello?$AA@", i32 0, i32 0) }
+comment|// MSABI: @f4.x = internal global %struct.s { i8* getelementptr inbounds ([6 x i8], [6 x i8]* @"\01??_C@_05CJBACGMB@hello?$AA@", i32 0, i32 0) }
 end_comment
 
 begin_comment
@@ -143,7 +143,7 @@ argument_list|(
 name|x
 argument_list|)
 expr_stmt|;
-comment|// CHECK: [[T1:%.*]] = load i8** @f1.x
+comment|// CHECK: [[T1:%.*]] = load i8*, i8** @f1.x
 comment|// CHECK: call void @bar(i8* [[T1:%.*]])
 block|}
 end_function

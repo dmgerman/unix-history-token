@@ -197,7 +197,7 @@ name|representation
 return|;
 block|}
 comment|// Overloaded operators for bool like qualities
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -532,6 +532,15 @@ name|ObjCEnd
 init|=
 name|ObjCObjArg
 block|,
+comment|// FreeBSD kernel specific specifiers.
+name|FreeBSDbArg
+block|,
+name|FreeBSDDArg
+block|,
+name|FreeBSDrArg
+block|,
+name|FreeBSDyArg
+block|,
 comment|// GlibC specific specifiers.
 name|PrintErrno
 block|,
@@ -713,6 +722,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|kind
 operator|>=
 name|IntArgBeg
@@ -720,6 +730,15 @@ operator|&&
 name|kind
 operator|<=
 name|IntArgEnd
+operator|)
+operator|||
+name|kind
+operator|==
+name|FreeBSDrArg
+operator|||
+name|kind
+operator|==
+name|FreeBSDyArg
 return|;
 block|}
 name|bool
@@ -821,6 +840,20 @@ block|,
 name|WCStrTy
 block|,
 name|WIntTy
+block|}
+enum|;
+enum|enum
+name|MatchKind
+block|{
+name|NoMatch
+init|=
+literal|0
+block|,
+name|Match
+init|=
+literal|1
+block|,
+name|NoMatchPedantic
 block|}
 enum|;
 name|private
@@ -976,7 +1009,7 @@ return|return
 name|Res
 return|;
 block|}
-name|bool
+name|MatchKind
 name|matchesType
 argument_list|(
 name|ASTContext
@@ -2422,29 +2455,17 @@ block|;
 name|bool
 name|ParsePrintfString
 argument_list|(
-name|FormatStringHandler
-operator|&
-name|H
+argument|FormatStringHandler&H
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|beg
+argument|const char *beg
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|end
+argument|const char *end
 argument_list|,
-specifier|const
-name|LangOptions
-operator|&
-name|LO
+argument|const LangOptions&LO
 argument_list|,
-specifier|const
-name|TargetInfo
-operator|&
-name|Target
+argument|const TargetInfo&Target
+argument_list|,
+argument|bool isFreeBSDKPrintf
 argument_list|)
 block|;
 name|bool

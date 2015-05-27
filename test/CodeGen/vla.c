@@ -367,7 +367,7 @@ literal|3
 index|]
 decl_stmt|;
 comment|/* Variable length array.  */
-comment|// CHECK:  [[tmp_1:%.*]] = load i32* @GLOB, align 4
+comment|// CHECK:  [[tmp_1:%.*]] = load i32, i32* @GLOB, align 4
 comment|// CHECK-NEXT: add nsw i32 [[tmp_1]], 1
 name|__typeof__
 argument_list|(
@@ -413,13 +413,13 @@ comment|// CHECK:      [[NV:%.*]] = alloca i32, align 4
 comment|// CHECK-NEXT: [[PV:%.*]] = alloca [5 x double]*, align 4
 comment|// CHECK-NEXT: store
 comment|// CHECK-NEXT: store
-comment|// CHECK-NEXT: [[N:%.*]] = load i32* [[NV]], align 4
-comment|// CHECK-NEXT: [[P:%.*]] = load [5 x double]** [[PV]], align 4
+comment|// CHECK-NEXT: [[N:%.*]] = load i32, i32* [[NV]], align 4
+comment|// CHECK-NEXT: [[P:%.*]] = load [5 x double]*, [5 x double]** [[PV]], align 4
 comment|// CHECK-NEXT: [[T0:%.*]] = mul nsw i32 1, [[N]]
-comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [5 x double]* [[P]], i32 [[T0]]
-comment|// CHECK-NEXT: [[T2:%.*]] = getelementptr inbounds [5 x double]* [[T1]], i32 2
-comment|// CHECK-NEXT: [[T3:%.*]] = getelementptr inbounds [5 x double]* [[T2]], i32 0, i32 3
-comment|// CHECK-NEXT: [[T4:%.*]] = load double* [[T3]]
+comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [5 x double], [5 x double]* [[P]], i32 [[T0]]
+comment|// CHECK-NEXT: [[T2:%.*]] = getelementptr inbounds [5 x double], [5 x double]* [[T1]], i32 2
+comment|// CHECK-NEXT: [[T3:%.*]] = getelementptr inbounds [5 x double], [5 x double]* [[T2]], i32 0, i32 3
+comment|// CHECK-NEXT: [[T4:%.*]] = load double, double* [[T3]]
 comment|// CHECK-NEXT: ret double [[T4]]
 return|return
 name|p
@@ -468,21 +468,21 @@ comment|// CHECK-NEXT: [[P2:%.*]] = alloca [6 x i8]*, align 4
 comment|// CHECK-NEXT: store i32
 comment|// CHECK-NEXT: store [6 x i8]*
 comment|// VLA captures.
-comment|// CHECK-NEXT: [[DIM0:%.*]] = load i32* [[N]], align 4
-comment|// CHECK-NEXT: [[T0:%.*]] = load i32* [[N]], align 4
+comment|// CHECK-NEXT: [[DIM0:%.*]] = load i32, i32* [[N]], align 4
+comment|// CHECK-NEXT: [[T0:%.*]] = load i32, i32* [[N]], align 4
 comment|// CHECK-NEXT: [[DIM1:%.*]] = add i32 [[T0]], 1
-comment|// CHECK-NEXT: [[T0:%.*]] = load [6 x i8]** [[P]], align 4
-comment|// CHECK-NEXT: [[T1:%.*]] = load i32* [[N]], align 4
+comment|// CHECK-NEXT: [[T0:%.*]] = load [6 x i8]*, [6 x i8]** [[P]], align 4
+comment|// CHECK-NEXT: [[T1:%.*]] = load i32, i32* [[N]], align 4
 comment|// CHECK-NEXT: [[T2:%.*]] = udiv i32 [[T1]], 2
 comment|// CHECK-NEXT: [[T3:%.*]] = mul nuw i32 [[DIM0]], [[DIM1]]
 comment|// CHECK-NEXT: [[T4:%.*]] = mul nsw i32 [[T2]], [[T3]]
-comment|// CHECK-NEXT: [[T5:%.*]] = getelementptr inbounds [6 x i8]* [[T0]], i32 [[T4]]
-comment|// CHECK-NEXT: [[T6:%.*]] = load i32* [[N]], align 4
+comment|// CHECK-NEXT: [[T5:%.*]] = getelementptr inbounds [6 x i8], [6 x i8]* [[T0]], i32 [[T4]]
+comment|// CHECK-NEXT: [[T6:%.*]] = load i32, i32* [[N]], align 4
 comment|// CHECK-NEXT: [[T7:%.*]] = udiv i32 [[T6]], 4
 comment|// CHECK-NEXT: [[T8:%.*]] = sub i32 0, [[T7]]
 comment|// CHECK-NEXT: [[T9:%.*]] = mul nuw i32 [[DIM0]], [[DIM1]]
 comment|// CHECK-NEXT: [[T10:%.*]] = mul nsw i32 [[T8]], [[T9]]
-comment|// CHECK-NEXT: [[T11:%.*]] = getelementptr inbounds [6 x i8]* [[T5]], i32 [[T10]]
+comment|// CHECK-NEXT: [[T11:%.*]] = getelementptr inbounds [6 x i8], [6 x i8]* [[T5]], i32 [[T10]]
 comment|// CHECK-NEXT: store [6 x i8]* [[T11]], [6 x i8]** [[P2]], align 4
 name|__typeof
 argument_list|(
@@ -502,8 +502,8 @@ name|n
 operator|/
 literal|4
 expr_stmt|;
-comment|// CHECK-NEXT: [[T0:%.*]] = load [6 x i8]** [[P2]], align 4
-comment|// CHECK-NEXT: [[T1:%.*]] = load [6 x i8]** [[P]], align 4
+comment|// CHECK-NEXT: [[T0:%.*]] = load [6 x i8]*, [6 x i8]** [[P2]], align 4
+comment|// CHECK-NEXT: [[T1:%.*]] = load [6 x i8]*, [6 x i8]** [[P]], align 4
 comment|// CHECK-NEXT: [[T2:%.*]] = ptrtoint [6 x i8]* [[T0]] to i32
 comment|// CHECK-NEXT: [[T3:%.*]] = ptrtoint [6 x i8]* [[T1]] to i32
 comment|// CHECK-NEXT: [[T4:%.*]] = sub i32 [[T2]], [[T3]]
@@ -570,16 +570,16 @@ block|}
 operator|+=
 literal|0
 expr_stmt|;
-comment|// CHECK-NEXT: [[Z:%.*]] = load i32* [[I]], align 4
+comment|// CHECK-NEXT: [[Z:%.*]] = load i32, i32* [[I]], align 4
 comment|// CHECK-NEXT: [[INC:%.*]]  = add nsw i32 [[Z]], 1
 comment|// CHECK-NEXT: store i32 [[INC]], i32* [[I]], align 4
-comment|// CHECK-NEXT: [[O:%.*]] = load i32* [[I]], align 4
-comment|// CHECK-NEXT: [[AR:%.*]] = getelementptr inbounds [5 x i32]* [[A]], i32 0, i32 0
+comment|// CHECK-NEXT: [[O:%.*]] = load i32, i32* [[I]], align 4
+comment|// CHECK-NEXT: [[AR:%.*]] = getelementptr inbounds [5 x i32], [5 x i32]* [[A]], i32 0, i32 0
 comment|// CHECK-NEXT: [[T:%.*]] = bitcast [5 x i32]* [[A]] to i32*
 comment|// CHECK-NEXT: store i32* [[T]], i32** [[CL]]
-comment|// CHECK-NEXT: [[TH:%.*]] = load i32** [[CL]]
+comment|// CHECK-NEXT: [[TH:%.*]] = load i32*, i32** [[CL]]
 comment|// CHECK-NEXT: [[VLAIX:%.*]] = mul nsw i32 0, [[O]]
-comment|// CHECK-NEXT: [[ADDPTR:%.*]] = getelementptr inbounds i32* [[TH]], i32 [[VLAIX]]
+comment|// CHECK-NEXT: [[ADDPTR:%.*]] = getelementptr inbounds i32, i32* [[TH]], i32 [[VLAIX]]
 comment|// CHECK-NEXT: store i32* [[ADDPTR]], i32** [[CL]]
 block|}
 end_function
@@ -637,15 +637,15 @@ expr_stmt|;
 comment|// CHECK-NEXT: [[CL:%.*]] = alloca i32**, align 4
 comment|// CHECK-NEXT: store i32 20, i32* [[N]], align 4
 comment|// CHECK-NEXT: store i32 0, i32* [[I]], align 4
-comment|// CHECK-NEXT: [[Z:%.*]] = load i32* [[I]], align 4
+comment|// CHECK-NEXT: [[Z:%.*]] = load i32, i32* [[I]], align 4
 comment|// CHECK-NEXT: [[O:%.*]] = bitcast i32*** [[A]] to i32**
 comment|// CHECK-NEXT: store i32** [[O]], i32*** [[CL]]
-comment|// CHECK-NEXT: [[T:%.*]] = load i32*** [[CL]]
-comment|// CHECK-NEXT: [[IX:%.*]] = getelementptr inbounds i32** [[T]], i32 0
-comment|// CHECK-NEXT: [[TH:%.*]] = load i32** [[IX]], align 4
+comment|// CHECK-NEXT: [[T:%.*]] = load i32**, i32*** [[CL]]
+comment|// CHECK-NEXT: [[IX:%.*]] = getelementptr inbounds i32*, i32** [[T]], i32 0
+comment|// CHECK-NEXT: [[TH:%.*]] = load i32*, i32** [[IX]], align 4
 comment|// CHECK-NEXT: [[F:%.*]] = mul nsw i32 1, [[Z]]
-comment|// CHECK-NEXT: [[IX1:%.*]] = getelementptr inbounds i32* [[TH]], i32 [[F]]
-comment|// CHECK-NEXT: [[IX2:%.*]] = getelementptr inbounds i32* [[IX1]], i32 5
+comment|// CHECK-NEXT: [[IX1:%.*]] = getelementptr inbounds i32, i32* [[TH]], i32 [[F]]
+comment|// CHECK-NEXT: [[IX2:%.*]] = getelementptr inbounds i32, i32* [[IX1]], i32 5
 comment|// CHECK-NEXT: store i32 0, i32* [[IX2]], align 4
 block|}
 end_function

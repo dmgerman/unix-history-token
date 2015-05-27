@@ -12,11 +12,11 @@ comment|//  member that is a pointer to a block.
 end_comment
 
 begin_comment
-comment|// CHECK: __block_literal_generic{{.*}}DW_TAG_structure_type
+comment|// CHECK: !DICompositeType(tag: DW_TAG_structure_type, name: "__block_literal_generic"
 end_comment
 
 begin_comment
-comment|// CHECK: __block_descriptor{{.*}}DW_TAG_structure_type
+comment|// CHECK: !DICompositeType(tag: DW_TAG_structure_type, name: "__block_descriptor"
 end_comment
 
 begin_struct

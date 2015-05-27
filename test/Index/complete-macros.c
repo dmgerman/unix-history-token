@@ -152,7 +152,7 @@ comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: macro definition:{TypedText FOO}{LeftParen (}{Placeholder Arg1}{Comma , }{Placeholder Arg2}{RightParen )}
+comment|// CHECK-CC1: macro definition:{TypedText FOO} (70)
 end_comment
 
 begin_comment

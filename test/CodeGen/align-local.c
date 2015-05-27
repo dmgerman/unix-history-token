@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm< %s | grep "align 16" | count 2
+comment|// RUN: %clang_cc1 -emit-llvm< %s | FileCheck %s
 end_comment
 
 begin_typedef
@@ -28,6 +28,14 @@ begin_expr_stmt
 name|ff
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|// CHECK: alloca %struct.ff, align 16
+end_comment
+
+begin_comment
+comment|// CHECK: alloca %struct.anon, align 16
+end_comment
 
 begin_function
 name|int

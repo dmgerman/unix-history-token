@@ -24,23 +24,23 @@ comment|// RUN: %clang -### -target i386-apple-darwin9 -c -g %t.s 2>&1 | FileChe
 end_comment
 
 begin_comment
-comment|// CHECK: !0 = !{
+comment|// CHECK: !0 = !DICompileUnit(
 end_comment
 
 begin_comment
-comment|// CHECK: -I path\5C with\5C \5C\5Cspaces
+comment|// CHECK-SAME:                flags:
 end_comment
 
 begin_comment
-comment|// CHECK: -g -Os
+comment|// CHECK-SAME:                -I path\5C with\5C \5C\5Cspaces
 end_comment
 
 begin_comment
-comment|// CHECK: -mmacosx-version-min=10.5.0
+comment|// CHECK-SAME:                -g -Os
 end_comment
 
 begin_comment
-comment|// CHECK: [ DW_TAG_compile_unit ]
+comment|// CHECK-SAME:                -mmacosx-version-min=10.5.0
 end_comment
 
 begin_decl_stmt

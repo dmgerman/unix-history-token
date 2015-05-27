@@ -36,7 +36,7 @@ operator|+
 literal|32
 argument_list|)
 expr_stmt|;
-comment|// CHECK: @llvm.clear_cache(i8* getelementptr {{.*}}, i8* getelementptr {{.*}} (i8* getelementptr {{.*}} 32))
+comment|// CHECK: @llvm.clear_cache(i8* getelementptr inbounds ({{.*}}, i8* getelementptr inbounds (i8, i8* getelementptr inbounds ({{.*}} 32))
 return|return
 literal|0
 return|;

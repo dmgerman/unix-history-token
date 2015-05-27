@@ -90,5 +90,65 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: warning: value size does not match register size specified by the constraint and modifier
+end_comment
+
+begin_comment
+comment|// CHECK: asm ("%w0 %w1 %2" : "+r" (one) : "r" (wide_two));
+end_comment
+
+begin_comment
+comment|// CHECK: note: use constraint modifier "w"
+end_comment
+
+begin_comment
+comment|// CHECK: fix-it:{{.*}}:{47:17-47:19}:"%w2"
+end_comment
+
+begin_function
+name|void
+name|read_write_modifier0
+parameter_list|(
+name|int
+name|one
+parameter_list|,
+name|int
+name|two
+parameter_list|)
+block|{
+name|long
+name|wide_two
+init|=
+name|two
+decl_stmt|;
+asm|asm ("%w0 %w1 %2" : "+r" (one) : "r" (wide_two));
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-NOT: warning:
+end_comment
+
+begin_function
+name|void
+name|read_write_modifier1
+parameter_list|(
+name|int
+name|one
+parameter_list|,
+name|int
+name|two
+parameter_list|)
+block|{
+name|long
+name|wide_two
+init|=
+name|two
+decl_stmt|;
+asm|asm ("%w0 %1" : "+r" (one), "+r" (wide_two));
+block|}
+end_function
+
 end_unit
 

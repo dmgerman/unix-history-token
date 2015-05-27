@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -pedantic
+comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -pedantic -std=c11
 end_comment
 
 begin_typedef
@@ -12,8 +12,19 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-note 3 {{forward declaration of 'struct S'}}
+comment|// expected-note 4 {{forward declaration of 'struct S'}}
 end_comment
+
+begin_decl_stmt
+specifier|extern
+atomic|_Atomic
+argument_list|(
+name|S
+operator|*
+argument_list|)
+name|e
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void
@@ -126,6 +137,10 @@ name|d
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{arithmetic on a pointer to the function type 'void (S *, void *)' is a GNU extension}}
+name|e
+operator|++
+expr_stmt|;
+comment|// expected-error {{arithmetic on a pointer to an incomplete type}}
 block|}
 end_function
 

@@ -433,7 +433,7 @@ name|__m256i
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.psrl.dq({{.*}}, i32 8)
+comment|// CHECK: shufflevector<32 x i8> %{{.*}},<32 x i8> zeroinitializer,<32 x i32><i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 32, i32 17, i32 18, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31, i32 48>
 return|return
 name|_mm256_alignr_epi8
 argument_list|(
@@ -2036,9 +2036,29 @@ name|__m256i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.psll.dq
+comment|// CHECK: shufflevector<32 x i8> zeroinitializer,<32 x i8> %{{.*}},<32 x i32><i32 13, i32 14, i32 15, i32 32, i32 33, i32 34, i32 35, i32 36, i32 37, i32 38, i32 39, i32 40, i32 41, i32 42, i32 43, i32 44, i32 29, i32 30, i32 31, i32 48, i32 49, i32 50, i32 51, i32 52, i32 53, i32 54, i32 55, i32 56, i32 57, i32 58, i32 59, i32 60>
 return|return
 name|_mm256_slli_si256
+argument_list|(
+name|a
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_bslli_epi128
+parameter_list|(
+name|__m256i
+name|a
+parameter_list|)
+block|{
+comment|// CHECK: shufflevector<32 x i8> zeroinitializer,<32 x i8> %{{.*}},<32 x i32><i32 13, i32 14, i32 15, i32 32, i32 33, i32 34, i32 35, i32 36, i32 37, i32 38, i32 39, i32 40, i32 41, i32 42, i32 43, i32 44, i32 29, i32 30, i32 31, i32 48, i32 49, i32 50, i32 51, i32 52, i32 53, i32 54, i32 55, i32 56, i32 57, i32 58, i32 59, i32 60>
+return|return
+name|_mm256_bslli_epi128
 argument_list|(
 name|a
 argument_list|,
@@ -2271,9 +2291,29 @@ name|__m256i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.psrl.dq
+comment|// CHECK: shufflevector<32 x i8> %{{.*}},<32 x i8> zeroinitializer,<32 x i32><i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 32, i32 33, i32 34, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31, i32 48, i32 49, i32 50>
 return|return
 name|_mm256_srli_si256
+argument_list|(
+name|a
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_bsrli_epi128
+parameter_list|(
+name|__m256i
+name|a
+parameter_list|)
+block|{
+comment|// CHECK: shufflevector<32 x i8> %{{.*}},<32 x i8> zeroinitializer,<32 x i32><i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9, i32 10, i32 11, i32 12, i32 13, i32 14, i32 15, i32 32, i32 33, i32 34, i32 19, i32 20, i32 21, i32 22, i32 23, i32 24, i32 25, i32 26, i32 27, i32 28, i32 29, i32 30, i32 31, i32 48, i32 49, i32 50>
+return|return
+name|_mm256_bsrli_epi128
 argument_list|(
 name|a
 argument_list|,
@@ -2634,6 +2674,24 @@ block|}
 end_function
 
 begin_function
+name|__m128d
+name|test_mm_broadcastsd_pd
+parameter_list|(
+name|__m128d
+name|a
+parameter_list|)
+block|{
+comment|// CHECK: shufflevector<2 x double> %{{.*}},<2 x double> %{{.*}},<2 x i32> zeroinitializer
+return|return
+name|_mm_broadcastsd_pd
+argument_list|(
+name|a
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
 name|__m256
 name|test_mm256_broadcastss_ps
 parameter_list|(
@@ -2677,7 +2735,7 @@ name|__m128i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.vbroadcasti128
+comment|// CHECK: shufflevector<2 x i64> %{{.*}},<2 x i64> %{{.*}},<4 x i32><i32 0, i32 1, i32 0, i32 1>
 return|return
 name|_mm256_broadcastsi128_si256
 argument_list|(
@@ -2998,13 +3056,35 @@ end_function
 
 begin_function
 name|__m128i
-name|test_mm256_extracti128_si256
+name|test_mm256_extracti128_si256_0
 parameter_list|(
 name|__m256i
 name|a
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.vextracti128
+comment|// CHECK-LABEL: @test_mm256_extracti128_si256_0
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1>
+return|return
+name|_mm256_extracti128_si256
+argument_list|(
+name|a
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m128i
+name|test_mm256_extracti128_si256_1
+parameter_list|(
+name|__m256i
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_extracti128_si256_1
+comment|// CHECK: shufflevector{{.*}}<i32 2, i32 3>
 return|return
 name|_mm256_extracti128_si256
 argument_list|(
@@ -3016,9 +3096,34 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// Immediate should be truncated to one bit.
+end_comment
+
+begin_function
+name|__m128i
+name|test_mm256_extracti128_si256_2
+parameter_list|(
+name|__m256i
+name|a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_extracti128_si256_2
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1>
+return|return
+name|_mm256_extracti128_si256
+argument_list|(
+name|a
+argument_list|,
+literal|2
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_function
 name|__m256i
-name|test_mm256_inserti128_si256
+name|test_mm256_inserti128_si256_0
 parameter_list|(
 name|__m256i
 name|a
@@ -3027,7 +3132,34 @@ name|__m128i
 name|b
 parameter_list|)
 block|{
-comment|// CHECK: @llvm.x86.avx2.vinserti128
+comment|// CHECK-LABEL: @test_mm256_inserti128_si256_0
+comment|// CHECK: shufflevector{{.*}}<i32 4, i32 5, i32 2, i32 3>
+return|return
+name|_mm256_inserti128_si256
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_mm256_inserti128_si256_1
+parameter_list|(
+name|__m256i
+name|a
+parameter_list|,
+name|__m128i
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_inserti128_si256_1
+comment|// CHECK: shufflevector{{.*}}<i32 0, i32 1, i32 4, i32 5>
 return|return
 name|_mm256_inserti128_si256
 argument_list|(
@@ -3036,6 +3168,36 @@ argument_list|,
 name|b
 argument_list|,
 literal|1
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// Immediate should be truncated to one bit.
+end_comment
+
+begin_function
+name|__m256i
+name|test_mm256_inserti128_si256_2
+parameter_list|(
+name|__m256i
+name|a
+parameter_list|,
+name|__m128i
+name|b
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_mm256_inserti128_si256_2
+comment|// CHECK: shufflevector{{.*}}<i32 4, i32 5, i32 2, i32 3>
+return|return
+name|_mm256_inserti128_si256
+argument_list|(
+name|a
+argument_list|,
+name|b
+argument_list|,
+literal|2
 argument_list|)
 return|;
 block|}

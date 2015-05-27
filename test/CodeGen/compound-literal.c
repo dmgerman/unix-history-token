@@ -184,13 +184,13 @@ name|S
 name|s
 decl_stmt|;
 comment|// CHECK-NEXT: [[COMPOUNDLIT:%[a-zA-Z0-9.]+]] = alloca [[STRUCT]]
-comment|// CHECK-NEXT: [[CX:%[a-zA-Z0-9.]+]] = getelementptr inbounds [[STRUCT]]* [[COMPOUNDLIT]], i32 0, i32 0
-comment|// CHECK-NEXT: [[SY:%[a-zA-Z0-9.]+]] = getelementptr inbounds [[STRUCT]]* [[S]], i32 0, i32 1
-comment|// CHECK-NEXT: [[TMP:%[a-zA-Z0-9.]+]] = load i32* [[SY]]
+comment|// CHECK-NEXT: [[CX:%[a-zA-Z0-9.]+]] = getelementptr inbounds [[STRUCT]], [[STRUCT]]* [[COMPOUNDLIT]], i32 0, i32 0
+comment|// CHECK-NEXT: [[SY:%[a-zA-Z0-9.]+]] = getelementptr inbounds [[STRUCT]], [[STRUCT]]* [[S]], i32 0, i32 1
+comment|// CHECK-NEXT: [[TMP:%[a-zA-Z0-9.]+]] = load i32, i32* [[SY]]
 comment|// CHECK-NEXT: store i32 [[TMP]], i32* [[CX]]
-comment|// CHECK-NEXT: [[CY:%[a-zA-Z0-9.]+]] = getelementptr inbounds [[STRUCT]]* [[COMPOUNDLIT]], i32 0, i32 1
-comment|// CHECK-NEXT: [[SX:%[a-zA-Z0-9.]+]] = getelementptr inbounds [[STRUCT]]* [[S]], i32 0, i32 0
-comment|// CHECK-NEXT: [[TMP:%[a-zA-Z0-9.]+]] = load i32* [[SX]]
+comment|// CHECK-NEXT: [[CY:%[a-zA-Z0-9.]+]] = getelementptr inbounds [[STRUCT]], [[STRUCT]]* [[COMPOUNDLIT]], i32 0, i32 1
+comment|// CHECK-NEXT: [[SX:%[a-zA-Z0-9.]+]] = getelementptr inbounds [[STRUCT]], [[STRUCT]]* [[S]], i32 0, i32 0
+comment|// CHECK-NEXT: [[TMP:%[a-zA-Z0-9.]+]] = load i32, i32* [[SX]]
 comment|// CHECK-NEXT: store i32 [[TMP]], i32* [[CY]]
 comment|// CHECK-NEXT: [[SI8:%[a-zA-Z0-9.]+]] = bitcast [[STRUCT]]* [[S]] to i8*
 comment|// CHECK-NEXT: [[COMPOUNDLITI8:%[a-zA-Z0-9.]+]] = bitcast [[STRUCT]]* [[COMPOUNDLIT]] to i8*
@@ -257,16 +257,16 @@ comment|// CHECK-NEXT: store i32
 comment|// CHECK-NEXT: store i32
 comment|// CHECK-NEXT: store i32
 comment|// Evaluate the compound literal directly in the result value slot.
-comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[G]]* [[RESULT]], i32 0, i32 0
-comment|// CHECK-NEXT: [[T1:%.*]] = load i32* [[X]], align 4
+comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[G]], [[G]]* [[RESULT]], i32 0, i32 0
+comment|// CHECK-NEXT: [[T1:%.*]] = load i32, i32* [[X]], align 4
 comment|// CHECK-NEXT: [[T2:%.*]] = trunc i32 [[T1]] to i16
 comment|// CHECK-NEXT: store i16 [[T2]], i16* [[T0]], align 2
-comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[G]]* [[RESULT]], i32 0, i32 1
-comment|// CHECK-NEXT: [[T1:%.*]] = load i32* [[Y]], align 4
+comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[G]], [[G]]* [[RESULT]], i32 0, i32 1
+comment|// CHECK-NEXT: [[T1:%.*]] = load i32, i32* [[Y]], align 4
 comment|// CHECK-NEXT: [[T2:%.*]] = trunc i32 [[T1]] to i16
 comment|// CHECK-NEXT: store i16 [[T2]], i16* [[T0]], align 2
-comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[G]]* [[RESULT]], i32 0, i32 2
-comment|// CHECK-NEXT: [[T1:%.*]] = load i32* [[Z]], align 4
+comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr inbounds [[G]], [[G]]* [[RESULT]], i32 0, i32 2
+comment|// CHECK-NEXT: [[T1:%.*]] = load i32, i32* [[Z]], align 4
 comment|// CHECK-NEXT: [[T2:%.*]] = trunc i32 [[T1]] to i16
 comment|// CHECK-NEXT: store i16 [[T2]], i16* [[T0]], align 2
 return|return
@@ -285,7 +285,7 @@ return|;
 comment|// CHECK-NEXT: [[T0:%.*]] = bitcast i48* [[COERCE_TEMP]] to i8*
 comment|// CHECK-NEXT: [[T1:%.*]] = bitcast [[G]]* [[RESULT]] to i8*
 comment|// CHECK-NEXT: call void @llvm.memcpy.p0i8.p0i8.i64(i8* [[T0]], i8* [[T1]], i64 6
-comment|// CHECK-NEXT: [[T0:%.*]] = load i48* [[COERCE_TEMP]]
+comment|// CHECK-NEXT: [[T0:%.*]] = load i48, i48* [[COERCE_TEMP]]
 comment|// CHECK-NEXT: ret i48 [[T0]]
 block|}
 end_function

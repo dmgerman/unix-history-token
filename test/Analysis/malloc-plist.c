@@ -1783,6 +1783,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -2428,6 +2432,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
 end_comment
 
 begin_comment
@@ -3968,6 +3976,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
 end_comment
 
 begin_comment
@@ -5564,6 +5576,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
 end_comment
 
 begin_comment
@@ -7644,6 +7660,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Use-after-free</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
 end_comment
 
 begin_comment
@@ -9883,6 +9903,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -10955,6 +10979,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -11600,6 +11628,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
 end_comment
 
 begin_comment
@@ -12423,6 +12455,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -13240,6 +13276,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
 end_comment
 
 begin_comment
@@ -14451,6 +14491,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -15659,6 +15703,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -16479,6 +16527,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -17296,6 +17348,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
 end_comment
 
 begin_comment
@@ -18235,6 +18291,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 
@@ -19168,6 +19228,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
 end_comment
 
 begin_comment
@@ -20240,6 +20304,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-NEXT:<key>type</key><string>Memory leak</string>
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>unix.Malloc</string>
 end_comment
 
 begin_comment

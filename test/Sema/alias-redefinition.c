@@ -228,12 +228,6 @@ end_comment
 
 begin_decl_stmt
 name|int
-name|v1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|var1
 name|__attribute
 argument_list|(
@@ -248,47 +242,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note {{previous definition}}
+comment|// expected-error {{definition 'var1' cannot also be an alias}}
 end_comment
 
 begin_decl_stmt
-name|int
-name|var1
-name|__attribute
-argument_list|(
-operator|(
-name|alias
-argument_list|(
-literal|"v1"
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// expected-error {{redefinition of 'var1'}}
-end_comment
-
-begin_decl_stmt
-name|int
-name|v2
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|var2
-init|=
-literal|2
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// expected-note {{previous definition}}
-end_comment
-
-begin_decl_stmt
+specifier|static
 name|int
 name|var2
 name|__attribute
@@ -300,28 +258,25 @@ literal|"v2"
 argument_list|)
 operator|)
 argument_list|)
+init|=
+literal|2
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{redefinition of 'var2'}}
+comment|// expected-error {{definition 'var2' cannot also be an alias}}
 end_comment
 
 begin_decl_stmt
-name|int
-name|v3
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|extern
 name|int
 name|var3
-name|__attribute
+name|__attribute__
 argument_list|(
 operator|(
 name|alias
 argument_list|(
-literal|"v3"
+literal|"C"
 argument_list|)
 operator|)
 argument_list|)
@@ -329,26 +284,20 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note {{previous definition}}
+comment|// expected-note{{previous definition is here}}
 end_comment
 
 begin_decl_stmt
 name|int
 name|var3
 init|=
-literal|2
+literal|3
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{redefinition of 'var3'}}
+comment|// expected-error{{redefinition of 'var3'}}
 end_comment
-
-begin_decl_stmt
-name|int
-name|v4
-decl_stmt|;
-end_decl_stmt
 
 begin_decl_stmt
 name|int
@@ -357,13 +306,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note {{previous definition}}
+comment|// expected-note{{previous definition is here}}
 end_comment
 
 begin_decl_stmt
+specifier|extern
 name|int
 name|var4
-name|__attribute
+name|__attribute__
 argument_list|(
 operator|(
 name|alias
@@ -376,42 +326,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{alias definition of 'var4' after tentative definition}}
-end_comment
-
-begin_decl_stmt
-name|int
-name|v5
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
-name|var5
-name|__attribute
-argument_list|(
-operator|(
-name|alias
-argument_list|(
-literal|"v5"
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// expected-note {{previous definition}}
-end_comment
-
-begin_decl_stmt
-name|int
-name|var5
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// expected-error {{tentative definition of 'var5' after alias definition}}
+comment|// expected-error{{alias definition of 'var4' after tentative definition}}
 end_comment
 
 end_unit

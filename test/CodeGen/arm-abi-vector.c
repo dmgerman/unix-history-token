@@ -122,15 +122,15 @@ comment|// CHECK: varargs_vec_2i
 comment|// CHECK: alloca<2 x i32>, align 8
 comment|// CHECK: [[ALIGN:%.*]] = and i32 [[VAR:%.*]], -8
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8* [[AP_ALIGN]], i32 8
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 8
 comment|// CHECK: bitcast i8* [[AP_ALIGN]] to<2 x i32>*
 comment|// APCS-GNU: varargs_vec_2i
 comment|// APCS-GNU: alloca<2 x i32>, align 8
 comment|// APCS-GNU: [[VAR_ALIGN:%.*]] = alloca<2 x i32>
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8* {{%.*}}, i32 8
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* {{%.*}}, i32 8
 comment|// APCS-GNU: bitcast<2 x i32>* [[VAR_ALIGN]] to i8*
 comment|// APCS-GNU: call void @llvm.memcpy
-comment|// APCS-GNU: load<2 x i32>* [[VAR_ALIGN]]
+comment|// APCS-GNU: load<2 x i32>,<2 x i32>* [[VAR_ALIGN]]
 name|va_list
 name|ap
 decl_stmt|;
@@ -189,9 +189,9 @@ name|in
 parameter_list|)
 block|{
 comment|// CHECK: test_2i
-comment|// CHECK: call arm_aapcscc double (i32, ...)* @varargs_vec_2i(i32 3,<2 x i32> {{%.*}})
+comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_2i(i32 3,<2 x i32> {{%.*}})
 comment|// APCS-GNU: test_2i
-comment|// APCS-GNU: call double (i32, ...)* @varargs_vec_2i(i32 3,<2 x i32> {{%.*}})
+comment|// APCS-GNU: call double (i32, ...) @varargs_vec_2i(i32 3,<2 x i32> {{%.*}})
 return|return
 name|varargs_vec_2i
 argument_list|(
@@ -216,11 +216,11 @@ parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_3c
 comment|// CHECK: alloca<3 x i8>, align 4
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8* [[AP:%.*]], i32 4
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP:%.*]], i32 4
 comment|// CHECK: bitcast i8* [[AP]] to<3 x i8>*
 comment|// APCS-GNU: varargs_vec_3c
 comment|// APCS-GNU: alloca<3 x i8>, align 4
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8* [[AP:%.*]], i32 4
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP:%.*]], i32 4
 comment|// APCS-GNU: bitcast i8* [[AP]] to<3 x i8>*
 name|va_list
 name|ap
@@ -280,9 +280,9 @@ name|in
 parameter_list|)
 block|{
 comment|// CHECK: test_3c
-comment|// CHECK: call arm_aapcscc double (i32, ...)* @varargs_vec_3c(i32 3, i32 {{%.*}})
+comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_3c(i32 3, i32 {{%.*}})
 comment|// APCS-GNU: test_3c
-comment|// APCS-GNU: call double (i32, ...)* @varargs_vec_3c(i32 3, i32 {{%.*}})
+comment|// APCS-GNU: call double (i32, ...) @varargs_vec_3c(i32 3, i32 {{%.*}})
 return|return
 name|varargs_vec_3c
 argument_list|(
@@ -309,15 +309,15 @@ comment|// CHECK: varargs_vec_5c
 comment|// CHECK: alloca<5 x i8>, align 8
 comment|// CHECK: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8* [[AP_ALIGN]], i32 8
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 8
 comment|// CHECK: bitcast i8* [[AP_ALIGN]] to<5 x i8>*
 comment|// APCS-GNU: varargs_vec_5c
 comment|// APCS-GNU: alloca<5 x i8>, align 8
 comment|// APCS-GNU: [[VAR_ALIGN:%.*]] = alloca<5 x i8>
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8* {{%.*}}, i32 8
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* {{%.*}}, i32 8
 comment|// APCS-GNU: bitcast<5 x i8>* [[VAR_ALIGN]] to i8*
 comment|// APCS-GNU: call void @llvm.memcpy
-comment|// APCS-GNU: load<5 x i8>* [[VAR_ALIGN]]
+comment|// APCS-GNU: load<5 x i8>,<5 x i8>* [[VAR_ALIGN]]
 name|va_list
 name|ap
 decl_stmt|;
@@ -376,9 +376,9 @@ name|in
 parameter_list|)
 block|{
 comment|// CHECK: test_5c
-comment|// CHECK: call arm_aapcscc double (i32, ...)* @varargs_vec_5c(i32 5,<2 x i32> {{%.*}})
+comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_5c(i32 5,<2 x i32> {{%.*}})
 comment|// APCS-GNU: test_5c
-comment|// APCS-GNU: call double (i32, ...)* @varargs_vec_5c(i32 5,<2 x i32> {{%.*}})
+comment|// APCS-GNU: call double (i32, ...) @varargs_vec_5c(i32 5,<2 x i32> {{%.*}})
 return|return
 name|varargs_vec_5c
 argument_list|(
@@ -406,17 +406,17 @@ comment|// CHECK: alloca<9 x i8>, align 16
 comment|// CHECK: [[VAR_ALIGN:%.*]] = alloca<9 x i8>
 comment|// CHECK: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8* [[AP_ALIGN]], i32 16
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 16
 comment|// CHECK: bitcast<9 x i8>* [[VAR_ALIGN]] to i8*
 comment|// CHECK: call void @llvm.memcpy
-comment|// CHECK: load<9 x i8>* [[VAR_ALIGN]]
+comment|// CHECK: load<9 x i8>,<9 x i8>* [[VAR_ALIGN]]
 comment|// APCS-GNU: varargs_vec_9c
 comment|// APCS-GNU: alloca<9 x i8>, align 16
 comment|// APCS-GNU: [[VAR_ALIGN:%.*]] = alloca<9 x i8>
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8* {{%.*}}, i32 16
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* {{%.*}}, i32 16
 comment|// APCS-GNU: bitcast<9 x i8>* [[VAR_ALIGN]] to i8*
 comment|// APCS-GNU: call void @llvm.memcpy
-comment|// APCS-GNU: load<9 x i8>* [[VAR_ALIGN]]
+comment|// APCS-GNU: load<9 x i8>,<9 x i8>* [[VAR_ALIGN]]
 name|va_list
 name|ap
 decl_stmt|;
@@ -475,9 +475,9 @@ name|in
 parameter_list|)
 block|{
 comment|// CHECK: test_9c
-comment|// CHECK: call arm_aapcscc double (i32, ...)* @varargs_vec_9c(i32 9,<4 x i32> {{%.*}})
+comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_9c(i32 9,<4 x i32> {{%.*}})
 comment|// APCS-GNU: test_9c
-comment|// APCS-GNU: call double (i32, ...)* @varargs_vec_9c(i32 9,<4 x i32> {{%.*}})
+comment|// APCS-GNU: call double (i32, ...) @varargs_vec_9c(i32 9,<4 x i32> {{%.*}})
 return|return
 name|varargs_vec_9c
 argument_list|(
@@ -501,14 +501,14 @@ modifier|...
 parameter_list|)
 block|{
 comment|// CHECK: varargs_vec_19c
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8* [[AP:%.*]], i32 4
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP:%.*]], i32 4
 comment|// CHECK: [[VAR:%.*]] = bitcast i8* [[AP]] to i8**
-comment|// CHECK: [[VAR2:%.*]] = load i8** [[VAR]]
+comment|// CHECK: [[VAR2:%.*]] = load i8*, i8** [[VAR]]
 comment|// CHECK: bitcast i8* [[VAR2]] to<19 x i8>*
 comment|// APCS-GNU: varargs_vec_19c
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8* [[AP:%.*]], i32 4
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP:%.*]], i32 4
 comment|// APCS-GNU: [[VAR:%.*]] = bitcast i8* [[AP]] to i8**
-comment|// APCS-GNU: [[VAR2:%.*]] = load i8** [[VAR]]
+comment|// APCS-GNU: [[VAR2:%.*]] = load i8*, i8** [[VAR]]
 comment|// APCS-GNU: bitcast i8* [[VAR2]] to<19 x i8>*
 name|va_list
 name|ap
@@ -568,9 +568,9 @@ name|in
 parameter_list|)
 block|{
 comment|// CHECK: test_19c
-comment|// CHECK: call arm_aapcscc double (i32, ...)* @varargs_vec_19c(i32 19,<19 x i8>* {{%.*}})
+comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_19c(i32 19,<19 x i8>* {{%.*}})
 comment|// APCS-GNU: test_19c
-comment|// APCS-GNU: call double (i32, ...)* @varargs_vec_19c(i32 19,<19 x i8>* {{%.*}})
+comment|// APCS-GNU: call double (i32, ...) @varargs_vec_19c(i32 19,<19 x i8>* {{%.*}})
 return|return
 name|varargs_vec_19c
 argument_list|(
@@ -597,15 +597,15 @@ comment|// CHECK: varargs_vec_3s
 comment|// CHECK: alloca<3 x i16>, align 8
 comment|// CHECK: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8* [[AP_ALIGN]], i32 8
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 8
 comment|// CHECK: bitcast i8* [[AP_ALIGN]] to<3 x i16>*
 comment|// APCS-GNU: varargs_vec_3s
 comment|// APCS-GNU: alloca<3 x i16>, align 8
 comment|// APCS-GNU: [[VAR_ALIGN:%.*]] = alloca<3 x i16>
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8* {{%.*}}, i32 8
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* {{%.*}}, i32 8
 comment|// APCS-GNU: bitcast<3 x i16>* [[VAR_ALIGN]] to i8*
 comment|// APCS-GNU: call void @llvm.memcpy
-comment|// APCS-GNU: load<3 x i16>* [[VAR_ALIGN]]
+comment|// APCS-GNU: load<3 x i16>,<3 x i16>* [[VAR_ALIGN]]
 name|va_list
 name|ap
 decl_stmt|;
@@ -664,9 +664,9 @@ name|in
 parameter_list|)
 block|{
 comment|// CHECK: test_3s
-comment|// CHECK: call arm_aapcscc double (i32, ...)* @varargs_vec_3s(i32 3,<2 x i32> {{%.*}})
+comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_3s(i32 3,<2 x i32> {{%.*}})
 comment|// APCS-GNU: test_3s
-comment|// APCS-GNU: call double (i32, ...)* @varargs_vec_3s(i32 3,<2 x i32> {{%.*}})
+comment|// APCS-GNU: call double (i32, ...) @varargs_vec_3s(i32 3,<2 x i32> {{%.*}})
 return|return
 name|varargs_vec_3s
 argument_list|(
@@ -694,17 +694,17 @@ comment|// CHECK: alloca<5 x i16>, align 16
 comment|// CHECK: [[VAR_ALIGN:%.*]] = alloca<5 x i16>
 comment|// CHECK: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8* [[AP_ALIGN]], i32 16
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 16
 comment|// CHECK: bitcast<5 x i16>* [[VAR_ALIGN]] to i8*
 comment|// CHECK: call void @llvm.memcpy
-comment|// CHECK: load<5 x i16>* [[VAR_ALIGN]]
+comment|// CHECK: load<5 x i16>,<5 x i16>* [[VAR_ALIGN]]
 comment|// APCS-GNU: varargs_vec_5s
 comment|// APCS-GNU: alloca<5 x i16>, align 16
 comment|// APCS-GNU: [[VAR_ALIGN:%.*]] = alloca<5 x i16>
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8* {{%.*}}, i32 16
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* {{%.*}}, i32 16
 comment|// APCS-GNU: bitcast<5 x i16>* [[VAR_ALIGN]] to i8*
 comment|// APCS-GNU: call void @llvm.memcpy
-comment|// APCS-GNU: load<5 x i16>* [[VAR_ALIGN]]
+comment|// APCS-GNU: load<5 x i16>,<5 x i16>* [[VAR_ALIGN]]
 name|va_list
 name|ap
 decl_stmt|;
@@ -763,9 +763,9 @@ name|in
 parameter_list|)
 block|{
 comment|// CHECK: test_5s
-comment|// CHECK: call arm_aapcscc double (i32, ...)* @varargs_vec_5s(i32 5,<4 x i32> {{%.*}})
+comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_vec_5s(i32 5,<4 x i32> {{%.*}})
 comment|// APCS-GNU: test_5s
-comment|// APCS-GNU: call double (i32, ...)* @varargs_vec_5s(i32 5,<4 x i32> {{%.*}})
+comment|// APCS-GNU: call double (i32, ...) @varargs_vec_5s(i32 5,<4 x i32> {{%.*}})
 return|return
 name|varargs_vec_5s
 argument_list|(
@@ -810,11 +810,11 @@ block|{
 comment|// CHECK: varargs_struct
 comment|// CHECK: [[ALIGN:%.*]] = and i32 {{%.*}}, -8
 comment|// CHECK: [[AP_ALIGN:%.*]] = inttoptr i32 [[ALIGN]] to i8*
-comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8* [[AP_ALIGN]], i32 16
+comment|// CHECK: [[AP_NEXT:%.*]] = getelementptr i8, i8* [[AP_ALIGN]], i32 16
 comment|// CHECK: bitcast i8* [[AP_ALIGN]] to %struct.StructWithVec*
 comment|// APCS-GNU: varargs_struct
 comment|// APCS-GNU: [[VAR_ALIGN:%.*]] = alloca %struct.StructWithVec
-comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8* {{%.*}}, i32 16
+comment|// APCS-GNU: [[AP_NEXT:%.*]] = getelementptr i8, i8* {{%.*}}, i32 16
 comment|// APCS-GNU: bitcast %struct.StructWithVec* [[VAR_ALIGN]] to i8*
 comment|// APCS-GNU: call void @llvm.memcpy
 name|va_list
@@ -883,9 +883,9 @@ name|d
 parameter_list|)
 block|{
 comment|// CHECK: test_struct
-comment|// CHECK: call arm_aapcscc double (i32, ...)* @varargs_struct(i32 3, [2 x i64] {{%.*}})
+comment|// CHECK: call arm_aapcscc double (i32, ...) @varargs_struct(i32 3, [2 x i64] {{%.*}})
 comment|// APCS-GNU: test_struct
-comment|// APCS-GNU: call double (i32, ...)* @varargs_struct(i32 3, [2 x i64] {{%.*}})
+comment|// APCS-GNU: call double (i32, ...) @varargs_struct(i32 3, [2 x i64] {{%.*}})
 return|return
 name|varargs_struct
 argument_list|(

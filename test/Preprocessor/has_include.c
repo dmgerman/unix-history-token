@@ -598,6 +598,18 @@ comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}} // expected-er
 argument|#if __has_include( #endif
 comment|// expected-error@+1 {{missing '(' after '__has_include'}} // expected-error@+1 {{expected value in expression}}
 argument|#if __has_include #endif
+comment|// expected-error@+1 {{missing '(' after '__has_include'}}
+argument|#if __has_include
+literal|'x'
+argument|#endif
+comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}}
+argument|#if __has_include(
+literal|'x'
+argument|#endif
+comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME}} expected-error@+1 {{expected end of line in preprocessor expression}}
+argument|#if __has_include(
+literal|'x'
+argument|) #endif
 comment|// expected-error@+1 {{missing ')' after '__has_include'}}  // expected-error@+1 {{expected value in expression}}  // expected-note@+1 {{to match this '('}}
 argument|#if __has_include(<stdint.h> #endif
 comment|// expected-error@+1 {{expected "FILENAME" or<FILENAME>}} // expected-error@+1 {{expected value in expression}}

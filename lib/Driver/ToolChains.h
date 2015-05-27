@@ -574,6 +574,7 @@ block|;
 operator|~
 name|Generic_GCC
 argument_list|()
+name|override
 block|;
 name|void
 name|printVerboseInfo
@@ -800,6 +801,7 @@ block|;
 operator|~
 name|MachO
 argument_list|()
+name|override
 block|;
 comment|/// @name MachO specific toolchain API
 comment|/// {
@@ -893,6 +895,20 @@ argument|bool AddRPath = false
 argument_list|)
 specifier|const
 block|;
+comment|/// Add any profiling runtime libraries that are needed. This is essentially a
+comment|/// MachO specific version of addProfileRT in Tools.cpp.
+name|virtual
+name|void
+name|addProfileRTLibs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|{
+comment|// There aren't any profiling libs for embedded targets currently.
+block|}
 comment|/// }
 comment|/// @name ToolChain Implementation
 comment|/// {
@@ -1182,6 +1198,7 @@ block|;
 operator|~
 name|Darwin
 argument_list|()
+name|override
 block|;
 name|std
 operator|::
@@ -1234,20 +1251,18 @@ literal|6
 argument_list|,
 literal|0
 argument_list|)
-operator|||
-name|getTriple
-argument_list|()
-operator|.
-name|getArch
-argument_list|()
-operator|==
-name|llvm
-operator|::
-name|Triple
-operator|::
-name|aarch64
 return|;
 block|}
+name|void
+name|addProfileRTLibs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+name|override
+block|;
 name|protected
 operator|:
 comment|/// }
@@ -1691,7 +1706,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-name|virtual
 name|void
 name|addClangWarningOptions
 argument_list|(
@@ -1711,7 +1725,19 @@ specifier|const
 name|override
 block|;
 comment|/// }
-block|}
+name|private
+operator|:
+name|void
+name|AddLinkSanitizerLibArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|,
+argument|StringRef Sanitizer
+argument_list|)
+specifier|const
+block|; }
 decl_stmt|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
@@ -1767,6 +1793,123 @@ argument|const llvm::opt::ArgList&DriverArgs
 argument_list|,
 argument|llvm::opt::ArgStringList&CC1Args
 argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|CloudABI
+range|:
+name|public
+name|Generic_ELF
+block|{
+name|public
+operator|:
+name|CloudABI
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|;
+name|bool
+name|HasNativeLLVMSupport
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|bool
+name|IsMathErrnoDefault
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|IsObjCNonFragileABIDefault
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|CXXStdlibType
+name|GetCXXStdlibType
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|ToolChain
+operator|::
+name|CST_Libcxx
+return|;
+block|}
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|AddCXXStdlibLibArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isPIEDefault
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|protected
+operator|:
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
 specifier|const
 name|override
 block|; }
@@ -2529,6 +2672,7 @@ block|;
 operator|~
 name|Hexagon_TC
 argument_list|()
+name|override
 block|;
 name|void
 name|AddClangSystemIncludeArgs
@@ -2605,6 +2749,171 @@ name|ArgList
 operator|&
 name|Args
 argument_list|)
+block|;
+specifier|static
+specifier|const
+name|char
+operator|*
+name|GetSmallDataThreshold
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|UsesG0
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|smallDataThreshold
+argument_list|)
+block|; }
+decl_stmt|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|NaCl_TC
+range|:
+name|public
+name|Generic_ELF
+block|{
+name|public
+operator|:
+name|NaCl_TC
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+block|;
+name|void
+name|AddClangSystemIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+argument|const llvm::opt::ArgList&DriverArgs
+argument_list|,
+argument|llvm::opt::ArgStringList&CC1Args
+argument_list|)
+specifier|const
+name|override
+block|;
+name|CXXStdlibType
+name|GetCXXStdlibType
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|AddCXXStdlibLibArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|IsIntegratedAssemblerDefault
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// Get the path to the file containing NaCl's ARM macros. It lives in NaCl_TC
+comment|// because the AssembleARM tool needs a const char * that it can pass around
+comment|// and the toolchain outlives all the jobs.
+specifier|const
+name|char
+operator|*
+name|GetNaClArmMacrosPath
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NaClArmMacrosPath
+operator|.
+name|c_str
+argument_list|()
+return|;
+block|}
+name|std
+operator|::
+name|string
+name|ComputeEffectiveClangTriple
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|types::ID InputType
+argument_list|)
+specifier|const
+name|override
+block|;
+name|std
+operator|::
+name|string
+name|Linker
+block|;
+name|protected
+operator|:
+name|Tool
+operator|*
+name|buildLinker
+argument_list|()
+specifier|const
+name|override
+block|;
+name|Tool
+operator|*
+name|buildAssembler
+argument_list|()
+specifier|const
+name|override
+block|;
+name|private
+operator|:
+name|std
+operator|::
+name|string
+name|NaClArmMacrosPath
 block|; }
 decl_stmt|;
 comment|/// TCEToolChain - A tool chain using the llvm bitcode tools to perform
@@ -2645,6 +2954,7 @@ block|;
 operator|~
 name|TCEToolChain
 argument_list|()
+name|override
 block|;
 name|bool
 name|IsMathErrnoDefault

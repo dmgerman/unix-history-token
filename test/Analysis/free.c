@@ -4,8 +4,18 @@ comment|// RUN: %clang_cc1 -analyze -analyzer-store=region -analyzer-checker=cor
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-store=region -analyzer-checker=core,alpha.unix.MallocWithAnnotations -fblocks -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-store=region -analyzer-checker=core,unix.Malloc -fblocks -verify -analyzer-config unix.Malloc:Optimistic=true %s
 end_comment
+
+begin_typedef
+typedef|typedef
+name|__typeof
+argument_list|(
+argument|sizeof(int)
+argument_list|)
+name|size_t
+expr_stmt|;
+end_typedef
 
 begin_function_decl
 name|void
@@ -13,6 +23,16 @@ name|free
 parameter_list|(
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|alloca
+parameter_list|(
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -233,7 +253,7 @@ operator|(
 name|char
 operator|*
 operator|)
-name|__builtin_alloca
+name|alloca
 argument_list|(
 literal|2
 argument_list|)
@@ -252,6 +272,33 @@ name|void
 name|t12
 parameter_list|()
 block|{
+name|char
+modifier|*
+name|p
+init|=
+operator|(
+name|char
+operator|*
+operator|)
+name|__builtin_alloca
+argument_list|(
+literal|2
+argument_list|)
+decl_stmt|;
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{Memory allocated by alloca() should not be deallocated}}
+block|}
+end_function
+
+begin_function
+name|void
+name|t13
+parameter_list|()
+block|{
 name|free
 argument_list|(
 lambda|^
@@ -266,7 +313,7 @@ end_function
 
 begin_function
 name|void
-name|t13
+name|t14
 parameter_list|(
 name|char
 name|a
@@ -294,7 +341,7 @@ end_decl_stmt
 
 begin_function
 name|void
-name|t14
+name|t15
 parameter_list|()
 block|{
 name|free
@@ -308,7 +355,7 @@ end_function
 
 begin_function
 name|void
-name|t15
+name|t16
 parameter_list|(
 name|char
 modifier|*

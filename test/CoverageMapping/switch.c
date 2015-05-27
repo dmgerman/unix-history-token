@@ -15,7 +15,7 @@ name|int
 name|i
 parameter_list|)
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:17 -> [[@LINE+8]]:2 = #0 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:17 -> [[@LINE+8]]:2 = #0
 switch|switch
 condition|(
 name|i
@@ -24,20 +24,99 @@ block|{
 case|case
 literal|1
 case|:
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:11 = #2 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+3]]:10 = #2
 return|return;
 case|case
 literal|2
 case|:
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:10 = #3 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:10 = #3
 break|break;
 block|}
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:12 = #1 (HasCodeBefore = 0)
 name|int
 name|x
 init|=
 literal|0
 decl_stmt|;
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:2 = #1
+block|}
+end_function
+
+begin_function
+name|void
+name|nop
+parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|// CHECK: bar
+end_comment
+
+begin_function
+name|void
+name|bar
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+comment|// CHECK-NEXT: File 0, [[@LINE]]:17 -> [[@LINE+20]]:2 = #0
+switch|switch
+condition|(
+name|i
+condition|)
+empty_stmt|;
+comment|// CHECK-NEXT: File 0, [[@LINE]]:5 -> [[@LINE]]:6 = 0
+switch|switch
+condition|(
+name|i
+condition|)
+block|{
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+16]]:2 = #1
+block|}
+switch|switch
+condition|(
+name|i
+condition|)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+13]]:2 = #2
+name|nop
+argument_list|()
+expr_stmt|;
+comment|// CHECK-NEXT: File 0, [[@LINE]]:5 -> [[@LINE]]:10 = 0
+switch|switch
+condition|(
+name|i
+condition|)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+10]]:2 = #3
+case|case
+literal|1
+case|:
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:10 = #5
+name|nop
+argument_list|()
+expr_stmt|;
+switch|switch
+condition|(
+name|i
+condition|)
+block|{
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+6]]:2 = #4
+name|nop
+argument_list|()
+expr_stmt|;
+comment|// CHECK-NEXT: File 0, [[@LINE]]:5 -> [[@LINE+2]]:10 = 0
+case|case
+literal|1
+case|:
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:10 = #7
+name|nop
+argument_list|()
+expr_stmt|;
+block|}
+name|nop
+argument_list|()
+expr_stmt|;
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:2 = #6
 block|}
 end_function
 
@@ -50,7 +129,7 @@ name|int
 name|main
 parameter_list|()
 block|{
-comment|// CHECK-NEXT: File 0, [[@LINE]]:12 -> [[@LINE+34]]:2 = #0 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:12 -> [[@LINE+34]]:2 = #0
 name|int
 name|i
 init|=
@@ -64,7 +143,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+2]]:10 = #2 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+7]]:10 = #2
 name|i
 operator|=
 literal|1
@@ -73,26 +152,26 @@ break|break;
 case|case
 literal|1
 case|:
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+2]]:10 = #3 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+2]]:10 = #3
 name|i
 operator|=
 literal|2
 expr_stmt|;
 break|break;
 default|default:
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:10 = #4 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:10 = #4
 break|break;
 block|}
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:14 = #1 (HasCodeBefore = 0)
 switch|switch
 condition|(
 name|i
 condition|)
 block|{
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+22]]:2 = #1
 case|case
 literal|0
 case|:
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+2]]:10 = #6 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+6]]:10 = #6
 name|i
 operator|=
 literal|1
@@ -101,29 +180,29 @@ break|break;
 case|case
 literal|1
 case|:
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:10 = #7 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+3]]:10 = #7
 name|i
 operator|=
 literal|2
 expr_stmt|;
 default|default:
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:10 = (#7 + #8) (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:10 = (#7 + #8)
 break|break;
 block|}
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+3]]:14 = #5 (HasCodeBefore = 0)
 switch|switch
 condition|(
 name|i
 condition|)
 block|{
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+12]]:2 = #5
 case|case
 literal|1
 case|:
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE]]:10 = #10 (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+5]]:11 = #10
 case|case
 literal|2
 case|:
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:11 = (#10 + #11) (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+4]]:11 = (#10 + #11)
 name|i
 operator|=
 literal|11
@@ -131,18 +210,23 @@ expr_stmt|;
 case|case
 literal|3
 case|:
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE]]:10 = ((#10 + #11) + #12) (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+2]]:11 = ((#10 + #11) + #12)
 case|case
 literal|4
 case|:
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:11 = (((#10 + #11) + #12) + #13) (HasCodeBefore = 0)
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+1]]:11 = (((#10 + #11) + #12) + #13)
 name|i
 operator|=
 literal|99
 expr_stmt|;
 block|}
-comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+3]]:11 = #9 (HasCodeBefore = 0)
 name|foo
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+comment|// CHECK-NEXT: File 0, [[@LINE]]:3 -> [[@LINE+2]]:11 = #9
+name|bar
 argument_list|(
 literal|1
 argument_list|)

@@ -3412,11 +3412,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef long long int int64_t;
+comment|// S390X:typedef long int int64_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef long long unsigned int uint64_t;
+comment|// S390X:typedef long unsigned int uint64_t;
 end_comment
 
 begin_comment
@@ -3536,11 +3536,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:typedef long long int intmax_t;
+comment|// S390X:typedef long int intmax_t;
 end_comment
 
 begin_comment
-comment|// S390X:typedef long long unsigned int uintmax_t;
+comment|// S390X:typedef long unsigned int uintmax_t;
 end_comment
 
 begin_comment
@@ -3672,7 +3672,7 @@ comment|// S390X:INT64_MAX_ 9223372036854775807L
 end_comment
 
 begin_comment
-comment|// S390X:INT64_MIN_ (-9223372036854775807LL -1)
+comment|// S390X:INT64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
@@ -3680,7 +3680,7 @@ comment|// S390X:UINT64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// S390X:INT_LEAST64_MIN_ (-9223372036854775807LL -1)
+comment|// S390X:INT_LEAST64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
@@ -3692,7 +3692,7 @@ comment|// S390X:UINT_LEAST64_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// S390X:INT_FAST64_MIN_ (-9223372036854775807LL -1)
+comment|// S390X:INT_FAST64_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
@@ -3708,7 +3708,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:INTPTR_MIN_ (-9223372036854775807LL -1)
+comment|// S390X:INTPTR_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
@@ -3720,7 +3720,7 @@ comment|// S390X:UINTPTR_MAX_ 18446744073709551615UL
 end_comment
 
 begin_comment
-comment|// S390X:PTRDIFF_MIN_ (-9223372036854775807LL -1)
+comment|// S390X:PTRDIFF_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment
@@ -3736,7 +3736,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// S390X:INTMAX_MIN_ (-9223372036854775807LL -1)
+comment|// S390X:INTMAX_MIN_ (-9223372036854775807L -1)
 end_comment
 
 begin_comment

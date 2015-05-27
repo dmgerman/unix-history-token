@@ -325,12 +325,12 @@ argument_list|(
 argument|Visitor
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|HandleTranslationUnit
 argument_list|(
 argument|clang::ASTContext&Context
 argument_list|)
+name|override
 block|{
 name|Visitor
 operator|->
@@ -376,7 +376,6 @@ argument_list|(
 argument|Visitor
 argument_list|)
 block|{}
-name|virtual
 name|std
 operator|::
 name|unique_ptr
@@ -391,6 +390,7 @@ argument|CompilerInstance&
 argument_list|,
 argument|llvm::StringRef dummy
 argument_list|)
+name|override
 block|{
 comment|/// TestConsumer will be deleted by the framework calling us.
 return|return
@@ -504,10 +504,10 @@ argument_list|)
 argument_list|)
 block|;   }
 comment|/// \brief Checks that all expected matches have been found.
-name|virtual
 operator|~
 name|ExpectedLocationVisitor
 argument_list|()
+name|override
 block|{
 for|for
 control|(

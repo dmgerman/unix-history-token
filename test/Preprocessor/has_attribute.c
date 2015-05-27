@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple arm-unknown-linux -E %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -triple arm-unknown-linux -verify -E %s -o - | FileCheck %s
 end_comment
 
 begin_comment
@@ -283,6 +283,24 @@ begin_expr_stmt
 name|int
 name|does_not_have_uuid
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__has_cpp_attribute
+argument_list|(
+name|selectany
+argument_list|)
+end_if
+
+begin_comment
+comment|// expected-error {{token is not a valid binary operator in a preprocessor subexpression}}
+end_comment
 
 begin_endif
 endif|#

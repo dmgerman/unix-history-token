@@ -1050,11 +1050,11 @@ block|{ }
 end_function
 
 begin_comment
-comment|// APCS-GNU-LABEL: define void @f33(%struct.s33* byval align 1 %s)
+comment|// APCS-GNU-LABEL: define void @f33(%struct.s33* byval align 4 %s)
 end_comment
 
 begin_comment
-comment|// AAPCS-LABEL: define arm_aapcscc void @f33(%struct.s33* byval align 1 %s)
+comment|// AAPCS-LABEL: define arm_aapcscc void @f33(%struct.s33* byval align 4 %s)
 end_comment
 
 begin_comment
@@ -1111,7 +1111,7 @@ comment|// AAPCS: %[[a:.*]] = alloca [1 x i32]
 end_comment
 
 begin_comment
-comment|// AAPCS: load [1 x i32]* %[[a]]
+comment|// AAPCS: load [1 x i32], [1 x i32]* %[[a]]
 end_comment
 
 begin_comment
@@ -1228,7 +1228,7 @@ block|}
 end_function
 
 begin_comment
-comment|// APCS-GNU-LABEL: define<4 x float> @f35(i32 %i, %struct.s35* byval align 16, %struct.s35* byval align 16)
+comment|// APCS-GNU-LABEL: define<4 x float> @f35(i32 %i, %struct.s35* byval align 4, %struct.s35* byval align 4)
 end_comment
 
 begin_comment
@@ -1252,11 +1252,11 @@ comment|// APCS-GNU: %[[d:.*]] = bitcast %struct.s35* %[[a]] to<4 x float>*
 end_comment
 
 begin_comment
-comment|// APCS-GNU: load<4 x float>* %[[d]], align 16
+comment|// APCS-GNU: load<4 x float>,<4 x float>* %[[d]], align 16
 end_comment
 
 begin_comment
-comment|// AAPCS-LABEL: define arm_aapcscc<4 x float> @f35(i32 %i, %struct.s35* byval align 16, %struct.s35* byval align 16)
+comment|// AAPCS-LABEL: define arm_aapcscc<4 x float> @f35(i32 %i, %struct.s35* byval align 8, %struct.s35* byval align 8)
 end_comment
 
 begin_comment
@@ -1280,7 +1280,7 @@ comment|// AAPCS: %[[d:.*]] = bitcast %struct.s35* %[[a]] to<4 x float>*
 end_comment
 
 begin_comment
-comment|// AAPCS: load<4 x float>* %[[d]], align 16
+comment|// AAPCS: load<4 x float>,<4 x float>* %[[d]], align 16
 end_comment
 
 end_unit

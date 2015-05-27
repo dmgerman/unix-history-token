@@ -79,7 +79,7 @@ name|test1
 parameter_list|()
 block|{
 comment|// CHECK: @test1
-comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* {{.*}}, i8* bitcast (%struct.X* getelementptr inbounds (%struct.Y* @g, i32 0, i32 1) to i8*), i64 24, i32 1, i1 false)
+comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* {{.*}}, i8* bitcast (%struct.X* getelementptr inbounds (%struct.Y, %struct.Y* @g, i32 0, i32 1) to i8*), i64 24, i32 1, i1 false)
 return|return
 name|g
 operator|.
@@ -95,7 +95,7 @@ name|test2
 parameter_list|()
 block|{
 comment|// CHECK: @test2
-comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* {{.*}}, i8* bitcast (%struct.X* getelementptr inbounds (%struct.Y* @g, i32 0, i32 1) to i8*), i64 24, i32 1, i1 false)
+comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* {{.*}}, i8* bitcast (%struct.X* getelementptr inbounds (%struct.Y, %struct.Y* @g, i32 0, i32 1) to i8*), i64 24, i32 1, i1 false)
 name|struct
 name|X
 name|a
@@ -120,7 +120,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK: @test3
-comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* bitcast (%struct.X* getelementptr inbounds (%struct.Y* @g, i32 0, i32 1) to i8*), i8* {{.*}}, i64 24, i32 1, i1 false)
+comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* bitcast (%struct.X* getelementptr inbounds (%struct.Y, %struct.Y* @g, i32 0, i32 1) to i8*), i8* {{.*}}, i64 24, i32 1, i1 false)
 name|g
 operator|.
 name|y
@@ -140,7 +140,7 @@ name|test4
 parameter_list|()
 block|{
 comment|// CHECK: @test4
-comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* {{.*}}, i8* bitcast (%struct.X* getelementptr inbounds (%struct.Y* @g, i32 0, i32 1) to i8*), i64 24, i32 1, i1 false)
+comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* {{.*}}, i8* bitcast (%struct.X* getelementptr inbounds (%struct.Y, %struct.Y* @g, i32 0, i32 1) to i8*), i64 24, i32 1, i1 false)
 name|f
 argument_list|(
 name|g
@@ -161,7 +161,7 @@ name|test5
 parameter_list|()
 block|{
 comment|// CHECK: @test5
-comment|// CHECK: load i32* getelementptr inbounds (%struct.Y* @g, i32 0, i32 1, i32 0, i64 0), align 1
+comment|// CHECK: load i32, i32* getelementptr inbounds (%struct.Y, %struct.Y* @g, i32 0, i32 1, i32 0, i64 0), align 1
 return|return
 name|g
 operator|.
@@ -185,7 +185,7 @@ name|test6
 parameter_list|()
 block|{
 comment|// CHECK: @test6
-comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* bitcast (%struct.X* getelementptr inbounds (%struct.Y* @g, i32 0, i32 1) to i8*), i8* %{{.*}}, i64 24, i32 1, i1 false)
+comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* bitcast (%struct.X* getelementptr inbounds (%struct.Y, %struct.Y* @g, i32 0, i32 1) to i8*), i8* %{{.*}}, i64 24, i32 1, i1 false)
 name|g
 operator|.
 name|y
@@ -253,7 +253,7 @@ name|test7
 parameter_list|()
 block|{
 comment|// CHECK: @test7
-comment|// CHECK: load i32* getelementptr inbounds (%struct.YBitfield* @gbitfield, i32 0, i32 1, i32 0), align 4
+comment|// CHECK: load i32, i32* getelementptr inbounds (%struct.YBitfield, %struct.YBitfield* @gbitfield, i32 0, i32 1, i32 0), align 4
 return|return
 name|gbitfield
 operator|.

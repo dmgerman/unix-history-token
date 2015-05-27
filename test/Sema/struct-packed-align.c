@@ -395,14 +395,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|// FIXME: Will need to force arch once max usable alignment isn't hard
-end_comment
-
-begin_comment
-comment|// coded.
-end_comment
-
 begin_struct
 struct|struct
 name|__attribute__
@@ -417,6 +409,59 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__s390x__
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|e1_2
+index|[
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|as1_2
+argument_list|)
+operator|==
+literal|8
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|e2_2
+index|[
+name|__alignof
+argument_list|(
+expr|struct
+name|as1_2
+argument_list|)
+operator|==
+literal|8
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_decl_stmt
 specifier|extern
@@ -459,6 +504,11 @@ literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct

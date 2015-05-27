@@ -60,7 +60,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:  [[call:%.*]] = call i32 (...)* @f()
+comment|// CHECK:  [[call:%.*]] = call i32 (...) @f()
 end_comment
 
 begin_comment

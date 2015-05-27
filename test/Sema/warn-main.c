@@ -93,5 +93,30 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// expected-warning@+1 {{'main' is not allowed to be declared variadic}}
+end_comment
+
+begin_function
+name|int
+name|main
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|,
+modifier|...
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 end_unit
 

@@ -43,32 +43,5 @@ comment|// expected-error {{argument to '__builtin_ia32_palignr' must be a const
 block|}
 end_function
 
-begin_function
-name|int
-name|test2
-parameter_list|(
-name|int
-name|N
-parameter_list|)
-block|{
-name|__m128i
-name|white2
-decl_stmt|;
-name|white2
-operator|=
-name|__builtin_ia32_pslldqi128
-argument_list|(
-name|white2
-argument_list|,
-name|N
-argument_list|)
-expr_stmt|;
-comment|// expected-error {{argument to '__builtin_ia32_pslldqi128' must be a constant integer}}
-return|return
-literal|0
-return|;
-block|}
-end_function
-
 end_unit
 

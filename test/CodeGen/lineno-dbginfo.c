@@ -8,7 +8,19 @@ comment|// RUN: %clang_cc1 -S -g -include %t.h %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: !"0x34\00outer\00outer\00\00[[@LINE+1]]\000\001"
+comment|// CHECK: !DIGlobalVariable(name: "outer",
+end_comment
+
+begin_comment
+comment|// CHECK-NOT:               linkageName:
+end_comment
+
+begin_comment
+comment|// CHECK-SAME:              line: [[@LINE+2]]
+end_comment
+
+begin_comment
+comment|// CHECK-SAME:              isDefinition: true
 end_comment
 
 begin_decl_stmt

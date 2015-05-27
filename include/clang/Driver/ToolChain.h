@@ -175,6 +175,18 @@ block|,
 name|RLT_Libgcc
 block|}
 enum|;
+enum|enum
+name|RTTIMode
+block|{
+name|RM_EnabledExplicitly
+block|,
+name|RM_EnabledImplicitly
+block|,
+name|RM_DisabledExplicitly
+block|,
+name|RM_DisabledImplicitly
+block|}
+enum|;
 name|private
 label|:
 specifier|const
@@ -197,6 +209,21 @@ name|ArgList
 operator|&
 name|Args
 expr_stmt|;
+comment|// We need to initialize CachedRTTIArg before CachedRTTIMode
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|Arg
+operator|*
+specifier|const
+name|CachedRTTIArg
+expr_stmt|;
+specifier|const
+name|RTTIMode
+name|CachedRTTIMode
+decl_stmt|;
 comment|/// The list of toolchain specific path prefixes to search for
 comment|/// files.
 name|path_list
@@ -593,6 +620,32 @@ name|getSanitizerArgs
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|// Returns the Arg * that explicitly turned on/off rtti, or nullptr.
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|Arg
+operator|*
+name|getRTTIArg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CachedRTTIArg
+return|;
+block|}
+comment|// Returns the RTTIMode for the toolchain with the current arguments.
+name|RTTIMode
+name|getRTTIMode
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CachedRTTIMode
+return|;
+block|}
 comment|// Tool access.
 comment|/// TranslateArgs - Create a new derived argument list for any argument
 comment|/// translations this ToolChain may wish to perform, or 0 if no tool chain

@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -ffinite-math-only -emit-llvm -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -ffinite-math-only -emit-llvm -o - %s | FileCheck %s -check-prefix=CHECK -check-prefix=FINITE
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fno-signed-zeros -emit-llvm -o - %s | FileCheck %s -check-prefix=CHECK  -check-prefix=NSZ
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -freciprocal-math -emit-llvm -o - %s | FileCheck %s -check-prefix=CHECK  -check-prefix=RECIP
 end_comment
 
 begin_decl_stmt
@@ -21,7 +29,9 @@ name|void
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: define void @foo()
-comment|// CHECK: fadd nnan ninf
+comment|// FINITE: fadd nnan ninf
+comment|// NSZ: fadd nsz
+comment|// RECIP: fadd arcp
 name|f0
 operator|=
 name|f1

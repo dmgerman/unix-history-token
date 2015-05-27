@@ -88,6 +88,66 @@ comment|// EP: "-o" "-"
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl /fp:fast /fp:except -### -- %s 2>&1 | FileCheck -check-prefix=fpexcept %s
+end_comment
+
+begin_comment
+comment|// fpexcept-NOT: -menable-unsafe-fp-math
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /fp:fast /fp:except /fp:except- -### -- %s 2>&1 | FileCheck -check-prefix=fpexcept_ %s
+end_comment
+
+begin_comment
+comment|// fpexcept_: -menable-unsafe-fp-math
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /fp:precise /fp:fast -### -- %s 2>&1 | FileCheck -check-prefix=fpfast %s
+end_comment
+
+begin_comment
+comment|// fpfast: -menable-unsafe-fp-math
+end_comment
+
+begin_comment
+comment|// fpfast: -ffast-math
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /fp:fast /fp:precise -### -- %s 2>&1 | FileCheck -check-prefix=fpprecise %s
+end_comment
+
+begin_comment
+comment|// fpprecise-NOT: -menable-unsafe-fp-math
+end_comment
+
+begin_comment
+comment|// fpprecise-NOT: -ffast-math
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /fp:fast /fp:strict -### -- %s 2>&1 | FileCheck -check-prefix=fpstrict %s
+end_comment
+
+begin_comment
+comment|// fpstrict-NOT: -menable-unsafe-fp-math
+end_comment
+
+begin_comment
+comment|// fpstrict-NOT: -ffast-math
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /GA -### -- %s 2>&1 | FileCheck -check-prefix=GA %s
+end_comment
+
+begin_comment
+comment|// GA: -ftls-model=local-exec
+end_comment
+
+begin_comment
 comment|// RTTI is on by default; just check that we don't error.
 end_comment
 
@@ -117,6 +177,30 @@ end_comment
 
 begin_comment
 comment|// Gy_-NOT: -ffunction-sections
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Gs -### -- %s 2>&1 | FileCheck -check-prefix=Gs %s
+end_comment
+
+begin_comment
+comment|// Gs: "-mstack-probe-size=0"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Gs0 -### -- %s 2>&1 | FileCheck -check-prefix=Gs0 %s
+end_comment
+
+begin_comment
+comment|// Gs0: "-mstack-probe-size=0"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Gs4096 -### -- %s 2>&1 | FileCheck -check-prefix=Gs4096 %s
+end_comment
+
+begin_comment
+comment|// Gs4096: "-mstack-probe-size=4096"
 end_comment
 
 begin_comment
@@ -232,6 +316,22 @@ comment|// Oy_: -mdisable-fp-elim
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cl /Qvec -### -- %s 2>&1 | FileCheck -check-prefix=Qvec %s
+end_comment
+
+begin_comment
+comment|// Qvec: -vectorize-loops
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Qvec /Qvec- -### -- %s 2>&1 | FileCheck -check-prefix=Qvec_ %s
+end_comment
+
+begin_comment
+comment|// Qvec_-NOT: -vectorize-loops
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl /showIncludes -### -- %s 2>&1 | FileCheck -check-prefix=showIncludes %s
 end_comment
 
@@ -317,6 +417,22 @@ end_comment
 
 begin_comment
 comment|// VMX: '/vms' not allowed with '/vmm'
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /volatile:iso -### -- %s 2>&1 | FileCheck -check-prefix=VOLATILE-ISO %s
+end_comment
+
+begin_comment
+comment|// VOLATILE-ISO-NOT: "-fms-volatile"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /volatile:ms -### -- %s 2>&1 | FileCheck -check-prefix=VOLATILE-MS %s
+end_comment
+
+begin_comment
+comment|// VOLATILE-MS: "-fms-volatile"
 end_comment
 
 begin_comment
@@ -464,15 +580,19 @@ comment|// For some warning ids, we can map from MSVC warning to Clang warning.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl -wd4005 -### -- %s 2>&1 | FileCheck -check-prefix=wd4005 %s
+comment|// RUN: %clang_cl -wd4005 -wd4996 -### -- %s 2>&1 | FileCheck -check-prefix=Wno %s
 end_comment
 
 begin_comment
-comment|// wd4005: "-cc1"
+comment|// Wno: "-cc1"
 end_comment
 
 begin_comment
-comment|// wd4005: "-Wno-macro-redefined"
+comment|// Wno: "-Wno-macro-redefined"
+end_comment
+
+begin_comment
+comment|// Wno: "-Wno-deprecated-declarations"
 end_comment
 
 begin_comment
@@ -480,11 +600,7 @@ comment|// Ignored options. Check that we don't get "unused during compilation" 
 end_comment
 
 begin_comment
-comment|// (/Zs is for syntax-only)
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cl /Zs \
+comment|// RUN: %clang_cl /c \
 end_comment
 
 begin_comment
@@ -505,6 +621,10 @@ end_comment
 
 begin_comment
 comment|// RUN:    /errorReport:foo \
+end_comment
+
+begin_comment
+comment|// RUN:    /Fdfoo \
 end_comment
 
 begin_comment
@@ -537,6 +657,10 @@ end_comment
 
 begin_comment
 comment|// RUN:    /Ob2 \
+end_comment
+
+begin_comment
+comment|// RUN:    /openmp- \
 end_comment
 
 begin_comment
@@ -585,6 +709,14 @@ end_comment
 
 begin_comment
 comment|// IGNORED-NOT: no such file or directory
+end_comment
+
+begin_comment
+comment|// Don't confuse /openmp- with the /o flag:
+end_comment
+
+begin_comment
+comment|// IGNORED-NOT: "-o" "penmp-.obj"
 end_comment
 
 begin_comment
@@ -684,10 +816,6 @@ comment|// RUN:     /FC \
 end_comment
 
 begin_comment
-comment|// RUN:     /Fdfoo \
-end_comment
-
-begin_comment
 comment|// RUN:     /Fifoo \
 end_comment
 
@@ -697,10 +825,6 @@ end_comment
 
 begin_comment
 comment|// RUN:     /FpDebug\main.pch \
-end_comment
-
-begin_comment
-comment|// RUN:     /fp:precise \
 end_comment
 
 begin_comment
@@ -769,10 +893,6 @@ end_comment
 
 begin_comment
 comment|// RUN:     /GS \
-end_comment
-
-begin_comment
-comment|// RUN:     /Gs1000 \
 end_comment
 
 begin_comment
@@ -988,11 +1108,51 @@ comment|// RTTI-NOT: "-fno-rtti"
 end_comment
 
 begin_comment
+comment|// thread safe statics are off for versions< 19.
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /c -### -- %s 2>&1 | FileCheck -check-prefix=NoThreadSafeStatics %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Zc:threadSafeInit /Zc:threadSafeInit- /c -### -- %s 2>&1 | FileCheck -check-prefix=NoThreadSafeStatics %s
+end_comment
+
+begin_comment
+comment|// NoThreadSafeStatics: "-fno-threadsafe-statics"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /Zc:threadSafeInit /c -### -- %s 2>&1 | FileCheck -check-prefix=ThreadSafeStatics %s
+end_comment
+
+begin_comment
+comment|// ThreadSafeStatics-NOT: "-fno-threadsafe-statics"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fmsc-version=1800 -TP -### -- %s 2>&1 | FileCheck -check-prefix=CXX11 %s
+end_comment
+
+begin_comment
+comment|// CXX11: -std=c++11
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl -fmsc-version=1900 -TP -### -- %s 2>&1 | FileCheck -check-prefix=CXX14 %s
+end_comment
+
+begin_comment
+comment|// CXX14: -std=c++14
+end_comment
+
+begin_comment
 comment|// Accept "core" clang options.
 end_comment
 
 begin_comment
-comment|// (/Zs is for syntax-only)
+comment|// (/Zs is for syntax-only, -Werror makes it fail hard on unknown options)
 end_comment
 
 begin_comment
@@ -1001,6 +1161,26 @@ end_comment
 
 begin_comment
 comment|// RUN:     --driver-mode=cl \
+end_comment
+
+begin_comment
+comment|// RUN:     -fcolor-diagnostics \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-color-diagnostics \
+end_comment
+
+begin_comment
+comment|// RUN:     -fdiagnostics-color \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-diagnostics-color \
+end_comment
+
+begin_comment
+comment|// RUN:     -fdiagnostics-parseable-fixits \
 end_comment
 
 begin_comment
@@ -1020,15 +1200,23 @@ comment|// RUN:     -fstrict-aliasing \
 end_comment
 
 begin_comment
+comment|// RUN:     -fsyntax-only \
+end_comment
+
+begin_comment
 comment|// RUN:     -mllvm -disable-llvm-optzns \
 end_comment
 
 begin_comment
-comment|// RUN:     -Wunused-variables \
+comment|// RUN:     -Wunused-variable \
 end_comment
 
 begin_comment
-comment|// RUN:     /Zs -- %s 2>&1
+comment|// RUN:     -fmacro-backtrace-limit=0 \
+end_comment
+
+begin_comment
+comment|// RUN:     -Werror /Zs -- %s 2>&1
 end_comment
 
 begin_function

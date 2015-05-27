@@ -584,6 +584,10 @@ comment|// CHECK-NEXT:<key>type</key><string>Garbage return value</string>
 end_comment
 
 begin_comment
+comment|// CHECK-NEXT:<key>check_name</key><string>core.uninitialized.UndefReturn</string>
+end_comment
+
+begin_comment
 comment|// CHECK-NEXT:<key>issue_context_kind</key><string>function</string>
 end_comment
 

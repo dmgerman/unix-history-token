@@ -11,6 +11,10 @@ begin_comment
 comment|// RUN: %clang_cc1 %s -triple i686-pc-linux -fms-extensions -emit-llvm -o - | FileCheck -check-prefix LINUX %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 %s -triple x86_64-scei-ps4 -fms-extensions -emit-llvm -o - | FileCheck -check-prefix PS4 %s
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -44,6 +48,17 @@ literal|"USER32.LIB"
 name|)
 end_pragma
 
+begin_pragma
+pragma|#
+directive|pragma
+name|comment
+name|(
+name|lib
+name|,
+literal|"with space"
+name|)
+end_pragma
+
 begin_define
 define|#
 directive|define
@@ -63,6 +78,17 @@ name|BAR
 name|)
 end_pragma
 
+begin_pragma
+pragma|#
+directive|pragma
+name|comment
+name|(
+name|linker
+name|,
+literal|" /foo=\"foo bar\""
+name|)
+end_pragma
+
 begin_comment
 comment|// CHECK: !llvm.module.flags = !{{{.*}}}
 end_comment
@@ -72,7 +98,7 @@ comment|// CHECK: !{{[0-9]+}} = !{i32 6, !"Linker Options", ![[link_opts:[0-9]+]
 end_comment
 
 begin_comment
-comment|// CHECK: ![[link_opts]] = !{![[msvcrt:[0-9]+]], ![[kernel32:[0-9]+]], ![[USER32:[0-9]+]], ![[bar:[0-9]+]]}
+comment|// CHECK: ![[link_opts]] = !{![[msvcrt:[0-9]+]], ![[kernel32:[0-9]+]], ![[USER32:[0-9]+]], ![[space:[0-9]+]], ![[bar:[0-9]+]], ![[foo:[0-9]+]]}
 end_comment
 
 begin_comment
@@ -88,7 +114,15 @@ comment|// CHECK: ![[USER32]] = !{!"/DEFAULTLIB:USER32.LIB"}
 end_comment
 
 begin_comment
+comment|// CHECK: ![[space]] = !{!"/DEFAULTLIB:\22with space.lib\22"}
+end_comment
+
+begin_comment
 comment|// CHECK: ![[bar]] = !{!" /bar=2"}
+end_comment
+
+begin_comment
+comment|// CHECK: ![[foo]] = !{!" /foo=\22foo bar\22"}
 end_comment
 
 begin_comment
@@ -105,6 +139,18 @@ end_comment
 
 begin_comment
 comment|// LINUX: !{!" /bar=2"}
+end_comment
+
+begin_comment
+comment|// PS4: !{!"\01msvcrt.lib"}
+end_comment
+
+begin_comment
+comment|// PS4: !{!"\01kernel32"}
+end_comment
+
+begin_comment
+comment|// PS4: !{!"\01USER32.LIB"}
 end_comment
 
 end_unit

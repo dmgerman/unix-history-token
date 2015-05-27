@@ -86,8 +86,8 @@ name|void
 name|test_cf
 parameter_list|()
 block|{
-comment|// CHECK:      load volatile float* getelementptr inbounds ({ float, float }* @cf, i32 0, i32 0), align 4
-comment|// CHECK-NEXT: load volatile float* getelementptr inbounds ({ float, float }* @cf, i32 0, i32 1), align 4
+comment|// CHECK:      load volatile float, float* getelementptr inbounds ({ float, float }, { float, float }* @cf, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: load volatile float, float* getelementptr inbounds ({ float, float }, { float, float }* @cf, i32 0, i32 1), align 4
 call|(
 name|void
 call|)
@@ -95,10 +95,10 @@ argument_list|(
 name|cf
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: [[R:%.*]] = load volatile float* getelementptr inbounds ({ float, float }* @cf, i32 0, i32 0), align 4
-comment|// CHECK-NEXT: [[I:%.*]] = load volatile float* getelementptr inbounds ({ float, float }* @cf, i32 0, i32 1), align 4
-comment|// CHECK-NEXT: store volatile float [[R]], float* getelementptr inbounds ({ float, float }* @cf, i32 0, i32 0), align 4
-comment|// CHECK-NEXT: store volatile float [[I]], float* getelementptr inbounds ({ float, float }* @cf, i32 0, i32 1), align 4
+comment|// CHECK-NEXT: [[R:%.*]] = load volatile float, float* getelementptr inbounds ({ float, float }, { float, float }* @cf, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: [[I:%.*]] = load volatile float, float* getelementptr inbounds ({ float, float }, { float, float }* @cf, i32 0, i32 1), align 4
+comment|// CHECK-NEXT: store volatile float [[R]], float* getelementptr inbounds ({ float, float }, { float, float }* @cf, i32 0, i32 0), align 4
+comment|// CHECK-NEXT: store volatile float [[I]], float* getelementptr inbounds ({ float, float }, { float, float }* @cf, i32 0, i32 1), align 4
 call|(
 name|void
 call|)
@@ -121,8 +121,8 @@ name|void
 name|test_cd
 parameter_list|()
 block|{
-comment|// CHECK:      load volatile double* getelementptr inbounds ({ double, double }* @cd, i32 0, i32 0), align 8
-comment|// CHECK-NEXT: load volatile double* getelementptr inbounds ({ double, double }* @cd, i32 0, i32 1), align 8
+comment|// CHECK:      load volatile double, double* getelementptr inbounds ({ double, double }, { double, double }* @cd, i32 0, i32 0), align 8
+comment|// CHECK-NEXT: load volatile double, double* getelementptr inbounds ({ double, double }, { double, double }* @cd, i32 0, i32 1), align 8
 call|(
 name|void
 call|)
@@ -130,10 +130,10 @@ argument_list|(
 name|cd
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: [[R:%.*]] = load volatile double* getelementptr inbounds ({ double, double }* @cd, i32 0, i32 0), align 8
-comment|// CHECK-NEXT: [[I:%.*]] = load volatile double* getelementptr inbounds ({ double, double }* @cd, i32 0, i32 1), align 8
-comment|// CHECK-NEXT: store volatile double [[R]], double* getelementptr inbounds ({ double, double }* @cd, i32 0, i32 0), align 8
-comment|// CHECK-NEXT: store volatile double [[I]], double* getelementptr inbounds ({ double, double }* @cd, i32 0, i32 1), align 8
+comment|// CHECK-NEXT: [[R:%.*]] = load volatile double, double* getelementptr inbounds ({ double, double }, { double, double }* @cd, i32 0, i32 0), align 8
+comment|// CHECK-NEXT: [[I:%.*]] = load volatile double, double* getelementptr inbounds ({ double, double }, { double, double }* @cd, i32 0, i32 1), align 8
+comment|// CHECK-NEXT: store volatile double [[R]], double* getelementptr inbounds ({ double, double }, { double, double }* @cd, i32 0, i32 0), align 8
+comment|// CHECK-NEXT: store volatile double [[I]], double* getelementptr inbounds ({ double, double }, { double, double }* @cd, i32 0, i32 1), align 8
 call|(
 name|void
 call|)
@@ -156,8 +156,8 @@ name|void
 name|test_cf32
 parameter_list|()
 block|{
-comment|// CHECK:      load volatile float* getelementptr inbounds ({ float, float }* @cf32, i32 0, i32 0), align 32
-comment|// CHECK-NEXT: load volatile float* getelementptr inbounds ({ float, float }* @cf32, i32 0, i32 1), align 4
+comment|// CHECK:      load volatile float, float* getelementptr inbounds ({ float, float }, { float, float }* @cf32, i32 0, i32 0), align 32
+comment|// CHECK-NEXT: load volatile float, float* getelementptr inbounds ({ float, float }, { float, float }* @cf32, i32 0, i32 1), align 4
 call|(
 name|void
 call|)
@@ -165,10 +165,10 @@ argument_list|(
 name|cf32
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: [[R:%.*]] = load volatile float* getelementptr inbounds ({ float, float }* @cf32, i32 0, i32 0), align 32
-comment|// CHECK-NEXT: [[I:%.*]] = load volatile float* getelementptr inbounds ({ float, float }* @cf32, i32 0, i32 1), align 4
-comment|// CHECK-NEXT: store volatile float [[R]], float* getelementptr inbounds ({ float, float }* @cf32, i32 0, i32 0), align 32
-comment|// CHECK-NEXT: store volatile float [[I]], float* getelementptr inbounds ({ float, float }* @cf32, i32 0, i32 1), align 4
+comment|// CHECK-NEXT: [[R:%.*]] = load volatile float, float* getelementptr inbounds ({ float, float }, { float, float }* @cf32, i32 0, i32 0), align 32
+comment|// CHECK-NEXT: [[I:%.*]] = load volatile float, float* getelementptr inbounds ({ float, float }, { float, float }* @cf32, i32 0, i32 1), align 4
+comment|// CHECK-NEXT: store volatile float [[R]], float* getelementptr inbounds ({ float, float }, { float, float }* @cf32, i32 0, i32 0), align 32
+comment|// CHECK-NEXT: store volatile float [[I]], float* getelementptr inbounds ({ float, float }, { float, float }* @cf32, i32 0, i32 1), align 4
 call|(
 name|void
 call|)
@@ -191,8 +191,8 @@ name|void
 name|test_cd32
 parameter_list|()
 block|{
-comment|// CHECK:      load volatile double* getelementptr inbounds ({ double, double }* @cd32, i32 0, i32 0), align 32
-comment|// CHECK-NEXT: load volatile double* getelementptr inbounds ({ double, double }* @cd32, i32 0, i32 1), align 8
+comment|// CHECK:      load volatile double, double* getelementptr inbounds ({ double, double }, { double, double }* @cd32, i32 0, i32 0), align 32
+comment|// CHECK-NEXT: load volatile double, double* getelementptr inbounds ({ double, double }, { double, double }* @cd32, i32 0, i32 1), align 8
 call|(
 name|void
 call|)
@@ -200,10 +200,10 @@ argument_list|(
 name|cd32
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: [[R:%.*]] = load volatile double* getelementptr inbounds ({ double, double }* @cd32, i32 0, i32 0), align 32
-comment|// CHECK-NEXT: [[I:%.*]] = load volatile double* getelementptr inbounds ({ double, double }* @cd32, i32 0, i32 1), align 8
-comment|// CHECK-NEXT: store volatile double [[R]], double* getelementptr inbounds ({ double, double }* @cd32, i32 0, i32 0), align 32
-comment|// CHECK-NEXT: store volatile double [[I]], double* getelementptr inbounds ({ double, double }* @cd32, i32 0, i32 1), align 8
+comment|// CHECK-NEXT: [[R:%.*]] = load volatile double, double* getelementptr inbounds ({ double, double }, { double, double }* @cd32, i32 0, i32 0), align 32
+comment|// CHECK-NEXT: [[I:%.*]] = load volatile double, double* getelementptr inbounds ({ double, double }, { double, double }* @cd32, i32 0, i32 1), align 8
+comment|// CHECK-NEXT: store volatile double [[R]], double* getelementptr inbounds ({ double, double }, { double, double }* @cd32, i32 0, i32 0), align 32
+comment|// CHECK-NEXT: store volatile double [[I]], double* getelementptr inbounds ({ double, double }, { double, double }* @cd32, i32 0, i32 1), align 8
 call|(
 name|void
 call|)

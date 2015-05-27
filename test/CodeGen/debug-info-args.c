@@ -18,7 +18,7 @@ name|double
 name|z
 parameter_list|)
 block|{
-comment|// CHECK: ![[NUM:[^,]*]], null, null, null} ; [ DW_TAG_subroutine_type
+comment|// CHECK: !DISubroutineType(types: ![[NUM:[0-9]+]])
 comment|// CHECK: ![[NUM]] = {{!{![^,]*, ![^,]*, ![^,]*, ![^,]*}}}
 return|return
 name|y

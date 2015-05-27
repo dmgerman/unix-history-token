@@ -122,7 +122,7 @@ comment|// O32:   [[TMP0:%.+]] = bitcast i8** %va to i32**
 end_comment
 
 begin_comment
-comment|// O32:   [[AP_CUR:%.+]] = load i32** [[TMP0]], align [[PTRALIGN]]
+comment|// O32:   [[AP_CUR:%.+]] = load i32*, i32** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -130,7 +130,7 @@ comment|// NEW:   [[TMP0:%.+]] = bitcast i8** %va to i64**
 end_comment
 
 begin_comment
-comment|// NEW:   [[AP_CUR:%.+]] = load i64** [[TMP0]], align [[PTRALIGN]]
+comment|// NEW:   [[AP_CUR:%.+]] = load i64*, i64** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -138,11 +138,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[AP_NEXT:%.+]] = getelementptr i32* [[AP_CUR]], i32 1
+comment|// O32:   [[AP_NEXT:%.+]] = getelementptr i32, i32* [[AP_CUR]], i32 1
 end_comment
 
 begin_comment
-comment|// NEW:   [[AP_NEXT:%.+]] = getelementptr i64* [[AP_CUR]], {{i32|i64}} 1
+comment|// NEW:   [[AP_NEXT:%.+]] = getelementptr i64, i64* [[AP_CUR]], {{i32|i64}} 1
 end_comment
 
 begin_comment
@@ -162,11 +162,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[ARG1:%.+]] = load i32* [[AP_CUR]], align 4
+comment|// O32:   [[ARG1:%.+]] = load i32, i32* [[AP_CUR]], align 4
 end_comment
 
 begin_comment
-comment|// NEW:   [[TMP2:%.+]] = load i64* [[AP_CUR]], align 8
+comment|// NEW:   [[TMP2:%.+]] = load i64, i64* [[AP_CUR]], align 8
 end_comment
 
 begin_comment
@@ -272,7 +272,7 @@ comment|// O32:   [[TMP0:%.+]] = bitcast i8** %va to i32**
 end_comment
 
 begin_comment
-comment|// O32:   [[AP_CUR:%.+]] = load i32** [[TMP0]], align [[PTRALIGN]]
+comment|// O32:   [[AP_CUR:%.+]] = load i32*, i32** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -280,7 +280,7 @@ comment|// NEW:   [[TMP0:%.+]] = bitcast i8** %va to i64**
 end_comment
 
 begin_comment
-comment|// NEW:   [[AP_CUR:%.+]] = load i64** [[TMP0]], align [[PTRALIGN]]
+comment|// NEW:   [[AP_CUR:%.+]] = load i64*, i64** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -288,11 +288,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[AP_NEXT1:%.+]] = getelementptr i32* [[AP_CUR]], i32 1
+comment|// O32:   [[AP_NEXT1:%.+]] = getelementptr i32, i32* [[AP_CUR]], i32 1
 end_comment
 
 begin_comment
-comment|// NEW:   [[AP_NEXT1:%.+]] = getelementptr i64* [[AP_CUR]], [[INTPTR_T:i32|i64]] 1
+comment|// NEW:   [[AP_NEXT1:%.+]] = getelementptr i64, i64* [[AP_CUR]], [[INTPTR_T:i32|i64]] 1
 end_comment
 
 begin_comment
@@ -316,11 +316,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[ARG1:%.+]] = load i32* [[AP_CUR]], align 4
+comment|// O32:   [[ARG1:%.+]] = load i32, i32* [[AP_CUR]], align 4
 end_comment
 
 begin_comment
-comment|// NEW:   [[TMP3:%.+]] = load i64* [[AP_CUR]], align 8
+comment|// NEW:   [[TMP3:%.+]] = load i64, i64* [[AP_CUR]], align 8
 end_comment
 
 begin_comment
@@ -332,11 +332,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[AP_NEXT2:%.+]] = getelementptr i32* [[AP_CUR]], i32 2
+comment|// O32:   [[AP_NEXT2:%.+]] = getelementptr i32, i32* [[AP_CUR]], i32 2
 end_comment
 
 begin_comment
-comment|// NEW:   [[AP_NEXT2:%.+]] = getelementptr i64* [[AP_CUR]], [[INTPTR_T]] 2
+comment|// NEW:   [[AP_NEXT2:%.+]] = getelementptr i64, i64* [[AP_CUR]], [[INTPTR_T]] 2
 end_comment
 
 begin_comment
@@ -356,11 +356,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[ARG2:%.+]] = load i32* [[AP_NEXT1]], align 4
+comment|// O32:   [[ARG2:%.+]] = load i32, i32* [[AP_NEXT1]], align 4
 end_comment
 
 begin_comment
-comment|// NEW:   [[TMP4:%.+]] = load i64* [[AP_NEXT1]], align 8
+comment|// NEW:   [[TMP4:%.+]] = load i64, i64* [[AP_NEXT1]], align 8
 end_comment
 
 begin_comment
@@ -456,7 +456,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[AP_CUR:%.+]] = load i8** %va, align [[PTRALIGN]]
+comment|// O32:   [[AP_CUR:%.+]] = load i8*, i8** %va, align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -464,7 +464,7 @@ comment|// NEW:   [[TMP0:%.+]] = bitcast i8** %va to i64**
 end_comment
 
 begin_comment
-comment|// NEW:   [[AP_CUR:%.+]] = load i64** [[TMP0]], align [[PTRALIGN]]
+comment|// NEW:   [[AP_CUR:%.+]] = load i64*, i64** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -504,11 +504,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[AP_NEXT:%.+]] = getelementptr i8* [[PTR4]], [[INTPTR_T]] 8
+comment|// O32:   [[AP_NEXT:%.+]] = getelementptr i8, i8* [[PTR4]], [[INTPTR_T]] 8
 end_comment
 
 begin_comment
-comment|// NEW:   [[AP_NEXT:%.+]] = getelementptr i64* [[AP_CUR]], [[INTPTR_T:i32|i64]] 1
+comment|// NEW:   [[AP_NEXT:%.+]] = getelementptr i64, i64* [[AP_CUR]], [[INTPTR_T:i32|i64]] 1
 end_comment
 
 begin_comment
@@ -528,11 +528,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[ARG1:%.+]] = load i64* [[PTR3]], align 8
+comment|// O32:   [[ARG1:%.+]] = load i64, i64* [[PTR3]], align 8
 end_comment
 
 begin_comment
-comment|// NEW:   [[ARG1:%.+]] = load i64* [[AP_CUR]], align 8
+comment|// NEW:   [[ARG1:%.+]] = load i64, i64* [[AP_CUR]], align 8
 end_comment
 
 begin_comment
@@ -637,7 +637,7 @@ comment|// O32:   [[TMP0:%.+]] = bitcast i8** %va to i8***
 end_comment
 
 begin_comment
-comment|// O32:   [[AP_CUR:%.+]] = load i8*** [[TMP0]], align [[PTRALIGN]]
+comment|// O32:   [[AP_CUR:%.+]] = load i8**, i8*** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -649,7 +649,7 @@ comment|// N32:   [[TMP0:%.+]] = bitcast i8** %va to i64**
 end_comment
 
 begin_comment
-comment|// N32:   [[AP_CUR:%.+]] = load i64** [[TMP0]], align [[PTRALIGN]]
+comment|// N32:   [[AP_CUR:%.+]] = load i64*, i64** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -657,7 +657,7 @@ comment|// N64:   [[TMP0:%.+]] = bitcast i8** %va to i8***
 end_comment
 
 begin_comment
-comment|// N64:   [[AP_CUR:%.+]] = load i8*** [[TMP0]], align [[PTRALIGN]]
+comment|// N64:   [[AP_CUR:%.+]] = load i8**, i8*** [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -665,7 +665,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[AP_NEXT:%.+]] = getelementptr i8** [[AP_CUR]], i32 1
+comment|// O32:   [[AP_NEXT:%.+]] = getelementptr i8*, i8** [[AP_CUR]], i32 1
 end_comment
 
 begin_comment
@@ -673,11 +673,11 @@ comment|// N32 differs because the vararg is not a N32 pointer. It's been promot
 end_comment
 
 begin_comment
-comment|// N32:   [[AP_NEXT:%.+]] = getelementptr i64* [[AP_CUR]], {{i32|i64}} 1
+comment|// N32:   [[AP_NEXT:%.+]] = getelementptr i64, i64* [[AP_CUR]], {{i32|i64}} 1
 end_comment
 
 begin_comment
-comment|// N64:   [[AP_NEXT:%.+]] = getelementptr i8** [[AP_CUR]], {{i32|i64}} 1
+comment|// N64:   [[AP_NEXT:%.+]] = getelementptr i8*, i8** [[AP_CUR]], {{i32|i64}} 1
 end_comment
 
 begin_comment
@@ -705,7 +705,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[ARG1:%.+]] = load i8** [[AP_CUR]], align 4
+comment|// O32:   [[ARG1:%.+]] = load i8*, i8** [[AP_CUR]], align 4
 end_comment
 
 begin_comment
@@ -717,7 +717,7 @@ comment|// 64-bit so we must truncate the excess and bitcast to a N32 pointer.
 end_comment
 
 begin_comment
-comment|// N32:   [[TMP2:%.+]] = load i64* [[AP_CUR]], align 8
+comment|// N32:   [[TMP2:%.+]] = load i64, i64* [[AP_CUR]], align 8
 end_comment
 
 begin_comment
@@ -729,7 +729,7 @@ comment|// N32:   [[ARG1:%.+]] = inttoptr i32 [[TMP3]] to i8*
 end_comment
 
 begin_comment
-comment|// N64:   [[ARG1:%.+]] = load i8** [[AP_CUR]], align 8
+comment|// N64:   [[ARG1:%.+]] = load i8*, i8** [[AP_CUR]], align 8
 end_comment
 
 begin_comment
@@ -814,7 +814,7 @@ comment|// ALL:   call void @llvm.va_start(i8* [[VA1]])
 end_comment
 
 begin_comment
-comment|// ALL:   [[AP_CUR:%.+]] = load i8** %va, align [[PTRALIGN]]
+comment|// ALL:   [[AP_CUR:%.+]] = load i8*, i8** %va, align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -878,7 +878,7 @@ comment|// ALL:   [[PTR4:%.+]] = inttoptr [[INTPTR_T]] [[PTR2]] to i8*
 end_comment
 
 begin_comment
-comment|// ALL:   [[AP_NEXT:%.+]] = getelementptr i8* [[PTR4]], [[INTPTR_T]] 16
+comment|// ALL:   [[AP_NEXT:%.+]] = getelementptr i8, i8* [[PTR4]], [[INTPTR_T]] 16
 end_comment
 
 begin_comment
@@ -886,7 +886,7 @@ comment|// ALL:   store i8* [[AP_NEXT]], i8** %va, align [[PTRALIGN]]
 end_comment
 
 begin_comment
-comment|// ALL:   [[PTR5:%.+]] = load<4 x i32>* [[PTR3]], align 16
+comment|// ALL:   [[PTR5:%.+]] = load<4 x i32>,<4 x i32>* [[PTR3]], align 16
 end_comment
 
 begin_comment

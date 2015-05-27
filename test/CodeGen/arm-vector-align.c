@@ -103,7 +103,7 @@ name|addr
 parameter_list|)
 block|{
 comment|// CHECK: @t2
-comment|// CHECK: load i32* %{{.*}}, align 1
+comment|// CHECK: load i32, i32* %{{.*}}, align 1
 name|int32x2_t
 name|vec
 init|=

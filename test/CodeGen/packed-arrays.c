@@ -408,7 +408,7 @@ comment|// CHECK-LABEL: define i32 @f0_a
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 1
+comment|// CHECK:   load i32, i32* %{{.*}}, align 1
 end_comment
 
 begin_comment
@@ -420,7 +420,7 @@ comment|// CHECK-LABEL: define i32 @f0_b
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 4
+comment|// CHECK:   load i32, i32* %{{.*}}, align 4
 end_comment
 
 begin_comment
@@ -484,7 +484,7 @@ comment|// CHECK-LABEL: define i32 @f1_a
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 1
+comment|// CHECK:   load i32, i32* %{{.*}}, align 1
 end_comment
 
 begin_comment
@@ -496,7 +496,7 @@ comment|// CHECK-LABEL: define i32 @f1_b
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 4
+comment|// CHECK:   load i32, i32* %{{.*}}, align 4
 end_comment
 
 begin_comment
@@ -516,7 +516,7 @@ comment|// CHECK-LABEL: define i32 @f1_c
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 4
+comment|// CHECK:   load i32, i32* %{{.*}}, align 4
 end_comment
 
 begin_comment
@@ -528,7 +528,7 @@ comment|// CHECK-LABEL: define i32 @f1_d
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 1
+comment|// CHECK:   load i32, i32* %{{.*}}, align 1
 end_comment
 
 begin_comment
@@ -620,7 +620,7 @@ comment|// CHECK-LABEL: define i32 @f2_a
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 1
+comment|// CHECK:   load i32, i32* %{{.*}}, align 1
 end_comment
 
 begin_comment
@@ -632,7 +632,7 @@ comment|// CHECK-LABEL: define i32 @f2_b
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 4
+comment|// CHECK:   load i32, i32* %{{.*}}, align 4
 end_comment
 
 begin_comment
@@ -644,7 +644,7 @@ comment|// CHECK-LABEL: define i32 @f2_c
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 1
+comment|// CHECK:   load i32, i32* %{{.*}}, align 1
 end_comment
 
 begin_comment
@@ -656,7 +656,7 @@ comment|// CHECK-LABEL: define i32 @f2_d
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 1
+comment|// CHECK:   load i32, i32* %{{.*}}, align 1
 end_comment
 
 begin_comment
@@ -748,7 +748,7 @@ comment|// CHECK-LABEL: define i32 @f3_a
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 1
+comment|// CHECK:   load i32, i32* %{{.*}}, align 1
 end_comment
 
 begin_comment
@@ -760,7 +760,7 @@ comment|// CHECK-LABEL: define i32 @f3_b
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 4
+comment|// CHECK:   load i32, i32* %{{.*}}, align 4
 end_comment
 
 begin_comment
@@ -772,7 +772,7 @@ comment|// CHECK-LABEL: define i32 @f3_c
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 1
+comment|// CHECK:   load i32, i32* %{{.*}}, align 1
 end_comment
 
 begin_comment
@@ -784,7 +784,7 @@ comment|// CHECK-LABEL: define i32 @f3_d
 end_comment
 
 begin_comment
-comment|// CHECK:   load i32* %{{.*}}, align 1
+comment|// CHECK:   load i32, i32* %{{.*}}, align 1
 end_comment
 
 begin_comment
@@ -884,7 +884,7 @@ comment|// CHECK-LABEL: define double @f4
 end_comment
 
 begin_comment
-comment|// CHECK:   load double* {{.*}}, align 8
+comment|// CHECK:   load double, double* {{.*}}, align 8
 end_comment
 
 begin_comment

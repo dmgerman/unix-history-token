@@ -157,7 +157,7 @@ begin_decl_stmt
 name|__vector
 name|__bool
 name|int
-name|vv_bi
+name|vv___bi
 decl_stmt|;
 end_decl_stmt
 
@@ -629,7 +629,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{use of 'double' with '__vector' requires VSX support to be enabled (available on the POWER7 or later)}}
+comment|// expected-error {{use of 'double' with '__vector' requires VSX support to be enabled (available on POWER7 or later)}}
 end_comment
 
 begin_decl_stmt
@@ -640,7 +640,59 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{use of 'double' with '__vector' requires VSX support to be enabled (available on the POWER7 or later)}}
+comment|// expected-error {{use of 'double' with '__vector' requires VSX support to be enabled (available on POWER7 or later)}}
+end_comment
+
+begin_decl_stmt
+name|__vector
+name|bool
+name|long
+name|long
+name|v_bll1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{use of 'long long' with '__vector bool' requires VSX support (available on POWER7 or later) or extended Altivec support (available on POWER8 or later) to be enabled}}
+end_comment
+
+begin_decl_stmt
+name|__vector
+name|__bool
+name|long
+name|long
+name|v_bll2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{use of 'long long' with '__vector bool' requires VSX support (available on POWER7 or later) or extended Altivec support (available on POWER8 or later) to be enabled}}
+end_comment
+
+begin_decl_stmt
+name|vector
+name|bool
+name|long
+name|long
+name|v_bll3
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{use of 'long long' with '__vector bool' requires VSX support (available on POWER7 or later) or extended Altivec support (available on POWER8 or later) to be enabled}}
+end_comment
+
+begin_decl_stmt
+name|vector
+name|__bool
+name|long
+name|long
+name|v_bll4
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{use of 'long long' with '__vector bool' requires VSX support (available on POWER7 or later) or extended Altivec support (available on POWER8 or later) to be enabled}}
 end_comment
 
 begin_decl_stmt
@@ -743,19 +795,6 @@ end_comment
 
 begin_decl_stmt
 name|vector
-name|bool
-name|long
-name|long
-name|v_bll
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// expected-error {{cannot use 'long long' with '__vector bool'}}
-end_comment
-
-begin_decl_stmt
-name|vector
 name|__bool
 name|float
 name|v___bf
@@ -826,19 +865,6 @@ end_decl_stmt
 
 begin_comment
 comment|// expected-error {{cannot use 'long' with '__vector bool'}}
-end_comment
-
-begin_decl_stmt
-name|vector
-name|__bool
-name|long
-name|long
-name|v___bll
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// expected-error {{cannot use 'long long' with '__vector bool'}}
 end_comment
 
 begin_comment

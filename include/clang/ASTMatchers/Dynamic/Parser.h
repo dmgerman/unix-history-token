@@ -355,10 +355,10 @@ name|Sema
 block|{
 name|public
 operator|:
-name|virtual
 operator|~
 name|RegistrySema
 argument_list|()
+name|override
 block|;
 name|llvm
 operator|::

@@ -429,7 +429,7 @@ comment|// CHECK-LABEL: @call_f1
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load float* getelementptr inbounds (%struct.f1* @global_f1, i32 0, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load float, float* getelementptr inbounds (%struct.f1, %struct.f1* @global_f1, i32 0, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -465,7 +465,7 @@ comment|// CHECK-LABEL: @call_f2
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x float]* getelementptr inbounds (%struct.f2* @global_f2, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x float], [2 x float]* getelementptr inbounds (%struct.f2, %struct.f2* @global_f2, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -501,7 +501,7 @@ comment|// CHECK-LABEL: @call_f3
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x float]* getelementptr inbounds (%struct.f3* @global_f3, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x float], [3 x float]* getelementptr inbounds (%struct.f3, %struct.f3* @global_f3, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -537,7 +537,7 @@ comment|// CHECK-LABEL: @call_f4
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [4 x float]* getelementptr inbounds (%struct.f4* @global_f4, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [4 x float], [4 x float]* getelementptr inbounds (%struct.f4, %struct.f4* @global_f4, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -573,7 +573,7 @@ comment|// CHECK-LABEL: @call_f5
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [5 x float]* getelementptr inbounds (%struct.f5* @global_f5, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [5 x float], [5 x float]* getelementptr inbounds (%struct.f5, %struct.f5* @global_f5, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -609,7 +609,7 @@ comment|// CHECK-LABEL: @call_f6
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [6 x float]* getelementptr inbounds (%struct.f6* @global_f6, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [6 x float], [6 x float]* getelementptr inbounds (%struct.f6, %struct.f6* @global_f6, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -645,7 +645,7 @@ comment|// CHECK-LABEL: @call_f7
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [7 x float]* getelementptr inbounds (%struct.f7* @global_f7, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [7 x float], [7 x float]* getelementptr inbounds (%struct.f7, %struct.f7* @global_f7, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -681,7 +681,7 @@ comment|// CHECK-LABEL: @call_f8
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [8 x float]* getelementptr inbounds (%struct.f8* @global_f8, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [8 x float], [8 x float]* getelementptr inbounds (%struct.f8, %struct.f8* @global_f8, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -729,7 +729,7 @@ comment|// CHECK: call void @llvm.memcpy.p0i8.p0i8.i64(i8* %[[TMP2]], i8* bitcas
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP3:[^ ]+]] = load [5 x i64]* %[[TMP1]]
+comment|// CHECK: %[[TMP3:[^ ]+]] = load [5 x i64], [5 x i64]* %[[TMP1]]
 end_comment
 
 begin_comment
@@ -765,7 +765,7 @@ comment|// CHECK-LABEL: @call_fab
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x float]* bitcast (%struct.fab* @global_fab to [2 x float]*)
+comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x float], [2 x float]* bitcast (%struct.fab* @global_fab to [2 x float]*)
 end_comment
 
 begin_comment
@@ -801,7 +801,7 @@ comment|// CHECK-LABEL: @call_fabc
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x float]* bitcast (%struct.fabc* @global_fabc to [3 x float]*)
+comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x float], [3 x float]* bitcast (%struct.fabc* @global_fabc to [3 x float]*)
 end_comment
 
 begin_comment
@@ -1232,7 +1232,7 @@ comment|// CHECK-LABEL: @call_v1
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load<4 x i32>* getelementptr inbounds (%struct.v1* @global_v1, i32 0, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load<4 x i32>,<4 x i32>* getelementptr inbounds (%struct.v1, %struct.v1* @global_v1, i32 0, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -1268,7 +1268,7 @@ comment|// CHECK-LABEL: @call_v2
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x<4 x i32>]* getelementptr inbounds (%struct.v2* @global_v2, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x<4 x i32>], [2 x<4 x i32>]* getelementptr inbounds (%struct.v2, %struct.v2* @global_v2, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -1304,7 +1304,7 @@ comment|// CHECK-LABEL: @call_v3
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x<4 x i32>]* getelementptr inbounds (%struct.v3* @global_v3, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x<4 x i32>], [3 x<4 x i32>]* getelementptr inbounds (%struct.v3, %struct.v3* @global_v3, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -1340,7 +1340,7 @@ comment|// CHECK-LABEL: @call_v4
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [4 x<4 x i32>]* getelementptr inbounds (%struct.v4* @global_v4, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [4 x<4 x i32>], [4 x<4 x i32>]* getelementptr inbounds (%struct.v4, %struct.v4* @global_v4, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -1376,7 +1376,7 @@ comment|// CHECK-LABEL: @call_v5
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [5 x<4 x i32>]* getelementptr inbounds (%struct.v5* @global_v5, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [5 x<4 x i32>], [5 x<4 x i32>]* getelementptr inbounds (%struct.v5, %struct.v5* @global_v5, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -1412,7 +1412,7 @@ comment|// CHECK-LABEL: @call_v6
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [6 x<4 x i32>]* getelementptr inbounds (%struct.v6* @global_v6, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [6 x<4 x i32>], [6 x<4 x i32>]* getelementptr inbounds (%struct.v6, %struct.v6* @global_v6, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -1448,7 +1448,7 @@ comment|// CHECK-LABEL: @call_v7
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [7 x<4 x i32>]* getelementptr inbounds (%struct.v7* @global_v7, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [7 x<4 x i32>], [7 x<4 x i32>]* getelementptr inbounds (%struct.v7, %struct.v7* @global_v7, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -1484,7 +1484,7 @@ comment|// CHECK-LABEL: @call_v8
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [8 x<4 x i32>]* getelementptr inbounds (%struct.v8* @global_v8, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [8 x<4 x i32>], [8 x<4 x i32>]* getelementptr inbounds (%struct.v8, %struct.v8* @global_v8, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -1552,7 +1552,7 @@ comment|// CHECK-LABEL: @call_vab
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x<4 x i32>]* bitcast (%struct.vab* @global_vab to [2 x<4 x i32>]*)
+comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x<4 x i32>], [2 x<4 x i32>]* bitcast (%struct.vab* @global_vab to [2 x<4 x i32>]*)
 end_comment
 
 begin_comment
@@ -1588,7 +1588,7 @@ comment|// CHECK-LABEL: @call_vabc
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x<4 x i32>]* bitcast (%struct.vabc* @global_vabc to [3 x<4 x i32>]*)
+comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x<4 x i32>], [3 x<4 x i32>]* bitcast (%struct.vabc* @global_vabc to [3 x<4 x i32>]*)
 end_comment
 
 begin_comment
@@ -2019,7 +2019,7 @@ comment|// CHECK-LABEL: @call_v3f1
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load<3 x float>* getelementptr inbounds (%struct.v3f1* @global_v3f1, i32 0, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load<3 x float>,<3 x float>* getelementptr inbounds (%struct.v3f1, %struct.v3f1* @global_v3f1, i32 0, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -2055,7 +2055,7 @@ comment|// CHECK-LABEL: @call_v3f2
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x<3 x float>]* getelementptr inbounds (%struct.v3f2* @global_v3f2, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x<3 x float>], [2 x<3 x float>]* getelementptr inbounds (%struct.v3f2, %struct.v3f2* @global_v3f2, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -2091,7 +2091,7 @@ comment|// CHECK-LABEL: @call_v3f3
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x<3 x float>]* getelementptr inbounds (%struct.v3f3* @global_v3f3, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x<3 x float>], [3 x<3 x float>]* getelementptr inbounds (%struct.v3f3, %struct.v3f3* @global_v3f3, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -2127,7 +2127,7 @@ comment|// CHECK-LABEL: @call_v3f4
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [4 x<3 x float>]* getelementptr inbounds (%struct.v3f4* @global_v3f4, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [4 x<3 x float>], [4 x<3 x float>]* getelementptr inbounds (%struct.v3f4, %struct.v3f4* @global_v3f4, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -2163,7 +2163,7 @@ comment|// CHECK-LABEL: @call_v3f5
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [5 x<3 x float>]* getelementptr inbounds (%struct.v3f5* @global_v3f5, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [5 x<3 x float>], [5 x<3 x float>]* getelementptr inbounds (%struct.v3f5, %struct.v3f5* @global_v3f5, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -2199,7 +2199,7 @@ comment|// CHECK-LABEL: @call_v3f6
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [6 x<3 x float>]* getelementptr inbounds (%struct.v3f6* @global_v3f6, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [6 x<3 x float>], [6 x<3 x float>]* getelementptr inbounds (%struct.v3f6, %struct.v3f6* @global_v3f6, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -2235,7 +2235,7 @@ comment|// CHECK-LABEL: @call_v3f7
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [7 x<3 x float>]* getelementptr inbounds (%struct.v3f7* @global_v3f7, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [7 x<3 x float>], [7 x<3 x float>]* getelementptr inbounds (%struct.v3f7, %struct.v3f7* @global_v3f7, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -2271,7 +2271,7 @@ comment|// CHECK-LABEL: @call_v3f8
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [8 x<3 x float>]* getelementptr inbounds (%struct.v3f8* @global_v3f8, i32 0, i32 0), align 1
+comment|// CHECK: %[[TMP:[^ ]+]] = load [8 x<3 x float>], [8 x<3 x float>]* getelementptr inbounds (%struct.v3f8, %struct.v3f8* @global_v3f8, i32 0, i32 0), align 1
 end_comment
 
 begin_comment
@@ -2339,7 +2339,7 @@ comment|// CHECK-LABEL: @call_v3fab
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x<3 x float>]* bitcast (%struct.v3fab* @global_v3fab to [2 x<3 x float>]*)
+comment|// CHECK: %[[TMP:[^ ]+]] = load [2 x<3 x float>], [2 x<3 x float>]* bitcast (%struct.v3fab* @global_v3fab to [2 x<3 x float>]*)
 end_comment
 
 begin_comment
@@ -2375,7 +2375,7 @@ comment|// CHECK-LABEL: @call_v3fabc
 end_comment
 
 begin_comment
-comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x<3 x float>]* bitcast (%struct.v3fabc* @global_v3fabc to [3 x<3 x float>]*)
+comment|// CHECK: %[[TMP:[^ ]+]] = load [3 x<3 x float>], [3 x<3 x float>]* bitcast (%struct.v3fabc* @global_v3fabc to [3 x<3 x float>]*)
 end_comment
 
 begin_comment

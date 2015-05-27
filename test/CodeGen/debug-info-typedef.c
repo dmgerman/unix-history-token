@@ -42,11 +42,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK:  !"0x16\00MyType\002\00{{.*}}", ![[HEADER:[0-9]+]], null{{.*}}} ; [ DW_TAG_typedef ] [MyType] [line 2, size 0, align 0, offset 0] [from int]
+comment|// CHECK: !DIDerivedType(tag: DW_TAG_typedef, name: "MyType", file: ![[HEADER:[0-9]+]], line: 2,
 end_comment
 
 begin_comment
-comment|// CHECK: ![[HEADER]] = !{!"b.h",
+comment|// CHECK: ![[HEADER]] = !DIFile(filename: "b.h",
 end_comment
 
 end_unit

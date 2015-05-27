@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|CINDEX_VERSION_MINOR
-value|29
+value|30
 end_define
 
 begin_define
@@ -2436,6 +2436,11 @@ block|,
 name|CXCursor_LastExtraDecl
 init|=
 name|CXCursor_ModuleImportDecl
+block|,
+comment|/**    * \brief A code completion overload candidate.    */
+name|CXCursor_OverloadCandidate
+init|=
+literal|700
 block|}
 enum|;
 comment|/**  * \brief A cursor representing some element in the abstract syntax tree for  * a translation unit.  *  * The cursor abstraction unifies the different kinds of entities in a  * program--declaration, statements, expressions, references to declarations,  * etc.--under a single "cursor" abstraction with a common set of operations.  * Common operation for a cursor include: getting the physical location in  * a source file where the cursor points, getting the name associated with a  * cursor, and retrieving cursors for any child nodes of a particular cursor.  *  * Cursors can be produced in two specific ways.  * clang_getTranslationUnitCursor() produces a cursor for a translation unit,  * from which one can use clang_visitChildren() to explore the rest of the  * translation unit. clang_getCursor() maps from a physical source location  * to the entity that resides at that location, allowing one to map from the  * source code into the AST.  */
@@ -3118,10 +3123,7 @@ name|CXCallingConv_AAPCS_VFP
 init|=
 literal|7
 block|,
-name|CXCallingConv_PnaclCall
-init|=
-literal|8
-block|,
+comment|/* Value 8 was PnaclCall, but it was never used, so it could safely be re-used. */
 name|CXCallingConv_IntelOclBicc
 init|=
 literal|9
@@ -3606,6 +3608,25 @@ specifier|const
 name|char
 modifier|*
 name|S
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Return the offset of the field represented by the Cursor.  *  * If the cursor is not a field declaration, -1 is returned.  * If the cursor semantic parent is not a record field declaration,  *   CXTypeLayoutError_Invalid is returned.  * If the field's type declaration is an incomplete type,  *   CXTypeLayoutError_Incomplete is returned.  * If the field's type declaration is a dependent type,  *   CXTypeLayoutError_Dependent is returned.  * If the field's name S is not found,  *   CXTypeLayoutError_InvalidFieldName is returned.  */
+name|CINDEX_LINKAGE
+name|long
+name|long
+name|clang_Cursor_getOffsetOfField
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Determine whether the given cursor represents an anonymous record  * declaration.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_Cursor_isAnonymous
+parameter_list|(
+name|CXCursor
+name|C
 parameter_list|)
 function_decl|;
 enum|enum
@@ -6481,12 +6502,39 @@ name|CXIdxLoc
 name|loc
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Visitor invoked for each field found by a traversal.  *  * This visitor function will be invoked for each field found by  * \c clang_Type_visitFields. Its first argument is the cursor being  * visited, its second argument is the client data provided to  * \c clang_Type_visitFields.  *  * The visitor should return one of the \c CXVisitorResult values  * to direct \c clang_Type_visitFields.  */
+typedef|typedef
+name|enum
+name|CXVisitorResult
+function_decl|(
+modifier|*
+name|CXFieldVisitor
+function_decl|)
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|,
+name|CXClientData
+name|client_data
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Visit the fields of a particular type.  *  * This function visits all the direct fields of the given cursor,  * invoking the given \p visitor function with the cursors of each  * visited field. The traversal may be ended prematurely, if  * the visitor returns \c CXFieldVisit_Break.  *  * \param T the record type whose field may be visited.  *  * \param visitor the visitor function that will be invoked for each  * field of \p T.  *  * \param client_data pointer data supplied by the client, which will  * be passed to the visitor each time it is invoked.  *  * \returns a non-zero value if the traversal was terminated  * prematurely by the visitor returning \c CXFieldVisit_Break.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_Type_visitFields
+parameter_list|(
+name|CXType
+name|T
+parameter_list|,
+name|CXFieldVisitor
+name|visitor
+parameter_list|,
+name|CXClientData
+name|client_data
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * @}  */
-comment|/* Include the comment API for compatibility. This will eventually go away. */
-include|#
-directive|include
-file|"clang-c/Documentation.h"
 ifdef|#
 directive|ifdef
 name|__cplusplus

@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-llvm -o %t %s
+comment|// RUN: %clang_cc1 -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g0 = external hidden constant i32' %t
+comment|// CHECK-DAG: @g0 = external hidden constant i32
 end_comment
 
 begin_comment
-comment|// RUN: grep '@g1 = hidden constant i32 1' %t
+comment|// CHECK-DAG: @g1 = hidden constant i32 1
 end_comment
 
 begin_decl_stmt

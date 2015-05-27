@@ -40,7 +40,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK: load<8 x float>* %{{.*}}, align 1
+comment|// CHECK: load<8 x float>,<8 x float>* %{{.*}}, align 1
 return|return
 name|_mm256_loadu_ps
 argument_list|(
@@ -59,7 +59,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK: load<4 x double>* %{{.*}}, align 1
+comment|// CHECK: load<4 x double>,<4 x double>* %{{.*}}, align 1
 return|return
 name|_mm256_loadu_pd
 argument_list|(
@@ -78,7 +78,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-comment|// CHECK: load<4 x i64>* %{{.+}}, align 1
+comment|// CHECK: load<4 x i64>,<4 x i64>* %{{.+}}, align 1
 return|return
 name|_mm256_loadu_si256
 argument_list|(
@@ -618,6 +618,98 @@ argument_list|,
 name|__b
 argument_list|,
 literal|0x35
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_256_insert_epi8
+parameter_list|(
+name|__m256i
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_256_insert_epi8
+comment|// CHECK: insertelement<32 x i8> {{.*}}, i8 {{.*}}, i32 {{.*}}
+return|return
+name|_mm256_insert_epi8
+argument_list|(
+name|__a
+argument_list|,
+literal|42
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_256_insert_epi16
+parameter_list|(
+name|__m256i
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_256_insert_epi16
+comment|// CHECK: insertelement<16 x i16> {{.*}}, i16 {{.*}}, i32 {{.*}}
+return|return
+name|_mm256_insert_epi16
+argument_list|(
+name|__a
+argument_list|,
+literal|42
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_256_insert_epi32
+parameter_list|(
+name|__m256i
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_256_insert_epi32
+comment|// CHECK: insertelement<8 x i32> {{.*}}, i32 {{.*}}, i32 {{.*}}
+return|return
+name|_mm256_insert_epi32
+argument_list|(
+name|__a
+argument_list|,
+literal|42
+argument_list|,
+literal|3
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|__m256i
+name|test_256_insert_epi64
+parameter_list|(
+name|__m256i
+name|__a
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @test_256_insert_epi64
+comment|// CHECK: insertelement<4 x i64> {{.*}}, i64 {{.*}}, i32 {{.*}}
+return|return
+name|_mm256_insert_epi64
+argument_list|(
+name|__a
+argument_list|,
+literal|42
+argument_list|,
+literal|3
 argument_list|)
 return|;
 block|}

@@ -159,7 +159,7 @@ name|y
 parameter_list|)
 value|(y)
 comment|/* 7.17.4 Fences */
-comment|// These should be provided by the libc implementation.
+comment|/* These should be provided by the libc implementation. */
 name|void
 name|atomic_thread_fence
 parameter_list|(
@@ -624,7 +624,7 @@ define|#
 directive|define
 name|ATOMIC_FLAG_INIT
 value|{ 0 }
-comment|// These should be provided by the libc implementation.
+comment|/* These should be provided by the libc implementation. */
 ifdef|#
 directive|ifdef
 name|__cplusplus

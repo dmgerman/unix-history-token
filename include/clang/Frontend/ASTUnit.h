@@ -1493,15 +1493,15 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
-begin_macro
+begin_expr_stmt
 name|ASTUnit
 argument_list|(
-argument|const ASTUnit&
+specifier|const
+name|ASTUnit
+operator|&
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -1514,7 +1514,8 @@ specifier|const
 name|ASTUnit
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 
@@ -1848,6 +1849,7 @@ begin_expr_stmt
 operator|~
 name|ASTUnit
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 
@@ -2906,14 +2908,10 @@ comment|/// preprocessing entities of the primary module if this is an AST file.
 end_comment
 
 begin_expr_stmt
-name|std
+name|llvm
 operator|::
-name|pair
+name|iterator_range
 operator|<
-name|PreprocessingRecord
-operator|::
-name|iterator
-operator|,
 name|PreprocessingRecord
 operator|::
 name|iterator
@@ -3923,9 +3921,6 @@ name|Visibility
 argument_list|,
 name|SourceLocation
 name|ImportLoc
-argument_list|,
-name|bool
-name|Complain
 argument_list|)
 name|override
 block|{}

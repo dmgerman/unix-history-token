@@ -205,8 +205,7 @@ operator|&
 name|Callback
 argument_list|)
 expr_stmt|;
-comment|/// Returns true in case of a structural error.
-name|bool
+name|void
 name|parse
 parameter_list|()
 function_decl|;
@@ -337,6 +336,10 @@ name|parseNamespace
 parameter_list|()
 function_decl|;
 name|void
+name|parseNew
+parameter_list|()
+function_decl|;
+name|void
 name|parseAccessSpecifier
 parameter_list|()
 function_decl|;
@@ -368,6 +371,10 @@ name|void
 name|parseObjCProtocol
 parameter_list|()
 function_decl|;
+name|void
+name|parseJavaScriptEs6ImportExport
+parameter_list|()
+function_decl|;
 name|bool
 name|tryToParseLambda
 parameter_list|()
@@ -380,6 +387,24 @@ name|void
 name|tryToParseJSFunction
 parameter_list|()
 function_decl|;
+comment|/// \brief Parses tokens until encountering the CloseKind token, but balances
+comment|/// tokens when encountering more OpenKind tokens. Useful for e.g. parsing a
+comment|/// curly brace delimited block that can contain nested blocks.
+comment|/// The parser must be positioned on a token of OpenKind.
+name|void
+name|parseBalanced
+argument_list|(
+name|tok
+operator|::
+name|TokenKind
+name|OpenKind
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|CloseKind
+argument_list|)
+decl_stmt|;
 name|void
 name|addUnwrappedLine
 parameter_list|()
@@ -414,7 +439,12 @@ parameter_list|)
 function_decl|;
 name|void
 name|calculateBraceTypes
-parameter_list|()
+parameter_list|(
+name|bool
+name|ExpectClassBody
+init|=
+name|false
+parameter_list|)
 function_decl|;
 comment|// Marks a conditional compilation edge (for example, an '#if', '#ifdef',
 comment|// '#else' or merge conflict marker). If 'Unreachable' is true, assumes
@@ -523,11 +553,6 @@ name|bool
 operator|>
 name|DeclarationScopeStack
 expr_stmt|;
-comment|// Will be true if we encounter an error that leads to possibily incorrect
-comment|// indentation levels.
-name|bool
-name|StructuralError
-decl_stmt|;
 specifier|const
 name|FormatStyle
 modifier|&

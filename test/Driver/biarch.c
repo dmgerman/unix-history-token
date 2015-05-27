@@ -36,7 +36,7 @@ comment|// RUN: %clang -target armv6--netbsd-eabihf -m32 %s -### 2> %t
 end_comment
 
 begin_comment
-comment|// RUN: grep '"-cc1" "-triple" "armv6--netbsd-eabihf"' %t
+comment|// RUN: grep '"-cc1" "-triple" "armv6k--netbsd-eabihf"' %t
 end_comment
 
 begin_comment

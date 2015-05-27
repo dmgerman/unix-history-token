@@ -20,10 +20,6 @@ comment|// RUN: %clang_cc1 -fmodules -x c -verify -fmodules-cache-path=%t -I inc
 end_comment
 
 begin_comment
-comment|// REQUIRES: shell
-end_comment
-
-begin_comment
 comment|// expected-no-diagnostics
 end_comment
 

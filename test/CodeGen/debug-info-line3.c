@@ -31,7 +31,7 @@ comment|// CHECK: ret void, !dbg [[LINE:.*]]
 end_comment
 
 begin_comment
-comment|// CHECK: [[LINE]] = !MDLocation(line: 6,
+comment|// CHECK: [[LINE]] = !DILocation(line: 6,
 end_comment
 
 end_unit

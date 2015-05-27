@@ -20,19 +20,19 @@ comment|// CHECK: ret void, !dbg [[F2_LINE:![0-9]*]]
 end_comment
 
 begin_comment
-comment|// CHECK: [[F1:![0-9]*]] = {{.*}} ; [ DW_TAG_subprogram ] {{.*}} [def] [f1]
+comment|// CHECK: [[F1:![0-9]*]] = !DISubprogram(name: "f1",{{.*}} isDefinition: true
 end_comment
 
 begin_comment
-comment|// CHECK: [[F2:![0-9]*]] = {{.*}} ; [ DW_TAG_subprogram ] {{.*}} [def] [f2]
+comment|// CHECK: [[F2:![0-9]*]] = !DISubprogram(name: "f2",{{.*}} isDefinition: true
 end_comment
 
 begin_comment
-comment|// CHECK: [[F1_LINE]] = !MDLocation({{.*}}, scope: [[F1]])
+comment|// CHECK: [[F1_LINE]] = !DILocation({{.*}}, scope: [[F1]])
 end_comment
 
 begin_comment
-comment|// CHECK: [[F2_LINE]] = !MDLocation({{.*}}, scope: [[F2]])
+comment|// CHECK: [[F2_LINE]] = !DILocation({{.*}}, scope: [[F2]])
 end_comment
 
 begin_function

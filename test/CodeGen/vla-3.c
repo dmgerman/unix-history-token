@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -std=gnu99 %s -emit-llvm -o - | grep ".*alloca.*align 16"
+comment|// RUN: %clang_cc1 -std=gnu99 %s -emit-llvm -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// CHECK: alloca {{.*}}, align 16
 end_comment
 
 begin_function_decl

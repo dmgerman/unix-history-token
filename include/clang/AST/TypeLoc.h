@@ -369,7 +369,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()

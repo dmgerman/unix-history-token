@@ -147,7 +147,6 @@ block|{
 struct_decl|struct
 name|A
 struct_decl|;
-comment|// expected-note {{forward}}
 specifier|static
 specifier|const
 name|int
@@ -159,7 +158,6 @@ name|int
 name|function
 parameter_list|()
 function_decl|;
-comment|// expected-note {{here}}
 block|}
 struct|;
 end_struct
@@ -196,10 +194,6 @@ argument_list|()
 return|;
 block|}
 end_function
-
-begin_comment
-comment|// expected-note {{subexpression}} expected-note {{undefined}}
-end_comment
 
 end_unit
 

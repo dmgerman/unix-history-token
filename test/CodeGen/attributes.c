@@ -518,7 +518,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: [[FPTRVAR:%[a-z0-9]+]] = load void (i32)** @fptr
+comment|// CHECK: [[FPTRVAR:%[a-z0-9]+]] = load void (i32)*, void (i32)** @fptr
 end_comment
 
 begin_comment

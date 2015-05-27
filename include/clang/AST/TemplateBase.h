@@ -311,11 +311,12 @@ block|}
 union|;
 name|TemplateArgument
 argument_list|(
-argument|TemplateName
+name|TemplateName
 argument_list|,
-argument|bool
+name|bool
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|public
 label|:

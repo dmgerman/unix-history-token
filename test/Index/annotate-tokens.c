@@ -282,6 +282,41 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_typedef
+typedef|typedef
+union|union
+block|{
+struct|struct
+block|{
+name|int
+name|field
+range|:
+literal|16
+decl_stmt|;
+block|}
+struct|;
+block|}
+name|r_t
+typedef|;
+end_typedef
+
+begin_function
+name|void
+name|test
+parameter_list|()
+block|{
+name|r_t
+name|reg
+decl_stmt|;
+name|reg
+operator|.
+name|field
+operator|=
+literal|1
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|// RUN: c-index-test -test-annotate-tokens=%s:4:1:37:1 %s | FileCheck %s
 end_comment
@@ -855,7 +890,7 @@ comment|// CHECK-RANGE1: Punctuation: "," [54:11 - 54:12] InitListExpr=
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -test-annotate-tokens=%s:54:1:59:1 %s | FileCheck %s -check-prefix=CHECK-RANGE2
+comment|// RUN: c-index-test -test-annotate-tokens=%s:54:1:70:1 %s | FileCheck %s -check-prefix=CHECK-RANGE2
 end_comment
 
 begin_comment
@@ -928,6 +963,18 @@ end_comment
 
 begin_comment
 comment|// CHECK-RANGE2: Punctuation: ";" [58:17 - 58:18]
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Identifier: "reg" [68:3 - 68:6] DeclRefExpr=reg:67:7
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Punctuation: "." [68:6 - 68:7] MemberRefExpr=field:62:9
+end_comment
+
+begin_comment
+comment|// CHECK-RANGE2: Identifier: "field" [68:7 - 68:12] MemberRefExpr=field:62:9
 end_comment
 
 end_unit

@@ -69,5 +69,75 @@ parameter_list|)
 block|{}
 end_function
 
+begin_comment
+comment|// For ABI compatibility with ICC, _Complex should be passed/returned
+end_comment
+
+begin_comment
+comment|// as if it were a struct with two elements.
+end_comment
+
+begin_comment
+comment|// CHECK-LABEL: define void @f5(i64 %a.coerce)
+end_comment
+
+begin_function
+name|void
+name|f5
+parameter_list|(
+specifier|_Complex
+name|float
+name|a
+parameter_list|)
+block|{}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define void @f6({ double, double }* %a)
+end_comment
+
+begin_function
+name|void
+name|f6
+parameter_list|(
+specifier|_Complex
+name|double
+name|a
+parameter_list|)
+block|{}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define i64 @f7()
+end_comment
+
+begin_function
+specifier|_Complex
+name|float
+name|f7
+parameter_list|()
+block|{
+return|return
+literal|1.0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK-LABEL: define void @f8({ double, double }* noalias sret %agg.result)
+end_comment
+
+begin_function
+specifier|_Complex
+name|double
+name|f8
+parameter_list|()
+block|{
+return|return
+literal|1.0
+return|;
+block|}
+end_function
+
 end_unit
 

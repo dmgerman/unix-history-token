@@ -520,5 +520,16 @@ begin_comment
 comment|// also act like compound-assignment.
 end_comment
 
+begin_struct
+struct|struct
+name|Test6
+block|{   :
+literal|0.0
+expr_stmt|;
+comment|// expected-error{{type name requires a specifier or qualifier}}
+block|}
+struct|;
+end_struct
+
 end_unit
 

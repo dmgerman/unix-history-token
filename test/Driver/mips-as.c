@@ -400,6 +400,46 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mips32r3 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-ALIAS-32R3 %s
+end_comment
+
+begin_comment
+comment|// MIPS-ALIAS-32R3: as{{(.exe)?}}" "-march" "mips32r3" "-mabi" "32" "-mno-shared" "-call_nonpic" "-EB"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips-linux-gnu -mips32r5 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-ALIAS-32R5 %s
+end_comment
+
+begin_comment
+comment|// MIPS-ALIAS-32R5: as{{(.exe)?}}" "-march" "mips32r5" "-mabi" "32" "-mno-shared" "-call_nonpic" "-EB"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target mips-linux-gnu -mips32r6 -### \
 end_comment
 
@@ -453,6 +493,46 @@ end_comment
 
 begin_comment
 comment|// MIPS-ALIAS-64R2: as{{(.exe)?}}" "-march" "mips64r2" "-mabi" "64" "-mno-shared" "-KPIC" "-EB"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64-linux-gnu -mips64r3 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-ALIAS-64R3 %s
+end_comment
+
+begin_comment
+comment|// MIPS-ALIAS-64R3: as{{(.exe)?}}" "-march" "mips64r3" "-mabi" "64" "-mno-shared" "-KPIC" "-EB"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target mips64-linux-gnu -mips64r5 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=MIPS-ALIAS-64R5 %s
+end_comment
+
+begin_comment
+comment|// MIPS-ALIAS-64R5: as{{(.exe)?}}" "-march" "mips64r5" "-mabi" "64" "-mno-shared" "-KPIC" "-EB"
 end_comment
 
 begin_comment

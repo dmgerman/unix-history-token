@@ -96,10 +96,6 @@ comment|// RUN:     | FileCheck %s --check-prefix=CHECK-X86-ANDROID
 end_comment
 
 begin_comment
-comment|// CHECK-X86-ANDROID: "-pie"
-end_comment
-
-begin_comment
 comment|// CHECK-X86-ANDROID: "-plugin" "{{.*}}/LLVMgold.so"
 end_comment
 

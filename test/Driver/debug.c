@@ -7,21 +7,5 @@ begin_comment
 comment|// CHECK-PWD: {{"-fdebug-compilation-dir" ".*Driver.*"}}
 end_comment
 
-begin_comment
-comment|// "PWD=/foo gcc" wouldn't necessarily work. You would need to pick a different
-end_comment
-
-begin_comment
-comment|// path to the same directory (try a symlink).
-end_comment
-
-begin_comment
-comment|// This depends on host's behavior how $PWD would be set.
-end_comment
-
-begin_comment
-comment|// REQUIRES: shell
-end_comment
-
 end_unit
 

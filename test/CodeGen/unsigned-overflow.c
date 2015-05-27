@@ -64,8 +64,8 @@ name|void
 name|testlongadd
 parameter_list|()
 block|{
-comment|// CHECK:      [[T1:%.*]] = load i64* @lj
-comment|// CHECK-NEXT: [[T2:%.*]] = load i64* @lk
+comment|// CHECK:      [[T1:%.*]] = load i64, i64* @lj
+comment|// CHECK-NEXT: [[T2:%.*]] = load i64, i64* @lk
 comment|// CHECK-NEXT: [[T3:%.*]] = call { i64, i1 } @llvm.uadd.with.overflow.i64(i64 [[T1]], i64 [[T2]])
 comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i64, i1 } [[T3]], 0
 comment|// CHECK-NEXT: [[T5:%.*]] = extractvalue { i64, i1 } [[T3]], 1
@@ -88,8 +88,8 @@ name|void
 name|testlongsub
 parameter_list|()
 block|{
-comment|// CHECK:      [[T1:%.*]] = load i64* @lj
-comment|// CHECK-NEXT: [[T2:%.*]] = load i64* @lk
+comment|// CHECK:      [[T1:%.*]] = load i64, i64* @lj
+comment|// CHECK-NEXT: [[T2:%.*]] = load i64, i64* @lk
 comment|// CHECK-NEXT: [[T3:%.*]] = call { i64, i1 } @llvm.usub.with.overflow.i64(i64 [[T1]], i64 [[T2]])
 comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i64, i1 } [[T3]], 0
 comment|// CHECK-NEXT: [[T5:%.*]] = extractvalue { i64, i1 } [[T3]], 1
@@ -112,8 +112,8 @@ name|void
 name|testlongmul
 parameter_list|()
 block|{
-comment|// CHECK:      [[T1:%.*]] = load i64* @lj
-comment|// CHECK-NEXT: [[T2:%.*]] = load i64* @lk
+comment|// CHECK:      [[T1:%.*]] = load i64, i64* @lj
+comment|// CHECK-NEXT: [[T2:%.*]] = load i64, i64* @lk
 comment|// CHECK-NEXT: [[T3:%.*]] = call { i64, i1 } @llvm.umul.with.overflow.i64(i64 [[T1]], i64 [[T2]])
 comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i64, i1 } [[T3]], 0
 comment|// CHECK-NEXT: [[T5:%.*]] = extractvalue { i64, i1 } [[T3]], 1
@@ -142,7 +142,7 @@ name|li
 operator|++
 argument_list|)
 expr_stmt|;
-comment|// CHECK:      [[T1:%.*]] = load i64* @li
+comment|// CHECK:      [[T1:%.*]] = load i64, i64* @li
 comment|// CHECK-NEXT: [[T2:%.*]] = call { i64, i1 } @llvm.uadd.with.overflow.i64(i64 [[T1]], i64 1)
 comment|// CHECK-NEXT: [[T3:%.*]] = extractvalue { i64, i1 } [[T2]], 0
 comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i64, i1 } [[T2]], 1
@@ -165,7 +165,7 @@ operator|++
 name|li
 argument_list|)
 expr_stmt|;
-comment|// CHECK:      [[T1:%.*]] = load i64* @li
+comment|// CHECK:      [[T1:%.*]] = load i64, i64* @li
 comment|// CHECK-NEXT: [[T2:%.*]] = call { i64, i1 } @llvm.uadd.with.overflow.i64(i64 [[T1]], i64 1)
 comment|// CHECK-NEXT: [[T3:%.*]] = extractvalue { i64, i1 } [[T2]], 0
 comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i64, i1 } [[T2]], 1
@@ -182,8 +182,8 @@ name|void
 name|testintadd
 parameter_list|()
 block|{
-comment|// CHECK:      [[T1:%.*]] = load i32* @ij
-comment|// CHECK-NEXT: [[T2:%.*]] = load i32* @ik
+comment|// CHECK:      [[T1:%.*]] = load i32, i32* @ij
+comment|// CHECK-NEXT: [[T2:%.*]] = load i32, i32* @ik
 comment|// CHECK-NEXT: [[T3:%.*]] = call { i32, i1 } @llvm.uadd.with.overflow.i32(i32 [[T1]], i32 [[T2]])
 comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i32, i1 } [[T3]], 0
 comment|// CHECK-NEXT: [[T5:%.*]] = extractvalue { i32, i1 } [[T3]], 1
@@ -206,8 +206,8 @@ name|void
 name|testintsub
 parameter_list|()
 block|{
-comment|// CHECK:      [[T1:%.*]] = load i32* @ij
-comment|// CHECK-NEXT: [[T2:%.*]] = load i32* @ik
+comment|// CHECK:      [[T1:%.*]] = load i32, i32* @ij
+comment|// CHECK-NEXT: [[T2:%.*]] = load i32, i32* @ik
 comment|// CHECK-NEXT: [[T3:%.*]] = call { i32, i1 } @llvm.usub.with.overflow.i32(i32 [[T1]], i32 [[T2]])
 comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i32, i1 } [[T3]], 0
 comment|// CHECK-NEXT: [[T5:%.*]] = extractvalue { i32, i1 } [[T3]], 1
@@ -230,8 +230,8 @@ name|void
 name|testintmul
 parameter_list|()
 block|{
-comment|// CHECK:      [[T1:%.*]] = load i32* @ij
-comment|// CHECK-NEXT: [[T2:%.*]] = load i32* @ik
+comment|// CHECK:      [[T1:%.*]] = load i32, i32* @ij
+comment|// CHECK-NEXT: [[T2:%.*]] = load i32, i32* @ik
 comment|// CHECK-NEXT: [[T3:%.*]] = call { i32, i1 } @llvm.umul.with.overflow.i32(i32 [[T1]], i32 [[T2]])
 comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i32, i1 } [[T3]], 0
 comment|// CHECK-NEXT: [[T5:%.*]] = extractvalue { i32, i1 } [[T3]], 1
@@ -260,7 +260,7 @@ name|ii
 operator|++
 argument_list|)
 expr_stmt|;
-comment|// CHECK:      [[T1:%.*]] = load i32* @ii
+comment|// CHECK:      [[T1:%.*]] = load i32, i32* @ii
 comment|// CHECK-NEXT: [[T2:%.*]] = call { i32, i1 } @llvm.uadd.with.overflow.i32(i32 [[T1]], i32 1)
 comment|// CHECK-NEXT: [[T3:%.*]] = extractvalue { i32, i1 } [[T2]], 0
 comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i32, i1 } [[T2]], 1
@@ -283,7 +283,7 @@ operator|++
 name|ii
 argument_list|)
 expr_stmt|;
-comment|// CHECK:      [[T1:%.*]] = load i32* @ii
+comment|// CHECK:      [[T1:%.*]] = load i32, i32* @ii
 comment|// CHECK-NEXT: [[T2:%.*]] = call { i32, i1 } @llvm.uadd.with.overflow.i32(i32 [[T1]], i32 1)
 comment|// CHECK-NEXT: [[T3:%.*]] = extractvalue { i32, i1 } [[T2]], 0
 comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i32, i1 } [[T2]], 1

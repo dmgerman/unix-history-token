@@ -75,7 +75,7 @@ name|v
 operator|=
 name|argc
 expr_stmt|;
-comment|// CHECK: getelementptr inbounds %struct.foo* %f, i32 0, i32 0
+comment|// CHECK: getelementptr inbounds %struct.foo, %struct.foo* %f, i32 0, i32 0
 comment|// CHECK-NEXT: bitcast i32* {{.*}} to i8*
 comment|// CHECK-NEXT: call i8* @llvm.ptr.annotation.p0i8({{.*}}str{{.*}}str{{.*}}i32 8)
 comment|// CHECK-NEXT: bitcast i8* {{.*}} to i32*
@@ -88,7 +88,7 @@ name|v
 operator|=
 name|argc
 expr_stmt|;
-comment|// CHECK: bitcast i32* getelementptr inbounds (%struct.foo* @gf, i32 0, i32 0) to i8*
+comment|// CHECK: bitcast i32* getelementptr inbounds (%struct.foo, %struct.foo* @gf, i32 0, i32 0) to i8*
 comment|// CHECK-NEXT: call i8* @llvm.ptr.annotation.p0i8({{.*}}str{{.*}}str{{.*}}i32 8)
 return|return
 literal|0

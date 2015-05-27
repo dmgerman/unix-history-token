@@ -24,6 +24,14 @@ comment|// CHECK-NODS-NOT: -fdata-sections
 end_comment
 
 begin_comment
+comment|// CHECK-US-NOT: -fno-unique-section-names
+end_comment
+
+begin_comment
+comment|// CHECK-NOUS: -fno-unique-section-names
+end_comment
+
+begin_comment
 comment|// RUN: %clang -no-canonical-prefixes %s -### -fsyntax-only 2>&1       \
 end_comment
 
@@ -193,6 +201,38 @@ end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-DS %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -fsyntax-only 2>&1        \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     -funique-section-names \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-US %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -fsyntax-only 2>&1        \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     -fno-unique-section-names \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-NOUS %s
 end_comment
 
 end_unit

@@ -101,7 +101,7 @@ name|c
 operator|->
 name|i
 return|;
-comment|// expected-error {{member reference type 'struct simple' is not a pointer; maybe you meant to use '.'?}}
+comment|// expected-error {{member reference type 'struct simple' is not a pointer; did you mean to use '.'?}}
 block|}
 end_function
 

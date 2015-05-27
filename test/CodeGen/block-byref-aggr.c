@@ -78,7 +78,7 @@ comment|// CHECK:      [[RESULT:%.*]] = call i32 @makeAgg()
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr [[AGG]]* [[TEMP]], i32 0, i32 0
+comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr [[AGG]], [[AGG]]* [[TEMP]], i32 0, i32 0
 end_comment
 
 begin_comment
@@ -90,15 +90,15 @@ comment|//   Check that we properly assign into the forwarding pointer.
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[A_FORWARDING:%.*]] = getelementptr inbounds [[BYREF]]* [[A]], i32 0, i32 1
+comment|// CHECK-NEXT: [[A_FORWARDING:%.*]] = getelementptr inbounds [[BYREF]], [[BYREF]]* [[A]], i32 0, i32 1
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T0:%.*]] = load [[BYREF]]** [[A_FORWARDING]]
+comment|// CHECK-NEXT: [[T0:%.*]] = load [[BYREF]]*, [[BYREF]]** [[A_FORWARDING]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[BYREF]]* [[T0]], i32 0, i32 4
+comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[BYREF]], [[BYREF]]* [[T0]], i32 0, i32 4
 end_comment
 
 begin_comment
@@ -183,7 +183,7 @@ comment|// CHECK:      [[RESULT:%.*]] = call i32 @makeAgg()
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr [[AGG]]* [[TEMP]], i32 0, i32 0
+comment|// CHECK-NEXT: [[T0:%.*]] = getelementptr [[AGG]], [[AGG]]* [[TEMP]], i32 0, i32 0
 end_comment
 
 begin_comment
@@ -195,15 +195,15 @@ comment|//   Check that we properly assign into the forwarding pointer, first fo
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[B_FORWARDING:%.*]] = getelementptr inbounds [[B_BYREF]]* [[B]], i32 0, i32 1
+comment|// CHECK-NEXT: [[B_FORWARDING:%.*]] = getelementptr inbounds [[B_BYREF]], [[B_BYREF]]* [[B]], i32 0, i32 1
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T0:%.*]] = load [[B_BYREF]]** [[B_FORWARDING]]
+comment|// CHECK-NEXT: [[T0:%.*]] = load [[B_BYREF]]*, [[B_BYREF]]** [[B_FORWARDING]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[B_BYREF]]* [[T0]], i32 0, i32 4
+comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[B_BYREF]], [[B_BYREF]]* [[T0]], i32 0, i32 4
 end_comment
 
 begin_comment
@@ -223,15 +223,15 @@ comment|//   Then for 'a':
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[A_FORWARDING:%.*]] = getelementptr inbounds [[A_BYREF]]* [[A]], i32 0, i32 1
+comment|// CHECK-NEXT: [[A_FORWARDING:%.*]] = getelementptr inbounds [[A_BYREF]], [[A_BYREF]]* [[A]], i32 0, i32 1
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T0:%.*]] = load [[A_BYREF]]** [[A_FORWARDING]]
+comment|// CHECK-NEXT: [[T0:%.*]] = load [[A_BYREF]]*, [[A_BYREF]]** [[A_FORWARDING]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[A_BYREF]]* [[T0]], i32 0, i32 4
+comment|// CHECK-NEXT: [[T1:%.*]] = getelementptr inbounds [[A_BYREF]], [[A_BYREF]]* [[T0]], i32 0, i32 4
 end_comment
 
 begin_comment

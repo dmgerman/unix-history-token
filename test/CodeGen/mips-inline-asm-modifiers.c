@@ -35,11 +35,11 @@ typedef|(16)));
 end_typedef
 
 begin_comment
-comment|// CHECK: %{{[0-9]+}} = call i32 asm ".set noreorder;\0Alw    $0,$1;\0A.set reorder;\0A", "=r,*m,~{$1}"(i32* getelementptr inbounds ([8 x i32]* @b, i32 {{[0-9]+}}, i32 {{[0-9]+}})) #2,
+comment|// CHECK: %{{[0-9]+}} = call i32 asm ".set noreorder;\0Alw    $0,$1;\0A.set reorder;\0A", "=r,*m,~{$1}"(i32* getelementptr inbounds ([8 x i32], [8 x i32]* @b, i32 {{[0-9]+}}, i32 {{[0-9]+}})) #2,
 end_comment
 
 begin_comment
-comment|// CHECK: %{{[0-9]+}} = call i32 asm "lw    $0,${1:D};\0A", "=r,*m,~{$1}"(i32* getelementptr inbounds ([8 x i32]* @b, i32 {{[0-9]+}}, i32 {{[0-9]+}})) #2,
+comment|// CHECK: %{{[0-9]+}} = call i32 asm "lw    $0,${1:D};\0A", "=r,*m,~{$1}"(i32* getelementptr inbounds ([8 x i32], [8 x i32]* @b, i32 {{[0-9]+}}, i32 {{[0-9]+}})) #2,
 end_comment
 
 begin_comment

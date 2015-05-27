@@ -40,11 +40,11 @@ comment|// the same argument number by mistake).
 end_comment
 
 begin_comment
-comment|// CHECK: !"0x101\00.block_descriptor\0016777218\00{{[0-9]+}}", {{.*}} ; [ DW_TAG_arg_variable ] [.block_descriptor]
+comment|// CHECK: !DILocalVariable(tag: DW_TAG_arg_variable, name: ".block_descriptor", arg: 1,{{.*}}line: 2,
 end_comment
 
 begin_comment
-comment|// CHECK: !"0x101\00param\0033554434\00{{[0-9]+}}", {{.*}} ; [ DW_TAG_arg_variable ] [param]
+comment|// CHECK: !DILocalVariable(tag: DW_TAG_arg_variable, name: "param", arg: 2,{{.*}}line: 2,
 end_comment
 
 begin_comment

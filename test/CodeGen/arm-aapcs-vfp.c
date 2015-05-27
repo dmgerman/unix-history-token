@@ -535,7 +535,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK-LABEL: define arm_aapcs_vfpcc void @f33(%struct.s33* byval align 1 %s)
+comment|// CHECK-LABEL: define arm_aapcs_vfpcc void @f33(%struct.s33* byval align 4 %s)
 end_comment
 
 begin_struct
@@ -630,7 +630,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_2(double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, i32 %j, [3 x i32], [2 x i64] %k.coerce)
+comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_2(double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, i32 %j, [2 x i64] %k.coerce)
 end_comment
 
 begin_function
@@ -674,7 +674,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_3(%struct.struct_long_long_int* noalias sret %agg.result, double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, [3 x i32], [2 x i64] %k.coerce)
+comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_3(%struct.struct_long_long_int* noalias sret %agg.result, double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, [2 x i64] %k.coerce)
 end_comment
 
 begin_function
@@ -735,7 +735,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: define arm_aapcs_vfpcc void @test_test_vfp_stack_gpr_split_bitfield(double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, i32 %j, i32 %k, [2 x i32], [3 x i32] %l.coerce)
+comment|// CHECK: define arm_aapcs_vfpcc void @test_test_vfp_stack_gpr_split_bitfield(double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, i32 %j, i32 %k, [3 x i32] %l.coerce)
 end_comment
 
 begin_function
@@ -802,7 +802,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_4(double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, i32 %j, [3 x i32], [2 x i64] %k.coerce)
+comment|// CHECK: define arm_aapcs_vfpcc void @test_vfp_stack_gpr_split_4(double %a, double %b, double %c, double %d, double %e, double %f, double %g, double %h, double %i, i32 %j, [2 x i64] %k.coerce)
 end_comment
 
 begin_function

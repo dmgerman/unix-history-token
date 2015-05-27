@@ -33,10 +33,10 @@ name|var64
 parameter_list|)
 block|{
 asm|asm("add %0, %1, %1" : "=r"(var32) : "0"(var32));
-comment|// CHECK: [[R32_ARG:%[a-zA-Z0-9]+]] = load i32*
+comment|// CHECK: [[R32_ARG:%[a-zA-Z0-9]+]] = load i32, i32*
 comment|// CHECK: call i32 asm "add $0, $1, $1", "=r,0"(i32 [[R32_ARG]])
 asm|asm("add %0, %1, %1" : "=r"(var64) : "0"(var64));
-comment|// CHECK: [[R32_ARG:%[a-zA-Z0-9]+]] = load i64*
+comment|// CHECK: [[R32_ARG:%[a-zA-Z0-9]+]] = load i64, i64*
 comment|// CHECK: call i64 asm "add $0, $1, $1", "=r,0"(i64 [[R32_ARG]])
 asm|asm("ldr %0, %1" : "=r"(var32) : "m"(var));
 asm|asm("ldr %0, [%1]" : "=r"(var64) : "r"(&var));
@@ -63,10 +63,10 @@ name|test_constraint_w
 parameter_list|()
 block|{
 asm|asm("fadd %s0, %s1, %s1" : "=w"(f) : "w"(f));
-comment|// CHECK: [[FLT_ARG:%[a-zA-Z_0-9]+]] = load float* @f
+comment|// CHECK: [[FLT_ARG:%[a-zA-Z_0-9]+]] = load float, float* @f
 comment|// CHECK: call float asm "fadd ${0:s}, ${1:s}, ${1:s}", "=w,w"(float [[FLT_ARG]])
 asm|asm("fadd %d0, %d1, %d1" : "=w"(d) : "w"(d));
-comment|// CHECK: [[DBL_ARG:%[a-zA-Z_0-9]+]] = load double* @d
+comment|// CHECK: [[DBL_ARG:%[a-zA-Z_0-9]+]] = load double, double* @d
 comment|// CHECK: call double asm "fadd ${0:d}, ${1:d}, ${1:d}", "=w,w"(double [[DBL_ARG]])
 block|}
 end_function

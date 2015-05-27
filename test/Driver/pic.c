@@ -52,6 +52,14 @@ comment|//
 end_comment
 
 begin_comment
+comment|// CHECK-NO-STATIC-NOT: "-static"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// CHECK-PIE1: "-mrelocation-model" "pic"
 end_comment
 
@@ -805,6 +813,14 @@ end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIC2
+end_comment
+
+begin_comment
+comment|// RUN: %clang -x assembler -c %s -target arm64-apple-ios -mkernel -miphoneos-version-min=7.0.0 -no-integrated-as -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-NO-STATIC
 end_comment
 
 begin_comment

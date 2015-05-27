@@ -4,6 +4,14 @@ comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -fms-extensions
 end_comment
 
 begin_comment
+comment|// RUN: not %clang_cc1 %s -fms-extensions -E | FileCheck %s
+end_comment
+
+begin_comment
+comment|// REQUIRES: non-ps4-sdk
+end_comment
+
+begin_comment
 comment|// rdar://6495941
 end_comment
 
@@ -37,6 +45,10 @@ begin_comment
 comment|// expected-error {{pragma comment requires parenthesized identifier and optional string}}
 end_comment
 
+begin_comment
+comment|// CHECK: #pragma comment(linker,"foo=" 1)
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -48,6 +60,10 @@ literal|" bar="
 name|BAR
 name|)
 end_pragma
+
+begin_comment
+comment|// CHECK: #pragma comment(linker," bar=" "2")
+end_comment
 
 begin_pragma
 pragma|#
@@ -63,6 +79,10 @@ name|__TIME__
 name|)
 end_pragma
 
+begin_comment
+comment|// CHECK: {{#pragma comment\( user, \"Compiled on \".*\" at \".*\" \)}}
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -74,6 +94,10 @@ end_pragma
 
 begin_comment
 comment|// expected-error {{unknown kind of pragma comment}}
+end_comment
+
+begin_comment
+comment|// CHECK: #pragma comment(foo)
 end_comment
 
 begin_pragma
@@ -88,6 +112,10 @@ end_pragma
 
 begin_comment
 comment|// expected-error {{expected string literal in pragma comment}}
+end_comment
+
+begin_comment
+comment|// CHECK: #pragma comment(compiler,)
 end_comment
 
 begin_define
@@ -110,6 +138,10 @@ begin_comment
 comment|// macro expand kind.
 end_comment
 
+begin_comment
+comment|// CHECK: #pragma comment(compiler)
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -124,6 +156,10 @@ begin_comment
 comment|// expected-error {{pragma comment requires}}
 end_comment
 
+begin_comment
+comment|// CHECK: #pragma comment(compiler) x
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -135,6 +171,10 @@ literal|"foo\abar\nbaz\tsome	thing"
 name|)
 end_pragma
 
+begin_comment
+comment|// CHECK: #pragma comment(user, "foo\abar\nbaz\tsome	thing")
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -145,6 +185,10 @@ name|,
 literal|"1"
 name|)
 end_pragma
+
+begin_comment
+comment|// CHECK: #pragma detect_mismatch("test", "1")
+end_comment
 
 begin_pragma
 pragma|#
@@ -158,6 +202,10 @@ begin_comment
 comment|// expected-error {{expected string literal in pragma detect_mismatch}}
 end_comment
 
+begin_comment
+comment|// CHECK: #pragma detect_mismatch()
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -169,6 +217,10 @@ end_pragma
 
 begin_comment
 comment|// expected-error {{pragma detect_mismatch is malformed; it requires two comma-separated string literals}}
+end_comment
+
+begin_comment
+comment|// CHECK: #pragma detect_mismatch("test")
 end_comment
 
 begin_pragma
@@ -186,6 +238,10 @@ begin_comment
 comment|// expected-error {{expected string literal in pragma detect_mismatch}}
 end_comment
 
+begin_comment
+comment|// CHECK: #pragma detect_mismatch("test", 1)
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -196,6 +252,10 @@ name|,
 name|BAR
 name|)
 end_pragma
+
+begin_comment
+comment|// CHECK: #pragma detect_mismatch("test", "2")
+end_comment
 
 begin_comment
 comment|// __pragma
@@ -209,6 +269,10 @@ literal|" bar="
 argument|BAR)
 argument_list|)
 end_macro
+
+begin_comment
+comment|// CHECK: #pragma comment(linker," bar=" "2")
+end_comment
 
 begin_define
 define|#
@@ -224,11 +288,16 @@ parameter_list|()
 block|{
 name|__pragma
 argument_list|()
+comment|// CHECK: #pragma
 comment|// If we ever actually *support* __pragma(warning(disable: x)),
 comment|// this warning should go away.
 name|MACRO_WITH__PRAGMA
 comment|// expected-warning {{lower precedence}} \
 comment|// expected-note 2 {{place parentheses}}
+comment|// CHECK: #pragma warning(push)
+comment|// CHECK: #pragma warning(disable: 10000)
+comment|// CHECK: ; 1 + (2> 3) ? 4 : 5;
+comment|// CHECK: #pragma warning(pop)
 block|}
 end_function
 
@@ -511,6 +580,10 @@ name|push
 name|)
 end_pragma
 
+begin_comment
+comment|// CHECK: #pragma warning(push)
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -522,6 +595,10 @@ name|1
 name|)
 end_pragma
 
+begin_comment
+comment|// CHECK: #pragma warning(push, 1)
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -532,6 +609,10 @@ name|:
 name|4705
 name|)
 end_pragma
+
+begin_comment
+comment|// CHECK: #pragma warning(disable: 4705)
+end_comment
 
 begin_pragma
 pragma|#
@@ -550,6 +631,14 @@ name|321
 name|)
 end_pragma
 
+begin_comment
+comment|// CHECK: #pragma warning(disable: 123 456 789)
+end_comment
+
+begin_comment
+comment|// CHECK: #pragma warning(error: 321)
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -560,6 +649,10 @@ name|:
 name|321
 name|)
 end_pragma
+
+begin_comment
+comment|// CHECK: #pragma warning(once: 321)
+end_comment
 
 begin_pragma
 pragma|#
@@ -572,6 +665,10 @@ name|321
 name|)
 end_pragma
 
+begin_comment
+comment|// CHECK: #pragma warning(suppress: 321)
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -583,6 +680,10 @@ name|321
 name|)
 end_pragma
 
+begin_comment
+comment|// CHECK: #pragma warning(default: 321)
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -591,6 +692,79 @@ name|(
 name|pop
 name|)
 end_pragma
+
+begin_comment
+comment|// CHECK: #pragma warning(pop)
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|1
+name|:
+name|123
+name|)
+end_pragma
+
+begin_comment
+comment|// CHECK: #pragma warning(1: 123)
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|2
+name|:
+name|234
+name|567
+name|)
+end_pragma
+
+begin_comment
+comment|// CHECK: #pragma warning(2: 234 567)
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|3
+name|:
+name|123
+name|;
+name|4
+name|:
+name|678
+name|)
+end_pragma
+
+begin_comment
+comment|// CHECK: #pragma warning(3: 123)
+end_comment
+
+begin_comment
+comment|// CHECK: #pragma warning(4: 678)
+end_comment
+
+begin_pragma
+pragma|#
+directive|pragma
+name|warning
+name|(
+name|5
+name|:
+name|123
+name|)
+end_pragma
+
+begin_comment
+comment|// expected-warning {{expected 'push', 'pop', 'default', 'disable', 'error', 'once', 'suppress', 1, 2, 3, or 4}}
+end_comment
 
 begin_pragma
 pragma|#
@@ -604,6 +778,10 @@ name|)
 end_pragma
 
 begin_comment
+comment|// CHECK: #pragma warning(push, 0)
+end_comment
+
+begin_comment
 comment|// FIXME: We could probably support pushing warning level 0.
 end_comment
 
@@ -615,6 +793,10 @@ name|(
 name|pop
 name|)
 end_pragma
+
+begin_comment
+comment|// CHECK: #pragma warning(pop)
+end_comment
 
 begin_pragma
 pragma|#
@@ -663,6 +845,10 @@ begin_comment
 comment|// expected-warning {{expected ')'}}
 end_comment
 
+begin_comment
+comment|// CHECK: #pragma warning(push)
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -673,6 +859,10 @@ end_pragma
 
 begin_comment
 comment|// expected-warning {{expected ')'}}
+end_comment
+
+begin_comment
+comment|// CHECK: #pragma warning(push)
 end_comment
 
 begin_pragma
@@ -705,6 +895,10 @@ begin_comment
 comment|// expected-warning {{expected ')'}}
 end_comment
 
+begin_comment
+comment|// CHECK: #pragma warning(pop)
+end_comment
+
 begin_pragma
 pragma|#
 directive|pragma
@@ -719,6 +913,10 @@ end_pragma
 
 begin_comment
 comment|// expected-warning {{extra tokens at end of #pragma warning directive}}
+end_comment
+
+begin_comment
+comment|// CHECK: #pragma warning(push, 1)
 end_comment
 
 begin_pragma

@@ -79,7 +79,7 @@ comment|// CHECK-NEXT: call void @llvm.memcpy.{{.*}}(i8* %[[ZERO]], i8* %[[ONE]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: call void @llvm.memcpy.{{.*}}(i8* getelementptr inbounds (%struct.s* @gs, i32 0, i32 0, i32 0), i8* getelementptr inbounds (%struct.s* @gs, i32 0, i32 0, i32 0), i64 132, i32 4, i1 true)
+comment|// CHECK-NEXT: call void @llvm.memcpy.{{.*}}(i8* getelementptr inbounds (%struct.s, %struct.s* @gs, i32 0, i32 0, i32 0), i8* getelementptr inbounds (%struct.s, %struct.s* @gs, i32 0, i32 0, i32 0), i64 132, i32 4, i1 true)
 end_comment
 
 begin_comment
@@ -87,7 +87,7 @@ comment|// CHECK-NEXT: %[[TWO:.*]] = bitcast %struct.s* %[[LS]] to i8*
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: call void @llvm.memcpy.{{.*}}(i8* %[[TWO]], i8* getelementptr inbounds (%struct.s* @gs, i32 0, i32 0, i32 0), i64 132, i32 4, i1 true)
+comment|// CHECK-NEXT: call void @llvm.memcpy.{{.*}}(i8* %[[TWO]], i8* getelementptr inbounds (%struct.s, %struct.s* @gs, i32 0, i32 0, i32 0), i64 132, i32 4, i1 true)
 end_comment
 
 begin_struct
@@ -134,11 +134,11 @@ comment|// CHECK-LABEL: define void @fee()
 end_comment
 
 begin_comment
-comment|// CHECK: call void @llvm.memcpy.{{.*}}(i8* getelementptr inbounds (%struct.s1* @s, i32 0, i32 0, i32 0, i32 0), i8* getelementptr inbounds (%struct.s1* @s, i32 0, i32 0, i32 0, i32 0), i64 132, i32 4, i1 true)
+comment|// CHECK: call void @llvm.memcpy.{{.*}}(i8* getelementptr inbounds (%struct.s1, %struct.s1* @s, i32 0, i32 0, i32 0, i32 0), i8* getelementptr inbounds (%struct.s1, %struct.s1* @s, i32 0, i32 0, i32 0, i32 0), i64 132, i32 4, i1 true)
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: call void @llvm.memcpy.{{.*}}(i8* getelementptr inbounds (%struct.s1* @s, i32 0, i32 0, i32 0, i32 0), i8* getelementptr inbounds (%struct.s* @gs, i32 0, i32 0, i32 0), i64 132, i32 4, i1 true)
+comment|// CHECK-NEXT: call void @llvm.memcpy.{{.*}}(i8* getelementptr inbounds (%struct.s1, %struct.s1* @s, i32 0, i32 0, i32 0, i32 0), i8* getelementptr inbounds (%struct.s, %struct.s* @gs, i32 0, i32 0, i32 0), i64 132, i32 4, i1 true)
 end_comment
 
 end_unit

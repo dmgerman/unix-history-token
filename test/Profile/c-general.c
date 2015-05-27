@@ -24,47 +24,51 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-macosx10.9 -main-file-name c-gen
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[SLC:__llvm_profile_counters_simple_loops]] = hidden global [4 x i64] zeroinitializer
+comment|// PGOGEN: @[[SLC:__llvm_profile_counters_simple_loops]] = private global [4 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[IFC:__llvm_profile_counters_conditionals]] = hidden global [11 x i64] zeroinitializer
+comment|// PGOGEN: @[[IFC:__llvm_profile_counters_conditionals]] = private global [11 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[EEC:__llvm_profile_counters_early_exits]] = hidden global [9 x i64] zeroinitializer
+comment|// PGOGEN: @[[EEC:__llvm_profile_counters_early_exits]] = private global [9 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[JMC:__llvm_profile_counters_jumps]] = hidden global [22 x i64] zeroinitializer
+comment|// PGOGEN: @[[JMC:__llvm_profile_counters_jumps]] = private global [22 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[SWC:__llvm_profile_counters_switches]] = hidden global [19 x i64] zeroinitializer
+comment|// PGOGEN: @[[SWC:__llvm_profile_counters_switches]] = private global [19 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[BSC:__llvm_profile_counters_big_switch]] = hidden global [17 x i64] zeroinitializer
+comment|// PGOGEN: @[[BSC:__llvm_profile_counters_big_switch]] = private global [17 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[BOC:__llvm_profile_counters_boolean_operators]] = hidden global [8 x i64] zeroinitializer
+comment|// PGOGEN: @[[BOC:__llvm_profile_counters_boolean_operators]] = private global [8 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[BLC:__llvm_profile_counters_boolop_loops]] = hidden global [9 x i64] zeroinitializer
+comment|// PGOGEN: @[[BLC:__llvm_profile_counters_boolop_loops]] = private global [9 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[COC:__llvm_profile_counters_conditional_operator]] = hidden global [3 x i64] zeroinitializer
+comment|// PGOGEN: @[[COC:__llvm_profile_counters_conditional_operator]] = private global [3 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[MAC:__llvm_profile_counters_main]] = hidden global [1 x i64] zeroinitializer
+comment|// PGOGEN: @[[DFC:__llvm_profile_counters_do_fallthrough]] = private global [4 x i64] zeroinitializer
 end_comment
 
 begin_comment
-comment|// PGOGEN: @[[STC:"__llvm_profile_counters_c-general.c:static_func"]] = internal global [2 x i64] zeroinitializer
+comment|// PGOGEN: @[[MAC:__llvm_profile_counters_main]] = private global [1 x i64] zeroinitializer
+end_comment
+
+begin_comment
+comment|// PGOGEN: @[[STC:"__llvm_profile_counters_c-general.c:static_func"]] = private global [2 x i64] zeroinitializer
 end_comment
 
 begin_comment
@@ -1173,11 +1177,25 @@ comment|// PGOUSE-NOT: br {{.*}} !prof ![0-9]+
 block|}
 end_function
 
+begin_comment
+comment|// PGOGEN-LABEL: @do_fallthrough()
+end_comment
+
+begin_comment
+comment|// PGOUSE-LABEL: @do_fallthrough()
+end_comment
+
+begin_comment
+comment|// PGOGEN: store {{.*}} @[[DFC]], i64 0, i64 0
+end_comment
+
 begin_function
 name|void
 name|do_fallthrough
 parameter_list|()
 block|{
+comment|// PGOGEN: store {{.*}} @[[DFC]], i64 0, i64 1
+comment|// PGOUSE: br {{.*}} !prof ![[DF1:[0-9]+]]
 for|for
 control|(
 name|int
@@ -1198,11 +1216,14 @@ name|j
 init|=
 literal|0
 decl_stmt|;
+comment|// PGOGEN: store {{.*}} @[[DFC]], i64 0, i64 2
 do|do
 block|{
 comment|// The number of exits out of this do-loop via the break statement
 comment|// exceeds the counter value for the loop (which does not include the
 comment|// fallthrough count). Make sure that does not violate any assertions.
+comment|// PGOGEN: store {{.*}} @[[DFC]], i64 0, i64 3
+comment|// PGOUSE: br {{.*}} !prof ![[DF3:[0-9]+]]
 if|if
 condition|(
 name|i
@@ -1213,6 +1234,7 @@ break|break;
 name|j
 operator|++
 expr_stmt|;
+comment|// PGOUSE: br {{.*}} !prof ![[DF2:[0-9]+]]
 block|}
 do|while
 condition|(
@@ -1517,6 +1539,18 @@ end_comment
 
 begin_comment
 comment|// PGOUSE-DAG: ![[CO2]] = !{!"branch_weights", i32 2, i32 1}
+end_comment
+
+begin_comment
+comment|// PGOUSE-DAG: ![[DF1]] = !{!"branch_weights", i32 11, i32 2}
+end_comment
+
+begin_comment
+comment|// PGOUSE-DAG: ![[DF2]] = !{!"branch_weights", i32 3, i32 3}
+end_comment
+
+begin_comment
+comment|// PGOUSE-DAG: ![[DF3]] = !{!"branch_weights", i32 9, i32 5}
 end_comment
 
 begin_comment

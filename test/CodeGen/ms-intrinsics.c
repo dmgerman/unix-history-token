@@ -255,7 +255,7 @@ comment|// CHECK-I386:   [[PTR:%[0-9]+]] = inttoptr i32 %Offset to i32 addrspace
 end_comment
 
 begin_comment
-comment|// CHECK-I386:   [[VALUE:%[0-9]+]] = load volatile i32 addrspace(257)* [[PTR]], align 4
+comment|// CHECK-I386:   [[VALUE:%[0-9]+]] = load volatile i32, i32 addrspace(257)* [[PTR]], align 4
 end_comment
 
 begin_comment

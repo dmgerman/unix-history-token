@@ -139,5 +139,82 @@ block|}
 block|}
 end_function
 
+begin_function_decl
+name|void
+name|banana
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note {{'banana' declared here}}
+end_comment
+
+begin_function
+name|int
+name|c11Generic
+parameter_list|(
+name|int
+name|arg
+parameter_list|)
+block|{
+generic_selection|_Generic(
+name|hello
+generic_selection|,
+name|int
+association|:
+name|banana
+generic_selection|)
+argument_list|()
+expr_stmt|;
+comment|// expected-error-re {{use of undeclared identifier 'hello'{{$}}}}
+generic_selection|_Generic(
+name|arg
+generic_selection|,
+name|int
+association|:
+name|bandana
+generic_selection|)
+argument_list|()
+expr_stmt|;
+comment|// expected-error {{use of undeclared identifier 'bandana'; did you mean 'banana'?}}
+block|}
+end_function
+
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|__m128i
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(16)));
+end_typedef
+
+begin_function
+name|int
+name|PR23101
+parameter_list|(
+name|__m128i
+name|__x
+parameter_list|)
+block|{
+return|return
+name|foo
+argument_list|(
+operator|(
+name|__v2di
+operator|)
+name|__x
+argument_list|)
+return|;
+comment|// expected-warning {{implicit declaration of function 'foo'}} \
+comment|// expected-error {{use of undeclared identifier '__v2di'}}
+block|}
+end_function
+
 end_unit
 

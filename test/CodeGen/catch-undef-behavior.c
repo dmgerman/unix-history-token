@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsanitize=alignment,null,object-size,shift,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-COMMON --check-prefix=CHECK-UBSAN
+comment|// RUN: %clang_cc1 -fsanitize=alignment,null,object-size,shift-base,shift-exponent,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift-base,shift-exponent,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-COMMON --check-prefix=CHECK-UBSAN
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fsanitize-undefined-trap-on-error -fsanitize=alignment,null,object-size,shift,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-COMMON --check-prefix=CHECK-TRAP
+comment|// RUN: %clang_cc1 -fsanitize-undefined-trap-on-error -fsanitize=alignment,null,object-size,shift-base,shift-exponent,return,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -fsanitize-recover=alignment,null,object-size,shift-base,shift-exponent,signed-integer-overflow,vla-bound,float-cast-overflow,integer-divide-by-zero,bool,returns-nonnull-attribute,nonnull-attribute -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-COMMON --check-prefix=CHECK-TRAP
 end_comment
 
 begin_comment
@@ -13,6 +13,10 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -fsanitize=signed-integer-overflow -emit-llvm %s -o - -triple x86_64-linux-gnu | FileCheck %s --check-prefix=CHECK-OVERFLOW
+end_comment
+
+begin_comment
+comment|// REQUIRES: asserts
 end_comment
 
 begin_comment
@@ -200,13 +204,16 @@ name|int
 name|b
 parameter_list|)
 block|{
-comment|// CHECK-COMMON:      %[[INBOUNDS:.*]] = icmp ule i32 %[[RHS:.*]], 31
-comment|// CHECK-COMMON-NEXT: br i1 %[[INBOUNDS]], label %[[CHECKBB:.*]], label %[[CONTBB:.*]]
-comment|// CHECK-COMMON:      %[[SHIFTED_OUT_WIDTH:.*]] = sub nuw nsw i32 31, %[[RHS]]
+comment|// CHECK-COMMON:      %[[RHS_INBOUNDS:.*]] = icmp ule i32 %[[RHS:.*]], 31
+comment|// CHECK-COMMON-NEXT: br i1 %[[RHS_INBOUNDS]], label %[[CHECK_BB:.*]], label %[[CONT_BB:.*]],
+comment|// CHECK-COMMON:      [[CHECK_BB]]:
+comment|// CHECK-COMMON-NEXT: %[[SHIFTED_OUT_WIDTH:.*]] = sub nuw nsw i32 31, %[[RHS]]
 comment|// CHECK-COMMON-NEXT: %[[SHIFTED_OUT:.*]] = lshr i32 %[[LHS:.*]], %[[SHIFTED_OUT_WIDTH]]
 comment|// CHECK-COMMON-NEXT: %[[NO_OVERFLOW:.*]] = icmp eq i32 %[[SHIFTED_OUT]], 0
-comment|// CHECK-COMMON-NEXT: br label %[[CONTBB]]
-comment|// CHECK-COMMON:      %[[VALID:.*]] = phi i1 [ %[[INBOUNDS]], {{.*}} ], [ %[[NO_OVERFLOW]], %[[CHECKBB]] ]
+comment|// CHECK-COMMON-NEXT: br label %[[CONT_BB]]
+comment|// CHECK-COMMON:      [[CONT_BB]]:
+comment|// CHECK-COMMON-NEXT: %[[VALID_BASE:.*]] = phi i1 [ true, {{.*}} ], [ %[[NO_OVERFLOW]], %[[CHECK_BB]] ]
+comment|// CHECK-COMMON-NEXT: %[[VALID:.*]] = and i1 %[[RHS_INBOUNDS]], %[[VALID_BASE]]
 comment|// CHECK-UBSAN: br i1 %[[VALID]], {{.*}} !prof ![[WEIGHT_MD]]
 comment|// CHECK-TRAP:  br i1 %[[VALID]]
 comment|// CHECK-UBSAN:      %[[ARG1:.*]] = zext
@@ -251,7 +258,7 @@ comment|// CHECK-UBSAN-NEXT: %[[ARG2:.*]] = zext
 comment|// CHECK-UBSAN-NEXT: call void @__ubsan_handle_shift_out_of_bounds(i8* bitcast ({{.*}} @[[LINE_400]] to i8*), i64 %[[ARG1]], i64 %[[ARG2]])
 comment|// CHECK-TRAP:      call void @llvm.trap() [[NR_NUW]]
 comment|// CHECK-TRAP-NEXT: unreachable
-comment|// CHECK-COMMON:      %[[RET:.*]] = ashr i32 %[[LHS]], %[[RHS]]
+comment|// CHECK-COMMON:      %[[RET:.*]] = ashr i32 {{.*}}, %[[RHS]]
 comment|// CHECK-COMMON-NEXT: ret i32 %[[RET]]
 line|#
 directive|line
@@ -833,7 +840,7 @@ comment|// CHECK-COMMON: [[OK:%.*]] = icmp ne i32* {{.*}}, null
 comment|// CHECK-COMMON: br i1 [[OK]]
 comment|// CHECK-UBSAN: call void @__ubsan_handle_nonnull_arg
 comment|// CHECK-UBSAN-NOT: __ubsan_handle_nonnull_arg
-comment|// CHECK-COMMON: call void (i32, ...)* @nonnull_variadic
+comment|// CHECK-COMMON: call void (i32, ...) @nonnull_variadic
 name|nonnull_variadic
 argument_list|(
 name|a

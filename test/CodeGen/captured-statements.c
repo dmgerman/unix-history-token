@@ -59,17 +59,29 @@ name|clang
 name|__debug
 name|captured
 block|{
+specifier|static
+name|float
+name|inner
+init|=
+literal|3.0
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|inner
+expr_stmt|;
 name|i
 operator|++
 expr_stmt|;
 block|}
 comment|// CHECK-1: %struct.anon = type { i32* }
+comment|// CHECK-1: {{.+}} global float 3.0
 comment|//
 comment|// CHECK-1: test1
 comment|// CHECK-1: alloca %struct.anon
-comment|// CHECK-1: getelementptr inbounds %struct.anon*
+comment|// CHECK-1: getelementptr inbounds %struct.anon, %struct.anon*
 comment|// CHECK-1: store i32* %i
-comment|// CHECK-1: call void @[[HelperName:__captured_stmt[0-9]+]]
+comment|// CHECK-1: call void @[[HelperName:__captured_stmt[\.0-9]+]]
 block|}
 end_function
 
@@ -82,11 +94,11 @@ comment|// CHECK-1:   getelementptr inbounds %struct.anon{{.*}}, i32 0, i32 0
 end_comment
 
 begin_comment
-comment|// CHECK-1:   load i32**
+comment|// CHECK-1:   load i32*, i32**
 end_comment
 
 begin_comment
-comment|// CHECK-1:   load i32*
+comment|// CHECK-1:   load i32, i32*
 end_comment
 
 begin_comment
@@ -137,7 +149,7 @@ expr_stmt|;
 block|}
 comment|// CHECK-2: test2
 comment|// CHECK-2-NOT: %i
-comment|// CHECK-2: call void @[[HelperName:__captured_stmt[0-9]+]]
+comment|// CHECK-2: call void @[[HelperName:__captured_stmt[\.0-9]+]]
 block|}
 end_function
 
@@ -246,7 +258,7 @@ expr_stmt|;
 block|}
 comment|// CHECK-3: test4([[INTPTR_T:i.+]] {{.*}}[[SIZE_ARG:%.+]], [[INTPTR_T]]*
 comment|// CHECK-3: store [[INTPTR_T]] {{.*}}[[SIZE_ARG]], [[INTPTR_T]]* [[SIZE_ADDR:%.+]],
-comment|// CHECK-3: [[SIZE:%.+]] = load [[INTPTR_T]]* [[SIZE_ADDR]],
+comment|// CHECK-3: [[SIZE:%.+]] = load [[INTPTR_T]], [[INTPTR_T]]* [[SIZE_ADDR]],
 comment|// CHECK-3: [[REF:%.+]] = getelementptr inbounds
 comment|// CHECK-3: store [[INTPTR_T]] [[SIZE]], [[INTPTR_T]]* [[REF]]
 comment|// CHECK-3: call void @__captured_stmt
@@ -283,7 +295,7 @@ operator|++
 expr_stmt|;
 block|}
 comment|// CHECK-GLOBALS: %[[Capture:struct\.anon[\.0-9]*]] = type {}
-comment|// CHECK-GLOBALS: call void @__captured_stmt[[HelperName:[0-9]+]](%[[Capture]]
+comment|// CHECK-GLOBALS: call void @__captured_stmt[[HelperName:[\.0-9]+]](%[[Capture]]
 block|}
 end_function
 
@@ -296,15 +308,15 @@ comment|// CHECK-GLOBALS-NOT: ret
 end_comment
 
 begin_comment
-comment|// CHECK-GLOBALS:   load i32* @global
+comment|// CHECK-GLOBALS:   load i32, i32* @global
 end_comment
 
 begin_comment
-comment|// CHECK-GLOBALS:   load i32* @
+comment|// CHECK-GLOBALS:   load i32, i32* @
 end_comment
 
 begin_comment
-comment|// CHECK-GLOBALS:   load i32* @e
+comment|// CHECK-GLOBALS:   load i32, i32* @e
 end_comment
 
 end_unit

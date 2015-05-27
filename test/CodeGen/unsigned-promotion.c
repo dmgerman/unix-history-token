@@ -84,16 +84,16 @@ name|void
 name|testshortadd
 parameter_list|()
 block|{
-comment|// CHECKS:        load i16* @sj
-comment|// CHECKS:        load i16* @sk
+comment|// CHECKS:        load i16, i16* @sj
+comment|// CHECKS:        load i16, i16* @sk
 comment|// CHECKS:        [[T1:%.*]] = call { i32, i1 } @llvm.sadd.with.overflow.i32(i32 [[T2:%.*]], i32 [[T3:%.*]])
 comment|// CHECKS-NEXT:   [[T4:%.*]] = extractvalue { i32, i1 } [[T1]], 0
 comment|// CHECKS-NEXT:   [[T5:%.*]] = extractvalue { i32, i1 } [[T1]], 1
 comment|// CHECKS:        call void @__ubsan_handle_add_overflow
 comment|//
-comment|// CHECKU:      [[T1:%.*]] = load i16* @sj
+comment|// CHECKU:      [[T1:%.*]] = load i16, i16* @sj
 comment|// CHECKU:      [[T2:%.*]] = zext i16 [[T1]]
-comment|// CHECKU:      [[T3:%.*]] = load i16* @sk
+comment|// CHECKU:      [[T3:%.*]] = load i16, i16* @sk
 comment|// CHECKU:      [[T4:%.*]] = zext i16 [[T3]]
 comment|// CHECKU-NOT:  llvm.sadd
 comment|// CHECKU-NOT:  llvm.uadd
@@ -120,16 +120,16 @@ name|void
 name|testshortsub
 parameter_list|()
 block|{
-comment|// CHECKS:        load i16* @sj
-comment|// CHECKS:        load i16* @sk
+comment|// CHECKS:        load i16, i16* @sj
+comment|// CHECKS:        load i16, i16* @sk
 comment|// CHECKS:        [[T1:%.*]] = call { i32, i1 } @llvm.ssub.with.overflow.i32(i32 [[T2:%.*]], i32 [[T3:%.*]])
 comment|// CHECKS-NEXT:   [[T4:%.*]] = extractvalue { i32, i1 } [[T1]], 0
 comment|// CHECKS-NEXT:   [[T5:%.*]] = extractvalue { i32, i1 } [[T1]], 1
 comment|// CHECKS:        call void @__ubsan_handle_sub_overflow
 comment|//
-comment|// CHECKU:      [[T1:%.*]] = load i16* @sj
+comment|// CHECKU:      [[T1:%.*]] = load i16, i16* @sj
 comment|// CHECKU:      [[T2:%.*]] = zext i16 [[T1]]
-comment|// CHECKU:      [[T3:%.*]] = load i16* @sk
+comment|// CHECKU:      [[T3:%.*]] = load i16, i16* @sk
 comment|// CHECKU:      [[T4:%.*]] = zext i16 [[T3]]
 comment|// CHECKU-NOT:  llvm.ssub
 comment|// CHECKU-NOT:  llvm.usub
@@ -156,16 +156,16 @@ name|void
 name|testshortmul
 parameter_list|()
 block|{
-comment|// CHECKS:        load i16* @sj
-comment|// CHECKS:        load i16* @sk
+comment|// CHECKS:        load i16, i16* @sj
+comment|// CHECKS:        load i16, i16* @sk
 comment|// CHECKS:        [[T1:%.*]] = call { i32, i1 } @llvm.smul.with.overflow.i32(i32 [[T2:%.*]], i32 [[T3:%.*]])
 comment|// CHECKS-NEXT:   [[T4:%.*]] = extractvalue { i32, i1 } [[T1]], 0
 comment|// CHECKS-NEXT:   [[T5:%.*]] = extractvalue { i32, i1 } [[T1]], 1
 comment|// CHECKS:        call void @__ubsan_handle_mul_overflow
 comment|//
-comment|// CHECKU:      [[T1:%.*]] = load i16* @sj
+comment|// CHECKU:      [[T1:%.*]] = load i16, i16* @sj
 comment|// CHECKU:      [[T2:%.*]] = zext i16 [[T1]]
-comment|// CHECKU:      [[T3:%.*]] = load i16* @sk
+comment|// CHECKU:      [[T3:%.*]] = load i16, i16* @sk
 comment|// CHECKU:      [[T4:%.*]] = zext i16 [[T3]]
 comment|// CHECKU-NOT:  llvm.smul
 comment|// CHECKU-NOT:  llvm.umul
@@ -192,16 +192,16 @@ name|void
 name|testcharadd
 parameter_list|()
 block|{
-comment|// CHECKS:        load i8* @cj
-comment|// CHECKS:        load i8* @ck
+comment|// CHECKS:        load i8, i8* @cj
+comment|// CHECKS:        load i8, i8* @ck
 comment|// CHECKS:        [[T1:%.*]] = call { i32, i1 } @llvm.sadd.with.overflow.i32(i32 [[T2:%.*]], i32 [[T3:%.*]])
 comment|// CHECKS-NEXT:   [[T4:%.*]] = extractvalue { i32, i1 } [[T1]], 0
 comment|// CHECKS-NEXT:   [[T5:%.*]] = extractvalue { i32, i1 } [[T1]], 1
 comment|// CHECKS:        call void @__ubsan_handle_add_overflow
 comment|//
-comment|// CHECKU:      [[T1:%.*]] = load i8* @cj
+comment|// CHECKU:      [[T1:%.*]] = load i8, i8* @cj
 comment|// CHECKU:      [[T2:%.*]] = zext i8 [[T1]]
-comment|// CHECKU:      [[T3:%.*]] = load i8* @ck
+comment|// CHECKU:      [[T3:%.*]] = load i8, i8* @ck
 comment|// CHECKU:      [[T4:%.*]] = zext i8 [[T3]]
 comment|// CHECKU-NOT:  llvm.sadd
 comment|// CHECKU-NOT:  llvm.uadd
@@ -228,16 +228,16 @@ name|void
 name|testcharsub
 parameter_list|()
 block|{
-comment|// CHECKS:        load i8* @cj
-comment|// CHECKS:        load i8* @ck
+comment|// CHECKS:        load i8, i8* @cj
+comment|// CHECKS:        load i8, i8* @ck
 comment|// CHECKS:        [[T1:%.*]] = call { i32, i1 } @llvm.ssub.with.overflow.i32(i32 [[T2:%.*]], i32 [[T3:%.*]])
 comment|// CHECKS-NEXT:   [[T4:%.*]] = extractvalue { i32, i1 } [[T1]], 0
 comment|// CHECKS-NEXT:   [[T5:%.*]] = extractvalue { i32, i1 } [[T1]], 1
 comment|// CHECKS:        call void @__ubsan_handle_sub_overflow
 comment|//
-comment|// CHECKU:      [[T1:%.*]] = load i8* @cj
+comment|// CHECKU:      [[T1:%.*]] = load i8, i8* @cj
 comment|// CHECKU:      [[T2:%.*]] = zext i8 [[T1]]
-comment|// CHECKU:      [[T3:%.*]] = load i8* @ck
+comment|// CHECKU:      [[T3:%.*]] = load i8, i8* @ck
 comment|// CHECKU:      [[T4:%.*]] = zext i8 [[T3]]
 comment|// CHECKU-NOT:  llvm.ssub
 comment|// CHECKU-NOT:  llvm.usub
@@ -264,16 +264,16 @@ name|void
 name|testcharmul
 parameter_list|()
 block|{
-comment|// CHECKS:        load i8* @cj
-comment|// CHECKS:        load i8* @ck
+comment|// CHECKS:        load i8, i8* @cj
+comment|// CHECKS:        load i8, i8* @ck
 comment|// CHECKS:        [[T1:%.*]] = call { i32, i1 } @llvm.smul.with.overflow.i32(i32 [[T2:%.*]], i32 [[T3:%.*]])
 comment|// CHECKS-NEXT:   [[T4:%.*]] = extractvalue { i32, i1 } [[T1]], 0
 comment|// CHECKS-NEXT:   [[T5:%.*]] = extractvalue { i32, i1 } [[T1]], 1
 comment|// CHECKS:        call void @__ubsan_handle_mul_overflow
 comment|//
-comment|// CHECKU:      [[T1:%.*]] = load i8* @cj
+comment|// CHECKU:      [[T1:%.*]] = load i8, i8* @cj
 comment|// CHECKU:      [[T2:%.*]] = zext i8 [[T1]]
-comment|// CHECKU:      [[T3:%.*]] = load i8* @ck
+comment|// CHECKU:      [[T3:%.*]] = load i8, i8* @ck
 comment|// CHECKU:      [[T4:%.*]] = zext i8 [[T3]]
 comment|// CHECKU-NOT:  llvm.smul
 comment|// CHECKU-NOT:  llvm.umul

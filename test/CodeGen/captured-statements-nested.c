@@ -141,63 +141,63 @@ operator|=
 literal|12
 expr_stmt|;
 comment|// CHECK1: define internal void @__captured_stmt{{.*}}([[T]]
-comment|// CHECK1: [[PARAM_ARR_SIZE_REF:%.+]] = getelementptr inbounds [[T]]* {{.+}}, i{{[0-9]+}} 0, i{{[0-9]+}} 5
-comment|// CHECK1: [[PARAM_ARR_SIZE:%.+]] = load [[SIZE_TYPE]]* [[PARAM_ARR_SIZE_REF]]
-comment|// CHECK1: [[ARR_SIZE1_REF:%.+]] = getelementptr inbounds [[T]]* {{.+}}, i{{[0-9]+}} 0, i{{[0-9]+}} 8
-comment|// CHECK1: [[ARR_SIZE1:%.+]] = load [[SIZE_TYPE]]* [[ARR_SIZE1_REF]]
-comment|// CHECK1: [[ARR_SIZE2_REF:%.+]] = getelementptr inbounds [[T]]* {{.+}}, i{{[0-9]+}} 0, i{{[0-9]+}} 9
-comment|// CHECK1: [[ARR_SIZE2:%.+]] = load [[SIZE_TYPE]]* [[ARR_SIZE2_REF]]
+comment|// CHECK1: [[PARAM_ARR_SIZE_REF:%.+]] = getelementptr inbounds [[T]], [[T]]* {{.+}}, i{{[0-9]+}} 0, i{{[0-9]+}} 5
+comment|// CHECK1: [[PARAM_ARR_SIZE:%.+]] = load [[SIZE_TYPE]], [[SIZE_TYPE]]* [[PARAM_ARR_SIZE_REF]]
+comment|// CHECK1: [[ARR_SIZE1_REF:%.+]] = getelementptr inbounds [[T]], [[T]]* {{.+}}, i{{[0-9]+}} 0, i{{[0-9]+}} 8
+comment|// CHECK1: [[ARR_SIZE1:%.+]] = load [[SIZE_TYPE]], [[SIZE_TYPE]]* [[ARR_SIZE1_REF]]
+comment|// CHECK1: [[ARR_SIZE2_REF:%.+]] = getelementptr inbounds [[T]], [[T]]* {{.+}}, i{{[0-9]+}} 0, i{{[0-9]+}} 9
+comment|// CHECK1: [[ARR_SIZE2:%.+]] = load [[SIZE_TYPE]], [[SIZE_TYPE]]* [[ARR_SIZE2_REF]]
 comment|//
-comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 2
-comment|// CHECK1-NEXT: load %struct.A**
-comment|// CHECK1-NEXT: getelementptr inbounds %struct.A*
+comment|// CHECK1: getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 2
+comment|// CHECK1-NEXT: load %struct.A*, %struct.A**
+comment|// CHECK1-NEXT: getelementptr inbounds %struct.A, %struct.A*
 comment|// CHECK1-NEXT: store i{{.+}} 1
 comment|//
-comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 1
-comment|// CHECK1-NEXT: load i{{[0-9]+}}**
+comment|// CHECK1: getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 1
+comment|// CHECK1-NEXT: load i{{[0-9]+}}*, i{{[0-9]+}}**
 comment|// CHECK1-NEXT: store i{{[0-9]+}} 1
 comment|//
-comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 0
-comment|// CHECK1-NEXT: load i{{[0-9]+}}**
+comment|// CHECK1: getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 0
+comment|// CHECK1-NEXT: load i{{[0-9]+}}*, i{{[0-9]+}}**
 comment|// CHECK1-NEXT: store i{{[0-9]+}} 1
 comment|//
-comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 4
-comment|// CHECK1-NEXT: load i{{[0-9]+}}**
-comment|// CHECK1-NEXT: load i{{[0-9]+}}*
-comment|// CHECK1-NEXT: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 3
-comment|// CHECK1-NEXT: load i{{[0-9]+}}***
-comment|// CHECK1-NEXT: load i{{[0-9]+}}**
+comment|// CHECK1: getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 4
+comment|// CHECK1-NEXT: load i{{[0-9]+}}*, i{{[0-9]+}}**
+comment|// CHECK1-NEXT: load i{{[0-9]+}}, i{{[0-9]+}}*
+comment|// CHECK1-NEXT: getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 3
+comment|// CHECK1-NEXT: load i{{[0-9]+}}**, i{{[0-9]+}}***
+comment|// CHECK1-NEXT: load i{{[0-9]+}}*, i{{[0-9]+}}**
 comment|// CHECK1-NEXT: store i{{[0-9]+}}
 comment|//
-comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 2
-comment|// CHECK1-NEXT: load %struct.A**
-comment|// CHECK1-NEXT: getelementptr inbounds %struct.A*
+comment|// CHECK1: getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 2
+comment|// CHECK1-NEXT: load %struct.A*, %struct.A**
+comment|// CHECK1-NEXT: getelementptr inbounds %struct.A, %struct.A*
 comment|// CHECK1-NEXT: store float
 comment|//
-comment|// CHECK1: getelementptr inbounds [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 2
-comment|// CHECK1-NEXT: load %struct.A**
-comment|// CHECK1-NEXT: getelementptr inbounds %struct.A*
+comment|// CHECK1: getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 2
+comment|// CHECK1-NEXT: load %struct.A*, %struct.A**
+comment|// CHECK1-NEXT: getelementptr inbounds %struct.A, %struct.A*
 comment|// CHECK1-NEXT: store i8 99
 comment|//
-comment|// CHECK1: [[SIZE_ADDR_REF:%.*]] = getelementptr inbounds [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 7
-comment|// CHECK1-DAG: [[SIZE_ADDR:%.*]] = load i{{.+}}** [[SIZE_ADDR_REF]]
-comment|// CHECK1-DAG: [[SIZE:%.*]] = load i{{.+}}* [[SIZE_ADDR]]
+comment|// CHECK1: [[SIZE_ADDR_REF:%.*]] = getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 7
+comment|// CHECK1-DAG: [[SIZE_ADDR:%.*]] = load i{{.+}}*, i{{.+}}** [[SIZE_ADDR_REF]]
+comment|// CHECK1-DAG: [[SIZE:%.*]] = load i{{.+}}, i{{.+}}* [[SIZE_ADDR]]
 comment|// CHECK1-DAG: [[PARAM_ARR_IDX:%.*]] = sub nsw i{{.+}} [[SIZE]], 1
-comment|// CHECK1-DAG: [[PARAM_ARR_ADDR_REF:%.*]] = getelementptr inbounds [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 6
-comment|// CHECK1-DAG: [[PARAM_ARR_ADDR:%.*]] = load i{{.+}}*** [[PARAM_ARR_ADDR_REF]]
-comment|// CHECK1-DAG: [[PARAM_ARR:%.*]] = load i{{.+}}** [[PARAM_ARR_ADDR]]
-comment|// CHECK1-DAG: [[PARAM_ARR_SIZE_MINUS_1_ADDR:%.*]] = getelementptr inbounds i{{.+}}* [[PARAM_ARR]], i{{.*}}
+comment|// CHECK1-DAG: [[PARAM_ARR_ADDR_REF:%.*]] = getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 6
+comment|// CHECK1-DAG: [[PARAM_ARR_ADDR:%.*]] = load i{{.+}}**, i{{.+}}*** [[PARAM_ARR_ADDR_REF]]
+comment|// CHECK1-DAG: [[PARAM_ARR:%.*]] = load i{{.+}}*, i{{.+}}** [[PARAM_ARR_ADDR]]
+comment|// CHECK1-DAG: [[PARAM_ARR_SIZE_MINUS_1_ADDR:%.*]] = getelementptr inbounds i{{.+}}, i{{.+}}* [[PARAM_ARR]], i{{.*}}
 comment|// CHECK1: store i{{.+}} 2, i{{.+}}* [[PARAM_ARR_SIZE_MINUS_1_ADDR]]
 comment|//
-comment|// CHECK1: [[Z_ADDR_REF:%.*]] = getelementptr inbounds [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 2
-comment|// CHECK1-DAG: [[Z_ADDR:%.*]] = load %struct.A** [[Z_ADDR_REF]]
-comment|// CHECK1-DAG: [[Z_A_ADDR:%.*]] = getelementptr inbounds %struct.A* [[Z_ADDR]], i{{.+}} 0, i{{.+}} 0
-comment|// CHECK1-DAG: [[ARR_IDX_2:%.*]] = load i{{.+}}* [[Z_A_ADDR]]
-comment|// CHECK1-DAG: [[ARR_ADDR_REF:%.*]] = getelementptr inbounds [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 10
-comment|// CHECK1-DAG: [[ARR_ADDR:%.*]] = load i{{.+}}** [[ARR_ADDR_REF]]
+comment|// CHECK1: [[Z_ADDR_REF:%.*]] = getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 2
+comment|// CHECK1-DAG: [[Z_ADDR:%.*]] = load %struct.A*, %struct.A** [[Z_ADDR_REF]]
+comment|// CHECK1-DAG: [[Z_A_ADDR:%.*]] = getelementptr inbounds %struct.A, %struct.A* [[Z_ADDR]], i{{.+}} 0, i{{.+}} 0
+comment|// CHECK1-DAG: [[ARR_IDX_2:%.*]] = load i{{.+}}, i{{.+}}* [[Z_A_ADDR]]
+comment|// CHECK1-DAG: [[ARR_ADDR_REF:%.*]] = getelementptr inbounds [[T]], [[T]]* {{.*}}, i{{.+}} 0, i{{.+}} 10
+comment|// CHECK1-DAG: [[ARR_ADDR:%.*]] = load i{{.+}}*, i{{.+}}** [[ARR_ADDR_REF]]
 comment|// CHECK1-DAG: [[ARR_IDX_1:%.*]] = mul {{.*}} 10
-comment|// CHECK1-DAG: [[ARR_10_ADDR:%.*]] = getelementptr inbounds i{{.+}}* [[ARR_ADDR]], i{{.*}} [[ARR_IDX_1]]
-comment|// CHECK1-DAG: [[ARR_10_Z_A_ADDR:%.*]] = getelementptr inbounds i{{.+}}* [[ARR_10_ADDR]], i{{.*}}
+comment|// CHECK1-DAG: [[ARR_10_ADDR:%.*]] = getelementptr inbounds i{{.+}}, i{{.+}}* [[ARR_ADDR]], i{{.*}} [[ARR_IDX_1]]
+comment|// CHECK1-DAG: [[ARR_10_Z_A_ADDR:%.*]] = getelementptr inbounds i{{.+}}, i{{.+}}* [[ARR_10_ADDR]], i{{.*}}
 comment|// CHECK1: store i{{.+}} 12, i{{.+}}* [[ARR_10_Z_A_ADDR]]
 block|}
 block|}
@@ -302,12 +302,12 @@ comment|//
 comment|// CHECK2: [[CapA:%[0-9a-z_.]*]] = getelementptr inbounds {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 7
 comment|//
 comment|// CHECK2: getelementptr inbounds %struct.anon{{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 0
-comment|// CHECK2: load i{{[0-9]+}}**
-comment|// CHECK2: load i{{[0-9]+}}*
+comment|// CHECK2: load i{{[0-9]+}}*, i{{[0-9]+}}**
+comment|// CHECK2: load i{{[0-9]+}}, i{{[0-9]+}}*
 comment|// CHECK2: store i{{[0-9]+}} {{.*}}, i{{[0-9]+}}* [[CapA]]
 comment|//
 comment|// CHECK2: [[CapC:%[0-9a-z_.]*]] = getelementptr inbounds {{.*}}, i{{[0-9]+}} 0, i{{[0-9]+}} 8
-comment|// CHECK2-NEXT: [[Val:%[0-9a-z_]*]] = load i{{[0-9]+}}* [[C]]
+comment|// CHECK2-NEXT: [[Val:%[0-9a-z_]*]] = load i{{[0-9]+}}, i{{[0-9]+}}* [[C]]
 comment|// CHECK2-NEXT: store i{{[0-9]+}} [[Val]], i{{[0-9]+}}* [[CapC]]
 comment|//
 comment|// CHECK2: bitcast %struct.__block_byref_d*

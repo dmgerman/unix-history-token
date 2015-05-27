@@ -69,7 +69,7 @@ name|i
 parameter_list|)
 block|{
 comment|// CHECK: @fi1
-comment|// CHECK: load atomic i32* {{.*}} seq_cst
+comment|// CHECK: load atomic i32, i32* {{.*}} seq_cst
 return|return
 name|__c11_atomic_load
 argument_list|(
@@ -91,7 +91,7 @@ name|i
 parameter_list|)
 block|{
 comment|// CHECK: @fi1a
-comment|// CHECK: load atomic i32* {{.*}} seq_cst
+comment|// CHECK: load atomic i32, i32* {{.*}} seq_cst
 name|int
 name|v
 decl_stmt|;
@@ -121,7 +121,7 @@ name|i
 parameter_list|)
 block|{
 comment|// CHECK: @fi1b
-comment|// CHECK: load atomic i32* {{.*}} seq_cst
+comment|// CHECK: load atomic i32, i32* {{.*}} seq_cst
 return|return
 name|__atomic_load_n
 argument_list|(
@@ -468,7 +468,7 @@ name|d
 parameter_list|)
 block|{
 comment|// CHECK: @ff1
-comment|// CHECK: load atomic i32* {{.*}} monotonic
+comment|// CHECK: load atomic i32, i32* {{.*}} monotonic
 return|return
 name|__c11_atomic_load
 argument_list|(
@@ -546,7 +546,7 @@ name|p
 parameter_list|)
 block|{
 comment|// CHECK: @fp1
-comment|// CHECK: load atomic i64* {{.*}} seq_cst
+comment|// CHECK: load atomic i64, i64* {{.*}} seq_cst
 return|return
 name|__c11_atomic_load
 argument_list|(

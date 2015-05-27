@@ -369,9 +369,11 @@ label|:
 operator|~
 name|MatcherOps
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 name|private
-operator|:
+label|:
 name|ast_type_traits
 operator|::
 name|ASTNodeKind
@@ -390,10 +392,10 @@ name|RefCountedBaseVPTR
 block|{
 name|public
 operator|:
-name|virtual
 operator|~
 name|Payload
 argument_list|()
+name|override
 block|;
 name|virtual
 name|llvm
@@ -850,7 +852,7 @@ name|Matchers
 argument_list|)
 expr_stmt|;
 comment|/// \brief Returns true iff this is not an empty value.
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()

@@ -1440,11 +1440,55 @@ comment|// CHECK-NO-WARNING2-NOT: optimization flag '-finline-limit' is not supp
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -fshort-wchar -fno-short-wchar %s 2>&1 | FileCheck -check-prefix=CHECK-WCHAR1 %s
+comment|// RUN: %clang -### -S -fsigned-char %s 2>&1 | FileCheck -check-prefix=CHAR-SIGN1 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -fno-short-wchar -fshort-wchar %s 2>&1 | FileCheck -check-prefix=CHECK-WCHAR2 %s
+comment|// CHAR-SIGN1-NOT: -fno-signed-char
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -funsigned-char %s 2>&1 | FileCheck -check-prefix=CHAR-SIGN2 %s
+end_comment
+
+begin_comment
+comment|// CHAR-SIGN2: -fno-signed-char
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fno-signed-char %s 2>&1 | FileCheck -check-prefix=CHAR-SIGN3 %s
+end_comment
+
+begin_comment
+comment|// CHAR-SIGN3: -fno-signed-char
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -S -fno-unsigned-char %s 2>&1 | FileCheck -check-prefix=CHAR-SIGN4 %s
+end_comment
+
+begin_comment
+comment|// CHAR-SIGN4-NOT: -fno-signed-char
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fshort-wchar -fno-short-wchar %s 2>&1 | FileCheck -check-prefix=CHECK-WCHAR1 -check-prefix=DELIMITERS %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -### -fno-short-wchar -fshort-wchar %s 2>&1 | FileCheck -check-prefix=CHECK-WCHAR2 -check-prefix=DELIMITERS %s
+end_comment
+
+begin_comment
+comment|// Make sure we don't match the -NOT lines with the linker invocation.
+end_comment
+
+begin_comment
+comment|// Delimiters match the start of the cc1 and the start of the linker lines
+end_comment
+
+begin_comment
+comment|// DELIMITERS: {{^ *"}}
 end_comment
 
 begin_comment
@@ -1461,6 +1505,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-WCHAR2-NOT: -fno-short-wchar
+end_comment
+
+begin_comment
+comment|// DELIMITERS: {{^ *"}}
 end_comment
 
 end_unit

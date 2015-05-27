@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -fblocks -o - | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple x86_64-linux -emit-llvm -fblocks -o - | FileCheck %s
 end_comment
 
 begin_comment
@@ -24,11 +24,11 @@ comment|// CHECK: @__block_literal_global = internal constant
 end_comment
 
 begin_comment
-comment|// CHECK: @__block_descriptor_tmp1 = internal constant
+comment|// CHECK: @__block_descriptor_tmp.2 = internal constant
 end_comment
 
 begin_comment
-comment|// CHECK: @__block_literal_global2 = internal constant
+comment|// CHECK: @__block_literal_global.3 = internal constant
 end_comment
 
 begin_function

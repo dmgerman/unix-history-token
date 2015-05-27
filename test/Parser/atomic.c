@@ -298,5 +298,15 @@ name|atomic_s_no_missing_semicolon
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+modifier|*
+specifier|const
+specifier|_Atomic
+name|atomic_return_type
+parameter_list|()
+function_decl|;
+end_function_decl
+
 end_unit
 

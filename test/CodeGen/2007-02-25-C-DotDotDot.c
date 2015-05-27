@@ -16,7 +16,7 @@ comment|// not
 end_comment
 
 begin_comment
-comment|//  call float (...)* bitcast (float ()* @foo to float (...)*)( )
+comment|//  call float (...) bitcast (float ()* @foo to float (...)*)( )
 end_comment
 
 begin_function

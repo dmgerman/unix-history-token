@@ -4,7 +4,7 @@ comment|// RUN: %clang -target i386-unknown-unknown -### -S %s -msse -msse4 -mno
 end_comment
 
 begin_comment
-comment|// CHECK: "pentium4" "-target-feature" "+sse4" "-target-feature" "-mmx" "-target-feature" "+sse"
+comment|// CHECK: "pentium4" "-target-feature" "+sse4.2" "-target-feature" "-mmx" "-target-feature" "+sse"
 end_comment
 
 begin_comment

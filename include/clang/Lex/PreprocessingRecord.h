@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -193,7 +199,7 @@ name|namespace
 name|clang
 block|{
 name|class
-name|MacroDefinition
+name|MacroDefinitionRecord
 decl_stmt|;
 name|class
 name|FileEntry
@@ -494,7 +500,7 @@ expr|}
 block|;
 comment|/// \brief Record the location of a macro definition.
 name|class
-name|MacroDefinition
+name|MacroDefinitionRecord
 operator|:
 name|public
 name|PreprocessingDirective
@@ -508,7 +514,7 @@ block|;
 name|public
 operator|:
 name|explicit
-name|MacroDefinition
+name|MacroDefinitionRecord
 argument_list|(
 argument|const IdentifierInfo *Name
 argument_list|,
@@ -526,7 +532,7 @@ name|Name
 argument_list|(
 argument|Name
 argument_list|)
-block|{ }
+block|{}
 comment|/// \brief Retrieve the name of the macro being defined.
 specifier|const
 name|IdentifierInfo
@@ -588,7 +594,7 @@ operator|<
 name|IdentifierInfo
 operator|*
 block|,
-name|MacroDefinition
+name|MacroDefinitionRecord
 operator|*
 operator|>
 name|NameOrDef
@@ -613,10 +619,10 @@ name|NameOrDef
 argument_list|(
 argument|BuiltinName
 argument_list|)
-block|{ }
+block|{}
 name|MacroExpansion
 argument_list|(
-argument|MacroDefinition *Definition
+argument|MacroDefinitionRecord *Definition
 argument_list|,
 argument|SourceRange Range
 argument_list|)
@@ -632,7 +638,7 @@ name|NameOrDef
 argument_list|(
 argument|Definition
 argument_list|)
-block|{ }
+block|{     }
 comment|/// \brief True if it is a builtin macro.
 name|bool
 name|isBuiltinMacro
@@ -661,7 +667,7 @@ specifier|const
 block|{
 if|if
 condition|(
-name|MacroDefinition
+name|MacroDefinitionRecord
 modifier|*
 name|Def
 init|=
@@ -688,7 +694,7 @@ return|;
 block|}
 comment|/// \brief The definition of the macro being expanded. May return null if
 comment|/// this is a builtin macro.
-name|MacroDefinition
+name|MacroDefinitionRecord
 operator|*
 name|getDefinition
 argument_list|()
@@ -699,7 +705,7 @@ name|NameOrDef
 operator|.
 name|dyn_cast
 operator|<
-name|MacroDefinition
+name|MacroDefinitionRecord
 operator|*
 operator|>
 operator|(
@@ -1086,7 +1092,7 @@ specifier|const
 name|MacroInfo
 operator|*
 block|,
-name|MacroDefinition
+name|MacroDefinitionRecord
 operator|*
 operator|>
 name|MacroDefinitions
@@ -1174,7 +1180,7 @@ name|MacroInfo
 operator|*
 name|Macro
 argument_list|,
-name|MacroDefinition
+name|MacroDefinitionRecord
 operator|*
 name|Def
 argument_list|)
@@ -1234,17 +1240,9 @@ return|return
 name|SourceMgr
 return|;
 block|}
-comment|// Iteration over the preprocessed entities.
-name|class
-name|iterator
-block|{
-name|PreprocessingRecord
-operator|*
-name|Self
-block|;
-comment|/// \brief Position within the preprocessed entity sequence.
+comment|/// Iteration over the preprocessed entities.
 comment|///
-comment|/// In a complete iteration, the Position field walks the range [-M, N),
+comment|/// In a complete iteration, the iterator walks the range [-M, N),
 comment|/// where negative values are used to indicate preprocessed entities
 comment|/// loaded from the external source while non-negative values are used to
 comment|/// indicate preprocessed entities introduced by the current preprocessor.
@@ -1254,49 +1252,42 @@ comment|/// values (corresponding to loaded entities), so that position -M
 comment|/// corresponds to element 0 in the loaded entities vector, position -M+1
 comment|/// corresponds to element 1 in the loaded entities vector, etc. This
 comment|/// gives us a reasonably efficient, source-order walk.
-name|int
-name|Position
-block|;
-name|public
+comment|///
+comment|/// We define this as a wrapping iterator around an int. The
+comment|/// iterator_adaptor_base class forwards the iterator methods to basic
+comment|/// integer arithmetic.
+name|class
+name|iterator
 operator|:
-typedef|typedef
-name|PreprocessedEntity
-modifier|*
-name|value_type
-typedef|;
-typedef|typedef
-name|value_type
-modifier|&
-name|reference
-typedef|;
-typedef|typedef
-name|value_type
-modifier|*
-name|pointer
-typedef|;
-typedef|typedef
+name|public
+name|llvm
+operator|::
+name|iterator_adaptor_base
+operator|<
+name|iterator
+block|,
+name|int
+block|,
 name|std
 operator|::
 name|random_access_iterator_tag
-name|iterator_category
-expr_stmt|;
-typedef|typedef
-name|int
-name|difference_type
-typedef|;
-name|iterator
-argument_list|()
-operator|:
-name|Self
-argument_list|(
-name|nullptr
-argument_list|)
 block|,
-name|Position
-argument_list|(
-literal|0
-argument_list|)
-block|{ }
+name|PreprocessedEntity
+operator|*
+block|,
+name|int
+block|,
+name|PreprocessedEntity
+operator|*
+block|,
+name|PreprocessedEntity
+operator|*
+operator|>
+block|{
+name|PreprocessingRecord
+operator|*
+name|Self
+block|;
 name|iterator
 argument_list|(
 argument|PreprocessingRecord *Self
@@ -1304,17 +1295,36 @@ argument_list|,
 argument|int Position
 argument_list|)
 operator|:
-name|Self
+name|iterator
+operator|::
+name|iterator_adaptor_base
 argument_list|(
-name|Self
+name|Position
 argument_list|)
 block|,
-name|Position
+name|Self
 argument_list|(
-argument|Position
+argument|Self
 argument_list|)
-block|{ }
-name|value_type
+block|{}
+name|friend
+name|class
+name|PreprocessingRecord
+block|;
+name|public
+operator|:
+name|iterator
+argument_list|()
+operator|:
+name|iterator
+argument_list|(
+argument|nullptr
+argument_list|,
+literal|0
+argument_list|)
+block|{}
+name|PreprocessedEntity
+operator|*
 name|operator
 operator|*
 operator|(
@@ -1324,7 +1334,9 @@ block|{
 name|bool
 name|isLoaded
 operator|=
-name|Position
+name|this
+operator|->
+name|I
 operator|<
 literal|0
 block|;
@@ -1340,9 +1352,13 @@ operator|.
 name|size
 argument_list|()
 operator|+
-name|Position
+name|this
+operator|->
+name|I
 else|:
-name|Position
+name|this
+operator|->
+name|I
 block|;
 name|PPEntityID
 name|ID
@@ -1365,405 +1381,26 @@ name|ID
 argument_list|)
 return|;
 block|}
-name|value_type
+name|PreprocessedEntity
+operator|*
 name|operator
-index|[]
-operator|(
-name|difference_type
-name|D
-operator|)
+operator|->
+expr|(
+block|)
+specifier|const
 block|{
 return|return
 operator|*
-operator|(
-operator|*
-name|this
-operator|+
-name|D
-operator|)
-return|;
-block|}
-name|iterator
-operator|&
-name|operator
-operator|++
-operator|(
-operator|)
-block|{
-operator|++
-name|Position
-block|;
-return|return
 operator|*
 name|this
 return|;
 block|}
-name|iterator
-name|operator
-operator|++
-operator|(
-name|int
-operator|)
-block|{
-name|iterator
-name|Prev
-argument_list|(
-operator|*
-name|this
-argument_list|)
+expr|}
 block|;
-operator|++
-name|Position
-block|;
-return|return
-name|Prev
-return|;
-block|}
-name|iterator
-operator|&
-name|operator
-operator|--
-operator|(
-operator|)
-block|{
-operator|--
-name|Position
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|iterator
-name|operator
-operator|--
-operator|(
-name|int
-operator|)
-block|{
-name|iterator
-name|Prev
-argument_list|(
-operator|*
-name|this
-argument_list|)
-block|;
-operator|--
-name|Position
-block|;
-return|return
-name|Prev
-return|;
-block|}
-name|friend
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|iterator
-operator|&
-name|X
-expr|,
-specifier|const
-name|iterator
-operator|&
-name|Y
-operator|)
-block|{
-return|return
-name|X
-operator|.
-name|Position
-operator|==
-name|Y
-operator|.
-name|Position
-return|;
-block|}
-name|friend
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|iterator
-operator|&
-name|X
-expr|,
-specifier|const
-name|iterator
-operator|&
-name|Y
-operator|)
-block|{
-return|return
-name|X
-operator|.
-name|Position
-operator|!=
-name|Y
-operator|.
-name|Position
-return|;
-block|}
-name|friend
-name|bool
-name|operator
-operator|<
-operator|(
-specifier|const
-name|iterator
-operator|&
-name|X
-expr|,
-specifier|const
-name|iterator
-operator|&
-name|Y
-operator|)
-block|{
-return|return
-name|X
-operator|.
-name|Position
-operator|<
-name|Y
-operator|.
-name|Position
-return|;
-block|}
-name|friend
-name|bool
-name|operator
-operator|>
-operator|(
-specifier|const
-name|iterator
-operator|&
-name|X
-expr|,
-specifier|const
-name|iterator
-operator|&
-name|Y
-operator|)
-block|{
-return|return
-name|X
-operator|.
-name|Position
-operator|>
-name|Y
-operator|.
-name|Position
-return|;
-block|}
-name|friend
-name|bool
-name|operator
-operator|<=
-operator|(
-specifier|const
-name|iterator
-operator|&
-name|X
-expr|,
-specifier|const
-name|iterator
-operator|&
-name|Y
-operator|)
-block|{
-return|return
-name|X
-operator|.
-name|Position
-operator|<
-name|Y
-operator|.
-name|Position
-return|;
-block|}
-name|friend
-name|bool
-name|operator
-operator|>=
-operator|(
-specifier|const
-name|iterator
-operator|&
-name|X
-expr|,
-specifier|const
-name|iterator
-operator|&
-name|Y
-operator|)
-block|{
-return|return
-name|X
-operator|.
-name|Position
-operator|>
-name|Y
-operator|.
-name|Position
-return|;
-block|}
-name|friend
-name|iterator
-operator|&
-name|operator
-operator|+=
-operator|(
-name|iterator
-operator|&
-name|X
-expr|,
-name|difference_type
-name|D
-operator|)
-block|{
-name|X
-operator|.
-name|Position
-operator|+=
-name|D
-block|;
-return|return
-name|X
-return|;
-block|}
-name|friend
-name|iterator
-operator|&
-name|operator
-operator|-=
-operator|(
-name|iterator
-operator|&
-name|X
-expr|,
-name|difference_type
-name|D
-operator|)
-block|{
-name|X
-operator|.
-name|Position
-operator|-=
-name|D
-block|;
-return|return
-name|X
-return|;
-block|}
-name|friend
-name|iterator
-name|operator
-operator|+
-operator|(
-name|iterator
-name|X
-expr|,
-name|difference_type
-name|D
-operator|)
-block|{
-name|X
-operator|.
-name|Position
-operator|+=
-name|D
-block|;
-return|return
-name|X
-return|;
-block|}
-name|friend
-name|iterator
-name|operator
-operator|+
-operator|(
-name|difference_type
-name|D
-expr|,
-name|iterator
-name|X
-operator|)
-block|{
-name|X
-operator|.
-name|Position
-operator|+=
-name|D
-block|;
-return|return
-name|X
-return|;
-block|}
-name|friend
-name|difference_type
-name|operator
-operator|-
-operator|(
-specifier|const
-name|iterator
-operator|&
-name|X
-expr|,
-specifier|const
-name|iterator
-operator|&
-name|Y
-operator|)
-block|{
-return|return
-name|X
-operator|.
-name|Position
-operator|-
-name|Y
-operator|.
-name|Position
-return|;
-block|}
-name|friend
-name|iterator
-name|operator
-operator|-
-operator|(
-name|iterator
-name|X
-expr|,
-name|difference_type
-name|D
-operator|)
-block|{
-name|X
-operator|.
-name|Position
-operator|-=
-name|D
-block|;
-return|return
-name|X
-return|;
-block|}
-name|friend
-name|class
-name|PreprocessingRecord
-block|;     }
-decl_stmt|;
-name|friend
-name|class
-name|iterator
-decl_stmt|;
 comment|/// \brief Begin iterator for all preprocessed entities.
 name|iterator
 name|begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|iterator
@@ -1784,7 +1421,7 @@ block|}
 comment|/// \brief End iterator for all preprocessed entities.
 name|iterator
 name|end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|iterator
@@ -1801,7 +1438,7 @@ block|}
 comment|/// \brief Begin iterator for local, non-loaded, preprocessed entities.
 name|iterator
 name|local_begin
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|iterator
@@ -1815,7 +1452,7 @@ block|}
 comment|/// \brief End iterator for local, non-loaded, preprocessed entities.
 name|iterator
 name|local_end
-parameter_list|()
+argument_list|()
 block|{
 return|return
 name|iterator
@@ -1829,14 +1466,12 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// \brief begin/end iterator pair for the given range of loaded
+comment|/// \brief iterator range for the given range of loaded
 comment|/// preprocessed entities.
-name|std
+name|llvm
 operator|::
-name|pair
+name|iterator_range
 operator|<
-name|iterator
-operator|,
 name|iterator
 operator|>
 name|getIteratorsForLoadedRange
@@ -1864,9 +1499,9 @@ argument_list|()
 argument_list|)
 block|;
 return|return
-name|std
+name|llvm
 operator|::
-name|make_pair
+name|make_range
 argument_list|(
 name|iterator
 argument_list|(
@@ -1900,24 +1535,22 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// \brief Returns a pair of [Begin, End) iterators of preprocessed entities
-comment|/// that source range \p R encompasses.
+comment|/// \brief Returns a range of preprocessed entities that source range \p R
+comment|/// encompasses.
 comment|///
 comment|/// \param R the range to look for preprocessed entities.
 comment|///
-name|std
+name|llvm
 operator|::
-name|pair
+name|iterator_range
 operator|<
-name|iterator
-operator|,
 name|iterator
 operator|>
 name|getPreprocessedEntitiesInRange
 argument_list|(
 argument|SourceRange R
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// \brief Returns true if the preprocessed entity that \p PPEI iterator
 comment|/// points to is coming from the file \p FID.
 comment|///
@@ -1927,32 +1560,30 @@ comment|/// and not from files \#included in the range given at
 comment|/// \see getPreprocessedEntitiesInRange.
 name|bool
 name|isEntityInFileID
-parameter_list|(
-name|iterator
-name|PPEI
-parameter_list|,
-name|FileID
-name|FID
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|iterator PPEI
+argument_list|,
+argument|FileID FID
+argument_list|)
+block|;
 comment|/// \brief Add a new preprocessed entity to this record.
 name|PPEntityID
 name|addPreprocessedEntity
-parameter_list|(
+argument_list|(
 name|PreprocessedEntity
-modifier|*
+operator|*
 name|Entity
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Set the external source for preprocessed entities.
 name|void
 name|SetExternalSource
-parameter_list|(
+argument_list|(
 name|ExternalPreprocessingRecordSource
-modifier|&
+operator|&
 name|Source
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Retrieve the external source for preprocessed entities.
 name|ExternalPreprocessingRecordSource
 operator|*
@@ -1966,16 +1597,16 @@ return|;
 block|}
 comment|/// \brief Retrieve the macro definition that corresponds to the given
 comment|/// \c MacroInfo.
-name|MacroDefinition
-modifier|*
+name|MacroDefinitionRecord
+operator|*
 name|findMacroDefinition
-parameter_list|(
+argument_list|(
 specifier|const
 name|MacroInfo
-modifier|*
+operator|*
 name|MI
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Retrieve all ranges that got skipped while preprocessing.
 specifier|const
 name|std
@@ -1994,249 +1625,165 @@ name|SkippedRanges
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|void
 name|MacroExpands
 argument_list|(
-specifier|const
-name|Token
-operator|&
-name|Id
+argument|const Token&Id
 argument_list|,
-specifier|const
-name|MacroDirective
-operator|*
-name|MD
+argument|const MacroDefinition&MD
 argument_list|,
-name|SourceRange
-name|Range
+argument|SourceRange Range
 argument_list|,
-specifier|const
-name|MacroArgs
-operator|*
-name|Args
+argument|const MacroArgs *Args
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
 name|MacroDefined
 argument_list|(
-specifier|const
-name|Token
-operator|&
-name|Id
+argument|const Token&Id
 argument_list|,
-specifier|const
-name|MacroDirective
-operator|*
-name|MD
+argument|const MacroDirective *MD
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
 name|MacroUndefined
 argument_list|(
-specifier|const
-name|Token
-operator|&
-name|Id
+argument|const Token&Id
 argument_list|,
-specifier|const
-name|MacroDirective
-operator|*
-name|MD
+argument|const MacroDefinition&MD
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
 name|InclusionDirective
 argument_list|(
-name|SourceLocation
-name|HashLoc
+argument|SourceLocation HashLoc
 argument_list|,
-specifier|const
-name|Token
-operator|&
-name|IncludeTok
+argument|const Token&IncludeTok
 argument_list|,
-name|StringRef
-name|FileName
+argument|StringRef FileName
 argument_list|,
-name|bool
-name|IsAngled
+argument|bool IsAngled
 argument_list|,
-name|CharSourceRange
-name|FilenameRange
+argument|CharSourceRange FilenameRange
 argument_list|,
-specifier|const
-name|FileEntry
-operator|*
-name|File
+argument|const FileEntry *File
 argument_list|,
-name|StringRef
-name|SearchPath
+argument|StringRef SearchPath
 argument_list|,
-name|StringRef
-name|RelativePath
+argument|StringRef RelativePath
 argument_list|,
-specifier|const
-name|Module
-operator|*
-name|Imported
+argument|const Module *Imported
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
 name|Ifdef
 argument_list|(
-name|SourceLocation
-name|Loc
+argument|SourceLocation Loc
 argument_list|,
-specifier|const
-name|Token
-operator|&
-name|MacroNameTok
+argument|const Token&MacroNameTok
 argument_list|,
-specifier|const
-name|MacroDirective
-operator|*
-name|MD
+argument|const MacroDefinition&MD
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
 name|Ifndef
 argument_list|(
-name|SourceLocation
-name|Loc
+argument|SourceLocation Loc
 argument_list|,
-specifier|const
-name|Token
-operator|&
-name|MacroNameTok
+argument|const Token&MacroNameTok
 argument_list|,
-specifier|const
-name|MacroDirective
-operator|*
-name|MD
+argument|const MacroDefinition&MD
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 comment|/// \brief Hook called whenever the 'defined' operator is seen.
 name|void
 name|Defined
 argument_list|(
-specifier|const
-name|Token
-operator|&
-name|MacroNameTok
+argument|const Token&MacroNameTok
 argument_list|,
-specifier|const
-name|MacroDirective
-operator|*
-name|MD
+argument|const MacroDefinition&MD
 argument_list|,
-name|SourceRange
-name|Range
+argument|SourceRange Range
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
 name|SourceRangeSkipped
 argument_list|(
-name|SourceRange
-name|Range
+argument|SourceRange Range
 argument_list|)
 name|override
-decl_stmt|;
+block|;
 name|void
 name|addMacroExpansion
-parameter_list|(
-specifier|const
-name|Token
-modifier|&
-name|Id
-parameter_list|,
-specifier|const
-name|MacroInfo
-modifier|*
-name|MI
-parameter_list|,
-name|SourceRange
-name|Range
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const Token&Id
+argument_list|,
+argument|const MacroInfo *MI
+argument_list|,
+argument|SourceRange Range
+argument_list|)
+block|;
 comment|/// \brief Cached result of the last \see getPreprocessedEntitiesInRange
 comment|/// query.
-struct|struct
+block|struct
 block|{
 name|SourceRange
 name|Range
-decl_stmt|;
+block|;
 name|std
 operator|::
 name|pair
 operator|<
 name|int
-operator|,
+block|,
 name|int
 operator|>
 name|Result
-expr_stmt|;
-block|}
+block|;     }
 name|CachedRangeQuery
-struct|;
+block|;
 name|std
 operator|::
 name|pair
 operator|<
 name|int
-operator|,
+block|,
 name|int
 operator|>
 name|getPreprocessedEntitiesInRangeSlow
 argument_list|(
 argument|SourceRange R
 argument_list|)
-expr_stmt|;
+block|;
 name|friend
 name|class
 name|ASTReader
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|ASTWriter
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-unit|}
+block|;   }
+block|; }
 comment|// end namespace clang
-end_comment
-
-begin_decl_stmt
-unit|inline
+specifier|inline
 name|void
-modifier|*
+operator|*
 name|operator
 name|new
 argument_list|(
-name|size_t
-name|bytes
+argument|size_t bytes
 argument_list|,
-name|clang
-operator|::
-name|PreprocessingRecord
-operator|&
-name|PR
+argument|clang::PreprocessingRecord& PR
 argument_list|,
-name|unsigned
-name|alignment
+argument|unsigned alignment
 argument_list|)
 name|throw
 argument_list|()
@@ -2252,25 +1799,16 @@ name|alignment
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_decl_stmt
 specifier|inline
 name|void
 name|operator
 name|delete
 argument_list|(
-name|void
-operator|*
-name|ptr
+argument|void* ptr
 argument_list|,
-name|clang
-operator|::
-name|PreprocessingRecord
-operator|&
-name|PR
+argument|clang::PreprocessingRecord& PR
 argument_list|,
-name|unsigned
+argument|unsigned
 argument_list|)
 name|throw
 argument_list|()
@@ -2281,8 +1819,7 @@ name|Deallocate
 argument_list|(
 name|ptr
 argument_list|)
-expr_stmt|;
-block|}
+block|; }
 end_decl_stmt
 
 begin_endif

@@ -111,9 +111,12 @@ name|SanitizerMetadata
 block|{
 name|SanitizerMetadata
 argument_list|(
-argument|const SanitizerMetadata&
+specifier|const
+name|SanitizerMetadata
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -123,7 +126,8 @@ specifier|const
 name|SanitizerMetadata
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|CodeGenModule
 modifier|&

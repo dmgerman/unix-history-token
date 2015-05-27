@@ -5422,11 +5422,20 @@ begin_comment
 comment|/* Ugly hack for backwards-compatibility (compatible with gcc) */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__SSE2__
-end_ifdef
+argument_list|)
+operator|&&
+operator|!
+name|__has_feature
+argument_list|(
+name|modules
+argument_list|)
+end_if
 
 begin_include
 include|#

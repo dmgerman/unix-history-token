@@ -34,8 +34,8 @@ name|test0
 parameter_list|()
 block|{
 comment|// -ftrapv doesn't affect unsigned arithmetic.
-comment|// CHECK:      [[T1:%.*]] = load i32* @uj
-comment|// CHECK-NEXT: [[T2:%.*]] = load i32* @uk
+comment|// CHECK:      [[T1:%.*]] = load i32, i32* @uj
+comment|// CHECK-NEXT: [[T2:%.*]] = load i32, i32* @uk
 comment|// CHECK-NEXT: [[T3:%.*]] = add i32 [[T1]], [[T2]]
 comment|// CHECK-NEXT: store i32 [[T3]], i32* @ui
 name|ui
@@ -44,8 +44,8 @@ name|uj
 operator|+
 name|uk
 expr_stmt|;
-comment|// CHECK:      [[T1:%.*]] = load i32* @j
-comment|// CHECK-NEXT: [[T2:%.*]] = load i32* @k
+comment|// CHECK:      [[T1:%.*]] = load i32, i32* @j
+comment|// CHECK-NEXT: [[T2:%.*]] = load i32, i32* @k
 comment|// CHECK-NEXT: [[T3:%.*]] = call { i32, i1 } @llvm.sadd.with.overflow.i32(i32 [[T1]], i32 [[T2]])
 comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i32, i1 } [[T3]], 0
 comment|// CHECK-NEXT: [[T5:%.*]] = extractvalue { i32, i1 } [[T3]], 1
@@ -83,7 +83,7 @@ name|i
 operator|++
 argument_list|)
 expr_stmt|;
-comment|// CHECK:      [[T1:%.*]] = load i32* @i
+comment|// CHECK:      [[T1:%.*]] = load i32, i32* @i
 comment|// CHECK-NEXT: [[T2:%.*]] = call { i32, i1 } @llvm.sadd.with.overflow.i32(i32 [[T1]], i32 1)
 comment|// CHECK-NEXT: [[T3:%.*]] = extractvalue { i32, i1 } [[T2]], 0
 comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i32, i1 } [[T2]], 1
@@ -115,7 +115,7 @@ operator|++
 name|i
 argument_list|)
 expr_stmt|;
-comment|// CHECK:      [[T1:%.*]] = load i32* @i
+comment|// CHECK:      [[T1:%.*]] = load i32, i32* @i
 comment|// CHECK-NEXT: [[T2:%.*]] = call { i32, i1 } @llvm.sadd.with.overflow.i32(i32 [[T1]], i32 1)
 comment|// CHECK-NEXT: [[T3:%.*]] = extractvalue { i32, i1 } [[T2]], 0
 comment|// CHECK-NEXT: [[T4:%.*]] = extractvalue { i32, i1 } [[T2]], 1

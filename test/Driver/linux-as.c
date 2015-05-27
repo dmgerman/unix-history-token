@@ -108,6 +108,66 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target arm-linux -mcpu=cortex-a8 -mfpu=neon -march=armebv7-a -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-ARMEB-ALL %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARMEB-ALL: as{{(.exe)?}}" "-mfloat-abi=soft" "-march=armebv7-a" "-mcpu=cortex-a8" "-mfpu=neon"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target thumb-linux -mcpu=cortex-a8 -mfpu=neon -march=thumbv7-a -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-THUMB-ALL %s
+end_comment
+
+begin_comment
+comment|// CHECK-THUMB-ALL: as{{(.exe)?}}" "-mfloat-abi=soft" "-march=thumbv7-a" "-mcpu=cortex-a8" "-mfpu=neon"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target thumb-linux -mcpu=cortex-a8 -mfpu=neon -march=thumbebv7-a -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-THUMBEB-ALL %s
+end_comment
+
+begin_comment
+comment|// CHECK-THUMBEB-ALL: as{{(.exe)?}}" "-mfloat-abi=soft" "-march=thumbebv7-a" "-mcpu=cortex-a8" "-mfpu=neon"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv7-linux -mcpu=cortex-a8 -### \
 end_comment
 
@@ -128,6 +188,66 @@ comment|//
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target armebv7-linux -mcpu=cortex-a8 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-ARMEB-TARGET %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARMEB-TARGET: as{{(.exe)?}}" "-mfpu=neon" "-mfloat-abi=soft" "-mcpu=cortex-a8"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target thumbv7-linux -mcpu=cortex-a8 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-THUMB-TARGET %s
+end_comment
+
+begin_comment
+comment|// CHECK-THUMB-TARGET: as{{(.exe)?}}" "-mfpu=neon" "-mfloat-abi=soft" "-mcpu=cortex-a8"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target thumbebv7-linux -mcpu=cortex-a8 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-THUMBEB-TARGET %s
+end_comment
+
+begin_comment
+comment|// CHECK-THUMBEB-TARGET: as{{(.exe)?}}" "-mfpu=neon" "-mfloat-abi=soft" "-mcpu=cortex-a8"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target armv8-linux -mcpu=cortex-a53 -### \
 end_comment
 
@@ -141,6 +261,66 @@ end_comment
 
 begin_comment
 comment|// CHECK-ARM-TARGET-V8: as{{(.exe)?}}" "-mfpu=crypto-neon-fp-armv8" "-mfloat-abi=soft" "-mcpu=cortex-a53"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target armebv8-linux -mcpu=cortex-a53 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-ARMEB-TARGET-V8 %s
+end_comment
+
+begin_comment
+comment|// CHECK-ARMEB-TARGET-V8: as{{(.exe)?}}" "-mfpu=crypto-neon-fp-armv8" "-mfloat-abi=soft" "-mcpu=cortex-a53"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target thumbv8-linux -mcpu=cortex-a53 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-THUMB-TARGET-V8 %s
+end_comment
+
+begin_comment
+comment|// CHECK-THUMB-TARGET-V8: as{{(.exe)?}}" "-mfpu=crypto-neon-fp-armv8" "-mfloat-abi=soft" "-mcpu=cortex-a53"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target thumbebv8-linux -mcpu=cortex-a53 -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-THUMBEB-TARGET-V8 %s
+end_comment
+
+begin_comment
+comment|// CHECK-THUMBEB-TARGET-V8: as{{(.exe)?}}" "-mfpu=crypto-neon-fp-armv8" "-mfloat-abi=soft" "-mcpu=cortex-a53"
 end_comment
 
 begin_comment
@@ -345,6 +525,38 @@ end_comment
 
 begin_comment
 comment|// CHECK-SPARCV8: -o
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target sparcel-linux -mcpu=invalid-cpu -### \
+end_comment
+
+begin_comment
+comment|// RUN:   -no-integrated-as -c %s 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck -check-prefix=CHECK-SPARCV8EL %s
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV8EL: as
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV8EL: -32
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV8EL: -Av8plusa
+end_comment
+
+begin_comment
+comment|// CHECK-SPARCV8EL: -o
 end_comment
 
 begin_comment

@@ -1,6 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1  -std=c99 %s -emit-llvm -o - | grep -v llvm.isunordered | not grep call
+comment|// RUN: %clang_cc1  -std=c99 %s -emit-llvm -o - | FileCheck %s
+end_comment
+
+begin_comment
+comment|// CHECK: @Test
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: call
 end_comment
 
 begin_decl_stmt

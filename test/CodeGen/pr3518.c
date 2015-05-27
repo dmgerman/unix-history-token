@@ -34,15 +34,15 @@ comment|// CHECK: @.compoundliteral = internal global %struct.A { i32 1, i32 2 }
 end_comment
 
 begin_comment
-comment|// CHECK: @.compoundliteral1 = internal global %struct.A { i32 3, i32 4 }
+comment|// CHECK: @.compoundliteral.1 = internal global %struct.A { i32 3, i32 4 }
 end_comment
 
 begin_comment
-comment|// CHECK: @.compoundliteral2 = internal global %struct.B { %struct.A* @.compoundliteral, %struct.A* @.compoundliteral1 }
+comment|// CHECK: @.compoundliteral.2 = internal global %struct.B { %struct.A* @.compoundliteral, %struct.A* @.compoundliteral.1 }
 end_comment
 
 begin_comment
-comment|// CHECK: @.compoundliteral3 = internal global %struct.A { i32 5, i32 6 }
+comment|// CHECK: @.compoundliteral.3 = internal global %struct.A { i32 5, i32 6 }
 end_comment
 
 begin_struct

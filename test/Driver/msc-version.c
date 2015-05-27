@@ -20,11 +20,11 @@ comment|// CHECK-NO-MSC-VERSION: _MSC_BUILD 1
 end_comment
 
 begin_comment
-comment|// CHECK-NO-MSC-VERSION: _MSC_FULL_VER 170000000
+comment|// CHECK-NO-MSC-VERSION: _MSC_FULL_VER 180000000
 end_comment
 
 begin_comment
-comment|// CHECK-NO-MSC-VERSION: _MSC_VER 1700
+comment|// CHECK-NO-MSC-VERSION: _MSC_VER 1800
 end_comment
 
 begin_comment
@@ -144,7 +144,7 @@ comment|// CHECK-MSC-17-NOT: "-fmsc-version=1700"
 end_comment
 
 begin_comment
-comment|// CHECK-MSC-17: "-fms-compatibility-version=17.0"
+comment|// CHECK-MSC-17: "-fms-compatibility-version=17"
 end_comment
 
 begin_comment

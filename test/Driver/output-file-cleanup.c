@@ -48,10 +48,6 @@ comment|// RUN: test -f %t.d
 end_comment
 
 begin_comment
-comment|// REQUIRES: shell
-end_comment
-
-begin_comment
 comment|// REQUIRES: crash-recovery
 end_comment
 

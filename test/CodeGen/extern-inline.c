@@ -72,7 +72,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: load i32* %{{.*}}
+comment|// CHECK: load i32, i32* %{{.*}}
 end_comment
 
 begin_comment
@@ -167,11 +167,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: load i32* %{{.*}}
+comment|// CHECK: load i32, i32* %{{.*}}
 end_comment
 
 begin_comment
-comment|// CHECK: load i32* %{{.*}}
+comment|// CHECK: load i32, i32* %{{.*}}
 end_comment
 
 begin_comment

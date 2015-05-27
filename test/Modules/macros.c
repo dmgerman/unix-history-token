@@ -4,23 +4,15 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=macros_top %S/Inputs/module.map
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=macros_left %S/Inputs/module.map
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=macros_right %S/Inputs/module.map
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=macros %S/Inputs/module.map
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -fmodules -x objective-c -verify -fmodules-cache-path=%t -I %S/Inputs %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -verify -fmodules-cache-path=%t -I %S/Inputs %s -detailed-preprocessing-record
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fmodules -DLOCAL_VISIBILITY -fmodules-local-submodule-visibility -x objective-c++ -verify -fmodules-cache-path=%t -I %S/Inputs %s
 end_comment
 
 begin_comment
@@ -53,6 +45,10 @@ end_comment
 
 begin_comment
 comment|// expected-note@Inputs/macros_left.h:14{{other definition of 'LEFT_RIGHT_DIFFERENT'}}
+end_comment
+
+begin_comment
+comment|// expected-note@Inputs/macros_left.h:11{{other definition of 'LEFT_RIGHT_DIFFERENT2'}}
 end_comment
 
 begin_decl_stmt
@@ -106,6 +102,23 @@ begin_error
 error|#
 directive|error
 error|MODULE macro should not be visible
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|INDIRECTLY_IN_MACROS
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|INDIRECTLY_IN_MACROS should be visible
 end_error
 
 begin_endif
@@ -583,16 +596,56 @@ begin_comment
 comment|// ok, no longer defined
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCAL_VISIBILITY
+end_ifdef
+
 begin_comment
-comment|// FIXME: When macros_right.undef is built, macros_top is visible because
+comment|// TOP_RIGHT_UNDEF should not be undefined, because macros_right.undef does
 end_comment
 
 begin_comment
-comment|// the state from building macros_right leaks through, so macros_right.undef
+comment|// not undefine macros_right's macro.
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TOP_RIGHT_UNDEF
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|TOP_RIGHT_UNDEF should still be defined
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|// When macros_right.undef is built and local submodule visibility is not
 end_comment
 
 begin_comment
-comment|// undefines macros_top's macro.
+comment|// enabled, macros_top is visible because the state from building
+end_comment
+
+begin_comment
+comment|// macros_right leaks through, so macros_right.undef undefines macros_top's
+end_comment
+
+begin_comment
+comment|// macro.
 end_comment
 
 begin_ifdef
@@ -606,6 +659,11 @@ error|#
 directive|error
 error|TOP_RIGHT_UNDEF should not be defined
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

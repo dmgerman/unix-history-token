@@ -38,9 +38,9 @@ expr|struct
 name|Bar
 argument_list|)
 return|;
-comment|// CHECK: [[FPOP:%.*]] = getelementptr inbounds %struct.__va_list_tag* {{.*}}, i32 0, i32 1
-comment|// CHECK: [[FPO:%.*]] = load i32* [[FPOP]]
-comment|// CHECK: [[FPVEC:%.*]] = getelementptr i8* {{.*}}, i32 [[FPO]]
+comment|// CHECK: [[FPOP:%.*]] = getelementptr inbounds %struct.__va_list_tag, %struct.__va_list_tag* {{.*}}, i32 0, i32 1
+comment|// CHECK: [[FPO:%.*]] = load i32, i32* [[FPOP]]
+comment|// CHECK: [[FPVEC:%.*]] = getelementptr i8, i8* {{.*}}, i32 [[FPO]]
 comment|// CHECK: bitcast i8* [[FPVEC]] to<2 x float>*
 block|}
 end_function

@@ -29,11 +29,35 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:  !"0x34\00localstatic\00localstatic\00\005\001\001", !{{.*}}, !{{.*}}, !{{.*}}, i32* @main.localstatic, null} ; [ DW_TAG_variable ]
+comment|// CHECK: !DIGlobalVariable(name: "localstatic"
 end_comment
 
 begin_comment
-comment|// CHECK:  !"0x34\00global\00global\00\003\000\001", null, !{{.*}}, !{{.*}}, i32* @global, null} ; [ DW_TAG_variable ]
+comment|// CHECK-NOT:               linkageName:
+end_comment
+
+begin_comment
+comment|// CHECK-SAME:              line: 5,
+end_comment
+
+begin_comment
+comment|// CHECK-SAME:              variable: i32* @main.localstatic
+end_comment
+
+begin_comment
+comment|// CHECK: !DIGlobalVariable(name: "global"
+end_comment
+
+begin_comment
+comment|// CHECK-NOT:               linkageName:
+end_comment
+
+begin_comment
+comment|// CHECK-SAME:              line: 3,
+end_comment
+
+begin_comment
+comment|// CHECK-SAME:              variable: i32* @global
 end_comment
 
 end_unit

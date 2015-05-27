@@ -7,6 +7,18 @@ begin_comment
 comment|// REQUIRES: crash-recovery
 end_comment
 
+begin_comment
+comment|// FIXME: CHECKs might be incompatible to win32.
+end_comment
+
+begin_comment
+comment|// Stack traces also require back traces.
+end_comment
+
+begin_comment
+comment|// REQUIRES: shell, backtrace
+end_comment
+
 begin_function_decl
 name|void
 name|clang_analyzer_crash

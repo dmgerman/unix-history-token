@@ -42,7 +42,7 @@ name|test2
 parameter_list|()
 block|{
 comment|// CHECK: [[REGCALLRESULT:%[a-zA-Z0-9\.]+]] = call i32* @foo()
-comment|// CHECK: load i32* [[REGCALLRESULT]]
+comment|// CHECK: load i32, i32* [[REGCALLRESULT]]
 comment|// CHECK: call i32 asm
 comment|// CHECK: store i32 {{%[a-zA-Z0-9\.]+}}, i32* [[REGCALLRESULT]]
 asm|asm ("foobar" : "+r"(*foo()));

@@ -676,7 +676,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: @g20.l0 = internal global %struct.g20_s1 { %struct.g20_s0* null, %struct.g20_s0** getelementptr inbounds (%struct.g20_s1* @g20.l0, i32 0, i32 0) }
+comment|// CHECK: @g20.l0 = internal global %struct.g20_s1 { %struct.g20_s0* null, %struct.g20_s0** getelementptr inbounds (%struct.g20_s1, %struct.g20_s1* @g20.l0, i32 0, i32 0) }
 end_comment
 
 begin_struct_decl
@@ -829,7 +829,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: @g25.g26 = internal global i8* getelementptr inbounds ([4 x i8]* @__func__.g25, i32 0, i32 0)
+comment|// CHECK: @g25.g26 = internal global i8* getelementptr inbounds ([4 x i8], [4 x i8]* @__func__.g25, i32 0, i32 0)
 end_comment
 
 begin_comment

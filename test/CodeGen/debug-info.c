@@ -168,7 +168,7 @@ comment|// Radar 7325611
 end_comment
 
 begin_comment
-comment|// CHECK: !"0x16\00barfoo\00{{.*}}"
+comment|// CHECK: !DIDerivedType(tag: DW_TAG_typedef, name: "barfoo"
 end_comment
 
 begin_typedef

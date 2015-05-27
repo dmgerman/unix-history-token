@@ -4,23 +4,11 @@ comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=macros_top %S/Inputs/module.map
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=macros_left %S/Inputs/module.map
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=macros_right %S/Inputs/module.map
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodules-cache-path=%t -fmodule-name=macros %S/Inputs/module.map
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -fmodules -x objective-c -verify -fmodules-cache-path=%t -I %S/Inputs %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fmodules -fmodules-local-submodule-visibility -x objective-c++ -verify -fmodules-cache-path=%t -I %S/Inputs %s -DLOCAL_VISIBILITY
 end_comment
 
 begin_comment
@@ -191,8 +179,36 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// FIXME: See macros.c.
+comment|// See macros.c.
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOCAL_VISIBILITY
+end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TOP_RIGHT_UNDEF
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|TOP_RIGHT_UNDEF should still be defined
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_ifdef
 ifdef|#
@@ -205,6 +221,11 @@ error|#
 directive|error
 error|TOP_RIGHT_UNDEF should not be defined
 end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

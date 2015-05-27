@@ -83,7 +83,7 @@ name|void
 name|test1
 parameter_list|()
 block|{
-comment|// CHECK:     = call i8* @__strcpy_chk(i8* getelementptr inbounds ([63 x i8]* @gbuf, i32 0, i64 4), i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0), i64 59)
+comment|// CHECK:     = call i8* @__strcpy_chk(i8* getelementptr inbounds ([63 x i8], [63 x i8]* @gbuf, i32 0, i64 4), i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0), i64 59)
 name|strcpy
 argument_list|(
 operator|&
@@ -107,7 +107,7 @@ name|void
 name|test2
 parameter_list|()
 block|{
-comment|// CHECK:     = call i8* @__strcpy_chk(i8* getelementptr inbounds ([63 x i8]* @gbuf, i32 0, i32 0), i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0), i64 63)
+comment|// CHECK:     = call i8* @__strcpy_chk(i8* getelementptr inbounds ([63 x i8], [63 x i8]* @gbuf, i32 0, i32 0), i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0), i64 63)
 name|strcpy
 argument_list|(
 name|gbuf
@@ -127,7 +127,7 @@ name|void
 name|test3
 parameter_list|()
 block|{
-comment|// CHECK:     = call i8* @__strcpy_chk(i8* getelementptr inbounds ([63 x i8]* @gbuf, i64 1, i64 37), i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0), i64 0)
+comment|// CHECK:     = call i8* @__strcpy_chk(i8* getelementptr inbounds ([63 x i8], [63 x i8]* @gbuf, i64 1, i64 37), i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0), i64 0)
 name|strcpy
 argument_list|(
 operator|&
@@ -151,7 +151,7 @@ name|void
 name|test4
 parameter_list|()
 block|{
-comment|// CHECK:     = call i8* @__strcpy_chk(i8* getelementptr inbounds ([63 x i8]* @gbuf, i32 0, i64 -1), i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0), i64 0)
+comment|// CHECK:     = call i8* @__strcpy_chk(i8* getelementptr inbounds ([63 x i8], [63 x i8]* @gbuf, i32 0, i64 -1), i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0), i64 0)
 name|strcpy
 argument_list|(
 operator|(
@@ -184,7 +184,7 @@ name|void
 name|test5
 parameter_list|()
 block|{
-comment|// CHECK:     = load i8** @gp
+comment|// CHECK:     = load i8*, i8** @gp
 comment|// CHECK-NEXT:= call i64 @llvm.objectsize.i64.p0i8(i8* %{{.*}}, i1 false)
 name|strcpy
 argument_list|(
@@ -211,7 +211,7 @@ index|[
 literal|57
 index|]
 decl_stmt|;
-comment|// CHECK:       = call i8* @__strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0), i64 53)
+comment|// CHECK:       = call i8* @__strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0), i64 53)
 name|strcpy
 argument_list|(
 operator|&
@@ -241,7 +241,7 @@ decl_stmt|;
 comment|// Ensure we only evaluate the side-effect once.
 comment|// CHECK:     = add
 comment|// CHECK-NOT: = add
-comment|// CHECK:     = call i8* @__strcpy_chk(i8* getelementptr inbounds ([63 x i8]* @gbuf, i32 0, i32 0), i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0), i64 63)
+comment|// CHECK:     = call i8* @__strcpy_chk(i8* getelementptr inbounds ([63 x i8], [63 x i8]* @gbuf, i32 0, i32 0), i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0), i64 63)
 name|strcpy
 argument_list|(
 operator|(
@@ -274,7 +274,7 @@ literal|50
 index|]
 decl_stmt|;
 comment|// CHECK-NOT:   __strcpy_chk
-comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0))
+comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0))
 name|strcpy
 argument_list|(
 name|buf
@@ -299,7 +299,7 @@ name|test9
 parameter_list|()
 block|{
 comment|// CHECK-NOT:   __strcpy_chk
-comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0))
+comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0))
 name|strcpy
 argument_list|(
 operator|(
@@ -339,7 +339,7 @@ name|test10
 parameter_list|()
 block|{
 comment|// CHECK-NOT:   __strcpy_chk
-comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0))
+comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0))
 name|strcpy
 argument_list|(
 operator|*
@@ -364,7 +364,7 @@ name|test11
 parameter_list|()
 block|{
 comment|// CHECK-NOT:   __strcpy_chk
-comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* getelementptr inbounds ([63 x i8]* @gbuf, i32 0, i32 0), i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0))
+comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* getelementptr inbounds ([63 x i8], [63 x i8]* @gbuf, i32 0, i32 0), i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0))
 name|strcpy
 argument_list|(
 name|gp
@@ -387,7 +387,7 @@ name|test12
 parameter_list|()
 block|{
 comment|// CHECK-NOT:   __strcpy_chk
-comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0))
+comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0))
 name|strcpy
 argument_list|(
 operator|++
@@ -409,7 +409,7 @@ name|test13
 parameter_list|()
 block|{
 comment|// CHECK-NOT:   __strcpy_chk
-comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0))
+comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0))
 name|strcpy
 argument_list|(
 name|gp
@@ -431,7 +431,7 @@ name|test14
 parameter_list|()
 block|{
 comment|// CHECK-NOT:   __strcpy_chk
-comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0))
+comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0))
 name|strcpy
 argument_list|(
 operator|--
@@ -453,7 +453,7 @@ name|test15
 parameter_list|()
 block|{
 comment|// CHECK-NOT:   __strcpy_chk
-comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{..*}}, i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0))
+comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{..*}}, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0))
 name|strcpy
 argument_list|(
 name|gp
@@ -475,7 +475,7 @@ name|test16
 parameter_list|()
 block|{
 comment|// CHECK-NOT:   __strcpy_chk
-comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0))
+comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* %{{.*}}, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str, i32 0, i32 0))
 name|strcpy
 argument_list|(
 name|gp

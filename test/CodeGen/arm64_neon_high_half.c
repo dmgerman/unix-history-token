@@ -1895,7 +1895,7 @@ name|int16x8_t
 name|rhs
 parameter_list|)
 block|{
-comment|// CHECK: addhn2.16b v0, v1, v2
+comment|// CHECK: addhn2.16b v0, {{v1, v2|v2, v1}}
 return|return
 name|vaddhn_high_s16
 argument_list|(
@@ -1923,7 +1923,7 @@ name|int32x4_t
 name|rhs
 parameter_list|)
 block|{
-comment|// CHECK: addhn2.8h v0, v1, v2
+comment|// CHECK: addhn2.8h v0, {{v1, v2|v2, v1}}
 return|return
 name|vaddhn_high_s32
 argument_list|(
@@ -1951,7 +1951,7 @@ name|int64x2_t
 name|rhs
 parameter_list|)
 block|{
-comment|// CHECK: addhn2.4s v0, v1, v2
+comment|// CHECK: addhn2.4s v0, {{v1, v2|v2, v1}}
 return|return
 name|vaddhn_high_s64
 argument_list|(
@@ -1979,7 +1979,7 @@ name|uint16x8_t
 name|rhs
 parameter_list|)
 block|{
-comment|// CHECK: addhn2.16b v0, v1, v2
+comment|// CHECK: addhn2.16b v0, {{v1, v2|v2, v1}}
 return|return
 name|vaddhn_high_s16
 argument_list|(
@@ -2007,7 +2007,7 @@ name|uint32x4_t
 name|rhs
 parameter_list|)
 block|{
-comment|// CHECK: addhn2.8h v0, v1, v2
+comment|// CHECK: addhn2.8h v0, {{v1, v2|v2, v1}}
 return|return
 name|vaddhn_high_s32
 argument_list|(
@@ -2035,7 +2035,7 @@ name|uint64x2_t
 name|rhs
 parameter_list|)
 block|{
-comment|// CHECK: addhn2.4s v0, v1, v2
+comment|// CHECK: addhn2.4s v0, {{v1, v2|v2, v1}}
 return|return
 name|vaddhn_high_s64
 argument_list|(

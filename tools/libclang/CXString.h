@@ -183,7 +183,8 @@ operator|::
 name|string
 name|String
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+init|=
+name|delete
 decl_stmt|;
 comment|/// \brief Create a CXString object that is backed by a string buffer.
 name|CXString

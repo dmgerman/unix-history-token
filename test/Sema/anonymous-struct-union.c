@@ -66,6 +66,7 @@ name|X
 name|xc
 parameter_list|)
 block|{
+comment|// expected-note@-1 3{{variable 'xc' declared const here}}
 name|x
 operator|.
 name|i
@@ -113,21 +114,21 @@ name|d
 operator|=
 literal|0.0
 expr_stmt|;
-comment|// expected-error{{read-only variable is not assignable}}
+comment|// expected-error{{cannot assign to variable 'xc' with const-qualified type 'const struct X'}}
 name|xc
 operator|.
 name|f
 operator|=
 literal|0
 expr_stmt|;
-comment|// expected-error{{read-only variable is not assignable}}
+comment|// expected-error{{cannot assign to variable 'xc' with const-qualified type 'const struct X'}}
 name|xc
 operator|.
 name|a
 operator|=
 literal|0
 expr_stmt|;
-comment|// expected-error{{read-only variable is not assignable}}
+comment|// expected-error{{cannot assign to variable 'xc' with const-qualified type 'const struct X'}}
 block|}
 end_function
 

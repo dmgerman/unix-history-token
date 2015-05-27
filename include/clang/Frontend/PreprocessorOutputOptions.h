@@ -73,6 +73,12 @@ literal|1
 decl_stmt|;
 comment|///< Show \#line markers.
 name|unsigned
+name|UseLineDirectives
+range|:
+literal|1
+decl_stmt|;
+comment|///< Use \#line instead of GCC-style \# N.
+name|unsigned
 name|ShowMacroComments
 range|:
 literal|1
@@ -106,6 +112,10 @@ expr_stmt|;
 name|ShowLineMarkers
 operator|=
 literal|1
+expr_stmt|;
+name|UseLineDirectives
+operator|=
+literal|0
 expr_stmt|;
 name|ShowMacroComments
 operator|=

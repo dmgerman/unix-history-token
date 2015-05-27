@@ -419,5 +419,64 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|test_conditional_operator
+parameter_list|()
+block|{
+name|int
+name|x
+decl_stmt|;
+name|x
+operator|=
+name|b
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+comment|// expected-warning {{address of array}}
+name|x
+operator|=
+name|c
+operator|.
+name|x
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+comment|// expected-warning {{address of array}}
+name|x
+operator|=
+name|str
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+comment|// expected-warning {{address of array}}
+name|x
+operator|=
+name|array
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+comment|// expected-warning {{address of array}}
+name|x
+operator|=
+operator|&
+name|x
+condition|?
+literal|1
+else|:
+literal|0
+expr_stmt|;
+comment|// expected-warning {{address of 'x'}}
+block|}
+end_function
+
 end_unit
 

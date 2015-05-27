@@ -168,7 +168,7 @@ name|Warnings
 name|without
 name|flags
 argument_list|(
-literal|96
+literal|93
 argument_list|)
 operator|:
 name|CHECK
@@ -201,11 +201,6 @@ operator|-
 name|NEXT
 operator|:
 name|ext_initializer_string_for_char_array_too_long
-name|CHECK
-operator|-
-name|NEXT
-operator|:
-name|ext_many_braces_around_scalar_init
 name|CHECK
 operator|-
 name|NEXT
@@ -330,11 +325,6 @@ name|CHECK
 operator|-
 name|NEXT
 operator|:
-name|warn_braces_around_scalar_init
-name|CHECK
-operator|-
-name|NEXT
-operator|:
 name|warn_c_kext
 name|CHECK
 operator|-
@@ -426,11 +416,6 @@ operator|-
 name|NEXT
 operator|:
 name|warn_enum_value_overflow
-name|CHECK
-operator|-
-name|NEXT
-operator|:
-name|warn_exception_caught_by_earlier_handler
 name|CHECK
 operator|-
 name|NEXT

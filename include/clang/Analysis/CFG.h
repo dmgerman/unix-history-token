@@ -1337,7 +1337,7 @@ name|getStmt
 argument_list|()
 return|;
 block|}
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -1944,10 +1944,6 @@ name|Parent
 argument_list|(
 argument|parent
 argument_list|)
-block|{}
-operator|~
-name|CFGBlock
-argument_list|()
 block|{}
 comment|// Statement iterators
 typedef|typedef

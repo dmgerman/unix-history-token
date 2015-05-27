@@ -108,7 +108,7 @@ name|class
 name|MacroInfo
 decl_stmt|;
 name|class
-name|MacroDefinition
+name|MacroDefinitionRecord
 decl_stmt|;
 name|class
 name|SourceLocation
@@ -342,14 +342,14 @@ name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
-comment|/// \brief Retrieves the corresponding MacroInfo of a MacroDefinition.
+comment|/// \brief Retrieves the corresponding MacroInfo of a MacroDefinitionRecord.
 specifier|const
 name|MacroInfo
 modifier|*
 name|getMacroInfo
 parameter_list|(
 specifier|const
-name|MacroDefinition
+name|MacroDefinitionRecord
 modifier|*
 name|MacroDef
 parameter_list|,
@@ -359,8 +359,8 @@ parameter_list|)
 function_decl|;
 comment|/// \brief If \c Loc resides inside the definition of \c MI and it points at
 comment|/// an identifier that has ever been a macro name, this returns the latest
-comment|/// MacroDefinition for that name, otherwise it returns NULL.
-name|MacroDefinition
+comment|/// MacroDefinitionRecord for that name, otherwise it returns NULL.
+name|MacroDefinitionRecord
 modifier|*
 name|checkForMacroInMacroDefinition
 parameter_list|(
@@ -378,8 +378,8 @@ parameter_list|)
 function_decl|;
 comment|/// \brief If \c Tok resides inside the definition of \c MI and it points at
 comment|/// an identifier that has ever been a macro name, this returns the latest
-comment|/// MacroDefinition for that name, otherwise it returns NULL.
-name|MacroDefinition
+comment|/// MacroDefinitionRecord for that name, otherwise it returns NULL.
+name|MacroDefinitionRecord
 modifier|*
 name|checkForMacroInMacroDefinition
 parameter_list|(

@@ -814,7 +814,7 @@ name|void
 parameter_list|)
 block|{
 comment|// CHECK: test_struct_of_four_doubles_variadic
-comment|// CHECK: call arm_aapcs_vfpcc void (double, [4 x i64], [4 x i64], double, ...)* @takes_struct_of_four_doubles_variadic(double {{.*}}, [4 x i64] {{.*}}, [4 x i64] {{.*}}, double {{.*}})
+comment|// CHECK: call arm_aapcs_vfpcc void (double, [4 x i64], [4 x i64], double, ...) @takes_struct_of_four_doubles_variadic(double {{.*}}, [4 x i64] {{.*}}, [4 x i64] {{.*}}, double {{.*}})
 name|takes_struct_of_four_doubles_variadic
 argument_list|(
 literal|3.0

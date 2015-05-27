@@ -388,9 +388,12 @@ name|private
 operator|:
 name|Directive
 argument_list|(
-argument|const Directive&
+specifier|const
+name|Directive
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -400,7 +403,8 @@ specifier|const
 name|Directive
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -662,6 +666,7 @@ expr_stmt|;
 operator|~
 name|VerifyDiagnosticConsumer
 argument_list|()
+name|override
 expr_stmt|;
 name|void
 name|BeginSourceFile

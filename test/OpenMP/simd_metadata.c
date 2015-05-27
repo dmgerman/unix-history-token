@@ -1,10 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fopenmp=libiomp5 -triple x86_64-unknown-unknown -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -fopenmp -triple x86_64-unknown-unknown -emit-llvm %s -o - | FileCheck %s -check-prefix=CHECK -check-prefix=X86
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fopenmp=libiomp5 -triple powerpc64-unknown-unknown -emit-llvm %s -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -fopenmp -triple x86_64-unknown-unknown -target-feature +avx -emit-llvm %s -o - | FileCheck %s -check-prefix=CHECK -check-prefix=X86-AVX
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fopenmp -triple powerpc64-unknown-unknown -emit-llvm %s -o - | FileCheck %s -check-prefix=CHECK -check-prefix=PPC
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fopenmp -triple powerpc64-unknown-unknown -target-abi elfv1-qpx -emit-llvm %s -o - | FileCheck %s -check-prefix=CHECK -check-prefix=PPC-QPX
 end_comment
 
 begin_function
@@ -62,11 +70,17 @@ comment|// CHECK-NEXT:    [[C_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[C_PTRINT]], 31
 comment|// CHECK-NEXT:    [[C_MASKCOND:%.+]] = icmp eq i{{[0-9]+}} [[C_MASKEDPTR]], 0
 comment|// CHECK-NEXT:    call void @llvm.assume(i1 [[C_MASKCOND]])
 comment|// CHECK:         [[A_PTRINT:%.+]] = ptrtoint
-comment|// CHECK-NEXT:    [[A_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[A_PTRINT]], 15
+comment|// X86-NEXT:     [[A_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[A_PTRINT]], 15
+comment|// X86-AVX-NEXT: [[A_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[A_PTRINT]], 31
+comment|// PPC-NEXT:     [[A_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[A_PTRINT]], 15
+comment|// PPC-QPX-NEXT: [[A_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[A_PTRINT]], 15
 comment|// CHECK-NEXT:    [[A_MASKCOND:%.+]] = icmp eq i{{[0-9]+}} [[A_MASKEDPTR]], 0
 comment|// CHECK-NEXT:    call void @llvm.assume(i1 [[A_MASKCOND]])
 comment|// CHECK:         [[B_PTRINT:%.+]] = ptrtoint
-comment|// CHECK-NEXT:    [[B_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[B_PTRINT]], 15
+comment|// X86-NEXT:      [[B_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[B_PTRINT]], 15
+comment|// X86-AVX-NEXT:  [[B_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[B_PTRINT]], 31
+comment|// PPC-NEXT:      [[B_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[B_PTRINT]], 15
+comment|// PPC-QPX-NEXT:  [[B_MASKEDPTR:%.+]] = and i{{[0-9]+}} [[B_PTRINT]], 31
 comment|// CHECK-NEXT:    [[B_MASKCOND:%.+]] = icmp eq i{{[0-9]+}} [[B_MASKEDPTR]], 0
 comment|// CHECK-NEXT:    call void @llvm.assume(i1 [[B_MASKCOND]])
 for|for

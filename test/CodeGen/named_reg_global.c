@@ -93,7 +93,7 @@ comment|// CHECK: define{{.*}} void @set_stack_pointer_addr(i[[bits]] %addr) #0 
 end_comment
 
 begin_comment
-comment|// CHECK: [[sto:%[0-9]+]] = load i[[bits]]* %
+comment|// CHECK: [[sto:%[0-9]+]] = load i[[bits]], i[[bits]]* %
 end_comment
 
 begin_comment

@@ -143,7 +143,7 @@ comment|// CHECK-NEXT: store i8 1, i8* [[TEMP]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T0:%.*]] = load i8* [[TEMP]], align 1
+comment|// CHECK-NEXT: [[T0:%.*]] = load i8, i8* [[TEMP]], align 1
 end_comment
 
 begin_comment
@@ -185,7 +185,7 @@ comment|// CHECK-NEXT: [[T0:%.*]] = bitcast float* [[TEMP]] to i32*
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T1:%.*]] = load i32* [[T0]], align 4
+comment|// CHECK-NEXT: [[T1:%.*]] = load i32, i32* [[T0]], align 4
 end_comment
 
 begin_comment
@@ -227,7 +227,7 @@ comment|// CHECK-NEXT: [[T0:%.*]] = bitcast i8** [[TEMP]] to i64*
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T1:%.*]] = load i64* [[T0]], align 8
+comment|// CHECK-NEXT: [[T1:%.*]] = load i64, i64* [[T0]], align 8
 end_comment
 
 begin_comment
@@ -274,7 +274,7 @@ comment|// CHECK-NEXT: [[T0:%.*]] = bitcast [[PAIR_T]]* [[TEMP]] to i128*
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: [[T1:%.*]] = load i128* [[T0]], align 16
+comment|// CHECK-NEXT: [[T1:%.*]] = load i128, i128* [[T0]], align 16
 end_comment
 
 begin_comment

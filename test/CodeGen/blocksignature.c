@@ -16,7 +16,7 @@ comment|// X64: @__block_literal_global = internal constant {{.*}} { i8** @_NSCo
 end_comment
 
 begin_comment
-comment|// X64: @.str1 = private unnamed_addr constant [12 x i8] c"i16@?0c8f12\00"
+comment|// X64: @.str.1 = private unnamed_addr constant [12 x i8] c"i16@?0c8f12\00"
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|// X32: [[STR1:@.*]] = private unnamed_addr constant [6 x i8] c"v4@?0\00
 end_comment
 
 begin_comment
-comment|// X32: @__block_descriptor_tmp = internal constant [[FULL_DESCRIPTOR_T:.*]] { i32 0, i32 20, i8* getelementptr inbounds ([6 x i8]* [[STR1]], i32 0, i32 0), i8* null }
+comment|// X32: @__block_descriptor_tmp = internal constant [[FULL_DESCRIPTOR_T:.*]] { i32 0, i32 20, i8* getelementptr inbounds ([6 x i8], [6 x i8]* [[STR1]], i32 0, i32 0), i8* null }
 end_comment
 
 begin_comment
@@ -40,7 +40,7 @@ comment|// X32: [[STR2:@.*]] = private unnamed_addr constant [11 x i8] c"i12@?0c
 end_comment
 
 begin_comment
-comment|// X32: @__block_descriptor_tmp{{.*}} = internal constant [[FULL_DESCRIPTOR_T]] { i32 0, i32 24, i8* getelementptr inbounds ([11 x i8]* [[STR2]], i32 0, i32 0), i8* null }
+comment|// X32: @__block_descriptor_tmp{{.*}} = internal constant [[FULL_DESCRIPTOR_T]] { i32 0, i32 24, i8* getelementptr inbounds ([11 x i8], [11 x i8]* [[STR2]], i32 0, i32 0), i8* null }
 end_comment
 
 begin_comment

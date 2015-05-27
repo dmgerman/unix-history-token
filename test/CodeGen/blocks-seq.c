@@ -8,27 +8,27 @@ comment|// CHECK: [[Vi:%.+]] = alloca %struct.__block_byref_i, align 8
 end_comment
 
 begin_comment
-comment|// CHECK: call i32 (...)* @rhs()
+comment|// CHECK: call i32 (...) @rhs()
 end_comment
 
 begin_comment
-comment|// CHECK: [[V7:%.+]] = getelementptr inbounds %struct.__block_byref_i* [[Vi]], i32 0, i32 1
+comment|// CHECK: [[V7:%.+]] = getelementptr inbounds %struct.__block_byref_i, %struct.__block_byref_i* [[Vi]], i32 0, i32 1
 end_comment
 
 begin_comment
-comment|// CHECK: load %struct.__block_byref_i** [[V7]]
+comment|// CHECK: load %struct.__block_byref_i*, %struct.__block_byref_i** [[V7]]
 end_comment
 
 begin_comment
-comment|// CHECK: call i32 (...)* @rhs()
+comment|// CHECK: call i32 (...) @rhs()
 end_comment
 
 begin_comment
-comment|// CHECK: [[V11:%.+]] = getelementptr inbounds %struct.__block_byref_i* [[Vi]], i32 0, i32 1
+comment|// CHECK: [[V11:%.+]] = getelementptr inbounds %struct.__block_byref_i, %struct.__block_byref_i* [[Vi]], i32 0, i32 1
 end_comment
 
 begin_comment
-comment|// CHECK: load %struct.__block_byref_i** [[V11]]
+comment|// CHECK: load %struct.__block_byref_i*, %struct.__block_byref_i** [[V11]]
 end_comment
 
 begin_function_decl

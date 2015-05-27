@@ -47,7 +47,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{functions returning a pointer type}}
+comment|// expected-warning {{attribute only applies to functions}}
 end_comment
 
 begin_function_decl
@@ -67,7 +67,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-warning {{functions returning a pointer type}}
+comment|// expected-warning {{attribute only applies to return values that are pointers}}
 end_comment
 
 begin_function_decl
@@ -87,7 +87,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-warning {{functions returning a pointer type}}
+comment|// expected-warning {{attribute only applies to return values that are pointers}}
 end_comment
 
 begin_function_decl
@@ -158,7 +158,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|//  expected-warning{{'malloc' attribute only applies to functions returning a pointer type}}
+comment|//  expected-warning{{attribute only applies to functions}}
 end_comment
 
 begin_macro
@@ -179,7 +179,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-warning{{'malloc' attribute only applies to functions returning a pointer type}}
+comment|// expected-warning{{attribute only applies to functions}}
 end_comment
 
 begin_macro

@@ -1,18 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// REQUIRES: powerpc-registered-target
+comment|// RUN: %clang_cc1 -triple powerpc64-unknown-unknown -faltivec -ffreestanding -emit-llvm -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc64-unknown-unknown -faltivec -ffreestanding -S -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple powerpc64-unknown-unknown -faltivec -ffreestanding -emit-llvm -fno-lax-vector-conversions -o - %s | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc64-unknown-unknown -faltivec -ffreestanding -fno-lax-vector-conversions -S -o - %s | FileCheck %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -triple powerpc64-unknown-unknown -faltivec -ffreestanding -x c++ -S -o - %s | FileCheck %s
+comment|// RUN: %clang_cc1 -triple powerpc64-unknown-unknown -faltivec -ffreestanding -emit-llvm -x c++ -o - %s | FileCheck %s
 end_comment
 
 begin_include
@@ -30,11 +26,7 @@ comment|// (i.e. all inline routines in the header are marked "static")
 end_comment
 
 begin_comment
-comment|// CHECK: .text
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: .file
+comment|// CHECK: target triple = "powerpc64-
 end_comment
 
 begin_comment
@@ -42,15 +34,7 @@ comment|// CHECK-NEXT: {{^$}}
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: .ident{{.*$}}
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: .section ".note.GNU-stack","",@progbits
-end_comment
-
-begin_comment
-comment|// CHECK-NOT: .
+comment|// CHECK-NEXT: llvm.ident
 end_comment
 
 end_unit

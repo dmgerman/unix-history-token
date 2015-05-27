@@ -113,7 +113,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void ({{.*}}, ...)* @JS_ReportErrorNumber({{.*}}@js_GetErrorMessage
+comment|// CHECK: call void ({{.*}}, ...) @JS_ReportErrorNumber({{.*}}@js_GetErrorMessage
 block|}
 end_function
 

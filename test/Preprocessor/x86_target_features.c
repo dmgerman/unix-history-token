@@ -36,6 +36,14 @@ comment|// SSE4: #define __SSSE3__ 1
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target i386-unknown-unknown -march=core2 -msse4.1 -mno-sse4 -x c -E -dM -o - %s | FileCheck --check-prefix=NOSSE4 %s
+end_comment
+
+begin_comment
+comment|// NOSSE4-NOT: #define __SSE4_1__ 1
+end_comment
+
+begin_comment
 comment|// RUN: %clang -target i386-unknown-unknown -march=core2 -msse4 -mno-sse2 -x c -E -dM -o - %s | FileCheck --check-prefix=SSE %s
 end_comment
 
