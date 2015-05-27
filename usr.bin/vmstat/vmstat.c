@@ -8008,7 +8008,6 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|VM_MEMATTR_WB_WA
-name|:
 case|case
 name|VM_MEMATTR_WB_WA
 case|:
