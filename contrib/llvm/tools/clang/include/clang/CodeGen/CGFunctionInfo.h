@@ -153,10 +153,10 @@ comment|/// are all scalar types or are themselves expandable types.
 name|Expand
 block|,
 comment|/// InAlloca - Pass the argument directly using the LLVM inalloca attribute.
-comment|/// This is similar to 'direct', except it only applies to arguments stored
-comment|/// in memory and forbids any implicit copies.  When applied to a return
-comment|/// type, it means the value is returned indirectly via an implicit sret
-comment|/// parameter stored in the argument struct.
+comment|/// This is similar to indirect with byval, except it only applies to
+comment|/// arguments stored in memory and forbids any implicit copies.  When
+comment|/// applied to a return type, it means the value is returned indirectly via
+comment|/// an implicit sret parameter stored in the argument struct.
 name|InAlloca
 block|,
 name|KindFirst

@@ -611,10 +611,10 @@ label|:
 name|JobList
 argument_list|()
 expr_stmt|;
-name|virtual
 operator|~
 name|JobList
 argument_list|()
+name|override
 block|{}
 name|void
 name|Print

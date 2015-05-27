@@ -432,6 +432,18 @@ comment|/// \brief If \c true, aligns trailing comments.
 name|bool
 name|AlignTrailingComments
 decl_stmt|;
+comment|/// \brief If \c true, aligns consecutive assignments.
+comment|///
+comment|/// This will align the assignment operators of consecutive lines. This
+comment|/// will result in formattings like
+comment|/// \code
+comment|/// int aaaa = 12;
+comment|/// int b    = 23;
+comment|/// int ccc  = 23;
+comment|/// \endcode
+name|bool
+name|AlignConsecutiveAssignments
+decl_stmt|;
 comment|/// \brief If \c true, aligns escaped newlines as far left as possible.
 comment|/// Otherwise puts them into the right-most column.
 name|bool
@@ -1107,35 +1119,6 @@ operator|&
 name|Style
 argument_list|)
 expr_stmt|;
-comment|/// \brief Reformats the given \p Ranges in the token stream coming out of
-comment|/// \c Lex.
-comment|///
-comment|/// DEPRECATED: Do not use.
-name|tooling
-operator|::
-name|Replacements
-name|reformat
-argument_list|(
-specifier|const
-name|FormatStyle
-operator|&
-name|Style
-argument_list|,
-name|Lexer
-operator|&
-name|Lex
-argument_list|,
-name|SourceManager
-operator|&
-name|SourceMgr
-argument_list|,
-name|ArrayRef
-operator|<
-name|CharSourceRange
-operator|>
-name|Ranges
-argument_list|)
-expr_stmt|;
 comment|/// \brief Reformats the given \p Ranges in the file \p ID.
 comment|///
 comment|/// Each range is extended on either end to its next bigger logic unit, i.e.
@@ -1144,6 +1127,10 @@ comment|/// formatting.
 comment|///
 comment|/// Returns the \c Replacements necessary to make all \p Ranges comply with
 comment|/// \p Style.
+comment|///
+comment|/// If \c IncompleteFormat is non-null, its value will be set to true if any
+comment|/// of the affected ranges were not formatted due to a non-recoverable syntax
+comment|/// error.
 name|tooling
 operator|::
 name|Replacements
@@ -1156,11 +1143,13 @@ argument_list|,
 argument|FileID ID
 argument_list|,
 argument|ArrayRef<CharSourceRange> Ranges
+argument_list|,
+argument|bool *IncompleteFormat = nullptr
 argument_list|)
 expr_stmt|;
 comment|/// \brief Reformats the given \p Ranges in \p Code.
 comment|///
-comment|/// Otherwise identical to the reformat() function consuming a \c Lexer.
+comment|/// Otherwise identical to the reformat() function using a file ID.
 name|tooling
 operator|::
 name|Replacements
@@ -1174,6 +1163,8 @@ argument|ArrayRef<tooling::Range> Ranges
 argument_list|,
 argument|StringRef FileName =
 literal|"<stdin>"
+argument_list|,
+argument|bool *IncompleteFormat = nullptr
 argument_list|)
 expr_stmt|;
 comment|/// \brief Returns the \c LangOpts that the formatter expects you to set.

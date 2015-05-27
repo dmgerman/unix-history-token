@@ -215,7 +215,7 @@ comment|///
 comment|/// These can be in 3 states:
 comment|///   1) Not present, identified by isEmpty()
 comment|///   2) Present, identified by isNotEmpty()
-comment|///      2.a) Valid, idenified by isValid()
+comment|///      2.a) Valid, identified by isValid()
 comment|///      2.b) Invalid, identified by isInvalid().
 comment|///
 comment|/// isSet() is deprecated because it mostly corresponded to "valid" but was
@@ -1478,9 +1478,12 @@ return|;
 block|}
 name|DeclSpec
 argument_list|(
-argument|const DeclSpec&
+specifier|const
+name|DeclSpec
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -1490,7 +1493,8 @@ specifier|const
 name|DeclSpec
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
@@ -3683,9 +3687,13 @@ name|private
 label|:
 name|UnqualifiedId
 argument_list|(
-argument|const UnqualifiedId&Other
+specifier|const
+name|UnqualifiedId
+operator|&
+name|Other
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 specifier|const
 name|UnqualifiedId
@@ -3697,7 +3705,8 @@ specifier|const
 name|UnqualifiedId
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
@@ -5145,6 +5154,8 @@ argument_list|,
 argument|SourceLocation VolatileQualLoc
 argument_list|,
 argument|SourceLocation RestrictQualLoc
+argument_list|,
+argument|SourceLocation AtomicQualLoc
 argument_list|)
 block|{
 name|DeclaratorChunk
@@ -5199,6 +5210,17 @@ operator|.
 name|RestrictQualLoc
 operator|=
 name|RestrictQualLoc
+operator|.
+name|getRawEncoding
+argument_list|()
+block|;
+name|I
+operator|.
+name|Ptr
+operator|.
+name|AtomicQualLoc
+operator|=
+name|AtomicQualLoc
 operator|.
 name|getRawEncoding
 argument_list|()
@@ -8389,6 +8411,11 @@ name|Specifiers
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|LastSpecifier
+argument_list|(
+argument|VS_None
+argument_list|)
 block|{ }
 name|bool
 name|SetSpecifier
@@ -8486,6 +8513,15 @@ name|VS
 parameter_list|)
 function_decl|;
 name|SourceLocation
+name|getFirstLocation
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FirstLocation
+return|;
+block|}
+name|SourceLocation
 name|getLastLocation
 argument_list|()
 specifier|const
@@ -8494,15 +8530,30 @@ return|return
 name|LastLocation
 return|;
 block|}
+name|Specifier
+name|getLastSpecifier
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LastSpecifier
+return|;
+block|}
 name|private
 label|:
 name|unsigned
 name|Specifiers
 decl_stmt|;
+name|Specifier
+name|LastSpecifier
+decl_stmt|;
 name|SourceLocation
 name|VS_overrideLoc
 decl_stmt|,
 name|VS_finalLoc
+decl_stmt|;
+name|SourceLocation
+name|FirstLocation
 decl_stmt|;
 name|SourceLocation
 name|LastLocation

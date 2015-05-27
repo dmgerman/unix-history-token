@@ -115,10 +115,10 @@ argument_list|(
 argument|SB
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|SimpleConstraintManager
 argument_list|()
+name|override
 block|;
 comment|//===------------------------------------------------------------------===//
 comment|// Common implementation for the interface provided by ConstraintManager.

@@ -432,11 +432,14 @@ comment|// __attribute__((pcs("aapcs")))
 name|CC_AAPCS_VFP
 block|,
 comment|// __attribute__((pcs("aapcs-vfp")))
-name|CC_PnaclCall
-block|,
-comment|// __attribute__((pnaclcall))
 name|CC_IntelOclBicc
+block|,
 comment|// __attribute__((intel_ocl_bicc))
+name|CC_SpirFunction
+block|,
+comment|// default for OpenCL functions on SPIR target
+name|CC_SpirKernel
+comment|// inferred for OpenCL kernels on SPIR target
 block|}
 enum|;
 comment|/// \brief Checks whether the given calling convention supports variadic
@@ -468,6 +471,12 @@ name|CC_X86Pascal
 case|:
 case|case
 name|CC_X86VectorCall
+case|:
+case|case
+name|CC_SpirFunction
+case|:
+case|case
+name|CC_SpirKernel
 case|:
 return|return
 name|false

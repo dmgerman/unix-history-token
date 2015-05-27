@@ -171,10 +171,11 @@ block|;   }
 operator|~
 name|DominatorTree
 argument_list|()
+name|override
 block|{
 name|delete
 name|DT
-block|;   }
+block|; }
 name|llvm
 operator|::
 name|DominatorTreeBase

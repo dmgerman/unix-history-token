@@ -216,6 +216,17 @@ name|CLMode
 block|}
 name|Mode
 enum|;
+enum|enum
+name|SaveTempsMode
+block|{
+name|SaveTempsNone
+block|,
+name|SaveTempsCwd
+block|,
+name|SaveTempsObj
+block|}
+name|SaveTemps
+enum|;
 name|public
 label|:
 comment|// Diag - Forwarding function for diagnostics.
@@ -734,6 +745,28 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+name|bool
+name|isSaveTempsEnabled
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SaveTemps
+operator|!=
+name|SaveTempsNone
+return|;
+block|}
+name|bool
+name|isSaveTempsObj
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SaveTemps
+operator|==
+name|SaveTempsObj
+return|;
+block|}
 comment|/// @}
 comment|/// @name Primary Functionality
 comment|/// @{
@@ -1044,6 +1077,8 @@ name|Action
 operator|>
 name|ConstructPhaseAction
 argument_list|(
+argument|const ToolChain&TC
+argument_list|,
 argument|const llvm::opt::ArgList&Args
 argument_list|,
 argument|phases::ID Phase
@@ -1174,6 +1209,11 @@ decl_stmt|;
 name|bool
 name|IsUsingLTO
 argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|,
 specifier|const
 name|llvm
 operator|::

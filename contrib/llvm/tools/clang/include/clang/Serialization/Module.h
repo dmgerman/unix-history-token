@@ -565,7 +565,7 @@ name|InputFilesCursor
 expr_stmt|;
 comment|/// \brief Offsets for all of the input file entries in the AST file.
 specifier|const
-name|uint32_t
+name|uint64_t
 modifier|*
 name|InputFileOffsets
 decl_stmt|;
@@ -918,6 +918,17 @@ specifier|const
 name|uint32_t
 modifier|*
 name|CXXBaseSpecifiersOffsets
+decl_stmt|;
+comment|/// \brief The number of C++ ctor initializer lists in this AST file.
+name|unsigned
+name|LocalNumCXXCtorInitializers
+decl_stmt|;
+comment|/// \brief Offset of each C++ ctor initializer list within the bitstream,
+comment|/// indexed by the C++ ctor initializer list ID minus 1.
+specifier|const
+name|uint32_t
+modifier|*
+name|CXXCtorInitializersOffsets
 decl_stmt|;
 typedef|typedef
 name|llvm

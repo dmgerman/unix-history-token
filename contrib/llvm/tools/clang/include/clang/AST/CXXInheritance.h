@@ -972,12 +972,12 @@ comment|///   struct C : virtual A { virtual void f(); };
 comment|///   struct D : B, C { };
 comment|/// \endcode
 comment|///
-comment|/// This data structure contaings a mapping from every virtual
+comment|/// This data structure contains a mapping from every virtual
 comment|/// function *that does not override an existing virtual function* and
 comment|/// in every subobject where that virtual function occurs to the set
 comment|/// of virtual functions that override it. Thus, the same virtual
 comment|/// function \c A::f can actually occur in multiple subobjects of type
-comment|/// \c A due to multiple inheritance, and may be overriden by
+comment|/// \c A due to multiple inheritance, and may be overridden by
 comment|/// different virtual functions in each, as in the following example:
 comment|///
 comment|/// \code
@@ -993,7 +993,7 @@ comment|/// type \c A, in this example the two virtual functions both override
 comment|/// \c A::f but in *different* subobjects of type A. This is
 comment|/// represented by numbering the subobjects in which the overridden
 comment|/// and the overriding virtual member functions are located. Subobject
-comment|/// 0 represents the virtua base class subobject of that type, while
+comment|/// 0 represents the virtual base class subobject of that type, while
 comment|/// subobject numbers greater than 0 refer to non-virtual base class
 comment|/// subobjects of that type.
 name|class

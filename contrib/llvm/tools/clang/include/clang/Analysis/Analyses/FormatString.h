@@ -197,7 +197,7 @@ name|representation
 return|;
 block|}
 comment|// Overloaded operators for bool like qualities
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -842,6 +842,20 @@ block|,
 name|WIntTy
 block|}
 enum|;
+enum|enum
+name|MatchKind
+block|{
+name|NoMatch
+init|=
+literal|0
+block|,
+name|Match
+init|=
+literal|1
+block|,
+name|NoMatchPedantic
+block|}
+enum|;
 name|private
 label|:
 specifier|const
@@ -995,7 +1009,7 @@ return|return
 name|Res
 return|;
 block|}
-name|bool
+name|MatchKind
 name|matchesType
 argument_list|(
 name|ASTContext

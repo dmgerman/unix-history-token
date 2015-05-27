@@ -432,10 +432,10 @@ argument_list|)
 block|{}
 name|public
 operator|:
-name|virtual
 operator|~
 name|SymbolData
 argument_list|()
+name|override
 block|{}
 name|SymbolID
 name|getSymbolID
@@ -2592,10 +2592,6 @@ argument|nullptr
 argument_list|,
 argument|storeMgr
 argument_list|)
-block|{}
-operator|~
-name|SymbolReaper
-argument_list|()
 block|{}
 specifier|const
 name|LocationContext

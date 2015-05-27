@@ -319,6 +319,8 @@ operator|>
 name|class
 name|filtered_clause_iterator
 block|{
+name|protected
+operator|:
 name|ArrayRef
 operator|<
 name|OMPClause
@@ -403,7 +405,7 @@ argument_list|)
 block|,
 name|Pred
 argument_list|(
-argument|Pred
+argument|std::move(Pred)
 argument_list|)
 block|{
 name|SkipToNextClause
@@ -487,6 +489,7 @@ operator|==
 name|End
 return|;
 block|}
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -497,8 +500,100 @@ operator|!=
 name|End
 return|;
 block|}
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Current
+operator|==
+name|End
+return|;
+block|}
 block|}
 empty_stmt|;
+name|template
+operator|<
+name|typename
+name|Fn
+operator|>
+name|filtered_clause_iterator
+operator|<
+name|Fn
+operator|>
+name|getFilteredClauses
+argument_list|(
+argument|Fn&&fn
+argument_list|)
+specifier|const
+block|{
+return|return
+name|filtered_clause_iterator
+operator|<
+name|Fn
+operator|>
+operator|(
+name|clauses
+argument_list|()
+operator|,
+name|std
+operator|::
+name|move
+argument_list|(
+name|fn
+argument_list|)
+operator|)
+return|;
+block|}
+struct|struct
+name|ClauseKindFilter
+block|{
+name|OpenMPClauseKind
+name|Kind
+decl_stmt|;
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|OMPClause
+operator|*
+name|clause
+operator|)
+specifier|const
+block|{
+return|return
+name|clause
+operator|->
+name|getClauseKind
+argument_list|()
+operator|==
+name|Kind
+return|;
+block|}
+block|}
+struct|;
+name|filtered_clause_iterator
+operator|<
+name|ClauseKindFilter
+operator|>
+name|getClausesOfKind
+argument_list|(
+argument|OpenMPClauseKind Kind
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getFilteredClauses
+argument_list|(
+name|ClauseKindFilter
+block|{
+name|Kind
+block|}
+argument_list|)
+return|;
+block|}
 comment|/// \brief Gets a single clause of the specified kind \a K associated with the
 comment|/// current directive iff there is only one clause of this kind (and assertion
 comment|/// is fired if there is more than one clause is associated with the
@@ -1705,6 +1800,11 @@ name|Expr
 operator|*
 name|LastIteration
 block|;
+comment|/// \brief Loop number of iterations.
+name|Expr
+operator|*
+name|NumIterations
+block|;
 comment|/// \brief Calculation of last iteration.
 name|Expr
 operator|*
@@ -1812,6 +1912,10 @@ operator|!=
 name|nullptr
 operator|&&
 name|LastIteration
+operator|!=
+name|nullptr
+operator|&&
+name|NumIterations
 operator|!=
 name|nullptr
 operator|&&
@@ -5171,6 +5275,29 @@ name|friend
 name|class
 name|ASTStmtReader
 block|;
+comment|/// \brief Used for 'atomic update' or 'atomic capture' constructs. They may
+comment|/// have atomic expressions of forms
+comment|/// \code
+comment|/// x = x binop expr;
+comment|/// x = expr binop x;
+comment|/// \endcode
+comment|/// This field is true for the first form of the expression and false for the
+comment|/// second. Required for correct codegen of non-associative operations (like
+comment|///<< or>>).
+name|bool
+name|IsXLHSInRHSPart
+block|;
+comment|/// \brief Used for 'atomic update' or 'atomic capture' constructs. They may
+comment|/// have atomic expressions of forms
+comment|/// \code
+comment|/// v = x;<update x>;
+comment|///<update x>; v = x;
+comment|/// \endcode
+comment|/// This field is true for the first(postfix) form of the expression and false
+comment|/// otherwise.
+name|bool
+name|IsPostfixUpdate
+block|;
 comment|/// \brief Build directive with the given start and end location.
 comment|///
 comment|/// \param StartLoc Starting location of the directive kind.
@@ -5188,19 +5315,29 @@ argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPAtomicDirectiveClass
+name|OMPAtomicDirectiveClass
 argument_list|,
-argument|OMPD_atomic
+name|OMPD_atomic
 argument_list|,
-argument|StartLoc
+name|StartLoc
 argument_list|,
-argument|EndLoc
+name|EndLoc
 argument_list|,
-argument|NumClauses
+name|NumClauses
 argument_list|,
-literal|4
+literal|5
+argument_list|)
+block|,
+name|IsXLHSInRHSPart
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|IsPostfixUpdate
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Build an empty directive.
@@ -5215,19 +5352,31 @@ argument_list|)
 operator|:
 name|OMPExecutableDirective
 argument_list|(
-argument|this
+name|this
 argument_list|,
-argument|OMPAtomicDirectiveClass
+name|OMPAtomicDirectiveClass
 argument_list|,
-argument|OMPD_atomic
+name|OMPD_atomic
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|SourceLocation()
+name|SourceLocation
+argument_list|()
 argument_list|,
-argument|NumClauses
+name|NumClauses
 argument_list|,
-literal|4
+literal|5
+argument_list|)
+block|,
+name|IsXLHSInRHSPart
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|IsPostfixUpdate
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 comment|/// \brief Set 'x' part of the associated expression/statement.
@@ -5248,6 +5397,28 @@ argument_list|)
 operator|=
 name|X
 block|; }
+comment|/// \brief Set helper expression of the form
+comment|/// 'OpaqueValueExpr(x) binop OpaqueValueExpr(expr)' or
+comment|/// 'OpaqueValueExpr(expr) binop OpaqueValueExpr(x)'.
+name|void
+name|setUpdateExpr
+argument_list|(
+argument|Expr *UE
+argument_list|)
+block|{
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+literal|2
+argument_list|)
+operator|=
+name|UE
+block|; }
 comment|/// \brief Set 'v' part of the associated expression/statement.
 name|void
 name|setV
@@ -5263,7 +5434,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-literal|2
+literal|3
 argument_list|)
 operator|=
 name|V
@@ -5283,7 +5454,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 operator|=
 name|E
@@ -5302,7 +5473,13 @@ comment|/// \param AssociatedStmt Statement, associated with the directive.
 comment|/// \param X 'x' part of the associated expression/statement.
 comment|/// \param V 'v' part of the associated expression/statement.
 comment|/// \param E 'expr' part of the associated expression/statement.
-comment|///
+comment|/// \param UE Helper expression of the form
+comment|/// 'OpaqueValueExpr(x) binop OpaqueValueExpr(expr)' or
+comment|/// 'OpaqueValueExpr(expr) binop OpaqueValueExpr(x)'.
+comment|/// \param IsXLHSInRHSPart true if \a UE has the first form and false if the
+comment|/// second.
+comment|/// \param IsPostfixUpdate true if original value of 'x' must be stored in
+comment|/// 'v', not an updated one.
 specifier|static
 name|OMPAtomicDirective
 operator|*
@@ -5323,6 +5500,12 @@ argument_list|,
 argument|Expr *V
 argument_list|,
 argument|Expr *E
+argument_list|,
+argument|Expr *UE
+argument_list|,
+argument|bool IsXLHSInRHSPart
+argument_list|,
+argument|bool IsPostfixUpdate
 argument_list|)
 block|;
 comment|/// \brief Creates an empty directive with the place for \a NumClauses
@@ -5390,6 +5573,82 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/// \brief Get helper expression of the form
+comment|/// 'OpaqueValueExpr(x) binop OpaqueValueExpr(expr)' or
+comment|/// 'OpaqueValueExpr(expr) binop OpaqueValueExpr(x)'.
+name|Expr
+operator|*
+name|getUpdateExpr
+argument_list|()
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+literal|2
+argument_list|)
+operator|)
+return|;
+block|}
+specifier|const
+name|Expr
+operator|*
+name|getUpdateExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast_or_null
+operator|<
+name|Expr
+operator|>
+operator|(
+operator|*
+name|std
+operator|::
+name|next
+argument_list|(
+name|child_begin
+argument_list|()
+argument_list|,
+literal|2
+argument_list|)
+operator|)
+return|;
+block|}
+comment|/// \brief Return true if helper update expression has form
+comment|/// 'OpaqueValueExpr(x) binop OpaqueValueExpr(expr)' and false if it has form
+comment|/// 'OpaqueValueExpr(expr) binop OpaqueValueExpr(x)'.
+name|bool
+name|isXLHSInRHSPart
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsXLHSInRHSPart
+return|;
+block|}
+comment|/// \brief Return true if 'v' expression must be updated to original value of
+comment|/// 'x', false if 'v' must be updated to the new value of 'x'.
+name|bool
+name|isPostfixUpdate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsPostfixUpdate
+return|;
+block|}
 comment|/// \brief Get 'v' part of the associated expression/statement.
 name|Expr
 operator|*
@@ -5410,7 +5669,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-literal|2
+literal|3
 argument_list|)
 operator|)
 return|;
@@ -5436,7 +5695,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-literal|2
+literal|3
 argument_list|)
 operator|)
 return|;
@@ -5461,7 +5720,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 operator|)
 return|;
@@ -5487,7 +5746,7 @@ argument_list|(
 name|child_begin
 argument_list|()
 argument_list|,
-literal|3
+literal|4
 argument_list|)
 operator|)
 return|;

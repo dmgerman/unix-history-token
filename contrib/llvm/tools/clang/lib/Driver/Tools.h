@@ -145,9 +145,9 @@ operator|&
 name|Args
 argument_list|,
 specifier|const
-name|InputInfoList
+name|InputInfo
 operator|&
-name|Inputs
+name|Input
 argument_list|)
 block|;
 specifier|static
@@ -462,6 +462,15 @@ argument_list|,
 argument|RF_Full
 argument_list|)
 block|{}
+name|void
+name|AddMIPSTargetArgs
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|llvm::opt::ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|hasGoodDiagnostics
 argument_list|()
@@ -975,6 +984,27 @@ name|Triple
 argument_list|)
 decl_stmt|;
 specifier|const
+name|StringRef
+name|getARMArch
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgList
+operator|&
+name|Args
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|Triple
+argument_list|)
+decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|getARMCPUForMArch
@@ -1003,6 +1033,9 @@ name|getLLVMArchSuffixForARM
 parameter_list|(
 name|StringRef
 name|CPU
+parameter_list|,
+name|StringRef
+name|Arch
 parameter_list|)
 function_decl|;
 name|void
@@ -1033,6 +1066,27 @@ block|}
 name|namespace
 name|mips
 block|{
+typedef|typedef
+enum|enum
+block|{
+name|NanLegacy
+init|=
+literal|1
+block|,
+name|Nan2008
+init|=
+literal|2
+block|}
+name|NanEncoding
+typedef|;
+name|NanEncoding
+name|getSupportedNanEncoding
+parameter_list|(
+name|StringRef
+modifier|&
+name|CPU
+parameter_list|)
+function_decl|;
 name|void
 name|getMipsCPUAndABI
 argument_list|(
@@ -1152,6 +1206,77 @@ name|Value
 argument_list|)
 decl_stmt|;
 block|}
+comment|/// cloudabi -- Directly call GNU Binutils linker
+name|namespace
+name|cloudabi
+block|{
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Link
+range|:
+name|public
+name|GnuTool
+block|{
+name|public
+operator|:
+name|Link
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|GnuTool
+argument_list|(
+literal|"cloudabi::Link"
+argument_list|,
+literal|"linker"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
+block|}
+comment|// end namespace cloudabi
 name|namespace
 name|darwin
 block|{
@@ -2160,6 +2285,119 @@ operator|:
 name|GnuTool
 argument_list|(
 literal|"GNU::Link"
+argument_list|,
+literal|"linker"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|isLinkJob
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|;   }
+block|; }
+name|namespace
+name|nacltools
+block|{
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|AssembleARM
+operator|:
+name|public
+name|gnutools
+operator|::
+name|Assemble
+block|{
+name|public
+operator|:
+name|AssembleARM
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|gnutools
+operator|::
+name|Assemble
+argument_list|(
+argument|TC
+argument_list|)
+block|{}
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const llvm::opt::ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+name|override
+block|;   }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|Link
+operator|:
+name|public
+name|Tool
+block|{
+name|public
+operator|:
+name|Link
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|Tool
+argument_list|(
+literal|"NaCl::Link"
 argument_list|,
 literal|"linker"
 argument_list|,

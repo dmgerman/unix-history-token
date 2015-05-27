@@ -125,9 +125,12 @@ name|ObjCListBase
 block|{
 name|ObjCListBase
 argument_list|(
-argument|const ObjCListBase&
+specifier|const
+name|ObjCListBase
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -137,7 +140,8 @@ specifier|const
 name|ObjCListBase
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:
@@ -3886,12 +3890,12 @@ block|{
 return|return
 name|isInstance
 condition|?
-name|getInstanceMethod
+name|getCategoryInstanceMethod
 argument_list|(
 name|Sel
 argument_list|)
 else|:
-name|getClassMethod
+name|getCategoryClassMethod
 argument_list|(
 name|Sel
 argument_list|)
@@ -9392,10 +9396,8 @@ name|SourceLocation
 name|IvarRBraceLoc
 block|;
 comment|/// Support for ivar initialization.
-comment|/// IvarInitializers - The arguments used to initialize the ivars
-name|CXXCtorInitializer
-operator|*
-operator|*
+comment|/// \brief The arguments used to initialize the ivars
+name|LazyCXXCtorInitializersPtr
 name|IvarInitializers
 block|;
 name|unsigned
@@ -9615,8 +9617,24 @@ name|init_iterator
 name|init_begin
 parameter_list|()
 block|{
+specifier|const
+specifier|auto
+modifier|*
+name|ConstThis
+init|=
+name|this
+decl_stmt|;
 return|return
-name|IvarInitializers
+name|const_cast
+operator|<
+name|init_iterator
+operator|>
+operator|(
+name|ConstThis
+operator|->
+name|init_begin
+argument_list|()
+operator|)
 return|;
 block|}
 end_function
@@ -9630,11 +9648,7 @@ name|init_const_iterator
 name|init_begin
 argument_list|()
 specifier|const
-block|{
-return|return
-name|IvarInitializers
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_comment
@@ -9647,7 +9661,8 @@ name|init_end
 parameter_list|()
 block|{
 return|return
-name|IvarInitializers
+name|init_begin
+argument_list|()
 operator|+
 name|NumIvarInitializers
 return|;
@@ -9665,7 +9680,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IvarInitializers
+name|init_begin
+argument_list|()
 operator|+
 name|NumIvarInitializers
 return|;

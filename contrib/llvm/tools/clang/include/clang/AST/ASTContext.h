@@ -1134,6 +1134,25 @@ operator|*
 operator|>
 name|MergedDecls
 expr_stmt|;
+comment|/// \brief A mapping from a defining declaration to a list of modules (other
+comment|/// than the owning module of the declaration) that contain merged
+comment|/// definitions of that entity.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|NamedDecl
+operator|*
+operator|,
+name|llvm
+operator|::
+name|TinyPtrVector
+operator|<
+name|Module
+operator|*
+operator|>>
+name|MergedDefModules
+expr_stmt|;
 name|public
 label|:
 comment|/// \brief A type synonym for the TemplateOrInstantiation mapping.
@@ -1353,6 +1372,11 @@ decl_stmt|;
 name|TranslationUnitDecl
 modifier|*
 name|TUDecl
+decl_stmt|;
+name|mutable
+name|ExternCContextDecl
+modifier|*
+name|ExternCContext
 decl_stmt|;
 comment|/// \brief The associated SourceManager object.a
 name|SourceManager
@@ -2825,8 +2849,106 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/// \brief Note that the definition \p ND has been merged into module \p M,
+end_comment
+
+begin_comment
+comment|/// and should be visible whenever \p M is visible.
+end_comment
+
+begin_function_decl
+name|void
+name|mergeDefinitionIntoModule
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|ND
+parameter_list|,
+name|Module
+modifier|*
+name|M
+parameter_list|,
+name|bool
+name|NotifyListeners
+init|=
+name|true
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Clean up the merged definition list. Call this if you might have
+end_comment
+
+begin_comment
+comment|/// added duplicates into the list.
+end_comment
+
+begin_function_decl
+name|void
+name|deduplicateMergedDefinitonsFor
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|ND
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Get the additional modules in which the definition \p Def has
+end_comment
+
+begin_comment
+comment|/// been merged.
+end_comment
+
 begin_expr_stmt
-name|TranslationUnitDecl
+name|ArrayRef
+operator|<
+name|Module
+operator|*
+operator|>
+name|getModulesWithMergedDefinition
+argument_list|(
+argument|NamedDecl *Def
+argument_list|)
+block|{
+name|auto
+name|MergedIt
+operator|=
+name|MergedDefModules
+operator|.
+name|find
+argument_list|(
+name|Def
+argument_list|)
+block|;
+if|if
+condition|(
+name|MergedIt
+operator|==
+name|MergedDefModules
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|None
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|MergedIt
+operator|->
+name|second
+return|;
+end_return
+
+begin_expr_stmt
+unit|}    TranslationUnitDecl
 operator|*
 name|getTranslationUnitDecl
 argument_list|()
@@ -2837,6 +2959,14 @@ name|TUDecl
 return|;
 block|}
 end_expr_stmt
+
+begin_function_decl
+name|ExternCContextDecl
+modifier|*
+name|getExternCContextDecl
+parameter_list|()
+function_decl|const;
+end_function_decl
 
 begin_comment
 comment|// Builtin Types.
@@ -7529,6 +7659,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Return the default alignment for __attribute__((aligned)) on
+end_comment
+
+begin_comment
+comment|/// this target, to be used if no alignment value is specified.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|getTargetDefaultAlignForAttributeAligned
+argument_list|(
+name|void
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Return the alignment in bits that should be given to a
 end_comment
 
@@ -8769,6 +8917,17 @@ end_comment
 begin_decl_stmt
 name|QualType
 name|getSignatureParameterType
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|QualType
+name|getExceptionObjectType
 argument_list|(
 name|QualType
 name|T
@@ -10133,6 +10292,69 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|getCopyConstructorForExceptionObject
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|addCopyConstructorForExceptionObject
+parameter_list|(
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+name|CXXConstructorDecl
+modifier|*
+name|CD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|addDefaultArgExprForConstructor
+parameter_list|(
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|CD
+parameter_list|,
+name|unsigned
+name|ParmIdx
+parameter_list|,
+name|Expr
+modifier|*
+name|DAE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|Expr
+modifier|*
+name|getDefaultArgExprForConstructor
+parameter_list|(
+specifier|const
+name|CXXConstructorDecl
+modifier|*
+name|CD
+parameter_list|,
+name|unsigned
+name|ParmIdx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|setManglingNumber
 parameter_list|(
@@ -10459,15 +10681,15 @@ name|private
 label|:
 end_label
 
-begin_macro
+begin_expr_stmt
 name|ASTContext
 argument_list|(
-argument|const ASTContext&
+specifier|const
+name|ASTContext
+operator|&
 argument_list|)
-end_macro
-
-begin_expr_stmt
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 end_expr_stmt
 
@@ -10480,7 +10702,8 @@ specifier|const
 name|ASTContext
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 end_decl_stmt
 

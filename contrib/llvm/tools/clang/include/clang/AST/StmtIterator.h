@@ -840,7 +840,7 @@ operator|==
 name|second
 return|;
 block|}
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -1120,7 +1120,7 @@ operator|==
 name|second
 return|;
 block|}
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()

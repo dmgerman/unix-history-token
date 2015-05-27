@@ -563,9 +563,13 @@ name|NumArguments
 decl_stmt|;
 name|TemplateArgumentList
 argument_list|(
-argument|const TemplateArgumentList&Other
+specifier|const
+name|TemplateArgumentList
+operator|&
+name|Other
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -576,7 +580,8 @@ name|TemplateArgumentList
 operator|&
 name|Other
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|TemplateArgumentList
 argument_list|(
@@ -1126,7 +1131,7 @@ block|;
 comment|/// \brief The function template from which this function template
 comment|/// specialization was generated.
 comment|///
-comment|/// The two bits are contain the top 4 values of TemplateSpecializationKind.
+comment|/// The two bits contain the top 4 values of TemplateSpecializationKind.
 name|llvm
 operator|::
 name|PointerIntPair
@@ -1808,7 +1813,21 @@ typedef|;
 specifier|static
 name|DeclType
 operator|*
-name|getMostRecentDecl
+name|getDecl
+argument_list|(
+argument|EntryType *D
+argument_list|)
+block|{
+return|return
+name|D
+return|;
+block|}
+specifier|static
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|getTemplateArgs
 argument_list|(
 argument|EntryType *D
 argument_list|)
@@ -1816,7 +1835,10 @@ block|{
 return|return
 name|D
 operator|->
-name|getMostRecentDecl
+name|getTemplateArgs
+argument_list|()
+operator|.
+name|asArray
 argument_list|()
 return|;
 block|}
@@ -1828,7 +1850,7 @@ name|typename
 name|EntryType
 block|,
 name|typename
-name|_SETraits
+name|SETraits
 operator|=
 name|SpecEntryTraits
 operator|<
@@ -1836,46 +1858,29 @@ name|EntryType
 operator|>
 block|,
 name|typename
-name|_DeclType
+name|DeclType
 operator|=
 name|typename
-name|_SETraits
+name|SETraits
 operator|::
 name|DeclType
 operator|>
-name|class
+expr|struct
 name|SpecIterator
 operator|:
-name|public
-name|std
+name|llvm
 operator|::
-name|iterator
+name|iterator_adaptor_base
 operator|<
-name|std
-operator|::
-name|forward_iterator_tag
+name|SpecIterator
+operator|<
+name|EntryType
 block|,
-name|_DeclType
-operator|*
-block|,
-name|ptrdiff_t
-block|,
-name|_DeclType
-operator|*
-block|,
-name|_DeclType
-operator|*
-operator|>
-block|{
-typedef|typedef
-name|_SETraits
 name|SETraits
-typedef|;
-typedef|typedef
-name|_DeclType
+block|,
 name|DeclType
-typedef|;
-typedef|typedef
+operator|>
+block|,
 name|typename
 name|llvm
 operator|::
@@ -1885,27 +1890,51 @@ name|EntryType
 operator|>
 operator|::
 name|iterator
-name|SetIteratorType
-expr_stmt|;
-name|SetIteratorType
-name|SetIter
-block|;
-name|public
-operator|:
+block|,
+name|typename
+name|std
+operator|::
+name|iterator_traits
+operator|<
+name|typename
+name|llvm
+operator|::
+name|FoldingSetVector
+operator|<
+name|EntryType
+operator|>
+operator|::
+name|iterator
+operator|>
+operator|::
+name|iterator_category
+block|,
+name|DeclType
+operator|*
+block|,
+name|ptrdiff_t
+block|,
+name|DeclType
+operator|*
+block|,
+name|DeclType
+operator|*
+operator|>
+block|{
 name|SpecIterator
-argument_list|()
-operator|:
-name|SetIter
 argument_list|()
 block|{}
+name|explicit
 name|SpecIterator
 argument_list|(
-argument|SetIteratorType SetIter
+argument|typename llvm::FoldingSetVector<EntryType>::iterator SetIter
 argument_list|)
 operator|:
-name|SetIter
+name|SpecIterator
+operator|::
+name|iterator_adaptor_base
 argument_list|(
-argument|SetIter
+argument|std::move(SetIter)
 argument_list|)
 block|{}
 name|DeclType
@@ -1919,12 +1948,17 @@ block|{
 return|return
 name|SETraits
 operator|::
-name|getMostRecentDecl
+name|getDecl
 argument_list|(
 operator|&
 operator|*
-name|SetIter
+name|this
+operator|->
+name|I
 argument_list|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
 return|;
 block|}
 name|DeclType
@@ -1941,81 +1975,8 @@ operator|*
 name|this
 return|;
 block|}
-name|SpecIterator
-operator|&
-name|operator
-operator|++
-operator|(
-operator|)
-block|{
-operator|++
-name|SetIter
+expr|}
 block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|SpecIterator
-name|operator
-operator|++
-operator|(
-name|int
-operator|)
-block|{
-name|SpecIterator
-name|tmp
-argument_list|(
-operator|*
-name|this
-argument_list|)
-block|;
-operator|++
-operator|(
-operator|*
-name|this
-operator|)
-block|;
-return|return
-name|tmp
-return|;
-block|}
-name|bool
-name|operator
-operator|==
-operator|(
-name|SpecIterator
-name|Other
-operator|)
-specifier|const
-block|{
-return|return
-name|SetIter
-operator|==
-name|Other
-operator|.
-name|SetIter
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-name|SpecIterator
-name|Other
-operator|)
-specifier|const
-block|{
-return|return
-name|SetIter
-operator|!=
-name|Other
-operator|.
-name|SetIter
-return|;
-block|}
-block|}
-empty_stmt|;
 name|template
 operator|<
 name|typename
@@ -2088,8 +2049,36 @@ operator|*
 operator|&
 name|InsertPos
 argument_list|)
-expr_stmt|;
-struct|struct
+block|;
+name|template
+operator|<
+name|class
+name|Derived
+block|,
+name|class
+name|EntryType
+operator|>
+name|void
+name|addSpecializationImpl
+argument_list|(
+name|llvm
+operator|::
+name|FoldingSetVector
+operator|<
+name|EntryType
+operator|>
+operator|&
+name|Specs
+argument_list|,
+name|EntryType
+operator|*
+name|Entry
+argument_list|,
+name|void
+operator|*
+name|InsertPos
+argument_list|)
+block|;    struct
 name|CommonBase
 block|{
 name|CommonBase
@@ -2113,22 +2102,21 @@ name|PointerIntPair
 operator|<
 name|RedeclarableTemplateDecl
 operator|*
-operator|,
+block|,
 literal|1
-operator|,
+block|,
 name|bool
 operator|>
 name|InstantiatedFromMember
-expr_stmt|;
-block|}
-struct|;
+block|;   }
+block|;
 comment|/// \brief Pointer to the common data shared by all declarations of this
 comment|/// template.
 name|mutable
 name|CommonBase
-modifier|*
+operator|*
 name|Common
-decl_stmt|;
+block|;
 comment|/// \brief Retrieves the "common" pointer shared by all (re-)declarations of
 comment|/// the same template. Calling this routine may implicitly allocate memory
 comment|/// for the common pointer.
@@ -2137,20 +2125,18 @@ operator|*
 name|getCommonPtr
 argument_list|()
 specifier|const
-expr_stmt|;
+block|;
 name|virtual
 name|CommonBase
-modifier|*
+operator|*
 name|newCommon
 argument_list|(
-name|ASTContext
-operator|&
-name|C
+argument|ASTContext&C
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|// Construct a template decl with name, parameters, and templated element.
 name|RedeclarableTemplateDecl
 argument_list|(
@@ -2168,7 +2154,7 @@ argument|TemplateParameterList *Params
 argument_list|,
 argument|NamedDecl *Decl
 argument_list|)
-block|:
+operator|:
 name|TemplateDecl
 argument_list|(
 name|DK
@@ -2183,12 +2169,12 @@ name|Params
 argument_list|,
 name|Decl
 argument_list|)
-operator|,
+block|,
 name|redeclarable_base
 argument_list|(
 name|C
 argument_list|)
-operator|,
+block|,
 name|Common
 argument_list|()
 block|{}
@@ -2202,13 +2188,13 @@ operator|>
 name|friend
 name|class
 name|RedeclarableTemplate
-expr_stmt|;
+block|;
 comment|/// \brief Retrieves the canonical declaration of this template.
 name|RedeclarableTemplateDecl
-modifier|*
+operator|*
 name|getCanonicalDecl
-parameter_list|()
-function|override
+argument_list|()
+name|override
 block|{
 return|return
 name|getFirstDecl
@@ -2263,7 +2249,7 @@ block|}
 comment|/// \brief Note that this member template is a specialization.
 name|void
 name|setMemberSpecialization
-parameter_list|()
+argument_list|()
 block|{
 name|assert
 argument_list|(
@@ -2277,7 +2263,7 @@ argument_list|()
 operator|&&
 literal|"Only member templates can be member template specializations"
 argument_list|)
-expr_stmt|;
+block|;
 name|getCommonPtr
 argument_list|()
 operator|->
@@ -2287,8 +2273,7 @@ name|setInt
 argument_list|(
 name|true
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 comment|/// \brief Retrieve the member template from which this template was
 comment|/// instantiated, or NULL if this template was not instantiated from a
 comment|/// member template.
@@ -2343,11 +2328,9 @@ return|;
 block|}
 name|void
 name|setInstantiatedFromMemberTemplate
-parameter_list|(
-name|RedeclarableTemplateDecl
-modifier|*
-name|TD
-parameter_list|)
+argument_list|(
+argument|RedeclarableTemplateDecl *TD
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -2360,7 +2343,7 @@ operator|.
 name|getPointer
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 name|getCommonPtr
 argument_list|()
 operator|->
@@ -2370,8 +2353,7 @@ name|setPointer
 argument_list|(
 name|TD
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 typedef|typedef
 name|redeclarable_base
 operator|::
@@ -2388,42 +2370,39 @@ name|using
 name|redeclarable_base
 operator|::
 name|redecls_begin
-expr_stmt|;
+block|;
 name|using
 name|redeclarable_base
 operator|::
 name|redecls_end
-expr_stmt|;
+block|;
 name|using
 name|redeclarable_base
 operator|::
 name|redecls
-expr_stmt|;
+block|;
 name|using
 name|redeclarable_base
 operator|::
 name|getPreviousDecl
-expr_stmt|;
+block|;
 name|using
 name|redeclarable_base
 operator|::
 name|getMostRecentDecl
-expr_stmt|;
+block|;
 name|using
 name|redeclarable_base
 operator|::
 name|isFirstDecl
-expr_stmt|;
+block|;
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|Decl
-modifier|*
-name|D
-parameter_list|)
+argument_list|(
+argument|const Decl *D
+argument_list|)
 block|{
 return|return
 name|classofKind
@@ -2438,10 +2417,9 @@ block|}
 specifier|static
 name|bool
 name|classofKind
-parameter_list|(
-name|Kind
-name|K
-parameter_list|)
+argument_list|(
+argument|Kind K
+argument_list|)
 block|{
 return|return
 name|K
@@ -2456,23 +2434,16 @@ block|}
 name|friend
 name|class
 name|ASTReader
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|ASTDeclReader
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|ASTDeclWriter
+block|; }
 decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2491,7 +2462,7 @@ typedef|;
 specifier|static
 name|DeclType
 operator|*
-name|getMostRecentDecl
+name|getDecl
 argument_list|(
 argument|FunctionTemplateSpecializationInfo *I
 argument_list|)
@@ -2500,23 +2471,30 @@ return|return
 name|I
 operator|->
 name|Function
+return|;
+block|}
+specifier|static
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|getTemplateArgs
+argument_list|(
+argument|FunctionTemplateSpecializationInfo *I
+argument_list|)
+block|{
+return|return
+name|I
 operator|->
-name|getMostRecentDecl
+name|TemplateArguments
+operator|->
+name|asArray
 argument_list|()
 return|;
 block|}
 block|}
-end_expr_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// Declaration of a template function.
-end_comment
-
-begin_decl_stmt
 name|class
 name|FunctionTemplateDecl
 range|:
@@ -2646,12 +2624,6 @@ name|friend
 name|class
 name|FunctionDecl
 block|;
-comment|/// \brief Load any lazily-loaded specializations from the external source.
-name|void
-name|LoadLazySpecializations
-argument_list|()
-specifier|const
-block|;
 comment|/// \brief Retrieve the set of function template specializations of this
 comment|/// function template.
 name|llvm
@@ -2683,6 +2655,12 @@ argument_list|)
 block|;
 name|public
 operator|:
+comment|/// \brief Load any lazily-loaded specializations from the external source.
+name|void
+name|LoadLazySpecializations
+argument_list|()
+specifier|const
+block|;
 comment|/// Get the underlying function declaration of the template.
 name|FunctionDecl
 operator|*
@@ -2832,6 +2810,52 @@ return|;
 block|}
 name|FunctionTemplateDecl
 operator|*
+name|getMostRecentDecl
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|FunctionTemplateDecl
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|RedeclarableTemplateDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|const
+name|FunctionTemplateDecl
+operator|*
+name|getMostRecentDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|FunctionTemplateDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
+return|;
+block|}
+name|FunctionTemplateDecl
+operator|*
 name|getInstantiatedFromMemberTemplate
 argument_list|()
 block|{
@@ -2855,9 +2879,6 @@ name|FunctionTemplateSpecializationInfo
 operator|>
 name|spec_iterator
 expr_stmt|;
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 name|llvm
 operator|::
@@ -2867,9 +2888,6 @@ name|spec_iterator
 operator|>
 name|spec_range
 expr_stmt|;
-end_typedef
-
-begin_expr_stmt
 name|spec_range
 name|specializations
 argument_list|()
@@ -2886,9 +2904,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|spec_iterator
 name|spec_begin
 argument_list|()
@@ -2904,9 +2919,6 @@ name|false
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|spec_iterator
 name|spec_end
 argument_list|()
@@ -2922,37 +2934,13 @@ name|true
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Retrieve the "injected" template arguments that correspond to the
-end_comment
-
-begin_comment
 comment|/// template parameters of this function template.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Although the C++ standard has no notion of the "injected" template
-end_comment
-
-begin_comment
 comment|/// arguments for a function template, the notion is convenient when
-end_comment
-
-begin_comment
 comment|/// we need to perform substitutions inside the definition of a function
-end_comment
-
-begin_comment
 comment|/// template.
-end_comment
-
-begin_expr_stmt
 name|ArrayRef
 operator|<
 name|TemplateArgument
@@ -2960,13 +2948,7 @@ operator|>
 name|getInjectedTemplateArgs
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Create a function template node.
-end_comment
-
-begin_function_decl
 specifier|static
 name|FunctionTemplateDecl
 modifier|*
@@ -2995,13 +2977,7 @@ modifier|*
 name|Decl
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|/// \brief Create an empty function template node.
-end_comment
-
-begin_function_decl
 specifier|static
 name|FunctionTemplateDecl
 modifier|*
@@ -3015,13 +2991,7 @@ name|unsigned
 name|ID
 parameter_list|)
 function_decl|;
-end_function_decl
-
-begin_comment
 comment|// Implement isa/cast/dyncast support
-end_comment
-
-begin_function
 specifier|static
 name|bool
 name|classof
@@ -3042,9 +3012,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classofKind
@@ -3059,24 +3026,22 @@ operator|==
 name|FunctionTemplate
 return|;
 block|}
-end_function
-
-begin_decl_stmt
 name|friend
 name|class
 name|ASTDeclReader
 decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|friend
 name|class
 name|ASTDeclWriter
 decl_stmt|;
+block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
-unit|};
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -3130,7 +3095,8 @@ name|TemplateParmPosition
 block|{
 name|TemplateParmPosition
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|protected
 label|:
@@ -6105,12 +6071,6 @@ operator|*
 name|LazySpecializations
 block|;   }
 block|;
-comment|/// \brief Load any lazily-loaded specializations from the external source.
-name|void
-name|LoadLazySpecializations
-argument_list|()
-specifier|const
-block|;
 comment|/// \brief Retrieve the set of specializations of this class template.
 name|llvm
 operator|::
@@ -6198,6 +6158,12 @@ return|;
 block|}
 name|public
 operator|:
+comment|/// \brief Load any lazily-loaded specializations from the external source.
+name|void
+name|LoadLazySpecializations
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Get the underlying class declarations of the template.
 name|CXXRecordDecl
 operator|*
@@ -9358,12 +9324,6 @@ operator|*
 name|LazySpecializations
 block|;   }
 block|;
-comment|/// \brief Load any lazily-loaded specializations from the external source.
-name|void
-name|LoadLazySpecializations
-argument_list|()
-specifier|const
-block|;
 comment|/// \brief Retrieve the set of specializations of this variable template.
 name|llvm
 operator|::
@@ -9451,6 +9411,12 @@ return|;
 block|}
 name|public
 operator|:
+comment|/// \brief Load any lazily-loaded specializations from the external source.
+name|void
+name|LoadLazySpecializations
+argument_list|()
+specifier|const
+block|;
 comment|/// \brief Get the underlying variable declarations of the template.
 name|VarDecl
 operator|*
@@ -9645,6 +9611,52 @@ operator|->
 name|getPreviousDecl
 argument_list|()
 operator|)
+return|;
+block|}
+name|VarTemplateDecl
+operator|*
+name|getMostRecentDecl
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|VarTemplateDecl
+operator|>
+operator|(
+name|static_cast
+operator|<
+name|RedeclarableTemplateDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|const
+name|VarTemplateDecl
+operator|*
+name|getMostRecentDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|VarTemplateDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDecl
+argument_list|()
 return|;
 block|}
 name|VarTemplateDecl

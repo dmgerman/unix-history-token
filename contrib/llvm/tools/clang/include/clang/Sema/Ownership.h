@@ -265,7 +265,7 @@ name|P
 argument_list|)
 expr_stmt|;
 block|}
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()

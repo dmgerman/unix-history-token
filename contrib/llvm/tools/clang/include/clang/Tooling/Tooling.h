@@ -186,6 +186,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Option/Option.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<memory>
 end_include
 
@@ -277,10 +283,10 @@ name|ToolAction
 block|{
 name|public
 operator|:
-name|virtual
 operator|~
 name|FrontendActionFactory
 argument_list|()
+name|override
 block|;
 comment|/// \brief Invokes the compiler with a FrontendAction created by create().
 name|bool
@@ -1255,6 +1261,35 @@ name|string
 name|getAbsolutePath
 argument_list|(
 argument|StringRef File
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Creates a \c CompilerInvocation.
+end_comment
+
+begin_expr_stmt
+name|clang
+operator|::
+name|CompilerInvocation
+operator|*
+name|newInvocation
+argument_list|(
+name|clang
+operator|::
+name|DiagnosticsEngine
+operator|*
+name|Diagnostics
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgStringList
+operator|&
+name|CC1Args
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -693,7 +693,7 @@ literal|"'"
 return|;
 block|}
 comment|/// \brief Returns whether this TypoCorrection has a non-empty DeclarationName
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()

@@ -1285,6 +1285,7 @@ expr_stmt|;
 operator|~
 name|ItaniumVTableContext
 argument_list|()
+name|override
 expr_stmt|;
 specifier|const
 name|VTableLayout
@@ -1945,6 +1946,7 @@ block|{}
 operator|~
 name|MicrosoftVTableContext
 argument_list|()
+name|override
 expr_stmt|;
 end_expr_stmt
 

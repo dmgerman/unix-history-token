@@ -101,9 +101,6 @@ name|class
 name|CodeGenOptions
 decl_stmt|;
 name|class
-name|TargetOptions
-decl_stmt|;
-name|class
 name|Decl
 decl_stmt|;
 name|class
@@ -173,11 +170,6 @@ specifier|const
 name|CodeGenOptions
 operator|&
 name|CGO
-argument_list|,
-specifier|const
-name|TargetOptions
-operator|&
-name|TO
 argument_list|,
 name|llvm
 operator|::

@@ -114,8 +114,8 @@ comment|/// information about the SourceRange of the tokens and the type object.
 name|class
 name|Token
 block|{
-comment|/// The location of the token.
-name|SourceLocation
+comment|/// The location of the token. This is actually a SourceLocation.
+name|unsigned
 name|Loc
 decl_stmt|;
 comment|// Conceptually these next two fields could be in a union.  However, this
@@ -330,7 +330,12 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
 name|Loc
+argument_list|)
 return|;
 block|}
 name|unsigned
@@ -361,6 +366,9 @@ block|{
 name|Loc
 operator|=
 name|L
+operator|.
+name|getRawEncoding
+argument_list|()
 expr_stmt|;
 block|}
 name|void
@@ -403,6 +411,10 @@ operator|::
 name|getFromRawEncoding
 argument_list|(
 name|UintData
+condition|?
+name|UintData
+else|:
+name|Loc
 argument_list|)
 return|;
 block|}
@@ -443,6 +455,28 @@ argument_list|()
 operator|:
 name|getLocation
 argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getEndLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isAnnotation
+argument_list|()
+operator|?
+name|getAnnotationEndLoc
+argument_list|()
+operator|:
+name|getLocation
+argument_list|()
+operator|.
+name|getLocWithOffset
+argument_list|(
+name|getLength
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// \brief SourceRange of the group of tokens that this annotation token
@@ -529,6 +563,9 @@ expr_stmt|;
 name|Loc
 operator|=
 name|SourceLocation
+argument_list|()
+operator|.
+name|getRawEncoding
 argument_list|()
 expr_stmt|;
 block|}

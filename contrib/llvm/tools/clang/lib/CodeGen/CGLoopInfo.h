@@ -249,9 +249,12 @@ name|LoopInfoStack
 block|{
 name|LoopInfoStack
 argument_list|(
-argument|const LoopInfoStack&
+specifier|const
+name|LoopInfoStack
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -261,7 +264,8 @@ specifier|const
 name|LoopInfoStack
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:

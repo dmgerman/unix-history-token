@@ -1857,6 +1857,10 @@ parameter_list|)
 function_decl|;
 specifier|static
 name|__inline__
+define|#
+directive|define
+name|_XCR_XFEATURE_ENABLED_MASK
+value|0
 name|unsigned
 name|__int64
 name|__cdecl
@@ -5270,7 +5274,7 @@ argument_list|)
 name|__attribute__
 argument_list|(
 operator|(
-name|deprecated
+name|__deprecated__
 argument_list|(
 literal|"use other intrinsics or C++11 atomics instead"
 argument_list|)
@@ -5299,7 +5303,7 @@ argument_list|)
 name|__attribute__
 argument_list|(
 operator|(
-name|deprecated
+name|__deprecated__
 argument_list|(
 literal|"use other intrinsics or C++11 atomics instead"
 argument_list|)
@@ -5328,7 +5332,7 @@ argument_list|)
 name|__attribute__
 argument_list|(
 operator|(
-name|deprecated
+name|__deprecated__
 argument_list|(
 literal|"use other intrinsics or C++11 atomics instead"
 argument_list|)
@@ -6131,7 +6135,7 @@ name|long
 name|__attribute__
 argument_list|(
 operator|(
-name|always_inline
+name|__always_inline__
 operator|,
 name|__nodebug__
 operator|)
@@ -6158,7 +6162,7 @@ name|void
 name|__attribute__
 argument_list|(
 operator|(
-name|always_inline
+name|__always_inline__
 operator|,
 name|__nodebug__
 operator|)

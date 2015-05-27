@@ -804,6 +804,8 @@ name|MLV_IncompleteType
 block|,
 name|MLV_ConstQualified
 block|,
+name|MLV_ConstAddrSpace
+block|,
 name|MLV_ArrayType
 block|,
 name|MLV_NoSetterProperty
@@ -904,6 +906,8 @@ name|CM_NoSetterProperty
 block|,
 comment|// Implicit assignment to ObjC property without setter
 name|CM_ConstQualified
+block|,
+name|CM_ConstAddrSpace
 block|,
 name|CM_ArrayType
 block|,
@@ -4411,9 +4415,12 @@ return|;
 block|}
 name|APNumericStorage
 argument_list|(
-argument|const APNumericStorage&
+specifier|const
+name|APNumericStorage
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -4423,7 +4430,8 @@ specifier|const
 name|APNumericStorage
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:
@@ -7709,65 +7717,7 @@ argument|SourceLocation op
 argument_list|,
 argument|SourceLocation rp
 argument_list|)
-operator|:
-name|Expr
-argument_list|(
-name|UnaryExprOrTypeTraitExprClass
-argument_list|,
-name|resultType
-argument_list|,
-name|VK_RValue
-argument_list|,
-name|OK_Ordinary
-argument_list|,
-name|false
-argument_list|,
-comment|// Never type-dependent (C++ [temp.dep.expr]p3).
-comment|// Value-dependent if the argument is type-dependent.
-name|E
-operator|->
-name|isTypeDependent
-argument_list|()
-argument_list|,
-name|E
-operator|->
-name|isInstantiationDependent
-argument_list|()
-argument_list|,
-name|E
-operator|->
-name|containsUnexpandedParameterPack
-argument_list|()
-argument_list|)
-block|,
-name|OpLoc
-argument_list|(
-name|op
-argument_list|)
-block|,
-name|RParenLoc
-argument_list|(
-argument|rp
-argument_list|)
-block|{
-name|UnaryExprOrTypeTraitExprBits
-operator|.
-name|Kind
-operator|=
-name|ExprKind
 block|;
-name|UnaryExprOrTypeTraitExprBits
-operator|.
-name|IsType
-operator|=
-name|false
-block|;
-name|Argument
-operator|.
-name|Ex
-operator|=
-name|E
-block|;   }
 comment|/// \brief Construct an empty sizeof/alignof expression.
 name|explicit
 name|UnaryExprOrTypeTraitExpr
@@ -9144,7 +9094,9 @@ comment|/// always the type of the expr itself, if the return type is a referenc
 comment|/// type.
 name|QualType
 name|getCallReturnType
-argument_list|()
+argument_list|(
+argument|const ASTContext&Ctx
+argument_list|)
 specifier|const
 block|;
 name|SourceLocation
@@ -9276,6 +9228,10 @@ comment|/// MemberLoc - This is the location of the member name.
 name|SourceLocation
 name|MemberLoc
 block|;
+comment|/// This is the location of the -> or . in the expression.
+name|SourceLocation
+name|OperatorLoc
+block|;
 comment|/// IsArrow - True if this is "X->F", false if this is "X.F".
 name|bool
 name|IsArrow
@@ -9364,6 +9320,8 @@ argument|Expr *base
 argument_list|,
 argument|bool isarrow
 argument_list|,
+argument|SourceLocation operatorloc
+argument_list|,
 argument|ValueDecl *memberdecl
 argument_list|,
 argument|const DeclarationNameInfo&NameInfo
@@ -9432,6 +9390,11 @@ name|getLoc
 argument_list|()
 argument_list|)
 block|,
+name|OperatorLoc
+argument_list|(
+name|operatorloc
+argument_list|)
+block|,
 name|IsArrow
 argument_list|(
 name|isarrow
@@ -9474,6 +9437,8 @@ argument_list|(
 argument|Expr *base
 argument_list|,
 argument|bool isarrow
+argument_list|,
+argument|SourceLocation operatorloc
 argument_list|,
 argument|ValueDecl *memberdecl
 argument_list|,
@@ -9535,6 +9500,11 @@ argument_list|(
 name|l
 argument_list|)
 block|,
+name|OperatorLoc
+argument_list|(
+name|operatorloc
+argument_list|)
+block|,
 name|IsArrow
 argument_list|(
 name|isarrow
@@ -9565,6 +9535,8 @@ argument_list|,
 argument|Expr *base
 argument_list|,
 argument|bool isarrow
+argument_list|,
+argument|SourceLocation OperatorLoc
 argument_list|,
 argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
@@ -10218,6 +10190,19 @@ name|MemberLoc
 argument_list|,
 name|MemberDNLoc
 argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|SourceLocation
+name|getOperatorLoc
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|OperatorLoc
 return|;
 block|}
 end_expr_stmt

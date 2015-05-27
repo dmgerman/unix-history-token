@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Sanitizers.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceLocation.h"
 end_include
 
@@ -212,11 +218,16 @@ name|Implicit
 range|:
 literal|1
 decl_stmt|;
-name|virtual
-operator|~
-name|Attr
-argument_list|()
-expr_stmt|;
+name|bool
+name|IsLateParsed
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|DuplicatesAllowed
+range|:
+literal|1
+decl_stmt|;
 name|void
 modifier|*
 name|operator
@@ -269,7 +280,7 @@ parameter_list|,
 name|size_t
 name|Alignment
 init|=
-literal|16
+literal|8
 parameter_list|)
 function|throw
 parameter_list|()
@@ -326,8 +337,11 @@ argument|attr::Kind AK
 argument_list|,
 argument|SourceRange R
 argument_list|,
-argument|unsigned SpellingListIndex =
-literal|0
+argument|unsigned SpellingListIndex
+argument_list|,
+argument|bool IsLateParsed
+argument_list|,
+argument|bool DuplicatesAllowed
 argument_list|)
 block|:
 name|Range
@@ -357,7 +371,17 @@ argument_list|)
 operator|,
 name|Implicit
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|IsLateParsed
+argument_list|(
+name|IsLateParsed
+argument_list|)
+operator|,
+name|DuplicatesAllowed
+argument_list|(
+argument|DuplicatesAllowed
 argument_list|)
 block|{}
 name|public
@@ -390,15 +414,12 @@ return|return
 name|SpellingListIndex
 return|;
 block|}
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getSpelling
 argument_list|()
 specifier|const
-operator|=
-literal|0
 expr_stmt|;
 name|SourceLocation
 name|getLocation
@@ -487,7 +508,6 @@ name|IsPackExpansion
 return|;
 block|}
 comment|// Clone this attribute.
-name|virtual
 name|Attr
 modifier|*
 name|clone
@@ -497,21 +517,17 @@ operator|&
 name|C
 argument_list|)
 decl|const
-init|=
-literal|0
 decl_stmt|;
-name|virtual
 name|bool
 name|isLateParsed
 argument_list|()
 specifier|const
 block|{
 return|return
-name|false
+name|IsLateParsed
 return|;
 block|}
 comment|// Pretty print this attribute.
-name|virtual
 name|void
 name|printPretty
 argument_list|(
@@ -525,20 +541,17 @@ operator|&
 name|Policy
 argument_list|)
 decl|const
-init|=
-literal|0
 decl_stmt|;
 comment|/// \brief By default, attributes cannot be duplicated when being merged;
 comment|/// however, an attribute can override this. Returns true if the attribute
 comment|/// can be duplicated when merging.
-name|virtual
 name|bool
 name|duplicatesAllowed
 argument_list|()
 specifier|const
 block|{
 return|return
-name|false
+name|DuplicatesAllowed
 return|;
 block|}
 block|}
@@ -549,11 +562,6 @@ range|:
 name|public
 name|Attr
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 name|protected
 operator|:
 name|InheritableAttr
@@ -562,8 +570,11 @@ argument|attr::Kind AK
 argument_list|,
 argument|SourceRange R
 argument_list|,
-argument|unsigned SpellingListIndex =
-literal|0
+argument|unsigned SpellingListIndex
+argument_list|,
+argument|bool IsLateParsed
+argument_list|,
+argument|bool DuplicatesAllowed
 argument_list|)
 operator|:
 name|Attr
@@ -573,6 +584,10 @@ argument_list|,
 argument|R
 argument_list|,
 argument|SpellingListIndex
+argument_list|,
+argument|IsLateParsed
+argument_list|,
+argument|DuplicatesAllowed
 argument_list|)
 block|{}
 name|public
@@ -614,11 +629,6 @@ operator|:
 name|public
 name|InheritableAttr
 block|{
-name|void
-name|anchor
-argument_list|()
-name|override
-block|;
 name|protected
 operator|:
 name|InheritableParamAttr
@@ -627,8 +637,11 @@ argument|attr::Kind AK
 argument_list|,
 argument|SourceRange R
 argument_list|,
-argument|unsigned SpellingListIndex =
-literal|0
+argument|unsigned SpellingListIndex
+argument_list|,
+argument|bool IsLateParsed
+argument_list|,
+argument|bool DuplicatesAllowed
 argument_list|)
 operator|:
 name|InheritableAttr
@@ -638,6 +651,10 @@ argument_list|,
 argument|R
 argument_list|,
 argument|SpellingListIndex
+argument_list|,
+argument|IsLateParsed
+argument_list|,
+argument|DuplicatesAllowed
 argument_list|)
 block|{}
 name|public

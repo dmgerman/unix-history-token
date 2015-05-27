@@ -340,6 +340,18 @@ modifier|*
 name|FromD
 parameter_list|)
 function_decl|;
+comment|/// \brief Return the copy of the given declaration in the "to" context if
+comment|/// it has already been imported from the "from" context.  Otherwise return
+comment|/// NULL.
+name|Decl
+modifier|*
+name|GetAlreadyImportedOrNull
+parameter_list|(
+name|Decl
+modifier|*
+name|FromD
+parameter_list|)
+function_decl|;
 comment|/// \brief Import the given declaration context from the "from"
 comment|/// AST context into the "to" AST context.
 comment|///

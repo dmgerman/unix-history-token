@@ -124,11 +124,23 @@ name|public
 label|:
 name|SanitizerBlacklist
 argument_list|(
-argument|StringRef BlacklistPath
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|BlacklistPaths
 argument_list|,
-argument|SourceManager&SM
+name|SourceManager
+operator|&
+name|SM
 argument_list|)
-empty_stmt|;
+expr_stmt|;
 name|bool
 name|isBlacklistedGlobal
 argument_list|(

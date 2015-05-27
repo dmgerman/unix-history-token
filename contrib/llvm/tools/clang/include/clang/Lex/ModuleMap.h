@@ -209,6 +209,10 @@ operator|*
 operator|>
 name|Modules
 expr_stmt|;
+comment|/// \brief The number of modules we have created in total.
+name|unsigned
+name|NumCreatedModules
+decl_stmt|;
 name|public
 label|:
 comment|/// \brief Flags describing the role of a module header.
@@ -326,7 +330,7 @@ return|;
 block|}
 comment|// \brief Whether this known header is valid (i.e., it has an
 comment|// associated module).
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -1170,6 +1174,9 @@ specifier|const
 name|FileEntry
 modifier|*
 name|UmbrellaHeader
+parameter_list|,
+name|Twine
+name|NameAsWritten
 parameter_list|)
 function_decl|;
 comment|/// \brief Sets the umbrella directory of the given module to the given
@@ -1185,6 +1192,9 @@ specifier|const
 name|DirectoryEntry
 modifier|*
 name|UmbrellaDir
+parameter_list|,
+name|Twine
+name|NameAsWritten
 parameter_list|)
 function_decl|;
 comment|/// \brief Adds this header to the given module.

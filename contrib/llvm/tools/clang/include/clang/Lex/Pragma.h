@@ -252,10 +252,10 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|PragmaNamespace
 argument_list|()
+name|override
 block|;
 comment|/// FindHandler - Check to see if there is already a handler for the
 comment|/// specified name.  If not, return the handler for the null name if it

@@ -135,6 +135,9 @@ decl_stmt|;
 name|class
 name|IdentifierInfo
 decl_stmt|;
+name|class
+name|Preprocessor
+decl_stmt|;
 comment|/// \brief The preprocessor keeps track of this information for each
 comment|/// file that is \#included.
 struct|struct
@@ -721,9 +724,12 @@ decl_stmt|;
 comment|// HeaderSearch doesn't support default or copy construction.
 name|HeaderSearch
 argument_list|(
-argument|const HeaderSearch&
+specifier|const
+name|HeaderSearch
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -733,7 +739,8 @@ specifier|const
 name|HeaderSearch
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|friend
 name|class
@@ -1296,6 +1303,10 @@ comment|/// if we should include it.
 name|bool
 name|ShouldEnterIncludeFile
 parameter_list|(
+name|Preprocessor
+modifier|&
+name|PP
+parameter_list|,
 specifier|const
 name|FileEntry
 modifier|*
@@ -1499,18 +1510,6 @@ modifier|*
 name|FE
 parameter_list|)
 function_decl|;
-comment|/// Returns true if modules are enabled.
-name|bool
-name|enabledModules
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LangOpts
-operator|.
-name|Modules
-return|;
-block|}
 comment|/// \brief Retrieve the name of the module file that should be used to
 comment|/// load the given module.
 comment|///

@@ -325,9 +325,12 @@ argument_list|)
 decl_stmt|;
 name|GlobalModuleIndex
 argument_list|(
-argument|const GlobalModuleIndex&
+specifier|const
+name|GlobalModuleIndex
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|GlobalModuleIndex
 modifier|&
@@ -338,7 +341,8 @@ specifier|const
 name|GlobalModuleIndex
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:

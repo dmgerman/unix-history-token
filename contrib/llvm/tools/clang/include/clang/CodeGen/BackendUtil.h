@@ -131,7 +131,7 @@ argument_list|,
 name|BackendAction
 name|Action
 argument_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 operator|*
 name|OS
 argument_list|)

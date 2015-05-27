@@ -2117,7 +2117,7 @@ operator|.
 name|Mask
 return|;
 block|}
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()
@@ -5445,9 +5445,12 @@ name|private
 operator|:
 name|Type
 argument_list|(
-argument|const Type&
+specifier|const
+name|Type
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|operator
@@ -5457,7 +5460,8 @@ specifier|const
 name|Type
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 comment|/// Bitfields required by the Type class.
 name|class
@@ -6581,6 +6585,12 @@ argument_list|()
 specifier|const
 block|;
 comment|// __attribute__((NSObject))
+name|bool
+name|isObjCIndependentClassType
+argument_list|()
+specifier|const
+block|;
+comment|// __attribute__((objc_independent_class))
 comment|// FIXME: change this to 'raw' interface type, so we can used 'interface' type
 comment|// for the common case.
 name|bool
@@ -13913,8 +13923,6 @@ block|,
 name|attr_pascal
 block|,
 name|attr_vectorcall
-block|,
-name|attr_pnaclcall
 block|,
 name|attr_inteloclbicc
 block|,

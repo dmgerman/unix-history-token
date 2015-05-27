@@ -152,7 +152,7 @@ name|LLVM_CLANG_ASTMATCHERS_ASTMATCHERSMACROS_H
 end_define
 
 begin_comment
-comment|/// \brief AST_MATCHER_FUNCTION(ReturnType, DefineMatcher) {
+comment|/// \brief AST_MATCHER_FUNCTION(ReturnType, DefineMatcher) { ... }
 end_comment
 
 begin_comment
@@ -177,7 +177,7 @@ value|inline ReturnType DefineMatcher##_getInstance();                          
 end_define
 
 begin_comment
-comment|/// \brief AST_MATCHER_FUNCTION_P(ReturnType, DefineMatcher, ParamType, Param) {
+comment|/// \brief AST_MATCHER_FUNCTION_P(ReturnType, DefineMatcher, ParamType, Param) { ... }
 end_comment
 
 begin_comment
@@ -532,75 +532,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|AST_POLYMORPHIC_SUPPORTED_TYPES_1
+name|AST_POLYMORPHIC_SUPPORTED_TYPES
 parameter_list|(
-name|t1
-parameter_list|)
-value|void(internal::TypeList<t1>)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AST_POLYMORPHIC_SUPPORTED_TYPES_2
-parameter_list|(
-name|t1
-parameter_list|,
-name|t2
+modifier|...
 parameter_list|)
 define|\
-value|void(internal::TypeList<t1, t2>)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AST_POLYMORPHIC_SUPPORTED_TYPES_3
-parameter_list|(
-name|t1
-parameter_list|,
-name|t2
-parameter_list|,
-name|t3
-parameter_list|)
-define|\
-value|void(internal::TypeList<t1, t2, t3>)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AST_POLYMORPHIC_SUPPORTED_TYPES_4
-parameter_list|(
-name|t1
-parameter_list|,
-name|t2
-parameter_list|,
-name|t3
-parameter_list|,
-name|t4
-parameter_list|)
-define|\
-value|void(internal::TypeList<t1, t2, t3, t4>)
-end_define
-
-begin_define
-define|#
-directive|define
-name|AST_POLYMORPHIC_SUPPORTED_TYPES_5
-parameter_list|(
-name|t1
-parameter_list|,
-name|t2
-parameter_list|,
-name|t3
-parameter_list|,
-name|t4
-parameter_list|,
-name|t5
-parameter_list|)
-define|\
-value|void(internal::TypeList<t1, t2, t3, internal::TypeList<t4, t5>>)
+value|void(internal::TypeList<__VA_ARGS__>)
 end_define
 
 begin_comment
