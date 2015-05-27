@@ -134,6 +134,11 @@ operator|&
 name|Banner
 operator|=
 literal|""
+argument_list|,
+name|bool
+name|ShouldPreserveUseListOrder
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// \brief Create and return a pass that prints functions to the specified
@@ -192,6 +197,9 @@ operator|::
 name|string
 name|Banner
 expr_stmt|;
+name|bool
+name|ShouldPreserveUseListOrder
+decl_stmt|;
 name|public
 label|:
 name|PrintModulePass
@@ -199,20 +207,14 @@ argument_list|()
 expr_stmt|;
 name|PrintModulePass
 argument_list|(
-name|raw_ostream
-operator|&
-name|OS
+argument|raw_ostream&OS
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Banner
-operator|=
+argument|const std::string&Banner =
 literal|""
+argument_list|,
+argument|bool ShouldPreserveUseListOrder = false
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|PreservedAnalyses
 name|run
 parameter_list|(

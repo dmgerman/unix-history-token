@@ -195,6 +195,32 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|SDValue
+name|EmitTargetCodeForMemmove
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc dl
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Dst
+argument_list|,
+argument|SDValue Src
+argument_list|,
+argument|SDValue Size
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|bool isVolatile
+argument_list|,
+argument|MachinePointerInfo DstPtrInfo
+argument_list|,
+argument|MachinePointerInfo SrcPtrInfo
+argument_list|)
+specifier|const
+name|override
+block|;
 comment|// Adjust parameters for memset, see RTABI section 4.3.4
 name|SDValue
 name|EmitTargetCodeForMemset
@@ -219,6 +245,27 @@ argument|MachinePointerInfo DstPtrInfo
 argument_list|)
 specifier|const
 name|override
+block|;
+name|SDValue
+name|EmitSpecializedLibcall
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc dl
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Dst
+argument_list|,
+argument|SDValue Src
+argument_list|,
+argument|SDValue Size
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|RTLIB::Libcall LC
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

@@ -155,26 +155,26 @@ argument_list|)
 block|;     }
 name|private
 operator|:
-name|void
-name|initializePass
-argument_list|()
-name|override
-block|{
-name|InitializeAliasAnalysis
+name|bool
+name|doInitialization
 argument_list|(
-name|this
+argument|Module&M
 argument_list|)
-block|;     }
+name|override
+expr_stmt|;
 comment|/// This method is used when a pass implements an analysis interface through
 comment|/// multiple inheritance.  If needed, it should override this to adjust the
 comment|/// this pointer as needed for the specified pass info.
 name|void
-operator|*
+modifier|*
 name|getAdjustedAnalysisPointer
-argument_list|(
-argument|const void *PI
-argument_list|)
-name|override
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|PI
+parameter_list|)
+function|override
 block|{
 if|if
 condition|(
@@ -282,14 +282,11 @@ decl_stmt|;
 block|}
 empty_stmt|;
 block|}
+comment|// namespace objcarc
+block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace objcarc
-end_comment
-
-begin_comment
-unit|}
 comment|// namespace llvm
 end_comment
 

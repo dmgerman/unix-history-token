@@ -76,9 +76,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|HexagonMCInst
-decl_stmt|;
-name|class
 name|HexagonInstPrinter
 range|:
 name|public
@@ -89,18 +86,18 @@ operator|:
 name|explicit
 name|HexagonInstPrinter
 argument_list|(
-specifier|const
 name|MCAsmInfo
+specifier|const
 operator|&
 name|MAI
 argument_list|,
-specifier|const
 name|MCInstrInfo
+specifier|const
 operator|&
 name|MII
 argument_list|,
-specifier|const
 name|MCRegisterInfo
+specifier|const
 operator|&
 name|MRI
 argument_list|)
@@ -122,23 +119,15 @@ block|{}
 name|void
 name|printInst
 argument_list|(
-argument|const MCInst *MI
+argument|MCInst const *MI
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
 argument|StringRef Annot
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|)
 name|override
-block|;
-name|void
-name|printInst
-argument_list|(
-argument|const HexagonMCInst *MI
-argument_list|,
-argument|raw_ostream&O
-argument_list|,
-argument|StringRef Annot
-argument_list|)
 block|;
 name|virtual
 name|StringRef
@@ -161,12 +150,15 @@ operator|&
 name|O
 argument_list|)
 block|;
-name|StringRef
-name|getRegName
+name|void
+name|printRegName
 argument_list|(
+argument|raw_ostream&OS
+argument_list|,
 argument|unsigned RegNo
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 specifier|const
@@ -322,6 +314,17 @@ specifier|const
 block|;
 name|void
 name|printJumpTable
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+specifier|const
+block|;
+name|void
+name|printExtBrtarget
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

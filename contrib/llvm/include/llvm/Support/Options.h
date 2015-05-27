@@ -235,7 +235,7 @@ comment|///
 comment|/// The OptionRegistry is responsible for managing lifetimes of the options and
 comment|/// provides interfaces for option registration and reading values from options.
 comment|/// This object is a singleton, only one instance should ever exist so that all
-comment|/// options are registered in teh same place.
+comment|/// options are registered in the same place.
 name|class
 name|OptionRegistry
 block|{

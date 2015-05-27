@@ -70,15 +70,6 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCSymbol
-decl_stmt|;
-name|class
-name|X86TargetMachine
-decl_stmt|;
-name|class
-name|X86Subtarget
-decl_stmt|;
-name|class
 name|X86FrameLowering
 range|:
 name|public
@@ -138,6 +129,8 @@ name|void
 name|emitPrologue
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 name|override
@@ -156,6 +149,8 @@ name|void
 name|adjustForSegmentedStacks
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&PrologueMBB
 argument_list|)
 specifier|const
 name|override
@@ -164,6 +159,8 @@ name|void
 name|adjustForHiPEPrologue
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&PrologueMBB
 argument_list|)
 specifier|const
 name|override
@@ -301,6 +298,69 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MI
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Check the instruction before/after the passed instruction. If
+comment|/// it is an ADD/SUB/LEA instruction it is deleted argument and the
+comment|/// stack adjustment is returned as a positive value for ADD/LEA and
+comment|/// a negative for SUB.
+specifier|static
+name|int
+name|mergeSPUpdates
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator&MBBI
+argument_list|,
+argument|unsigned StackPtr
+argument_list|,
+argument|bool doMergeWithPrevious
+argument_list|)
+block|;
+comment|/// Emit a series of instructions to increment / decrement the stack
+comment|/// pointer by a constant value.
+specifier|static
+name|void
+name|emitSPUpdate
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator&MBBI
+argument_list|,
+argument|unsigned StackPtr
+argument_list|,
+argument|int64_t NumBytes
+argument_list|,
+argument|bool Is64BitTarget
+argument_list|,
+argument|bool Is64BitStackPtr
+argument_list|,
+argument|bool UseLEA
+argument_list|,
+argument|const TargetInstrInfo&TII
+argument_list|,
+argument|const TargetRegisterInfo&TRI
+argument_list|)
+block|;
+comment|/// Check that LEA can be used on SP in an epilogue sequence for \p MF.
+name|bool
+name|canUseLEAForSPInEpilogue
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+comment|/// Check whether or not the given \p MBB can be used as a epilogue
+comment|/// for the target.
+comment|/// The epilogue will be inserted before the first terminator of that block.
+comment|/// This method is used by the shrink-wrapping pass to decide if
+comment|/// \p MBB will be correctly handled by the target.
+name|bool
+name|canUseAsEpilogue
+argument_list|(
+argument|const MachineBasicBlock&MBB
 argument_list|)
 specifier|const
 name|override

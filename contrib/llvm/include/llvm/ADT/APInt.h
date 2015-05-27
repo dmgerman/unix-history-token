@@ -114,13 +114,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Deserializer
-decl_stmt|;
-name|class
 name|FoldingSetNodeID
-decl_stmt|;
-name|class
-name|Serializer
 decl_stmt|;
 name|class
 name|StringRef
@@ -1302,6 +1296,37 @@ name|getZExtValue
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Check if the APInt consists of a repeated bit pattern.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// e.g. 0x01010101 satisfies isSplat(8).
+end_comment
+
+begin_comment
+comment|/// \param SplatSizeInBits The size of the pattern in bits. Must divide bit
+end_comment
+
+begin_comment
+comment|/// width without remainder.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isSplat
+argument_list|(
+name|unsigned
+name|SplatSizeInBits
+argument_list|)
+decl|const
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
@@ -6320,7 +6345,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This function is an APInt version of the countLeadingOnes_{32,64}
+comment|/// This function is an APInt version of the countLeadingOnes
 end_comment
 
 begin_comment
@@ -6390,7 +6415,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This function is an APInt version of the countTrailingZeros_{32,64}
+comment|/// This function is an APInt version of the countTrailingZeros
 end_comment
 
 begin_comment
@@ -6430,7 +6455,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This function is an APInt version of the countTrailingOnes_{32,64}
+comment|/// This function is an APInt version of the countTrailingOnes
 end_comment
 
 begin_comment
@@ -6465,7 +6490,9 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
-name|CountTrailingOnes_64
+name|llvm
+operator|::
+name|countTrailingOnes
 argument_list|(
 name|VAL
 argument_list|)
@@ -6489,7 +6516,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// This function is an APInt version of the countPopulation_{32,64} functions
+comment|/// This function is an APInt version of the countPopulation functions
 end_comment
 
 begin_comment
@@ -6519,7 +6546,9 @@ name|isSingleWord
 argument_list|()
 condition|)
 return|return
-name|CountPopulation_64
+name|llvm
+operator|::
+name|countPopulation
 argument_list|(
 name|VAL
 argument_list|)

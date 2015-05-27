@@ -257,6 +257,16 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
+comment|// createDivergenceAnalysisPass - This pass determines which branches in a GPU
+comment|// program are divergent.
+comment|//
+name|FunctionPass
+modifier|*
+name|createDivergenceAnalysisPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
 comment|// Minor pass prototypes, allowing us to expose them through bugpoint and
 comment|// analyze.
 name|FunctionPass
@@ -290,11 +300,14 @@ modifier|*
 name|createMemDepPrinter
 parameter_list|()
 function_decl|;
-comment|// createJumpInstrTableInfoPass - This creates a pass that stores information
-comment|// about the jump tables created by JumpInstrTables
-name|ImmutablePass
+comment|//===--------------------------------------------------------------------===//
+comment|//
+comment|// createMemDerefPrinter - This pass collects memory dereferenceability
+comment|// information and prints it with -analyze.
+comment|//
+name|FunctionPass
 modifier|*
-name|createJumpInstrTableInfoPass
+name|createMemDerefPrinter
 parameter_list|()
 function_decl|;
 block|}

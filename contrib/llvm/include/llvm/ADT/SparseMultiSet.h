@@ -380,9 +380,12 @@ comment|// Disable copy construction and assignment.
 comment|// This data structure is not meant to be used that way.
 name|SparseMultiSet
 argument_list|(
-argument|const SparseMultiSet&
+specifier|const
+name|SparseMultiSet
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|SparseMultiSet
 modifier|&
@@ -393,7 +396,8 @@ specifier|const
 name|SparseMultiSet
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 comment|/// Whether the given entry is the head of the list. List heads's previous
 comment|/// pointers are to the tail of the list, allowing for efficient access to the

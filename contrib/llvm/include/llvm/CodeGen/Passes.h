@@ -351,6 +351,10 @@ comment|/// Default setting for -enable-tail-merge on this target.
 name|bool
 name|EnableTailMerge
 block|;
+comment|/// Default setting for -enable-shrink-wrap on this target.
+name|bool
+name|EnableShrinkWrap
+block|;
 name|public
 operator|:
 name|TargetPassConfig
@@ -368,10 +372,10 @@ comment|// Dummy constructor.
 name|TargetPassConfig
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|TargetPassConfig
 argument_list|()
+name|override
 block|;
 specifier|static
 name|char
@@ -553,6 +557,12 @@ name|getOptimizeRegAlloc
 argument_list|()
 specifier|const
 block|;
+comment|/// Return true if shrink wrapping is enabled.
+name|bool
+name|getEnableShrinkWrap
+argument_list|()
+specifier|const
+block|;
 comment|/// Return true if the default global register allocator is in use and
 comment|/// has not be overriden on the command line with '-regalloc=...'
 name|bool
@@ -610,7 +620,7 @@ comment|/// optimization level.
 comment|///
 comment|/// This can also be used to plug a new MachineSchedStrategy into an instance
 comment|/// of the standard ScheduleDAGMI:
-comment|///   return new ScheduleDAGMI(C, new MyStrategy(C))
+comment|///   return new ScheduleDAGMI(C, make_unique<MyStrategy>(C), /* IsPostRA= */false)
 comment|///
 comment|/// Return NULL to select the default (generic) machine scheduler.
 name|virtual
@@ -897,20 +907,6 @@ modifier|*
 name|TM
 parameter_list|)
 function_decl|;
-comment|/// \brief Create a basic TargetTransformInfo analysis pass.
-comment|///
-comment|/// This pass implements the target transform info analysis using the target
-comment|/// independent information available to the LLVM code generator.
-name|ImmutablePass
-modifier|*
-name|createBasicTargetTransformInfoPass
-parameter_list|(
-specifier|const
-name|TargetMachine
-modifier|*
-name|TM
-parameter_list|)
-function_decl|;
 comment|/// createUnreachableBlockEliminationPass - The LLVM code generator does not
 comment|/// work well with unreachable basic blocks (what live ranges make sense for a
 comment|/// block that cannot be reached?).  As such, a code generator should either
@@ -1054,6 +1050,13 @@ specifier|extern
 name|char
 modifier|&
 name|SpillPlacementID
+decl_stmt|;
+comment|/// ShrinkWrap pass. Look for the best place to insert save and restore
+comment|// instruction and update the MachineFunctionInfo with that information.
+specifier|extern
+name|char
+modifier|&
+name|ShrinkWrapID
 decl_stmt|;
 comment|/// VirtRegRewriter pass. Rewrite virtual registers to physical registers as
 comment|/// assigned in VirtRegMap.
@@ -1199,12 +1202,19 @@ name|char
 modifier|&
 name|MachineBlockPlacementStatsID
 decl_stmt|;
-comment|/// GCLowering Pass - Performs target-independent LLVM IR transformations for
-comment|/// highly portable strategies.
-comment|///
+comment|/// GCLowering Pass - Used by gc.root to perform its default lowering
+comment|/// operations.
 name|FunctionPass
 modifier|*
 name|createGCLoweringPass
+parameter_list|()
+function_decl|;
+comment|/// ShadowStackGCLowering - Implements the custom lowering mechanism
+comment|/// used by the shadow stack GC.  Only runs on functions which opt in to
+comment|/// the shadow stack collector.
+name|FunctionPass
+modifier|*
+name|createShadowStackGCLoweringPass
 parameter_list|()
 function_decl|;
 comment|/// GCMachineCodeAnalysis - Target-independent pass to mark safe points
@@ -1311,6 +1321,18 @@ modifier|*
 name|TM
 parameter_list|)
 function_decl|;
+comment|/// createWinEHPass - Prepares personality functions used by MSVC on Windows,
+comment|/// in addition to the Itanium LSDA based personalities.
+name|FunctionPass
+modifier|*
+name|createWinEHPass
+parameter_list|(
+specifier|const
+name|TargetMachine
+modifier|*
+name|TM
+parameter_list|)
+function_decl|;
 comment|/// createSjLjEHPreparePass - This pass adapts exception handling code to use
 comment|/// the GCC-style builtin setjmp/longjmp (sjlj) to handling EH control flow.
 comment|///
@@ -1397,6 +1419,48 @@ comment|// End llvm namespace
 end_comment
 
 begin_comment
+comment|/// Target machine pass initializer for passes with dependencies. Use with
+end_comment
+
+begin_comment
+comment|/// INITIALIZE_TM_PASS_END.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INITIALIZE_TM_PASS_BEGIN
+value|INITIALIZE_PASS_BEGIN
+end_define
+
+begin_comment
+comment|/// Target machine pass initializer for passes with dependencies. Use with
+end_comment
+
+begin_comment
+comment|/// INITIALIZE_TM_PASS_BEGIN.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INITIALIZE_TM_PASS_END
+parameter_list|(
+name|passName
+parameter_list|,
+name|arg
+parameter_list|,
+name|name
+parameter_list|,
+name|cfg
+parameter_list|,
+name|analysis
+parameter_list|)
+define|\
+value|PassInfo *PI = new PassInfo(name, arg,& passName ::ID, \       PassInfo::NormalCtor_t(callDefaultCtor< passName>), cfg, analysis, \       PassInfo::TargetMachineCtor_t(callTargetMachineCtor< passName>)); \     Registry.registerPass(*PI, true); \     return PI; \   } \   void llvm::initialize##passName##Pass(PassRegistry&Registry) { \     CALL_ONCE_INITIALIZATION(initialize##passName##PassOnce) \   }
+end_define
+
+begin_comment
 comment|/// This initializer registers TargetMachine constructor, so the pass being
 end_comment
 
@@ -1432,7 +1496,7 @@ parameter_list|,
 name|analysis
 parameter_list|)
 define|\
-value|static void* initialize##passName##PassOnce(PassRegistry&Registry) { \     PassInfo *PI = new PassInfo(name, arg,& passName ::ID, \       PassInfo::NormalCtor_t(callDefaultCtor< passName>), cfg, analysis, \       PassInfo::TargetMachineCtor_t(callTargetMachineCtor< passName>)); \     Registry.registerPass(*PI, true); \     return PI; \   } \   void llvm::initialize##passName##Pass(PassRegistry&Registry) { \     CALL_ONCE_INITIALIZATION(initialize##passName##PassOnce) \   }
+value|INITIALIZE_TM_PASS_BEGIN(passName, arg, name, cfg, analysis) \     INITIALIZE_TM_PASS_END(passName, arg, name, cfg, analysis)
 end_define
 
 begin_endif

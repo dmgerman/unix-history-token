@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/InstrTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -195,26 +201,52 @@ argument_list|,
 argument|APIntMoveTy Upper
 argument_list|)
 empty_stmt|;
-comment|/// Produce the smallest range that contains all values that
-comment|/// might satisfy the comparison specified by Pred when compared to any value
-comment|/// contained within Other.
+comment|/// Produce the smallest range such that all values that may satisfy the given
+comment|/// predicate with any value contained within Other is contained in the
+comment|/// returned range.  Formally, this returns a superset of
+comment|/// 'union over all y in Other . { x : icmp op x y is true }'.  If the exact
+comment|/// answer is not representable as a ConstantRange, the return value will be a
+comment|/// proper superset of the above.
 comment|///
-comment|/// Solves for range X in 'for all x in X, there exists a y in Y such that
-comment|/// icmp op x, y is true'. Every value that might make the comparison true
-comment|/// is included in the resulting range.
+comment|/// Example: Pred = ult and Other = i8 [2, 5) returns Result = [0, 4)
 specifier|static
 name|ConstantRange
-name|makeICmpRegion
-parameter_list|(
-name|unsigned
+name|makeAllowedICmpRegion
+argument_list|(
+name|CmpInst
+operator|::
+name|Predicate
 name|Pred
-parameter_list|,
+argument_list|,
 specifier|const
 name|ConstantRange
-modifier|&
+operator|&
 name|Other
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
+comment|/// Produce the largest range such that all values in the returned range
+comment|/// satisfy the given predicate with all values contained within Other.
+comment|/// Formally, this returns a subset of
+comment|/// 'intersection over all y in Other . { x : icmp op x y is true }'.  If the
+comment|/// exact answer is not representable as a ConstantRange, the return value
+comment|/// will be a proper subset of the above.
+comment|///
+comment|/// Example: Pred = ult and Other = i8 [2, 5) returns [0, 2)
+specifier|static
+name|ConstantRange
+name|makeSatisfyingICmpRegion
+argument_list|(
+name|CmpInst
+operator|::
+name|Predicate
+name|Pred
+argument_list|,
+specifier|const
+name|ConstantRange
+operator|&
+name|Other
+argument_list|)
+decl_stmt|;
 comment|/// Return the lower value for this range.
 comment|///
 specifier|const
@@ -568,8 +600,8 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// Return a new range representing the possible values resulting
-comment|/// from a multiplication of a value in this range and a value in \p Other.
-comment|/// TODO: This isn't fully implemented yet.
+comment|/// from a multiplication of a value in this range and a value in \p Other,
+comment|/// treating both this and \p Other as unsigned ranges.
 name|ConstantRange
 name|multiply
 argument_list|(

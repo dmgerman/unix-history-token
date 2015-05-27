@@ -335,10 +335,10 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|RemoteTargetExternal
 argument_list|()
+name|override
 block|{}
 name|private
 operator|:

@@ -220,16 +220,6 @@ literal|"Unknown condition code"
 argument_list|)
 expr_stmt|;
 block|}
-name|ImmutablePass
-modifier|*
-name|createNVPTXTargetTransformInfoPass
-parameter_list|(
-specifier|const
-name|NVPTXTargetMachine
-modifier|*
-name|TM
-parameter_list|)
-function_decl|;
 name|FunctionPass
 modifier|*
 name|createNVPTXISelDag

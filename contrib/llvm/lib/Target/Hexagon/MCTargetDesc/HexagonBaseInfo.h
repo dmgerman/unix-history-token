@@ -243,35 +243,36 @@ literal|6
 comment|// Post increment addressing mode
 block|}
 enum|;
-enum|enum
+name|enum
+name|class
 name|MemAccessSize
 block|{
 name|NoMemAccess
-init|=
+operator|=
 literal|0
-block|,
+operator|,
 comment|// Not a memory acces instruction.
 name|ByteAccess
-init|=
+operator|=
 literal|1
-block|,
+operator|,
 comment|// Byte access instruction (memb).
 name|HalfWordAccess
-init|=
+operator|=
 literal|2
-block|,
+operator|,
 comment|// Half word access instruction (memh).
 name|WordAccess
-init|=
+operator|=
 literal|3
-block|,
+operator|,
 comment|// Word access instruction (memw).
 name|DoubleWordAccess
-init|=
+operator|=
 literal|4
 comment|// Double word access instruction (memd)
 block|}
-enum|;
+empty_stmt|;
 comment|// MCInstrDesc TSFlags
 comment|// *** Must match HexagonInstrFormat*.td ***
 enum|enum

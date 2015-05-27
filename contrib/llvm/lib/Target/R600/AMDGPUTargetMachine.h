@@ -112,6 +112,8 @@ range|:
 name|public
 name|LLVMTargetMachine
 block|{
+name|private
+operator|:
 name|protected
 operator|:
 name|TargetLoweringObjectFile
@@ -155,6 +157,20 @@ operator|*
 name|getSubtargetImpl
 argument_list|()
 specifier|const
+block|{
+return|return
+operator|&
+name|Subtarget
+return|;
+block|}
+specifier|const
+name|AMDGPUSubtarget
+operator|*
+name|getSubtargetImpl
+argument_list|(
+argument|const Function&
+argument_list|)
+specifier|const
 name|override
 block|{
 return|return
@@ -175,20 +191,9 @@ operator|&
 name|IntrinsicInfo
 return|;
 block|}
-name|TargetPassConfig
-operator|*
-name|createPassConfig
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|)
-name|override
-block|;
-comment|/// \brief Register R600 analysis passes with a pass manager.
-name|void
-name|addAnalysisPasses
-argument_list|(
-argument|PassManagerBase&PM
-argument_list|)
+name|TargetIRAnalysis
+name|getTargetIRAnalysis
+argument_list|()
 name|override
 block|;
 name|TargetLoweringObjectFile
@@ -203,6 +208,45 @@ name|TLOF
 return|;
 block|}
 expr|}
+block|;
+comment|//===----------------------------------------------------------------------===//
+comment|// R600 Target Machine (R600 -> Cayman)
+comment|//===----------------------------------------------------------------------===//
+name|class
+name|R600TargetMachine
+operator|:
+name|public
+name|AMDGPUTargetMachine
+block|{
+name|public
+operator|:
+name|R600TargetMachine
+argument_list|(
+argument|const Target&T
+argument_list|,
+argument|StringRef TT
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|TargetOptions Options
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
+argument_list|)
+block|;
+name|TargetPassConfig
+operator|*
+name|createPassConfig
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|)
+name|override
+block|; }
 block|;
 comment|//===----------------------------------------------------------------------===//
 comment|// GCN Target Machine (SI+)
@@ -233,6 +277,14 @@ argument|CodeModel::Model CM
 argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
+block|;
+name|TargetPassConfig
+operator|*
+name|createPassConfig
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|)
+name|override
 block|; }
 block|;  }
 end_decl_stmt

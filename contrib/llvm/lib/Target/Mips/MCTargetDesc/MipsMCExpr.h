@@ -190,7 +190,6 @@ argument_list|)
 specifier|const
 name|override
 block|;
-specifier|const
 name|MCSection
 operator|*
 name|FindAssociatedSection

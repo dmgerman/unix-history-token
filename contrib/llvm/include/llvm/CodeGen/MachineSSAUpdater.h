@@ -291,13 +291,17 @@ specifier|const
 name|MachineSSAUpdater
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|MachineSSAUpdater
 argument_list|(
-argument|const MachineSSAUpdater&
+specifier|const
+name|MachineSSAUpdater
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 block|}
 empty_stmt|;

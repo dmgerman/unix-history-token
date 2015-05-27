@@ -983,6 +983,22 @@ begin_comment
 comment|/// Access to the STV_xxx flag stored in the first two bits of st_other.
 end_comment
 
+begin_comment
+comment|/// STV_DEFAULT: 0
+end_comment
+
+begin_comment
+comment|/// STV_INTERNAL: 1
+end_comment
+
+begin_comment
+comment|/// STV_HIDDEN: 2
+end_comment
+
+begin_comment
+comment|/// STV_PROTECTED: 3
+end_comment
+
 begin_expr_stmt
 name|unsigned
 name|char
@@ -997,6 +1013,38 @@ literal|0x3
 return|;
 block|}
 end_expr_stmt
+
+begin_function
+name|void
+name|setVisibility
+parameter_list|(
+name|unsigned
+name|char
+name|v
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|v
+operator|<
+literal|4
+operator|&&
+literal|"Invalid value for visibility"
+argument_list|)
+expr_stmt|;
+name|st_other
+operator|=
+operator|(
+name|st_other
+operator|&
+operator|~
+literal|0x3
+operator|)
+operator||
+name|v
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 unit|};
@@ -1560,12 +1608,20 @@ name|void
 name|setRInfo
 argument_list|(
 argument|uint32_t R
+argument_list|,
+argument|bool IsMips64EL
 argument_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+name|IsMips64EL
+argument_list|)
+block|;
 name|r_info
 operator|=
 name|R
-block|; }
+block|;   }
 end_expr_stmt
 
 begin_expr_stmt
@@ -1690,9 +1746,64 @@ name|setRInfo
 parameter_list|(
 name|uint64_t
 name|R
+parameter_list|,
+name|bool
+name|IsMips64EL
 parameter_list|)
 block|{
-comment|// FIXME: Add mips64el support.
+if|if
+condition|(
+name|IsMips64EL
+condition|)
+name|r_info
+operator|=
+operator|(
+name|R
+operator|>>
+literal|32
+operator|)
+operator||
+operator|(
+operator|(
+name|R
+operator|&
+literal|0xff000000
+operator|)
+operator|<<
+literal|8
+operator|)
+operator||
+operator|(
+operator|(
+name|R
+operator|&
+literal|0x00ff0000
+operator|)
+operator|<<
+literal|24
+operator|)
+operator||
+operator|(
+operator|(
+name|R
+operator|&
+literal|0x0000ff00
+operator|)
+operator|<<
+literal|40
+operator|)
+operator||
+operator|(
+operator|(
+name|R
+operator|&
+literal|0x000000ff
+operator|)
+operator|<<
+literal|56
+operator|)
+expr_stmt|;
+else|else
 name|r_info
 operator|=
 name|R
@@ -1768,12 +1879,20 @@ name|void
 name|setRInfo
 argument_list|(
 argument|uint32_t R
+argument_list|,
+argument|bool IsMips64EL
 argument_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+name|IsMips64EL
+argument_list|)
+block|;
 name|r_info
 operator|=
 name|R
-block|; }
+block|;   }
 end_expr_stmt
 
 begin_expr_stmt
@@ -1902,9 +2021,64 @@ name|setRInfo
 parameter_list|(
 name|uint64_t
 name|R
+parameter_list|,
+name|bool
+name|IsMips64EL
 parameter_list|)
 block|{
-comment|// FIXME: Add mips64el support.
+if|if
+condition|(
+name|IsMips64EL
+condition|)
+name|r_info
+operator|=
+operator|(
+name|R
+operator|>>
+literal|32
+operator|)
+operator||
+operator|(
+operator|(
+name|R
+operator|&
+literal|0xff000000
+operator|)
+operator|<<
+literal|8
+operator|)
+operator||
+operator|(
+operator|(
+name|R
+operator|&
+literal|0x00ff0000
+operator|)
+operator|<<
+literal|24
+operator|)
+operator||
+operator|(
+operator|(
+name|R
+operator|&
+literal|0x0000ff00
+operator|)
+operator|<<
+literal|40
+operator|)
+operator||
+operator|(
+operator|(
+name|R
+operator|&
+literal|0x000000ff
+operator|)
+operator|<<
+literal|56
+operator|)
+expr_stmt|;
+else|else
 name|r_info
 operator|=
 name|R
@@ -2034,6 +2208,9 @@ name|setSymbol
 parameter_list|(
 name|uint32_t
 name|s
+parameter_list|,
+name|bool
+name|IsMips64EL
 parameter_list|)
 block|{
 name|setSymbolAndType
@@ -2042,6 +2219,8 @@ name|s
 argument_list|,
 name|getType
 argument_list|()
+argument_list|,
+name|IsMips64EL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2053,6 +2232,9 @@ name|setType
 parameter_list|(
 name|uint32_t
 name|t
+parameter_list|,
+name|bool
+name|IsMips64EL
 parameter_list|)
 block|{
 name|setSymbolAndType
@@ -2061,6 +2243,8 @@ name|getSymbol
 argument_list|()
 argument_list|,
 name|t
+argument_list|,
+name|IsMips64EL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2075,6 +2259,9 @@ name|s
 parameter_list|,
 name|uint32_t
 name|t
+parameter_list|,
+name|bool
+name|IsMips64EL
 parameter_list|)
 block|{
 name|this
@@ -2095,6 +2282,8 @@ name|t
 operator|&
 literal|0xffffffffL
 operator|)
+argument_list|,
+name|IsMips64EL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2205,6 +2394,9 @@ name|setSymbol
 parameter_list|(
 name|uint32_t
 name|s
+parameter_list|,
+name|bool
+name|IsMips64EL
 parameter_list|)
 block|{
 name|setSymbolAndType
@@ -2213,6 +2405,8 @@ name|s
 argument_list|,
 name|getType
 argument_list|()
+argument_list|,
+name|IsMips64EL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2225,6 +2419,9 @@ parameter_list|(
 name|unsigned
 name|char
 name|t
+parameter_list|,
+name|bool
+name|IsMips64EL
 parameter_list|)
 block|{
 name|setSymbolAndType
@@ -2233,6 +2430,8 @@ name|getSymbol
 argument_list|()
 argument_list|,
 name|t
+argument_list|,
+name|IsMips64EL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2248,6 +2447,9 @@ parameter_list|,
 name|unsigned
 name|char
 name|t
+parameter_list|,
+name|bool
+name|IsMips64EL
 parameter_list|)
 block|{
 name|this
@@ -2261,6 +2463,8 @@ literal|8
 operator|)
 operator|+
 name|t
+argument_list|,
+name|IsMips64EL
 argument_list|)
 expr_stmt|;
 block|}
@@ -2549,6 +2753,282 @@ name|Elf_Xword
 name|p_align
 block|;
 comment|// Segment alignment constraint
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// MIPS .reginfo section
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+expr|struct
+name|Elf_Mips_RegInfo
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|llvm
+operator|::
+name|support
+operator|::
+name|endianness
+name|TargetEndianness
+operator|,
+name|std
+operator|::
+name|size_t
+name|MaxAlign
+operator|>
+expr|struct
+name|Elf_Mips_RegInfo
+operator|<
+name|ELFType
+operator|<
+name|TargetEndianness
+operator|,
+name|MaxAlign
+operator|,
+name|false
+operator|>>
+block|{
+name|LLVM_ELF_IMPORT_TYPES
+argument_list|(
+argument|TargetEndianness
+argument_list|,
+argument|MaxAlign
+argument_list|,
+argument|false
+argument_list|)
+name|Elf_Word
+name|ri_gprmask
+block|;
+comment|// bit-mask of used general registers
+name|Elf_Word
+name|ri_cprmask
+index|[
+literal|4
+index|]
+block|;
+comment|// bit-mask of used co-processor registers
+name|Elf_Addr
+name|ri_gp_value
+block|;
+comment|// gp register value
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|llvm
+operator|::
+name|support
+operator|::
+name|endianness
+name|TargetEndianness
+operator|,
+name|std
+operator|::
+name|size_t
+name|MaxAlign
+operator|>
+expr|struct
+name|Elf_Mips_RegInfo
+operator|<
+name|ELFType
+operator|<
+name|TargetEndianness
+operator|,
+name|MaxAlign
+operator|,
+name|true
+operator|>>
+block|{
+name|LLVM_ELF_IMPORT_TYPES
+argument_list|(
+argument|TargetEndianness
+argument_list|,
+argument|MaxAlign
+argument_list|,
+argument|true
+argument_list|)
+name|Elf_Word
+name|ri_gprmask
+block|;
+comment|// bit-mask of used general registers
+name|Elf_Word
+name|ri_pad
+block|;
+comment|// unused padding field
+name|Elf_Word
+name|ri_cprmask
+index|[
+literal|4
+index|]
+block|;
+comment|// bit-mask of used co-processor registers
+name|Elf_Addr
+name|ri_gp_value
+block|;
+comment|// gp register value
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// .MIPS.options section
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+expr|struct
+name|Elf_Mips_Options
+block|{
+name|LLVM_ELF_IMPORT_TYPES_ELFT
+argument_list|(
+argument|ELFT
+argument_list|)
+name|uint8_t
+name|kind
+block|;
+comment|// Determines interpretation of variable part of descriptor
+name|uint8_t
+name|size
+block|;
+comment|// Byte size of descriptor, including this header
+name|Elf_Half
+name|section
+block|;
+comment|// Section header index of section affected,
+comment|// or 0 for global options
+name|Elf_Word
+name|info
+block|;
+comment|// Kind-specific information
+specifier|const
+name|Elf_Mips_RegInfo
+operator|<
+name|ELFT
+operator|>
+operator|&
+name|getRegInfo
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|kind
+operator|==
+name|llvm
+operator|::
+name|ELF
+operator|::
+name|ODK_REGINFO
+argument_list|)
+block|;
+return|return
+operator|*
+name|reinterpret_cast
+operator|<
+specifier|const
+name|Elf_Mips_RegInfo
+operator|<
+name|ELFT
+operator|>
+operator|*
+operator|>
+operator|(
+operator|(
+specifier|const
+name|uint8_t
+operator|*
+operator|)
+name|this
+operator|+
+sizeof|sizeof
+argument_list|(
+name|Elf_Mips_Options
+argument_list|)
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|// .MIPS.abiflags section content
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ELFT
+operator|>
+expr|struct
+name|Elf_Mips_ABIFlags
+block|{
+name|LLVM_ELF_IMPORT_TYPES_ELFT
+argument_list|(
+argument|ELFT
+argument_list|)
+name|Elf_Half
+name|version
+block|;
+comment|// Version of the structure
+name|uint8_t
+name|isa_level
+block|;
+comment|// ISA level: 1-5, 32, and 64
+name|uint8_t
+name|isa_rev
+block|;
+comment|// ISA revision (0 for MIPS I - MIPS V)
+name|uint8_t
+name|gpr_size
+block|;
+comment|// General purpose registers size
+name|uint8_t
+name|cpr1_size
+block|;
+comment|// Co-processor 1 registers size
+name|uint8_t
+name|cpr2_size
+block|;
+comment|// Co-processor 2 registers size
+name|uint8_t
+name|fp_abi
+block|;
+comment|// Floating-point ABI flag
+name|Elf_Word
+name|isa_ext
+block|;
+comment|// Processor-specific extension
+name|Elf_Word
+name|ases
+block|;
+comment|// ASEs flags
+name|Elf_Word
+name|flags1
+block|;
+comment|// General flags
+name|Elf_Word
+name|flags2
+block|;
+comment|// General flags
 block|}
 expr_stmt|;
 end_expr_stmt

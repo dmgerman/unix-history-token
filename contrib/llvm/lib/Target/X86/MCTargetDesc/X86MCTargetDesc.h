@@ -114,13 +114,16 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+name|class
+name|raw_pwrite_stream
+decl_stmt|;
 specifier|extern
 name|Target
 name|TheX86_32Target
 decl_stmt|,
 name|TheX86_64Target
 decl_stmt|;
-comment|/// DWARFFlavour - Flavour of dwarf regnumbers
+comment|/// Flavour of dwarf regnumbers
 comment|///
 name|namespace
 name|DWARFFlavour
@@ -141,7 +144,7 @@ literal|2
 block|}
 enum|;
 block|}
-comment|/// N86 namespace - Native X86 register numbers
+comment|///  Native X86 register numbers
 comment|///
 name|namespace
 name|N86
@@ -193,75 +196,6 @@ argument_list|(
 argument|StringRef TT
 argument_list|)
 expr_stmt|;
-comment|/// GetCpuIDAndInfo - Execute the specified cpuid and return the 4 values in
-comment|/// the specified arguments.  If we can't run cpuid on the host, return true.
-name|bool
-name|GetCpuIDAndInfo
-parameter_list|(
-name|unsigned
-name|value
-parameter_list|,
-name|unsigned
-modifier|*
-name|rEAX
-parameter_list|,
-name|unsigned
-modifier|*
-name|rEBX
-parameter_list|,
-name|unsigned
-modifier|*
-name|rECX
-parameter_list|,
-name|unsigned
-modifier|*
-name|rEDX
-parameter_list|)
-function_decl|;
-comment|/// GetCpuIDAndInfoEx - Execute the specified cpuid with subleaf and return
-comment|/// the 4 values in the specified arguments.  If we can't run cpuid on the
-comment|/// host, return true.
-name|bool
-name|GetCpuIDAndInfoEx
-parameter_list|(
-name|unsigned
-name|value
-parameter_list|,
-name|unsigned
-name|subleaf
-parameter_list|,
-name|unsigned
-modifier|*
-name|rEAX
-parameter_list|,
-name|unsigned
-modifier|*
-name|rEBX
-parameter_list|,
-name|unsigned
-modifier|*
-name|rECX
-parameter_list|,
-name|unsigned
-modifier|*
-name|rEDX
-parameter_list|)
-function_decl|;
-name|void
-name|DetectFamilyModel
-parameter_list|(
-name|unsigned
-name|EAX
-parameter_list|,
-name|unsigned
-modifier|&
-name|Family
-parameter_list|,
-name|unsigned
-modifier|&
-name|Model
-parameter_list|)
-function_decl|;
 name|unsigned
 name|getDwarfRegFlavour
 parameter_list|(
@@ -280,9 +214,8 @@ modifier|*
 name|MRI
 parameter_list|)
 function_decl|;
-comment|/// createX86MCSubtargetInfo - Create a X86 MCSubtargetInfo instance.
-comment|/// This is exposed so Asm parser, etc. do not need to go through
-comment|/// TargetRegistry.
+comment|/// Create a X86 MCSubtargetInfo instance. This is exposed so Asm parser, etc.
+comment|/// do not need to go through TargetRegistry.
 name|MCSubtargetInfo
 modifier|*
 name|createX86MCSubtargetInfo
@@ -311,11 +244,6 @@ specifier|const
 name|MCRegisterInfo
 modifier|&
 name|MRI
-parameter_list|,
-specifier|const
-name|MCSubtargetInfo
-modifier|&
-name|STI
 parameter_list|,
 name|MCContext
 modifier|&
@@ -364,8 +292,8 @@ name|StringRef
 name|CPU
 parameter_list|)
 function_decl|;
-comment|/// createX86WinCOFFStreamer - Construct an X86 Windows COFF machine code
-comment|/// streamer which will generate PE/COFF format object files.
+comment|/// Construct an X86 Windows COFF machine code streamer which will generate
+comment|/// PE/COFF format object files.
 comment|///
 comment|/// Takes ownership of \p AB and \p CE.
 name|MCStreamer
@@ -380,24 +308,24 @@ name|MCAsmBackend
 modifier|&
 name|AB
 parameter_list|,
+name|raw_pwrite_stream
+modifier|&
+name|OS
+parameter_list|,
 name|MCCodeEmitter
 modifier|*
 name|CE
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
 parameter_list|,
 name|bool
 name|RelaxAll
 parameter_list|)
 function_decl|;
-comment|/// createX86MachObjectWriter - Construct an X86 Mach-O object writer.
+comment|/// Construct an X86 Mach-O object writer.
 name|MCObjectWriter
 modifier|*
 name|createX86MachObjectWriter
 parameter_list|(
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,
@@ -411,12 +339,12 @@ name|uint32_t
 name|CPUSubtype
 parameter_list|)
 function_decl|;
-comment|/// createX86ELFObjectWriter - Construct an X86 ELF object writer.
+comment|/// Construct an X86 ELF object writer.
 name|MCObjectWriter
 modifier|*
 name|createX86ELFObjectWriter
 parameter_list|(
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,
@@ -430,12 +358,12 @@ name|uint16_t
 name|EMachine
 parameter_list|)
 function_decl|;
-comment|/// createX86WinCOFFObjectWriter - Construct an X86 Win COFF object writer.
+comment|/// Construct an X86 Win COFF object writer.
 name|MCObjectWriter
 modifier|*
 name|createX86WinCOFFObjectWriter
 parameter_list|(
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,
@@ -443,7 +371,7 @@ name|bool
 name|Is64Bit
 parameter_list|)
 function_decl|;
-comment|/// createX86_64MachORelocationInfo - Construct X86-64 Mach-O relocation info.
+comment|/// Construct X86-64 Mach-O relocation info.
 name|MCRelocationInfo
 modifier|*
 name|createX86_64MachORelocationInfo
@@ -453,7 +381,7 @@ modifier|&
 name|Ctx
 parameter_list|)
 function_decl|;
-comment|/// createX86_64ELFORelocationInfo - Construct X86-64 ELF relocation info.
+comment|/// Construct X86-64 ELF relocation info.
 name|MCRelocationInfo
 modifier|*
 name|createX86_64ELFRelocationInfo

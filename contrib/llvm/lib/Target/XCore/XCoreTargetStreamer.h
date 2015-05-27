@@ -68,10 +68,10 @@ operator|&
 name|S
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|XCoreTargetStreamer
 argument_list|()
+name|override
 block|;
 name|virtual
 name|void

@@ -435,10 +435,10 @@ init|=
 name|nullptr
 parameter_list|)
 function_decl|;
-name|virtual
 operator|~
 name|ScheduleDAGInstrs
 argument_list|()
+name|override
 block|{}
 name|bool
 name|isPostRA

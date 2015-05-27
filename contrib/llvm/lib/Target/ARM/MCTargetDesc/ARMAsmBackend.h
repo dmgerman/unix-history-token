@@ -162,18 +162,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
 name|STI
 operator|->
 name|getFeatureBits
 argument_list|()
-operator|&
+index|[
 name|ARM
 operator|::
 name|HasV6T2Ops
-operator|)
-operator|!=
-literal|0
+index|]
 return|;
 block|}
 specifier|const
@@ -222,6 +219,13 @@ argument|bool IsPCRel
 argument_list|)
 specifier|const
 name|override
+block|;
+name|unsigned
+name|getRelaxedOpcode
+argument_list|(
+argument|unsigned Op
+argument_list|)
+specifier|const
 block|;
 name|bool
 name|mayNeedRelaxation

@@ -128,13 +128,17 @@ specifier|const
 name|MachineDominanceFrontier
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|MachineDominanceFrontier
 argument_list|(
-argument|const MachineDominanceFrontier&
+specifier|const
+name|MachineDominanceFrontier
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 specifier|static
 name|char

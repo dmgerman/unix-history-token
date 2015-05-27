@@ -85,12 +85,7 @@ block|{
 name|public
 operator|:
 name|MipsSERegisterInfo
-argument_list|(
-specifier|const
-name|MipsSubtarget
-operator|&
-name|Subtarget
-argument_list|)
+argument_list|()
 block|;
 name|bool
 name|requiresRegisterScavenging

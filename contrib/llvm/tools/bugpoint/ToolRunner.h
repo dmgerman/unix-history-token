@@ -773,6 +773,7 @@ block|}
 operator|~
 name|LLC
 argument_list|()
+name|override
 block|{
 name|delete
 name|gcc

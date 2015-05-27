@@ -391,7 +391,8 @@ name|private
 label|:
 name|AnalysisResolver
 argument_list|()
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|public
 label|:

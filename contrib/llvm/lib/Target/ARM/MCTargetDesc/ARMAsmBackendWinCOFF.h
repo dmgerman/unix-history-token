@@ -84,7 +84,7 @@ name|MCObjectWriter
 operator|*
 name|createObjectWriter
 argument_list|(
-argument|raw_ostream&OS
+argument|raw_pwrite_stream&OS
 argument_list|)
 specifier|const
 name|override

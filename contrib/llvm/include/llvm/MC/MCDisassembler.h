@@ -58,12 +58,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCRelocationInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCSymbolizer.h"
 end_include
 
@@ -171,16 +165,16 @@ argument_list|()
 expr_stmt|;
 comment|/// Returns the disassembly of a single instruction.
 comment|///
-comment|/// @param Instr    - An MCInst to populate with the contents of the
+comment|/// \param Instr    - An MCInst to populate with the contents of the
 comment|///                   instruction.
-comment|/// @param Size     - A value to populate with the size of the instruction, or
+comment|/// \param Size     - A value to populate with the size of the instruction, or
 comment|///                   the number of bytes consumed while attempting to decode
 comment|///                   an invalid instruction.
-comment|/// @param Address  - The address, in the memory space of region, of the first
+comment|/// \param Address  - The address, in the memory space of region, of the first
 comment|///                   byte of the instruction.
-comment|/// @param VStream  - The stream to print warnings and diagnostic messages on.
-comment|/// @param CStream  - The stream to print comments and annotations on.
-comment|/// @return         - MCDisassembler::Success if the instruction is valid,
+comment|/// \param VStream  - The stream to print warnings and diagnostic messages on.
+comment|/// \param CStream  - The stream to print comments and annotations on.
+comment|/// \return         - MCDisassembler::Success if the instruction is valid,
 comment|///                   MCDisassembler::SoftFail if the instruction was
 comment|///                                            disassemblable but invalid,
 comment|///                   MCDisassembler::Fail if the instruction was invalid.

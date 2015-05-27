@@ -88,6 +88,9 @@ decl_stmt|;
 comment|/// \brief Create and return a pass that writes the module to the specified
 comment|/// ostream. Note that this pass is designed for use with the legacy pass
 comment|/// manager.
+comment|///
+comment|/// If \c ShouldPreserveUseListOrder, encode use-list order so it can be
+comment|/// reproduced when deserialized.
 name|ModulePass
 modifier|*
 name|createBitcodeWriterPass
@@ -95,6 +98,11 @@ parameter_list|(
 name|raw_ostream
 modifier|&
 name|Str
+parameter_list|,
+name|bool
+name|ShouldPreserveUseListOrder
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Pass for writing a module of IR out to a bitcode file.
@@ -108,20 +116,31 @@ name|raw_ostream
 modifier|&
 name|OS
 decl_stmt|;
+name|bool
+name|ShouldPreserveUseListOrder
+decl_stmt|;
 name|public
 label|:
 comment|/// \brief Construct a bitcode writer pass around a particular output stream.
+comment|///
+comment|/// If \c ShouldPreserveUseListOrder, encode use-list order so it can be
+comment|/// reproduced when deserialized.
 name|explicit
 name|BitcodeWriterPass
 argument_list|(
-name|raw_ostream
-operator|&
-name|OS
+argument|raw_ostream&OS
+argument_list|,
+argument|bool ShouldPreserveUseListOrder = false
 argument_list|)
-operator|:
+block|:
 name|OS
 argument_list|(
-argument|OS
+name|OS
+argument_list|)
+operator|,
+name|ShouldPreserveUseListOrder
+argument_list|(
+argument|ShouldPreserveUseListOrder
 argument_list|)
 block|{}
 comment|/// \brief Run the bitcode writer pass, and output the module to the selected

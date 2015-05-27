@@ -119,13 +119,17 @@ specifier|const
 name|AttributeImpl
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|AttributeImpl
 argument_list|(
-argument|const AttributeImpl&
+specifier|const
+name|AttributeImpl
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:
@@ -488,6 +492,12 @@ operator|==
 name|Attribute
 operator|::
 name|Dereferenceable
+operator|||
+name|Kind
+operator|==
+name|Attribute
+operator|::
+name|DereferenceableOrNull
 operator|)
 operator|&&
 literal|"Wrong kind for int attribute!"
@@ -633,13 +643,17 @@ specifier|const
 name|AttributeSetNode
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|AttributeSetNode
 argument_list|(
-argument|const AttributeSetNode&
+specifier|const
+name|AttributeSetNode
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -710,6 +724,11 @@ specifier|const
 block|;
 name|uint64_t
 name|getDereferenceableBytes
+argument_list|()
+specifier|const
+block|;
+name|uint64_t
+name|getDereferenceableOrNullBytes
 argument_list|()
 specifier|const
 block|;
@@ -890,13 +909,17 @@ specifier|const
 name|AttributeSetImpl
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|AttributeSetImpl
 argument_list|(
-argument|const AttributeSetImpl&
+specifier|const
+name|AttributeSetImpl
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:

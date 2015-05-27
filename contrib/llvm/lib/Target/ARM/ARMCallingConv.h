@@ -169,8 +169,6 @@ operator|.
 name|AllocateReg
 argument_list|(
 name|RegList
-argument_list|,
-literal|4
 argument_list|)
 condition|)
 name|State
@@ -246,8 +244,6 @@ operator|.
 name|AllocateReg
 argument_list|(
 name|RegList
-argument_list|,
-literal|4
 argument_list|)
 condition|)
 name|State
@@ -501,8 +497,6 @@ argument_list|(
 name|HiRegList
 argument_list|,
 name|ShadowRegList
-argument_list|,
-literal|2
 argument_list|)
 decl_stmt|;
 if|if
@@ -520,8 +514,6 @@ operator|.
 name|AllocateReg
 argument_list|(
 name|GPRArgRegs
-argument_list|,
-literal|4
 argument_list|)
 expr_stmt|;
 name|assert
@@ -838,8 +830,6 @@ argument_list|(
 name|HiRegList
 argument_list|,
 name|LoRegList
-argument_list|,
-literal|2
 argument_list|)
 decl_stmt|;
 if|if
@@ -1379,14 +1369,6 @@ operator|.
 name|getFirstUnallocated
 argument_list|(
 name|RegList
-operator|.
-name|data
-argument_list|()
-argument_list|,
-name|RegList
-operator|.
-name|size
-argument_list|()
 argument_list|)
 decl_stmt|;
 comment|// First consume all registers that would give an unaligned object. Whether
@@ -1580,14 +1562,6 @@ operator|.
 name|getFirstUnallocated
 argument_list|(
 name|RegList
-operator|.
-name|data
-argument_list|()
-argument_list|,
-name|RegList
-operator|.
-name|size
-argument_list|()
 argument_list|)
 decl_stmt|;
 for|for

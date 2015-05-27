@@ -133,10 +133,10 @@ operator|&
 name|mf
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|ScheduleDAGSDNodes
 argument_list|()
+name|override
 block|{}
 comment|/// Run - perform scheduling.
 comment|///

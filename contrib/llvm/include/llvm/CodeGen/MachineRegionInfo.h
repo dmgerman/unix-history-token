@@ -222,10 +222,6 @@ expr|,
 name|isSubRegion
 operator|)
 block|{    }
-operator|~
-name|MachineRegionNode
-argument_list|()
-block|{ }
 name|bool
 name|operator
 operator|==
@@ -341,10 +337,10 @@ name|explicit
 name|MachineRegionInfo
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|MachineRegionInfo
 argument_list|()
+name|override
 block|;
 comment|// updateStatistics - Update statistic about created regions.
 name|void
@@ -397,6 +393,7 @@ block|;
 operator|~
 name|MachineRegionInfoPass
 argument_list|()
+name|override
 block|;
 name|MachineRegionInfo
 operator|&

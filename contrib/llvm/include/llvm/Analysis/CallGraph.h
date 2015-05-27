@@ -1050,9 +1050,12 @@ name|NumReferences
 decl_stmt|;
 name|CallGraphNode
 argument_list|(
-argument|const CallGraphNode&
+specifier|const
+name|CallGraphNode
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -1062,7 +1065,8 @@ specifier|const
 name|CallGraphNode
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|void
 name|DropRef
@@ -1180,10 +1184,10 @@ comment|// Class identification, replacement for typeinfo
 name|CallGraphWrapperPass
 argument_list|()
 block|;
-name|virtual
 operator|~
 name|CallGraphWrapperPass
 argument_list|()
+name|override
 block|;
 comment|/// \brief The internal \c CallGraph around which the rest of this interface
 comment|/// is wrapped.

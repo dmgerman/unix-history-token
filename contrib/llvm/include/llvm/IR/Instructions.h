@@ -248,6 +248,10 @@ range|:
 name|public
 name|UnaryInstruction
 block|{
+name|Type
+operator|*
+name|AllocatedType
+block|;
 name|protected
 operator|:
 name|AllocaInst
@@ -368,10 +372,10 @@ argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|;
 comment|// Out of line virtual method, so the vtable, etc. has a home.
-name|virtual
 operator|~
 name|AllocaInst
 argument_list|()
+name|override
 block|;
 comment|/// isArrayAllocation - Return true if there is an allocation size parameter
 comment|/// to the allocation instruction that is not 1.
@@ -439,7 +443,23 @@ operator|*
 name|getAllocatedType
 argument_list|()
 specifier|const
-block|;
+block|{
+return|return
+name|AllocatedType
+return|;
+block|}
+comment|/// \brief for use only in special circumstances that need to generically
+comment|/// transform a whole instruction (eg: IR linking and vectorization).
+name|void
+name|setAllocatedType
+argument_list|(
+argument|Type *Ty
+argument_list|)
+block|{
+name|AllocatedType
+operator|=
+name|Ty
+block|; }
 comment|/// getAlignment - Return the alignment of the memory that is being allocated
 comment|/// by the instruction.
 comment|///
@@ -650,6 +670,8 @@ argument_list|)
 block|;
 name|LoadInst
 argument_list|(
+argument|Type *Ty
+argument_list|,
 argument|Value *Ptr
 argument_list|,
 argument|const Twine&NameStr
@@ -665,6 +687,30 @@ argument|Value *Ptr
 argument_list|,
 argument|const Twine&NameStr
 argument_list|,
+argument|bool isVolatile = false
+argument_list|,
+argument|Instruction *InsertBefore = nullptr
+argument_list|)
+operator|:
+name|LoadInst
+argument_list|(
+argument|cast<PointerType>(Ptr->getType())->getElementType()
+argument_list|,
+argument|Ptr
+argument_list|,
+argument|NameStr
+argument_list|,
+argument|isVolatile
+argument_list|,
+argument|InsertBefore
+argument_list|)
+block|{}
+name|LoadInst
+argument_list|(
+argument|Value *Ptr
+argument_list|,
+argument|const Twine&NameStr
+argument_list|,
 argument|bool isVolatile
 argument_list|,
 argument|BasicBlock *InsertAtEnd
@@ -672,6 +718,36 @@ argument_list|)
 block|;
 name|LoadInst
 argument_list|(
+argument|Value *Ptr
+argument_list|,
+argument|const Twine&NameStr
+argument_list|,
+argument|bool isVolatile
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|Instruction *InsertBefore = nullptr
+argument_list|)
+operator|:
+name|LoadInst
+argument_list|(
+argument|cast<PointerType>(Ptr->getType())->getElementType()
+argument_list|,
+argument|Ptr
+argument_list|,
+argument|NameStr
+argument_list|,
+argument|isVolatile
+argument_list|,
+argument|Align
+argument_list|,
+argument|InsertBefore
+argument_list|)
+block|{}
+name|LoadInst
+argument_list|(
+argument|Type *Ty
+argument_list|,
 argument|Value *Ptr
 argument_list|,
 argument|const Twine&NameStr
@@ -698,6 +774,44 @@ argument_list|)
 block|;
 name|LoadInst
 argument_list|(
+argument|Value *Ptr
+argument_list|,
+argument|const Twine&NameStr
+argument_list|,
+argument|bool isVolatile
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|AtomicOrdering Order
+argument_list|,
+argument|SynchronizationScope SynchScope = CrossThread
+argument_list|,
+argument|Instruction *InsertBefore = nullptr
+argument_list|)
+operator|:
+name|LoadInst
+argument_list|(
+argument|cast<PointerType>(Ptr->getType())->getElementType()
+argument_list|,
+argument|Ptr
+argument_list|,
+argument|NameStr
+argument_list|,
+argument|isVolatile
+argument_list|,
+argument|Align
+argument_list|,
+argument|Order
+argument_list|,
+argument|SynchScope
+argument_list|,
+argument|InsertBefore
+argument_list|)
+block|{}
+name|LoadInst
+argument_list|(
+argument|Type *Ty
+argument_list|,
 argument|Value *Ptr
 argument_list|,
 argument|const Twine&NameStr
@@ -762,6 +876,19 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 block|;
+name|LoadInst
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|Value *Ptr
+argument_list|,
+argument|const char *NameStr = nullptr
+argument_list|,
+argument|bool isVolatile = false
+argument_list|,
+argument|Instruction *InsertBefore = nullptr
+argument_list|)
+block|;
 name|explicit
 name|LoadInst
 argument_list|(
@@ -773,7 +900,20 @@ argument|bool isVolatile = false
 argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
-block|;
+operator|:
+name|LoadInst
+argument_list|(
+argument|cast<PointerType>(Ptr->getType())->getElementType()
+argument_list|,
+argument|Ptr
+argument_list|,
+argument|NameStr
+argument_list|,
+argument|isVolatile
+argument_list|,
+argument|InsertBefore
+argument_list|)
+block|{}
 name|LoadInst
 argument_list|(
 argument|Value *Ptr
@@ -1142,11 +1282,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|AssertOK
@@ -1709,11 +1850,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|Init
@@ -1942,11 +2084,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 name|Init
@@ -2528,11 +2671,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:
@@ -3059,6 +3203,10 @@ operator|:
 name|public
 name|Instruction
 block|{
+name|Type
+operator|*
+name|SourceElementType
+block|;
 name|GetElementPtrInst
 argument_list|(
 specifier|const
@@ -3094,6 +3242,8 @@ comment|/// BasicBlock.
 specifier|inline
 name|GetElementPtrInst
 argument_list|(
+argument|Type *PointeeType
+argument_list|,
 argument|Value *Ptr
 argument_list|,
 argument|ArrayRef<Value *> IdxList
@@ -3108,6 +3258,8 @@ block|;
 specifier|inline
 name|GetElementPtrInst
 argument_list|(
+argument|Type *PointeeType
+argument_list|,
 argument|Value *Ptr
 argument_list|,
 argument|ArrayRef<Value *> IdxList
@@ -3135,6 +3287,8 @@ name|GetElementPtrInst
 operator|*
 name|Create
 argument_list|(
+argument|Type *PointeeType
+argument_list|,
 argument|Value *Ptr
 argument_list|,
 argument|ArrayRef<Value *> IdxList
@@ -3158,6 +3312,53 @@ name|size
 argument_list|()
 argument_list|)
 block|;
+if|if
+condition|(
+operator|!
+name|PointeeType
+condition|)
+name|PointeeType
+operator|=
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Ptr
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|getScalarType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+expr_stmt|;
+else|else
+name|assert
+argument_list|(
+name|PointeeType
+operator|==
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Ptr
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|getScalarType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return
 name|new
 argument_list|(
@@ -3165,6 +3366,8 @@ argument|Values
 argument_list|)
 name|GetElementPtrInst
 argument_list|(
+name|PointeeType
+argument_list|,
 name|Ptr
 argument_list|,
 name|IdxList
@@ -3182,6 +3385,8 @@ name|GetElementPtrInst
 operator|*
 name|Create
 argument_list|(
+argument|Type *PointeeType
+argument_list|,
 argument|Value *Ptr
 argument_list|,
 argument|ArrayRef<Value *> IdxList
@@ -3204,6 +3409,53 @@ name|size
 argument_list|()
 argument_list|)
 block|;
+if|if
+condition|(
+operator|!
+name|PointeeType
+condition|)
+name|PointeeType
+operator|=
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Ptr
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|getScalarType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+expr_stmt|;
+else|else
+name|assert
+argument_list|(
+name|PointeeType
+operator|==
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Ptr
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|getScalarType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+argument_list|)
+expr_stmt|;
 return|return
 name|new
 argument_list|(
@@ -3211,6 +3463,8 @@ argument|Values
 argument_list|)
 name|GetElementPtrInst
 argument_list|(
+name|PointeeType
+argument_list|,
 name|Ptr
 argument_list|,
 name|IdxList
@@ -3240,12 +3494,46 @@ argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
+return|return
+name|CreateInBounds
+argument_list|(
+name|nullptr
+argument_list|,
+name|Ptr
+argument_list|,
+name|IdxList
+argument_list|,
+name|NameStr
+argument_list|,
+name|InsertBefore
+argument_list|)
+return|;
+block|}
+specifier|static
+name|GetElementPtrInst
+operator|*
+name|CreateInBounds
+argument_list|(
+argument|Type *PointeeType
+argument_list|,
+argument|Value *Ptr
+argument_list|,
+argument|ArrayRef<Value *> IdxList
+argument_list|,
+argument|const Twine&NameStr =
+literal|""
+argument_list|,
+argument|Instruction *InsertBefore = nullptr
+argument_list|)
+block|{
 name|GetElementPtrInst
 operator|*
 name|GEP
 operator|=
 name|Create
 argument_list|(
+name|PointeeType
+argument_list|,
 name|Ptr
 argument_list|,
 name|IdxList
@@ -3280,12 +3568,45 @@ argument_list|,
 argument|BasicBlock *InsertAtEnd
 argument_list|)
 block|{
+return|return
+name|CreateInBounds
+argument_list|(
+name|nullptr
+argument_list|,
+name|Ptr
+argument_list|,
+name|IdxList
+argument_list|,
+name|NameStr
+argument_list|,
+name|InsertAtEnd
+argument_list|)
+return|;
+block|}
+specifier|static
+name|GetElementPtrInst
+operator|*
+name|CreateInBounds
+argument_list|(
+argument|Type *PointeeType
+argument_list|,
+argument|Value *Ptr
+argument_list|,
+argument|ArrayRef<Value *> IdxList
+argument_list|,
+argument|const Twine&NameStr
+argument_list|,
+argument|BasicBlock *InsertAtEnd
+argument_list|)
+block|{
 name|GetElementPtrInst
 operator|*
 name|GEP
 operator|=
 name|Create
 argument_list|(
+name|PointeeType
+argument_list|,
 name|Ptr
 argument_list|,
 name|IdxList
@@ -3332,6 +3653,49 @@ argument_list|()
 operator|)
 return|;
 block|}
+name|Type
+operator|*
+name|getSourceElementType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceElementType
+return|;
+block|}
+name|void
+name|setSourceElementType
+argument_list|(
+argument|Type *Ty
+argument_list|)
+block|{
+name|SourceElementType
+operator|=
+name|Ty
+block|; }
+name|Type
+operator|*
+name|getResultElementType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|getType
+argument_list|()
+operator|->
+name|getScalarType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+return|;
+block|}
 comment|/// \brief Returns the address space of this instruction's pointer type.
 name|unsigned
 name|getAddressSpace
@@ -3358,7 +3722,7 @@ name|getIndexedType
 argument_list|(
 name|Type
 operator|*
-name|Ptr
+name|Ty
 argument_list|,
 name|ArrayRef
 operator|<
@@ -3375,7 +3739,7 @@ name|getIndexedType
 argument_list|(
 name|Type
 operator|*
-name|Ptr
+name|Ty
 argument_list|,
 name|ArrayRef
 operator|<
@@ -3392,7 +3756,7 @@ name|getIndexedType
 argument_list|(
 name|Type
 operator|*
-name|Ptr
+name|Ty
 argument_list|,
 name|ArrayRef
 operator|<
@@ -3525,6 +3889,44 @@ argument_list|,
 argument|ArrayRef<Value *> IdxList
 argument_list|)
 block|{
+return|return
+name|getGEPReturnType
+argument_list|(
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Ptr
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|getScalarType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+argument_list|,
+name|Ptr
+argument_list|,
+name|IdxList
+argument_list|)
+return|;
+block|}
+specifier|static
+name|Type
+operator|*
+name|getGEPReturnType
+argument_list|(
+argument|Type *ElTy
+argument_list|,
+argument|Value *Ptr
+argument_list|,
+argument|ArrayRef<Value *> IdxList
+argument_list|)
+block|{
 name|Type
 operator|*
 name|PtrTy
@@ -3537,10 +3939,7 @@ name|checkGEPType
 argument_list|(
 name|getIndexedType
 argument_list|(
-name|Ptr
-operator|->
-name|getType
-argument_list|()
+name|ElTy
 argument_list|,
 name|IdxList
 argument_list|)
@@ -3747,6 +4146,8 @@ name|GetElementPtrInst
 operator|::
 name|GetElementPtrInst
 argument_list|(
+argument|Type *PointeeType
+argument_list|,
 argument|Value *Ptr
 argument_list|,
 argument|ArrayRef<Value *> IdxList
@@ -3760,15 +4161,37 @@ argument_list|)
 operator|:
 name|Instruction
 argument_list|(
-argument|getGEPReturnType(Ptr, IdxList)
+name|getGEPReturnType
+argument_list|(
+name|PointeeType
 argument_list|,
-argument|GetElementPtr
+name|Ptr
 argument_list|,
-argument|OperandTraits<GetElementPtrInst>::op_end(this) - Values
+name|IdxList
+argument_list|)
 argument_list|,
-argument|Values
+name|GetElementPtr
 argument_list|,
-argument|InsertBefore
+name|OperandTraits
+operator|<
+name|GetElementPtrInst
+operator|>
+operator|::
+name|op_end
+argument_list|(
+name|this
+argument_list|)
+operator|-
+name|Values
+argument_list|,
+name|Values
+argument_list|,
+name|InsertBefore
+argument_list|)
+block|,
+name|SourceElementType
+argument_list|(
+argument|PointeeType
 argument_list|)
 block|{
 name|init
@@ -3784,6 +4207,8 @@ name|GetElementPtrInst
 operator|::
 name|GetElementPtrInst
 argument_list|(
+argument|Type *PointeeType
+argument_list|,
 argument|Value *Ptr
 argument_list|,
 argument|ArrayRef<Value *> IdxList
@@ -3797,15 +4222,37 @@ argument_list|)
 operator|:
 name|Instruction
 argument_list|(
-argument|getGEPReturnType(Ptr, IdxList)
+name|getGEPReturnType
+argument_list|(
+name|PointeeType
 argument_list|,
-argument|GetElementPtr
+name|Ptr
 argument_list|,
-argument|OperandTraits<GetElementPtrInst>::op_end(this) - Values
+name|IdxList
+argument_list|)
 argument_list|,
-argument|Values
+name|GetElementPtr
 argument_list|,
-argument|InsertAtEnd
+name|OperandTraits
+operator|<
+name|GetElementPtrInst
+operator|>
+operator|::
+name|op_end
+argument_list|(
+name|this
+argument_list|)
+operator|-
+name|Values
+argument_list|,
+name|Values
+argument_list|,
+name|InsertAtEnd
+argument_list|)
+block|,
+name|SourceElementType
+argument_list|(
+argument|PointeeType
 argument_list|)
 block|{
 name|init
@@ -4557,31 +5004,44 @@ argument_list|)
 block|;   }
 comment|/// @returns true if the predicate of this instruction is EQ or NE.
 comment|/// \brief Determine if this is an equality predicate.
+specifier|static
+name|bool
+name|isEquality
+argument_list|(
+argument|Predicate Pred
+argument_list|)
+block|{
+return|return
+name|Pred
+operator|==
+name|FCMP_OEQ
+operator|||
+name|Pred
+operator|==
+name|FCMP_ONE
+operator|||
+name|Pred
+operator|==
+name|FCMP_UEQ
+operator|||
+name|Pred
+operator|==
+name|FCMP_UNE
+return|;
+block|}
+comment|/// @returns true if the predicate of this instruction is EQ or NE.
+comment|/// \brief Determine if this is an equality predicate.
 name|bool
 name|isEquality
 argument_list|()
 specifier|const
 block|{
 return|return
+name|isEquality
+argument_list|(
 name|getPredicate
 argument_list|()
-operator|==
-name|FCMP_OEQ
-operator|||
-name|getPredicate
-argument_list|()
-operator|==
-name|FCMP_ONE
-operator|||
-name|getPredicate
-argument_list|()
-operator|==
-name|FCMP_UEQ
-operator|||
-name|getPredicate
-argument_list|()
-operator|==
-name|FCMP_UNE
+argument_list|)
 return|;
 block|}
 comment|/// @returns true if the predicate of this instruction is commutative.
@@ -4728,6 +5188,10 @@ name|AttributeSet
 name|AttributeList
 block|;
 comment|///< parameter attributes for call
+name|FunctionType
+operator|*
+name|FTy
+block|;
 name|CallInst
 argument_list|(
 specifier|const
@@ -4739,6 +5203,49 @@ block|;
 name|void
 name|init
 argument_list|(
+argument|Value *Func
+argument_list|,
+argument|ArrayRef<Value *> Args
+argument_list|,
+argument|const Twine&NameStr
+argument_list|)
+block|{
+name|init
+argument_list|(
+name|cast
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Func
+operator|->
+name|getType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+operator|)
+argument_list|,
+name|Func
+argument_list|,
+name|Args
+argument_list|,
+name|NameStr
+argument_list|)
+block|;   }
+name|void
+name|init
+argument_list|(
+name|FunctionType
+operator|*
+name|FTy
+argument_list|,
 name|Value
 operator|*
 name|Func
@@ -4774,6 +5281,10 @@ comment|/// \brief Construct a CallInst from a range of arguments
 specifier|inline
 name|CallInst
 argument_list|(
+name|FunctionType
+operator|*
+name|Ty
+argument_list|,
 name|Value
 operator|*
 name|Func
@@ -4795,6 +5306,43 @@ operator|*
 name|InsertBefore
 argument_list|)
 block|;
+specifier|inline
+name|CallInst
+argument_list|(
+name|Value
+operator|*
+name|Func
+argument_list|,
+name|ArrayRef
+operator|<
+name|Value
+operator|*
+operator|>
+name|Args
+argument_list|,
+specifier|const
+name|Twine
+operator|&
+name|NameStr
+argument_list|,
+name|Instruction
+operator|*
+name|InsertBefore
+argument_list|)
+operator|:
+name|CallInst
+argument_list|(
+argument|cast<FunctionType>(                      cast<PointerType>(Func->getType())->getElementType())
+argument_list|,
+argument|Func
+argument_list|,
+argument|Args
+argument_list|,
+argument|NameStr
+argument_list|,
+argument|InsertBefore
+argument_list|)
+block|{}
 comment|/// Construct a CallInst given a range of arguments.
 comment|/// \brief Construct a CallInst from a range of arguments
 specifier|inline
@@ -4881,6 +5429,56 @@ argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
+name|Create
+argument_list|(
+name|cast
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Func
+operator|->
+name|getType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+operator|)
+argument_list|,
+name|Func
+argument_list|,
+name|Args
+argument_list|,
+name|NameStr
+argument_list|,
+name|InsertBefore
+argument_list|)
+return|;
+block|}
+specifier|static
+name|CallInst
+operator|*
+name|Create
+argument_list|(
+argument|FunctionType *Ty
+argument_list|,
+argument|Value *Func
+argument_list|,
+argument|ArrayRef<Value *> Args
+argument_list|,
+argument|const Twine&NameStr =
+literal|""
+argument_list|,
+argument|Instruction *InsertBefore = nullptr
+argument_list|)
+block|{
+return|return
 name|new
 argument_list|(
 argument|unsigned(Args.size() +
@@ -4889,6 +5487,8 @@ argument|)
 argument_list|)
 name|CallInst
 argument_list|(
+name|Ty
+argument_list|,
 name|Func
 argument_list|,
 name|Args
@@ -5107,9 +5707,40 @@ block|;
 operator|~
 name|CallInst
 argument_list|()
+name|override
 block|;
+name|FunctionType
+operator|*
+name|getFunctionType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FTy
+return|;
+block|}
+name|void
+name|mutateFunctionType
+argument_list|(
+argument|FunctionType *FTy
+argument_list|)
+block|{
+name|mutateType
+argument_list|(
+name|FTy
+operator|->
+name|getReturnType
+argument_list|()
+argument_list|)
+block|;
+name|this
+operator|->
+name|FTy
+operator|=
+name|FTy
+block|;   }
 comment|// Note that 'musttail' implies 'tail'.
-block|enum
+expr|enum
 name|TailCallKind
 block|{
 name|TCK_None
@@ -5449,6 +6080,25 @@ argument_list|,
 argument|Attribute attr
 argument_list|)
 block|;
+comment|/// \brief adds the dereferenceable attribute to the list of attributes.
+name|void
+name|addDereferenceableAttr
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|uint64_t Bytes
+argument_list|)
+block|;
+comment|/// \brief adds the dereferenceable_or_null attribute to the list of
+comment|/// attributes.
+name|void
+name|addDereferenceableOrNullAttr
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|uint64_t Bytes
+argument_list|)
+block|;
 comment|/// \brief Determine whether this call has the given attribute.
 name|bool
 name|hasFnAttr
@@ -5515,6 +6165,24 @@ return|return
 name|AttributeList
 operator|.
 name|getDereferenceableBytes
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
+comment|/// \brief Extract the number of dereferenceable_or_null bytes for a call or
+comment|/// parameter (0=unknown).
+name|uint64_t
+name|getDereferenceableOrNullBytes
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|AttributeList
+operator|.
+name|getDereferenceableOrNullBytes
 argument_list|(
 name|i
 argument_list|)
@@ -5859,6 +6527,70 @@ argument_list|(
 argument|Value* Fn
 argument_list|)
 block|{
+name|setCalledFunction
+argument_list|(
+name|cast
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Fn
+operator|->
+name|getType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+operator|)
+argument_list|,
+name|Fn
+argument_list|)
+block|;   }
+name|void
+name|setCalledFunction
+argument_list|(
+argument|FunctionType *FTy
+argument_list|,
+argument|Value *Fn
+argument_list|)
+block|{
+name|this
+operator|->
+name|FTy
+operator|=
+name|FTy
+block|;
+name|assert
+argument_list|(
+name|FTy
+operator|==
+name|cast
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Fn
+operator|->
+name|getType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+operator|)
+argument_list|)
+block|;
 name|Op
 operator|<
 operator|-
@@ -6039,6 +6771,10 @@ name|CallInst
 operator|::
 name|CallInst
 argument_list|(
+name|FunctionType
+operator|*
+name|Ty
+argument_list|,
 name|Value
 operator|*
 name|Func
@@ -6062,7 +6798,7 @@ argument_list|)
 operator|:
 name|Instruction
 argument_list|(
-argument|cast<FunctionType>(cast<PointerType>(Func->getType())                                    ->getElementType())->getReturnType()
+argument|Ty->getReturnType()
 argument_list|,
 argument|Instruction::Call
 argument_list|,
@@ -6079,6 +6815,8 @@ argument_list|)
 block|{
 name|init
 argument_list|(
+name|Ty
+argument_list|,
 name|Func
 argument_list|,
 name|Args
@@ -7881,6 +8619,29 @@ name|end
 argument_list|()
 return|;
 block|}
+specifier|inline
+name|iterator_range
+operator|<
+name|idx_iterator
+operator|>
+name|indices
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|idx_iterator
+operator|>
+operator|(
+name|idx_begin
+argument_list|()
+expr|,
+name|idx_end
+argument_list|()
+operator|)
+return|;
+block|}
 name|Value
 operator|*
 name|getAggregateOperand
@@ -8113,11 +8874,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|InsertValueInst
 argument_list|(
@@ -8370,6 +9132,29 @@ name|Indices
 operator|.
 name|end
 argument_list|()
+return|;
+block|}
+specifier|inline
+name|iterator_range
+operator|<
+name|idx_iterator
+operator|>
+name|indices
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|idx_iterator
+operator|>
+operator|(
+name|idx_begin
+argument_list|()
+expr|,
+name|idx_end
+argument_list|()
+operator|)
 return|;
 block|}
 name|Value
@@ -8677,11 +9462,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 comment|/// ReservedSpace - The number of operands actually allocated.  NumOperands is
 comment|/// the number actually in use.
@@ -8889,6 +9675,7 @@ block|}
 operator|~
 name|PHINode
 argument_list|()
+name|override
 block|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
@@ -9008,6 +9795,25 @@ name|block_begin
 argument_list|()
 operator|+
 name|getNumOperands
+argument_list|()
+return|;
+block|}
+name|op_range
+name|incoming_values
+argument_list|()
+block|{
+return|return
+name|operands
+argument_list|()
+return|;
+block|}
+name|const_op_range
+name|incoming_values
+argument_list|()
+specifier|const
+block|{
+return|return
+name|operands
 argument_list|()
 return|;
 block|}
@@ -9502,11 +10308,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 comment|// Allocate space for exactly zero operands.
 name|void
@@ -9622,6 +10429,7 @@ block|;
 operator|~
 name|LandingPadInst
 argument_list|()
+name|override
 block|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
@@ -10040,10 +10848,10 @@ name|InsertAtEnd
 argument_list|)
 return|;
 block|}
-name|virtual
 operator|~
 name|ReturnInst
 argument_list|()
+name|override
 block|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
@@ -10698,11 +11506,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|unsigned
 name|ReservedSpace
@@ -11401,6 +12210,7 @@ block|}
 operator|~
 name|SwitchInst
 argument_list|()
+name|override
 block|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
@@ -12023,11 +12833,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|unsigned
 name|ReservedSpace
@@ -12165,6 +12976,7 @@ block|}
 operator|~
 name|IndirectBrInst
 argument_list|()
+name|override
 block|;
 comment|/// Provide fast operand accessors.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
@@ -12444,6 +13256,10 @@ block|{
 name|AttributeSet
 name|AttributeList
 block|;
+name|FunctionType
+operator|*
+name|FTy
+block|;
 name|InvokeInst
 argument_list|(
 specifier|const
@@ -12455,6 +13271,57 @@ block|;
 name|void
 name|init
 argument_list|(
+argument|Value *Func
+argument_list|,
+argument|BasicBlock *IfNormal
+argument_list|,
+argument|BasicBlock *IfException
+argument_list|,
+argument|ArrayRef<Value *> Args
+argument_list|,
+argument|const Twine&NameStr
+argument_list|)
+block|{
+name|init
+argument_list|(
+name|cast
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Func
+operator|->
+name|getType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+operator|)
+argument_list|,
+name|Func
+argument_list|,
+name|IfNormal
+argument_list|,
+name|IfException
+argument_list|,
+name|Args
+argument_list|,
+name|NameStr
+argument_list|)
+block|;   }
+name|void
+name|init
+argument_list|(
+name|FunctionType
+operator|*
+name|FTy
+argument_list|,
 name|Value
 operator|*
 name|Func
@@ -12486,6 +13353,45 @@ comment|/// \brief Construct an InvokeInst from a range of arguments
 specifier|inline
 name|InvokeInst
 argument_list|(
+argument|Value *Func
+argument_list|,
+argument|BasicBlock *IfNormal
+argument_list|,
+argument|BasicBlock *IfException
+argument_list|,
+argument|ArrayRef<Value *> Args
+argument_list|,
+argument|unsigned Values
+argument_list|,
+argument|const Twine&NameStr
+argument_list|,
+argument|Instruction *InsertBefore
+argument_list|)
+operator|:
+name|InvokeInst
+argument_list|(
+argument|cast<FunctionType>(                        cast<PointerType>(Func->getType())->getElementType())
+argument_list|,
+argument|Func
+argument_list|,
+argument|IfNormal
+argument_list|,
+argument|IfException
+argument_list|,
+argument|Args
+argument_list|,
+argument|Values
+argument_list|,
+argument|NameStr
+argument_list|,
+argument|InsertBefore
+argument_list|)
+block|{}
+specifier|inline
+name|InvokeInst
+argument_list|(
+argument|FunctionType *Ty
+argument_list|,
 argument|Value *Func
 argument_list|,
 argument|BasicBlock *IfNormal
@@ -12552,6 +13458,64 @@ argument_list|,
 argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
+return|return
+name|Create
+argument_list|(
+name|cast
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Func
+operator|->
+name|getType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+operator|)
+argument_list|,
+name|Func
+argument_list|,
+name|IfNormal
+argument_list|,
+name|IfException
+argument_list|,
+name|Args
+argument_list|,
+name|NameStr
+argument_list|,
+name|InsertBefore
+argument_list|)
+return|;
+block|}
+specifier|static
+name|InvokeInst
+operator|*
+name|Create
+argument_list|(
+argument|FunctionType *Ty
+argument_list|,
+argument|Value *Func
+argument_list|,
+argument|BasicBlock *IfNormal
+argument_list|,
+argument|BasicBlock *IfException
+argument_list|,
+argument|ArrayRef<Value *> Args
+argument_list|,
+argument|const Twine&NameStr =
+literal|""
+argument_list|,
+argument|Instruction *InsertBefore = nullptr
+argument_list|)
+block|{
 name|unsigned
 name|Values
 operator|=
@@ -12572,6 +13536,8 @@ argument|Values
 argument_list|)
 name|InvokeInst
 argument_list|(
+name|Ty
+argument_list|,
 name|Func
 argument_list|,
 name|IfNormal
@@ -12648,6 +13614,36 @@ argument_list|(
 name|Value
 argument_list|)
 block|;
+name|FunctionType
+operator|*
+name|getFunctionType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FTy
+return|;
+block|}
+name|void
+name|mutateFunctionType
+argument_list|(
+argument|FunctionType *FTy
+argument_list|)
+block|{
+name|mutateType
+argument_list|(
+name|FTy
+operator|->
+name|getReturnType
+argument_list|()
+argument_list|)
+block|;
+name|this
+operator|->
+name|FTy
+operator|=
+name|FTy
+block|;   }
 comment|/// getNumArgOperands - Return the number of invoke arguments.
 comment|///
 name|unsigned
@@ -12856,6 +13852,25 @@ argument_list|,
 argument|Attribute attr
 argument_list|)
 block|;
+comment|/// \brief adds the dereferenceable attribute to the list of attributes.
+name|void
+name|addDereferenceableAttr
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|uint64_t Bytes
+argument_list|)
+block|;
+comment|/// \brief adds the dereferenceable_or_null attribute to the list of
+comment|/// attributes.
+name|void
+name|addDereferenceableOrNullAttr
+argument_list|(
+argument|unsigned i
+argument_list|,
+argument|uint64_t Bytes
+argument_list|)
+block|;
 comment|/// \brief Determine whether this call has the given attribute.
 name|bool
 name|hasFnAttr
@@ -12922,6 +13937,24 @@ return|return
 name|AttributeList
 operator|.
 name|getDereferenceableBytes
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
+comment|/// \brief Extract the number of dereferenceable_or_null bytes for a call or
+comment|/// parameter (0=unknown).
+name|uint64_t
+name|getDereferenceableOrNullBytes
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|AttributeList
+operator|.
+name|getDereferenceableOrNullBytes
 argument_list|(
 name|i
 argument_list|)
@@ -13238,6 +14271,70 @@ argument_list|(
 argument|Value* Fn
 argument_list|)
 block|{
+name|setCalledFunction
+argument_list|(
+name|cast
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Fn
+operator|->
+name|getType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+operator|)
+argument_list|,
+name|Fn
+argument_list|)
+block|;   }
+name|void
+name|setCalledFunction
+argument_list|(
+argument|FunctionType *FTy
+argument_list|,
+argument|Value *Fn
+argument_list|)
+block|{
+name|this
+operator|->
+name|FTy
+operator|=
+name|FTy
+block|;
+name|assert
+argument_list|(
+name|FTy
+operator|==
+name|cast
+operator|<
+name|FunctionType
+operator|>
+operator|(
+name|cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|Fn
+operator|->
+name|getType
+argument_list|()
+operator|)
+operator|->
+name|getElementType
+argument_list|()
+operator|)
+argument_list|)
+block|;
 name|Op
 operator|<
 operator|-
@@ -13548,6 +14645,8 @@ name|InvokeInst
 operator|::
 name|InvokeInst
 argument_list|(
+argument|FunctionType *Ty
+argument_list|,
 argument|Value *Func
 argument_list|,
 argument|BasicBlock *IfNormal
@@ -13565,7 +14664,7 @@ argument_list|)
 operator|:
 name|TerminatorInst
 argument_list|(
-argument|cast<FunctionType>(cast<PointerType>(Func->getType())                                       ->getElementType())->getReturnType()
+argument|Ty->getReturnType()
 argument_list|,
 argument|Instruction::Invoke
 argument_list|,
@@ -13578,6 +14677,8 @@ argument_list|)
 block|{
 name|init
 argument_list|(
+name|Ty
+argument_list|,
 name|Func
 argument_list|,
 name|IfNormal
@@ -13892,11 +14993,12 @@ operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:

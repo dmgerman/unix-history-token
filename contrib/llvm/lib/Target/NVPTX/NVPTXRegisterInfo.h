@@ -93,13 +93,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// Forward Declarations.
-name|class
-name|TargetInstrInfo
-decl_stmt|;
-name|class
-name|NVPTXSubtarget
-decl_stmt|;
 name|class
 name|NVPTXRegisterInfo
 range|:
@@ -108,9 +101,6 @@ name|NVPTXGenRegisterInfo
 block|{
 name|private
 operator|:
-name|bool
-name|Is64Bit
-block|;
 comment|// Hold Strings that can be free'd all together with NVPTXRegisterInfo
 name|ManagedStringPool
 name|ManagedStrPool
@@ -118,12 +108,7 @@ block|;
 name|public
 operator|:
 name|NVPTXRegisterInfo
-argument_list|(
-specifier|const
-name|NVPTXSubtarget
-operator|&
-name|st
-argument_list|)
+argument_list|()
 block|;
 comment|//------------------------------------------------------
 comment|// Pure virtual functions from TargetRegisterInfo
@@ -134,7 +119,7 @@ name|MCPhysReg
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
-argument|const MachineFunction *MF = nullptr
+argument|const MachineFunction *MF
 argument_list|)
 specifier|const
 name|override

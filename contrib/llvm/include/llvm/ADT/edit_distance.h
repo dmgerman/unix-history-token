@@ -131,7 +131,7 @@ comment|//
 comment|//   http://en.wikipedia.org/wiki/Levenshtein_distance
 comment|//
 comment|// Although the algorithm is typically described using an m x n
-comment|// array, only two rows are used at a time, so this implemenation
+comment|// array, only two rows are used at a time, so this implementation
 comment|// just keeps two separate vectors for those two rows.
 name|typename
 name|ArrayRef

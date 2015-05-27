@@ -65,6 +65,12 @@ directive|include
 file|"llvm/MC/MCAsmInfoDarwin.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCAsmInfoELF.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -107,7 +113,7 @@ name|struct
 name|AArch64MCAsmInfoELF
 range|:
 name|public
-name|MCAsmInfo
+name|MCAsmInfoELF
 block|{
 name|explicit
 name|AArch64MCAsmInfoELF

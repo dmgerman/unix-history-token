@@ -342,7 +342,7 @@ argument|MachineFunction&MF
 argument_list|,
 argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
+argument|ArrayRef<unsigned> Ops
 argument_list|,
 argument|int FrameIndex
 argument_list|)
@@ -357,7 +357,7 @@ argument|MachineFunction&MF
 argument_list|,
 argument|MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
+argument|ArrayRef<unsigned> Ops
 argument_list|,
 argument|MachineInstr *LoadMI
 argument_list|)
@@ -389,7 +389,7 @@ name|canFoldMemoryOperand
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
-argument|const SmallVectorImpl<unsigned>&Ops
+argument|ArrayRef<unsigned> Ops
 argument_list|)
 specifier|const
 name|override

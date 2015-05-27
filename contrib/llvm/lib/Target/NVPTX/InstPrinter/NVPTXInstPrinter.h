@@ -105,11 +105,6 @@ specifier|const
 name|MCRegisterInfo
 operator|&
 name|MRI
-argument_list|,
-specifier|const
-name|MCSubtargetInfo
-operator|&
-name|STI
 argument_list|)
 block|;
 name|void
@@ -130,6 +125,8 @@ argument_list|,
 argument|raw_ostream&OS
 argument_list|,
 argument|StringRef Annot
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|)
 name|override
 block|;

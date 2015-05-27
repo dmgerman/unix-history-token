@@ -81,9 +81,12 @@ name|private
 label|:
 name|MCCodeEmitter
 argument_list|(
-argument|const MCCodeEmitter&
+specifier|const
+name|MCCodeEmitter
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -93,7 +96,8 @@ specifier|const
 name|MCCodeEmitter
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:
@@ -113,12 +117,12 @@ name|virtual
 name|void
 name|reset
 parameter_list|()
-block|{ }
+block|{}
 comment|/// EncodeInstruction - Encode the given \p Inst to bytes on the output
 comment|/// stream \p OS.
 name|virtual
 name|void
-name|EncodeInstruction
+name|encodeInstruction
 argument_list|(
 specifier|const
 name|MCInst

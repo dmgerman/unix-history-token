@@ -140,17 +140,6 @@ modifier|*
 name|createEmitX86CodeToMemory
 parameter_list|()
 function_decl|;
-comment|/// \brief Creates an X86-specific Target Transformation Info pass.
-name|ImmutablePass
-modifier|*
-name|createX86TargetTransformInfoPass
-parameter_list|(
-specifier|const
-name|X86TargetMachine
-modifier|*
-name|TM
-parameter_list|)
-function_decl|;
 comment|/// createX86PadShortFunctions - Return a pass that pads short functions
 comment|/// with NOOPs. This will prevent a stall when returning on the Atom.
 name|FunctionPass
@@ -173,6 +162,24 @@ comment|/// esp-relative movs with pushes.
 name|FunctionPass
 modifier|*
 name|createX86CallFrameOptimization
+parameter_list|()
+function_decl|;
+comment|/// createX86WinEHStatePass - Return an IR pass that inserts EH registration
+comment|/// stack objects and explicit EH state updates. This pass must run after EH
+comment|/// preparation, which does Windows-specific but architecture-neutral
+comment|/// preparation.
+name|FunctionPass
+modifier|*
+name|createX86WinEHStatePass
+parameter_list|()
+function_decl|;
+comment|/// Return a Machine IR pass that expands X86-specific pseudo
+comment|/// instructions into a sequence of actual instructions. This pass
+comment|/// must run after prologue/epilogue insertion and before lowering
+comment|/// the MachineInstr to MC.
+name|FunctionPass
+modifier|*
+name|createX86ExpandPseudoPass
 parameter_list|()
 function_decl|;
 block|}

@@ -724,26 +724,6 @@ name|NID
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Used by the Bitcode serializer to emit APInts to Bitcode.
-name|void
-name|Emit
-argument_list|(
-name|Serializer
-operator|&
-name|S
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Used by the Bitcode deserializer to deserialize APInts.
-specifier|static
-name|APFloat
-name|ReadVal
-parameter_list|(
-name|Deserializer
-modifier|&
-name|D
-parameter_list|)
-function_decl|;
 comment|/// \name Arithmetic
 comment|/// @{
 name|opStatus
@@ -1004,12 +984,7 @@ name|Sign
 argument_list|)
 expr_stmt|;
 return|return
-name|std
-operator|::
-name|move
-argument_list|(
 name|Value
-argument_list|)
 return|;
 block|}
 comment|/// @}
@@ -1137,7 +1112,8 @@ name|APFloat
 operator|&
 operator|)
 specifier|const
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 comment|/// IEEE comparison with another floating point number (NaNs compare
 comment|/// unordered, 0==-0).

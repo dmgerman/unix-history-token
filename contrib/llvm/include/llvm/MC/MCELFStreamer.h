@@ -125,7 +125,7 @@ name|MCAsmBackend
 operator|&
 name|TAB
 argument_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 operator|&
 name|OS
 argument_list|,
@@ -150,51 +150,10 @@ argument_list|(
 argument|false
 argument_list|)
 block|{}
-name|MCELFStreamer
-argument_list|(
-name|MCContext
-operator|&
-name|Context
-argument_list|,
-name|MCAsmBackend
-operator|&
-name|TAB
-argument_list|,
-name|raw_ostream
-operator|&
-name|OS
-argument_list|,
-name|MCCodeEmitter
-operator|*
-name|Emitter
-argument_list|,
-name|MCAssembler
-operator|*
-name|Assembler
-argument_list|)
-operator|:
-name|MCObjectStreamer
-argument_list|(
-name|Context
-argument_list|,
-name|TAB
-argument_list|,
-name|OS
-argument_list|,
-name|Emitter
-argument_list|,
-name|Assembler
-argument_list|)
-block|,
-name|SeenIdent
-argument_list|(
-argument|false
-argument_list|)
-block|{}
-name|virtual
 operator|~
 name|MCELFStreamer
 argument_list|()
+name|override
 block|;
 comment|/// state management
 name|void
@@ -202,6 +161,10 @@ name|reset
 argument_list|()
 name|override
 block|{
+name|SeenIdent
+operator|=
+name|false
+block|;
 name|LocalCommons
 operator|.
 name|clear
@@ -212,16 +175,17 @@ operator|.
 name|clear
 argument_list|()
 block|;
-name|SeenIdent
-operator|=
-name|false
+name|BundleGroups
+operator|.
+name|clear
+argument_list|()
 block|;
 name|MCObjectStreamer
 operator|::
 name|reset
 argument_list|()
 block|;   }
-comment|/// @name MCStreamer Interface
+comment|/// \name MCStreamer Interface
 comment|/// @{
 name|void
 name|InitSections
@@ -233,7 +197,7 @@ block|;
 name|void
 name|ChangeSection
 argument_list|(
-argument|const MCSection *Section
+argument|MCSection *Section
 argument_list|,
 argument|const MCExpr *Subsection
 argument_list|)
@@ -347,7 +311,7 @@ block|;
 name|void
 name|EmitZerofill
 argument_list|(
-argument|const MCSection *Section
+argument|MCSection *Section
 argument_list|,
 argument|MCSymbol *Symbol = nullptr
 argument_list|,
@@ -362,7 +326,7 @@ block|;
 name|void
 name|EmitTBSSSymbol
 argument_list|(
-argument|const MCSection *Section
+argument|MCSection *Section
 argument_list|,
 argument|MCSymbol *Symbol
 argument_list|,
@@ -442,6 +406,11 @@ name|override
 block|;
 name|private
 operator|:
+name|bool
+name|isBundleLocked
+argument_list|()
+specifier|const
+block|;
 name|void
 name|EmitInstToFragment
 argument_list|(
@@ -469,14 +438,26 @@ operator|*
 name|expr
 argument_list|)
 block|;
+comment|/// \brief Merge the content of the fragment \p EF into the fragment \p DF.
+name|void
+name|mergeFragment
+argument_list|(
+name|MCDataFragment
+operator|*
+argument_list|,
+name|MCEncodedFragmentWithFixups
+operator|*
+argument_list|)
+block|;
 name|bool
 name|SeenIdent
 block|;    struct
 name|LocalCommon
 block|{
-name|MCSymbolData
+specifier|const
+name|MCSymbol
 operator|*
-name|SD
+name|Symbol
 block|;
 name|uint64_t
 name|Size
@@ -501,6 +482,19 @@ block|,
 literal|16
 operator|>
 name|BindingExplicitlySet
+block|;
+comment|/// BundleGroups - The stack of fragments holding the bundle-locked
+comment|/// instructions.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|MCDataFragment
+operator|*
+block|,
+literal|4
+operator|>
+name|BundleGroups
 block|; }
 decl_stmt|;
 name|MCELFStreamer
@@ -515,7 +509,7 @@ name|MCAsmBackend
 modifier|&
 name|TAB
 parameter_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,

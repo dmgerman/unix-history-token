@@ -133,6 +133,8 @@ argument_list|,
 argument|int Selection
 argument_list|,
 argument|SectionKind K
+argument_list|,
+argument|MCSymbol *Begin
 argument_list|)
 operator|:
 name|MCSection
@@ -140,6 +142,8 @@ argument_list|(
 name|SV_COFF
 argument_list|,
 name|K
+argument_list|,
+name|Begin
 argument_list|)
 block|,
 name|SectionName
@@ -178,6 +182,7 @@ block|;     }
 operator|~
 name|MCSectionCOFF
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -199,40 +204,6 @@ specifier|const
 block|{
 return|return
 name|SectionName
-return|;
-block|}
-name|std
-operator|::
-name|string
-name|getLabelBeginName
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|SectionName
-operator|.
-name|str
-argument_list|()
-operator|+
-literal|"_begin"
-return|;
-block|}
-name|std
-operator|::
-name|string
-name|getLabelEndName
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-name|SectionName
-operator|.
-name|str
-argument_list|()
-operator|+
-literal|"_end"
 return|;
 block|}
 name|unsigned

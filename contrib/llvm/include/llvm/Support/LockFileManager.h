@@ -170,9 +170,12 @@ name|Error
 expr_stmt|;
 name|LockFileManager
 argument_list|(
-argument|const LockFileManager&
+specifier|const
+name|LockFileManager
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|LockFileManager
 modifier|&
@@ -183,7 +186,8 @@ specifier|const
 name|LockFileManager
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 specifier|static
 name|Optional
@@ -247,6 +251,14 @@ name|WaitForUnlockResult
 name|waitForUnlock
 parameter_list|()
 function_decl|;
+comment|/// \brief Remove the lock file.  This may delete a different lock file than
+comment|/// the one previously read if there is a race.
+name|std
+operator|::
+name|error_code
+name|unsafeRemoveLockFile
+argument_list|()
+expr_stmt|;
 block|}
 empty_stmt|;
 block|}

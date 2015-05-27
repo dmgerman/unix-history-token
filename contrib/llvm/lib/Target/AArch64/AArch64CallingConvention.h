@@ -355,7 +355,7 @@ operator|.
 name|getMachineFunction
 argument_list|()
 operator|.
-name|getSubtarget
+name|getTarget
 argument_list|()
 operator|.
 name|getDataLayout

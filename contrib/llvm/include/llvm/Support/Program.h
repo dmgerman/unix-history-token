@@ -74,12 +74,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Path.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<system_error>
 end_include
 
@@ -87,6 +81,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|StringRef
+decl_stmt|;
 name|namespace
 name|sys
 block|{

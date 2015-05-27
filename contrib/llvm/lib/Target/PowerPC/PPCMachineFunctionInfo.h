@@ -131,6 +131,10 @@ comment|/// entry, even though LR may otherwise apparently not be used.
 name|bool
 name|LRStoreRequired
 block|;
+comment|/// This function makes use of the PPC64 ELF TOC base pointer (register r2).
+name|bool
+name|UsesTOCBasePtr
+block|;
 comment|/// MinReservedArea - This is the frame size that is at least reserved in a
 comment|/// potential caller (parameter+linkage area).
 name|unsigned
@@ -241,6 +245,11 @@ name|false
 argument_list|)
 block|,
 name|LRStoreRequired
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|UsesTOCBasePtr
 argument_list|(
 name|false
 argument_list|)
@@ -516,6 +525,23 @@ specifier|const
 block|{
 return|return
 name|LRStoreRequired
+return|;
+block|}
+name|void
+name|setUsesTOCBasePtr
+argument_list|()
+block|{
+name|UsesTOCBasePtr
+operator|=
+name|true
+block|; }
+name|bool
+name|usesTOCBasePtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsesTOCBasePtr
 return|;
 block|}
 name|void

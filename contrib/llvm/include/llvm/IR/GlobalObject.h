@@ -99,15 +99,18 @@ name|GlobalValue
 block|{
 name|GlobalObject
 argument_list|(
-argument|const GlobalObject&
+specifier|const
+name|GlobalObject
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:
 name|GlobalObject
 argument_list|(
-argument|Type *Ty
+argument|PointerType *Ty
 argument_list|,
 argument|ValueTy VTy
 argument_list|,

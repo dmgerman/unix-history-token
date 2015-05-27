@@ -748,10 +748,10 @@ argument_list|,
 argument|children.end()
 argument_list|)
 block|{   }
-name|virtual
 operator|~
 name|ScopeMatcher
 argument_list|()
+name|override
 block|;
 name|unsigned
 name|getNumChildren
@@ -2219,10 +2219,10 @@ argument_list|,
 argument|cases.end()
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|SwitchOpcodeMatcher
 argument_list|()
+name|override
 block|;
 specifier|static
 specifier|inline
@@ -2543,10 +2543,10 @@ argument_list|,
 argument|cases.end()
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|SwitchTypeMatcher
 argument_list|()
+name|override
 block|;
 specifier|static
 specifier|inline

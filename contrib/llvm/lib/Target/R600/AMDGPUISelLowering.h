@@ -166,15 +166,6 @@ block|;
 comment|/// \brief Split a vector store into multiple scalar stores.
 comment|/// \returns The resulting chain.
 name|SDValue
-name|LowerUDIVREM
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|LowerFREM
 argument_list|(
 argument|SDValue Op
@@ -212,6 +203,33 @@ specifier|const
 block|;
 name|SDValue
 name|LowerFNEARBYINT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFROUND32
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFROUND64
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFROUND
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -413,6 +431,15 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerUDIVREM
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerDIVREM24
 argument_list|(
 argument|SDValue Op
@@ -483,6 +510,11 @@ argument_list|(
 name|TargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|AMDGPUSubtarget
+operator|&
+name|STI
 argument_list|)
 block|;
 name|bool
@@ -611,6 +643,18 @@ argument_list|(
 argument|EVT
 argument_list|,
 argument|EVT
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|storeOfVectorConstantIsCheap
+argument_list|(
+argument|EVT MemVT
+argument_list|,
+argument|unsigned NumElem
+argument_list|,
+argument|unsigned AS
 argument_list|)
 specifier|const
 name|override
@@ -856,6 +900,9 @@ name|namespace
 name|AMDGPUISD
 block|{
 enum|enum
+name|NodeType
+enum|:
+name|unsigned
 block|{
 comment|// AMDIL ISD Opcodes
 name|FIRST_NUMBER
@@ -881,9 +928,6 @@ name|FRACT
 block|,
 name|CLAMP
 block|,
-name|MAD
-block|,
-comment|// Multiply + add with same result as the separate operations.
 comment|// SIN_HW, COS_HW - f32 for SI, 1 ULP max error, valid from -100 pi to 100 pi.
 comment|// Denormals handled on some parts.
 name|COS_HW
@@ -940,6 +984,10 @@ block|,
 name|FP_CLASS
 block|,
 name|DOT4
+block|,
+name|CARRY
+block|,
+name|BORROW
 block|,
 name|BFE_U32
 block|,
@@ -1005,6 +1053,14 @@ name|BUILD_VERTICAL_VECTOR
 block|,
 comment|/// Pointer to the start of the shader's constant data.
 name|CONST_DATA_PTR
+block|,
+name|SENDMSG
+block|,
+name|INTERP_MOV
+block|,
+name|INTERP_P1
+block|,
+name|INTERP_P2
 block|,
 name|FIRST_MEM_OPCODE_NUMBER
 init|=

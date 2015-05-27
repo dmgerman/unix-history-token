@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/TargetLibraryInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/IntrinsicInst.h"
 end_include
 
@@ -69,12 +75,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Intrinsics.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetLibraryInfo.h"
 end_include
 
 begin_decl_stmt
@@ -242,6 +242,7 @@ return|;
 block|}
 block|}
 specifier|static
+specifier|inline
 name|bool
 name|hasVectorInstrinsicScalarOpd
 argument_list|(

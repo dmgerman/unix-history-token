@@ -952,6 +952,14 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|section_iterator
+name|getRelocationSection
+argument_list|(
+argument|DataRefImpl Rel
+argument_list|)
+specifier|const
+name|override
+block|;
 name|std
 operator|::
 name|error_code
@@ -1289,7 +1297,7 @@ argument_list|)
 specifier|const
 block|;
 name|SectionRef
-name|getRelocationSection
+name|getAnyRelocationSection
 argument_list|(
 argument|const MachO::any_relocation_info&RE
 argument_list|)
@@ -1629,6 +1637,13 @@ name|getDataInCodeLoadCommand
 argument_list|()
 specifier|const
 block|;
+name|MachO
+operator|::
+name|linkedit_data_command
+name|getLinkOptHintsLoadCommand
+argument_list|()
+specifier|const
+block|;
 name|ArrayRef
 operator|<
 name|uint8_t
@@ -1849,6 +1864,11 @@ specifier|const
 name|char
 modifier|*
 name|DataInCodeLoadCmd
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|LinkOptHintsLoadCmd
 decl_stmt|;
 specifier|const
 name|char

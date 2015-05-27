@@ -140,11 +140,6 @@ block|;
 name|bool
 name|ExtendedInsts
 block|;
-specifier|const
-name|DataLayout
-name|DL
-block|;
-comment|// Calculates type size& alignment
 name|MSP430FrameLowering
 name|FrameLowering
 block|;
@@ -234,19 +229,6 @@ block|{
 return|return
 operator|&
 name|InstrInfo
-return|;
-block|}
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|DL
 return|;
 block|}
 specifier|const

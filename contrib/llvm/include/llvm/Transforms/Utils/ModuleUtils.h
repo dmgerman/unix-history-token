@@ -59,6 +59,22 @@ directive|define
 name|LLVM_TRANSFORMS_UTILS_MODULEUTILS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
+end_include
+
+begin_comment
+comment|// for std::pair
+end_comment
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -74,6 +90,18 @@ name|GlobalValue
 decl_stmt|;
 name|class
 name|GlobalVariable
+decl_stmt|;
+name|class
+name|Constant
+decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
+name|class
+name|Value
+decl_stmt|;
+name|class
+name|Type
 decl_stmt|;
 name|template
 operator|<
@@ -140,6 +168,46 @@ name|bool
 name|CompilerUsed
 argument_list|)
 decl_stmt|;
+comment|// Validate the result of Module::getOrInsertFunction called for an interface
+comment|// function of given sanitizer. If the instrumented module defines a function
+comment|// with the same name, their prototypes must match, otherwise
+comment|// getOrInsertFunction returns a bitcast.
+name|Function
+modifier|*
+name|checkSanitizerInterfaceFunction
+parameter_list|(
+name|Constant
+modifier|*
+name|FuncOrBitcast
+parameter_list|)
+function_decl|;
+comment|/// \brief Creates sanitizer constructor function, and calls sanitizer's init
+comment|/// function from it.
+comment|/// \return Returns pair of pointers to constructor, and init functions
+comment|/// respectively.
+name|std
+operator|::
+name|pair
+operator|<
+name|Function
+operator|*
+operator|,
+name|Function
+operator|*
+operator|>
+name|createSanitizerCtorAndInitFunctions
+argument_list|(
+argument|Module&M
+argument_list|,
+argument|StringRef CtorName
+argument_list|,
+argument|StringRef InitName
+argument_list|,
+argument|ArrayRef<Type *> InitArgTypes
+argument_list|,
+argument|ArrayRef<Value *> InitArgs
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

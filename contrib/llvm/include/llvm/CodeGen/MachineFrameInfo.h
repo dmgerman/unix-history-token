@@ -498,6 +498,39 @@ comment|/// True if this is a varargs function that contains a musttail call.
 name|bool
 name|HasMustTailInVarArgFunc
 decl_stmt|;
+comment|/// True if this function contains a tail call. If so immutable objects like
+comment|/// function arguments are no longer so. A tail call *can* override fixed
+comment|/// stack objects like arguments so we can't treat them as immutable.
+name|bool
+name|HasTailCall
+decl_stmt|;
+comment|/// Not null, if shrink-wrapping found a better place for the prologue.
+name|MachineBasicBlock
+modifier|*
+name|Save
+decl_stmt|;
+comment|/// Not null, if shrink-wrapping found a better place for the epilogue.
+name|MachineBasicBlock
+modifier|*
+name|Restore
+decl_stmt|;
+comment|/// Check if it exists a path from \p MBB leading to the basic
+comment|/// block with a SavePoint (a.k.a. prologue).
+name|bool
+name|isBeforeSavePoint
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+specifier|const
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|)
+decl|const
+decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -602,6 +635,18 @@ operator|=
 name|false
 block|;
 name|HasMustTailInVarArgFunc
+operator|=
+name|false
+block|;
+name|Save
+operator|=
+name|nullptr
+block|;
+name|Restore
+operator|=
+name|nullptr
+block|;
+name|HasTailCall
 operator|=
 name|false
 block|;   }
@@ -1543,6 +1588,25 @@ operator|=
 name|B
 expr_stmt|;
 block|}
+comment|/// Returns true if the function contains a tail call.
+name|bool
+name|hasTailCall
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasTailCall
+return|;
+block|}
+name|void
+name|setHasTailCall
+parameter_list|()
+block|{
+name|HasTailCall
+operator|=
+name|true
+expr_stmt|;
+block|}
 comment|/// getMaxCallFrameSize - Return the maximum size of a call frame that must be
 comment|/// allocated for an outgoing function call.  This is only available if
 comment|/// CallFrameSetup/Destroy pseudo instructions are used by the target, and
@@ -1602,15 +1666,6 @@ name|Size
 parameter_list|,
 name|int64_t
 name|SPOffset
-parameter_list|)
-function_decl|;
-comment|/// Allocates memory at a fixed, target-specific offset from the frame
-comment|/// pointer. Marks the function as having its frame address taken.
-name|int
-name|CreateFrameAllocation
-parameter_list|(
-name|uint64_t
-name|Size
 parameter_list|)
 function_decl|;
 comment|/// isFixedObjectIndex - Returns true if the specified index corresponds to a
@@ -1687,6 +1742,14 @@ name|ObjectIdx
 argument_list|)
 decl|const
 block|{
+comment|// Tail calling functions can clobber their function arguments.
+if|if
+condition|(
+name|HasTailCall
+condition|)
+return|return
+name|false
+return|;
 name|assert
 argument_list|(
 name|unsigned
@@ -1930,6 +1993,52 @@ block|{
 name|CSIValid
 operator|=
 name|v
+expr_stmt|;
+block|}
+name|MachineBasicBlock
+operator|*
+name|getSavePoint
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Save
+return|;
+block|}
+name|void
+name|setSavePoint
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|NewSave
+parameter_list|)
+block|{
+name|Save
+operator|=
+name|NewSave
+expr_stmt|;
+block|}
+name|MachineBasicBlock
+operator|*
+name|getRestorePoint
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Restore
+return|;
+block|}
+name|void
+name|setRestorePoint
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|NewRestore
+parameter_list|)
+block|{
+name|Restore
+operator|=
+name|NewRestore
 expr_stmt|;
 block|}
 comment|/// getPristineRegs - Return a set of physical registers that are pristine on

@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -163,6 +169,7 @@ block|;     }
 operator|~
 name|LibCallAliasAnalysis
 argument_list|()
+name|override
 expr_stmt|;
 name|ModRefResult
 name|getModRefInfo
@@ -212,23 +219,13 @@ name|override
 decl_stmt|;
 name|bool
 name|runOnFunction
-parameter_list|(
-name|Function
-modifier|&
-name|F
-parameter_list|)
-function|override
-block|{
-name|InitializeAliasAnalysis
 argument_list|(
-name|this
+name|Function
+operator|&
+name|F
 argument_list|)
-expr_stmt|;
-comment|// set up super class
-return|return
-name|false
-return|;
-block|}
+name|override
+decl_stmt|;
 comment|/// getAdjustedAnalysisPointer - This method is used when a pass implements
 comment|/// an analysis interface through multiple inheritance.  If needed, it
 comment|/// should override this to adjust the this pointer as needed for the

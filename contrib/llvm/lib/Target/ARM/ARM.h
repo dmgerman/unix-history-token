@@ -138,16 +138,6 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
-name|createARMGlobalMergePass
-parameter_list|(
-specifier|const
-name|TargetLowering
-modifier|*
-name|tli
-parameter_list|)
-function_decl|;
-name|FunctionPass
-modifier|*
 name|createARMConstantIslandPass
 parameter_list|()
 function_decl|;
@@ -170,17 +160,6 @@ name|FunctionPass
 modifier|*
 name|createThumb2SizeReductionPass
 parameter_list|()
-function_decl|;
-comment|/// \brief Creates an ARM-specific Target Transformation Info pass.
-name|ImmutablePass
-modifier|*
-name|createARMTargetTransformInfoPass
-parameter_list|(
-specifier|const
-name|ARMBaseTargetMachine
-modifier|*
-name|TM
-parameter_list|)
 function_decl|;
 name|void
 name|LowerARMMachineInstrToMCInst

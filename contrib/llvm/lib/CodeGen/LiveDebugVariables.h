@@ -135,6 +135,7 @@ name|Function
 operator|*
 block|,
 name|DISubprogram
+operator|*
 operator|>
 name|FunctionDIs
 block|;
@@ -151,6 +152,7 @@ block|;
 operator|~
 name|LiveDebugVariables
 argument_list|()
+name|override
 block|;
 comment|/// renameRegister - Move any user variables in OldReg to NewReg:SubIdx.
 comment|/// @param OldReg Old virtual register that is going away.

@@ -126,9 +126,6 @@ name|class
 name|DIE
 decl_stmt|;
 name|class
-name|DISubprogram
-decl_stmt|;
-name|class
 name|LexicalScope
 decl_stmt|;
 name|class
@@ -141,16 +138,15 @@ name|class
 name|MCSection
 decl_stmt|;
 name|class
+name|MDNode
+decl_stmt|;
+name|class
 name|DwarfFile
 block|{
 comment|// Target of Dwarf emission, used for sizing of abbreviations.
 name|AsmPrinter
 modifier|*
 name|Asm
-decl_stmt|;
-name|DwarfDebug
-modifier|&
-name|DD
 decl_stmt|;
 comment|// Used to uniquely define abbreviations.
 name|FoldingSet
@@ -225,15 +221,13 @@ operator|,
 name|DIE
 operator|*
 operator|>
-name|MDTypeNodeToDieMap
+name|DITypeNodeToDieMap
 expr_stmt|;
 name|public
 label|:
 name|DwarfFile
 argument_list|(
 argument|AsmPrinter *AP
-argument_list|,
-argument|DwarfDebug&DD
 argument_list|,
 argument|StringRef Pref
 argument_list|,
@@ -305,17 +299,14 @@ comment|/// abbreviation section.
 name|void
 name|emitUnits
 parameter_list|(
-specifier|const
-name|MCSymbol
-modifier|*
-name|ASectionSym
+name|bool
+name|UseOffsets
 parameter_list|)
 function_decl|;
 comment|/// \brief Emit a set of abbreviations to the specific section.
 name|void
 name|emitAbbrevs
 parameter_list|(
-specifier|const
 name|MCSection
 modifier|*
 parameter_list|)
@@ -324,12 +315,10 @@ comment|/// \brief Emit all of the strings to the section given.
 name|void
 name|emitStrings
 parameter_list|(
-specifier|const
 name|MCSection
 modifier|*
 name|StrSection
 parameter_list|,
-specifier|const
 name|MCSection
 modifier|*
 name|OffsetSection
@@ -347,7 +336,8 @@ return|return
 name|StrPool
 return|;
 block|}
-name|void
+comment|/// \returns false if the variable was merged with a previous one.
+name|bool
 name|addScopeVariable
 parameter_list|(
 name|LexicalScope
@@ -409,7 +399,7 @@ modifier|*
 name|Die
 parameter_list|)
 block|{
-name|MDTypeNodeToDieMap
+name|DITypeNodeToDieMap
 operator|.
 name|insert
 argument_list|(
@@ -435,7 +425,7 @@ name|TypeMD
 parameter_list|)
 block|{
 return|return
-name|MDTypeNodeToDieMap
+name|DITypeNodeToDieMap
 operator|.
 name|lookup
 argument_list|(

@@ -52,7 +52,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Twine.h"
 end_include
 
 begin_include
@@ -183,17 +195,17 @@ name|difference_type
 expr_stmt|;
 name|arg_iterator
 argument_list|(
-argument|SmallVectorImpl<Arg*>::const_iterator it
+argument|SmallVectorImpl<Arg *>::const_iterator it
 argument_list|,
-argument|const ArgList&_Args
+argument|const ArgList&Args
 argument_list|,
-argument|OptSpecifier _Id0 =
+argument|OptSpecifier Id0 =
 literal|0U
 argument_list|,
-argument|OptSpecifier _Id1 =
+argument|OptSpecifier Id1 =
 literal|0U
 argument_list|,
-argument|OptSpecifier _Id2 =
+argument|OptSpecifier Id2 =
 literal|0U
 argument_list|)
 block|:
@@ -204,22 +216,22 @@ argument_list|)
 operator|,
 name|Args
 argument_list|(
-name|_Args
+name|Args
 argument_list|)
 operator|,
 name|Id0
 argument_list|(
-name|_Id0
+name|Id0
 argument_list|)
 operator|,
 name|Id1
 argument_list|(
-name|_Id1
+name|Id1
 argument_list|)
 operator|,
 name|Id2
 argument_list|(
-argument|_Id2
+argument|Id2
 argument_list|)
 block|{
 name|SkipToNextArg
@@ -360,9 +372,12 @@ name|private
 label|:
 name|ArgList
 argument_list|(
-argument|const ArgList&
+specifier|const
+name|ArgList
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -372,7 +387,8 @@ specifier|const
 name|ArgList
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|public
 label|:
@@ -787,6 +803,39 @@ decl|const
 decl_stmt|;
 name|Arg
 modifier|*
+name|getLastArgNoClaim
+argument_list|(
+name|OptSpecifier
+name|Id0
+argument_list|,
+name|OptSpecifier
+name|Id1
+argument_list|,
+name|OptSpecifier
+name|Id2
+argument_list|)
+decl|const
+decl_stmt|;
+name|Arg
+modifier|*
+name|getLastArgNoClaim
+argument_list|(
+name|OptSpecifier
+name|Id0
+argument_list|,
+name|OptSpecifier
+name|Id1
+argument_list|,
+name|OptSpecifier
+name|Id2
+argument_list|,
+name|OptSpecifier
+name|Id3
+argument_list|)
+decl|const
+decl_stmt|;
+name|Arg
+modifier|*
 name|getLastArg
 argument_list|(
 name|OptSpecifier
@@ -1168,13 +1217,13 @@ expr_stmt|;
 comment|/// @}
 comment|/// @name Arg Synthesis
 comment|/// @{
-comment|/// MakeArgString - Construct a constant string pointer whose
+comment|/// Construct a constant string pointer whose
 comment|/// lifetime will match that of the ArgList.
 name|virtual
 specifier|const
 name|char
 modifier|*
-name|MakeArgString
+name|MakeArgStringRef
 argument_list|(
 name|StringRef
 name|Str
@@ -1189,56 +1238,30 @@ modifier|*
 name|MakeArgString
 argument_list|(
 specifier|const
-name|char
-operator|*
-name|Str
-argument_list|)
-decl|const
-block|{
-return|return
-name|MakeArgString
-argument_list|(
-name|StringRef
-argument_list|(
-name|Str
-argument_list|)
-argument_list|)
-return|;
-block|}
-specifier|const
-name|char
-modifier|*
-name|MakeArgString
-argument_list|(
-name|std
-operator|::
-name|string
-name|Str
-argument_list|)
-decl|const
-block|{
-return|return
-name|MakeArgString
-argument_list|(
-name|StringRef
-argument_list|(
-name|Str
-argument_list|)
-argument_list|)
-return|;
-block|}
-specifier|const
-name|char
-modifier|*
-name|MakeArgString
-argument_list|(
-specifier|const
 name|Twine
 operator|&
 name|Str
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+name|SmallString
+operator|<
+literal|256
+operator|>
+name|Buf
+expr_stmt|;
+return|return
+name|MakeArgStringRef
+argument_list|(
+name|Str
+operator|.
+name|toStringRef
+argument_list|(
+name|Buf
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|/// \brief Create an arg string for (\p LHS + \p RHS), reusing the
 comment|/// string at \p Index if possible.
 specifier|const
@@ -1319,6 +1342,7 @@ block|;
 operator|~
 name|InputArgList
 argument_list|()
+name|override
 block|;
 specifier|const
 name|char
@@ -1376,7 +1400,7 @@ block|;
 specifier|const
 name|char
 operator|*
-name|MakeArgString
+name|MakeArgStringRef
 argument_list|(
 argument|StringRef Str
 argument_list|)
@@ -1428,6 +1452,7 @@ block|;
 operator|~
 name|DerivedArgList
 argument_list|()
+name|override
 block|;
 specifier|const
 name|char
@@ -1492,7 +1517,7 @@ block|;
 specifier|const
 name|char
 operator|*
-name|MakeArgString
+name|MakeArgStringRef
 argument_list|(
 argument|StringRef Str
 argument_list|)

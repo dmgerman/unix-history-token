@@ -203,9 +203,12 @@ name|V
 decl_stmt|;
 name|ValueHandleBase
 argument_list|(
-argument|const ValueHandleBase&
+specifier|const
+name|ValueHandleBase
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|public
 label|:

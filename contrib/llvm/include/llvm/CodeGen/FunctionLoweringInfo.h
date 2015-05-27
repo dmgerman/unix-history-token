@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -246,6 +252,35 @@ operator|,
 name|unsigned
 operator|>
 name|ValueMap
+expr_stmt|;
+comment|// Keep track of frame indices allocated for statepoints as they could be used
+comment|// across basic block boundaries.
+comment|// Key of the map is statepoint instruction, value is a map from spilled
+comment|// llvm Value to the optional stack stack slot index.
+comment|// If optional is unspecified it means that we have visited this value
+comment|// but didn't spill it.
+typedef|typedef
+name|DenseMap
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+name|Optional
+operator|<
+name|int
+operator|>>
+name|StatepointSpilledValueMapTy
+expr_stmt|;
+name|DenseMap
+operator|<
+specifier|const
+name|Instruction
+operator|*
+operator|,
+name|StatepointSpilledValueMapTy
+operator|>
+name|StatepointRelocatedValues
 expr_stmt|;
 comment|/// StaticAllocaMap - Keep track of frame indices for fixed sized allocas in
 comment|/// the entry block.  This allows the allocas to be efficiently referenced
@@ -790,6 +825,18 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
+name|void
+name|addSEHHandlersForLPads
+argument_list|(
+name|ArrayRef
+operator|<
+specifier|const
+name|LandingPadInst
+operator|*
+operator|>
+name|LPads
+argument_list|)
+decl_stmt|;
 comment|/// LiveOutRegInfo - Information about live out vregs.
 name|IndexedMap
 operator|<
@@ -817,25 +864,6 @@ parameter_list|,
 name|MachineModuleInfo
 modifier|*
 name|MMI
-parameter_list|)
-function_decl|;
-comment|/// AddCatchInfo - Extract the personality and type infos from an eh.selector
-comment|/// call, and add them to the specified machine basic block.
-name|void
-name|AddCatchInfo
-parameter_list|(
-specifier|const
-name|CallInst
-modifier|&
-name|I
-parameter_list|,
-name|MachineModuleInfo
-modifier|*
-name|MMI
-parameter_list|,
-name|MachineBasicBlock
-modifier|*
-name|MBB
 parameter_list|)
 function_decl|;
 comment|/// AddLandingPadInfo - Extract the exception handling information from the

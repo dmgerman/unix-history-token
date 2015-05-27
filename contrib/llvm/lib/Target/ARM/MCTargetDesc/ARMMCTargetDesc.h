@@ -109,13 +109,22 @@ name|class
 name|MCRelocationInfo
 decl_stmt|;
 name|class
+name|MCTargetStreamer
+decl_stmt|;
+name|class
 name|StringRef
 decl_stmt|;
 name|class
 name|Target
 decl_stmt|;
 name|class
+name|Triple
+decl_stmt|;
+name|class
 name|raw_ostream
+decl_stmt|;
+name|class
+name|raw_pwrite_stream
 decl_stmt|;
 specifier|extern
 name|Target
@@ -142,9 +151,8 @@ argument_list|,
 argument|StringRef CPU
 argument_list|)
 expr_stmt|;
-comment|/// createARMMCSubtargetInfo - Create a ARM MCSubtargetInfo instance.
-comment|/// This is exposed so Asm parser, etc. do not need to go through
-comment|/// TargetRegistry.
+comment|/// Create a ARM MCSubtargetInfo instance. This is exposed so Asm parser, etc.
+comment|/// do not need to go through TargetRegistry.
 name|MCSubtargetInfo
 modifier|*
 name|createARMMCSubtargetInfo
@@ -160,47 +168,47 @@ name|FS
 parameter_list|)
 function_decl|;
 block|}
-name|MCStreamer
+name|MCTargetStreamer
 modifier|*
-name|createMCAsmStreamer
+name|createARMNullTargetStreamer
 parameter_list|(
-name|MCContext
+name|MCStreamer
 modifier|&
-name|Ctx
+name|S
+parameter_list|)
+function_decl|;
+name|MCTargetStreamer
+modifier|*
+name|createARMTargetAsmStreamer
+parameter_list|(
+name|MCStreamer
+modifier|&
+name|S
 parameter_list|,
 name|formatted_raw_ostream
 modifier|&
 name|OS
 parameter_list|,
-name|bool
-name|isVerboseAsm
-parameter_list|,
-name|bool
-name|useDwarfDirectory
-parameter_list|,
 name|MCInstPrinter
 modifier|*
 name|InstPrint
 parameter_list|,
-name|MCCodeEmitter
-modifier|*
-name|CE
-parameter_list|,
-name|MCAsmBackend
-modifier|*
-name|TAB
-parameter_list|,
 name|bool
-name|ShowInst
+name|isVerboseAsm
 parameter_list|)
 function_decl|;
-name|MCStreamer
+name|MCTargetStreamer
 modifier|*
-name|createARMNullStreamer
+name|createARMObjectTargetStreamer
 parameter_list|(
-name|MCContext
+name|MCStreamer
 modifier|&
-name|Ctx
+name|S
+parameter_list|,
+specifier|const
+name|MCSubtargetInfo
+modifier|&
+name|STI
 parameter_list|)
 function_decl|;
 name|MCCodeEmitter
@@ -216,11 +224,6 @@ specifier|const
 name|MCRegisterInfo
 modifier|&
 name|MRI
-parameter_list|,
-specifier|const
-name|MCSubtargetInfo
-modifier|&
-name|STI
 parameter_list|,
 name|MCContext
 modifier|&
@@ -240,11 +243,6 @@ specifier|const
 name|MCRegisterInfo
 modifier|&
 name|MRI
-parameter_list|,
-specifier|const
-name|MCSubtargetInfo
-modifier|&
-name|STI
 parameter_list|,
 name|MCContext
 modifier|&
@@ -359,8 +357,8 @@ name|StringRef
 name|CPU
 parameter_list|)
 function_decl|;
-comment|/// createARMWinCOFFStreamer - Construct a PE/COFF machine code streamer which
-comment|/// will generate a PE/COFF object file.
+comment|// Construct a PE/COFF machine code streamer which will generate a PE/COFF
+comment|// object file.
 name|MCStreamer
 modifier|*
 name|createARMWinCOFFStreamer
@@ -373,21 +371,24 @@ name|MCAsmBackend
 modifier|&
 name|MAB
 parameter_list|,
-name|MCCodeEmitter
-modifier|&
-name|Emitter
-parameter_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
+parameter_list|,
+name|MCCodeEmitter
+modifier|*
+name|Emitter
+parameter_list|,
+name|bool
+name|RelaxAll
 parameter_list|)
 function_decl|;
-comment|/// createARMELFObjectWriter - Construct an ELF Mach-O object writer.
+comment|/// Construct an ELF Mach-O object writer.
 name|MCObjectWriter
 modifier|*
 name|createARMELFObjectWriter
 parameter_list|(
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,
@@ -398,12 +399,12 @@ name|bool
 name|IsLittleEndian
 parameter_list|)
 function_decl|;
-comment|/// createARMMachObjectWriter - Construct an ARM Mach-O object writer.
+comment|/// Construct an ARM Mach-O object writer.
 name|MCObjectWriter
 modifier|*
 name|createARMMachObjectWriter
 parameter_list|(
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,
@@ -417,12 +418,12 @@ name|uint32_t
 name|CPUSubtype
 parameter_list|)
 function_decl|;
-comment|/// createARMWinCOFFObjectWriter - Construct an ARM PE/COFF object writer.
+comment|/// Construct an ARM PE/COFF object writer.
 name|MCObjectWriter
 modifier|*
 name|createARMWinCOFFObjectWriter
 parameter_list|(
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,
@@ -430,7 +431,7 @@ name|bool
 name|Is64Bit
 parameter_list|)
 function_decl|;
-comment|/// createARMMachORelocationInfo - Construct ARM Mach-O relocation info.
+comment|/// Construct ARM Mach-O relocation info.
 name|MCRelocationInfo
 modifier|*
 name|createARMMachORelocationInfo

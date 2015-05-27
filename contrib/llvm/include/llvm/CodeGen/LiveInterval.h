@@ -123,6 +123,12 @@ directive|include
 file|<climits>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<set>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -657,6 +663,26 @@ name|VNInfoList
 name|valnos
 decl_stmt|;
 comment|// value#'s
+comment|// The segment set is used temporarily to accelerate initial computation
+comment|// of live ranges of physical registers in computeRegUnitRange.
+comment|// After that the set is flushed to the segment vector and deleted.
+typedef|typedef
+name|std
+operator|::
+name|set
+operator|<
+name|Segment
+operator|>
+name|SegmentSet
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SegmentSet
+operator|>
+name|segmentSet
+expr_stmt|;
 typedef|typedef
 name|Segments
 operator|::
@@ -775,8 +801,15 @@ return|;
 block|}
 comment|/// Constructs a new LiveRange object.
 name|LiveRange
-argument_list|()
-block|{     }
+argument_list|(
+argument|bool UseSegmentSet = false
+argument_list|)
+block|:
+name|segmentSet
+argument_list|(
+argument|UseSegmentSet ? llvm::make_unique<SegmentSet>()                                    : nullptr
+argument_list|)
+block|{}
 comment|/// Constructs a new LiveRange object by copying segments and valnos from
 comment|/// another LiveRange.
 name|LiveRange
@@ -786,6 +819,17 @@ argument_list|,
 argument|BumpPtrAllocator&Allocator
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|Other
+operator|.
+name|segmentSet
+operator|==
+name|nullptr
+operator|&&
+literal|"Copying of LiveRanges with active SegmentSets is not supported"
+argument_list|)
+expr_stmt|;
 comment|// Duplicate valnos.
 for|for
 control|(
@@ -1710,22 +1754,10 @@ parameter_list|(
 name|Segment
 name|S
 parameter_list|)
-block|{
-return|return
-name|addSegmentFrom
-argument_list|(
-name|S
-argument_list|,
-name|segments
-operator|.
-name|begin
-argument_list|()
-argument_list|)
-return|;
-block|}
-comment|/// extendInBlock - If this range is live before Kill in the basic block
-comment|/// that starts at StartIdx, extend it to be live up to Kill, and return
-comment|/// the value. If there is no segment before Kill, return NULL.
+function_decl|;
+comment|/// If this range is live before @p Use in the basic block that starts at
+comment|/// @p StartIdx, extend it to be live up to @p Use, and return the value. If
+comment|/// there is no segment before @p Use, return nullptr.
 name|VNInfo
 modifier|*
 name|extendInBlock
@@ -1734,7 +1766,7 @@ name|SlotIndex
 name|StartIdx
 parameter_list|,
 name|SlotIndex
-name|Kill
+name|Use
 parameter_list|)
 function_decl|;
 comment|/// join - Join two live ranges (this, and other) together.  This applies
@@ -2150,6 +2182,14 @@ operator|<
 name|otherIndex
 return|;
 block|}
+comment|/// Flush segment set into the regular segment vector.
+comment|/// The method is to be called after the live range
+comment|/// has been created, if use of the segment set was
+comment|/// activated in the constructor of the live range.
+name|void
+name|flushSegmentSet
+parameter_list|()
+function_decl|;
 name|void
 name|print
 argument_list|(
@@ -2199,34 +2239,15 @@ argument_list|)
 decl_stmt|;
 name|private
 label|:
-name|iterator
-name|addSegmentFrom
+name|friend
+name|class
+name|LiveRangeUpdater
+decl_stmt|;
+name|void
+name|addSegmentToSet
 parameter_list|(
 name|Segment
 name|S
-parameter_list|,
-name|iterator
-name|From
-parameter_list|)
-function_decl|;
-name|void
-name|extendSegmentEndTo
-parameter_list|(
-name|iterator
-name|I
-parameter_list|,
-name|SlotIndex
-name|NewEnd
-parameter_list|)
-function_decl|;
-name|iterator
-name|extendSegmentStartTo
-parameter_list|(
-name|iterator
-name|I
-parameter_list|,
-name|SlotIndex
-name|NewStr
 parameter_list|)
 function_decl|;
 name|void
@@ -2383,6 +2404,13 @@ argument_list|(
 argument|Weight
 argument_list|)
 block|{}
+operator|~
+name|LiveInterval
+argument_list|()
+block|{
+name|clearSubRanges
+argument_list|()
+block|;     }
 name|template
 operator|<
 name|typename
@@ -2785,17 +2813,12 @@ begin_comment
 comment|/// Removes all subregister liveness information.
 end_comment
 
-begin_function
+begin_function_decl
 name|void
 name|clearSubRanges
 parameter_list|()
-block|{
-name|SubRanges
-operator|=
-name|nullptr
-expr_stmt|;
-block|}
-end_function
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// Removes all subranges without any segments (subranges without segments
@@ -3025,21 +3048,6 @@ name|private
 label|:
 end_label
 
-begin_decl_stmt
-name|LiveInterval
-modifier|&
-name|operator
-init|=
-operator|(
-specifier|const
-name|LiveInterval
-operator|&
-name|rhs
-operator|)
-name|LLVM_DELETED_FUNCTION
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/// Appends @p Range to SubRanges list.
 end_comment
@@ -3065,6 +3073,21 @@ name|Range
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// Free memory held by SubRange.
+end_comment
+
+begin_function_decl
+name|void
+name|freeSubRange
+parameter_list|(
+name|SubRange
+modifier|*
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 unit|};

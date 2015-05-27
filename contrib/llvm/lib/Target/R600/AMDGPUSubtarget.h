@@ -114,12 +114,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DataLayout.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
@@ -211,6 +205,9 @@ name|bool
 name|FP32Denormals
 block|;
 name|bool
+name|FastFMAF32
+block|;
+name|bool
 name|CaymanISA
 block|;
 name|bool
@@ -243,9 +240,23 @@ block|;
 name|bool
 name|SGPRInitBug
 block|;
-specifier|const
-name|DataLayout
-name|DL
+name|bool
+name|IsGCN
+block|;
+name|bool
+name|GCN1Encoding
+block|;
+name|bool
+name|GCN3Encoding
+block|;
+name|bool
+name|CIInsts
+block|;
+name|bool
+name|FeatureDisable
+block|;
+name|int
+name|LDSBankCount
 block|;
 name|AMDGPUFrameLowering
 name|FrameLowering
@@ -289,6 +300,8 @@ name|AMDGPUSubtarget
 operator|&
 name|initializeSubtargetDependencies
 argument_list|(
+argument|StringRef TT
+argument_list|,
 argument|StringRef GPU
 argument_list|,
 argument|StringRef FS
@@ -350,19 +363,6 @@ name|TLInfo
 operator|.
 name|get
 argument_list|()
-return|;
-block|}
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-name|override
-block|{
-return|return
-operator|&
-name|DL
 return|;
 block|}
 specifier|const
@@ -456,6 +456,15 @@ specifier|const
 block|{
 return|return
 name|FP64Denormals
+return|;
+block|}
+name|bool
+name|hasFastFMAF32
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FastFMAF32
 return|;
 block|}
 name|bool
@@ -619,6 +628,40 @@ end_expr_stmt
 
 begin_expr_stmt
 name|bool
+name|hasCARRY
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getGeneration
+argument_list|()
+operator|>=
+name|EVERGREEN
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
+name|hasBORROW
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getGeneration
+argument_list|()
+operator|>=
+name|EVERGREEN
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|bool
 name|IsIRStructurizerEnabled
 argument_list|()
 specifier|const
@@ -730,6 +773,18 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|int
+name|getLDSBankCount
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LDSBankCount
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|getAmdKernelCodeChipID
 argument_list|()
@@ -745,10 +800,7 @@ specifier|const
 name|override
 block|{
 return|return
-name|getGeneration
-argument_list|()
-operator|<=
-name|NORTHERN_ISLANDS
+name|true
 return|;
 block|}
 end_expr_stmt
@@ -887,13 +939,24 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_empty_stmt
-unit|} }
-empty_stmt|;
-end_empty_stmt
+begin_macro
+unit|}    bool
+name|enableSubRegLiveness
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+name|override
+block|{
+return|return
+name|false
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
-unit|}
+unit|};  }
 comment|// End namespace llvm
 end_comment
 

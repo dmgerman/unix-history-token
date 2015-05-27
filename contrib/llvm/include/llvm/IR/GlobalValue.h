@@ -106,6 +106,15 @@ decl_stmt|;
 name|class
 name|Module
 decl_stmt|;
+name|namespace
+name|Intrinsic
+block|{
+enum_decl|enum
+name|ID
+enum_decl|:
+name|unsigned
+enum_decl|;
+block|}
 name|class
 name|GlobalValue
 range|:
@@ -114,9 +123,12 @@ name|Constant
 block|{
 name|GlobalValue
 argument_list|(
-argument|const GlobalValue&
+specifier|const
+name|GlobalValue
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -199,7 +211,7 @@ name|protected
 operator|:
 name|GlobalValue
 argument_list|(
-argument|Type *Ty
+argument|PointerType *Ty
 argument_list|,
 argument|ValueTy VTy
 argument_list|,
@@ -246,6 +258,16 @@ block|,
 name|ThreadLocal
 argument_list|(
 name|NotThreadLocal
+argument_list|)
+block|,
+name|IntID
+argument_list|(
+operator|(
+name|Intrinsic
+operator|::
+name|ID
+operator|)
+literal|0U
 argument_list|)
 block|,
 name|Parent
@@ -302,6 +324,17 @@ literal|19
 block|;
 name|protected
 operator|:
+comment|/// \brief The intrinsic ID for this subclass (which must be a Function).
+comment|///
+comment|/// This member is defined by this class, but not used for anything.
+comment|/// Subclasses can use it to store their intrinsic ID, if they have one.
+comment|///
+comment|/// This is stored here to save space in Function on 64-bit hosts.
+name|Intrinsic
+operator|::
+name|ID
+name|IntID
+block|;
 specifier|static
 specifier|const
 name|unsigned
@@ -367,6 +400,7 @@ block|;
 operator|~
 name|GlobalValue
 argument_list|()
+name|override
 block|{
 name|removeDeadConstantUsers
 argument_list|()
@@ -647,7 +681,6 @@ argument_list|()
 specifier|const
 block|;
 comment|/// Global values are always pointers.
-specifier|inline
 name|PointerType
 operator|*
 name|getType
@@ -665,6 +698,20 @@ operator|::
 name|getType
 argument_list|()
 operator|)
+return|;
+block|}
+name|Type
+operator|*
+name|getValueType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getType
+argument_list|()
+operator|->
+name|getElementType
+argument_list|()
 return|;
 block|}
 specifier|static
@@ -1278,7 +1325,7 @@ comment|/// If this GlobalValue is read in, and if the GVMaterializer supports i
 comment|/// release the memory for the function, and set it up to be materialized
 comment|/// lazily. If !isDematerializable(), this method is a noop.
 name|void
-name|Dematerialize
+name|dematerialize
 parameter_list|()
 function_decl|;
 comment|/// @}
@@ -1352,7 +1399,6 @@ comment|/// Get the module that this global value is contained inside of...
 end_comment
 
 begin_function
-specifier|inline
 name|Module
 modifier|*
 name|getParent
@@ -1365,7 +1411,6 @@ block|}
 end_function
 
 begin_expr_stmt
-specifier|inline
 specifier|const
 name|Module
 operator|*
@@ -1379,23 +1424,12 @@ return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|bool
 name|classof
 parameter_list|(

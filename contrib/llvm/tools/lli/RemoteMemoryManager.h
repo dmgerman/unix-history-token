@@ -225,10 +225,10 @@ argument_list|(
 argument|nullptr
 argument_list|)
 block|{}
-name|virtual
 operator|~
 name|RemoteMemoryManager
 argument_list|()
+name|override
 block|;
 name|uint8_t
 operator|*

@@ -468,6 +468,26 @@ argument_list|(
 argument|std::string Path
 argument_list|)
 expr_stmt|;
+specifier|static
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|InstrProfReader
+operator|>>
+name|create
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>
+name|Buffer
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -540,9 +560,12 @@ name|Counts
 block|;
 name|TextInstrProfReader
 argument_list|(
-argument|const TextInstrProfReader&
+specifier|const
+name|TextInstrProfReader
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|TextInstrProfReader
 operator|&
@@ -553,7 +576,8 @@ specifier|const
 name|TextInstrProfReader
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -763,9 +787,12 @@ name|ProfileEnd
 block|;
 name|RawInstrProfReader
 argument_list|(
-argument|const RawInstrProfReader&
+specifier|const
+name|RawInstrProfReader
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|RawInstrProfReader
 operator|&
@@ -776,7 +803,8 @@ specifier|const
 name|RawInstrProfReader
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -1357,9 +1385,12 @@ name|MaxFunctionCount
 block|;
 name|IndexedInstrProfReader
 argument_list|(
-argument|const IndexedInstrProfReader&
+specifier|const
+name|IndexedInstrProfReader
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|IndexedInstrProfReader
 operator|&
@@ -1370,7 +1401,8 @@ specifier|const
 name|IndexedInstrProfReader
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:
@@ -1458,14 +1490,37 @@ return|;
 block|}
 comment|/// Factory method to create an indexed reader.
 specifier|static
+name|ErrorOr
+operator|<
 name|std
 operator|::
-name|error_code
+name|unique_ptr
+operator|<
+name|IndexedInstrProfReader
+operator|>>
 name|create
 argument_list|(
 argument|std::string Path
-argument_list|,
-argument|std::unique_ptr<IndexedInstrProfReader>&Result
+argument_list|)
+block|;
+specifier|static
+name|ErrorOr
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|IndexedInstrProfReader
+operator|>>
+name|create
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>
+name|Buffer
 argument_list|)
 block|; }
 decl_stmt|;

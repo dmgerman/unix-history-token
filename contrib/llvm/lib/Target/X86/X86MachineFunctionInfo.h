@@ -130,6 +130,10 @@ comment|/// ReturnAddrIndex - FrameIndex for return slot.
 name|int
 name|ReturnAddrIndex
 block|;
+comment|/// \brief FrameIndex for return slot.
+name|int
+name|FrameAddrIndex
+block|;
 comment|/// TailCallReturnAddrDelta - The number of bytes by which return address
 comment|/// stack slot is moved as the result of tail call optimization.
 name|int
@@ -219,6 +223,11 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
+name|FrameAddrIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|TailCallReturnAddrDelta
 argument_list|(
 literal|0
@@ -298,6 +307,11 @@ literal|0
 argument_list|)
 block|,
 name|ReturnAddrIndex
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|FrameAddrIndex
 argument_list|(
 literal|0
 argument_list|)
@@ -473,6 +487,25 @@ argument|int Index
 argument_list|)
 block|{
 name|ReturnAddrIndex
+operator|=
+name|Index
+block|; }
+name|int
+name|getFAIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FrameAddrIndex
+return|;
+block|}
+name|void
+name|setFAIndex
+argument_list|(
+argument|int Index
+argument_list|)
+block|{
+name|FrameAddrIndex
 operator|=
 name|Index
 block|; }

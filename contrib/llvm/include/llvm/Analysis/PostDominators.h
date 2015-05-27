@@ -121,6 +121,7 @@ block|;   }
 operator|~
 name|PostDominatorTree
 argument_list|()
+name|override
 block|;
 name|bool
 name|runOnFunction

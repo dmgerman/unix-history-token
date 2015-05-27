@@ -125,18 +125,22 @@ name|Value
 block|{
 name|User
 argument_list|(
-argument|const User&
+specifier|const
+name|User
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|void
 operator|*
 name|operator
 name|new
 argument_list|(
-argument|size_t
+name|size_t
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|template
 operator|<
@@ -239,6 +243,7 @@ operator|:
 operator|~
 name|User
 argument_list|()
+name|override
 block|{
 name|Use
 operator|::
@@ -250,7 +255,7 @@ name|OperandList
 operator|+
 name|NumOperands
 argument_list|)
-block|;   }
+block|; }
 comment|/// \brief Free memory allocated for User and Use objects.
 name|void
 name|operator

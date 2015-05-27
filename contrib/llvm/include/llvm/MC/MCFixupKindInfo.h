@@ -47,7 +47,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// MCFixupKindInfo - Target independent information on a fixup kind.
+comment|/// \brief Target independent information on a fixup kind.
 struct|struct
 name|MCFixupKindInfo
 block|{

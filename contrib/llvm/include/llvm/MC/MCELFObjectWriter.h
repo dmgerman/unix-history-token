@@ -84,9 +84,6 @@ name|class
 name|MCObjectWriter
 decl_stmt|;
 name|class
-name|MCSectionData
-decl_stmt|;
-name|class
 name|MCSymbol
 decl_stmt|;
 name|class
@@ -95,6 +92,63 @@ decl_stmt|;
 name|class
 name|MCValue
 decl_stmt|;
+name|class
+name|raw_pwrite_stream
+decl_stmt|;
+struct|struct
+name|ELFRelocationEntry
+block|{
+name|uint64_t
+name|Offset
+decl_stmt|;
+comment|// Where is the relocation.
+specifier|const
+name|MCSymbol
+modifier|*
+name|Symbol
+decl_stmt|;
+comment|// The symbol to relocate with.
+name|unsigned
+name|Type
+decl_stmt|;
+comment|// The type of the relocation.
+name|uint64_t
+name|Addend
+decl_stmt|;
+comment|// The addend to use.
+name|ELFRelocationEntry
+argument_list|(
+argument|uint64_t Offset
+argument_list|,
+argument|const MCSymbol *Symbol
+argument_list|,
+argument|unsigned Type
+argument_list|,
+argument|uint64_t Addend
+argument_list|)
+block|:
+name|Offset
+argument_list|(
+name|Offset
+argument_list|)
+operator|,
+name|Symbol
+argument_list|(
+name|Symbol
+argument_list|)
+operator|,
+name|Type
+argument_list|(
+name|Type
+argument_list|)
+operator|,
+name|Addend
+argument_list|(
+argument|Addend
+argument_list|)
+block|{}
+block|}
+struct|;
 name|class
 name|MCELFObjectTargetWriter
 block|{
@@ -159,6 +213,21 @@ block|{
 case|case
 name|Triple
 operator|::
+name|CloudABI
+case|:
+return|return
+name|ELF
+operator|::
+name|ELFOSABI_CLOUDABI
+return|;
+case|case
+name|Triple
+operator|::
+name|PS4
+case|:
+case|case
+name|Triple
+operator|::
 name|FreeBSD
 case|:
 return|return
@@ -217,7 +286,26 @@ name|Type
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// @name Accessors
+name|virtual
+name|void
+name|sortRelocs
+argument_list|(
+specifier|const
+name|MCAssembler
+operator|&
+name|Asm
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|ELFRelocationEntry
+operator|>
+operator|&
+name|Relocs
+argument_list|)
+decl_stmt|;
+comment|/// \name Accessors
 comment|/// @{
 name|uint8_t
 name|getOSABI
@@ -526,7 +614,7 @@ name|MCELFObjectTargetWriter
 modifier|*
 name|MOTW
 parameter_list|,
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|,

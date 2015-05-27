@@ -291,9 +291,12 @@ name|Type
 block|{
 name|FunctionType
 argument_list|(
-argument|const FunctionType&
+specifier|const
+name|FunctionType
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 specifier|const
 name|FunctionType
@@ -305,7 +308,8 @@ specifier|const
 name|FunctionType
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|FunctionType
 argument_list|(
@@ -624,9 +628,12 @@ name|CompositeType
 block|{
 name|StructType
 argument_list|(
-argument|const StructType&
+specifier|const
+name|StructType
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 specifier|const
 name|StructType
@@ -638,7 +645,8 @@ specifier|const
 name|StructType
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|StructType
 argument_list|(
@@ -1073,9 +1081,12 @@ block|;
 comment|///< Storage for the single contained type.
 name|SequentialType
 argument_list|(
-argument|const SequentialType&
+specifier|const
+name|SequentialType
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 specifier|const
 name|SequentialType
@@ -1087,7 +1098,8 @@ specifier|const
 name|SequentialType
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|protected
 operator|:
@@ -1184,9 +1196,12 @@ name|NumElements
 block|;
 name|ArrayType
 argument_list|(
-argument|const ArrayType&
+specifier|const
+name|ArrayType
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 specifier|const
 name|ArrayType
@@ -1198,7 +1213,8 @@ specifier|const
 name|ArrayType
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|ArrayType
 argument_list|(
@@ -1275,9 +1291,12 @@ name|NumElements
 block|;
 name|VectorType
 argument_list|(
-argument|const VectorType&
+specifier|const
+name|VectorType
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 specifier|const
 name|VectorType
@@ -1289,7 +1308,8 @@ specifier|const
 name|VectorType
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|VectorType
 argument_list|(
@@ -1649,9 +1669,12 @@ name|SequentialType
 block|{
 name|PointerType
 argument_list|(
-argument|const PointerType&
+specifier|const
+name|PointerType
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 specifier|const
 name|PointerType
@@ -1663,7 +1686,8 @@ specifier|const
 name|PointerType
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|explicit
 name|PointerType
@@ -1713,6 +1737,16 @@ comment|/// element type.
 specifier|static
 name|bool
 name|isValidElementType
+argument_list|(
+name|Type
+operator|*
+name|ElemTy
+argument_list|)
+block|;
+comment|/// Return true if we can load or store from a pointer to this type.
+specifier|static
+name|bool
+name|isLoadableOrStorableType
 argument_list|(
 name|Type
 operator|*

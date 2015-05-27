@@ -389,11 +389,6 @@ name|ScalarEvolution
 operator|*
 name|SE
 block|;
-specifier|const
-name|DataLayout
-operator|*
-name|DL
-block|;
 name|SmallPtrSet
 operator|<
 name|Instruction

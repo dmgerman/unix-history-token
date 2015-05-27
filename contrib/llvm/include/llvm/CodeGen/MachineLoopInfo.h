@@ -281,13 +281,17 @@ specifier|const
 name|MachineLoopInfo
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|MachineLoopInfo
 argument_list|(
-argument|const MachineLoopInfo&
+specifier|const
+name|MachineLoopInfo
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 block|;
 name|public
 operator|:

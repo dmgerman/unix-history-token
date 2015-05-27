@@ -134,13 +134,17 @@ specifier|const
 name|GlobalAlias
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|GlobalAlias
 argument_list|(
-argument|const GlobalAlias&
+specifier|const
+name|GlobalAlias
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|setParent
@@ -152,9 +156,7 @@ parameter_list|)
 function_decl|;
 name|GlobalAlias
 argument_list|(
-argument|Type *Ty
-argument_list|,
-argument|unsigned AddressSpace
+argument|PointerType *Ty
 argument_list|,
 argument|LinkageTypes Linkage
 argument_list|,
@@ -196,12 +198,9 @@ name|GlobalAlias
 modifier|*
 name|create
 parameter_list|(
-name|Type
+name|PointerType
 modifier|*
 name|Ty
-parameter_list|,
-name|unsigned
-name|AddressSpace
 parameter_list|,
 name|LinkageTypes
 name|Linkage
@@ -226,12 +225,9 @@ name|GlobalAlias
 modifier|*
 name|create
 parameter_list|(
-name|Type
+name|PointerType
 modifier|*
 name|Ty
-parameter_list|,
-name|unsigned
-name|AddressSpace
 parameter_list|,
 name|LinkageTypes
 name|Linkage
@@ -252,12 +248,9 @@ name|GlobalAlias
 modifier|*
 name|create
 parameter_list|(
-name|Type
+name|PointerType
 modifier|*
 name|Ty
-parameter_list|,
-name|unsigned
-name|AddressSpace
 parameter_list|,
 name|LinkageTypes
 name|Linkage

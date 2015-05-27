@@ -143,8 +143,21 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|,
 argument|StringRef Annot
+argument_list|,
+argument|const MCSubtargetInfo&STI
 argument_list|)
 name|override
+block|;
+specifier|static
+name|void
+name|printRegOperand
+argument_list|(
+argument|unsigned RegNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|,
+argument|const MCRegisterInfo&MRI
+argument_list|)
 block|;
 name|private
 operator|:
@@ -269,6 +282,16 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printGDS
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printGLC
 argument_list|(
 argument|const MCInst *MI
@@ -302,6 +325,16 @@ name|void
 name|printRegOperand
 argument_list|(
 argument|unsigned RegNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printVOPDst
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
 argument_list|,
 argument|raw_ostream&O
 argument_list|)

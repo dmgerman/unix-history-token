@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -102,6 +108,9 @@ name|class
 name|Target
 decl_stmt|;
 name|class
+name|raw_pwrite_stream
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 specifier|extern
@@ -126,10 +135,9 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-specifier|const
-name|MCSubtargetInfo
+name|MCContext
 modifier|&
-name|STI
+name|Ctx
 parameter_list|)
 function_decl|;
 name|MCCodeEmitter
@@ -145,11 +153,6 @@ specifier|const
 name|MCRegisterInfo
 modifier|&
 name|MRI
-parameter_list|,
-specifier|const
-name|MCSubtargetInfo
-modifier|&
-name|STI
 parameter_list|,
 name|MCContext
 modifier|&
@@ -181,7 +184,7 @@ name|MCObjectWriter
 modifier|*
 name|createAMDGPUELFObjectWriter
 parameter_list|(
-name|raw_ostream
+name|raw_pwrite_stream
 modifier|&
 name|OS
 parameter_list|)

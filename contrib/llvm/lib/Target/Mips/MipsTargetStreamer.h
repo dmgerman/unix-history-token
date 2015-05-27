@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/MipsABIInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCELFStreamer.h"
 end_include
 
@@ -146,6 +152,13 @@ argument_list|()
 block|;
 name|virtual
 name|void
+name|emitDirectiveSetAtWithArg
+argument_list|(
+argument|unsigned RegNo
+argument_list|)
+block|;
+name|virtual
+name|void
 name|emitDirectiveSetNoAt
 argument_list|()
 block|;
@@ -189,6 +202,11 @@ block|;
 name|virtual
 name|void
 name|emitDirectiveOptionPic2
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveInsn
 argument_list|()
 block|;
 name|virtual
@@ -269,6 +287,16 @@ argument_list|()
 block|;
 name|virtual
 name|void
+name|emitDirectiveSetMips32R3
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetMips32R5
+argument_list|()
+block|;
+name|virtual
+name|void
 name|emitDirectiveSetMips32R6
 argument_list|()
 block|;
@@ -280,6 +308,16 @@ block|;
 name|virtual
 name|void
 name|emitDirectiveSetMips64R2
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetMips64R3
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetMips64R5
 argument_list|()
 block|;
 name|virtual
@@ -381,13 +419,6 @@ name|emitDirectiveSetFp
 argument_list|(
 argument|MipsABIFlagsSection::FpABIKind Value
 argument_list|)
-block|{}
-block|;
-name|virtual
-name|void
-name|emitMipsAbiFlags
-argument_list|()
-block|{}
 block|;
 name|void
 name|forbidModuleDirective
@@ -396,6 +427,14 @@ block|{
 name|ModuleDirectiveAllowed
 operator|=
 name|false
+block|; }
+name|void
+name|reallowModuleDirective
+argument_list|()
+block|{
+name|ModuleDirectiveAllowed
+operator|=
+name|true
 block|; }
 name|bool
 name|isModuleDirectiveAllowed
@@ -418,6 +457,14 @@ argument_list|(
 argument|const PredicateLibrary&P
 argument_list|)
 block|{
+name|ABI
+operator|=
+operator|&
+name|P
+operator|.
+name|getABI
+argument_list|()
+block|;
 name|ABIFlagsSection
 operator|.
 name|setAllFromPredicates
@@ -434,8 +481,32 @@ return|return
 name|ABIFlagsSection
 return|;
 block|}
+specifier|const
+name|MipsABIInfo
+operator|&
+name|getABI
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|ABI
+operator|&&
+literal|"ABI hasn't been set!"
+argument_list|)
+block|;
+return|return
+operator|*
+name|ABI
+return|;
+block|}
 name|protected
 operator|:
+specifier|const
+name|MipsABIInfo
+operator|*
+name|ABI
+block|;
 name|MipsABIFlagsSection
 name|ABIFlagsSection
 block|;
@@ -555,6 +626,13 @@ argument_list|()
 name|override
 block|;
 name|void
+name|emitDirectiveSetAtWithArg
+argument_list|(
+argument|unsigned RegNo
+argument_list|)
+name|override
+block|;
+name|void
 name|emitDirectiveSetNoAt
 argument_list|()
 name|override
@@ -595,6 +673,11 @@ name|override
 block|;
 name|void
 name|emitDirectiveOptionPic2
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveInsn
 argument_list|()
 name|override
 block|;
@@ -675,6 +758,16 @@ argument_list|()
 name|override
 block|;
 name|void
+name|emitDirectiveSetMips32R3
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips32R5
+argument_list|()
+name|override
+block|;
+name|void
 name|emitDirectiveSetMips32R6
 argument_list|()
 name|override
@@ -686,6 +779,16 @@ name|override
 block|;
 name|void
 name|emitDirectiveSetMips64R2
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips64R3
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetMips64R5
 argument_list|()
 name|override
 block|;
@@ -759,11 +862,6 @@ name|emitDirectiveSetFp
 argument_list|(
 argument|MipsABIFlagsSection::FpABIKind Value
 argument_list|)
-name|override
-block|;
-name|void
-name|emitMipsAbiFlags
-argument_list|()
 name|override
 block|; }
 decl_stmt|;
@@ -894,6 +992,11 @@ argument_list|()
 name|override
 block|;
 name|void
+name|emitDirectiveInsn
+argument_list|()
+name|override
+block|;
+name|void
 name|emitFrame
 argument_list|(
 argument|unsigned StackReg
@@ -956,60 +1059,9 @@ block|;
 name|void
 name|emitMipsAbiFlags
 argument_list|()
-name|override
-block|;
-name|protected
-operator|:
-name|bool
-name|isO32
-argument_list|()
-specifier|const
-block|{
-return|return
-name|STI
-operator|.
-name|getFeatureBits
-argument_list|()
-operator|&
-name|Mips
-operator|::
-name|FeatureO32
-return|;
-block|}
-name|bool
-name|isN32
-argument_list|()
-specifier|const
-block|{
-return|return
-name|STI
-operator|.
-name|getFeatureBits
-argument_list|()
-operator|&
-name|Mips
-operator|::
-name|FeatureN32
-return|;
-block|}
-name|bool
-name|isN64
-argument_list|()
-specifier|const
-block|{
-return|return
-name|STI
-operator|.
-name|getFeatureBits
-argument_list|()
-operator|&
-name|Mips
-operator|::
-name|FeatureN64
-return|;
-block|}
-expr|}
 block|; }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif

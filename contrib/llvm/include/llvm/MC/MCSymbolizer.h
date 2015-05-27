@@ -124,9 +124,12 @@ name|MCSymbolizer
 block|{
 name|MCSymbolizer
 argument_list|(
-argument|const MCSymbolizer&
+specifier|const
+name|MCSymbolizer
+operator|&
 argument_list|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 expr_stmt|;
 name|void
 name|operator
@@ -136,7 +139,8 @@ specifier|const
 name|MCSymbolizer
 operator|&
 operator|)
-name|LLVM_DELETED_FUNCTION
+operator|=
+name|delete
 decl_stmt|;
 name|protected
 label|:
@@ -191,14 +195,14 @@ comment|/// Instead of having a difficult to read immediate, a symbolic operand 
 comment|/// represent this immediate in a more understandable way, for instance as a
 comment|/// symbol or an offset from a symbol. Relocations can also be used to enrich
 comment|/// the symbolic expression.
-comment|/// @param Inst      - The MCInst where to insert the symbolic operand.
-comment|/// @param cStream   - Stream to print comments and annotations on.
-comment|/// @param Value     - Operand value, pc-adjusted by the caller if necessary.
-comment|/// @param Address   - Load address of the instruction.
-comment|/// @param IsBranch  - Is the instruction a branch?
-comment|/// @param Offset    - Byte offset of the operand inside the inst.
-comment|/// @param InstSize  - Size of the instruction in bytes.
-comment|/// @return Whether a symbolic operand was added.
+comment|/// \param Inst      - The MCInst where to insert the symbolic operand.
+comment|/// \param cStream   - Stream to print comments and annotations on.
+comment|/// \param Value     - Operand value, pc-adjusted by the caller if necessary.
+comment|/// \param Address   - Load address of the instruction.
+comment|/// \param IsBranch  - Is the instruction a branch?
+comment|/// \param Offset    - Byte offset of the operand inside the inst.
+comment|/// \param InstSize  - Size of the instruction in bytes.
+comment|/// \return Whether a symbolic operand was added.
 name|virtual
 name|bool
 name|tryAddingSymbolicOperand

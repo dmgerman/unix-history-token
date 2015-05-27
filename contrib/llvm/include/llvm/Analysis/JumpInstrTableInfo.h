@@ -117,10 +117,10 @@ argument|uint64_t ByteAlign =
 literal|16
 argument_list|)
 block|;
-name|virtual
 operator|~
 name|JumpInstrTableInfo
 argument_list|()
+name|override
 block|;
 specifier|const
 name|char

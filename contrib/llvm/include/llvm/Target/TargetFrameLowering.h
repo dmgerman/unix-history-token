@@ -348,6 +348,10 @@ argument_list|(
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|)
 decl|const
 init|=
@@ -378,9 +382,13 @@ argument_list|(
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|PrologueMBB
 argument_list|)
 decl|const
-block|{ }
+block|{}
 comment|/// Adjust the prologue to add Erlang Run-Time System (ERTS) specific code in
 comment|/// the assembly prologue to explicitly handle the stack.
 name|virtual
@@ -390,9 +398,13 @@ argument_list|(
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|PrologueMBB
 argument_list|)
 decl|const
-block|{ }
+block|{}
 comment|/// Adjust the prologue to add an allocation at a fixed offset from the frame
 comment|/// pointer.
 name|virtual
@@ -402,9 +414,13 @@ argument_list|(
 name|MachineFunction
 operator|&
 name|MF
+argument_list|,
+name|MachineBasicBlock
+operator|&
+name|PrologueMBB
 argument_list|)
 decl|const
-block|{ }
+block|{}
 comment|/// spillCalleeSavedRegisters - Issues instruction(s) to spill all callee
 comment|/// saved registers and returns true if it isn't possible / profitable to do
 comment|/// so by issuing a series of store instructions via
@@ -481,6 +497,18 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Return true if the target needs to disable frame pointer elimination.
+name|virtual
+name|bool
+name|noFramePointerElim
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// hasFP - Return true if the specified function should have a dedicated
 comment|/// frame pointer register. For most targets this is true only if the function
 comment|/// has variable sized allocas or if frame pointer elimination is disabled.
@@ -705,6 +733,52 @@ literal|"Call Frame Pseudo Instructions do not exist on this "
 literal|"target!"
 argument_list|)
 expr_stmt|;
+block|}
+comment|/// Check whether or not the given \p MBB can be used as a prologue
+comment|/// for the target.
+comment|/// The prologue will be inserted first in this basic block.
+comment|/// This method is used by the shrink-wrapping pass to decide if
+comment|/// \p MBB will be correctly handled by the target.
+comment|/// As soon as the target enable shrink-wrapping without overriding
+comment|/// this method, we assume that each basic block is a valid
+comment|/// prologue.
+name|virtual
+name|bool
+name|canUseAsPrologue
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// Check whether or not the given \p MBB can be used as a epilogue
+comment|/// for the target.
+comment|/// The epilogue will be inserted before the first terminator of that block.
+comment|/// This method is used by the shrink-wrapping pass to decide if
+comment|/// \p MBB will be correctly handled by the target.
+comment|/// As soon as the target enable shrink-wrapping without overriding
+comment|/// this method, we assume that each basic block is a valid
+comment|/// epilogue.
+name|virtual
+name|bool
+name|canUseAsEpilogue
+argument_list|(
+specifier|const
+name|MachineBasicBlock
+operator|&
+name|MBB
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
 block|}
 block|}
 empty_stmt|;

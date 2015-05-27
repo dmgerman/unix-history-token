@@ -128,19 +128,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<new>
 end_include
 
 begin_decl_stmt
@@ -514,7 +502,7 @@ argument_list|()
 return|;
 block|}
 specifier|inline
-name|LLVM_EXPLICIT
+name|explicit
 name|operator
 name|bool
 argument_list|()

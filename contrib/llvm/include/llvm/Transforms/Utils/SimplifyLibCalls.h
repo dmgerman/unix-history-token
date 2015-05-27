@@ -66,19 +66,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/IRBuilder.h"
+file|"llvm/Analysis/TargetLibraryInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetLibraryInfo.h"
+file|"llvm/IR/IRBuilder.h"
 end_include
 
 begin_decl_stmt
@@ -118,11 +124,6 @@ block|{
 name|private
 label|:
 specifier|const
-name|DataLayout
-modifier|*
-name|DL
-decl_stmt|;
-specifier|const
 name|TargetLibraryInfo
 modifier|*
 name|TLI
@@ -134,8 +135,6 @@ name|public
 label|:
 name|FortifiedLibCallSimplifier
 argument_list|(
-argument|const DataLayout *DL
-argument_list|,
 argument|const TargetLibraryInfo *TLI
 argument_list|,
 argument|bool OnlyLowerUnknownSize = false
@@ -276,7 +275,7 @@ name|FortifiedSimplifier
 decl_stmt|;
 specifier|const
 name|DataLayout
-modifier|*
+modifier|&
 name|DL
 decl_stmt|;
 specifier|const
@@ -287,25 +286,78 @@ decl_stmt|;
 name|bool
 name|UnsafeFPShrink
 decl_stmt|;
-name|protected
-label|:
-operator|~
-name|LibCallSimplifier
-argument_list|()
-block|{}
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|Instruction
+operator|*
+argument_list|,
+name|Value
+operator|*
+argument_list|)
+operator|>
+name|Replacer
+expr_stmt|;
+comment|/// \brief Internal wrapper for RAUW that is the default implementation.
+comment|///
+comment|/// Other users may provide an alternate function with this signature instead
+comment|/// of this one.
+specifier|static
+name|void
+name|replaceAllUsesWithDefault
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+name|Value
+modifier|*
+name|With
+parameter_list|)
+function_decl|;
+comment|/// \brief Replace an instruction's uses with a value using our replacer.
+name|void
+name|replaceAllUsesWith
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+name|Value
+modifier|*
+name|With
+parameter_list|)
+function_decl|;
 name|public
-operator|:
+label|:
 name|LibCallSimplifier
 argument_list|(
 specifier|const
 name|DataLayout
-operator|*
-name|TD
+operator|&
+name|DL
 argument_list|,
 specifier|const
 name|TargetLibraryInfo
 operator|*
 name|TLI
+argument_list|,
+name|function_ref
+operator|<
+name|void
+argument_list|(
+name|Instruction
+operator|*
+argument_list|,
+name|Value
+operator|*
+argument_list|)
+operator|>
+name|Replacer
+operator|=
+operator|&
+name|replaceAllUsesWithDefault
 argument_list|)
 expr_stmt|;
 comment|/// optimizeCall - Take the given call instruction and return a more
@@ -324,23 +376,6 @@ modifier|*
 name|CI
 parameter_list|)
 function_decl|;
-comment|/// replaceAllUsesWith - This method is used when the library call
-comment|/// simplifier needs to replace instructions other than the library
-comment|/// call being modified.
-name|virtual
-name|void
-name|replaceAllUsesWith
-argument_list|(
-name|Instruction
-operator|*
-name|I
-argument_list|,
-name|Value
-operator|*
-name|With
-argument_list|)
-decl|const
-decl_stmt|;
 name|private
 label|:
 comment|// String and Memory Library Call Optimizations
@@ -557,6 +592,21 @@ decl_stmt|;
 name|Value
 modifier|*
 name|optimizeStrStr
+argument_list|(
+name|CallInst
+operator|*
+name|CI
+argument_list|,
+name|IRBuilder
+operator|<
+operator|>
+operator|&
+name|B
+argument_list|)
+decl_stmt|;
+name|Value
+modifier|*
+name|optimizeMemChr
 argument_list|(
 name|CallInst
 operator|*

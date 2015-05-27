@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/MipsABIInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"MCTargetDesc/MipsBaseInfo.h"
 end_include
 
@@ -120,6 +126,8 @@ name|MipsISD
 block|{
 enum|enum
 name|NodeType
+enum|:
+name|unsigned
 block|{
 comment|// Start the numbering from where ISD NodeType finishes.
 name|FIRST_NUMBER
@@ -1246,6 +1254,12 @@ name|MipsSubtarget
 operator|&
 name|Subtarget
 block|;
+comment|// Cache the ABI from the TargetMachine, we use it everywhere.
+specifier|const
+name|MipsABIInfo
+operator|&
+name|ABI
+block|;
 name|private
 operator|:
 comment|// Create a TargetGlobalAddress node.
@@ -1789,6 +1803,8 @@ operator|*
 operator|>
 name|getRegForInlineAsmConstraint
 argument_list|(
+argument|const TargetRegisterInfo *TRI
+argument_list|,
 argument|const std::string&Constraint
 argument_list|,
 argument|MVT VT
@@ -1814,6 +1830,46 @@ argument_list|)
 specifier|const
 name|override
 block|;
+name|unsigned
+name|getInlineAsmMemConstraint
+argument_list|(
+argument|const std::string&ConstraintCode
+argument_list|)
+specifier|const
+name|override
+block|{
+if|if
+condition|(
+name|ConstraintCode
+operator|==
+literal|"R"
+condition|)
+return|return
+name|InlineAsm
+operator|::
+name|Constraint_R
+return|;
+elseif|else
+if|if
+condition|(
+name|ConstraintCode
+operator|==
+literal|"ZC"
+condition|)
+return|return
+name|InlineAsm
+operator|::
+name|Constraint_ZC
+return|;
+return|return
+name|TargetLowering
+operator|::
+name|getInlineAsmMemConstraint
+argument_list|(
+name|ConstraintCode
+argument_list|)
+return|;
+block|}
 name|bool
 name|isLegalAddressingMode
 argument_list|(
@@ -1867,6 +1923,12 @@ name|override
 block|;
 name|unsigned
 name|getJumpTableEncoding
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|useSoftFloat
 argument_list|()
 specifier|const
 name|override
@@ -1968,57 +2030,58 @@ argument|unsigned Opc
 argument_list|)
 specifier|const
 block|;   }
-block|;
+decl_stmt|;
 comment|/// Create MipsTargetLowering objects.
 specifier|const
 name|MipsTargetLowering
-operator|*
+modifier|*
 name|createMips16TargetLowering
-argument_list|(
+parameter_list|(
 specifier|const
 name|MipsTargetMachine
-operator|&
+modifier|&
 name|TM
-argument_list|,
+parameter_list|,
 specifier|const
 name|MipsSubtarget
-operator|&
+modifier|&
 name|STI
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 specifier|const
 name|MipsTargetLowering
-operator|*
+modifier|*
 name|createMipsSETargetLowering
-argument_list|(
+parameter_list|(
 specifier|const
 name|MipsTargetMachine
-operator|&
+modifier|&
 name|TM
-argument_list|,
+parameter_list|,
 specifier|const
 name|MipsSubtarget
-operator|&
+modifier|&
 name|STI
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|namespace
 name|Mips
 block|{
 name|FastISel
-operator|*
+modifier|*
 name|createFastISel
-argument_list|(
+parameter_list|(
 name|FunctionLoweringInfo
-operator|&
+modifier|&
 name|funcInfo
-argument_list|,
+parameter_list|,
 specifier|const
 name|TargetLibraryInfo
-operator|*
+modifier|*
 name|libInfo
-argument_list|)
-block|;   }
+parameter_list|)
+function_decl|;
+block|}
 block|}
 end_decl_stmt
 

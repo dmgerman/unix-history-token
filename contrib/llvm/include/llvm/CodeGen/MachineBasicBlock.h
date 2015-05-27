@@ -1856,11 +1856,15 @@ comment|// LiveIn management methods.
 end_comment
 
 begin_comment
-comment|/// addLiveIn - Add the specified register as a live in.  Note that it
+comment|/// Adds the specified register as a live in. Note that it is an error to add
 end_comment
 
 begin_comment
-comment|/// is an error to add the same register to the same set more than once.
+comment|/// the same register to the same set more than once unless the intention is
+end_comment
+
+begin_comment
+comment|/// to call sortUniqueLiveIns after all registers are added.
 end_comment
 
 begin_function
@@ -1876,6 +1880,66 @@ operator|.
 name|push_back
 argument_list|(
 name|Reg
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// Sorts and uniques the LiveIns vector. It can be significantly faster to do
+end_comment
+
+begin_comment
+comment|/// this than repeatedly calling isLiveIn before calling addLiveIn for every
+end_comment
+
+begin_comment
+comment|/// LiveIn insertion.
+end_comment
+
+begin_function
+name|void
+name|sortUniqueLiveIns
+parameter_list|()
+block|{
+name|std
+operator|::
+name|sort
+argument_list|(
+name|LiveIns
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|LiveIns
+operator|.
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|LiveIns
+operator|.
+name|erase
+argument_list|(
+name|std
+operator|::
+name|unique
+argument_list|(
+name|LiveIns
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|LiveIns
+operator|.
+name|end
+argument_list|()
+argument_list|)
+argument_list|,
+name|LiveIns
+operator|.
+name|end
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -3436,27 +3500,11 @@ enum|;
 end_enum
 
 begin_comment
-comment|/// computeRegisterLiveness - Return whether (physical) register \c Reg
+comment|/// Return whether (physical) register \p Reg has been<def>ined and not
 end_comment
 
 begin_comment
-comment|/// has been<def>ined and not<kill>ed as of just before \c MI.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Search is localised to a neighborhood of
-end_comment
-
-begin_comment
-comment|/// \c Neighborhood instructions before (searching for defs or kills) and
-end_comment
-
-begin_comment
-comment|/// Neighborhood instructions after (searching just for defs) MI.
+comment|///<kill>ed as of just before \p Before.
 end_comment
 
 begin_comment
@@ -3464,32 +3512,48 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// \c Reg must be a physical register.
+comment|/// Search is localised to a neighborhood of \p Neighborhood instructions
 end_comment
 
-begin_function_decl
+begin_comment
+comment|/// before (searching for defs or kills) and \p Neighborhood instructions
+end_comment
+
+begin_comment
+comment|/// after (searching just for defs) \p Before.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \p Reg must be a physical register.
+end_comment
+
+begin_decl_stmt
 name|LivenessQueryResult
 name|computeRegisterLiveness
-parameter_list|(
+argument_list|(
 specifier|const
 name|TargetRegisterInfo
-modifier|*
+operator|*
 name|TRI
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Reg
-parameter_list|,
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|,
+argument_list|,
+name|const_iterator
+name|Before
+argument_list|,
 name|unsigned
 name|Neighborhood
-init|=
+operator|=
 literal|10
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|// Debugging methods.

@@ -90,6 +90,8 @@ name|NVPTXISD
 block|{
 enum|enum
 name|NodeType
+enum|:
+name|unsigned
 block|{
 comment|// Start the numbering from where ISD NodeType finishes.
 name|FIRST_NUMBER
@@ -899,6 +901,11 @@ specifier|const
 name|NVPTXTargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|NVPTXSubtarget
+operator|&
+name|STI
 argument_list|)
 block|;
 name|SDValue
@@ -1048,6 +1055,8 @@ operator|*
 operator|>
 name|getRegForInlineAsmConstraint
 argument_list|(
+argument|const TargetRegisterInfo *TRI
+argument_list|,
 argument|const std::string&Constraint
 argument_list|,
 argument|MVT VT
@@ -1200,6 +1209,26 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
+name|unsigned
+name|getInlineAsmMemConstraint
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|ConstraintCode
+argument_list|)
+decl|const
+name|override
+block|{
+comment|// FIXME: Map different constraints differently.
+return|return
+name|InlineAsm
+operator|::
+name|Constraint_m
+return|;
+block|}
 specifier|const
 name|NVPTXTargetMachine
 modifier|*
@@ -1275,7 +1304,7 @@ label|:
 specifier|const
 name|NVPTXSubtarget
 modifier|&
-name|nvptxSubtarget
+name|STI
 decl_stmt|;
 comment|// cache the subtarget here
 name|SDValue
@@ -1412,6 +1441,18 @@ decl|const
 decl_stmt|;
 name|SDValue
 name|LowerShiftLeftParts
+argument_list|(
+name|SDValue
+name|Op
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|LowerSelect
 argument_list|(
 name|SDValue
 name|Op
