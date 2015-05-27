@@ -311,13 +311,6 @@ name|SI
 parameter_list|)
 function_decl|;
 name|uint64_t
-name|LLVMGetSymbolFileOffset
-parameter_list|(
-name|LLVMSymbolIteratorRef
-name|SI
-parameter_list|)
-function_decl|;
-name|uint64_t
 name|LLVMGetSymbolSize
 parameter_list|(
 name|LLVMSymbolIteratorRef

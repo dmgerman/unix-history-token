@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -52,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|AML_NUM_OPCODES
-value|0x81
+value|0x82
 end_define
 
 begin_comment
@@ -1130,6 +1130,34 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+struct|struct
+name|acpi_package_info4
+block|{
+name|UINT8
+name|Type
+decl_stmt|;
+name|UINT8
+name|ObjectType1
+decl_stmt|;
+name|UINT8
+name|Count1
+decl_stmt|;
+name|UINT8
+name|SubObjectTypes
+decl_stmt|;
+name|UINT8
+name|PkgCount
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+block|}
+name|ACPI_PACKAGE_INFO4
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 union|union
 name|acpi_predefined_info
 block|{
@@ -1144,6 +1172,9 @@ name|RetInfo2
 decl_stmt|;
 name|ACPI_PACKAGE_INFO3
 name|RetInfo3
+decl_stmt|;
+name|ACPI_PACKAGE_INFO4
+name|RetInfo4
 decl_stmt|;
 block|}
 name|ACPI_PREDEFINED_INFO
@@ -1471,6 +1502,10 @@ name|UINT8
 name|EnableForRun
 decl_stmt|;
 comment|/* GPEs to keep enabled when running */
+name|UINT8
+name|EnableMask
+decl_stmt|;
+comment|/* Current mask of enabled GPEs */
 block|}
 name|ACPI_GPE_REGISTER_INFO
 typedef|;
@@ -2359,6 +2394,8 @@ value|\     ACPI_DISASM_ONLY_MEMBERS (\     UINT8                           Disa
 comment|/* Used during AML disassembly */
 value|\     UINT8                           DisasmOpcode;
 comment|/* Subtype used for disassembly */
+value|\     char                            *OperatorSymbol;
+comment|/* Used for C-style operator name strings */
 value|\     char                            AmlOpName[16])
 end_define
 
@@ -2829,6 +2866,20 @@ define|#
 directive|define
 name|ACPI_PARSEOP_SPECIAL
 value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_COMPOUND
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PARSEOP_ASSIGNMENT
+value|0x40
 end_define
 
 begin_comment
@@ -4075,6 +4126,24 @@ name|String
 decl_stmt|;
 block|}
 name|AH_UUID
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|ah_table
+block|{
+name|char
+modifier|*
+name|Signature
+decl_stmt|;
+name|char
+modifier|*
+name|Description
+decl_stmt|;
+block|}
+name|AH_TABLE
 typedef|;
 end_typedef
 

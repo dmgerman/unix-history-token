@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1997 Yen Yen Lim and North Dakota State University  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *      This product includes software developed by Yen Yen Lim and 	North Dakota State University  * 4. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE  * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sunatm.c,v 1.8 2004-03-17 23:24:38 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -64,18 +47,6 @@ end_struct_decl
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pcap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
 end_include
 
@@ -88,19 +59,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"addrtoname.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"atm.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"atmuni31.h"
 end_include
 
 begin_comment
@@ -185,6 +144,10 @@ begin_function
 name|u_int
 name|sunatm_if_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -227,9 +190,13 @@ operator|<
 name|PKT_BEGIN_POS
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|atm]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -240,27 +207,27 @@ return|;
 block|}
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 block|{
-if|if
-condition|(
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
 name|p
 index|[
 name|DIR_POS
 index|]
 operator|&
 literal|0x80
-condition|)
-name|printf
-argument_list|(
+condition|?
 literal|"Tx: "
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
+else|:
 literal|"Rx: "
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -329,6 +296,8 @@ name|PKT_BEGIN_POS
 expr_stmt|;
 name|atm_print
 argument_list|(
+name|ndo
+argument_list|,
 name|vpi
 argument_list|,
 name|vci

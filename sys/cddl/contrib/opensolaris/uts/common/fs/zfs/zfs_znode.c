@@ -769,7 +769,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -1506,7 +1506,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function
@@ -1581,14 +1581,13 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * Cleanup vfs& vnode ops 	 */
 name|zfs_remove_op_tables
 argument_list|()
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
 comment|/* 	 * Cleanup zcache 	 */
 if|if
 condition|(
@@ -1615,7 +1614,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_decl_stmt
@@ -1974,7 +1973,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function
@@ -3136,7 +3135,7 @@ comment|/* z_prefetch default is enabled */
 break|break;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 case|case
 name|VBLK
 case|:
@@ -3185,13 +3184,12 @@ block|}
 break|break;
 endif|#
 directive|endif
-comment|/* sun */
 case|case
 name|VFIFO
 case|:
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 case|case
 name|VSOCK
 case|:
@@ -3200,7 +3198,6 @@ name|VDOOR
 case|:
 endif|#
 directive|endif
-comment|/* sun */
 name|vp
 operator|->
 name|v_op
@@ -3247,7 +3244,7 @@ block|}
 break|break;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 case|case
 name|VLNK
 case|:
@@ -3270,7 +3267,6 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
-comment|/* sun */
 block|}
 name|mutex_enter
 argument_list|(
@@ -3562,7 +3558,7 @@ name|obj
 operator|=
 literal|0
 expr_stmt|;
-name|gethrestime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|now
@@ -6506,7 +6502,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* 	 * XXXPJD: Not sure how is that possible, but under heavy 	 * zfs recv -F load it happens that z_gen is the same, but 	 * vnode type is different than znode type. This would mean 	 * that for example regular file was replaced with directory 	 * which has the same object number. 	 */
+comment|/* 	 * It is highly improbable but still quite possible that two 	 * objects in different datasets are created with the same 	 * object numbers and in transaction groups with the same 	 * numbers.  znodes corresponding to those objects would 	 * have the same z_id and z_gen, but their other attributes 	 * may be different. 	 * zfs recv -F may replace one of such objects with the other. 	 * As a result file properties recorded in the replaced 	 * object's vnode may no longer match the received object's 	 * properties.  At present the only cached property is the 	 * files type recorded in v_type. 	 * So, handle this case by leaving the old vnode and znode 	 * disassociated from the actual object.  A new vnode and a 	 * znode will be created if the object is accessed 	 * (e.g. via a look-up).  The old vnode and znode will be 	 * recycled when the last vnode reference is dropped. 	 */
 name|vp
 operator|=
 name|ZTOV
@@ -6974,7 +6970,7 @@ block|{
 name|timestruc_t
 name|now
 decl_stmt|;
-name|gethrestime
+name|vfs_timestamp
 argument_list|(
 operator|&
 name|now
@@ -7203,7 +7199,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -7260,10 +7256,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* sun */
-end_comment
 
 begin_comment
 comment|/*  * Increase the file length  *  *	IN:	zp	- znode of file to free data in.  *		end	- new end-of-file  *  *	RETURN:	0 on success, error code on failure  */

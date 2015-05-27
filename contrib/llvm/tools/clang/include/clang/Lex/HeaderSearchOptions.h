@@ -271,6 +271,12 @@ operator|::
 name|string
 name|ModuleCachePath
 block|;
+comment|/// \brief The directory used for a user build.
+name|std
+operator|::
+name|string
+name|ModuleUserBuildPath
+block|;
 comment|/// \brief Whether we should disable the use of the hash string within the
 comment|/// module cache.
 comment|///
@@ -283,6 +289,18 @@ block|;
 comment|/// \brief Interpret module maps.  This option is implied by full modules.
 name|unsigned
 name|ModuleMaps
+operator|:
+literal|1
+block|;
+comment|/// \brief Set the 'home directory' of a module map file to the current
+comment|/// working directory (or the home directory of the module map file that
+comment|/// contained the 'extern module' directive importing this module map file
+comment|/// if any) rather than the directory containing the module map file.
+comment|//
+comment|/// The home directory is where we look for files named in the module map
+comment|/// file.
+name|unsigned
+name|ModuleMapFileHomeIsCwd
 operator|:
 literal|1
 block|;
@@ -306,6 +324,13 @@ comment|/// regenerated often.
 name|unsigned
 name|ModuleCachePruneAfter
 block|;
+comment|/// \brief The time in seconds when the build session started.
+comment|///
+comment|/// This time is used by other optimizations in header search and module
+comment|/// loading.
+name|uint64_t
+name|BuildSessionTimestamp
+block|;
 comment|/// \brief The set of macro names that should be ignored for the purposes
 comment|/// of computing the module hash.
 name|llvm
@@ -318,16 +343,16 @@ name|string
 operator|>
 name|ModulesIgnoreMacros
 block|;
-comment|/// \brief The set of user-provided module-map-files.
-name|llvm
+comment|/// \brief The set of user-provided virtual filesystem overlay files.
+name|std
 operator|::
-name|SetVector
+name|vector
 operator|<
 name|std
 operator|::
 name|string
 operator|>
-name|ModuleMapFiles
+name|VFSOverlayFiles
 block|;
 comment|/// Include the compiler builtin includes.
 name|unsigned
@@ -359,6 +384,20 @@ name|Verbose
 operator|:
 literal|1
 block|;
+comment|/// \brief If true, skip verifying input files used by modules if the
+comment|/// module was already verified during this build session (see
+comment|/// \c BuildSessionTimestamp).
+name|unsigned
+name|ModulesValidateOncePerBuildSession
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether to validate system input files when a module is loaded.
+name|unsigned
+name|ModulesValidateSystemHeaders
+operator|:
+literal|1
+block|;
 name|public
 operator|:
 name|HeaderSearchOptions
@@ -378,6 +417,11 @@ literal|0
 argument_list|)
 block|,
 name|ModuleMaps
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ModuleMapFileHomeIsCwd
 argument_list|(
 literal|0
 argument_list|)
@@ -404,6 +448,11 @@ operator|*
 literal|60
 argument_list|)
 block|,
+name|BuildSessionTimestamp
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|UseBuiltinIncludes
 argument_list|(
 name|true
@@ -425,6 +474,16 @@ name|false
 argument_list|)
 block|,
 name|Verbose
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|ModulesValidateOncePerBuildSession
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|ModulesValidateSystemHeaders
 argument_list|(
 argument|false
 argument_list|)
@@ -479,6 +538,19 @@ name|Prefix
 argument_list|,
 name|IsSystemHeader
 argument_list|)
+argument_list|)
+block|;   }
+name|void
+name|AddVFSOverlayFile
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|{
+name|VFSOverlayFiles
+operator|.
+name|push_back
+argument_list|(
+name|Name
 argument_list|)
 block|;   }
 block|}

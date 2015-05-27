@@ -57,36 +57,6 @@ block|}
 enum|;
 end_enum
 
-begin_enum
-enum|enum
-name|iw_cm_event_status
-block|{
-name|IW_CM_EVENT_STATUS_OK
-init|=
-literal|0
-block|,
-comment|/* request successful */
-name|IW_CM_EVENT_STATUS_ACCEPTED
-init|=
-literal|0
-block|,
-comment|/* connect request accepted */
-name|IW_CM_EVENT_STATUS_REJECTED
-block|,
-comment|/* connect request rejected */
-name|IW_CM_EVENT_STATUS_TIMEOUT
-block|,
-comment|/* the operation timed out */
-name|IW_CM_EVENT_STATUS_RESET
-block|,
-comment|/* reset from remote peer */
-name|IW_CM_EVENT_STATUS_EINVAL
-block|,
-comment|/* asynchronous failure for bad parm */
-block|}
-enum|;
-end_enum
-
 begin_struct
 struct|struct
 name|iw_cm_event
@@ -95,8 +65,7 @@ name|enum
 name|iw_cm_event_type
 name|event
 decl_stmt|;
-name|enum
-name|iw_cm_event_status
+name|int
 name|status
 decl_stmt|;
 name|struct
@@ -111,17 +80,23 @@ name|void
 modifier|*
 name|private_data
 decl_stmt|;
-name|u8
-name|private_data_len
-decl_stmt|;
 name|void
 modifier|*
 name|provider_data
+decl_stmt|;
+name|u8
+name|private_data_len
 decl_stmt|;
 name|struct
 name|socket
 modifier|*
 name|so
+decl_stmt|;
+name|u8
+name|ord
+decl_stmt|;
+name|u8
+name|ird
 decl_stmt|;
 block|}
 struct|;

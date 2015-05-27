@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_MANGLENUMBERINGCONTEXT_H
+name|LLVM_CLANG_AST_MANGLENUMBERINGCONTEXT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_MANGLENUMBERINGCONTEXT_H
+name|LLVM_CLANG_AST_MANGLENUMBERINGCONTEXT_H
 end_define
 
 begin_include
@@ -118,29 +118,6 @@ operator|<
 name|MangleNumberingContext
 operator|>
 block|{
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|Type
-operator|*
-block|,
-name|unsigned
-operator|>
-name|ManglingNumbers
-block|;
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|IdentifierInfo
-operator|*
-block|,
-name|unsigned
-operator|>
-name|TagManglingNumbers
-block|;
 name|public
 operator|:
 name|virtual
@@ -150,6 +127,7 @@ argument_list|()
 block|{}
 comment|/// \brief Retrieve the mangling number of a new lambda expression with the
 comment|/// given call operator within this context.
+name|virtual
 name|unsigned
 name|getManglingNumber
 argument_list|(
@@ -158,9 +136,12 @@ name|CXXMethodDecl
 operator|*
 name|CallOperator
 argument_list|)
+operator|=
+literal|0
 block|;
 comment|/// \brief Retrieve the mangling number of a new block literal within this
 comment|/// context.
+name|virtual
 name|unsigned
 name|getManglingNumber
 argument_list|(
@@ -169,12 +150,13 @@ name|BlockDecl
 operator|*
 name|BD
 argument_list|)
+operator|=
+literal|0
 block|;
-comment|/// \brief Retrieve the mangling number of a static local variable within
-comment|/// this context.
+comment|/// Static locals are numbered by source order.
 name|virtual
 name|unsigned
-name|getManglingNumber
+name|getStaticLocalNumber
 argument_list|(
 specifier|const
 name|VarDecl
@@ -186,14 +168,29 @@ literal|0
 block|;
 comment|/// \brief Retrieve the mangling number of a static local variable within
 comment|/// this context.
+name|virtual
 name|unsigned
 name|getManglingNumber
 argument_list|(
-specifier|const
-name|TagDecl
-operator|*
-name|TD
+argument|const VarDecl *VD
+argument_list|,
+argument|unsigned MSLocalManglingNumber
 argument_list|)
+operator|=
+literal|0
+block|;
+comment|/// \brief Retrieve the mangling number of a static local variable within
+comment|/// this context.
+name|virtual
+name|unsigned
+name|getManglingNumber
+argument_list|(
+argument|const TagDecl *TD
+argument_list|,
+argument|unsigned MSLocalManglingNumber
+argument_list|)
+operator|=
+literal|0
 block|; }
 decl_stmt|;
 block|}

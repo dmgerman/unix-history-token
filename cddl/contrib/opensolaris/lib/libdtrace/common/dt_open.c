@@ -13,14 +13,11 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -38,10 +35,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_comment
-comment|/* FreeBSD */
-end_comment
 
 begin_include
 include|#
@@ -84,14 +77,11 @@ directive|include
 file|<strings.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -200,15 +190,11 @@ directive|include
 file|<dt_provider.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_include
 include|#
@@ -529,15 +515,11 @@ begin_comment
 comment|/*  * Global variables that are formatted on FreeBSD based on the kernel file name.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -1138,12 +1120,9 @@ block|}
 block|,
 name|DT_VERS_1_0
 block|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 operator|&
 name|dt_idops_type
 block|,
@@ -1696,12 +1675,9 @@ name|DIF_SUBR_INET_NTOA
 operator|,
 name|DT_ATTR_STABCMN
 operator|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|DT_VERS_1_5
 operator|,
 operator|&
@@ -1747,12 +1723,9 @@ name|DIF_SUBR_INET_NTOA6
 operator|,
 name|DT_ATTR_STABCMN
 operator|,
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|DT_VERS_1_5
 operator|,
 operator|&
@@ -2011,15 +1984,11 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_block
 block|{
@@ -2151,14 +2120,11 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_block
 block|{
@@ -2895,14 +2861,11 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_block
 block|{
@@ -3489,15 +3452,11 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_block
 block|{
@@ -4129,14 +4088,11 @@ begin_operator
 operator|,
 end_operator
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_block
 block|{
@@ -4168,15 +4124,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_block
 block|{
@@ -5871,14 +5823,11 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_decl_stmt
 specifier|const
@@ -5941,6 +5890,20 @@ begin_comment
 comment|/* default ld(1) to invoke */
 end_comment
 
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|_dtrace_defobjcopy
+init|=
+literal|"objcopy"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* default objcopy(1) to invoke */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -5960,14 +5923,11 @@ begin_comment
 comment|/* default library directory */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_decl_stmt
 specifier|const
@@ -5987,6 +5947,16 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|_dtrace_libdir32
+init|=
+literal|"/usr/lib32/dtrace"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|const
@@ -6165,14 +6135,11 @@ name|dt_fdlist_t
 typedef|;
 end_typedef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_pragma
 pragma|#
@@ -6343,12 +6310,9 @@ decl_stmt|;
 name|int
 name|fd
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|struct
 name|dirent
 modifier|*
@@ -6654,6 +6618,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+comment|/* !illumos */
 name|char
 modifier|*
 name|p
@@ -7022,6 +6987,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* illumos */
 block|}
 end_function
 
@@ -7086,14 +7052,11 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_function
 specifier|static
@@ -7578,12 +7541,9 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|ftfd
 operator|=
 name|open
@@ -7777,12 +7737,9 @@ name|dt_oflags
 operator|=
 name|flags
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|dtp
 operator|->
 name|dt_prcmode
@@ -7867,12 +7824,9 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|dtp
 operator|->
 name|dt_stdout_fd
@@ -7990,6 +7944,20 @@ argument_list|(
 name|_dtrace_defld
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|dtp
+operator|->
+name|dt_objcopy_path
+operator|=
+name|strdup
+argument_list|(
+name|_dtrace_defobjcopy
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|dtp
 operator|->
 name|dt_provmod
@@ -8050,6 +8018,17 @@ name|dt_ld_path
 operator|==
 name|NULL
 operator|||
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|dtp
+operator|->
+name|dt_objcopy_path
+operator|==
+name|NULL
+operator|||
+endif|#
+directive|endif
 name|dtp
 operator|->
 name|dt_cpp_path
@@ -8114,12 +8093,9 @@ operator|->
 name|dt_cpp_path
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 operator|(
 name|void
 operator|)
@@ -8397,12 +8373,9 @@ operator|)
 return|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 ifdef|#
 directive|ifdef
 name|__x86
@@ -8610,13 +8583,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * On FreeBSD the kernel module name can't be hard-coded. The 	 * 'kern.bootfile' sysctl value tells us exactly which file is being 	 * used as the kernel. 	 */
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 block|{
 name|char
 name|bootfile
@@ -10200,6 +10169,55 @@ name|pgp
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up the default DTrace library path.  Once set, the next call to 	 * dt_compile() will compile all the libraries.  We intentionally defer 	 * library processing to improve overhead for clients that don't ever 	 * compile, and to provide better error reporting (because the full 	 * reporting of compiler errors requires dtrace_open() to succeed). 	 */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+ifdef|#
+directive|ifdef
+name|__LP64__
+if|if
+condition|(
+operator|(
+name|dtp
+operator|->
+name|dt_oflags
+operator|&
+name|DTRACE_O_ILP32
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|dtrace_setopt
+argument_list|(
+name|dtp
+argument_list|,
+literal|"libdir"
+argument_list|,
+name|_dtrace_libdir32
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|set_open_errno
+argument_list|(
+name|dtp
+argument_list|,
+name|errp
+argument_list|,
+name|dtp
+operator|->
+name|dt_errno
+argument_list|)
+operator|)
+return|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|dtrace_setopt
@@ -10227,6 +10245,37 @@ name|dt_errno
 argument_list|)
 operator|)
 return|;
+else|#
+directive|else
+if|if
+condition|(
+name|dtrace_setopt
+argument_list|(
+name|dtp
+argument_list|,
+literal|"libdir"
+argument_list|,
+name|_dtrace_libdir
+argument_list|)
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|set_open_errno
+argument_list|(
+name|dtp
+argument_list|,
+name|errp
+argument_list|,
+name|dtp
+operator|->
+name|dt_errno
+argument_list|)
+operator|)
+return|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|dtp
@@ -10632,12 +10681,9 @@ operator|->
 name|dt_ddefs_fd
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 name|dtp
@@ -10813,6 +10859,18 @@ operator|->
 name|dt_ld_path
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|free
+argument_list|(
+name|dtp
+operator|->
+name|dt_objcopy_path
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|free
 argument_list|(
 name|dtp

@@ -4026,6 +4026,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|RT3070_PLL_PD
+value|(1<< 1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RT3070_RX0_PD
 value|(1<< 2)
 end_define
@@ -4234,6 +4241,68 @@ define|#
 directive|define
 name|RT3090_DEF_LNA
 value|10
+end_define
+
+begin_comment
+comment|/* possible flags for RT5390 RF register 38 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_RX_LO1
+value|(1<< 5)
+end_define
+
+begin_comment
+comment|/* possible flags for RT5390 RF register 39 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_RX_LO2
+value|(1<< 7)
+end_define
+
+begin_comment
+comment|/* possible flags for RT5390 RF register 42 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_RX_CTB
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* possible flags for RT5390 BBP register 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_MAC_IF_CTRL
+value|(1<< 6)
+end_define
+
+begin_comment
+comment|/* possible flags for RT5390 BBP register 105 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_MLD
+value|(1<< 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5390_SIG_MODULATION
+value|(1<< 3)
 end_define
 
 begin_comment
@@ -4804,6 +4873,17 @@ end_define
 
 begin_comment
 comment|/* dual-band 3T3R */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RT5390_RF_5390
+value|15
+end_define
+
+begin_comment
+comment|/* b/g/n */
 end_comment
 
 begin_comment
@@ -5452,19 +5532,7 @@ define|#
 directive|define
 name|RT2860_DEF_MAC
 define|\
-value|{ RT2860_BCN_OFFSET0,		0xf8f0e8e0 },	\ 	{ RT2860_LEGACY_BASIC_RATE,	0x0000013f },	\ 	{ RT2860_HT_BASIC_RATE,		0x00008003 },	\ 	{ RT2860_MAC_SYS_CTRL,		0x00000000 },	\ 	{ RT2860_BKOFF_SLOT_CFG,	0x00000209 },	\ 	{ RT2860_TX_SW_CFG0,		0x00000000 },	\ 	{ RT2860_TX_SW_CFG1,		0x00080606 },	\ 	{ RT2860_TX_LINK_CFG,		0x00001020 },	\ 	{ RT2860_TX_TIMEOUT_CFG,	0x000a2090 },	\ 	{ RT2860_LED_CFG,		0x7f031e46 },	\ 	{ RT2860_WMM_AIFSN_CFG,		0x00002273 },	\ 	{ RT2860_WMM_CWMIN_CFG,		0x00002344 },	\ 	{ RT2860_WMM_CWMAX_CFG,		0x000034aa },	\ 	{ RT2860_MAX_PCNT,		0x1f3fbf9f },	\ 	{ RT2860_TX_RTY_CFG,		0x47d01f0f },	\ 	{ RT2860_AUTO_RSP_CFG,		0x00000013 },	\ 	{ RT2860_CCK_PROT_CFG,		0x05740003 },	\ 	{ RT2860_OFDM_PROT_CFG,		0x05740003 },	\ 	{ RT2860_GF20_PROT_CFG,		0x01744004 },	\ 	{ RT2860_GF40_PROT_CFG,		0x03f44084 },	\ 	{ RT2860_MM20_PROT_CFG,		0x01744004 },	\ 	{ RT2860_MM40_PROT_CFG,		0x03f54084 },	\ 	{ RT2860_TXOP_CTRL_CFG,		0x0000583f },	\ 	{ RT2860_TXOP_HLDR_ET,		0x00000002 },	\ 	{ RT2860_TX_RTS_CFG,		0x00092b20 },	\ 	{ RT2860_EXP_ACK_TIME,		0x002400ca },	\ 	{ RT2860_XIFS_TIME_CFG,		0x33a41010 },	\ 	{ RT2860_PWR_PIN_CFG,		0x00000003 }
-end_define
-
-begin_comment
-comment|/* XXX only a few registers differ from above, try to merge? */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|RT2870_DEF_MAC
-define|\
-value|{ RT2860_BCN_OFFSET0,		0xf8f0e8e0 },	\ 	{ RT2860_LEGACY_BASIC_RATE,	0x0000013f },	\ 	{ RT2860_HT_BASIC_RATE,		0x00008003 },	\ 	{ RT2860_MAC_SYS_CTRL,		0x00000000 },	\ 	{ RT2860_BKOFF_SLOT_CFG,	0x00000209 },	\ 	{ RT2860_TX_SW_CFG0,		0x00000000 },	\ 	{ RT2860_TX_SW_CFG1,		0x00080606 },	\ 	{ RT2860_TX_LINK_CFG,		0x00001020 },	\ 	{ RT2860_TX_TIMEOUT_CFG,	0x000a2090 },	\ 	{ RT2860_LED_CFG,		0x7f031e46 },	\ 	{ RT2860_WMM_AIFSN_CFG,		0x00002273 },	\ 	{ RT2860_WMM_CWMIN_CFG,		0x00002344 },	\ 	{ RT2860_WMM_CWMAX_CFG,		0x000034aa },	\ 	{ RT2860_MAX_PCNT,		0x1f3fbf9f },	\ 	{ RT2860_TX_RTY_CFG,		0x47d01f0f },	\ 	{ RT2860_AUTO_RSP_CFG,		0x00000013 },	\ 	{ RT2860_CCK_PROT_CFG,		0x05740003 },	\ 	{ RT2860_OFDM_PROT_CFG,		0x05740003 },	\ 	{ RT2860_PBF_CFG,		0x00f40006 },	\ 	{ RT2860_WPDMA_GLO_CFG,		0x00000030 },	\ 	{ RT2860_GF20_PROT_CFG,		0x01744004 },	\ 	{ RT2860_GF40_PROT_CFG,		0x03f44084 },	\ 	{ RT2860_MM20_PROT_CFG,		0x01744004 },	\ 	{ RT2860_MM40_PROT_CFG,		0x03f44084 },	\ 	{ RT2860_TXOP_CTRL_CFG,		0x0000583f },	\ 	{ RT2860_TXOP_HLDR_ET,		0x00000002 },	\ 	{ RT2860_TX_RTS_CFG,		0x00092b20 },	\ 	{ RT2860_EXP_ACK_TIME,		0x002400ca },	\ 	{ RT2860_XIFS_TIME_CFG,		0x33a41010 },	\ 	{ RT2860_PWR_PIN_CFG,		0x00000003 }
+value|{ RT2860_BCN_OFFSET0,		0xf8f0e8e0 },	\ 	{ RT2860_BCN_OFFSET1,		0x6f77d0c8 },	\ 	{ RT2860_LEGACY_BASIC_RATE,	0x0000013f },	\ 	{ RT2860_HT_BASIC_RATE,		0x00008003 },	\ 	{ RT2860_MAC_SYS_CTRL,		0x00000000 },	\ 	{ RT2860_RX_FILTR_CFG,		0x00017f97 },	\ 	{ RT2860_BKOFF_SLOT_CFG,	0x00000209 },	\ 	{ RT2860_TX_SW_CFG0,		0x00000000 },	\ 	{ RT2860_TX_SW_CFG1,		0x00080606 },	\ 	{ RT2860_TX_LINK_CFG,		0x00001020 },	\ 	{ RT2860_TX_TIMEOUT_CFG,	0x000a2090 },	\ 	{ RT2860_MAX_LEN_CFG,		0x00001f00 },	\ 	{ RT2860_LED_CFG,		0x7f031e46 },	\ 	{ RT2860_WMM_AIFSN_CFG,		0x00002273 },	\ 	{ RT2860_WMM_CWMIN_CFG,		0x00002344 },	\ 	{ RT2860_WMM_CWMAX_CFG,		0x000034aa },	\ 	{ RT2860_MAX_PCNT,		0x1f3fbf9f },	\ 	{ RT2860_TX_RTY_CFG,		0x47d01f0f },	\ 	{ RT2860_AUTO_RSP_CFG,		0x00000013 },	\ 	{ RT2860_CCK_PROT_CFG,		0x05740003 },	\ 	{ RT2860_OFDM_PROT_CFG,		0x05740003 },	\ 	{ RT2860_GF20_PROT_CFG,		0x01744004 },	\ 	{ RT2860_GF40_PROT_CFG,		0x03f44084 },	\ 	{ RT2860_MM20_PROT_CFG,		0x01744004 },	\ 	{ RT2860_MM40_PROT_CFG,		0x03f54084 },	\ 	{ RT2860_TXOP_CTRL_CFG,		0x0000583f },	\ 	{ RT2860_TX_RTS_CFG,		0x00092b20 },	\ 	{ RT2860_EXP_ACK_TIME,		0x002400ca },	\ 	{ RT2860_TXOP_HLDR_ET,		0x00000002 },	\ 	{ RT2860_XIFS_TIME_CFG,		0x33a41010 },	\ 	{ RT2860_PWR_PIN_CFG,		0x00000003 }
 end_define
 
 begin_comment
@@ -5476,10 +5544,19 @@ define|#
 directive|define
 name|RT2860_DEF_BBP
 define|\
-value|{  65, 0x2c },	\ 	{  66, 0x38 },	\ 	{  69, 0x12 },	\ 	{  70, 0x0a },	\ 	{  73, 0x10 },	\ 	{  81, 0x37 },	\ 	{  82, 0x62 },	\ 	{  83, 0x6a },	\ 	{  84, 0x99 },	\ 	{  86, 0x00 },	\ 	{  91, 0x04 },	\ 	{  92, 0x00 },	\ 	{ 103, 0x00 },	\ 	{ 105, 0x05 },	\ 	{ 106, 0x35 }
+value|{  65, 0x2c },	\ 	{  66, 0x38 },	\ 	{  68, 0x0b },	\ 	{  69, 0x12 },	\ 	{  70, 0x0a },	\ 	{  73, 0x10 },	\ 	{  81, 0x37 },	\ 	{  82, 0x62 },	\ 	{  83, 0x6a },	\ 	{  84, 0x99 },	\ 	{  86, 0x00 },	\ 	{  91, 0x04 },	\ 	{  92, 0x00 },	\ 	{ 103, 0x00 },	\ 	{ 105, 0x05 },	\ 	{ 106, 0x35 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5390_DEF_BBP
+define|\
+value|{  31, 0x08 },	\ 	{  65, 0x2c },	\ 	{  66, 0x38 },	\ 	{  68, 0x0b },	\ 	{  69, 0x12 },	\ 	{  70, 0x0a },	\ 	{  73, 0x13 },	\ 	{  75, 0x46 },	\ 	{  76, 0x28 },	\ 	{  77, 0x59 },	\ 	{  81, 0x37 },	\ 	{  82, 0x62 },	\ 	{  83, 0x7a },	\ 	{  84, 0x19 },	\ 	{  86, 0x38 },	\ 	{  91, 0x04 },	\ 	{  92, 0x02 },	\ 	{ 103, 0xc0 },	\ 	{ 104, 0x92 },	\ 	{ 105, 0x3c },	\ 	{ 106, 0x03 },	\ 	{ 128, 0x12 },
 end_define
 
 begin_comment
+unit|\
 comment|/*  * Default settings for RF registers; values derived from the reference driver.  */
 end_comment
 
@@ -5504,15 +5581,23 @@ define|#
 directive|define
 name|RT3070_DEF_RF
 define|\
-value|{  4, 0x40 },	\ 	{  5, 0x03 },	\ 	{  6, 0x02 },	\ 	{  7, 0x70 },	\ 	{  9, 0x0f },	\ 	{ 10, 0x41 },	\ 	{ 11, 0x21 },	\ 	{ 12, 0x7b },	\ 	{ 14, 0x90 },	\ 	{ 15, 0x58 },	\ 	{ 16, 0xb3 },	\ 	{ 17, 0x92 },	\ 	{ 18, 0x2c },	\ 	{ 19, 0x02 },	\ 	{ 20, 0xba },	\ 	{ 21, 0xdb },	\ 	{ 24, 0x16 },	\ 	{ 25, 0x01 },	\ 	{ 29, 0x1f }
+value|{  4, 0x40 },	\ 	{  5, 0x03 },	\ 	{  6, 0x02 },	\ 	{  7, 0x60 },	\ 	{  9, 0x0f },	\ 	{ 10, 0x41 },	\ 	{ 11, 0x21 },	\ 	{ 12, 0x7b },	\ 	{ 14, 0x90 },	\ 	{ 15, 0x58 },	\ 	{ 16, 0xb3 },	\ 	{ 17, 0x92 },	\ 	{ 18, 0x2c },	\ 	{ 19, 0x02 },	\ 	{ 20, 0xba },	\ 	{ 21, 0xdb },	\ 	{ 24, 0x16 },	\ 	{ 25, 0x01 },	\ 	{ 29, 0x1f }
 end_define
 
 begin_define
 define|#
 directive|define
-name|RT3572_DEF_RF
+name|RT5390_DEF_RF
 define|\
-value|{  0, 0x70 },	\ 	{  1, 0x81 },	\ 	{  2, 0xf1 },	\ 	{  3, 0x02 },	\ 	{  4, 0x4c },	\ 	{  5, 0x05 },	\ 	{  6, 0x4a },	\ 	{  7, 0xd8 },	\ 	{  9, 0xc3 },	\ 	{ 10, 0xf1 },	\ 	{ 11, 0xb9 },	\ 	{ 12, 0x70 },	\ 	{ 13, 0x65 },	\ 	{ 14, 0xa0 },	\ 	{ 15, 0x53 },	\ 	{ 16, 0x4c },	\ 	{ 17, 0x23 },	\ 	{ 18, 0xac },	\ 	{ 19, 0x93 },	\ 	{ 20, 0xb3 },	\ 	{ 21, 0xd0 },	\ 	{ 22, 0x00 },  	\ 	{ 23, 0x3c },	\ 	{ 24, 0x16 },	\ 	{ 25, 0x15 },	\ 	{ 26, 0x85 },	\ 	{ 27, 0x00 },	\ 	{ 28, 0x00 },	\ 	{ 29, 0x9b },	\ 	{ 30, 0x09 },	\ 	{ 31, 0x10 }
+value|{  1, 0x0f },	\ 	{  2, 0x80 },	\ 	{  3, 0x88 },	\ 	{  5, 0x10 },	\ 	{  6, 0xe0 },	\ 	{  7, 0x00 },	\ 	{ 10, 0x53 },	\ 	{ 11, 0x4a },	\ 	{ 12, 0x46 },	\ 	{ 13, 0x9f },	\ 	{ 14, 0x00 },	\ 	{ 15, 0x00 },	\ 	{ 16, 0x00 },	\ 	{ 18, 0x03 },	\ 	{ 19, 0x00 },	\ 	{ 20, 0x00 },	\ 	{ 21, 0x00 },	\ 	{ 22, 0x20 },	\ 	{ 23, 0x00 },	\ 	{ 24, 0x00 },	\ 	{ 25, 0x80 },	\ 	{ 26, 0x00 },	\ 	{ 27, 0x09 },	\ 	{ 28, 0x00 },	\ 	{ 29, 0x10 },	\ 	{ 30, 0x10 },	\ 	{ 31, 0x80 },	\ 	{ 32, 0x80 },	\ 	{ 33, 0x00 },	\ 	{ 34, 0x07 },	\ 	{ 35, 0x12 },	\ 	{ 36, 0x00 },	\ 	{ 37, 0x08 },	\ 	{ 38, 0x85 },	\ 	{ 39, 0x1b },	\ 	{ 40, 0x0b },	\ 	{ 41, 0xbb },	\ 	{ 42, 0xd2 },	\ 	{ 43, 0x9a },	\ 	{ 44, 0x0e },	\ 	{ 45, 0xa2 },	\ 	{ 46, 0x73 },	\ 	{ 47, 0x00 },	\ 	{ 48, 0x10 },	\ 	{ 49, 0x94 },	\ 	{ 52, 0x38 },	\ 	{ 53, 0x00 },	\ 	{ 54, 0x78 },	\ 	{ 55, 0x23 },	\ 	{ 56, 0x22 },	\ 	{ 57, 0x80 },	\ 	{ 58, 0x7f },	\ 	{ 59, 0x07 },	\ 	{ 60, 0x45 },	\ 	{ 61, 0xd1 },	\ 	{ 62, 0x00 },	\ 	{ 63, 0x00 }
+end_define
+
+begin_define
+define|#
+directive|define
+name|RT5392_DEF_RF
+define|\
+value|{  1, 0x17 },	\ 	{  2, 0x80 },	\ 	{  3, 0x88 },	\ 	{  5, 0x10 },	\ 	{  6, 0xe0 },	\ 	{  7, 0x00 },	\ 	{ 10, 0x53 },	\ 	{ 11, 0x4a },	\ 	{ 12, 0x46 },	\ 	{ 13, 0x9f },	\ 	{ 14, 0x00 },	\ 	{ 15, 0x00 },	\ 	{ 16, 0x00 },	\ 	{ 18, 0x03 },	\ 	{ 19, 0x4d },	\ 	{ 20, 0x00 },	\ 	{ 21, 0x8d },	\ 	{ 22, 0x20 },	\ 	{ 23, 0x0b },	\ 	{ 24, 0x44 },	\ 	{ 25, 0x80 },	\ 	{ 26, 0x82 },	\ 	{ 27, 0x09 },	\ 	{ 28, 0x00 },	\ 	{ 29, 0x10 },	\ 	{ 30, 0x10 },	\ 	{ 31, 0x80 },	\ 	{ 32, 0x80 },	\ 	{ 33, 0xc0 },	\ 	{ 34, 0x07 },	\ 	{ 35, 0x12 },	\ 	{ 36, 0x00 },	\ 	{ 37, 0x08 },	\ 	{ 38, 0x89 },	\ 	{ 39, 0x1b },	\ 	{ 40, 0x0f },	\ 	{ 41, 0xbb },	\ 	{ 42, 0xd5 },	\ 	{ 43, 0x9b },	\ 	{ 44, 0x0e },	\ 	{ 45, 0xa2 },	\ 	{ 46, 0x73 },	\ 	{ 47, 0x0c },	\ 	{ 48, 0x10 },	\ 	{ 49, 0x94 },	\ 	{ 50, 0x94 },	\ 	{ 51, 0x3a },	\ 	{ 52, 0x48 },	\ 	{ 53, 0x44 },	\ 	{ 54, 0x38 },	\ 	{ 55, 0x43 },	\ 	{ 56, 0xa1 },	\ 	{ 57, 0x00 },	\ 	{ 58, 0x39 },	\ 	{ 59, 0x07 },	\ 	{ 60, 0x45 },	\ 	{ 61, 0x91 },	\ 	{ 62, 0x39 },	\ 	{ 63, 0x00 }
 end_define
 
 end_unit

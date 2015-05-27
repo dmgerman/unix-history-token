@@ -231,13 +231,6 @@ name|uint32_t
 name|b_vflags
 decl_stmt|;
 comment|/* (V) BV_* flags */
-name|TAILQ_ENTRY
-argument_list|(
-argument|buf
-argument_list|)
-name|b_freelist
-expr_stmt|;
-comment|/* (Q) Free list position inactive. */
 name|unsigned
 name|short
 name|b_qindex
@@ -312,14 +305,50 @@ name|b_saveaddr
 decl_stmt|;
 comment|/* Original b_addr for physio. */
 union|union
-name|pager_info
 block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|buf
+argument_list|)
+name|bu_freelist
+expr_stmt|;
+comment|/* (Q) */
+struct|struct
+block|{
+name|void
+function_decl|(
+modifier|*
+name|pg_iodone
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|vm_page_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 name|int
 name|pg_reqpage
 decl_stmt|;
 block|}
-name|b_pager
+name|bu_pager
+struct|;
+block|}
+name|b_union
 union|;
+define|#
+directive|define
+name|b_freelist
+value|b_union.bu_freelist
+define|#
+directive|define
+name|b_pager
+value|b_union.bu_pager
 union|union
 name|cluster_info
 block|{
@@ -745,7 +774,7 @@ begin_define
 define|#
 directive|define
 name|PRINT_BUF_FLAGS
-value|"\20\40remfree\37cluster\36vmio\35ram\34managed" \ 	"\33paging\32infreecnt\31nocopy\30b23\27relbuf\26dirty\25b20" \ 	"\24b19\23b18\22clusterok\21malloc\20nocache\17b14\16inval" \ 	"\15b12\14b11\13eintr\12done\11persist\10delwri\7validsuspwrt" \ 	"\6cache\5deferred\4direct\3async\2needcommit\1age"
+value|"\20\40remfree\37cluster\36vmio\35ram\34managed" \ 	"\33paging\32infreecnt\31nocopy\30b23\27relbuf\26dirty\25b20" \ 	"\24b19\23b18\22clusterok\21malloc\20nocache\17b14\16inval" \ 	"\15kvaalloc\14unmapped\13eintr\12done\11persist\10delwri" \ 	"\7validsuspwrt\6cache\5deferred\4direct\3async\2needcommit\1age"
 end_define
 
 begin_comment
@@ -1828,6 +1857,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Number of pbufs for vnode pager */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|vnode_async_pbuf_freecnt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Number of pbufs for vnode pager, 					     asynchronous reads */
 end_comment
 
 begin_decl_stmt

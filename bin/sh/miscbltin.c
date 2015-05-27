@@ -945,7 +945,7 @@ argument_list|(
 operator|*
 name|ap
 argument_list|,
-name|nullstr
+literal|""
 argument_list|,
 literal|0
 argument_list|)

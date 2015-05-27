@@ -32,19 +32,23 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|///
 end_comment
 
 begin_comment
-comment|//  This file provides utility classes that uses RAII to save and restore
+comment|/// \file
 end_comment
 
 begin_comment
-comment|//  values.
+comment|/// This file provides utility classes that use RAII to save and restore
 end_comment
 
 begin_comment
-comment|//
+comment|/// values.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -67,8 +71,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|// SaveAndRestore - A utility class that uses RAII to save and restore
-comment|//  the value of a variable.
+comment|/// A utility class that uses RAII to save and restore the value of a variable.
 name|template
 operator|<
 name|typename
@@ -81,44 +84,44 @@ name|SaveAndRestore
 argument_list|(
 name|T
 operator|&
-name|x
+name|X
 argument_list|)
 operator|:
 name|X
 argument_list|(
-name|x
+name|X
 argument_list|)
 block|,
-name|old_value
+name|OldValue
 argument_list|(
-argument|x
+argument|X
 argument_list|)
 block|{}
 name|SaveAndRestore
 argument_list|(
 name|T
 operator|&
-name|x
+name|X
 argument_list|,
 specifier|const
 name|T
 operator|&
-name|new_value
+name|NewValue
 argument_list|)
 operator|:
 name|X
 argument_list|(
-name|x
+name|X
 argument_list|)
 block|,
-name|old_value
+name|OldValue
 argument_list|(
-argument|x
+argument|X
 argument_list|)
 block|{
 name|X
 operator|=
-name|new_value
+name|NewValue
 block|;   }
 operator|~
 name|SaveAndRestore
@@ -126,14 +129,14 @@ argument_list|()
 block|{
 name|X
 operator|=
-name|old_value
+name|OldValue
 block|; }
 name|T
 name|get
 argument_list|()
 block|{
 return|return
-name|old_value
+name|OldValue
 return|;
 block|}
 name|private
@@ -143,12 +146,12 @@ operator|&
 name|X
 block|;
 name|T
-name|old_value
+name|OldValue
 block|; }
 expr_stmt|;
-comment|// SaveOr - Similar to SaveAndRestore.  Operates only on bools; the old
-comment|//  value of a variable is saved, and during the dstor the old value is
-comment|//  or'ed with the new value.
+comment|/// Similar to \c SaveAndRestore.  Operates only on bools; the old value of a
+comment|/// variable is saved, and during the dstor the old value is or'ed with the new
+comment|/// value.
 struct|struct
 name|SaveOr
 block|{
@@ -156,20 +159,20 @@ name|SaveOr
 argument_list|(
 name|bool
 operator|&
-name|x
+name|X
 argument_list|)
 operator|:
 name|X
 argument_list|(
-name|x
+name|X
 argument_list|)
 operator|,
-name|old_value
+name|OldValue
 argument_list|(
-argument|x
+argument|X
 argument_list|)
 block|{
-name|x
+name|X
 operator|=
 name|false
 block|; }
@@ -179,7 +182,7 @@ argument_list|()
 block|{
 name|X
 operator||=
-name|old_value
+name|OldValue
 block|; }
 name|private
 operator|:
@@ -189,12 +192,16 @@ name|X
 expr_stmt|;
 specifier|const
 name|bool
-name|old_value
+name|OldValue
 decl_stmt|;
 block|}
 struct|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

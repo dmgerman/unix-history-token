@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_COMMENT_SEMA_H
+name|LLVM_CLANG_AST_COMMENTSEMA_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_COMMENT_SEMA_H
+name|LLVM_CLANG_AST_COMMENTSEMA_H
 end_define
 
 begin_include
@@ -337,23 +337,8 @@ name|Size
 argument_list|)
 return|;
 block|}
-else|else
 return|return
-name|llvm
-operator|::
-name|makeArrayRef
-argument_list|(
-name|static_cast
-operator|<
-name|T
-operator|*
-operator|>
-operator|(
-name|NULL
-operator|)
-argument_list|,
-literal|0
-argument_list|)
+name|None
 return|;
 block|}
 name|ParagraphComment

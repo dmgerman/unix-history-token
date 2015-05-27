@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_CODEGEN_EHSCOPESTACK_H
+name|LLVM_CLANG_LIB_CODEGEN_EHSCOPESTACK_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_CODEGEN_EHSCOPESTACK_H
+name|LLVM_CLANG_LIB_CODEGEN_EHSCOPESTACK_H
 end_define
 
 begin_include
@@ -88,13 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Value.h"
+file|"llvm/IR/Instructions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/Instructions.h"
+file|"llvm/IR/Value.h"
 end_include
 
 begin_decl_stmt
@@ -234,7 +234,7 @@ operator|,
 name|bool
 name|mightBeInstruction
 operator|=
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
@@ -248,7 +248,7 @@ operator|::
 name|value
 operator|&&
 operator|!
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
@@ -262,7 +262,7 @@ operator|::
 name|value
 operator|&&
 operator|!
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
@@ -319,6 +319,8 @@ block|{}
 expr_stmt|;
 enum|enum
 name|CleanupKind
+enum|:
+name|unsigned
 block|{
 name|EHCleanup
 init|=
@@ -699,6 +701,7 @@ parameter_list|,
 name|Flags
 name|flags
 parameter_list|)
+function|override
 block|{
 name|A0
 name|a0
@@ -795,6 +798,7 @@ parameter_list|,
 name|Flags
 name|flags
 parameter_list|)
+function|override
 block|{
 name|A0
 name|a0
@@ -955,6 +959,7 @@ parameter_list|,
 name|Flags
 name|flags
 parameter_list|)
+function|override
 block|{
 name|A0
 name|a0
@@ -1166,6 +1171,7 @@ parameter_list|,
 name|Flags
 name|flags
 parameter_list|)
+function|override
 block|{
 name|A0
 name|a0
@@ -1484,17 +1490,17 @@ argument_list|()
 operator|:
 name|StartOfBuffer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|EndOfBuffer
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|StartOfData
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|InnermostNormalCleanup

@@ -34,19 +34,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_DRIVER_TOOLCHAIN_H_
+name|LLVM_CLANG_DRIVER_TOOLCHAIN_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_DRIVER_TOOLCHAIN_H_
+name|LLVM_CLANG_DRIVER_TOOLCHAIN_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"clang/Driver/Action.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Driver/Multilib.h"
 end_include
 
 begin_include
@@ -59,12 +65,6 @@ begin_include
 include|#
 directive|include
 file|"clang/Driver/Util.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
@@ -83,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Path.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -149,7 +155,7 @@ name|std
 operator|::
 name|string
 operator|,
-literal|4
+literal|16
 operator|>
 name|path_list
 expr_stmt|;
@@ -202,21 +208,27 @@ name|path_list
 name|ProgramPaths
 decl_stmt|;
 name|mutable
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Tool
 operator|>
 name|Clang
 expr_stmt|;
 name|mutable
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Tool
 operator|>
 name|Assemble
 expr_stmt|;
 name|mutable
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Tool
 operator|>
@@ -247,7 +259,9 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|mutable
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|SanitizerArgs
 operator|>
@@ -255,6 +269,9 @@ name|SanitizerArguments
 expr_stmt|;
 name|protected
 label|:
+name|MultilibSet
+name|Multilibs
+decl_stmt|;
 name|ToolChain
 argument_list|(
 specifier|const
@@ -499,9 +516,7 @@ return|;
 block|}
 comment|/// \brief Provide the default architecture name (as expected by -arch) for
 comment|/// this toolchain. Note t
-name|std
-operator|::
-name|string
+name|StringRef
 name|getDefaultUniversalArchName
 argument_list|()
 specifier|const
@@ -561,6 +576,17 @@ name|ProgramPaths
 return|;
 block|}
 specifier|const
+name|MultilibSet
+operator|&
+name|getMultilibs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Multilibs
+return|;
+block|}
+specifier|const
 name|SanitizerArgs
 operator|&
 name|getSanitizerArgs
@@ -589,7 +615,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// Choose a tool to use to handle the action \p JA.
@@ -623,6 +649,15 @@ argument|const char *Name
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// Returns the linker path, respecting the -fuse-ld= argument to determine
+comment|/// the linker suffix or name.
+name|std
+operator|::
+name|string
+name|GetLinkerPath
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Dispatch to the specific toolchain for verbose printing.
 comment|///
 comment|/// This is used when handling the verbose option to print detailed,
@@ -640,6 +675,14 @@ decl|const
 block|{}
 empty_stmt|;
 comment|// Platform defaults information
+comment|/// \brief Returns true if the toolchain is targeting a non-native
+comment|/// architecture.
+name|virtual
+name|bool
+name|isCrossCompiling
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// HasNativeLTOLinker - Check whether the linker and related tools have
 comment|/// native LLVM support.
 name|virtual
@@ -737,7 +780,7 @@ name|false
 return|;
 block|}
 comment|/// GetDefaultStackProtectorLevel - Get the default stack protector level for
-comment|/// this tool chain (0=off, 1=on, 2=all).
+comment|/// this tool chain (0=off, 1=on, 2=strong, 3=all).
 name|virtual
 name|unsigned
 name|GetDefaultStackProtectorLevel
@@ -854,6 +897,30 @@ return|return
 name|false
 return|;
 block|}
+comment|/// getThreadModel() - Which thread model does this target use?
+name|virtual
+name|std
+operator|::
+name|string
+name|getThreadModel
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|"posix"
+return|;
+block|}
+comment|/// isThreadModelSupported() - Does this target support a thread model?
+name|virtual
+name|bool
+name|isThreadModelSupported
+argument_list|(
+specifier|const
+name|StringRef
+name|Model
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// ComputeLLVMTriple - Return the LLVM target triple to use, after taking
 comment|/// command line arguments into account.
 name|virtual
@@ -954,6 +1021,21 @@ name|ArgList
 operator|&
 name|DriverArgs
 argument_list|,
+name|llvm
+operator|::
+name|opt
+operator|::
+name|ArgStringList
+operator|&
+name|CC1Args
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Add warning options that need to be passed to cc1 for this target.
+name|virtual
+name|void
+name|addClangWarningOptions
+argument_list|(
 name|llvm
 operator|::
 name|opt

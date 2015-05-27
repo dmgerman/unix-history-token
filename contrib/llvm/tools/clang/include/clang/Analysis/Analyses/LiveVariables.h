@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_LIVEVARIABLES_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_LIVEVARIABLES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_LIVEVARIABLES_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_LIVEVARIABLES_H
 end_define
 
 begin_include
@@ -147,12 +147,12 @@ argument_list|()
 operator|:
 name|liveStmts
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|liveDecls
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|LivenessValues

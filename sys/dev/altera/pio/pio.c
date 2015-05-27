@@ -690,15 +690,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|WRITE4
-argument_list|(
-name|sc
-argument_list|,
-name|PIO_DATA
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(

@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<assert.h>
 end_include
 
@@ -42,7 +36,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelf_ehdr.c 2225 2011-11-26 18:55:54Z jkoshy $"
+literal|"$Id: libelf_ehdr.c 3174 2015-03-27 17:13:41Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -86,6 +80,7 @@ modifier|*
 name|xlator
 function_decl|)
 parameter_list|(
+name|unsigned
 name|char
 modifier|*
 name|_d
@@ -93,6 +88,7 @@ parameter_list|,
 name|size_t
 name|_dsz
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|_s
@@ -209,6 +205,7 @@ name|xlator
 call|)
 argument_list|(
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -224,6 +221,11 @@ operator|->
 name|s_shdr
 argument_list|)
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|e
 operator|->
 name|e_rawfile
@@ -287,6 +289,9 @@ name|e_elf
 operator|.
 name|e_nscn
 operator|=
+operator|(
+name|size_t
+operator|)
 name|GET_SHDR_MEMBER
 argument_list|(
 name|sh_size
@@ -354,7 +359,7 @@ name|E
 parameter_list|,
 name|SZ
 parameter_list|)
-value|do {						\ 		Elf##SZ##_Ehdr *eh = (E);				\ 		eh->e_ident[EI_MAG0] = ELFMAG0;				\ 		eh->e_ident[EI_MAG1] = ELFMAG1;				\ 		eh->e_ident[EI_MAG2] = ELFMAG2;				\ 		eh->e_ident[EI_MAG3] = ELFMAG3;				\ 		eh->e_ident[EI_CLASS] = ELFCLASS##SZ;			\ 		eh->e_ident[EI_DATA]  = ELFDATANONE;			\ 		eh->e_ident[EI_VERSION] = LIBELF_PRIVATE(version);	\ 		eh->e_machine = EM_NONE;				\ 		eh->e_type    = ELF_K_NONE;				\ 		eh->e_version = LIBELF_PRIVATE(version);		\ 	} while (0)
+value|do {						\ 		Elf##SZ##_Ehdr *eh = (E);				\ 		eh->e_ident[EI_MAG0] = ELFMAG0;				\ 		eh->e_ident[EI_MAG1] = ELFMAG1;				\ 		eh->e_ident[EI_MAG2] = ELFMAG2;				\ 		eh->e_ident[EI_MAG3] = ELFMAG3;				\ 		eh->e_ident[EI_CLASS] = ELFCLASS##SZ;			\ 		eh->e_ident[EI_DATA]  = ELFDATANONE;			\ 		eh->e_ident[EI_VERSION] = LIBELF_PRIVATE(version)& 0xFFU; \ 		eh->e_machine = EM_NONE;				\ 		eh->e_type    = ELF_K_NONE;				\ 		eh->e_version = LIBELF_PRIVATE(version);		\ 	} while (0)
 end_define
 
 begin_function
@@ -398,6 +403,7 @@ modifier|*
 name|xlator
 function_decl|)
 parameter_list|(
+name|unsigned
 name|char
 modifier|*
 name|_d
@@ -405,6 +411,7 @@ parameter_list|,
 name|size_t
 name|_dsz
 parameter_list|,
+name|unsigned
 name|char
 modifier|*
 name|_s
@@ -759,6 +766,11 @@ modifier|*
 name|xlator
 call|)
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|ehdr
 argument_list|,
 name|msz

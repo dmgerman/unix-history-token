@@ -62,6 +62,12 @@ begin_decl_stmt
 name|namespace
 name|lldb_private
 block|{
+name|class
+name|Platform
+decl_stmt|;
+name|class
+name|ExecutionContext
+decl_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Every register is described in detail including its name, alternate
 comment|// name (optional), encoding, size in bytes and the default display
@@ -89,7 +95,9 @@ comment|// Size in bytes of the register
 name|uint32_t
 name|byte_offset
 decl_stmt|;
-comment|// The byte offset in the register context data where this register's value is found
+comment|// The byte offset in the register context data where this register's value is found.
+comment|// This is optional, and can be 0 if a particular RegisterContext does not need to
+comment|// address its registers by byte offset.
 name|lldb
 operator|::
 name|Encoding
@@ -115,12 +123,18 @@ name|uint32_t
 modifier|*
 name|value_regs
 decl_stmt|;
-comment|// List of registers that must be terminated with LLDB_INVALID_REGNUM
+comment|// List of registers (terminated with LLDB_INVALID_REGNUM).  If this value is not
+comment|// null, all registers in this list will be read first, at which point the value
+comment|// for this register will be valid.  For example, the value list for ah
+comment|// would be eax (x86) or rax (x64).
 name|uint32_t
 modifier|*
 name|invalidate_regs
 decl_stmt|;
-comment|// List of registers that must be invalidated when this register is modified, list must be terminated with LLDB_INVALID_REGNUM
+comment|// List of registers (terminated with LLDB_INVALID_REGNUM).  If this value is not
+comment|// null, all registers in this list will be invalidateed when the value of this
+comment|// register changes.  For example, the invalidate list for eax would be rax
+comment|// ax, ah, and al.
 block|}
 name|RegisterInfo
 typedef|;
@@ -151,7 +165,11 @@ name|uint32_t
 modifier|*
 name|registers
 decl_stmt|;
-comment|// An array of register numbers in this set
+comment|// An array of register indices in this set.  The values in this array are
+comment|// *indices* (not register numbers) into a particular RegisterContext's
+comment|// register array.  For example, if eax is defined at index 4 for a
+comment|// particular RegisterContext, eax would be included in this RegisterSet
+comment|// by adding the value 4.  Not by adding the value lldb_eax_i386.
 block|}
 name|RegisterSet
 typedef|;
@@ -174,8 +192,50 @@ decl_stmt|;
 block|}
 name|OptionEnumValueElement
 typedef|;
-typedef|typedef
 struct|struct
+name|OptionValidator
+block|{
+name|virtual
+operator|~
+name|OptionValidator
+argument_list|()
+block|{ }
+name|virtual
+name|bool
+name|IsValid
+argument_list|(
+argument|Platform&platform
+argument_list|,
+argument|const ExecutionContext&target
+argument_list|)
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+specifier|const
+name|char
+operator|*
+name|ShortConditionString
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+name|virtual
+specifier|const
+name|char
+operator|*
+name|LongConditionString
+argument_list|()
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+block|}
+struct|;
+struct|struct
+name|OptionDefinition
 block|{
 name|uint32_t
 name|usage_mask
@@ -200,6 +260,11 @@ name|int
 name|option_has_arg
 decl_stmt|;
 comment|// no_argument, required_argument or optional_argument
+name|OptionValidator
+modifier|*
+name|validator
+decl_stmt|;
+comment|// If non-NULL, option is valid iff |validator->IsValid()|, otherwise always valid.
 name|OptionEnumValueElement
 modifier|*
 name|enum_values
@@ -223,8 +288,7 @@ decl_stmt|;
 comment|// Full text explaining what this options does and what (if any) argument to
 comment|// pass it.
 block|}
-name|OptionDefinition
-typedef|;
+struct|;
 block|}
 end_decl_stmt
 

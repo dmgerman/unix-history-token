@@ -188,6 +188,9 @@ comment|//===-------------------------------------------------------------------
 comment|/// createFunctionInliningPass - Return a new pass object that uses a heuristic
 comment|/// to inline direct function calls to small functions.
 comment|///
+comment|/// The Threshold can be passed directly, or asked to be computed from the
+comment|/// given optimization and size optimization arguments.
+comment|///
 comment|/// The -inline-threshold command line option takes precedence over the
 comment|/// threshold given here.
 name|Pass
@@ -201,6 +204,17 @@ name|createFunctionInliningPass
 parameter_list|(
 name|int
 name|Threshold
+parameter_list|)
+function_decl|;
+name|Pass
+modifier|*
+name|createFunctionInliningPass
+parameter_list|(
+name|unsigned
+name|OptLevel
+parameter_list|,
+name|unsigned
+name|SizeOptLevel
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//

@@ -62,6 +62,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/vm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/smp.h>
 end_include
 
@@ -182,7 +194,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|gic_init_secondary
+name|arm_init_secondary_ic
 argument_list|()
 expr_stmt|;
 block|}
@@ -205,7 +217,7 @@ operator|!=
 literal|0
 condition|)
 return|return;
-comment|/* Read current CP15 Cache Size ID Register */
+comment|/* Read the number of cores from the CP15 L2 Control Register. */
 asm|__asm __volatile("mrc p15, 1, %0, c9, c0, 2" : "=r" (ncpu));
 name|ncpu
 operator|=

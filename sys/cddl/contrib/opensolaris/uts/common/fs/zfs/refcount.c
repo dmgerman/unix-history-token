@@ -43,6 +43,35 @@ begin_comment
 comment|/* runs out of memory too easily */
 end_comment
 
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_vfs_zfs
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|reference_tracking_enable
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|reference_tracking_enable
+argument_list|,
+literal|0
+argument_list|,
+literal|"Track reference holders to refcount_t objects, used mostly by ZFS"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_else
 else|#
 directive|else

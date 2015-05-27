@@ -3623,7 +3623,6 @@ name|ba
 operator|=
 name|standard_allocator
 expr_stmt|;
-comment|/* Be careful not to access map from here on. */
 name|bufzone
 operator|=
 name|busdma_bufalloc_findzone
@@ -6333,6 +6332,7 @@ break|break;
 case|case
 name|BUS_DMASYNC_PREREAD
 case|:
+comment|/* 			 * An mbuf may start in the middle of a cacheline. There 			 * will be no cpu writes to the beginning of that line 			 * (which contains the mbuf header) while dma is in 			 * progress.  Handle that case by doing a writeback of 			 * just the first cacheline before invalidating the 			 * overall buffer.  Any mbuf in a chain may have this 			 * misalignment.  Buffers which are not mbufs bounce if 			 * they are not aligned to a cacheline. 			 */
 while|while
 condition|(
 name|sl
@@ -6340,6 +6340,51 @@ operator|!=
 name|end
 condition|)
 block|{
+if|if
+condition|(
+name|sl
+operator|->
+name|vaddr
+operator|&
+name|arm_dcache_align_mask
+condition|)
+block|{
+name|KASSERT
+argument_list|(
+name|map
+operator|->
+name|flags
+operator|&
+name|DMAMAP_MBUF
+argument_list|,
+operator|(
+literal|"unaligned buffer is not an mbuf"
+operator|)
+argument_list|)
+expr_stmt|;
+name|cpu_dcache_wb_range
+argument_list|(
+name|sl
+operator|->
+name|vaddr
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|l2cache_wb_range
+argument_list|(
+name|sl
+operator|->
+name|vaddr
+argument_list|,
+name|sl
+operator|->
+name|busaddr
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|cpu_dcache_inv_range
 argument_list|(
 name|sl
@@ -7523,7 +7568,7 @@ name|bpage
 operator|->
 name|vaddr
 operator||=
-name|vaddr
+name|addr
 operator|&
 name|PAGE_MASK
 expr_stmt|;
@@ -7531,7 +7576,7 @@ name|bpage
 operator|->
 name|busaddr
 operator||=
-name|vaddr
+name|addr
 operator|&
 name|PAGE_MASK
 expr_stmt|;

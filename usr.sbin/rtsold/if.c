@@ -46,12 +46,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_types.h>
 end_include
 
@@ -1127,14 +1121,9 @@ block|{
 case|case
 name|IFT_ETHER
 case|:
-ifdef|#
-directive|ifdef
-name|IFT_IEEE80211
 case|case
 name|IFT_IEEE80211
 case|:
-endif|#
-directive|endif
 return|return
 operator|(
 name|ROUNDUP8
@@ -1191,14 +1180,9 @@ block|{
 case|case
 name|IFT_ETHER
 case|:
-ifdef|#
-directive|ifdef
-name|IFT_IEEE80211
 case|case
 name|IFT_IEEE80211
 case|:
-endif|#
-directive|endif
 name|ndopt
 operator|->
 name|nd_opt_len

@@ -18,30 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/socket.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ntp_rfc2553.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ntp_types.h"
 end_include
 
@@ -64,17 +40,9 @@ decl_stmt|;
 block|}
 name|Ul_i
 union|;
-union|union
-block|{
 name|u_int32
-name|Xl_uf
+name|l_uf
 decl_stmt|;
-name|int32
-name|Xl_f
-decl_stmt|;
-block|}
-name|Ul_f
-union|;
 block|}
 name|l_fp
 typedef|;
@@ -100,28 +68,6 @@ end_define
 
 begin_comment
 comment|/* signed integral part */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|l_uf
-value|Ul_f.Xl_uf
-end_define
-
-begin_comment
-comment|/* unsigned fractional part */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|l_f
-value|Ul_f.Xl_f
-end_define
-
-begin_comment
-comment|/* signed fractional part */
 end_comment
 
 begin_comment
@@ -154,7 +100,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * A unit second in fp format.  Actually 2**(half_the_bits_in_a_long)  */
+comment|/*  * A unit second in fp format.	Actually 2**(half_the_bits_in_a_long)  */
 end_comment
 
 begin_define
@@ -181,35 +127,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|HTONL_FP
-parameter_list|(
-name|h
-parameter_list|,
-name|n
-parameter_list|)
-value|do { (n)->l_ui = htonl((h)->l_ui); \ 			     (n)->l_uf = htonl((h)->l_uf); } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NTOHS_FP
 parameter_list|(
 name|x
 parameter_list|)
 value|(ntohl(x))
-end_define
-
-begin_define
-define|#
-directive|define
-name|NTOHL_FP
-parameter_list|(
-name|n
-parameter_list|,
-name|h
-parameter_list|)
-value|do { (h)->l_ui = ntohl((n)->l_ui); \ 			     (h)->l_uf = ntohl((n)->l_uf); } while (0)
 end_define
 
 begin_define
@@ -226,7 +148,7 @@ parameter_list|,
 name|hf
 parameter_list|)
 define|\
-value|do { (hi) = ntohl(ni); (hf) = ntohl(nf); } while (0)
+value|do {							\ 		(hi) = ntohl(ni);				\ 		(hf) = ntohl(nf);				\ 	} while (FALSE)
 end_define
 
 begin_define
@@ -243,11 +165,37 @@ parameter_list|,
 name|nf
 parameter_list|)
 define|\
-value|do { (ni) = ntohl(hi); (nf) = ntohl(hf); } while (0)
+value|do {							\ 		(ni) = htonl(hi);				\ 		(nf) = htonl(hf);				\ 	} while (FALSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HTONL_FP
+parameter_list|(
+name|h
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|HTONL_MFP((h)->l_ui, (h)->l_uf, (n)->l_ui, (n)->l_uf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTOHL_FP
+parameter_list|(
+name|n
+parameter_list|,
+name|h
+parameter_list|)
+define|\
+value|NTOHL_MFP((n)->l_ui, (n)->l_uf, (h)->l_ui, (h)->l_uf)
 end_define
 
 begin_comment
-comment|/* funny ones.  Converts ts fractions to net order ts */
+comment|/* Convert unsigned ts fraction to net order ts */
 end_comment
 
 begin_define
@@ -260,19 +208,7 @@ parameter_list|,
 name|nts
 parameter_list|)
 define|\
-value|do { (nts)->l_ui = 0; (nts)->l_uf = htonl(uf); } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|HTONL_F
-parameter_list|(
-name|f
-parameter_list|,
-name|nts
-parameter_list|)
-value|do { (nts)->l_uf = htonl(f); \ 				if ((f)& 0x80000000) \ 					(nts)->l_i = -1; \ 				else \ 					(nts)->l_i = 0; \ 			} while (0)
+value|do {							\ 		(nts)->l_ui = 0;				\ 		(nts)->l_uf = htonl(uf);			\ 	} while (FALSE)
 end_define
 
 begin_comment
@@ -298,7 +234,7 @@ name|LFPTOFP
 parameter_list|(
 name|v
 parameter_list|)
-value|MFPTOFP((v)->l_i, (v)->l_f)
+value|MFPTOFP((v)->l_i, (v)->l_uf)
 end_define
 
 begin_define
@@ -332,7 +268,7 @@ name|MAXLFP
 parameter_list|(
 name|v
 parameter_list|)
-value|((v)->l_ui = 0x7fffffff, (v)->l_uf = 0xffffffff)
+value|((v)->l_ui = 0x7fffffffu, (v)->l_uf = 0xffffffffu)
 end_define
 
 begin_define
@@ -342,7 +278,7 @@ name|MINLFP
 parameter_list|(
 name|v
 parameter_list|)
-value|((v)->l_ui = 0x80000000, (v)->l_uf = 0)
+value|((v)->l_ui = 0x80000000u, (v)->l_uf = 0u)
 end_define
 
 begin_comment
@@ -360,7 +296,7 @@ name|v_f
 parameter_list|)
 comment|/* v = -v */
 define|\
-value|do { \ 		if ((v_f) == 0) \ 			(v_i) = -((s_fp)(v_i)); \ 		else { \ 			(v_f) = -((s_fp)(v_f)); \ 			(v_i) = ~(v_i); \ 		} \ 	} while(0)
+value|do { \ 		(v_f) = ~(v_f) + 1u; \ 		(v_i) = ~(v_i) + ((v_f) == 0); \ 	} while (FALSE)
 end_define
 
 begin_define
@@ -378,7 +314,7 @@ name|a_f
 parameter_list|)
 comment|/* r = -a */
 define|\
-value|do { \ 		if ((a_f) == 0) { \ 			(r_f) = 0; \ 			(r_i) = -(a_i); \ 		} else { \ 			(r_f) = -(a_f); \ 			(r_i) = ~(a_i); \ 		} \ 	} while(0)
+value|do { \ 		(r_f) = ~(a_f) + 1u; \ 		(r_i) = ~(a_i) + ((r_f) == 0); \ 	} while (FALSE)
 end_define
 
 begin_define
@@ -396,7 +332,7 @@ name|a_f
 parameter_list|)
 comment|/* r += a */
 define|\
-value|do { \ 		register u_int32 lo_tmp; \ 		register u_int32 hi_tmp; \ 		\ 		lo_tmp = ((r_f)& 0xffff) + ((a_f)& 0xffff); \ 		hi_tmp = (((r_f)>> 16)& 0xffff) + (((a_f)>> 16)& 0xffff); \ 		if (lo_tmp& 0x10000) \ 			hi_tmp++; \ 		(r_f) = ((hi_tmp& 0xffff)<< 16) | (lo_tmp& 0xffff); \ 		\ 		(r_i) += (a_i); \ 		if (hi_tmp& 0x10000) \ 			(r_i)++; \ 	} while (0)
+value|do { \ 		u_int32 add_t = (r_f); \ 		(r_f) += (a_f); \ 		(r_i) += (a_i) + ((u_int32)(r_f)< add_t); \ 	} while (FALSE)
 end_define
 
 begin_define
@@ -404,13 +340,13 @@ define|#
 directive|define
 name|M_ADD3
 parameter_list|(
-name|r_ovr
+name|r_o
 parameter_list|,
 name|r_i
 parameter_list|,
 name|r_f
 parameter_list|,
-name|a_ovr
+name|a_o
 parameter_list|,
 name|a_i
 parameter_list|,
@@ -418,7 +354,7 @@ name|a_f
 parameter_list|)
 comment|/* r += a, three word */
 define|\
-value|do { \ 		register u_int32 lo_tmp; \ 		register u_int32 hi_tmp; \ 		\ 		lo_tmp = ((r_f)& 0xffff) + ((a_f)& 0xffff); \ 		hi_tmp = (((r_f)>> 16)& 0xffff) + (((a_f)>> 16)& 0xffff); \ 		if (lo_tmp& 0x10000) \ 			hi_tmp++; \ 		(r_f) = ((hi_tmp& 0xffff)<< 16) | (lo_tmp& 0xffff); \ 		\ 		lo_tmp = ((r_i)& 0xffff) + ((a_i)& 0xffff); \ 		if (hi_tmp& 0x10000) \ 			lo_tmp++; \ 		hi_tmp = (((r_i)>> 16)& 0xffff) + (((a_i)>> 16)& 0xffff); \ 		if (lo_tmp& 0x10000) \ 			hi_tmp++; \ 		(r_i) = ((hi_tmp& 0xffff)<< 16) | (lo_tmp& 0xffff); \ 		\ 		(r_ovr) += (a_ovr); \ 		if (hi_tmp& 0x10000) \ 			(r_ovr)++; \ 	} while (0)
+value|do { \ 		u_int32 add_t, add_c; \ 		add_t  = (r_f); \ 		(r_f) += (a_f); \ 		add_c  = ((u_int32)(r_f)< add_t); \ 		(r_i) += add_c; \ 		add_c  = ((u_int32)(r_i)< add_c); \ 		add_t  = (r_i); \ 		(r_i) += (a_i); \ 		add_c |= ((u_int32)(r_i)< add_t); \ 		(r_o) += (a_o) + add_c; \ 	} while (FALSE)
 end_define
 
 begin_define
@@ -436,7 +372,7 @@ name|a_f
 parameter_list|)
 comment|/* r -= a */
 define|\
-value|do { \ 		register u_int32 lo_tmp; \ 		register u_int32 hi_tmp; \ 		\ 		if ((a_f) == 0) { \ 			(r_i) -= (a_i); \ 		} else { \ 			lo_tmp = ((r_f)& 0xffff) + ((-((s_fp)(a_f)))& 0xffff); \ 			hi_tmp = (((r_f)>> 16)& 0xffff) \ 			    + (((-((s_fp)(a_f)))>> 16)& 0xffff); \ 			if (lo_tmp& 0x10000) \ 				hi_tmp++; \ 			(r_f) = ((hi_tmp& 0xffff)<< 16) | (lo_tmp& 0xffff); \ 			\ 			(r_i) += ~(a_i); \ 			if (hi_tmp& 0x10000) \ 				(r_i)++; \ 		} \ 	} while (0)
+value|do { \ 		u_int32 sub_t = (r_f); \ 		(r_f) -= (a_f); \ 		(r_i) -= (a_i) + ((u_int32)(r_f)> sub_t); \ 	} while (FALSE)
 end_define
 
 begin_define
@@ -450,7 +386,7 @@ name|v_f
 parameter_list|)
 comment|/* v>>= 1, v is unsigned */
 define|\
-value|do { \ 		(v_f) = (u_int32)(v_f)>> 1; \ 		if ((v_i)& 01) \ 			(v_f) |= 0x80000000; \ 		(v_i) = (u_int32)(v_i)>> 1; \ 	} while (0)
+value|do { \ 		(v_f) = ((u_int32)(v_f)>> 1) | ((u_int32)(v_i)<< 31);	\ 		(v_i) = ((u_int32)(v_i)>> 1); \ 	} while (FALSE)
 end_define
 
 begin_define
@@ -464,7 +400,7 @@ name|v_f
 parameter_list|)
 comment|/* v>>= 1, v is signed */
 define|\
-value|do { \ 		(v_f) = (u_int32)(v_f)>> 1; \ 		if ((v_i)& 01) \ 			(v_f) |= 0x80000000; \ 		if ((v_i)& 0x80000000) \ 			(v_i) = ((v_i)>> 1) | 0x80000000; \ 		else \ 			(v_i) = (v_i)>> 1; \ 	} while (0)
+value|do { \ 		(v_f) = ((u_int32)(v_f)>> 1) | ((u_int32)(v_i)<< 31);	\ 		(v_i) = ((u_int32)(v_i)>> 1) | ((u_int32)(v_i)& 0x80000000);	\ 	} while (FALSE)
 end_define
 
 begin_define
@@ -478,7 +414,7 @@ name|v_f
 parameter_list|)
 comment|/* v<<= 1 */
 define|\
-value|do { \ 		(v_i)<<= 1; \ 		if ((v_f)& 0x80000000) \ 			(v_i) |= 0x1; \ 		(v_f)<<= 1; \ 	} while (0)
+value|do { \ 		(v_i) = ((u_int32)(v_i)<< 1) | ((u_int32)(v_f)>> 31);	\ 		(v_f) = ((u_int32)(v_f)<< 1); \ 	} while (FALSE)
 end_define
 
 begin_define
@@ -486,7 +422,7 @@ define|#
 directive|define
 name|M_LSHIFT3
 parameter_list|(
-name|v_ovr
+name|v_o
 parameter_list|,
 name|v_i
 parameter_list|,
@@ -494,7 +430,7 @@ name|v_f
 parameter_list|)
 comment|/* v<<= 1, with overflow */
 define|\
-value|do { \ 		(v_ovr)<<= 1; \ 		if ((v_i)& 0x80000000) \ 			(v_ovr) |= 0x1; \ 		(v_i)<<= 1; \ 		if ((v_f)& 0x80000000) \ 			(v_i) |= 0x1; \ 		(v_f)<<= 1; \ 	} while (0)
+value|do { \ 		(v_o) = ((u_int32)(v_o)<< 1) | ((u_int32)(v_i)>> 31);	\ 		(v_i) = ((u_int32)(v_i)<< 1) | ((u_int32)(v_f)>> 31);	\ 		(v_f) = ((u_int32)(v_f)<< 1); \ 	} while (FALSE)
 end_define
 
 begin_define
@@ -550,7 +486,7 @@ name|f
 parameter_list|)
 comment|/* r += f, f is a int32 fraction */
 define|\
-value|do { \ 		if ((f)> 0) \ 			M_ADD((r_i), (r_f), 0, (f)); \ 		else if ((f)< 0) \ 			M_ADD((r_i), (r_f), (-1), (f));\ 	} while(0)
+value|do { \ 		int32 add_f = (int32)(f); \ 		if (add_f>= 0) \ 			M_ADD((r_i), (r_f), 0, (uint32)( add_f)); \ 		else \ 			M_SUB((r_i), (r_f), 0, (uint32)(-add_f)); \ 	} while(0)
 end_define
 
 begin_define
@@ -559,12 +495,46 @@ directive|define
 name|M_ISNEG
 parameter_list|(
 name|v_i
-parameter_list|,
-name|v_f
 parameter_list|)
 comment|/* v< 0 */
 define|\
 value|(((v_i)& 0x80000000) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_ISGT
+parameter_list|(
+name|a_i
+parameter_list|,
+name|a_f
+parameter_list|,
+name|b_i
+parameter_list|,
+name|b_f
+parameter_list|)
+comment|/* a> b signed */
+define|\
+value|(((u_int32)((a_i) ^ 0x80000000)> (u_int32)((b_i) ^ 0x80000000)) || \ 	  ((a_i) == (b_i)&& ((u_int32)(a_f))> ((u_int32)(b_f))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_ISGTU
+parameter_list|(
+name|a_i
+parameter_list|,
+name|a_f
+parameter_list|,
+name|b_i
+parameter_list|,
+name|b_f
+parameter_list|)
+comment|/* a> b unsigned */
+define|\
+value|(((u_int32)(a_i))> ((u_int32)(b_i)) || \ 	  ((a_i) == (b_i)&& ((u_int32)(a_f))> ((u_int32)(b_f))))
 end_define
 
 begin_define
@@ -600,7 +570,7 @@ name|b_f
 parameter_list|)
 comment|/* a>= b signed */
 define|\
-value|(((int32)(a_i))> ((int32)(b_i)) || \ 	  ((a_i) == (b_i)&& ((u_int32)(a_f))>= ((u_int32)(b_f))))
+value|(((u_int32)((a_i) ^ 0x80000000)> (u_int32)((b_i) ^ 0x80000000)) || \ 	  ((a_i) == (b_i)&& (u_int32)(a_f)>= (u_int32)(b_f)))
 end_define
 
 begin_define
@@ -618,7 +588,7 @@ name|b_f
 parameter_list|)
 comment|/* a == b unsigned */
 define|\
-value|((a_i) == (b_i)&& (a_f) == (b_f))
+value|((u_int32)(a_i) == (u_int32)(b_i)&& (u_int32)(a_f) == (u_int32)(b_f))
 end_define
 
 begin_comment
@@ -742,7 +712,7 @@ name|L_ISNEG
 parameter_list|(
 name|v
 parameter_list|)
-value|(((v)->l_ui& 0x80000000) != 0)
+value|M_ISNEG((v)->l_ui)
 end_define
 
 begin_define
@@ -752,7 +722,31 @@ name|L_ISZERO
 parameter_list|(
 name|v
 parameter_list|)
-value|((v)->l_ui == 0&& (v)->l_uf == 0)
+value|(((v)->l_ui | (v)->l_uf) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L_ISGT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|M_ISGT((a)->l_i, (a)->l_uf, (b)->l_i, (b)->l_uf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|L_ISGTU
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|M_ISGTU((a)->l_ui, (a)->l_uf, (b)->l_ui, (b)->l_uf)
 end_define
 
 begin_define
@@ -764,7 +758,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((a)->l_ui> (b)->l_ui || \ 			  ((a)->l_ui == (b)->l_ui&& (a)->l_uf>= (b)->l_uf))
+value|M_ISHIS((a)->l_ui, (a)->l_uf, (b)->l_ui, (b)->l_uf)
 end_define
 
 begin_define
@@ -776,7 +770,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((a)->l_i> (b)->l_i || \ 			  ((a)->l_i == (b)->l_i&& (a)->l_uf>= (b)->l_uf))
+value|M_ISGEQ((a)->l_ui, (a)->l_uf, (b)->l_ui, (b)->l_uf)
 end_define
 
 begin_define
@@ -799,7 +793,7 @@ begin_define
 define|#
 directive|define
 name|FRIC
-value|65536.
+value|65536.0
 end_define
 
 begin_comment
@@ -844,11 +838,75 @@ begin_define
 define|#
 directive|define
 name|FRAC
-value|4294967296.
+value|4294967296.0
 end_define
 
 begin_comment
 comment|/* 2^32 as a double */
+end_comment
+
+begin_comment
+comment|/*  * Use 64 bit integers if available.  Solaris on SPARC has a problem  * compiling parsesolaris.c if ntp_fp.h includes math.h, due to  * archaic gets() and printf() prototypes used in Solaris kernel  * headers.  So far the problem has only been seen with gcc, but it  * may also affect Sun compilers, in which case the defined(__GNUC__)  * term should be removed.  * XSCALE also generates bad code for these, at least with GCC 3.3.5.  * This is unrelated to math.h, but the same solution applies.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_U_INT64
+argument_list|)
+operator|&&
+expr|\
+operator|!
+operator|(
+name|defined
+argument_list|(
+name|__SVR4
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__sun
+argument_list|)
+operator|&&
+expr|\
+name|defined
+argument_list|(
+name|sparc
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__XSCALE__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
+begin_comment
+comment|/* ldexp() */
 end_comment
 
 begin_define
@@ -858,13 +916,13 @@ name|M_DTOLFP
 parameter_list|(
 name|d
 parameter_list|,
-name|r_i
+name|r_ui
 parameter_list|,
 name|r_uf
 parameter_list|)
 comment|/* double to l_fp */
 define|\
-value|do { \ 		register double d_tmp; \ 		\ 		d_tmp = (d); \ 		if (d_tmp< 0) { \ 			d_tmp = -d_tmp; \ 			(r_i) = (int32)(d_tmp); \ 			(r_uf) = (u_int32)(((d_tmp) - (double)(r_i)) * FRAC); \ 			M_NEG((r_i), (r_uf)); \ 		} else { \ 			(r_i) = (int32)(d_tmp); \ 			(r_uf) = (u_int32)(((d_tmp) - (double)(r_i)) * FRAC); \ 		} \ 	} while (0)
+value|do {							\ 		double	d_tmp;					\ 		u_int64	q_tmp;					\ 		int	M_isneg;					\ 								\ 		d_tmp = (d);					\ 		M_isneg = (d_tmp< 0.);				\ 		if (M_isneg) {					\ 			d_tmp = -d_tmp;				\ 		}						\ 		q_tmp = (u_int64)ldexp(d_tmp, 32);		\ 		if (M_isneg) {					\ 			q_tmp = ~q_tmp + 1;			\ 		}						\ 		(r_uf) = (u_int32)q_tmp;			\ 		(r_ui) = (u_int32)(q_tmp>> 32);		\ 	} while (FALSE)
 end_define
 
 begin_define
@@ -872,7 +930,7 @@ define|#
 directive|define
 name|M_LFPTOD
 parameter_list|(
-name|r_i
+name|r_ui
 parameter_list|,
 name|r_uf
 parameter_list|,
@@ -880,8 +938,54 @@ name|d
 parameter_list|)
 comment|/* l_fp to double */
 define|\
-value|do { \ 		register l_fp l_tmp; \ 		\ 		l_tmp.l_i = (r_i); \ 		l_tmp.l_f = (r_uf); \ 		if (l_tmp.l_i< 0) { \ 			M_NEG(l_tmp.l_i, l_tmp.l_uf); \ 			(d) = -((double)l_tmp.l_i + ((double)l_tmp.l_uf) / FRAC); \ 		} else { \ 			(d) = (double)l_tmp.l_i + ((double)l_tmp.l_uf) / FRAC; \ 		} \ 	} while (0)
+value|do {							\ 		double	d_tmp;					\ 		u_int64	q_tmp;					\ 		int	M_isneg;				\ 								\ 		q_tmp = ((u_int64)(r_ui)<< 32) + (r_uf);	\ 		M_isneg = M_ISNEG(r_ui);			\ 		if (M_isneg) {					\ 			q_tmp = ~q_tmp + 1;			\ 		}						\ 		d_tmp = ldexp((double)q_tmp, -32);		\ 		if (M_isneg) {					\ 			d_tmp = -d_tmp;				\ 		}						\ 		(d) = d_tmp;					\ 	} while (FALSE)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* use only 32 bit unsigned values */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_DTOLFP
+parameter_list|(
+name|d
+parameter_list|,
+name|r_ui
+parameter_list|,
+name|r_uf
+parameter_list|)
+comment|/* double to l_fp */
+define|\
+value|do { \ 		double d_tmp; \ 		if ((d_tmp = (d))< 0) { \ 			(r_ui) = (u_int32)(-d_tmp); \ 			(r_uf) = (u_int32)(-(d_tmp + (double)(r_ui)) * FRAC); \ 			M_NEG((r_ui), (r_uf)); \ 		} else { \ 			(r_ui) = (u_int32)d_tmp; \ 			(r_uf) = (u_int32)((d_tmp - (double)(r_ui)) * FRAC); \ 		} \ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_LFPTOD
+parameter_list|(
+name|r_ui
+parameter_list|,
+name|r_uf
+parameter_list|,
+name|d
+parameter_list|)
+comment|/* l_fp to double */
+define|\
+value|do { \ 		u_int32 l_thi, l_tlo; \ 		l_thi = (r_ui); l_tlo = (r_uf); \ 		if (M_ISNEG(l_thi)) { \ 			M_NEG(l_thi, l_tlo); \ 			(d) = -((double)l_thi + (double)l_tlo / FRAC); \ 		} else { \ 			(d) = (double)l_thi + (double)l_tlo / FRAC; \ 		} \ 	} while (0)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -911,312 +1015,281 @@ begin_comment
 comment|/*  * Prototypes  */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|dofptoa
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|u_fp
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|short
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|dolfptoa
-name|P
-argument_list|(
-operator|(
-name|u_long
-operator|,
-name|u_long
-operator|,
+parameter_list|(
+name|u_int32
+parameter_list|,
+name|u_int32
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|short
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|atolfp
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|buftvtots
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|fptoa
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|s_fp
-operator|,
+parameter_list|,
 name|short
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|fptoms
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|s_fp
-operator|,
+parameter_list|,
 name|short
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|hextolfp
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|gpstolfp
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|unsigned
 name|long
-operator|,
+parameter_list|,
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|mstolfp
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|prettydate
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|gmprettydate
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|char
 modifier|*
 name|uglydate
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|void
 name|mfp_mul
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|int32
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int32
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int32
-operator|,
+parameter_list|,
 name|u_int32
-operator|,
+parameter_list|,
 name|int32
-operator|,
+parameter_list|,
 name|u_int32
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
+specifier|extern
+name|void
+name|set_sys_fuzz
+parameter_list|(
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|init_systime
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|extern
 name|void
 name|get_systime
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|l_fp
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|step_systime
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|int
 name|adj_systime
-name|P
-argument_list|(
-operator|(
+parameter_list|(
 name|double
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|extern
 name|struct
 name|tm
 modifier|*
 name|ntp2unix_tm
-name|P
-argument_list|(
-operator|(
-name|u_long
+parameter_list|(
+name|u_int32
 name|ntp
-operator|,
+parameter_list|,
 name|int
 name|local
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#
 directive|define
 name|lfptoa
 parameter_list|(
-name|_fpv
+name|fpv
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|mfptoa((_fpv)->l_ui, (_fpv)->l_uf, (_ndec))
+value|mfptoa((fpv)->l_ui, (fpv)->l_uf, (ndec))
 end_define
 
 begin_define
@@ -1224,11 +1297,11 @@ define|#
 directive|define
 name|lfptoms
 parameter_list|(
-name|_fpv
+name|fpv
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|mfptoms((_fpv)->l_ui, (_fpv)->l_uf, (_ndec))
+value|mfptoms((fpv)->l_ui, (fpv)->l_uf, (ndec))
 end_define
 
 begin_define
@@ -1236,19 +1309,9 @@ define|#
 directive|define
 name|stoa
 parameter_list|(
-name|_sin
+name|addr
 parameter_list|)
-value|socktoa((_sin))
-end_define
-
-begin_define
-define|#
-directive|define
-name|stohost
-parameter_list|(
-name|_sin
-parameter_list|)
-value|socktohost((_sin))
+value|socktoa(addr)
 end_define
 
 begin_define
@@ -1256,19 +1319,29 @@ define|#
 directive|define
 name|ntoa
 parameter_list|(
-name|_sin
+name|addr
 parameter_list|)
-value|stoa(_sin)
+value|stoa(addr)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ntohost
+name|sptoa
 parameter_list|(
-name|_sin
+name|addr
 parameter_list|)
-value|stohost(_sin)
+value|sockporttoa(addr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|stohost
+parameter_list|(
+name|addr
+parameter_list|)
+value|socktohost(addr)
 end_define
 
 begin_define
@@ -1276,11 +1349,11 @@ define|#
 directive|define
 name|ufptoa
 parameter_list|(
-name|_fpv
+name|fpv
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|dofptoa((_fpv), 0, (_ndec), 0)
+value|dofptoa((fpv), 0, (ndec), 0)
 end_define
 
 begin_define
@@ -1288,11 +1361,11 @@ define|#
 directive|define
 name|ufptoms
 parameter_list|(
-name|_fpv
+name|fpv
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|dofptoa((_fpv), 0, (_ndec), 1)
+value|dofptoa((fpv), 0, (ndec), 1)
 end_define
 
 begin_define
@@ -1300,11 +1373,11 @@ define|#
 directive|define
 name|ulfptoa
 parameter_list|(
-name|_fpv
+name|fpv
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|dolfptoa((_fpv)->l_ui, (_fpv)->l_uf, 0, (_ndec), 0)
+value|dolfptoa((fpv)->l_ui, (fpv)->l_uf, 0, (ndec), 0)
 end_define
 
 begin_define
@@ -1312,11 +1385,11 @@ define|#
 directive|define
 name|ulfptoms
 parameter_list|(
-name|_fpv
+name|fpv
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|dolfptoa((_fpv)->l_ui, (_fpv)->l_uf, 0, (_ndec), 1)
+value|dolfptoa((fpv)->l_ui, (fpv)->l_uf, 0, (ndec), 1)
 end_define
 
 begin_define
@@ -1324,14 +1397,141 @@ define|#
 directive|define
 name|umfptoa
 parameter_list|(
-name|_fpi
+name|fpi
 parameter_list|,
-name|_fpf
+name|fpf
 parameter_list|,
-name|_ndec
+name|ndec
 parameter_list|)
-value|dolfptoa((_fpi), (_fpf), 0, (_ndec), 0)
+value|dolfptoa((fpi), (fpf), 0, (ndec), 0)
 end_define
+
+begin_comment
+comment|/*  * Optional callback from libntp step_systime() to ntpd.  Optional *  because other libntp clients like ntpdate don't use it.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|time_stepped_callback
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_decl_stmt
+specifier|extern
+name|time_stepped_callback
+name|step_callback
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Multi-thread locking for get_systime()  *  * On most systems, get_systime() is used solely by the main ntpd  * thread, but on Windows it's also used by the dedicated I/O thread.  * The [Bug 2037] changes to get_systime() have it keep state between  * calls to ensure time moves in only one direction, which means its  * use on Windows needs to be protected against simultaneous execution  * to avoid falsely detecting Lamport violations by ensuring only one  * thread at a time is in get_systime().  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYS_WINNT
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|CRITICAL_SECTION
+name|get_systime_cs
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|INIT_GET_SYSTIME_CRITSEC
+parameter_list|()
+define|\
+value|InitializeCriticalSection(&get_systime_cs)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENTER_GET_SYSTIME_CRITSEC
+parameter_list|()
+define|\
+value|EnterCriticalSection(&get_systime_cs)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LEAVE_GET_SYSTIME_CRITSEC
+parameter_list|()
+define|\
+value|LeaveCriticalSection(&get_systime_cs)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INIT_WIN_PRECISE_TIME
+parameter_list|()
+define|\
+value|init_win_precise_time()
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !SYS_WINNT follows */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INIT_GET_SYSTIME_CRITSEC
+parameter_list|()
+define|\
+value|do {} while (FALSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENTER_GET_SYSTIME_CRITSEC
+parameter_list|()
+define|\
+value|do {} while (FALSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LEAVE_GET_SYSTIME_CRITSEC
+parameter_list|()
+define|\
+value|do {} while (FALSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INIT_WIN_PRECISE_TIME
+parameter_list|()
+define|\
+value|do {} while (FALSE)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

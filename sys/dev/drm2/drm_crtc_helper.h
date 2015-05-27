@@ -30,6 +30,10 @@ block|, }
 enum|;
 end_enum
 
+begin_comment
+comment|/**  * drm_crtc_helper_funcs - helper operations for CRTCs  * @mode_fixup: try to fixup proposed mode for this connector  * @mode_set: set this mode  *  * The helper operations are called by the mid-layer CRTC helper.  */
+end_comment
+
 begin_struct
 struct|struct
 name|drm_crtc_helper_funcs
@@ -212,6 +216,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/**  * drm_encoder_helper_funcs - helper operations for encoders  * @mode_fixup: try to fixup proposed mode for this connector  * @mode_set: set this mode  *  * The helper operations are called by the mid-layer CRTC helper.  */
+end_comment
+
 begin_struct
 struct|struct
 name|drm_encoder_helper_funcs
@@ -373,6 +381,10 @@ function_decl|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/**  * drm_connector_helper_funcs - helper operations for connectors  * @get_modes: get mode list for this connector  * @mode_valid: is this mode valid on the given connector?  *  * The helper operations are called by the mid-layer CRTC helper.  */
+end_comment
 
 begin_struct
 struct|struct
@@ -537,6 +549,18 @@ name|connector
 parameter_list|,
 name|int
 name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|drm_helper_move_panel_connectors_to_head
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -713,6 +737,19 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
+name|drm_kms_helper_hotplug_event
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
 name|drm_kms_helper_poll_disable
 parameter_list|(
 name|struct
@@ -732,24 +769,6 @@ name|struct
 name|drm_device
 modifier|*
 name|dev
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|bool
-name|drm_fetch_cmdline_mode_from_kenv
-parameter_list|(
-name|struct
-name|drm_connector
-modifier|*
-name|connector
-parameter_list|,
-name|struct
-name|drm_cmdline_mode
-modifier|*
-name|cmdline_mode
 parameter_list|)
 function_decl|;
 end_function_decl

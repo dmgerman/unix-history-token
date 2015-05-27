@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_REWRITE_FIX_IT_REWRITER_H
+name|LLVM_CLANG_REWRITE_FRONTEND_FIXITREWRITER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_REWRITE_FIX_IT_REWRITER_H
+name|LLVM_CLANG_REWRITE_FRONTEND_FIXITREWRITER_H
 end_define
 
 begin_include
@@ -199,8 +199,13 @@ name|DiagnosticConsumer
 operator|*
 name|Client
 block|;
-name|bool
-name|OwnsClient
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DiagnosticConsumer
+operator|>
+name|Owner
 block|;
 comment|/// \brief Turn an input path into an output path. NULL implies overwriting
 comment|/// the original.
@@ -267,7 +272,7 @@ argument_list|(
 name|ID
 argument_list|)
 operator|!=
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|// Iteration over files with changes.
@@ -333,22 +338,21 @@ expr|>
 operator|*
 name|RewrittenFiles
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// IncludeInDiagnosticCounts - This method (whose default implementation
 comment|/// returns true) indicates whether the diagnostics handled by this
 comment|/// DiagnosticConsumer should be included in the number of diagnostics
 comment|/// reported by DiagnosticsEngine.
-name|virtual
 name|bool
 name|IncludeInDiagnosticCounts
 argument_list|()
 specifier|const
+name|override
 expr_stmt|;
 comment|/// HandleDiagnostic - Handle this diagnostic, reporting it to the user or
 comment|/// capturing it to a log as needed.
-name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
@@ -362,6 +366,7 @@ name|Diagnostic
 operator|&
 name|Info
 argument_list|)
+name|override
 decl_stmt|;
 comment|/// \brief Emit a diagnostic via the adapted diagnostic client.
 name|void
@@ -386,10 +391,6 @@ unit|}
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_REWRITE_FIX_IT_REWRITER_H
-end_comment
 
 end_unit
 

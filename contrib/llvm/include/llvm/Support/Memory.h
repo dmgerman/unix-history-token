@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/system_error.h"
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -99,7 +99,7 @@ argument_list|()
 operator|:
 name|Address
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Size
@@ -212,24 +212,26 @@ comment|/// @brief Allocate mapped memory.
 specifier|static
 name|MemoryBlock
 name|allocateMappedMemory
-parameter_list|(
+argument_list|(
 name|size_t
 name|NumBytes
-parameter_list|,
+argument_list|,
 specifier|const
 name|MemoryBlock
-modifier|*
+operator|*
 specifier|const
 name|NearBlock
-parameter_list|,
+argument_list|,
 name|unsigned
 name|Flags
-parameter_list|,
+argument_list|,
+name|std
+operator|::
 name|error_code
-modifier|&
+operator|&
 name|EC
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// This method releases a block of memory that was allocated with the
 comment|/// allocateMappedMemory method. It should not be used to release any
 comment|/// memory block allocated any other way.
@@ -240,20 +242,22 @@ comment|/// describing the failure if an error occurred.
 comment|///
 comment|/// @brief Release mapped memory.
 specifier|static
+name|std
+operator|::
 name|error_code
 name|releaseMappedMemory
-parameter_list|(
+argument_list|(
 name|MemoryBlock
-modifier|&
+operator|&
 name|Block
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// This method sets the protection flags for a block of memory to the
 comment|/// state specified by /p Flags.  The behavior is not specified if the
 comment|/// memory was not allocated using the allocateMappedMemory method.
 comment|/// \p Block describes the memory block to be protected.
 comment|/// \p Flags specifies the new protection state to be assigned to the block.
-comment|/// \p ErrMsg [out] returns a string describing any error that occured.
+comment|/// \p ErrMsg [out] returns a string describing any error that occurred.
 comment|///
 comment|/// If \p Flags is MF_WRITE, the actual behavior varies
 comment|/// with the operating system (i.e. MF_READ | MF_WRITE on Windows) and the
@@ -264,18 +268,16 @@ comment|/// describing the failure if an error occurred.
 comment|///
 comment|/// @brief Set memory protection state.
 specifier|static
+name|std
+operator|::
 name|error_code
 name|protectMappedMemory
-parameter_list|(
-specifier|const
-name|MemoryBlock
-modifier|&
-name|Block
-parameter_list|,
-name|unsigned
-name|Flags
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|const MemoryBlock&Block
+argument_list|,
+argument|unsigned Flags
+argument_list|)
+expr_stmt|;
 comment|/// This method allocates a block of Read/Write/Execute memory that is
 comment|/// suitable for executing dynamically generated code (e.g. JIT). An
 comment|/// attempt to allocate \p NumBytes bytes of virtual memory is made.
@@ -304,7 +306,7 @@ name|string
 operator|*
 name|ErrMsg
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// This method releases a block of Read/Write/Execute memory that was
@@ -328,7 +330,7 @@ name|string
 operator|*
 name|ErrMsg
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// InvalidateInstructionCache - Before the JIT can run a block of code
@@ -364,7 +366,7 @@ name|string
 operator|*
 name|ErrMsg
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// setWritable - When adding to a block of code, the JIT may need
@@ -384,7 +386,7 @@ name|string
 operator|*
 name|ErrMsg
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// setRangeExecutable - Mark the page containing a range of addresses

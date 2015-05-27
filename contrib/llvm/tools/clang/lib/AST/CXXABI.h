@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_CXXABI_H
+name|LLVM_CLANG_LIB_AST_CXXABI_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_CXXABI_H
+name|LLVM_CLANG_LIB_AST_CXXABI_H
 end_define
 
 begin_include
@@ -151,15 +151,6 @@ expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// Creates an instance of a C++ ABI class.
-name|CXXABI
-modifier|*
-name|CreateARMCXXABI
-parameter_list|(
-name|ASTContext
-modifier|&
-name|Ctx
-parameter_list|)
-function_decl|;
 name|CXXABI
 modifier|*
 name|CreateItaniumCXXABI

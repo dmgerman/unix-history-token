@@ -719,6 +719,18 @@ operator|(
 literal|0
 operator|)
 return|;
+comment|/* 	 * Ignore the system syncher.  ZFS already commits async data 	 * at zfs_txg_timeout intervals. 	 */
+if|if
+condition|(
+name|waitfor
+operator|==
+name|MNT_LAZY
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|vfsp
@@ -6030,29 +6042,6 @@ argument_list|,
 name|osname
 argument_list|)
 expr_stmt|;
-comment|/* Grab extra reference. */
-name|VERIFY
-argument_list|(
-name|VFS_ROOT
-argument_list|(
-name|vfsp
-argument_list|,
-name|LK_EXCLUSIVE
-argument_list|,
-operator|&
-name|vp
-argument_list|)
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -7744,6 +7733,7 @@ literal|0
 condition|)
 else|#
 directive|else
+comment|/* !illumos */
 if|if
 condition|(
 operator|!
@@ -7795,7 +7785,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* ! illumos */
+comment|/* illumos */
 comment|/* 	 * If full-owner-access is enabled and delegated administration is 	 * turned on, we must set nosuid. 	 */
 if|if
 condition|(
@@ -8133,7 +8123,7 @@ argument_list|()
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * Add an extra VFS_HOLD on our parent vfs so that it can't 	 * disappear due to a forced unmount. 	 */
 if|if
 condition|(
@@ -8162,7 +8152,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
 name|out
 label|:
 return|return
@@ -8422,7 +8411,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ZFS_ENTER_NOERROR
+name|ZFS_ENTER
 argument_list|(
 name|zfsvfs
 argument_list|)
@@ -9080,7 +9069,7 @@ name|vflush
 argument_list|(
 name|vfsp
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 operator|(
 name|fflag
@@ -9133,7 +9122,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 operator|!
@@ -10662,7 +10651,7 @@ name|vfs_data
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 	 * If this is a snapshot, we have an extra VFS_HOLD on our parent 	 * from zfs_mount().  Release it here.  If we came through 	 * zfs_mountroot() instead, we didn't grab an extra hold, so 	 * skip the VFS_RELE for rootvfs. 	 */
 if|if
 condition|(
@@ -10687,7 +10676,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
 name|zfsvfs_free
 argument_list|(
 name|zfsvfs

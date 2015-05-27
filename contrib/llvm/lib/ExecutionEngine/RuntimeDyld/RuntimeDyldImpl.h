@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_RUNTIME_DYLD_IMPL_H
+name|LLVM_LIB_EXECUTIONENGINE_RUNTIMEDYLD_RUNTIMEDYLDIMPL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_RUNTIME_DYLD_IMPL_H
+name|LLVM_LIB_EXECUTIONENGINE_RUNTIMEDYLD_RUNTIMEDYLDIMPL_H
 end_define
 
 begin_include
@@ -86,13 +86,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/ObjectImage.h"
+file|"llvm/ExecutionEngine/RuntimeDyld.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ExecutionEngine/RuntimeDyld.h"
+file|"llvm/ExecutionEngine/RuntimeDyldChecker.h"
 end_include
 
 begin_include
@@ -146,13 +146,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/system_error.h"
+file|<map>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -175,9 +175,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|ObjectBuffer
-decl_stmt|;
 name|class
 name|Twine
 decl_stmt|;
@@ -246,10 +243,13 @@ argument_list|)
 operator|,
 name|LoadAddress
 argument_list|(
-operator|(
+name|reinterpret_cast
+operator|<
 name|uintptr_t
-operator|)
+operator|>
+operator|(
 name|address
+operator|)
 argument_list|)
 operator|,
 name|StubOffset
@@ -288,11 +288,29 @@ comment|/// used to make a relocation section relative instead of symbol relativ
 name|int64_t
 name|Addend
 decl_stmt|;
+struct|struct
+name|SectionPair
+block|{
+name|uint32_t
+name|SectionA
+decl_stmt|;
+name|uint32_t
+name|SectionB
+decl_stmt|;
+block|}
+struct|;
 comment|/// SymOffset - Section offset of the relocation entry's symbol (used for GOT
 comment|/// lookup).
+union|union
+block|{
 name|uint64_t
 name|SymOffset
 decl_stmt|;
+name|SectionPair
+name|Sections
+decl_stmt|;
+block|}
+union|;
 comment|/// True if this is a PCRel relocation (MachO specific).
 name|bool
 name|IsPCRel
@@ -445,6 +463,75 @@ argument_list|(
 argument|Size
 argument_list|)
 block|{}
+name|RelocationEntry
+argument_list|(
+argument|unsigned id
+argument_list|,
+argument|uint64_t offset
+argument_list|,
+argument|uint32_t type
+argument_list|,
+argument|int64_t addend
+argument_list|,
+argument|unsigned SectionA
+argument_list|,
+argument|uint64_t SectionAOffset
+argument_list|,
+argument|unsigned SectionB
+argument_list|,
+argument|uint64_t SectionBOffset
+argument_list|,
+argument|bool IsPCRel
+argument_list|,
+argument|unsigned Size
+argument_list|)
+operator|:
+name|SectionID
+argument_list|(
+name|id
+argument_list|)
+operator|,
+name|Offset
+argument_list|(
+name|offset
+argument_list|)
+operator|,
+name|RelType
+argument_list|(
+name|type
+argument_list|)
+operator|,
+name|Addend
+argument_list|(
+name|SectionAOffset
+operator|-
+name|SectionBOffset
+operator|+
+name|addend
+argument_list|)
+operator|,
+name|IsPCRel
+argument_list|(
+name|IsPCRel
+argument_list|)
+operator|,
+name|Size
+argument_list|(
+argument|Size
+argument_list|)
+block|{
+name|Sections
+operator|.
+name|SectionA
+operator|=
+name|SectionA
+block|;
+name|Sections
+operator|.
+name|SectionB
+operator|=
+name|SectionB
+block|;   }
 block|}
 empty_stmt|;
 name|class
@@ -486,7 +573,7 @@ argument_list|)
 operator|,
 name|SymbolName
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 specifier|inline
@@ -603,12 +690,27 @@ begin_decl_stmt
 name|class
 name|RuntimeDyldImpl
 block|{
+name|friend
+name|class
+name|RuntimeDyld
+operator|::
+name|LoadedObjectInfo
+expr_stmt|;
+name|friend
+name|class
+name|RuntimeDyldCheckerImpl
+decl_stmt|;
 name|protected
 label|:
 comment|// The MemoryManager to load objects into.
 name|RTDyldMemoryManager
 modifier|*
 name|MemMgr
+decl_stmt|;
+comment|// Attached RuntimeDyldChecker instance. Null if no instance attached.
+name|RuntimeDyldCheckerImpl
+modifier|*
+name|Checker
 decl_stmt|;
 comment|// A list of all sections emitted by the dynamic linker.  These sections are
 comment|// referenced in the code by means of their index in this list - SectionID.
@@ -746,6 +848,11 @@ expr_stmt|;
 name|bool
 name|IsTargetLittleEndian
 decl_stmt|;
+comment|// True if all sections should be passed to the memory manager, false if only
+comment|// sections containing relocations should be. Defaults to 'false'.
+name|bool
+name|ProcessAllSections
+decl_stmt|;
 comment|// This mutex prevents simultaneously loading objects from two different
 comment|// threads.  This keeps us from having to protect individual data structures
 comment|// and guarantees that section allocation requests to the memory manager
@@ -810,10 +917,11 @@ return|;
 block|}
 name|uint64_t
 name|getSectionLoadAddress
-parameter_list|(
+argument_list|(
 name|unsigned
 name|SectionID
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 return|return
 name|Sections
@@ -827,10 +935,11 @@ block|}
 name|uint8_t
 modifier|*
 name|getSectionAddress
-parameter_list|(
+argument_list|(
 name|unsigned
 name|SectionID
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 return|return
 operator|(
@@ -860,11 +969,9 @@ if|if
 condition|(
 name|IsTargetLittleEndian
 condition|)
-name|Value
-operator|=
 name|sys
 operator|::
-name|SwapByteOrder
+name|swapByteOrder
 argument_list|(
 name|Value
 argument_list|)
@@ -907,11 +1014,9 @@ if|if
 condition|(
 name|IsTargetLittleEndian
 condition|)
-name|Value
-operator|=
 name|sys
 operator|::
-name|SwapByteOrder
+name|swapByteOrder
 argument_list|(
 name|Value
 argument_list|)
@@ -984,11 +1089,9 @@ if|if
 condition|(
 name|IsTargetLittleEndian
 condition|)
-name|Value
-operator|=
 name|sys
 operator|::
-name|SwapByteOrder
+name|swapByteOrder
 argument_list|(
 name|Value
 argument_list|)
@@ -1106,13 +1209,44 @@ operator|&
 literal|0xFF
 expr_stmt|;
 block|}
+comment|/// Endian-aware read Read the least significant Size bytes from Src.
+name|uint64_t
+name|readBytesUnaligned
+argument_list|(
+name|uint8_t
+operator|*
+name|Src
+argument_list|,
+name|unsigned
+name|Size
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Endian-aware write. Write the least significant Size bytes from Value to
+comment|/// Dst.
+name|void
+name|writeBytesUnaligned
+argument_list|(
+name|uint64_t
+name|Value
+argument_list|,
+name|uint8_t
+operator|*
+name|Dst
+argument_list|,
+name|unsigned
+name|Size
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Given the common symbols discovered in the object file, emit a
 comment|/// new section for them and update the symbol mappings in the object and
 comment|/// symbol table.
 name|void
 name|emitCommonSymbols
 parameter_list|(
-name|ObjectImage
+specifier|const
+name|ObjectFile
 modifier|&
 name|Obj
 parameter_list|,
@@ -1136,7 +1270,8 @@ comment|/// \return SectionID.
 name|unsigned
 name|emitSection
 parameter_list|(
-name|ObjectImage
+specifier|const
+name|ObjectFile
 modifier|&
 name|Obj
 parameter_list|,
@@ -1157,7 +1292,8 @@ comment|/// \return SectionID.
 name|unsigned
 name|findOrEmitSection
 parameter_list|(
-name|ObjectImage
+specifier|const
+name|ObjectFile
 modifier|&
 name|Obj
 parameter_list|,
@@ -1210,6 +1346,11 @@ parameter_list|(
 name|uint8_t
 modifier|*
 name|Addr
+parameter_list|,
+name|unsigned
+name|AbiVariant
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// \brief Resolves relocations from Relocs list with address from Value.
@@ -1243,30 +1384,28 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// \brief Parses the object file relocation and stores it to Relocations
-comment|///        or SymbolRelocations (this depends on the object file type).
+comment|/// \brief Parses one or more object file relocations (some object files use
+comment|///        relocation pairs) and stores it to Relocations or SymbolRelocations
+comment|///        (this depends on the object file type).
+comment|/// \return Iterator to the next relocation that needs to be parsed.
 name|virtual
-name|void
+name|relocation_iterator
 name|processRelocationRef
 parameter_list|(
 name|unsigned
 name|SectionID
 parameter_list|,
-name|RelocationRef
+name|relocation_iterator
 name|RelI
 parameter_list|,
-name|ObjectImage
+specifier|const
+name|ObjectFile
 modifier|&
 name|Obj
 parameter_list|,
 name|ObjSectionToIDMap
 modifier|&
 name|ObjSectionToID
-parameter_list|,
-specifier|const
-name|SymbolTableMap
-modifier|&
-name|Symbols
 parameter_list|,
 name|StubMap
 modifier|&
@@ -1293,16 +1432,63 @@ name|uint64_t
 name|Addr
 parameter_list|)
 block|{}
-name|virtual
-name|ObjectImage
-modifier|*
-name|createObjectImage
+comment|// \brief Compute an upper bound of the memory that is required to load all
+comment|// sections
+name|void
+name|computeTotalAllocSize
 parameter_list|(
-name|ObjectBuffer
-modifier|*
-name|InputBuffer
+specifier|const
+name|ObjectFile
+modifier|&
+name|Obj
+parameter_list|,
+name|uint64_t
+modifier|&
+name|CodeSize
+parameter_list|,
+name|uint64_t
+modifier|&
+name|DataSizeRO
+parameter_list|,
+name|uint64_t
+modifier|&
+name|DataSizeRW
 parameter_list|)
 function_decl|;
+comment|// \brief Compute the stub buffer size required for a section
+name|unsigned
+name|computeSectionStubBufSize
+parameter_list|(
+specifier|const
+name|ObjectFile
+modifier|&
+name|Obj
+parameter_list|,
+specifier|const
+name|SectionRef
+modifier|&
+name|Section
+parameter_list|)
+function_decl|;
+comment|// \brief Implementation of the generic part of the loadObject algorithm.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+operator|,
+name|unsigned
+operator|>
+name|loadObjectImpl
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|&
+name|Obj
+argument_list|)
+expr_stmt|;
 name|public
 label|:
 name|RuntimeDyldImpl
@@ -1317,32 +1503,84 @@ argument_list|(
 name|mm
 argument_list|)
 operator|,
+name|Checker
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|ProcessAllSections
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|HasError
 argument_list|(
 argument|false
 argument_list|)
-block|{}
+block|{   }
 name|virtual
 operator|~
 name|RuntimeDyldImpl
 argument_list|()
 expr_stmt|;
-name|ObjectImage
-modifier|*
-name|loadObject
-parameter_list|(
-name|ObjectBuffer
-modifier|*
-name|InputBuffer
-parameter_list|)
-function_decl|;
 name|void
+name|setProcessAllSections
+parameter_list|(
+name|bool
+name|ProcessAllSections
+parameter_list|)
+block|{
+name|this
+operator|->
+name|ProcessAllSections
+operator|=
+name|ProcessAllSections
+expr_stmt|;
+block|}
+name|void
+name|setRuntimeDyldChecker
+parameter_list|(
+name|RuntimeDyldCheckerImpl
+modifier|*
+name|Checker
+parameter_list|)
+block|{
+name|this
+operator|->
+name|Checker
+operator|=
+name|Checker
+expr_stmt|;
+block|}
+name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|RuntimeDyld
+operator|::
+name|LoadedObjectInfo
+operator|>
+name|loadObject
+argument_list|(
+specifier|const
+name|object
+operator|::
+name|ObjectFile
+operator|&
+name|Obj
+argument_list|)
+operator|=
+literal|0
+expr_stmt|;
+name|uint8_t
 modifier|*
 name|getSymbolAddress
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Name
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 comment|// FIXME: Just look up as a function for now. Overly simple of course.
 comment|// Work in progress.
@@ -1368,7 +1606,7 @@ name|end
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|SymbolLoc
 name|Loc
@@ -1392,10 +1630,11 @@ return|;
 block|}
 name|uint64_t
 name|getSymbolLoadAddress
-parameter_list|(
+argument_list|(
 name|StringRef
 name|Name
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 comment|// FIXME: Just look up as a function for now. Overly simple of course.
 comment|// Work in progress.
@@ -1499,12 +1738,12 @@ return|;
 block|}
 name|virtual
 name|bool
-name|isCompatibleFormat
+name|isCompatibleFile
 argument_list|(
 specifier|const
-name|ObjectBuffer
-operator|*
-name|Buffer
+name|ObjectFile
+operator|&
+name|Obj
 argument_list|)
 decl|const
 init|=
@@ -1524,6 +1763,11 @@ name|virtual
 name|void
 name|finalizeLoad
 parameter_list|(
+specifier|const
+name|ObjectFile
+modifier|&
+name|ObjImg
+parameter_list|,
 name|ObjSectionToIDMap
 modifier|&
 name|SectionMap

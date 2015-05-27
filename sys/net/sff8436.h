@@ -437,9 +437,14 @@ init|=
 literal|221
 block|,
 comment|/* Enhanced Options Indicates which 					* optional features are implemented 					* (if any) in the transceiver 					* (see Table 42) */
-name|SFF_8436_CC_EXT
+name|SFF_8636_BITRATE
 init|=
 literal|222
+block|,
+comment|/* Nominal bit rate per channel, units 					* of 250 Mbps */
+name|SFF_8436_CC_EXT
+init|=
+literal|223
 block|,
 comment|/* Check code for the Extended ID 					* Fields (bytes 192-222 incl) */
 name|SFF_8436_VENDOR_RSRVD_START

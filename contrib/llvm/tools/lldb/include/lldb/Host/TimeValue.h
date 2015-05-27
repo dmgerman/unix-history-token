@@ -65,41 +65,6 @@ directive|include
 file|<sys/time.h>
 end_include
 
-begin_comment
-comment|// BEGIN: MinGW work around
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|_STRUCT_TIMESPEC
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|HAVE_STRUCT_TIMESPEC
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<pthread.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// END: MinGW work around
-end_comment
-
 begin_endif
 endif|#
 directive|endif
@@ -152,6 +117,13 @@ name|uint64_t
 name|NanoSecPerMicroSec
 init|=
 literal|1000U
+decl_stmt|;
+specifier|static
+specifier|const
+name|uint64_t
+name|NanoSecPerMilliSec
+init|=
+literal|1000000UL
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|// Constructors and Destructors
@@ -321,6 +293,20 @@ name|NanoSecPerSec
 operator|)
 operator|/
 name|NanoSecPerMicroSec
+return|;
+block|}
+comment|/// Returns only the fractional portion of the TimeValue rounded down to the
+comment|/// nearest millisecond (divide by one million).
+comment|/// @brief Retrieve the milliseconds component;
+name|uint32_t
+name|milliseconds
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_nano_seconds
+operator|/
+name|NanoSecPerMilliSec
 return|;
 block|}
 name|protected

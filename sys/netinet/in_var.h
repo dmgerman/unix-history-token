@@ -15,6 +15,50 @@ directive|define
 name|_NETINET_IN_VAR_H_
 end_define
 
+begin_comment
+comment|/*  * Argument structure for SIOCAIFADDR.  */
+end_comment
+
+begin_struct
+struct|struct
+name|in_aliasreq
+block|{
+name|char
+name|ifra_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* if name, e.g. "en0" */
+name|struct
+name|sockaddr_in
+name|ifra_addr
+decl_stmt|;
+name|struct
+name|sockaddr_in
+name|ifra_broadaddr
+decl_stmt|;
+define|#
+directive|define
+name|ifra_dstaddr
+value|ifra_broadaddr
+name|struct
+name|sockaddr_in
+name|ifra_mask
+decl_stmt|;
+name|int
+name|ifra_vhid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -35,7 +79,7 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 struct_decl|;
 end_struct_decl
 
@@ -66,7 +110,7 @@ name|ii_llt
 decl_stmt|;
 comment|/* ARP state */
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|ii_igmp
 decl_stmt|;
@@ -80,20 +124,6 @@ comment|/* 224.0.0.1 membership */
 block|}
 struct|;
 end_struct
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|_WANT_IFADDR
-argument_list|)
-end_if
 
 begin_comment
 comment|/*  * Interface address, Internet version.  One of these structures  * is allocated for each Internet address on an interface.  * The ifaddr structure contains the protocol-independent part  * of the structure and is assumed to be first.  */
@@ -162,45 +192,6 @@ block|}
 struct|;
 end_struct
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_struct
-struct|struct
-name|in_aliasreq
-block|{
-name|char
-name|ifra_name
-index|[
-name|IFNAMSIZ
-index|]
-decl_stmt|;
-comment|/* if name, e.g. "en0" */
-name|struct
-name|sockaddr_in
-name|ifra_addr
-decl_stmt|;
-name|struct
-name|sockaddr_in
-name|ifra_broadaddr
-decl_stmt|;
-define|#
-directive|define
-name|ifra_dstaddr
-value|ifra_broadaddr
-name|struct
-name|sockaddr_in
-name|ifra_mask
-decl_stmt|;
-name|int
-name|ifra_vhid
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_comment
 comment|/*  * Given a pointer to an in_ifaddr (ifaddr),  * return a pointer to the addr as a sockaddr_in.  */
 end_comment
@@ -247,12 +238,6 @@ parameter_list|)
 define|\
 value|((ntohl((in).s_addr)& ~((struct in_ifaddr *)(ifa)->ia_subnetmask))
 end_define
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_decl_stmt
 specifier|extern
@@ -517,49 +502,6 @@ define|\
 value|do {									\ 	IN_IFADDR_RLOCK();						\ 	for ((ia) = TAILQ_FIRST(&V_in_ifaddrhead);			\ 	    (ia) != NULL&& (ia)->ia_ifp != (ifp);			\ 	    (ia) = TAILQ_NEXT((ia), ia_link))				\ 		continue;						\ 	if ((ia) != NULL)						\ 		ifa_ref(&(ia)->ia_ifa);					\ 	IN_IFADDR_RUNLOCK();						\ } while (0)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*  * IP datagram reassembly.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IPREASS_NHASH_LOG2
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPREASS_NHASH
-value|(1<< IPREASS_NHASH_LOG2)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPREASS_HMASK
-value|(IPREASS_NHASH - 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IPREASS_HASH
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-define|\
-value|(((((x)& 0xF) | ((((x)>> 8)& 0xF)<< 4)) ^ (y))& IPREASS_HMASK)
-end_define
-
 begin_comment
 comment|/*  * Legacy IPv4 IGMP per-link structure.  */
 end_comment
@@ -590,101 +532,6 @@ expr_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_comment
-comment|/*  * Per-interface IGMP router version information.  */
-end_comment
-
-begin_struct
-struct|struct
-name|igmp_ifinfo
-block|{
-name|LIST_ENTRY
-argument_list|(
-argument|igmp_ifinfo
-argument_list|)
-name|igi_link
-expr_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|igi_ifp
-decl_stmt|;
-comment|/* interface this instance belongs to */
-name|uint32_t
-name|igi_version
-decl_stmt|;
-comment|/* IGMPv3 Host Compatibility Mode */
-name|uint32_t
-name|igi_v1_timer
-decl_stmt|;
-comment|/* IGMPv1 Querier Present timer (s) */
-name|uint32_t
-name|igi_v2_timer
-decl_stmt|;
-comment|/* IGMPv2 Querier Present timer (s) */
-name|uint32_t
-name|igi_v3_timer
-decl_stmt|;
-comment|/* IGMPv3 General Query (interface) timer (s)*/
-name|uint32_t
-name|igi_flags
-decl_stmt|;
-comment|/* IGMP per-interface flags */
-name|uint32_t
-name|igi_rv
-decl_stmt|;
-comment|/* IGMPv3 Robustness Variable */
-name|uint32_t
-name|igi_qi
-decl_stmt|;
-comment|/* IGMPv3 Query Interval (s) */
-name|uint32_t
-name|igi_qri
-decl_stmt|;
-comment|/* IGMPv3 Query Response Interval (s) */
-name|uint32_t
-name|igi_uri
-decl_stmt|;
-comment|/* IGMPv3 Unsolicited Report Interval (s) */
-name|SLIST_HEAD
-argument_list|(
-argument_list|,
-argument|in_multi
-argument_list|)
-name|igi_relinmhead
-expr_stmt|;
-comment|/* released groups */
-name|struct
-name|ifqueue
-name|igi_gq
-decl_stmt|;
-comment|/* queue of general query responses */
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|IGIF_SILENT
-value|0x00000001
-end_define
-
-begin_comment
-comment|/* Do not use IGMP on this ifp */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IGIF_LOOPBACK
-value|0x00000002
-end_define
-
-begin_comment
-comment|/* Send IGMP reports to loopback */
-end_comment
 
 begin_comment
 comment|/*  * IPv4 multicast IGMP-layer source entry.  */
@@ -926,7 +773,7 @@ decl_stmt|;
 comment|/* reference count */
 comment|/* New fields for IGMPv3 follow. */
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|inm_igi
 decl_stmt|;
@@ -948,7 +795,7 @@ name|inm_nsrc
 decl_stmt|;
 comment|/* # of tree entries */
 name|struct
-name|ifqueue
+name|mbufq
 name|inm_scq
 decl_stmt|;
 comment|/* queue of pending 						 * state-change packets */
@@ -1105,12 +952,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_KERNEL
-end_ifdef
 
 begin_ifdef
 ifdef|#
@@ -1770,18 +1611,6 @@ name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|int	 in_rt_getifa(struct rt_addrinfo *, u_int fibnum); int	 in_rtioctl(u_long, caddr_t, u_int); int	 in_rtrequest1(int, struct rt_addrinfo *, struct rtentry **, u_int);
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

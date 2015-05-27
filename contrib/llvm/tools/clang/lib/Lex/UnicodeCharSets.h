@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_LEX_UNICODECHARSETS_H
+name|LLVM_CLANG_LIB_LEX_UNICODECHARSETS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_LEX_UNICODECHARSETS_H
+name|LLVM_CLANG_LIB_LEX_UNICODECHARSETS_H
 end_define
 
 begin_include
@@ -2466,7 +2466,7 @@ block|,
 block|{
 literal|0x0D60
 block|,
-literal|0x0D60
+literal|0x0D61
 block|}
 block|,
 comment|// Digits (11)

@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|XCOREINSTPRINTER_H
+name|LLVM_LIB_TARGET_XCORE_INSTPRINTER_XCOREINSTPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|XCOREINSTPRINTER_H
+name|LLVM_LIB_TARGET_XCORE_INSTPRINTER_XCOREINSTPRINTER_H
 end_define
 
 begin_include
@@ -138,7 +138,6 @@ argument_list|(
 argument|unsigned RegNo
 argument_list|)
 block|;
-name|virtual
 name|void
 name|printRegName
 argument_list|(
@@ -147,8 +146,8 @@ argument_list|,
 argument|unsigned RegNo
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|printInst
 argument_list|(
@@ -158,6 +157,7 @@ argument|raw_ostream&O
 argument_list|,
 argument|StringRef Annot
 argument_list|)
+name|override
 block|;
 name|private
 operator|:

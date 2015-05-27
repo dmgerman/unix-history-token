@@ -95,7 +95,7 @@ name|long_interval
 decl_stmt|;
 comment|/* use if signal> threshold */
 name|struct
-name|os_time
+name|os_reltime
 name|last_bgscan
 decl_stmt|;
 block|}
@@ -302,7 +302,7 @@ name|short_scan_count
 operator|--
 expr_stmt|;
 block|}
-name|os_get_time
+name|os_get_reltime
 argument_list|(
 operator|&
 name|data
@@ -678,7 +678,7 @@ name|NULL
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This function is called immediately after an association, so it is 	 * reasonable to assume that a scan was completed recently. This makes 	 * us skip an immediate new scan in cases where the current signal 	 * level is below the bgscan threshold. 	 */
-name|os_get_time
+name|os_get_reltime
 argument_list|(
 operator|&
 name|data
@@ -859,7 +859,7 @@ init|=
 literal|0
 decl_stmt|;
 name|struct
-name|os_time
+name|os_reltime
 name|now
 decl_stmt|;
 if|if
@@ -926,7 +926,7 @@ name|data
 operator|->
 name|short_interval
 expr_stmt|;
-name|os_get_time
+name|os_get_reltime
 argument_list|(
 operator|&
 name|now
@@ -1071,7 +1071,7 @@ name|above
 condition|)
 block|{
 comment|/* 		 * Signal dropped further 4 dB. Request a new scan if we have 		 * not yet scanned in a while. 		 */
-name|os_get_time
+name|os_get_reltime
 argument_list|(
 operator|&
 name|now

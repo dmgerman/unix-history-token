@@ -9684,7 +9684,7 @@ return|;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 operator|(

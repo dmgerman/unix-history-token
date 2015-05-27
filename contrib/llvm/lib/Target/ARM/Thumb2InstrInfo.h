@@ -50,20 +50,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|THUMB2INSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_ARM_THUMB2INSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|THUMB2INSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_ARM_THUMB2INSTRINFO_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"ARM.h"
-end_include
 
 begin_include
 include|#
@@ -114,6 +108,7 @@ argument_list|(
 argument|MCInst&NopInst
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Return the non-pre/post incrementing version of 'Opc'. Return 0
 comment|// if there is not such an opcode.
@@ -123,6 +118,7 @@ argument_list|(
 argument|unsigned Opc
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|ReplaceTailWithBranchTo
@@ -132,6 +128,7 @@ argument_list|,
 argument|MachineBasicBlock *NewDest
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isLegalToSplitMBBAt
@@ -141,6 +138,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator MBBI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|copyPhysReg
@@ -158,6 +156,7 @@ argument_list|,
 argument|bool KillSrc
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|storeRegToStackSlot
@@ -177,6 +176,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|loadRegFromStackSlot
@@ -194,6 +194,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getRegisterInfo - TargetInstrInfo is a superset of MRegister info.  As
 comment|/// such, whenever a client has an instance of instruction info, it should
@@ -205,13 +206,25 @@ operator|&
 name|getRegisterInfo
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|RI
 return|;
 block|}
-expr|}
-block|;
+name|private
+operator|:
+name|void
+name|expandLoadStackGuard
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|Reloc::Model RM
+argument_list|)
+specifier|const
+name|override
+block|; }
+decl_stmt|;
 comment|/// getITInstrPredicate - Valid only in Thumb2 mode. This function is identical
 comment|/// to llvm::getInstrPredicate except it returns AL for conditional branch
 comment|/// instructions which are "predicated", but are not in IT blocks.
@@ -229,17 +242,14 @@ name|unsigned
 operator|&
 name|PredReg
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// THUMB2INSTRUCTIONINFO_H
-end_comment
 
 end_unit
 

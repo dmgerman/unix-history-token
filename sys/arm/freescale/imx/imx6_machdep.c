@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/platform.h>
+file|<machine/platformvar.h>
 end_include
 
 begin_include
@@ -117,6 +117,12 @@ begin_include
 include|#
 directive|include
 file|<dev/ofw/openfirm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"platform_if.h"
 end_include
 
 begin_decl_stmt
@@ -246,10 +252,12 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|vm_offset_t
-name|platform_lastaddr
+name|imx6_lastaddr
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 return|return
@@ -262,10 +270,12 @@ block|}
 end_function
 
 begin_function
-name|void
-name|platform_probe_and_attach
+specifier|static
+name|int
+name|imx6_attach
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 comment|/* Inform the MPCore timer driver that its clock is variable. */
@@ -274,23 +284,21 @@ argument_list|(
 name|ARM_TMR_FREQUENCY_VARIES
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|platform_gpio_init
+name|imx6_late_init
 parameter_list|(
-name|void
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-name|void
-name|platform_late_init
-parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 comment|/* Cache the gpio1 node handle for imx6_decode_fdt() workaround code. */
@@ -312,10 +320,12 @@ comment|/*  * Set up static device mappings.  *  * This attempts to cover the mo
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|platform_devmap_init
+name|imx6_devmap_init
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 specifier|const
@@ -623,6 +633,94 @@ unit|static void  imx6_early_putc(int c) { 	volatile uint32_t * UART_STAT_REG = 
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|platform_method_t
+name|imx6_methods
+index|[]
+init|=
+block|{
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_attach
+argument_list|,
+name|imx6_attach
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_lastaddr
+argument_list|,
+name|imx6_lastaddr
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_devmap_init
+argument_list|,
+name|imx6_devmap_init
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_late_init
+argument_list|,
+name|imx6_late_init
+argument_list|)
+block|,
+name|PLATFORMMETHOD_END
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|FDT_PLATFORM_DEF2
+argument_list|(
+name|imx6
+argument_list|,
+name|imx6s
+argument_list|,
+literal|"i.MX6 Solo"
+argument_list|,
+literal|0
+argument_list|,
+literal|"fsl,imx6s"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|FDT_PLATFORM_DEF2
+argument_list|(
+name|imx6
+argument_list|,
+name|imx6d
+argument_list|,
+literal|"i.MX6 Dual"
+argument_list|,
+literal|0
+argument_list|,
+literal|"fsl,imx6d"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|FDT_PLATFORM_DEF2
+argument_list|(
+name|imx6
+argument_list|,
+name|imx6q
+argument_list|,
+literal|"i.MX6 Quad"
+argument_list|,
+literal|0
+argument_list|,
+literal|"fsl,imx6q"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: prompt.c,v 1.14 2009/03/31 17:38:27 christos Exp $  */
+comment|/*	$NetBSD: prompt.c,v 1.20 2011/07/29 15:16:33 christos Exp $	*/
 end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_if
 if|#
@@ -19,15 +29,30 @@ name|SCCSID
 argument_list|)
 end_if
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)prompt.c	8.1 (Berkeley) 6/4/93"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)prompt.c	8.1 (Berkeley) 6/4/93";
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: prompt.c,v 1.20 2011/07/29 15:16:33 christos Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -59,12 +84,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sys.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -76,7 +95,7 @@ end_include
 
 begin_function_decl
 name|private
-name|char
+name|Char
 modifier|*
 name|prompt_default
 parameter_list|(
@@ -88,7 +107,7 @@ end_function_decl
 
 begin_function_decl
 name|private
-name|char
+name|Char
 modifier|*
 name|prompt_default_r
 parameter_list|(
@@ -102,21 +121,26 @@ begin_comment
 comment|/* prompt_default():  *	Just a default prompt, in case the user did not provide one  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|private
-name|char
+name|Char
 modifier|*
 comment|/*ARGSUSED*/
 name|prompt_default
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-name|__unused
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 specifier|static
-name|char
+name|Char
 name|a
 index|[
 literal|3
@@ -131,32 +155,35 @@ literal|'\0'
 block|}
 decl_stmt|;
 return|return
-operator|(
 name|a
-operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* prompt_default_r():  *	Just a default rprompt, in case the user did not provide one  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|private
-name|char
+name|Char
 modifier|*
 comment|/*ARGSUSED*/
 name|prompt_default_r
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-name|__unused
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{
 specifier|static
-name|char
+name|Char
 name|a
 index|[
 literal|1
@@ -167,15 +194,13 @@ literal|'\0'
 block|}
 decl_stmt|;
 return|return
-operator|(
 name|a
-operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* prompt_print():  *	Print the prompt and update the prompt position.  *	We use an array of integers in case we want to pass  * 	literal escape sequences in the prompt and we want a  *	bit to flag them  */
+comment|/* prompt_print():  *	Print the prompt and update the prompt position.  */
 end_comment
 
 begin_function
@@ -195,7 +220,7 @@ name|el_prompt_t
 modifier|*
 name|elp
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 name|p
 decl_stmt|;
@@ -225,8 +250,12 @@ name|el
 operator|->
 name|el_rprompt
 expr_stmt|;
-for|for
-control|(
+if|if
+condition|(
+name|elp
+operator|->
+name|p_wide
+condition|)
 name|p
 operator|=
 call|(
@@ -238,6 +267,38 @@ call|)
 argument_list|(
 name|el
 argument_list|)
+expr_stmt|;
+else|else
+name|p
+operator|=
+name|ct_decode_string
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|void
+operator|*
+operator|)
+call|(
+modifier|*
+name|elp
+operator|->
+name|p_func
+call|)
+argument_list|(
+name|el
+argument_list|)
+argument_list|,
+operator|&
+name|el
+operator|->
+name|el_scratch
+argument_list|)
+expr_stmt|;
+for|for
+control|(
 init|;
 operator|*
 name|p
@@ -267,7 +328,7 @@ if|if
 condition|(
 name|ignore
 condition|)
-name|term__putc
+name|terminal__putc
 argument_list|(
 name|el
 argument_list|,
@@ -414,19 +475,24 @@ begin_comment
 comment|/* prompt_end():  *	Clean up the prompt stuff  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|protected
 name|void
 comment|/*ARGSUSED*/
 name|prompt_end
-parameter_list|(
+argument_list|(
 name|EditLine
-modifier|*
+operator|*
 name|el
-name|__unused
-parameter_list|)
+name|__attribute__
+argument_list|(
+operator|(
+name|__unused__
+operator|)
+argument_list|)
+argument_list|)
 block|{ }
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* prompt_set():  *	Install a prompt printing function  */
@@ -444,11 +510,14 @@ parameter_list|,
 name|el_pfunc_t
 name|prf
 parameter_list|,
-name|char
+name|Char
 name|c
 parameter_list|,
 name|int
 name|op
+parameter_list|,
+name|int
+name|wide
 parameter_list|)
 block|{
 name|el_prompt_t
@@ -512,12 +581,14 @@ name|prompt_default_r
 expr_stmt|;
 block|}
 else|else
+block|{
 name|p
 operator|->
 name|p_func
 operator|=
 name|prf
 expr_stmt|;
+block|}
 name|p
 operator|->
 name|p_ignore
@@ -539,6 +610,12 @@ operator|.
 name|h
 operator|=
 literal|0
+expr_stmt|;
+name|p
+operator|->
+name|p_wide
+operator|=
+name|wide
 expr_stmt|;
 return|return
 literal|0
@@ -563,7 +640,7 @@ name|el_pfunc_t
 modifier|*
 name|prf
 parameter_list|,
-name|char
+name|Char
 modifier|*
 name|c
 parameter_list|,
@@ -606,13 +683,15 @@ name|el
 operator|->
 name|el_rprompt
 expr_stmt|;
+if|if
+condition|(
+name|prf
+condition|)
 operator|*
 name|prf
 operator|=
-name|el
+name|p
 operator|->
-name|el_rprompt
-operator|.
 name|p_func
 expr_stmt|;
 if|if

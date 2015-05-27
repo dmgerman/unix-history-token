@@ -345,7 +345,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|run_debug
@@ -1283,7 +1283,7 @@ name|RUN_DEV
 argument_list|(
 name|MELCO
 argument_list|,
-name|RT2870_1
+name|WLIUCG300HP
 argument_list|)
 block|,
 name|RUN_DEV
@@ -1326,6 +1326,13 @@ argument_list|(
 name|MELCO
 argument_list|,
 name|WLIUCGNM
+argument_list|)
+block|,
+name|RUN_DEV
+argument_list|(
+name|MELCO
+argument_list|,
+name|WLIUCG300HPV1
 argument_list|)
 block|,
 name|RUN_DEV

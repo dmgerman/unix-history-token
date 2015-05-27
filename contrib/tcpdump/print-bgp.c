@@ -3,6 +3,12 @@ begin_comment
 comment|/*  * Copyright (C) 1999 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Extensively modified by Hannes Gredler (hannes@juniper.net) for more  * complete BGP support.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -14,29 +20,6 @@ include|#
 directive|include
 file|"config.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-bgp.c,v 1.118 2007-12-07 15:54:52 hannes Exp $"
-decl_stmt|;
-end_decl_stmt
 
 begin_endif
 endif|#
@@ -70,12 +53,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"decode_prefix.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"addrtoname.h"
 end_include
 
@@ -83,12 +60,6 @@ begin_include
 include|#
 directive|include
 file|"extract.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"bgp.h"
 end_include
 
 begin_include
@@ -107,16 +78,16 @@ begin_struct
 struct|struct
 name|bgp
 block|{
-name|u_int8_t
+name|uint8_t
 name|bgp_marker
 index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|bgp_len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bgp_type
 decl_stmt|;
 block|}
@@ -171,6 +142,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_msg_values
@@ -220,31 +192,31 @@ begin_struct
 struct|struct
 name|bgp_open
 block|{
-name|u_int8_t
+name|uint8_t
 name|bgpo_marker
 index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|bgpo_len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bgpo_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bgpo_version
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|bgpo_myas
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|bgpo_holdtime
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|bgpo_id
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bgpo_optlen
 decl_stmt|;
 comment|/* options should follow */
@@ -267,10 +239,10 @@ begin_struct
 struct|struct
 name|bgp_opt
 block|{
-name|u_int8_t
+name|uint8_t
 name|bgpopt_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bgpopt_len
 decl_stmt|;
 comment|/* variable length */
@@ -304,22 +276,22 @@ begin_struct
 struct|struct
 name|bgp_notification
 block|{
-name|u_int8_t
+name|uint8_t
 name|bgpn_marker
 index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|bgpn_len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bgpn_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bgpn_major
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bgpn_minor
 decl_stmt|;
 block|}
@@ -341,30 +313,30 @@ begin_struct
 struct|struct
 name|bgp_route_refresh
 block|{
-name|u_int8_t
+name|uint8_t
 name|bgp_marker
 index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|afi
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* the compiler messes this structure up               */
-name|u_int8_t
+name|uint8_t
 name|res
 decl_stmt|;
 comment|/* when doing misaligned sequences of int8 and int16   */
-name|u_int8_t
+name|uint8_t
 name|safi
 decl_stmt|;
 comment|/* afi should be int16 - so we have to access it using */
@@ -614,6 +586,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_attr_values
@@ -807,6 +780,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_as_path_segment_open_values
@@ -848,6 +822,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_as_path_segment_close_values
@@ -903,6 +878,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_opt_values
@@ -997,6 +973,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_capcode_values
@@ -1105,6 +1082,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_notify_major_values
@@ -1175,6 +1153,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_notify_minor_cease_values
@@ -1234,6 +1213,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_notify_minor_msg_values
@@ -1269,6 +1249,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_notify_minor_open_values
@@ -1328,6 +1309,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_notify_minor_update_values
@@ -1411,6 +1393,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_notify_minor_cap_values
@@ -1452,6 +1435,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_origin_values
@@ -1536,6 +1520,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_pmsi_tunnel_values
@@ -1595,6 +1580,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_pmsi_flag_values
@@ -1748,6 +1734,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_safi_values
@@ -2142,6 +2129,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_extd_comm_flag_values
@@ -2171,6 +2159,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_extd_comm_subtype_values
@@ -2425,6 +2414,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_extd_comm_ospf_rtype_values
@@ -2494,7 +2484,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * as_printf  *  * Convert an AS number into a string and return string pointer.  *  * Bepending on bflag is set or not, AS number is converted into ASDOT notation  * or plain number notation.  *  */
+comment|/*  * as_printf  *  * Convert an AS number into a string and return string pointer.  *  * Depending on bflag is set or not, AS number is converted into ASDOT notation  * or plain number notation.  *  */
 end_comment
 
 begin_function
@@ -2503,6 +2493,10 @@ name|char
 modifier|*
 name|as_printf
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|char
 modifier|*
 name|str
@@ -2517,7 +2511,9 @@ block|{
 if|if
 condition|(
 operator|!
-name|bflag
+name|ndo
+operator|->
+name|ndo_bflag
 operator|||
 name|asnum
 operator|<=
@@ -2576,6 +2572,10 @@ begin_function
 name|int
 name|decode_prefix4
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2601,7 +2601,7 @@ name|plen
 decl_stmt|,
 name|plenbytes
 decl_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|pptr
 index|[
@@ -2658,7 +2658,7 @@ operator|)
 operator|/
 literal|8
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -2733,6 +2733,8 @@ literal|"%s/%d"
 argument_list|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -2769,6 +2771,10 @@ specifier|static
 name|int
 name|decode_labeled_prefix4
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2795,7 +2801,7 @@ decl_stmt|,
 name|plenbytes
 decl_stmt|;
 comment|/* prefix length and label = 4 bytes */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -2871,7 +2877,7 @@ operator|)
 operator|/
 literal|8
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -2947,6 +2953,8 @@ literal|"%s/%d, label:%u %s"
 argument_list|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -3014,6 +3022,10 @@ name|char
 modifier|*
 name|bgp_vpn_ip_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -3057,7 +3069,7 @@ literal|3
 operator|)
 case|:
 comment|/* 32 */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -3084,6 +3096,8 @@ literal|"%s"
 argument_list|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|)
 argument_list|)
@@ -3104,7 +3118,7 @@ literal|3
 operator|)
 case|:
 comment|/* 128 */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -3131,6 +3145,8 @@ literal|"%s"
 argument_list|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|)
 argument_list|)
@@ -3188,6 +3204,10 @@ specifier|static
 name|int
 name|bgp_vpn_sg_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -3201,7 +3221,7 @@ name|u_int
 name|buflen
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|addr_length
 decl_stmt|;
 name|u_int
@@ -3214,7 +3234,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Source address length, encoded in bits */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -3231,7 +3251,7 @@ name|pptr
 operator|++
 expr_stmt|;
 comment|/* Source address */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -3281,6 +3301,8 @@ literal|", Source %s"
 argument_list|,
 name|bgp_vpn_ip_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|,
 name|addr_length
@@ -3297,7 +3319,7 @@ operator|)
 expr_stmt|;
 block|}
 comment|/* Group address length, encoded in bits */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -3314,7 +3336,7 @@ name|pptr
 operator|++
 expr_stmt|;
 comment|/* Group address */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -3364,6 +3386,8 @@ literal|", Group %s"
 argument_list|,
 name|bgp_vpn_ip_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|,
 name|addr_length
@@ -3398,6 +3422,10 @@ name|char
 modifier|*
 name|bgp_vpn_rd_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -3576,6 +3604,8 @@ literal|"%s:%u (%u.%u.%u.%u:%u)"
 argument_list|,
 name|as_printf
 argument_list|(
+name|ndo
+argument_list|,
 name|astostr
 argument_list|,
 sizeof|sizeof
@@ -3683,6 +3713,10 @@ specifier|static
 name|int
 name|decode_rt_routing_info
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -3696,7 +3730,7 @@ name|u_int
 name|buflen
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|route_target
 index|[
 literal|8
@@ -3705,7 +3739,7 @@ decl_stmt|;
 name|u_int
 name|plen
 decl_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|pptr
 index|[
@@ -3769,7 +3803,7 @@ name|route_target
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -3857,6 +3891,8 @@ literal|"origin AS: %s, route target %s"
 argument_list|,
 name|as_printf
 argument_list|(
+name|ndo
+argument_list|,
 name|astostr
 argument_list|,
 sizeof|sizeof
@@ -3874,6 +3910,8 @@ argument_list|)
 argument_list|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -3908,6 +3946,10 @@ specifier|static
 name|int
 name|decode_labeled_vpn_prefix4
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -3928,7 +3970,7 @@ decl_stmt|;
 name|u_int
 name|plen
 decl_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|pptr
 index|[
@@ -3990,7 +4032,7 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -4079,6 +4121,8 @@ literal|"RD: %s, %s/%d, label:%u %s"
 argument_list|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 operator|+
 literal|4
@@ -4086,6 +4130,8 @@ argument_list|)
 argument_list|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -4159,6 +4205,10 @@ specifier|static
 name|int
 name|decode_mdt_vpn_nlri
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -4182,7 +4232,7 @@ name|u_char
 modifier|*
 name|vpn_ip
 decl_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|pptr
 index|[
@@ -4198,7 +4248,7 @@ name|pptr
 operator|!=
 name|MDT_VPN_NLRI_LEN
 operator|*
-name|NBBY
+literal|8
 condition|)
 return|return
 operator|-
@@ -4208,7 +4258,7 @@ name|pptr
 operator|++
 expr_stmt|;
 comment|/* RD */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -4227,7 +4277,7 @@ operator|+=
 literal|8
 expr_stmt|;
 comment|/* IPv4 address */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -4254,7 +4304,7 @@ name|in_addr
 argument_list|)
 expr_stmt|;
 comment|/* MDT Group Address */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -4278,16 +4328,22 @@ literal|"RD: %s, VPN IP Address: %s, MC Group Address: %s"
 argument_list|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|rd
 argument_list|)
 argument_list|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|vpn_ip
 argument_list|)
 argument_list|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|)
 argument_list|)
@@ -4357,6 +4413,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bgp_multicast_vpn_route_type_values
@@ -4413,6 +4470,10 @@ specifier|static
 name|int
 name|decode_multicast_vpn
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -4426,7 +4487,7 @@ name|u_int
 name|buflen
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|route_type
 decl_stmt|,
 name|route_length
@@ -4438,7 +4499,7 @@ decl_stmt|;
 name|u_int
 name|offset
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -4490,7 +4551,7 @@ block|{
 case|case
 name|BGP_MULTICAST_VPN_ROUTE_TYPE_INTRA_AS_I_PMSI
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -4521,11 +4582,15 @@ literal|", RD: %s, Originator %s"
 argument_list|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|)
 argument_list|,
 name|bgp_vpn_ip_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 operator|+
 name|BGP_VPN_RD_LEN
@@ -4544,7 +4609,7 @@ break|break;
 case|case
 name|BGP_MULTICAST_VPN_ROUTE_TYPE_INTER_AS_I_PMSI
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -4577,11 +4642,15 @@ literal|", RD: %s, Source-AS %s"
 argument_list|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|)
 argument_list|,
 name|as_printf
 argument_list|(
+name|ndo
+argument_list|,
 name|astostr
 argument_list|,
 sizeof|sizeof
@@ -4602,7 +4671,7 @@ break|break;
 case|case
 name|BGP_MULTICAST_VPN_ROUTE_TYPE_S_PMSI
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -4633,6 +4702,8 @@ literal|", RD: %s"
 argument_list|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|)
 argument_list|)
@@ -4645,6 +4716,8 @@ name|sg_length
 operator|=
 name|bgp_vpn_sg_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|,
 name|buf
@@ -4658,7 +4731,7 @@ name|route_length
 operator|-
 name|sg_length
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -4689,6 +4762,8 @@ literal|", Originator %s"
 argument_list|,
 name|bgp_vpn_ip_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|,
 name|addr_length
@@ -4701,7 +4776,7 @@ break|break;
 case|case
 name|BGP_MULTICAST_VPN_ROUTE_TYPE_SOURCE_ACTIVE
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -4732,6 +4807,8 @@ literal|", RD: %s"
 argument_list|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|)
 argument_list|)
@@ -4742,6 +4819,8 @@ name|BGP_VPN_RD_LEN
 expr_stmt|;
 name|bgp_vpn_sg_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|,
 name|buf
@@ -4757,7 +4836,7 @@ comment|/* fall through */
 case|case
 name|BGP_MULTICAST_VPN_ROUTE_TYPE_SOURCE_TREE_JOIN
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -4788,11 +4867,15 @@ literal|", RD: %s, Source-AS %s"
 argument_list|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|)
 argument_list|,
 name|as_printf
 argument_list|(
+name|ndo
+argument_list|,
 name|astostr
 argument_list|,
 sizeof|sizeof
@@ -4815,6 +4898,8 @@ name|BGP_VPN_RD_LEN
 expr_stmt|;
 name|bgp_vpn_sg_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|,
 name|buf
@@ -4868,6 +4953,10 @@ specifier|static
 name|int
 name|decode_labeled_vpn_l2
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -4894,7 +4983,7 @@ name|tlv_len
 decl_stmt|,
 name|ttlv_len
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -4928,7 +5017,7 @@ literal|12
 condition|)
 block|{
 comment|/* assume AD-only with RD, BGPNH */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -4957,12 +5046,16 @@ literal|"RD: %s, BGPNH: %s"
 argument_list|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|)
 argument_list|,
-comment|/* need something like getname() here */
+comment|/* need something like getname(ndo, ) here */
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 operator|+
 literal|8
@@ -5000,7 +5093,7 @@ condition|)
 block|{
 comment|/* assume old format */
 comment|/* RD, ID, LBLKOFF, LBLBASE */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -5029,6 +5122,8 @@ literal|"RD: %s, CE-ID: %u, Label-Block Offset: %u, Label Base %u"
 argument_list|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|)
 argument_list|,
@@ -5092,7 +5187,7 @@ return|return
 operator|-
 literal|1
 return|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -5179,7 +5274,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|pptr
 index|[
@@ -5302,6 +5397,10 @@ begin_function
 name|int
 name|decode_prefix6
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -5327,7 +5426,7 @@ name|plen
 decl_stmt|,
 name|plenbytes
 decl_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|pd
 index|[
@@ -5384,7 +5483,7 @@ operator|)
 operator|/
 literal|8
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pd
 index|[
@@ -5454,6 +5553,8 @@ literal|"%s/%d"
 argument_list|,
 name|getname6
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -5490,6 +5591,10 @@ specifier|static
 name|int
 name|decode_labeled_prefix6
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -5516,7 +5621,7 @@ decl_stmt|,
 name|plenbytes
 decl_stmt|;
 comment|/* prefix length and label = 4 bytes */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -5591,7 +5696,7 @@ operator|)
 operator|/
 literal|8
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -5657,6 +5762,8 @@ literal|"%s/%d, label:%u %s"
 argument_list|,
 name|getname6
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -5719,6 +5826,10 @@ specifier|static
 name|int
 name|decode_labeled_vpn_prefix6
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -5739,7 +5850,7 @@ decl_stmt|;
 name|u_int
 name|plen
 decl_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|pptr
 index|[
@@ -5801,7 +5912,7 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -5885,6 +5996,8 @@ literal|"RD: %s, %s/%d, label:%u %s"
 argument_list|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 operator|+
 literal|4
@@ -5892,6 +6005,8 @@ argument_list|)
 argument_list|,
 name|getname6
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -5959,6 +6074,10 @@ specifier|static
 name|int
 name|decode_clnp_prefix
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -5972,7 +6091,7 @@ name|u_int
 name|buflen
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|addr
 index|[
 literal|19
@@ -5981,7 +6100,7 @@ decl_stmt|;
 name|u_int
 name|plen
 decl_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|pptr
 index|[
@@ -6020,7 +6139,7 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -6140,6 +6259,10 @@ specifier|static
 name|int
 name|decode_labeled_vpn_clnp_prefix
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -6153,7 +6276,7 @@ name|u_int
 name|buflen
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 name|addr
 index|[
 literal|19
@@ -6162,7 +6285,7 @@ decl_stmt|;
 name|u_int
 name|plen
 decl_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|pptr
 index|[
@@ -6224,7 +6347,7 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -6306,6 +6429,8 @@ literal|"RD: %s, %s/%d, label:%u %s"
 argument_list|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 operator|+
 literal|4
@@ -6382,7 +6507,11 @@ specifier|static
 name|int
 name|bgp_attr_get_as_size
 parameter_list|(
-name|u_int8_t
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
+name|uint8_t
 name|bgpa_type
 parameter_list|,
 specifier|const
@@ -6423,7 +6552,7 @@ operator|+
 name|len
 condition|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|tptr
 index|[
@@ -6453,7 +6582,7 @@ goto|goto
 name|trunc
 goto|;
 block|}
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|tptr
 index|[
@@ -6501,6 +6630,10 @@ specifier|static
 name|int
 name|bgp_attr_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|u_int
 name|atype
 parameter_list|,
@@ -6516,10 +6649,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|af
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|safi
 decl_stmt|,
 name|snpa
@@ -6532,7 +6665,7 @@ comment|/* copy buffer for bandwidth values */
 name|float
 name|f
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|i
 decl_stmt|;
 block|}
@@ -6588,23 +6721,30 @@ name|len
 operator|!=
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|tptr
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_origin_values
@@ -6623,6 +6763,7 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6641,9 +6782,13 @@ operator|%
 literal|2
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6654,9 +6799,13 @@ operator|!
 name|len
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"empty"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6666,6 +6815,8 @@ name|as_size
 operator|=
 name|bgp_attr_get_as_size
 argument_list|(
+name|ndo
+argument_list|,
 name|atype
 argument_list|,
 name|pptr
@@ -6682,7 +6833,7 @@ operator|+
 name|len
 condition|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|tptr
 index|[
@@ -6690,10 +6841,13 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_as_path_segment_open_values
@@ -6712,6 +6866,7 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -6734,7 +6889,7 @@ operator|+=
 name|as_size
 control|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -6746,12 +6901,17 @@ argument_list|,
 name|as_size
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s "
-argument_list|,
+operator|,
 name|as_printf
 argument_list|(
+name|ndo
+argument_list|,
 name|astostr
 argument_list|,
 sizeof|sizeof
@@ -6785,10 +6945,11 @@ name|i
 index|]
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|tptr
 index|[
@@ -6796,10 +6957,13 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_as_path_segment_close_values
@@ -6818,9 +6982,10 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|tptr
 index|[
@@ -6850,14 +7015,18 @@ name|len
 operator|!=
 literal|4
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -6867,14 +7036,20 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s"
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6891,14 +7066,18 @@ name|len
 operator|!=
 literal|4
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -6908,14 +7087,18 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6929,9 +7112,13 @@ name|len
 operator|!=
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6950,14 +7137,18 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -6974,12 +7165,17 @@ operator|==
 literal|6
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" AS #%s, origin %s"
-argument_list|,
+operator|,
 name|as_printf
 argument_list|(
+name|ndo
+argument_list|,
 name|astostr
 argument_list|,
 sizeof|sizeof
@@ -6992,24 +7188,32 @@ argument_list|(
 name|tptr
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|2
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" AS #%s, origin %s"
-argument_list|,
+operator|,
 name|as_printf
 argument_list|(
+name|ndo
+argument_list|,
 name|astostr
 argument_list|,
 sizeof|sizeof
@@ -7022,13 +7226,16 @@ argument_list|(
 name|tptr
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7043,14 +7250,18 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -7060,12 +7271,17 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" AS #%s, origin %s"
-argument_list|,
+operator|,
 name|as_printf
 argument_list|(
+name|ndo
+argument_list|,
 name|astostr
 argument_list|,
 sizeof|sizeof
@@ -7078,13 +7294,16 @@ argument_list|(
 name|tptr
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7098,9 +7317,13 @@ operator|%
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7112,10 +7335,10 @@ operator|>
 literal|0
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|comm
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -7140,35 +7363,50 @@ block|{
 case|case
 name|BGP_COMMUNITY_NO_EXPORT
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" NO_EXPORT"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|BGP_COMMUNITY_NO_ADVERT
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" NO_ADVERTISE"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|BGP_COMMUNITY_NO_EXPORT_SUBCONFED
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" NO_EXPORT_SUBCONFED"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%u:%u%s"
-argument_list|,
+operator|,
 operator|(
 name|comm
 operator|>>
@@ -7176,11 +7414,11 @@ literal|16
 operator|)
 operator|&
 literal|0xffff
-argument_list|,
+operator|,
 name|comm
 operator|&
 literal|0xffff
-argument_list|,
+operator|,
 operator|(
 name|tlen
 operator|>
@@ -7190,6 +7428,7 @@ condition|?
 literal|", "
 else|:
 literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7214,14 +7453,18 @@ operator|!=
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -7231,14 +7474,20 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s"
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7252,9 +7501,13 @@ operator|%
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7266,7 +7519,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -7276,15 +7529,20 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s%s"
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|tlen
 operator|>
@@ -7294,6 +7552,7 @@ condition|?
 literal|", "
 else|:
 literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -7309,7 +7568,7 @@ break|break;
 case|case
 name|BGPTYPE_MP_REACH_NLRI
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -7333,10 +7592,13 @@ index|[
 literal|2
 index|]
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    AFI: %s (%u), %sSAFI: %s (%u)"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|af_values
@@ -7352,9 +7614,9 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|af
-argument_list|,
+operator|,
 operator|(
 name|safi
 operator|>
@@ -7364,7 +7626,7 @@ condition|?
 literal|"vendor specific "
 else|:
 literal|""
-argument_list|,
+operator|,
 comment|/* 128 is meanwhile wellknown */
 name|tok2strbuf
 argument_list|(
@@ -7381,8 +7643,9 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|safi
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -7644,7 +7907,7 @@ operator|)
 case|:
 break|break;
 default|default:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -7654,23 +7917,31 @@ argument_list|,
 name|tlen
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    no AFI %u / SAFI %u decoder"
-argument_list|,
+operator|,
 name|af
-argument_list|,
+operator|,
 name|safi
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t    "
@@ -7687,7 +7958,7 @@ name|tptr
 operator|+=
 literal|3
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|tptr
 index|[
@@ -7719,9 +7990,13 @@ name|nnh
 init|=
 literal|0
 decl_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    nexthop: "
+operator|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -7739,9 +8014,13 @@ operator|>
 literal|0
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", "
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7831,9 +8110,13 @@ name|in_addr
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -7843,7 +8126,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -7857,14 +8140,20 @@ name|in_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s"
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -7930,9 +8219,13 @@ name|BGP_VPN_RD_LEN
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -7942,7 +8235,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -7958,21 +8251,29 @@ operator|+
 name|BGP_VPN_RD_LEN
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"RD: %s, %s"
-argument_list|,
+operator|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 name|BGP_VPN_RD_LEN
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -8054,9 +8355,13 @@ name|in6_addr
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -8066,7 +8371,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -8080,14 +8385,20 @@ name|in6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s"
-argument_list|,
+operator|,
 name|getname6
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -8153,9 +8464,13 @@ name|BGP_VPN_RD_LEN
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -8165,7 +8480,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -8181,21 +8496,29 @@ operator|+
 name|BGP_VPN_RD_LEN
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"RD: %s, %s"
-argument_list|,
+operator|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 name|getname6
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 name|BGP_VPN_RD_LEN
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -8276,9 +8599,13 @@ name|in_addr
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -8288,7 +8615,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -8302,14 +8629,20 @@ name|in_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s"
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -8361,7 +8694,7 @@ operator||
 name|SAFNUM_UNIMULTICAST
 operator|)
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -8371,16 +8704,20 @@ argument_list|,
 name|tlen
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s"
-argument_list|,
+operator|,
 name|isonsap_string
 argument_list|(
 name|tptr
 argument_list|,
 name|tlen
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -8428,9 +8765,13 @@ operator|+
 literal|1
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlen
@@ -8440,7 +8781,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -8450,15 +8791,20 @@ argument_list|,
 name|tlen
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"RD: %s, %s"
-argument_list|,
+operator|,
 name|bgp_vpn_rd_print
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 name|isonsap_string
 argument_list|(
 name|tptr
@@ -8469,6 +8815,7 @@ name|tlen
 operator|-
 name|BGP_VPN_RD_LEN
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* rfc986 mapped IPv4 address ? */
@@ -8483,18 +8830,24 @@ argument_list|)
 operator|==
 literal|0x47000601
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" = %s"
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 name|BGP_VPN_RD_LEN
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -8513,18 +8866,24 @@ argument_list|)
 operator|==
 literal|0x350000
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" = %s"
-argument_list|,
+operator|,
 name|getname6
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 name|BGP_VPN_RD_LEN
 operator|+
 literal|3
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -8540,7 +8899,7 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -8550,23 +8909,31 @@ argument_list|,
 name|tlen
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"no AFI %u/SAFI %u decoder"
-argument_list|,
+operator|,
 name|af
-argument_list|,
+operator|,
 name|safi
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t    "
@@ -8589,18 +8956,22 @@ break|break;
 block|}
 block|}
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", nh-length: %u"
-argument_list|,
+operator|,
 name|nhlen
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
 operator|+=
 name|tlen
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|tptr
 index|[
@@ -8623,11 +8994,15 @@ condition|(
 name|snpa
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    %u SNPA"
-argument_list|,
+operator|,
 name|snpa
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -8642,7 +9017,7 @@ name|snpa
 operator|--
 control|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|tptr
 index|[
@@ -8650,14 +9025,18 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %d bytes"
-argument_list|,
+operator|,
 name|tptr
 index|[
 literal|0
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -8673,9 +9052,13 @@ block|}
 block|}
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", no SNPA"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -8732,6 +9115,8 @@ name|advance
 operator|=
 name|decode_prefix4
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|len
@@ -8751,9 +9136,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -8778,11 +9167,15 @@ condition|)
 break|break;
 comment|/* bytes left, but not enough */
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8799,6 +9192,8 @@ name|advance
 operator|=
 name|decode_labeled_prefix4
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|len
@@ -8818,9 +9213,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -8845,11 +9244,15 @@ condition|)
 break|break;
 comment|/* bytes left, but not enough */
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8884,6 +9287,8 @@ name|advance
 operator|=
 name|decode_labeled_vpn_prefix4
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -8901,9 +9306,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -8918,11 +9327,15 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8939,6 +9352,8 @@ name|advance
 operator|=
 name|decode_rt_routing_info
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -8956,9 +9371,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -8973,11 +9392,15 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9004,6 +9427,8 @@ name|advance
 operator|=
 name|decode_multicast_vpn
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -9021,9 +9446,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9038,11 +9467,15 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9059,6 +9492,8 @@ name|advance
 operator|=
 name|decode_mdt_vpn_nlri
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -9076,9 +9511,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9093,11 +9532,15 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9135,6 +9578,8 @@ name|advance
 operator|=
 name|decode_prefix6
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|len
@@ -9154,9 +9599,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9181,11 +9630,15 @@ condition|)
 break|break;
 comment|/* bytes left, but not enough */
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9202,6 +9655,8 @@ name|advance
 operator|=
 name|decode_labeled_prefix6
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|len
@@ -9221,9 +9676,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9248,11 +9707,15 @@ condition|)
 break|break;
 comment|/* bytes left, but not enough */
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9287,6 +9750,8 @@ name|advance
 operator|=
 name|decode_labeled_vpn_prefix6
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -9304,9 +9769,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9321,11 +9790,15 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9371,6 +9844,8 @@ name|advance
 operator|=
 name|decode_labeled_vpn_l2
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -9388,9 +9863,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9405,11 +9884,15 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9444,6 +9927,8 @@ name|advance
 operator|=
 name|decode_clnp_prefix
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -9461,9 +9946,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9478,11 +9967,15 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9517,6 +10010,8 @@ name|advance
 operator|=
 name|decode_labeled_vpn_clnp_prefix
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -9534,9 +10029,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9551,16 +10050,20 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -9568,23 +10071,31 @@ argument_list|,
 name|tlen
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    no AFI %u / SAFI %u decoder"
-argument_list|,
+operator|,
 name|af
-argument_list|,
+operator|,
 name|safi
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t    "
@@ -9622,7 +10133,7 @@ break|break;
 case|case
 name|BGPTYPE_MP_UNREACH_NLRI
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -9646,10 +10157,13 @@ index|[
 literal|2
 index|]
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    AFI: %s (%u), %sSAFI: %s (%u)"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|af_values
@@ -9665,9 +10179,9 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|af
-argument_list|,
+operator|,
 operator|(
 name|safi
 operator|>
@@ -9677,7 +10191,7 @@ condition|?
 literal|"vendor specific "
 else|:
 literal|""
-argument_list|,
+operator|,
 comment|/* 128 is meanwhile wellknown */
 name|tok2strbuf
 argument_list|(
@@ -9694,8 +10208,9 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|safi
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -9704,9 +10219,13 @@ name|len
 operator|==
 name|BGP_MP_NLRI_MINSIZE
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      End-of-Rib Marker (empty NLRI)"
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -9766,6 +10285,8 @@ name|advance
 operator|=
 name|decode_prefix4
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|len
@@ -9785,9 +10306,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9812,11 +10337,15 @@ condition|)
 break|break;
 comment|/* bytes left, but not enough */
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9833,6 +10362,8 @@ name|advance
 operator|=
 name|decode_labeled_prefix4
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|len
@@ -9852,9 +10383,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9879,11 +10414,15 @@ condition|)
 break|break;
 comment|/* bytes left, but not enough */
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9918,6 +10457,8 @@ name|advance
 operator|=
 name|decode_labeled_vpn_prefix4
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -9935,9 +10476,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -9952,11 +10497,15 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9994,6 +10543,8 @@ name|advance
 operator|=
 name|decode_prefix6
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|len
@@ -10013,9 +10564,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -10040,11 +10595,15 @@ condition|)
 break|break;
 comment|/* bytes left, but not enough */
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10061,6 +10620,8 @@ name|advance
 operator|=
 name|decode_labeled_prefix6
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|len
@@ -10080,9 +10641,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -10107,11 +10672,15 @@ condition|)
 break|break;
 comment|/* bytes left, but not enough */
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10146,6 +10715,8 @@ name|advance
 operator|=
 name|decode_labeled_vpn_prefix6
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -10163,9 +10734,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -10180,11 +10755,15 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10230,6 +10809,8 @@ name|advance
 operator|=
 name|decode_labeled_vpn_l2
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -10247,9 +10828,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -10264,11 +10849,15 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10303,6 +10892,8 @@ name|advance
 operator|=
 name|decode_clnp_prefix
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -10320,9 +10911,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -10337,11 +10932,15 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10376,6 +10975,8 @@ name|advance
 operator|=
 name|decode_labeled_vpn_clnp_prefix
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -10393,9 +10994,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -10410,11 +11015,15 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10431,6 +11040,8 @@ name|advance
 operator|=
 name|decode_mdt_vpn_nlri
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -10448,9 +11059,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -10465,11 +11080,15 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10496,6 +11115,8 @@ name|advance
 operator|=
 name|decode_multicast_vpn
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|buf
@@ -10513,9 +11134,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -10530,16 +11155,20 @@ goto|goto
 name|trunc
 goto|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 operator|(
@@ -10551,23 +11180,31 @@ argument_list|,
 name|tlen
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"no AFI %u / SAFI %u decoder"
-argument_list|,
+operator|,
 name|af
-argument_list|,
+operator|,
 name|safi
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|-
 literal|3
@@ -10612,9 +11249,13 @@ operator|%
 literal|8
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"invalid len"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10626,10 +11267,10 @@ operator|>
 literal|0
 condition|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|extd_comm
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -10646,10 +11287,13 @@ argument_list|(
 name|tptr
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    %s (0x%04x), Flags [%s]"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_extd_comm_subtype_values
@@ -10665,9 +11309,9 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|extd_comm
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|bgp_extd_comm_flag_values
@@ -10676,9 +11320,10 @@ literal|"none"
 argument_list|,
 name|extd_comm
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 operator|(
@@ -10704,30 +11349,36 @@ case|:
 case|case
 name|BGP_EXT_COM_L2VPN_RT_0
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": %u:%u (= %s)"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
 operator|+
 literal|2
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
 literal|4
 argument_list|)
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10743,23 +11394,29 @@ case|:
 case|case
 name|BGP_EXT_COM_VRF_RT_IMP
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": %s:%u"
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|2
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
 operator|+
 literal|6
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10769,12 +11426,17 @@ case|:
 case|case
 name|BGP_EXT_COM_RO_2
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": %s:%u"
-argument_list|,
+operator|,
 name|as_printf
 argument_list|(
+name|ndo
+argument_list|,
 name|astostr
 argument_list|,
 sizeof|sizeof
@@ -10789,13 +11451,14 @@ operator|+
 literal|2
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
 operator|+
 literal|6
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10813,10 +11476,13 @@ operator|+
 literal|2
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": bandwidth: %.3f Mbps"
-argument_list|,
+operator|,
 name|bw
 operator|.
 name|f
@@ -10824,6 +11490,7 @@ operator|*
 literal|8
 operator|/
 literal|1000000
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10845,16 +11512,22 @@ case|:
 case|case
 name|BGP_EXT_COM_OSPF_RID2
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s"
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|2
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -10864,17 +11537,22 @@ case|:
 case|case
 name|BGP_EXT_COM_OSPF_RTYPE2
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": area:%s, router-type:%s, metric-type:%s%s"
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|2
 argument_list|)
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_extd_comm_ospf_rtype_values
@@ -10895,7 +11573,7 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 operator|*
 operator|(
@@ -10910,7 +11588,7 @@ condition|?
 literal|"E2"
 else|:
 literal|""
-argument_list|,
+operator|,
 operator|(
 operator|(
 operator|*
@@ -10938,16 +11616,20 @@ condition|?
 literal|"E1"
 else|:
 literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|BGP_EXT_COM_L2INFO
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": %s Control Flags [0x%02x]:MTU %u"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|l2vpn_encaps_values
@@ -10968,41 +11650,46 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 operator|*
 operator|(
 name|tptr
 operator|+
 literal|3
 operator|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|BGP_EXT_COM_SOURCE_AS
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": AS %u"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
 operator|+
 literal|2
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -11012,6 +11699,8 @@ argument_list|)
 expr_stmt|;
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t      "
@@ -11035,7 +11724,7 @@ case|case
 name|BGPTYPE_PMSI_TUNNEL
 case|:
 block|{
-name|u_int8_t
+name|uint8_t
 name|tunnel_type
 decl_stmt|,
 name|flags
@@ -11058,7 +11747,7 @@ name|tlen
 operator|=
 name|len
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -11068,10 +11757,13 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Tunnel-type %s (%u), Flags [%s], MPLS Label %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|bgp_pmsi_tunnel_values
@@ -11080,9 +11772,9 @@ literal|"Unknown"
 argument_list|,
 name|tunnel_type
 argument_list|)
-argument_list|,
+operator|,
 name|tunnel_type
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|bgp_pmsi_flag_values
@@ -11091,7 +11783,7 @@ literal|"none"
 argument_list|,
 name|flags
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_24BITS
 argument_list|(
 name|tptr
@@ -11100,6 +11792,7 @@ literal|2
 argument_list|)
 operator|>>
 literal|4
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -11122,7 +11815,7 @@ comment|/* fall through */
 case|case
 name|BGP_PMSI_TUNNEL_PIM_BIDIR
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -11132,28 +11825,36 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Sender %s, P-Group %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|BGP_PMSI_TUNNEL_PIM_SSM
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -11163,28 +11864,36 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Root-Node %s, P-Group %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|BGP_PMSI_TUNNEL_INGRESS
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -11194,14 +11903,20 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Tunnel-Endpoint %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -11212,7 +11927,7 @@ comment|/* fall through */
 case|case
 name|BGP_PMSI_TUNNEL_LDP_MP2MP
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -11222,28 +11937,34 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Root-Node %s, LSP-ID 0x%08x"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|BGP_PMSI_TUNNEL_RSVP_P2MP
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -11253,34 +11974,44 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Extended-Tunnel-ID %s, P2MP-ID 0x%08x"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
 block|{
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t      "
@@ -11295,7 +12026,7 @@ block|}
 case|case
 name|BGPTYPE_ATTR_SET
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -11314,12 +12045,17 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Origin AS: %s"
-argument_list|,
+operator|,
 name|as_printf
 argument_list|(
+name|ndo
+argument_list|,
 name|astostr
 argument_list|,
 sizeof|sizeof
@@ -11332,6 +12068,7 @@ argument_list|(
 name|tptr
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -11356,7 +12093,7 @@ name|alenlen
 decl_stmt|,
 name|alen
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -11406,7 +12143,7 @@ argument_list|,
 name|tptr
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -11442,10 +12179,13 @@ name|len
 operator|-=
 name|alenlen
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s (%u), length: %u"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_attr_values
@@ -11461,10 +12201,11 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|atype
-argument_list|,
+operator|,
 name|alen
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -11472,10 +12213,13 @@ condition|(
 name|aflags
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Flags [%s%s%s%s"
-argument_list|,
+operator|,
 name|aflags
 operator|&
 literal|0x80
@@ -11483,7 +12227,7 @@ condition|?
 literal|"O"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|aflags
 operator|&
 literal|0x40
@@ -11491,7 +12235,7 @@ condition|?
 literal|"T"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|aflags
 operator|&
 literal|0x20
@@ -11499,7 +12243,7 @@ condition|?
 literal|"P"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|aflags
 operator|&
 literal|0x10
@@ -11507,6 +12251,7 @@ condition|?
 literal|"E"
 else|:
 literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -11515,18 +12260,26 @@ name|aflags
 operator|&
 literal|0xf
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"+%x"
-argument_list|,
+operator|,
 name|aflags
 operator|&
 literal|0xf
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"]: "
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -11536,6 +12289,8 @@ condition|(
 operator|!
 name|bgp_attr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|atype
 argument_list|,
 name|tptr
@@ -11557,7 +12312,7 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|pptr
@@ -11565,22 +12320,30 @@ argument_list|,
 name|len
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    no Attribute %u decoder"
-argument_list|,
+operator|,
 name|atype
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* we have no decoder for the attribute */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|,
 literal|"\n\t    "
@@ -11592,7 +12355,9 @@ break|break;
 block|}
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 operator|&&
@@ -11600,7 +12365,7 @@ name|len
 condition|)
 block|{
 comment|/* omit zero length attributes*/
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|pptr
@@ -11610,6 +12375,8 @@ argument_list|)
 expr_stmt|;
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|,
 literal|"\n\t    "
@@ -11634,6 +12401,10 @@ specifier|static
 name|void
 name|bgp_capabilities_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -11676,7 +12447,7 @@ operator|<
 name|caps_len
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|opt
 index|[
@@ -11706,10 +12477,13 @@ name|tcap_len
 operator|=
 name|cap_len
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s (%u), length: %u"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_capcode_values
@@ -11725,13 +12499,14 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|cap_type
-argument_list|,
+operator|,
 name|cap_len
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|opt
 index|[
@@ -11751,10 +12526,13 @@ block|{
 case|case
 name|BGP_CAPCODE_MP
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\tAFI %s (%u), SAFI %s (%u)"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|af_values
@@ -11777,7 +12555,7 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|opt
@@ -11786,7 +12564,7 @@ name|i
 operator|+
 literal|2
 argument_list|)
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_safi_values
@@ -11807,23 +12585,27 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|opt
 index|[
 name|i
 operator|+
 literal|5
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|BGP_CAPCODE_RESTART
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\tRestart Flags: [%s], Restart Time %us"
-argument_list|,
+operator|,
 operator|(
 operator|(
 name|opt
@@ -11840,7 +12622,7 @@ condition|?
 literal|"R"
 else|:
 literal|"none"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|opt
@@ -11851,6 +12633,7 @@ literal|2
 argument_list|)
 operator|&
 literal|0xfff
+operator|)
 argument_list|)
 expr_stmt|;
 name|tcap_len
@@ -11868,10 +12651,13 @@ operator|>=
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t  AFI %s (%u), SAFI %s (%u), Forwarding state preserved: %s"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|af_values
@@ -11894,7 +12680,7 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|opt
@@ -11903,7 +12689,7 @@ name|i
 operator|+
 name|cap_offset
 argument_list|)
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_safi_values
@@ -11926,7 +12712,7 @@ argument_list|(
 name|tokbuf2
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|opt
 index|[
 name|i
@@ -11935,7 +12721,7 @@ name|cap_offset
 operator|+
 literal|2
 index|]
-argument_list|,
+operator|,
 operator|(
 operator|(
 name|opt
@@ -11954,6 +12740,7 @@ condition|?
 literal|"yes"
 else|:
 literal|"no"
+operator|)
 argument_list|)
 expr_stmt|;
 name|tcap_len
@@ -11984,12 +12771,17 @@ operator|==
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t 4 Byte AS %s"
-argument_list|,
+operator|,
 name|as_printf
 argument_list|(
+name|ndo
+argument_list|,
 name|astostr
 argument_list|,
 sizeof|sizeof
@@ -12006,26 +12798,35 @@ operator|+
 literal|2
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\tno decoder for Capability %u"
-argument_list|,
+operator|,
 name|cap_type
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|opt
 index|[
@@ -12043,7 +12844,9 @@ break|break;
 block|}
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 operator|&&
@@ -12054,6 +12857,8 @@ condition|)
 block|{
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|opt
 index|[
@@ -12078,9 +12883,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|BGP]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -12091,6 +12900,10 @@ specifier|static
 name|void
 name|bgp_open_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -12122,7 +12935,7 @@ index|[
 name|TOKBUFSIZE
 index|]
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|dat
 index|[
@@ -12142,21 +12955,30 @@ argument_list|,
 name|BGP_OPEN_SIZE
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Version %d, "
-argument_list|,
+operator|,
 name|bgpo
 operator|.
 name|bgpo_version
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"my AS %s, "
-argument_list|,
+operator|,
 name|as_printf
 argument_list|(
+name|ndo
+argument_list|,
 name|astostr
 argument_list|,
 sizeof|sizeof
@@ -12171,26 +12993,36 @@ operator|.
 name|bgpo_myas
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Holdtime %us, "
-argument_list|,
+operator|,
 name|ntohs
 argument_list|(
 name|bgpo
 operator|.
 name|bgpo_holdtime
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ID %s"
-argument_list|,
+operator|,
 name|getname
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -12200,15 +13032,20 @@ name|bgpo
 operator|.
 name|bgpo_id
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Optional parameters, length: %u"
-argument_list|,
+operator|,
 name|bgpo
 operator|.
 name|bgpo_optlen
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* some little sanity checking */
@@ -12255,7 +13092,7 @@ operator|.
 name|bgpo_optlen
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|opt
 index|[
@@ -12294,25 +13131,32 @@ operator|.
 name|bgpo_optlen
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t     Option %d, length: %u"
-argument_list|,
+operator|,
 name|bgpopt
 operator|.
 name|bgpopt_type
-argument_list|,
+operator|,
 name|bgpopt
 operator|.
 name|bgpopt_len
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Option %s (%u), length: %u"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_opt_values
@@ -12330,14 +13174,15 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|bgpopt
 operator|.
 name|bgpopt_type
-argument_list|,
+operator|,
 name|bgpopt
 operator|.
 name|bgpopt_len
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* now let's decode the options we know*/
@@ -12353,6 +13198,8 @@ name|BGP_OPT_CAP
 case|:
 name|bgp_capabilities_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|opt
 index|[
@@ -12371,13 +13218,17 @@ case|case
 name|BGP_OPT_AUTH
 case|:
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      no decoder for option %u"
-argument_list|,
+operator|,
 name|bgpopt
 operator|.
 name|bgpopt_type
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -12394,9 +13245,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|BGP]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -12407,6 +13262,10 @@ specifier|static
 name|void
 name|bgp_update_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -12456,7 +13315,7 @@ name|wpfx
 decl_stmt|;
 endif|#
 directive|endif
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|dat
 index|[
@@ -12497,7 +13356,7 @@ operator|-=
 name|BGP_SIZE
 expr_stmt|;
 comment|/* Unfeasible routes */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|p
 index|[
@@ -12537,7 +13396,7 @@ name|withdrawn_routes_len
 condition|)
 block|{
 comment|/* 		 * Without keeping state from the original NLRI message, 		 * it's not possible to tell if this a v4 or v6 route, 		 * so only try to decode it if we're not v6 enabled. 	         */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|p
 index|[
@@ -12559,11 +13418,15 @@ goto|;
 ifdef|#
 directive|ifdef
 name|INET6
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Withdrawn routes: %d bytes"
-argument_list|,
+operator|,
 name|withdrawn_routes_len
+operator|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -12593,9 +13456,13 @@ name|withdrawn_routes_len
 operator|-=
 literal|2
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Withdrawn routes:"
+operator|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -12609,6 +13476,8 @@ name|wpfx
 operator|=
 name|decode_prefix4
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|withdrawn_routes_len
@@ -12629,9 +13498,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -12661,11 +13534,15 @@ goto|;
 comment|/* bytes left, but not enough */
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -12685,7 +13562,7 @@ block|}
 endif|#
 directive|endif
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|p
 index|[
@@ -12735,9 +13612,13 @@ literal|0
 condition|)
 block|{
 comment|/* No withdrawn routes, no path attributes, no NLRI */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  End-of-Rib Marker (empty NLRI)"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -12762,7 +13643,7 @@ name|alenlen
 decl_stmt|,
 name|alen
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|p
 index|[
@@ -12825,7 +13706,7 @@ argument_list|,
 name|p
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|p
 index|[
@@ -12874,10 +13755,13 @@ name|length
 operator|-=
 name|alenlen
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  %s (%u), length: %u"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_attr_values
@@ -12893,10 +13777,11 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|atype
-argument_list|,
+operator|,
 name|alen
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -12904,10 +13789,13 @@ condition|(
 name|aflags
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Flags [%s%s%s%s"
-argument_list|,
+operator|,
 name|aflags
 operator|&
 literal|0x80
@@ -12915,7 +13803,7 @@ condition|?
 literal|"O"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|aflags
 operator|&
 literal|0x40
@@ -12923,7 +13811,7 @@ condition|?
 literal|"T"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|aflags
 operator|&
 literal|0x20
@@ -12931,7 +13819,7 @@ condition|?
 literal|"P"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|aflags
 operator|&
 literal|0x10
@@ -12939,6 +13827,7 @@ condition|?
 literal|"E"
 else|:
 literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -12947,18 +13836,26 @@ name|aflags
 operator|&
 literal|0xf
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"+%x"
-argument_list|,
+operator|,
 name|aflags
 operator|&
 literal|0xf
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"]: "
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -12985,6 +13882,8 @@ condition|(
 operator|!
 name|bgp_attr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|atype
 argument_list|,
 name|p
@@ -13015,9 +13914,13 @@ name|length
 condition|)
 block|{
 comment|/* 		 * XXX - what if they're using the "Advertisement of 		 * Multiple Paths in BGP" feature: 		 * 		 * https://datatracker.ietf.org/doc/draft-ietf-idr-add-paths/ 		 * 		 * http://tools.ietf.org/html/draft-ietf-idr-add-paths-06 		 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Updated routes:"
+operator|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -13037,6 +13940,8 @@ name|i
 operator|=
 name|decode_prefix4
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -13057,9 +13962,13 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    (illegal prefix length)"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -13089,11 +13998,15 @@ goto|;
 comment|/* bytes left, but not enough */
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -13110,9 +14023,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|BGP]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -13123,6 +14040,10 @@ specifier|static
 name|void
 name|bgp_notification_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -13153,7 +14074,7 @@ index|[
 name|TOKBUFSIZE
 index|]
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|dat
 index|[
@@ -13181,10 +14102,13 @@ operator|<
 name|BGP_NOTIFICATION_SIZE
 condition|)
 return|return;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s (%u)"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_notify_major_values
@@ -13202,10 +14126,11 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|bgpn
 operator|.
 name|bgpn_major
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -13218,10 +14143,13 @@ block|{
 case|case
 name|BGP_NOTIFY_MAJOR_MSG
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", subcode %s (%u)"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_notify_minor_msg_values
@@ -13239,20 +14167,24 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|bgpn
 operator|.
 name|bgpn_minor
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|BGP_NOTIFY_MAJOR_OPEN
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", subcode %s (%u)"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_notify_minor_open_values
@@ -13270,20 +14202,24 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|bgpn
 operator|.
 name|bgpn_minor
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|BGP_NOTIFY_MAJOR_UPDATE
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", subcode %s (%u)"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_notify_minor_update_values
@@ -13301,20 +14237,24 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|bgpn
 operator|.
 name|bgpn_minor
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|BGP_NOTIFY_MAJOR_CAP
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" subcode %s (%u)"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_notify_minor_cap_values
@@ -13332,19 +14272,23 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|bgpn
 operator|.
 name|bgpn_minor
+operator|)
 argument_list|)
 expr_stmt|;
 case|case
 name|BGP_NOTIFY_MAJOR_CEASE
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", subcode %s (%u)"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_notify_minor_cease_values
@@ -13362,10 +14306,11 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|bgpn
 operator|.
 name|bgpn_minor
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* draft-ietf-idr-cease-subcode-02 mentions optionally 7 bytes              * for the maxprefix subtype, which may contain AFI, SAFI and MAXPREFIXES              */
@@ -13390,7 +14335,7 @@ name|dat
 operator|+
 name|BGP_NOTIFICATION_SIZE
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -13398,10 +14343,13 @@ argument_list|,
 literal|7
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", AFI %s (%u), SAFI %s (%u), Max Prefixes: %u"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|af_values
@@ -13420,12 +14368,12 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_safi_values
@@ -13446,20 +14394,21 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 operator|*
 operator|(
 name|tptr
 operator|+
 literal|2
 operator|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
 literal|3
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -13470,9 +14419,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|BGP]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -13483,6 +14436,10 @@ specifier|static
 name|void
 name|bgp_route_refresh_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -13510,7 +14467,7 @@ index|[
 name|TOKBUFSIZE
 index|]
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|pptr
 index|[
@@ -13538,10 +14495,13 @@ operator|*
 operator|)
 name|pptr
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  AFI %s (%u), SAFI %s (%u)"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|af_values
@@ -13564,7 +14524,7 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -13572,7 +14532,7 @@ name|bgp_route_refresh_header
 operator|->
 name|afi
 argument_list|)
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_safi_values
@@ -13590,20 +14550,23 @@ argument_list|(
 name|tokbuf2
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|bgp_route_refresh_header
 operator|->
 name|safi
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|pptr
@@ -13613,6 +14576,8 @@ argument_list|)
 expr_stmt|;
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|,
 literal|"\n\t  "
@@ -13624,9 +14589,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|BGP]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -13637,6 +14606,10 @@ specifier|static
 name|int
 name|bgp_header_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -13656,7 +14629,7 @@ index|[
 name|TOKBUFSIZE
 index|]
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|dat
 index|[
@@ -13676,10 +14649,13 @@ argument_list|,
 name|BGP_SIZE
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t%s Message (%u), length: %u"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_msg_values
@@ -13697,12 +14673,13 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|bgp
 operator|.
 name|bgp_type
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -13717,6 +14694,8 @@ name|BGP_OPEN
 case|:
 name|bgp_open_print
 argument_list|(
+name|ndo
+argument_list|,
 name|dat
 argument_list|,
 name|length
@@ -13728,6 +14707,8 @@ name|BGP_UPDATE
 case|:
 name|bgp_update_print
 argument_list|(
+name|ndo
+argument_list|,
 name|dat
 argument_list|,
 name|length
@@ -13739,6 +14720,8 @@ name|BGP_NOTIFICATION
 case|:
 name|bgp_notification_print
 argument_list|(
+name|ndo
+argument_list|,
 name|dat
 argument_list|,
 name|length
@@ -13754,6 +14737,8 @@ name|BGP_ROUTE_REFRESH
 case|:
 name|bgp_route_refresh_print
 argument_list|(
+name|ndo
+argument_list|,
 name|dat
 argument_list|,
 name|length
@@ -13762,7 +14747,7 @@ expr_stmt|;
 break|break;
 default|default:
 comment|/* we have no decoder for the BGP message */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|dat
@@ -13770,17 +14755,23 @@ argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  no Message %u decoder"
-argument_list|,
+operator|,
 name|bgp
 operator|.
 name|bgp_type
+operator|)
 argument_list|)
 expr_stmt|;
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|dat
 argument_list|,
 literal|"\n\t  "
@@ -13795,9 +14786,13 @@ literal|1
 return|;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|BGP]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -13810,6 +14805,10 @@ begin_function
 name|void
 name|bgp_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -13877,7 +14876,7 @@ name|struct
 name|bgp
 name|bgp
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|hlen
 decl_stmt|;
 name|char
@@ -13894,7 +14893,9 @@ name|length
 expr_stmt|;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|<
 name|dat
 operator|+
@@ -13902,18 +14903,26 @@ name|length
 condition|)
 name|ep
 operator|=
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": BGP, length: %u"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<
 literal|1
 condition|)
@@ -13937,7 +14946,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 name|p
 index|[
@@ -13966,7 +14975,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 name|p
 index|[
@@ -14003,7 +15012,7 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* found BGP header */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|p
 index|[
@@ -14030,9 +15039,13 @@ name|start
 operator|!=
 name|p
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|BGP]"
+operator|)
 argument_list|)
 expr_stmt|;
 name|hlen
@@ -14051,20 +15064,24 @@ operator|<
 name|BGP_SIZE
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n[|BGP Bogus header length %u< %u]"
-argument_list|,
+operator|,
 name|hlen
-argument_list|,
+operator|,
 name|BGP_SIZE
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 if|if
 condition|(
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 name|p
 index|[
@@ -14080,6 +15097,8 @@ condition|(
 operator|!
 name|bgp_header_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|hlen
@@ -14097,10 +15116,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n[|BGP %s]"
-argument_list|,
+operator|,
 name|tok2strbuf
 argument_list|(
 name|bgp_msg_values
@@ -14118,6 +15140,7 @@ argument_list|(
 name|tokbuf
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -14126,9 +15149,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|BGP]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -112,7 +112,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 literal|0
 argument_list|,
@@ -129,7 +129,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|INFINITY
 argument_list|,
@@ -162,7 +162,7 @@ expr_stmt|;
 comment|/* raise invalid if b is not a NaN */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|a
 argument_list|,
@@ -190,7 +190,7 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|fabs
 argument_list|(
@@ -211,7 +211,7 @@ return|;
 else|else
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|a
 argument_list|,
@@ -294,7 +294,7 @@ argument_list|)
 expr_stmt|;
 name|result
 operator|=
-name|cpack
+name|CMPLX
 argument_list|(
 name|t
 argument_list|,
@@ -331,7 +331,7 @@ argument_list|)
 expr_stmt|;
 name|result
 operator|=
-name|cpack
+name|CMPLX
 argument_list|(
 name|fabs
 argument_list|(

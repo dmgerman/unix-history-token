@@ -110,16 +110,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_var.h>
-end_include
-
-begin_comment
-comment|/* for struct ifaddr */
-end_comment
-
-begin_include
-include|#
-directive|include
 file|<netinet/in_var.h>
 end_include
 
@@ -2938,6 +2928,25 @@ literal|"-no_prefer_iface"
 argument_list|,
 operator|-
 name|ND6_IFF_NO_PREFER_IFACE
+argument_list|,
+name|setnd6flags
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
+literal|"no_dad"
+argument_list|,
+name|ND6_IFF_NO_DAD
+argument_list|,
+name|setnd6flags
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
+literal|"-no_dad"
+argument_list|,
+operator|-
+name|ND6_IFF_NO_DAD
 argument_list|,
 name|setnd6flags
 argument_list|)

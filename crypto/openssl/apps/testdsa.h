@@ -84,7 +84,7 @@ block|,
 literal|0xc2
 block|,
 literal|0xd2
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -225,7 +225,7 @@ block|,
 literal|0x6b
 block|,
 literal|0xc8
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -364,7 +364,7 @@ block|,
 literal|0x7D
 block|,
 literal|0x31
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -415,7 +415,7 @@ block|,
 literal|0x71
 block|,
 literal|0x8F
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -554,7 +554,7 @@ block|,
 literal|0x9D
 block|,
 literal|0x20
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -766,7 +766,7 @@ block|,
 literal|0x61
 block|,
 literal|0x18
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1300,7 +1300,7 @@ block|,
 literal|0xCD
 block|,
 literal|0x49
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1351,7 +1351,7 @@ block|,
 literal|0x65
 block|,
 literal|0x6F
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1618,7 +1618,7 @@ block|,
 literal|0x02
 block|,
 literal|0xB8
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1830,7 +1830,7 @@ block|,
 literal|0x91
 block|,
 literal|0xa7
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2353,7 +2353,7 @@ block|,
 literal|0xb7
 block|,
 literal|0xce
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2876,7 +2876,7 @@ block|,
 literal|0xCF
 block|,
 literal|0x9B
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -2927,7 +2927,7 @@ block|,
 literal|0x17
 block|,
 literal|0x1B
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -3450,7 +3450,7 @@ block|,
 literal|0xE5
 block|,
 literal|0x38
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

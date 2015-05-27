@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/AlignOf.h"
 end_include
 
@@ -129,8 +135,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// SmallVectorBase - This is all the non-templated stuff common to all
-comment|/// SmallVectors.
+comment|/// This is all the non-templated stuff common to all SmallVectors.
 name|class
 name|SmallVectorBase
 block|{
@@ -170,7 +175,7 @@ argument_list|(
 argument|(char*)FirstEl+Size
 argument_list|)
 block|{}
-comment|/// grow_pod - This is an implementation of the grow() method which only works
+comment|/// This is an implementation of the grow() method which only works
 comment|/// on POD-like data types and is out of line to reduce code duplication.
 name|void
 name|grow_pod
@@ -184,7 +189,7 @@ argument_list|)
 expr_stmt|;
 name|public
 label|:
-comment|/// size_in_bytes - This returns size()*sizeof(T).
+comment|/// This returns size()*sizeof(T).
 name|size_t
 name|size_in_bytes
 argument_list|()
@@ -255,10 +260,9 @@ operator|>
 expr|struct
 name|SmallVectorStorage
 expr_stmt|;
-comment|/// SmallVectorTemplateCommon - This is the part of SmallVectorTemplateBase
-comment|/// which does not depend on whether the type T is a POD. The extra dummy
-comment|/// template argument is used by ArrayRef to avoid unnecessarily requiring T
-comment|/// to be complete.
+comment|/// This is the part of SmallVectorTemplateBase which does not depend on whether
+comment|/// the type T is a POD. The extra dummy template argument is used by ArrayRef
+comment|/// to avoid unnecessarily requiring T to be complete.
 name|template
 operator|<
 name|typename
@@ -339,7 +343,7 @@ name|TSize
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// isSmall - Return true if this is a smallvector which has not had dynamic
+comment|/// Return true if this is a smallvector which has not had dynamic
 comment|/// memory allocated for it.
 name|bool
 name|isSmall
@@ -361,7 +365,7 @@ name|FirstEl
 operator|)
 return|;
 block|}
-comment|/// resetToSmall - Put this vector in a state of being small.
+comment|/// Put this vector in a state of being small.
 name|void
 name|resetToSmall
 parameter_list|()
@@ -624,8 +628,7 @@ name|T
 argument_list|)
 return|;
 block|}
-comment|/// capacity - Return the total number of elements in the currently allocated
-comment|/// buffer.
+comment|/// Return the total number of elements in the currently allocated buffer.
 name|size_t
 name|capacity
 argument_list|()
@@ -639,7 +642,7 @@ name|begin
 argument_list|()
 return|;
 block|}
-comment|/// data - Return a pointer to the vector's buffer, even if empty().
+comment|/// Return a pointer to the vector's buffer, even if empty().
 name|pointer
 name|data
 parameter_list|()
@@ -652,7 +655,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// data - Return a pointer to the vector's buffer, even if empty().
+comment|/// Return a pointer to the vector's buffer, even if empty().
 name|const_pointer
 name|data
 argument_list|()
@@ -670,18 +673,15 @@ name|reference
 name|operator
 function|[]
 parameter_list|(
-name|unsigned
+name|size_type
 name|idx
 parameter_list|)
 block|{
 name|assert
 argument_list|(
-name|begin
-argument_list|()
-operator|+
 name|idx
 operator|<
-name|end
+name|size
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -697,19 +697,16 @@ name|const_reference
 name|operator
 index|[]
 argument_list|(
-name|unsigned
+name|size_type
 name|idx
 argument_list|)
 decl|const
 block|{
 name|assert
 argument_list|(
-name|begin
-argument_list|()
-operator|+
 name|idx
 operator|<
-name|end
+name|size
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -876,7 +873,7 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-comment|/// move - Use move-assignment to move the range [I, E) onto the
+comment|/// Use move-assignment to move the range [I, E) onto the
 comment|/// objects starting with "Dest".  This is just<memory>'s
 comment|/// std::move, but not all stdlibs actually provide that.
 name|template
@@ -898,9 +895,6 @@ argument_list|,
 argument|It2 Dest
 argument_list|)
 block|{
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
 for|for
 control|(
 init|;
@@ -934,35 +928,9 @@ name|Dest
 return|;
 end_return
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_return
-return|return
-operator|::
-name|std
-operator|::
-name|copy
-argument_list|(
-name|I
-argument_list|,
-name|E
-argument_list|,
-name|Dest
-argument_list|)
-return|;
-end_return
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 unit|}
-comment|/// move_backward - Use move-assignment to move the range
+comment|/// Use move-assignment to move the range
 end_comment
 
 begin_comment
@@ -997,9 +965,6 @@ argument_list|,
 argument|It2 Dest
 argument_list|)
 block|{
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
 while|while
 condition|(
 name|I
@@ -1028,39 +993,13 @@ name|Dest
 return|;
 end_return
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_return
-return|return
-operator|::
-name|std
-operator|::
-name|copy_backward
-argument_list|(
-name|I
-argument_list|,
-name|E
-argument_list|,
-name|Dest
-argument_list|)
-return|;
-end_return
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 unit|}
-comment|/// uninitialized_move - Move the range [I, E) into the uninitialized
+comment|/// Move the range [I, E) into the uninitialized memory starting with "Dest",
 end_comment
 
 begin_comment
-comment|/// memory starting with "Dest", constructing elements as needed.
+comment|/// constructing elements as needed.
 end_comment
 
 begin_expr_stmt
@@ -1083,9 +1022,6 @@ argument_list|,
 argument|It2 Dest
 argument_list|)
 block|{
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
 for|for
 control|(
 init|;
@@ -1116,38 +1052,19 @@ name|I
 argument_list|)
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-operator|::
-name|std
-operator|::
-name|uninitialized_copy
-argument_list|(
-name|I
-argument_list|,
-name|E
-argument_list|,
-name|Dest
-argument_list|)
-expr_stmt|;
+block|}
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-unit|}
-comment|/// uninitialized_copy - Copy the range [I, E) onto the uninitialized
+comment|/// Copy the range [I, E) onto the uninitialized memory starting with "Dest",
 end_comment
 
 begin_comment
-comment|/// memory starting with "Dest", constructing elements as needed.
+comment|/// constructing elements as needed.
 end_comment
 
 begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|It1
@@ -1177,10 +1094,9 @@ argument_list|,
 name|Dest
 argument_list|)
 block|;   }
-comment|/// grow - Grow the allocated memory (without initializing new
-comment|/// elements), doubling the size of the allocated memory.
-comment|/// Guarantees space for at least one more element, or MinSize more
-comment|/// elements if specified.
+comment|/// Grow the allocated memory (without initializing new elements), doubling
+comment|/// the size of the allocated memory. Guarantees space for at least one more
+comment|/// element, or MinSize more elements if specified.
 name|void
 name|grow
 argument_list|(
@@ -1207,17 +1123,22 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|LLVM_UNLIKELY
+argument_list|(
 name|this
 operator|->
 name|EndX
-operator|<
+operator|>=
 name|this
 operator|->
 name|CapacityX
+argument_list|)
 condition|)
-block|{
-name|Retry
-label|:
+name|this
+operator|->
+name|grow
+argument_list|()
+expr_stmt|;
 operator|::
 name|new
 argument_list|(
@@ -1240,24 +1161,8 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-name|this
-operator|->
-name|grow
-argument_list|()
-expr_stmt|;
-goto|goto
-name|Retry
-goto|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
 
 begin_decl_stmt
 name|void
@@ -1270,17 +1175,22 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|LLVM_UNLIKELY
+argument_list|(
 name|this
 operator|->
 name|EndX
-operator|<
+operator|>=
 name|this
 operator|->
 name|CapacityX
+argument_list|)
 condition|)
-block|{
-name|Retry
-label|:
+name|this
+operator|->
+name|grow
+argument_list|()
+expr_stmt|;
 operator|::
 name|new
 argument_list|(
@@ -1309,23 +1219,8 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-name|this
-operator|->
-name|grow
-argument_list|()
-expr_stmt|;
-goto|goto
-name|Retry
-goto|;
 block|}
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|void
@@ -1355,6 +1250,476 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|LLVM_HAS_VARIADIC_TEMPLATES
+end_if
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+operator|...
+name|ArgTypes
+operator|>
+name|void
+name|emplace_back
+argument_list|(
+argument|ArgTypes&&... Args
+argument_list|)
+block|{
+if|if
+condition|(
+name|LLVM_UNLIKELY
+argument_list|(
+name|this
+operator|->
+name|EndX
+operator|>=
+name|this
+operator|->
+name|CapacityX
+argument_list|)
+condition|)
+name|this
+operator|->
+name|grow
+argument_list|()
+expr_stmt|;
+operator|::
+name|new
+argument_list|(
+argument|(void *)this->end()
+argument_list|)
+name|T
+argument_list|(
+name|std
+operator|::
+name|forward
+operator|<
+name|ArgTypes
+operator|>
+operator|(
+name|Args
+operator|)
+operator|...
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|this
+operator|->
+name|setEnd
+argument_list|(
+name|this
+operator|->
+name|end
+argument_list|()
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_else
+unit|}
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+unit|private:
+name|template
+operator|<
+name|typename
+name|Constructor
+operator|>
+name|void
+name|emplace_back_impl
+argument_list|(
+argument|Constructor construct
+argument_list|)
+block|{
+if|if
+condition|(
+name|LLVM_UNLIKELY
+argument_list|(
+name|this
+operator|->
+name|EndX
+operator|>=
+name|this
+operator|->
+name|CapacityX
+argument_list|)
+condition|)
+name|this
+operator|->
+name|grow
+argument_list|()
+expr_stmt|;
+name|construct
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|this
+operator|->
+name|end
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|this
+operator|->
+name|setEnd
+argument_list|(
+name|this
+operator|->
+name|end
+argument_list|()
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+unit|}  public:
+name|void
+name|emplace_back
+parameter_list|()
+block|{
+name|emplace_back_impl
+argument_list|(
+index|[]
+operator|(
+name|void
+operator|*
+name|Mem
+operator|)
+block|{
+operator|::
+name|new
+argument_list|(
+argument|Mem
+argument_list|)
+name|T
+argument_list|()
+block|; }
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T1
+operator|>
+name|void
+name|emplace_back
+argument_list|(
+argument|T1&&A1
+argument_list|)
+block|{
+name|emplace_back_impl
+argument_list|(
+index|[
+operator|&
+index|]
+operator|(
+name|void
+operator|*
+name|Mem
+operator|)
+block|{
+operator|::
+name|new
+argument_list|(
+argument|Mem
+argument_list|)
+name|T
+argument_list|(
+name|std
+operator|::
+name|forward
+operator|<
+name|T1
+operator|>
+operator|(
+name|A1
+operator|)
+argument_list|)
+block|; }
+argument_list|)
+block|;   }
+name|template
+operator|<
+name|typename
+name|T1
+operator|,
+name|typename
+name|T2
+operator|>
+name|void
+name|emplace_back
+argument_list|(
+argument|T1&&A1
+argument_list|,
+argument|T2&&A2
+argument_list|)
+block|{
+name|emplace_back_impl
+argument_list|(
+index|[
+operator|&
+index|]
+operator|(
+name|void
+operator|*
+name|Mem
+operator|)
+block|{
+operator|::
+name|new
+argument_list|(
+argument|Mem
+argument_list|)
+name|T
+argument_list|(
+name|std
+operator|::
+name|forward
+operator|<
+name|T1
+operator|>
+operator|(
+name|A1
+operator|)
+argument_list|,
+name|std
+operator|::
+name|forward
+operator|<
+name|T2
+operator|>
+operator|(
+name|A2
+operator|)
+argument_list|)
+block|;     }
+argument_list|)
+block|;   }
+name|template
+operator|<
+name|typename
+name|T1
+operator|,
+name|typename
+name|T2
+operator|,
+name|typename
+name|T3
+operator|>
+name|void
+name|emplace_back
+argument_list|(
+argument|T1&&A1
+argument_list|,
+argument|T2&&A2
+argument_list|,
+argument|T3&&A3
+argument_list|)
+block|{
+name|T
+argument_list|(
+name|std
+operator|::
+name|forward
+operator|<
+name|T1
+operator|>
+operator|(
+name|A1
+operator|)
+argument_list|,
+name|std
+operator|::
+name|forward
+operator|<
+name|T2
+operator|>
+operator|(
+name|A2
+operator|)
+argument_list|,
+name|std
+operator|::
+name|forward
+operator|<
+name|T3
+operator|>
+operator|(
+name|A3
+operator|)
+argument_list|)
+block|;
+name|emplace_back_impl
+argument_list|(
+index|[
+operator|&
+index|]
+operator|(
+name|void
+operator|*
+name|Mem
+operator|)
+block|{
+operator|::
+name|new
+argument_list|(
+argument|Mem
+argument_list|)
+name|T
+argument_list|(
+name|std
+operator|::
+name|forward
+operator|<
+name|T1
+operator|>
+operator|(
+name|A1
+operator|)
+argument_list|,
+name|std
+operator|::
+name|forward
+operator|<
+name|T2
+operator|>
+operator|(
+name|A2
+operator|)
+argument_list|,
+name|std
+operator|::
+name|forward
+operator|<
+name|T3
+operator|>
+operator|(
+name|A3
+operator|)
+argument_list|)
+block|;     }
+argument_list|)
+block|;   }
+name|template
+operator|<
+name|typename
+name|T1
+operator|,
+name|typename
+name|T2
+operator|,
+name|typename
+name|T3
+operator|,
+name|typename
+name|T4
+operator|>
+name|void
+name|emplace_back
+argument_list|(
+argument|T1&&A1
+argument_list|,
+argument|T2&&A2
+argument_list|,
+argument|T3&&A3
+argument_list|,
+argument|T4&&A4
+argument_list|)
+block|{
+name|emplace_back_impl
+argument_list|(
+index|[
+operator|&
+index|]
+operator|(
+name|void
+operator|*
+name|Mem
+operator|)
+block|{
+operator|::
+name|new
+argument_list|(
+argument|Mem
+argument_list|)
+name|T
+argument_list|(
+name|std
+operator|::
+name|forward
+operator|<
+name|T1
+operator|>
+operator|(
+name|A1
+operator|)
+argument_list|,
+name|std
+operator|::
+name|forward
+operator|<
+name|T2
+operator|>
+operator|(
+name|A2
+operator|)
+argument_list|,
+name|std
+operator|::
+name|forward
+operator|<
+name|T3
+operator|>
+operator|(
+name|A3
+operator|)
+argument_list|,
+name|std
+operator|::
+name|forward
+operator|<
+name|T4
+operator|>
+operator|(
+name|A4
+operator|)
+argument_list|)
+block|;     }
+argument_list|)
+block|;   }
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// LLVM_HAS_VARIADIC_TEMPLATES
+end_comment
 
 begin_comment
 unit|};
@@ -1602,7 +1967,7 @@ argument_list|,
 argument|T *
 argument_list|)
 block|{}
-comment|/// move - Use move-assignment to move the range [I, E) onto the
+comment|/// Use move-assignment to move the range [I, E) onto the
 comment|/// objects starting with "Dest".  For PODs, this is just memcpy.
 name|template
 operator|<
@@ -1637,9 +2002,8 @@ name|Dest
 argument_list|)
 return|;
 block|}
-comment|/// move_backward - Use move-assignment to move the range
-comment|/// [I, E) onto the objects ending at "Dest", moving objects
-comment|/// in reverse order.
+comment|/// Use move-assignment to move the range [I, E) onto the objects ending at
+comment|/// "Dest", moving objects in reverse order.
 name|template
 operator|<
 name|typename
@@ -1676,7 +2040,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// uninitialized_move - Move the range [I, E) onto the uninitialized memory
+comment|/// Move the range [I, E) onto the uninitialized memory
 end_comment
 
 begin_comment
@@ -1713,7 +2077,7 @@ argument_list|,
 name|Dest
 argument_list|)
 block|;   }
-comment|/// uninitialized_copy - Copy the range [I, E) onto the uninitialized memory
+comment|/// Copy the range [I, E) onto the uninitialized memory
 comment|/// starting with "Dest", constructing elements into it as needed.
 name|template
 operator|<
@@ -1746,7 +2110,7 @@ argument_list|,
 name|Dest
 argument_list|)
 block|;   }
-comment|/// uninitialized_copy - Copy the range [I, E) onto the uninitialized memory
+comment|/// Copy the range [I, E) onto the uninitialized memory
 comment|/// starting with "Dest", constructing elements into it as needed.
 name|template
 operator|<
@@ -1788,7 +2152,7 @@ name|T
 argument_list|)
 argument_list|)
 block|;   }
-comment|/// grow - double the size of the allocated memory, guaranteeing space for at
+comment|/// Double the size of the allocated memory, guaranteeing space for at
 comment|/// least one more element or MinSize if specified.
 name|void
 name|grow
@@ -1824,17 +2188,22 @@ argument_list|)
 block|{
 if|if
 condition|(
+name|LLVM_UNLIKELY
+argument_list|(
 name|this
 operator|->
 name|EndX
-operator|<
+operator|>=
 name|this
 operator|->
 name|CapacityX
+argument_list|)
 condition|)
-block|{
-name|Retry
-label|:
+name|this
+operator|->
+name|grow
+argument_list|()
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|this
@@ -1851,6 +2220,9 @@ name|T
 argument_list|)
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|this
 operator|->
 name|setEnd
@@ -1863,23 +2235,10 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
-name|this
-operator|->
-name|grow
-argument_list|()
-expr_stmt|;
 end_expr_stmt
 
-begin_goto
-goto|goto
-name|Retry
-goto|;
-end_goto
-
 begin_macro
-unit|}      void
+unit|}    void
 name|pop_back
 argument_list|()
 end_macro
@@ -1903,15 +2262,11 @@ end_block
 
 begin_comment
 unit|};
-comment|/// SmallVectorImpl - This class consists of common code factored out of the
+comment|/// This class consists of common code factored out of the SmallVector class to
 end_comment
 
 begin_comment
-comment|/// SmallVector class to reduce code duplication based on the SmallVector 'N'
-end_comment
-
-begin_comment
-comment|/// template parameter.
+comment|/// reduce code duplication based on the SmallVector 'N' template parameter.
 end_comment
 
 begin_expr_stmt
@@ -2102,7 +2457,7 @@ begin_function
 name|void
 name|resize
 parameter_list|(
-name|unsigned
+name|size_type
 name|N
 parameter_list|)
 block|{
@@ -2173,25 +2528,38 @@ argument_list|(
 name|N
 argument_list|)
 expr_stmt|;
-name|std
-operator|::
-name|uninitialized_fill
-argument_list|(
+for|for
+control|(
+name|auto
+name|I
+init|=
 name|this
 operator|->
 name|end
 argument_list|()
-argument_list|,
+init|,
+name|E
+init|=
 name|this
 operator|->
 name|begin
 argument_list|()
 operator|+
 name|N
-argument_list|,
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+name|new
+argument_list|(
+argument|&*I
+argument_list|)
 name|T
 argument_list|()
-argument_list|)
 expr_stmt|;
 name|this
 operator|->
@@ -2213,7 +2581,7 @@ begin_function
 name|void
 name|resize
 parameter_list|(
-name|unsigned
+name|size_type
 name|N
 parameter_list|,
 specifier|const
@@ -2328,7 +2696,7 @@ begin_function
 name|void
 name|reserve
 parameter_list|(
-name|unsigned
+name|size_type
 name|N
 parameter_list|)
 block|{
@@ -2357,9 +2725,6 @@ name|LLVM_ATTRIBUTE_UNUSED_RESULT
 name|pop_back_val
 parameter_list|()
 block|{
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
 name|T
 name|Result
 init|=
@@ -2374,18 +2739,6 @@ name|back
 argument_list|()
 argument_list|)
 decl_stmt|;
-else|#
-directive|else
-name|T
-name|Result
-init|=
-name|this
-operator|->
-name|back
-argument_list|()
-decl_stmt|;
-endif|#
-directive|endif
 name|this
 operator|->
 name|pop_back
@@ -2409,11 +2762,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// append - Add the specified range to the end of the SmallVector.
-end_comment
-
-begin_comment
-comment|///
+comment|/// Add the specified range to the end of the SmallVector.
 end_comment
 
 begin_expr_stmt
@@ -2508,11 +2857,7 @@ end_expr_stmt
 
 begin_comment
 unit|}
-comment|/// append - Add the specified range to the end of the SmallVector.
-end_comment
-
-begin_comment
-comment|///
+comment|/// Add the specified range to the end of the SmallVector.
 end_comment
 
 begin_macro
@@ -2591,7 +2936,7 @@ begin_function
 name|void
 name|assign
 parameter_list|(
-name|unsigned
+name|size_type
 name|NumElts
 parameter_list|,
 specifier|const
@@ -2814,12 +3159,6 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_decl_stmt
 name|iterator
 name|insert
@@ -2894,14 +3233,37 @@ condition|(
 name|this
 operator|->
 name|EndX
-operator|<
+operator|>=
 name|this
 operator|->
 name|CapacityX
 condition|)
 block|{
-name|Retry
-label|:
+name|size_t
+name|EltNo
+init|=
+name|I
+operator|-
+name|this
+operator|->
+name|begin
+argument_list|()
+decl_stmt|;
+name|this
+operator|->
+name|grow
+argument_list|()
+expr_stmt|;
+name|I
+operator|=
+name|this
+operator|->
+name|begin
+argument_list|()
+operator|+
+name|EltNo
+expr_stmt|;
+block|}
 operator|::
 name|new
 argument_list|(
@@ -2919,18 +3281,6 @@ operator|->
 name|back
 argument_list|()
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|this
-operator|->
-name|setEnd
-argument_list|(
-name|this
-operator|->
-name|end
-argument_list|()
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 comment|// Push everything else over.
@@ -2951,6 +3301,18 @@ name|this
 operator|->
 name|end
 argument_list|()
+argument_list|)
+expr_stmt|;
+name|this
+operator|->
+name|setEnd
+argument_list|(
+name|this
+operator|->
+name|end
+argument_list|()
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|// If we just moved the element we're inserting, be sure to update
@@ -2993,40 +3355,7 @@ return|return
 name|I
 return|;
 block|}
-name|size_t
-name|EltNo
-init|=
-name|I
-operator|-
-name|this
-operator|->
-name|begin
-argument_list|()
-decl_stmt|;
-name|this
-operator|->
-name|grow
-argument_list|()
-expr_stmt|;
-name|I
-operator|=
-name|this
-operator|->
-name|begin
-argument_list|()
-operator|+
-name|EltNo
-expr_stmt|;
-goto|goto
-name|Retry
-goto|;
-block|}
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|iterator
@@ -3097,14 +3426,37 @@ condition|(
 name|this
 operator|->
 name|EndX
-operator|<
+operator|>=
 name|this
 operator|->
 name|CapacityX
 condition|)
 block|{
-name|Retry
-label|:
+name|size_t
+name|EltNo
+init|=
+name|I
+operator|-
+name|this
+operator|->
+name|begin
+argument_list|()
+decl_stmt|;
+name|this
+operator|->
+name|grow
+argument_list|()
+expr_stmt|;
+name|I
+operator|=
+name|this
+operator|->
+name|begin
+argument_list|()
+operator|+
+name|EltNo
+expr_stmt|;
+block|}
 operator|::
 name|new
 argument_list|(
@@ -3112,22 +3464,15 @@ argument|(void*) this->end()
 argument_list|)
 name|T
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|this
 operator|->
 name|back
 argument_list|()
 argument_list|)
-expr_stmt|;
-name|this
-operator|->
-name|setEnd
-argument_list|(
-name|this
-operator|->
-name|end
-argument_list|()
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 comment|// Push everything else over.
@@ -3148,6 +3493,18 @@ name|this
 operator|->
 name|end
 argument_list|()
+argument_list|)
+expr_stmt|;
+name|this
+operator|->
+name|setEnd
+argument_list|(
+name|this
+operator|->
+name|end
+argument_list|()
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 comment|// If we just moved the element we're inserting, be sure to update
@@ -3184,34 +3541,6 @@ expr_stmt|;
 return|return
 name|I
 return|;
-block|}
-name|size_t
-name|EltNo
-init|=
-name|I
-operator|-
-name|this
-operator|->
-name|begin
-argument_list|()
-decl_stmt|;
-name|this
-operator|->
-name|grow
-argument_list|()
-expr_stmt|;
-name|I
-operator|=
-name|this
-operator|->
-name|begin
-argument_list|()
-operator|+
-name|EltNo
-expr_stmt|;
-goto|goto
-name|Retry
-goto|;
 block|}
 end_function
 
@@ -3296,18 +3625,12 @@ expr_stmt|;
 comment|// Ensure there is enough space.
 name|reserve
 argument_list|(
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
 name|this
 operator|->
 name|size
 argument_list|()
 operator|+
 name|NumToInsert
-operator|)
 argument_list|)
 expr_stmt|;
 comment|// Uninvalidate the iterator.
@@ -3350,17 +3673,33 @@ argument_list|()
 decl_stmt|;
 name|append
 argument_list|(
+name|std
+operator|::
+name|move_iterator
+operator|<
+name|iterator
+operator|>
+operator|(
 name|this
 operator|->
 name|end
 argument_list|()
 operator|-
 name|NumToInsert
+operator|)
 argument_list|,
+name|std
+operator|::
+name|move_iterator
+operator|<
+name|iterator
+operator|>
+operator|(
 name|this
 operator|->
 name|end
 argument_list|()
+operator|)
 argument_list|)
 expr_stmt|;
 comment|// Copy the existing elements that get replaced.
@@ -3576,18 +3915,12 @@ end_comment
 begin_expr_stmt
 name|reserve
 argument_list|(
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
 name|this
 operator|->
 name|size
 argument_list|()
 operator|+
 name|NumToInsert
-operator|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3651,17 +3984,33 @@ argument_list|()
 decl_stmt|;
 name|append
 argument_list|(
+name|std
+operator|::
+name|move_iterator
+operator|<
+name|iterator
+operator|>
+operator|(
 name|this
 operator|->
 name|end
 argument_list|()
 operator|-
 name|NumToInsert
+operator|)
 argument_list|,
+name|std
+operator|::
+name|move_iterator
+operator|<
+name|iterator
+operator|>
+operator|(
 name|this
 operator|->
 name|end
 argument_list|()
+operator|)
 argument_list|)
 expr_stmt|;
 comment|// Copy the existing elements that get replaced.
@@ -3837,12 +4186,6 @@ operator|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_decl_stmt
 name|SmallVectorImpl
 modifier|&
@@ -3855,11 +4198,6 @@ name|RHS
 operator|)
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|bool
@@ -4019,7 +4357,7 @@ begin_function
 name|void
 name|set_size
 parameter_list|(
-name|unsigned
+name|size_type
 name|N
 parameter_list|)
 block|{
@@ -4226,20 +4564,14 @@ end_if
 begin_for
 for|for
 control|(
-name|unsigned
+name|size_type
 name|i
 init|=
 literal|0
 init|;
 name|i
 operator|!=
-name|static_cast
-operator|<
-name|unsigned
-operator|>
-operator|(
 name|NumShared
-operator|)
 condition|;
 operator|++
 name|i
@@ -4741,15 +5073,8 @@ name|this
 return|;
 end_return
 
-begin_if
-unit|}
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_expr_stmt
-unit|template
+unit|}  template
 operator|<
 name|typename
 name|T
@@ -5056,8 +5381,10 @@ argument_list|()
 argument_list|,
 name|RHS
 operator|.
-name|end
+name|begin
 argument_list|()
+operator|+
+name|CurSize
 argument_list|,
 name|this
 operator|->
@@ -5133,13 +5460,8 @@ name|this
 return|;
 end_return
 
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
 begin_comment
+unit|}
 comment|/// Storage for the SmallVector elements which aren't contained in
 end_comment
 
@@ -5219,7 +5541,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// SmallVector - This is a 'vector' (really, a variable-sized array), optimized
+comment|/// This is a 'vector' (really, a variable-sized array), optimized
 end_comment
 
 begin_comment
@@ -5268,7 +5590,7 @@ operator|<
 name|T
 operator|>
 block|{
-comment|/// Storage - Inline space for elements which aren't stored in the base class.
+comment|/// Inline space for elements which aren't stored in the base class.
 name|SmallVectorStorage
 operator|<
 name|T
@@ -5293,7 +5615,7 @@ block|{   }
 name|explicit
 name|SmallVector
 argument_list|(
-argument|unsigned Size
+argument|size_t Size
 argument_list|,
 argument|const T&Value = T()
 argument_list|)
@@ -5342,6 +5664,47 @@ argument_list|(
 name|S
 argument_list|,
 name|E
+argument_list|)
+block|;   }
+name|template
+operator|<
+name|typename
+name|RangeTy
+operator|>
+name|explicit
+name|SmallVector
+argument_list|(
+specifier|const
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|RangeTy
+operator|>
+name|R
+argument_list|)
+operator|:
+name|SmallVectorImpl
+operator|<
+name|T
+operator|>
+operator|(
+name|N
+operator|)
+block|{
+name|this
+operator|->
+name|append
+argument_list|(
+name|R
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|R
+operator|.
+name|end
+argument_list|()
 argument_list|)
 block|;   }
 name|SmallVector
@@ -5409,12 +5772,6 @@ name|this
 return|;
 block|}
 end_expr_stmt
-
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
 
 begin_expr_stmt
 name|SmallVector
@@ -5495,11 +5852,6 @@ name|this
 return|;
 block|}
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 unit|};

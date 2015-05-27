@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/GetElementPtrTypeIterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/IRBuilder.h"
 end_include
 
@@ -79,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Operator.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/GetElementPtrTypeIterator.h"
 end_include
 
 begin_decl_stmt
@@ -128,6 +128,9 @@ name|class
 name|AllocaInst
 decl_stmt|;
 name|class
+name|AssumptionCache
+decl_stmt|;
+name|class
 name|ConstantExpr
 decl_stmt|;
 name|class
@@ -144,6 +147,9 @@ name|DIBuilder
 decl_stmt|;
 name|class
 name|AliasAnalysis
+decl_stmt|;
+name|class
+name|DominatorTree
 decl_stmt|;
 name|template
 operator|<
@@ -180,7 +186,7 @@ name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -201,7 +207,7 @@ name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// RecursivelyDeleteTriviallyDeadInstructions - If the specified value is a
@@ -220,7 +226,7 @@ name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// RecursivelyDeleteDeadPHINode - If the specified value is an effectively
@@ -240,7 +246,7 @@ name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// SimplifyInstructionsInBlock - Scan the specified basic block and try to
@@ -260,14 +266,14 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 specifier|const
 name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -299,7 +305,7 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// MergeBasicBlockIntoOnlyPred - BB is a block with one predecessor and its
@@ -318,7 +324,7 @@ name|Pass
 modifier|*
 name|P
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// TryToSimplifyUncondBranchFromEmptyBlock - BB is known to contain an
@@ -365,12 +371,21 @@ name|TargetTransformInfo
 modifier|&
 name|TTI
 parameter_list|,
+name|unsigned
+name|BonusInstThreshold
+parameter_list|,
 specifier|const
 name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// FlatternCFG - This function is used to flatten a CFG.  For
@@ -388,7 +403,7 @@ name|AliasAnalysis
 modifier|*
 name|AA
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// FoldBranchToCommonDest - If this basic block is ONLY a setcc and a branch,
@@ -401,6 +416,18 @@ parameter_list|(
 name|BranchInst
 modifier|*
 name|BI
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|*
+name|DL
+init|=
+name|nullptr
+parameter_list|,
+name|unsigned
+name|BonusInstThreshold
+init|=
+literal|1
 parameter_list|)
 function_decl|;
 comment|/// DemoteRegToStack - This function takes a virtual register computed by an
@@ -426,7 +453,7 @@ name|Instruction
 modifier|*
 name|AllocaPoint
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// DemotePHIToStack - This function takes a virtual register computed by a phi
@@ -444,7 +471,7 @@ name|Instruction
 modifier|*
 name|AllocaPoint
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// getOrEnforceKnownAlignment - If the specified pointer has an alignment that
@@ -466,7 +493,27 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// getKnownAlignment - Try to infer an alignment for the specified pointer.
@@ -484,7 +531,27 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -495,6 +562,12 @@ argument_list|,
 literal|0
 argument_list|,
 name|TD
+argument_list|,
+name|AC
+argument_list|,
+name|CxtI
+argument_list|,
+name|DT
 argument_list|)
 return|;
 block|}
@@ -1017,6 +1090,28 @@ modifier|&
 name|F
 parameter_list|)
 function_decl|;
+comment|/// \brief Combine the metadata of two instructions so that K can replace J
+comment|///
+comment|/// Metadata not listed as known via KnownIDs is removed
+name|void
+name|combineMetadata
+argument_list|(
+name|Instruction
+operator|*
+name|K
+argument_list|,
+specifier|const
+name|Instruction
+operator|*
+name|J
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|KnownIDs
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

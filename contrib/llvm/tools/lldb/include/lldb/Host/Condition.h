@@ -77,7 +77,7 @@ comment|/// @brief A C++ wrapper class for pthread condition variables.
 comment|///
 comment|/// A class that wraps up a pthread condition (pthread_cond_t). The
 comment|/// class will create a pthread condition when an instance is
-comment|/// constructed, and detroy it when it is destructed. It also provides
+comment|/// constructed, and destroy it when it is destructed. It also provides
 comment|/// access to the standard pthread condition calls.
 comment|//----------------------------------------------------------------------
 name|class

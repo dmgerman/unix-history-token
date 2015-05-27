@@ -186,12 +186,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -407,12 +401,16 @@ name|typename
 name|T
 operator|>
 name|typename
+name|std
+operator|::
 name|enable_if
 operator|<
 name|is_integral_or_enum
 operator|<
 name|T
 operator|>
+operator|::
+name|value
 operator|,
 name|hash_code
 operator|>
@@ -547,14 +545,13 @@ name|sys
 operator|::
 name|IsBigEndianHost
 condition|)
-return|return
 name|sys
 operator|::
-name|SwapByteOrder
+name|swapByteOrder
 argument_list|(
 name|result
 argument_list|)
-return|;
+expr_stmt|;
 return|return
 name|result
 return|;
@@ -591,14 +588,13 @@ name|sys
 operator|::
 name|IsBigEndianHost
 condition|)
-return|return
 name|sys
 operator|::
-name|SwapByteOrder
+name|swapByteOrder
 argument_list|(
 name|result
 argument_list|)
-return|;
+expr_stmt|;
 return|return
 name|result
 return|;
@@ -1462,9 +1458,6 @@ name|h5
 decl_stmt|,
 name|h6
 decl_stmt|;
-name|uint64_t
-name|seed
-decl_stmt|;
 comment|/// \brief Create a new hash_state structure and initialize it based on the
 comment|/// seed and the first 64-byte chunk.
 comment|/// This effectively performs the initial mix.
@@ -1515,8 +1508,6 @@ name|seed
 argument_list|)
 block|,
 literal|0
-block|,
-name|seed
 block|}
 decl_stmt|;
 name|state
@@ -1884,6 +1875,8 @@ operator|>
 expr|struct
 name|is_hashable_data
 operator|:
+name|std
+operator|::
 name|integral_constant
 operator|<
 name|bool
@@ -1897,6 +1890,8 @@ operator|>
 operator|::
 name|value
 operator|||
+name|std
+operator|::
 name|is_pointer
 operator|<
 name|T
@@ -1942,6 +1937,8 @@ name|U
 operator|>
 expr|>
 operator|:
+name|std
+operator|::
 name|integral_constant
 operator|<
 name|bool
@@ -1996,12 +1993,16 @@ name|typename
 name|T
 operator|>
 name|typename
+name|std
+operator|::
 name|enable_if
 operator|<
 name|is_hashable_data
 operator|<
 name|T
 operator|>
+operator|::
+name|value
 operator|,
 name|T
 operator|>
@@ -2025,7 +2026,9 @@ name|typename
 name|T
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 operator|!
 name|is_hashable_data
@@ -2179,9 +2182,9 @@ operator|*
 specifier|const
 name|buffer_end
 operator|=
-name|buffer_ptr
-operator|+
-name|array_lengthof
+name|std
+operator|::
+name|end
 argument_list|(
 name|buffer
 argument_list|)
@@ -2338,12 +2341,16 @@ name|typename
 name|ValueT
 operator|>
 name|typename
+name|std
+operator|::
 name|enable_if
 operator|<
 name|is_hashable_data
 operator|<
 name|ValueT
 operator|>
+operator|::
+name|value
 operator|,
 name|hash_code
 operator|>
@@ -3873,12 +3880,16 @@ name|typename
 name|T
 operator|>
 name|typename
+name|std
+operator|::
 name|enable_if
 operator|<
 name|is_integral_or_enum
 operator|<
 name|T
 operator|>
+operator|::
+name|value
 operator|,
 name|hash_code
 operator|>

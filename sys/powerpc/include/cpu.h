@@ -97,9 +97,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|PPC_FEATURE_HAS_VSX
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
 name|PPC_FEATURE_BITMASK
 define|\
-value|"\20"								\ 	"\040PPC32\037PPC64\035ALTIVEC\034FPU\033MMU\031UNIFIEDCACHE"
+value|"\20"								\ 	"\040PPC32\037PPC64\035ALTIVEC\034FPU\033MMU\031UNIFIEDCACHE"	\ 	"\010VSX"
 end_define
 
 begin_define
@@ -231,10 +238,11 @@ define|#
 directive|define
 name|cpu_spinwait
 parameter_list|()
+value|__asm __volatile("or 27,27,27")
 end_define
 
 begin_comment
-comment|/* nothing */
+comment|/* yield */
 end_comment
 
 begin_decl_stmt

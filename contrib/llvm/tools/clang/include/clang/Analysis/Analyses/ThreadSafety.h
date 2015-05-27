@@ -70,13 +70,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_THREADSAFETY_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_THREADSAFETY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_THREADSAFETY_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_THREADSAFETY_H
 end_define
 
 begin_include
@@ -102,7 +102,7 @@ name|namespace
 name|clang
 block|{
 name|namespace
-name|thread_safety
+name|threadSafety
 block|{
 comment|/// This enum distinguishes between different kinds of operations that may
 comment|/// need to be protected by locks. We use this enum in error handling.
@@ -116,7 +116,14 @@ name|POK_VarAccess
 block|,
 comment|///< Reading or writing a variable (e.g. x in x = 5;)
 name|POK_FunctionCall
+block|,
 comment|///< Making a function call (e.g. fool())
+name|POK_PassByRef
+block|,
+comment|///< Passing a guarded variable by reference.
+name|POK_PtPassByRef
+block|,
+comment|///< Passing a pt-guarded variable by reference.
 block|}
 enum|;
 comment|/// This enum distinguishes between different kinds of lock actions. For
@@ -129,7 +136,10 @@ name|LK_Shared
 block|,
 comment|///< Shared/reader lock of a mutex.
 name|LK_Exclusive
+block|,
 comment|///< Exclusive/writer lock of a mutex.
+name|LK_Generic
+comment|///< Can be either Shared or Exclusive
 block|}
 enum|;
 comment|/// This enum distinguishes between different ways to access (read or write) a
@@ -188,17 +198,22 @@ name|ThreadSafetyHandler
 argument_list|()
 expr_stmt|;
 comment|/// Warn about lock expressions which fail to resolve to lockable objects.
+comment|/// \param Kind -- the capability's name parameter (role, mutex, etc).
 comment|/// \param Loc -- the SourceLocation of the unresolved expression.
 name|virtual
 name|void
 name|handleInvalidLockExp
 parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
 name|SourceLocation
 name|Loc
 parameter_list|)
 block|{}
 comment|/// Warn about unlock function calls that do not have a prior matching lock
 comment|/// expression.
+comment|/// \param Kind -- the capability's name parameter (role, mutex, etc).
 comment|/// \param LockName -- A StringRef name for the lock expression, to be printed
 comment|/// in the error message.
 comment|/// \param Loc -- The SourceLocation of the Unlock
@@ -206,6 +221,9 @@ name|virtual
 name|void
 name|handleUnmatchedUnlock
 parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
 name|Name
 name|LockName
 parameter_list|,
@@ -213,7 +231,37 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 block|{}
+comment|/// Warn about an unlock function call that attempts to unlock a lock with
+comment|/// the incorrect lock kind. For instance, a shared lock being unlocked
+comment|/// exclusively, or vice versa.
+comment|/// \param LockName -- A StringRef name for the lock expression, to be printed
+comment|/// in the error message.
+comment|/// \param Kind -- the capability's name parameter (role, mutex, etc).
+comment|/// \param Expected -- the kind of lock expected.
+comment|/// \param Received -- the kind of lock received.
+comment|/// \param Loc -- The SourceLocation of the Unlock.
+name|virtual
+name|void
+name|handleIncorrectUnlockKind
+parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
+name|Name
+name|LockName
+parameter_list|,
+name|LockKind
+name|Expected
+parameter_list|,
+name|LockKind
+name|Received
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{}
 comment|/// Warn about lock function calls for locks which are already held.
+comment|/// \param Kind -- the capability's name parameter (role, mutex, etc).
 comment|/// \param LockName -- A StringRef name for the lock expression, to be printed
 comment|/// in the error message.
 comment|/// \param Loc -- The location of the second lock expression.
@@ -221,6 +269,9 @@ name|virtual
 name|void
 name|handleDoubleLock
 parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
 name|Name
 name|LockName
 parameter_list|,
@@ -233,6 +284,7 @@ comment|/// The three situations are:
 comment|/// 1. a mutex is locked on an "if" branch but not the "else" branch,
 comment|/// 2, or a mutex is only held at the start of some loop iterations,
 comment|/// 3. or when a mutex is locked but not unlocked inside a function.
+comment|/// \param Kind -- the capability's name parameter (role, mutex, etc).
 comment|/// \param LockName -- A StringRef name for the lock expression, to be printed
 comment|/// in the error message.
 comment|/// \param LocLocked -- The location of the lock expression where the mutex is
@@ -244,6 +296,9 @@ name|virtual
 name|void
 name|handleMutexHeldEndOfScope
 parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
 name|Name
 name|LockName
 parameter_list|,
@@ -260,6 +315,7 @@ block|{}
 comment|/// Warn when a mutex is held exclusively and shared at the same point. For
 comment|/// example, if a mutex is locked exclusively during an if branch and shared
 comment|/// during the else branch.
+comment|/// \param Kind -- the capability's name parameter (role, mutex, etc).
 comment|/// \param LockName -- A StringRef name for the lock expression, to be printed
 comment|/// in the error message.
 comment|/// \param Loc1 -- The location of the first lock expression.
@@ -268,6 +324,9 @@ name|virtual
 name|void
 name|handleExclusiveAndShared
 parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
 name|Name
 name|LockName
 parameter_list|,
@@ -279,6 +338,7 @@ name|Loc2
 parameter_list|)
 block|{}
 comment|/// Warn when a protected operation occurs while no locks are held.
+comment|/// \param Kind -- the capability's name parameter (role, mutex, etc).
 comment|/// \param D -- The decl for the protected variable or function
 comment|/// \param POK -- The kind of protected operation (e.g. variable access)
 comment|/// \param AK -- The kind of access (i.e. read or write) that occurred
@@ -287,6 +347,9 @@ name|virtual
 name|void
 name|handleNoMutexHeld
 parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
 specifier|const
 name|NamedDecl
 modifier|*
@@ -304,6 +367,7 @@ parameter_list|)
 block|{}
 comment|/// Warn when a protected operation occurs while the specific mutex protecting
 comment|/// the operation is not locked.
+comment|/// \param Kind -- the capability's name parameter (role, mutex, etc).
 comment|/// \param D -- The decl for the protected variable or function
 comment|/// \param POK -- The kind of protected operation (e.g. variable access)
 comment|/// \param LockName -- A StringRef name for the lock expression, to be printed
@@ -314,6 +378,9 @@ name|virtual
 name|void
 name|handleMutexNotHeld
 parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
 specifier|const
 name|NamedDecl
 modifier|*
@@ -335,11 +402,36 @@ name|Name
 modifier|*
 name|PossibleMatch
 init|=
-literal|0
+name|nullptr
+parameter_list|)
+block|{}
+comment|/// Warn when acquiring a lock that the negative capability is not held.
+comment|/// \param Kind -- the capability's name parameter (role, mutex, etc).
+comment|/// \param LockName -- The name for the lock expression, to be printed in the
+comment|/// diagnostic.
+comment|/// \param Neg -- The name of the negative capability to be printed in the
+comment|/// diagnostic.
+comment|/// \param Loc -- The location of the protected operation.
+name|virtual
+name|void
+name|handleNegativeNotHeld
+parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
+name|Name
+name|LockName
+parameter_list|,
+name|Name
+name|Neg
+parameter_list|,
+name|SourceLocation
+name|Loc
 parameter_list|)
 block|{}
 comment|/// Warn when a function is called while an excluded mutex is locked. For
 comment|/// example, the mutex may be locked inside the function.
+comment|/// \param Kind -- the capability's name parameter (role, mutex, etc).
 comment|/// \param FunName -- The name of the function
 comment|/// \param LockName -- A StringRef name for the lock expression, to be printed
 comment|/// in the error message.
@@ -348,6 +440,9 @@ name|virtual
 name|void
 name|handleFunExcludesLock
 parameter_list|(
+name|StringRef
+name|Kind
+parameter_list|,
 name|Name
 name|FunName
 parameter_list|,
@@ -356,6 +451,29 @@ name|LockName
 parameter_list|,
 name|SourceLocation
 name|Loc
+parameter_list|)
+block|{}
+comment|/// Called by the analysis when starting analysis of a function.
+comment|/// Used to issue suggestions for changes to annotations.
+name|virtual
+name|void
+name|enterFunction
+parameter_list|(
+specifier|const
+name|FunctionDecl
+modifier|*
+name|FD
+parameter_list|)
+block|{}
+comment|/// Called by the analysis when finishing analysis of a function.
+name|virtual
+name|void
+name|leaveFunction
+parameter_list|(
+specifier|const
+name|FunctionDecl
+modifier|*
+name|FD
 parameter_list|)
 block|{}
 name|bool
@@ -416,7 +534,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace clang::thread_safety
+comment|// end namespace clang::threadSafety
 end_comment
 
 begin_endif

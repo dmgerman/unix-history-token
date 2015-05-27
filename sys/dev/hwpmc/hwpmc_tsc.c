@@ -301,7 +301,7 @@ name|pmc_hw
 modifier|*
 name|phw
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -1118,7 +1118,7 @@ name|mode
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,

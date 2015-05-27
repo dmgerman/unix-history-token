@@ -31,7 +31,7 @@ begin_define
 define|#
 directive|define
 name|CMD_BUF_LEN
-value|256
+value|4096
 end_define
 
 begin_decl_stmt

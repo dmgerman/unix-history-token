@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_SIMPLE_CONSTRAINT_MANAGER_H
+name|LLVM_CLANG_LIB_STATICANALYZER_CORE_SIMPLECONSTRAINTMANAGER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_SIMPLE_CONSTRAINT_MANAGER_H
+name|LLVM_CLANG_LIB_STATICANALYZER_CORE_SIMPLECONSTRAINTMANAGER_H
 end_define
 
 begin_include
@@ -132,6 +132,7 @@ argument|DefinedSVal Cond
 argument_list|,
 argument|bool Assumption
 argument_list|)
+name|override
 block|;
 name|ProgramStateRef
 name|assume
@@ -287,6 +288,7 @@ argument_list|(
 argument|SVal X
 argument_list|)
 specifier|const
+name|override
 block|;
 name|ProgramStateRef
 name|assumeAux

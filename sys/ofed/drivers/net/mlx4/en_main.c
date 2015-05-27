@@ -75,6 +75,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
+
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
@@ -85,6 +91,11 @@ literal|")"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -1112,12 +1123,8 @@ operator|->
 name|caps
 operator|.
 name|num_ports
-operator|-
-literal|1
 argument_list|,
 name|MAX_MSIX_P_PORT
-operator|-
-literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1474,18 +1481,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_undef
-undef|#
-directive|undef
-name|MODULE_VERSION
-end_undef
-
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
-
 begin_function
 specifier|static
 name|int
@@ -1549,6 +1544,22 @@ argument_list|(
 name|mlxen
 argument_list|,
 name|mlx4
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|mlxen
+argument_list|,
+name|linuxapi
 argument_list|,
 literal|1
 argument_list|,

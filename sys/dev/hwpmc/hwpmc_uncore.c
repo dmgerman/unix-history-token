@@ -57,11 +57,37 @@ directive|include
 file|<machine/intr_machdep.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|1100000
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<x86/apicvar.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/apicvar.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -298,7 +324,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -520,7 +546,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -792,7 +818,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -894,7 +920,7 @@ literal|4
 operator|)
 operator|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -980,7 +1006,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -1359,7 +1385,7 @@ name|v
 operator|=
 name|tmp
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -1402,7 +1428,7 @@ modifier|*
 name|pmc
 parameter_list|)
 block|{
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -1552,7 +1578,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -1652,7 +1678,7 @@ operator|!=
 literal|0
 condition|)
 do|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -1712,7 +1738,7 @@ name|uncore_cpu
 modifier|*
 name|ucfc
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -1792,7 +1818,7 @@ operator|&=
 operator|~
 name|fc
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -1861,7 +1887,7 @@ operator|!=
 literal|0
 condition|)
 do|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -2043,7 +2069,7 @@ operator|->
 name|pc_ucfctrl
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -2114,15 +2140,13 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MDP
 argument_list|,
 name|INI
 argument_list|,
 literal|1
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"ucf-initialize"
 argument_list|)
@@ -6382,7 +6406,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -6749,7 +6773,7 @@ name|v
 operator|=
 name|tmp
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -6799,7 +6823,7 @@ name|void
 operator|)
 name|pm
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -6983,7 +7007,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -7008,7 +7032,7 @@ name|pm_ucp
 operator|.
 name|pm_ucp_evsel
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -7250,7 +7274,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -7421,7 +7445,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -7515,15 +7539,13 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MDP
 argument_list|,
 name|INI
 argument_list|,
 literal|1
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"ucp-initialize"
 argument_list|)
@@ -7747,7 +7769,7 @@ argument_list|(
 name|uncore_cputype
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -7799,15 +7821,13 @@ modifier|*
 name|md
 parameter_list|)
 block|{
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MDP
 argument_list|,
 name|INI
 argument_list|,
 literal|1
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"uncore-finalize"
 argument_list|)

@@ -96,7 +96,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_at -- :@[@ | buffer]  *	    :*[* | buffer]  *  *	Execute the contents of the buffer.  *  * PUBLIC: int ex_at __P((SCR *, EXCMD *));  */
+comment|/*  * ex_at -- :@[@ | buffer]  *	    :*[* | buffer]  *  *	Execute the contents of the buffer.  *  * PUBLIC: int ex_at(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

@@ -164,7 +164,7 @@ comment|/// Clients that wish to share modules with other targets should
 comment|/// use ModuleList::GetSharedModule().
 comment|///
 comment|/// @param[in] file_spec
-comment|///     The file specification for the on disk repesentation of
+comment|///     The file specification for the on disk representation of
 comment|///     this executable image.
 comment|///
 comment|/// @param[in] arch
@@ -189,7 +189,7 @@ argument|const ArchSpec& arch
 argument_list|,
 argument|const ConstString *object_name = NULL
 argument_list|,
-argument|off_t object_offset =
+argument|lldb::offset_t object_offset =
 literal|0
 argument_list|,
 argument|const TimeValue *object_mod_time_ptr = NULL
@@ -201,6 +201,20 @@ specifier|const
 name|ModuleSpec
 operator|&
 name|module_spec
+argument_list|)
+expr_stmt|;
+specifier|static
+name|lldb
+operator|::
+name|ModuleSP
+name|CreateJITModule
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|ObjectFileJITDelegateSP
+operator|&
+name|delegate_sp
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -353,7 +367,7 @@ comment|/// is called, so this is a good way to see what has been parsed
 comment|/// in a module.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|//------------------------------------------------------------------
 name|void
 name|Dump
@@ -736,7 +750,7 @@ name|variable_list
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|/// Find global and static variables by regular exression.
+comment|/// Find global and static variables by regular expression.
 comment|///
 comment|/// @param[in] regex
 comment|///     A regular expression to use when matching the name.
@@ -802,11 +816,11 @@ comment|///     from.
 comment|///
 comment|/// @param[in] type_name
 comment|///     The name of the type we are looking for that is a fully
-comment|///     or partially qualfieid type name.
+comment|///     or partially qualified type name.
 comment|///
 comment|/// @param[in] exact_match
-comment|///     If \b true, \a type_name is fully qualifed and must match
-comment|///     exactly. If \b false, \a type_name is a partially qualfied
+comment|///     If \b true, \a type_name is fully qualified and must match
+comment|///     exactly. If \b false, \a type_name is a partially qualified
 comment|///     name where the leading namespaces or classes can be
 comment|///     omitted to make finding types that a user may type
 comment|///     easier.
@@ -1184,6 +1198,20 @@ modifier|*
 name|GetSectionList
 parameter_list|()
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Notify the module that the file addresses for the Sections have
+comment|/// been updated.
+comment|///
+comment|/// If the Section file addresses for a module are updated, this
+comment|/// method should be called.  Any parts of the module, object file,
+comment|/// or symbol file that has cached those file addresses must invalidate
+comment|/// or update its cache.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|SectionFileAddressesChanged
+parameter_list|()
+function_decl|;
 name|uint32_t
 name|GetVersion
 parameter_list|(
@@ -1195,7 +1223,20 @@ name|uint32_t
 name|num_versions
 parameter_list|)
 function_decl|;
-comment|// Load an object file from memory.
+comment|//------------------------------------------------------------------
+comment|/// Load an object file from memory.
+comment|///
+comment|/// If available, the size of the object file in memory may be
+comment|/// passed to avoid additional round trips to process memory.
+comment|/// If the size is not provided, a default value is used. This
+comment|/// value should be large enough to enable the ObjectFile plugins
+comment|/// to read the header of the object file without going back to the
+comment|/// process.
+comment|///
+comment|/// @return
+comment|///     The object file loaded from memory or NULL, if the operation
+comment|///     failed (see the `error` for more information in that case).
+comment|//------------------------------------------------------------------
 name|ObjectFile
 modifier|*
 name|GetMemoryObjectFile
@@ -1215,6 +1256,11 @@ argument_list|,
 name|Error
 operator|&
 name|error
+argument_list|,
+name|size_t
+name|size_to_read
+operator|=
+literal|512
 argument_list|)
 decl_stmt|;
 comment|//------------------------------------------------------------------
@@ -1286,12 +1332,12 @@ comment|//------------------------------------------------------------------
 comment|/// A debugging function that will cause everything in a module to
 comment|/// be parsed.
 comment|///
-comment|/// All compile units will be pasred, along with all globals and
+comment|/// All compile units will be parsed, along with all globals and
 comment|/// static variables and all functions for those compile units.
 comment|/// All types, scopes, local variables, static variables, global
 comment|/// variables, and line tables will be parsed. This can be used
 comment|/// prior to dumping a module to see a complete list of the
-comment|/// resuling debug information that gets parsed, or as a debug
+comment|/// resulting debug information that gets parsed, or as a debug
 comment|/// function to ensure that the module can consume all of the
 comment|/// debug data the symbol vendor provides.
 comment|//------------------------------------------------------------------
@@ -1707,7 +1753,7 @@ comment|// Return true if the file backing this module has changed since the
 end_comment
 
 begin_comment
-comment|// module was originally created  since we saved the intial file
+comment|// module was originally created  since we saved the initial file
 end_comment
 
 begin_comment
@@ -2623,6 +2669,16 @@ begin_label
 name|private
 label|:
 end_label
+
+begin_expr_stmt
+name|Module
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Only used internally by CreateJITModule ()
+end_comment
 
 begin_function_decl
 name|size_t

@@ -269,6 +269,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LIBLLDB_LOG_JIT_LOADER
+value|(1u<< 27)
+end_define
+
+begin_define
+define|#
+directive|define
 name|LIBLLDB_LOG_ALL
 value|(UINT32_MAX)
 end_define

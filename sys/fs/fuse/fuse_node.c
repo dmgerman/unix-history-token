@@ -1196,7 +1196,38 @@ modifier|*
 name|td
 parameter_list|)
 block|{
-comment|/*          * Funcation is called for every vnode open.          * Merge fuse_open_flags it may be 0          *          * XXXIP: Handle FOPEN_DIRECT_IO and FOPEN_KEEP_CACHE          */
+comment|/* 	 * Funcation is called for every vnode open. 	 * Merge fuse_open_flags it may be 0 	 * 	 * XXXIP: Handle FOPEN_KEEP_CACHE 	 */
+comment|/* 	 * Ideally speaking, direct io should be enabled on 	 * fd's but do not see of any way of providing that 	 * this implementation. 	 * 	 * Also cannot think of a reason why would two 	 * different fd's on same vnode would like 	 * have DIRECT_IO turned on and off. But linux 	 * based implementation works on an fd not an 	 * inode and provides such a feature. 	 * 	 * XXXIP: Handle fd based DIRECT_IO 	 */
+if|if
+condition|(
+name|fuse_open_flags
+operator|&
+name|FOPEN_DIRECT_IO
+condition|)
+block|{
+name|VTOFUD
+argument_list|(
+name|vp
+argument_list|)
+operator|->
+name|flag
+operator||=
+name|FN_DIRECTIO
+expr_stmt|;
+block|}
+else|else
+block|{
+name|VTOFUD
+argument_list|(
+name|vp
+argument_list|)
+operator|->
+name|flag
+operator|&=
+operator|~
+name|FN_DIRECTIO
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|vnode_vtype

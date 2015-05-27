@@ -154,9 +154,6 @@ argument_list|(
 name|__arm__
 argument_list|)
 operator|&
-name|uart_lpc_class
-block|,
-operator|&
 name|uart_s3c2410_class
 block|,
 endif|#

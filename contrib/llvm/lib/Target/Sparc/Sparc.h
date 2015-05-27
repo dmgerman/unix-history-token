@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TARGET_SPARC_H
+name|LLVM_LIB_TARGET_SPARC_SPARC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TARGET_SPARC_H
+name|LLVM_LIB_TARGET_SPARC_SPARC_H
 end_define
 
 begin_include
@@ -121,19 +121,6 @@ modifier|&
 name|TM
 parameter_list|)
 function_decl|;
-name|FunctionPass
-modifier|*
-name|createSparcJITCodeEmitterPass
-parameter_list|(
-name|SparcTargetMachine
-modifier|&
-name|TM
-parameter_list|,
-name|JITCodeEmitter
-modifier|&
-name|JCE
-parameter_list|)
-function_decl|;
 name|void
 name|LowerSparcMachineInstrToMCInst
 parameter_list|(
@@ -170,8 +157,16 @@ block|{
 enum|enum
 name|CondCodes
 block|{
-comment|//ICC_A   =  8   ,  // Always
-comment|//ICC_N   =  0   ,  // Never
+name|ICC_A
+init|=
+literal|8
+block|,
+comment|// Always
+name|ICC_N
+init|=
+literal|0
+block|,
+comment|// Never
 name|ICC_NE
 init|=
 literal|9
@@ -242,8 +237,20 @@ init|=
 literal|7
 block|,
 comment|// Overflow Set
-comment|//FCC_A   =  8+16,  // Always
-comment|//FCC_N   =  0+16,  // Never
+name|FCC_A
+init|=
+literal|8
+operator|+
+literal|16
+block|,
+comment|// Always
+name|FCC_N
+init|=
+literal|0
+operator|+
+literal|16
+block|,
+comment|// Never
 name|FCC_U
 init|=
 literal|7
@@ -365,6 +372,22 @@ block|{
 case|case
 name|SPCC
 operator|::
+name|ICC_A
+case|:
+return|return
+literal|"a"
+return|;
+case|case
+name|SPCC
+operator|::
+name|ICC_N
+case|:
+return|return
+literal|"n"
+return|;
+case|case
+name|SPCC
+operator|::
 name|ICC_NE
 case|:
 return|return
@@ -473,6 +496,22 @@ name|ICC_VS
 case|:
 return|return
 literal|"vs"
+return|;
+case|case
+name|SPCC
+operator|::
+name|FCC_A
+case|:
+return|return
+literal|"a"
+return|;
+case|case
+name|SPCC
+operator|::
+name|FCC_N
+case|:
+return|return
+literal|"n"
 return|;
 case|case
 name|SPCC

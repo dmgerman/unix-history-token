@@ -304,6 +304,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|if_clone
+modifier|*
+name|if_clone_findifc
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|if_clone_addgroup
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|struct
+name|if_clone
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* The below interface used only by epair(4). */
 end_comment

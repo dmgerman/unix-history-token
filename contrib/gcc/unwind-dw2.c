@@ -6018,11 +6018,27 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/*  * ARM64TODO: http://llvm.org/pr22997  * llvm 3.6 doesn't support __builtin_init_dwarf_reg_size_table on AArch64.  */
+ifdef|#
+directive|ifdef
+name|__aarch64__
+name|printf
+argument_list|(
+literal|"Unimplemented: init_dwarf_reg_size_table\n"
+argument_list|)
+expr_stmt|;
+name|abort
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 name|__builtin_init_dwarf_reg_size_table
 argument_list|(
 name|dwarf_reg_size_table
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

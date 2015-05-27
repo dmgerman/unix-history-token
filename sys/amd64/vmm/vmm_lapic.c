@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"vmm_ipi.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"vmm_ktr.h"
 end_include
 
@@ -156,11 +150,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+comment|/* 	 * According to section "Maskable Hardware Interrupts" in Intel SDM 	 * vectors 16 through 255 can be delivered through the local APIC. 	 */
 if|if
 condition|(
 name|vector
 operator|<
-literal|32
+literal|16
 operator|||
 name|vector
 operator|>

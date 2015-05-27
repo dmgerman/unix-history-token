@@ -768,7 +768,7 @@ argument_list|(
 operator|&
 name|gxemul_cons_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset

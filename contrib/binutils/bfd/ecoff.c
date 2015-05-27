@@ -193,14 +193,16 @@ literal|0
 block|,
 literal|0
 block|,
-comment|/* has_gp_reloc, need_finalize_relax, reloc_done,                */
+comment|/* has_tls_get_addr_call, has_gp_reloc, need_finalize_relax,     */
 literal|0
 block|,
 literal|0
 block|,
 literal|0
 block|,
-comment|/* vma, lma, size, rawsize,                                      */
+comment|/* reloc_done, vma, lma, size, rawsize,                          */
+literal|0
+block|,
 literal|0
 block|,
 literal|0

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -788,6 +788,10 @@ name|ACPI_GENERIC_ADDRESS
 name|SleepStatus
 decl_stmt|;
 comment|/* 64-bit Sleep Status register (ACPI 5.0) */
+name|UINT64
+name|HypervisorId
+decl_stmt|;
+comment|/* Hypervisor Vendor ID (ACPI 6.0) */
 block|}
 name|ACPI_TABLE_FADT
 typedef|;
@@ -1183,7 +1187,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/* Values for SleepStatus and SleepControl registers (V5 FADT) */
+comment|/* Values for SleepStatus and SleepControl registers (V5+ FADT) */
 end_comment
 
 begin_define
@@ -1371,7 +1375,7 @@ value|(UINT16) ACPI_OFFSET (ACPI_TABLE_FADT, f)
 end_define
 
 begin_comment
-comment|/*  * Sizes of the various flavors of FADT. We need to look closely  * at the FADT length because the version number essentially tells  * us nothing because of many BIOS bugs where the version does not  * match the expected length. In other words, the length of the  * FADT is the bottom line as to what the version really is.  *  * For reference, the values below are as follows:  *     FADT V1  size: 0x074  *     FADT V2  size: 0x084  *     FADT V3  size: 0x0F4  *     FADT V4  size: 0x0F4  *     FADT V5  size: 0x10C  */
+comment|/*  * Sizes of the various flavors of FADT. We need to look closely  * at the FADT length because the version number essentially tells  * us nothing because of many BIOS bugs where the version does not  * match the expected length. In other words, the length of the  * FADT is the bottom line as to what the version really is.  *  * For reference, the values below are as follows:  *     FADT V1 size: 0x074  *     FADT V2 size: 0x084  *     FADT V3 size: 0x0F4  *     FADT V4 size: 0x0F4  *     FADT V5 size: 0x10C  *     FADT V6 size: 0x114  */
 end_comment
 
 begin_define
@@ -1399,6 +1403,13 @@ begin_define
 define|#
 directive|define
 name|ACPI_FADT_V5_SIZE
+value|(UINT32) (ACPI_FADT_OFFSET (HypervisorId))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FADT_V6_SIZE
 value|(UINT32) (sizeof (ACPI_TABLE_FADT))
 end_define
 

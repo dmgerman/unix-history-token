@@ -54,14 +54,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_CODEGEN_TARGETINFO_H
+name|LLVM_CLANG_LIB_CODEGEN_TARGETINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_CODEGEN_TARGETINFO_H
+name|LLVM_CLANG_LIB_CODEGEN_TARGETINFO_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"CGValue.h"
+end_include
 
 begin_include
 include|#
@@ -78,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|"llvm/ADT/SmallString.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallString.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_decl_stmt
@@ -158,7 +164,7 @@ name|Info
 argument_list|(
 argument|info
 argument_list|)
-block|{ }
+block|{}
 name|virtual
 operator|~
 name|TargetCodeGenInfo
@@ -201,7 +207,32 @@ operator|&
 name|M
 argument_list|)
 decl|const
-block|{ }
+block|{}
+comment|/// EmitTargetMD - Provides a convenient hook to handle extra
+comment|/// target-specific metadata for the given global.
+name|virtual
+name|void
+name|emitTargetMD
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|CodeGen
+operator|::
+name|CodeGenModule
+operator|&
+name|M
+argument_list|)
+decl|const
+block|{}
 comment|/// Determines the size of struct _Unwind_Exception on this platform,
 comment|/// in 8-bit units.  The Itanium ABI defines this as:
 comment|///   struct _Unwind_Exception {
@@ -340,12 +371,92 @@ argument|CodeGen::CodeGenFunction&CGF
 argument_list|,
 argument|StringRef Constraint
 argument_list|,
-argument|llvm::Type* Ty
+argument|llvm::Type *Ty
 argument_list|)
 specifier|const
 block|{
 return|return
 name|Ty
+return|;
+block|}
+comment|/// Adds constraints and types for result registers.
+name|virtual
+name|void
+name|addReturnRegisterOutputs
+argument_list|(
+name|CodeGen
+operator|::
+name|CodeGenFunction
+operator|&
+name|CGF
+argument_list|,
+name|CodeGen
+operator|::
+name|LValue
+name|ReturnValue
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|Constraints
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|Type
+operator|*
+operator|>
+operator|&
+name|ResultRegTypes
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|llvm
+operator|::
+name|Type
+operator|*
+operator|>
+operator|&
+name|ResultTruncRegTypes
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|CodeGen
+operator|::
+name|LValue
+operator|>
+operator|&
+name|ResultRegDests
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|AsmString
+argument_list|,
+name|unsigned
+name|NumOutputs
+argument_list|)
+decl|const
+block|{}
+comment|/// doesReturnSlotInterfereWithArgs - Return true if the target uses an
+comment|/// argument slot for an 'sret' type.
+name|virtual
+name|bool
+name|doesReturnSlotInterfereWithArgs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
 return|;
 block|}
 comment|/// Retrieve the address of a function to call immediately before
@@ -382,7 +493,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// Determine whether a call to an unprototyped functions under
@@ -417,7 +528,7 @@ comment|///
 comment|/// However, some platforms make the conventions identical except
 comment|/// for passing additional out-of-band information to a variadic
 comment|/// function: for example, x86-64 passes the number of SSE
-comment|/// arguments in %al.  On these platforms, it is desireable to
+comment|/// arguments in %al.  On these platforms, it is desirable to
 comment|/// call unprototyped functions using the variadic convention so
 comment|/// that unprototyped calls to varargs functions still succeed.
 comment|///
@@ -494,6 +605,22 @@ name|Opt
 argument_list|)
 decl|const
 block|{}
+comment|/// Gets the target-specific default alignment used when an 'aligned' clause
+comment|/// is used with a 'simd' OpenMP directive without specifying a specific
+comment|/// alignment.
+name|virtual
+name|unsigned
+name|getOpenMPSimdDefaultAlignment
+argument_list|(
+name|QualType
+name|Type
+argument_list|)
+decl|const
+block|{
+return|return
+literal|0
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}
@@ -503,10 +630,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// CLANG_CODEGEN_TARGETINFO_H
-end_comment
 
 end_unit
 

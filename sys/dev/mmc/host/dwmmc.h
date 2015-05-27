@@ -661,6 +661,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SDMMC_STATUS_FIFO_FULL
+value|(1<< 3)
+end_define
+
+begin_comment
+comment|/* FIFO full */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDMMC_STATUS_FIFO_EMPTY
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* FIFO empty */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SDMMC_FIFOTH
 value|0x4C
 end_define

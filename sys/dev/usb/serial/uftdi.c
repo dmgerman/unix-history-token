@@ -253,7 +253,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|uftdi_debug
@@ -3236,6 +3236,15 @@ argument_list|(
 name|FTDI
 argument_list|,
 name|SCS_DEVICE_7
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FTDI
+argument_list|,
+name|SCX8_USB_PHOENIX
 argument_list|,
 literal|0
 argument_list|)
@@ -10482,7 +10491,7 @@ name|req
 operator|.
 name|bmRequestType
 operator|=
-name|UT_WRITE_VENDOR_DEVICE
+name|UT_READ_VENDOR_DEVICE
 expr_stmt|;
 name|req
 operator|.
@@ -10690,7 +10699,7 @@ name|req
 operator|.
 name|bmRequestType
 operator|=
-name|UT_WRITE_VENDOR_DEVICE
+name|UT_READ_VENDOR_DEVICE
 expr_stmt|;
 name|req
 operator|.

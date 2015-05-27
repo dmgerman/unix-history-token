@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ADT_ILISTNODE_H
+name|LLVM_ADT_ILIST_NODE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ADT_ILISTNODE_H
+name|LLVM_ADT_ILIST_NODE_H
 end_define
 
 begin_decl_stmt
@@ -133,7 +133,7 @@ argument_list|()
 operator|:
 name|Prev
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 expr|}
@@ -218,7 +218,7 @@ argument_list|()
 operator|:
 name|Next
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|public
@@ -250,7 +250,7 @@ name|getNext
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|Prev
@@ -284,7 +284,7 @@ name|getNext
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|Prev
@@ -313,7 +313,7 @@ name|getNext
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|Next
@@ -345,7 +345,7 @@ name|getNext
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|Next

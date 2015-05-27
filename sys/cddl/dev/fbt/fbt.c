@@ -644,19 +644,6 @@ operator|==
 literal|0
 condition|)
 return|return;
-comment|/* 	 * The cyclic timer subsystem can be built as a module and DTrace 	 * depends on that, so it is ineligible too. 	 */
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|modname
-argument_list|,
-literal|"cyclic"
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return;
 comment|/* 	 * To register with DTrace, a module must list 'dtrace' as a 	 * dependency in order for the kernel linker to resolve 	 * symbols like dtrace_register(). All modules with such a 	 * dependency are ineligible for FBT tracing. 	 */
 for|for
 control|(

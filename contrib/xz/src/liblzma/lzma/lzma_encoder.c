@@ -824,18 +824,18 @@ argument_list|)
 expr_stmt|;
 specifier|const
 name|uint32_t
-name|pos_slot
+name|dist_slot
 init|=
-name|get_pos_slot
+name|get_dist_slot
 argument_list|(
 name|distance
 argument_list|)
 decl_stmt|;
 specifier|const
 name|uint32_t
-name|len_to_pos_state
+name|dist_state
 init|=
-name|get_len_to_pos_state
+name|get_dist_state
 argument_list|(
 name|len
 argument_list|)
@@ -849,21 +849,21 @@ name|rc
 argument_list|,
 name|coder
 operator|->
-name|pos_slot
+name|dist_slot
 index|[
-name|len_to_pos_state
+name|dist_state
 index|]
 argument_list|,
-name|POS_SLOT_BITS
+name|DIST_SLOT_BITS
 argument_list|,
-name|pos_slot
+name|dist_slot
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pos_slot
+name|dist_slot
 operator|>=
-name|START_POS_MODEL_INDEX
+name|DIST_MODEL_START
 condition|)
 block|{
 specifier|const
@@ -871,7 +871,7 @@ name|uint32_t
 name|footer_bits
 init|=
 operator|(
-name|pos_slot
+name|dist_slot
 operator|>>
 literal|1
 operator|)
@@ -886,7 +886,7 @@ operator|(
 literal|2
 operator||
 operator|(
-name|pos_slot
+name|dist_slot
 operator|&
 literal|1
 operator|)
@@ -896,7 +896,7 @@ name|footer_bits
 decl_stmt|;
 specifier|const
 name|uint32_t
-name|pos_reduced
+name|dist_reduced
 init|=
 name|distance
 operator|-
@@ -904,12 +904,12 @@ name|base
 decl_stmt|;
 if|if
 condition|(
-name|pos_slot
+name|dist_slot
 operator|<
-name|END_POS_MODEL_INDEX
+name|DIST_MODEL_END
 condition|)
 block|{
-comment|// Careful here: base - pos_slot - 1 can be -1, but
+comment|// Careful here: base - dist_slot - 1 can be -1, but
 comment|// rc_bittree_reverse starts at probs[1], not probs[0].
 name|rc_bittree_reverse
 argument_list|(
@@ -920,17 +920,17 @@ name|rc
 argument_list|,
 name|coder
 operator|->
-name|pos_special
+name|dist_special
 operator|+
 name|base
 operator|-
-name|pos_slot
+name|dist_slot
 operator|-
 literal|1
 argument_list|,
 name|footer_bits
 argument_list|,
-name|pos_reduced
+name|dist_reduced
 argument_list|)
 expr_stmt|;
 block|}
@@ -943,7 +943,7 @@ name|coder
 operator|->
 name|rc
 argument_list|,
-name|pos_reduced
+name|dist_reduced
 operator|>>
 name|ALIGN_BITS
 argument_list|,
@@ -961,11 +961,11 @@ name|rc
 argument_list|,
 name|coder
 operator|->
-name|pos_align
+name|dist_align
 argument_list|,
 name|ALIGN_BITS
 argument_list|,
-name|pos_reduced
+name|dist_reduced
 operator|&
 name|ALIGN_MASK
 argument_list|)
@@ -1460,7 +1460,7 @@ if|if
 condition|(
 name|back
 operator|<
-name|REP_DISTANCES
+name|REPS
 condition|)
 block|{
 comment|// It's a repeated match i.e. the same distance
@@ -1528,7 +1528,7 @@ name|pos_state
 argument_list|,
 name|back
 operator|-
-name|REP_DISTANCES
+name|REPS
 argument_list|,
 name|len
 argument_list|)
@@ -1968,9 +1968,9 @@ break|break;
 block|}
 comment|// Get optimal match (repeat position and length).
 comment|// Value ranges for pos:
-comment|//   - [0, REP_DISTANCES): repeated match
-comment|//   - [REP_DISTANCES, UINT32_MAX):
-comment|//     match at (pos - REP_DISTANCES)
+comment|//   - [0, REPS): repeated match
+comment|//   - [REPS, UINT32_MAX):
+comment|//     match at (pos - REPS)
 comment|//   - UINT32_MAX: not a match but a literal
 comment|// Value ranges for len:
 comment|//   - [MATCH_LEN_MIN, MATCH_LEN_MAX]
@@ -2525,7 +2525,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|REP_DISTANCES
+name|REPS
 condition|;
 operator|++
 name|i
@@ -2666,7 +2666,7 @@ name|i
 operator|<
 name|FULL_DISTANCES
 operator|-
-name|END_POS_MODEL_INDEX
+name|DIST_MODEL_END
 condition|;
 operator|++
 name|i
@@ -2675,7 +2675,7 @@ name|bit_reset
 argument_list|(
 name|coder
 operator|->
-name|pos_special
+name|dist_special
 index|[
 name|i
 index|]
@@ -2691,7 +2691,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|LEN_TO_POS_STATES
+name|DIST_STATES
 condition|;
 operator|++
 name|i
@@ -2700,19 +2700,19 @@ name|bittree_reset
 argument_list|(
 name|coder
 operator|->
-name|pos_slot
+name|dist_slot
 index|[
 name|i
 index|]
 argument_list|,
-name|POS_SLOT_BITS
+name|DIST_SLOT_BITS
 argument_list|)
 expr_stmt|;
 name|bittree_reset
 argument_list|(
 name|coder
 operator|->
-name|pos_align
+name|dist_align
 argument_list|,
 name|ALIGN_BITS
 argument_list|)
@@ -2811,6 +2811,7 @@ modifier|*
 modifier|*
 name|coder_ptr
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -3018,6 +3019,7 @@ name|lzma_lz_encoder
 modifier|*
 name|lz
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -3066,6 +3068,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator

@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_POWERPC_PPCPREDICATES_H
+name|LLVM_LIB_TARGET_POWERPC_MCTARGETDESC_PPCPREDICATES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_POWERPC_PPCPREDICATES_H
+name|LLVM_LIB_TARGET_POWERPC_MCTARGETDESC_PPCPREDICATES_H
 end_define
 
 begin_comment
@@ -333,6 +333,16 @@ literal|5
 operator|)
 operator||
 literal|7
+block|,
+comment|// When dealing with individual condition-register bits, we have simple set
+comment|// and unset predicates.
+name|PRED_BIT_SET
+init|=
+literal|1024
+block|,
+name|PRED_BIT_UNSET
+init|=
+literal|1025
 block|}
 enum|;
 comment|/// Invert the specified predicate.  != -> ==,< ->>=.

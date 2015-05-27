@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MC_MCSUBTARGET_H
+name|LLVM_MC_MCSUBTARGETINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MC_MCSUBTARGET_H
+name|LLVM_MC_MCSUBTARGETINFO_H
 end_define
 
 begin_include
@@ -97,17 +97,19 @@ name|string
 name|TargetTriple
 expr_stmt|;
 comment|// Target triple
-specifier|const
+name|ArrayRef
+operator|<
 name|SubtargetFeatureKV
-modifier|*
+operator|>
 name|ProcFeatures
-decl_stmt|;
+expr_stmt|;
 comment|// Processor feature list
-specifier|const
+name|ArrayRef
+operator|<
 name|SubtargetFeatureKV
-modifier|*
+operator|>
 name|ProcDesc
-decl_stmt|;
+expr_stmt|;
 comment|// Processor descriptions
 comment|// Scheduler machine model
 specifier|const
@@ -130,9 +132,7 @@ name|MCReadAdvanceEntry
 modifier|*
 name|ReadAdvanceTable
 decl_stmt|;
-specifier|const
 name|MCSchedModel
-modifier|*
 name|CPUSchedModel
 decl_stmt|;
 specifier|const
@@ -153,14 +153,6 @@ modifier|*
 name|ForwardingPaths
 decl_stmt|;
 comment|// Forwarding paths
-name|unsigned
-name|NumFeatures
-decl_stmt|;
-comment|// Number of processor features
-name|unsigned
-name|NumProcs
-decl_stmt|;
-comment|// Number of processors
 name|uint64_t
 name|FeatureBits
 decl_stmt|;
@@ -169,68 +161,64 @@ name|public
 label|:
 name|void
 name|InitMCSubtargetInfo
-parameter_list|(
+argument_list|(
 name|StringRef
 name|TT
-parameter_list|,
+argument_list|,
 name|StringRef
 name|CPU
-parameter_list|,
+argument_list|,
 name|StringRef
 name|FS
-parameter_list|,
-specifier|const
+argument_list|,
+name|ArrayRef
+operator|<
 name|SubtargetFeatureKV
-modifier|*
+operator|>
 name|PF
-parameter_list|,
-specifier|const
+argument_list|,
+name|ArrayRef
+operator|<
 name|SubtargetFeatureKV
-modifier|*
+operator|>
 name|PD
-parameter_list|,
+argument_list|,
 specifier|const
 name|SubtargetInfoKV
-modifier|*
+operator|*
 name|ProcSched
-parameter_list|,
+argument_list|,
 specifier|const
 name|MCWriteProcResEntry
-modifier|*
+operator|*
 name|WPR
-parameter_list|,
+argument_list|,
 specifier|const
 name|MCWriteLatencyEntry
-modifier|*
+operator|*
 name|WL
-parameter_list|,
+argument_list|,
 specifier|const
 name|MCReadAdvanceEntry
-modifier|*
+operator|*
 name|RA
-parameter_list|,
+argument_list|,
 specifier|const
 name|InstrStage
-modifier|*
+operator|*
 name|IS
-parameter_list|,
+argument_list|,
 specifier|const
 name|unsigned
-modifier|*
+operator|*
 name|OC
-parameter_list|,
+argument_list|,
 specifier|const
 name|unsigned
-modifier|*
+operator|*
 name|FP
-parameter_list|,
-name|unsigned
-name|NF
-parameter_list|,
-name|unsigned
-name|NP
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// getTargetTriple - Return the target triple string.
 name|StringRef
 name|getTargetTriple
@@ -251,6 +239,20 @@ block|{
 return|return
 name|FeatureBits
 return|;
+block|}
+comment|/// setFeatureBits - Set the feature bits.
+comment|///
+name|void
+name|setFeatureBits
+parameter_list|(
+name|uint64_t
+name|FeatureBits_
+parameter_list|)
+block|{
+name|FeatureBits
+operator|=
+name|FeatureBits_
+expr_stmt|;
 block|}
 comment|/// InitMCProcessorInfo - Set or change the CPU (optionally supplemented with
 comment|/// feature string). Recompute feature bits and scheduling model.
@@ -292,9 +294,7 @@ parameter_list|)
 function_decl|;
 comment|/// getSchedModelForCPU - Get the machine model of a CPU.
 comment|///
-specifier|const
 name|MCSchedModel
-modifier|*
 name|getSchedModelForCPU
 argument_list|(
 name|StringRef
@@ -306,7 +306,7 @@ comment|/// getSchedModel - Get the machine model for this subtarget's CPU.
 comment|///
 specifier|const
 name|MCSchedModel
-operator|*
+operator|&
 name|getSchedModel
 argument_list|()
 specifier|const
@@ -515,12 +515,69 @@ name|InstrItins
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Check whether the CPU string is valid.
+name|bool
+name|isCPUStringValid
+parameter_list|(
+name|StringRef
+name|CPU
+parameter_list|)
+block|{
+name|auto
+name|Found
+init|=
+name|std
+operator|::
+name|find_if
+argument_list|(
+name|ProcDesc
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|ProcDesc
+operator|.
+name|end
+argument_list|()
+argument_list|,
+index|[
+operator|=
+index|]
+operator|(
+specifier|const
+name|SubtargetFeatureKV
+operator|&
+name|KV
+operator|)
+block|{
+return|return
+name|CPU
+operator|==
+name|KV
+operator|.
+name|Key
+return|;
 block|}
-empty_stmt|;
+block|)
+function|;
+return|return
+name|Found
+operator|!=
+name|ProcDesc
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

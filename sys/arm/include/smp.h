@@ -76,6 +76,13 @@ name|IPI_TLB
 value|7
 end_define
 
+begin_define
+define|#
+directive|define
+name|IPI_CACHE
+value|8
+end_define
+
 begin_function_decl
 name|void
 name|init_secondary
@@ -160,7 +167,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pic_ipi_get
+name|pic_ipi_read
 parameter_list|(
 name|int
 name|arg

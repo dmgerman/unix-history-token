@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2014, Juniper Networks, Inc.  * All rights reserved.
 end_comment
 
 begin_comment
-comment|/**  * libxo provides a means of generating text, XML, and JSON output  * using a single set of function calls, maximizing the value of output  * while minimizing the cost/impact on the code.  */
+comment|/**  * libxo provides a means of generating text, XML, JSON, and HTML output  * using a single set of function calls, maximizing the value of output  * while minimizing the cost/impact on the code.  */
 end_comment
 
 begin_ifndef
@@ -18,6 +18,102 @@ define|#
 directive|define
 name|INCLUDE_XO_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__dead2
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|NORETURN
+value|__dead2
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NORETURN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __dead2 */
+end_comment
+
+begin_comment
+comment|/*  * Normally we'd use the HAVE_PRINTFLIKE define triggered by the  * --enable-printflike option to configure, but we don't install  * our internal "xoconfig.h", and I'd rather not.  Taking the  * coward's path, we'll turn it on inside a #if that allows  * others to turn it off where needed.  Not ideal, but functional.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NO_PRINTFLIKE
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|PRINTFLIKE
+parameter_list|(
+name|_x
+parameter_list|,
+name|_y
+parameter_list|)
+value|__printflike(_x, _y)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|PRINTFLIKE
+parameter_list|(
+name|_x
+parameter_list|,
+name|_y
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NO_PRINTFLIKE */
+end_comment
 
 begin_comment
 comment|/** Formatting types */
@@ -82,6 +178,7 @@ begin_typedef
 typedef|typedef
 name|unsigned
 name|long
+name|long
 name|xo_xof_flags_t
 typedef|;
 end_typedef
@@ -89,8 +186,18 @@ end_typedef
 begin_define
 define|#
 directive|define
+name|XOF_BIT
+parameter_list|(
+name|_n
+parameter_list|)
+value|((xo_xof_flags_t) 1<< (_n))
+end_define
+
+begin_define
+define|#
+directive|define
 name|XOF_CLOSE_FP
-value|(1<<0)
+value|XOF_BIT(0)
 end_define
 
 begin_comment
@@ -101,7 +208,7 @@ begin_define
 define|#
 directive|define
 name|XOF_PRETTY
-value|(1<<1)
+value|XOF_BIT(1)
 end_define
 
 begin_comment
@@ -112,7 +219,7 @@ begin_define
 define|#
 directive|define
 name|XOF_DIV_OPEN
-value|(1<<2)
+value|XOF_BIT(2)
 end_define
 
 begin_comment
@@ -123,18 +230,18 @@ begin_define
 define|#
 directive|define
 name|XOF_LINE_OPEN
-value|(1<<3)
+value|XOF_BIT(3)
 end_define
 
 begin_comment
-comment|/** Internal use only: a<div class="line"> */
+comment|/** Internal use only:<div class="line"> */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XOF_WARN
-value|(1<<4)
+value|XOF_BIT(4)
 end_define
 
 begin_comment
@@ -145,7 +252,7 @@ begin_define
 define|#
 directive|define
 name|XOF_XPATH
-value|(1<<5)
+value|XOF_BIT(5)
 end_define
 
 begin_comment
@@ -156,7 +263,7 @@ begin_define
 define|#
 directive|define
 name|XOF_INFO
-value|(1<<6)
+value|XOF_BIT(6)
 end_define
 
 begin_comment
@@ -167,7 +274,7 @@ begin_define
 define|#
 directive|define
 name|XOF_WARN_XML
-value|(1<<7)
+value|XOF_BIT(7)
 end_define
 
 begin_comment
@@ -178,18 +285,18 @@ begin_define
 define|#
 directive|define
 name|XOF_NO_ENV
-value|(1<<8)
+value|XOF_BIT(8)
 end_define
 
 begin_comment
-comment|/** Don't look at the LIBXO_OPTIONS env var */
+comment|/** Don't look at LIBXO_OPTIONS env var */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XOF_NO_VA_ARG
-value|(1<<9)
+value|XOF_BIT(9)
 end_define
 
 begin_comment
@@ -200,7 +307,7 @@ begin_define
 define|#
 directive|define
 name|XOF_DTRT
-value|(1<<10)
+value|XOF_BIT(10)
 end_define
 
 begin_comment
@@ -211,7 +318,7 @@ begin_define
 define|#
 directive|define
 name|XOF_KEYS
-value|(1<<11)
+value|XOF_BIT(11)
 end_define
 
 begin_comment
@@ -222,7 +329,7 @@ begin_define
 define|#
 directive|define
 name|XOF_IGNORE_CLOSE
-value|(1<<12)
+value|XOF_BIT(12)
 end_define
 
 begin_comment
@@ -233,7 +340,7 @@ begin_define
 define|#
 directive|define
 name|XOF_NOT_FIRST
-value|(1<<13)
+value|XOF_BIT(13)
 end_define
 
 begin_comment
@@ -244,7 +351,7 @@ begin_define
 define|#
 directive|define
 name|XOF_NO_LOCALE
-value|(1<<14)
+value|XOF_BIT(14)
 end_define
 
 begin_comment
@@ -255,7 +362,7 @@ begin_define
 define|#
 directive|define
 name|XOF_TOP_EMITTED
-value|(1<<15)
+value|XOF_BIT(15)
 end_define
 
 begin_comment
@@ -266,7 +373,7 @@ begin_define
 define|#
 directive|define
 name|XOF_NO_TOP
-value|(1<<16)
+value|XOF_BIT(16)
 end_define
 
 begin_comment
@@ -277,7 +384,7 @@ begin_define
 define|#
 directive|define
 name|XOF_ANCHOR
-value|(1<<17)
+value|XOF_BIT(17)
 end_define
 
 begin_comment
@@ -288,7 +395,7 @@ begin_define
 define|#
 directive|define
 name|XOF_UNITS
-value|(1<<18)
+value|XOF_BIT(18)
 end_define
 
 begin_comment
@@ -299,7 +406,7 @@ begin_define
 define|#
 directive|define
 name|XOF_UNITS_PENDING
-value|(1<<19)
+value|XOF_BIT(19)
 end_define
 
 begin_comment
@@ -310,18 +417,18 @@ begin_define
 define|#
 directive|define
 name|XOF_UNDERSCORES
-value|(1<<20)
+value|XOF_BIT(20)
 end_define
 
 begin_comment
-comment|/** Replace dashes with underscores (JSON)  */
+comment|/** Replace dashes with underscores (JSON)*/
 end_comment
 
 begin_define
 define|#
 directive|define
 name|XOF_COLUMNS
-value|(1<<21)
+value|XOF_BIT(21)
 end_define
 
 begin_comment
@@ -332,11 +439,55 @@ begin_define
 define|#
 directive|define
 name|XOF_FLUSH
-value|(1<<22)
+value|XOF_BIT(22)
 end_define
 
 begin_comment
 comment|/** Flush after each xo_emit call */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XOF_FLUSH_LINE
+value|XOF_BIT(23)
+end_define
+
+begin_comment
+comment|/** Flush after each newline */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XOF_NO_CLOSE
+value|XOF_BIT(24)
+end_define
+
+begin_comment
+comment|/** xo_finish won't close open elements */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XOF_COLOR_ALLOWED
+value|XOF_BIT(25)
+end_define
+
+begin_comment
+comment|/** Allow color/effects to be enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XOF_COLOR
+value|XOF_BIT(26)
+end_define
+
+begin_comment
+comment|/** Enable color and effects */
 end_comment
 
 begin_comment
@@ -417,6 +568,20 @@ name|void
 function_decl|(
 modifier|*
 name|xo_close_func_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|*
+name|xo_flush_func_t
 function_decl|)
 parameter_list|(
 name|void
@@ -563,6 +728,9 @@ name|write_func
 parameter_list|,
 name|xo_close_func_t
 name|close_func
+parameter_list|,
+name|xo_flush_func_t
+name|flush_func
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1089,6 +1257,62 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|xo_open_marker_h
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|xo_open_marker
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|xo_close_marker_h
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|xo_close_marker
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|xo_attr_h
 parameter_list|(
 name|xo_handle_t
@@ -1205,7 +1429,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|xo_flush_h
 parameter_list|(
 name|xo_handle_t
@@ -1216,7 +1440,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|xo_flush
 parameter_list|(
 name|void
@@ -1225,7 +1449,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|xo_finish_h
 parameter_list|(
 name|xo_handle_t
@@ -1236,7 +1460,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|xo_finish
 parameter_list|(
 name|void
@@ -1278,8 +1502,17 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PRINTFLIKE
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -1295,8 +1528,17 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PRINTFLIKE
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -1309,8 +1551,17 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PRINTFLIKE
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -1323,62 +1574,92 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PRINTFLIKE
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
 
-begin_function_decl
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|void
 name|xo_err
-parameter_list|(
+argument_list|(
 name|int
 name|eval
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|,
+operator|...
+argument_list|)
+name|NORETURN
+name|PRINTFLIKE
+argument_list|(
+literal|2
+argument_list|,
+literal|3
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|xo_errx
-parameter_list|(
+argument_list|(
 name|int
 name|eval
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|,
+operator|...
+argument_list|)
+name|NORETURN
+name|PRINTFLIKE
+argument_list|(
+literal|2
+argument_list|,
+literal|3
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|xo_errc
-parameter_list|(
+argument_list|(
 name|int
 name|eval
-parameter_list|,
+argument_list|,
 name|int
 name|code
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|,
+operator|...
+argument_list|)
+name|NORETURN
+name|PRINTFLIKE
+argument_list|(
+literal|3
+argument_list|,
+literal|4
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -1420,8 +1701,17 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PRINTFLIKE
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -1437,8 +1727,17 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PRINTFLIKE
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -1451,8 +1750,17 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|PRINTFLIKE
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -1462,6 +1770,10 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/**  * @brief Lift libxo-specific arguments from a set of arguments  *  * libxo-enable programs typically use command line options to enable  * all the nifty-cool libxo features.  xo_parse_args() makes this simple  * by pre-processing the command line arguments given to main(), handling  * and removing the libxo-specific ones, meaning anything starting with  * "--libxo".  A full description of these arguments is in the base  * documentation.  * @param[in] argc Number of arguments (ala #main())  * @param[in] argc Array of argument strings (ala #main())  * @return New number of arguments, or -1 for failure.  */
+end_comment
 
 begin_function_decl
 name|int
@@ -1479,7 +1791,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * This is the "magic" number returned by libxo-supporting commands  * when passed the equally magic "--libxo-check" option.  If you  * return this, we can assume that since you know the magic handshake,  * you'll happily handle future --libxo options and not do something  * violent like reboot the box or create another hole in the ozone  * layer.  */
+comment|/**  * This is the "magic" number returned by libxo-supporting commands  * when passed the equally magic "--libxo-check" option.  If you  * return this, we can (unsafely) assume that since you know the magic  * handshake, you'll happily handle future --libxo options and not do  * something violent like reboot the box or create another hole in the  * ozone layer.  */
 end_comment
 
 begin_define
@@ -1490,7 +1802,7 @@ value|121
 end_define
 
 begin_comment
-comment|/*  * externs for our version number strings  */
+comment|/**  * externs for libxo's version number strings  */
 end_comment
 
 begin_decl_stmt
@@ -1502,6 +1814,10 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/** Base version triple string */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -1510,6 +1826,77 @@ name|xo_version_extra
 index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/** Extra version magic content */
+end_comment
+
+begin_comment
+comment|/**  * @brief Dump the internal stack of a libxo handle.  *  * This diagnostic function is something I will ask you to call from  * your program when you write to tell me libxo has gone bat-stink  * crazy and has discarded your list or container or content.  Output  * content will be what we lovingly call "developer entertainment".  * @param[in] xop A valid libxo handle, or NULL for the default handle  */
+end_comment
+
+begin_function_decl
+name|void
+name|xo_dump_stack
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * @brief Recode the name of the program, suitable for error output.  *  * libxo will record the given name for use while generating error  * messages.  The contents are not copied, so the value must continue  * to point to a valid memory location.  This allows the caller to change  * the value, but requires the caller to manage the memory.  Typically  * this is called with argv[0] from main().  * @param[in] name The name of the current application program  */
+end_comment
+
+begin_function_decl
+name|void
+name|xo_set_program
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * @brief Add a version string to the output, where possible.  *  * Adds a version number to the output, suitable for tracking  * changes in the content.  This is only important for the "encoding"  * format styles (XML and JSON) and allows a user of the data to  * discern which version of the data model is in use.  * @param[in] version The version number, encoded as a string  */
+end_comment
+
+begin_function_decl
+name|void
+name|xo_set_version
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|version
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * #xo_set_version with a handle.  * @param[in] xop A valid libxo handle, or NULL for the default handle  * @param[in] version The version number, encoded as a string  */
+end_comment
+
+begin_function_decl
+name|void
+name|xo_set_version_h
+parameter_list|(
+name|xo_handle_t
+modifier|*
+name|xop
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|version
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -343,7 +343,7 @@ begin_define
 define|#
 directive|define
 name|DB_SMALL_VALUE_MAX
-value|(0x7fffffff)
+value|(KERNBASE-1)
 end_define
 
 begin_define

@@ -867,7 +867,7 @@ literal|0xffffffff
 return|;
 block|}
 comment|/// Returns the symbol index when the given entry represents a 32-bit
-comment|/// reloction.
+comment|/// relocation.
 specifier|static
 name|unsigned
 name|RelocSymbol32
@@ -887,7 +887,7 @@ literal|8
 return|;
 block|}
 comment|/// Returns the symbol index when the given entry represents a 64-bit
-comment|/// reloction.
+comment|/// relocation.
 specifier|static
 name|unsigned
 name|RelocSymbol64
@@ -999,7 +999,7 @@ literal|0xffffffff
 return|;
 block|}
 comment|/// Returns the symbol index when the given entry represents a 32-bit
-comment|/// reloction.
+comment|/// relocation.
 specifier|static
 name|unsigned
 name|RelocSymbol32
@@ -1019,7 +1019,7 @@ literal|8
 return|;
 block|}
 comment|/// Returns the symbol index when the given entry represents a 64-bit
-comment|/// reloction.
+comment|/// relocation.
 specifier|static
 name|unsigned
 name|RelocSymbol64

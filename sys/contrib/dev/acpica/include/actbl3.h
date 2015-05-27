@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -118,12 +118,45 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_SIG_STAO
+value|"STAO"
+end_define
+
+begin_comment
+comment|/* Status Override table */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACPI_SIG_TPM2
 value|"TPM2"
 end_define
 
 begin_comment
 comment|/* Trusted Platform Module 2.0 H/W interface table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_WPBT
+value|"WPBT"
+end_define
+
+begin_comment
+comment|/* Windows Platform Binary Table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_XENV
+value|"XENV"
+end_define
+
+begin_comment
+comment|/* Xen Environment table */
 end_comment
 
 begin_define
@@ -172,17 +205,6 @@ end_define
 
 begin_comment
 comment|/* Microsoft Data Management Table */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ACPI_SIG_WPBT
-value|"WPBT"
-end_define
-
-begin_comment
-comment|/* Windows Platform Binary Table */
 end_comment
 
 begin_comment
@@ -239,7 +261,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * DRTM - Dynamic Root of Trust for Measurement table  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * DRTM - Dynamic Root of Trust for Measurement table  * Conforms to "TCG D-RTM Architecture" June 17 2013, Version 1.0.0  * Table version 1  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -284,25 +306,89 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* 1) Validated Tables List */
+comment|/* Flag Definitions for above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_DRTM_ACCESS_ALLOWED
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DRTM_ENABLE_GAP_CODE
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DRTM_INCOMPLETE_MEASUREMENTS
+value|(1<<2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DRTM_AUTHORITY_ORDER
+value|(1<<3)
+end_define
+
+begin_comment
+comment|/* 1) Validated Tables List (64-bit addresses) */
 end_comment
 
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_drtm_vtl_list
+name|acpi_drtm_vtable_list
 block|{
 name|UINT32
-name|ValidatedTableListCount
+name|ValidatedTableCount
+decl_stmt|;
+name|UINT64
+name|ValidatedTables
+index|[
+literal|1
+index|]
 decl_stmt|;
 block|}
-name|ACPI_DRTM_VTL_LIST
+name|ACPI_DRTM_VTABLE_LIST
 typedef|;
 end_typedef
 
 begin_comment
-comment|/* 2) Resources List */
+comment|/* 2) Resources List (of Resource Descriptors) */
 end_comment
+
+begin_comment
+comment|/* Resource Descriptor */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_drtm_resource
+block|{
+name|UINT8
+name|Size
+index|[
+literal|7
+index|]
+decl_stmt|;
+name|UINT8
+name|Type
+decl_stmt|;
+name|UINT64
+name|Address
+decl_stmt|;
+block|}
+name|ACPI_DRTM_RESOURCE
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -310,7 +396,13 @@ struct|struct
 name|acpi_drtm_resource_list
 block|{
 name|UINT32
-name|ResourceListCount
+name|ResourceCount
+decl_stmt|;
+name|ACPI_DRTM_RESOURCE
+name|Resources
+index|[
+literal|1
+index|]
 decl_stmt|;
 block|}
 name|ACPI_DRTM_RESOURCE_LIST
@@ -324,13 +416,19 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|acpi_drtm_id_list
+name|acpi_drtm_dps_id
 block|{
 name|UINT32
-name|IdListCount
+name|DpsIdLength
+decl_stmt|;
+name|UINT8
+name|DpsId
+index|[
+literal|16
+index|]
 decl_stmt|;
 block|}
-name|ACPI_DRTM_ID_LIST
+name|ACPI_DRTM_DPS_ID
 typedef|;
 end_typedef
 
@@ -1868,6 +1966,27 @@ value|(0x1F<<3)
 end_define
 
 begin_comment
+comment|/*******************************************************************************  *  * STAO - Status Override Table (_STA override) - ACPI 6.0  *        Version 1  *  * Conforms to "ACPI Specification for Status Override Table"  * 6 January 2015  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_stao
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+name|UINT8
+name|IgnoreUart
+decl_stmt|;
+block|}
+name|ACPI_TABLE_STAO
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*******************************************************************************  *  * TPM2 - Trusted Platform Module (TPM) 2.0 Hardware Interface Table  *        Version 3  *  * Conforms to "TPM 2.0 Hardware Interface Table (TPM2)" 29 November 2011  *  ******************************************************************************/
 end_comment
 
@@ -1932,6 +2051,69 @@ name|ResponseAddress
 decl_stmt|;
 block|}
 name|ACPI_TPM2_CONTROL
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*******************************************************************************  *  * WPBT - Windows Platform Environment Table (ACPI 6.0)  *        Version 1  *  * Conforms to "Windows Platform Binary Table (WPBT)" 29 November 2011  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_wpbt
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+name|UINT32
+name|HandoffSize
+decl_stmt|;
+name|UINT64
+name|HandoffAddress
+decl_stmt|;
+name|UINT8
+name|Layout
+decl_stmt|;
+name|UINT8
+name|Type
+decl_stmt|;
+name|UINT16
+name|ArgumentsLength
+decl_stmt|;
+block|}
+name|ACPI_TABLE_WPBT
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*******************************************************************************  *  * XENV - Xen Environment Table (ACPI 6.0)  *        Version 1  *  * Conforms to "ACPI Specification for Xen Environment Table" 4 January 2015  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_xenv
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+name|UINT64
+name|GrantTableAddress
+decl_stmt|;
+name|UINT64
+name|GrantTableSize
+decl_stmt|;
+name|UINT32
+name|EventInterrupt
+decl_stmt|;
+name|UINT8
+name|EventFlags
+decl_stmt|;
+block|}
+name|ACPI_TABLE_XENV
 typedef|;
 end_typedef
 

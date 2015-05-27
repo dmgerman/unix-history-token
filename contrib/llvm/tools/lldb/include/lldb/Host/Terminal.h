@@ -201,7 +201,7 @@ comment|///     The file descriptor to save the state of.
 comment|///
 comment|/// @param[in] save_process_group
 comment|///     If \b true, save the process group settings, else do not
-comment|///     save the process group setttings for a TTY.
+comment|///     save the process group settings for a TTY.
 comment|///
 comment|/// @return
 comment|///     Returns \b true if \a fd describes a TTY and if the state

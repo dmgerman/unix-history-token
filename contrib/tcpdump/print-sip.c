@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Hannes Gredler (hannes@juniper.net)  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-sip.c,v 1.1 2004-07-27 17:04:20 hannes Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -52,18 +35,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
 end_include
 
@@ -73,16 +44,14 @@ directive|include
 file|"extract.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"udp.h"
-end_include
-
 begin_function
 name|void
 name|sip_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -97,23 +66,31 @@ block|{
 name|u_int
 name|idx
 decl_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"SIP, length: %u%s"
-argument_list|,
+operator|,
 name|len
-argument_list|,
-name|vflag
+operator|,
+name|ndo
+operator|->
+name|ndo_vflag
 condition|?
 literal|"\n\t"
 else|:
 literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* in non-verbose mode just lets print the protocol and length */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<
 literal|1
 condition|)
@@ -132,7 +109,7 @@ name|idx
 operator|++
 control|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 operator|(
@@ -159,6 +136,8 @@ block|{
 comment|/* linefeed ? */
 name|safeputchar
 argument_list|(
+name|ndo
+argument_list|,
 operator|*
 operator|(
 name|pptr
@@ -170,9 +149,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t"
+operator|)
 argument_list|)
 expr_stmt|;
 name|idx
@@ -184,12 +167,16 @@ block|}
 comment|/* do we want to see an additionally hexdump ? */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|,
 literal|"\n\t"
@@ -200,9 +187,13 @@ expr_stmt|;
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|sip]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

@@ -1875,6 +1875,12 @@ operator|!
 name|mm
 operator|->
 name|mm_replacing
+operator|&&
+name|mm
+operator|->
+name|mm_children
+operator|>
+literal|1
 condition|)
 block|{
 comment|/* 			 * For scrubbing reads we need to allocate a read 			 * buffer for each child and issue reads to all 			 * children.  If any child succeeds, it will copy its 			 * data into zio->io_data in vdev_mirror_scrub_done. 			 */

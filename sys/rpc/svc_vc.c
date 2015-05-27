@@ -691,6 +691,8 @@ block|{
 name|SVCXPRT
 modifier|*
 name|xprt
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -878,7 +880,8 @@ name|solisten
 argument_list|(
 name|so
 argument_list|,
-name|SOMAXCONN
+operator|-
+literal|1
 argument_list|,
 name|curthread
 argument_list|)

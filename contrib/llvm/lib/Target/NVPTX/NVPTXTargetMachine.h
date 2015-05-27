@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NVPTX_TARGETMACHINE_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXTARGETMACHINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NVPTX_TARGETMACHINE_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXTARGETMACHINE_H
 end_define
 
 begin_include
@@ -68,37 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"NVPTXFrameLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"NVPTXISelLowering.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"NVPTXInstrInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"NVPTXRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"NVPTXSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/IR/DataLayout.h"
 end_include
 
 begin_include
@@ -131,34 +101,21 @@ range|:
 name|public
 name|LLVMTargetMachine
 block|{
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|TargetLoweringObjectFile
+operator|>
+name|TLOF
+block|;
 name|NVPTXSubtarget
 name|Subtarget
-block|;
-specifier|const
-name|DataLayout
-name|DL
-block|;
-comment|// Calculates type size& alignment
-name|NVPTXInstrInfo
-name|InstrInfo
-block|;
-name|NVPTXTargetLowering
-name|TLInfo
-block|;
-name|TargetSelectionDAGInfo
-name|TSInfo
-block|;
-comment|// NVPTX does not have any call stack frame, but need a NVPTX specific
-comment|// FrameLowering class because TargetFrameLowering is abstract.
-name|NVPTXFrameLowering
-name|FrameLowering
 block|;
 comment|// Hold Strings that can be free'd all together with NVPTXTargetMachine
 name|ManagedStringPool
 name|ManagedStrPool
 block|;
-comment|//bool addCommonCodeGenPasses(PassManagerBase&, CodeGenOpt::Level,
-comment|//                            bool DisableVerify, MCContext *&OutCtx);
 name|public
 operator|:
 name|NVPTXTargetMachine
@@ -182,111 +139,24 @@ argument_list|,
 argument|bool is64bit
 argument_list|)
 block|;
-name|virtual
-specifier|const
-name|TargetFrameLowering
-operator|*
-name|getFrameLowering
+operator|~
+name|NVPTXTargetMachine
 argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|FrameLowering
-return|;
-block|}
-name|virtual
-specifier|const
-name|NVPTXInstrInfo
-operator|*
-name|getInstrInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|InstrInfo
-return|;
-block|}
-name|virtual
-specifier|const
-name|DataLayout
-operator|*
-name|getDataLayout
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|DL
-return|;
-block|}
-name|virtual
+name|override
+block|;
 specifier|const
 name|NVPTXSubtarget
 operator|*
 name|getSubtargetImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|&
 name|Subtarget
 return|;
 block|}
-name|virtual
-specifier|const
-name|NVPTXRegisterInfo
-operator|*
-name|getRegisterInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-operator|(
-name|InstrInfo
-operator|.
-name|getRegisterInfo
-argument_list|()
-operator|)
-return|;
-block|}
-name|virtual
-name|NVPTXTargetLowering
-operator|*
-name|getTargetLowering
-argument_list|()
-specifier|const
-block|{
-return|return
-name|const_cast
-operator|<
-name|NVPTXTargetLowering
-operator|*
-operator|>
-operator|(
-operator|&
-name|TLInfo
-operator|)
-return|;
-block|}
-name|virtual
-specifier|const
-name|TargetSelectionDAGInfo
-operator|*
-name|getSelectionDAGInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|TSInfo
-return|;
-block|}
-comment|//virtual bool addInstSelector(PassManagerBase&PM,
-comment|//                             CodeGenOpt::Level OptLevel);
-comment|//virtual bool addPreRegAlloc(PassManagerBase&, CodeGenOpt::Level);
 name|ManagedStringPool
 operator|*
 name|getManagedStrPool
@@ -305,34 +175,15 @@ name|ManagedStrPool
 operator|)
 return|;
 block|}
-name|virtual
 name|TargetPassConfig
 operator|*
 name|createPassConfig
 argument_list|(
-name|PassManagerBase
-operator|&
-name|PM
+argument|PassManagerBase&PM
 argument_list|)
+name|override
 block|;
-comment|// Emission of machine code through JITCodeEmitter is not supported.
-name|virtual
-name|bool
-name|addPassesToEmitMachineCode
-argument_list|(
-argument|PassManagerBase&
-argument_list|,
-argument|JITCodeEmitter&
-argument_list|,
-argument|bool = true
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// Emission of machine code through MCJIT is not supported.
-name|virtual
 name|bool
 name|addPassesToEmitMC
 argument_list|(
@@ -344,17 +195,39 @@ argument|raw_ostream&
 argument_list|,
 argument|bool = true
 argument_list|)
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-expr|}
-block|;
+name|TargetLoweringObjectFile
+operator|*
+name|getObjFileLowering
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|TLOF
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+comment|/// \brief Register NVPTX analysis passes with a pass manager.
+name|void
+name|addAnalysisPasses
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|)
+name|override
+block|;  }
+decl_stmt|;
 comment|// NVPTXTargetMachine.
 name|class
 name|NVPTXTargetMachine32
-operator|:
+range|:
 name|public
 name|NVPTXTargetMachine
 block|{
@@ -384,10 +257,10 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-block|;
+decl_stmt|;
 name|class
 name|NVPTXTargetMachine64
-operator|:
+range|:
 name|public
 name|NVPTXTargetMachine
 block|{
@@ -417,7 +290,8 @@ argument_list|,
 argument|CodeGenOpt::Level OL
 argument_list|)
 block|; }
-block|;  }
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

@@ -168,6 +168,76 @@ comment|/* :lower16: */
 end_comment
 
 begin_comment
+comment|/**  * The ARM64 target VariantKinds.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_VariantKind_ARM64_PAGE
+value|1
+end_define
+
+begin_comment
+comment|/* @page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_VariantKind_ARM64_PAGEOFF
+value|2
+end_define
+
+begin_comment
+comment|/* @pageoff */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_VariantKind_ARM64_GOTPAGE
+value|3
+end_define
+
+begin_comment
+comment|/* @gotpage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_VariantKind_ARM64_GOTPAGEOFF
+value|4
+end_define
+
+begin_comment
+comment|/* @gotpageoff */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_VariantKind_ARM64_TLVP
+value|5
+end_define
+
+begin_comment
+comment|/* @tvlppage */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_VariantKind_ARM64_TLVOFF
+value|6
+end_define
+
+begin_comment
+comment|/* @tvlppageoff */
+end_comment
+
+begin_comment
 comment|/**  * The type for the symbol lookup function.  This may be called by the  * disassembler for things like adding a comment for a PC plus a constant  * offset load instruction to use a symbol name instead of a load address value.  * It is passed the block information is saved when the disassembler context is  * created and the ReferenceValue to look up as a symbol.  If no symbol is found  * for the ReferenceValue NULL is returned.  The ReferenceType of the  * instruction is passed indirectly as is the PC of the instruction in  * ReferencePC.  If the output reference can be determined its type is returned  * indirectly in ReferenceType along with ReferenceName if any, or that is set  * to NULL.  */
 end_comment
 
@@ -239,6 +309,61 @@ define|#
 directive|define
 name|LLVMDisassembler_ReferenceType_In_PCrel_Load
 value|2
+end_define
+
+begin_comment
+comment|/* The input reference is from an ARM64::ADRP instruction. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_ReferenceType_In_ARM64_ADRP
+value|0x100000001
+end_define
+
+begin_comment
+comment|/* The input reference is from an ARM64::ADDXri instruction. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_ReferenceType_In_ARM64_ADDXri
+value|0x100000002
+end_define
+
+begin_comment
+comment|/* The input reference is from an ARM64::LDRXui instruction. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_ReferenceType_In_ARM64_LDRXui
+value|0x100000003
+end_define
+
+begin_comment
+comment|/* The input reference is from an ARM64::LDRXl instruction. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_ReferenceType_In_ARM64_LDRXl
+value|0x100000004
+end_define
+
+begin_comment
+comment|/* The input reference is from an ARM64::ADR instruction. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_ReferenceType_In_ARM64_ADR
+value|0x100000005
 end_define
 
 begin_comment
@@ -329,6 +454,17 @@ name|LLVMDisassembler_ReferenceType_Out_Objc_Class_Ref
 value|8
 end_define
 
+begin_comment
+comment|/* The output reference is to a C++ symbol name. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_ReferenceType_DeMangled_Name
+value|9
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -342,7 +478,7 @@ block|{
 endif|#
 directive|endif
 comment|/* !defined(__cplusplus) */
-comment|/**  * Create a disassembler for the TripleName.  Symbolic disassembly is supported  * by passing a block of information in the DisInfo parameter and specifying the  * TagType and callback functions as described above.  These can all be passed  * as NULL.  If successful, this returns a disassembler context.  If not, it  * returns NULL. This function is equivalent to calling LLVMCreateDisasmCPU()  * with an empty CPU name.  */
+comment|/**  * Create a disassembler for the TripleName.  Symbolic disassembly is supported  * by passing a block of information in the DisInfo parameter and specifying the  * TagType and callback functions as described above.  These can all be passed  * as NULL.  If successful, this returns a disassembler context.  If not, it  * returns NULL. This function is equivalent to calling  * LLVMCreateDisasmCPUFeatures() with an empty CPU name and feature set.  */
 name|LLVMDisasmContextRef
 name|LLVMCreateDisasm
 parameter_list|(
@@ -365,7 +501,7 @@ name|LLVMSymbolLookupCallback
 name|SymbolLookUp
 parameter_list|)
 function_decl|;
-comment|/**  * Create a disassembler for the TripleName and a specific CPU.  Symbolic  * disassembly is supported by passing a block of information in the DisInfo  * parameter and specifying the TagType and callback functions as described  * above.  These can all be passed * as NULL.  If successful, this returns a  * disassembler context.  If not, it returns NULL.  */
+comment|/**  * Create a disassembler for the TripleName and a specific CPU.  Symbolic  * disassembly is supported by passing a block of information in the DisInfo  * parameter and specifying the TagType and callback functions as described  * above.  These can all be passed * as NULL.  If successful, this returns a  * disassembler context.  If not, it returns NULL. This function is equivalent  * to calling LLVMCreateDisasmCPUFeatures() with an empty feature set.  */
 name|LLVMDisasmContextRef
 name|LLVMCreateDisasmCPU
 parameter_list|(
@@ -378,6 +514,39 @@ specifier|const
 name|char
 modifier|*
 name|CPU
+parameter_list|,
+name|void
+modifier|*
+name|DisInfo
+parameter_list|,
+name|int
+name|TagType
+parameter_list|,
+name|LLVMOpInfoCallback
+name|GetOpInfo
+parameter_list|,
+name|LLVMSymbolLookupCallback
+name|SymbolLookUp
+parameter_list|)
+function_decl|;
+comment|/**  * Create a disassembler for the TripleName, a specific CPU and specific feature  * string.  Symbolic disassembly is supported by passing a block of information  * in the DisInfo parameter and specifying the TagType and callback functions as  * described above.  These can all be passed * as NULL.  If successful, this  * returns a disassembler context.  If not, it returns NULL.  */
+name|LLVMDisasmContextRef
+name|LLVMCreateDisasmCPUFeatures
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Triple
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|CPU
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Features
 parameter_list|,
 name|void
 modifier|*

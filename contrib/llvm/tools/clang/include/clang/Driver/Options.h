@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_DRIVER_OPTIONS_H
+name|LLVM_CLANG_DRIVER_OPTIONS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_DRIVER_OPTIONS_H
+name|LLVM_CLANG_DRIVER_OPTIONS_H
 end_define
 
 begin_decl_stmt
@@ -128,12 +128,20 @@ operator|<<
 literal|10
 operator|)
 block|,
-name|NoDriverOption
+name|CC1AsOption
 init|=
 operator|(
 literal|1
 operator|<<
 literal|11
+operator|)
+block|,
+name|NoDriverOption
+init|=
+operator|(
+literal|1
+operator|<<
+literal|12
 operator|)
 block|}
 enum|;

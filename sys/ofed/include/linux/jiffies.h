@@ -80,6 +80,8 @@ argument_list|(
 operator|&
 name|tv
 argument_list|)
+operator|-
+literal|1
 operator|)
 return|;
 block|}
@@ -111,7 +113,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((long)(b) - (long)(a)< 0)
+value|((int)((b) - (a))< 0)
 end_define
 
 begin_define
@@ -135,7 +137,7 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|((long)(a) - (long)(b)>= 0)
+value|((int)((a) - (b))>= 0)
 end_define
 
 begin_define

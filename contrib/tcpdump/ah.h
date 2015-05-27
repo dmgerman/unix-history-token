@@ -31,19 +31,19 @@ begin_struct
 struct|struct
 name|ah
 block|{
-name|u_int8_t
+name|uint8_t
 name|ah_nxt
 decl_stmt|;
 comment|/* Next Header */
-name|u_int8_t
+name|uint8_t
 name|ah_len
 decl_stmt|;
 comment|/* Length of data, in 32bit */
-name|u_int16_t
+name|uint16_t
 name|ah_reserve
 decl_stmt|;
 comment|/* Reserved for future use */
-name|u_int32_t
+name|uint32_t
 name|ah_spi
 decl_stmt|;
 comment|/* Security parameter index */
@@ -57,23 +57,23 @@ begin_struct
 struct|struct
 name|newah
 block|{
-name|u_int8_t
+name|uint8_t
 name|ah_nxt
 decl_stmt|;
 comment|/* Next Header */
-name|u_int8_t
+name|uint8_t
 name|ah_len
 decl_stmt|;
 comment|/* Length of data + 1, in 32bit */
-name|u_int16_t
+name|uint16_t
 name|ah_reserve
 decl_stmt|;
 comment|/* Reserved for future use */
-name|u_int32_t
+name|uint32_t
 name|ah_spi
 decl_stmt|;
 comment|/* Security parameter index */
-name|u_int32_t
+name|uint32_t
 name|ah_seq
 decl_stmt|;
 comment|/* Sequence number field */

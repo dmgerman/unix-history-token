@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_X86_X86FIXUPKINDS_H
+name|LLVM_LIB_TARGET_X86_MCTARGETDESC_X86FIXUPKINDS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_X86_X86FIXUPKINDS_H
+name|LLVM_LIB_TARGET_X86_MCTARGETDESC_X86FIXUPKINDS_H
 end_define
 
 begin_include
@@ -77,6 +77,9 @@ block|,
 comment|// 32-bit, relative to the start
 comment|// of the instruction. Used only
 comment|// for _GLOBAL_OFFSET_TABLE_.
+name|reloc_global_offset_table8
+block|,
+comment|// 64-bit variant.
 comment|// Marker
 name|LastTargetFixupKind
 block|,

@@ -314,7 +314,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * When this is set to 1, nsdispatch won't use nsswitch.conf  * but will consult the 'defaults' source list only.  * NOTE: nested fallbacks (when nsdispatch calls fallback functions,  *     which in turn calls nsdispatch, which should call fallback  *     function) are not supported  */
+comment|/*  * We keep track of nsdispatch() nesting depth in dispatch_depth.  When a  * fallback method is invoked from nsdispatch(), we temporarily set  * fallback_depth to the current dispatch depth plus one.  Subsequent  * calls at that exact depth will run in fallback mode (restricted to the  * same source as the call that was handled by the fallback method), while  * calls below that depth will be handled normally, allowing fallback  * methods to perform arbitrary lookups.  */
 end_comment
 
 begin_struct
@@ -322,7 +322,10 @@ struct|struct
 name|fb_state
 block|{
 name|int
-name|fb_dispatch
+name|dispatch_depth
+decl_stmt|;
+name|int
+name|fallback_depth
 decl_stmt|;
 block|}
 struct|;
@@ -2944,6 +2947,9 @@ name|fb_state
 modifier|*
 name|st
 decl_stmt|;
+name|int
+name|saved_depth
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|NS_CACHING
@@ -3047,13 +3053,20 @@ goto|goto
 name|fin
 goto|;
 block|}
+operator|++
+name|st
+operator|->
+name|dispatch_depth
+expr_stmt|;
 if|if
 condition|(
 name|st
 operator|->
-name|fb_dispatch
-operator|==
-literal|0
+name|dispatch_depth
+operator|>
+name|st
+operator|->
+name|fallback_depth
 condition|)
 block|{
 name|dbt
@@ -3426,10 +3439,20 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|saved_depth
+operator|=
 name|st
 operator|->
-name|fb_dispatch
+name|fallback_depth
+expr_stmt|;
+name|st
+operator|->
+name|fallback_depth
 operator|=
+name|st
+operator|->
+name|dispatch_depth
+operator|+
 literal|1
 expr_stmt|;
 name|va_start
@@ -3466,9 +3489,9 @@ argument_list|)
 expr_stmt|;
 name|st
 operator|->
-name|fb_dispatch
+name|fallback_depth
 operator|=
-literal|0
+name|saved_depth
 expr_stmt|;
 block|}
 else|else
@@ -3638,6 +3661,11 @@ argument_list|(
 operator|&
 name|nss_lock
 argument_list|)
+expr_stmt|;
+operator|--
+name|st
+operator|->
+name|dispatch_depth
 expr_stmt|;
 name|fin
 label|:

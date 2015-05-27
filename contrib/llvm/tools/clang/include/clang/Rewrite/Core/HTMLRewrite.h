@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_HTMLREWRITER_H
+name|LLVM_CLANG_REWRITE_CORE_HTMLREWRITE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_HTMLREWRITER_H
+name|LLVM_CLANG_REWRITE_CORE_HTMLREWRITE_H
 end_define
 
 begin_include
@@ -261,7 +261,7 @@ name|char
 modifier|*
 name|title
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// SyntaxHighlight - Relex the specified FileID and annotate the HTML with

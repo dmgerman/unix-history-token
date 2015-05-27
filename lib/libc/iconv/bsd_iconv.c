@@ -454,7 +454,6 @@ parameter_list|(
 name|iconv_t
 name|handle
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -564,7 +563,6 @@ parameter_list|(
 name|iconv_t
 name|handle
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*

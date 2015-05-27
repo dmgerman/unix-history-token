@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TGPARSER_H
+name|LLVM_LIB_TABLEGEN_TGPARSER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TGPARSER_H
+name|LLVM_LIB_TABLEGEN_TGPARSER_H
 end_define
 
 begin_include
@@ -242,9 +242,12 @@ name|std
 operator|::
 name|string
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|MultiClass
-operator|*
-operator|>
+operator|>>
 name|MultiClasses
 expr_stmt|;
 comment|/// Loops - Keep track of any foreach loops we are within.
@@ -271,6 +274,9 @@ comment|// Record tracker
 name|RecordKeeper
 modifier|&
 name|Records
+decl_stmt|;
+name|unsigned
+name|AnonCounter
 decl_stmt|;
 comment|// A "named boolean" indicating how to parse identifiers.  Usually
 comment|// identifiers map to some existing object but in special cases
@@ -311,12 +317,17 @@ argument_list|)
 operator|,
 name|CurMultiClass
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Records
 argument_list|(
-argument|records
+name|records
+argument_list|)
+operator|,
+name|AnonCounter
+argument_list|(
+literal|0
 argument_list|)
 block|{}
 comment|/// ParseFile - Main entrypoint for parsing a tblgen file.  These parser
@@ -511,6 +522,12 @@ modifier|&
 name|SubMultiClass
 parameter_list|)
 function_decl|;
+name|std
+operator|::
+name|string
+name|GetNewAnonymousName
+argument_list|()
+expr_stmt|;
 comment|// IterRecord: Map an iterator name to a value.
 struct|struct
 name|IterRecord
@@ -593,7 +610,7 @@ name|MultiClass
 modifier|*
 name|MC
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|bool
@@ -626,6 +643,7 @@ name|DefProto
 parameter_list|,
 name|Init
 modifier|*
+modifier|&
 name|DefmPrefix
 parameter_list|,
 name|SMRange
@@ -810,20 +828,6 @@ function_decl|;
 name|Init
 modifier|*
 name|ParseIDValue
-parameter_list|(
-name|Record
-modifier|*
-name|CurRec
-parameter_list|,
-name|IDParseMode
-name|Mode
-init|=
-name|ParseValueMode
-parameter_list|)
-function_decl|;
-name|Init
-modifier|*
-name|ParseIDValue
 argument_list|(
 name|Record
 operator|*
@@ -857,7 +861,7 @@ name|RecTy
 modifier|*
 name|ItemType
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|IDParseMode
 name|Mode
@@ -877,7 +881,7 @@ name|RecTy
 modifier|*
 name|ItemType
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|IDParseMode
 name|Mode
@@ -902,13 +906,13 @@ name|Record
 operator|*
 name|ArgsRec
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|RecTy
 operator|*
 name|EltTy
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|std
@@ -995,6 +999,10 @@ parameter_list|(
 name|Record
 modifier|*
 name|CurRec
+parameter_list|,
+name|RecTy
+modifier|*
+name|ItemType
 parameter_list|)
 function_decl|;
 name|RecTy

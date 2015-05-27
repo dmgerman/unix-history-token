@@ -103,7 +103,7 @@ comment|/* internal dev flags */
 name|devinfo_state_t
 name|dd_state
 decl_stmt|;
-comment|/* attacement state of dev */
+comment|/* attachment state of dev */
 block|}
 struct|;
 end_struct

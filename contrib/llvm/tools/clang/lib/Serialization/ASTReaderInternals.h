@@ -50,25 +50,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SERIALIZATION_ASTREADER_INTERNALS_H
+name|LLVM_CLANG_LIB_SERIALIZATION_ASTREADERINTERNALS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SERIALIZATION_ASTREADER_INTERNALS_H
+name|LLVM_CLANG_LIB_SERIALIZATION_ASTREADERINTERNALS_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"clang/AST/DeclarationName.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/Basic/OnDiskHashTable.h"
 end_include
 
 begin_include
@@ -86,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/stat.h>
+file|"llvm/Support/OnDiskHashTable.h"
 end_include
 
 begin_include
@@ -160,6 +154,14 @@ operator|*
 operator|>
 name|data_type
 expr_stmt|;
+typedef|typedef
+name|unsigned
+name|hash_value_type
+typedef|;
+typedef|typedef
+name|unsigned
+name|offset_type
+typedef|;
 comment|/// \brief Special internal key for declaration names.
 comment|/// The hash table creates keys for comparison; we do not create
 comment|/// a DeclarationName for the internal key to avoid deserializing types.
@@ -251,7 +253,7 @@ operator|.
 name|Data
 return|;
 block|}
-name|unsigned
+name|hash_value_type
 name|ComputeHash
 argument_list|(
 specifier|const
@@ -336,6 +338,14 @@ typedef|typedef
 name|StringRef
 name|internal_key_type
 typedef|;
+typedef|typedef
+name|unsigned
+name|hash_value_type
+typedef|;
+typedef|typedef
+name|unsigned
+name|offset_type
+typedef|;
 specifier|static
 name|bool
 name|EqualKey
@@ -358,7 +368,7 @@ name|b
 return|;
 block|}
 specifier|static
-name|unsigned
+name|hash_value_type
 name|ComputeHash
 parameter_list|(
 specifier|const
@@ -474,7 +484,7 @@ name|IdentifierInfo
 operator|*
 name|II
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|Reader
@@ -517,7 +527,9 @@ empty_stmt|;
 comment|/// \brief The on-disk hash table used to contain information about
 comment|/// all of the identifiers in the program.
 typedef|typedef
-name|OnDiskChainedHashTable
+name|llvm
+operator|::
+name|OnDiskIterableChainedHashTable
 operator|<
 name|ASTIdentifierLookupTrait
 operator|>
@@ -550,6 +562,12 @@ decl_stmt|;
 name|unsigned
 name|FactoryBits
 decl_stmt|;
+name|bool
+name|InstanceHasMoreThanOneDecl
+decl_stmt|;
+name|bool
+name|FactoryHasMoreThanOneDecl
+decl_stmt|;
 name|SmallVector
 operator|<
 name|ObjCMethodDecl
@@ -577,6 +595,14 @@ typedef|;
 typedef|typedef
 name|external_key_type
 name|internal_key_type
+typedef|;
+typedef|typedef
+name|unsigned
+name|hash_value_type
+typedef|;
+typedef|typedef
+name|unsigned
+name|offset_type
 typedef|;
 name|ASTSelectorLookupTrait
 argument_list|(
@@ -615,7 +641,7 @@ name|b
 return|;
 block|}
 specifier|static
-name|unsigned
+name|hash_value_type
 name|ComputeHash
 parameter_list|(
 name|Selector
@@ -683,6 +709,8 @@ block|}
 empty_stmt|;
 comment|/// \brief The on-disk hash table used for the global method pool.
 typedef|typedef
+name|llvm
+operator|::
 name|OnDiskChainedHashTable
 operator|<
 name|ASTSelectorLookupTrait
@@ -694,8 +722,8 @@ comment|/// the header search information.
 comment|///
 comment|/// The on-disk hash table contains a mapping from each header path to
 comment|/// information about that header (how many times it has been included, its
-comment|/// controlling macro, etc.). Note that we actually hash based on the
-comment|/// filename, and support "deep" comparisons of file names based on current
+comment|/// controlling macro, etc.). Note that we actually hash based on the size
+comment|/// and mtime, and support "deep" comparisons of file names based on current
 comment|/// inode numbers, so that the search can cope with non-normalized path names
 comment|/// and symlinks.
 name|class
@@ -740,6 +768,9 @@ name|char
 modifier|*
 name|Filename
 decl_stmt|;
+name|bool
+name|Imported
+decl_stmt|;
 block|}
 struct|;
 typedef|typedef
@@ -751,6 +782,14 @@ typedef|;
 typedef|typedef
 name|HeaderFileInfo
 name|data_type
+typedef|;
+typedef|typedef
+name|unsigned
+name|hash_value_type
+typedef|;
+typedef|typedef
+name|unsigned
+name|offset_type
 typedef|;
 name|HeaderFileInfoTrait
 argument_list|(
@@ -793,7 +832,7 @@ argument|FrameworkStrings
 argument_list|)
 block|{ }
 specifier|static
-name|unsigned
+name|hash_value_type
 name|ComputeHash
 argument_list|(
 argument|internal_key_ref ikey
@@ -865,6 +904,8 @@ block|}
 empty_stmt|;
 comment|/// \brief The on-disk hash table used for known header files.
 typedef|typedef
+name|llvm
+operator|::
 name|OnDiskChainedHashTable
 operator|<
 name|HeaderFileInfoTrait

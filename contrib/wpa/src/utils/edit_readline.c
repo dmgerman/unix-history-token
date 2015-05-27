@@ -794,7 +794,7 @@ condition|(
 name|h
 condition|)
 block|{
-name|os_free
+name|free
 argument_list|(
 name|h
 operator|->
@@ -808,7 +808,7 @@ operator|->
 name|data
 argument_list|)
 expr_stmt|;
-name|os_free
+name|free
 argument_list|(
 name|h
 argument_list|)

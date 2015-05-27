@@ -49,8 +49,14 @@ comment|/* Number of sets supported by ipfw*/
 end_comment
 
 begin_comment
-comment|/*  * Default number of ipfw tables.  */
+comment|/*  * Compat values for old clients  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_KERNEL
+end_ifndef
 
 begin_define
 define|#
@@ -65,6 +71,11 @@ directive|define
 name|IPFW_TABLES_DEFAULT
 value|128
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Most commands (queue, pipe, tag, untag, limit...) can have a 16-bit  * argument between 1 and 65534. The value 0 (IP_FW_TARG) is used  * to represent 'tablearg' value, e.g.  indicate the use of a 'tablearg'  * result of the most recent table() lookup.  * Note that 16bit is only a historical limit, resulting from  * the use of a 16-bit fields for that value. In reality, we can have  * 2^32 pipes, queues, tag values and so on.  */
@@ -2279,7 +2290,7 @@ value|0x00000100
 end_define
 
 begin_comment
-comment|/* IPv6 nexthop */
+comment|/* limit */
 end_comment
 
 begin_define
@@ -2684,9 +2695,9 @@ name|dscp
 decl_stmt|;
 name|uint8_t
 name|spare0
-index|[
-literal|3
-index|]
+decl_stmt|;
+name|uint16_t
+name|spare1
 decl_stmt|;
 name|struct
 name|in6_addr
@@ -2697,8 +2708,9 @@ name|limit
 decl_stmt|;
 comment|/* O_LIMIT */
 name|uint32_t
-name|spare1
+name|zoneid
 decl_stmt|;
+comment|/* scope zone id for nh6 */
 name|uint64_t
 name|reserved
 decl_stmt|;
@@ -3425,13 +3437,6 @@ block|}
 name|ipfw_ta_info
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|IPFW_OBJTYPE_TABLE
-value|1
-end_define
 
 begin_typedef
 typedef|typedef

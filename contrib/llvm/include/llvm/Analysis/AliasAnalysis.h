@@ -160,7 +160,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CallSite.h"
+file|"llvm/IR/CallSite.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Metadata.h"
 end_include
 
 begin_decl_stmt
@@ -205,7 +211,7 @@ label|:
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 decl_stmt|;
 specifier|const
 name|TargetLibraryInfo
@@ -256,19 +262,19 @@ comment|// Class identification, replacement for typeinfo
 name|AliasAnalysis
 argument_list|()
 operator|:
-name|TD
+name|DL
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|TLI
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|AA
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|virtual
@@ -302,7 +308,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|TD
+name|DL
 return|;
 block|}
 comment|/// getTargetLibraryInfo - Return a pointer to the current TargetLibraryInfo
@@ -351,23 +357,20 @@ comment|/// See http://llvm.org/docs/LangRef.html#pointeraliasing
 name|uint64_t
 name|Size
 decl_stmt|;
-comment|/// TBAATag - The metadata node which describes the TBAA type of
-comment|/// the location, or null if there is no known unique tag.
-specifier|const
-name|MDNode
-modifier|*
-name|TBAATag
+comment|/// AATags - The metadata nodes which describes the aliasing of the
+comment|/// location (each member is null if that kind of information is
+comment|/// unavailable)..
+name|AAMDNodes
+name|AATags
 decl_stmt|;
 name|explicit
 name|Location
 argument_list|(
-argument|const Value *P =
-literal|0
+argument|const Value *P = nullptr
 argument_list|,
 argument|uint64_t S = UnknownSize
 argument_list|,
-argument|const MDNode *N =
-literal|0
+argument|const AAMDNodes&N = AAMDNodes()
 argument_list|)
 block|:
 name|Ptr
@@ -380,7 +383,7 @@ argument_list|(
 name|S
 argument_list|)
 operator|,
-name|TBAATag
+name|AATags
 argument_list|(
 argument|N
 argument_list|)
@@ -435,7 +438,7 @@ name|Copy
 return|;
 block|}
 name|Location
-name|getWithoutTBAATag
+name|getWithoutAATags
 argument_list|()
 specifier|const
 block|{
@@ -448,9 +451,10 @@ argument_list|)
 block|;
 name|Copy
 operator|.
-name|TBAATag
+name|AATags
 operator|=
-literal|0
+name|AAMDNodes
+argument_list|()
 block|;
 return|return
 name|Copy
@@ -945,6 +949,26 @@ operator||
 name|ModRef
 block|}
 enum|;
+comment|/// Get the location associated with a pointer argument of a callsite.
+comment|/// The mask bits are set to indicate the allowed aliasing ModRef kinds.
+comment|/// Note that these mask bits do not necessarily account for the overall
+comment|/// behavior of the function, but rather only provide additional
+comment|/// per-argument information.
+name|virtual
+name|Location
+name|getArgLocation
+parameter_list|(
+name|ImmutableCallSite
+name|CS
+parameter_list|,
+name|unsigned
+name|ArgIdx
+parameter_list|,
+name|ModRefResult
+modifier|&
+name|Mask
+parameter_list|)
+function_decl|;
 comment|/// getModRefBehavior - Return the behavior when calling the given call site.
 name|virtual
 name|ModRefBehavior
@@ -1878,7 +1902,7 @@ comment|//===-------------------------------------------------------------------
 comment|/// Higher level methods for querying mod/ref information.
 comment|///
 comment|/// canBasicBlockModify - Return true if it is possible for execution of the
-comment|/// specified basic block to modify the value pointed to by Ptr.
+comment|/// specified basic block to modify the location Loc.
 name|bool
 name|canBasicBlockModify
 parameter_list|(
@@ -1925,12 +1949,13 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-comment|/// canInstructionRangeModify - Return true if it is possible for the
-comment|/// execution of the specified instructions to modify the value pointed to by
-comment|/// Ptr.  The instructions to consider are all of the instructions in the
-comment|/// range of [I1,I2] INCLUSIVE.  I1 and I2 must be in the same basic block.
+comment|/// canInstructionRangeModRef - Return true if it is possible for the
+comment|/// execution of the specified instructions to mod\ref (according to the
+comment|/// mode) the location Loc. The instructions to consider are all
+comment|/// of the instructions in the range of [I1,I2] INCLUSIVE.
+comment|/// I1 and I2 must be in the same basic block.
 name|bool
-name|canInstructionRangeModify
+name|canInstructionRangeModRef
 parameter_list|(
 specifier|const
 name|Instruction
@@ -1946,11 +1971,15 @@ specifier|const
 name|Location
 modifier|&
 name|Loc
+parameter_list|,
+specifier|const
+name|ModRefResult
+name|Mode
 parameter_list|)
 function_decl|;
-comment|/// canInstructionRangeModify - A convenience wrapper.
+comment|/// canInstructionRangeModRef - A convenience wrapper.
 name|bool
-name|canInstructionRangeModify
+name|canInstructionRangeModRef
 parameter_list|(
 specifier|const
 name|Instruction
@@ -1969,10 +1998,14 @@ name|Ptr
 parameter_list|,
 name|uint64_t
 name|Size
+parameter_list|,
+specifier|const
+name|ModRefResult
+name|Mode
 parameter_list|)
 block|{
 return|return
-name|canInstructionRangeModify
+name|canInstructionRangeModRef
 argument_list|(
 name|I1
 argument_list|,
@@ -1984,6 +2017,8 @@ name|Ptr
 argument_list|,
 name|Size
 argument_list|)
+argument_list|,
+name|Mode
 argument_list|)
 return|;
 block|}
@@ -2109,8 +2144,6 @@ name|getEmptyKey
 argument_list|()
 argument_list|,
 literal|0
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
@@ -2136,8 +2169,6 @@ operator|>
 operator|::
 name|getTombstoneKey
 argument_list|()
-argument_list|,
-literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -2179,16 +2210,14 @@ argument_list|)
 operator|^
 name|DenseMapInfo
 operator|<
-specifier|const
-name|MDNode
-operator|*
+name|AAMDNodes
 operator|>
 operator|::
 name|getHashValue
 argument_list|(
 name|Val
 operator|.
-name|TBAATag
+name|AATags
 argument_list|)
 return|;
 block|}
@@ -2220,11 +2249,11 @@ name|Size
 operator|&&
 name|LHS
 operator|.
-name|TBAATag
+name|AATags
 operator|==
 name|RHS
 operator|.
-name|TBAATag
+name|AATags
 return|;
 block|}
 expr|}
@@ -2260,6 +2289,20 @@ comment|///    NoAlias returns (e.g. calls to malloc)
 comment|///
 name|bool
 name|isIdentifiedObject
+argument_list|(
+specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
+block|;
+comment|/// isIdentifiedFunctionLocal - Return true if V is umabigously identified
+comment|/// at the function-level. Different IdentifiedFunctionLocals can't alias.
+comment|/// Further, an IdentifiedFunctionLocal can not alias with any function
+comment|/// arguments other than itself, which is not necessarily true for
+comment|/// IdentifiedObjects.
+name|bool
+name|isIdentifiedFunctionLocal
 argument_list|(
 specifier|const
 name|Value

@@ -82,6 +82,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AssumptionCacheTracker
+decl_stmt|;
+name|class
 name|CallSite
 decl_stmt|;
 name|class
@@ -356,14 +359,13 @@ name|public
 name|CallGraphSCCPass
 block|{
 specifier|const
-name|DataLayout
-operator|*
-name|TD
-block|;
-specifier|const
 name|TargetTransformInfo
 operator|*
 name|TTI
+block|;
+name|AssumptionCacheTracker
+operator|*
+name|ACT
 block|;
 name|public
 operator|:
@@ -385,14 +387,14 @@ argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|runOnSCC
 argument_list|(
-name|CallGraphSCC
-operator|&
-name|SCC
+argument|CallGraphSCC&SCC
 argument_list|)
+name|override
 block|;
 comment|/// \brief Get an InlineCost object representing the cost of inlining this
 comment|/// callsite.

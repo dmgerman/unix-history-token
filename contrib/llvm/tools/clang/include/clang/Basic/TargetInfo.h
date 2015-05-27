@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/TargetCXXABI.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
@@ -85,6 +79,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/Specifiers.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/TargetCXXABI.h"
 end_include
 
 begin_include
@@ -200,7 +200,9 @@ operator|<
 name|TargetInfo
 operator|>
 block|{
-name|IntrusiveRefCntPtr
+name|std
+operator|::
+name|shared_ptr
 operator|<
 name|TargetOptions
 operator|>
@@ -400,8 +402,14 @@ name|DiagnosticsEngine
 operator|&
 name|Diags
 argument_list|,
+specifier|const
+name|std
+operator|::
+name|shared_ptr
+operator|<
 name|TargetOptions
-operator|*
+operator|>
+operator|&
 name|Opts
 argument_list|)
 block|;
@@ -429,18 +437,6 @@ operator|*
 name|TargetOpts
 return|;
 block|}
-name|void
-name|setTargetOpts
-argument_list|(
-argument|TargetOptions *TargetOpts
-argument_list|)
-block|{
-name|this
-operator|->
-name|TargetOpts
-operator|=
-name|TargetOpts
-block|;   }
 comment|///===---- Target Data Type Query Methods -------------------------------===//
 expr|enum
 name|IntType
@@ -537,8 +533,6 @@ name|SizeType
 block|,
 name|IntMaxType
 block|,
-name|UIntMaxType
-block|,
 name|PtrDiffType
 block|,
 name|IntPtrType
@@ -623,7 +617,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|UIntMaxType
+name|getCorrespondingUnsignedType
+argument_list|(
+name|IntMaxType
+argument_list|)
 return|;
 block|}
 name|IntType
@@ -653,6 +650,18 @@ specifier|const
 block|{
 return|return
 name|IntPtrType
+return|;
+block|}
+name|IntType
+name|getUIntPtrType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCorrespondingUnsignedType
+argument_list|(
+name|IntPtrType
+argument_list|)
 return|;
 block|}
 name|IntType
@@ -701,6 +710,18 @@ name|Int64Type
 return|;
 block|}
 name|IntType
+name|getUInt64Type
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCorrespondingUnsignedType
+argument_list|(
+name|Int64Type
+argument_list|)
+return|;
+block|}
+name|IntType
 name|getSigAtomicType
 argument_list|()
 specifier|const
@@ -718,6 +739,56 @@ return|return
 name|ProcessIDType
 return|;
 block|}
+specifier|static
+name|IntType
+name|getCorrespondingUnsignedType
+argument_list|(
+argument|IntType T
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|T
+condition|)
+block|{
+case|case
+name|SignedChar
+case|:
+return|return
+name|UnsignedChar
+return|;
+case|case
+name|SignedShort
+case|:
+return|return
+name|UnsignedShort
+return|;
+case|case
+name|SignedInt
+case|:
+return|return
+name|UnsignedInt
+return|;
+case|case
+name|SignedLong
+case|:
+return|return
+name|UnsignedLong
+return|;
+case|case
+name|SignedLongLong
+case|:
+return|return
+name|UnsignedLongLong
+return|;
+default|default:
+name|llvm_unreachable
+argument_list|(
+literal|"Unexpected signed integer type"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 comment|/// \brief Return the width (in bits) of the specified integer type enum.
 comment|///
 comment|/// For example, SignedInt -> getIntWidth().
@@ -731,6 +802,16 @@ block|;
 comment|/// \brief Return integer type with specified width.
 name|IntType
 name|getIntTypeByWidth
+argument_list|(
+argument|unsigned BitWidth
+argument_list|,
+argument|bool IsSigned
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return the smallest integer type with at least the specified width.
+name|IntType
+name|getLeastIntTypeByWidth
 argument_list|(
 argument|unsigned BitWidth
 argument_list|,
@@ -777,9 +858,9 @@ return|return
 name|AddrSpace
 operator|==
 literal|0
-condition|?
+operator|?
 name|PointerWidth
-else|:
+operator|:
 name|getPointerWidthV
 argument_list|(
 name|AddrSpace
@@ -931,6 +1012,7 @@ name|LongLongAlign
 return|;
 block|}
 comment|/// \brief Determine whether the __int128 type is supported on this target.
+name|virtual
 name|bool
 name|hasInt128Type
 argument_list|()
@@ -1232,6 +1314,46 @@ return|return
 name|MaxAtomicInlineWidth
 return|;
 block|}
+comment|/// \brief Returns true if the given target supports lock-free atomic
+comment|/// operations at the specified width and alignment.
+name|virtual
+name|bool
+name|hasBuiltinAtomic
+argument_list|(
+argument|uint64_t AtomicSizeInBits
+argument_list|,
+argument|uint64_t AlignmentInBits
+argument_list|)
+specifier|const
+block|{
+return|return
+name|AtomicSizeInBits
+operator|<=
+name|AlignmentInBits
+operator|&&
+name|AtomicSizeInBits
+operator|<=
+name|getMaxAtomicInlineWidth
+argument_list|()
+operator|&&
+operator|(
+name|AtomicSizeInBits
+operator|<=
+name|getCharWidth
+argument_list|()
+operator|||
+name|llvm
+operator|::
+name|isPowerOf2_64
+argument_list|(
+name|AtomicSizeInBits
+operator|/
+name|getCharWidth
+argument_list|()
+argument_list|)
+operator|)
+return|;
+block|}
 comment|/// \brief Return the maximum vector alignment supported for the given target.
 name|unsigned
 name|getMaxVectorAlign
@@ -1388,11 +1510,24 @@ block|;
 comment|/// \brief Return the constant suffix for the specified integer type enum.
 comment|///
 comment|/// For example, SignedLong -> "L".
-specifier|static
 specifier|const
 name|char
 operator|*
 name|getTypeConstantSuffix
+argument_list|(
+argument|IntType T
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return the printf format modifier for the specified
+comment|/// integer type enum.
+comment|///
+comment|/// For example, SignedLong -> "l".
+specifier|static
+specifier|const
+name|char
+operator|*
+name|getTypeFormatModifier
 argument_list|(
 argument|IntType T
 argument_list|)
@@ -1548,7 +1683,18 @@ comment|// "+r" output constraint (read and write).
 name|CI_HasMatchingInput
 operator|=
 literal|0x08
+block|,
 comment|// This output operand has a matching input.
+name|CI_ImmediateConstant
+operator|=
+literal|0x10
+block|,
+comment|// This operand must be an immediate constant
+name|CI_EarlyClobber
+operator|=
+literal|0x20
+block|,
+comment|// "&" output constraint (early clobber).
 block|}
 block|;
 name|unsigned
@@ -1556,6 +1702,15 @@ name|Flags
 block|;
 name|int
 name|TiedOperand
+block|;     struct
+block|{
+name|int
+name|Min
+block|;
+name|int
+name|Max
+block|;     }
+name|ImmRange
 block|;
 name|std
 operator|::
@@ -1601,7 +1756,17 @@ name|Name
 argument_list|(
 argument|Name.str()
 argument_list|)
-block|{}
+block|{
+name|ImmRange
+operator|.
+name|Min
+operator|=
+name|ImmRange
+operator|.
+name|Max
+operator|=
+literal|0
+block|;     }
 specifier|const
 name|std
 operator|::
@@ -1638,6 +1803,20 @@ operator|(
 name|Flags
 operator|&
 name|CI_ReadWrite
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|bool
+name|earlyClobber
+argument_list|()
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|CI_EarlyClobber
 operator|)
 operator|!=
 literal|0
@@ -1727,6 +1906,43 @@ operator|)
 name|TiedOperand
 return|;
 block|}
+name|bool
+name|requiresImmediateConstant
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|CI_ImmediateConstant
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+name|int
+name|getImmConstantMin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ImmRange
+operator|.
+name|Min
+return|;
+block|}
+name|int
+name|getImmConstantMax
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ImmRange
+operator|.
+name|Max
+return|;
+block|}
 name|void
 name|setIsReadWrite
 argument_list|()
@@ -1734,6 +1950,14 @@ block|{
 name|Flags
 operator||=
 name|CI_ReadWrite
+block|; }
+name|void
+name|setEarlyClobber
+argument_list|()
+block|{
+name|Flags
+operator||=
+name|CI_EarlyClobber
 block|; }
 name|void
 name|setAllowsMemory
@@ -1759,6 +1983,30 @@ name|Flags
 operator||=
 name|CI_HasMatchingInput
 block|; }
+name|void
+name|setRequiresImmediate
+argument_list|(
+argument|int Min
+argument_list|,
+argument|int Max
+argument_list|)
+block|{
+name|Flags
+operator||=
+name|CI_ImmediateConstant
+block|;
+name|ImmRange
+operator|.
+name|Min
+operator|=
+name|Min
+block|;
+name|ImmRange
+operator|.
+name|Max
+operator|=
+name|Max
+block|;     }
 comment|/// \brief Indicate that this is an input operand that is tied to
 comment|/// the specified output operand.
 comment|///
@@ -1813,6 +2061,22 @@ specifier|const
 block|;
 name|virtual
 name|bool
+name|validateOutputSize
+argument_list|(
+argument|StringRef
+comment|/*Constraint*/
+argument_list|,
+argument|unsigned
+comment|/*Size*/
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+name|virtual
+name|bool
 name|validateInputSize
 argument_list|(
 argument|StringRef
@@ -1834,11 +2098,14 @@ argument_list|(
 argument|StringRef
 comment|/*Constraint*/
 argument_list|,
-argument|const char
+argument|char
 comment|/*Modifier*/
 argument_list|,
 argument|unsigned
 comment|/*Size*/
+argument_list|,
+argument|std::string&
+comment|/*SuggestedModifier*/
 argument_list|)
 specifier|const
 block|{
@@ -1932,6 +2199,11 @@ name|getTargetDescription
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|DescriptionString
+argument_list|)
+block|;
 return|return
 name|DescriptionString
 return|;
@@ -1991,48 +2263,6 @@ return|return
 name|true
 return|;
 block|}
-comment|/// \brief Return the section to use for CFString literals, or 0 if no
-comment|/// special section is used.
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getCFStringSection
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|"__DATA,__cfstring"
-return|;
-block|}
-comment|/// \brief Return the section to use for NSString literals, or 0 if no
-comment|/// special section is used.
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getNSStringSection
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|"__OBJC,__cstring_object,regular,no_dead_strip"
-return|;
-block|}
-comment|/// \brief Return the section to use for NSString literals, or 0 if no
-comment|/// special section is used (NonFragile ABI).
-name|virtual
-specifier|const
-name|char
-operator|*
-name|getNSStringNonFragileABISection
-argument_list|()
-specifier|const
-block|{
-return|return
-literal|"__DATA, __objc_stringobj, regular, no_dead_strip"
-return|;
-block|}
 comment|/// \brief An optional hook that targets can implement to perform semantic
 comment|/// checking on attribute((section("foo"))) specifiers.
 comment|///
@@ -2064,8 +2294,9 @@ comment|/// Apply changes to the target information with respect to certain
 comment|/// language options which change the target configuration.
 name|virtual
 name|void
-name|setForcedLangOptions
+name|adjust
 argument_list|(
+specifier|const
 name|LangOptions
 operator|&
 name|Opts
@@ -2083,15 +2314,14 @@ specifier|const
 block|{   }
 comment|/// \brief Get the ABI currently in use.
 name|virtual
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|getABI
 argument_list|()
 specifier|const
 block|{
 return|return
-literal|""
+name|StringRef
+argument_list|()
 return|;
 block|}
 comment|/// \brief Get the C++ ABI currently in use.
@@ -2345,7 +2575,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|const
@@ -2557,7 +2787,7 @@ decl|const
 block|{
 name|Addl
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|NumAddl
 operator|=

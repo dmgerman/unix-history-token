@@ -1057,16 +1057,13 @@ name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
 name|cpu_setup
-argument_list|(
-literal|""
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|i80321_calibrate_delay
 argument_list|()
 expr_stmt|;
 name|i81342_sdram_bounds
 argument_list|(
-operator|&
 name|obio_bs_tag
 argument_list|,
 name|IOP34X_VADDR

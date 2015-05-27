@@ -584,6 +584,14 @@ name|rx_frame_count
 decl_stmt|;
 comment|/* Last rx Frame count */
 name|u_int32_t
+name|rx_busy_count
+decl_stmt|;
+comment|/* Last rx busy count */
+name|u_int32_t
+name|rx_ext_busy_count
+decl_stmt|;
+comment|/* Last rx busy count; extension channel */
+name|u_int32_t
 name|cycle_count
 decl_stmt|;
 comment|/* Last cycle_count (can detect wrap-around) */
@@ -674,81 +682,102 @@ define|\
 value|((AH9300(ah)->ah_proc_phy_err& HAL_PROCESS_ANI))
 end_define
 
-begin_struct
-struct|struct
-name|ar9300_stats
-block|{
-name|u_int32_t
-name|ast_ani_niup
-decl_stmt|;
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+unit|struct ar9300_stats {     u_int32_t   ast_ani_niup;
 comment|/* ANI increased noise immunity */
-name|u_int32_t
-name|ast_ani_nidown
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_nidown;
 comment|/* ANI decreased noise immunity */
-name|u_int32_t
-name|ast_ani_spurup
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_spurup;
 comment|/* ANI increased spur immunity */
-name|u_int32_t
-name|ast_ani_spurdown
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_spurdown;
 comment|/* ANI descreased spur immunity */
-name|u_int32_t
-name|ast_ani_ofdmon
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_ofdmon;
 comment|/* ANI OFDM weak signal detect on */
-name|u_int32_t
-name|ast_ani_ofdmoff
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_ofdmoff;
 comment|/* ANI OFDM weak signal detect off */
-name|u_int32_t
-name|ast_ani_cckhigh
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_cckhigh;
 comment|/* ANI CCK weak signal threshold high */
-name|u_int32_t
-name|ast_ani_ccklow
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_ccklow;
 comment|/* ANI CCK weak signal threshold low */
-name|u_int32_t
-name|ast_ani_stepup
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_stepup;
 comment|/* ANI increased first step level */
-name|u_int32_t
-name|ast_ani_stepdown
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_stepdown;
 comment|/* ANI decreased first step level */
-name|u_int32_t
-name|ast_ani_ofdmerrs
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_ofdmerrs;
 comment|/* ANI cumulative ofdm phy err count */
-name|u_int32_t
-name|ast_ani_cckerrs
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_cckerrs;
 comment|/* ANI cumulative cck phy err count */
-name|u_int32_t
-name|ast_ani_reset
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_reset;
 comment|/* ANI parameters zero'd for non-STA */
-name|u_int32_t
-name|ast_ani_lzero
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_lzero;
 comment|/* ANI listen time forced to zero */
-name|u_int32_t
-name|ast_ani_lneg
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|u_int32_t   ast_ani_lneg;
 comment|/* ANI listen time calculated< 0 */
-name|HAL_MIB_STATS
-name|ast_mibstats
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|HAL_MIB_STATS   ast_mibstats;
 comment|/* MIB counter stats */
-name|HAL_NODE_STATS
-name|ast_nodestats
-decl_stmt|;
+end_comment
+
+begin_comment
+unit|HAL_NODE_STATS  ast_nodestats;
 comment|/* Latest rssi stats from driver */
-block|}
-struct|;
-end_struct
+end_comment
+
+begin_endif
+unit|};
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct
@@ -1154,6 +1183,7 @@ begin_struct
 struct|struct
 name|ar9300_ini_array
 block|{
+specifier|const
 name|u_int32_t
 modifier|*
 name|ia_array
@@ -1181,7 +1211,7 @@ name|rows
 parameter_list|,
 name|columns
 parameter_list|)
-value|do {             \     (iniarray)->ia_array = (u_int32_t *)(array);    \     (iniarray)->ia_rows = (rows);       \     (iniarray)->ia_columns = (columns); \ } while (0)
+value|do {             \     (iniarray)->ia_array = (const u_int32_t *)(array);    \     (iniarray)->ia_rows = (rows);       \     (iniarray)->ia_columns = (columns); \ } while (0)
 end_define
 
 begin_define
@@ -1567,8 +1597,7 @@ name|os_atomic_t
 name|ah_ier_ref_count
 decl_stmt|;
 comment|/* reference count for enabling interrupts */
-name|struct
-name|ar9300_stats
+name|HAL_ANI_STATS
 name|ah_stats
 decl_stmt|;
 comment|/* various statistics */
@@ -2000,6 +2029,10 @@ name|u_int8_t
 name|ah_rx_chainmask
 decl_stmt|;
 comment|/* rx chain mask */
+comment|/* optional tx chainmask */
+name|u_int8_t
+name|ah_tx_chainmaskopt
+decl_stmt|;
 name|u_int8_t
 name|ah_tx_cal_chainmask
 decl_stmt|;
@@ -2757,6 +2790,33 @@ directive|endif
 name|HAL_BOOL
 name|ah_reduced_self_gen_mask
 decl_stmt|;
+name|HAL_BOOL
+name|ah_chip_reset_done
+decl_stmt|;
+name|HAL_BOOL
+name|ah_abort_txdma_norx
+decl_stmt|;
+comment|/* store previous passive RX Cal info */
+name|HAL_BOOL
+name|ah_skip_rx_iq_cal
+decl_stmt|;
+name|HAL_BOOL
+name|ah_rx_cal_complete
+decl_stmt|;
+comment|/* previous rx cal completed or not */
+name|u_int32_t
+name|ah_rx_cal_chan
+decl_stmt|;
+comment|/* chan on which rx cal is done */
+name|u_int32_t
+name|ah_rx_cal_chan_flag
+decl_stmt|;
+name|u_int32_t
+name|ah_rx_cal_corr
+index|[
+name|AR9300_MAX_CHAINS
+index|]
+decl_stmt|;
 comment|/* Local additions for FreeBSD */
 comment|/*      * These fields are in the top level HAL in the atheros      * codebase; here we place them in the AR9300 HAL and      * access them via accessor methods if the driver requires them.      */
 name|u_int32_t
@@ -2814,6 +2874,10 @@ decl_stmt|;
 name|int
 name|ah_dcs_enable
 decl_stmt|;
+name|HAL_ANI_STATE
+name|ext_ani_state
+decl_stmt|;
+comment|/* FreeBSD; external facing ANI state */
 name|struct
 name|ar9300NfLimits
 name|nf_2GHz
@@ -4025,6 +4089,9 @@ parameter_list|,
 name|u_int32_t
 name|beacon_period
 parameter_list|,
+name|u_int32_t
+name|beacon_period_fraction
+parameter_list|,
 name|HAL_OPMODE
 name|opmode
 parameter_list|)
@@ -4274,6 +4341,41 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|ATH_SUPPORT_KEYPLUMB_WAR
+end_if
+
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|ar9300_check_key_cache_entry
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|u_int16_t
+name|entry
+parameter_list|,
+specifier|const
+name|HAL_KEYVAL
+modifier|*
+name|k
+parameter_list|,
+name|int
+name|xorKey
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|extern
 name|void
@@ -4353,6 +4455,42 @@ name|ah
 parameter_list|,
 name|u_int32_t
 name|cfg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|extern  u_int32_t ar9300_ant_ctrl_common_get(struct ath_hal *ah, HAL_BOOL is_2ghz);
+endif|#
+directive|endif
+end_endif
+
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|ar9300_ant_swcom_sel
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|u_int8_t
+name|ops
+parameter_list|,
+name|u_int32_t
+modifier|*
+name|common_tbl1
+parameter_list|,
+name|u_int32_t
+modifier|*
+name|common_tbl2
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6158,6 +6296,53 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int16_t
+name|ar9300_get_nf_from_reg
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|,
+name|int
+name|wait_time
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|ar9300_get_rx_nf_offset
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|,
+name|int8_t
+modifier|*
+name|nf_pwr
+parameter_list|,
+name|int8_t
+modifier|*
+name|nf_cal
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|HAL_BOOL
 name|ar9300_load_nf
 parameter_list|(
@@ -6375,8 +6560,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|struct
-name|ar9300_stats
+name|HAL_ANI_STATS
 modifier|*
 name|ar9300_ani_get_current_stats
 parameter_list|(
@@ -9376,6 +9560,39 @@ end_endif
 begin_comment
 comment|/* ATH_TX99_DIAG */
 end_comment
+
+begin_function_decl
+specifier|extern
+name|HAL_BOOL
+name|ar9300_set_ctl_pwr
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|ctl_array
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|ar9300_set_txchainmaskopt
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|u_int8_t
+name|mask
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_enum
 enum|enum

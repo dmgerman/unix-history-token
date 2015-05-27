@@ -1697,7 +1697,7 @@ comment|/// Indent the current line using the current indentation level and
 end_comment
 
 begin_comment
-comment|/// print an optional string following the idenatation spaces.
+comment|/// print an optional string following the indentation spaces.
 end_comment
 
 begin_comment

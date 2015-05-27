@@ -167,6 +167,8 @@ comment|///< and file and line), to information about what the pointer points to
 comment|///< if the address is in a section (section of pointers, c strings, etc).
 name|DumpStyleResolvedDescriptionNoModule
 block|,
+name|DumpStyleResolvedDescriptionNoFunctionArguments
+block|,
 name|DumpStyleDetailedSymbolContext
 block|,
 comment|///< Detailed symbol context information for an address for all symbol
@@ -444,7 +446,7 @@ comment|/// supplied stream \a s. There are many ways to display a section
 comment|/// offset based address, and \a style lets the user choose.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|///
 comment|/// @param[in] style
 comment|///     The display style for the address.
@@ -565,7 +567,7 @@ comment|/// Get the load address as an opcode load address.
 comment|///
 comment|/// This function will first resolve its address to a load address.
 comment|/// Then, if the address turns out to be in code address, return the
-comment|/// load address for a an opcode. This address object might have
+comment|/// load address for an opcode. This address object might have
 comment|/// extra bits set (bit zero will be set to Thumb functions for an
 comment|/// ARM target) that are required for changing the program counter
 comment|/// and this function will remove any bits that are intended for
@@ -645,7 +647,7 @@ comment|/// and offset (for section offset based addresses), or just a valid
 comment|/// offset (for absolute addresses that have no section).
 comment|///
 comment|/// @return
-comment|///     Returns \b true if the the offset is valid, \b false
+comment|///     Returns \b true if the offset is valid, \b false
 comment|///     otherwise.
 comment|//------------------------------------------------------------------
 name|bool

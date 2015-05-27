@@ -140,12 +140,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/fdt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/ti/ti_prcm.h>
 end_include
 
@@ -353,7 +347,6 @@ end_expr_stmt
 
 begin_function
 specifier|static
-specifier|volatile
 name|__inline
 name|uint32_t
 name|ti_wdt_reg_read

@@ -1294,30 +1294,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|cpuset_t
-name|vm_active_cpus
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|cpuset_t
-name|vm_suspended_cpus
-parameter_list|(
-name|struct
-name|vm
-modifier|*
-name|vm
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|struct
 name|vm_exit
 modifier|*
@@ -1388,6 +1364,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_SYS__CPUSET_H_
+end_ifdef
+
 begin_comment
 comment|/*  * Rendezvous all vcpus specified in 'dest' and execute 'func(arg)'.  * The rendezvous 'func(arg)' is not allowed to do anything that will  * cause the thread to be put to sleep.  *  * If the rendezvous is being initiated from a vcpu context then the  * 'vcpuid' must refer to that vcpu, otherwise it should be set to -1.  *  * The caller cannot hold any locks when initiating the rendezvous.  *  * The implementation of this API may cause vcpus other than those specified  * by 'dest' to be stalled. The caller should not rely on any vcpus making  * forward progress when the rendezvous is in progress.  */
 end_comment
@@ -1439,6 +1421,39 @@ name|arg
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|cpuset_t
+name|vm_active_cpus
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|cpuset_t
+name|vm_suspended_cpus
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _SYS__CPUSET_H_ */
+end_comment
 
 begin_function
 specifier|static
@@ -1637,8 +1652,8 @@ name|int
 name|vcpu
 parameter_list|)
 block|{
-return|return
-operator|(
+if|if
+condition|(
 name|curthread
 operator|->
 name|td_flags
@@ -1648,6 +1663,28 @@ name|TDF_ASTPENDING
 operator||
 name|TDF_NEEDRESCHED
 operator|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+name|curthread
+operator|->
+name|td_owepreempt
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+else|else
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}
@@ -1790,8 +1827,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|vrtc
+modifier|*
+name|vm_rtc
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * Inject exception 'vme' into the guest vcpu. This function returns 0 on  * success and non-zero on failure.  *  * Wrapper functions like 'vm_inject_gp()' should be preferred to calling  * this function directly because they enforce the trap-like or fault-like  * behavior of an exception.  *  * This function should only be called in the context of the thread that is  * executing this vcpu.  */
+comment|/*  * Inject exception 'vector' into the guest vcpu. This function returns 0 on  * success and non-zero on failure.  *  * Wrapper functions like 'vm_inject_gp()' should be preferred to calling  * this function directly because they enforce the trap-like or fault-like  * behavior of an exception.  *  * This function should only be called in the context of the thread that is  * executing this vcpu.  */
 end_comment
 
 begin_function_decl
@@ -1806,10 +1857,17 @@ parameter_list|,
 name|int
 name|vcpuid
 parameter_list|,
-name|struct
-name|vm_exception
-modifier|*
-name|vme
+name|int
+name|vector
+parameter_list|,
+name|int
+name|err_valid
+parameter_list|,
+name|uint32_t
+name|errcode
+parameter_list|,
+name|int
+name|restart_instruction
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1916,7 +1974,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Set up 'copyinfo[]' to copy to/from guest linear address space starting  * at 'gla' and 'len' bytes long. The 'prot' should be set to PROT_READ for  * a copyin or PROT_WRITE for a copyout.   *  * Returns 0 on success.  * Returns 1 if an exception was injected into the guest.  * Returns -1 otherwise.  *  * The 'copyinfo[]' can be passed to 'vm_copyin()' or 'vm_copyout()' only if  * the return value is 0. The 'copyinfo[]' resources should be freed by calling  * 'vm_copy_teardown()' after the copy is done.  */
+comment|/*  * Set up 'copyinfo[]' to copy to/from guest linear address space starting  * at 'gla' and 'len' bytes long. The 'prot' should be set to PROT_READ for  * a copyin or PROT_WRITE for a copyout.   *  * retval	is_fault	Intepretation  *   0		   0		Success  *   0		   1		An exception was injected into the guest  * EFAULT	  N/A		Unrecoverable error  *  * The 'copyinfo[]' can be passed to 'vm_copyin()' or 'vm_copyout()' only if  * the return value is 0. The 'copyinfo[]' resources should be freed by calling  * 'vm_copy_teardown()' after the copy is done.  */
 end_comment
 
 begin_function_decl
@@ -1952,6 +2010,10 @@ name|copyinfo
 parameter_list|,
 name|int
 name|num_copyinfo
+parameter_list|,
+name|int
+modifier|*
+name|is_fault
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2030,6 +2092,21 @@ name|copyinfo
 parameter_list|,
 name|size_t
 name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vcpu_trace_exceptions
+parameter_list|(
+name|struct
+name|vm
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|vcpuid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2304,6 +2381,16 @@ name|rex_present
 range|:
 literal|1
 decl_stmt|,
+name|repz_present
+range|:
+literal|1
+decl_stmt|,
+comment|/* REP/REPE/REPZ prefix */
+name|repnz_present
+range|:
+literal|1
+decl_stmt|,
+comment|/* REPNE/REPNZ prefix */
 name|opsize_override
 range|:
 literal|1
@@ -2312,8 +2399,13 @@ comment|/* Operand size override */
 name|addrsize_override
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* Address size override */
+name|segment_override
+range|:
+literal|1
+decl_stmt|;
+comment|/* Segment override */
 name|uint8_t
 name|mod
 range|:
@@ -2357,6 +2449,10 @@ decl_stmt|;
 comment|/* VM_REG_GUEST_xyz */
 name|int
 name|index_register
+decl_stmt|;
+comment|/* VM_REG_GUEST_xyz */
+name|int
+name|segment_register
 decl_stmt|;
 comment|/* VM_REG_GUEST_xyz */
 name|int64_t
@@ -2598,6 +2694,9 @@ name|gpa
 decl_stmt|;
 name|uint64_t
 name|gla
+decl_stmt|;
+name|uint64_t
+name|cs_base
 decl_stmt|;
 name|int
 name|cs_d
@@ -2881,6 +2980,20 @@ name|error_code
 parameter_list|,
 name|uint64_t
 name|cr2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vm_restart_instruction
+parameter_list|(
+name|void
+modifier|*
+name|vm
+parameter_list|,
+name|int
+name|vcpuid
 parameter_list|)
 function_decl|;
 end_function_decl

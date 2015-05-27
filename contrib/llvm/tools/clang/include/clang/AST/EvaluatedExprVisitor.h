@@ -228,6 +228,38 @@ argument_list|)
 return|;
 block|}
 name|void
+name|VisitGenericSelectionExpr
+parameter_list|(
+name|GenericSelectionExpr
+modifier|*
+name|E
+parameter_list|)
+block|{
+comment|// The controlling expression of a generic selection is not evaluated.
+comment|// Don't visit either child expression if the condition is type-dependent.
+if|if
+condition|(
+name|E
+operator|->
+name|isResultDependent
+argument_list|()
+condition|)
+return|return;
+comment|// Only the selected subexpression matters; the other subexpressions and the
+comment|// controlling expression are not evaluated.
+return|return
+name|this
+operator|->
+name|Visit
+argument_list|(
+name|E
+operator|->
+name|getResultExpr
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|void
 name|VisitDesignatedInitExpr
 parameter_list|(
 name|DesignatedInitExpr

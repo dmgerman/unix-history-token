@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPUISELLOWERING_H
+name|LLVM_LIB_TARGET_R600_AMDGPUISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPUISELLOWERING_H
+name|LLVM_LIB_TARGET_R600_AMDGPUISELLOWERING_H
 end_define
 
 begin_include
@@ -81,6 +81,9 @@ name|class
 name|AMDGPUMachineFunction
 decl_stmt|;
 name|class
+name|AMDGPUSubtarget
+decl_stmt|;
+name|class
 name|MachineRegisterInfo
 decl_stmt|;
 name|class
@@ -89,20 +92,27 @@ range|:
 name|public
 name|TargetLowering
 block|{
+name|protected
+operator|:
+specifier|const
+name|AMDGPUSubtarget
+operator|*
+name|Subtarget
+block|;
 name|private
 operator|:
-name|void
-name|ExtractVectorElements
+name|SDValue
+name|LowerConstantInitializer
 argument_list|(
-argument|SDValue Op
+argument|const Constant* Init
+argument_list|,
+argument|const GlobalValue *GV
+argument_list|,
+argument|const SDValue&InitPtr
+argument_list|,
+argument|SDValue Chain
 argument_list|,
 argument|SelectionDAG&DAG
-argument_list|,
-argument|SmallVectorImpl<SDValue>&Args
-argument_list|,
-argument|unsigned Start
-argument_list|,
-argument|unsigned Count
 argument_list|)
 specifier|const
 block|;
@@ -165,6 +175,71 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerFREM
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFCEIL
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFTRUNC
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFRINT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFNEARBYINT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFFLOOR
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerINT_TO_FP64
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|bool Signed
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerUINT_TO_FP
 argument_list|(
 argument|SDValue Op
@@ -173,26 +248,92 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-name|protected
-operator|:
-comment|/// \brief Helper function that adds Reg to the LiveIn list of the DAG's
-comment|/// MachineFunction.
-comment|///
-comment|/// \returns a RegisterSDNode representing Reg.
-name|virtual
 name|SDValue
-name|CreateLiveInRegister
+name|LowerSINT_TO_FP
 argument_list|(
+argument|SDValue Op
+argument_list|,
 argument|SelectionDAG&DAG
-argument_list|,
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|unsigned Reg
-argument_list|,
-argument|EVT VT
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|LowerFP64_TO_INT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|bool Signed
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFP_TO_UINT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFP_TO_SINT
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerSIGN_EXTEND_INREG
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performStoreCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performMulCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|protected
+operator|:
+specifier|static
+name|EVT
+name|getEquivalentMemType
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|EVT VT
+argument_list|)
+block|;
+specifier|static
+name|EVT
+name|getEquivalentLoadRegType
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|EVT VT
+argument_list|)
+block|;
+name|virtual
 name|SDValue
 name|LowerGlobalAddress
 argument_list|(
@@ -204,18 +345,48 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Split a vector load into multiple scalar loads.
+comment|/// \brief Split a vector load into a scalar load of each component.
+name|SDValue
+name|ScalarizeVectorLoad
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Split a vector load into 2 loads of half the vector.
 name|SDValue
 name|SplitVectorLoad
 argument_list|(
-argument|const SDValue&Op
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Split a vector store into a scalar store of each component.
+name|SDValue
+name|ScalarizeVectorStore
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Split a vector store into 2 stores of half the vector.
+name|SDValue
+name|SplitVectorStore
+argument_list|(
+argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|SplitVectorStore
+name|LowerLOAD
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -229,6 +400,37 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerSDIVREM
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerDIVREM24
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|bool sign
+argument_list|)
+specifier|const
+block|;
+name|void
+name|LowerUDIVREM64
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&Results
 argument_list|)
 specifier|const
 block|;
@@ -283,29 +485,126 @@ operator|&
 name|TM
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|isFAbsFree
 argument_list|(
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isFNegFree
 argument_list|(
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
+name|bool
+name|isTruncateFree
+argument_list|(
+argument|EVT Src
+argument_list|,
+argument|EVT Dest
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isTruncateFree
+argument_list|(
+argument|Type *Src
+argument_list|,
+argument|Type *Dest
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isZExtFree
+argument_list|(
+argument|Type *Src
+argument_list|,
+argument|Type *Dest
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isZExtFree
+argument_list|(
+argument|EVT Src
+argument_list|,
+argument|EVT Dest
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isZExtFree
+argument_list|(
+argument|SDValue Val
+argument_list|,
+argument|EVT VT2
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isNarrowingProfitable
+argument_list|(
+argument|EVT VT1
+argument_list|,
+argument|EVT VT2
+argument_list|)
+specifier|const
+name|override
+block|;
 name|MVT
 name|getVectorIdxTy
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
+name|bool
+name|isSelectSupported
+argument_list|(
+argument|SelectSupportKind
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isFPImmLegal
+argument_list|(
+argument|const APFloat&Imm
+argument_list|,
+argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|ShouldShrinkFPConstant
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|shouldReduceLoadWidth
+argument_list|(
+argument|SDNode *Load
+argument_list|,
+argument|ISD::LoadExtType ExtType
+argument_list|,
+argument|EVT ExtVT
+argument_list|)
+specifier|const
+name|override
+block|;
 name|bool
 name|isLoadBitCastBeneficial
 argument_list|(
@@ -314,9 +613,20 @@ argument_list|,
 argument|EVT
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
+name|bool
+name|isCheapToSpeculateCttz
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|isCheapToSpeculateCtlz
+argument_list|()
+specifier|const
+name|override
+block|;
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -335,8 +645,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
@@ -345,20 +655,8 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
-block|{
-name|CLI
-operator|.
-name|Callee
-operator|.
-name|dump
-argument_list|()
+name|override
 block|;
-name|llvm_unreachable
-argument_list|(
-literal|"Undefined function"
-argument_list|)
-block|;   }
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -367,6 +665,29 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
+block|;
+name|SDValue
+name|PerformDAGCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|void
+name|ReplaceNodeResults
+argument_list|(
+argument|SDNode * N
+argument_list|,
+argument|SmallVectorImpl<SDValue>&Results
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
 block|;
 name|SDValue
 name|LowerIntrinsicIABS
@@ -387,15 +708,47 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerMinMax
+name|CombineFMinMaxLegacy
 argument_list|(
-argument|SDValue Op
+argument|SDLoc DL
+argument_list|,
+argument|EVT VT
+argument_list|,
+argument|SDValue LHS
+argument_list|,
+argument|SDValue RHS
+argument_list|,
+argument|SDValue True
+argument_list|,
+argument|SDValue False
+argument_list|,
+argument|SDValue CC
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|CombineIMinMax
+argument_list|(
+argument|SDLoc DL
+argument_list|,
+argument|EVT VT
+argument_list|,
+argument|SDValue LHS
+argument_list|,
+argument|SDValue RHS
+argument_list|,
+argument|SDValue True
+argument_list|,
+argument|SDValue False
+argument_list|,
+argument|SDValue CC
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -404,6 +757,33 @@ argument_list|(
 argument|unsigned Opcode
 argument_list|)
 specifier|const
+name|override
+block|;
+name|SDValue
+name|getRsqrtEstimate
+argument_list|(
+argument|SDValue Operand
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|,
+argument|unsigned&RefinementSteps
+argument_list|,
+argument|bool&UseOneConstNR
+argument_list|)
+specifier|const
+name|override
+block|;
+name|SDValue
+name|getRecipEstimate
+argument_list|(
+argument|SDValue Operand
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|,
+argument|unsigned&RefinementSteps
+argument_list|)
+specifier|const
+name|override
 block|;
 name|virtual
 name|SDNode
@@ -420,15 +800,11 @@ return|return
 name|N
 return|;
 block|}
-comment|// Functions defined in AMDILISelLowering.cpp
-name|public
-operator|:
 comment|/// \brief Determine which of the bits specified in \p Mask are known to be
 comment|/// either zero or one and return them in the \p KnownZero and \p KnownOne
 comment|/// bitsets.
-name|virtual
 name|void
-name|computeMaskedBitsForTargetNode
+name|computeKnownBitsForTargetNode
 argument_list|(
 argument|const SDValue Op
 argument_list|,
@@ -442,159 +818,36 @@ argument|unsigned Depth =
 literal|0
 argument_list|)
 specifier|const
+name|override
 block|;
+name|unsigned
+name|ComputeNumSignBitsForTargetNode
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|const SelectionDAG&DAG
+argument_list|,
+argument|unsigned Depth =
+literal|0
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// \brief Helper function that adds Reg to the LiveIn list of the DAG's
+comment|/// MachineFunction.
+comment|///
+comment|/// \returns a RegisterSDNode representing Reg.
 name|virtual
-name|bool
-name|getTgtMemIntrinsic
+name|SDValue
+name|CreateLiveInRegister
 argument_list|(
-argument|IntrinsicInfo&Info
+argument|SelectionDAG&DAG
 argument_list|,
-argument|const CallInst&I
+argument|const TargetRegisterClass *RC
 argument_list|,
-argument|unsigned Intrinsic
-argument_list|)
-specifier|const
-block|;
-comment|/// We want to mark f32/f64 floating point values as legal.
-name|bool
-name|isFPImmLegal
-argument_list|(
-argument|const APFloat&Imm
+argument|unsigned Reg
 argument_list|,
 argument|EVT VT
-argument_list|)
-specifier|const
-block|;
-comment|/// We don't want to shrink f64/f32 constants.
-name|bool
-name|ShouldShrinkFPConstant
-argument_list|(
-argument|EVT VT
-argument_list|)
-specifier|const
-block|;
-name|private
-operator|:
-name|void
-name|InitAMDILLowering
-argument_list|()
-block|;
-name|SDValue
-name|LowerSREM
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSREM8
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSREM16
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSREM32
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSREM64
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSDIV
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSDIV24
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSDIV32
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSDIV64
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSIGN_EXTEND_INREG
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|EVT
-name|genIntType
-argument_list|(
-argument|uint32_t size =
-literal|32
-argument_list|,
-argument|uint32_t numEle =
-literal|1
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerBRCOND
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerFP_ROUND
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|; }
@@ -617,9 +870,6 @@ comment|// Function call based on a single integer
 name|UMUL
 block|,
 comment|// 32bit unsigned multiplication
-name|DIV_INF
-block|,
-comment|// Divide with infinity returned on zero divisor
 name|RET_FLAG
 block|,
 name|BRANCH_COND
@@ -629,25 +879,90 @@ name|DWORDADDR
 block|,
 name|FRACT
 block|,
+name|CLAMP
+block|,
+name|MAD
+block|,
+comment|// Multiply + add with same result as the separate operations.
+comment|// SIN_HW, COS_HW - f32 for SI, 1 ULP max error, valid from -100 pi to 100 pi.
+comment|// Denormals handled on some parts.
 name|COS_HW
 block|,
 name|SIN_HW
 block|,
-name|FMAX
+name|FMAX_LEGACY
 block|,
 name|SMAX
 block|,
 name|UMAX
 block|,
-name|FMIN
+name|FMIN_LEGACY
 block|,
 name|SMIN
 block|,
 name|UMIN
 block|,
+name|FMAX3
+block|,
+name|SMAX3
+block|,
+name|UMAX3
+block|,
+name|FMIN3
+block|,
+name|SMIN3
+block|,
+name|UMIN3
+block|,
 name|URECIP
 block|,
+name|DIV_SCALE
+block|,
+name|DIV_FMAS
+block|,
+name|DIV_FIXUP
+block|,
+name|TRIG_PREOP
+block|,
+comment|// 1 ULP max error for f64
+comment|// RCP, RSQ - For f32, 1 ULP max error, no denormal handling.
+comment|//            For f64, max error 2^29 ULP, handles denormals.
+name|RCP
+block|,
+name|RSQ
+block|,
+name|RSQ_LEGACY
+block|,
+name|RSQ_CLAMPED
+block|,
+name|LDEXP
+block|,
+name|FP_CLASS
+block|,
 name|DOT4
+block|,
+name|BFE_U32
+block|,
+comment|// Extract range of bits with zero extension to 32-bits.
+name|BFE_I32
+block|,
+comment|// Extract range of bits with sign extension to 32-bits.
+name|BFI
+block|,
+comment|// (src0& src1) | (~src0& src2)
+name|BFM
+block|,
+comment|// Insert a range of bits into a 32-bit word.
+name|BREV
+block|,
+comment|// Reverse bits.
+name|MUL_U24
+block|,
+name|MUL_I24
+block|,
+name|MAD_U24
+block|,
+name|MAD_I24
 block|,
 name|TEXTURE_FETCH
 block|,
@@ -668,6 +983,28 @@ block|,
 name|SAMPLED
 block|,
 name|SAMPLEL
+block|,
+comment|// These cvt_f32_ubyte* nodes need to remain consecutive and in order.
+name|CVT_F32_UBYTE0
+block|,
+name|CVT_F32_UBYTE1
+block|,
+name|CVT_F32_UBYTE2
+block|,
+name|CVT_F32_UBYTE3
+block|,
+comment|/// This node is for VLIW targets and it is used to represent a vector
+comment|/// that is stored in consecutive registers with the same channel.
+comment|/// For example:
+comment|///   |X  |Y|Z|W|
+comment|/// T0|v.x| | | |
+comment|/// T1|v.y| | | |
+comment|/// T2|v.z| | | |
+comment|/// T3|v.w| | | |
+name|BUILD_VERTICAL_VECTOR
+block|,
+comment|/// Pointer to the start of the shader's constant data.
+name|CONST_DATA_PTR
 block|,
 name|FIRST_MEM_OPCODE_NUMBER
 init|=
@@ -697,10 +1034,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDGPUISELLOWERING_H
-end_comment
 
 end_unit
 

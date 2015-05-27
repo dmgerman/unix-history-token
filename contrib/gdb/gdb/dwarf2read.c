@@ -27729,6 +27729,12 @@ case|:
 return|return
 literal|"DW_OP_GNU_push_tls_address"
 return|;
+case|case
+name|DW_OP_GNU_uninit
+case|:
+return|return
+literal|"DW_OP_GNU_uninit"
+return|;
 default|default:
 return|return
 literal|"OP_<unknown>"
@@ -29450,6 +29456,10 @@ condition|)
 name|dwarf2_complex_location_expr_complaint
 argument_list|()
 expr_stmt|;
+break|break;
+case|case
+name|DW_OP_GNU_uninit
+case|:
 break|break;
 default|default:
 name|complaint

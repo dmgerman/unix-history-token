@@ -76,7 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"RegisterContextPOSIX.h"
+file|"Plugins/Process/Utility/RegisterContextPOSIX.h"
 end_include
 
 begin_decl_stmt

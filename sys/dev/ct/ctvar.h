@@ -39,34 +39,18 @@ begin_struct
 struct|struct
 name|ct_bus_access_handle
 block|{
-name|bus_space_tag_t
-name|ch_iot
+name|struct
+name|resource
+modifier|*
+name|ch_io
 decl_stmt|;
-comment|/* core chip ctrl port tag */
-name|bus_space_tag_t
-name|ch_delayt
+comment|/* core chip ctrl port */
+name|struct
+name|resource
+modifier|*
+name|ch_mem
 decl_stmt|;
-comment|/* delay port tag */
-name|bus_space_tag_t
-name|ch_datat
-decl_stmt|;
-comment|/* data port tag (pio) */
-name|bus_space_tag_t
-name|ch_memt
-decl_stmt|;
-comment|/* data port tag (shm) */
-name|bus_space_handle_t
-name|ch_ioh
-decl_stmt|;
-name|bus_space_handle_t
-name|ch_delaybah
-decl_stmt|;
-name|bus_space_handle_t
-name|ch_datah
-decl_stmt|;
-name|bus_space_handle_t
-name|ch_memh
-decl_stmt|;
+comment|/* data port (shm) */
 name|void
 function_decl|(
 modifier|*
@@ -366,7 +350,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|void
 name|ctintr
 parameter_list|(
 name|void

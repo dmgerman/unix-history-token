@@ -265,8 +265,8 @@ end_expr_stmt
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|ieee80211_ratectl_deinit
 parameter_list|(
 name|struct
@@ -289,8 +289,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|ieee80211_ratectl_node_init
 parameter_list|(
 name|struct
@@ -323,8 +323,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|ieee80211_ratectl_node_deinit
 parameter_list|(
 name|struct
@@ -403,8 +403,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|ieee80211_ratectl_tx_complete
 parameter_list|(
 specifier|const
@@ -453,8 +453,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|ieee80211_ratectl_tx_update
 parameter_list|(
 specifier|const
@@ -515,8 +515,8 @@ end_function
 
 begin_function
 specifier|static
-name|void
 name|__inline
+name|void
 name|ieee80211_ratectl_setinterval
 parameter_list|(
 specifier|const

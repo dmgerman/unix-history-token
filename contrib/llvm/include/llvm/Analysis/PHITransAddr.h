@@ -76,6 +76,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|AssumptionCache
+decl_stmt|;
+name|class
 name|DominatorTree
 decl_stmt|;
 name|class
@@ -102,17 +105,22 @@ name|Value
 modifier|*
 name|Addr
 decl_stmt|;
-comment|/// TD - The target data we are playing with if known, otherwise null.
+comment|/// The DataLayout we are playing with if known, otherwise null.
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 decl_stmt|;
 comment|/// TLI - The target library info if known, otherwise null.
 specifier|const
 name|TargetLibraryInfo
 modifier|*
 name|TLI
+decl_stmt|;
+comment|/// A cache of @llvm.assume calls used by SimplifyInstruction.
+name|AssumptionCache
+modifier|*
+name|AC
 decl_stmt|;
 comment|/// InstInputs - The inputs for our symbolic address.
 name|SmallVector
@@ -135,7 +143,11 @@ argument_list|,
 specifier|const
 name|DataLayout
 operator|*
-name|td
+name|DL
+argument_list|,
+name|AssumptionCache
+operator|*
+name|AC
 argument_list|)
 operator|:
 name|Addr
@@ -143,14 +155,19 @@ argument_list|(
 name|addr
 argument_list|)
 operator|,
-name|TD
+name|DL
 argument_list|(
-name|td
+name|DL
 argument_list|)
 operator|,
 name|TLI
 argument_list|(
-literal|0
+name|nullptr
+argument_list|)
+operator|,
+name|AC
+argument_list|(
+argument|AC
 argument_list|)
 block|{
 comment|// If the address is an instruction, the whole thing is considered an input.

@@ -1261,7 +1261,6 @@ operator|*
 literal|1024
 operator|)
 return|;
-break|break;
 case|case
 literal|8
 case|:
@@ -1274,7 +1273,6 @@ operator|*
 literal|1024
 operator|)
 return|;
-break|break;
 case|case
 literal|12
 case|:
@@ -1287,7 +1285,6 @@ operator|*
 literal|1024
 operator|)
 return|;
-break|break;
 case|case
 literal|14
 case|:
@@ -1300,7 +1297,6 @@ operator|*
 literal|1024
 operator|)
 return|;
-break|break;
 case|case
 literal|15
 case|:
@@ -1313,7 +1309,6 @@ operator|*
 literal|1024
 operator|)
 return|;
-break|break;
 default|default:
 name|device_printf
 argument_list|(

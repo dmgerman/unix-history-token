@@ -94,7 +94,7 @@ if|#
 directive|if
 name|__STDC_VERSION__
 operator|>=
-literal|199900L
+literal|199901L
 operator|||
 name|__cplusplus
 operator|>=
@@ -128,12 +128,23 @@ begin_comment
 comment|/* Hack required to make standard headers work, at least on Ubuntu */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__GNUC_VA_LIST
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|__GNUC_VA_LIST
 value|1
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef

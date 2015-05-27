@@ -1918,10 +1918,8 @@ name|cn_flags
 operator|&
 name|MAKEENTRY
 operator|)
-operator|&&
-name|nameiop
 operator|!=
-name|CREATE
+literal|0
 condition|)
 name|cache_enter
 argument_list|(
@@ -6199,8 +6197,11 @@ operator|->
 name|i_number
 argument_list|,
 operator|(
-literal|"directory %d reparented\n"
+literal|"directory %ju reparented\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|VTOI
 argument_list|(
 name|vp1

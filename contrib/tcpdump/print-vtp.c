@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * VLAN TRUNKING PROTOCOL (VTP)  *  * Reference documentation:  *  http://www.cisco.com/en/US/tech/tk389/tk689/technologies_tech_note09186a0080094c52.shtml   *  http://www.cisco.com/warp/public/473/21.html   *  http://www.cisco.com/univercd/cc/td/doc/product/lan/trsrb/frames.htm  *  * Original code ode by Carles Kishimoto<carles.kishimoto@gmail.com>  */
+comment|/*  * Copyright (c) 1998-2007 The TCPDUMP project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * VLAN TRUNKING PROTOCOL (VTP)  *  * Reference documentation:  *  http://www.cisco.com/en/US/tech/tk389/tk689/technologies_tech_note09186a0080094c52.shtml  *  http://www.cisco.com/warp/public/473/21.html  *  http://www.cisco.com/univercd/cc/td/doc/product/lan/trsrb/frames.htm  *  * Original code ode by Carles Kishimoto<carles.kishimoto@gmail.com>  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -29,18 +35,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
 end_include
 
@@ -54,12 +48,6 @@ begin_include
 include|#
 directive|include
 file|"extract.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"nlpid.h"
 end_include
 
 begin_define
@@ -129,25 +117,25 @@ begin_struct
 struct|struct
 name|vtp_vlan_
 block|{
-name|u_int8_t
+name|uint8_t
 name|len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|status
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|name_len
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|vlanid
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|mtu
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|index
 decl_stmt|;
 block|}
@@ -156,6 +144,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|vtp_message_type_values
@@ -197,6 +186,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|vtp_header_values
@@ -242,6 +232,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|vtp_vlan_type_values
@@ -289,6 +280,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|vtp_vlan_status
@@ -388,6 +380,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|vtp_vlan_tlv_values
@@ -465,6 +458,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|vtp_stp_type_values
@@ -502,6 +496,10 @@ begin_function
 name|void
 name|vtp_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -544,20 +542,14 @@ name|tptr
 operator|=
 name|pptr
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|TTEST2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
 argument_list|,
 name|VTP_HEADER_LEN
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 name|type
 operator|=
 operator|*
@@ -567,13 +559,16 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"VTPv%u, Message %s (0x%02x), length %u"
-argument_list|,
+operator|,
 operator|*
 name|tptr
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|vtp_message_type_values
@@ -582,21 +577,24 @@ literal|"Unknown message type"
 argument_list|,
 name|type
 argument_list|)
-argument_list|,
+operator|,
 operator|*
 operator|(
 name|tptr
 operator|+
 literal|1
 operator|)
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* In non-verbose mode, just print version and message type */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<
 literal|1
 condition|)
@@ -604,16 +602,19 @@ block|{
 return|return;
 block|}
 comment|/* verbose mode print all fields */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tDomain name: %s, %s: %u"
-argument_list|,
+operator|,
 operator|(
 name|tptr
 operator|+
 literal|4
 operator|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|vtp_header_values
@@ -627,12 +628,13 @@ operator|+
 literal|1
 operator|)
 argument_list|)
-argument_list|,
+operator|,
 operator|*
 operator|(
 name|tptr
 operator|+
 literal|2
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -648,85 +650,99 @@ block|{
 case|case
 name|VTP_SUMMARY_ADV
 case|:
-comment|/* 	 *  SUMMARY ADVERTISEMENT 	 * 	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |     Version   |     Code      |    Followers  |    MmgtD Len  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Management Domain Name                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Configuration revision number              | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                  Updater Identity IP address                  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Update Timestamp (12 bytes)                | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                        MD5 digest (16 bytes)                  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *   	 */
-name|printf
+comment|/* 	 *  SUMMARY ADVERTISEMENT 	 * 	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |     Version   |     Code      |    Followers  |    MmgtD Len  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Management Domain Name                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Configuration revision number              | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                  Updater Identity IP address                  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Update Timestamp (12 bytes)                | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                        MD5 digest (16 bytes)                  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 * 	 */
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Config Rev %x, Updater %s"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
 operator|+=
 literal|8
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Timestamp 0x%08x 0x%08x 0x%08x"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
 literal|4
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
 literal|8
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
 operator|+=
 name|VTP_UPDATE_TIMESTAMP_LEN
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", MD5 digest: %08x%08x%08x%08x"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
 literal|4
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
 literal|8
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
 literal|12
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -737,18 +753,22 @@ break|break;
 case|case
 name|VTP_SUBSET_ADV
 case|:
-comment|/* 	 *  SUBSET ADVERTISEMENT 	 * 	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |     Version   |     Code      |   Seq number  |    MmgtD Len  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Management Domain Name                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Configuration revision number              | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         VLAN info field 1                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         ................                      | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         VLAN info field N                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *       	 */
-name|printf
+comment|/* 	 *  SUBSET ADVERTISEMENT 	 * 	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |     Version   |     Code      |   Seq number  |    MmgtD Len  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Management Domain Name                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Configuration revision number              | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         VLAN info field 1                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         ................                      | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         VLAN info field N                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 * 	 */
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Config Rev %x"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/*   	 *  VLAN INFORMATION 	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  | V info len    |    Status     |  VLAN type    | VLAN name len | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |       ISL vlan id             |            MTU size           | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                     802.10 index (SAID)                       | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         VLAN name                             | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 * 	 */
+comment|/* 	 *  VLAN INFORMATION 	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  | V info len    |    Status     |  VLAN type    | VLAN name len | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |       ISL vlan id             |            MTU size           | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                     802.10 index (SAID)                       | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                         VLAN name                             | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 * 	 */
 name|tptr
 operator|+=
 literal|4
@@ -776,20 +796,14 @@ operator|==
 literal|0
 condition|)
 break|break;
-if|if
-condition|(
-operator|!
-name|TTEST2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
 argument_list|,
 name|len
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 name|vtp_vlan
 operator|=
 operator|(
@@ -799,10 +813,13 @@ operator|*
 operator|)
 name|tptr
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tVLAN info status %s, type %s, VLAN-id %u, MTU %u, SAID 0x%08x, Name %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|vtp_vlan_status
@@ -813,7 +830,7 @@ name|vtp_vlan
 operator|->
 name|status
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|vtp_vlan_type_values
@@ -824,7 +841,7 @@ name|vtp_vlan
 operator|->
 name|type
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -832,7 +849,7 @@ name|vtp_vlan
 operator|->
 name|vlanid
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -840,7 +857,7 @@ name|vtp_vlan
 operator|->
 name|mtu
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -848,11 +865,12 @@ name|vtp_vlan
 operator|->
 name|index
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|tptr
 operator|+
 name|VTP_VLAN_INFO_OFFSET
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -901,7 +919,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/*                   * Cisco specs says 2 bytes for type + 2 bytes for length, take only 1                  * See: http://www.cisco.com/univercd/cc/td/doc/product/lan/trsrb/frames.htm                   */
+comment|/*                  * Cisco specs says 2 bytes for type + 2 bytes for length, take only 1                  * See: http://www.cisco.com/univercd/cc/td/doc/product/lan/trsrb/frames.htm                  */
 name|type
 operator|=
 operator|*
@@ -916,10 +934,13 @@ operator|+
 literal|1
 operator|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t%s (0x%04x) TLV"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|vtp_vlan_tlv_values
@@ -928,8 +949,9 @@ literal|"Unknown"
 argument_list|,
 name|type
 argument_list|)
-argument_list|,
+operator|,
 name|type
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/*                  * infinite loop check                  */
@@ -946,10 +968,7 @@ condition|)
 block|{
 return|return;
 block|}
-if|if
-condition|(
-operator|!
-name|TTEST2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -960,10 +979,7 @@ literal|2
 operator|+
 literal|2
 argument_list|)
-condition|)
-goto|goto
-name|trunc
-goto|;
+expr_stmt|;
 name|tlv_value
 operator|=
 name|EXTRACT_16BITS
@@ -981,21 +997,28 @@ block|{
 case|case
 name|VTP_VLAN_STE_HOP_COUNT
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %u"
-argument_list|,
+operator|,
 name|tlv_value
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|VTP_VLAN_PRUNING
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s (%u)"
-argument_list|,
+operator|,
 name|tlv_value
 operator|==
 literal|1
@@ -1003,18 +1026,22 @@ condition|?
 literal|"Enabled"
 else|:
 literal|"Disabled"
-argument_list|,
+operator|,
 name|tlv_value
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|VTP_VLAN_STP_TYPE
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s (%u)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|vtp_stp_type_values
@@ -1023,18 +1050,22 @@ literal|"Unknown"
 argument_list|,
 name|tlv_value
 argument_list|)
-argument_list|,
+operator|,
 name|tlv_value
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|VTP_VLAN_BRIDGE_TYPE
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s (%u)"
-argument_list|,
+operator|,
 name|tlv_value
 operator|==
 literal|1
@@ -1042,18 +1073,22 @@ condition|?
 literal|"SRB"
 else|:
 literal|"SRT"
-argument_list|,
+operator|,
 name|tlv_value
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|VTP_VLAN_BACKUP_CRF_MODE
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s (%u)"
-argument_list|,
+operator|,
 name|tlv_value
 operator|==
 literal|1
@@ -1061,8 +1096,9 @@ condition|?
 literal|"Backup"
 else|:
 literal|"Not backup"
-argument_list|,
+operator|,
 name|tlv_value
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1085,6 +1121,8 @@ case|:
 default|default:
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t\t  "
@@ -1121,14 +1159,18 @@ case|case
 name|VTP_ADV_REQUEST
 case|:
 comment|/* 	 *  ADVERTISEMENT REQUEST 	 * 	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |     Version   |     Code      |   Reserved    |    MmgtD Len  | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                    Management Domain Name                     | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 *  |                          Start value                          | 	 *  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ 	 * 	 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tStart value: %u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1143,9 +1185,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|vtp]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

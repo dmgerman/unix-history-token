@@ -93,6 +93,12 @@ operator|==
 literal|1
 end_if
 
+begin_undef
+undef|#
+directive|undef
+name|SHA_Data
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -108,6 +114,12 @@ operator|==
 literal|256
 end_elif
 
+begin_undef
+undef|#
+directive|undef
+name|SHA_Data
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -122,6 +134,12 @@ name|SHA
 operator|==
 literal|512
 end_elif
+
+begin_undef
+undef|#
+directive|undef
+name|SHA_Data
+end_undef
 
 begin_define
 define|#

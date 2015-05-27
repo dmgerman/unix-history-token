@@ -75,6 +75,15 @@ directive|include
 file|<sys/firmware.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_ACPI
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
@@ -86,6 +95,11 @@ include|#
 directive|include
 file|<dev/acpica/acpivar.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -277,7 +291,7 @@ begin_define
 define|#
 directive|define
 name|RADEON_FENCE_JIFFIES_TIMEOUT
-value|(DRM_HZ / 2)
+value|(HZ / 2)
 end_define
 
 begin_comment
@@ -4516,14 +4530,14 @@ decl_stmt|;
 comment|/* dynpm power management */
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|struct
 name|delayed_work
 name|dynpm_idle_work
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 name|enum
 name|radeon_dynpm_state
 name|dynpm_state
@@ -4564,7 +4578,7 @@ name|int_thermal_type
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 name|struct
 name|device
 modifier|*
@@ -4572,7 +4586,7 @@ name|int_hwmon_dev
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 block|}
 struct|;
 end_struct
@@ -7006,6 +7020,12 @@ name|r600_audio
 name|audio_status
 decl_stmt|;
 comment|/* audio stuff */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_ACPI
+argument_list|)
 struct|struct
 block|{
 name|ACPI_HANDLE
@@ -7017,6 +7037,8 @@ decl_stmt|;
 block|}
 name|acpi
 struct|;
+endif|#
+directive|endif
 comment|/* only one userspace can use Hyperz features or CMASK at a time */
 name|struct
 name|drm_file
@@ -7810,12 +7832,6 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|DRM_DEBUG_CODE
-argument_list|)
-operator|||
 name|DRM_DEBUG_CODE
 operator|==
 literal|0
@@ -9486,6 +9502,15 @@ begin_comment
 comment|/* radeon_acpi.c */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CONFIG_ACPI
+argument_list|)
+end_if
+
 begin_function_decl
 specifier|extern
 name|int
@@ -9511,6 +9536,48 @@ name|rdev
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function
+specifier|static
+specifier|inline
+name|int
+name|radeon_acpi_init
+parameter_list|(
+name|struct
+name|radeon_device
+modifier|*
+name|rdev
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|radeon_acpi_fini
+parameter_list|(
+name|struct
+name|radeon_device
+modifier|*
+name|rdev
+parameter_list|)
+block|{ }
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Prototypes added by @dumbbell. */

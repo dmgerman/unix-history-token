@@ -40,15 +40,6 @@ name|scsi_low_softc
 name|sc_sclow
 decl_stmt|;
 comment|/* generic data */
-name|bus_space_tag_t
-name|sc_iot
-decl_stmt|;
-name|bus_space_tag_t
-name|sc_memt
-decl_stmt|;
-name|bus_space_handle_t
-name|sc_ioh
-decl_stmt|;
 name|int
 name|port_rid
 decl_stmt|;
@@ -149,10 +140,9 @@ begin_function_decl
 name|int
 name|ncvprobesubr
 parameter_list|(
-name|bus_space_tag_t
-parameter_list|,
-name|bus_space_handle_t
-name|ioh
+name|struct
+name|resource
+modifier|*
 parameter_list|,
 name|u_int
 parameter_list|,

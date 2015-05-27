@@ -89,7 +89,7 @@ argument_list|()
 operator|:
 name|Ptr
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|bool
@@ -100,7 +100,7 @@ block|{
 return|return
 name|Ptr
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|bool

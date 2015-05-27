@@ -131,25 +131,28 @@ value|8
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|qflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|unsigned
+specifier|static
 name|char
 modifier|*
 name|checkAgainst
@@ -157,6 +160,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|checksFailed
 decl_stmt|;
@@ -371,6 +375,7 @@ specifier|static
 name|void
 name|MDString
 parameter_list|(
+specifier|const
 name|Algorithm_t
 modifier|*
 parameter_list|,
@@ -386,6 +391,7 @@ specifier|static
 name|void
 name|MDTimeTrial
 parameter_list|(
+specifier|const
 name|Algorithm_t
 modifier|*
 parameter_list|)
@@ -397,6 +403,7 @@ specifier|static
 name|void
 name|MDTestSuite
 parameter_list|(
+specifier|const
 name|Algorithm_t
 modifier|*
 parameter_list|)
@@ -408,6 +415,7 @@ specifier|static
 name|void
 name|MDFilter
 parameter_list|(
+specifier|const
 name|Algorithm_t
 modifier|*
 parameter_list|,
@@ -421,6 +429,7 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
+specifier|const
 name|Algorithm_t
 modifier|*
 parameter_list|)
@@ -467,6 +476,8 @@ comment|/* algorithm function table */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|Algorithm_t
 name|Algorithm
@@ -1147,6 +1158,7 @@ specifier|static
 name|void
 name|MDString
 parameter_list|(
+specifier|const
 name|Algorithm_t
 modifier|*
 name|alg
@@ -1264,6 +1276,7 @@ specifier|static
 name|void
 name|MDTimeTrial
 parameter_list|(
+specifier|const
 name|Algorithm_t
 modifier|*
 name|alg
@@ -1491,6 +1504,7 @@ comment|/*  * Digests a reference suite of strings and prints the results.  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1669,6 +1683,7 @@ specifier|static
 name|void
 name|MDTestSuite
 parameter_list|(
+specifier|const
 name|Algorithm_t
 modifier|*
 name|alg
@@ -1788,6 +1803,7 @@ specifier|static
 name|void
 name|MDFilter
 parameter_list|(
+specifier|const
 name|Algorithm_t
 modifier|*
 name|alg
@@ -1902,6 +1918,7 @@ specifier|static
 name|void
 name|usage
 parameter_list|(
+specifier|const
 name|Algorithm_t
 modifier|*
 name|alg

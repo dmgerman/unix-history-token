@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SIISELLOWERING_H
+name|LLVM_LIB_TARGET_R600_SIISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SIISELLOWERING_H
+name|LLVM_LIB_TARGET_R600_SIISELLOWERING_H
 end_define
 
 begin_include
@@ -99,6 +99,8 @@ argument_list|,
 argument|SDValue Chain
 argument_list|,
 argument|unsigned Offset
+argument_list|,
+argument|bool Signed
 argument_list|)
 specifier|const
 block|;
@@ -114,6 +116,45 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
+name|LowerGlobalAddress
+argument_list|(
+argument|AMDGPUMachineFunction *MFI
+argument_list|,
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+name|override
+block|;
+name|SDValue
+name|LowerINTRINSIC_WO_CHAIN
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerINTRINSIC_VOID
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFrameIndex
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
 name|LowerLOAD
 argument_list|(
 argument|SDValue Op
@@ -123,7 +164,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerSELECT_CC
+name|LowerSELECT
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -132,11 +173,49 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerSIGN_EXTEND
+name|LowerFastFDIV
 argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFDIV32
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFDIV64
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFDIV
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerINT_TO_FP
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|bool Signed
 argument_list|)
 specifier|const
 block|;
@@ -150,16 +229,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerZERO_EXTEND
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerADD
+name|LowerTrig
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -173,26 +243,6 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|ResourceDescriptorToi128
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|foldImm
-argument_list|(
-argument|SDValue&Operand
-argument_list|,
-argument|int32_t&Immediate
-argument_list|,
-argument|bool&ScalarSlotUsed
 argument_list|)
 specifier|const
 block|;
@@ -219,29 +269,6 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|ensureSRegLimit
-argument_list|(
-argument|SelectionDAG&DAG
-argument_list|,
-argument|SDValue&Operand
-argument_list|,
-argument|unsigned RegClass
-argument_list|,
-argument|bool&ScalarSlotUsed
-argument_list|)
-specifier|const
-block|;
-name|SDNode
-operator|*
-name|foldOperands
-argument_list|(
-argument|MachineSDNode *N
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|void
 name|adjustWritemask
 argument_list|(
 argument|MachineSDNode *&N
@@ -260,6 +287,71 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|performUCharToFloatCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performSHLPtrCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|unsigned AS
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performAndCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performOrCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performClassCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performMin3Max3Combine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|performSetCCCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|DAGCombinerInfo&DCI
+argument_list|)
+specifier|const
+block|;
 name|public
 operator|:
 name|SITargetLowering
@@ -270,21 +362,80 @@ name|tm
 argument_list|)
 block|;
 name|bool
-name|allowsUnalignedMemoryAccesses
+name|isShuffleMaskLegal
 argument_list|(
-argument|EVT  VT
+argument|const SmallVectorImpl<int>&
+comment|/*Mask*/
+argument_list|,
+argument|EVT
+comment|/*VT*/
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isLegalAddressingMode
+argument_list|(
+argument|const AddrMode&AM
+argument_list|,
+argument|Type *Ty
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|allowsMisalignedMemoryAccesses
+argument_list|(
+argument|EVT VT
+argument_list|,
+argument|unsigned AS
+argument_list|,
+argument|unsigned Align
 argument_list|,
 argument|bool *IsFast
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
-name|bool
-name|shouldSplitVectorElementType
+name|EVT
+name|getOptimalMemOpType
+argument_list|(
+argument|uint64_t Size
+argument_list|,
+argument|unsigned DstAlign
+argument_list|,
+argument|unsigned SrcAlign
+argument_list|,
+argument|bool IsMemset
+argument_list|,
+argument|bool ZeroMemset
+argument_list|,
+argument|bool MemcpyStrSrc
+argument_list|,
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|TargetLoweringBase
+operator|::
+name|LegalizeTypeAction
+name|getPreferredVectorAction
 argument_list|(
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
+block|;
+name|bool
+name|shouldConvertConstantLoadToIntImm
+argument_list|(
+argument|const APInt&Imm
+argument_list|,
+argument|Type *Ty
+argument_list|)
+specifier|const
+name|override
 block|;
 name|SDValue
 name|LowerFormalArguments
@@ -304,8 +455,8 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -315,8 +466,8 @@ argument_list|,
 argument|MachineBasicBlock * BB
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
@@ -325,24 +476,24 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isFMAFasterThanFMulAndFAdd
 argument_list|(
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -351,8 +502,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|PerformDAGCombine
 argument_list|(
@@ -361,8 +512,8 @@ argument_list|,
 argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDNode
 operator|*
 name|PostISelFolding
@@ -372,8 +523,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|AdjustInstrPostInstrSelection
 argument_list|(
@@ -382,6 +533,7 @@ argument_list|,
 argument|SDNode *Node
 argument_list|)
 specifier|const
+name|override
 block|;
 name|int32_t
 name|analyzeImmediate
@@ -402,6 +554,56 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
+block|;
+name|void
+name|legalizeTargetIndependentNode
+argument_list|(
+argument|SDNode *Node
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|MachineSDNode
+operator|*
+name|wrapAddr64Rsrc
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SDValue Ptr
+argument_list|)
+specifier|const
+block|;
+name|MachineSDNode
+operator|*
+name|buildRSRC
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SDValue Ptr
+argument_list|,
+argument|uint32_t RsrcDword1
+argument_list|,
+argument|uint64_t RsrcDword2And3
+argument_list|)
+specifier|const
+block|;
+name|MachineSDNode
+operator|*
+name|buildScratchRSRC
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|SDValue Ptr
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}
@@ -415,10 +617,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|//SIISELLOWERING_H
-end_comment
 
 end_unit
 

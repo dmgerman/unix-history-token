@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_MANAGED_STATIC_H
+name|LLVM_SUPPORT_MANAGEDSTATIC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_MANAGED_STATIC_H
+name|LLVM_SUPPORT_MANAGEDSTATIC_H
 end_define
 
 begin_include
@@ -221,7 +221,7 @@ block|{
 return|return
 name|Ptr
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|void
@@ -556,21 +556,6 @@ block|{
 name|llvm_shutdown_obj
 argument_list|()
 block|{ }
-name|explicit
-name|llvm_shutdown_obj
-parameter_list|(
-name|bool
-name|multithreaded
-parameter_list|)
-block|{
-if|if
-condition|(
-name|multithreaded
-condition|)
-name|llvm_start_multithreaded
-argument_list|()
-expr_stmt|;
-block|}
 operator|~
 name|llvm_shutdown_obj
 argument_list|()

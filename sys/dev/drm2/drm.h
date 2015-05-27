@@ -21,10 +21,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/**  * \mainpage  *  * The Direct Rendering Manager (DRM) is a device-independent kernel-level  * device driver that provides support for the XFree86 Direct Rendering  * Infrastructure (DRI).  *  * The DRM supports the Direct Rendering Infrastructure (DRI) in four major  * ways:  *     -# The DRM provides synchronized access to the graphics hardware via  *        the use of an optimized two-tiered lock.  *     -# The DRM enforces the DRI security policy for access to the graphics  *        hardware by only allowing authenticated X11 clients access to  *        restricted regions of memory.  *     -# The DRM provides a generic DMA engine, complete with multiple  *        queues and the ability to detect the need for an OpenGL context  *        switch.  *     -# The DRM is extensible via the use of small device-specific modules  *        that rely extensively on the API exported by the DRM module.  *  */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -36,69 +32,6 @@ define|#
 directive|define
 name|_DRM_H_
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__user
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__user
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__iomem
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|__iomem
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DEPRECATED
-value|__attribute__ ((deprecated))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DEPRECATED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_if
 if|#
@@ -108,6 +41,12 @@ argument_list|(
 name|__linux__
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<linux/types.h>
+end_include
 
 begin_include
 include|#
@@ -115,92 +54,22 @@ directive|include
 file|<asm/ioctl.h>
 end_include
 
+begin_typedef
+typedef|typedef
+name|unsigned
+name|int
+name|drm_handle_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_comment
-comment|/* For _IO* macros */
+comment|/* One of the BSDs */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_NR
-parameter_list|(
-name|n
-parameter_list|)
-value|_IOC_NR(n)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOC_VOID
-value|_IOC_NONE
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOC_READ
-value|_IOC_READ
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOC_WRITE
-value|_IOC_WRITE
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOC_READWRITE
-value|_IOC_READ|_IOC_WRITE
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOC
-parameter_list|(
-name|dir
-parameter_list|,
-name|group
-parameter_list|,
-name|nr
-parameter_list|,
-name|size
-parameter_list|)
-value|_IOC(dir, group, nr, size)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD_kernel__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__OpenBSD__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__DragonFly__
-argument_list|)
-end_elif
 
 begin_include
 include|#
@@ -208,115 +77,86 @@ directive|include
 file|<sys/ioccom.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_NR
-parameter_list|(
-name|n
-parameter_list|)
-value|((n)& 0xff)
-end_define
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
-begin_define
-define|#
-directive|define
-name|DRM_IOC_VOID
-value|IOC_VOID
-end_define
+begin_typedef
+typedef|typedef
+name|int8_t
+name|__s8
+typedef|;
+end_typedef
 
-begin_define
-define|#
-directive|define
-name|DRM_IOC_READ
-value|IOC_OUT
-end_define
+begin_typedef
+typedef|typedef
+name|uint8_t
+name|__u8
+typedef|;
+end_typedef
 
-begin_define
-define|#
-directive|define
-name|DRM_IOC_WRITE
-value|IOC_IN
-end_define
+begin_typedef
+typedef|typedef
+name|int16_t
+name|__s16
+typedef|;
+end_typedef
 
-begin_define
-define|#
-directive|define
-name|DRM_IOC_READWRITE
-value|IOC_INOUT
-end_define
+begin_typedef
+typedef|typedef
+name|uint16_t
+name|__u16
+typedef|;
+end_typedef
 
-begin_define
-define|#
-directive|define
-name|DRM_IOC
-parameter_list|(
-name|dir
-parameter_list|,
-name|group
-parameter_list|,
-name|nr
-parameter_list|,
-name|size
-parameter_list|)
-value|_IOC(dir, group, nr, size)
-end_define
+begin_typedef
+typedef|typedef
+name|int32_t
+name|__s32
+typedef|;
+end_typedef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_typedef
+typedef|typedef
+name|uint32_t
+name|__u32
+typedef|;
+end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__OpenBSD__
-end_ifdef
+begin_typedef
+typedef|typedef
+name|int64_t
+name|__s64
+typedef|;
+end_typedef
 
-begin_define
-define|#
-directive|define
-name|DRM_MAJOR
-value|81
-end_define
+begin_typedef
+typedef|typedef
+name|uint64_t
+name|__u64
+typedef|;
+end_typedef
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_typedef
+typedef|typedef
+name|unsigned
+name|long
+name|drm_handle_t
+typedef|;
+end_typedef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|DRM_MAJOR
-value|226
-end_define
+begin_include
+include|#
+directive|include
+file|<dev/drm2/drm_os_freebsd.h>
+end_include
 
 begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|DRM_MAX_MINOR
-value|15
-end_define
 
 begin_define
 define|#
@@ -414,51 +254,6 @@ parameter_list|)
 value|((lock)& ~(_DRM_LOCK_HELD|_DRM_LOCK_CONT))
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__linux__
-argument_list|)
-end_if
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|drm_handle_t
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|long
-name|drm_handle_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/**< To mapped regions */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -466,10 +261,6 @@ name|int
 name|drm_context_t
 typedef|;
 end_typedef
-
-begin_comment
-comment|/**< GLXContext handle */
-end_comment
 
 begin_typedef
 typedef|typedef
@@ -488,11 +279,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**< Magic for authentication */
-end_comment
-
-begin_comment
-comment|/**  * Cliprect.  *  * \warning If you change this structure, make sure you change  * XF86DRIClipRectRec in the server as well  *  * \note KW: Actually it's illegal to change either for  * backwards-compatibility reasons.  */
+comment|/**  * Cliprect.  *  * \warning: If you change this structure, make sure you change  * XF86DRIClipRectRec in the server as well  *  * \note KW: Actually it's illegal to change either for  * backwards-compatibility reasons.  */
 end_comment
 
 begin_struct
@@ -514,6 +301,27 @@ decl_stmt|;
 name|unsigned
 name|short
 name|y2
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/**  * Drawable information.  */
+end_comment
+
+begin_struct
+struct|struct
+name|drm_drawable_info
+block|{
+name|unsigned
+name|int
+name|num_rects
+decl_stmt|;
+name|struct
+name|drm_clip_rect
+modifier|*
+name|rects
 decl_stmt|;
 block|}
 struct|;
@@ -577,46 +385,6 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* This is beyond ugly, and only works on GCC.  However, it allows me to use  * drm.h in places (i.e., in the X-server) where I can't use size_t.  The real  * fix is to use uint32_t instead of size_t, but that fix will break existing  * LP64 (i.e., PowerPC64, SPARC64, Alpha, etc.) systems.  That *will*  * eventually happen, though.  I chose 'unsigned long' to be the fallback type  * because that works on all the platforms I know about.  Hopefully, the  * real fix will happen before that bites us.  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__SIZE_TYPE__
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|DRM_SIZE_T
-value|__SIZE_TYPE__
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_warning
-warning|#
-directive|warning
-literal|"__SIZE_TYPE__ not defined.  Assuming sizeof(size_t) == sizeof(unsigned long)!"
-end_warning
-
-begin_define
-define|#
-directive|define
-name|DRM_SIZE_T
-value|unsigned long
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/**  * DRM_IOCTL_VERSION ioctl argument type.  *  * \sa drmGetVersion().  */
 end_comment
 
@@ -636,7 +404,7 @@ name|int
 name|version_patchlevel
 decl_stmt|;
 comment|/**< Patch level */
-name|DRM_SIZE_T
+name|size_t
 name|name_len
 decl_stmt|;
 comment|/**< Length of name buffer */
@@ -646,7 +414,7 @@ modifier|*
 name|name
 decl_stmt|;
 comment|/**< Name of driver */
-name|DRM_SIZE_T
+name|size_t
 name|date_len
 decl_stmt|;
 comment|/**< Length of date buffer */
@@ -656,7 +424,7 @@ modifier|*
 name|date
 decl_stmt|;
 comment|/**< User-space buffer to hold date */
-name|DRM_SIZE_T
+name|size_t
 name|desc_len
 decl_stmt|;
 comment|/**< Length of desc buffer */
@@ -678,7 +446,7 @@ begin_struct
 struct|struct
 name|drm_unique
 block|{
-name|DRM_SIZE_T
+name|size_t
 name|unique_len
 decl_stmt|;
 comment|/**< Length of unique */
@@ -691,12 +459,6 @@ comment|/**< Unique name for driver instantiation */
 block|}
 struct|;
 end_struct
-
-begin_undef
-undef|#
-directive|undef
-name|DRM_SIZE_T
-end_undef
 
 begin_struct
 struct|struct
@@ -795,7 +557,8 @@ comment|/**< Consistent memory for PCI DMA */
 name|_DRM_GEM
 init|=
 literal|6
-comment|/**< GEM */
+block|,
+comment|/**< GEM object */
 block|}
 enum|;
 end_enum
@@ -1207,14 +970,13 @@ block|{
 name|int
 name|count
 decl_stmt|;
-comment|/**< Number of buffers described in list */
+comment|/**< Entries in list */
 name|struct
 name|drm_buf_desc
 name|__user
 modifier|*
 name|list
 decl_stmt|;
-comment|/**< List of buffer descriptions */
 block|}
 struct|;
 end_struct
@@ -1281,27 +1043,12 @@ name|int
 name|count
 decl_stmt|;
 comment|/**< Length of the buffer list */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__cplusplus
-argument_list|)
-name|void
-name|__user
-modifier|*
-name|c_virtual
-decl_stmt|;
-else|#
-directive|else
 name|void
 name|__user
 modifier|*
 name|virtual
 decl_stmt|;
 comment|/**< Mmap'd area in user-virtual */
-endif|#
-directive|endif
 name|struct
 name|drm_buf_pub
 name|__user
@@ -1538,6 +1285,7 @@ init|=
 literal|0x1
 block|,
 comment|/**< Wait for given number of vblanks */
+comment|/* bits 1-6 are reserved for high crtcs */
 name|_DRM_VBLANK_HIGH_CRTC_MASK
 init|=
 literal|0x0000003e
@@ -1565,7 +1313,7 @@ comment|/**< Secondary display controller */
 name|_DRM_VBLANK_SIGNAL
 init|=
 literal|0x40000000
-comment|/**< Send signal instead of blocking */
+comment|/**< Send signal instead of blocking, unsupported */
 block|}
 enum|;
 end_enum
@@ -1675,10 +1423,10 @@ begin_struct
 struct|struct
 name|drm_modeset_ctl
 block|{
-name|uint32_t
+name|__u32
 name|crtc
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|cmd
 decl_stmt|;
 block|}
@@ -1778,23 +1526,22 @@ name|unsigned
 name|long
 name|aperture_base
 decl_stmt|;
-comment|/**< physical address */
+comment|/* physical address */
 name|unsigned
 name|long
 name|aperture_size
 decl_stmt|;
-comment|/**< bytes */
+comment|/* bytes */
 name|unsigned
 name|long
 name|memory_allowed
 decl_stmt|;
-comment|/**< bytes */
+comment|/* bytes */
 name|unsigned
 name|long
 name|memory_used
 decl_stmt|;
-comment|/** \name PCI information */
-comment|/*@{ */
+comment|/* PCI information */
 name|unsigned
 name|short
 name|id_vendor
@@ -1803,7 +1550,6 @@ name|unsigned
 name|short
 name|id_device
 decl_stmt|;
-comment|/*@} */
 block|}
 struct|;
 end_struct
@@ -1854,1050 +1600,118 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|DRM_FENCE_FLAG_EMIT
-value|0x00000001
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_FENCE_FLAG_SHAREABLE
-value|0x00000002
-end_define
-
 begin_comment
-comment|/**  * On hardware with no interrupt events for operation completion,  * indicates that the kernel should sleep while waiting for any blocking  * operation to complete rather than spinning.  *  * Has no effect otherwise.  */
+comment|/** DRM_IOCTL_GEM_CLOSE ioctl argument type */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_FENCE_FLAG_WAIT_LAZY
-value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_FENCE_FLAG_NO_USER
-value|0x00000010
-end_define
-
-begin_comment
-comment|/* Reserved for driver use */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_FENCE_MASK_DRIVER
-value|0xFF000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_FENCE_TYPE_EXE
-value|0x00000001
-end_define
-
-begin_struct
-struct|struct
-name|drm_fence_arg
-block|{
-name|unsigned
-name|int
-name|handle
-decl_stmt|;
-name|unsigned
-name|int
-name|fence_class
-decl_stmt|;
-name|unsigned
-name|int
-name|type
-decl_stmt|;
-name|unsigned
-name|int
-name|flags
-decl_stmt|;
-name|unsigned
-name|int
-name|signaled
-decl_stmt|;
-name|unsigned
-name|int
-name|error
-decl_stmt|;
-name|unsigned
-name|int
-name|sequence
-decl_stmt|;
-name|unsigned
-name|int
-name|pad64
-decl_stmt|;
-name|uint64_t
-name|expand_pad
-index|[
-literal|2
-index|]
-decl_stmt|;
-comment|/* Future expansion */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/* Buffer permissions, referring to how the GPU uses the buffers.  * these translate to fence types used for the buffers.  * Typically a texture buffer is read, A destination buffer is write and  *  a command (batch-) buffer is exe. Can be or-ed together.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_READ
-value|(1ULL<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_WRITE
-value|(1ULL<< 1)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_EXE
-value|(1ULL<< 2)
-end_define
-
-begin_comment
-comment|/*  * All of the bits related to access mode  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_MASK_ACCESS
-value|(DRM_BO_FLAG_READ | DRM_BO_FLAG_WRITE | DRM_BO_FLAG_EXE)
-end_define
-
-begin_comment
-comment|/*  * Status flags. Can be read to determine the actual state of a buffer.  * Can also be set in the buffer mask before validation.  */
-end_comment
-
-begin_comment
-comment|/*  * Mask: Never evict this buffer. Not even with force. This type of buffer is only  * available to root and must be manually removed before buffer manager shutdown  * or lock.  * Flags: Acknowledge  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_NO_EVICT
-value|(1ULL<< 4)
-end_define
-
-begin_comment
-comment|/*  * Mask: Require that the buffer is placed in mappable memory when validated.  *       If not set the buffer may or may not be in mappable memory when validated.  * Flags: If set, the buffer is in mappable memory.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_MAPPABLE
-value|(1ULL<< 5)
-end_define
-
-begin_comment
-comment|/* Mask: The buffer should be shareable with other processes.  * Flags: The buffer is shareable with other processes.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_SHAREABLE
-value|(1ULL<< 6)
-end_define
-
-begin_comment
-comment|/* Mask: If set, place the buffer in cache-coherent memory if available.  *       If clear, never place the buffer in cache coherent memory if validated.  * Flags: The buffer is currently in cache-coherent memory.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_CACHED
-value|(1ULL<< 7)
-end_define
-
-begin_comment
-comment|/* Mask: Make sure that every time this buffer is validated,  *       it ends up on the same location provided that the memory mask is the same.  *       The buffer will also not be evicted when claiming space for  *       other buffers. Basically a pinned buffer but it may be thrown out as  *       part of buffer manager shutdown or locking.  * Flags: Acknowledge.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_NO_MOVE
-value|(1ULL<< 8)
-end_define
-
-begin_comment
-comment|/* Mask: Make sure the buffer is in cached memory when mapped.  In conjunction  * with DRM_BO_FLAG_CACHED it also allows the buffer to be bound into the GART  * with unsnooped PTEs instead of snooped, by using chipset-specific cache  * flushing at bind time.  A better name might be DRM_BO_FLAG_TT_UNSNOOPED,  * as the eviction to local memory (TTM unbind) on map is just a side effect  * to prevent aggressive cache prefetch from the GPU disturbing the cache  * management that the DRM is doing.  *  * Flags: Acknowledge.  * Buffers allocated with this flag should not be used for suballocators  * This type may have issues on CPUs with over-aggressive caching  * http://marc.info/?l=linux-kernel&m=102376926732464&w=2  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_CACHED_MAPPED
-value|(1ULL<< 19)
-end_define
-
-begin_comment
-comment|/* Mask: Force DRM_BO_FLAG_CACHED flag strictly also if it is set.  * Flags: Acknowledge.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_FORCE_CACHING
-value|(1ULL<< 13)
-end_define
-
-begin_comment
-comment|/*  * Mask: Force DRM_BO_FLAG_MAPPABLE flag strictly also if it is clear.  * Flags: Acknowledge.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_FORCE_MAPPABLE
-value|(1ULL<< 14)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_TILE
-value|(1ULL<< 15)
-end_define
-
-begin_comment
-comment|/*  * Memory type flags that can be or'ed together in the mask, but only  * one appears in flags.  */
-end_comment
-
-begin_comment
-comment|/* System memory */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_MEM_LOCAL
-value|(1ULL<< 24)
-end_define
-
-begin_comment
-comment|/* Translation table memory */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_MEM_TT
-value|(1ULL<< 25)
-end_define
-
-begin_comment
-comment|/* Vram memory */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_MEM_VRAM
-value|(1ULL<< 26)
-end_define
-
-begin_comment
-comment|/* Up to the driver to define. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_MEM_PRIV0
-value|(1ULL<< 27)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_MEM_PRIV1
-value|(1ULL<< 28)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_MEM_PRIV2
-value|(1ULL<< 29)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_MEM_PRIV3
-value|(1ULL<< 30)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_FLAG_MEM_PRIV4
-value|(1ULL<< 31)
-end_define
-
-begin_comment
-comment|/* We can add more of these now with a 64-bit flag type */
-end_comment
-
-begin_comment
-comment|/*  * This is a mask covering all of the memory type flags; easier to just  * use a single constant than a bunch of | values. It covers  * DRM_BO_FLAG_MEM_LOCAL through DRM_BO_FLAG_MEM_PRIV4  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_MASK_MEM
-value|0x00000000FF000000ULL
-end_define
-
-begin_comment
-comment|/*  * This adds all of the CPU-mapping options in with the memory  * type to label all bits which change how the page gets mapped  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_MASK_MEMTYPE
-value|(DRM_BO_MASK_MEM | \ 				 DRM_BO_FLAG_CACHED_MAPPED | \ 				 DRM_BO_FLAG_CACHED | \ 				 DRM_BO_FLAG_MAPPABLE)
-end_define
-
-begin_comment
-comment|/* Driver-private flags */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_MASK_DRIVER
-value|0xFFFF000000000000ULL
-end_define
-
-begin_comment
-comment|/*  * Don't block on validate and map. Instead, return EBUSY.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_HINT_DONT_BLOCK
-value|0x00000002
-end_define
-
-begin_comment
-comment|/*  * Don't place this buffer on the unfenced list. This means  * that the buffer will not end up having a fence associated  * with it as a result of this operation  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_HINT_DONT_FENCE
-value|0x00000004
-end_define
-
-begin_comment
-comment|/**  * On hardware with no interrupt events for operation completion,  * indicates that the kernel should sleep while waiting for any blocking  * operation to complete rather than spinning.  *  * Has no effect otherwise.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_HINT_WAIT_LAZY
-value|0x00000008
-end_define
-
-begin_comment
-comment|/*  * The client has compute relocations refering to this buffer using the  * offset in the presumed_offset field. If that offset ends up matching  * where this buffer lands, the kernel is free to skip executing those  * relocations  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_HINT_PRESUMED_OFFSET
-value|0x00000010
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_INIT_MAGIC
-value|0xfe769812
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_INIT_MAJOR
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_INIT_MINOR
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_INIT_PATCH
-value|0
-end_define
-
-begin_struct
-struct|struct
-name|drm_bo_info_req
-block|{
-name|uint64_t
-name|mask
-decl_stmt|;
-name|uint64_t
-name|flags
-decl_stmt|;
-name|unsigned
-name|int
-name|handle
-decl_stmt|;
-name|unsigned
-name|int
-name|hint
-decl_stmt|;
-name|unsigned
-name|int
-name|fence_class
-decl_stmt|;
-name|unsigned
-name|int
-name|desired_tile_stride
-decl_stmt|;
-name|unsigned
-name|int
-name|tile_info
-decl_stmt|;
-name|unsigned
-name|int
-name|pad64
-decl_stmt|;
-name|uint64_t
-name|presumed_offset
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|drm_bo_create_req
-block|{
-name|uint64_t
-name|flags
-decl_stmt|;
-name|uint64_t
-name|size
-decl_stmt|;
-name|uint64_t
-name|buffer_start
-decl_stmt|;
-name|unsigned
-name|int
-name|hint
-decl_stmt|;
-name|unsigned
-name|int
-name|page_alignment
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Reply flags  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_REP_BUSY
-value|0x00000001
-end_define
-
-begin_struct
-struct|struct
-name|drm_bo_info_rep
-block|{
-name|uint64_t
-name|flags
-decl_stmt|;
-name|uint64_t
-name|proposed_flags
-decl_stmt|;
-name|uint64_t
-name|size
-decl_stmt|;
-name|uint64_t
-name|offset
-decl_stmt|;
-name|uint64_t
-name|arg_handle
-decl_stmt|;
-name|uint64_t
-name|buffer_start
-decl_stmt|;
-name|unsigned
-name|int
-name|handle
-decl_stmt|;
-name|unsigned
-name|int
-name|fence_flags
-decl_stmt|;
-name|unsigned
-name|int
-name|rep_flags
-decl_stmt|;
-name|unsigned
-name|int
-name|page_alignment
-decl_stmt|;
-name|unsigned
-name|int
-name|desired_tile_stride
-decl_stmt|;
-name|unsigned
-name|int
-name|hw_tile_stride
-decl_stmt|;
-name|unsigned
-name|int
-name|tile_info
-decl_stmt|;
-name|unsigned
-name|int
-name|pad64
-decl_stmt|;
-name|uint64_t
-name|expand_pad
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/*Future expansion */
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|drm_bo_arg_rep
-block|{
-name|struct
-name|drm_bo_info_rep
-name|bo_info
-decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
-name|unsigned
-name|int
-name|pad64
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|drm_bo_create_arg
-block|{
-union|union
-block|{
-name|struct
-name|drm_bo_create_req
-name|req
-decl_stmt|;
-name|struct
-name|drm_bo_info_rep
-name|rep
-decl_stmt|;
-block|}
-name|d
-union|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|drm_bo_handle_arg
-block|{
-name|unsigned
-name|int
-name|handle
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|drm_bo_reference_info_arg
-block|{
-union|union
-block|{
-name|struct
-name|drm_bo_handle_arg
-name|req
-decl_stmt|;
-name|struct
-name|drm_bo_info_rep
-name|rep
-decl_stmt|;
-block|}
-name|d
-union|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|drm_bo_map_wait_idle_arg
-block|{
-union|union
-block|{
-name|struct
-name|drm_bo_info_req
-name|req
-decl_stmt|;
-name|struct
-name|drm_bo_info_rep
-name|rep
-decl_stmt|;
-block|}
-name|d
-union|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|drm_bo_op_req
-block|{
-enum|enum
-block|{
-name|drm_bo_validate
-block|,
-name|drm_bo_fence
-block|,
-name|drm_bo_ref_fence
-block|, 	}
-name|op
-enum|;
-name|unsigned
-name|int
-name|arg_handle
-decl_stmt|;
-name|struct
-name|drm_bo_info_req
-name|bo_req
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|drm_bo_op_arg
-block|{
-name|uint64_t
-name|next
-decl_stmt|;
-union|union
-block|{
-name|struct
-name|drm_bo_op_req
-name|req
-decl_stmt|;
-name|struct
-name|drm_bo_arg_rep
-name|rep
-decl_stmt|;
-block|}
-name|d
-union|;
-name|int
-name|handled
-decl_stmt|;
-name|unsigned
-name|int
-name|pad64
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_MEM_LOCAL
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_MEM_TT
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_MEM_VRAM
-value|2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_MEM_PRIV0
-value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_MEM_PRIV1
-value|4
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_MEM_PRIV2
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_MEM_PRIV3
-value|6
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_MEM_PRIV4
-value|7
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_MEM_TYPES
-value|8
-end_define
-
-begin_comment
-comment|/* For now. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_LOCK_UNLOCK_BM
-value|(1<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_BO_LOCK_IGNORE_NO_EVICT
-value|(1<< 1)
-end_define
-
-begin_struct
-struct|struct
-name|drm_bo_version_arg
-block|{
-name|uint32_t
-name|major
-decl_stmt|;
-name|uint32_t
-name|minor
-decl_stmt|;
-name|uint32_t
-name|patchlevel
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|drm_mm_type_arg
-block|{
-name|unsigned
-name|int
-name|mem_type
-decl_stmt|;
-name|unsigned
-name|int
-name|lock_flags
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|drm_mm_init_arg
-block|{
-name|unsigned
-name|int
-name|magic
-decl_stmt|;
-name|unsigned
-name|int
-name|major
-decl_stmt|;
-name|unsigned
-name|int
-name|minor
-decl_stmt|;
-name|unsigned
-name|int
-name|mem_type
-decl_stmt|;
-name|uint64_t
-name|p_offset
-decl_stmt|;
-name|uint64_t
-name|p_size
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|drm_mm_info_arg
-block|{
-name|unsigned
-name|int
-name|mem_type
-decl_stmt|;
-name|uint64_t
-name|p_size
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_struct
 struct|struct
 name|drm_gem_close
 block|{
 comment|/** Handle of the object to be closed. */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
-name|uint32_t
+name|__u32
 name|pad
 decl_stmt|;
 block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/** DRM_IOCTL_GEM_FLINK ioctl argument type */
+end_comment
+
 begin_struct
 struct|struct
 name|drm_gem_flink
 block|{
 comment|/** Handle for the object being named */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
 comment|/** Returned global name */
-name|uint32_t
+name|__u32
 name|name
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/** DRM_IOCTL_GEM_OPEN ioctl argument type */
+end_comment
 
 begin_struct
 struct|struct
 name|drm_gem_open
 block|{
 comment|/** Name of object being opened */
-name|uint32_t
+name|__u32
 name|name
 decl_stmt|;
 comment|/** Returned handle for the object */
-name|uint32_t
+name|__u32
 name|handle
 decl_stmt|;
 comment|/** Returned size of the object */
-name|uint64_t
+name|__u64
 name|size
 decl_stmt|;
 block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/** DRM_IOCTL_GET_CAP ioctl argument type */
+end_comment
+
 begin_struct
 struct|struct
 name|drm_get_cap
 block|{
-name|uint64_t
+name|__u64
 name|capability
 decl_stmt|;
-name|uint64_t
+name|__u64
 name|value
 decl_stmt|;
 block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|drm_event
-block|{
-name|uint32_t
-name|type
-decl_stmt|;
-name|uint32_t
-name|length
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
-name|DRM_EVENT_VBLANK
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_EVENT_FLIP_COMPLETE
-value|0x02
+name|DRM_CLOEXEC
+value|O_CLOEXEC
 end_define
 
 begin_struct
 struct|struct
-name|drm_event_vblank
+name|drm_prime_handle
 block|{
-name|struct
-name|drm_event
-name|base
+name|__u32
+name|handle
 decl_stmt|;
-name|uint64_t
-name|user_data
+comment|/** Flags.. only applicable for handle->fd */
+name|__u32
+name|flags
 decl_stmt|;
-name|uint32_t
-name|tv_sec
-decl_stmt|;
-name|uint32_t
-name|tv_usec
-decl_stmt|;
-name|uint32_t
-name|sequence
-decl_stmt|;
-name|uint32_t
-name|reserved
+comment|/** Returned dmabuf file descriptor */
+name|__s32
+name|fd
 decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_define
-define|#
-directive|define
-name|DRM_CAP_DUMB_BUFFER
-value|0x1
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_CAP_VBLANK_HIGH_CRTC
-value|0x2
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_CAP_DUMB_PREFERRED_DEPTH
-value|0x3
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_CAP_DUMB_PREFER_SHADOW
-value|0x4
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_CAP_PRIME
-value|0x5
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_CAP_TIMESTAMP_MONOTONIC
-value|0x6
-end_define
 
 begin_include
 include|#
 directive|include
-file|"drm_mode.h"
+file|<dev/drm2/drm_mode.h>
 end_include
-
-begin_comment
-comment|/**  * \name Ioctls Definitions  */
-end_comment
-
-begin_comment
-comment|/*@{*/
-end_comment
 
 begin_define
 define|#
@@ -3012,7 +1826,7 @@ begin_define
 define|#
 directive|define
 name|DRM_IOCTL_MODESET_CTL
-value|DRM_IOW(0x08,  struct drm_modeset_ctl)
+value|DRM_IOW(0x08, struct drm_modeset_ctl)
 end_define
 
 begin_define
@@ -3249,8 +2063,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRM_IOCTL_GEM_PRIME_OPEN
-value|DRM_IOWR(0x2e, struct drm_gem_open)
+name|DRM_IOCTL_PRIME_HANDLE_TO_FD
+value|DRM_IOWR(0x2d, struct drm_prime_handle)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_IOCTL_PRIME_FD_TO_HANDLE
+value|DRM_IOWR(0x2e, struct drm_prime_handle)
 end_define
 
 begin_define
@@ -3515,160 +2336,16 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRM_IOCTL_MM_INIT
-value|DRM_IOWR(0xc0, struct drm_mm_init_arg)
+name|DRM_IOCTL_MODE_OBJ_GETPROPERTIES
+value|DRM_IOWR(0xB9, struct drm_mode_obj_get_properties)
 end_define
 
 begin_define
 define|#
 directive|define
-name|DRM_IOCTL_MM_TAKEDOWN
-value|DRM_IOWR(0xc1, struct drm_mm_type_arg)
+name|DRM_IOCTL_MODE_OBJ_SETPROPERTY
+value|DRM_IOWR(0xBA, struct drm_mode_obj_set_property)
 end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_MM_LOCK
-value|DRM_IOWR(0xc2, struct drm_mm_type_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_MM_UNLOCK
-value|DRM_IOWR(0xc3, struct drm_mm_type_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_FENCE_CREATE
-value|DRM_IOWR(0xc4, struct drm_fence_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_FENCE_REFERENCE
-value|DRM_IOWR(0xc6, struct drm_fence_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_FENCE_UNREFERENCE
-value|DRM_IOWR(0xc7, struct drm_fence_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_FENCE_SIGNALED
-value|DRM_IOWR(0xc8, struct drm_fence_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_FENCE_FLUSH
-value|DRM_IOWR(0xc9, struct drm_fence_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_FENCE_WAIT
-value|DRM_IOWR(0xca, struct drm_fence_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_FENCE_EMIT
-value|DRM_IOWR(0xcb, struct drm_fence_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_FENCE_BUFFERS
-value|DRM_IOWR(0xcc, struct drm_fence_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_BO_CREATE
-value|DRM_IOWR(0xcd, struct drm_bo_create_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_BO_MAP
-value|DRM_IOWR(0xcf, struct drm_bo_map_wait_idle_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_BO_UNMAP
-value|DRM_IOWR(0xd0, struct drm_bo_handle_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_BO_REFERENCE
-value|DRM_IOWR(0xd1, struct drm_bo_reference_info_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_BO_UNREFERENCE
-value|DRM_IOWR(0xd2, struct drm_bo_handle_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_BO_SETSTATUS
-value|DRM_IOWR(0xd3, struct drm_bo_map_wait_idle_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_BO_INFO
-value|DRM_IOWR(0xd4, struct drm_bo_reference_info_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_BO_WAIT_IDLE
-value|DRM_IOWR(0xd5, struct drm_bo_map_wait_idle_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_BO_VERSION
-value|DRM_IOR(0xd6, struct drm_bo_version_arg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DRM_IOCTL_MM_INFO
-value|DRM_IOWR(0xd7, struct drm_mm_info_arg)
-end_define
-
-begin_comment
-comment|/*@}*/
-end_comment
 
 begin_comment
 comment|/**  * Device specific ioctls should only be in their respective headers  * The device specific ioctl range is from 0x40 to 0x99.  * Generic IOCTLS restart at 0xA0.  *  * \sa drmCommandNone(), drmCommandRead(), drmCommandWrite(), and  * drmCommandReadWrite().  */
@@ -3689,6 +2366,121 @@ value|0xA0
 end_define
 
 begin_comment
+comment|/**  * Header for events written back to userspace on the drm fd.  The  * type defines the type of event, the length specifies the total  * length of the event (including the header), and user_data is  * typically a 64 bit value passed with the ioctl that triggered the  * event.  A read on the drm fd will always only return complete  * events, that is, if for example the read buffer is 100 bytes, and  * there are two 64 byte events pending, only one will be returned.  *  * Event types 0 - 0x7fffffff are generic drm events, 0x80000000 and  * up are chipset specific.  */
+end_comment
+
+begin_struct
+struct|struct
+name|drm_event
+block|{
+name|__u32
+name|type
+decl_stmt|;
+name|__u32
+name|length
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|DRM_EVENT_VBLANK
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_EVENT_FLIP_COMPLETE
+value|0x02
+end_define
+
+begin_struct
+struct|struct
+name|drm_event_vblank
+block|{
+name|struct
+name|drm_event
+name|base
+decl_stmt|;
+name|__u64
+name|user_data
+decl_stmt|;
+name|__u32
+name|tv_sec
+decl_stmt|;
+name|__u32
+name|tv_usec
+decl_stmt|;
+name|__u32
+name|sequence
+decl_stmt|;
+name|__u32
+name|reserved
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|DRM_CAP_DUMB_BUFFER
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_CAP_VBLANK_HIGH_CRTC
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_CAP_DUMB_PREFERRED_DEPTH
+value|0x3
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_CAP_DUMB_PREFER_SHADOW
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_CAP_PRIME
+value|0x5
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_CAP_TIMESTAMP_MONOTONIC
+value|0x6
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_PRIME_CAP_IMPORT
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRM_PRIME_CAP_EXPORT
+value|0x2
+end_define
+
+begin_comment
 comment|/* typedef area */
 end_comment
 
@@ -3703,6 +2495,14 @@ typedef|typedef
 name|struct
 name|drm_clip_rect
 name|drm_clip_rect_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|struct
+name|drm_drawable_info
+name|drm_drawable_info_t
 typedef|;
 end_typedef
 
@@ -4007,38 +2807,6 @@ typedef|typedef
 name|struct
 name|drm_set_version
 name|drm_set_version_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|drm_fence_arg
-name|drm_fence_arg_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|drm_mm_type_arg
-name|drm_mm_type_arg_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|struct
-name|drm_mm_init_arg
-name|drm_mm_init_arg_t
-typedef|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|enum
-name|drm_bo_type
-name|drm_bo_type_t
 typedef|;
 end_typedef
 

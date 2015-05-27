@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: var.c,v 1.186 2014/06/20 06:13:45 sjg Exp $	*/
+comment|/*	$NetBSD: var.c,v 1.192 2015/05/05 21:51:09 sjg Exp $	*/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$NetBSD: var.c,v 1.186 2014/06/20 06:13:45 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.192 2015/05/05 21:51:09 sjg Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -59,7 +59,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: var.c,v 1.186 2014/06/20 06:13:45 sjg Exp $"
+literal|"$NetBSD: var.c,v 1.192 2015/05/05 21:51:09 sjg Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12574,6 +12574,8 @@ operator|&
 name|value
 argument_list|,
 literal|0
+argument_list|,
+name|FALSE
 argument_list|)
 operator|==
 name|COND_INVALID
@@ -14066,10 +14068,12 @@ name|Boolean
 name|dynamic
 decl_stmt|;
 comment|/* TRUE if the variable is local and we're 				 * expanding it in a non-local context. This 				 * is done to support dynamic sources. The 				 * result is just the invocation, unaltered */
-name|Var_Parse_State
-name|parsestate
+specifier|const
+name|char
+modifier|*
+name|extramodifiers
 decl_stmt|;
-comment|/* Flags passed to helper functions */
+comment|/* extra modifiers to apply first */
 name|char
 name|name
 index|[
@@ -14081,6 +14085,10 @@ name|freePtr
 operator|=
 name|NULL
 expr_stmt|;
+name|extramodifiers
+operator|=
+name|NULL
+expr_stmt|;
 name|dynamic
 operator|=
 name|FALSE
@@ -14089,19 +14097,6 @@ name|start
 operator|=
 name|str
 expr_stmt|;
-name|parsestate
-operator|.
-name|oneBigWord
-operator|=
-name|FALSE
-expr_stmt|;
-name|parsestate
-operator|.
-name|varSpace
-operator|=
-literal|' '
-expr_stmt|;
-comment|/* word separator */
 name|startc
 operator|=
 name|str
@@ -14579,7 +14574,7 @@ operator|)
 operator|&&
 name|strchr
 argument_list|(
-literal|"@%*!<>"
+literal|"@%?*!<>"
 argument_list|,
 name|str
 index|[
@@ -14624,19 +14619,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * No need for nested expansion or anything, as we're 		 * the only one who sets these things and we sure don't 		 * but nested invocations in them... 		 */
-name|nstr
-operator|=
-name|Buf_GetAll
-argument_list|(
-operator|&
-name|v
-operator|->
-name|val
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|str
@@ -14647,75 +14629,19 @@ operator|==
 literal|'D'
 condition|)
 block|{
-name|nstr
+name|extramodifiers
 operator|=
-name|VarModify
-argument_list|(
-name|ctxt
-argument_list|,
-operator|&
-name|parsestate
-argument_list|,
-name|nstr
-argument_list|,
-name|VarHead
-argument_list|,
-name|NULL
-argument_list|)
+literal|"H:"
 expr_stmt|;
 block|}
 else|else
 block|{
-name|nstr
+comment|/* F */
+name|extramodifiers
 operator|=
-name|VarModify
-argument_list|(
-name|ctxt
-argument_list|,
-operator|&
-name|parsestate
-argument_list|,
-name|nstr
-argument_list|,
-name|VarTail
-argument_list|,
-name|NULL
-argument_list|)
+literal|"T:"
 expr_stmt|;
 block|}
-comment|/* 		 * Resulting string is dynamically allocated, so 		 * tell caller to free it. 		 */
-operator|*
-name|freePtr
-operator|=
-name|nstr
-expr_stmt|;
-operator|*
-name|lengthPtr
-operator|=
-name|tstr
-operator|-
-name|start
-operator|+
-literal|1
-expr_stmt|;
-name|Buf_Destroy
-argument_list|(
-operator|&
-name|buf
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-name|VarFreeEnv
-argument_list|(
-name|v
-argument_list|,
-name|TRUE
-argument_list|)
-expr_stmt|;
-return|return
-name|nstr
-return|;
 block|}
 block|}
 if|if
@@ -15134,13 +15060,65 @@ operator|!=
 name|NULL
 operator|)
 operator|&&
+operator|(
 name|haveModifier
+operator|||
+name|extramodifiers
+operator|!=
+name|NULL
+operator|)
 condition|)
 block|{
+name|void
+modifier|*
+name|extraFree
+decl_stmt|;
 name|int
 name|used
 decl_stmt|;
-comment|/* 	 * Skip initial colon. 	 */
+name|extraFree
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|extramodifiers
+operator|!=
+name|NULL
+condition|)
+block|{
+name|nstr
+operator|=
+name|ApplyModifiers
+argument_list|(
+name|nstr
+argument_list|,
+name|extramodifiers
+argument_list|,
+literal|'('
+argument_list|,
+literal|')'
+argument_list|,
+name|v
+argument_list|,
+name|ctxt
+argument_list|,
+name|errnum
+argument_list|,
+operator|&
+name|used
+argument_list|,
+operator|&
+name|extraFree
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|haveModifier
+condition|)
+block|{
+comment|/* Skip initial colon. */
 name|tstr
 operator|++
 expr_stmt|;
@@ -15172,6 +15150,26 @@ name|tstr
 operator|+=
 name|used
 expr_stmt|;
+if|if
+condition|(
+name|extraFree
+condition|)
+block|{
+name|free
+argument_list|(
+name|extraFree
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+operator|*
+name|freePtr
+operator|=
+name|extraFree
+expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

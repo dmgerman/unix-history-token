@@ -1295,8 +1295,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SOTG_PTD_DW3_XFER_COUNT
+name|SOTG_PTD_DW3_XFER_COUNT_HS
 value|0x7FFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SOTG_PTD_DW3_XFER_COUNT_SPLIT
+value|0x03FF
 end_define
 
 begin_define

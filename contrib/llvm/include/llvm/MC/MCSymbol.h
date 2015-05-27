@@ -133,6 +133,12 @@ name|IsTemporary
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief True if this symbol can be redefined.
+name|unsigned
+name|IsRedefinable
+range|:
+literal|1
+decl_stmt|;
 comment|/// IsUsed - True if this symbol has been used.
 name|mutable
 name|unsigned
@@ -165,17 +171,22 @@ argument_list|)
 operator|,
 name|Section
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Value
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|IsTemporary
 argument_list|(
 name|isTemporary
+argument_list|)
+operator|,
+name|IsRedefinable
+argument_list|(
+name|false
 argument_list|)
 operator|,
 name|IsUsed
@@ -246,6 +257,53 @@ operator|=
 name|Value
 expr_stmt|;
 block|}
+comment|/// \brief Check if this symbol is redefinable.
+name|bool
+name|isRedefinable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsRedefinable
+return|;
+block|}
+comment|/// \brief Mark this symbol as redefinable.
+name|void
+name|setRedefinable
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|IsRedefinable
+operator|=
+name|Value
+expr_stmt|;
+block|}
+comment|/// \brief Prepare this symbol to be redefined.
+name|void
+name|redefineIfPossible
+parameter_list|()
+block|{
+if|if
+condition|(
+name|IsRedefinable
+condition|)
+block|{
+name|Value
+operator|=
+name|nullptr
+expr_stmt|;
+name|Section
+operator|=
+name|nullptr
+expr_stmt|;
+name|IsRedefinable
+operator|=
+name|false
+expr_stmt|;
+block|}
+block|}
 comment|/// @}
 comment|/// @name Associated Sections
 comment|/// @{
@@ -260,7 +318,7 @@ block|{
 return|return
 name|Section
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// isInSection - Check if this symbol is defined in some section (i.e., it
@@ -348,7 +406,7 @@ parameter_list|()
 block|{
 name|Section
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 comment|/// setAbsolute - Mark the symbol as absolute.
@@ -373,7 +431,7 @@ block|{
 return|return
 name|Value
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getVariableValue() - Get the value for variable symbols.
@@ -401,7 +459,7 @@ name|Value
 return|;
 block|}
 comment|// AliasedSymbol() - If this is an alias (a = b), return the symbol
-comment|// we ultimately point to. For a non alias, this just returns the symbol
+comment|// we ultimately point to. For a non-alias, this just returns the symbol
 comment|// itself.
 specifier|const
 name|MCSymbol

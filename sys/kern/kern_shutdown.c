@@ -218,6 +218,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/dump.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pcb.h>
 end_include
 
@@ -687,23 +693,6 @@ name|howto
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_decl_stmt
-specifier|static
-name|void
-name|vpanic
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|fmt
-argument_list|,
-name|va_list
-name|ap
-argument_list|)
-name|__dead2
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/* register various local shutdown events */
@@ -2734,7 +2723,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|vpanic
 parameter_list|(
@@ -2812,7 +2800,7 @@ name|other_cpus
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * We set stop_scheduler here and not in the block above, 	 * because we want to ensure that if panic has been called and 	 * stop_scheduler_on_panic is true, then stop_scheduler will 	 * always be set.  Even if panic has been entered from kdb. 	 */
+comment|/* 	 * Ensure that the scheduler is stopped while panicking, even if panic 	 * has been entered from kdb. 	 */
 name|td
 operator|->
 name|td_stopsched
@@ -3585,7 +3573,7 @@ name|kdh
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kdh
 operator|->
@@ -3601,7 +3589,7 @@ name|magic
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kdh
 operator|->
@@ -3662,7 +3650,7 @@ argument_list|(
 name|blksz
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kdh
 operator|->
@@ -3680,7 +3668,7 @@ name|hostname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kdh
 operator|->
@@ -3702,7 +3690,7 @@ name|panicstr
 operator|!=
 name|NULL
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kdh
 operator|->

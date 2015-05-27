@@ -206,18 +206,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_USBHC
-argument_list|,
-literal|"USBHC"
-argument_list|,
-literal|"USB host controller"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
 name|usb

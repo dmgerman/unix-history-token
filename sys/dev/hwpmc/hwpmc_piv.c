@@ -71,11 +71,37 @@ directive|include
 file|<machine/intr_machdep.h>
 end_include
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|1100000
+operator|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<x86/apicvar.h>
 end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<machine/apicvar.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1783,7 +1809,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -1868,7 +1894,7 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -2132,7 +2158,7 @@ name|pmc_cpu
 modifier|*
 name|pc
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -2454,7 +2480,7 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -2591,7 +2617,7 @@ name|v
 operator|=
 name|tmp
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -2755,7 +2781,7 @@ argument_list|(
 name|pm
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -2900,7 +2926,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -3399,7 +3425,7 @@ index|[
 name|ri
 index|]
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -3560,7 +3586,7 @@ operator|(
 name|ESRCH
 operator|)
 return|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -4109,7 +4135,7 @@ name|pm_p4_escrvalue
 operator|=
 name|escrvalue
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG5
 argument_list|(
 name|MDP
 argument_list|,
@@ -4206,7 +4232,7 @@ name|pm_p4
 operator|.
 name|pm_p4_escr
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -4448,7 +4474,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -4975,7 +5001,7 @@ operator|->
 name|pc_mtx
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG6
 argument_list|(
 name|MDP
 argument_list|,
@@ -4984,7 +5010,7 @@ argument_list|,
 literal|2
 argument_list|,
 literal|"p4-start cpu=%d rc=%d ri=%d escr=%d "
-literal|"escrmsr=0x%x escrvalue=0x%x cccr_config=0x%x v=%jx"
+literal|"escrmsr=0x%x escrvalue=0x%x"
 argument_list|,
 name|cpu
 argument_list|,
@@ -5003,6 +5029,17 @@ argument_list|,
 name|escrmsr
 argument_list|,
 name|escrvalue
+argument_list|)
+expr_stmt|;
+name|PMCDBG2
+argument_list|(
+name|MDP
+argument_list|,
+name|STA
+argument_list|,
+literal|2
+argument_list|,
+literal|"cccr_config=0x%x v=%jx"
 argument_list|,
 name|cccrvalue
 argument_list|,
@@ -5157,7 +5194,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -5439,7 +5476,7 @@ operator|->
 name|pc_mtx
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG5
 argument_list|(
 name|MDP
 argument_list|,
@@ -5448,7 +5485,7 @@ argument_list|,
 literal|2
 argument_list|,
 literal|"p4-stop cpu=%d rc=%d ri=%d escrmsr=0x%x "
-literal|"escrval=0x%x cccrval=0x%x v=%jx"
+literal|"escrval=0x%x"
 argument_list|,
 name|cpu
 argument_list|,
@@ -5459,6 +5496,17 @@ argument_list|,
 name|escrmsr
 argument_list|,
 name|escrvalue
+argument_list|)
+expr_stmt|;
+name|PMCDBG2
+argument_list|(
+name|MDP
+argument_list|,
+name|STO
+argument_list|,
+literal|2
+argument_list|,
+literal|"cccrval=0x%x v=%jx"
 argument_list|,
 name|cccrvalue
 argument_list|,
@@ -5570,7 +5618,7 @@ decl_stmt|;
 name|pmc_value_t
 name|v
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -5800,7 +5848,7 @@ operator|+
 name|ri
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -6053,7 +6101,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -6238,7 +6286,7 @@ name|pm_pmc_msr
 operator|-
 name|P4_PERFCTR_MSR_FIRST
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -6309,15 +6357,13 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MDP
 argument_list|,
 name|INI
 argument_list|,
 literal|1
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"p4-initialize"
 argument_list|)

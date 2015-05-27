@@ -17779,7 +17779,7 @@ operator|)
 expr_stmt|;
 name|value
 operator|=
-name|abs
+name|llabs
 argument_list|(
 name|relocation
 argument_list|)
@@ -17956,7 +17956,7 @@ operator|)
 expr_stmt|;
 name|value
 operator|=
-name|abs
+name|llabs
 argument_list|(
 name|relocation
 argument_list|)
@@ -22325,7 +22325,7 @@ name|g_n
 operator|=
 name|calculate_group_reloc_mask
 argument_list|(
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -22391,7 +22391,7 @@ name|rel
 operator|->
 name|r_offset
 argument_list|,
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -22629,7 +22629,7 @@ expr_stmt|;
 comment|/* Calculate the value of the relevant G_{n-1} to obtain            the residual at that stage.  */
 name|calculate_group_reloc_mask
 argument_list|(
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -22671,7 +22671,7 @@ name|rel
 operator|->
 name|r_offset
 argument_list|,
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -22914,7 +22914,7 @@ expr_stmt|;
 comment|/* Calculate the value of the relevant G_{n-1} to obtain            the residual at that stage.  */
 name|calculate_group_reloc_mask
 argument_list|(
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -22956,7 +22956,7 @@ name|rel
 operator|->
 name|r_offset
 argument_list|,
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -23205,7 +23205,7 @@ expr_stmt|;
 comment|/* Calculate the value of the relevant G_{n-1} to obtain            the residual at that stage.  */
 name|calculate_group_reloc_mask
 argument_list|(
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -23255,7 +23255,7 @@ name|rel
 operator|->
 name|r_offset
 argument_list|,
-name|abs
+name|llabs
 argument_list|(
 name|signed_value
 argument_list|)
@@ -25410,6 +25410,43 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|bfd
+modifier|*
+name|hasbfd
+decl_stmt|,
+modifier|*
+name|hasnotbfd
+decl_stmt|;
+if|if
+condition|(
+name|in_attr
+index|[
+name|Tag_ABI_VFP_args
+index|]
+operator|.
+name|i
+condition|)
+block|{
+name|hasbfd
+operator|=
+name|ibfd
+expr_stmt|;
+name|hasnotbfd
+operator|=
+name|obfd
+expr_stmt|;
+block|}
+else|else
+block|{
+name|hasbfd
+operator|=
+name|obfd
+expr_stmt|;
+name|hasnotbfd
+operator|=
+name|ibfd
+expr_stmt|;
+block|}
 name|_bfd_error_handler
 argument_list|(
 name|_
@@ -25417,9 +25454,9 @@ argument_list|(
 literal|"ERROR: %B uses VFP register arguments, %B does not"
 argument_list|)
 argument_list|,
-name|ibfd
+name|hasbfd
 argument_list|,
-name|obfd
+name|hasnotbfd
 argument_list|)
 expr_stmt|;
 return|return
@@ -25441,6 +25478,31 @@ name|i
 operator|++
 control|)
 block|{
+if|if
+condition|(
+name|out_attr
+index|[
+name|i
+index|]
+operator|.
+name|type
+operator|==
+literal|0
+condition|)
+name|out_attr
+index|[
+name|i
+index|]
+operator|.
+name|type
+operator|=
+name|in_attr
+index|[
+name|i
+index|]
+operator|.
+name|type
+expr_stmt|;
 comment|/* Merge this attribute with existing attributes.  */
 switch|switch
 condition|(
@@ -25544,6 +25606,12 @@ name|Tag_ABI_align8_preserved
 case|:
 case|case
 name|Tag_ABI_HardFP_use
+case|:
+case|case
+name|Tag_CPU_unaligned_access
+case|:
+case|case
+name|Tag_FP_HP_extension
 case|:
 comment|/* Use the largest value specified.  */
 if|if
@@ -26288,9 +26356,9 @@ block|}
 break|break;
 default|default:
 comment|/* All known attributes should be explicitly covered.   */
-name|abort
-argument_list|()
-expr_stmt|;
+comment|/* XXX Not now */
+comment|/* abort (); */
+break|break;
 block|}
 block|}
 comment|/* Merge Tag_compatibility attributes and any common GNU ones.  */
@@ -36351,6 +36419,49 @@ operator||=
 name|EF_ARM_BE8
 expr_stmt|;
 block|}
+comment|/*    * For EABI 5, we have to tag dynamic binaries and execs as either    * soft float or hard float.    */
+if|if
+condition|(
+name|EF_ARM_EABI_VERSION
+argument_list|(
+name|i_ehdrp
+operator|->
+name|e_flags
+argument_list|)
+operator|==
+name|EF_ARM_EABI_VER5
+operator|&&
+operator|(
+name|i_ehdrp
+operator|->
+name|e_type
+operator|==
+name|ET_DYN
+operator|||
+name|i_ehdrp
+operator|->
+name|e_type
+operator|==
+name|ET_EXEC
+operator|)
+condition|)
+name|i_ehdrp
+operator|->
+name|e_flags
+operator||=
+name|bfd_elf_get_obj_attr_int
+argument_list|(
+name|abfd
+argument_list|,
+name|OBJ_ATTR_PROC
+argument_list|,
+name|Tag_ABI_VFP_args
+argument_list|)
+condition|?
+name|EF_ARM_VFP_FLOAT
+else|:
+name|EF_ARM_SOFT_FLOAT
+expr_stmt|;
 block|}
 end_function
 

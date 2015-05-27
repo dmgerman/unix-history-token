@@ -50,19 +50,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|REWRITE_ASTCONSUMERS_H
+name|LLVM_CLANG_REWRITE_FRONTEND_ASTCONSUMERS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|REWRITE_ASTCONSUMERS_H
+name|LLVM_CLANG_REWRITE_FRONTEND_ASTCONSUMERS_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -89,90 +95,65 @@ name|Preprocessor
 decl_stmt|;
 comment|// ObjC rewriter: attempts to rewrite ObjC constructs into pure C code.
 comment|// This is considered experimental, and only works with Apple's ObjC runtime.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-modifier|*
+operator|>
 name|CreateObjCRewriter
 argument_list|(
-specifier|const
+argument|const std::string&InFile
+argument_list|,
+argument|raw_ostream *OS
+argument_list|,
+argument|DiagnosticsEngine&Diags
+argument_list|,
+argument|const LangOptions&LOpts
+argument_list|,
+argument|bool SilenceRewriteMacroWarning
+argument_list|)
+expr_stmt|;
 name|std
 operator|::
-name|string
-operator|&
-name|InFile
-argument_list|,
-name|raw_ostream
-operator|*
-name|OS
-argument_list|,
-name|DiagnosticsEngine
-operator|&
-name|Diags
-argument_list|,
-specifier|const
-name|LangOptions
-operator|&
-name|LOpts
-argument_list|,
-name|bool
-name|SilenceRewriteMacroWarning
-argument_list|)
-decl_stmt|;
+name|unique_ptr
+operator|<
 name|ASTConsumer
-modifier|*
+operator|>
 name|CreateModernObjCRewriter
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|InFile
+argument|const std::string&InFile
 argument_list|,
-name|raw_ostream
-operator|*
-name|OS
+argument|raw_ostream *OS
 argument_list|,
-name|DiagnosticsEngine
-operator|&
-name|Diags
+argument|DiagnosticsEngine&Diags
 argument_list|,
-specifier|const
-name|LangOptions
-operator|&
-name|LOpts
+argument|const LangOptions&LOpts
 argument_list|,
-name|bool
-name|SilenceRewriteMacroWarning
+argument|bool SilenceRewriteMacroWarning
 argument_list|,
-name|bool
-name|LineInfo
+argument|bool LineInfo
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// CreateHTMLPrinter - Create an AST consumer which rewrites source code to
 comment|/// HTML with syntax highlighting suitable for viewing in a web-browser.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-modifier|*
+operator|>
 name|CreateHTMLPrinter
-parameter_list|(
-name|raw_ostream
-modifier|*
-name|OS
-parameter_list|,
-name|Preprocessor
-modifier|&
-name|PP
-parameter_list|,
-name|bool
-name|SyntaxHighlight
-init|=
-name|true
-parameter_list|,
-name|bool
-name|HighlightMacros
-init|=
-name|true
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|raw_ostream *OS
+argument_list|,
+argument|Preprocessor&PP
+argument_list|,
+argument|bool SyntaxHighlight = true
+argument_list|,
+argument|bool HighlightMacros = true
+argument_list|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

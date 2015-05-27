@@ -260,7 +260,7 @@ function_decl|;
 name|bool
 name|Remove
 parameter_list|(
-name|off_t
+name|size_t
 name|index
 parameter_list|,
 name|bool

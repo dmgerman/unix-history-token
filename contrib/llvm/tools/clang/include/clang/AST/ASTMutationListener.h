@@ -224,6 +224,18 @@ modifier|*
 name|D
 parameter_list|)
 block|{}
+comment|/// \brief A function's exception specification has been evaluated or
+comment|/// instantiated.
+name|virtual
+name|void
+name|ResolvedExceptionSpec
+parameter_list|(
+specifier|const
+name|FunctionDecl
+modifier|*
+name|FD
+parameter_list|)
+block|{}
 comment|/// \brief A function's return type has been deduced.
 name|virtual
 name|void
@@ -256,6 +268,17 @@ name|StaticDataMemberInstantiated
 parameter_list|(
 specifier|const
 name|VarDecl
+modifier|*
+name|D
+parameter_list|)
+block|{}
+comment|/// \brief A function template's definition was instantiated.
+name|virtual
+name|void
+name|FunctionDefinitionInstantiated
+parameter_list|(
+specifier|const
+name|FunctionDecl
 modifier|*
 name|D
 parameter_list|)
@@ -310,6 +333,20 @@ comment|/// \param D the declaration marked used
 name|virtual
 name|void
 name|DeclarationMarkedUsed
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{}
+comment|/// \brief A declaration is marked as OpenMP threadprivate which was not
+comment|/// previously marked as threadprivate.
+comment|///
+comment|/// \param D the declaration marked OpenMP threadprivate.
+name|virtual
+name|void
+name|DeclarationMarkedOpenMPThreadPrivate
 parameter_list|(
 specifier|const
 name|Decl

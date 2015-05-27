@@ -3732,7 +3732,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|const
 name|mcontext_t
 modifier|*
 name|mc

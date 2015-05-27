@@ -1153,7 +1153,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* page allocation classes: */
+comment|/*  * Page allocation parameters for vm_page for the functions  * vm_page_alloc(), vm_page_grab(), vm_page_alloc_contig() and  * vm_page_alloc_freelist().  Some functions support only a subset  * of the flags, and ignore others, see the flags legend.  *  * Bits 0 - 1 define class.  * Bits 2 - 15 dedicated for flags.  * Legend:  * (a) - vm_page_alloc() supports the flag.  * (c) - vm_page_alloc_contig() supports the flag.  * (f) - vm_page_alloc_freelist() supports the flag.  * (g) - vm_page_grab() supports the flag.  * Bits above 15 define the count of additional pages that the caller  * intends to allocate.  */
 end_comment
 
 begin_define
@@ -1184,10 +1184,6 @@ name|VM_ALLOC_CLASS_MASK
 value|3
 end_define
 
-begin_comment
-comment|/* page allocation flags: */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1196,7 +1192,7 @@ value|0x0020
 end_define
 
 begin_comment
-comment|/* non pageable */
+comment|/* (acfg) Allocate non pageable page */
 end_comment
 
 begin_define
@@ -1207,7 +1203,7 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/* Try to obtain a zeroed page */
+comment|/* (acfg) Try to obtain a zeroed page */
 end_comment
 
 begin_define
@@ -1218,7 +1214,7 @@ value|0x0100
 end_define
 
 begin_comment
-comment|/* No associated object */
+comment|/* (acg) No associated object */
 end_comment
 
 begin_define
@@ -1229,7 +1225,7 @@ value|0x0200
 end_define
 
 begin_comment
-comment|/* Do not busy the page */
+comment|/* (acg) Do not busy the page */
 end_comment
 
 begin_define
@@ -1240,7 +1236,7 @@ value|0x0400
 end_define
 
 begin_comment
-comment|/* Fail if the page is not cached */
+comment|/* (ag) Fail if page is not cached */
 end_comment
 
 begin_define
@@ -1251,7 +1247,7 @@ value|0x0800
 end_define
 
 begin_comment
-comment|/* Fail if the page is cached */
+comment|/* (ag) Fail if page is cached */
 end_comment
 
 begin_define
@@ -1262,7 +1258,7 @@ value|0x1000
 end_define
 
 begin_comment
-comment|/* vm_page_grab() only */
+comment|/* (g) Ignore shared busy flag */
 end_comment
 
 begin_define
@@ -1273,7 +1269,7 @@ value|0x2000
 end_define
 
 begin_comment
-comment|/* don't include in dump */
+comment|/* (ag) don't include in dump */
 end_comment
 
 begin_define
@@ -1284,7 +1280,18 @@ value|0x4000
 end_define
 
 begin_comment
-comment|/* Shared busy the page */
+comment|/* (acg) Shared busy the page */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_NOWAIT
+value|0x8000
+end_define
+
+begin_comment
+comment|/* (g) Do not sleep, return NULL */
 end_comment
 
 begin_define

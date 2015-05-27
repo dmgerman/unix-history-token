@@ -311,12 +311,14 @@ block|{
 name|int
 name|i
 decl_stmt|;
+specifier|const
 name|struct
 name|savexmm
 modifier|*
 name|sx
 init|=
 operator|(
+specifier|const
 expr|struct
 name|savexmm
 operator|*

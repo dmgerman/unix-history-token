@@ -258,6 +258,10 @@ argument_list|)
 operator|)
 block|}
 enum|;
+name|friend
+struct_decl|struct
+name|DenseMapAPIntKeyInfo
+struct_decl|;
 comment|/// \brief Fast internal constructor
 comment|///
 comment|/// This constructor is used only internally for speed of construction of
@@ -769,13 +773,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|BitWidth
-operator|&&
-literal|"bitwidth too small"
-argument_list|)
-block|;
 if|if
 condition|(
 name|isSingleWord
@@ -794,9 +791,6 @@ name|that
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
 comment|/// \brief Move Constructor.
 name|APInt
 argument_list|(
@@ -823,8 +817,6 @@ name|BitWidth
 operator|=
 literal|0
 block|;   }
-endif|#
-directive|endif
 comment|/// \brief Destructor.
 operator|~
 name|APInt
@@ -2572,14 +2564,8 @@ argument_list|)
 return|;
 end_return
 
-begin_if
-unit|}
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_comment
+unit|}
 comment|/// @brief Move assignment operator.
 end_comment
 
@@ -2600,26 +2586,63 @@ operator|!
 name|isSingleWord
 argument_list|()
 condition|)
+block|{
+comment|// The MSVC STL shipped in 2013 requires that self move assignment be a
+comment|// no-op.  Otherwise algorithms like stable_sort will produce answers
+comment|// where half of the output is left in a moved-from state.
+if|if
+condition|(
+name|this
+operator|==
+operator|&
+name|that
+condition|)
+return|return
+operator|*
+name|this
+return|;
 name|delete
 index|[]
 name|pVal
 decl_stmt|;
-name|BitWidth
-operator|=
+block|}
+comment|// Use memcpy so that type based alias analysis sees both VAL and pVal
+comment|// as modified.
+name|memcpy
+argument_list|(
+operator|&
+name|VAL
+argument_list|,
+operator|&
 name|that
 operator|.
-name|BitWidth
+name|VAL
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|uint64_t
+argument_list|)
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VAL
-operator|=
+begin_comment
+comment|// If 'this ==&that', avoid zeroing our own bitwidth by storing to 'that'
+end_comment
+
+begin_comment
+comment|// first.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|ThatBitWidth
+init|=
 name|that
 operator|.
-name|VAL
-expr_stmt|;
-end_expr_stmt
+name|BitWidth
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|that
@@ -2630,6 +2653,13 @@ literal|0
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|BitWidth
+operator|=
+name|ThatBitWidth
+expr_stmt|;
+end_expr_stmt
+
 begin_return
 return|return
 operator|*
@@ -2637,13 +2667,8 @@ name|this
 return|;
 end_return
 
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
 begin_comment
+unit|}
 comment|/// \brief Assignment operator.
 end_comment
 
@@ -4162,7 +4187,26 @@ begin_decl_stmt
 name|APInt
 name|sshl_ov
 argument_list|(
-name|unsigned
+specifier|const
+name|APInt
+operator|&
+name|Amt
+argument_list|,
+name|bool
+operator|&
+name|Overflow
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|APInt
+name|ushl_ov
+argument_list|(
+specifier|const
+name|APInt
+operator|&
 name|Amt
 argument_list|,
 name|bool
@@ -5871,6 +5915,9 @@ parameter_list|)
 block|{
 return|return
 operator|(
+operator|(
+name|uint64_t
+operator|)
 name|BitWidth
 operator|+
 name|APINT_BITS_PER_WORD
@@ -7029,6 +7076,129 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \returns the nearest log base 2 of this APInt. Ties round up.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// NOTE: When we have a BitWidth of 1, we define:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|///   log2(0) = UINT32_MAX
+end_comment
+
+begin_comment
+comment|///   log2(1) = 0
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// to get around any mathematical concerns resulting from
+end_comment
+
+begin_comment
+comment|/// referencing 2 in a space where 2 does no exist.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|nearestLogBase2
+argument_list|()
+specifier|const
+block|{
+comment|// Special case when we have a bitwidth of 1. If VAL is 1, then we
+comment|// get 0. If VAL is 0, we get UINT64_MAX which gets truncated to
+comment|// UINT32_MAX.
+if|if
+condition|(
+name|BitWidth
+operator|==
+literal|1
+condition|)
+return|return
+name|VAL
+operator|-
+literal|1
+return|;
+end_expr_stmt
+
+begin_comment
+comment|// Handle the zero case.
+end_comment
+
+begin_if
+if|if
+condition|(
+operator|!
+name|getBoolValue
+argument_list|()
+condition|)
+return|return
+name|UINT32_MAX
+return|;
+end_if
+
+begin_comment
+comment|// The non-zero case is handled by computing:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   nearestLogBase2(x) = logBase2(x) + x[logBase2(x)-1].
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// where x[i] is referring to the value of the ith bit of x.
+end_comment
+
+begin_decl_stmt
+name|unsigned
+name|lg
+init|=
+name|logBase2
+argument_list|()
+decl_stmt|;
+end_decl_stmt
+
+begin_return
+return|return
+name|lg
+operator|+
+name|unsigned
+argument_list|(
+operator|(
+operator|*
+name|this
+operator|)
+index|[
+name|lg
+operator|-
+literal|1
+index|]
+argument_list|)
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// \returns the log base 2 of this APInt if its an exact power of two, -1
 end_comment
 
@@ -7036,10 +7206,13 @@ begin_comment
 comment|/// otherwise
 end_comment
 
-begin_expr_stmt
-name|int32_t
+begin_macro
+unit|int32_t
 name|exactLogBase2
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 if|if

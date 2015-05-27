@@ -130,7 +130,7 @@ name|SymbolContextScope
 argument_list|()
 block|{}
 comment|//------------------------------------------------------------------
-comment|/// Reconstruct the object's symbolc context into \a sc.
+comment|/// Reconstruct the object's symbol context into \a sc.
 comment|///
 comment|/// The object should fill in as much of the SymbolContext as it
 comment|/// can so function calls that require a symbol context can be made
@@ -205,11 +205,11 @@ name|NULL
 return|;
 block|}
 comment|//------------------------------------------------------------------
-comment|/// Dump the object's symbolc context to the stream \a s.
+comment|/// Dump the object's symbol context to the stream \a s.
 comment|///
 comment|/// The object should dump its symbol context to the stream \a s.
 comment|/// This function is widely used in the DumpDebug and verbose output
-comment|/// for lldb objets.
+comment|/// for lldb objects.
 comment|///
 comment|/// @param[in] s
 comment|///     The stream to which to dump the object's symbol context.

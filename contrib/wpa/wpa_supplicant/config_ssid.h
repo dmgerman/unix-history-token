@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * WPA Supplicant / Network configuration structures  * Copyright (c) 2003-2008, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * WPA Supplicant / Network configuration structures  * Copyright (c) 2003-2013, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_ifndef
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|"common/defs.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"utils/list.h"
 end_include
 
 begin_include
@@ -93,6 +99,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|DEFAULT_MESH_MAX_RETRIES
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_MESH_RETRY_TIMEOUT
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_MESH_CONFIRM_TIMEOUT
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_MESH_HOLDING_TIMEOUT
+value|40
+end_define
+
+begin_define
+define|#
+directive|define
 name|DEFAULT_DISABLE_HT
 value|0
 end_define
@@ -108,6 +142,13 @@ begin_define
 define|#
 directive|define
 name|DEFAULT_DISABLE_SGI
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_DISABLE_LDPC
 value|0
 end_define
 
@@ -143,6 +184,40 @@ end_define
 begin_comment
 comment|/* no change */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_USER_SELECTED_SIM
+value|1
+end_define
+
+begin_struct
+struct|struct
+name|psk_list_entry
+block|{
+name|struct
+name|dl_list
+name|list
+decl_stmt|;
+name|u8
+name|addr
+index|[
+name|ETH_ALEN
+index|]
+decl_stmt|;
+name|u8
+name|psk
+index|[
+literal|32
+index|]
+decl_stmt|;
+name|u8
+name|p2p
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_comment
 comment|/**  * struct wpa_ssid - Network configuration data  *  * This structure includes all the configuration variables for a network. This  * data is included in the per-interface configuration data as an element of  * the network list, struct wpa_config::ssid. Each network block in the  * configuration is mapped to a struct wpa_ssid instance.  */
@@ -188,9 +263,32 @@ index|[
 name|ETH_ALEN
 index|]
 decl_stmt|;
+comment|/** 	 * bssid_blacklist - List of inacceptable BSSIDs 	 */
+name|u8
+modifier|*
+name|bssid_blacklist
+decl_stmt|;
+name|size_t
+name|num_bssid_blacklist
+decl_stmt|;
+comment|/** 	 * bssid_blacklist - List of acceptable BSSIDs 	 */
+name|u8
+modifier|*
+name|bssid_whitelist
+decl_stmt|;
+name|size_t
+name|num_bssid_whitelist
+decl_stmt|;
 comment|/** 	 * bssid_set - Whether BSSID is configured for this network 	 */
 name|int
 name|bssid_set
+decl_stmt|;
+comment|/** 	 * go_p2p_dev_addr - GO's P2P Device Address or all zeros if not set 	 */
+name|u8
+name|go_p2p_dev_addr
+index|[
+name|ETH_ALEN
+index|]
 decl_stmt|;
 comment|/** 	 * psk - WPA pre-shared key (256 bits) 	 */
 name|u8
@@ -320,7 +418,7 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* IEEE8021X_EAPOL */
-comment|/** 	 * mode - IEEE 802.11 operation mode (Infrastucture/IBSS) 	 * 	 * 0 = infrastructure (Managed) mode, i.e., associate with an AP. 	 * 	 * 1 = IBSS (ad-hoc, peer-to-peer) 	 * 	 * 2 = AP (access point) 	 * 	 * 3 = P2P Group Owner (can be set in the configuration file) 	 * 	 * 4 = P2P Group Formation (used internally; not in configuration 	 * files) 	 * 	 * Note: IBSS can only be used with key_mgmt NONE (plaintext and 	 * static WEP) and key_mgmt=WPA-NONE (fixed group key TKIP/CCMP). In 	 * addition, ap_scan has to be set to 2 for IBSS. WPA-None requires 	 * following network block options: proto=WPA, key_mgmt=WPA-NONE, 	 * pairwise=NONE, group=TKIP (or CCMP, but not both), and psk must also 	 * be set (either directly or using ASCII passphrase). 	 */
+comment|/** 	 * mode - IEEE 802.11 operation mode (Infrastucture/IBSS) 	 * 	 * 0 = infrastructure (Managed) mode, i.e., associate with an AP. 	 * 	 * 1 = IBSS (ad-hoc, peer-to-peer) 	 * 	 * 2 = AP (access point) 	 * 	 * 3 = P2P Group Owner (can be set in the configuration file) 	 * 	 * 4 = P2P Group Formation (used internally; not in configuration 	 * files) 	 * 	 * 5 = Mesh 	 * 	 * Note: IBSS can only be used with key_mgmt NONE (plaintext and static 	 * WEP) and WPA-PSK (with proto=RSN). In addition, key_mgmt=WPA-NONE 	 * (fixed group key TKIP/CCMP) is available for backwards compatibility, 	 * but its use is deprecated. WPA-None requires following network block 	 * options: proto=WPA, key_mgmt=WPA-NONE, pairwise=NONE, group=TKIP (or 	 * CCMP, but not both), and psk must also be set (either directly or 	 * using ASCII passphrase). 	 */
 enum|enum
 name|wpas_mode
 block|{
@@ -343,6 +441,10 @@ block|,
 name|WPAS_MODE_P2P_GROUP_FORMATION
 init|=
 literal|4
+block|,
+name|WPAS_MODE_MESH
+init|=
+literal|5
 block|, 	}
 name|mode
 enum|;
@@ -378,8 +480,36 @@ comment|/** 	 * frequency - Channel frequency in megahertz (MHz) for IBSS 	 * 	 
 name|int
 name|frequency
 decl_stmt|;
+comment|/** 	 * fixed_freq - Use fixed frequency for IBSS 	 */
+name|int
+name|fixed_freq
+decl_stmt|;
+comment|/** 	 * mesh_basic_rates - BSS Basic rate set for mesh network 	 * 	 */
+name|int
+modifier|*
+name|mesh_basic_rates
+decl_stmt|;
+comment|/** 	 * Mesh network plink parameters 	 */
+name|int
+name|dot11MeshMaxRetries
+decl_stmt|;
+name|int
+name|dot11MeshRetryTimeout
+decl_stmt|;
+comment|/* msec */
+name|int
+name|dot11MeshConfirmTimeout
+decl_stmt|;
+comment|/* msec */
+name|int
+name|dot11MeshHoldingTimeout
+decl_stmt|;
+comment|/* msec */
 name|int
 name|ht40
+decl_stmt|;
+name|int
+name|vht
 decl_stmt|;
 comment|/** 	 * wpa_ptk_rekey - Maximum lifetime for PTK in seconds 	 * 	 * This value can be used to enforce rekeying of PTK to mitigate some 	 * attacks against TKIP deficiencies. 	 */
 name|int
@@ -423,6 +553,11 @@ value|100
 endif|#
 directive|endif
 comment|/* P2P_MAX_STORED_CLIENTS */
+comment|/** 	 * psk_list - Per-client PSKs (struct psk_list_entry) 	 */
+name|struct
+name|dl_list
+name|psk_list
+decl_stmt|;
 comment|/** 	 * p2p_group - Network generated as a P2P group (used internally) 	 */
 name|int
 name|p2p_group
@@ -454,6 +589,14 @@ comment|/** 	 * disable_sgi - Disable SGI (Short Guard Interval) for this networ
 name|int
 name|disable_sgi
 decl_stmt|;
+comment|/** 	 * disable_ldpc - Disable LDPC for this network 	 * 	 * By default, use it if it is available, but this can be configured 	 * to 1 to have it disabled. 	 */
+name|int
+name|disable_ldpc
+decl_stmt|;
+comment|/** 	 * ht40_intolerant - Indicate 40 MHz intolerant for this network 	 */
+name|int
+name|ht40_intolerant
+decl_stmt|;
 comment|/** 	 * disable_max_amsdu - Disable MAX A-MSDU 	 * 	 * A-MDSU will be 3839 bytes when disabled, or 7935 	 * when enabled (assuming it is otherwise supported) 	 * -1 (default) means do not apply any settings to the kernel. 	 */
 name|int
 name|disable_max_amsdu
@@ -474,6 +617,60 @@ decl_stmt|;
 endif|#
 directive|endif
 comment|/* CONFIG_HT_OVERRIDES */
+ifdef|#
+directive|ifdef
+name|CONFIG_VHT_OVERRIDES
+comment|/** 	 * disable_vht - Disable VHT (IEEE 802.11ac) for this network 	 * 	 * By default, use it if it is available, but this can be configured 	 * to 1 to have it disabled. 	 */
+name|int
+name|disable_vht
+decl_stmt|;
+comment|/** 	 * vht_capa - VHT capabilities to use 	 */
+name|unsigned
+name|int
+name|vht_capa
+decl_stmt|;
+comment|/** 	 * vht_capa_mask - mask for VHT capabilities 	 */
+name|unsigned
+name|int
+name|vht_capa_mask
+decl_stmt|;
+name|int
+name|vht_rx_mcs_nss_1
+decl_stmt|,
+name|vht_rx_mcs_nss_2
+decl_stmt|,
+name|vht_rx_mcs_nss_3
+decl_stmt|,
+name|vht_rx_mcs_nss_4
+decl_stmt|,
+name|vht_rx_mcs_nss_5
+decl_stmt|,
+name|vht_rx_mcs_nss_6
+decl_stmt|,
+name|vht_rx_mcs_nss_7
+decl_stmt|,
+name|vht_rx_mcs_nss_8
+decl_stmt|;
+name|int
+name|vht_tx_mcs_nss_1
+decl_stmt|,
+name|vht_tx_mcs_nss_2
+decl_stmt|,
+name|vht_tx_mcs_nss_3
+decl_stmt|,
+name|vht_tx_mcs_nss_4
+decl_stmt|,
+name|vht_tx_mcs_nss_5
+decl_stmt|,
+name|vht_tx_mcs_nss_6
+decl_stmt|,
+name|vht_tx_mcs_nss_7
+decl_stmt|,
+name|vht_tx_mcs_nss_8
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_VHT_OVERRIDES */
 comment|/** 	 * ap_max_inactivity - Timeout in seconds to detect STA's inactivity 	 * 	 * This timeout value is used in AP mode to clean up inactive stations. 	 * By default: 300 seconds. 	 */
 name|int
 name|ap_max_inactivity
@@ -482,6 +679,10 @@ comment|/** 	 * dtim_period - DTIM period in Beacon intervals 	 * By default: 2 
 name|int
 name|dtim_period
 decl_stmt|;
+comment|/** 	 * beacon_int - Beacon interval (default: 100 TU) 	 */
+name|int
+name|beacon_int
+decl_stmt|;
 comment|/** 	 * auth_failures - Number of consecutive authentication failures 	 */
 name|unsigned
 name|int
@@ -489,13 +690,44 @@ name|auth_failures
 decl_stmt|;
 comment|/** 	 * disabled_until - Network block disabled until this time if non-zero 	 */
 name|struct
-name|os_time
+name|os_reltime
 name|disabled_until
 decl_stmt|;
 comment|/** 	 * parent_cred - Pointer to parent wpa_cred entry 	 * 	 * This pointer can be used to delete temporary networks when a wpa_cred 	 * that was used to create them is removed. This pointer should not be 	 * dereferences since it may not be updated in all cases. 	 */
 name|void
 modifier|*
 name|parent_cred
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CONFIG_MACSEC
+comment|/** 	 * macsec_policy - Determines the policy for MACsec secure session 	 * 	 * 0: MACsec not in use (default) 	 * 1: MACsec enabled - Should secure, accept key server's advice to 	 *    determine whether to use a secure session or not. 	 */
+name|int
+name|macsec_policy
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_MACSEC */
+ifdef|#
+directive|ifdef
+name|CONFIG_HS20
+name|int
+name|update_identifier
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* CONFIG_HS20 */
+name|unsigned
+name|int
+name|wps_run
+decl_stmt|;
+comment|/** 	 * mac_addr - MAC address policy 	 * 	 * 0 = use permanent MAC address 	 * 1 = use random MAC address for each ESS connection 	 * 2 = like 1, but maintain OUI (with local admin bit set) 	 * 	 * Internally, special value -1 is used to indicate that the parameter 	 * was not specified in the configuration (i.e., default behavior is 	 * followed). 	 */
+name|int
+name|mac_addr
+decl_stmt|;
+comment|/** 	 * no_auto_peer - Do not automatically peer with compatible mesh peers 	 * 	 * When unset, the reception of a beacon from a another mesh peer in 	 * this MBSS will trigger a peering attempt. 	 */
+name|int
+name|no_auto_peer
 decl_stmt|;
 block|}
 struct|;

@@ -655,6 +655,10 @@ index|]
 decl_stmt|;
 comment|/* LMP features */
 name|u_int8_t
+name|addrtype
+decl_stmt|;
+comment|/*Address Type*/
+name|u_int8_t
 name|page_scan_rep_mode
 decl_stmt|;
 comment|/* PS rep. mode */

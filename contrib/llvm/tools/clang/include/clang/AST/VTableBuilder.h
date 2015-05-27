@@ -92,13 +92,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SetVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseSet.h"
+file|<memory>
 end_include
 
 begin_include
@@ -850,11 +856,12 @@ label|:
 name|uint64_t
 name|NumVTableComponents
 decl_stmt|;
-name|llvm
+name|std
 operator|::
-name|OwningArrayPtr
+name|unique_ptr
 operator|<
 name|VTableComponent
+index|[]
 operator|>
 name|VTableComponents
 expr_stmt|;
@@ -862,11 +869,12 @@ comment|/// \brief Contains thunks needed by vtables, sorted by indices.
 name|uint64_t
 name|NumVTableThunks
 decl_stmt|;
-name|llvm
+name|std
 operator|::
-name|OwningArrayPtr
+name|unique_ptr
 operator|<
 name|VTableThunkTy
+index|[]
 operator|>
 name|VTableThunks
 expr_stmt|;
@@ -1043,8 +1051,22 @@ literal|1
 operator|>
 name|ThunkInfoVectorTy
 expr_stmt|;
+name|bool
+name|isMicrosoft
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsMicrosoftABI
+return|;
+block|}
+name|virtual
+operator|~
+name|VTableContextBase
+argument_list|()
+block|{}
 name|protected
-label|:
+operator|:
 typedef|typedef
 name|llvm
 operator|::
@@ -1076,27 +1098,33 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-name|virtual
-operator|~
 name|VTableContextBase
-argument_list|()
+argument_list|(
+argument|bool MS
+argument_list|)
+block|:
+name|IsMicrosoftABI
+argument_list|(
+argument|MS
+argument_list|)
 block|{}
 name|public
-operator|:
+label|:
 name|virtual
 specifier|const
 name|ThunkInfoVectorTy
-operator|*
+modifier|*
 name|getThunkInfo
-argument_list|(
-argument|GlobalDecl GD
-argument_list|)
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
 block|{
 specifier|const
 name|CXXMethodDecl
-operator|*
+modifier|*
 name|MD
-operator|=
+init|=
 name|cast
 operator|<
 name|CXXMethodDecl
@@ -1110,7 +1138,7 @@ operator|->
 name|getCanonicalDecl
 argument_list|()
 operator|)
-block|;
+decl_stmt|;
 name|computeVTableRelatedInformation
 argument_list|(
 name|MD
@@ -1118,7 +1146,7 @@ operator|->
 name|getParent
 argument_list|()
 argument_list|)
-block|;
+expr_stmt|;
 comment|// This assumes that all the destructors present in the vtable
 comment|// use exactly the same set of thunks.
 name|ThunksMapTy
@@ -1132,7 +1160,7 @@ name|find
 argument_list|(
 name|MD
 argument_list|)
-block|;
+expr_stmt|;
 if|if
 condition|(
 name|I
@@ -1145,7 +1173,7 @@ condition|)
 block|{
 comment|// We did not find a thunk for this method.
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 return|return
@@ -1155,6 +1183,9 @@ operator|->
 name|second
 return|;
 block|}
+name|bool
+name|IsMicrosoftABI
+decl_stmt|;
 block|}
 empty_stmt|;
 name|class
@@ -1165,9 +1196,6 @@ name|VTableContextBase
 block|{
 name|private
 operator|:
-name|bool
-name|IsMicrosoftABI
-block|;
 comment|/// \brief Contains the index (relative to the vtable address point)
 comment|/// where the function pointer for a virtual function is stored.
 typedef|typedef
@@ -1237,13 +1265,14 @@ name|VirtualBaseClassOffsetOffsets
 decl_stmt|;
 name|void
 name|computeVTableRelatedInformation
-parameter_list|(
+argument_list|(
 specifier|const
 name|CXXRecordDecl
-modifier|*
+operator|*
 name|RD
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|public
 label|:
 name|ItaniumVTableContext
@@ -1344,6 +1373,24 @@ modifier|*
 name|VBase
 parameter_list|)
 function_decl|;
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|VTableContextBase
+modifier|*
+name|VT
+parameter_list|)
+block|{
+return|return
+operator|!
+name|VT
+operator|->
+name|isMicrosoft
+argument_list|()
+return|;
+block|}
 block|}
 end_decl_stmt
 
@@ -1351,9 +1398,21 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|/// Holds information about the inheritance path to a virtual base or function
+end_comment
+
+begin_comment
+comment|/// table pointer.  A record may contain as many vfptrs or vbptrs as there are
+end_comment
+
+begin_comment
+comment|/// base subobjects.
+end_comment
+
 begin_struct
 struct|struct
-name|VFPtrInfo
+name|VPtrInfo
 block|{
 typedef|typedef
 name|SmallVector
@@ -1366,119 +1425,167 @@ literal|1
 operator|>
 name|BasePath
 expr_stmt|;
-comment|// Don't pass the PathToMangle as it should be calculated later.
-name|VFPtrInfo
+name|VPtrInfo
 argument_list|(
-argument|CharUnits VFPtrOffset
-argument_list|,
-argument|const BasePath&PathToBaseWithVFPtr
-argument_list|)
-block|:
-name|VBTableIndex
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|LastVBase
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|VFPtrOffset
-argument_list|(
-name|VFPtrOffset
-argument_list|)
-operator|,
-name|PathToBaseWithVFPtr
-argument_list|(
-name|PathToBaseWithVFPtr
-argument_list|)
-operator|,
-name|VFPtrFullOffset
-argument_list|(
-argument|VFPtrOffset
-argument_list|)
-block|{   }
-comment|// Don't pass the PathToMangle as it should be calculated later.
-name|VFPtrInfo
-argument_list|(
-argument|uint64_t VBTableIndex
-argument_list|,
-argument|const CXXRecordDecl *LastVBase
-argument_list|,
-argument|CharUnits VFPtrOffset
-argument_list|,
-argument|const BasePath&PathToBaseWithVFPtr
-argument_list|,
-argument|CharUnits VFPtrFullOffset
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
 argument_list|)
 operator|:
-name|VBTableIndex
+name|ReusingBase
 argument_list|(
-name|VBTableIndex
+name|RD
 argument_list|)
 operator|,
-name|LastVBase
+name|BaseWithVPtr
 argument_list|(
-name|LastVBase
+name|RD
 argument_list|)
 operator|,
-name|VFPtrOffset
+name|NextBaseToMangle
 argument_list|(
-name|VFPtrOffset
+argument|RD
 argument_list|)
-operator|,
-name|PathToBaseWithVFPtr
-argument_list|(
-name|PathToBaseWithVFPtr
-argument_list|)
-operator|,
-name|VFPtrFullOffset
-argument_list|(
-argument|VFPtrFullOffset
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|VBTableIndex
-operator|&&
-literal|"The full constructor should only be used "
-literal|"for vfptrs in virtual bases"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|LastVBase
-argument_list|)
-block|;   }
-comment|/// If nonzero, holds the vbtable index of the virtual base with the vfptr.
-name|uint64_t
-name|VBTableIndex
+block|{}
+comment|// Copy constructor.
+comment|// FIXME: Uncomment when we've moved to C++11.
+comment|// VPtrInfo(const VPtrInfo&) = default;
+comment|/// The vtable will hold all of the virtual bases or virtual methods of
+comment|/// ReusingBase.  This may or may not be the same class as VPtrSubobject.Base.
+comment|/// A derived class will reuse the vptr of the first non-virtual base
+comment|/// subobject that has one.
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|ReusingBase
 expr_stmt|;
-comment|/// Stores the last vbase on the path from the complete type to the vfptr.
+comment|/// BaseWithVPtr is at this offset from its containing complete object or
+comment|/// virtual base.
+name|CharUnits
+name|NonVirtualOffset
+decl_stmt|;
+comment|/// The vptr is stored inside this subobject.
 specifier|const
 name|CXXRecordDecl
 modifier|*
-name|LastVBase
+name|BaseWithVPtr
 decl_stmt|;
-comment|/// This is the offset of the vfptr from the start of the last vbase,
-comment|/// or the complete type if there are no virtual bases.
-name|CharUnits
-name|VFPtrOffset
+comment|/// The bases from the inheritance path that got used to mangle the vbtable
+comment|/// name.  This is not really a full path like a CXXBasePath.  It holds the
+comment|/// subset of records that need to be mangled into the vbtable symbol name in
+comment|/// order to get a unique name.
+name|BasePath
+name|MangledPath
+decl_stmt|;
+comment|/// The next base to push onto the mangled path if this path is ambiguous in a
+comment|/// derived class.  If it's null, then it's already been pushed onto the path.
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|NextBaseToMangle
+decl_stmt|;
+comment|/// The set of possibly indirect vbases that contain this vbtable.  When a
+comment|/// derived class indirectly inherits from the same vbase twice, we only keep
+comment|/// vtables and their paths from the first instance.
+name|BasePath
+name|ContainingVBases
 decl_stmt|;
 comment|/// This holds the base classes path from the complete type to the first base
-comment|/// with the given vfptr offset, in the base-to-derived order.
+comment|/// with the given vfptr offset, in the base-to-derived order.  Only used for
+comment|/// vftables.
 name|BasePath
-name|PathToBaseWithVFPtr
+name|PathToBaseWithVPtr
 decl_stmt|;
-comment|/// This holds the subset of records that need to be mangled into the vftable
-comment|/// symbol name in order to get a unique name, in the derived-to-base order.
-name|BasePath
-name|PathToMangle
-decl_stmt|;
-comment|/// This is the full offset of the vfptr from the start of the complete type.
+comment|/// Static offset from the top of the most derived class to this vfptr,
+comment|/// including any virtual base offset.  Only used for vftables.
 name|CharUnits
-name|VFPtrFullOffset
+name|FullOffsetInMDC
+decl_stmt|;
+comment|/// The vptr is stored inside the non-virtual component of this virtual base.
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|getVBaseWithVPtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ContainingVBases
+operator|.
+name|empty
+argument_list|()
+operator|?
+name|nullptr
+operator|:
+name|ContainingVBases
+operator|.
+name|front
+argument_list|()
+return|;
+block|}
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|SmallVector
+operator|<
+name|VPtrInfo
+operator|*
+operator|,
+literal|2
+operator|>
+name|VPtrInfoVector
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// All virtual base related information about a given record decl.  Includes
+end_comment
+
+begin_comment
+comment|/// information on all virtual base tables and the path components that are used
+end_comment
+
+begin_comment
+comment|/// to mangle them.
+end_comment
+
+begin_struct
+struct|struct
+name|VirtualBaseInfo
+block|{
+operator|~
+name|VirtualBaseInfo
+argument_list|()
+block|{
+name|llvm
+operator|::
+name|DeleteContainerPointers
+argument_list|(
+name|VBPtrPaths
+argument_list|)
+block|; }
+comment|/// A map from virtual base to vbtable index for doing a conversion from the
+comment|/// the derived class to the a base.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|VBTableIndices
+expr_stmt|;
+comment|/// Information on all virtual base tables used when this record is the most
+comment|/// derived class.
+name|VPtrInfoVector
+name|VBPtrPaths
 decl_stmt|;
 block|}
 struct|;
@@ -1526,7 +1633,7 @@ argument_list|)
 block|,
 name|VBase
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|VFPtrOffset
@@ -1610,68 +1717,38 @@ operator|.
 name|VBTableIndex
 return|;
 block|}
-if|if
-condition|(
-name|VFPtrOffset
-operator|!=
-name|other
-operator|.
-name|VFPtrOffset
-condition|)
 return|return
+name|std
+operator|::
+name|tie
+argument_list|(
 name|VFPtrOffset
+argument_list|,
+name|Index
+argument_list|)
 operator|<
+name|std
+operator|::
+name|tie
+argument_list|(
 name|other
 operator|.
 name|VFPtrOffset
-return|;
-if|if
-condition|(
-name|Index
-operator|!=
+argument_list|,
 name|other
 operator|.
 name|Index
-condition|)
-return|return
-name|Index
-operator|<
-name|other
-operator|.
-name|Index
-return|;
-return|return
-name|false
+argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_typedef
-unit|};
-typedef|typedef
-name|SmallVector
-operator|<
-name|VFPtrInfo
-operator|,
-literal|1
-operator|>
-name|VFPtrListTy
-expr_stmt|;
-end_typedef
-
-begin_label
+expr|}
+block|;
 name|private
-label|:
-end_label
-
-begin_decl_stmt
+operator|:
 name|ASTContext
-modifier|&
+operator|&
 name|Context
-decl_stmt|;
-end_decl_stmt
-
-begin_typedef
+block|;
 typedef|typedef
 name|llvm
 operator|::
@@ -1683,15 +1760,9 @@ name|MethodVFTableLocation
 operator|>
 name|MethodVFTableLocationsTy
 expr_stmt|;
-end_typedef
-
-begin_decl_stmt
 name|MethodVFTableLocationsTy
 name|MethodVFTableLocations
-decl_stmt|;
-end_decl_stmt
-
-begin_typedef
+block|;
 typedef|typedef
 name|llvm
 operator|::
@@ -1701,13 +1772,11 @@ specifier|const
 name|CXXRecordDecl
 operator|*
 operator|,
-name|VFPtrListTy
+name|VPtrInfoVector
+operator|*
 operator|>
 name|VFPtrLocationsMapTy
 expr_stmt|;
-end_typedef
-
-begin_decl_stmt
 name|VFPtrLocationsMapTy
 name|VFPtrLocations
 decl_stmt|;
@@ -1751,93 +1820,50 @@ name|VFTableLayouts
 decl_stmt|;
 end_decl_stmt
 
-begin_typedef
-typedef|typedef
+begin_expr_stmt
 name|llvm
 operator|::
-name|SmallSetVector
+name|DenseMap
 operator|<
 specifier|const
 name|CXXRecordDecl
 operator|*
 operator|,
-literal|8
+name|VirtualBaseInfo
+operator|*
 operator|>
-name|BasesSetVectorTy
+name|VBaseInfo
 expr_stmt|;
-end_typedef
-
-begin_decl_stmt
-name|void
-name|enumerateVFPtrs
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|MostDerivedClass
-argument_list|,
-specifier|const
-name|ASTRecordLayout
-operator|&
-name|MostDerivedClassLayout
-argument_list|,
-name|BaseSubobject
-name|Base
-argument_list|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|LastVBase
-argument_list|,
-specifier|const
-name|VFPtrInfo
-operator|::
-name|BasePath
-operator|&
-name|PathFromCompleteClass
-argument_list|,
-name|BasesSetVectorTy
-operator|&
-name|VisitedVBases
-argument_list|,
-name|MicrosoftVTableContext
-operator|::
-name|VFPtrListTy
-operator|&
-name|Result
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|void
-name|enumerateVFPtrs
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|ForClass
-argument_list|,
-name|MicrosoftVTableContext
-operator|::
-name|VFPtrListTy
-operator|&
-name|Result
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+end_expr_stmt
 
 begin_function_decl
 name|void
-name|computeVTableRelatedInformation
+name|enumerateVFPtrs
 parameter_list|(
 specifier|const
 name|CXXRecordDecl
 modifier|*
-name|RD
+name|ForClass
+parameter_list|,
+name|VPtrInfoVector
+modifier|&
+name|Result
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+name|void
+name|computeVTableRelatedInformation
+argument_list|(
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|RD
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void
@@ -1859,65 +1885,35 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_typedef
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|,
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|>
-name|ClassPairTy
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|ClassPairTy
-operator|,
-name|unsigned
-operator|>
-name|VBTableIndicesTy
-expr_stmt|;
-end_typedef
-
-begin_decl_stmt
-name|VBTableIndicesTy
-name|VBTableIndices
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|DenseSet
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
-operator|>
-name|ComputedVBTableIndices
-expr_stmt|;
-end_expr_stmt
-
 begin_function_decl
-name|void
+specifier|const
+name|VirtualBaseInfo
+modifier|*
 name|computeVBTableRelatedInformation
 parameter_list|(
 specifier|const
 name|CXXRecordDecl
 modifier|*
 name|RD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|computeVTablePaths
+parameter_list|(
+name|bool
+name|ForVBTables
+parameter_list|,
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|,
+name|VPtrInfoVector
+modifier|&
+name|Paths
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1935,6 +1931,12 @@ operator|&
 name|Context
 argument_list|)
 operator|:
+name|VTableContextBase
+argument_list|(
+comment|/*MS=*/
+name|true
+argument_list|)
+operator|,
 name|Context
 argument_list|(
 argument|Context
@@ -1943,26 +1945,22 @@ block|{}
 operator|~
 name|MicrosoftVTableContext
 argument_list|()
-block|{
-name|llvm
-operator|::
-name|DeleteContainerSeconds
-argument_list|(
-name|VFTableLayouts
-argument_list|)
-block|; }
-specifier|const
-name|VFPtrListTy
-operator|&
-name|getVFPtrOffsets
-argument_list|(
-specifier|const
-name|CXXRecordDecl
-operator|*
-name|RD
-argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+specifier|const
+name|VPtrInfoVector
+modifier|&
+name|getVFPtrOffsets
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|const
@@ -2002,6 +2000,7 @@ parameter_list|(
 name|GlobalDecl
 name|GD
 parameter_list|)
+function|override
 block|{
 comment|// Complete destructors don't have a slot in a vftable, so no thunks needed.
 if|if
@@ -2025,7 +2024,7 @@ operator|==
 name|Dtor_Complete
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|VTableContextBase
@@ -2054,7 +2053,7 @@ begin_comment
 comment|/// and the rest are offsets from the vbptr to virtual bases.
 end_comment
 
-begin_function
+begin_function_decl
 name|unsigned
 name|getVBTableIndex
 parameter_list|(
@@ -2068,45 +2067,49 @@ name|CXXRecordDecl
 modifier|*
 name|VBase
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|VPtrInfoVector
+modifier|&
+name|enumerateVBTables
+parameter_list|(
+specifier|const
+name|CXXRecordDecl
+modifier|*
+name|RD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|VTableContextBase
+modifier|*
+name|VT
+parameter_list|)
 block|{
-name|computeVBTableRelatedInformation
-argument_list|(
-name|Derived
-argument_list|)
-expr_stmt|;
-name|ClassPairTy
-name|Pair
-argument_list|(
-name|Derived
-argument_list|,
-name|VBase
-argument_list|)
-decl_stmt|;
-name|assert
-argument_list|(
-name|VBTableIndices
-operator|.
-name|count
-argument_list|(
-name|Pair
-argument_list|)
-operator|==
-literal|1
-operator|&&
-literal|"VBase must be a vbase of Derived"
-argument_list|)
-expr_stmt|;
 return|return
-name|VBTableIndices
-index|[
-name|Pair
-index|]
+name|VT
+operator|->
+name|isMicrosoft
+argument_list|()
 return|;
 block|}
 end_function
 
+begin_comment
+unit|};  }
+comment|// namespace clang
+end_comment
+
 begin_endif
-unit|}; }
 endif|#
 directive|endif
 end_endif

@@ -79,6 +79,9 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|namespace
 name|PBQP
 block|{
 comment|/// \brief Represents a solution to a PBQP problem.
@@ -94,7 +97,7 @@ name|std
 operator|::
 name|map
 operator|<
-name|Graph
+name|GraphBase
 operator|::
 name|NodeId
 operator|,
@@ -240,7 +243,7 @@ comment|/// @param selection Selection for nodeId.
 name|void
 name|setSelection
 argument_list|(
-name|Graph
+name|GraphBase
 operator|::
 name|NodeId
 name|nodeId
@@ -263,7 +266,7 @@ comment|/// @return The selection for nodeId;
 name|unsigned
 name|getSelection
 argument_list|(
-name|Graph
+name|GraphBase
 operator|::
 name|NodeId
 name|nodeId
@@ -303,7 +306,13 @@ block|}
 block|}
 empty_stmt|;
 block|}
+comment|// namespace PBQP
+block|}
 end_decl_stmt
+
+begin_comment
+comment|// namespace llvm
+end_comment
 
 begin_endif
 endif|#

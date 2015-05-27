@@ -4,11 +4,11 @@ comment|/* crypto/bio/bio_dgram.c */
 end_comment
 
 begin_comment
-comment|/*   * DTLS implementation written by Nagendra Modadugu  * (nagendra@cs.stanford.edu) for the OpenSSL project 2005.    */
+comment|/*  * DTLS implementation written by Nagendra Modadugu  * (nagendra@cs.stanford.edu) for the OpenSSL project 2005.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_include
@@ -528,7 +528,7 @@ block|,
 name|dgram_free
 block|,
 name|NULL
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -564,7 +564,7 @@ block|,
 name|dgram_sctp_free
 block|,
 name|NULL
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1351,7 +1351,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* Adjust socket timeout if next handhake message timer 		 * will expire earlier. 		 */
+comment|/*          * Adjust socket timeout if next handhake message timer will expire          * earlier.          */
 if|if
 condition|(
 operator|(
@@ -1685,7 +1685,7 @@ name|ptr
 decl_stmt|;
 struct|struct
 block|{
-comment|/* 	 * See commentary in b_sock.c.<appro> 	 */
+comment|/*          * See commentary in b_sock.c.<appro>          */
 union|union
 block|{
 name|size_t
@@ -2162,8 +2162,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* higher layers are responsible for querying MTU, if necessary */
-block|if ( data->_errno == EMSGSIZE)
+comment|/* higher layers are responsible for querying                                  * MTU, if necessary */
+block|if (data->_errno == EMSGSIZE)
 comment|/* retrieve the new MTU */
 block|BIO_ctrl(b, BIO_CTRL_DGRAM_QUERY_MTU, 0, NULL);
 endif|#
@@ -2174,6 +2174,92 @@ return|return
 operator|(
 name|ret
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|long
+name|dgram_get_mtu_overhead
+parameter_list|(
+name|bio_dgram_data
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|long
+name|ret
+decl_stmt|;
+switch|switch
+condition|(
+name|data
+operator|->
+name|peer
+operator|.
+name|sa
+operator|.
+name|sa_family
+condition|)
+block|{
+case|case
+name|AF_INET
+case|:
+comment|/*          * Assume this is UDP - 20 bytes for IP, 8 bytes for UDP          */
+name|ret
+operator|=
+literal|28
+expr_stmt|;
+break|break;
+if|#
+directive|if
+name|OPENSSL_USE_IPV6
+case|case
+name|AF_INET6
+case|:
+ifdef|#
+directive|ifdef
+name|IN6_IS_ADDR_V4MAPPED
+if|if
+condition|(
+name|IN6_IS_ADDR_V4MAPPED
+argument_list|(
+operator|&
+name|data
+operator|->
+name|peer
+operator|.
+name|sa_in6
+operator|.
+name|sin6_addr
+argument_list|)
+condition|)
+comment|/*              * Assume this is UDP - 20 bytes for IP, 8 bytes for UDP              */
+name|ret
+operator|=
+literal|28
+expr_stmt|;
+else|else
+endif|#
+directive|endif
+comment|/*              * Assume this is UDP - 40 bytes for IP, 8 bytes for UDP              */
+name|ret
+operator|=
+literal|48
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+default|default:
+comment|/* We don't know. Go with the historical default */
+name|ret
+operator|=
+literal|28
+expr_stmt|;
+break|break;
+block|}
+return|return
+name|ret
 return|;
 block|}
 end_function
@@ -2246,7 +2332,7 @@ decl_stmt|;
 name|socklen_t
 name|sockopt_len
 decl_stmt|;
-comment|/* assume that system supporting IP_MTU is 				 * modern enough to define socklen_t */
+comment|/* assume that system supporting IP_MTU is                                  * modern enough to define socklen_t */
 name|socklen_t
 name|addr_len
 decl_stmt|;
@@ -2457,7 +2543,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|if (connect(b->num, to, sizeof(struct sockaddr))< 0) 			{ perror("connect"); ret = 0; } 		else 			{
+block|if (connect(b->num, to, sizeof(struct sockaddr))< 0) {             perror("connect");             ret = 0;         } else {
 endif|#
 directive|endif
 switch|switch
@@ -2869,7 +2955,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* we assume that the transport protocol is UDP and no 				 * IP options are used. 				 */
+comment|/*                  * we assume that the transport protocol is UDP and no IP                  * options are used.                  */
 name|data
 operator|->
 name|mtu
@@ -2940,7 +3026,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* we assume that the transport protocol is UDP and no 				 * IPV6 options are used. 				 */
+comment|/*                  * we assume that the transport protocol is UDP and no IPV6                  * options are used.                  */
 name|data
 operator|->
 name|mtu
@@ -2980,6 +3066,14 @@ break|break;
 case|case
 name|BIO_CTRL_DGRAM_GET_FALLBACK_MTU
 case|:
+name|ret
+operator|=
+operator|-
+name|dgram_get_mtu_overhead
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|data
@@ -2995,12 +3089,8 @@ case|case
 name|AF_INET
 case|:
 name|ret
-operator|=
+operator|+=
 literal|576
-operator|-
-literal|20
-operator|-
-literal|8
 expr_stmt|;
 break|break;
 if|#
@@ -3027,35 +3117,23 @@ name|sin6_addr
 argument_list|)
 condition|)
 name|ret
-operator|=
+operator|+=
 literal|576
-operator|-
-literal|20
-operator|-
-literal|8
 expr_stmt|;
 else|else
 endif|#
 directive|endif
 name|ret
-operator|=
+operator|+=
 literal|1280
-operator|-
-literal|40
-operator|-
-literal|8
 expr_stmt|;
 break|break;
 endif|#
 directive|endif
 default|default:
 name|ret
-operator|=
+operator|+=
 literal|576
-operator|-
-literal|20
-operator|-
-literal|8
 expr_stmt|;
 break|break;
 block|}
@@ -4197,6 +4275,17 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+case|case
+name|BIO_CTRL_DGRAM_GET_MTU_OVERHEAD
+case|:
+name|ret
+operator|=
+name|dgram_get_mtu_overhead
+argument_list|(
+name|data
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|ret
 operator|=
@@ -4405,13 +4494,24 @@ name|sctp_authchunk
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|ret
-operator|>=
+operator|<
 literal|0
+condition|)
+block|{
+name|BIO_vfree
+argument_list|(
+name|bio
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|auth
 operator|.
 name|sauth_chunk
@@ -4438,14 +4538,25 @@ name|sctp_authchunk
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|ret
-operator|>=
+operator|<
 literal|0
+condition|)
+block|{
+name|BIO_vfree
+argument_list|(
+name|bio
 argument_list|)
 expr_stmt|;
-comment|/* Test if activation was successful. When using accept(), 	 * SCTP-AUTH has to be activated for the listening socket 	 * already, otherwise the connected socket won't use it. */
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+comment|/*      * Test if activation was successful. When using accept(), SCTP-AUTH has      * to be activated for the listening socket already, otherwise the      * connected socket won't use it.      */
 name|sockopt_len
 operator|=
 call|(
@@ -4472,6 +4583,23 @@ argument_list|(
 name|sockopt_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|authchunks
+condition|)
+block|{
+name|BIO_vfree
+argument_list|(
+name|bio
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|memset
 argument_list|(
 name|authchunks
@@ -4500,13 +4628,29 @@ operator|&
 name|sockopt_len
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|ret
-operator|>=
+operator|<
 literal|0
+condition|)
+block|{
+name|OPENSSL_free
+argument_list|(
+name|authchunks
 argument_list|)
 expr_stmt|;
+name|BIO_vfree
+argument_list|(
+name|bio
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|p
@@ -4635,13 +4779,24 @@ name|sctp_event
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|ret
-operator|>=
+operator|<
 literal|0
+condition|)
+block|{
+name|BIO_vfree
+argument_list|(
+name|bio
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 else|#
 directive|else
 name|sockopt_len
@@ -4672,13 +4827,24 @@ operator|&
 name|sockopt_len
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|ret
-operator|>=
+operator|<
 literal|0
+condition|)
+block|{
+name|BIO_vfree
+argument_list|(
+name|bio
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|event
 operator|.
 name|sctp_authentication_event
@@ -4705,18 +4871,29 @@ name|sctp_event_subscribe
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|ret
-operator|>=
+operator|<
 literal|0
+condition|)
+block|{
+name|BIO_vfree
+argument_list|(
+name|bio
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 endif|#
 directive|endif
 endif|#
 directive|endif
-comment|/* Disable partial delivery by setting the min size 	 * larger than the max record size of 2^14 + 2048 + 13 	 */
+comment|/*      * Disable partial delivery by setting the min size larger than the max      * record size of 2^14 + 2048 + 13      */
 name|ret
 operator|=
 name|setsockopt
@@ -4736,13 +4913,24 @@ name|optval
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|ret
-operator|>=
+operator|<
 literal|0
+condition|)
+block|{
+name|BIO_vfree
+argument_list|(
+name|bio
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|bio
@@ -4917,11 +5105,32 @@ name|data
 operator|!=
 name|NULL
 condition|)
+block|{
+if|if
+condition|(
+name|data
+operator|->
+name|saved_message
+operator|.
+name|data
+operator|!=
+name|NULL
+condition|)
+name|OPENSSL_free
+argument_list|(
+name|data
+operator|->
+name|saved_message
+operator|.
+name|data
+argument_list|)
+expr_stmt|;
 name|OPENSSL_free
 argument_list|(
 name|data
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 literal|1
@@ -5184,6 +5393,25 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|n
+operator|<=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+name|ret
+operator|=
+name|n
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
 name|msg
 operator|.
 name|msg_controllen
@@ -5431,25 +5659,6 @@ block|}
 block|}
 if|if
 condition|(
-name|n
-operator|<=
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-name|n
-operator|<
-literal|0
-condition|)
-name|ret
-operator|=
-name|n
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
 name|msg
 operator|.
 name|msg_flags
@@ -5495,7 +5704,7 @@ name|eventsize
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* If a message has been delayed until the socket 					 * is dry, it can be sent now. 					 */
+comment|/*                      * If a message has been delayed until the socket is dry,                      * it can be sent now.                      */
 if|if
 condition|(
 name|data
@@ -5536,6 +5745,14 @@ name|saved_message
 operator|.
 name|data
 argument_list|)
+expr_stmt|;
+name|data
+operator|->
+name|saved_message
+operator|.
+name|data
+operator|=
+name|NULL
 expr_stmt|;
 name|data
 operator|->
@@ -5604,13 +5821,19 @@ name|sctp_event
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|i
-operator|>=
+operator|<
 literal|0
-argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+name|i
 expr_stmt|;
+break|break;
+block|}
 else|#
 directive|else
 name|eventsize
@@ -5640,13 +5863,19 @@ operator|&
 name|eventsize
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|i
-operator|>=
+operator|<
 literal|0
-argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+name|i
 expr_stmt|;
+break|break;
+block|}
 name|event
 operator|.
 name|sctp_sender_dry_event
@@ -5675,13 +5904,19 @@ name|sctp_event_subscribe
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|i
-operator|>=
+operator|<
 literal|0
-argument_list|)
+condition|)
+block|{
+name|ret
+operator|=
+name|i
 expr_stmt|;
+break|break;
+block|}
 endif|#
 directive|endif
 block|}
@@ -5790,7 +6025,7 @@ operator|)
 condition|)
 block|{
 comment|/* Partial message read, this should never happen! */
-comment|/* The buffer was too small, this means the peer sent 			 * a message that was larger than allowed. */
+comment|/*              * The buffer was too small, this means the peer sent a message              * that was larger than allowed.              */
 if|if
 condition|(
 name|ret
@@ -5801,7 +6036,7 @@ return|return
 operator|-
 literal|1
 return|;
-comment|/* Test if socket buffer can handle max record 			 * size (2^14 + 2048 + 13) 			 */
+comment|/*              * Test if socket buffer can handle max record size (2^14 + 2048              * + 13)              */
 name|optlen
 operator|=
 operator|(
@@ -5831,13 +6066,12 @@ operator|&
 name|optlen
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|ret
 operator|>=
 literal|0
-argument_list|)
-expr_stmt|;
+condition|)
 name|OPENSSL_assert
 argument_list|(
 name|optval
@@ -5845,7 +6079,7 @@ operator|>=
 literal|18445
 argument_list|)
 expr_stmt|;
-comment|/* Test if SCTP doesn't partially deliver below 			 * max record size (2^14 + 2048 + 13) 			 */
+comment|/*              * Test if SCTP doesn't partially deliver below max record size              * (2^14 + 2048 + 13)              */
 name|optlen
 operator|=
 operator|(
@@ -5875,13 +6109,12 @@ operator|&
 name|optlen
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|ret
 operator|>=
 literal|0
-argument_list|)
-expr_stmt|;
+condition|)
 name|OPENSSL_assert
 argument_list|(
 name|optval
@@ -5889,7 +6122,7 @@ operator|>=
 literal|18445
 argument_list|)
 expr_stmt|;
-comment|/* Partially delivered notification??? Probably a bug.... */
+comment|/*              * Partially delivered notification??? Probably a bug....              */
 name|OPENSSL_assert
 argument_list|(
 operator|!
@@ -5902,7 +6135,7 @@ name|MSG_NOTIFICATION
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Everything seems ok till now, so it's most likely 			 * a message dropped by PR-SCTP. 			 */
+comment|/*              * Everything seems ok till now, so it's most likely a message              * dropped by PR-SCTP.              */
 name|memset
 argument_list|(
 name|out
@@ -6012,6 +6245,24 @@ argument_list|(
 name|optlen
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|authchunks
+condition|)
+block|{
+name|BIOerr
+argument_list|(
+name|BIO_F_DGRAM_SCTP_READ
+argument_list|,
+name|ERR_R_MALLOC_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 name|memset
 argument_list|(
 name|authchunks
@@ -6042,13 +6293,12 @@ operator|&
 name|optlen
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
+if|if
+condition|(
 name|ii
 operator|>=
 literal|0
-argument_list|)
-expr_stmt|;
+condition|)
 for|for
 control|(
 name|p
@@ -6291,7 +6541,7 @@ directive|endif
 name|clear_socket_error
 argument_list|()
 expr_stmt|;
-comment|/* If we're send anything else than application data, 	 * disable all user parameters and flags. 	 */
+comment|/*      * If we're send anything else than application data, disable all user      * parameters and flags.      */
 if|if
 condition|(
 name|in
@@ -6333,7 +6583,7 @@ operator|&
 name|handshake_sinfo
 expr_stmt|;
 block|}
-comment|/* If we have to send a shutdown alert message and the 	 * socket is not dry yet, we have to save it and send it 	 * as soon as the socket gets dry. 	 */
+comment|/*      * If we have to send a shutdown alert message and the socket is not dry      * yet, we have to save it and send it as soon as the socket gets dry.      */
 if|if
 condition|(
 name|data
@@ -6347,6 +6597,10 @@ name|b
 argument_list|)
 condition|)
 block|{
+name|char
+modifier|*
+name|tmp
+decl_stmt|;
 name|data
 operator|->
 name|saved_message
@@ -6355,13 +6609,47 @@ name|bio
 operator|=
 name|b
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|tmp
+operator|=
+name|OPENSSL_malloc
+argument_list|(
+name|inl
+argument_list|)
+operator|)
+condition|)
+block|{
+name|BIOerr
+argument_list|(
+name|BIO_F_DGRAM_SCTP_WRITE
+argument_list|,
+name|ERR_R_MALLOC_ERROR
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+if|if
+condition|(
 name|data
 operator|->
 name|saved_message
 operator|.
-name|length
-operator|=
-name|inl
+name|data
+condition|)
+name|OPENSSL_free
+argument_list|(
+name|data
+operator|->
+name|saved_message
+operator|.
+name|data
+argument_list|)
 expr_stmt|;
 name|data
 operator|->
@@ -6369,10 +6657,7 @@ name|saved_message
 operator|.
 name|data
 operator|=
-name|OPENSSL_malloc
-argument_list|(
-name|inl
-argument_list|)
+name|tmp
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -6386,6 +6671,14 @@ name|in
 argument_list|,
 name|inl
 argument_list|)
+expr_stmt|;
+name|data
+operator|->
+name|saved_message
+operator|.
+name|length
+operator|=
+name|inl
 expr_stmt|;
 return|return
 name|inl
@@ -6922,7 +7215,7 @@ block|{
 case|case
 name|BIO_CTRL_DGRAM_QUERY_MTU
 case|:
-comment|/* Set to maximum (2^14) 		 * and ignore user input to enable transport 		 * protocol fragmentation. 		 * Returns always 2^14. 		 */
+comment|/*          * Set to maximum (2^14) and ignore user input to enable transport          * protocol fragmentation. Returns always 2^14.          */
 name|data
 operator|->
 name|mtu
@@ -6939,7 +7232,7 @@ break|break;
 case|case
 name|BIO_CTRL_DGRAM_SET_MTU
 case|:
-comment|/* Set to maximum (2^14) 		 * and ignore input to enable transport 		 * protocol fragmentation. 		 * Returns always 2^14. 		 */
+comment|/*          * Set to maximum (2^14) and ignore input to enable transport          * protocol fragmentation. Returns always 2^14.          */
 name|data
 operator|->
 name|mtu
@@ -6969,7 +7262,16 @@ break|break;
 case|case
 name|BIO_CTRL_DGRAM_SET_NEXT_TIMEOUT
 case|:
-comment|/* SCTP doesn't need the DTLS timer 		 * Returns always 1. 		 */
+comment|/*          * SCTP doesn't need the DTLS timer Returns always 1.          */
+break|break;
+case|case
+name|BIO_CTRL_DGRAM_GET_MTU_OVERHEAD
+case|:
+comment|/*          * We allow transport protocol fragmentation so this is irrelevant          */
+name|ret
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 case|case
 name|BIO_CTRL_DGRAM_SCTP_SET_IN_HANDSHAKE
@@ -7020,7 +7322,7 @@ break|break;
 case|case
 name|BIO_CTRL_DGRAM_SCTP_ADD_AUTH_KEY
 case|:
-comment|/* New shared key for SCTP AUTH. 		 * Returns 0 on success, -1 otherwise. 		 */
+comment|/*          * New shared key for SCTP AUTH. Returns 0 on success, -1 otherwise.          */
 comment|/* Get active key */
 name|sockopt_len
 operator|=
@@ -7115,7 +7417,7 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|__FreeBSD__
-comment|/* This field is missing in FreeBSD 8.2 and earlier, 		 * and FreeBSD 8.3 and higher work without it. 		 */
+comment|/*          * This field is missing in FreeBSD 8.2 and earlier, and FreeBSD 8.3          * and higher work without it.          */
 name|authkey
 operator|->
 name|sca_keylength
@@ -7287,7 +7589,7 @@ operator|<
 literal|0
 condition|)
 break|break;
-comment|/* CCS has been sent, so remember that and fall through 		 * to check if we need to deactivate an old key 		 */
+comment|/*          * CCS has been sent, so remember that and fall through to check if          * we need to deactivate an old key          */
 name|data
 operator|->
 name|ccs_sent
@@ -7298,7 +7600,7 @@ case|case
 name|BIO_CTRL_DGRAM_SCTP_AUTH_CCS_RCVD
 case|:
 comment|/* Returns 0 on success, -1 otherwise. */
-comment|/* Has this command really been called or is this just a fall-through? */
+comment|/*          * Has this command really been called or is this just a          * fall-through?          */
 if|if
 condition|(
 name|cmd
@@ -7311,7 +7613,7 @@ name|ccs_rcvd
 operator|=
 literal|1
 expr_stmt|;
-comment|/* CSS has been both, received and sent, so deactivate an old key */
+comment|/*          * CSS has been both, received and sent, so deactivate an old key          */
 if|if
 condition|(
 name|data
@@ -7362,7 +7664,7 @@ operator|<
 literal|0
 condition|)
 break|break;
-comment|/* Deactivate key or delete second last key if 			 * SCTP_AUTHENTICATION_EVENT is not available. 			 */
+comment|/*              * Deactivate key or delete second last key if              * SCTP_AUTHENTICATION_EVENT is not available.              */
 name|authkeyid
 operator|.
 name|scact_keynumber
@@ -7754,7 +8056,7 @@ literal|0
 expr_stmt|;
 break|break;
 default|default:
-comment|/* Pass to default ctrl function to 		 * process SCTP unspecific commands 		 */
+comment|/*          * Pass to default ctrl function to process SCTP unspecific commands          */
 name|ret
 operator|=
 name|dgram_ctrl
@@ -9165,7 +9467,7 @@ name|defined
 argument_list|(
 name|OPENSSL_SYS_WINDOWS
 argument_list|)
-comment|/* If the socket return value (i) is -1 	 * and err is unexpectedly 0 at this point, 	 * the error code was overwritten by 	 * another system call before this error 	 * handling is called. 	 */
+comment|/*          * If the socket return value (i) is -1 and err is unexpectedly 0 at          * this point, the error code was overwritten by another system call          * before this error handling is called.          */
 endif|#
 directive|endif
 return|return

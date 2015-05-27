@@ -66,13 +66,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FRONTEND_PCHBITCODES_H
+name|LLVM_CLANG_SERIALIZATION_ASTBITCODES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FRONTEND_PCHBITCODES_H
+name|LLVM_CLANG_SERIALIZATION_ASTBITCODES_H
 end_define
 
 begin_include
@@ -121,7 +121,7 @@ specifier|const
 name|unsigned
 name|VERSION_MAJOR
 init|=
-literal|5
+literal|6
 decl_stmt|;
 comment|/// \brief AST file minor version number supported by this version of
 comment|/// Clang.
@@ -642,9 +642,6 @@ comment|/// \brief The block containing the definitions of all of the
 comment|/// types and decls used within the AST file.
 name|DECLTYPES_BLOCK_ID
 block|,
-comment|/// \brief The block containing DECL_UPDATES records.
-name|DECL_UPDATES_BLOCK_ID
-block|,
 comment|/// \brief The block containing the detailed preprocessing record.
 name|PREPROCESSOR_DETAIL_BLOCK_ID
 block|,
@@ -740,7 +737,28 @@ comment|/// \brief Record code for the preprocessor options table.
 name|PREPROCESSOR_OPTIONS
 init|=
 literal|12
-block|}
+block|,
+comment|/// \brief Record code for the module name.
+name|MODULE_NAME
+init|=
+literal|13
+block|,
+comment|/// \brief Record code for the module map file that was used to build this
+comment|/// AST file.
+name|MODULE_MAP_FILE
+init|=
+literal|14
+block|,
+comment|/// \brief Record code for the signature that identifiers this AST file.
+name|SIGNATURE
+init|=
+literal|15
+block|,
+comment|/// \brief Record code for the module build directory.
+name|MODULE_DIRECTORY
+init|=
+literal|16
+block|,     }
 enum|;
 comment|/// \brief Record types that occur within the input-files block
 comment|/// inside the control block.
@@ -820,15 +838,15 @@ name|IDENTIFIER_TABLE
 init|=
 literal|5
 block|,
-comment|/// \brief Record code for the array of external definitions.
+comment|/// \brief Record code for the array of eagerly deserialized decls.
 comment|///
-comment|/// The AST file contains a list of all of the unnamed external
-comment|/// definitions present within the parsed headers, stored as an
-comment|/// array of declaration IDs. These external definitions will be
+comment|/// The AST file contains a list of all of the declarations that should be
+comment|/// eagerly deserialized present within the parsed headers, stored as an
+comment|/// array of declaration IDs. These declarations will be
 comment|/// reported to the AST consumer after the AST file has been
 comment|/// read, since their presence can affect the semantics of the
 comment|/// program (e.g., for code generation).
-name|EXTERNAL_DEFINITIONS
+name|EAGERLY_DESERIALIZED_DECLS
 init|=
 literal|6
 block|,
@@ -1100,7 +1118,17 @@ comment|/// \brief Record code for late parsed template functions.
 name|LATE_PARSED_TEMPLATE
 init|=
 literal|50
-block|}
+block|,
+comment|/// \brief Record code for \#pragma optimize options.
+name|OPTIMIZE_PRAGMA_OPTIONS
+init|=
+literal|51
+block|,
+comment|/// \brief Record code for potentially unused local typedef names.
+name|UNUSED_LOCAL_TYPEDEF_NAME_CANDIDATES
+init|=
+literal|52
+block|,     }
 enum|;
 comment|/// \brief Record types used within a source manager block.
 enum|enum
@@ -1263,7 +1291,19 @@ comment|/// \brief Specifies a header that is private to this submodule.
 name|SUBMODULE_PRIVATE_HEADER
 init|=
 literal|13
-block|}
+block|,
+comment|/// \brief Specifies a header that is part of the module but must be
+comment|/// textually included.
+name|SUBMODULE_TEXTUAL_HEADER
+init|=
+literal|14
+block|,
+comment|/// \brief Specifies a header that is private to this submodule but
+comment|/// must be textually included.
+name|SUBMODULE_PRIVATE_TEXTUAL_HEADER
+init|=
+literal|15
+block|,     }
 enum|;
 comment|/// \brief Record types used within a comments block.
 enum|enum
@@ -1532,13 +1572,6 @@ name|NUM_PREDEF_TYPE_IDS
 init|=
 literal|100
 decl_stmt|;
-comment|/// \brief The number of allowed abbreviations in bits
-specifier|const
-name|unsigned
-name|NUM_ALLOWED_ABBREVS_SIZE
-init|=
-literal|4
-decl_stmt|;
 comment|/// \brief Record codes for each kind of type.
 comment|///
 comment|/// These constants describe the type records that can occur within a
@@ -1747,6 +1780,11 @@ comment|/// \brief A DecayedType record.
 name|TYPE_DECAYED
 init|=
 literal|41
+block|,
+comment|/// \brief An AdjustedType record.
+name|TYPE_ADJUSTED
+init|=
+literal|42
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -2450,9 +2488,6 @@ comment|// UnresolvedMemberExpr
 name|EXPR_CXX_UNRESOLVED_LOOKUP
 block|,
 comment|// UnresolvedLookupExpr
-name|EXPR_CXX_UNARY_TYPE_TRAIT
-block|,
-comment|// UnaryTypeTraitExpr
 name|EXPR_CXX_EXPRESSION_TRAIT
 block|,
 comment|// ExpressionTraitExpr
@@ -2465,9 +2500,6 @@ comment|// OpaqueValueExpr
 name|EXPR_BINARY_CONDITIONAL_OPERATOR
 block|,
 comment|// BinaryConditionalOperator
-name|EXPR_BINARY_TYPE_TRAIT
-block|,
-comment|// BinaryTypeTraitExpr
 name|EXPR_TYPE_TRAIT
 block|,
 comment|// TypeTraitExpr
@@ -2492,6 +2524,9 @@ comment|// FunctionParmPackExpr
 name|EXPR_MATERIALIZE_TEMPORARY
 block|,
 comment|// MaterializeTemporaryExpr
+name|EXPR_CXX_FOLD
+block|,
+comment|// CXXFoldExpr
 comment|// CUDA
 name|EXPR_CUDA_KERNEL_CALL
 block|,
@@ -2510,6 +2545,9 @@ comment|// CXXUuidofExpr (of expr).
 name|EXPR_CXX_UUIDOF_TYPE
 block|,
 comment|// CXXUuidofExpr (of type).
+name|STMT_SEH_LEAVE
+block|,
+comment|// SEHLeaveStmt
 name|STMT_SEH_EXCEPT
 block|,
 comment|// SEHExceptStmt
@@ -2519,8 +2557,48 @@ comment|// SEHFinallyStmt
 name|STMT_SEH_TRY
 block|,
 comment|// SEHTryStmt
-comment|// OpenMP drectives
+comment|// OpenMP directives
 name|STMT_OMP_PARALLEL_DIRECTIVE
+block|,
+name|STMT_OMP_SIMD_DIRECTIVE
+block|,
+name|STMT_OMP_FOR_DIRECTIVE
+block|,
+name|STMT_OMP_FOR_SIMD_DIRECTIVE
+block|,
+name|STMT_OMP_SECTIONS_DIRECTIVE
+block|,
+name|STMT_OMP_SECTION_DIRECTIVE
+block|,
+name|STMT_OMP_SINGLE_DIRECTIVE
+block|,
+name|STMT_OMP_MASTER_DIRECTIVE
+block|,
+name|STMT_OMP_CRITICAL_DIRECTIVE
+block|,
+name|STMT_OMP_PARALLEL_FOR_DIRECTIVE
+block|,
+name|STMT_OMP_PARALLEL_FOR_SIMD_DIRECTIVE
+block|,
+name|STMT_OMP_PARALLEL_SECTIONS_DIRECTIVE
+block|,
+name|STMT_OMP_TASK_DIRECTIVE
+block|,
+name|STMT_OMP_TASKYIELD_DIRECTIVE
+block|,
+name|STMT_OMP_BARRIER_DIRECTIVE
+block|,
+name|STMT_OMP_TASKWAIT_DIRECTIVE
+block|,
+name|STMT_OMP_FLUSH_DIRECTIVE
+block|,
+name|STMT_OMP_ORDERED_DIRECTIVE
+block|,
+name|STMT_OMP_ATOMIC_DIRECTIVE
+block|,
+name|STMT_OMP_TARGET_DIRECTIVE
+block|,
+name|STMT_OMP_TEAMS_DIRECTIVE
 block|,
 comment|// ARC
 name|EXPR_OBJC_BRIDGED_CAST

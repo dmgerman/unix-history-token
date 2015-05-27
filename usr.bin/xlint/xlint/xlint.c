@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $NetBSD: xlint.c,v 1.27 2002/01/31 19:09:33 tv Exp $ */
+comment|/* $NetBSD: xlint.c,v 1.36 2005/02/09 21:24:48 dsl Exp $ */
 end_comment
 
 begin_comment
@@ -31,7 +31,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: xlint.c,v 1.27 2002/01/31 19:09:33 tv Exp $"
+literal|"$NetBSD: xlint.c,v 1.36 2005/02/09 21:24:48 dsl Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -370,6 +370,8 @@ decl_stmt|,
 name|dflag
 decl_stmt|,
 name|Bflag
+decl_stmt|,
+name|Sflag
 decl_stmt|;
 end_decl_stmt
 
@@ -706,7 +708,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Some functions to deal with lists of strings.  * Take care that we get no surprises in case of asyncron signals.  */
+comment|/*  * Some functions to deal with lists of strings.  * Take care that we get no surprises in case of asynchronous signals.  */
 end_comment
 
 begin_function
@@ -1464,7 +1466,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: lint [-abceghprvwxzHF] [-s|-t] [-i|-nu] [-Dname[=def]]"
+literal|"usage: lint [-abceghprvwxzHFS] [-s|-t] [-i|-nu] [-Dname[=def]]"
 literal|" [-Uname] [-X<id>[,<id>]...\n"
 argument_list|)
 expr_stmt|;
@@ -1486,7 +1488,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       lint [-abceghprvwzHF] [-s|-t] -Clibrary [-Dname[=def]]\n"
+literal|"       lint [-abceghprvwzHFS] [-s|-t] -Clibrary [-Dname[=def]]\n"
 literal|" [-X<id>[,<id>]...\n"
 argument_list|)
 expr_stmt|;
@@ -1846,6 +1848,12 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|#
+directive|if
+literal|0
+block|appcstrg(&cflags, "-Wp,-$");
+endif|#
+directive|endif
 name|appcstrg
 argument_list|(
 operator|&
@@ -1957,7 +1965,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"abcd:eghil:no:prstuvwxzB:C:D:FHI:L:U:VX:"
+literal|"abcd:eghil:no:prstuvwxzB:C:D:FHI:L:M:SU:VX:"
 argument_list|)
 operator|)
 operator|!=
@@ -2246,6 +2254,29 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+literal|'S'
+case|:
+if|if
+condition|(
+name|tflag
+condition|)
+name|usage
+argument_list|()
+expr_stmt|;
+name|appcstrg
+argument_list|(
+operator|&
+name|l1flags
+argument_list|,
+literal|"-S"
+argument_list|)
+expr_stmt|;
+name|Sflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 if|#
 directive|if
 operator|!
@@ -2444,6 +2475,9 @@ literal|'D'
 case|:
 case|case
 literal|'I'
+case|:
+case|case
+literal|'M'
 case|:
 case|case
 literal|'U'

@@ -137,18 +137,17 @@ comment|///
 comment|/// For MachineFunctionPasses, calling AU.preservesCFG() indicates that
 comment|/// the pass does not modify the MachineBasicBlock CFG.
 comment|///
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|;
 name|private
 operator|:
 comment|/// createPrinterPass - Get a machine function printer pass.
-name|virtual
 name|Pass
 operator|*
 name|createPrinterPass
@@ -158,15 +157,14 @@ argument_list|,
 argument|const std::string&Banner
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|F
+argument|Function&F
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

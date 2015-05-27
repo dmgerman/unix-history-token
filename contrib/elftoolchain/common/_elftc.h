@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: _elftc.h 2922 2013-03-17 22:53:15Z kaiwang27 $  */
+comment|/*-  * Copyright (c) 2009 Joseph Koshy  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: _elftc.h 3175 2015-03-27 17:21:24Z emaste $  */
 end_comment
 
 begin_comment
@@ -75,6 +75,34 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|LIST_FOREACH_SAFE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LIST_FOREACH_SAFE
+parameter_list|(
+name|var
+parameter_list|,
+name|head
+parameter_list|,
+name|field
+parameter_list|,
+name|tvar
+parameter_list|)
+define|\
+value|for ((var) = LIST_FIRST((head));			\ 	    (var)&& ((tvar) = LIST_NEXT((var), field), 1);	\ 	    (var) = (tvar))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|SLIST_FOREACH_SAFE
 end_ifndef
 
@@ -92,7 +120,7 @@ parameter_list|,
 name|tvar
 parameter_list|)
 define|\
-value|for ((var) = SLIST_FIRST((head));				\ 	    (var)&& ((tvar) = SLIST_NEXT((var), field), 1);		\ 	    (var) = (tvar))
+value|for ((var) = SLIST_FIRST((head));			\ 	    (var)&& ((tvar) = SLIST_NEXT((var), field), 1);	\ 	    (var) = (tvar))
 end_define
 
 begin_endif
@@ -632,7 +660,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__linux__
+name|__APPLE__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__GLIBC__
 argument_list|)
 operator|||
 name|defined
@@ -640,9 +673,10 @@ argument_list|(
 name|__GNU__
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
-name|__GLIBC__
+name|__linux__
 argument_list|)
 end_if
 
@@ -861,6 +895,11 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|__APPLE__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
 name|__DragonFly__
 argument_list|)
 operator|||
@@ -869,12 +908,12 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|__minix
 argument_list|)
 operator|||
-expr|\
 name|defined
 argument_list|(
 name|__NetBSD__
@@ -911,6 +950,11 @@ name|defined
 argument_list|(
 name|__GLIBC__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
 end_if
 
 begin_comment
@@ -940,7 +984,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GLIBC__ */
+comment|/* __GLIBC__ || __linux__ */
 end_comment
 
 begin_if
@@ -989,6 +1033,72 @@ end_comment
 
 begin_comment
 comment|/**  ** Per-OS configuration.  **/
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<machine/endian.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|roundup2
+value|roundup
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELFTC_BYTE_ORDER
+value|_BYTE_ORDER
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELFTC_BYTE_ORDER_LITTLE_ENDIAN
+value|_LITTLE_ENDIAN
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELFTC_BYTE_ORDER_BIG_ENDIAN
+value|_BIG_ENDIAN
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELFTC_HAVE_MMAP
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ELFTC_HAVE_STRMODE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __APPLE__ */
 end_comment
 
 begin_if
@@ -1051,6 +1161,11 @@ directive|if
 name|defined
 argument_list|(
 name|__GLIBC__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__linux__
 argument_list|)
 end_if
 
@@ -1123,7 +1238,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __GLIBC__ */
+comment|/* __GLIBC__ || __linux__ */
 end_comment
 
 begin_if

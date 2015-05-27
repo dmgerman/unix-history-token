@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * hostapd / WMM (Wi-Fi Multimedia)  * Copyright 2002-2003, Instant802 Networks, Inc.  * Copyright 2005-2006, Devicescape Software, Inc.  * Copyright (c) 2009, Jouni Malinen<j@w1.fi>  *  * This program is free software; you can redistribute it and/or modify  * it under the terms of the GNU General Public License version 2 as  * published by the Free Software Foundation.  *  * Alternatively, this software may be distributed under the terms of BSD  * license.  *  * See README and COPYING for more details.  */
+comment|/*  * hostapd / WMM (Wi-Fi Multimedia)  * Copyright 2002-2003, Instant802 Networks, Inc.  * Copyright 2005-2006, Devicescape Software, Inc.  * Copyright (c) 2009, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -819,9 +819,11 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"wmm_send_action: send"
+name|MSG_INFO
+argument_list|,
+literal|"wmm_send_action: send failed"
 argument_list|)
 expr_stmt|;
 block|}

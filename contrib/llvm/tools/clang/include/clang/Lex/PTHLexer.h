@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_PTHLEXER_H
+name|LLVM_CLANG_LEX_PTHLEXER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_PTHLEXER_H
+name|LLVM_CLANG_LEX_PTHLEXER_H
 end_define
 
 begin_include
@@ -261,6 +261,7 @@ name|IndirectLex
 argument_list|(
 argument|Token&Result
 argument_list|)
+name|override
 block|{
 name|Lex
 argument_list|(
@@ -272,6 +273,7 @@ comment|/// the current file.
 name|SourceLocation
 name|getSourceLocation
 argument_list|()
+name|override
 block|;
 comment|/// SkipBlock - Used by Preprocessor to skip the current conditional block.
 name|bool

@@ -582,7 +582,7 @@ name|decl
 argument_list|)
 decl_stmt|;
 comment|//
-comment|// Comleters for maps
+comment|// Completers for maps
 comment|//
 name|class
 name|MapCompleter

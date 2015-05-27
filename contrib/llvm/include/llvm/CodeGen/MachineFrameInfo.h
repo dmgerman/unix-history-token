@@ -246,12 +246,6 @@ comment|// cannot alias any other memory objects.
 name|bool
 name|isSpillSlot
 decl_stmt|;
-comment|// MayNeedSP - If true the stack object triggered the creation of the stack
-comment|// protector. We should allocate this object right after the stack
-comment|// protector.
-name|bool
-name|MayNeedSP
-decl_stmt|;
 comment|/// Alloca - If this stack object is originated from an Alloca instruction
 comment|/// this value saves the original IR allocation. Can be NULL.
 specifier|const
@@ -263,6 +257,13 @@ comment|// PreAllocated - If true, the object was mapped into the local frame
 comment|// block and doesn't need additional handling for allocation beyond that.
 name|bool
 name|PreAllocated
+decl_stmt|;
+comment|// If true, an LLVM IR value might point to this object.
+comment|// Normally, spill slots and fixed-offset objects don't alias IR-accessible
+comment|// objects, but there are exceptions (on PowerPC, for example, some byval
+comment|// arguments have ABI-prescribed offsets).
+name|bool
+name|isAliased
 decl_stmt|;
 name|StackObject
 argument_list|(
@@ -276,9 +277,9 @@ argument|bool IM
 argument_list|,
 argument|bool isSS
 argument_list|,
-argument|bool NSP
-argument_list|,
 argument|const AllocaInst *Val
+argument_list|,
+argument|bool A
 argument_list|)
 block|:
 name|SPOffset
@@ -306,11 +307,6 @@ argument_list|(
 name|isSS
 argument_list|)
 operator|,
-name|MayNeedSP
-argument_list|(
-name|NSP
-argument_list|)
-operator|,
 name|Alloca
 argument_list|(
 name|Val
@@ -318,15 +314,23 @@ argument_list|)
 operator|,
 name|PreAllocated
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|isAliased
+argument_list|(
+argument|A
 argument_list|)
 block|{}
 block|}
 struct|;
-specifier|const
-name|TargetMachine
-modifier|&
-name|TM
+comment|/// StackAlignment - The alignment of the stack.
+name|unsigned
+name|StackAlignment
+decl_stmt|;
+comment|/// StackRealignable - Can the stack be realigned.
+name|bool
+name|StackRealignable
 decl_stmt|;
 comment|/// Objects - The list of stack objects allocated...
 comment|///
@@ -360,6 +364,16 @@ comment|/// ReturnAddressTaken - This boolean keeps track of whether there is a 
 comment|/// to builtin \@llvm.returnaddress.
 name|bool
 name|ReturnAddressTaken
+decl_stmt|;
+comment|/// HasStackMap - This boolean keeps track of whether there is a call
+comment|/// to builtin \@llvm.experimental.stackmap.
+name|bool
+name|HasStackMap
+decl_stmt|;
+comment|/// HasPatchPoint - This boolean keeps track of whether there is a call
+comment|/// to builtin \@llvm.experimental.patchpoint.
+name|bool
+name|HasPatchPoint
 decl_stmt|;
 comment|/// StackSize - The prolog/epilog code inserter calculates the final stack
 comment|/// offsets for all of the fixed size objects, updating the Objects list
@@ -476,26 +490,34 @@ comment|/// pointer.
 name|bool
 name|HasInlineAsmWithSPAdjust
 decl_stmt|;
-specifier|const
-name|TargetFrameLowering
-operator|*
-name|getFrameLowering
-argument_list|()
-specifier|const
-expr_stmt|;
+comment|/// True if the function contains a call to the llvm.vastart intrinsic.
+name|bool
+name|HasVAStart
+decl_stmt|;
+comment|/// True if this is a varargs function that contains a musttail call.
+name|bool
+name|HasMustTailInVarArgFunc
+decl_stmt|;
 name|public
 label|:
 name|explicit
 name|MachineFrameInfo
 argument_list|(
-argument|const TargetMachine&TM
+argument|unsigned StackAlign
+argument_list|,
+argument|bool isStackRealign
 argument_list|,
 argument|bool RealignOpt
 argument_list|)
 block|:
-name|TM
+name|StackAlignment
 argument_list|(
-name|TM
+name|StackAlign
+argument_list|)
+operator|,
+name|StackRealignable
+argument_list|(
+name|isStackRealign
 argument_list|)
 operator|,
 name|RealignOption
@@ -522,6 +544,14 @@ operator|=
 name|false
 block|;
 name|ReturnAddressTaken
+operator|=
+name|false
+block|;
+name|HasStackMap
+operator|=
+name|false
+block|;
+name|HasPatchPoint
 operator|=
 name|false
 block|;
@@ -564,6 +594,14 @@ operator|=
 name|false
 block|;
 name|HasInlineAsmWithSPAdjust
+operator|=
+name|false
+block|;
+name|HasVAStart
+operator|=
+name|false
+block|;
+name|HasMustTailInVarArgFunc
 operator|=
 name|false
 block|;   }
@@ -687,6 +725,58 @@ name|s
 parameter_list|)
 block|{
 name|ReturnAddressTaken
+operator|=
+name|s
+expr_stmt|;
+block|}
+comment|/// hasStackMap - This method may be called any time after instruction
+comment|/// selection is complete to determine if there is a call to builtin
+comment|/// \@llvm.experimental.stackmap.
+name|bool
+name|hasStackMap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasStackMap
+return|;
+block|}
+name|void
+name|setHasStackMap
+parameter_list|(
+name|bool
+name|s
+init|=
+name|true
+parameter_list|)
+block|{
+name|HasStackMap
+operator|=
+name|s
+expr_stmt|;
+block|}
+comment|/// hasPatchPoint - This method may be called any time after instruction
+comment|/// selection is complete to determine if there is a call to builtin
+comment|/// \@llvm.experimental.patchpoint.
+name|bool
+name|hasPatchPoint
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasPatchPoint
+return|;
+block|}
+name|void
+name|setHasPatchPoint
+parameter_list|(
+name|bool
+name|s
+init|=
+name|true
+parameter_list|)
+block|{
+name|HasPatchPoint
 operator|=
 name|s
 expr_stmt|;
@@ -1153,44 +1243,6 @@ operator|.
 name|Alloca
 return|;
 block|}
-comment|/// NeedsStackProtector - Returns true if the object may need stack
-comment|/// protectors.
-name|bool
-name|MayNeedStackProtector
-argument_list|(
-name|int
-name|ObjectIdx
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|unsigned
-argument_list|(
-name|ObjectIdx
-operator|+
-name|NumFixedObjects
-argument_list|)
-operator|<
-name|Objects
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Invalid Object Idx!"
-argument_list|)
-expr_stmt|;
-return|return
-name|Objects
-index|[
-name|ObjectIdx
-operator|+
-name|NumFixedObjects
-index|]
-operator|.
-name|MayNeedSP
-return|;
-block|}
 comment|/// getObjectOffset - Return the assigned stack offset of the specified object
 comment|/// from the incoming stack pointer.
 comment|///
@@ -1447,6 +1499,50 @@ operator|=
 name|B
 expr_stmt|;
 block|}
+comment|/// Returns true if the function calls the llvm.va_start intrinsic.
+name|bool
+name|hasVAStart
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVAStart
+return|;
+block|}
+name|void
+name|setHasVAStart
+parameter_list|(
+name|bool
+name|B
+parameter_list|)
+block|{
+name|HasVAStart
+operator|=
+name|B
+expr_stmt|;
+block|}
+comment|/// Returns true if the function is variadic and contains a musttail call.
+name|bool
+name|hasMustTailInVarArgFunc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMustTailInVarArgFunc
+return|;
+block|}
+name|void
+name|setHasMustTailInVarArgFunc
+parameter_list|(
+name|bool
+name|B
+parameter_list|)
+block|{
+name|HasMustTailInVarArgFunc
+operator|=
+name|B
+expr_stmt|;
+block|}
 comment|/// getMaxCallFrameSize - Return the maximum size of a call frame that must be
 comment|/// allocated for an outgoing function call.  This is only available if
 comment|/// CallFrameSetup/Destroy pseudo instructions are used by the target, and
@@ -1475,8 +1571,8 @@ expr_stmt|;
 block|}
 comment|/// CreateFixedObject - Create a new object at a fixed location on the stack.
 comment|/// All fixed objects should be created before other objects are created for
-comment|/// efficiency. By default, fixed objects are immutable. This returns an
-comment|/// index with a negative value.
+comment|/// efficiency. By default, fixed objects are not pointed to by LLVM IR
+comment|/// values. This returns an index with a negative value.
 comment|///
 name|int
 name|CreateFixedObject
@@ -1489,6 +1585,32 @@ name|SPOffset
 parameter_list|,
 name|bool
 name|Immutable
+parameter_list|,
+name|bool
+name|isAliased
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// CreateFixedSpillStackObject - Create a spill slot at a fixed location
+comment|/// on the stack.  Returns an index with a negative value.
+name|int
+name|CreateFixedSpillStackObject
+parameter_list|(
+name|uint64_t
+name|Size
+parameter_list|,
+name|int64_t
+name|SPOffset
+parameter_list|)
+function_decl|;
+comment|/// Allocates memory at a fixed, target-specific offset from the frame
+comment|/// pointer. Marks the function as having its frame address taken.
+name|int
+name|CreateFrameAllocation
+parameter_list|(
+name|uint64_t
+name|Size
 parameter_list|)
 function_decl|;
 comment|/// isFixedObjectIndex - Returns true if the specified index corresponds to a
@@ -1515,6 +1637,44 @@ name|int
 operator|)
 name|NumFixedObjects
 operator|)
+return|;
+block|}
+comment|/// isAliasedObjectIndex - Returns true if the specified index corresponds
+comment|/// to an object that might be pointed to by an LLVM IR value.
+name|bool
+name|isAliasedObjectIndex
+argument_list|(
+name|int
+name|ObjectIdx
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|unsigned
+argument_list|(
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+argument_list|)
+operator|<
+name|Objects
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid Object Idx!"
+argument_list|)
+expr_stmt|;
+return|return
+name|Objects
+index|[
+name|ObjectIdx
+operator|+
+name|NumFixedObjects
+index|]
+operator|.
+name|isAliased
 return|;
 block|}
 comment|/// isImmutableObjectIndex - Returns true if the specified index corresponds
@@ -1649,17 +1809,12 @@ parameter_list|,
 name|bool
 name|isSS
 parameter_list|,
-name|bool
-name|MayNeedSP
-init|=
-name|false
-parameter_list|,
 specifier|const
 name|AllocaInst
 modifier|*
 name|Alloca
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// CreateSpillStackObject - Create a new statically sized stack object that

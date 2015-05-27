@@ -550,7 +550,7 @@ argument_list|()
 operator|:
 name|lie
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|,
 literal|0
 argument_list|)
@@ -577,7 +577,7 @@ operator|.
 name|getPointer
 argument_list|()
 operator|!=
-literal|0
+name|nullptr
 operator|&&
 literal|"Attempt to construct index with 0 pointer."
 argument_list|)
@@ -1403,27 +1403,25 @@ name|getPassRegistry
 argument_list|()
 argument_list|)
 block|;     }
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&au
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|releaseMemory
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
-name|fn
+argument|MachineFunction&fn
 argument_list|)
+name|override
 block|;
 comment|/// Dump the indexes.
 name|void
@@ -1582,7 +1580,7 @@ operator|->
 name|getInstr
 argument_list|()
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// Returns the next non-null index, if one exists.
@@ -2241,7 +2239,9 @@ condition|)
 block|{
 name|itr
 operator|=
-name|prior
+name|std
+operator|::
+name|prev
 argument_list|(
 name|itr
 argument_list|)
@@ -2262,11 +2262,13 @@ operator|<
 name|end
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 name|itr
 operator|=
-name|prior
+name|std
+operator|::
+name|prev
 argument_list|(
 name|itr
 argument_list|)
@@ -2285,7 +2287,7 @@ operator|->
 name|second
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// Insert the given machine instruction into the mapping. Returns the
@@ -2354,7 +2356,7 @@ operator|->
 name|getParent
 argument_list|()
 operator|!=
-literal|0
+name|nullptr
 operator|&&
 literal|"Instr must be added to function."
 argument_list|)
@@ -2385,7 +2387,9 @@ argument_list|()
 expr_stmt|;
 name|prevItr
 operator|=
-name|prior
+name|std
+operator|::
+name|prev
 argument_list|(
 name|nextItr
 argument_list|)
@@ -2406,7 +2410,7 @@ argument_list|()
 expr_stmt|;
 name|nextItr
 operator|=
-name|llvm
+name|std
 operator|::
 name|next
 argument_list|(
@@ -2572,7 +2576,7 @@ name|miEntry
 operator|->
 name|setInstr
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|mi2iMap
@@ -2692,7 +2696,7 @@ operator|::
 name|iterator
 name|nextMBB
 operator|=
-name|llvm
+name|std
 operator|::
 name|next
 argument_list|(
@@ -2708,13 +2712,13 @@ name|IndexListEntry
 modifier|*
 name|startEntry
 init|=
-literal|0
+name|nullptr
 decl_stmt|;
 name|IndexListEntry
 modifier|*
 name|endEntry
 init|=
-literal|0
+name|nullptr
 decl_stmt|;
 name|IndexList
 operator|::
@@ -2746,7 +2750,7 @@ name|endEntry
 operator|=
 name|createEntry
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 literal|0
 argument_list|)
@@ -2769,7 +2773,7 @@ name|startEntry
 operator|=
 name|createEntry
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 literal|0
 argument_list|)

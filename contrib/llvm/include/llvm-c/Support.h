@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm-c/Core.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_ifdef
@@ -33,6 +33,19 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/**  * @defgroup LLVMCSupportTypes Types and Enumerations  *  * @{  */
+typedef|typedef
+name|int
+name|LLVMBool
+typedef|;
+comment|/**  * Used to pass regions of memory through LLVM interfaces.  *  * @see llvm::MemoryBuffer  */
+typedef|typedef
+name|struct
+name|LLVMOpaqueMemoryBuffer
+modifier|*
+name|LLVMMemoryBufferRef
+typedef|;
+comment|/**  * @}  */
 comment|/**  * This function permanently loads the dynamic library at the given path.  * It is safe to call this function multiple times for the same library.  *  * @see sys::DynamicLibrary::LoadLibraryPermanently()   */
 name|LLVMBool
 name|LLVMLoadLibraryPermanently
@@ -41,6 +54,26 @@ specifier|const
 name|char
 modifier|*
 name|Filename
+parameter_list|)
+function_decl|;
+comment|/**  * This function parses the given arguments using the LLVM command line parser.  * Note that the only stable thing about this function is its signature; you  * cannot rely on any particular set of command line arguments being interpreted  * the same way across LLVM versions.  *  * @see llvm::cl::ParseCommandLineOptions()  */
+name|void
+name|LLVMParseCommandLineOptions
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+specifier|const
+modifier|*
+name|argv
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Overview
 parameter_list|)
 function_decl|;
 ifdef|#

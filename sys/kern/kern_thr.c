@@ -874,11 +874,14 @@ block|}
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
-name|td
-operator|->
-name|td_proc
+name|p
 argument_list|)
 expr_stmt|;
 name|error
@@ -894,9 +897,7 @@ argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
-name|td
-operator|->
-name|td_proc
+name|p
 argument_list|)
 expr_stmt|;
 if|if
@@ -910,6 +911,7 @@ operator|(
 name|EPROCLIM
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 comment|/* Initialize our td */
@@ -1154,14 +1156,10 @@ block|}
 block|}
 name|PROC_LOCK
 argument_list|(
-name|td
-operator|->
-name|td_proc
+name|p
 argument_list|)
 expr_stmt|;
-name|td
-operator|->
-name|td_proc
+name|p
 operator|->
 name|p_flag
 operator||=
@@ -1311,6 +1309,11 @@ label|:
 ifdef|#
 directive|ifdef
 name|RACCT
+if|if
+condition|(
+name|racct_enable
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1330,6 +1333,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 return|return
@@ -1502,6 +1506,11 @@ name|tidhash_lock
 argument_list|)
 expr_stmt|;
 name|tdsigcleanup
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+name|umtx_thread_exit
 argument_list|(
 name|td
 argument_list|)

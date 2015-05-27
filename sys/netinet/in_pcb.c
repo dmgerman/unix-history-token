@@ -193,6 +193,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/rss_config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/vnet.h>
 end_include
 
@@ -220,12 +226,6 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_pcb.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<netinet/in_rss.h>
 end_include
 
 begin_include
@@ -9826,7 +9826,7 @@ argument_list|(
 operator|&
 name|ipport_tick_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset

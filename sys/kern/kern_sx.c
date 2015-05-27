@@ -854,6 +854,8 @@ operator||
 name|SX_NOPROFILE
 operator||
 name|SX_NOADAPTIVE
+operator||
+name|SX_NEW
 operator|)
 operator|)
 operator|==
@@ -938,6 +940,16 @@ condition|)
 name|flags
 operator||=
 name|LO_QUIET
+expr_stmt|;
+if|if
+condition|(
+name|opts
+operator|&
+name|SX_NEW
+condition|)
+name|flags
+operator||=
+name|LO_NEW
 expr_stmt|;
 name|flags
 operator||=

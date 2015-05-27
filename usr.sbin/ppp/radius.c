@@ -7709,6 +7709,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|*
 name|bundle
 operator|->
 name|radius

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * pcap-sita.h: Packet capture interface for SITA WAN devices  *  * Authors: Fulko Hew (fulko.hew@sita.aero) (+1 905 6815570);  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-sita.h  */
+comment|/*  * pcap-sita.h: Packet capture interface for SITA WAN devices  *  * Authors: Fulko Hew (fulko.hew@sita.aero) (+1 905 6815570);  */
 end_comment
 
 begin_function_decl

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_BUGREPORTERVISITOR
+name|LLVM_CLANG_STATICANALYZER_CORE_BUGREPORTER_BUGREPORTERVISITOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_BUGREPORTERVISITOR
+name|LLVM_CLANG_STATICANALYZER_CORE_BUGREPORTER_BUGREPORTERVISITOR_H
 end_define
 
 begin_include
@@ -129,8 +129,12 @@ comment|/// (Warning: if you have a deep subclass of BugReporterVisitorImpl, the
 comment|/// default implementation of clone() will NOT do the right thing, and you
 comment|/// will have to provide your own implementation.)
 name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|BugReporterVisitor
-operator|*
+operator|>
 name|clone
 argument_list|()
 specifier|const
@@ -175,8 +179,12 @@ comment|/// If returns NULL the default implementation will be used.
 comment|/// Also note that at most one visitor of a BugReport should generate a
 comment|/// non-NULL end of path diagnostic piece.
 name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|getEndPath
 argument_list|(
 name|BugReporterContext
@@ -205,8 +213,12 @@ literal|0
 block|;
 comment|/// \brief Generates the default final diagnostic piece.
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|getDefaultEndPath
 argument_list|(
 name|BugReporterContext
@@ -222,7 +234,7 @@ name|BugReport
 operator|&
 name|BR
 argument_list|)
-block|;  }
+block|; }
 decl_stmt|;
 comment|/// This class provides a convenience implementation for clone() using the
 comment|/// Curiously-Recurring Template Pattern. If you are implementing a custom
@@ -243,17 +255,25 @@ operator|:
 name|public
 name|BugReporterVisitor
 block|{
-name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|BugReporterVisitor
-operator|*
+operator|>
 name|clone
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
-name|new
+name|llvm
+operator|::
+name|make_unique
+operator|<
 name|DERIVED
-argument_list|(
+operator|>
+operator|(
 operator|*
 name|static_cast
 operator|<
@@ -264,7 +284,7 @@ operator|>
 operator|(
 name|this
 operator|)
-argument_list|)
+operator|)
 return|;
 block|}
 expr|}
@@ -344,29 +364,21 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|;
 name|PathDiagnosticPiece
 operator|*
 name|VisitNode
 argument_list|(
-specifier|const
-name|ExplodedNode
-operator|*
-name|N
+argument|const ExplodedNode *N
 argument_list|,
-specifier|const
-name|ExplodedNode
-operator|*
-name|PrevN
+argument|const ExplodedNode *PrevN
 argument_list|,
-name|BugReporterContext
-operator|&
-name|BRC
+argument|BugReporterContext&BRC
 argument_list|,
-name|BugReport
-operator|&
-name|BR
+argument|BugReport&BR
 argument_list|)
+name|override
 block|; }
 block|;
 name|class
@@ -445,6 +457,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// Return the tag associated with this visitor.  This tag will be used
 comment|/// to make all PathDiagnosticPieces created by this visitor.
@@ -459,24 +472,15 @@ name|PathDiagnosticPiece
 operator|*
 name|VisitNode
 argument_list|(
-specifier|const
-name|ExplodedNode
-operator|*
-name|N
+argument|const ExplodedNode *N
 argument_list|,
-specifier|const
-name|ExplodedNode
-operator|*
-name|PrevN
+argument|const ExplodedNode *PrevN
 argument_list|,
-name|BugReporterContext
-operator|&
-name|BRC
+argument|BugReporterContext&BRC
 argument_list|,
-name|BugReport
-operator|&
-name|BR
+argument|BugReport&BR
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -508,6 +512,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|{
 specifier|static
 name|int
@@ -527,24 +532,15 @@ name|PathDiagnosticPiece
 operator|*
 name|VisitNode
 argument_list|(
-specifier|const
-name|ExplodedNode
-operator|*
-name|N
+argument|const ExplodedNode *N
 argument_list|,
-specifier|const
-name|ExplodedNode
-operator|*
-name|PrevN
+argument|const ExplodedNode *PrevN
 argument_list|,
-name|BugReporterContext
-operator|&
-name|BRC
+argument|BugReporterContext&BRC
 argument_list|,
-name|BugReport
-operator|&
-name|BR
+argument|BugReport&BR
 argument_list|)
+name|override
 block|;
 comment|/// If the statement is a message send expression with nil receiver, returns
 comment|/// the receiver expression. Returns NULL otherwise.
@@ -584,6 +580,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|{
 specifier|static
 name|int
@@ -608,29 +605,19 @@ operator|*
 name|getTag
 argument_list|()
 block|;
-name|virtual
 name|PathDiagnosticPiece
 operator|*
 name|VisitNode
 argument_list|(
-specifier|const
-name|ExplodedNode
-operator|*
-name|N
+argument|const ExplodedNode *N
 argument_list|,
-specifier|const
-name|ExplodedNode
-operator|*
-name|Prev
+argument|const ExplodedNode *Prev
 argument_list|,
-name|BugReporterContext
-operator|&
-name|BRC
+argument|BugReporterContext&BRC
 argument_list|,
-name|BugReport
-operator|&
-name|BR
+argument|BugReport&BR
 argument_list|)
+name|override
 block|;
 name|PathDiagnosticPiece
 operator|*
@@ -832,6 +819,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|{
 name|ID
 operator|.
@@ -841,7 +829,6 @@ name|getTag
 argument_list|()
 argument_list|)
 block|;   }
-name|virtual
 name|PathDiagnosticPiece
 operator|*
 name|VisitNode
@@ -854,29 +841,27 @@ argument|BugReporterContext&BRC
 argument_list|,
 argument|BugReport&BR
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|PathDiagnosticPiece
-operator|*
+operator|>
 name|getEndPath
 argument_list|(
-name|BugReporterContext
-operator|&
-name|BRC
+argument|BugReporterContext&BRC
 argument_list|,
-specifier|const
-name|ExplodedNode
-operator|*
-name|N
+argument|const ExplodedNode *N
 argument_list|,
-name|BugReport
-operator|&
-name|BR
+argument|BugReport&BR
 argument_list|)
+name|override
 block|; }
 block|;
 comment|/// \brief When a region containing undefined value or '0' value is passed
@@ -914,13 +899,13 @@ argument_list|(
 argument|InR
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|{
 specifier|static
 name|int
@@ -947,24 +932,15 @@ name|PathDiagnosticPiece
 operator|*
 name|VisitNode
 argument_list|(
-specifier|const
-name|ExplodedNode
-operator|*
-name|N
+argument|const ExplodedNode *N
 argument_list|,
-specifier|const
-name|ExplodedNode
-operator|*
-name|PrevN
+argument|const ExplodedNode *PrevN
 argument_list|,
-name|BugReporterContext
-operator|&
-name|BRC
+argument|BugReporterContext&BRC
 argument_list|,
-name|BugReport
-operator|&
-name|BR
+argument|BugReport&BR
 argument_list|)
+name|override
 block|; }
 block|;
 name|class
@@ -1008,6 +984,7 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// Return the tag associated with this visitor.  This tag will be used
 comment|/// to make all PathDiagnosticPieces created by this visitor.
@@ -1022,24 +999,15 @@ name|PathDiagnosticPiece
 operator|*
 name|VisitNode
 argument_list|(
-specifier|const
-name|ExplodedNode
-operator|*
-name|Succ
+argument|const ExplodedNode *Succ
 argument_list|,
-specifier|const
-name|ExplodedNode
-operator|*
-name|Pred
+argument|const ExplodedNode *Pred
 argument_list|,
-name|BugReporterContext
-operator|&
-name|BRC
+argument|BugReporterContext&BRC
 argument_list|,
-name|BugReport
-operator|&
-name|BR
+argument|BugReport&BR
 argument_list|)
+name|override
 block|; }
 block|;
 name|namespace
@@ -1131,10 +1099,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|//LLVM_CLANG_GR__BUGREPORTERVISITOR
-end_comment
 
 end_unit
 

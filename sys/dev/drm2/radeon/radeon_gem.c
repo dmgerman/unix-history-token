@@ -89,7 +89,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 if|if
 condition|(
 name|robj
@@ -114,7 +114,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 name|radeon_bo_unref
 argument_list|(
 operator|&
@@ -265,7 +265,7 @@ condition|(
 name|r
 operator|!=
 operator|-
-name|ERESTART
+name|ERESTARTSYS
 condition|)
 block|{
 if|if
@@ -1158,6 +1158,18 @@ condition|(
 name|r
 condition|)
 block|{
+if|if
+condition|(
+name|r
+operator|==
+operator|-
+name|ERESTARTSYS
+condition|)
+name|r
+operator|=
+operator|-
+name|EINTR
+expr_stmt|;
 name|sx_sunlock
 argument_list|(
 operator|&
@@ -1179,10 +1191,6 @@ return|return
 name|r
 return|;
 block|}
-name|handle
-operator|=
-literal|0
-expr_stmt|;
 name|r
 operator|=
 name|drm_gem_handle_create
@@ -1790,6 +1798,18 @@ argument_list|(
 name|gobj
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+operator|-
+name|ERESTARTSYS
+condition|)
+name|r
+operator|=
+operator|-
+name|EINTR
+expr_stmt|;
 name|r
 operator|=
 name|radeon_gem_handle_lockup
@@ -2161,7 +2181,7 @@ name|dev_err
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"offset 0x%lX is in reserved area 0x%X\n"
 argument_list|,
@@ -2209,7 +2229,7 @@ name|dev_err
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"invalid flags 0x%08X vs 0x%08X\n"
 argument_list|,
@@ -2247,7 +2267,7 @@ name|dev_err
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"only supported snooped mapping for now\n"
 argument_list|)
@@ -2282,7 +2302,7 @@ name|dev_err
 argument_list|(
 name|dev
 operator|->
-name|device
+name|dev
 argument_list|,
 literal|"unsupported operation %d\n"
 argument_list|,
@@ -2638,10 +2658,6 @@ return|return
 operator|-
 name|ENOMEM
 return|;
-name|handle
-operator|=
-literal|0
-expr_stmt|;
 name|r
 operator|=
 name|drm_gem_handle_create

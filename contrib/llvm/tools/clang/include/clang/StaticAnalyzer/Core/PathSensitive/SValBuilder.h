@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_SVALBUILDER
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_SVALBUILDER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_SVALBUILDER
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_SVALBUILDER_H
 end_define
 
 begin_include
@@ -359,7 +359,7 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// Create a new value which represents a binary expression with two non
+comment|/// Create a new value which represents a binary expression with two non-
 comment|/// location operands.
 name|virtual
 name|SVal
@@ -412,7 +412,7 @@ init|=
 literal|0
 decl_stmt|;
 comment|/// Create a new value which represents a binary expression with a memory
-comment|/// location and non location operands. For example, this would be used to
+comment|/// location and non-location operands. For example, this would be used to
 comment|/// evaluate a pointer arithmetic operation.
 name|virtual
 name|SVal
@@ -658,7 +658,7 @@ name|void
 modifier|*
 name|symbolTag
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -701,7 +701,7 @@ name|void
 modifier|*
 name|symbolTag
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return

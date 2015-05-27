@@ -108,12 +108,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/LiveIntervalUnion.h"
 end_include
 
@@ -181,11 +175,14 @@ name|Array
 name|Matrix
 block|;
 comment|// Cached queries per register unit.
-name|OwningArrayPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|LiveIntervalUnion
 operator|::
 name|Query
+index|[]
 operator|>
 name|Queries
 block|;
@@ -200,26 +197,25 @@ name|BitVector
 name|RegMaskUsable
 block|;
 comment|// MachineFunctionPass boilerplate.
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
+argument|MachineFunction&
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|releaseMemory
 argument_list|()
+name|override
 block|;
 name|public
 operator|:

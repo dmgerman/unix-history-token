@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  This file is part of DOS-libpcap  *  Ported to DOS/DOSX by G. Vanem<gvanem@broadpark.no>  *  *  pcap-dos.c: Interface to PKTDRVR, NDIS2 and 32-bit pmode  *              network drivers.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-dos.c,v 1.7 2008-04-22 17:16:30 guy Exp $ (LBL)  */
+comment|/*  *  This file is part of DOS-libpcap  *  Ported to DOS/DOSX by G. Vanem<gvanem@broadpark.no>  *  *  pcap-dos.c: Interface to PKTDRVR, NDIS2 and 32-bit pmode  *              network drivers.  */
 end_comment
 
 begin_include
@@ -885,10 +885,36 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Private data for capturing on MS-DOS.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pcap_dos
+block|{
+name|void
+function_decl|(
+modifier|*
+name|wait_proc
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/*          call proc while waiting */
+name|struct
+name|pcap_stat
+name|stat
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function
 name|pcap_t
 modifier|*
-name|pcap_create
+name|pcap_create_interface
 parameter_list|(
 specifier|const
 name|char
@@ -911,6 +937,12 @@ argument_list|(
 name|device
 argument_list|,
 name|ebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcap_dos
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -952,6 +984,15 @@ modifier|*
 name|pcap
 parameter_list|)
 block|{
+name|struct
+name|pcap_dos
+modifier|*
+name|pcapd
+init|=
+name|pcap
+operator|->
+name|priv
+decl_stmt|;
 if|if
 condition|(
 name|pcap
@@ -1199,6 +1240,15 @@ name|data
 parameter_list|)
 block|{
 name|struct
+name|pcap_dos
+modifier|*
+name|pd
+init|=
+name|p
+operator|->
+name|priv
+decl_stmt|;
+name|struct
 name|pcap_pkthdr
 name|pcap
 decl_stmt|;
@@ -1207,6 +1257,12 @@ name|timeval
 name|now
 decl_stmt|,
 name|expiry
+init|=
+block|{
+literal|0
+block|,
+literal|0
+block|}
 decl_stmt|;
 name|BYTE
 modifier|*
@@ -1221,7 +1277,7 @@ if|if
 condition|(
 name|p
 operator|->
-name|md
+name|opt
 operator|.
 name|timeout
 operator|>
@@ -1248,7 +1304,7 @@ literal|1000UL
 operator|*
 name|p
 operator|->
-name|md
+name|opt
 operator|.
 name|timeout
 expr_stmt|;
@@ -1529,12 +1585,12 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* If not to wait for a packet or pcap_close() called from      * e.g. SIGINT handler, exit loop now.      */
+comment|/* If not to wait for a packet or pcap_cleanup_dos() called from      * e.g. SIGINT handler, exit loop now.      */
 if|if
 condition|(
 name|p
 operator|->
-name|md
+name|opt
 operator|.
 name|timeout
 operator|<=
@@ -1606,10 +1662,8 @@ literal|0
 condition|)
 comment|/* receive error */
 block|{
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|stat
 operator|.
 name|ps_drop
@@ -1670,6 +1724,15 @@ modifier|*
 name|data
 parameter_list|)
 block|{
+name|struct
+name|pcap_dos
+modifier|*
+name|pd
+init|=
+name|p
+operator|->
+name|priv
+decl_stmt|;
 name|int
 name|rc
 decl_stmt|,
@@ -1683,11 +1746,10 @@ name|num
 operator|<=
 name|cnt
 operator|||
-operator|(
+name|PACKET_COUNT_IS_UNLIMITED
+argument_list|(
 name|cnt
-operator|<
-literal|0
-operator|)
+argument_list|)
 condition|)
 block|{
 if|if
@@ -1767,6 +1829,11 @@ name|struct
 name|net_device_stats
 modifier|*
 name|stats
+decl_stmt|;
+name|struct
+name|pcap_dos
+modifier|*
+name|pd
 decl_stmt|;
 name|struct
 name|device
@@ -1849,10 +1916,14 @@ block|}
 name|FLUSHK
 argument_list|()
 expr_stmt|;
+name|pd
+operator|=
 name|p
 operator|->
-name|md
-operator|.
+name|priv
+expr_stmt|;
+name|pd
+operator|->
 name|stat
 operator|.
 name|ps_recv
@@ -1861,10 +1932,8 @@ name|stats
 operator|->
 name|rx_packets
 expr_stmt|;
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|stat
 operator|.
 name|ps_drop
@@ -1873,10 +1942,8 @@ name|stats
 operator|->
 name|rx_missed_errors
 expr_stmt|;
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|stat
 operator|.
 name|ps_ifdrop
@@ -1898,10 +1965,8 @@ condition|)
 operator|*
 name|ps
 operator|=
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|stat
 expr_stmt|;
 return|return
@@ -2134,6 +2199,11 @@ modifier|*
 name|p
 parameter_list|)
 block|{
+name|struct
+name|pcap_dos
+modifier|*
+name|pd
+decl_stmt|;
 if|if
 condition|(
 name|p
@@ -2142,6 +2212,12 @@ operator|!
 name|exc_occured
 condition|)
 block|{
+name|pd
+operator|=
+name|p
+operator|->
+name|priv
+expr_stmt|;
 if|if
 condition|(
 name|pcap_stats
@@ -2153,10 +2229,8 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|p
+name|pd
 operator|->
-name|md
-operator|.
 name|stat
 operator|.
 name|ps_drop
@@ -2883,12 +2957,23 @@ name|int
 name|wait
 parameter_list|)
 block|{
+name|struct
+name|pcap_dos
+modifier|*
+name|pd
+decl_stmt|;
 if|if
 condition|(
 name|p
 condition|)
 block|{
+name|pd
+operator|=
 name|p
+operator|->
+name|priv
+expr_stmt|;
+name|pd
 operator|->
 name|wait_proc
 operator|=
@@ -2896,7 +2981,7 @@ name|yield
 expr_stmt|;
 name|p
 operator|->
-name|md
+name|opt
 operator|.
 name|timeout
 operator|=

@@ -369,7 +369,7 @@ begin_define
 define|#
 directive|define
 name|ATPDPHASHSIZE
-value|16
+value|32
 end_define
 
 begin_define
@@ -679,6 +679,9 @@ argument|tstate
 argument_list|)
 name|next
 expr_stmt|;
+name|lun_id_t
+name|ts_lun
+decl_stmt|;
 name|struct
 name|cam_path
 modifier|*
@@ -1471,7 +1474,7 @@ name|ISP_LOCK
 parameter_list|(
 name|isp
 parameter_list|)
-value|mtx_lock(&isp->isp_osinfo.lock)
+value|mtx_lock(&(isp)->isp_osinfo.lock)
 end_define
 
 begin_define
@@ -1481,7 +1484,7 @@ name|ISP_UNLOCK
 parameter_list|(
 name|isp
 parameter_list|)
-value|mtx_unlock(&isp->isp_osinfo.lock)
+value|mtx_unlock(&(isp)->isp_osinfo.lock)
 end_define
 
 begin_define
@@ -1491,7 +1494,7 @@ name|ISP_ASSERT_LOCKED
 parameter_list|(
 name|isp
 parameter_list|)
-value|mtx_assert(&isp->isp_osinfo.lock, MA_OWNED)
+value|mtx_assert(&(isp)->isp_osinfo.lock, MA_OWNED)
 end_define
 
 begin_comment
@@ -3142,6 +3145,21 @@ name|ccb_scsiio
 modifier|*
 parameter_list|,
 name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|isp_fcp_reset_crn
+parameter_list|(
+name|struct
+name|isp_fc
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

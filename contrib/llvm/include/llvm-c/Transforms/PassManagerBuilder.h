@@ -36,12 +36,6 @@ directive|ifdef
 name|__cplusplus
 end_ifdef
 
-begin_include
-include|#
-directive|include
-file|"llvm/Transforms/IPO/PassManagerBuilder.h"
-end_include
-
 begin_extern
 extern|extern
 literal|"C"

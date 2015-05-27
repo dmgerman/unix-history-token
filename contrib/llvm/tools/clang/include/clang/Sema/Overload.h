@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/AlignOf.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
 end_include
 
@@ -265,38 +271,6 @@ name|ICK_Num_Conversion_Kinds
 comment|///< The number of conversion kinds
 block|}
 enum|;
-comment|/// ImplicitConversionCategory - The category of an implicit
-comment|/// conversion kind. The enumerator values match with Table 9 of
-comment|/// (C++ 13.3.3.1.1) and are listed such that better conversion
-comment|/// categories have smaller values.
-enum|enum
-name|ImplicitConversionCategory
-block|{
-name|ICC_Identity
-init|=
-literal|0
-block|,
-comment|///< Identity
-name|ICC_Lvalue_Transformation
-block|,
-comment|///< Lvalue transformation
-name|ICC_Qualification_Adjustment
-block|,
-comment|///< Qualification adjustment
-name|ICC_Promotion
-block|,
-comment|///< Promotion
-name|ICC_Conversion
-comment|///< Conversion
-block|}
-enum|;
-name|ImplicitConversionCategory
-name|GetConversionCategory
-parameter_list|(
-name|ImplicitConversionKind
-name|Kind
-parameter_list|)
-function_decl|;
 comment|/// ImplicitConversionRank - The rank of an implicit conversion
 comment|/// kind. The enumerator values match with Table 9 of (C++
 comment|/// 13.3.3.1.1) and are listed such that better conversion ranks
@@ -692,7 +666,7 @@ name|StandardConversionSequence
 name|Before
 decl_stmt|;
 comment|/// EllipsisConversion - When this is true, it means user-defined
-comment|/// conversion sequence starts with a ... (elipsis) conversion, instead of
+comment|/// conversion sequence starts with a ... (ellipsis) conversion, instead of
 comment|/// a standard conversion. In this case, 'Before' field must be ignored.
 comment|// FIXME. I much rather put this as the first field. But there seems to be
 comment|// a gcc code gen. bug which causes a crash in a test. Putting it here seems
@@ -970,8 +944,6 @@ name|no_conversion
 block|,
 name|unrelated_class
 block|,
-name|suppressed_user
-block|,
 name|bad_qualifiers
 block|,
 name|lvalue_ref_to_rvalue
@@ -1051,7 +1023,7 @@ name|K
 expr_stmt|;
 name|FromExpr
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|setFromType
 argument_list|(
@@ -1743,6 +1715,17 @@ comment|/// duplicates the work of a trivial or derived-to-base
 comment|/// conversion.
 name|ovl_fail_trivial_conversion
 block|,
+comment|/// This conversion candidate was not considered because it is
+comment|/// an illegal instantiation of a constructor temploid: it is
+comment|/// callable with one argument, we only have one argument, and
+comment|/// its first parameter type is exactly the type of the class.
+comment|///
+comment|/// Defining such a constructor directly is illegal, and
+comment|/// template-argument deduction is supposed to ignore such
+comment|/// instantiations, but we can still get one with the right
+comment|/// kind of implicit instantiation.
+name|ovl_fail_illegal_constructor
+block|,
 comment|/// This conversion candidate is not viable because its result
 comment|/// type is not implicitly convertible to the desired type.
 name|ovl_fail_bad_final_conversion
@@ -1755,6 +1738,10 @@ comment|/// (CUDA) This candidate was not viable because the callee
 comment|/// was not accessible from the caller's target (i.e. host->device,
 comment|/// global->host, device->host).
 name|ovl_fail_bad_target
+block|,
+comment|/// This candidate function was not viable because an enable_if
+comment|/// attribute disabled it.
+name|ovl_fail_enable_if
 block|}
 enum|;
 comment|/// OverloadCandidate - A single candidate in an overload set (C++ 13.3).
@@ -1981,13 +1968,107 @@ return|return
 name|CanFix
 return|;
 block|}
+name|unsigned
+name|getNumParams
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|IsSurrogate
+condition|)
+block|{
+name|auto
+name|STy
+init|=
+name|Surrogate
+operator|->
+name|getConversionType
+argument_list|()
+decl_stmt|;
+while|while
+condition|(
+name|STy
+operator|->
+name|isPointerType
+argument_list|()
+operator|||
+name|STy
+operator|->
+name|isReferenceType
+argument_list|()
+condition|)
+name|STy
+operator|=
+name|STy
+operator|->
+name|getPointeeType
+argument_list|()
+expr_stmt|;
+return|return
+name|STy
+operator|->
+name|getAs
+operator|<
+name|FunctionProtoType
+operator|>
+operator|(
+operator|)
+operator|->
+name|getNumParams
+argument_list|()
+return|;
 block|}
-struct|;
+if|if
+condition|(
+name|Function
+condition|)
+return|return
+name|Function
+operator|->
+name|getNumParams
+argument_list|()
+return|;
+return|return
+name|ExplicitCallArguments
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// OverloadCandidateSet - A set of overload candidates, used in C++
+end_comment
+
+begin_comment
 comment|/// overload resolution (C++ 13.3).
+end_comment
+
+begin_decl_stmt
 name|class
 name|OverloadCandidateSet
 block|{
+name|public
+label|:
+enum|enum
+name|CandidateSetKind
+block|{
+comment|/// Normal lookup.
+name|CSK_Normal
+block|,
+comment|/// Lookup for candidates for a call using operator syntax. Candidates
+comment|/// that have no parameters of class type will be skipped unless there
+comment|/// is a parameter of (reference to) enum type and the corresponding
+comment|/// argument is of the same enum type.
+name|CSK_Operator
+block|}
+enum|;
+name|private
+label|:
 name|SmallVector
 operator|<
 name|OverloadCandidate
@@ -2017,20 +2098,34 @@ expr_stmt|;
 name|SourceLocation
 name|Loc
 decl_stmt|;
+name|CandidateSetKind
+name|Kind
+decl_stmt|;
 name|unsigned
 name|NumInlineSequences
 decl_stmt|;
-name|char
-name|InlineSpace
-index|[
+name|llvm
+operator|::
+name|AlignedCharArray
+operator|<
+name|llvm
+operator|::
+name|AlignOf
+operator|<
+name|ImplicitConversionSequence
+operator|>
+operator|::
+name|Alignment
+operator|,
 literal|16
 operator|*
 sizeof|sizeof
 argument_list|(
 name|ImplicitConversionSequence
 argument_list|)
-index|]
-decl_stmt|;
+operator|>
+name|InlineSpace
+expr_stmt|;
 name|OverloadCandidateSet
 argument_list|(
 argument|const OverloadCandidateSet&
@@ -2056,11 +2151,18 @@ label|:
 name|OverloadCandidateSet
 argument_list|(
 argument|SourceLocation Loc
+argument_list|,
+argument|CandidateSetKind CSK
 argument_list|)
 block|:
 name|Loc
 argument_list|(
 name|Loc
+argument_list|)
+operator|,
+name|Kind
+argument_list|(
+name|CSK
 argument_list|)
 operator|,
 name|NumInlineSequences
@@ -2084,6 +2186,15 @@ return|return
 name|Loc
 return|;
 block|}
+name|CandidateSetKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+return|;
+block|}
 comment|/// \brief Determine when this overload candidate will be new to the
 comment|/// overload set.
 name|bool
@@ -2104,6 +2215,8 @@ operator|->
 name|getCanonicalDecl
 argument_list|()
 argument_list|)
+operator|.
+name|second
 return|;
 block|}
 comment|/// \brief Clear out all of the candidates.
@@ -2215,6 +2328,8 @@ name|ImplicitConversionSequence
 operator|*
 operator|)
 name|InlineSpace
+operator|.
+name|buffer
 decl_stmt|;
 name|C
 operator|.
@@ -2334,7 +2449,13 @@ argument_list|()
 argument_list|)
 decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 name|bool
 name|isBetterOverloadCandidate
 parameter_list|(
@@ -2361,10 +2482,10 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
+end_function_decl
 
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

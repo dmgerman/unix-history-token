@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_ANALYSIS_BODYFARM_H
+name|LLVM_CLANG_LIB_ANALYSIS_BODYFARM_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_ANALYSIS_BODYFARM_H
+name|LLVM_CLANG_LIB_ANALYSIS_BODYFARM_H
 end_define
 
 begin_include
@@ -95,7 +95,16 @@ name|class
 name|FunctionDecl
 decl_stmt|;
 name|class
+name|ObjCMethodDecl
+decl_stmt|;
+name|class
+name|ObjCPropertyDecl
+decl_stmt|;
+name|class
 name|Stmt
+decl_stmt|;
+name|class
+name|CodeInjector
 decl_stmt|;
 name|class
 name|BodyFarm
@@ -107,11 +116,20 @@ argument_list|(
 name|ASTContext
 operator|&
 name|C
+argument_list|,
+name|CodeInjector
+operator|*
+name|injector
 argument_list|)
 operator|:
 name|C
 argument_list|(
-argument|C
+name|C
+argument_list|)
+operator|,
+name|Injector
+argument_list|(
+argument|injector
 argument_list|)
 block|{}
 comment|/// Factory method for creating bodies for ordinary functions.
@@ -125,6 +143,17 @@ operator|*
 name|D
 argument_list|)
 expr_stmt|;
+comment|/// Factory method for creating bodies for Objective-C properties.
+name|Stmt
+modifier|*
+name|getBody
+parameter_list|(
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 name|private
 label|:
 typedef|typedef
@@ -150,6 +179,10 @@ name|C
 decl_stmt|;
 name|BodyMap
 name|Bodies
+decl_stmt|;
+name|CodeInjector
+modifier|*
+name|Injector
 decl_stmt|;
 block|}
 empty_stmt|;

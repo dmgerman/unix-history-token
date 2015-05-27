@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_PATH_DIAGNOSTIC_H
+name|LLVM_CLANG_STATICANALYZER_CORE_BUGREPORTER_PATHDIAGNOSTIC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_PATH_DIAGNOSTIC_H
+name|LLVM_CLANG_STATICANALYZER_CORE_BUGREPORTER_PATHDIAGNOSTIC_H
 end_define
 
 begin_include
@@ -104,13 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<list>
+file|<iterator>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<iterator>
+file|<list>
 end_include
 
 begin_include
@@ -129,6 +129,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|ConditionalOperator
+decl_stmt|;
 name|class
 name|AnalysisDeclContext
 decl_stmt|;
@@ -273,6 +276,10 @@ operator|::
 name|BumpPtrAllocator
 name|Alloc
 block|;
+operator|~
+name|FilesMade
+argument_list|()
+block|;
 name|void
 name|addDiagnostic
 argument_list|(
@@ -358,12 +365,16 @@ literal|0
 expr_stmt|;
 name|void
 name|HandlePathDiagnostic
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|PathDiagnostic
-modifier|*
+operator|>
 name|D
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 enum|enum
 name|PathGenerationScheme
 block|{
@@ -533,12 +544,12 @@ argument_list|)
 operator|,
 name|S
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|D
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SM
@@ -565,8 +576,7 @@ name|genLocation
 argument_list|(
 argument|SourceLocation L = SourceLocation()
 argument_list|,
-argument|LocationOrAnalysisDeclContext LAC = (AnalysisDeclContext*)
-literal|0
+argument|LocationOrAnalysisDeclContext LAC = (AnalysisDeclContext *)nullptr
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -580,7 +590,7 @@ operator|(
 name|AnalysisDeclContext
 operator|*
 operator|)
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -597,17 +607,17 @@ argument_list|)
 operator|,
 name|S
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|D
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SM
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// Create a location corresponding to the given statement.
@@ -643,12 +653,12 @@ name|StmtK
 operator|?
 name|s
 operator|:
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|D
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SM
@@ -727,7 +737,7 @@ argument_list|)
 operator|,
 name|S
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|D
@@ -790,12 +800,12 @@ argument_list|)
 operator|,
 name|S
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|D
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SM
@@ -920,6 +930,21 @@ specifier|const
 name|BinaryOperator
 modifier|*
 name|BO
+parameter_list|,
+specifier|const
+name|SourceManager
+modifier|&
+name|SM
+parameter_list|)
+function_decl|;
+specifier|static
+name|PathDiagnosticLocation
+name|createConditionalColonLoc
+parameter_list|(
+specifier|const
+name|ConditionalOperator
+modifier|*
+name|CO
 parameter_list|,
 specifier|const
 name|SourceManager
@@ -1116,7 +1141,7 @@ block|{
 return|return
 name|SM
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|FullSourceLoc
@@ -1774,7 +1799,6 @@ return|return
 name|Result
 return|;
 block|}
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|()
@@ -1860,28 +1884,29 @@ name|PathDiagnosticLocation
 name|getLocation
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Pos
 return|;
 block|}
-name|virtual
 name|void
 name|flattenLocations
 argument_list|()
+name|override
 block|{
 name|Pos
 operator|.
 name|flatten
 argument_list|()
 block|; }
-name|virtual
 name|void
 name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 name|bool
@@ -1988,17 +2013,14 @@ argument_list|()
 block|{}
 comment|/// \brief Search the call expression for the symbol Sym and dispatch the
 comment|/// 'getMessageForX()' methods to construct a specific message.
-name|virtual
 name|std
 operator|::
 name|string
 name|getMessage
 argument_list|(
-specifier|const
-name|ExplodedNode
-operator|*
-name|N
+argument|const ExplodedNode *N
 argument_list|)
+name|override
 block|;
 comment|/// Produces the message of the following form:
 comment|///   'Msg via Nth parameter'
@@ -2055,7 +2077,9 @@ comment|/// If the event occurs in a different frame than the final diagnostic,
 comment|/// supply a message that will be used to construct an extra hint on the
 comment|/// returns from all the calls on the stack from this event to the final
 comment|/// diagnostic.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|StackHintGenerator
 operator|>
@@ -2071,8 +2095,7 @@ argument|StringRef s
 argument_list|,
 argument|bool addPosRange = true
 argument_list|,
-argument|StackHintGenerator *stackHint =
-literal|0
+argument|StackHintGenerator *stackHint = nullptr
 argument_list|)
 operator|:
 name|PathDiagnosticSpotPiece
@@ -2146,10 +2169,10 @@ name|hasCallStackHint
 argument_list|()
 block|{
 return|return
+operator|(
+name|bool
+operator|)
 name|CallStackHint
-operator|.
-name|isValid
-argument_list|()
 return|;
 block|}
 comment|/// Produce the hint for the given node. The node contains
@@ -2178,11 +2201,11 @@ return|return
 literal|""
 return|;
 block|}
-name|virtual
 name|void
 name|dump
 argument_list|()
 specifier|const
+name|override
 block|;
 specifier|static
 specifier|inline
@@ -2234,7 +2257,7 @@ argument_list|)
 block|,
 name|Callee
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|NoExit
@@ -2271,7 +2294,7 @@ argument_list|)
 block|,
 name|Callee
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|NoExit
@@ -2383,11 +2406,11 @@ name|CallStackMessage
 operator|=
 name|st
 block|;   }
-name|virtual
 name|PathDiagnosticLocation
 name|getLocation
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|callEnter
@@ -2417,10 +2440,10 @@ name|getCallExitEvent
 argument_list|()
 specifier|const
 block|;
-name|virtual
 name|void
 name|flattenLocations
 argument_list|()
+name|override
 block|{
 name|callEnter
 operator|.
@@ -2503,19 +2526,19 @@ operator|*
 name|caller
 argument_list|)
 block|;
-name|virtual
 name|void
 name|dump
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|static
 specifier|inline
@@ -2711,11 +2734,11 @@ argument_list|(
 name|X
 argument_list|)
 block|; }
-name|virtual
 name|PathDiagnosticLocation
 name|getLocation
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getStartLocation
@@ -2755,10 +2778,10 @@ name|end
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|flattenLocations
 argument_list|()
+name|override
 block|{
 for|for
 control|(
@@ -2838,19 +2861,19 @@ operator|==
 name|ControlFlow
 return|;
 block|}
-name|virtual
 name|void
 name|dump
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -2893,10 +2916,10 @@ name|containsEvent
 argument_list|()
 specifier|const
 block|;
-name|virtual
 name|void
 name|flattenLocations
 argument_list|()
+name|override
 block|{
 name|PathDiagnosticSpotPiece
 operator|::
@@ -2955,19 +2978,19 @@ operator|==
 name|Macro
 return|;
 block|}
-name|virtual
 name|void
 name|dump
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -2993,6 +3016,11 @@ name|llvm
 operator|::
 name|FoldingSetNode
 block|{
+name|std
+operator|::
+name|string
+name|CheckName
+block|;
 specifier|const
 name|Decl
 operator|*
@@ -3062,6 +3090,8 @@ name|public
 operator|:
 name|PathDiagnostic
 argument_list|(
+argument|StringRef CheckName
+argument_list|,
 argument|const Decl *DeclWithIssue
 argument_list|,
 argument|StringRef bugtype
@@ -3196,14 +3226,18 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function
+begin_decl_stmt
 name|void
 name|setEndOfPath
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|PathDiagnosticPiece
-modifier|*
+operator|>
 name|EndPiece
-parameter_list|)
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -3239,10 +3273,13 @@ operator|.
 name|push_back
 argument_list|(
 name|EndPiece
+operator|.
+name|release
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_function
 name|void
@@ -3346,6 +3383,18 @@ operator|?
 name|VerboseDesc
 operator|:
 name|ShortDesc
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|StringRef
+name|getCheckName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CheckName
 return|;
 block|}
 end_expr_stmt

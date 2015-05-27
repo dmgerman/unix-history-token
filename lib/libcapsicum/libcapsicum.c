@@ -499,6 +499,8 @@ argument_list|(
 name|chan
 argument_list|,
 name|nvl
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -735,6 +737,8 @@ argument_list|(
 name|chan
 argument_list|,
 name|nvlmsg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -849,6 +853,8 @@ argument_list|(
 name|chan
 argument_list|,
 name|nvlmsg
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -991,6 +997,9 @@ specifier|const
 name|cap_channel_t
 modifier|*
 name|chan
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|assert
@@ -1016,6 +1025,8 @@ argument_list|(
 name|chan
 operator|->
 name|cch_sock
+argument_list|,
+name|flags
 argument_list|)
 operator|)
 return|;
@@ -1035,6 +1046,9 @@ parameter_list|,
 name|nvlist_t
 modifier|*
 name|nvl
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|assert
@@ -1062,6 +1076,8 @@ operator|->
 name|cch_sock
 argument_list|,
 name|nvl
+argument_list|,
+name|flags
 argument_list|)
 operator|)
 return|;

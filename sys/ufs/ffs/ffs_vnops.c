@@ -394,6 +394,11 @@ operator|=
 name|vnode_pager_local_getpages
 block|,
 operator|.
+name|vop_getpages_async
+operator|=
+name|vnode_pager_local_getpages_async
+block|,
+operator|.
 name|vop_lock1
 operator|=
 name|ffs_lock
@@ -477,6 +482,11 @@ operator|.
 name|vop_getpages
 operator|=
 name|vnode_pager_local_getpages
+block|,
+operator|.
+name|vop_getpages_async
+operator|=
+name|vnode_pager_local_getpages_async
 block|,
 operator|.
 name|vop_lock1

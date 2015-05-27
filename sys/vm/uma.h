@@ -813,7 +813,7 @@ parameter_list|(
 name|uma_zone_t
 name|zone
 parameter_list|,
-name|int
+name|vm_size_t
 name|size
 parameter_list|,
 name|uint8_t
@@ -842,7 +842,7 @@ name|void
 modifier|*
 name|item
 parameter_list|,
-name|int
+name|vm_size_t
 name|size
 parameter_list|,
 name|uint8_t
@@ -1407,6 +1407,25 @@ comment|/* Reserved. */
 block|}
 struct|;
 end_struct
+
+begin_function_decl
+name|void
+name|uma_reclaim_wakeup
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|uma_reclaim_worker
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

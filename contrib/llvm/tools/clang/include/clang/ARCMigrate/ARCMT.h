@@ -359,7 +359,7 @@ name|RewriteListener
 modifier|*
 name|listener
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|FileRemapper

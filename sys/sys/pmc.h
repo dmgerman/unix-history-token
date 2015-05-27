@@ -104,7 +104,7 @@ directive|define
 name|__PMC_CPUS
 parameter_list|()
 define|\
-value|__PMC_CPU(AMD_K7,	0x00,	"AMD K7")		\ 	__PMC_CPU(AMD_K8,	0x01,	"AMD K8")		\ 	__PMC_CPU(INTEL_P5,	0x80,	"Intel Pentium")	\ 	__PMC_CPU(INTEL_P6,	0x81,	"Intel Pentium Pro")	\ 	__PMC_CPU(INTEL_CL,	0x82,	"Intel Celeron")	\ 	__PMC_CPU(INTEL_PII,	0x83,	"Intel Pentium II")	\ 	__PMC_CPU(INTEL_PIII,	0x84,	"Intel Pentium III")	\ 	__PMC_CPU(INTEL_PM,	0x85,	"Intel Pentium M")	\ 	__PMC_CPU(INTEL_PIV,	0x86,	"Intel Pentium IV")	\ 	__PMC_CPU(INTEL_CORE,	0x87,	"Intel Core Solo/Duo")	\ 	__PMC_CPU(INTEL_CORE2,	0x88,	"Intel Core2")		\ 	__PMC_CPU(INTEL_CORE2EXTREME,	0x89,	"Intel Core2 Extreme")	\ 	__PMC_CPU(INTEL_ATOM,	0x8A,	"Intel Atom")		\ 	__PMC_CPU(INTEL_COREI7, 0x8B,   "Intel Core i7")	\ 	__PMC_CPU(INTEL_WESTMERE, 0x8C,   "Intel Westmere")	\ 	__PMC_CPU(INTEL_SANDYBRIDGE, 0x8D,   "Intel Sandy Bridge")	\ 	__PMC_CPU(INTEL_IVYBRIDGE, 0x8E,   "Intel Ivy Bridge")	\ 	__PMC_CPU(INTEL_SANDYBRIDGE_XEON, 0x8F,   "Intel Sandy Bridge Xeon")	\ 	__PMC_CPU(INTEL_IVYBRIDGE_XEON, 0x90,   "Intel Ivy Bridge Xeon")	\ 	__PMC_CPU(INTEL_HASWELL, 0x91,   "Intel Haswell")	\ 	__PMC_CPU(INTEL_ATOM_SILVERMONT, 0x92,	"Intel Atom Silvermont")    \ 	__PMC_CPU(INTEL_NEHALEM_EX, 0x93,   "Intel Nehalem Xeon 7500")	\ 	__PMC_CPU(INTEL_WESTMERE_EX, 0x94,   "Intel Westmere Xeon E7")	\ 	__PMC_CPU(INTEL_XSCALE,	0x100,	"Intel XScale")		\ 	__PMC_CPU(MIPS_24K,     0x200,  "MIPS 24K")		\ 	__PMC_CPU(MIPS_OCTEON,  0x201,  "Cavium Octeon")	\ 	__PMC_CPU(PPC_7450,     0x300,  "PowerPC MPC7450")	\ 	__PMC_CPU(PPC_970,      0x380,  "IBM PowerPC 970")	\ 	__PMC_CPU(GENERIC, 	0x400,  "Generic")
+value|__PMC_CPU(AMD_K7,	0x00,	"AMD K7")		\ 	__PMC_CPU(AMD_K8,	0x01,	"AMD K8")		\ 	__PMC_CPU(INTEL_P5,	0x80,	"Intel Pentium")	\ 	__PMC_CPU(INTEL_P6,	0x81,	"Intel Pentium Pro")	\ 	__PMC_CPU(INTEL_CL,	0x82,	"Intel Celeron")	\ 	__PMC_CPU(INTEL_PII,	0x83,	"Intel Pentium II")	\ 	__PMC_CPU(INTEL_PIII,	0x84,	"Intel Pentium III")	\ 	__PMC_CPU(INTEL_PM,	0x85,	"Intel Pentium M")	\ 	__PMC_CPU(INTEL_PIV,	0x86,	"Intel Pentium IV")	\ 	__PMC_CPU(INTEL_CORE,	0x87,	"Intel Core Solo/Duo")	\ 	__PMC_CPU(INTEL_CORE2,	0x88,	"Intel Core2")		\ 	__PMC_CPU(INTEL_CORE2EXTREME,	0x89,	"Intel Core2 Extreme")	\ 	__PMC_CPU(INTEL_ATOM,	0x8A,	"Intel Atom")		\ 	__PMC_CPU(INTEL_COREI7, 0x8B,   "Intel Core i7")	\ 	__PMC_CPU(INTEL_WESTMERE, 0x8C,   "Intel Westmere")	\ 	__PMC_CPU(INTEL_SANDYBRIDGE, 0x8D,   "Intel Sandy Bridge")	\ 	__PMC_CPU(INTEL_IVYBRIDGE, 0x8E,   "Intel Ivy Bridge")	\ 	__PMC_CPU(INTEL_SANDYBRIDGE_XEON, 0x8F,   "Intel Sandy Bridge Xeon")	\ 	__PMC_CPU(INTEL_IVYBRIDGE_XEON, 0x90,   "Intel Ivy Bridge Xeon")	\ 	__PMC_CPU(INTEL_HASWELL, 0x91,   "Intel Haswell")	\ 	__PMC_CPU(INTEL_ATOM_SILVERMONT, 0x92,	"Intel Atom Silvermont")    \ 	__PMC_CPU(INTEL_NEHALEM_EX, 0x93,   "Intel Nehalem Xeon 7500")	\ 	__PMC_CPU(INTEL_WESTMERE_EX, 0x94,   "Intel Westmere Xeon E7")	\ 	__PMC_CPU(INTEL_HASWELL_XEON, 0x95,   "Intel Haswell Xeon E5 v3") \ 	__PMC_CPU(INTEL_BROADWELL, 0x96,   "Intel Broadwell") \ 	__PMC_CPU(INTEL_XSCALE,	0x100,	"Intel XScale")		\ 	__PMC_CPU(MIPS_24K,     0x200,  "MIPS 24K")		\ 	__PMC_CPU(MIPS_OCTEON,  0x201,  "Cavium Octeon")	\ 	__PMC_CPU(MIPS_74K,     0x202,  "MIPS 74K")		\ 	__PMC_CPU(PPC_7450,     0x300,  "PowerPC MPC7450")	\ 	__PMC_CPU(PPC_E500,     0x340,  "PowerPC e500 Core")	\ 	__PMC_CPU(PPC_MPC85XX,  0x340,  "Freescale PowerPC MPC85XX")	\ 	__PMC_CPU(PPC_970,      0x380,  "IBM PowerPC 970")	\ 	__PMC_CPU(GENERIC, 	0x400,  "Generic")		\ 	__PMC_CPU(ARMV7,	0x500,	"ARMv7")		\ 	__PMC_CPU(ARMV8_CORTEX_A53,	0x600,	"ARMv8 Cortex A53")	\ 	__PMC_CPU(ARMV8_CORTEX_A57,	0x601,	"ARMv8 Cortex A57")
 end_define
 
 begin_enum
@@ -155,42 +155,8 @@ directive|define
 name|__PMC_CLASSES
 parameter_list|()
 define|\
-value|__PMC_CLASS(TSC)
-comment|/* CPU Timestamp counter */
-value|\ 	__PMC_CLASS(K7)
-comment|/* AMD K7 performance counters */
-value|\ 	__PMC_CLASS(K8)
-comment|/* AMD K8 performance counters */
-value|\ 	__PMC_CLASS(P5)
-comment|/* Intel Pentium counters */
-value|\ 	__PMC_CLASS(P6)
-comment|/* Intel Pentium Pro counters */
-value|\ 	__PMC_CLASS(P4)
-comment|/* Intel Pentium-IV counters */
-value|\ 	__PMC_CLASS(IAF)
-comment|/* Intel Core2/Atom, fixed function */
-value|\ 	__PMC_CLASS(IAP)
-comment|/* Intel Core...Atom, programmable */
-value|\ 	__PMC_CLASS(UCF)
-comment|/* Intel Uncore fixed function */
-value|\ 	__PMC_CLASS(UCP)
-comment|/* Intel Uncore programmable */
-value|\ 	__PMC_CLASS(XSCALE)
-comment|/* Intel XScale counters */
-value|\ 	__PMC_CLASS(MIPS24K)
-comment|/* MIPS 24K */
-value|\ 	__PMC_CLASS(OCTEON)
-comment|/* Cavium Octeon */
-value|\ 	__PMC_CLASS(PPC7450)
-comment|/* Motorola MPC7450 class */
-value|\ 	__PMC_CLASS(PPC970)
-comment|/* IBM PowerPC 970 class */
-value|\ 	__PMC_CLASS(SOFT)
+value|__PMC_CLASS(TSC,	0x000,	"CPU Timestamp counter")	\ 	__PMC_CLASS(K7,		0x100,	"AMD K7 performance counters")	\ 	__PMC_CLASS(K8,		0x101,	"AMD K8 performance counters")	\ 	__PMC_CLASS(P5,		0x102,	"Intel Pentium counters")	\ 	__PMC_CLASS(P6,		0x103,	"Intel Pentium Pro counters")	\ 	__PMC_CLASS(P4,		0x104,	"Intel Pentium-IV counters")	\ 	__PMC_CLASS(IAF,	0x105,	"Intel Core2/Atom, fixed function") \ 	__PMC_CLASS(IAP,	0x106,	"Intel Core...Atom, programmable") \ 	__PMC_CLASS(UCF,	0x107,	"Intel Uncore fixed function")	\ 	__PMC_CLASS(UCP,	0x108,	"Intel Uncore programmable")	\ 	__PMC_CLASS(XSCALE,	0x200,	"Intel XScale counters")	\ 	__PMC_CLASS(ARMV7,	0x201,	"ARMv7")			\ 	__PMC_CLASS(ARMV8,	0x202,	"ARMv8")			\ 	__PMC_CLASS(MIPS24K,	0x300,	"MIPS 24K")			\ 	__PMC_CLASS(OCTEON,	0x301,	"Cavium Octeon")		\ 	__PMC_CLASS(MIPS74K,	0x302,	"MIPS 74K")			\ 	__PMC_CLASS(PPC7450,	0x400,	"Motorola MPC7450 class")	\ 	__PMC_CLASS(PPC970,	0x401,	"IBM PowerPC 970 class")	\ 	__PMC_CLASS(E500,	0x402,	"Freescale e500 class")		\ 	__PMC_CLASS(SOFT,	0x8000,	"Software events")
 end_define
-
-begin_comment
-comment|/* Software events */
-end_comment
 
 begin_enum
 enum|enum
@@ -203,9 +169,13 @@ define|#
 directive|define
 name|__PMC_CLASS
 parameter_list|(
-name|N
+name|S
+parameter_list|,
+name|V
+parameter_list|,
+name|D
 parameter_list|)
-value|PMC_CLASS_##N ,
+value|PMC_CLASS_##S = V,
 name|__PMC_CLASSES
 argument_list|()
 block|}
@@ -712,7 +682,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CALLCHAIN_DEPTH_MAX
-value|32
+value|128
 end_define
 
 begin_define
@@ -1319,7 +1289,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CALLCHAIN_DEPTH
-value|16
+value|32
 end_define
 
 begin_define
@@ -2475,9 +2445,15 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|DEBUG
+name|HWPMC_DEBUG
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/ktr.h>
+end_include
 
 begin_comment
 comment|/* debug flags, major flag groups */
@@ -2529,6 +2505,13 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
+name|KTR_PMC
+value|KTR_SUBSYS
+end_define
+
+begin_define
+define|#
+directive|define
 name|PMC_DEBUG_STRSIZE
 value|128
 end_define
@@ -2543,7 +2526,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|PMCDBG
+name|PMCDBG0
+parameter_list|(
+name|M
+parameter_list|,
+name|N
+parameter_list|,
+name|L
+parameter_list|,
+name|F
+parameter_list|)
+value|do {					\ 	if (pmc_debugflags.pdb_ ## M& (1<< PMC_DEBUG_MIN_ ## N))	\ 		CTR0(KTR_PMC, #M ":" #N ":" #L  ": " F);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCDBG1
 parameter_list|(
 name|M
 parameter_list|,
@@ -2553,9 +2552,129 @@ name|L
 parameter_list|,
 name|F
 parameter_list|,
-modifier|...
+name|p1
 parameter_list|)
-value|do {					\ 	if (pmc_debugflags.pdb_ ## M& (1<< PMC_DEBUG_MIN_ ## N))	\ 		printf(#M ":" #N ":" #L  ": " F "\n", __VA_ARGS__);	\ } while (0)
+value|do {					\ 	if (pmc_debugflags.pdb_ ## M& (1<< PMC_DEBUG_MIN_ ## N))	\ 		CTR1(KTR_PMC, #M ":" #N ":" #L  ": " F, p1);		\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCDBG2
+parameter_list|(
+name|M
+parameter_list|,
+name|N
+parameter_list|,
+name|L
+parameter_list|,
+name|F
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|)
+value|do {				\ 	if (pmc_debugflags.pdb_ ## M& (1<< PMC_DEBUG_MIN_ ## N))	\ 		CTR2(KTR_PMC, #M ":" #N ":" #L  ": " F, p1, p2);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCDBG3
+parameter_list|(
+name|M
+parameter_list|,
+name|N
+parameter_list|,
+name|L
+parameter_list|,
+name|F
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|)
+value|do {				\ 	if (pmc_debugflags.pdb_ ## M& (1<< PMC_DEBUG_MIN_ ## N))	\ 		CTR3(KTR_PMC, #M ":" #N ":" #L  ": " F, p1, p2, p3);	\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCDBG4
+parameter_list|(
+name|M
+parameter_list|,
+name|N
+parameter_list|,
+name|L
+parameter_list|,
+name|F
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|)
+value|do {			\ 	if (pmc_debugflags.pdb_ ## M& (1<< PMC_DEBUG_MIN_ ## N))	\ 		CTR4(KTR_PMC, #M ":" #N ":" #L  ": " F, p1, p2, p3, p4);\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCDBG5
+parameter_list|(
+name|M
+parameter_list|,
+name|N
+parameter_list|,
+name|L
+parameter_list|,
+name|F
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|,
+name|p5
+parameter_list|)
+value|do {			\ 	if (pmc_debugflags.pdb_ ## M& (1<< PMC_DEBUG_MIN_ ## N))	\ 		CTR5(KTR_PMC, #M ":" #N ":" #L  ": " F, p1, p2, p3, p4,	\ 		    p5);						\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCDBG6
+parameter_list|(
+name|M
+parameter_list|,
+name|N
+parameter_list|,
+name|L
+parameter_list|,
+name|F
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|,
+name|p5
+parameter_list|,
+name|p6
+parameter_list|)
+value|do {		\ 	if (pmc_debugflags.pdb_ ## M& (1<< PMC_DEBUG_MIN_ ## N))	\ 		CTR6(KTR_PMC, #M ":" #N ":" #L  ": " F, p1, p2, p3, p4,	\ 		    p5, p6);						\ } while (0)
 end_define
 
 begin_comment
@@ -3072,7 +3191,26 @@ end_else
 begin_define
 define|#
 directive|define
-name|PMCDBG
+name|PMCDBG0
+parameter_list|(
+name|M
+parameter_list|,
+name|N
+parameter_list|,
+name|L
+parameter_list|,
+name|F
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMCDBG1
 parameter_list|(
 name|M
 parameter_list|,
@@ -3082,13 +3220,124 @@ name|L
 parameter_list|,
 name|F
 parameter_list|,
-modifier|...
+name|p1
 parameter_list|)
 end_define
 
-begin_comment
-comment|/* nothing */
-end_comment
+begin_define
+define|#
+directive|define
+name|PMCDBG2
+parameter_list|(
+name|M
+parameter_list|,
+name|N
+parameter_list|,
+name|L
+parameter_list|,
+name|F
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCDBG3
+parameter_list|(
+name|M
+parameter_list|,
+name|N
+parameter_list|,
+name|L
+parameter_list|,
+name|F
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCDBG4
+parameter_list|(
+name|M
+parameter_list|,
+name|N
+parameter_list|,
+name|L
+parameter_list|,
+name|F
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCDBG5
+parameter_list|(
+name|M
+parameter_list|,
+name|N
+parameter_list|,
+name|L
+parameter_list|,
+name|F
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|,
+name|p5
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMCDBG6
+parameter_list|(
+name|M
+parameter_list|,
+name|N
+parameter_list|,
+name|L
+parameter_list|,
+name|F
+parameter_list|,
+name|p1
+parameter_list|,
+name|p2
+parameter_list|,
+name|p3
+parameter_list|,
+name|p4
+parameter_list|,
+name|p5
+parameter_list|,
+name|p6
+parameter_list|)
+end_define
 
 begin_endif
 endif|#

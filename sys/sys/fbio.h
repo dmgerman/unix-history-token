@@ -486,6 +486,21 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+name|fb_setblankmode_t
+parameter_list|(
+name|void
+modifier|*
+name|priv
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|fb_info
@@ -520,6 +535,14 @@ name|cdev
 modifier|*
 name|fb_cdev
 decl_stmt|;
+name|device_t
+name|fb_fbd_dev
+decl_stmt|;
+comment|/* "fbd" device. */
+name|device_t
+name|fb_video_dev
+decl_stmt|;
+comment|/* Video adapter. */
 name|fb_enter_t
 modifier|*
 name|enter
@@ -527,6 +550,10 @@ decl_stmt|;
 name|fb_leave_t
 modifier|*
 name|leave
+decl_stmt|;
+name|fb_setblankmode_t
+modifier|*
+name|setblankmode
 decl_stmt|;
 name|intptr_t
 name|fb_pbase
@@ -549,6 +576,16 @@ decl_stmt|;
 name|uint32_t
 name|fb_flags
 decl_stmt|;
+define|#
+directive|define
+name|FB_FLAG_NOMMAP
+value|1
+comment|/* mmap unsupported. */
+define|#
+directive|define
+name|FB_FLAG_NOWRITE
+value|2
+comment|/* disable writes for the time being */
 name|int
 name|fb_stride
 decl_stmt|;
@@ -556,11 +593,6 @@ name|int
 name|fb_bpp
 decl_stmt|;
 comment|/* bits per pixel */
-define|#
-directive|define
-name|FB_FLAG_NOMMAP
-value|1
-comment|/* mmap unsupported. */
 name|uint32_t
 name|fb_cmap
 index|[

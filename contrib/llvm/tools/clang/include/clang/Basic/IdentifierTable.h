@@ -76,19 +76,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/OperatorKinds.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/TokenKinds.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallString.h"
 end_include
 
 begin_include
@@ -101,12 +89,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/PointerLikeTypeTraits.h"
 end_include
 
 begin_include
@@ -1093,6 +1075,22 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Return true if this token is a keyword in the specified language.
+end_comment
+
+begin_function_decl
+name|bool
+name|isKeyword
+parameter_list|(
+specifier|const
+name|LangOptions
+modifier|&
+name|LangOpts
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// getFETokenInfo/setFETokenInfo - The language front-end is allowed to
 end_comment
 
@@ -1746,7 +1744,7 @@ name|IdentifierInfoLookup
 operator|*
 name|externalLookup
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|/// \brief Set the external identifier lookup mechanism.
@@ -1798,31 +1796,35 @@ name|StringRef
 name|Name
 parameter_list|)
 block|{
-name|llvm
-operator|::
-name|StringMapEntry
-operator|<
-name|IdentifierInfo
-operator|*
-operator|>
+name|auto
 operator|&
 name|Entry
 operator|=
+operator|*
 name|HashTable
 operator|.
-name|GetOrCreateValue
+name|insert
+argument_list|(
+name|std
+operator|::
+name|make_pair
 argument_list|(
 name|Name
+argument_list|,
+name|nullptr
 argument_list|)
+argument_list|)
+operator|.
+name|first
 expr_stmt|;
 name|IdentifierInfo
 modifier|*
+modifier|&
 name|II
 init|=
 name|Entry
 operator|.
-name|getValue
-argument_list|()
+name|second
 decl_stmt|;
 if|if
 condition|(
@@ -1851,20 +1853,10 @@ if|if
 condition|(
 name|II
 condition|)
-block|{
-comment|// Cache in the StringMap for subsequent lookups.
-name|Entry
-operator|.
-name|setValue
-argument_list|(
-name|II
-argument_list|)
-expr_stmt|;
 return|return
 operator|*
 name|II
 return|;
-block|}
 block|}
 comment|// Lookups failed, make a new IdentifierInfo.
 name|void
@@ -1889,13 +1881,6 @@ argument|Mem
 argument_list|)
 name|IdentifierInfo
 argument_list|()
-expr_stmt|;
-name|Entry
-operator|.
-name|setValue
-argument_list|(
-name|II
-argument_list|)
 expr_stmt|;
 comment|// Make sure getName() knows how to find the IdentifierInfo
 comment|// contents.
@@ -1971,38 +1956,44 @@ name|StringRef
 name|Name
 parameter_list|)
 block|{
-name|llvm
-operator|::
-name|StringMapEntry
-operator|<
-name|IdentifierInfo
-operator|*
-operator|>
+name|auto
 operator|&
 name|Entry
 operator|=
+operator|*
 name|HashTable
 operator|.
-name|GetOrCreateValue
+name|insert
+argument_list|(
+name|std
+operator|::
+name|make_pair
 argument_list|(
 name|Name
+argument_list|,
+name|nullptr
 argument_list|)
+argument_list|)
+operator|.
+name|first
 expr_stmt|;
 name|IdentifierInfo
 modifier|*
+modifier|&
 name|II
 init|=
 name|Entry
 operator|.
-name|getValue
-argument_list|()
+name|second
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|II
 condition|)
-block|{
+return|return
+operator|*
+name|II
+return|;
 comment|// Lookups failed, make a new IdentifierInfo.
 name|void
 modifier|*
@@ -2026,13 +2017,6 @@ argument|Mem
 argument_list|)
 name|IdentifierInfo
 argument_list|()
-expr_stmt|;
-name|Entry
-operator|.
-name|setValue
-argument_list|(
-name|II
-argument_list|)
 expr_stmt|;
 comment|// Make sure getName() knows how to find the IdentifierInfo
 comment|// contents.
@@ -2060,7 +2044,6 @@ argument_list|(
 name|true
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|*
 name|II
@@ -2242,6 +2225,8 @@ name|OMF_retainCount
 block|,
 name|OMF_self
 block|,
+name|OMF_initialize
+block|,
 comment|// performSelector families
 name|OMF_performSelector
 block|}
@@ -2317,6 +2302,19 @@ block|,
 name|OIT_Init
 block|,
 name|OIT_ReturnsSelf
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|ObjCStringFormatFamily
+block|{
+name|SFF_None
+block|,
+name|SFF_NSString
+block|,
+name|SFF_CFString
 block|}
 enum|;
 end_enum
@@ -2490,7 +2488,7 @@ name|ArgFlags
 operator|)
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_decl_stmt
@@ -2536,6 +2534,17 @@ begin_function_decl
 specifier|static
 name|ObjCMethodFamily
 name|getMethodFamilyImpl
+parameter_list|(
+name|Selector
+name|sel
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|ObjCStringFormatFamily
+name|getStringFormatFamilyImpl
 parameter_list|(
 name|Selector
 name|sel
@@ -2832,10 +2841,6 @@ begin_comment
 comment|/// it as an std::string.
 end_comment
 
-begin_comment
-comment|// FIXME: Add a print method that uses a raw_ostream.
-end_comment
-
 begin_expr_stmt
 name|std
 operator|::
@@ -2845,6 +2850,24 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Prints the full selector name (e.g. "foo:bar:").
+end_comment
+
+begin_decl_stmt
+name|void
+name|print
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Derive the conventional family of this method.
@@ -2858,6 +2881,22 @@ specifier|const
 block|{
 return|return
 name|getMethodFamilyImpl
+argument_list|(
+operator|*
+name|this
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|ObjCStringFormatFamily
+name|getStringFormatFamily
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getStringFormatFamilyImpl
 argument_list|(
 operator|*
 name|this
@@ -3252,6 +3291,17 @@ name|value
 operator|=
 name|true
 block|; }
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|PointerLikeTypeTraits
 expr_stmt|;
 end_expr_stmt
 

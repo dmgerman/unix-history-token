@@ -34,6 +34,28 @@ file|<netinet/tcp.h>
 end_include
 
 begin_comment
+comment|/* Maximum size of TSO packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TSO_MAX_SIZE
+value|(65535)
+end_define
+
+begin_comment
+comment|/*  * Maximum number of segments to be created for a TSO packet.  * Allow for a reasonable minimum MSS of 512.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TSO_MAX_SEGS
+value|howmany(SFXGE_TSO_MAX_SIZE, 512)
+end_define
+
+begin_comment
 comment|/* Maximum number of DMA segments needed to map an mbuf chain.  With  * TSO, the mbuf length may be just over 64K, divided into 2K mbuf  * clusters.  (The chain could be longer than this initially, but can  * be shortened with m_collapse().)  */
 end_comment
 
@@ -41,18 +63,8 @@ begin_define
 define|#
 directive|define
 name|SFXGE_TX_MAPPING_MAX_SEG
-value|(64 / 2 + 1)
-end_define
-
-begin_comment
-comment|/* Maximum number of DMA segments needed to map an output packet.  It  * could overlap all mbufs in the chain and also require an extra  * segment for a TSO header.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SFXGE_TX_PACKET_MAX_SEG
-value|(SFXGE_TX_MAPPING_MAX_SEG + 1)
+define|\
+value|(1 + howmany(SFXGE_TSO_MAX_SIZE, MCLBYTES))
 end_define
 
 begin_comment
@@ -110,6 +122,13 @@ begin_define
 define|#
 directive|define
 name|SFXGE_TX_DPL_GET_PKT_LIMIT_DEFAULT
+value|(64 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TX_DPL_GET_NON_TCP_PKT_LIMIT_DEFAULT
 value|1024
 end_define
 
@@ -117,7 +136,7 @@ begin_define
 define|#
 directive|define
 name|SFXGE_TX_DPL_PUT_PKT_LIMIT_DEFAULT
-value|64
+value|1024
 end_define
 
 begin_comment
@@ -132,7 +151,12 @@ name|unsigned
 name|int
 name|std_get_max
 decl_stmt|;
-comment|/* Maximum number of packets 						 * in get list */
+comment|/* Maximum number  of packets 						 * in get list */
+name|unsigned
+name|int
+name|std_get_non_tcp_max
+decl_stmt|;
+comment|/* Maximum number 						 * of non-TCP packets 						 * in get list */
 name|unsigned
 name|int
 name|std_put_max
@@ -160,6 +184,21 @@ name|int
 name|std_get_count
 decl_stmt|;
 comment|/* Packets in get list. */
+name|unsigned
+name|int
+name|std_get_non_tcp_count
+decl_stmt|;
+comment|/* Non-TCP packets 						 * in get list */
+name|unsigned
+name|int
+name|std_get_hiwat
+decl_stmt|;
+comment|/* Packets in get list 						 * high watermark */
+name|unsigned
+name|int
+name|std_put_hiwat
+decl_stmt|;
+comment|/* Packets in put list 						 * high watermark */
 block|}
 struct|;
 end_struct
@@ -234,61 +273,86 @@ name|SFXGE_TX_BATCH
 value|64
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SFXGE_HAVE_MQ
-end_ifdef
+begin_define
+define|#
+directive|define
+name|SFXGE_TXQ_LOCK_INIT
+parameter_list|(
+name|_txq
+parameter_list|,
+name|_ifname
+parameter_list|,
+name|_txq_index
+parameter_list|)
+define|\
+value|do {								\ 		struct sfxge_txq  *__txq = (_txq);			\ 									\ 		snprintf((__txq)->lock_name,				\ 			 sizeof((__txq)->lock_name),			\ 			 "%s:txq%u", (_ifname), (_txq_index));		\ 		mtx_init(&(__txq)->lock, (__txq)->lock_name,		\ 			 NULL, MTX_DEF);				\ 	} while (B_FALSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TXQ_LOCK_DESTROY
+parameter_list|(
+name|_txq
+parameter_list|)
+define|\
+value|mtx_destroy(&(_txq)->lock)
+end_define
 
 begin_define
 define|#
 directive|define
 name|SFXGE_TXQ_LOCK
 parameter_list|(
-name|txq
+name|_txq
 parameter_list|)
-value|(&(txq)->lock)
+define|\
+value|mtx_lock(&(_txq)->lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SFXGE_TX_SCALE
+name|SFXGE_TXQ_TRYLOCK
 parameter_list|(
-name|sc
+name|_txq
 parameter_list|)
-value|((sc)->intr.n_alloc)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|SFXGE_TXQ_LOCK
-parameter_list|(
-name|txq
-parameter_list|)
-value|(&(txq)->sc->tx_lock)
+define|\
+value|mtx_trylock(&(_txq)->lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|SFXGE_TX_SCALE
+name|SFXGE_TXQ_UNLOCK
 parameter_list|(
-name|sc
+name|_txq
 parameter_list|)
-value|1
+define|\
+value|mtx_unlock(&(_txq)->lock)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|SFXGE_TXQ_LOCK_ASSERT_OWNED
+parameter_list|(
+name|_txq
+parameter_list|)
+define|\
+value|mtx_assert(&(_txq)->lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SFXGE_TXQ_LOCK_ASSERT_NOTOWNED
+parameter_list|(
+name|_txq
+parameter_list|)
+define|\
+value|mtx_assert(&(_txq)->lock, MA_NOTOWNED)
+end_define
 
 begin_struct
 struct|struct
@@ -352,14 +416,15 @@ name|efx_txq_t
 modifier|*
 name|common
 decl_stmt|;
-name|struct
-name|sfxge_txq
-modifier|*
-name|next
-decl_stmt|;
 name|efsys_mem_t
 modifier|*
 name|tsoh_buffer
+decl_stmt|;
+name|char
+name|lock_name
+index|[
+name|SFXGE_LOCK_NAME_MAX
+index|]
 decl_stmt|;
 comment|/* This field changes more often and is read regularly on both 	 * the initiation and completion paths 	 */
 name|int
@@ -370,9 +435,6 @@ name|CACHE_LINE_SIZE
 parameter_list|)
 function_decl|;
 comment|/* The following fields change more often, and are used mostly 	 * on the initiation path 	 */
-ifdef|#
-directive|ifdef
-name|SFXGE_HAVE_MQ
 name|struct
 name|mtx
 name|lock
@@ -390,18 +452,6 @@ name|unsigned
 name|int
 name|n_pend_desc
 decl_stmt|;
-else|#
-directive|else
-name|unsigned
-name|int
-name|n_pend_desc
-name|__aligned
-parameter_list|(
-name|CACHE_LINE_SIZE
-parameter_list|)
-function_decl|;
-endif|#
-directive|endif
 name|unsigned
 name|int
 name|added
@@ -433,7 +483,27 @@ name|drops
 decl_stmt|;
 name|unsigned
 name|long
-name|early_drops
+name|get_overflow
+decl_stmt|;
+name|unsigned
+name|long
+name|get_non_tcp_overflow
+decl_stmt|;
+name|unsigned
+name|long
+name|put_overflow
+decl_stmt|;
+name|unsigned
+name|long
+name|netdown_drops
+decl_stmt|;
+name|unsigned
+name|long
+name|tso_pdrop_too_many
+decl_stmt|;
+name|unsigned
+name|long
+name|tso_pdrop_no_rsrc
 decl_stmt|;
 comment|/* The following fields change more often, and are used mostly 	 * on the completion path 	 */
 name|unsigned
@@ -448,9 +518,20 @@ name|unsigned
 name|int
 name|completed
 decl_stmt|;
+name|struct
+name|sfxge_txq
+modifier|*
+name|next
+decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_struct_decl
+struct_decl|struct
+name|sfxge_evq
+struct_decl|;
+end_struct_decl
 
 begin_function_decl
 specifier|extern
@@ -464,6 +545,19 @@ parameter_list|,
 name|struct
 name|mbuf
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|uint64_t
+name|sfxge_tx_get_drops
+parameter_list|(
+name|struct
+name|sfxge_softc
+modifier|*
+name|sc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -529,6 +623,11 @@ name|struct
 name|sfxge_txq
 modifier|*
 name|txq
+parameter_list|,
+name|struct
+name|sfxge_evq
+modifier|*
+name|evq
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -545,12 +644,6 @@ name|txq
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SFXGE_HAVE_MQ
-end_ifdef
 
 begin_function_decl
 specifier|extern
@@ -582,29 +675,6 @@ name|m
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_function_decl
-specifier|extern
-name|void
-name|sfxge_if_start
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

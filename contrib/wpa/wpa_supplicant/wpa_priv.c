@@ -1052,10 +1052,32 @@ expr_stmt|;
 name|params
 operator|.
 name|freq
+operator|.
+name|mode
+operator|=
+name|assoc
+operator|->
+name|hwmode
+expr_stmt|;
+name|params
+operator|.
+name|freq
+operator|.
+name|freq
 operator|=
 name|assoc
 operator|->
 name|freq
+expr_stmt|;
+name|params
+operator|.
+name|freq
+operator|.
+name|channel
+operator|=
+name|assoc
+operator|->
+name|channel
 expr_stmt|;
 if|if
 condition|(
@@ -1846,9 +1868,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"sendmsg(l2 rx)"
+name|MSG_ERROR
+argument_list|,
+literal|"sendmsg(l2 rx): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2479,9 +2508,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"recvfrom"
+name|MSG_ERROR
+argument_list|,
+literal|"recvfrom: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2875,16 +2911,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|wpa_driver_ops
-modifier|*
-name|wpa_drivers
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|struct
@@ -2977,11 +3003,11 @@ name|iface
 operator|->
 name|driver_name
 operator|=
-name|os_malloc
+name|dup_binstr
 argument_list|(
+name|params
+argument_list|,
 name|len
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3002,26 +3028,6 @@ return|return
 name|NULL
 return|;
 block|}
-name|os_memcpy
-argument_list|(
-name|iface
-operator|->
-name|driver_name
-argument_list|,
-name|params
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-name|iface
-operator|->
-name|driver_name
-index|[
-name|len
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -3239,9 +3245,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket(PF_UNIX)"
+name|MSG_ERROR
+argument_list|,
+literal|"socket(PF_UNIX): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|wpa_priv_interface_deinit
@@ -3373,21 +3386,20 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
-argument_list|(
-literal|"unlink[ctrl_iface]"
-argument_list|)
-expr_stmt|;
 name|wpa_printf
 argument_list|(
 name|MSG_ERROR
 argument_list|,
-literal|"Could not unlink "
-literal|"existing ctrl_iface socket '%s'"
+literal|"Could not unlink existing ctrl_iface socket '%s': %s"
 argument_list|,
 name|iface
 operator|->
 name|sock_name
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3419,9 +3431,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"wpa-priv-iface-init: bind(PF_UNIX)"
+name|MSG_ERROR
+argument_list|,
+literal|"wpa-priv-iface-init: bind(PF_UNIX): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3486,9 +3505,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"chmod"
+name|MSG_ERROR
+argument_list|,
+literal|"chmod: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3667,9 +3693,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"sendmsg(wpas_socket)"
+name|MSG_ERROR
+argument_list|,
+literal|"sendmsg(wpas_socket): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4767,9 +4800,16 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"sendmsg(wpas_socket)"
+name|MSG_ERROR
+argument_list|,
+literal|"sendmsg(wpas_socket): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4885,13 +4925,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|wpa_debug_level
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int

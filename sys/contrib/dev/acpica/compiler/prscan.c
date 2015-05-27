@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -127,8 +127,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|PrDoIncludeBuffer
+parameter_list|(
+name|char
+modifier|*
+name|Pathname
+parameter_list|,
+name|char
+modifier|*
+name|BufferName
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|PrDoIncludeFile
+parameter_list|(
+name|char
+modifier|*
+name|Pathname
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*  * Supported preprocessor directives  */
+comment|/*  * Supported preprocessor directives  * Each entry is of the form "Name, ArgumentCount"  */
 end_comment
 
 begin_decl_stmt
@@ -194,11 +222,24 @@ block|,
 literal|0
 block|}
 block|,
-comment|/* Argument is not standard format, so 0 */
+comment|/* Argument is not standard format, so just use 0 here */
+block|{
+literal|"includebuffer"
+block|,
+literal|0
+block|}
+block|,
+comment|/* Argument is not standard format, so just use 0 here */
 block|{
 literal|"line"
 block|,
 literal|1
+block|}
+block|,
+block|{
+literal|"loadbuffer"
+block|,
+literal|0
 block|}
 block|,
 block|{
@@ -228,6 +269,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* This table must match ordering of above table exactly */
+end_comment
+
 begin_enum
 enum|enum
 name|Gbl_DirectiveIndexes
@@ -251,6 +296,8 @@ block|,
 name|PR_DIRECTIVE_IFNDEF
 block|,
 name|PR_DIRECTIVE_INCLUDE
+block|,
+name|PR_DIRECTIVE_INCLUDEBUFFER
 block|,
 name|PR_DIRECTIVE_LINE
 block|,
@@ -783,13 +830,6 @@ name|Next
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* Line prefix */
-block|FlPrintFile (ASL_FILE_PREPROCESSOR, "/* %14s  %.5u  i:%.5u */ ",             Gbl_Files[ASL_FILE_INPUT].Filename,             Gbl_CurrentLineNumber, Gbl_PreprocessorLineNumber);
-endif|#
-directive|endif
 comment|/*          * Emit a #line directive if necessary, to keep the line numbers in          * the (.i) file synchronized with the original source code file, so          * that the correct line number appears in any error messages          * generated by the actual compiler.          */
 if|if
 condition|(
@@ -864,6 +904,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|Token2
+init|=
+name|NULL
 decl_stmt|;
 name|char
 modifier|*
@@ -919,7 +961,7 @@ argument_list|)
 expr_stmt|;
 name|DbgPrint
 argument_list|(
-name|ASL_DEBUG_OUTPUT
+name|ASL_PARSE_OUTPUT
 argument_list|,
 name|PR_PREFIX_ID
 literal|"#%s: Unknown directive\n"
@@ -1108,7 +1150,7 @@ name|Directive
 index|]
 operator|.
 name|ArgCount
-operator|==
+operator|>=
 literal|1
 condition|)
 block|{
@@ -1127,6 +1169,40 @@ if|if
 condition|(
 operator|!
 name|Token
+condition|)
+block|{
+goto|goto
+name|SyntaxError
+goto|;
+block|}
+block|}
+if|if
+condition|(
+name|Gbl_DirectiveInfo
+index|[
+name|Directive
+index|]
+operator|.
+name|ArgCount
+operator|>=
+literal|2
+condition|)
+block|{
+name|Token2
+operator|=
+name|PrGetNextToken
+argument_list|(
+name|NULL
+argument_list|,
+name|PR_TOKEN_SEPARATORS
+argument_list|,
+name|Next
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Token2
 condition|)
 block|{
 goto|goto
@@ -1253,7 +1329,7 @@ expr_stmt|;
 block|}
 name|DbgPrint
 argument_list|(
-name|ASL_DEBUG_OUTPUT
+name|ASL_PARSE_OUTPUT
 argument_list|,
 name|PR_PREFIX_ID
 literal|"Resolved #if: %8.8X%8.8X %s\n"
@@ -1467,7 +1543,7 @@ endif|#
 directive|endif
 name|DbgPrint
 argument_list|(
-name|ASL_DEBUG_OUTPUT
+name|ASL_PARSE_OUTPUT
 argument_list|,
 name|PR_PREFIX_ID
 literal|"New #define: %s->%s\n"
@@ -1548,7 +1624,7 @@ goto|;
 block|}
 name|DbgPrint
 argument_list|(
-name|ASL_DEBUG_OUTPUT
+name|ASL_PARSE_OUTPUT
 argument_list|,
 name|PR_PREFIX_ID
 literal|"Start #include file \"%s\"\n"
@@ -1560,9 +1636,76 @@ argument_list|,
 name|Gbl_CurrentLineNumber
 argument_list|)
 expr_stmt|;
-name|PrOpenIncludeFile
+name|PrDoIncludeFile
 argument_list|(
 name|Token
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PR_DIRECTIVE_INCLUDEBUFFER
+case|:
+name|Token
+operator|=
+name|PrGetNextToken
+argument_list|(
+name|NULL
+argument_list|,
+literal|" \"<>"
+argument_list|,
+name|Next
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Token
+condition|)
+block|{
+goto|goto
+name|SyntaxError
+goto|;
+block|}
+name|Token2
+operator|=
+name|PrGetNextToken
+argument_list|(
+name|NULL
+argument_list|,
+name|PR_TOKEN_SEPARATORS
+argument_list|,
+name|Next
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Token2
+condition|)
+block|{
+goto|goto
+name|SyntaxError
+goto|;
+block|}
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+name|PR_PREFIX_ID
+literal|"Start #includebuffer input from file \"%s\", buffer name %s\n"
+argument_list|,
+name|Gbl_CurrentLineNumber
+argument_list|,
+name|Token
+argument_list|,
+name|Token2
+argument_list|)
+expr_stmt|;
+name|PrDoIncludeBuffer
+argument_list|(
+name|Token
+argument_list|,
+name|Token2
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1603,7 +1746,7 @@ return|return;
 block|}
 name|DbgPrint
 argument_list|(
-name|ASL_DEBUG_OUTPUT
+name|ASL_PARSE_OUTPUT
 argument_list|,
 name|PR_PREFIX_ID
 literal|"User #line invocation %s\n"
@@ -1767,7 +1910,7 @@ name|PR_DIRECTIVE_UNDEF
 case|:
 name|DbgPrint
 argument_list|(
-name|ASL_DEBUG_OUTPUT
+name|ASL_PARSE_OUTPUT
 argument_list|,
 name|PR_PREFIX_ID
 literal|"#undef: %s\n"
@@ -1803,7 +1946,7 @@ default|default:
 comment|/* Should never get here */
 name|DbgPrint
 argument_list|(
-name|ASL_DEBUG_OUTPUT
+name|ASL_PARSE_OUTPUT
 argument_list|,
 name|PR_PREFIX_ID
 literal|"Unrecognized directive: %u\n"
@@ -2156,7 +2299,7 @@ argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
 literal|"Pr(%.4u) - [%u %s] "
-literal|"%*s %s #%s, Depth %u\n"
+literal|"%*s %s #%s, IfDepth %u\n"
 argument_list|,
 name|Gbl_CurrentLineNumber
 argument_list|,
@@ -2179,6 +2322,185 @@ argument_list|,
 name|DirectiveName
 argument_list|,
 name|Gbl_IfDepth
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    PrDoIncludeFile  *  * PARAMETERS:  Pathname                - Name of the input file  *  * RETURN:      None.  *  * DESCRIPTION: Open an include file, from #include.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|PrDoIncludeFile
+parameter_list|(
+name|char
+modifier|*
+name|Pathname
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|FullPathname
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|PrOpenIncludeFile
+argument_list|(
+name|Pathname
+argument_list|,
+literal|"r"
+argument_list|,
+operator|&
+name|FullPathname
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    PrDoIncludeBuffer  *  * PARAMETERS:  Pathname                - Name of the input binary file  *              BufferName              - ACPI namepath of the buffer  *  * RETURN:      None.  *  * DESCRIPTION: Create an ACPI buffer object from a binary file. The contents  *              of the file are emitted into the buffer object as ascii  *              hex data. From #includebuffer.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|PrDoIncludeBuffer
+parameter_list|(
+name|char
+modifier|*
+name|Pathname
+parameter_list|,
+name|char
+modifier|*
+name|BufferName
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|FullPathname
+decl_stmt|;
+name|FILE
+modifier|*
+name|BinaryBufferFile
+decl_stmt|;
+name|UINT32
+name|i
+init|=
+literal|0
+decl_stmt|;
+name|UINT8
+name|c
+decl_stmt|;
+name|BinaryBufferFile
+operator|=
+name|PrOpenIncludeFile
+argument_list|(
+name|Pathname
+argument_list|,
+literal|"rb"
+argument_list|,
+operator|&
+name|FullPathname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|BinaryBufferFile
+condition|)
+block|{
+return|return;
+block|}
+comment|/* Emit "Name (XXXX, Buffer() {" header */
+name|FlPrintFile
+argument_list|(
+name|ASL_FILE_PREPROCESSOR
+argument_list|,
+literal|"Name (%s, Buffer()\n{"
+argument_list|,
+name|BufferName
+argument_list|)
+expr_stmt|;
+comment|/* Dump the entire file in ascii hex format */
+while|while
+condition|(
+name|fread
+argument_list|(
+operator|&
+name|c
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+name|BinaryBufferFile
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|i
+operator|%
+literal|8
+operator|)
+condition|)
+block|{
+name|FlPrintFile
+argument_list|(
+name|ASL_FILE_PREPROCESSOR
+argument_list|,
+literal|"\n   "
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+block|}
+name|FlPrintFile
+argument_list|(
+name|ASL_FILE_PREPROCESSOR
+argument_list|,
+literal|" 0x%2.2X,"
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
+block|}
+name|DbgPrint
+argument_list|(
+name|ASL_PARSE_OUTPUT
+argument_list|,
+name|PR_PREFIX_ID
+literal|"#includebuffer: read %u bytes from %s\n"
+argument_list|,
+name|Gbl_CurrentLineNumber
+argument_list|,
+name|i
+argument_list|,
+name|FullPathname
+argument_list|)
+expr_stmt|;
+comment|/* Close the Name() operator */
+name|FlPrintFile
+argument_list|(
+name|ASL_FILE_PREPROCESSOR
+argument_list|,
+literal|"\n})\n"
+argument_list|,
+name|BufferName
+argument_list|)
+expr_stmt|;
+name|fclose
+argument_list|(
+name|BinaryBufferFile
 argument_list|)
 expr_stmt|;
 block|}

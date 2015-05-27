@@ -34,25 +34,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HexagonMACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONMACHINEFUNCTIONINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|HexagonMACHINEFUNCTIONINFO_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONMACHINEFUNCTIONINFO_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|"llvm/CodeGen/MachineFunction.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineFunction.h"
+file|<map>
 end_include
 
 begin_decl_stmt

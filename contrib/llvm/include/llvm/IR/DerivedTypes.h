@@ -422,6 +422,26 @@ name|NumContainedTys
 index|]
 return|;
 block|}
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+name|params
+argument_list|()
+specifier|const
+block|{
+return|return
+name|makeArrayRef
+argument_list|(
+name|param_begin
+argument_list|()
+argument_list|,
+name|param_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// Parameter type accessors.
 name|Type
 operator|*
@@ -636,7 +656,7 @@ argument_list|)
 block|,
 name|SymbolTableEntry
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 expr|enum
@@ -670,16 +690,6 @@ name|SymbolTableEntry
 block|;
 name|public
 operator|:
-operator|~
-name|StructType
-argument_list|()
-block|{
-name|delete
-index|[]
-name|ContainedTys
-block|;
-comment|// Delete the body.
-block|}
 comment|/// StructType::create - This creates an identified struct.
 specifier|static
 name|StructType
@@ -768,7 +778,7 @@ argument|Type *elt1
 argument_list|,
 argument|...
 argument_list|)
-name|END_WITH_NULL
+name|LLVM_END_WITH_NULL
 block|;
 comment|/// StructType::get - This static method is the primary way to create a
 comment|/// literal StructType.
@@ -809,7 +819,7 @@ argument|Type *elt1
 argument_list|,
 argument|...
 argument_list|)
-name|END_WITH_NULL
+name|LLVM_END_WITH_NULL
 block|;
 name|bool
 name|isPacked
@@ -866,7 +876,9 @@ block|}
 comment|/// isSized - Return true if this is a sized type.
 name|bool
 name|isSized
-argument_list|()
+argument_list|(
+argument|SmallPtrSetImpl<const Type*> *Visited = nullptr
+argument_list|)
 specifier|const
 block|;
 comment|/// hasName - Return true if this is a named struct that has a non-empty name.
@@ -878,7 +890,7 @@ block|{
 return|return
 name|SymbolTableEntry
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getName - Return the name for this struct type if it has an identity.
@@ -914,7 +926,7 @@ argument|Type *elt1
 argument_list|,
 argument|...
 argument_list|)
-name|END_WITH_NULL
+name|LLVM_END_WITH_NULL
 block|;
 comment|/// isValidElementType - Return true if the specified type is valid as a
 comment|/// element type.
@@ -954,6 +966,27 @@ name|ContainedTys
 index|[
 name|NumContainedTys
 index|]
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+specifier|const
+name|elements
+argument_list|()
+specifier|const
+block|{
+return|return
+name|makeArrayRef
+argument_list|(
+name|element_begin
+argument_list|()
+argument_list|,
+name|element_end
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// isLayoutIdentical - Return true if this is layout identical to the
@@ -1460,6 +1493,91 @@ name|VTy
 operator|->
 name|getNumElements
 argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// VectorType::getHalfElementsVectorType - This static method returns
+comment|/// a VectorType with half as many elements as the input type and the
+comment|/// same element type.
+comment|///
+specifier|static
+name|VectorType
+operator|*
+name|getHalfElementsVectorType
+argument_list|(
+argument|VectorType *VTy
+argument_list|)
+block|{
+name|unsigned
+name|NumElts
+operator|=
+name|VTy
+operator|->
+name|getNumElements
+argument_list|()
+block|;
+name|assert
+argument_list|(
+operator|(
+name|NumElts
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"Cannot halve vector with odd number of elements."
+argument_list|)
+block|;
+return|return
+name|VectorType
+operator|::
+name|get
+argument_list|(
+name|VTy
+operator|->
+name|getElementType
+argument_list|()
+argument_list|,
+name|NumElts
+operator|/
+literal|2
+argument_list|)
+return|;
+block|}
+comment|/// VectorType::getDoubleElementsVectorType - This static method returns
+comment|/// a VectorType with twice  as many elements as the input type and the
+comment|/// same element type.
+comment|///
+specifier|static
+name|VectorType
+operator|*
+name|getDoubleElementsVectorType
+argument_list|(
+argument|VectorType *VTy
+argument_list|)
+block|{
+name|unsigned
+name|NumElts
+operator|=
+name|VTy
+operator|->
+name|getNumElements
+argument_list|()
+block|;
+return|return
+name|VectorType
+operator|::
+name|get
+argument_list|(
+name|VTy
+operator|->
+name|getElementType
+argument_list|()
+argument_list|,
+name|NumElts
+operator|*
+literal|2
 argument_list|)
 return|;
 block|}

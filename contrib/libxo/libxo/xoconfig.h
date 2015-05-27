@@ -293,6 +293,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the<stdio_ext.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_STDIO_EXT_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<stdio.h> header file. */
 end_comment
 
@@ -485,6 +493,14 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define to 1 if you have the `__flbf' function. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE___FLBF */
+end_comment
+
+begin_comment
 comment|/* Enable debugging */
 end_comment
 
@@ -493,7 +509,15 @@ comment|/* #undef LIBXO_DEBUG */
 end_comment
 
 begin_comment
-comment|/* Define to the sub-directory in which libtool stores uninstalled libraries.    */
+comment|/* Enable text-only rendering */
+end_comment
+
+begin_comment
+comment|/* #undef LIBXO_TEXT_ONLY */
+end_comment
+
+begin_comment
+comment|/* Define to the sub-directory where libtool stores uninstalled libraries. */
 end_comment
 
 begin_define
@@ -544,7 +568,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"libxo 0.1.6"
+value|"libxo 0.3.2"
 end_define
 
 begin_comment
@@ -577,7 +601,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"0.1.6"
+value|"0.3.2"
 end_define
 
 begin_comment
@@ -607,7 +631,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"0.1.6"
+value|"0.3.2"
 end_define
 
 begin_comment

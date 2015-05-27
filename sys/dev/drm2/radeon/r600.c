@@ -145,7 +145,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|__linux__
 end_ifdef
 
 begin_comment
@@ -485,10 +485,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* DUMBBELL_WIP */
-end_comment
-
 begin_function_decl
 name|int
 name|r600_debugfs_mc_info_init
@@ -505,6 +501,33 @@ begin_comment
 comment|/* r600,rv610,rv630,rv620,rv635,rv670 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_WIP
+end_ifdef
+
+begin_comment
+comment|/* FreeBSD: to please GCC 4.2. */
+end_comment
+
+begin_function_decl
+name|int
+name|r600_mc_wait_for_idle
+parameter_list|(
+name|struct
+name|radeon_device
+modifier|*
+name|rdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
 specifier|static
 name|void
@@ -517,6 +540,33 @@ name|rdev
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FREEBSD_WIP
+end_ifdef
+
+begin_comment
+comment|/* FreeBSD: to please GCC 4.2. */
+end_comment
+
+begin_function_decl
+name|void
+name|r600_fini
+parameter_list|(
+name|struct
+name|radeon_device
+modifier|*
+name|rdev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|void
@@ -5510,7 +5560,7 @@ condition|)
 block|{
 return|return;
 block|}
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|1
 argument_list|)
@@ -6442,7 +6492,7 @@ condition|)
 return|return
 literal|0
 return|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|1
 argument_list|)
@@ -7457,6 +7507,7 @@ name|void
 modifier|*
 name|vram_scratch_ptr_ptr
 decl_stmt|;
+comment|/* FreeBSD: to please GCC 4.2. */
 if|if
 condition|(
 name|rdev
@@ -8154,7 +8205,7 @@ argument_list|(
 name|R_008020_GRBM_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|15
 argument_list|)
@@ -8198,7 +8249,7 @@ argument_list|(
 name|R_008020_GRBM_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|15
 argument_list|)
@@ -8398,7 +8449,7 @@ argument_list|(
 name|SRBM_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|50
 argument_list|)
@@ -8553,7 +8604,7 @@ name|rdev
 argument_list|)
 expr_stmt|;
 comment|/* Wait a little for things to settle down */
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|1
 argument_list|)
@@ -12715,7 +12766,7 @@ argument_list|(
 name|GRBM_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|15
 argument_list|)
@@ -13076,7 +13127,7 @@ argument_list|(
 name|GRBM_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|15
 argument_list|)
@@ -13266,7 +13317,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|1
 argument_list|)
@@ -13644,7 +13695,7 @@ argument_list|(
 name|SRBM_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|50
 argument_list|)
@@ -18024,6 +18075,7 @@ name|void
 modifier|*
 name|ring_ptr
 decl_stmt|;
+comment|/* FreeBSD: to please GCC 4.2. */
 comment|/* Allocate ring buffer */
 if|if
 condition|(
@@ -18394,7 +18446,7 @@ argument_list|(
 name|SRBM_SOFT_RESET
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|15
 argument_list|)
@@ -21343,7 +21395,7 @@ name|rdev
 argument_list|)
 expr_stmt|;
 comment|/* Wait and acknowledge irq */
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|1
 argument_list|)

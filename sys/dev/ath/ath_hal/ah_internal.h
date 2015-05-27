@@ -1059,6 +1059,10 @@ decl_stmt|,
 name|halRxDoMyBeacon
 range|:
 literal|1
+decl_stmt|,
+name|halHwUapsdTrig
+range|:
+literal|1
 decl_stmt|;
 name|uint32_t
 name|halWirelessModes
@@ -1549,15 +1553,15 @@ name|int
 name|ah_rxornIsFatal
 decl_stmt|;
 comment|/* how to treat HAL_INT_RXORN */
-ifndef|#
-directive|ifndef
-name|ATH_NF_PER_CHAN
+comment|/* Only used if ATH_NF_PER_CHAN is defined */
 name|HAL_NFCAL_HIST_FULL
 name|nf_cal_hist
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* ! ATH_NF_PER_CHAN */
+comment|/* 	 * Channel survey history - current channel only. 	 */
+name|HAL_CHANNEL_SURVEY
+name|ah_chansurvey
+decl_stmt|;
+comment|/* channel survey */
 block|}
 struct|;
 end_struct
@@ -4175,6 +4179,44 @@ modifier|*
 parameter_list|,
 name|HAL_CHANNEL_INTERNAL
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Clear the channel survey data.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|ath_hal_survey_clear
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Add a sample to the channel survey data.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|ath_hal_survey_add_sample
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_SURVEY_SAMPLE
+modifier|*
+name|hs
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -595,11 +595,6 @@ name|path
 parameter_list|)
 block|{
 name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
-name|struct
 name|ext4_extent_header
 modifier|*
 name|ehp
@@ -615,13 +610,6 @@ decl_stmt|;
 name|daddr_t
 name|nblk
 decl_stmt|;
-name|vp
-operator|=
-name|ITOV
-argument_list|(
-name|ip
-argument_list|)
-expr_stmt|;
 name|ehp
 operator|=
 operator|(

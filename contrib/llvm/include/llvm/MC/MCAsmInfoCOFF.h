@@ -77,10 +77,10 @@ range|:
 name|public
 name|MCAsmInfoCOFF
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -95,10 +95,10 @@ range|:
 name|public
 name|MCAsmInfoCOFF
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:

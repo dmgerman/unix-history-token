@@ -1028,7 +1028,7 @@ comment|/* 		 * It's a warning, not an error, to work around what seems 		 * to 
 name|log_warnx
 argument_list|(
 literal|"received Login PDU with wrong StatSN: "
-literal|"is %d, should be %d"
+literal|"is %u, should be %u"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -1706,6 +1706,28 @@ literal|"received invalid "
 literal|"MaxRecvDataSegmentLength"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|>
+name|ISCSI_MAX_DATA_SEGMENT_LENGTH
+condition|)
+block|{
+name|log_debugx
+argument_list|(
+literal|"capping MaxRecvDataSegmentLength "
+literal|"from %d to %d"
+argument_list|,
+name|tmp
+argument_list|,
+name|ISCSI_MAX_DATA_SEGMENT_LENGTH
+argument_list|)
+expr_stmt|;
+name|tmp
+operator|=
+name|ISCSI_MAX_DATA_SEGMENT_LENGTH
+expr_stmt|;
+block|}
 name|conn
 operator|->
 name|conn_max_data_segment_length
@@ -2015,6 +2037,23 @@ operator|=
 name|keys_new
 argument_list|()
 expr_stmt|;
+name|log_debugx
+argument_list|(
+literal|"offload \"%s\" limits MaxRecvDataSegmentLength to %zd"
+argument_list|,
+name|conn
+operator|->
+name|conn_conf
+operator|.
+name|isc_offload
+argument_list|,
+name|conn
+operator|->
+name|conn_limits
+operator|.
+name|isl_max_data_segment_length
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The following keys are irrelevant for discovery sessions. 	 */
 if|if
 condition|(
@@ -2100,7 +2139,13 @@ name|request_keys
 argument_list|,
 literal|"MaxBurstLength"
 argument_list|,
-name|ISCSI_MAX_DATA_SEGMENT_LENGTH
+literal|2
+operator|*
+name|conn
+operator|->
+name|conn_limits
+operator|.
+name|isl_max_data_segment_length
 argument_list|)
 expr_stmt|;
 name|keys_add_int
@@ -2109,7 +2154,11 @@ name|request_keys
 argument_list|,
 literal|"FirstBurstLength"
 argument_list|,
-name|ISCSI_MAX_DATA_SEGMENT_LENGTH
+name|conn
+operator|->
+name|conn_limits
+operator|.
+name|isl_max_data_segment_length
 argument_list|)
 expr_stmt|;
 name|keys_add
@@ -2119,6 +2168,15 @@ argument_list|,
 literal|"InitialR2T"
 argument_list|,
 literal|"Yes"
+argument_list|)
+expr_stmt|;
+name|keys_add
+argument_list|(
+name|request_keys
+argument_list|,
+literal|"MaxOutstandingR2T"
+argument_list|,
+literal|"1"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2149,7 +2207,11 @@ name|request_keys
 argument_list|,
 literal|"MaxRecvDataSegmentLength"
 argument_list|,
-name|ISCSI_MAX_DATA_SEGMENT_LENGTH
+name|conn
+operator|->
+name|conn_limits
+operator|.
+name|isl_max_data_segment_length
 argument_list|)
 expr_stmt|;
 name|keys_add
@@ -2177,15 +2239,6 @@ argument_list|,
 literal|"ErrorRecoveryLevel"
 argument_list|,
 literal|"0"
-argument_list|)
-expr_stmt|;
-name|keys_add
-argument_list|(
-name|request_keys
-argument_list|,
-literal|"MaxOutstandingR2T"
-argument_list|,
-literal|"1"
 argument_list|)
 expr_stmt|;
 name|keys_save

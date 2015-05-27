@@ -152,12 +152,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_gif.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in_var.h>
 end_include
 
@@ -217,6 +211,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|in_gif_input
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -226,6 +238,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|protosw
 name|in_gif_protosw
@@ -279,7 +292,15 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|GIF_TTL
+value|30
+end_define
+
 begin_expr_stmt
+specifier|static
 name|VNET_DEFINE
 argument_list|(
 name|int
@@ -574,6 +595,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|in_gif_input
 parameter_list|(
@@ -751,6 +773,9 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|int
+name|ret
+decl_stmt|;
 name|GIF_RLOCK_ASSERT
 argument_list|(
 name|sc
@@ -772,7 +797,18 @@ operator|->
 name|ip_dst
 operator|.
 name|s_addr
-operator|||
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|ret
+operator|=
+literal|32
+expr_stmt|;
+if|if
+condition|(
 name|sc
 operator|->
 name|gif_iphdr
@@ -787,11 +823,30 @@ name|ip_src
 operator|.
 name|s_addr
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|gif_options
+operator|&
+name|GIF_IGNORE_SOURCE
+operator|)
+operator|==
+literal|0
+condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
+else|else
+name|ret
+operator|+=
+literal|32
+expr_stmt|;
 comment|/* martian filters on outer source - NOT done in ip_input! */
 if|if
 condition|(
@@ -965,9 +1020,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|32
-operator|*
-literal|2
+name|ret
 operator|)
 return|;
 block|}

@@ -1070,6 +1070,12 @@ literal|1
 decl_stmt|;
 comment|/* Don't search default library path */
 name|bool
+name|z_global
+range|:
+literal|1
+decl_stmt|;
+comment|/* Make the object global */
+name|bool
 name|ref_nodel
 range|:
 literal|1
@@ -1135,6 +1141,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* A valid GNU hash tag is available */
+name|bool
+name|dlopened
+range|:
+literal|1
+decl_stmt|;
+comment|/* dlopen()-ed (vs. load statically) */
 name|struct
 name|link_map
 name|linkmap
@@ -1454,27 +1466,35 @@ name|SymLook
 typedef|;
 end_typedef
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|_rtld_error
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__printflike
-parameter_list|(
-function_decl|1
-operator|,
-function_decl|2
-end_function_decl
+operator|*
+argument_list|,
+operator|...
+argument_list|)
+name|__printflike
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+name|__exported
+decl_stmt|;
+end_decl_stmt
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_decl_stmt
+name|void
+name|rtld_die
+argument_list|(
+name|void
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|const

@@ -1198,7 +1198,7 @@ operator|>
 name|ed
 operator|->
 name|ed_clear_mark
-operator|&&
+operator|||
 name|mtdp
 operator|->
 name|t_emark

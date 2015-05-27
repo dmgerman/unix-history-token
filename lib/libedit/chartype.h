@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: chartype.h,v 1.6 2010/04/20 02:01:13 christos Exp $	*/
+comment|/*	$NetBSD: chartype.h,v 1.15 2015/05/17 13:14:41 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -56,6 +56,18 @@ argument_list|(
 name|__MACH__
 argument_list|)
 operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__OpenBSD__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
 end_if
 
 begin_ifndef
@@ -118,7 +130,7 @@ begin_define
 define|#
 directive|define
 name|ct_mbtowc_reset
-value|mbtowc(0,0,0)
+value|mbtowc(0,0,(size_t)0)
 end_define
 
 begin_define
@@ -193,6 +205,13 @@ parameter_list|(
 name|type
 parameter_list|)
 value|type ## W
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCHAR
+value|"%lc"
 end_define
 
 begin_define
@@ -490,15 +509,35 @@ parameter_list|)
 value|wcstol(p,e,b)
 end_define
 
-begin_define
-define|#
-directive|define
+begin_function
+specifier|static
+specifier|inline
+name|int
 name|Width
 parameter_list|(
+name|wchar_t
 name|c
 parameter_list|)
-value|wcwidth(c)
-end_define
+block|{
+name|int
+name|w
+init|=
+name|wcwidth
+argument_list|(
+name|c
+argument_list|)
+decl_stmt|;
+return|return
+name|w
+operator|<
+literal|0
+condition|?
+literal|0
+else|:
+name|w
+return|;
+block|}
+end_function
 
 begin_else
 else|#
@@ -607,6 +646,13 @@ parameter_list|(
 name|type
 parameter_list|)
 value|type
+end_define
+
+begin_define
+define|#
+directive|define
+name|FCHAR
+value|"%c"
 end_define
 
 begin_define
@@ -961,7 +1007,7 @@ value|__ct_encode_string
 end_define
 
 begin_comment
-comment|/* Encode a wide character string and return the UTF-8 encoded result. */
+comment|/* Encode a wide-character string and return the UTF-8 encoded result. */
 end_comment
 
 begin_function_decl
@@ -988,7 +1034,7 @@ value|__ct_decode_string
 end_define
 
 begin_comment
-comment|/* Decode a (multi)?byte string and return the wide character string result. */
+comment|/* Decode a (multi)?byte string and return the wide-character string result. */
 end_comment
 
 begin_function_decl
@@ -1037,13 +1083,24 @@ end_comment
 
 begin_function_decl
 name|protected
-name|void
-name|ct_conv_buff_resize
+name|int
+name|ct_conv_cbuff_resize
 parameter_list|(
 name|ct_buffer_t
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|protected
+name|int
+name|ct_conv_wbuff_resize
+parameter_list|(
+name|ct_buffer_t
+modifier|*
 parameter_list|,
 name|size_t
 parameter_list|)
@@ -1131,14 +1188,25 @@ end_define
 begin_define
 define|#
 directive|define
-name|ct_conv_buff_resize
+name|ct_conv_cbuff_resize
 parameter_list|(
 name|b
 parameter_list|,
-name|os
-parameter_list|,
-name|ns
+name|s
 parameter_list|)
+value|((s) == (0))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ct_conv_wbuff_resize
+parameter_list|(
+name|b
+parameter_list|,
+name|s
+parameter_list|)
+value|((s) == (0))
 end_define
 
 begin_define
@@ -1187,7 +1255,7 @@ begin_define
 define|#
 directive|define
 name|VISUAL_WIDTH_MAX
-value|8
+value|((size_t)8)
 end_define
 
 begin_comment

@@ -147,7 +147,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|sinh
 argument_list|(
@@ -167,7 +167,7 @@ condition|)
 comment|/* small x: normal case */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|sinh
 argument_list|(
@@ -214,7 +214,7 @@ literal|0.5
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|copysign
 argument_list|(
@@ -251,7 +251,7 @@ name|z
 operator|=
 name|__ldexp_cexp
 argument_list|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|fabs
 argument_list|(
@@ -267,7 +267,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|creal
 argument_list|(
@@ -300,7 +300,7 @@ name|x
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|h
 operator|*
@@ -339,7 +339,7 @@ literal|0x7ff00000
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|copysign
 argument_list|(
@@ -392,7 +392,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 argument_list|,
@@ -402,7 +402,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 argument_list|,
@@ -429,7 +429,7 @@ literal|0x7ff00000
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|y
 operator|-
@@ -473,7 +473,7 @@ literal|0x7ff00000
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 operator|*
@@ -491,7 +491,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 operator|*
@@ -513,7 +513,7 @@ block|}
 comment|/* 	 * sinh(NaN + I NaN)  = d(NaN) + I d(NaN). 	 * 	 * sinh(NaN +- I Inf) = d(NaN) + I d(NaN). 	 * Optionally raises the invalid floating-point exception. 	 * Choice = raise. 	 * 	 * sinh(NaN + I y)    = d(NaN) + I d(NaN). 	 * Optionally raises the invalid floating-point exception for finite 	 * nonzero y.  Choice = don't raise (except for signaling NaNs). 	 */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 operator|(
 name|x
@@ -559,7 +559,7 @@ name|z
 operator|=
 name|csinh
 argument_list|(
-name|cpack
+name|CMPLX
 argument_list|(
 operator|-
 name|cimag
@@ -576,7 +576,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|cimag
 argument_list|(

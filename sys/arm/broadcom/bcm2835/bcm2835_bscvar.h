@@ -38,7 +38,7 @@ literal|0
 block|,
 literal|1
 block|,
-literal|0x20205000
+literal|0x205000
 block|}
 block|,
 comment|/* BSC0 GPIO pins and base address. */
@@ -47,12 +47,19 @@ literal|2
 block|,
 literal|3
 block|,
-literal|0x20804000
+literal|0x804000
 block|}
 comment|/* BSC1 GPIO pins and base address. */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|BCM_BSC_BASE_MASK
+value|0x00ffffff
+end_define
 
 begin_struct
 struct|struct
@@ -60,6 +67,9 @@ name|bcm_bsc_softc
 block|{
 name|device_t
 name|sc_dev
+decl_stmt|;
+name|device_t
+name|sc_iicbus
 decl_stmt|;
 name|struct
 name|mtx
@@ -123,39 +133,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BCM_BSC_SLOW
-value|10000
-end_define
-
-begin_comment
-comment|/*  10 kHz. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BCM_BSC_FAST
-value|50000
-end_define
-
-begin_comment
-comment|/*  50 kHz. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BCM_BSC_FASTEST
-value|100000
-end_define
-
-begin_comment
-comment|/* 100 kHz. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|BCM_BSC_WRITE
 parameter_list|(
 name|_sc
@@ -165,7 +142,7 @@ parameter_list|,
 name|_val
 parameter_list|)
 define|\
-value|bus_space_write_4(_sc->sc_bst, _sc->sc_bsh, _off, _val)
+value|bus_space_write_4((_sc)->sc_bst, (_sc)->sc_bsh, _off, _val)
 end_define
 
 begin_define
@@ -178,7 +155,7 @@ parameter_list|,
 name|_off
 parameter_list|)
 define|\
-value|bus_space_read_4(_sc->sc_bst, _sc->sc_bsh, _off)
+value|bus_space_read_4((_sc)->sc_bst, (_sc)->sc_bsh, _off)
 end_define
 
 begin_define

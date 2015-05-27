@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCAssembler.h"
 end_include
 
@@ -67,6 +73,9 @@ name|MCCodeEmitter
 decl_stmt|;
 name|class
 name|MCSectionData
+decl_stmt|;
+name|class
+name|MCSubtargetInfo
 decl_stmt|;
 name|class
 name|MCExpr
@@ -109,6 +118,21 @@ operator|::
 name|iterator
 name|CurInsertionPoint
 block|;
+name|bool
+name|EmitEHFrame
+block|;
+name|bool
+name|EmitDebugFrame
+block|;
+name|SmallVector
+operator|<
+name|MCSymbolData
+operator|*
+block|,
+literal|2
+operator|>
+name|PendingLabels
+block|;
 name|virtual
 name|void
 name|EmitInstToData
@@ -117,26 +141,36 @@ specifier|const
 name|MCInst
 operator|&
 name|Inst
+argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|&
 argument_list|)
 operator|=
 literal|0
 block|;
-name|virtual
 name|void
 name|EmitCFIStartProcImpl
 argument_list|(
-name|MCDwarfFrameInfo
-operator|&
-name|Frame
+argument|MCDwarfFrameInfo&Frame
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitCFIEndProcImpl
 argument_list|(
-name|MCDwarfFrameInfo
-operator|&
-name|Frame
+argument|MCDwarfFrameInfo&Frame
+argument_list|)
+name|override
+block|;
+comment|// If any labels have been emitted but not assigned fragments, ensure that
+comment|// they get assigned, either to F if possible or to a new data fragment.
+name|void
+name|flushPendingLabels
+argument_list|(
+name|MCFragment
+operator|*
+name|F
 argument_list|)
 block|;
 name|protected
@@ -146,10 +180,6 @@ argument_list|(
 name|MCContext
 operator|&
 name|Context
-argument_list|,
-name|MCTargetStreamer
-operator|*
-name|TargetStreamer
 argument_list|,
 name|MCAsmBackend
 operator|&
@@ -169,10 +199,6 @@ argument_list|(
 name|MCContext
 operator|&
 name|Context
-argument_list|,
-name|MCTargetStreamer
-operator|*
-name|TargetStreamer
 argument_list|,
 name|MCAsmBackend
 operator|&
@@ -198,10 +224,56 @@ block|;
 name|public
 operator|:
 comment|/// state management
-name|virtual
 name|void
 name|reset
 argument_list|()
+name|override
+block|;
+comment|/// Object streamers require the integrated assembler.
+name|bool
+name|isIntegratedAssemblerRequired
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|MCSymbolData
+operator|&
+name|getOrCreateSymbolData
+argument_list|(
+argument|const MCSymbol *Symbol
+argument_list|)
+block|{
+return|return
+name|getAssembler
+argument_list|()
+operator|.
+name|getOrCreateSymbolData
+argument_list|(
+operator|*
+name|Symbol
+argument_list|)
+return|;
+block|}
+name|void
+name|EmitFrames
+argument_list|(
+name|MCAsmBackend
+operator|*
+name|MAB
+argument_list|)
+block|;
+name|void
+name|EmitCFISections
+argument_list|(
+argument|bool EH
+argument_list|,
+argument|bool Debug
+argument_list|)
+name|override
 block|;
 name|protected
 operator|:
@@ -226,8 +298,12 @@ name|insert
 argument_list|(
 argument|MCFragment *F
 argument_list|)
-specifier|const
 block|{
+name|flushPendingLabels
+argument_list|(
+name|F
+argument_list|)
+block|;
 name|CurSectionData
 operator|->
 name|getFragmentList
@@ -253,21 +329,16 @@ name|MCDataFragment
 operator|*
 name|getOrCreateDataFragment
 argument_list|()
-specifier|const
-block|;
-specifier|const
-name|MCExpr
-operator|*
-name|AddValueSymbols
-argument_list|(
-specifier|const
-name|MCExpr
-operator|*
-name|Value
-argument_list|)
 block|;
 name|public
 operator|:
+name|void
+name|visitUsedSymbol
+argument_list|(
+argument|const MCSymbol&Sym
+argument_list|)
+name|override
+block|;
 name|MCAssembler
 operator|&
 name|getAssembler
@@ -280,105 +351,73 @@ return|;
 block|}
 comment|/// @name MCStreamer Interface
 comment|/// @{
-name|virtual
 name|void
 name|EmitLabel
 argument_list|(
-name|MCSymbol
-operator|*
-name|Symbol
+argument|MCSymbol *Symbol
 argument_list|)
+name|override
 block|;
-name|virtual
-name|void
-name|EmitDebugLabel
-argument_list|(
-name|MCSymbol
-operator|*
-name|Symbol
-argument_list|)
-block|;
-name|virtual
 name|void
 name|EmitAssignment
 argument_list|(
-name|MCSymbol
-operator|*
-name|Symbol
+argument|MCSymbol *Symbol
 argument_list|,
-specifier|const
-name|MCExpr
-operator|*
-name|Value
+argument|const MCExpr *Value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitValueImpl
 argument_list|(
 argument|const MCExpr *Value
 argument_list|,
 argument|unsigned Size
+argument_list|,
+argument|const SMLoc&Loc = SMLoc()
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitULEB128Value
 argument_list|(
-specifier|const
-name|MCExpr
-operator|*
-name|Value
+argument|const MCExpr *Value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitSLEB128Value
 argument_list|(
-specifier|const
-name|MCExpr
-operator|*
-name|Value
+argument|const MCExpr *Value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitWeakReference
 argument_list|(
-name|MCSymbol
-operator|*
-name|Alias
+argument|MCSymbol *Alias
 argument_list|,
-specifier|const
-name|MCSymbol
-operator|*
-name|Symbol
+argument|const MCSymbol *Symbol
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|ChangeSection
 argument_list|(
-specifier|const
-name|MCSection
-operator|*
-name|Section
+argument|const MCSection *Section
 argument_list|,
-specifier|const
-name|MCExpr
-operator|*
-name|Subsection
+argument|const MCExpr *Subsection
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitInstruction
 argument_list|(
-specifier|const
-name|MCInst
-operator|&
-name|Inst
+argument|const MCInst&Inst
+argument_list|,
+argument|const MCSubtargetInfo& STI
 argument_list|)
+name|override
 block|;
 comment|/// \brief Emit an instruction to a special fragment, because this instruction
 comment|/// can change its size during relaxation.
@@ -390,35 +429,38 @@ specifier|const
 name|MCInst
 operator|&
 name|Inst
+argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|&
 argument_list|)
 block|;
-name|virtual
 name|void
 name|EmitBundleAlignMode
 argument_list|(
 argument|unsigned AlignPow2
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitBundleLock
 argument_list|(
 argument|bool AlignToEnd
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitBundleUnlock
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|EmitBytes
 argument_list|(
 argument|StringRef Data
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitValueToAlignment
 argument_list|(
@@ -433,8 +475,8 @@ argument_list|,
 argument|unsigned MaxBytesToEmit =
 literal|0
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitCodeAlignment
 argument_list|(
@@ -443,8 +485,8 @@ argument_list|,
 argument|unsigned MaxBytesToEmit =
 literal|0
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|EmitValueToOffset
 argument_list|(
@@ -452,8 +494,8 @@ argument|const MCExpr *Offset
 argument_list|,
 argument|unsigned char Value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitDwarfLocDirective
 argument_list|(
@@ -471,8 +513,8 @@ argument|unsigned Discriminator
 argument_list|,
 argument|StringRef FileName
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitDwarfAdvanceLineAddr
 argument_list|(
@@ -485,7 +527,6 @@ argument_list|,
 argument|unsigned PointerSize
 argument_list|)
 block|;
-name|virtual
 name|void
 name|EmitDwarfAdvanceFrameAddr
 argument_list|(
@@ -500,27 +541,20 @@ operator|*
 name|Label
 argument_list|)
 block|;
-name|virtual
 name|void
 name|EmitGPRel32Value
 argument_list|(
-specifier|const
-name|MCExpr
-operator|*
-name|Value
+argument|const MCExpr *Value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitGPRel64Value
 argument_list|(
-specifier|const
-name|MCExpr
-operator|*
-name|Value
+argument|const MCExpr *Value
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitFill
 argument_list|(
@@ -528,21 +562,36 @@ argument|uint64_t NumBytes
 argument_list|,
 argument|uint8_t FillValue
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|EmitZeros
 argument_list|(
 argument|uint64_t NumBytes
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|FinishImpl
 argument_list|()
-block|; }
-decl_stmt|;
+name|override
+block|;
+name|bool
+name|mayHaveInstructions
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|getCurrentSectionData
+argument_list|()
+operator|->
+name|hasInstructions
+argument_list|()
+return|;
 block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

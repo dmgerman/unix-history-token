@@ -9,6 +9,12 @@ directive|include
 file|<sys/param.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|L2CAP_SOCKET_CHECKED
+end_define
+
 begin_include
 include|#
 directive|include
@@ -560,6 +566,21 @@ literal|"Bluetooth HCI Specification 1.2"
 block|,
 comment|/* 0x03 */
 literal|"Bluetooth HCI Specification 2.0"
+block|,
+comment|/* 0x04 */
+literal|"Bluetooth HCI Specification 2.1"
+block|,
+comment|/* 0x05 */
+literal|"Bluetooth HCI Specification 3.0"
+block|,
+comment|/* 0x06 */
+literal|"Bluetooth HCI Specification 4.0"
+block|,
+comment|/* 0x07 */
+literal|"Bluetooth HCI Specification 4.1"
+block|,
+comment|/* 0x08 */
+literal|"Bluetooth HCI Specification 4.2"
 block|}
 decl_stmt|;
 return|return
@@ -616,6 +637,21 @@ literal|"Bluetooth LMP 1.2"
 block|,
 comment|/* 0x03 */
 literal|"Bluetooth LMP 2.0"
+block|,
+comment|/* 0x04 */
+literal|"Bluetooth LMP 2.1"
+block|,
+comment|/* 0x04 */
+literal|"Bluetooth LMP 3.0"
+block|,
+comment|/* 0x04 */
+literal|"Bluetooth LMP 4.0"
+block|,
+comment|/* 0x04 */
+literal|"Bluetooth LMP 4.1"
+block|,
+comment|/* 0x04 */
+literal|"Bluetooth LMP 4.2"
 block|}
 decl_stmt|;
 return|return

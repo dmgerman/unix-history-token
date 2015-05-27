@@ -1167,7 +1167,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t

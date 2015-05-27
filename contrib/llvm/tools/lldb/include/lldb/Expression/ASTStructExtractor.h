@@ -84,7 +84,7 @@ comment|/// arguments, and room for the function's return value.
 comment|///
 comment|/// The definition of this struct is itself in the body of the wrapper function,
 comment|/// so Clang does the structure layout itself.  ASTStructExtractor reads through
-comment|/// the AST for the wrapper funtion and finds the struct.
+comment|/// the AST for the wrapper function and finds the struct.
 comment|//----------------------------------------------------------------------
 name|class
 name|ASTStructExtractor

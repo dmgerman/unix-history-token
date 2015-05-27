@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * @(#) $Header: /tcpdump/master/libpcap/pcap-int.h,v 1.94 2008-09-16 00:20:23 guy Exp $ (LBL)  */
+comment|/*  * Copyright (c) 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the Computer Systems  *	Engineering Group at Lawrence Berkeley Laboratory.  * 4. Neither the name of the University nor of the Laboratory may be used  *    to endorse or promote products derived from this software without  *    specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -35,14 +35,6 @@ endif|#
 directive|endif
 ifdef|#
 directive|ifdef
-name|HAVE_LIBDLPI
-include|#
-directive|include
-file|<libdlpi.h>
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
 name|WIN32
 include|#
 directive|include
@@ -63,14 +55,6 @@ file|<fcntl.h>
 include|#
 directive|include
 file|<io.h>
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|HAVE_SNF_API
-include|#
-directive|include
-file|<snf.h>
 endif|#
 directive|endif
 if|#
@@ -110,331 +94,24 @@ value|((ull& 0xff00000000000000LL)>> 56) | \                       ((ull& 0x00ff
 endif|#
 directive|endif
 comment|/* _MSC_VER */
-comment|/*  * Savefile  */
-typedef|typedef
-enum|enum
-block|{
-name|NOT_SWAPPED
-block|,
-name|SWAPPED
-block|,
-name|MAYBE_SWAPPED
-block|}
-name|swapped_type_t
-typedef|;
-comment|/*  * Used when reading a savefile.  */
+comment|/*  * Maximum snapshot length.  *  * Somewhat arbitrary, but chosen to be:  *  *    1) big enough for maximum-size Linux loopback packets (65549)  *       and some USB packets captured with USBPcap:  *  *           http://desowin.org/usbpcap/  *  *       (> 131072,< 262144)  *  * and  *  *    2) small enough not to cause attempts to allocate huge amounts of  *       memory; some applications might use the snapshot length in a  *       savefile header to control the size of the buffer they allocate,  *       so a size of, say, 2^31-1 might not work well.  *  * We don't enforce this in pcap_set_snaplen(), but we use it internally.  */
+define|#
+directive|define
+name|MAXIMUM_SNAPLEN
+value|262144
 struct|struct
-name|pcap_sf
+name|pcap_opt
 block|{
-name|FILE
-modifier|*
-name|rfile
-decl_stmt|;
-name|int
-function_decl|(
-modifier|*
-name|next_packet_op
-function_decl|)
-parameter_list|(
-name|pcap_t
-modifier|*
-parameter_list|,
-name|struct
-name|pcap_pkthdr
-modifier|*
-parameter_list|,
-name|u_char
-modifier|*
-modifier|*
-parameter_list|)
-function_decl|;
-name|int
-name|swapped
-decl_stmt|;
-name|size_t
-name|hdrsize
-decl_stmt|;
-name|swapped_type_t
-name|lengths_swapped
-decl_stmt|;
-name|int
-name|version_major
-decl_stmt|;
-name|int
-name|version_minor
-decl_stmt|;
-name|bpf_u_int32
-name|ifcount
-decl_stmt|;
-comment|/* number of interfaces seen in this capture */
-name|u_int
-name|tsresol
-decl_stmt|;
-comment|/* time stamp resolution */
-name|u_int
-name|tsscale
-decl_stmt|;
-comment|/* scaling factor for resolution -> microseconds */
-name|u_int64_t
-name|tsoffset
-decl_stmt|;
-comment|/* time stamp offset */
-block|}
-struct|;
-comment|/*  * Used when doing a live capture.  */
-struct|struct
-name|pcap_md
-block|{
-name|struct
-name|pcap_stat
-name|stat
-decl_stmt|;
-comment|/*XXX*/
-name|int
-name|use_bpf
-decl_stmt|;
-comment|/* using kernel filter */
-name|u_long
-name|TotPkts
-decl_stmt|;
-comment|/* can't oflow for 79 hrs on ether */
-name|u_long
-name|TotAccepted
-decl_stmt|;
-comment|/* count accepted by filter */
-name|u_long
-name|TotDrops
-decl_stmt|;
-comment|/* count of dropped packets */
-name|long
-name|TotMissed
-decl_stmt|;
-comment|/* missed by i/f during this run */
-name|long
-name|OrigMissed
-decl_stmt|;
-comment|/* missed by i/f before this run */
 name|char
 modifier|*
-name|device
+name|source
 decl_stmt|;
-comment|/* device name */
 name|int
 name|timeout
 decl_stmt|;
 comment|/* timeout for buffering */
 name|int
-name|must_do_on_close
-decl_stmt|;
-comment|/* stuff we must do when we close */
-name|struct
-name|pcap
-modifier|*
-name|next
-decl_stmt|;
-comment|/* list of open pcaps that need stuff cleared on close */
-ifdef|#
-directive|ifdef
-name|linux
-name|int
-name|sock_packet
-decl_stmt|;
-comment|/* using Linux 2.0 compatible interface */
-name|int
-name|cooked
-decl_stmt|;
-comment|/* using SOCK_DGRAM rather than SOCK_RAW */
-name|int
-name|ifindex
-decl_stmt|;
-comment|/* interface index of device we're bound to */
-name|int
-name|lo_ifindex
-decl_stmt|;
-comment|/* interface index of the loopback device */
-name|u_int
-name|packets_read
-decl_stmt|;
-comment|/* count of packets read with recvfrom() */
-name|bpf_u_int32
-name|oldmode
-decl_stmt|;
-comment|/* mode to restore when turning monitor mode off */
-name|char
-modifier|*
-name|mondevice
-decl_stmt|;
-comment|/* mac80211 monitor device we created */
-name|u_char
-modifier|*
-name|mmapbuf
-decl_stmt|;
-comment|/* memory-mapped region pointer */
-name|size_t
-name|mmapbuflen
-decl_stmt|;
-comment|/* size of region */
-name|int
-name|vlan_offset
-decl_stmt|;
-comment|/* offset at which to insert vlan tags; if -1, don't insert */
-name|u_int
-name|tp_version
-decl_stmt|;
-comment|/* version of tpacket_hdr for mmaped ring */
-name|u_int
-name|tp_hdrlen
-decl_stmt|;
-comment|/* hdrlen of tpacket_hdr for mmaped ring */
-name|u_char
-modifier|*
-name|oneshot_buffer
-decl_stmt|;
-comment|/* buffer for copy of packet */
-name|long
-name|proc_dropped
-decl_stmt|;
-comment|/* packets reported dropped by /proc/net/dev */
-endif|#
-directive|endif
-comment|/* linux */
-ifdef|#
-directive|ifdef
-name|HAVE_DAG_API
-ifdef|#
-directive|ifdef
-name|HAVE_DAG_STREAMS_API
-name|u_char
-modifier|*
-name|dag_mem_bottom
-decl_stmt|;
-comment|/* DAG card current memory bottom pointer */
-name|u_char
-modifier|*
-name|dag_mem_top
-decl_stmt|;
-comment|/* DAG card current memory top pointer */
-else|#
-directive|else
-comment|/* HAVE_DAG_STREAMS_API */
-name|void
-modifier|*
-name|dag_mem_base
-decl_stmt|;
-comment|/* DAG card memory base address */
-name|u_int
-name|dag_mem_bottom
-decl_stmt|;
-comment|/* DAG card current memory bottom offset */
-name|u_int
-name|dag_mem_top
-decl_stmt|;
-comment|/* DAG card current memory top offset */
-endif|#
-directive|endif
-comment|/* HAVE_DAG_STREAMS_API */
-name|int
-name|dag_fcs_bits
-decl_stmt|;
-comment|/* Number of checksum bits from link layer */
-name|int
-name|dag_offset_flags
-decl_stmt|;
-comment|/* Flags to pass to dag_offset(). */
-name|int
-name|dag_stream
-decl_stmt|;
-comment|/* DAG stream number */
-name|int
-name|dag_timeout
-decl_stmt|;
-comment|/* timeout specified to pcap_open_live. 				 * Same as in linux above, introduce 				 * generally? */
-endif|#
-directive|endif
-comment|/* HAVE_DAG_API */
-ifdef|#
-directive|ifdef
-name|HAVE_SNF_API
-name|snf_handle_t
-name|snf_handle
-decl_stmt|;
-comment|/* opaque device handle */
-name|snf_ring_t
-name|snf_ring
-decl_stmt|;
-comment|/* opaque device ring handle */
-name|int
-name|snf_timeout
-decl_stmt|;
-name|int
-name|snf_boardnum
-decl_stmt|;
-endif|#
-directive|endif
-comment|/*HAVE_SNF_API*/
-ifdef|#
-directive|ifdef
-name|HAVE_ZEROCOPY_BPF
-comment|/*         * Zero-copy read buffer -- for zero-copy BPF.  'buffer' above will         * alternative between these two actual mmap'd buffers as required.         * As there is a header on the front size of the mmap'd buffer, only         * some of the buffer is exposed to libpcap as a whole via bufsize;         * zbufsize is the true size.  zbuffer tracks the current zbuf         * assocated with buffer so that it can be used to decide which the         * next buffer to read will be.         */
-name|u_char
-modifier|*
-name|zbuf1
-decl_stmt|,
-modifier|*
-name|zbuf2
-decl_stmt|,
-modifier|*
-name|zbuffer
-decl_stmt|;
-name|u_int
-name|zbufsize
-decl_stmt|;
-name|u_int
-name|zerocopy
-decl_stmt|;
-name|u_int
-name|interrupted
-decl_stmt|;
-name|struct
-name|timespec
-name|firstsel
-decl_stmt|;
-comment|/*         * If there's currently a buffer being actively processed, then it is         * referenced here; 'buffer' is also pointed at it, but offset by the         * size of the header.         */
-name|struct
-name|bpf_zbuf_header
-modifier|*
-name|bzh
-decl_stmt|;
-endif|#
-directive|endif
-comment|/* HAVE_ZEROCOPY_BPF */
-block|}
-struct|;
-comment|/*  * Stuff to do when we close.  */
-define|#
-directive|define
-name|MUST_CLEAR_PROMISC
-value|0x00000001
-comment|/* clear promiscuous mode */
-define|#
-directive|define
-name|MUST_CLEAR_RFMON
-value|0x00000002
-comment|/* clear rfmon (monitor) mode */
-define|#
-directive|define
-name|MUST_DELETE_MONIF
-value|0x00000004
-comment|/* delete monitor-mode interface */
-struct|struct
-name|pcap_opt
-block|{
-name|int
 name|buffer_size
-decl_stmt|;
-name|char
-modifier|*
-name|source
 decl_stmt|;
 name|int
 name|promisc
@@ -442,49 +119,19 @@ decl_stmt|;
 name|int
 name|rfmon
 decl_stmt|;
+comment|/* monitor mode */
+name|int
+name|immediate
+decl_stmt|;
+comment|/* immediate mode - deliver packets as soon as they arrive */
 name|int
 name|tstamp_type
 decl_stmt|;
+name|int
+name|tstamp_precision
+decl_stmt|;
 block|}
 struct|;
-comment|/*  * Ultrix, DEC OSF/1^H^H^H^H^H^H^H^H^HDigital UNIX^H^H^H^H^H^H^H^H^H^H^H^H  * Tru64 UNIX, and some versions of NetBSD pad FDDI packets to make everything  * line up on a nice boundary.  */
-ifdef|#
-directive|ifdef
-name|__NetBSD__
-include|#
-directive|include
-file|<sys/param.h>
-comment|/* needed to declare __NetBSD_Version__ */
-endif|#
-directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|ultrix
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__osf__
-argument_list|)
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|__NetBSD__
-argument_list|)
-operator|&&
-name|__NetBSD_Version__
-operator|>
-literal|106000000
-operator|)
-define|#
-directive|define
-name|PCAP_FDDIPAD
-value|3
-endif|#
-directive|endif
 typedef|typedef
 name|int
 function_decl|(
@@ -671,6 +318,18 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+typedef|typedef
+name|Adapter
+modifier|*
+function_decl|(
+modifier|*
+name|getadapter_op_t
+function_decl|)
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|)
+function_decl|;
 endif|#
 directive|endif
 typedef|typedef
@@ -684,9 +343,33 @@ name|pcap_t
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/*  * We put all the stuff used in the read code path at the beginning,  * to try to keep it together in the same cache line or lines.  */
 struct|struct
 name|pcap
 block|{
+comment|/* 	 * Method to call to read packets on a live capture. 	 */
+name|read_op_t
+name|read_op
+decl_stmt|;
+comment|/* 	 * Method to call to read to read packets from a savefile. 	 */
+name|int
+function_decl|(
+modifier|*
+name|next_packet_op
+function_decl|)
+parameter_list|(
+name|pcap_t
+modifier|*
+parameter_list|,
+name|struct
+name|pcap_pkthdr
+modifier|*
+parameter_list|,
+name|u_char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|WIN32
@@ -708,20 +391,57 @@ decl_stmt|;
 name|int
 name|selectable_fd
 decl_stmt|;
-name|int
-name|send_fd
-decl_stmt|;
 endif|#
 directive|endif
 comment|/* WIN32 */
-ifdef|#
-directive|ifdef
-name|HAVE_LIBDLPI
-name|dlpi_handle_t
-name|dlpi_hd
+comment|/* 	 * Read buffer. 	 */
+name|int
+name|bufsize
 decl_stmt|;
-endif|#
-directive|endif
+name|u_char
+modifier|*
+name|buffer
+decl_stmt|;
+name|u_char
+modifier|*
+name|bp
+decl_stmt|;
+name|int
+name|cc
+decl_stmt|;
+name|int
+name|break_loop
+decl_stmt|;
+comment|/* flag set to force break from packet-reading loop */
+name|void
+modifier|*
+name|priv
+decl_stmt|;
+comment|/* private data for methods */
+name|int
+name|swapped
+decl_stmt|;
+name|FILE
+modifier|*
+name|rfile
+decl_stmt|;
+comment|/* null if live capture, non-null if savefile */
+name|int
+name|fddipad
+decl_stmt|;
+name|struct
+name|pcap
+modifier|*
+name|next
+decl_stmt|;
+comment|/* list of open pcaps that need stuff cleared on close */
+comment|/* 	 * File version number; meaningful only for a savefile, but we 	 * keep it here so that apps that (mistakenly) ask for the 	 * version numbers will get the same zero values that they 	 * always did. 	 */
+name|int
+name|version_major
+decl_stmt|;
+name|int
+name|version_minor
+decl_stmt|;
 name|int
 name|snapshot
 decl_stmt|;
@@ -749,59 +469,9 @@ name|int
 name|oldstyle
 decl_stmt|;
 comment|/* if we're opening with pcap_open_live() */
-name|int
-name|break_loop
-decl_stmt|;
-comment|/* flag set to force break from packet-reading loop */
-ifdef|#
-directive|ifdef
-name|PCAP_FDDIPAD
-name|int
-name|fddipad
-decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|MSDOS
-name|void
-function_decl|(
-modifier|*
-name|wait_proc
-function_decl|)
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-comment|/*          call proc while waiting */
-endif|#
-directive|endif
-name|struct
-name|pcap_sf
-name|sf
-decl_stmt|;
-name|struct
-name|pcap_md
-name|md
-decl_stmt|;
 name|struct
 name|pcap_opt
 name|opt
-decl_stmt|;
-comment|/* 	 * Read buffer. 	 */
-name|int
-name|bufsize
-decl_stmt|;
-name|u_char
-modifier|*
-name|buffer
-decl_stmt|;
-name|u_char
-modifier|*
-name|bp
-decl_stmt|;
-name|int
-name|cc
 decl_stmt|;
 comment|/* 	 * Place holder for pcap_next(). 	 */
 name|u_char
@@ -812,15 +482,51 @@ comment|/* We're accepting only packets in this direction/these directions. */
 name|pcap_direction_t
 name|direction
 decl_stmt|;
-comment|/* 	 * Methods. 	 */
+comment|/* 	 * Placeholder for filter code if bpf not in kernel. 	 */
+name|struct
+name|bpf_program
+name|fcode
+decl_stmt|;
+name|char
+name|errbuf
+index|[
+name|PCAP_ERRBUF_SIZE
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|int
+name|dlt_count
+decl_stmt|;
+name|u_int
+modifier|*
+name|dlt_list
+decl_stmt|;
+name|int
+name|tstamp_type_count
+decl_stmt|;
+name|u_int
+modifier|*
+name|tstamp_type_list
+decl_stmt|;
+name|int
+name|tstamp_precision_count
+decl_stmt|;
+name|u_int
+modifier|*
+name|tstamp_precision_list
+decl_stmt|;
+name|struct
+name|pcap_pkthdr
+name|pcap_header
+decl_stmt|;
+comment|/* This is needed for the pcap_next_ex() to work */
+comment|/* 	 * More methods. 	 */
 name|activate_op_t
 name|activate_op
 decl_stmt|;
 name|can_set_rfmon_op_t
 name|can_set_rfmon_op
-decl_stmt|;
-name|read_op_t
-name|read_op
 decl_stmt|;
 name|inject_op_t
 name|inject_op
@@ -860,43 +566,14 @@ decl_stmt|;
 name|setmintocopy_op_t
 name|setmintocopy_op
 decl_stmt|;
+name|getadapter_op_t
+name|getadapter_op
+decl_stmt|;
 endif|#
 directive|endif
 name|cleanup_op_t
 name|cleanup_op
 decl_stmt|;
-comment|/* 	 * Placeholder for filter code if bpf not in kernel. 	 */
-name|struct
-name|bpf_program
-name|fcode
-decl_stmt|;
-name|char
-name|errbuf
-index|[
-name|PCAP_ERRBUF_SIZE
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|int
-name|dlt_count
-decl_stmt|;
-name|u_int
-modifier|*
-name|dlt_list
-decl_stmt|;
-name|int
-name|tstamp_type_count
-decl_stmt|;
-name|u_int
-modifier|*
-name|tstamp_type_list
-decl_stmt|;
-name|struct
-name|pcap_pkthdr
-name|pcap_header
-decl_stmt|;
-comment|/* This is needed for the pcap_next_ex() to work */
 block|}
 struct|;
 comment|/*  * This is a timeval as stored in a savefile.  * It has to use the same types everywhere, independent of the actual  * `struct timeval'; `struct timeval' has 32-bit tv_sec values on some  * platforms and 64-bit tv_sec values on other platforms, and writing  * out native `struct timeval' values would mean files could only be  * read on systems with the same tv_sec size as the system on which  * the file was written.  */
@@ -913,7 +590,7 @@ decl_stmt|;
 comment|/* microseconds */
 block|}
 struct|;
-comment|/*  * This is a `pcap_pkthdr' as actually stored in a savefile.  *  * Do not change the format of this structure, in any way (this includes  * changes that only affect the length of fields in this structure),  * and do not make the time stamp anything other than seconds and  * microseconds (e.g., seconds and nanoseconds).  Instead:  *  *	introduce a new structure for the new format;  *  *	send mail to "tcpdump-workers@lists.tcpdump.org", requesting  *	a new magic number for your new capture file format, and, when  *	you get the new magic number, put it in "savefile.c";  *  *	use that magic number for save files with the changed record  *	header;  *  *	make the code in "savefile.c" capable of reading files with  *	the old record header as well as files with the new record header  *	(using the magic number to determine the header format).  *  * Then supply the changes by forking the branch at  *  *	https://github.com/mcr/libpcap/issues  *  * and issuing a pull request, so that future versions of libpcap and  * programs that use it (such as tcpdump) will be able to read your new  * capture file format.  */
+comment|/*  * This is a `pcap_pkthdr' as actually stored in a savefile.  *  * Do not change the format of this structure, in any way (this includes  * changes that only affect the length of fields in this structure),  * and do not make the time stamp anything other than seconds and  * microseconds (e.g., seconds and nanoseconds).  Instead:  *  *	introduce a new structure for the new format;  *  *	send mail to "tcpdump-workers@lists.tcpdump.org", requesting  *	a new magic number for your new capture file format, and, when  *	you get the new magic number, put it in "savefile.c";  *  *	use that magic number for save files with the changed record  *	header;  *  *	make the code in "savefile.c" capable of reading files with  *	the old record header as well as files with the new record header  *	(using the magic number to determine the header format).  *  * Then supply the changes by forking the branch at  *  *	https://github.com/the-tcpdump-group/libpcap/issues  *  * and issuing a pull request, so that future versions of libpcap and  * programs that use it (such as tcpdump) will be able to read your new  * capture file format.  */
 struct|struct
 name|pcap_sf_pkthdr
 block|{
@@ -1112,6 +789,14 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
+comment|/*  * Does the packet count argument to a module's read routine say  * "supply packets until you run out of packets"?  */
+define|#
+directive|define
+name|PACKET_COUNT_IS_UNLIMITED
+parameter_list|(
+name|count
+parameter_list|)
+value|((count)<= 0)
 comment|/*  * Routines that most pcap implementations can use for non-blocking mode.  */
 if|#
 directive|if
@@ -1174,6 +859,8 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 name|int
@@ -1283,6 +970,42 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|int
+name|add_addr_to_dev
+parameter_list|(
+name|pcap_if_t
+modifier|*
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|struct
+name|sockaddr
+modifier|*
+name|dstaddr
+parameter_list|,
+name|size_t
+parameter_list|,
+name|char
+modifier|*
+name|errbuf
+parameter_list|)
+function_decl|;
+name|int
 name|pcap_add_if
 parameter_list|(
 name|pcap_if_t
@@ -1337,6 +1060,44 @@ name|char
 modifier|*
 parameter_list|,
 name|char
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/*  * Internal interfaces for "pcap_open_offline()".  *  * "pcap_open_offline_common()" allocates and fills in a pcap_t, for use  * by pcap_open_offline routines.  *  * "sf_cleanup()" closes the file handle associated with a pcap_t, if  * appropriate, and frees all data common to all modules for handling  * savefile types.  */
+name|pcap_t
+modifier|*
+name|pcap_open_offline_common
+parameter_list|(
+name|char
+modifier|*
+name|ebuf
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+function_decl|;
+name|void
+name|sf_cleanup
+parameter_list|(
+name|pcap_t
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+comment|/*  * Internal interfaces for both "pcap_create()" and routines that  * open savefiles.  *  * "pcap_oneshot()" is the standard one-shot callback for "pcap_next()"  * and "pcap_next_ex()".  */
+name|void
+name|pcap_oneshot
+parameter_list|(
+name|u_char
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|pcap_pkthdr
+modifier|*
+parameter_list|,
+specifier|const
+name|u_char
 modifier|*
 parameter_list|)
 function_decl|;

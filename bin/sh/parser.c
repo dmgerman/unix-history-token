@@ -8919,6 +8919,20 @@ argument_list|,
 name|startlinno
 argument_list|)
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|arg0
+condition|)
+name|outfmt
+argument_list|(
+name|out2
+argument_list|,
+literal|"%s: "
+argument_list|,
+name|arg0
+argument_list|)
+expr_stmt|;
 name|outfmt
 argument_list|(
 name|out2
@@ -9121,7 +9135,7 @@ literal|0
 case|:
 name|fmt
 operator|=
-name|nullstr
+literal|""
 expr_stmt|;
 break|break;
 case|case

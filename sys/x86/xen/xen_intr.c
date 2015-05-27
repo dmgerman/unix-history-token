@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************  * xen_intr.c  *  * Xen event and interrupt services for x86 PV and HVM guests.  *  * Copyright (c) 2002-2005, K A Fraser  * Copyright (c) 2005, Intel Corporation<xiaofeng.ling@intel.com>  * Copyright (c) 2012, Spectra Logic Corporation  *  * This file may be distributed separately from the Linux kernel, or  * incorporated into other software packages, subject to the following license:  *  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this source file (the "Software"), to deal in the Software without  * restriction, including without limitation the rights to use, copy, modify,  * merge, publish, distribute, sublicense, and/or sell copies of the Software,  * and to permit persons to whom the Software is furnished to do so, subject to  * the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS  * IN THE SOFTWARE.  */
+comment|/******************************************************************************  * xen_intr.c  *  * Xen event and interrupt services for x86 HVM guests.  *  * Copyright (c) 2002-2005, K A Fraser  * Copyright (c) 2005, Intel Corporation<xiaofeng.ling@intel.com>  * Copyright (c) 2012, Spectra Logic Corporation  *  * This file may be distributed separately from the Linux kernel, or  * incorporated into other software packages, subject to the following license:  *  * Permission is hereby granted, free of charge, to any person obtaining a copy  * of this source file (the "Software"), to deal in the Software without  * restriction, including without limitation the rights to use, copy, modify,  * merge, publish, distribute, sublicense, and/or sell copies of the Software,  * and to permit persons to whom the Software is furnished to do so, subject to  * the following conditions:  *  * The above copyright notice and this permission notice shall be included in  * all copies or substantial portions of the Software.  *  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS  * IN THE SOFTWARE.  */
 end_comment
 
 begin_include
@@ -372,18 +372,17 @@ literal|1
 decl_stmt|;
 comment|/* close on unbind? */
 name|u_int
-name|xi_shared
-range|:
-literal|1
-decl_stmt|;
-comment|/* Shared with other domains. */
-name|u_int
 name|xi_activehi
 range|:
 literal|1
 decl_stmt|;
 name|u_int
 name|xi_edgetrigger
+range|:
+literal|1
+decl_stmt|;
+name|u_int
+name|xi_masked
 range|:
 literal|1
 decl_stmt|;
@@ -1601,6 +1600,31 @@ name|isrc
 operator|->
 name|xi_port
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SMP
+if|if
+condition|(
+name|type
+operator|==
+name|EVTCHN_TYPE_PORT
+condition|)
+block|{
+comment|/* 		 * By default all interrupts are assigned to vCPU#0 		 * unless specified otherwise, so shuffle them to balance 		 * the interrupt load. 		 */
+name|xen_intr_assign_cpu
+argument_list|(
+operator|&
+name|isrc
+operator|->
+name|xi_intsrc
+argument_list|,
+name|intr_next_cpu
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 if|if
 condition|(
 name|filter
@@ -3121,10 +3145,9 @@ name|vcpu_id
 decl_stmt|;
 name|int
 name|error
+decl_stmt|,
+name|masked
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|XENHVM
 if|if
 condition|(
 name|xen_vector_callback_enabled
@@ -3136,8 +3159,6 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-endif|#
-directive|endif
 name|to_cpu
 operator|=
 name|apic_cpuid
@@ -3197,6 +3218,16 @@ name|EINVAL
 operator|)
 return|;
 block|}
+comment|/* 	 * Mask the event channel while binding it to prevent interrupt 	 * delivery with an inconsistent state in isrc->xi_cpu. 	 */
+name|masked
+operator|=
+name|evtchn_test_and_set_mask
+argument_list|(
+name|isrc
+operator|->
+name|xi_port
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3245,17 +3276,9 @@ operator|->
 name|xi_port
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|xen_intr_isrc_lock
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 name|bind_vcpu
 operator|.
@@ -3270,16 +3293,6 @@ operator|.
 name|vcpu
 operator|=
 name|vcpu_id
-expr_stmt|;
-comment|/* 	 * Allow interrupts to be fielded on the new VCPU before 	 * we ask the hypervisor to deliver them there. 	 */
-name|evtchn_cpu_unmask_port
-argument_list|(
-name|to_cpu
-argument_list|,
-name|isrc
-operator|->
-name|xi_port
-argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -3325,13 +3338,11 @@ name|xi_cpu
 operator|=
 name|to_cpu
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Roll-back to previous binding. */
-name|evtchn_cpu_mask_port
+name|evtchn_cpu_unmask_port
 argument_list|(
-name|to_cpu
+name|isrc
+operator|->
+name|xi_cpu
 argument_list|,
 name|isrc
 operator|->
@@ -3340,6 +3351,21 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|out
+label|:
+if|if
+condition|(
+name|masked
+operator|==
+literal|0
+condition|)
+name|evtchn_unmask_port
+argument_list|(
+name|isrc
+operator|->
+name|xi_port
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -3379,12 +3405,41 @@ parameter_list|(
 name|struct
 name|intsrc
 modifier|*
-name|isrc
+name|base_isrc
 parameter_list|,
 name|int
 name|eoi
 parameter_list|)
-block|{ }
+block|{
+name|struct
+name|xenisrc
+modifier|*
+name|isrc
+decl_stmt|;
+name|isrc
+operator|=
+operator|(
+expr|struct
+name|xenisrc
+operator|*
+operator|)
+name|base_isrc
+expr_stmt|;
+comment|/* 	 * NB: checking if the event channel is already masked is 	 * needed because the event channel user-space device 	 * masks event channels on it's filter as part of it's 	 * normal operation, and those shouldn't be automatically 	 * unmasked by the generic interrupt code. The event channel 	 * device will unmask them when needed. 	 */
+name|isrc
+operator|->
+name|xi_masked
+operator|=
+operator|!
+operator|!
+name|evtchn_test_and_set_mask
+argument_list|(
+name|isrc
+operator|->
+name|xi_port
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
@@ -3399,9 +3454,39 @@ parameter_list|(
 name|struct
 name|intsrc
 modifier|*
-name|isrc
+name|base_isrc
 parameter_list|)
-block|{ }
+block|{
+name|struct
+name|xenisrc
+modifier|*
+name|isrc
+decl_stmt|;
+name|isrc
+operator|=
+operator|(
+expr|struct
+name|xenisrc
+operator|*
+operator|)
+name|base_isrc
+expr_stmt|;
+if|if
+condition|(
+name|isrc
+operator|->
+name|xi_masked
+operator|==
+literal|0
+condition|)
+name|evtchn_unmask_port
+argument_list|(
+name|isrc
+operator|->
+name|xi_port
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_comment
@@ -3416,7 +3501,7 @@ parameter_list|(
 name|struct
 name|intsrc
 modifier|*
-name|isrc
+name|base_isrc
 parameter_list|)
 block|{ }
 end_function
@@ -3494,6 +3579,14 @@ operator|*
 operator|)
 name|base_isrc
 expr_stmt|;
+if|if
+condition|(
+name|isrc
+operator|->
+name|xi_edgetrigger
+operator|==
+literal|0
+condition|)
 name|evtchn_mask_port
 argument_list|(
 name|isrc
@@ -3544,6 +3637,14 @@ operator|*
 operator|)
 name|base_isrc
 expr_stmt|;
+if|if
+condition|(
+name|isrc
+operator|->
+name|xi_edgetrigger
+operator|==
+literal|0
+condition|)
 name|evtchn_unmask_port
 argument_list|(
 name|isrc
@@ -3574,7 +3675,9 @@ name|xenisrc
 modifier|*
 name|isrc
 decl_stmt|;
-comment|/* XXX Use shared page of flags for this. */
+name|int
+name|error
+decl_stmt|;
 name|isrc
 operator|=
 operator|(
@@ -3609,15 +3712,31 @@ operator|->
 name|xi_pirq
 block|}
 decl_stmt|;
-operator|(
-name|void
-operator|)
+name|error
+operator|=
 name|HYPERVISOR_physdev_op
 argument_list|(
 name|PHYSDEVOP_eoi
 argument_list|,
 operator|&
 name|eoi
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|panic
+argument_list|(
+literal|"Unable to EOI PIRQ#%d: %d\n"
+argument_list|,
+name|isrc
+operator|->
+name|xi_pirq
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 block|}
@@ -5036,10 +5155,6 @@ name|physdev_map_pirq
 name|map_pirq
 decl_stmt|;
 name|struct
-name|physdev_irq
-name|alloc_pirq
-decl_stmt|;
-name|struct
 name|xenisrc
 modifier|*
 name|isrc
@@ -5111,46 +5226,6 @@ block|{
 name|printf
 argument_list|(
 literal|"xen: unable to map IRQ#%d\n"
-argument_list|,
-name|vector
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
-block|}
-name|alloc_pirq
-operator|.
-name|irq
-operator|=
-name|vector
-expr_stmt|;
-name|alloc_pirq
-operator|.
-name|vector
-operator|=
-literal|0
-expr_stmt|;
-name|error
-operator|=
-name|HYPERVISOR_physdev_op
-argument_list|(
-name|PHYSDEVOP_alloc_irq_vector
-argument_list|,
-operator|&
-name|alloc_pirq
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"xen: unable to alloc PIRQ for IRQ#%d\n"
 argument_list|,
 name|vector
 argument_list|)
@@ -5441,6 +5516,13 @@ operator|.
 name|pirq
 operator|+
 name|i
+expr_stmt|;
+comment|/* MSI interrupts are always edge triggered */
+name|isrc
+operator|->
+name|xi_edgetrigger
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|mtx_unlock
@@ -6064,7 +6146,7 @@ block|{
 name|db_printf
 argument_list|(
 literal|"\tPirq: %d ActiveHi: %d EdgeTrigger: %d "
-literal|"NeedsEOI: %d Shared: %d\n"
+literal|"NeedsEOI: %d\n"
 argument_list|,
 name|isrc
 operator|->
@@ -6088,10 +6170,6 @@ name|xi_pirq
 argument_list|,
 name|xen_intr_pirq_eoi_map
 argument_list|)
-argument_list|,
-name|isrc
-operator|->
-name|xi_shared
 argument_list|)
 expr_stmt|;
 block|}

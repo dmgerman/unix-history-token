@@ -74,8 +74,8 @@ condition|(
 name|block
 operator|->
 name|version
-operator|!=
-literal|0
+operator|>
+literal|1
 condition|)
 return|return
 name|LZMA_OPTIONS_ERROR

@@ -580,6 +580,16 @@ argument_list|(
 name|best_cn
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|EARLY_PRINTF
+comment|/* 	 * Release early console. 	 */
+name|early_putc
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -1127,6 +1137,8 @@ operator|*
 literal|2
 argument_list|,
 name|SBUF_AUTOEXTEND
+operator||
+name|SBUF_INCLUDENUL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2109,6 +2121,16 @@ condition|(
 name|use_cnputs_mtx
 condition|)
 block|{
+comment|/* 		 * NOTE: Debug prints and/or witness printouts in 		 * console driver clients can cause the "cnputs_mtx" 		 * mutex to recurse. Simply return if that happens. 		 */
+if|if
+condition|(
+name|mtx_owned
+argument_list|(
+operator|&
+name|cnputs_mtx
+argument_list|)
+condition|)
+return|return;
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -2643,7 +2665,7 @@ argument_list|(
 operator|&
 name|beeping_timer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

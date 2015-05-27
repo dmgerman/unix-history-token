@@ -2051,7 +2051,7 @@ name|vm_offset_t
 operator|)
 name|ofwfb_static_window
 expr_stmt|;
-comment|/* 	 * Enable future font-loading and flag color support, as well as  	 * adding V_ADP_MODECHANGE so that we ofwfb_set_mode() gets called 	 * when the X server shuts down. This enables us to get the console 	 * back when X disappears. 	 */
+comment|/* 	 * Enable future font-loading and flag color support, as well as 	 * adding V_ADP_MODECHANGE so that we ofwfb_set_mode() gets called 	 * when the X server shuts down. This enables us to get the console 	 * back when X disappears. 	 */
 name|adp
 operator|->
 name|va_flags
@@ -5017,20 +5017,6 @@ block|{
 name|device_t
 name|child
 decl_stmt|;
-comment|/* 	 * The Nintendo Wii doesn't have open firmware, so don't probe ofwfb 	 * because otherwise we will crash. 	 */
-if|if
-condition|(
-name|strcmp
-argument_list|(
-name|installed_platform
-argument_list|()
-argument_list|,
-literal|"wii"
-argument_list|)
-operator|==
-literal|0
-condition|)
-return|return;
 comment|/* 	 * Add with a priority guaranteed to make it last on 	 * the device list 	 */
 name|child
 operator|=

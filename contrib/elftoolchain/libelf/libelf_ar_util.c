@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<assert.h>
 end_include
 
@@ -48,7 +42,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelf_ar_util.c 2365 2011-12-29 04:36:44Z jkoshy $"
+literal|"$Id: libelf_ar_util.c 3174 2015-03-27 17:13:41Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -64,11 +58,12 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|s
+name|src
 parameter_list|,
 name|size_t
 name|sz
 parameter_list|,
+name|unsigned
 name|int
 name|base
 parameter_list|,
@@ -77,18 +72,23 @@ modifier|*
 name|ret
 parameter_list|)
 block|{
+name|size_t
+name|r
+decl_stmt|;
+name|unsigned
 name|int
 name|c
 decl_stmt|,
 name|v
 decl_stmt|;
-name|size_t
-name|r
-decl_stmt|;
 specifier|const
+name|unsigned
 name|char
 modifier|*
 name|e
+decl_stmt|,
+modifier|*
+name|s
 decl_stmt|;
 name|assert
 argument_list|(
@@ -96,6 +96,16 @@ name|base
 operator|<=
 literal|10
 argument_list|)
+expr_stmt|;
+name|s
+operator|=
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
+name|src
 expr_stmt|;
 name|e
 operator|=
@@ -223,10 +233,12 @@ name|ar
 parameter_list|)
 block|{
 name|char
-name|c
-decl_stmt|,
 modifier|*
 name|s
+decl_stmt|;
+name|unsigned
+name|char
+name|c
 decl_stmt|;
 name|size_t
 name|len
@@ -234,6 +246,7 @@ decl_stmt|,
 name|offset
 decl_stmt|;
 specifier|const
+name|unsigned
 name|char
 modifier|*
 name|buf
@@ -278,6 +291,7 @@ name|assert
 argument_list|(
 operator|(
 specifier|const
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -289,6 +303,7 @@ name|e_rawfile
 operator|&&
 operator|(
 specifier|const
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -305,6 +320,12 @@ argument_list|)
 expr_stmt|;
 name|buf
 operator|=
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
 name|arh
 operator|->
 name|ar_name
@@ -340,9 +361,16 @@ if|if
 condition|(
 name|_libelf_ar_get_number
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+operator|(
 name|buf
 operator|+
 literal|1
+operator|)
 argument_list|,
 name|bufsize
 operator|-
@@ -446,11 +474,16 @@ control|)
 empty_stmt|;
 name|len
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|p
 operator|-
 name|q
 operator|+
 literal|1
+argument_list|)
 expr_stmt|;
 comment|/* space for the trailing NUL */
 if|if
@@ -487,6 +520,11 @@ name|strncpy
 argument_list|(
 name|s
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|q
 argument_list|,
 name|len
@@ -528,6 +566,11 @@ if|if
 condition|(
 name|_libelf_ar_get_number
 argument_list|(
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|r
 argument_list|,
 name|bufsize
@@ -591,6 +634,7 @@ name|q
 operator|=
 operator|(
 specifier|const
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -607,6 +651,11 @@ name|strncpy
 argument_list|(
 name|s
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|q
 argument_list|,
 name|len
@@ -694,19 +743,30 @@ expr_stmt|;
 block|}
 name|len
 operator|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|q
 operator|-
 name|buf
 operator|+
 literal|2
+argument_list|)
 expr_stmt|;
-comment|/* Add space for a trailing NUL. */
+comment|/* Space for a trailing NUL. */
 block|}
 else|else
 block|{
 comment|/* The buffer only had blanks. */
 name|buf
 operator|=
+operator|(
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|)
 literal|""
 expr_stmt|;
 name|len
@@ -748,6 +808,11 @@ name|strncpy
 argument_list|(
 name|s
 argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
 name|buf
 argument_list|,
 name|len
@@ -884,16 +949,17 @@ decl_stmt|;
 name|int
 name|scanahead
 decl_stmt|;
+name|struct
+name|ar_hdr
+name|arh
+decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|s
 decl_stmt|,
 modifier|*
 name|end
-decl_stmt|;
-name|struct
-name|ar_hdr
-name|arh
 decl_stmt|;
 name|_libelf_init_elf
 argument_list|(
@@ -968,7 +1034,7 @@ parameter_list|,
 name|END
 parameter_list|)
 define|\
-value|do {								\ 		if ((S) + sizeof((ARH))> (END))			\ 		        goto error;					\ 		(void) memcpy(&(ARH), (S), sizeof((ARH)));		\ 		if ((ARH).ar_fmag[0] != '`' || (ARH).ar_fmag[1] != '\n') \ 			goto error;					\ 		if (_libelf_ar_get_number((ARH).ar_size,		\ 		    sizeof((ARH).ar_size), 10,&(SZ)) == 0)		\ 			goto error;					\ 	} while (0)
+value|do {								\ 		if ((S) + sizeof((ARH))> (END))			\ 		        goto error;					\ 		(void) memcpy(&(ARH), (S), sizeof((ARH)));		\ 		if ((ARH).ar_fmag[0] != '`' || (ARH).ar_fmag[1] != '\n') \ 			goto error;					\ 		if (_libelf_ar_get_number((char *) (ARH).ar_size,	\ 		    sizeof((ARH).ar_size), 10,&(SZ)) == 0)		\ 			goto error;					\ 	} while (0)
 name|READ_AR_HEADER
 argument_list|(
 name|s
@@ -993,13 +1059,15 @@ operator|==
 literal|'/'
 condition|)
 block|{
-name|assert
-argument_list|(
+if|if
+condition|(
 name|sz
-operator|>
+operator|==
 literal|0
-argument_list|)
-expr_stmt|;
+condition|)
+goto|goto
+name|error
+goto|;
 name|e
 operator|->
 name|e_flags

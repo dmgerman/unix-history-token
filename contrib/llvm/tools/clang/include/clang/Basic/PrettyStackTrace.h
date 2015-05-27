@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_BASIC_PRETTYSTACKTRACE_H
+name|LLVM_CLANG_BASIC_PRETTYSTACKTRACE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_BASIC_PRETTYSTACKTRACE_H
+name|LLVM_CLANG_BASIC_PRETTYSTACKTRACE_H
 end_define
 
 begin_include
@@ -135,13 +135,13 @@ argument_list|(
 argument|Msg
 argument_list|)
 block|{}
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&OS
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 block|}

@@ -487,7 +487,9 @@ name|fs_bsize
 argument_list|)
 expr_stmt|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -896,7 +898,9 @@ name|fs_bsize
 argument_list|)
 expr_stmt|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -1318,7 +1322,9 @@ name|fs_bsize
 argument_list|)
 expr_stmt|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|4
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -1388,7 +1394,9 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 *	Write the block out to storage. 	 */
 name|twiddle
-argument_list|()
+argument_list|(
+literal|4
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -1620,7 +1628,9 @@ block|}
 else|else
 block|{
 name|twiddle
-argument_list|()
+argument_list|(
+literal|4
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=
@@ -2129,7 +2139,9 @@ operator|=
 name|fs
 expr_stmt|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Try reading the superblock in each of its possible locations. 	 */
 for|for
@@ -2693,7 +2705,9 @@ goto|goto
 name|out
 goto|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|rc
 operator|=

@@ -34,19 +34,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_DRIVER_TOOL_H_
+name|LLVM_CLANG_DRIVER_TOOL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_DRIVER_TOOL_H_
+name|LLVM_CLANG_DRIVER_TOOL_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Program.h"
 end_include
 
 begin_decl_stmt
@@ -98,6 +104,30 @@ comment|/// Tool - Information on a specific compilation tool.
 name|class
 name|Tool
 block|{
+name|public
+label|:
+comment|// Documents the level of support for response files in this tool.
+comment|// Response files are necessary if the command line gets too large,
+comment|// requiring the arguments to be transfered to a file.
+enum|enum
+name|ResponseFileSupport
+block|{
+comment|// Provides full support for response files, which means we can transfer
+comment|// all tool input arguments to a file. E.g.: clang, gcc, binutils and MSVC
+comment|// tools.
+name|RF_Full
+block|,
+comment|// Input file names can live in a file, but flags can't. E.g.: ld64 (Mac
+comment|// OS X linker).
+name|RF_FileList
+block|,
+comment|// Does not support response files: all arguments must be passed via
+comment|// command line.
+name|RF_None
+block|}
+enum|;
+name|private
+label|:
 comment|/// The tool name (for debugging).
 specifier|const
 name|char
@@ -116,26 +146,45 @@ name|ToolChain
 modifier|&
 name|TheToolChain
 decl_stmt|;
+comment|/// The level of support for response files seen in this tool
+specifier|const
+name|ResponseFileSupport
+name|ResponseSupport
+decl_stmt|;
+comment|/// The encoding to use when writing response files for this tool on Windows
+specifier|const
+name|llvm
+operator|::
+name|sys
+operator|::
+name|WindowsEncodingMethod
+name|ResponseEncoding
+expr_stmt|;
+comment|/// The flag used to pass a response file via command line to this tool
+specifier|const
+name|char
+modifier|*
+specifier|const
+name|ResponseFlag
+decl_stmt|;
 name|public
 label|:
 name|Tool
 argument_list|(
-specifier|const
-name|char
-operator|*
-name|Name
+argument|const char *Name
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|ShortName
+argument|const char *ShortName
 argument_list|,
-specifier|const
-name|ToolChain
-operator|&
-name|TC
+argument|const ToolChain&TC
+argument_list|,
+argument|ResponseFileSupport ResponseSupport = RF_None
+argument_list|,
+argument|llvm::sys::WindowsEncodingMethod ResponseEncoding = llvm::sys::WEM_UTF8
+argument_list|,
+argument|const char *ResponseFlag =
+literal|"@"
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|public
 label|:
 name|virtual
@@ -188,6 +237,16 @@ return|;
 block|}
 name|virtual
 name|bool
+name|canEmitIR
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
 name|hasIntegratedCPP
 argument_list|()
 specifier|const
@@ -212,6 +271,55 @@ specifier|const
 block|{
 return|return
 name|false
+return|;
+block|}
+comment|/// \brief Returns the level of support for response files of this tool,
+comment|/// whether it accepts arguments to be passed via a file on disk.
+name|ResponseFileSupport
+name|getResponseFilesSupport
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ResponseSupport
+return|;
+block|}
+comment|/// \brief Returns which encoding the response file should use. This is only
+comment|/// relevant on Windows platforms where there are different encodings being
+comment|/// accepted for different tools. On UNIX, UTF8 is universal.
+comment|///
+comment|/// Windows use cases: - GCC and Binutils on mingw only accept ANSI response
+comment|/// files encoded with the system current code page.
+comment|/// - MSVC's CL.exe and LINK.exe accept UTF16 on Windows.
+comment|/// - Clang accepts both UTF8 and UTF16.
+comment|///
+comment|/// FIXME: When GNU tools learn how to parse UTF16 on Windows, we should
+comment|/// always use UTF16 for Windows, which is the Windows official encoding for
+comment|/// international characters.
+name|llvm
+operator|::
+name|sys
+operator|::
+name|WindowsEncodingMethod
+name|getResponseFileEncoding
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ResponseEncoding
+return|;
+block|}
+comment|/// \brief Returns which prefix to use when passing the name of a response
+comment|/// file as a parameter to this tool.
+specifier|const
+name|char
+operator|*
+name|getResponseFileFlag
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ResponseFlag
 return|;
 block|}
 comment|/// \brief Does this tool have "good" standardized diagnostics, or should the

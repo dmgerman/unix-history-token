@@ -66,13 +66,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_BUMP_VECTOR
+name|LLVM_CLANG_ANALYSIS_SUPPORT_BUMPVECTOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_BUMP_VECTOR
+name|LLVM_CLANG_ANALYSIS_SUPPORT_BUMPVECTOR_H
 end_define
 
 begin_include
@@ -236,17 +236,17 @@ argument_list|)
 operator|:
 name|Begin
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 block|,
 name|End
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 block|,
 name|Capacity
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{
 name|reserve
@@ -262,7 +262,7 @@ argument_list|()
 block|{
 if|if
 condition|(
-name|llvm
+name|std
 operator|::
 name|is_class
 operator|<
@@ -591,7 +591,7 @@ parameter_list|()
 block|{
 if|if
 condition|(
-name|llvm
+name|std
 operator|::
 name|is_class
 operator|<
@@ -1062,7 +1062,7 @@ end_comment
 begin_if
 if|if
 condition|(
-name|llvm
+name|std
 operator|::
 name|is_class
 operator|<
@@ -1154,10 +1154,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// end: LLVM_CLANG_BUMP_VECTOR
-end_comment
 
 end_unit
 

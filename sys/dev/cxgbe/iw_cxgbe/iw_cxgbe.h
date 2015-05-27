@@ -3912,6 +3912,10 @@ name|struct
 name|ib_pd
 modifier|*
 name|pd
+parameter_list|,
+name|enum
+name|ib_mw_type
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4066,11 +4070,10 @@ name|ib_device
 modifier|*
 name|ibdev
 parameter_list|,
-name|int
-name|entries
-parameter_list|,
-name|int
-name|vector
+name|struct
+name|ib_cq_init_attr
+modifier|*
+name|attr
 parameter_list|,
 name|struct
 name|ib_ucontext

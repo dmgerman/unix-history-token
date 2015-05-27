@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|POWERPCCSELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_POWERPC_PPCSELECTIONDAGINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|POWERPCCSELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_POWERPC_PPCSELECTIONDAGINFO_H
 end_define
 
 begin_include
@@ -84,9 +84,9 @@ name|explicit
 name|PPCSelectionDAGInfo
 argument_list|(
 specifier|const
-name|PPCTargetMachine
-operator|&
-name|TM
+name|DataLayout
+operator|*
+name|DL
 argument_list|)
 block|;
 operator|~

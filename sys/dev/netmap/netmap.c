@@ -1635,8 +1635,9 @@ condition|(
 name|na
 operator|->
 name|nm_config
-condition|)
-block|{
+operator|==
+name|NULL
+operator|||
 name|na
 operator|->
 name|nm_config
@@ -1655,9 +1656,7 @@ argument_list|,
 operator|&
 name|rxd
 argument_list|)
-expr_stmt|;
-block|}
-else|else
+condition|)
 block|{
 comment|/* take whatever we had at init time */
 name|txr
@@ -7400,7 +7399,7 @@ name|ENXIO
 expr_stmt|;
 break|break;
 block|}
-name|rmb
+name|mb
 argument_list|()
 expr_stmt|;
 comment|/* make sure following reads are not from cache */
@@ -9451,6 +9450,42 @@ block|}
 endif|#
 directive|endif
 comment|/* linux */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"netmap queues/slots: TX %d/%d, RX %d/%d\n"
+argument_list|,
+name|hwna
+operator|->
+name|up
+operator|.
+name|num_tx_rings
+argument_list|,
+name|hwna
+operator|->
+name|up
+operator|.
+name|num_tx_desc
+argument_list|,
+name|hwna
+operator|->
+name|up
+operator|.
+name|num_rx_rings
+argument_list|,
+name|hwna
+operator|->
+name|up
+operator|.
+name|num_rx_desc
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|D
 argument_list|(
 literal|"success for %s tx %d/%d rx %d/%d queues/slots"
@@ -9486,6 +9521,8 @@ operator|.
 name|num_rx_desc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 literal|0
 return|;
@@ -10616,11 +10653,7 @@ condition|)
 goto|goto
 name|fail
 goto|;
-comment|/* XXX could use make_dev_credv() to get error number */
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-comment|/* support for the 'eternal' flag */
+comment|/* 	 * MAKEDEV_ETERNAL_KLD avoids an expensive check on syscalls 	 * when the module is compiled in. 	 * XXX could use make_dev_credv() to get error number 	 */
 name|netmap_dev
 operator|=
 name|make_dev_credf
@@ -10638,33 +10671,11 @@ name|UID_ROOT
 argument_list|,
 name|GID_WHEEL
 argument_list|,
-literal|0660
+literal|0600
 argument_list|,
 literal|"netmap"
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|netmap_dev
-operator|=
-name|make_dev
-argument_list|(
-operator|&
-name|netmap_cdevsw
-argument_list|,
-literal|0
-argument_list|,
-name|UID_ROOT
-argument_list|,
-name|GID_WHEEL
-argument_list|,
-literal|0660
-argument_list|,
-literal|"netmap"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 operator|!

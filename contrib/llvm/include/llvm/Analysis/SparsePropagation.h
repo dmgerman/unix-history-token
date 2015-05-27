@@ -280,7 +280,7 @@ name|SS
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// ComputeArgument - Given a formal argument value, compute and return a

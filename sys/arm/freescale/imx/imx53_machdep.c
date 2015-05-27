@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/platform.h>
+file|<machine/platformvar.h>
 end_include
 
 begin_include
@@ -83,11 +83,19 @@ directive|include
 file|<arm/freescale/imx/imx_machdep.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"platform_if.h"
+end_include
+
 begin_function
+specifier|static
 name|vm_offset_t
-name|platform_lastaddr
+name|imx53_lastaddr
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 return|return
@@ -100,10 +108,12 @@ block|}
 end_function
 
 begin_function
-name|void
-name|platform_probe_and_attach
+specifier|static
+name|int
+name|imx53_attach
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 comment|/* XXX - Get rid of this stuff soon. */
@@ -117,25 +127,12 @@ name|bootverbose
 operator|=
 literal|1
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-end_function
-
-begin_function
-name|void
-name|platform_gpio_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-name|void
-name|platform_late_init
-parameter_list|(
-name|void
-parameter_list|)
-block|{  }
 end_function
 
 begin_comment
@@ -143,10 +140,12 @@ comment|/*  * Set up static device mappings.  This is hand-optimized platform-sp
 end_comment
 
 begin_function
+specifier|static
 name|int
-name|platform_devmap_init
+name|imx53_devmap_init
 parameter_list|(
-name|void
+name|platform_t
+name|plat
 parameter_list|)
 block|{
 name|arm_devmap_add_entry
@@ -205,6 +204,53 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_decl_stmt
+specifier|static
+name|platform_method_t
+name|imx53_methods
+index|[]
+init|=
+block|{
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_attach
+argument_list|,
+name|imx53_attach
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_devmap_init
+argument_list|,
+name|imx53_devmap_init
+argument_list|)
+block|,
+name|PLATFORMMETHOD
+argument_list|(
+name|platform_lastaddr
+argument_list|,
+name|imx53_lastaddr
+argument_list|)
+block|,
+name|PLATFORMMETHOD_END
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|FDT_PLATFORM_DEF
+argument_list|(
+name|imx53
+argument_list|,
+literal|"i.MX53"
+argument_list|,
+literal|0
+argument_list|,
+literal|"fsl,imx53"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

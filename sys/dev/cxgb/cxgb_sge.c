@@ -5057,7 +5057,7 @@ name|sc
 operator|->
 name|sge_timer_ch
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset
@@ -5666,6 +5666,7 @@ name|FW_CTRL_TID_START
 operator|+
 name|id
 expr_stmt|;
+comment|/* XXX: a sane limit is needed instead of INT_MAX */
 name|mbufq_init
 argument_list|(
 operator|&
@@ -5677,6 +5678,8 @@ name|TXQ_ETH
 index|]
 operator|.
 name|sendq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 name|mbufq_init
@@ -5690,6 +5693,8 @@ name|TXQ_OFLD
 index|]
 operator|.
 name|sendq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 name|mbufq_init
@@ -5703,6 +5708,8 @@ name|TXQ_CTRL
 index|]
 operator|.
 name|sendq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 block|}
@@ -9213,13 +9220,15 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* check if flowid is set */
 if|if
 condition|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 name|qidx
 operator|=
@@ -9528,8 +9537,7 @@ if|if
 condition|(
 name|__predict_false
 argument_list|(
-operator|!
-name|mbufq_empty
+name|mbufq_len
 argument_list|(
 operator|&
 name|q
@@ -9541,7 +9549,10 @@ condition|)
 block|{
 name|addq_exit
 label|:
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|q
@@ -10071,8 +10082,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
-name|mbufq_empty
+name|mbufq_len
 argument_list|(
 operator|&
 name|q
@@ -12027,7 +12037,7 @@ condition|(
 operator|(
 name|m
 operator|=
-name|mbufq_peek
+name|mbufq_first
 argument_list|(
 operator|&
 name|q
@@ -13250,6 +13260,8 @@ name|i
 index|]
 operator|.
 name|sendq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 name|q
@@ -15756,13 +15768,15 @@ name|adap
 operator|->
 name|timestamp
 condition|)
+block|{
+name|M_HASHTYPE_SET
+argument_list|(
 name|mh
 operator|->
 name|mh_head
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
+argument_list|,
+name|M_HASHTYPE_OPAQUE
+argument_list|)
 expr_stmt|;
 name|mh
 operator|->
@@ -15774,6 +15788,7 @@ name|flowid
 operator|=
 name|rss_hash
 expr_stmt|;
+block|}
 block|}
 name|ethpad
 operator|=
@@ -17110,24 +17125,6 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* Output a trailing NUL. */
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
-name|err
-operator|=
-name|SYSCTL_OUT
-argument_list|(
-name|req
-argument_list|,
-literal|""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|sbuf_delete
 argument_list|(
 name|sb
@@ -17672,24 +17669,6 @@ argument_list|(
 name|sb
 argument_list|)
 expr_stmt|;
-comment|/* Output a trailing NUL. */
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
-name|err
-operator|=
-name|SYSCTL_OUT
-argument_list|(
-name|req
-argument_list|,
-literal|""
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
 name|sbuf_delete
 argument_list|(
 name|sb
@@ -18045,24 +18024,6 @@ operator|=
 name|sbuf_finish
 argument_list|(
 name|sb
-argument_list|)
-expr_stmt|;
-comment|/* Output a trailing NUL. */
-if|if
-condition|(
-name|err
-operator|==
-literal|0
-condition|)
-name|err
-operator|=
-name|SYSCTL_OUT
-argument_list|(
-name|req
-argument_list|,
-literal|""
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|sbuf_delete
@@ -19517,7 +19478,7 @@ index|]
 operator|.
 name|sendq
 operator|.
-name|qlen
+name|mq_len
 argument_list|,
 literal|0
 argument_list|,

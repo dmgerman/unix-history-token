@@ -91031,6 +91031,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_RXP_b09FwData
 index|[
@@ -91050,6 +91051,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|u32
 name|bce_RXP_b09FwRodata
 index|[

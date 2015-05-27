@@ -126,6 +126,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTConsumer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -175,6 +181,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -274,20 +286,13 @@ comment|/// \brief Invokes the compiler with a FrontendAction created by create(
 name|bool
 name|runInvocation
 argument_list|(
-name|clang
-operator|::
-name|CompilerInvocation
-operator|*
-name|Invocation
+argument|clang::CompilerInvocation *Invocation
 argument_list|,
-name|FileManager
-operator|*
-name|Files
+argument|FileManager *Files
 argument_list|,
-name|DiagnosticConsumer
-operator|*
-name|DiagConsumer
+argument|DiagnosticConsumer *DiagConsumer
 argument_list|)
+name|override
 block|;
 comment|/// \brief Returns a new clang::FrontendAction.
 comment|///
@@ -315,8 +320,12 @@ operator|<
 name|typename
 name|T
 operator|>
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FrontendActionFactory
-operator|*
+operator|>
 name|newFrontendActionFactory
 argument_list|()
 expr_stmt|;
@@ -366,16 +375,20 @@ comment|/// Example:
 comment|/// struct ProvidesASTConsumers {
 comment|///   clang::ASTConsumer *newASTConsumer();
 comment|/// } Factory;
-comment|/// FrontendActionFactory *FactoryAdapter =
-comment|///   newFrontendActionFactory(&Factory);
+comment|/// std::unique_ptr<FrontendActionFactory> FactoryAdapter(
+comment|///   newFrontendActionFactory(&Factory));
 name|template
 operator|<
 name|typename
 name|FactoryT
 operator|>
 specifier|inline
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FrontendActionFactory
-operator|*
+operator|>
 name|newFrontendActionFactory
 argument_list|(
 name|FactoryT
@@ -386,7 +399,7 @@ name|SourceFileCallbacks
 operator|*
 name|Callbacks
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 expr_stmt|;
 comment|/// \brief Runs (and deletes) the tool on 'Code' with the -fsyntax-only flag.
@@ -418,6 +431,27 @@ operator|=
 literal|"input.cc"
 argument_list|)
 decl_stmt|;
+comment|/// The first part of the pair is the filename, the second part the
+comment|/// file-content.
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+name|std
+operator|::
+name|string
+operator|>>
+name|FileContentMappings
+expr_stmt|;
 comment|/// \brief Runs (and deletes) the tool on 'Code' with the -fsyntax-only flag and
 comment|///        with additional other flags.
 comment|///
@@ -459,6 +493,14 @@ operator|&
 name|FileName
 operator|=
 literal|"input.cc"
+argument_list|,
+specifier|const
+name|FileContentMappings
+operator|&
+name|VirtualMappedFiles
+operator|=
+name|FileContentMappings
+argument_list|()
 argument_list|)
 decl_stmt|;
 comment|/// \brief Builds an AST for 'Code'.
@@ -467,23 +509,27 @@ comment|/// \param Code C++ code.
 comment|/// \param FileName The file name which 'Code' will be mapped as.
 comment|///
 comment|/// \return The resulting AST or null if an error occurred.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTUnit
-modifier|*
+operator|>
 name|buildASTFromCode
-parameter_list|(
+argument_list|(
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|Code
-parameter_list|,
+argument_list|,
 specifier|const
 name|Twine
-modifier|&
+operator|&
 name|FileName
-init|=
+operator|=
 literal|"input.cc"
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// \brief Builds an AST for 'Code' with additional flags.
 comment|///
 comment|/// \param Code C++ code.
@@ -491,8 +537,12 @@ comment|/// \param Args Additional flags to pass on.
 comment|/// \param FileName The file name which 'Code' will be mapped as.
 comment|///
 comment|/// \return The resulting AST or null if an error occurred.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTUnit
-modifier|*
+operator|>
 name|buildASTFromCodeWithArgs
 argument_list|(
 specifier|const
@@ -519,7 +569,7 @@ name|FileName
 operator|=
 literal|"input.cc"
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief Utility to run a FrontendAction in a single clang invocation.
 name|class
 name|ToolInvocation
@@ -537,7 +587,9 @@ comment|/// \param Files The FileManager used for the execution. Class does not 
 comment|/// ownership.
 name|ToolInvocation
 argument_list|(
-name|ArrayRef
+name|std
+operator|::
+name|vector
 operator|<
 name|std
 operator|::
@@ -561,7 +613,9 @@ comment|/// \param Action The action to be executed.
 comment|/// \param Files The FileManager used for the execution.
 name|ToolInvocation
 argument_list|(
-name|ArrayRef
+name|std
+operator|::
+name|vector
 operator|<
 name|std
 operator|::
@@ -590,7 +644,14 @@ name|DiagnosticConsumer
 modifier|*
 name|DiagConsumer
 parameter_list|)
-function_decl|;
+block|{
+name|this
+operator|->
+name|DiagConsumer
+operator|=
+name|DiagConsumer
+expr_stmt|;
+block|}
 comment|/// \brief Map a virtual file to be used while running the tool.
 comment|///
 comment|/// \param FilePath The path at which the content will be mapped.
@@ -715,23 +776,26 @@ operator|>
 name|SourcePaths
 argument_list|)
 expr_stmt|;
-name|virtual
 operator|~
 name|ClangTool
 argument_list|()
-block|{
-name|clearArgumentsAdjusters
-argument_list|()
-block|; }
+expr_stmt|;
 comment|/// \brief Set a \c DiagnosticConsumer to use during parsing.
 name|void
 name|setDiagnosticConsumer
-argument_list|(
+parameter_list|(
 name|DiagnosticConsumer
-operator|*
+modifier|*
 name|DiagConsumer
-argument_list|)
+parameter_list|)
+block|{
+name|this
+operator|->
+name|DiagConsumer
+operator|=
+name|DiagConsumer
 expr_stmt|;
+block|}
 comment|/// \brief Map a virtual file to be used while running the tool.
 comment|///
 comment|/// \param FilePath The path at which the content will be mapped.
@@ -746,20 +810,6 @@ name|StringRef
 name|Content
 parameter_list|)
 function_decl|;
-comment|/// \brief Install command line arguments adjuster.
-comment|///
-comment|/// \param Adjuster Command line arguments adjuster.
-comment|//
-comment|/// FIXME: Function is deprecated. Use (clear/append)ArgumentsAdjuster instead.
-comment|/// Remove it once all callers are gone.
-name|void
-name|setArgumentsAdjuster
-parameter_list|(
-name|ArgumentsAdjuster
-modifier|*
-name|Adjuster
-parameter_list|)
-function_decl|;
 comment|/// \brief Append a command line arguments adjuster to the adjuster chain.
 comment|///
 comment|/// \param Adjuster An argument adjuster, which will be run on the output of
@@ -768,7 +818,6 @@ name|void
 name|appendArgumentsAdjuster
 parameter_list|(
 name|ArgumentsAdjuster
-modifier|*
 name|Adjuster
 parameter_list|)
 function_decl|;
@@ -797,9 +846,12 @@ name|std
 operator|::
 name|vector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTUnit
-operator|*
-operator|>
+operator|>>
 operator|&
 name|ASTs
 argument_list|)
@@ -819,23 +871,20 @@ return|;
 block|}
 name|private
 label|:
-comment|// We store compile commands as pair (file name, compile command).
+specifier|const
+name|CompilationDatabase
+modifier|&
+name|Compilations
+decl_stmt|;
 name|std
 operator|::
 name|vector
 operator|<
 name|std
 operator|::
-name|pair
-operator|<
-name|std
-operator|::
 name|string
-operator|,
-name|CompileCommand
 operator|>
-expr|>
-name|CompileCommands
+name|SourcePaths
 expr_stmt|;
 name|llvm
 operator|::
@@ -861,15 +910,9 @@ operator|>
 expr|>
 name|MappedFileContents
 expr_stmt|;
-name|SmallVector
-operator|<
 name|ArgumentsAdjuster
-operator|*
-operator|,
-literal|2
-operator|>
-name|ArgsAdjusters
-expr_stmt|;
+name|ArgsAdjuster
+decl_stmt|;
 name|DiagnosticConsumer
 modifier|*
 name|DiagConsumer
@@ -881,8 +924,12 @@ operator|<
 name|typename
 name|T
 operator|>
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FrontendActionFactory
-operator|*
+operator|>
 name|newFrontendActionFactory
 argument_list|()
 block|{
@@ -894,13 +941,13 @@ name|FrontendActionFactory
 block|{
 name|public
 operator|:
-name|virtual
 name|clang
 operator|::
 name|FrontendAction
 operator|*
 name|create
 argument_list|()
+name|override
 block|{
 return|return
 name|new
@@ -910,8 +957,16 @@ block|}
 expr|}
 block|;
 return|return
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|FrontendActionFactory
+operator|>
+operator|(
 name|new
 name|SimpleFrontendActionFactory
+operator|)
 return|;
 block|}
 name|template
@@ -920,8 +975,12 @@ name|typename
 name|FactoryT
 operator|>
 specifier|inline
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|FrontendActionFactory
-operator|*
+operator|>
 name|newFrontendActionFactory
 argument_list|(
 argument|FactoryT *ConsumerFactory
@@ -959,13 +1018,13 @@ argument_list|(
 argument|Callbacks
 argument_list|)
 block|{}
-name|virtual
 name|clang
 operator|::
 name|FrontendAction
 operator|*
 name|create
 argument_list|()
+name|override
 block|{
 return|return
 name|new
@@ -1010,16 +1069,21 @@ argument_list|(
 argument|Callbacks
 argument_list|)
 block|{}
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|clang
 operator|::
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|clang::CompilerInstance&
 argument_list|,
 argument|StringRef
 argument_list|)
+name|override
 block|{
 return|return
 name|ConsumerFactory
@@ -1030,7 +1094,6 @@ return|;
 block|}
 name|protected
 operator|:
-name|virtual
 name|bool
 name|BeginSourceFileAction
 argument_list|(
@@ -1038,7 +1101,7 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef Filename
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|{
 if|if
 condition|(
@@ -1060,8 +1123,6 @@ return|;
 if|if
 condition|(
 name|Callbacks
-operator|!=
-name|NULL
 condition|)
 return|return
 name|Callbacks
@@ -1077,17 +1138,14 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
 name|void
 name|EndSourceFileAction
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|{
 if|if
 condition|(
 name|Callbacks
-operator|!=
-name|NULL
 condition|)
 name|Callbacks
 operator|->
@@ -1123,6 +1181,13 @@ decl_stmt|;
 block|}
 empty_stmt|;
 return|return
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|FrontendActionFactory
+operator|>
+operator|(
 name|new
 name|FrontendActionFactoryAdapter
 argument_list|(
@@ -1130,6 +1195,7 @@ name|ConsumerFactory
 argument_list|,
 name|Callbacks
 argument_list|)
+operator|)
 return|;
 block|}
 end_decl_stmt

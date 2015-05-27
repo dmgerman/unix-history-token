@@ -193,7 +193,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Text PDU with wrong StatSN: "
-literal|"is %d, should be %d"
+literal|"is %u, should be %u"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -444,7 +444,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Logout PDU with wrong StatSN: "
-literal|"is %d, should be %d"
+literal|"is %u, should be %u"
 argument_list|,
 name|ntohl
 argument_list|(

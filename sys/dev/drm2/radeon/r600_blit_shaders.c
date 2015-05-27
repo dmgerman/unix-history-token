@@ -1430,7 +1430,7 @@ specifier|const
 name|u32
 name|r6xx_ps_size
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|r6xx_ps
 argument_list|)
@@ -1442,7 +1442,7 @@ specifier|const
 name|u32
 name|r6xx_vs_size
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|r6xx_vs
 argument_list|)
@@ -1454,7 +1454,7 @@ specifier|const
 name|u32
 name|r6xx_default_size
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|r6xx_default_state
 argument_list|)
@@ -1466,7 +1466,7 @@ specifier|const
 name|u32
 name|r7xx_default_size
 init|=
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|r7xx_default_state
 argument_list|)

@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_STATICANALYZER_PRETTYSTACKTRACELOCATIONCONTEXT_H
+name|LLVM_CLANG_LIB_STATICANALYZER_CORE_PRETTYSTACKTRACELOCATIONCONTEXT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_STATICANALYZER_PRETTYSTACKTRACELOCATIONCONTEXT_H
+name|LLVM_CLANG_LIB_STATICANALYZER_CORE_PRETTYSTACKTRACELOCATIONCONTEXT_H
 end_define
 
 begin_include
@@ -100,13 +100,13 @@ argument_list|(
 name|LCtx
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&OS
 argument_list|)
 specifier|const
+name|override
 block|{
 name|OS
 operator|<<

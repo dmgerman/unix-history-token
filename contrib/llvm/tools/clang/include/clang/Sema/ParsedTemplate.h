@@ -118,7 +118,7 @@ argument_list|)
 operator|,
 name|Arg
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 comment|/// \brief Create a template type argument or non-type template argument.
@@ -204,7 +204,7 @@ block|{
 return|return
 name|Arg
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// \brief Determine what kind of template argument we have.

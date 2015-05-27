@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCExpr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCSymbol.h"
 end_include
 
@@ -85,17 +91,18 @@ name|class
 name|MCAsmInfo
 decl_stmt|;
 name|class
-name|MCSymbol
-decl_stmt|;
-name|class
-name|MCSymbolRefExpr
-decl_stmt|;
-name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// MCValue - This represents an "assembler immediate".  In its most general
-comment|/// form, this can hold "SymbolA - SymbolB + imm64".  Not all targets supports
-comment|/// relocations of this general form, but we need to represent this anyway.
+comment|/// MCValue - This represents an "assembler immediate".  In its most
+comment|/// general form, this can hold ":Kind:(SymbolA - SymbolB + imm64)".
+comment|/// Not all targets supports relocations of this general form, but we
+comment|/// need to represent this anyway.
+comment|///
+comment|/// In general both SymbolA and SymbolB will also have a modifier
+comment|/// analogous to the top-level Kind. Current targets are not expected
+comment|/// to make use of both though. The choice comes down to whether
+comment|/// relocation modifiers apply to the closest symbol or the whole
+comment|/// expression.
 comment|///
 comment|/// In the general form, SymbolB can only be defined if SymbolA is, and both
 comment|/// must be in the same (non-external) section. The latter constraint is not
@@ -116,6 +123,9 @@ name|SymB
 decl_stmt|;
 name|int64_t
 name|Cst
+decl_stmt|;
+name|uint32_t
+name|RefKind
 decl_stmt|;
 name|public
 label|:
@@ -148,6 +158,15 @@ specifier|const
 block|{
 return|return
 name|SymB
+return|;
+block|}
+name|uint32_t
+name|getRefKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RefKind
 return|;
 block|}
 comment|/// isAbsolute - Is this an absolute (as opposed to relocatable) value.
@@ -185,6 +204,13 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+name|MCSymbolRefExpr
+operator|::
+name|VariantKind
+name|getAccessVariant
+argument_list|()
+specifier|const
+expr_stmt|;
 specifier|static
 name|MCValue
 name|get
@@ -199,10 +225,15 @@ name|MCSymbolRefExpr
 modifier|*
 name|SymB
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|int64_t
 name|Val
+init|=
+literal|0
+parameter_list|,
+name|uint32_t
+name|RefKind
 init|=
 literal|0
 parameter_list|)
@@ -240,6 +271,12 @@ name|SymB
 operator|=
 name|SymB
 expr_stmt|;
+name|R
+operator|.
+name|RefKind
+operator|=
+name|RefKind
+expr_stmt|;
 return|return
 name|R
 return|;
@@ -265,11 +302,17 @@ name|R
 operator|.
 name|SymA
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|R
 operator|.
 name|SymB
+operator|=
+name|nullptr
+expr_stmt|;
+name|R
+operator|.
+name|RefKind
 operator|=
 literal|0
 expr_stmt|;

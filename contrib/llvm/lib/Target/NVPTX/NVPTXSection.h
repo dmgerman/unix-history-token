@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_NVPTXSECTION_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXSECTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_NVPTXSECTION_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXSECTION_H
 end_define
 
 begin_include
@@ -119,7 +119,6 @@ argument_list|()
 block|{}
 comment|/// Override this as NVPTX has its own way of printing switching
 comment|/// to a section.
-name|virtual
 name|void
 name|PrintSwitchToSection
 argument_list|(
@@ -130,57 +129,58 @@ argument_list|,
 argument|const MCExpr *Subsection
 argument_list|)
 specifier|const
+name|override
 block|{}
 comment|/// Base address of PTX sections is zero.
-name|virtual
 name|bool
 name|isBaseAddressKnownZero
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|UseCodeAlign
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|bool
 name|isVirtualSection
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getLabelBeginName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|""
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getLabelEndName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|""

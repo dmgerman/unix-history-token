@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2013-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2013-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -301,6 +301,29 @@ directive|include
 file|<machine/smp.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PCI_IOV
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/nv.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/iov_schema.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -313,11 +336,19 @@ directive|include
 file|"i40e_prototype.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|IXL_DEBUG
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|IXL_DEBUG_SYSCTL
+argument_list|)
+end_if
 
 begin_include
 include|#
@@ -352,6 +383,43 @@ name|is_set
 parameter_list|)
 value|((is_set) ? "On" : "Off")
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IXL_DEBUG || IXL_DEBUG_SYSCTL */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IXL_DEBUG
+end_ifdef
+
+begin_comment
+comment|/* Enable debug sysctls */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|IXL_DEBUG_SYSCTL
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|IXL_DEBUG_SYSCTL
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -531,6 +599,10 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* no IXL_DEBUG */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -646,6 +718,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* IXL_DEBUG */
+end_comment
 
 begin_comment
 comment|/* Tunables */
@@ -830,11 +906,22 @@ name|IXL_RX_HDR
 value|128
 end_define
 
+begin_comment
+comment|/* Controls the length of the Admin Queue */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|IXL_AQ_LEN
 value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_AQ_LEN_MAX
+value|1024
 end_define
 
 begin_define
@@ -912,6 +999,34 @@ define|#
 directive|define
 name|IXL_QUEUE_HUNG
 value|0x80000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_KEYSZ
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_VF_MAX_BUFFER
+value|0x3F80
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_VF_MAX_HDR_BUFFER
+value|0x840
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_VF_MAX_FRAME
+value|0x3FFF
 end_define
 
 begin_comment
@@ -1119,6 +1234,126 @@ end_define
 begin_define
 define|#
 directive|define
+name|IXL_VF_RESET_TIMEOUT
+value|100
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_VSI_DATA_PORT
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXLV_MAX_QUEUES
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_MAX_VSI_QUEUES
+value|(2 * (I40E_VSILAN_QTABLE_MAX_INDEX + 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_RX_CTX_BASE_UNITS
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_TX_CTX_BASE_UNITS
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_VPINT_LNKLSTN_REG
+parameter_list|(
+name|hw
+parameter_list|,
+name|vector
+parameter_list|,
+name|vf_num
+parameter_list|)
+define|\
+value|I40E_VPINT_LNKLSTN(((vector) - 1) + \ 	    (((hw)->func_caps.num_msix_vectors_vf - 1) * (vf_num)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_VFINT_DYN_CTLN_REG
+parameter_list|(
+name|hw
+parameter_list|,
+name|vector
+parameter_list|,
+name|vf_num
+parameter_list|)
+define|\
+value|I40E_VFINT_DYN_CTLN(((vector) - 1) + \ 	    (((hw)->func_caps.num_msix_vectors_vf - 1) * (vf_num)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_PF_PCI_CIAA_VF_DEVICE_STATUS
+value|0xAA
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_PF_PCI_CIAD_VF_TRANS_PENDING_MASK
+value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_GLGEN_VFLRSTAT_INDEX
+parameter_list|(
+name|glb_vf
+parameter_list|)
+value|((glb_vf) / 32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_GLGEN_VFLRSTAT_MASK
+parameter_list|(
+name|glb_vf
+parameter_list|)
+value|(1<< ((glb_vf) % 32))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_MAX_ITR_IDX
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXL_END_OF_INTR_LNKLST
+value|0x7FF
+end_define
+
+begin_define
+define|#
+directive|define
 name|IXL_TX_LOCK
 parameter_list|(
 name|_sc
@@ -1201,7 +1436,7 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
-literal|1100000
+literal|1100036
 end_if
 
 begin_define
@@ -1336,7 +1571,7 @@ name|vsi
 parameter_list|,
 name|count
 parameter_list|)
-value|(vsi)->iqdrops = (count)
+value|(vsi)->oqdrops = (count)
 end_define
 
 begin_define
@@ -1956,9 +2191,15 @@ name|int
 name|id
 decl_stmt|;
 name|u16
+name|vsi_num
+decl_stmt|;
+name|u16
 name|msix_base
 decl_stmt|;
 comment|/* station base MSIX vector */
+name|u16
+name|first_queue
+decl_stmt|;
 name|u16
 name|num_queues
 decl_stmt|;
@@ -1981,22 +2222,21 @@ name|u16
 name|seid
 decl_stmt|;
 name|u16
+name|uplink_seid
+decl_stmt|;
+name|u16
+name|downlink_seid
+decl_stmt|;
+name|u16
 name|max_frame_size
 decl_stmt|;
-name|u32
-name|link_speed
-decl_stmt|;
-name|bool
-name|link_up
-decl_stmt|;
-name|u32
-name|fc
-decl_stmt|;
-comment|/* local flow ctrl setting */
 comment|/* MAC/VLAN Filter list */
 name|struct
 name|ixl_ftl_head
 name|ftl
+decl_stmt|;
+name|u16
+name|num_macs
 decl_stmt|;
 name|struct
 name|i40e_aqc_vsi_properties_data
@@ -2070,6 +2310,11 @@ name|active_queues
 decl_stmt|;
 name|u64
 name|flags
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|vsi_node
 decl_stmt|;
 block|}
 struct|;
@@ -2222,10 +2467,12 @@ specifier|inline
 name|bool
 name|cmp_etheraddr
 parameter_list|(
+specifier|const
 name|u8
 modifier|*
 name|ea1
 parameter_list|,
+specifier|const
 name|u8
 modifier|*
 name|ea2

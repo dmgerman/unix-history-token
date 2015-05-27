@@ -998,7 +998,7 @@ index|[
 literal|1
 index|]
 operator|+
-literal|16
+literal|48
 operator|+
 operator|(
 operator|(
@@ -1009,7 +1009,7 @@ operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
-name|uint32_t
+name|uint64_t
 argument_list|)
 operator|)
 operator|)
@@ -1252,7 +1252,7 @@ index|[
 name|i
 index|]
 operator|=
-name|fuword32
+name|fuword64
 argument_list|(
 operator|(
 name|void
@@ -1266,7 +1266,7 @@ index|[
 literal|1
 index|]
 operator|+
-literal|16
+literal|48
 operator|+
 operator|(
 name|x

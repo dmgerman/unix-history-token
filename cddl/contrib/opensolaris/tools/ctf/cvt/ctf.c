@@ -667,6 +667,17 @@ else|:
 literal|0
 operator|)
 decl_stmt|;
+if|if
+condition|(
+name|target_requires_swap
+condition|)
+block|{
+name|SWAP_16
+argument_list|(
+name|id
+argument_list|)
+expr_stmt|;
+block|}
 name|ctf_buf_write
 argument_list|(
 name|b
@@ -680,17 +691,6 @@ name|id
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|target_requires_swap
-condition|)
-block|{
-name|SWAP_16
-argument_list|(
-name|id
-argument_list|)
-expr_stmt|;
-block|}
 name|debug
 argument_list|(
 literal|3
@@ -2397,6 +2397,11 @@ block|{
 name|terminate
 argument_list|(
 literal|"function %s has too many args: %d> %d\n"
+argument_list|,
+name|tdesc_name
+argument_list|(
+name|tp
+argument_list|)
 argument_list|,
 name|i
 argument_list|,

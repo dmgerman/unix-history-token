@@ -4420,7 +4420,7 @@ name|master_priv
 init|=
 name|file_priv
 operator|->
-name|masterp
+name|master
 operator|->
 name|driver_priv
 decl_stmt|;
@@ -4817,7 +4817,7 @@ name|dev
 argument_list|,
 name|file_priv
 operator|->
-name|masterp
+name|master
 argument_list|,
 name|buf
 argument_list|)

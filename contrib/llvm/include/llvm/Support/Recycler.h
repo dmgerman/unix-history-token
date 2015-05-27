@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ErrorHandling.h"
 end_include
 
@@ -91,9 +97,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|BumpPtrAllocator
-decl_stmt|;
 comment|/// PrintRecyclingAllocatorStats - Helper for RecyclingAllocator for
 comment|/// printing statistics.
 comment|///
@@ -409,19 +412,7 @@ argument_list|(
 argument|AllocatorType&Allocator
 argument_list|)
 block|{
-name|assert
-argument_list|(
-sizeof|sizeof
-argument_list|(
-name|SubClass
-argument_list|)
-operator|<=
-name|Size
-operator|&&
-literal|"Recycler allocation size is less than object size!"
-argument_list|)
-block|;
-name|assert
+name|static_assert
 argument_list|(
 name|AlignOf
 operator|<
@@ -431,8 +422,20 @@ operator|::
 name|Alignment
 operator|<=
 name|Align
-operator|&&
-literal|"Recycler allocation alignment is less than object alignment!"
+argument_list|,
+literal|"Recycler allocation alignment is less than object align!"
+argument_list|)
+block|;
+name|static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|SubClass
+argument_list|)
+operator|<=
+name|Size
+argument_list|,
+literal|"Recycler allocation size is less than object size!"
 argument_list|)
 block|;
 return|return

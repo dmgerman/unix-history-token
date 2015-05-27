@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SIMPLE_FORM_CONTEXT_H
+name|LLVM_CLANG_LIB_INDEX_SIMPLEFORMATCONTEXT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SIMPLE_FORM_CONTEXT_H
+name|LLVM_CLANG_LIB_INDEX_SIMPLEFORMATCONTEXT_H
 end_define
 
 begin_include
@@ -148,7 +148,7 @@ argument_list|)
 operator|,
 name|Diagnostics
 argument_list|(
-argument|new DiagnosticsEngine(new DiagnosticIDs,                                           DiagOpts.getPtr())
+argument|new DiagnosticsEngine(new DiagnosticIDs,                                           DiagOpts.get())
 argument_list|)
 operator|,
 name|Files
@@ -195,11 +195,14 @@ argument_list|,
 argument|StringRef Content
 argument_list|)
 block|{
-specifier|const
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|llvm
 operator|::
 name|MemoryBuffer
-operator|*
+operator|>
 name|Source
 operator|=
 name|llvm
@@ -236,16 +239,19 @@ name|overrideFileContents
 argument_list|(
 name|Entry
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|Source
-argument_list|,
-name|true
+argument_list|)
 argument_list|)
 block|;
 name|assert
 argument_list|(
 name|Entry
 operator|!=
-name|NULL
+name|nullptr
 argument_list|)
 block|;
 return|return

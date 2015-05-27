@@ -1587,6 +1587,10 @@ name|rxclr_cnt
 decl_stmt|;
 comment|/* rx clear count */
 name|u_int32_t
+name|extrxclr_cnt
+decl_stmt|;
+comment|/* ext chan rx clear count */
+name|u_int32_t
 name|txframecnt_diff
 decl_stmt|;
 comment|/* delta tx frame count */
@@ -2596,6 +2600,135 @@ end_define
 begin_comment
 comment|/* pow2 to optimize out * and / */
 end_comment
+
+begin_comment
+comment|/*  * This is the ANI state and MIB stats.  *  * It's used by the HAL modules to keep state /and/ by the debug ioctl  * to fetch ANI information.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint32_t
+name|ast_ani_niup
+decl_stmt|;
+comment|/* ANI increased noise immunity */
+name|uint32_t
+name|ast_ani_nidown
+decl_stmt|;
+comment|/* ANI decreased noise immunity */
+name|uint32_t
+name|ast_ani_spurup
+decl_stmt|;
+comment|/* ANI increased spur immunity */
+name|uint32_t
+name|ast_ani_spurdown
+decl_stmt|;
+comment|/* ANI descreased spur immunity */
+name|uint32_t
+name|ast_ani_ofdmon
+decl_stmt|;
+comment|/* ANI OFDM weak signal detect on */
+name|uint32_t
+name|ast_ani_ofdmoff
+decl_stmt|;
+comment|/* ANI OFDM weak signal detect off */
+name|uint32_t
+name|ast_ani_cckhigh
+decl_stmt|;
+comment|/* ANI CCK weak signal threshold high */
+name|uint32_t
+name|ast_ani_ccklow
+decl_stmt|;
+comment|/* ANI CCK weak signal threshold low */
+name|uint32_t
+name|ast_ani_stepup
+decl_stmt|;
+comment|/* ANI increased first step level */
+name|uint32_t
+name|ast_ani_stepdown
+decl_stmt|;
+comment|/* ANI decreased first step level */
+name|uint32_t
+name|ast_ani_ofdmerrs
+decl_stmt|;
+comment|/* ANI cumulative ofdm phy err count */
+name|uint32_t
+name|ast_ani_cckerrs
+decl_stmt|;
+comment|/* ANI cumulative cck phy err count */
+name|uint32_t
+name|ast_ani_reset
+decl_stmt|;
+comment|/* ANI parameters zero'd for non-STA */
+name|uint32_t
+name|ast_ani_lzero
+decl_stmt|;
+comment|/* ANI listen time forced to zero */
+name|uint32_t
+name|ast_ani_lneg
+decl_stmt|;
+comment|/* ANI listen time calculated< 0 */
+name|HAL_MIB_STATS
+name|ast_mibstats
+decl_stmt|;
+comment|/* MIB counter stats */
+name|HAL_NODE_STATS
+name|ast_nodestats
+decl_stmt|;
+comment|/* Latest rssi stats from driver */
+block|}
+name|HAL_ANI_STATS
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint8_t
+name|noiseImmunityLevel
+decl_stmt|;
+name|uint8_t
+name|spurImmunityLevel
+decl_stmt|;
+name|uint8_t
+name|firstepLevel
+decl_stmt|;
+name|uint8_t
+name|ofdmWeakSigDetectOff
+decl_stmt|;
+name|uint8_t
+name|cckWeakSigThreshold
+decl_stmt|;
+name|uint32_t
+name|listenTime
+decl_stmt|;
+comment|/* NB: intentionally ordered so data exported to user space is first */
+name|uint32_t
+name|txFrameCount
+decl_stmt|;
+comment|/* Last txFrameCount */
+name|uint32_t
+name|rxFrameCount
+decl_stmt|;
+comment|/* Last rx Frame count */
+name|uint32_t
+name|cycleCount
+decl_stmt|;
+comment|/* Last cycleCount 					   (to detect wrap-around) */
+name|uint32_t
+name|ofdmPhyErrCount
+decl_stmt|;
+comment|/* OFDM err count since last reset */
+name|uint32_t
+name|cckPhyErrCount
+decl_stmt|;
+comment|/* CCK err count since last reset */
+block|}
+name|HAL_ANI_STATE
+typedef|;
+end_typedef
 
 begin_struct_decl
 struct_decl|struct
@@ -6340,6 +6473,100 @@ name|__ahdecl
 function_decl|(
 modifier|*
 name|ah_btCoexEnable
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* Bluetooth MCI methods */
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_btMciSetup
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|void
+modifier|*
+parameter_list|,
+name|uint16_t
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_btMciSendMessage
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|uint8_t
+parameter_list|,
+name|HAL_BOOL
+parameter_list|,
+name|HAL_BOOL
+parameter_list|)
+function_decl|;
+name|uint32_t
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_btMciGetInterrupt
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|uint32_t
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_btMciGetState
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_btMciDetach
 function_decl|)
 parameter_list|(
 name|struct

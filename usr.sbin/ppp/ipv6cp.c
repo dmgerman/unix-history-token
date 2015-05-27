@@ -2544,6 +2544,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|*
 name|fp
 operator|->
 name|bundle
@@ -2853,6 +2854,7 @@ condition|)
 block|{
 if|if
 condition|(
+operator|*
 name|fp
 operator|->
 name|bundle

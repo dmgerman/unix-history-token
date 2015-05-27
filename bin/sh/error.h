@@ -157,6 +157,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SET_PENDING_INT
+value|intpending = 1
+end_define
+
+begin_define
+define|#
+directive|define
 name|CLEAR_PENDING_INT
 value|intpending = 0
 end_define
@@ -179,14 +186,15 @@ name|__dead2
 decl_stmt|;
 end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|onint
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|void

@@ -50,6 +50,12 @@ directive|include
 file|<sys/_callout.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_cpuset.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|taskqueue
@@ -213,7 +219,7 @@ end_empty_stmt
 
 begin_function_decl
 name|int
-name|taskqueue_start_threads_pinned
+name|taskqueue_start_threads_cpuset
 parameter_list|(
 name|struct
 name|taskqueue
@@ -227,8 +233,9 @@ parameter_list|,
 name|int
 name|pri
 parameter_list|,
-name|int
-name|cpu_id
+name|cpuset_t
+modifier|*
+name|mask
 parameter_list|,
 specifier|const
 name|char

@@ -1065,7 +1065,7 @@ name|client
 argument_list|,
 name|CLSET_WAITCHAN
 argument_list|,
-literal|"newnfsreq"
+literal|"nfsreq"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5300,7 +5300,7 @@ name|p
 argument_list|,
 name|LOG_INFO
 argument_list|,
-literal|"newnfs server %s: %s, error %d\n"
+literal|"nfs server %s: %s, error %d\n"
 argument_list|,
 name|server
 argument_list|,
@@ -5318,7 +5318,7 @@ name|p
 argument_list|,
 name|LOG_INFO
 argument_list|,
-literal|"newnfs server %s: %s\n"
+literal|"nfs server %s: %s\n"
 argument_list|,
 name|server
 argument_list|,

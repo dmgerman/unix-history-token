@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HEXAGONBASEINFO_H
+name|LLVM_LIB_TARGET_HEXAGON_MCTARGETDESC_HEXAGONBASEINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|HEXAGONBASEINFO_H
+name|LLVM_LIB_TARGET_HEXAGON_MCTARGETDESC_HEXAGONBASEINFO_H
 end_define
 
 begin_include
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdint.h>
 end_include
 
 begin_decl_stmt
@@ -288,10 +294,28 @@ name|SoloMask
 init|=
 literal|0x1
 block|,
+comment|// Packed only with A or X-type instructions.
+name|SoloAXPos
+init|=
+literal|6
+block|,
+name|SoloAXMask
+init|=
+literal|0x1
+block|,
+comment|// Only A-type instruction in first slot or nothing.
+name|SoloAin1Pos
+init|=
+literal|7
+block|,
+name|SoloAin1Mask
+init|=
+literal|0x1
+block|,
 comment|// Predicated instructions.
 name|PredicatedPos
 init|=
-literal|6
+literal|8
 block|,
 name|PredicatedMask
 init|=
@@ -299,7 +323,7 @@ literal|0x1
 block|,
 name|PredicatedFalsePos
 init|=
-literal|7
+literal|9
 block|,
 name|PredicatedFalseMask
 init|=
@@ -307,16 +331,24 @@ literal|0x1
 block|,
 name|PredicatedNewPos
 init|=
-literal|8
+literal|10
 block|,
 name|PredicatedNewMask
+init|=
+literal|0x1
+block|,
+name|PredicateLatePos
+init|=
+literal|11
+block|,
+name|PredicateLateMask
 init|=
 literal|0x1
 block|,
 comment|// New-Value consumer instructions.
 name|NewValuePos
 init|=
-literal|9
+literal|12
 block|,
 name|NewValueMask
 init|=
@@ -325,7 +357,7 @@ block|,
 comment|// New-Value producer instructions.
 name|hasNewValuePos
 init|=
-literal|10
+literal|13
 block|,
 name|hasNewValueMask
 init|=
@@ -334,25 +366,16 @@ block|,
 comment|// Which operand consumes or produces a new value.
 name|NewValueOpPos
 init|=
-literal|11
+literal|14
 block|,
 name|NewValueOpMask
 init|=
 literal|0x7
 block|,
-comment|// Which bits encode the new value.
-name|NewValueBitsPos
-init|=
-literal|14
-block|,
-name|NewValueBitsMask
-init|=
-literal|0x3
-block|,
 comment|// Stores that can become new-value stores.
 name|mayNVStorePos
 init|=
-literal|16
+literal|17
 block|,
 name|mayNVStoreMask
 init|=
@@ -361,16 +384,34 @@ block|,
 comment|// New-value store instructions.
 name|NVStorePos
 init|=
-literal|17
+literal|18
 block|,
 name|NVStoreMask
+init|=
+literal|0x1
+block|,
+comment|// Loads that can become current-value loads.
+name|mayCVLoadPos
+init|=
+literal|19
+block|,
+name|mayCVLoadMask
+init|=
+literal|0x1
+block|,
+comment|// Current-value load instructions.
+name|CVLoadPos
+init|=
+literal|20
+block|,
+name|CVLoadMask
 init|=
 literal|0x1
 block|,
 comment|// Extendable insns.
 name|ExtendablePos
 init|=
-literal|18
+literal|21
 block|,
 name|ExtendableMask
 init|=
@@ -379,7 +420,7 @@ block|,
 comment|// Insns must be extended.
 name|ExtendedPos
 init|=
-literal|19
+literal|22
 block|,
 name|ExtendedMask
 init|=
@@ -388,7 +429,7 @@ block|,
 comment|// Which operand may be extended.
 name|ExtendableOpPos
 init|=
-literal|20
+literal|23
 block|,
 name|ExtendableOpMask
 init|=
@@ -397,7 +438,7 @@ block|,
 comment|// Signed or unsigned range.
 name|ExtentSignedPos
 init|=
-literal|23
+literal|26
 block|,
 name|ExtentSignedMask
 init|=
@@ -406,16 +447,25 @@ block|,
 comment|// Number of bits of range before extending operand.
 name|ExtentBitsPos
 init|=
-literal|24
+literal|27
 block|,
 name|ExtentBitsMask
 init|=
 literal|0x1f
 block|,
+comment|// Alignment power-of-two before extending operand.
+name|ExtentAlignPos
+init|=
+literal|32
+block|,
+name|ExtentAlignMask
+init|=
+literal|0x3
+block|,
 comment|// Valid subtargets
 name|validSubTargetPos
 init|=
-literal|29
+literal|34
 block|,
 name|validSubTargetMask
 init|=
@@ -424,20 +474,38 @@ block|,
 comment|// Addressing mode for load/store instructions.
 name|AddrModePos
 init|=
-literal|33
+literal|40
 block|,
 name|AddrModeMask
 init|=
 literal|0x7
 block|,
-comment|// Access size of memory access instructions (load/store).
+comment|// Access size for load/store instructions.
 name|MemAccessSizePos
 init|=
-literal|36
+literal|43
 block|,
 name|MemAccesSizeMask
 init|=
 literal|0x7
+block|,
+comment|// Branch predicted taken.
+name|TakenPos
+init|=
+literal|47
+block|,
+name|TakenMask
+init|=
+literal|0x1
+block|,
+comment|// Floating-point instructions.
+name|FPPos
+init|=
+literal|48
+block|,
+name|FPMask
+init|=
+literal|0x1
 block|}
 enum|;
 comment|// *** The code above must match HexagonInstrFormat*.td *** //
@@ -469,6 +537,37 @@ comment|// Offset from the base of the SDA.
 name|MO_GPREL
 block|}
 enum|;
+name|enum
+name|class
+name|InstParseBits
+range|:
+name|uint32_t
+block|{
+name|INST_PARSE_MASK
+operator|=
+literal|0x0000c000
+block|,
+name|INST_PARSE_PACKET_END
+operator|=
+literal|0x0000c000
+block|,
+name|INST_PARSE_LOOP_END
+operator|=
+literal|0x00008000
+block|,
+name|INST_PARSE_NOT_END
+operator|=
+literal|0x00004000
+block|,
+name|INST_PARSE_DUPLEX
+operator|=
+literal|0x00000000
+block|,
+name|INST_PARSE_EXTENDER
+operator|=
+literal|0x00000000
+block|}
+decl_stmt|;
 block|}
 comment|// End namespace HexagonII.
 block|}

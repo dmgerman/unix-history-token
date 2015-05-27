@@ -2139,16 +2139,6 @@ modifier|*
 name|vtag
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|INET
-name|struct
-name|llentry
-modifier|*
-name|lle
-decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|rc
 decl_stmt|;
@@ -2171,7 +2161,7 @@ name|arpresolve
 argument_list|(
 name|ifp
 argument_list|,
-name|NULL
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -2179,8 +2169,7 @@ name|sa
 argument_list|,
 name|lladdr
 argument_list|,
-operator|&
-name|lle
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;

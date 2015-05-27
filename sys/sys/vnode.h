@@ -1285,6 +1285,28 @@ begin_comment
 comment|/* not used */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|VCREAT
+value|000400000000
+end_define
+
+begin_comment
+comment|/* creating new file */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VVERIFY
+value|001000000000
+end_define
+
+begin_comment
+comment|/* verification required */
+end_comment
+
 begin_comment
 comment|/*  * Permissions that were traditionally granted only to the file owner.  */
 end_comment
@@ -2430,6 +2452,24 @@ begin_comment
 comment|/*  * Finally, include the default set of vnode operations.  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|void
+name|vop_getpages_iodone_t
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|vm_page_t
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_include
 include|#
 directive|include
@@ -2452,6 +2492,13 @@ define|#
 directive|define
 name|VN_OPEN_NOCAPCHECK
 value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|VN_OPEN_NAMECACHE
+value|0x00000004
 end_define
 
 begin_comment
@@ -4991,6 +5038,14 @@ specifier|extern
 name|struct
 name|vop_vector
 name|default_vnodeops
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|vop_vector
+name|devfs_specops
 decl_stmt|;
 end_decl_stmt
 

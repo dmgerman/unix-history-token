@@ -54,31 +54,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MipsISELLOWERING_H
+name|LLVM_LIB_TARGET_MIPS_MIPSISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MipsISELLOWERING_H
+name|LLVM_LIB_TARGET_MIPS_MIPSISELLOWERING_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"Mips.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MipsSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"MCTargetDesc/MipsBaseInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"Mips.h"
 end_include
 
 begin_include
@@ -359,6 +353,10 @@ comment|// Pack even elements
 name|PCKOD
 block|,
 comment|// Pack odd elements
+comment|// Vector Lane Copy
+name|INSVE
+block|,
+comment|// Copy element from one vector to another
 comment|// Combined (XOR (OR $a, $b), -1)
 name|VNOR
 block|,
@@ -397,19 +395,34 @@ name|class
 name|MipsFunctionInfo
 decl_stmt|;
 name|class
+name|MipsSubtarget
+decl_stmt|;
+name|class
+name|MipsCCState
+decl_stmt|;
+name|class
 name|MipsTargetLowering
 range|:
 name|public
 name|TargetLowering
 block|{
+name|bool
+name|isMicroMips
+block|;
 name|public
 operator|:
 name|explicit
 name|MipsTargetLowering
 argument_list|(
+specifier|const
 name|MipsTargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|MipsSubtarget
+operator|&
+name|STI
 argument_list|)
 block|;
 specifier|static
@@ -418,18 +431,37 @@ name|MipsTargetLowering
 operator|*
 name|create
 argument_list|(
+specifier|const
 name|MipsTargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|MipsSubtarget
+operator|&
+name|STI
 argument_list|)
 block|;
-name|virtual
+comment|/// createFastISel - This method returns a target specific FastISel object,
+comment|/// or null if the target does not support "fast" ISel.
+name|FastISel
+operator|*
+name|createFastISel
+argument_list|(
+argument|FunctionLoweringInfo&funcInfo
+argument_list|,
+argument|const TargetLibraryInfo *libInfo
+argument_list|)
+specifier|const
+name|override
+block|;
 name|MVT
 name|getScalarShiftAmountTy
 argument_list|(
 argument|EVT LHSTy
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|MVT
@@ -437,7 +469,6 @@ operator|::
 name|i32
 return|;
 block|}
-name|virtual
 name|void
 name|LowerOperationWrapper
 argument_list|(
@@ -448,9 +479,9 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// LowerOperation - Provide custom lowering hooks for some operations.
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -459,11 +490,11 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// ReplaceNodeResults - Replace the results of node with an illegal result
 comment|/// type with new values built out of custom code.
 comment|///
-name|virtual
 name|void
 name|ReplaceNodeResults
 argument_list|(
@@ -474,10 +505,10 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getTargetNodeName - This method returns the name of a target specific
 comment|//  DAG node.
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -486,6 +517,7 @@ argument_list|(
 argument|unsigned Opcode
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getSetCCResultType - get the ISD::SETCC result ValueType
 name|EVT
@@ -496,8 +528,8 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|PerformDAGCombine
 argument_list|(
@@ -506,8 +538,8 @@ argument_list|,
 argument|DAGCombinerInfo&DCI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -517,6 +549,7 @@ argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
+name|override
 block|;      struct
 name|LTStr
 block|{
@@ -549,6 +582,28 @@ return|;
 block|}
 expr|}
 block|;
+name|void
+name|HandleByVal
+argument_list|(
+argument|CCState *
+argument_list|,
+argument|unsigned&
+argument_list|,
+argument|unsigned
+argument_list|)
+specifier|const
+name|override
+block|;
+name|unsigned
+name|getRegisterByName
+argument_list|(
+argument|const char* RegName
+argument_list|,
+argument|EVT VT
+argument_list|)
+specifier|const
+name|override
+block|;
 name|protected
 operator|:
 name|SDValue
@@ -574,29 +629,25 @@ name|getAddrLocal
 argument_list|(
 argument|NodeTy *N
 argument_list|,
+argument|SDLoc DL
+argument_list|,
 argument|EVT Ty
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
-argument|bool HasMips64
+argument|bool IsN32OrN64
 argument_list|)
 specifier|const
 block|{
-name|SDLoc
-name|DL
-argument_list|(
-name|N
-argument_list|)
-block|;
 name|unsigned
 name|GOTFlag
 operator|=
-name|HasMips64
-condition|?
+name|IsN32OrN64
+operator|?
 name|MipsII
 operator|::
 name|MO_GOT_PAGE
-else|:
+operator|:
 name|MipsII
 operator|::
 name|MO_GOT
@@ -670,7 +721,7 @@ block|;
 name|unsigned
 name|LoFlag
 operator|=
-name|HasMips64
+name|IsN32OrN64
 condition|?
 name|MipsII
 operator|::
@@ -740,6 +791,8 @@ name|getAddrGlobal
 argument_list|(
 argument|NodeTy *N
 argument_list|,
+argument|SDLoc DL
+argument_list|,
 argument|EVT Ty
 argument_list|,
 argument|SelectionDAG&DAG
@@ -752,12 +805,6 @@ argument|const MachinePointerInfo&PtrInfo
 argument_list|)
 specifier|const
 block|{
-name|SDLoc
-name|DL
-argument_list|(
-name|N
-argument_list|)
-block|;
 name|SDValue
 name|Tgt
 operator|=
@@ -831,6 +878,8 @@ name|getAddrGlobalLargeGOT
 argument_list|(
 argument|NodeTy *N
 argument_list|,
+argument|SDLoc DL
+argument_list|,
 argument|EVT Ty
 argument_list|,
 argument|SelectionDAG&DAG
@@ -845,12 +894,6 @@ argument|const MachinePointerInfo&PtrInfo
 argument_list|)
 specifier|const
 block|{
-name|SDLoc
-name|DL
-argument_list|(
-name|N
-argument_list|)
-block|;
 name|SDValue
 name|Hi
 operator|=
@@ -970,18 +1013,14 @@ name|getAddrNonPIC
 argument_list|(
 argument|NodeTy *N
 argument_list|,
+argument|SDLoc DL
+argument_list|,
 argument|EVT Ty
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|{
-name|SDLoc
-name|DL
-argument_list|(
-name|N
-argument_list|)
-block|;
 name|SDValue
 name|Hi
 operator|=
@@ -1059,6 +1098,99 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+comment|// This method creates the following nodes, which are necessary for
+comment|// computing a symbol's address using gp-relative addressing:
+comment|//
+comment|// (add $gp, %gp_rel(sym))
+name|template
+operator|<
+name|class
+name|NodeTy
+operator|>
+name|SDValue
+name|getAddrGPRel
+argument_list|(
+argument|NodeTy *N
+argument_list|,
+argument|SDLoc DL
+argument_list|,
+argument|EVT Ty
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Ty
+operator|==
+name|MVT
+operator|::
+name|i32
+argument_list|)
+block|;
+name|SDValue
+name|GPRel
+operator|=
+name|getTargetNode
+argument_list|(
+name|N
+argument_list|,
+name|Ty
+argument_list|,
+name|DAG
+argument_list|,
+name|MipsII
+operator|::
+name|MO_GPREL
+argument_list|)
+block|;
+return|return
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|ISD
+operator|::
+name|ADD
+argument_list|,
+name|DL
+argument_list|,
+name|Ty
+argument_list|,
+name|DAG
+operator|.
+name|getRegister
+argument_list|(
+name|Mips
+operator|::
+name|GP
+argument_list|,
+name|Ty
+argument_list|)
+argument_list|,
+name|DAG
+operator|.
+name|getNode
+argument_list|(
+name|MipsISD
+operator|::
+name|GPRel
+argument_list|,
+name|DL
+argument_list|,
+name|DAG
+operator|.
+name|getVTList
+argument_list|(
+name|Ty
+argument_list|)
+argument_list|,
+name|GPRel
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|/// This function fills Ops, which is the list of operands that will later
 comment|/// be used when a function call node is created. It also generates
 comment|/// copyToReg nodes to set up argument registers.
@@ -1078,6 +1210,8 @@ argument|bool GlobalOrExternal
 argument_list|,
 argument|bool InternalLinkage
 argument_list|,
+argument|bool IsCallReloc
+argument_list|,
 argument|CallLoweringInfo&CLI
 argument_list|,
 argument|SDValue Callee
@@ -1085,338 +1219,6 @@ argument_list|,
 argument|SDValue Chain
 argument_list|)
 specifier|const
-block|;
-comment|/// ByValArgInfo - Byval argument information.
-block|struct
-name|ByValArgInfo
-block|{
-name|unsigned
-name|FirstIdx
-block|;
-comment|// Index of the first register used.
-name|unsigned
-name|NumRegs
-block|;
-comment|// Number of registers used for this argument.
-name|unsigned
-name|Address
-block|;
-comment|// Offset of the stack area used to pass this argument.
-name|ByValArgInfo
-argument_list|()
-operator|:
-name|FirstIdx
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|NumRegs
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|Address
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-block|}
-block|;
-comment|/// MipsCC - This class provides methods used to analyze formal and call
-comment|/// arguments and inquire about calling convention information.
-name|class
-name|MipsCC
-block|{
-name|public
-operator|:
-expr|enum
-name|SpecialCallingConvType
-block|{
-name|Mips16RetHelperConv
-block|,
-name|NoSpecialCallingConv
-block|}
-block|;
-name|MipsCC
-argument_list|(
-argument|CallingConv::ID CallConv
-argument_list|,
-argument|bool IsO32
-argument_list|,
-argument|bool IsFP64
-argument_list|,
-argument|CCState&Info
-argument_list|,
-argument|SpecialCallingConvType SpecialCallingConv = NoSpecialCallingConv
-argument_list|)
-block|;
-name|void
-name|analyzeCallOperands
-argument_list|(
-argument|const SmallVectorImpl<ISD::OutputArg>&Outs
-argument_list|,
-argument|bool IsVarArg
-argument_list|,
-argument|bool IsSoftFloat
-argument_list|,
-argument|const SDNode *CallNode
-argument_list|,
-argument|std::vector<ArgListEntry>&FuncArgs
-argument_list|)
-block|;
-name|void
-name|analyzeFormalArguments
-argument_list|(
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|bool IsSoftFloat
-argument_list|,
-argument|Function::const_arg_iterator FuncArg
-argument_list|)
-block|;
-name|void
-name|analyzeCallResult
-argument_list|(
-argument|const SmallVectorImpl<ISD::InputArg>&Ins
-argument_list|,
-argument|bool IsSoftFloat
-argument_list|,
-argument|const SDNode *CallNode
-argument_list|,
-argument|const Type *RetTy
-argument_list|)
-specifier|const
-block|;
-name|void
-name|analyzeReturn
-argument_list|(
-argument|const SmallVectorImpl<ISD::OutputArg>&Outs
-argument_list|,
-argument|bool IsSoftFloat
-argument_list|,
-argument|const Type *RetTy
-argument_list|)
-specifier|const
-block|;
-specifier|const
-name|CCState
-operator|&
-name|getCCInfo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CCInfo
-return|;
-block|}
-comment|/// hasByValArg - Returns true if function has byval arguments.
-name|bool
-name|hasByValArg
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|ByValArgs
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-comment|/// regSize - Size (in number of bits) of integer registers.
-name|unsigned
-name|regSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsO32
-condition|?
-literal|4
-else|:
-literal|8
-return|;
-block|}
-comment|/// numIntArgRegs - Number of integer registers available for calls.
-name|unsigned
-name|numIntArgRegs
-argument_list|()
-specifier|const
-block|;
-comment|/// reservedArgArea - The size of the area the caller reserves for
-comment|/// register arguments. This is 16-byte if ABI is O32.
-name|unsigned
-name|reservedArgArea
-argument_list|()
-specifier|const
-block|;
-comment|/// Return pointer to array of integer argument registers.
-specifier|const
-name|uint16_t
-operator|*
-name|intArgRegs
-argument_list|()
-specifier|const
-block|;
-typedef|typedef
-name|SmallVectorImpl
-operator|<
-name|ByValArgInfo
-operator|>
-operator|::
-name|const_iterator
-name|byval_iterator
-expr_stmt|;
-name|byval_iterator
-name|byval_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ByValArgs
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-name|byval_iterator
-name|byval_end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ByValArgs
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|private
-operator|:
-name|void
-name|handleByValArg
-argument_list|(
-argument|unsigned ValNo
-argument_list|,
-argument|MVT ValVT
-argument_list|,
-argument|MVT LocVT
-argument_list|,
-argument|CCValAssign::LocInfo LocInfo
-argument_list|,
-argument|ISD::ArgFlagsTy ArgFlags
-argument_list|)
-block|;
-comment|/// useRegsForByval - Returns true if the calling convention allows the
-comment|/// use of registers to pass byval arguments.
-name|bool
-name|useRegsForByval
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CallConv
-operator|!=
-name|CallingConv
-operator|::
-name|Fast
-return|;
-block|}
-comment|/// Return the function that analyzes fixed argument list functions.
-name|llvm
-operator|::
-name|CCAssignFn
-operator|*
-name|fixedArgFn
-argument_list|()
-specifier|const
-block|;
-comment|/// Return the function that analyzes variable argument list functions.
-name|llvm
-operator|::
-name|CCAssignFn
-operator|*
-name|varArgFn
-argument_list|()
-specifier|const
-block|;
-specifier|const
-name|uint16_t
-operator|*
-name|shadowRegs
-argument_list|()
-specifier|const
-block|;
-name|void
-name|allocateRegs
-argument_list|(
-argument|ByValArgInfo&ByVal
-argument_list|,
-argument|unsigned ByValSize
-argument_list|,
-argument|unsigned Align
-argument_list|)
-block|;
-comment|/// Return the type of the register which is used to pass an argument or
-comment|/// return a value. This function returns f64 if the argument is an i64
-comment|/// value which has been generated as a result of softening an f128 value.
-comment|/// Otherwise, it just returns VT.
-name|MVT
-name|getRegVT
-argument_list|(
-argument|MVT VT
-argument_list|,
-argument|const Type *OrigTy
-argument_list|,
-argument|const SDNode *CallNode
-argument_list|,
-argument|bool IsSoftFloat
-argument_list|)
-specifier|const
-block|;
-name|template
-operator|<
-name|typename
-name|Ty
-operator|>
-name|void
-name|analyzeReturn
-argument_list|(
-argument|const SmallVectorImpl<Ty>&RetVals
-argument_list|,
-argument|bool IsSoftFloat
-argument_list|,
-argument|const SDNode *CallNode
-argument_list|,
-argument|const Type *RetTy
-argument_list|)
-specifier|const
-block|;
-name|CCState
-operator|&
-name|CCInfo
-block|;
-name|CallingConv
-operator|::
-name|ID
-name|CallConv
-block|;
-name|bool
-name|IsO32
-block|,
-name|IsFP64
-block|;
-name|SpecialCallingConvType
-name|SpecialCallingConv
-block|;
-name|SmallVector
-operator|<
-name|ByValArgInfo
-block|,
-literal|2
-operator|>
-name|ByValArgs
-block|;     }
 block|;
 name|protected
 operator|:
@@ -1441,15 +1243,8 @@ block|;
 comment|// Subtarget Info
 specifier|const
 name|MipsSubtarget
-operator|*
+operator|&
 name|Subtarget
-block|;
-name|bool
-name|HasMips64
-block|,
-name|IsN64
-block|,
-name|IsO32
 block|;
 name|private
 operator|:
@@ -1523,15 +1318,6 @@ argument|unsigned Flag
 argument_list|)
 specifier|const
 block|;
-name|MipsCC
-operator|::
-name|SpecialCallingConvType
-name|getSpecialCallingConv
-argument_list|(
-argument|SDValue Callee
-argument_list|)
-specifier|const
-block|;
 comment|// Lower Operand helpers
 name|SDValue
 name|LowerCallResult
@@ -1552,9 +1338,7 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|,
-argument|const SDNode *CallNode
-argument_list|,
-argument|const Type *RetTy
+argument|TargetLowering::CallLoweringInfo&CLI
 argument_list|)
 specifier|const
 block|;
@@ -1651,6 +1435,15 @@ specifier|const
 block|;
 name|SDValue
 name|lowerVASTART
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|lowerVAARG
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1756,11 +1549,11 @@ name|virtual
 name|bool
 name|isEligibleForTailCallOptimization
 argument_list|(
-argument|const MipsCC&MipsCCInfo
+argument|const CCState&CCInfo
 argument_list|,
 argument|unsigned NextStackOffset
 argument_list|,
-argument|const MipsFunctionInfo& FI
+argument|const MipsFunctionInfo&FI
 argument_list|)
 specifier|const
 operator|=
@@ -1786,9 +1579,13 @@ argument|SmallVectorImpl<SDValue>&InVals
 argument_list|,
 argument|const Argument *FuncArg
 argument_list|,
-argument|const MipsCC&CC
+argument|unsigned FirstReg
 argument_list|,
-argument|const ByValArgInfo&ByVal
+argument|unsigned LastReg
+argument_list|,
+argument|const CCValAssign&VA
+argument_list|,
+argument|MipsCCState&State
 argument_list|)
 specifier|const
 block|;
@@ -1800,7 +1597,7 @@ argument|SDValue Chain
 argument_list|,
 argument|SDLoc DL
 argument_list|,
-argument|std::deque< std::pair<unsigned
+argument|std::deque<std::pair<unsigned
 argument_list|,
 argument|SDValue>>&RegsToPass
 argument_list|,
@@ -1814,13 +1611,15 @@ argument|SelectionDAG&DAG
 argument_list|,
 argument|SDValue Arg
 argument_list|,
-argument|const MipsCC&CC
+argument|unsigned FirstReg
 argument_list|,
-argument|const ByValArgInfo&ByVal
+argument|unsigned LastReg
 argument_list|,
 argument|const ISD::ArgFlagsTy&Flags
 argument_list|,
 argument|bool isLittle
+argument_list|,
+argument|const CCValAssign&VA
 argument_list|)
 specifier|const
 block|;
@@ -1832,17 +1631,16 @@ name|writeVarArgRegs
 argument_list|(
 argument|std::vector<SDValue>&OutChains
 argument_list|,
-argument|const MipsCC&CC
-argument_list|,
 argument|SDValue Chain
 argument_list|,
 argument|SDLoc DL
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|,
+argument|CCState&State
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|SDValue
 name|LowerFormalArguments
 argument_list|(
@@ -1861,6 +1659,7 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
 name|SDValue
 name|passArgOnStack
@@ -1881,7 +1680,6 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|SDValue
 name|LowerCall
 argument_list|(
@@ -1890,8 +1688,8 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|CanLowerReturn
 argument_list|(
@@ -1906,8 +1704,8 @@ argument_list|,
 argument|LLVMContext&Context
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerReturn
 argument_list|(
@@ -1926,6 +1724,7 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Inline asm support
 name|ConstraintType
@@ -1934,6 +1733,7 @@ argument_list|(
 argument|const std::string&Constraint
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// Examine constraint string and operand type and determine a weight value.
 comment|/// The operand object must already have been set up with the operand type.
@@ -1945,6 +1745,7 @@ argument_list|,
 argument|const char *constraint
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// This function parses registers that appear in inline-asm constraints.
 comment|/// It returns pair (0, 0) on failure.
@@ -1960,7 +1761,7 @@ operator|*
 operator|>
 name|parseRegForInlineAsmConstraint
 argument_list|(
-argument|const StringRef&C
+argument|StringRef C
 argument_list|,
 argument|MVT VT
 argument_list|)
@@ -1983,12 +1784,12 @@ argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// LowerAsmOperandForConstraint - Lower the specified operand into the Ops
 comment|/// vector.  If it is invalid, don't add anything to Ops. If hasMemory is
 comment|/// true it means one of the asm constraint of the inline asm instruction
 comment|/// being processed is 'm'.
-name|virtual
 name|void
 name|LowerAsmOperandForConstraint
 argument_list|(
@@ -2001,8 +1802,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isLegalAddressingMode
 argument_list|(
@@ -2011,16 +1812,16 @@ argument_list|,
 argument|Type *Ty
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isOffsetFoldingLegal
 argument_list|(
 argument|const GlobalAddressSDNode *GA
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|EVT
 name|getOptimalMemOpType
 argument_list|(
@@ -2039,11 +1840,11 @@ argument_list|,
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isFPImmLegal - Returns true if the target can instruction select the
 comment|/// specified FP immediate natively. If false, the legalizer will
 comment|/// materialize the FP immediate as a load from a constant pool.
-name|virtual
 name|bool
 name|isFPImmLegal
 argument_list|(
@@ -2052,11 +1853,29 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getJumpTableEncoding
 argument_list|()
+specifier|const
+name|override
+block|;
+comment|/// Emit a sign-extension using sll/sra, seb, or seh appropriately.
+name|MachineBasicBlock
+operator|*
+name|emitSignExtendToI32InReg
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|unsigned DstReg
+argument_list|,
+argument|unsigned SrcRec
+argument_list|)
 specifier|const
 block|;
 name|MachineBasicBlock
@@ -2114,29 +1933,82 @@ argument_list|,
 argument|unsigned Size
 argument_list|)
 specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|emitSEL_D
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|emitPseudoSELECT
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|bool isFPCmp
+argument_list|,
+argument|unsigned Opc
+argument_list|)
+specifier|const
 block|;   }
-decl_stmt|;
+block|;
 comment|/// Create MipsTargetLowering objects.
 specifier|const
 name|MipsTargetLowering
-modifier|*
+operator|*
 name|createMips16TargetLowering
-parameter_list|(
+argument_list|(
+specifier|const
 name|MipsTargetMachine
-modifier|&
+operator|&
 name|TM
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|MipsSubtarget
+operator|&
+name|STI
+argument_list|)
+block|;
 specifier|const
 name|MipsTargetLowering
-modifier|*
+operator|*
 name|createMipsSETargetLowering
-parameter_list|(
+argument_list|(
+specifier|const
 name|MipsTargetMachine
-modifier|&
+operator|&
 name|TM
-parameter_list|)
-function_decl|;
+argument_list|,
+specifier|const
+name|MipsSubtarget
+operator|&
+name|STI
+argument_list|)
+block|;
+name|namespace
+name|Mips
+block|{
+name|FastISel
+operator|*
+name|createFastISel
+argument_list|(
+name|FunctionLoweringInfo
+operator|&
+name|funcInfo
+argument_list|,
+specifier|const
+name|TargetLibraryInfo
+operator|*
+name|libInfo
+argument_list|)
+block|;   }
 block|}
 end_decl_stmt
 
@@ -2144,10 +2016,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// MipsISELLOWERING_H
-end_comment
 
 end_unit
 

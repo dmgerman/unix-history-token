@@ -342,6 +342,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|BO_DEAD
+value|(1<< 2)
+end_define
+
+begin_comment
+comment|/* Dead; only with INVARIANTS */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|BO_LOCKPTR
 parameter_list|(
 name|bo

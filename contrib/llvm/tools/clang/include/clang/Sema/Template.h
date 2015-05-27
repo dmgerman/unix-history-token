@@ -733,7 +733,7 @@ argument_list|)
 operator|,
 name|PartiallySubstitutedPack
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|SemaRef
@@ -844,7 +844,7 @@ name|newScope
 operator|->
 name|Outer
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 if|if
 condition|(
@@ -1060,7 +1060,7 @@ comment|///
 comment|/// \param D The declaration whose instantiation we are searching for.
 comment|///
 comment|/// \returns A pointer to the declaration or argument pack of declarations
-comment|/// to which the declaration \c D is instantiataed, if found. Otherwise,
+comment|/// to which the declaration \c D is instantiated, if found. Otherwise,
 comment|/// returns NULL.
 name|llvm
 operator|::
@@ -1159,11 +1159,11 @@ argument_list|)
 expr_stmt|;
 name|PartiallySubstitutedPack
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|ArgsInPartiallySubstitutedPack
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|NumArgsInPartiallySubstitutedPack
 operator|=
@@ -1183,13 +1183,13 @@ operator|*
 operator|*
 name|ExplicitArgs
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|unsigned
 operator|*
 name|NumExplicitArgs
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1326,14 +1326,14 @@ argument_list|)
 operator|,
 name|LateAttrs
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|StartingScope
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
-block|{ }
+block|{}
 comment|// Define all the decl visitors using DeclNodes.inc
 define|#
 directive|define
@@ -1536,11 +1536,11 @@ parameter_list|()
 block|{
 name|LateAttrs
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|StartingScope
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 name|LocalInstantiationScope
@@ -1739,8 +1739,6 @@ name|TemplateArgumentListInfo
 operator|&
 name|TemplateArgsInfo
 argument_list|,
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|TemplateArgument

@@ -628,10 +628,8 @@ name|cnflags
 operator|&
 name|MAKEENTRY
 operator|)
-operator|&&
-name|nameiop
 operator|!=
-name|CREATE
+literal|0
 condition|)
 name|cache_enter
 argument_list|(
@@ -1522,10 +1520,8 @@ name|cnflags
 operator|&
 name|MAKEENTRY
 operator|)
-operator|&&
-name|nameiop
 operator|!=
-name|CREATE
+literal|0
 condition|)
 name|cache_enter
 argument_list|(

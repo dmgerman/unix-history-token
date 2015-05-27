@@ -135,137 +135,122 @@ begin_comment
 comment|/* The 'r' flag is required. */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|re_conv
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|size_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|re_cscope_conv
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|size_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|re_sub
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|size_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|regmatch_t
 index|[
 literal|10
 index|]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|re_tag_conv
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|*
-operator|,
+modifier|*
+modifier|*
+parameter_list|,
 name|size_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|s
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|EXCMD
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|CHAR_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|regex_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_s --  *	[line [,line]] s[ubstitute] [[/;]pat[/;]/repl[/;] [cgr] [count] [#lp]]  *  *	Substitute on lines matching a pattern.  *  * PUBLIC: int ex_s __P((SCR *, EXCMD *));  */
+comment|/*  * ex_s --  *	[line [,line]] s[ubstitute] [[/;]pat[/;]/repl[/;] [cgr] [count] [#lp]]  *  *	Substitute on lines matching a pattern.  *  * PUBLIC: int ex_s(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -1159,7 +1144,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_subagain --  *	[line [,line]]& [cgr] [count] [#lp]]  *  *	Substitute using the last substitute RE and replacement pattern.  *  * PUBLIC: int ex_subagain __P((SCR *, EXCMD *));  */
+comment|/*  * ex_subagain --  *	[line [,line]]& [cgr] [count] [#lp]]  *  *	Substitute using the last substitute RE and replacement pattern.  *  * PUBLIC: int ex_subagain(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -1274,7 +1259,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_subtilde --  *	[line [,line]] ~ [cgr] [count] [#lp]]  *  *	Substitute using the last RE and last substitute replacement pattern.  *  * PUBLIC: int ex_subtilde __P((SCR *, EXCMD *));  */
+comment|/*  * ex_subtilde --  *	[line [,line]] ~ [cgr] [count] [#lp]]  *  *	Substitute using the last RE and last substitute replacement pattern.  *  * PUBLIC: int ex_subtilde(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -3470,7 +3455,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * re_compile --  *	Compile the RE.  *  * PUBLIC: int re_compile __P((SCR *,  * PUBLIC:     CHAR_T *, size_t, CHAR_T **, size_t *, regex_t *, u_int));  */
+comment|/*  * re_compile --  *	Compile the RE.  *  * PUBLIC: int re_compile(SCR *,  * PUBLIC:     CHAR_T *, size_t, CHAR_T **, size_t *, regex_t *, u_int);  */
 end_comment
 
 begin_function
@@ -5139,7 +5124,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * re_error --  *	Report a regular expression error.  *  * PUBLIC: void re_error __P((SCR *, int, regex_t *));  */
+comment|/*  * re_error --  *	Report a regular expression error.  *  * PUBLIC: void re_error(SCR *, int, regex_t *);  */
 end_comment
 
 begin_function

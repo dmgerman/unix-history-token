@@ -7,14 +7,11 @@ begin_comment
 comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -81,14 +78,11 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -2502,12 +2496,9 @@ end_function
 
 begin_function
 name|int
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|dt_ioctl
 parameter_list|(
 name|dtrace_hdl_t
@@ -2548,13 +2539,9 @@ name|dtp
 operator|->
 name|dt_vector
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 comment|/* Avoid sign extension. */
 name|val
 operator|&=
@@ -2647,12 +2634,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 return|return
 operator|(
 name|p_online
@@ -2930,13 +2914,9 @@ decl_stmt|;
 name|int
 name|n
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 comment|/* 	 * On FreeBSD, check if output is currently being re-directed 	 * to another file. If so, output to that file instead of the 	 * one the caller has specified. 	 */
 if|if
 condition|(
@@ -4215,14 +4195,11 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_struct_decl
 struct_decl|struct
@@ -4318,12 +4295,9 @@ modifier|*
 name|lock
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 specifier|extern
 name|int
 name|_mutex_held

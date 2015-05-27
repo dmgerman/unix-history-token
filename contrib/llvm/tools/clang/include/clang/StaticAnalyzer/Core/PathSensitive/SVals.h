@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_RVALUE_H
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_SVALS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_RVALUE_H
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_SVALS_H
 end_define
 
 begin_include
@@ -215,7 +215,7 @@ name|SVal
 argument_list|(
 argument|BaseKind k
 argument_list|,
-argument|const void *D = NULL
+argument|const void *D = nullptr
 argument_list|)
 operator|:
 name|Data
@@ -236,7 +236,7 @@ argument_list|()
 operator|:
 name|Data
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Kind
@@ -770,7 +770,7 @@ name|DefinedOrUnknownSVal
 argument_list|(
 argument|BaseKind k
 argument_list|,
-argument|void *D = NULL
+argument|void *D = nullptr
 argument_list|)
 operator|:
 name|SVal

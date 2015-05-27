@@ -135,7 +135,6 @@ name|iconv
 parameter_list|(
 name|iconv_t
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*
@@ -206,7 +205,6 @@ name|__iconv
 parameter_list|(
 name|iconv_t
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 modifier|*

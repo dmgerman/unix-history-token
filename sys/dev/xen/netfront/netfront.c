@@ -50,6 +50,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -308,12 +314,6 @@ begin_include
 include|#
 directive|include
 file|<machine/xen/xenvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/xen/netfront/mbufq.h>
 end_include
 
 begin_include
@@ -1256,10 +1256,10 @@ name|xn_cdata
 decl_stmt|;
 comment|/* mbufs */
 name|struct
-name|mbuf_head
+name|mbufq
 name|xn_rx_batch
 decl_stmt|;
-comment|/* head of the batch queue */
+comment|/* batch queue */
 name|int
 name|xn_if_flags
 decl_stmt|;
@@ -3082,9 +3082,6 @@ case|case
 name|XenbusStateInitialised
 case|:
 case|case
-name|XenbusStateConnected
-case|:
-case|case
 name|XenbusStateUnknown
 case|:
 case|case
@@ -3127,6 +3124,21 @@ argument_list|,
 name|XenbusStateConnected
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|XenbusStateClosing
+case|:
+name|xenbus_set_state
+argument_list|(
+name|dev
+argument_list|,
+name|XenbusStateClosed
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|XenbusStateConnected
+case|:
 ifdef|#
 directive|ifdef
 name|INET
@@ -3139,17 +3151,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-break|break;
-case|case
-name|XenbusStateClosing
-case|:
-name|xenbus_set_state
-argument_list|(
-name|dev
-argument_list|,
-name|XenbusStateClosed
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
 block|}
@@ -3481,13 +3482,17 @@ name|i
 operator|++
 control|)
 block|{
-name|MGETHDR
-argument_list|(
 name|m_new
-argument_list|,
+operator|=
+name|m_getjcl
+argument_list|(
 name|M_NOWAIT
 argument_list|,
 name|MT_DATA
+argument_list|,
+name|M_PKTHDR
+argument_list|,
+name|MJUMPAGESIZE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3497,53 +3502,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s: MGETHDR failed\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-goto|goto
-name|no_mbuf
-goto|;
-block|}
-name|m_cljget
-argument_list|(
-name|m_new
-argument_list|,
-name|M_NOWAIT
-argument_list|,
-name|MJUMPAGESIZE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|m_new
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-name|printf
-argument_list|(
-literal|"%s: m_cljget failed\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|m_freem
-argument_list|(
-name|m_new
-argument_list|)
-expr_stmt|;
-name|no_mbuf
-label|:
 if|if
 condition|(
 name|i
@@ -3569,7 +3527,10 @@ operator|=
 name|MJUMPAGESIZE
 expr_stmt|;
 comment|/* queue the mbufs allocated */
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|sc
@@ -3839,10 +3800,7 @@ index|[
 name|nr_flips
 index|]
 operator|=
-name|PFNTOMFN
-argument_list|(
 name|pfn
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3854,13 +3812,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* Remove this page before passing 				 * back to Xen. 				 */
-name|set_phys_to_machine
-argument_list|(
-name|pfn
-argument_list|,
-name|INVALID_P2M_ENTRY
-argument_list|)
-expr_stmt|;
 name|MULTI_update_va_mapping
 argument_list|(
 operator|&
@@ -3891,10 +3842,7 @@ name|ref
 argument_list|,
 name|otherend_id
 argument_list|,
-name|PFNTOMFN
-argument_list|(
 name|pfn
-argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -3960,9 +3908,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We may have allocated buffers which have entries outstanding 	 * in the page * update queue -- make sure we flush those first! 	 */
-name|PT_UPDATES_FLUSH
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|nr_flips
@@ -4270,7 +4215,7 @@ modifier|*
 name|m
 decl_stmt|;
 name|struct
-name|mbuf_head
+name|mbufq
 name|rxq
 decl_stmt|,
 name|errq
@@ -4300,16 +4245,21 @@ name|np
 argument_list|)
 condition|)
 return|return;
+comment|/* XXX: there should be some sane limit. */
 name|mbufq_init
 argument_list|(
 operator|&
 name|errq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 name|mbufq_init
 argument_list|(
 operator|&
 name|rxq
+argument_list|,
+name|INT_MAX
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -4421,7 +4371,10 @@ if|if
 condition|(
 name|m
 condition|)
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|errq
@@ -4501,7 +4454,10 @@ name|m_pkthdr
 operator|.
 name|len
 expr_stmt|;
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|rxq
@@ -4617,21 +4573,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-while|while
-condition|(
-operator|(
-name|m
-operator|=
-name|mbufq_dequeue
+name|mbufq_drain
 argument_list|(
 operator|&
 name|errq
-argument_list|)
-operator|)
-condition|)
-name|m_freem
-argument_list|(
-name|m
 argument_list|)
 expr_stmt|;
 comment|/*  		 * Process all the mbufs after the remapping is complete. 		 * Break the mbuf chain first though. 		 */
@@ -6062,13 +6007,6 @@ name|val
 operator|=
 name|pfn
 expr_stmt|;
-name|set_phys_to_machine
-argument_list|(
-name|pfn
-argument_list|,
-name|mfn
-argument_list|)
-expr_stmt|;
 block|}
 name|pages_flipped
 operator|++
@@ -6450,10 +6388,6 @@ decl_stmt|;
 name|u_int
 name|nfrags
 decl_stmt|;
-name|netif_extra_info_t
-modifier|*
-name|extra
-decl_stmt|;
 name|int
 name|otherend_id
 decl_stmt|;
@@ -6605,10 +6539,6 @@ comment|/* 	 * Start packing the mbufs in this chain into 	 * the fragment point
 name|m
 operator|=
 name|m_head
-expr_stmt|;
-name|extra
-operator|=
-name|NULL
 expr_stmt|;
 name|otherend_id
 operator|=
@@ -7399,9 +7329,6 @@ condition|)
 block|{
 case|case
 name|SIOCSIFADDR
-case|:
-case|case
-name|SIOCGIFADDR
 case|:
 ifdef|#
 directive|ifdef
@@ -8287,10 +8214,7 @@ operator|->
 name|xbdev
 argument_list|)
 argument_list|,
-name|PFNTOMFN
-argument_list|(
 name|pfn
-argument_list|)
 argument_list|,
 literal|0
 argument_list|)
@@ -8916,6 +8840,16 @@ operator|=
 name|GRANT_REF_INVALID
 expr_stmt|;
 block|}
+name|mbufq_init
+argument_list|(
+operator|&
+name|np
+operator|->
+name|xn_rx_batch
+argument_list|,
+name|INT_MAX
+argument_list|)
+expr_stmt|;
 comment|/* A grant for every tx ring slot */
 if|if
 condition|(
@@ -9136,7 +9070,7 @@ name|np
 operator|->
 name|xn_stat_ch
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|netfront_carrier_off

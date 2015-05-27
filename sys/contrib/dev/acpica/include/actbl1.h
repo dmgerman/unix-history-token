@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -146,6 +146,17 @@ end_define
 
 begin_comment
 comment|/* System Resource Affinity Table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_NFIT
+value|"NFIT"
+end_define
+
+begin_comment
+comment|/* NVDIMM Firmware Interface Table */
 end_comment
 
 begin_comment
@@ -1981,10 +1992,14 @@ name|ACPI_MADT_TYPE_GENERIC_REDISTRIBUTOR
 init|=
 literal|14
 block|,
-name|ACPI_MADT_TYPE_RESERVED
+name|ACPI_MADT_TYPE_GENERIC_TRANSLATOR
 init|=
 literal|15
-comment|/* 15 and greater are reserved */
+block|,
+name|ACPI_MADT_TYPE_RESERVED
+init|=
+literal|16
+comment|/* 16 and greater are reserved */
 block|}
 enum|;
 end_enum
@@ -2369,7 +2384,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* 11: Generic Interrupt (ACPI 5.0) */
+comment|/* 11: Generic Interrupt (ACPI 5.0 + ACPI 6.0 changes) */
 end_comment
 
 begin_typedef
@@ -2420,6 +2435,15 @@ decl_stmt|;
 name|UINT64
 name|ArmMpidr
 decl_stmt|;
+name|UINT8
+name|EfficiencyClass
+decl_stmt|;
+name|UINT8
+name|Reserved2
+index|[
+literal|3
+index|]
+decl_stmt|;
 block|}
 name|ACPI_MADT_GENERIC_INTERRUPT
 typedef|;
@@ -2456,7 +2480,7 @@ comment|/* 02: VGIC Maintenance Interrupt mode */
 end_comment
 
 begin_comment
-comment|/* 12: Generic Distributor (ACPI 5.0) */
+comment|/* 12: Generic Distributor (ACPI 5.0 + ACPI 6.0 changes) */
 end_comment
 
 begin_typedef
@@ -2480,8 +2504,14 @@ decl_stmt|;
 name|UINT32
 name|GlobalIrqBase
 decl_stmt|;
-name|UINT32
+name|UINT8
+name|Version
+decl_stmt|;
+name|UINT8
 name|Reserved2
+index|[
+literal|3
+index|]
 decl_stmt|;
 comment|/* Reserved - must be zero */
 block|}
@@ -2560,6 +2590,36 @@ name|Length
 decl_stmt|;
 block|}
 name|ACPI_MADT_GENERIC_REDISTRIBUTOR
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 15: Generic Translator (ACPI 6.0) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_madt_generic_translator
+block|{
+name|ACPI_SUBTABLE_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+comment|/* reserved - must be zero */
+name|UINT32
+name|TranslationId
+decl_stmt|;
+name|UINT64
+name|BaseAddress
+decl_stmt|;
+name|UINT32
+name|Reserved2
+decl_stmt|;
+block|}
+name|ACPI_MADT_GENERIC_TRANSLATOR
 typedef|;
 end_typedef
 
@@ -2734,6 +2794,526 @@ decl_stmt|;
 comment|/* In bytes */
 block|}
 name|ACPI_MSCT_PROXIMITY
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*******************************************************************************  *  * NFIT - NVDIMM Interface Table (ACPI 6.0)  *        Version 1  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_nfit
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+name|UINT32
+name|Reserved
+decl_stmt|;
+comment|/* Reserved, must be zero */
+block|}
+name|ACPI_TABLE_NFIT
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Subtable header for NFIT */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_nfit_header
+block|{
+name|UINT16
+name|Type
+decl_stmt|;
+name|UINT16
+name|Length
+decl_stmt|;
+block|}
+name|ACPI_NFIT_HEADER
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for subtable type in ACPI_NFIT_HEADER */
+end_comment
+
+begin_enum
+enum|enum
+name|AcpiNfitType
+block|{
+name|ACPI_NFIT_TYPE_SYSTEM_ADDRESS
+init|=
+literal|0
+block|,
+name|ACPI_NFIT_TYPE_MEMORY_MAP
+init|=
+literal|1
+block|,
+name|ACPI_NFIT_TYPE_INTERLEAVE
+init|=
+literal|2
+block|,
+name|ACPI_NFIT_TYPE_SMBIOS
+init|=
+literal|3
+block|,
+name|ACPI_NFIT_TYPE_CONTROL_REGION
+init|=
+literal|4
+block|,
+name|ACPI_NFIT_TYPE_DATA_REGION
+init|=
+literal|5
+block|,
+name|ACPI_NFIT_TYPE_FLUSH_ADDRESS
+init|=
+literal|6
+block|,
+name|ACPI_NFIT_TYPE_RESERVED
+init|=
+literal|7
+comment|/* 7 and greater are reserved */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/*  * NFIT Subtables  */
+end_comment
+
+begin_comment
+comment|/* 0: System Physical Address Range Structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_nfit_system_address
+block|{
+name|ACPI_NFIT_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|RangeIndex
+decl_stmt|;
+name|UINT16
+name|Flags
+decl_stmt|;
+name|UINT32
+name|Reserved
+decl_stmt|;
+comment|/* Reseved, must be zero */
+name|UINT32
+name|ProximityDomain
+decl_stmt|;
+name|UINT8
+name|RangeGuid
+index|[
+literal|16
+index|]
+decl_stmt|;
+name|UINT64
+name|Address
+decl_stmt|;
+name|UINT64
+name|Length
+decl_stmt|;
+name|UINT64
+name|MemoryMapping
+decl_stmt|;
+block|}
+name|ACPI_NFIT_SYSTEM_ADDRESS
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_ADD_ONLINE_ONLY
+value|(1)
+end_define
+
+begin_comment
+comment|/* 00: Add/Online Operation Only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_PROXIMITY_VALID
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/* 01: Proximity Domain Valid */
+end_comment
+
+begin_comment
+comment|/* Range Type GUIDs appear in the include/acuuid.h file */
+end_comment
+
+begin_comment
+comment|/* 1: Memory Device to System Address Range Map Structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_nfit_memory_map
+block|{
+name|ACPI_NFIT_HEADER
+name|Header
+decl_stmt|;
+name|UINT32
+name|DeviceHandle
+decl_stmt|;
+name|UINT16
+name|PhysicalId
+decl_stmt|;
+name|UINT16
+name|RegionId
+decl_stmt|;
+name|UINT16
+name|RangeIndex
+decl_stmt|;
+name|UINT16
+name|RegionIndex
+decl_stmt|;
+name|UINT64
+name|RegionSize
+decl_stmt|;
+name|UINT64
+name|RegionOffset
+decl_stmt|;
+name|UINT64
+name|Address
+decl_stmt|;
+name|UINT16
+name|InterleaveIndex
+decl_stmt|;
+name|UINT16
+name|InterleaveWays
+decl_stmt|;
+name|UINT16
+name|Flags
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+comment|/* Reserved, must be zero */
+block|}
+name|ACPI_NFIT_MEMORY_MAP
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_MEM_SAVE_FAILED
+value|(1)
+end_define
+
+begin_comment
+comment|/* 00: Last SAVE to Memory Device failed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_MEM_RESTORE_FAILED
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/* 01: Last RESTORE from Memory Device failed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_MEM_FLUSH_FAILED
+value|(1<<2)
+end_define
+
+begin_comment
+comment|/* 02: Platform flush failed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_MEM_ARMED
+value|(1<<3)
+end_define
+
+begin_comment
+comment|/* 03: Memory Device observed to be not armed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_MEM_HEALTH_OBSERVED
+value|(1<<4)
+end_define
+
+begin_comment
+comment|/* 04: Memory Device observed SMART/health events */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_MEM_HEALTH_ENABLED
+value|(1<<5)
+end_define
+
+begin_comment
+comment|/* 05: SMART/health events enabled */
+end_comment
+
+begin_comment
+comment|/* 2: Interleave Structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_nfit_interleave
+block|{
+name|ACPI_NFIT_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|InterleaveIndex
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+comment|/* Reserved, must be zero */
+name|UINT32
+name|LineCount
+decl_stmt|;
+name|UINT32
+name|LineSize
+decl_stmt|;
+name|UINT32
+name|LineOffset
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* Variable length */
+block|}
+name|ACPI_NFIT_INTERLEAVE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 3: SMBIOS Management Information Structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_nfit_smbios
+block|{
+name|ACPI_NFIT_HEADER
+name|Header
+decl_stmt|;
+name|UINT32
+name|Reserved
+decl_stmt|;
+comment|/* Reserved, must be zero */
+name|UINT8
+name|Data
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* Variable length */
+block|}
+name|ACPI_NFIT_SMBIOS
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 4: NVDIMM Control Region Structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_nfit_control_region
+block|{
+name|ACPI_NFIT_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|RegionIndex
+decl_stmt|;
+name|UINT16
+name|VendorId
+decl_stmt|;
+name|UINT16
+name|DeviceId
+decl_stmt|;
+name|UINT16
+name|RevisionId
+decl_stmt|;
+name|UINT16
+name|SubsystemVendorId
+decl_stmt|;
+name|UINT16
+name|SubsystemDeviceId
+decl_stmt|;
+name|UINT16
+name|SubsystemRevisionId
+decl_stmt|;
+name|UINT8
+name|Reserved
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* Reserved, must be zero */
+name|UINT32
+name|SerialNumber
+decl_stmt|;
+name|UINT16
+name|Code
+decl_stmt|;
+name|UINT16
+name|Windows
+decl_stmt|;
+name|UINT64
+name|WindowSize
+decl_stmt|;
+name|UINT64
+name|CommandOffset
+decl_stmt|;
+name|UINT64
+name|CommandSize
+decl_stmt|;
+name|UINT64
+name|StatusOffset
+decl_stmt|;
+name|UINT64
+name|StatusSize
+decl_stmt|;
+name|UINT16
+name|Flags
+decl_stmt|;
+name|UINT8
+name|Reserved1
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* Reserved, must be zero */
+block|}
+name|ACPI_NFIT_CONTROL_REGION
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NFIT_CONTROL_BUFFERED
+value|(1)
+end_define
+
+begin_comment
+comment|/* Block Data Windows implementation is buffered */
+end_comment
+
+begin_comment
+comment|/* 5: NVDIMM Block Data Window Region Structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_nfit_data_region
+block|{
+name|ACPI_NFIT_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|RegionIndex
+decl_stmt|;
+name|UINT16
+name|Windows
+decl_stmt|;
+name|UINT64
+name|Offset
+decl_stmt|;
+name|UINT64
+name|Size
+decl_stmt|;
+name|UINT64
+name|Capacity
+decl_stmt|;
+name|UINT64
+name|StartAddress
+decl_stmt|;
+block|}
+name|ACPI_NFIT_DATA_REGION
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 6: Flush Hint Address Structure */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_nfit_flush_address
+block|{
+name|ACPI_NFIT_HEADER
+name|Header
+decl_stmt|;
+name|UINT32
+name|DeviceHandle
+decl_stmt|;
+name|UINT16
+name|HintCount
+decl_stmt|;
+name|UINT8
+name|Reserved
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* Reserved, must be zero */
+name|UINT64
+name|HintAddress
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* Variable length */
+block|}
+name|ACPI_NFIT_FLUSH_ADDRESS
 typedef|;
 end_typedef
 

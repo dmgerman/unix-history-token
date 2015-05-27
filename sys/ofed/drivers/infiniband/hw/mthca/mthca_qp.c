@@ -4825,6 +4825,8 @@ operator|->
 name|qp_type
 argument_list|,
 name|attr_mask
+argument_list|,
+name|IB_LINK_LAYER_UNSPECIFIED
 argument_list|)
 condition|)
 block|{

@@ -232,7 +232,6 @@ name|struct
 name|thread
 modifier|*
 parameter_list|,
-specifier|const
 name|mcontext32_t
 modifier|*
 parameter_list|)
@@ -1059,7 +1058,6 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-specifier|const
 name|mcontext32_t
 modifier|*
 name|mcp

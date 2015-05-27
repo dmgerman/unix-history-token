@@ -98,20 +98,24 @@ name|class
 name|MDNode
 decl_stmt|;
 name|class
+name|AssumptionCache
+decl_stmt|;
+name|class
+name|DominatorTree
+decl_stmt|;
+name|class
 name|TargetLibraryInfo
 decl_stmt|;
-comment|/// ComputeMaskedBits - Determine which of the bits specified in Mask are
-comment|/// known to be either zero or one and return them in the KnownZero/KnownOne
-comment|/// bit sets.  This code only analyzes bits in Mask, in order to short-circuit
-comment|/// processing.
+comment|/// Determine which bits of V are known to be either zero or one and return
+comment|/// them in the KnownZero/KnownOne bit sets.
 comment|///
 comment|/// This function is defined on values with integer type, values with pointer
 comment|/// type (but only if TD is non-null), and vectors of integers.  In the case
-comment|/// where V is a vector, the mask, known zero, and known one values are the
+comment|/// where V is a vector, the known zero and known one values are the
 comment|/// same width as the vector element, and the bit is set only if it is true
 comment|/// for all of the elements in the vector.
 name|void
-name|ComputeMaskedBits
+name|computeKnownBits
 parameter_list|(
 name|Value
 modifier|*
@@ -130,16 +134,38 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|unsigned
 name|Depth
 init|=
 literal|0
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
+comment|/// Compute known bits from the range metadata.
+comment|/// \p KnownZero the set of bits that are known to be zero
 name|void
-name|computeMaskedBitsLoad
+name|computeKnownBitsFromRangeMetadata
 parameter_list|(
 specifier|const
 name|MDNode
@@ -152,7 +178,7 @@ name|KnownZero
 parameter_list|)
 function_decl|;
 comment|/// ComputeSignBit - Determine whether the sign bit is known to be zero or
-comment|/// one.  Convenience wrapper around ComputeMaskedBits.
+comment|/// one.  Convenience wrapper around computeKnownBits.
 name|void
 name|ComputeSignBit
 parameter_list|(
@@ -173,12 +199,32 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|unsigned
 name|Depth
 init|=
 literal|0
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// isKnownToBeAPowerOfTwo - Return true if the given value is known to have
@@ -202,6 +248,26 @@ name|unsigned
 name|Depth
 init|=
 literal|0
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// isKnownNonZero - Return true if the given value is known to be non-zero
@@ -220,12 +286,32 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|unsigned
 name|Depth
 init|=
 literal|0
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// MaskedValueIsZero - Return true if 'V& Mask' is known to be zero.  We use
@@ -254,12 +340,32 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|unsigned
 name|Depth
 init|=
 literal|0
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// ComputeNumSignBits - Return the number of times the sign bit of the
@@ -282,12 +388,32 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|unsigned
 name|Depth
 init|=
 literal|0
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// ComputeMultiple - This function computes the integer multiple of Base that
@@ -376,7 +502,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// GetPointerBaseWithConstantOffset - Analyze the specified pointer to see if
@@ -497,7 +623,7 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|unsigned
 name|MaxLookup
@@ -522,7 +648,7 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|unsigned
 name|MaxLookup
@@ -571,7 +697,7 @@ name|DataLayout
 operator|*
 name|TD
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|unsigned
 name|MaxLookup
@@ -621,7 +747,7 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// isKnownNonNull - Return true if this pointer couldn't possibly be null by
@@ -640,7 +766,111 @@ name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// Return true if it is valid to use the assumptions provided by an
+comment|/// assume intrinsic, I, at the point in the control-flow identified by the
+comment|/// context instruction, CxtI.
+name|bool
+name|isValidAssumeForContext
+parameter_list|(
+specifier|const
+name|Instruction
+modifier|*
+name|I
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|*
+name|DL
+init|=
+name|nullptr
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+name|enum
+name|class
+name|OverflowResult
+block|{
+name|AlwaysOverflows
+operator|,
+name|MayOverflow
+operator|,
+name|NeverOverflows
+block|}
+empty_stmt|;
+name|OverflowResult
+name|computeOverflowForUnsignedMul
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|*
+name|DL
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+parameter_list|)
+function_decl|;
+name|OverflowResult
+name|computeOverflowForUnsignedAdd
+parameter_list|(
+name|Value
+modifier|*
+name|LHS
+parameter_list|,
+name|Value
+modifier|*
+name|RHS
+parameter_list|,
+specifier|const
+name|DataLayout
+modifier|*
+name|DL
+parameter_list|,
+name|AssumptionCache
+modifier|*
+name|AC
+parameter_list|,
+specifier|const
+name|Instruction
+modifier|*
+name|CxtI
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
 parameter_list|)
 function_decl|;
 block|}

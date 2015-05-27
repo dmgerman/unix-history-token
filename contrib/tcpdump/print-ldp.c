@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Hannes Gredler (hannes@juniper.net)  *  and Steinar Haug (sthaug@nethelp.no)  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ldp.c,v 1.20 2006-06-23 02:03:09 hannes Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -52,31 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"decode_prefix.h"
 end_include
 
 begin_include
@@ -111,25 +70,25 @@ begin_struct
 struct|struct
 name|ldp_common_header
 block|{
-name|u_int8_t
+name|uint8_t
 name|version
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|pdu_length
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|lsr_id
 index|[
 literal|4
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|label_space
 index|[
 literal|2
@@ -154,19 +113,19 @@ begin_struct
 struct|struct
 name|ldp_msg_header
 block|{
-name|u_int8_t
+name|uint8_t
 name|type
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|length
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|id
 index|[
 literal|4
@@ -919,21 +878,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|ldp_msg_print
 parameter_list|(
-specifier|register
-specifier|const
-name|u_char
+name|netdissect_options
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|ldp_tlv_print
-parameter_list|(
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -943,7 +894,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*   * ldp tlv header  *  *  0                   1                   2                   3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |U|F|        Type               |            Length             |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                                                               |  * |                             Value                             |  * ~                                                               ~  * |                                                               |  * |                               +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                               |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  */
+comment|/*  * ldp tlv header  *  *  0                   1                   2                   3  *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |U|F|        Type               |            Length             |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                                                               |  * |                             Value                             |  * ~                                                               ~  * |                                                               |  * |                               +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  * |                               |  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  */
 end_comment
 
 begin_define
@@ -954,13 +905,18 @@ parameter_list|(
 name|minlen
 parameter_list|)
 define|\
-value|TCHECK2(*tptr, minlen); if (tlv_tlen< minlen) goto badtlv;
+value|ND_TCHECK2(*tptr, minlen); if (tlv_tlen< minlen) goto badtlv;
 end_define
 
 begin_function
+specifier|static
 name|int
 name|ldp_tlv_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -971,13 +927,13 @@ block|{
 struct|struct
 name|ldp_tlv_header
 block|{
-name|u_int8_t
+name|uint8_t
 name|type
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|length
 index|[
 literal|2
@@ -1061,10 +1017,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* FIXME vendor private / experimental check */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    %s TLV (0x%04x), length: %u, Flags: [%s and %s forward if unknown]"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ldp_tlv_values
@@ -1073,11 +1032,11 @@ literal|"Unknown"
 argument_list|,
 name|tlv_type
 argument_list|)
-argument_list|,
+operator|,
 name|tlv_type
-argument_list|,
+operator|,
 name|tlv_len
-argument_list|,
+operator|,
 name|LDP_MASK_U_BIT
 argument_list|(
 name|EXTRACT_16BITS
@@ -1092,7 +1051,7 @@ condition|?
 literal|"continue processing"
 else|:
 literal|"ignore"
-argument_list|,
+operator|,
 name|LDP_MASK_F_BIT
 argument_list|(
 name|EXTRACT_16BITS
@@ -1107,6 +1066,7 @@ condition|?
 literal|"do"
 else|:
 literal|"don't"
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -1130,15 +1090,18 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Hold Time: %us, Flags: [%s Hello%s]"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|EXTRACT_16BITS
 argument_list|(
@@ -1153,7 +1116,7 @@ condition|?
 literal|"Targeted"
 else|:
 literal|"Link"
-argument_list|,
+operator|,
 operator|(
 name|EXTRACT_16BITS
 argument_list|(
@@ -1168,6 +1131,7 @@ condition|?
 literal|", Request for targeted Hellos"
 else|:
 literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1179,14 +1143,20 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      IPv4 Transport Address: %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1201,14 +1171,20 @@ argument_list|(
 literal|16
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      IPv6 Transport Address: %s"
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1222,14 +1198,18 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Sequence Number: %u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1256,10 +1236,13 @@ name|tlv_tlen
 operator|-=
 name|LDP_TLV_ADDRESS_LIST_AFNUM_LEN
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Address Family: %s, addresses"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|af_values
@@ -1268,6 +1251,7 @@ literal|"Unknown (%u)"
 argument_list|,
 name|af
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1289,7 +1273,7 @@ name|in_addr
 argument_list|)
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -1301,14 +1285,20 @@ name|in_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlv_tlen
@@ -1346,7 +1336,7 @@ name|in6_addr
 argument_list|)
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -1358,14 +1348,20 @@ name|in6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|ip6addr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlv_tlen
@@ -1401,22 +1397,25 @@ argument_list|(
 literal|8
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Version: %u, Keepalive: %us, Flags: [Downstream %s, Loop Detection %s]"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
 operator|+
 literal|2
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|EXTRACT_16BITS
 argument_list|(
@@ -1431,7 +1430,7 @@ condition|?
 literal|"On Demand"
 else|:
 literal|"Unsolicited"
-argument_list|,
+operator|,
 operator|(
 name|EXTRACT_16BITS
 argument_list|(
@@ -1446,6 +1445,7 @@ condition|?
 literal|"Enabled"
 else|:
 literal|"Disabled"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1462,10 +1462,13 @@ operator|=
 operator|*
 name|tptr
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s FEC (0x%02x)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ldp_fec_values
@@ -1474,8 +1477,9 @@ literal|"Unknown"
 argument_list|,
 name|fec_type
 argument_list|)
-argument_list|,
+operator|,
 name|fec_type
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -1529,6 +1533,8 @@ name|i
 operator|=
 name|decode_prefix4
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|tlv_tlen
@@ -1558,9 +1564,13 @@ operator|==
 operator|-
 literal|3
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": IPv4 prefix (goes past end of TLV)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1571,17 +1581,25 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": IPv4 prefix (invalid length)"
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": IPv4 prefix %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1600,6 +1618,8 @@ name|i
 operator|=
 name|decode_prefix6
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 name|tlv_tlen
@@ -1629,9 +1649,13 @@ operator|==
 operator|-
 literal|3
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": IPv4 prefix (goes past end of TLV)"
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1642,28 +1666,40 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": IPv6 prefix (invalid length)"
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": IPv6 prefix %s"
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 endif|#
 directive|endif
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": Address family %u prefix"
-argument_list|,
+operator|,
 name|af
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1696,10 +1732,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": %s, %scontrol word, group-ID %u, VC-info-length: %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|l2vpn_encaps_values
@@ -1713,7 +1752,7 @@ argument_list|)
 operator|&
 literal|0x7fff
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
@@ -1724,15 +1763,16 @@ condition|?
 literal|""
 else|:
 literal|"no "
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
 literal|3
 argument_list|)
-argument_list|,
+operator|,
 name|vc_info_len
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1743,10 +1783,13 @@ argument_list|(
 literal|11
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": %s, %scontrol word, group-ID %u, VC-ID %u, VC-info-length: %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|l2vpn_encaps_values
@@ -1760,7 +1803,7 @@ argument_list|)
 operator|&
 literal|0x7fff
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
@@ -1771,22 +1814,23 @@ condition|?
 literal|""
 else|:
 literal|"no "
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
 literal|3
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
 literal|7
 argument_list|)
-argument_list|,
+operator|,
 name|vc_info_len
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1853,10 +1897,13 @@ operator|<
 name|vc_info_tlv_len
 condition|)
 break|break;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\tInterface Parameter: %s (0x%02x), len %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ldp_fec_martini_ifparm_values
@@ -1865,10 +1912,11 @@ literal|"Unknown"
 argument_list|,
 name|vc_info_tlv_type
 argument_list|)
-argument_list|,
+operator|,
 name|vc_info_tlv_type
-argument_list|,
+operator|,
 name|vc_info_tlv_len
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1879,25 +1927,33 @@ block|{
 case|case
 name|LDP_FEC_MARTINI_IFPARM_MTU
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": %u"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
 operator|+
 literal|2
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|LDP_FEC_MARTINI_IFPARM_DESC
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": "
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1915,6 +1971,8 @@ operator|++
 control|)
 name|safeputchar
 argument_list|(
+name|ndo
+argument_list|,
 operator|*
 operator|(
 name|tptr
@@ -1927,17 +1985,20 @@ break|break;
 case|case
 name|LDP_FEC_MARTINI_IFPARM_VCCV
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t  Control Channels (0x%02x) = [%s]"
-argument_list|,
+operator|,
 operator|*
 operator|(
 name|tptr
 operator|+
 literal|2
 operator|)
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|ldp_fec_martini_ifparm_vccv_cc_values
@@ -1951,19 +2012,23 @@ operator|+
 literal|2
 operator|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t  CV Types (0x%02x) = [%s]"
-argument_list|,
+operator|,
 operator|*
 operator|(
 name|tptr
 operator|+
 literal|3
 operator|)
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|ldp_fec_martini_ifparm_vccv_cv_values
@@ -1977,12 +2042,15 @@ operator|+
 literal|3
 operator|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|2
@@ -2016,16 +2084,20 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Label: %u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 argument_list|)
 operator|&
 literal|0xfffff
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2048,14 +2120,17 @@ name|tptr
 operator|+=
 literal|4
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Status: 0x%02x, Flags: [%s and %s forward]"
-argument_list|,
+operator|,
 name|ui
 operator|&
 literal|0x3fffffff
-argument_list|,
+operator|,
 name|ui
 operator|&
 literal|0x80000000
@@ -2063,7 +2138,7 @@ condition|?
 literal|"Fatal error"
 else|:
 literal|"Advisory Notification"
-argument_list|,
+operator|,
 name|ui
 operator|&
 literal|0x40000000
@@ -2071,6 +2146,7 @@ condition|?
 literal|"do"
 else|:
 literal|"don't"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ui
@@ -2088,11 +2164,15 @@ if|if
 condition|(
 name|ui
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", causing Message ID: 0x%08x"
-argument_list|,
+operator|,
 name|ui
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2111,10 +2191,13 @@ argument_list|(
 name|tptr
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Flags: [%sReconnect, %sSave State, %sAll-Label Protection, %s Checkpoint, %sRe-Learn State]"
-argument_list|,
+operator|,
 name|ft_flags
 operator|&
 literal|0x8000
@@ -2122,7 +2205,7 @@ condition|?
 literal|""
 else|:
 literal|"No "
-argument_list|,
+operator|,
 name|ft_flags
 operator|&
 literal|0x8
@@ -2130,7 +2213,7 @@ condition|?
 literal|""
 else|:
 literal|"Don't "
-argument_list|,
+operator|,
 name|ft_flags
 operator|&
 literal|0x4
@@ -2138,7 +2221,7 @@ condition|?
 literal|""
 else|:
 literal|"No "
-argument_list|,
+operator|,
 name|ft_flags
 operator|&
 literal|0x2
@@ -2146,7 +2229,7 @@ condition|?
 literal|"Sequence Numbered Label"
 else|:
 literal|"All Labels"
-argument_list|,
+operator|,
 name|ft_flags
 operator|&
 literal|0x1
@@ -2154,6 +2237,7 @@ condition|?
 literal|""
 else|:
 literal|"Don't "
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -2171,11 +2255,15 @@ if|if
 condition|(
 name|ui
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Reconnect Timeout: %ums"
-argument_list|,
+operator|,
 name|ui
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -2193,11 +2281,15 @@ if|if
 condition|(
 name|ui
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Recovery Time: %ums"
-argument_list|,
+operator|,
 name|ui
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2209,14 +2301,18 @@ argument_list|(
 literal|2
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      MTU: %u"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2254,12 +2350,16 @@ case|:
 default|default:
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t      "
@@ -2279,9 +2379,13 @@ return|;
 comment|/* Type& Length fields not included */
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t packet exceeded snapshot"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2289,9 +2393,13 @@ literal|0
 return|;
 name|badtlv
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t TLV contents go past end of TLV"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2309,6 +2417,10 @@ begin_function
 name|void
 name|ldp_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -2346,6 +2458,8 @@ name|processed
 operator|=
 name|ldp_msg_print
 argument_list|(
+name|ndo
+argument_list|,
 name|pptr
 argument_list|)
 expr_stmt|;
@@ -2369,9 +2483,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ldp_msg_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -2430,7 +2549,7 @@ operator|*
 operator|)
 name|pptr
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|ldp_com_header
@@ -2450,12 +2569,17 @@ operator|!=
 name|LDP_VERSION
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"%sLDP version %u packet not supported"
-argument_list|,
 operator|(
-name|vflag
+name|ndo
+operator|,
+literal|"%sLDP version %u packet not supported"
+operator|,
+operator|(
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<
 literal|1
 operator|)
@@ -2463,7 +2587,7 @@ condition|?
 literal|""
 else|:
 literal|"\n\t"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -2471,6 +2595,7 @@ name|ldp_com_header
 operator|->
 name|version
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2488,12 +2613,17 @@ operator|->
 name|pdu_length
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"%sLDP, Label-Space-ID: %s:%u, pdu-length: %u"
-argument_list|,
 operator|(
-name|vflag
+name|ndo
+operator|,
+literal|"%sLDP, Label-Space-ID: %s:%u, pdu-length: %u"
+operator|,
+operator|(
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<
 literal|1
 operator|)
@@ -2501,15 +2631,17 @@ condition|?
 literal|""
 else|:
 literal|"\n\t"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ldp_com_header
 operator|->
 name|lsr_id
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -2517,14 +2649,17 @@ name|ldp_com_header
 operator|->
 name|label_space
 argument_list|)
-argument_list|,
+operator|,
 name|pdu_len
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* bail out if non-verbose */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<
 literal|1
 condition|)
@@ -2565,7 +2700,7 @@ literal|0
 condition|)
 block|{
 comment|/* did we capture enough for fully decoding the msg header ? */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -2609,10 +2744,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* FIXME vendor private / experimental check */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  %s Message (0x%04x), length: %u, Message ID: 0x%08x, Flags: [%s if unknown]"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ldp_msg_values
@@ -2621,11 +2759,11 @@ literal|"Unknown"
 argument_list|,
 name|msg_type
 argument_list|)
-argument_list|,
+operator|,
 name|msg_type
-argument_list|,
+operator|,
 name|msg_len
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -2633,7 +2771,7 @@ name|ldp_msg_header
 operator|->
 name|id
 argument_list|)
-argument_list|,
+operator|,
 name|LDP_MASK_U_BIT
 argument_list|(
 name|EXTRACT_16BITS
@@ -2648,6 +2786,7 @@ condition|?
 literal|"continue processing"
 else|:
 literal|"ignore"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2684,7 +2823,7 @@ literal|4
 expr_stmt|;
 comment|/* Type& Length fields not included */
 comment|/* did we capture enough for fully decoding the message ? */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -2736,6 +2875,8 @@ name|processed
 operator|=
 name|ldp_tlv_print
 argument_list|(
+name|ndo
+argument_list|,
 name|msg_tptr
 argument_list|)
 expr_stmt|;
@@ -2769,12 +2910,16 @@ case|:
 default|default:
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|msg_tptr
 argument_list|,
 literal|"\n\t  "
@@ -2787,7 +2932,9 @@ block|}
 comment|/* do we want to see an additionally hexdump ? */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 operator|||
@@ -2797,6 +2944,8 @@ name|TRUE
 condition|)
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 sizeof|sizeof
@@ -2830,9 +2979,13 @@ literal|4
 return|;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t packet exceeded snapshot"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2840,6 +2993,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */
+end_comment
 
 end_unit
 

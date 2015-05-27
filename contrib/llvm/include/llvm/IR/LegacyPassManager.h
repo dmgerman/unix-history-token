@@ -115,9 +115,10 @@ operator|~
 name|PassManagerBase
 argument_list|()
 expr_stmt|;
-comment|/// add - Add a pass to the queue of passes to run.  This passes ownership of
+comment|/// Add a pass to the queue of passes to run.  This passes ownership of
 comment|/// the Pass to the PassManager.  When the PassManager is destroyed, the pass
 comment|/// will be destroyed as well, so there is no need to delete the pass.  This
+comment|/// may even destroy the pass right away if it is found to be redundant. This
 comment|/// implies that all passes MUST be allocated with 'new'.
 name|virtual
 name|void
@@ -148,17 +149,12 @@ operator|~
 name|PassManager
 argument_list|()
 block|;
-comment|/// add - Add a pass to the queue of passes to run.  This passes ownership of
-comment|/// the Pass to the PassManager.  When the PassManager is destroyed, the pass
-comment|/// will be destroyed as well, so there is no need to delete the pass.  This
-comment|/// implies that all passes MUST be allocated with 'new'.
 name|void
 name|add
 argument_list|(
-name|Pass
-operator|*
-name|P
+argument|Pass *P
 argument_list|)
+name|override
 block|;
 comment|/// run - Execute all of the passes scheduled for execution.  Keep track of
 comment|/// whether any of the passes modifies the module, and if so, return true.
@@ -202,18 +198,12 @@ operator|~
 name|FunctionPassManager
 argument_list|()
 block|;
-comment|/// add - Add a pass to the queue of passes to run.  This passes
-comment|/// ownership of the Pass to the PassManager.  When the
-comment|/// PassManager_X is destroyed, the pass will be destroyed as well, so
-comment|/// there is no need to delete the pass.
-comment|/// This implies that all passes MUST be allocated with 'new'.
 name|void
 name|add
 argument_list|(
-name|Pass
-operator|*
-name|P
+argument|Pass *P
 argument_list|)
+name|override
 block|;
 comment|/// run - Execute all of the passes scheduled for execution.  Keep
 comment|/// track of whether any of the passes modifies the function, and if

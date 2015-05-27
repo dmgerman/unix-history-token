@@ -1164,6 +1164,18 @@ name|m
 argument_list|)
 expr_stmt|;
 block|}
+name|object
+operator|->
+name|handle
+operator|=
+name|NULL
+expr_stmt|;
+name|object
+operator|->
+name|type
+operator|=
+name|OBJT_DEAD
+expr_stmt|;
 block|}
 end_function
 
@@ -1403,9 +1415,6 @@ modifier|*
 name|mres
 parameter_list|)
 block|{
-name|vm_pindex_t
-name|pidx
-decl_stmt|;
 name|vm_paddr_t
 name|paddr
 decl_stmt|;
@@ -1442,13 +1451,6 @@ name|ref
 decl_stmt|,
 name|ret
 decl_stmt|;
-name|pidx
-operator|=
-name|OFF_TO_IDX
-argument_list|(
-name|offset
-argument_list|)
-expr_stmt|;
 name|memattr
 operator|=
 name|object

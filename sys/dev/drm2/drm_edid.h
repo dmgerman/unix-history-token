@@ -15,18 +15,6 @@ directive|define
 name|__DRM_EDID_H__
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/drm2/drmP.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -301,10 +289,16 @@ name|u8
 name|pixel_clock_mhz
 decl_stmt|;
 comment|/* need to multiply by 10 */
-name|u16
-name|sec_gtf_toggle
+name|u8
+name|flags
 decl_stmt|;
-comment|/* A000=use above, 20=use below */
+union|union
+block|{
+struct|struct
+block|{
+name|u8
+name|reserved
+decl_stmt|;
 name|u8
 name|hfreq_start_khz
 decl_stmt|;
@@ -313,7 +307,7 @@ name|u8
 name|c
 decl_stmt|;
 comment|/* need to divide by 2 */
-name|u16
+name|__le16
 name|m
 decl_stmt|;
 name|u8
@@ -323,6 +317,53 @@ name|u8
 name|j
 decl_stmt|;
 comment|/* need to divide by 2 */
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
+name|gtf2
+struct|;
+struct|struct
+block|{
+name|u8
+name|version
+decl_stmt|;
+name|u8
+name|data1
+decl_stmt|;
+comment|/* high 6 bits: extra clock resolution */
+name|u8
+name|data2
+decl_stmt|;
+comment|/* plus low 2 of above: max hactive */
+name|u8
+name|supported_aspects
+decl_stmt|;
+name|u8
+name|flags
+decl_stmt|;
+comment|/* preferred aspect and blanking support */
+name|u8
+name|supported_scalings
+decl_stmt|;
+name|u8
+name|preferred_refresh
+decl_stmt|;
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|packed
+operator|)
+argument_list|)
+name|cvt
+struct|;
+block|}
+name|formula
+union|;
 block|}
 name|__attribute__
 argument_list|(
@@ -535,7 +576,7 @@ begin_struct
 struct|struct
 name|detailed_timing
 block|{
-name|u16
+name|__le16
 name|pixel_clock
 decl_stmt|;
 comment|/* need to multiply by 10 KHz */
@@ -736,6 +777,10 @@ directive|define
 name|DRM_EDID_FEATURE_STANDARD_COLOR
 value|(1<< 2)
 end_define
+
+begin_comment
+comment|/* If analog */
+end_comment
 
 begin_define
 define|#
@@ -1015,6 +1060,18 @@ name|struct
 name|drm_display_mode
 modifier|*
 name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|drm_load_edid_firmware
+parameter_list|(
+name|struct
+name|drm_connector
+modifier|*
+name|connector
 parameter_list|)
 function_decl|;
 end_function_decl

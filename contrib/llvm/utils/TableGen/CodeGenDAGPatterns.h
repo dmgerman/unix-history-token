@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CODEGEN_DAGPATTERNS_H
+name|LLVM_UTILS_TABLEGEN_CODEGENDAGPATTERNS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CODEGEN_DAGPATTERNS_H
+name|LLVM_UTILS_TABLEGEN_CODEGENDAGPATTERNS_H
 end_define
 
 begin_include
@@ -384,6 +384,13 @@ name|hasFloatingPointTypes
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// hasScalarTypes - Return true if this TypeSet contains a scalar value
+comment|/// type.
+name|bool
+name|hasScalarTypes
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// hasVectorTypes - Return true if this TypeSet contains a vector value
 comment|/// type.
 name|bool
@@ -591,14 +598,14 @@ operator|::
 name|SimpleValueType
 argument_list|)
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 specifier|const
 name|char
 operator|*
 name|PredicateName
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 block|}
@@ -1255,12 +1262,12 @@ argument_list|)
 operator|,
 name|Val
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|TransformFn
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Children
@@ -1285,7 +1292,7 @@ comment|// leaf ctor
 operator|:
 name|Operator
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Val
@@ -1295,7 +1302,7 @@ argument_list|)
 operator|,
 name|TransformFn
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|Types
@@ -1366,7 +1373,7 @@ block|{
 return|return
 name|Val
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|// Type accessors.
@@ -1826,6 +1833,20 @@ name|CGP
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Returns the number of MachineInstr operands that would be produced by this
+comment|/// node if it mapped directly to an output Instruction's
+comment|/// operand. ComplexPattern specifies this explicitly; MIOperandInfo gives it
+comment|/// for Operands; otherwise 1.
+name|unsigned
+name|getNumMIResults
+argument_list|(
+specifier|const
+name|CodeGenDAGPatterns
+operator|&
+name|CGP
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// NodeHasProperty - Return true if this node has the specified property.
 name|bool
 name|NodeHasProperty
@@ -2266,6 +2287,24 @@ comment|/// or other non-fatal errors
 name|bool
 name|HasError
 decl_stmt|;
+comment|/// It's important that the usage of operands in ComplexPatterns is
+comment|/// consistent: each named operand can be defined by at most one
+comment|/// ComplexPattern. This records the ComplexPattern instance and the operand
+comment|/// number for each operand encountered in a ComplexPattern to aid in that
+comment|/// check.
+name|StringMap
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|Record
+operator|*
+operator|,
+name|unsigned
+operator|>>
+name|ComplexPatternOperands
+expr_stmt|;
 name|public
 label|:
 comment|/// TreePattern constructor - Parse the specified DagInits into the
@@ -2598,7 +2637,7 @@ expr|>
 operator|*
 name|NamedTypes
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -2611,19 +2650,17 @@ begin_comment
 comment|/// print it and set the error flag.  Otherwise, continue silently.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|error
-argument_list|(
+parameter_list|(
 specifier|const
-name|std
-operator|::
-name|string
-operator|&
+name|Twine
+modifier|&
 name|Msg
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|bool
@@ -2836,7 +2873,7 @@ argument_list|)
 operator|,
 name|ResultPattern
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|TreePattern
@@ -3036,7 +3073,7 @@ argument|TreePatternNode *dst
 argument_list|,
 argument|const std::vector<Record*>&dstregs
 argument_list|,
-argument|unsigned complexity
+argument|int complexity
 argument_list|,
 argument|unsigned uid
 argument_list|)
@@ -3106,7 +3143,7 @@ operator|>
 name|Dstregs
 expr_stmt|;
 comment|// Physical register defs being matched.
-name|unsigned
+name|int
 name|AddedComplexity
 decl_stmt|;
 comment|// Add to matching pattern complexity.
@@ -3171,7 +3208,7 @@ return|return
 name|Dstregs
 return|;
 block|}
-name|unsigned
+name|int
 name|getAddedComplexity
 argument_list|()
 specifier|const
@@ -3189,7 +3226,7 @@ specifier|const
 expr_stmt|;
 comment|/// Compute the complexity metric for the input pattern.  This roughly
 comment|/// corresponds to the number of nodes that are covered.
-name|unsigned
+name|int
 name|getPatternComplexity
 argument_list|(
 specifier|const
@@ -3289,8 +3326,12 @@ operator|<
 name|Record
 operator|*
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|TreePattern
-operator|*
+operator|>
 operator|,
 name|LessRecordByID
 operator|>
@@ -3353,10 +3394,6 @@ name|RecordKeeper
 operator|&
 name|R
 argument_list|)
-expr_stmt|;
-operator|~
-name|CodeGenDAGPatterns
-argument_list|()
 expr_stmt|;
 name|CodeGenTarget
 modifier|&
@@ -3861,6 +3898,9 @@ name|R
 argument_list|)
 operator|->
 name|second
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|TreePattern
@@ -3884,7 +3924,7 @@ name|R
 argument_list|)
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|PatternFragments
@@ -3895,6 +3935,9 @@ name|R
 argument_list|)
 operator|->
 name|second
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 typedef|typedef
@@ -3905,8 +3948,12 @@ operator|<
 name|Record
 operator|*
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|TreePattern
-operator|*
+operator|>
 operator|,
 name|LessRecordByID
 operator|>
@@ -4099,7 +4146,12 @@ parameter_list|()
 function_decl|;
 name|void
 name|ParsePatternFragments
-parameter_list|()
+parameter_list|(
+name|bool
+name|OutFrags
+init|=
+name|false
+parameter_list|)
 function_decl|;
 name|void
 name|ParseDefaultOperands

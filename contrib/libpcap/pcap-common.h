@@ -50,9 +50,11 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|void
-name|swap_linux_usb_header
+name|swap_pseudo_headers
 parameter_list|(
-specifier|const
+name|int
+name|linktype
+parameter_list|,
 name|struct
 name|pcap_pkthdr
 modifier|*
@@ -60,10 +62,7 @@ name|hdr
 parameter_list|,
 name|u_char
 modifier|*
-name|buf
-parameter_list|,
-name|int
-name|header_len_64_bytes
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -69,11 +69,7 @@ typedef|(16)));
 end_typedef
 
 begin_comment
-comment|// This header should only be included in a hosted environment as it depends on
-end_comment
-
-begin_comment
-comment|// a standard library to provide allocation routines.
+comment|/* This header should only be included in a hosted environment as it depends on  * a standard library to provide allocation routines. */
 end_comment
 
 begin_if
@@ -917,13 +913,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpss
+name|__builtin_ia32_cmpeqss
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
@@ -954,13 +948,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpps
+name|__builtin_ia32_cmpeqps
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|0
 argument_list|)
 return|;
 block|}
@@ -991,13 +983,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpss
+name|__builtin_ia32_cmpltss
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|1
 argument_list|)
 return|;
 block|}
@@ -1028,13 +1018,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpps
+name|__builtin_ia32_cmpltps
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|1
 argument_list|)
 return|;
 block|}
@@ -1065,13 +1053,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpss
+name|__builtin_ia32_cmpless
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|2
 argument_list|)
 return|;
 block|}
@@ -1102,13 +1088,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpps
+name|__builtin_ia32_cmpleps
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|2
 argument_list|)
 return|;
 block|}
@@ -1143,13 +1127,11 @@ name|__builtin_shufflevector
 argument_list|(
 name|__a
 argument_list|,
-name|__builtin_ia32_cmpss
+name|__builtin_ia32_cmpltss
 argument_list|(
 name|__b
 argument_list|,
 name|__a
-argument_list|,
-literal|1
 argument_list|)
 argument_list|,
 literal|4
@@ -1189,13 +1171,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpps
+name|__builtin_ia32_cmpltps
 argument_list|(
 name|__b
 argument_list|,
 name|__a
-argument_list|,
-literal|1
 argument_list|)
 return|;
 block|}
@@ -1230,13 +1210,11 @@ name|__builtin_shufflevector
 argument_list|(
 name|__a
 argument_list|,
-name|__builtin_ia32_cmpss
+name|__builtin_ia32_cmpless
 argument_list|(
 name|__b
 argument_list|,
 name|__a
-argument_list|,
-literal|2
 argument_list|)
 argument_list|,
 literal|4
@@ -1276,13 +1254,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpps
+name|__builtin_ia32_cmpleps
 argument_list|(
 name|__b
 argument_list|,
 name|__a
-argument_list|,
-literal|2
 argument_list|)
 return|;
 block|}
@@ -1313,13 +1289,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpss
+name|__builtin_ia32_cmpneqss
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|4
 argument_list|)
 return|;
 block|}
@@ -1350,13 +1324,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpps
+name|__builtin_ia32_cmpneqps
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|4
 argument_list|)
 return|;
 block|}
@@ -1387,13 +1359,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpss
+name|__builtin_ia32_cmpnltss
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|5
 argument_list|)
 return|;
 block|}
@@ -1424,13 +1394,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpps
+name|__builtin_ia32_cmpnltps
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|5
 argument_list|)
 return|;
 block|}
@@ -1461,13 +1429,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpss
+name|__builtin_ia32_cmpnless
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|6
 argument_list|)
 return|;
 block|}
@@ -1498,13 +1464,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpps
+name|__builtin_ia32_cmpnleps
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|6
 argument_list|)
 return|;
 block|}
@@ -1539,13 +1503,11 @@ name|__builtin_shufflevector
 argument_list|(
 name|__a
 argument_list|,
-name|__builtin_ia32_cmpss
+name|__builtin_ia32_cmpnltss
 argument_list|(
 name|__b
 argument_list|,
 name|__a
-argument_list|,
-literal|5
 argument_list|)
 argument_list|,
 literal|4
@@ -1585,13 +1547,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpps
+name|__builtin_ia32_cmpnltps
 argument_list|(
 name|__b
 argument_list|,
 name|__a
-argument_list|,
-literal|5
 argument_list|)
 return|;
 block|}
@@ -1626,13 +1586,11 @@ name|__builtin_shufflevector
 argument_list|(
 name|__a
 argument_list|,
-name|__builtin_ia32_cmpss
+name|__builtin_ia32_cmpnless
 argument_list|(
 name|__b
 argument_list|,
 name|__a
-argument_list|,
-literal|6
 argument_list|)
 argument_list|,
 literal|4
@@ -1672,13 +1630,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpps
+name|__builtin_ia32_cmpnleps
 argument_list|(
 name|__b
 argument_list|,
 name|__a
-argument_list|,
-literal|6
 argument_list|)
 return|;
 block|}
@@ -1709,13 +1665,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpss
+name|__builtin_ia32_cmpordss
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|7
 argument_list|)
 return|;
 block|}
@@ -1746,13 +1700,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpps
+name|__builtin_ia32_cmpordps
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|7
 argument_list|)
 return|;
 block|}
@@ -1783,13 +1735,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpss
+name|__builtin_ia32_cmpunordss
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|3
 argument_list|)
 return|;
 block|}
@@ -1820,13 +1770,11 @@ return|return
 operator|(
 name|__m128
 operator|)
-name|__builtin_ia32_cmpps
+name|__builtin_ia32_cmpunordps
 argument_list|(
 name|__a
 argument_list|,
 name|__b
-argument_list|,
-literal|3
 argument_list|)
 return|;
 block|}
@@ -3249,7 +3197,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// Microsoft specific.
+comment|/* Microsoft specific. */
 end_comment
 
 begin_decl_stmt
@@ -3747,6 +3695,12 @@ name|_MM_HINT_NTA
 value|0
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MSC_VER
+end_ifndef
+
 begin_comment
 comment|/* FIXME: We have to #define this because "sel" must be a constant integer, and    Sema doesn't do any form of constant propagation yet. */
 end_comment
@@ -3762,6 +3716,11 @@ name|sel
 parameter_list|)
 value|(__builtin_prefetch((void *)(a), 0, (sel)))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static

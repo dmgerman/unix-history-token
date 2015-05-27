@@ -71,6 +71,12 @@ directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -120,11 +126,15 @@ operator|&
 operator|)
 name|LLVM_DELETED_FUNCTION
 decl_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 specifier|const
 name|llvm
 operator|::
 name|MemoryBuffer
-operator|*
+operator|>
 name|FileBuffer
 expr_stmt|;
 name|bool
@@ -132,45 +142,46 @@ name|NeedsBSwap
 decl_stmt|;
 name|HeaderMap
 argument_list|(
-argument|const llvm::MemoryBuffer *File
+argument|std::unique_ptr<const llvm::MemoryBuffer> File
 argument_list|,
 argument|bool BSwap
 argument_list|)
 block|:
 name|FileBuffer
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|File
+argument_list|)
 argument_list|)
 operator|,
 name|NeedsBSwap
 argument_list|(
 argument|BSwap
 argument_list|)
-block|{   }
+block|{}
 name|public
 operator|:
-operator|~
-name|HeaderMap
-argument_list|()
-expr_stmt|;
 comment|/// HeaderMap::Create - This attempts to load the specified file as a header
 comment|/// map.  If it doesn't look like a HeaderMap, it gives up and returns null.
 specifier|static
 specifier|const
 name|HeaderMap
-modifier|*
+operator|*
 name|Create
-parameter_list|(
+argument_list|(
 specifier|const
 name|FileEntry
-modifier|*
+operator|*
 name|FE
-parameter_list|,
+argument_list|,
 name|FileManager
-modifier|&
+operator|&
 name|FM
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 comment|/// LookupFile - Check to see if the specified relative filename is located in
 comment|/// this HeaderMap.  If so, open it and return its FileEntry.
 comment|/// If RawPath is not NULL and the file is found, RawPath will be set to the
@@ -188,6 +199,23 @@ argument_list|,
 name|FileManager
 operator|&
 name|FM
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// If the specified relative filename is located in this HeaderMap return
+comment|/// the filename it is mapped to, otherwise return an empty StringRef.
+name|StringRef
+name|lookupFilename
+argument_list|(
+name|StringRef
+name|Filename
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|DestPath
 argument_list|)
 decl|const
 decl_stmt|;

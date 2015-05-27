@@ -6,13 +6,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FXP_VENDORID_INTEL
-value|0x8086
-end_define
-
-begin_define
-define|#
-directive|define
 name|FXP_PCI_MMBA
 value|0x10
 end_define

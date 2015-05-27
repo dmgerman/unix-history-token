@@ -326,6 +326,21 @@ comment|/* Data store translation miss */
 end_comment
 
 begin_comment
+comment|/* Power ISA 2.06+: */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_VSX
+value|0x0f40
+end_define
+
+begin_comment
+comment|/* VSX Unavailable */
+end_comment
+
+begin_comment
 comment|/* The following are available on 4xx and 85xx */
 end_comment
 
@@ -410,7 +425,7 @@ begin_define
 define|#
 directive|define
 name|EXC_DEBUG
-value|0x2000
+value|0x2f10
 end_define
 
 begin_comment
@@ -536,6 +551,35 @@ define|#
 directive|define
 name|EXC_PGM_TRAP
 value|(1UL<< 17)
+end_define
+
+begin_comment
+comment|/* DTrace trap opcode. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXC_DTRACE
+value|0x7c810808
+end_define
+
+begin_comment
+comment|/* Magic pointer to store TOC base and other info for trap handlers on ppc64 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TRAP_GENTRAP
+value|0x1f0
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRAP_TOCBASE
+value|0x1f8
 end_define
 
 begin_ifndef

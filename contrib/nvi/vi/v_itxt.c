@@ -118,27 +118,24 @@ name|LOG_CORRECT
 value|{							\ 	if (!MAPPED_KEYS_WAITING(sp))					\ 		(void)log_cursor(sp);					\ }
 end_define
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|u_int32_t
 name|set_txt_std
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|VICMD
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_int32_t
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * v_iA -- [count]A  *	Append text to the end of the line.  *  * PUBLIC: int v_iA __P((SCR *, VICMD *));  */
+comment|/*  * v_iA -- [count]A  *	Append text to the end of the line.  *  * PUBLIC: int v_iA(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -208,7 +205,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_ia -- [count]a  *	   [count]A  *	Append text to the cursor position.  *  * PUBLIC: int v_ia __P((SCR *, VICMD *));  */
+comment|/*  * v_ia -- [count]a  *	   [count]A  *	Append text to the cursor position.  *  * PUBLIC: int v_ia(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -387,7 +384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_iI -- [count]I  *	Insert text at the first nonblank.  *  * PUBLIC: int v_iI __P((SCR *, VICMD *));  */
+comment|/*  * v_iI -- [count]I  *	Insert text at the first nonblank.  *  * PUBLIC: int v_iI(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -448,7 +445,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_ii -- [count]i  *	   [count]I  *	Insert text at the cursor position.  *  * PUBLIC: int v_ii __P((SCR *, VICMD *));  */
+comment|/*  * v_ii -- [count]i  *	   [count]I  *	Insert text at the cursor position.  *  * PUBLIC: int v_ii(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -600,28 +597,25 @@ block|}
 enum|;
 end_enum
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|io
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|VICMD
-operator|*
-operator|,
-expr|enum
+modifier|*
+parameter_list|,
+name|enum
 name|which
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * v_iO -- [count]O  *	Insert text above this line.  *  * PUBLIC: int v_iO __P((SCR *, VICMD *));  */
+comment|/*  * v_iO -- [count]O  *	Insert text above this line.  *  * PUBLIC: int v_iO(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -653,7 +647,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_io -- [count]o  *	Insert text after this line.  *  * PUBLIC: int v_io __P((SCR *, VICMD *));  */
+comment|/*  * v_io -- [count]o  *	Insert text after this line.  *  * PUBLIC: int v_io(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -959,7 +953,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_change -- [buffer][count]c[count]motion  *	       [buffer][count]C  *	       [buffer][count]S  *	Change command.  *  * PUBLIC: int v_change __P((SCR *, VICMD *));  */
+comment|/*  * v_change -- [buffer][count]c[count]motion  *	       [buffer][count]C  *	       [buffer][count]S  *	Change command.  *  * PUBLIC: int v_change(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -1598,7 +1592,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_Replace -- [count]R  *	Overwrite multiple characters.  *  * PUBLIC: int v_Replace __P((SCR *, VICMD *));  */
+comment|/*  * v_Replace -- [count]R  *	Overwrite multiple characters.  *  * PUBLIC: int v_Replace(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -1776,7 +1770,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_subst -- [buffer][count]s  *	Substitute characters.  *  * PUBLIC: int v_subst __P((SCR *, VICMD *));  */
+comment|/*  * v_subst -- [buffer][count]s  *	Substitute characters.  *  * PUBLIC: int v_subst(SCR *, VICMD *);  */
 end_comment
 
 begin_function

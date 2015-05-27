@@ -95,35 +95,32 @@ directive|include
 file|"../common/common.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ex_prchars
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 specifier|const
 name|CHAR_T
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|size_t
-operator|,
+parameter_list|,
 name|u_int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_list -- :[line [,line]] l[ist] [count] [flags]  *  *	Display the addressed lines such that the output is unambiguous.  *  * PUBLIC: int ex_list __P((SCR *, EXCMD *));  */
+comment|/*  * ex_list -- :[line [,line]] l[ist] [count] [flags]  *  *	Display the addressed lines such that the output is unambiguous.  *  * PUBLIC: int ex_list(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -198,7 +195,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_number -- :[line [,line]] nu[mber] [count] [flags]  *  *	Display the addressed lines with a leading line number.  *  * PUBLIC: int ex_number __P((SCR *, EXCMD *));  */
+comment|/*  * ex_number -- :[line [,line]] nu[mber] [count] [flags]  *  *	Display the addressed lines with a leading line number.  *  * PUBLIC: int ex_number(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -273,7 +270,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_pr -- :[line [,line]] p[rint] [count] [flags]  *  *	Display the addressed lines.  *  * PUBLIC: int ex_pr __P((SCR *, EXCMD *));  */
+comment|/*  * ex_pr -- :[line [,line]] p[rint] [count] [flags]  *  *	Display the addressed lines.  *  * PUBLIC: int ex_pr(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -346,7 +343,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_print --  *	Print the selected lines.  *  * PUBLIC: int ex_print __P((SCR *, EXCMD *, MARK *, MARK *, u_int32_t));  */
+comment|/*  * ex_print --  *	Print the selected lines.  *  * PUBLIC: int ex_print(SCR *, EXCMD *, MARK *, MARK *, u_int32_t);  */
 end_comment
 
 begin_function
@@ -590,7 +587,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_ldisplay --  *	Display a line without any preceding number.  *  * PUBLIC: int ex_ldisplay __P((SCR *, const CHAR_T *, size_t, size_t, u_int));  */
+comment|/*  * ex_ldisplay --  *	Display a line without any preceding number.  *  * PUBLIC: int ex_ldisplay(SCR *, const CHAR_T *, size_t, size_t, u_int);  */
 end_comment
 
 begin_function
@@ -721,7 +718,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_scprint --  *	Display a line for the substitute with confirmation routine.  *  * PUBLIC: int ex_scprint __P((SCR *, MARK *, MARK *));  */
+comment|/*  * ex_scprint --  *	Display a line for the substitute with confirmation routine.  *  * PUBLIC: int ex_scprint(SCR *, MARK *, MARK *);  */
 end_comment
 
 begin_function
@@ -1258,7 +1255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_printf --  *	Ex's version of printf.  *  * PUBLIC: int ex_printf __P((SCR *, const char *, ...));  */
+comment|/*  * ex_printf --  *	Ex's version of printf.  *  * PUBLIC: int ex_printf(SCR *, const char *, ...);  */
 end_comment
 
 begin_function
@@ -1384,7 +1381,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_puts --  *	Ex's version of puts.  *  * PUBLIC: int ex_puts __P((SCR *, const char *));  */
+comment|/*  * ex_puts --  *	Ex's version of puts.  *  * PUBLIC: int ex_puts(SCR *, const char *);  */
 end_comment
 
 begin_function
@@ -1502,7 +1499,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_fflush --  *	Ex's version of fflush.  *  * PUBLIC: int ex_fflush __P((SCR *sp));  */
+comment|/*  * ex_fflush --  *	Ex's version of fflush.  *  * PUBLIC: int ex_fflush(SCR *sp);  */
 end_comment
 
 begin_function

@@ -128,62 +128,28 @@ argument_list|)
 block|;
 comment|/// \brief If this particular record type has an overridden layout,
 comment|/// return that layout.
-name|virtual
 name|bool
 name|layoutRecordType
 argument_list|(
-specifier|const
-name|RecordDecl
-operator|*
-name|Record
+argument|const RecordDecl *Record
 argument_list|,
-name|uint64_t
-operator|&
-name|Size
+argument|uint64_t&Size
 argument_list|,
-name|uint64_t
-operator|&
-name|Alignment
+argument|uint64_t&Alignment
 argument_list|,
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|FieldDecl
-operator|*
+argument|llvm::DenseMap<const FieldDecl *
 argument_list|,
-name|uint64_t
-operator|>
-operator|&
-name|FieldOffsets
+argument|uint64_t>&FieldOffsets
 argument_list|,
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
+argument|llvm::DenseMap<const CXXRecordDecl *
 argument_list|,
-name|CharUnits
-operator|>
-operator|&
-name|BaseOffsets
+argument|CharUnits>&BaseOffsets
 argument_list|,
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|CXXRecordDecl
-operator|*
+argument|llvm::DenseMap<const CXXRecordDecl *
 argument_list|,
-name|CharUnits
-operator|>
-operator|&
-name|VirtualBaseOffsets
+argument|CharUnits>&VirtualBaseOffsets
 argument_list|)
+name|override
 block|;
 comment|/// \brief Dump the overridden layouts.
 name|void

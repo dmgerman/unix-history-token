@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/CFG.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/InitializePasses.h"
 end_include
 
@@ -146,24 +152,24 @@ argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|F
+argument|Function&F
 argument_list|)
+name|override
 block|;
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&OS
 argument_list|,
-argument|const Module *M =
-literal|0
+argument|const Module *M = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// \brief Get an edge's probability, relative to other out-edges of the Src.
 comment|///
@@ -262,6 +268,15 @@ argument|const BasicBlock *Dst
 argument_list|)
 specifier|const
 block|;
+name|uint32_t
+name|getEdgeWeight
+argument_list|(
+argument|const BasicBlock *Src
+argument_list|,
+argument|succ_const_iterator Dst
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief Set the raw edge weight for a given edge.
 comment|///
 comment|/// This allows a pass to explicitly set the edge weight for an edge. It can
@@ -278,6 +293,27 @@ argument_list|,
 argument|uint32_t Weight
 argument_list|)
 block|;
+specifier|static
+name|uint32_t
+name|getBranchWeightStackProtector
+argument_list|(
+argument|bool IsLikely
+argument_list|)
+block|{
+return|return
+name|IsLikely
+operator|?
+operator|(
+literal|1u
+operator|<<
+literal|20
+operator|)
+operator|-
+literal|1
+operator|:
+literal|1
+return|;
+block|}
 name|private
 operator|:
 comment|// Since we allow duplicate edges from one basic block to another, we use

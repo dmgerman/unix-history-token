@@ -3,6 +3,12 @@ begin_comment
 comment|/*-  * Copyright (c) 2003, 2004 David Young.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of David Young may not be used to endorse or promote  *    products derived from this software without specific prior  *    written permission.  *  * THIS SOFTWARE IS PROVIDED BY DAVID YOUNG ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A  * PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL DAVID  * YOUNG BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED  * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY  * OF SUCH DAMAGE.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -51,15 +57,15 @@ file|"extract.h"
 end_include
 
 begin_function
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|cpack_next_boundary
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|buf
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|p
 parameter_list|,
@@ -107,7 +113,7 @@ comment|/* Advance to the next wordsize boundary. Return NULL if fewer than  * w
 end_comment
 
 begin_function
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|cpack_align_and_reserve
 parameter_list|(
@@ -120,7 +126,7 @@ name|size_t
 name|wordsize
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|next
 decl_stmt|;
@@ -164,6 +170,57 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Advance by N bytes without returning them. */
+end_comment
+
+begin_function
+name|int
+name|cpack_advance
+parameter_list|(
+name|struct
+name|cpack_state
+modifier|*
+name|cs
+parameter_list|,
+specifier|const
+name|size_t
+name|toskip
+parameter_list|)
+block|{
+comment|/* No space left? */
+if|if
+condition|(
+name|cs
+operator|->
+name|c_next
+operator|-
+name|cs
+operator|->
+name|c_buf
+operator|+
+name|toskip
+operator|>
+name|cs
+operator|->
+name|c_len
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|cs
+operator|->
+name|c_next
+operator|+=
+name|toskip
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
 begin_function
 name|int
 name|cpack_init
@@ -173,7 +230,7 @@ name|cpack_state
 modifier|*
 name|cs
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|buf
 parameter_list|,
@@ -233,12 +290,12 @@ name|cpack_state
 modifier|*
 name|cs
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 name|u
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|next
 decl_stmt|;
@@ -273,7 +330,7 @@ argument_list|(
 name|next
 argument_list|)
 expr_stmt|;
-comment|/* Move pointer past the u_int64_t. */
+comment|/* Move pointer past the uint64_t. */
 name|cs
 operator|->
 name|c_next
@@ -305,12 +362,12 @@ name|cpack_state
 modifier|*
 name|cs
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|u
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|next
 decl_stmt|;
@@ -345,7 +402,7 @@ argument_list|(
 name|next
 argument_list|)
 expr_stmt|;
-comment|/* Move pointer past the u_int32_t. */
+comment|/* Move pointer past the uint32_t. */
 name|cs
 operator|->
 name|c_next
@@ -377,12 +434,12 @@ name|cpack_state
 modifier|*
 name|cs
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|u
 parameter_list|)
 block|{
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|next
 decl_stmt|;
@@ -417,7 +474,7 @@ argument_list|(
 name|next
 argument_list|)
 expr_stmt|;
-comment|/* Move pointer past the u_int16_t. */
+comment|/* Move pointer past the uint16_t. */
 name|cs
 operator|->
 name|c_next
@@ -449,7 +506,7 @@ name|cpack_state
 modifier|*
 name|cs
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|u
 parameter_list|)
@@ -486,7 +543,7 @@ name|cs
 operator|->
 name|c_next
 expr_stmt|;
-comment|/* Move pointer past the u_int8_t. */
+comment|/* Move pointer past the uint8_t. */
 name|cs
 operator|->
 name|c_next

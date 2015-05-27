@@ -3649,28 +3649,28 @@ operator|.
 name|le
 argument_list|)
 expr_stmt|;
-name|callout_reset
+name|callout_reset_sbt
 argument_list|(
 operator|&
 name|dccb
 operator|->
 name|timer
 argument_list|,
-operator|(
+name|SBT_1MS
+operator|*
 name|ccb
 operator|->
 name|ccb_h
 operator|.
 name|timeout
-operator|*
-name|hz
-operator|)
-operator|/
-literal|1000
+argument_list|,
+literal|0
 argument_list|,
 name|dpttimeout
 argument_list|,
 name|dccb
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -6600,7 +6600,7 @@ comment|/* filterarg	*/
 name|NULL
 argument_list|,
 comment|/* maxsize	*/
-name|MAXBSIZE
+name|DFLTPHYS
 argument_list|,
 comment|/* nsegments	*/
 name|dpt

@@ -66,6 +66,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCAsmInfo
+decl_stmt|;
+name|class
 name|MCAsmLayout
 decl_stmt|;
 name|class
@@ -75,10 +78,16 @@ name|class
 name|MCContext
 decl_stmt|;
 name|class
+name|MCFixup
+decl_stmt|;
+name|class
 name|MCSection
 decl_stmt|;
 name|class
 name|MCSectionData
+decl_stmt|;
+name|class
+name|MCStreamer
 decl_stmt|;
 name|class
 name|MCSymbol
@@ -174,6 +183,33 @@ name|Addrs
 argument_list|)
 decl|const
 decl_stmt|;
+name|bool
+name|evaluateAsAbsolute
+argument_list|(
+name|int64_t
+operator|&
+name|Res
+argument_list|,
+specifier|const
+name|MCAssembler
+operator|*
+name|Asm
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|*
+name|Layout
+argument_list|,
+specifier|const
+name|SectionAddrMap
+operator|*
+name|Addrs
+argument_list|,
+name|bool
+name|InSet
+argument_list|)
+decl|const
+decl_stmt|;
 name|protected
 label|:
 name|explicit
@@ -205,12 +241,20 @@ operator|*
 name|Layout
 argument_list|,
 specifier|const
+name|MCFixup
+operator|*
+name|Fixup
+argument_list|,
+specifier|const
 name|SectionAddrMap
 operator|*
 name|Addrs
 argument_list|,
 name|bool
 name|InSet
+argument_list|,
+name|bool
+name|ForceVarExpansion
 argument_list|)
 decl|const
 decl_stmt|;
@@ -310,11 +354,22 @@ name|Layout
 argument_list|)
 decl|const
 decl_stmt|;
+name|int64_t
+name|evaluateKnownAbsolute
+argument_list|(
+specifier|const
+name|MCAsmLayout
+operator|&
+name|Layout
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// EvaluateAsRelocatable - Try to evaluate the expression to a relocatable
 comment|/// value, i.e. an expression of the fixed form (a - b + constant).
 comment|///
 comment|/// @param Res - The relocatable value, if evaluation succeeds.
 comment|/// @param Layout - The assembler layout object to use for evaluating values.
+comment|/// @param Fixup - The Fixup object if available.
 comment|/// @result - True on success.
 name|bool
 name|EvaluateAsRelocatable
@@ -325,8 +380,38 @@ name|Res
 argument_list|,
 specifier|const
 name|MCAsmLayout
-operator|&
+operator|*
 name|Layout
+argument_list|,
+specifier|const
+name|MCFixup
+operator|*
+name|Fixup
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Try to evaluate the expression to the form (a - b + constant) where
+comment|/// neither a nor b are variables.
+comment|///
+comment|/// This is a more aggressive variant of EvaluateAsRelocatable. The intended
+comment|/// use is for when relocations are not available, like the symbol value in
+comment|/// the symbol table.
+name|bool
+name|EvaluateAsValue
+argument_list|(
+name|MCValue
+operator|&
+name|Res
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|*
+name|Layout
+argument_list|,
+specifier|const
+name|MCFixup
+operator|*
+name|Fixup
 argument_list|)
 decl|const
 decl_stmt|;
@@ -496,31 +581,45 @@ name|VK_DTPOFF
 block|,
 name|VK_TLVP
 block|,
-comment|// Mach-O thread local variable relocation
+comment|// Mach-O thread local variable relocations
+name|VK_TLVPPAGE
+block|,
+name|VK_TLVPPAGEOFF
+block|,
+name|VK_PAGE
+block|,
+name|VK_PAGEOFF
+block|,
+name|VK_GOTPAGE
+block|,
+name|VK_GOTPAGEOFF
+block|,
 name|VK_SECREL
 block|,
-comment|// FIXME: We'd really like to use the generic Kinds listed above for these.
+name|VK_WEAKREF
+block|,
+comment|// The link between the symbols in .weakref foo, bar
 name|VK_ARM_NONE
-block|,
-name|VK_ARM_PLT
-block|,
-comment|// ARM-style PLT references. i.e., (PLT) instead of @PLT
-name|VK_ARM_TLSGD
-block|,
-comment|//   ditto for TLSGD, GOT, GOTOFF, TPOFF and GOTTPOFF
-name|VK_ARM_GOT
-block|,
-name|VK_ARM_GOTOFF
-block|,
-name|VK_ARM_TPOFF
-block|,
-name|VK_ARM_GOTTPOFF
 block|,
 name|VK_ARM_TARGET1
 block|,
 name|VK_ARM_TARGET2
 block|,
 name|VK_ARM_PREL31
+block|,
+name|VK_ARM_SBREL
+block|,
+comment|// symbol(sbrel)
+name|VK_ARM_TLSLDO
+block|,
+comment|// symbol(tlsldo)
+name|VK_ARM_TLSCALL
+block|,
+comment|// symbol(tlscall)
+name|VK_ARM_TLSDESC
+block|,
+comment|// symbol(tlsdesc)
+name|VK_ARM_TLSDESCSEQ
 block|,
 name|VK_PPC_LO
 block|,
@@ -675,6 +774,9 @@ comment|// symbol@got@tlsld@ha
 name|VK_PPC_TLSLD
 block|,
 comment|// symbol@tlsld
+name|VK_PPC_LOCAL
+block|,
+comment|// symbol@local
 name|VK_Mips_GPREL
 block|,
 name|VK_Mips_GOT_CALL
@@ -723,53 +825,53 @@ name|VK_Mips_CALL_HI16
 block|,
 name|VK_Mips_CALL_LO16
 block|,
+name|VK_Mips_PCREL_HI16
+block|,
+name|VK_Mips_PCREL_LO16
+block|,
 name|VK_COFF_IMGREL32
 comment|// symbol@imgrel (image-relative)
 block|}
 block|;
 name|private
 operator|:
+comment|/// The symbol reference modifier.
+specifier|const
+name|unsigned
+name|Kind
+operator|:
+literal|16
+block|;
+comment|/// Specifies how the variant kind should be printed.
+specifier|const
+name|unsigned
+name|UseParensForSymbolVariant
+operator|:
+literal|1
+block|;
+comment|// FIXME: Remove this bit.
+specifier|const
+name|unsigned
+name|HasSubsectionsViaSymbols
+operator|:
+literal|1
+block|;
 comment|/// The symbol being referenced.
 specifier|const
 name|MCSymbol
 operator|*
 name|Symbol
 block|;
-comment|/// The symbol reference modifier.
-specifier|const
-name|VariantKind
-name|Kind
-block|;
 name|explicit
 name|MCSymbolRefExpr
 argument_list|(
-argument|const MCSymbol *_Symbol
+argument|const MCSymbol *Symbol
 argument_list|,
-argument|VariantKind _Kind
+argument|VariantKind Kind
+argument_list|,
+argument|const MCAsmInfo *MAI
 argument_list|)
-operator|:
-name|MCExpr
-argument_list|(
-name|MCExpr
-operator|::
-name|SymbolRef
-argument_list|)
-block|,
-name|Symbol
-argument_list|(
-name|_Symbol
-argument_list|)
-block|,
-name|Kind
-argument_list|(
-argument|_Kind
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Symbol
-argument_list|)
-block|;   }
+block|;
 name|public
 operator|:
 comment|/// @name Construction
@@ -845,7 +947,29 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|static_cast
+operator|<
+name|VariantKind
+operator|>
+operator|(
 name|Kind
+operator|)
+return|;
+block|}
+name|void
+name|printVariantKind
+argument_list|(
+argument|raw_ostream&OS
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|hasSubsectionsViaSymbols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSubsectionsViaSymbols
 return|;
 block|}
 comment|/// @}
@@ -1806,6 +1930,8 @@ argument_list|(
 argument|MCValue&Res
 argument_list|,
 argument|const MCAsmLayout *Layout
+argument_list|,
+argument|const MCFixup *Fixup
 argument_list|)
 specifier|const
 operator|=
@@ -1813,9 +1939,9 @@ literal|0
 block|;
 name|virtual
 name|void
-name|AddValueSymbols
+name|visitUsedExpr
 argument_list|(
-argument|MCAssembler *
+argument|MCStreamer& Streamer
 argument_list|)
 specifier|const
 operator|=

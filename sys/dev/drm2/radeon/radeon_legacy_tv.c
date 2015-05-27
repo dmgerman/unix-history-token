@@ -720,7 +720,7 @@ begin_define
 define|#
 directive|define
 name|N_AVAILABLE_MODES
-value|DRM_ARRAY_SIZE(available_tv_modes)
+value|ARRAY_SIZE(available_tv_modes)
 end_define
 
 begin_function
@@ -3080,7 +3080,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|DRM_ARRAY_SIZE
+name|ARRAY_SIZE
 argument_list|(
 name|SLOPE_limit
 argument_list|)

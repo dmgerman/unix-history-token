@@ -3515,8 +3515,8 @@ condition|(
 name|con
 operator|->
 name|link_type
-operator|!=
-name|NG_HCI_LINK_ACL
+operator|==
+name|NG_HCI_LINK_SCO
 condition|)
 block|{
 name|NG_HCI_ERR

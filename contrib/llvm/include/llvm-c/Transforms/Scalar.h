@@ -42,6 +42,14 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/** See llvm::createAlignmentFromAssumptionsPass function. */
+name|void
+name|LLVMAddAlignmentFromAssumptionsPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
 comment|/** See llvm::createCFGSimplificationPass function. */
 name|void
 name|LLVMAddCFGSimplificationPass
@@ -53,6 +61,22 @@ function_decl|;
 comment|/** See llvm::createDeadStoreEliminationPass function. */
 name|void
 name|LLVMAddDeadStoreEliminationPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createScalarizerPass function. */
+name|void
+name|LLVMAddScalarizerPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createMergedLoadStoreMotionPass function. */
+name|void
+name|LLVMAddMergedLoadStoreMotionPass
 parameter_list|(
 name|LLVMPassManagerRef
 name|PM
@@ -157,6 +181,14 @@ function_decl|;
 comment|/** See llvm::createPartiallyInlineLibCallsPass function. */
 name|void
 name|LLVMAddPartiallyInlineLibCallsPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createLowerSwitchPass function. */
+name|void
+name|LLVMAddLowerSwitchPass
 parameter_list|(
 name|LLVMPassManagerRef
 name|PM
@@ -280,6 +312,14 @@ function_decl|;
 comment|/** See llvm::createTypeBasedAliasAnalysisPass function */
 name|void
 name|LLVMAddTypeBasedAliasAnalysisPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
+comment|/** See llvm::createScopedNoAliasAAPass function */
+name|void
+name|LLVMAddScopedNoAliasAAPass
 parameter_list|(
 name|LLVMPassManagerRef
 name|PM

@@ -73,26 +73,6 @@ directive|include
 file|<machine/tlb.h>
 end_include
 
-begin_struct
-struct|struct
-name|pmap_md
-block|{
-name|u_int
-name|md_index
-decl_stmt|;
-name|vm_paddr_t
-name|md_paddr
-decl_stmt|;
-name|vm_offset_t
-name|md_vaddr
-decl_stmt|;
-name|vm_size_t
-name|md_size
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_if
 if|#
 directive|if
@@ -160,6 +140,9 @@ argument_list|)
 name|pvo_vlink
 expr_stmt|;
 comment|/* Link to common virt page */
+ifndef|#
+directive|ifndef
+name|__powerpc64__
 name|LIST_ENTRY
 argument_list|(
 argument|pvo_entry
@@ -167,6 +150,8 @@ argument_list|)
 name|pvo_olink
 expr_stmt|;
 comment|/* Link to overflow entry */
+endif|#
+directive|endif
 name|RB_ENTRY
 argument_list|(
 argument|pvo_entry
@@ -174,21 +159,31 @@ argument_list|)
 name|pvo_plink
 expr_stmt|;
 comment|/* Link to pmap entries */
-union|union
+struct|struct
 block|{
+ifndef|#
+directive|ifndef
+name|__powerpc64__
+comment|/* 32-bit fields */
 name|struct
 name|pte
 name|pte
 decl_stmt|;
-comment|/* 32 bit PTE */
-name|struct
-name|lpte
-name|lpte
+endif|#
+directive|endif
+comment|/* 64-bit fields */
+name|uintptr_t
+name|slot
 decl_stmt|;
-comment|/* 64 bit PTE */
+name|vm_paddr_t
+name|pa
+decl_stmt|;
+name|vm_prot_t
+name|prot
+decl_stmt|;
 block|}
 name|pvo_pte
-union|;
+struct|;
 name|pmap_t
 name|pvo_pmap
 decl_stmt|;
@@ -254,6 +249,10 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/* Used by 32-bit PMAP */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -274,6 +273,25 @@ end_define
 
 begin_comment
 comment|/* slot is valid */
+end_comment
+
+begin_comment
+comment|/* Used by 64-bit PMAP */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVO_HID
+value|0x008UL
+end_define
+
+begin_comment
+comment|/* PVO entry in alternate hash*/
+end_comment
+
+begin_comment
+comment|/* Used by both */
 end_comment
 
 begin_define
@@ -307,6 +325,17 @@ end_define
 
 begin_comment
 comment|/* PVO entry allocated during 						   bootstrap */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PVO_DEAD
+value|0x100UL
+end_define
+
+begin_comment
+comment|/* waiting to be deleted */
 end_comment
 
 begin_define
@@ -443,7 +472,8 @@ begin_struct
 struct|struct
 name|md_page
 block|{
-name|u_int64_t
+specifier|volatile
+name|int32_t
 name|mdpg_attrs
 decl_stmt|;
 name|vm_memattr_t
@@ -1073,53 +1103,6 @@ name|int
 name|pmap_bootstrapped
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|extern
-name|vm_offset_t
-name|pmap_dumpsys_map
-parameter_list|(
-name|struct
-name|pmap_md
-modifier|*
-parameter_list|,
-name|vm_size_t
-parameter_list|,
-name|vm_size_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|pmap_dumpsys_unmap
-parameter_list|(
-name|struct
-name|pmap_md
-modifier|*
-parameter_list|,
-name|vm_size_t
-parameter_list|,
-name|vm_offset_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|struct
-name|pmap_md
-modifier|*
-name|pmap_scan_md
-parameter_list|(
-name|struct
-name|pmap_md
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|vm_offset_t

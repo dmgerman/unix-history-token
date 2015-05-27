@@ -7,14 +7,11 @@ begin_comment
 comment|/*  * Copyright 2008 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_pragma
 pragma|#
@@ -58,14 +55,11 @@ directive|include
 file|<sys/cmn_err.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -155,14 +149,11 @@ directive|include
 file|<sys/sysmacros.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -400,7 +391,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_ifdef
@@ -3130,24 +3121,18 @@ name|fasttrap_id_t
 modifier|*
 name|id
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|kmutex_t
 modifier|*
 name|pid_mtx
 decl_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|pid_mtx
 operator|=
 operator|&
@@ -3233,12 +3218,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|mutex_exit
 argument_list|(
 name|pid_mtx
@@ -3327,12 +3309,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|mutex_exit
 argument_list|(
 name|pid_mtx
@@ -3360,12 +3339,9 @@ name|uintptr_t
 name|addr
 parameter_list|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|sigqueue_t
 modifier|*
 name|sqp
@@ -4265,13 +4241,9 @@ name|p
 init|=
 name|curproc
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 name|proc_t
 modifier|*
 name|pp
@@ -4296,12 +4268,9 @@ name|fasttrap_bucket_t
 modifier|*
 name|bucket
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|kmutex_t
 modifier|*
 name|pid_mtx
@@ -4398,12 +4367,9 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Treat a child created by a call to vfork(2) as if it were its 	 * parent. We know that there's only one thread of control in such a 	 * process: this one. 	 */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 while|while
 condition|(
 name|p
@@ -4568,12 +4534,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|mutex_exit
 argument_list|(
 name|pid_mtx
@@ -5132,12 +5095,9 @@ operator|=
 operator|*
 name|tp
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|mutex_exit
 argument_list|(
 name|pid_mtx
@@ -6475,12 +6435,9 @@ name|i
 init|=
 literal|0
 decl_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|klwp_t
 modifier|*
 name|lwp
@@ -6567,6 +6524,7 @@ endif|#
 directive|endif
 else|#
 directive|else
+comment|/* !illumos */
 name|fasttrap_scrspace_t
 modifier|*
 name|scrspace
@@ -6632,7 +6590,7 @@ name|ftss_addr
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 comment|/* 		 * Generic Instruction Tracing 		 * --------------------------- 		 * 		 * This is the layout of the scratch space in the user-land 		 * thread structure for our generated instructions. 		 * 		 *	32-bit mode			bytes 		 *	------------------------	----- 		 * a:<original instruction><= 15 		 *	jmp<pc + tp->ftt_size>	    5 		 * b:<original instruction><= 15 		 *	int	T_DTRACE_RET		    2 		 *					----- 		 *<= 37 		 * 		 *	64-bit mode			bytes 		 *	------------------------	----- 		 * a:<original instruction><= 15 		 *	jmp	0(%rip)			    6 		 *<pc + tp->ftt_size>		    8 		 * b:<original instruction><= 15 		 * 	int	T_DTRACE_RET		    2 		 * 					----- 		 *<= 46 		 * 		 * The %pc is set to a, and curthread->t_dtrace_astpc is set 		 * to b. If we encounter a signal on the way out of the 		 * kernel, trap() will set %pc to curthread->t_dtrace_astpc 		 * so that we execute the original instruction and re-enter 		 * the kernel rather than redirecting to the next instruction. 		 * 		 * If there are return probes (so we know that we're going to 		 * need to reenter the kernel after executing the original 		 * instruction), the scratch space will just contain the 		 * original instruction followed by an interrupt -- the same 		 * data as at b. 		 * 		 * %rip-relative Addressing 		 * ------------------------ 		 * 		 * There's a further complication in 64-bit mode due to %rip- 		 * relative addressing. While this is clearly a beneficial 		 * architectural decision for position independent code, it's 		 * hard not to see it as a personal attack against the pid 		 * provider since before there was a relatively small set of 		 * instructions to emulate; with %rip-relative addressing, 		 * almost every instruction can potentially depend on the 		 * address at which it's executed. Rather than emulating 		 * the broad spectrum of instructions that can now be 		 * position dependent, we emulate jumps and others as in 		 * 32-bit mode, and take a different tack for instructions 		 * using %rip-relative addressing. 		 * 		 * For every instruction that uses the ModRM byte, the 		 * in-kernel disassembler reports its location. We use the 		 * ModRM byte to identify that an instruction uses 		 * %rip-relative addressing and to see what other registers 		 * the instruction uses. To emulate those instructions, 		 * we modify the instruction to be %rax-relative rather than 		 * %rip-relative (or %rcx-relative if the instruction uses 		 * %rax; or %r8- or %r9-relative if the REX.B is present so 		 * we don't have to rewrite the REX prefix). We then load 		 * the value that %rip would have been into the scratch 		 * register and generate an instruction to reset the scratch 		 * register back to its original value. The instruction 		 * sequence looks like this: 		 * 		 *	64-mode %rip-relative		bytes 		 *	------------------------	----- 		 * a:<modified instruction><= 15 		 *	movq	$<value>, %<scratch>	    6 		 *	jmp	0(%rip)			    6 		 *<pc + tp->ftt_size>		    8 		 * b:<modified instruction><= 15 		 * 	int	T_DTRACE_RET		    2 		 * 					----- 		 *					   52 		 * 		 * We set curthread->t_dtrace_regv so that upon receiving 		 * a signal we can reset the value of the scratch register. 		 */
 name|ASSERT
 argument_list|(
@@ -7091,12 +7049,9 @@ name|scratch
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 name|fasttrap_copyout
@@ -7301,13 +7256,9 @@ name|r_rip
 operator|=
 name|new_pc
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -7391,12 +7342,9 @@ name|t_dtrace_astpc
 operator|=
 literal|0
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 comment|/* 	 * Treat a child created by a call to vfork(2) as if it were its 	 * parent. We know that there's only one thread of control in such a 	 * process: this one. 	 */
 while|while
 condition|(
@@ -7749,12 +7697,9 @@ operator|->
 name|r_cs
 operator|)
 return|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 case|case
 name|REG_RFL
 case|:

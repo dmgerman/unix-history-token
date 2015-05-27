@@ -15,14 +15,28 @@ directive|define
 name|_DEV_TERASIC_MTL_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|"opt_syscons.h"
+end_include
+
 begin_struct
 struct|struct
 name|terasic_mtl_softc
 block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEV_SC
+argument_list|)
 comment|/* 	 * syscons requires that its video_adapter_t be at the front of the 	 * softc, so place syscons fields first, which we otherwise would 	 * probably not do. 	 */
 name|video_adapter_t
 name|mtl_va
 decl_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * Bus-related fields. 	 */
 name|device_t
 name|mtl_dev
@@ -49,7 +63,7 @@ decl_stmt|;
 name|int
 name|mtl_reg_rid
 decl_stmt|;
-comment|/* 	 * Graphics frame buffer device -- mappable from userspace. 	 */
+comment|/* 	 * Graphics frame buffer device -- mappable from userspace, and used 	 * by the vt framebuffer interface. 	 */
 name|struct
 name|cdev
 modifier|*
@@ -80,6 +94,11 @@ decl_stmt|;
 name|uint16_t
 modifier|*
 name|mtl_text_soft
+decl_stmt|;
+comment|/* 	 * Framebuffer hookup for vt(4). 	 */
+name|struct
+name|fb_info
+name|mtl_fb_info
 decl_stmt|;
 block|}
 struct|;
@@ -216,6 +235,13 @@ end_define
 begin_comment
 comment|/*  * Constants to help interpret various control registers.  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|TERASIC_MTL_BLEND_PIXEL_ENDIAN_SWAP
+value|0x10000000
+end_define
 
 begin_define
 define|#
@@ -443,6 +469,24 @@ value|8
 end_define
 
 begin_comment
+comment|/*  * Framebuffer constants.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TERASIC_MTL_FB_WIDTH
+value|800
+end_define
+
+begin_define
+define|#
+directive|define
+name|TERASIC_MTL_FB_HEIGHT
+value|640
+end_define
+
+begin_comment
 comment|/*  * Alpha-blending constants.  */
 end_comment
 
@@ -498,6 +542,30 @@ end_decl_stmt
 begin_comment
 comment|/*  * Sub-driver setup routines.  */
 end_comment
+
+begin_function_decl
+name|int
+name|terasic_mtl_fbd_attach
+parameter_list|(
+name|struct
+name|terasic_mtl_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|terasic_mtl_fbd_detach
+parameter_list|(
+name|struct
+name|terasic_mtl_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
@@ -771,6 +839,21 @@ name|sc
 parameter_list|,
 name|uint8_t
 name|alpha
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|terasic_mtl_reg_pixel_endian_set
+parameter_list|(
+name|struct
+name|terasic_mtl_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|endian_swap
 parameter_list|)
 function_decl|;
 end_function_decl

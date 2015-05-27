@@ -4,7 +4,7 @@ comment|/* crypto/bn/bn_mul.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_ifndef
@@ -74,7 +74,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* Here follows specialised variants of bn_add_words() and    bn_sub_words().  They have the property performing operations on    arrays of different sizes.  The sizes of those arrays is expressed through    cl, which is the common length ( basicall, min(len(a),len(b)) ), and dl,    which is the delta between the two lengths, calculated as len(a)-len(b).    All lengths are the number of BN_ULONGs...  For the operations that require    a result array as parameter, it must have the length cl+abs(dl).    These functions should probably end up in bn_asm.c as soon as there are    assembler counterparts for the systems that use assembler files.  */
+comment|/*  * Here follows specialised variants of bn_add_words() and bn_sub_words().  * They have the property performing operations on arrays of different sizes.  * The sizes of those arrays is expressed through cl, which is the common  * length ( basicall, min(len(a),len(b)) ), and dl, which is the delta  * between the two lengths, calculated as len(a)-len(b). All lengths are the  * number of BN_ULONGs...  For the operations that require a result array as  * parameter, it must have the length cl+abs(dl). These functions should  * probably end up in bn_asm.c as soon as there are assembler counterparts  * for the systems that use assembler files.  */
 end_comment
 
 begin_function
@@ -1687,11 +1687,11 @@ name|BN_RECURSION
 end_ifdef
 
 begin_comment
-comment|/* Karatsuba recursive multiplication algorithm  * (cf. Knuth, The Art of Computer Programming, Vol. 2) */
+comment|/*  * Karatsuba recursive multiplication algorithm (cf. Knuth, The Art of  * Computer Programming, Vol. 2)  */
 end_comment
 
 begin_comment
-comment|/* r is 2*n2 words in size,  * a and b are both n2 words in size.  * n2 must be a power of 2.  * We multiply and return the result.  * t must be 2*n2 words in size  * We calculate  * a[0]*b[0]  * a[0]*b[0]+a[1]*b[1]+(a[0]-a[1])*(b[1]-b[0])  * a[1]*b[1]  */
+comment|/*-  * r is 2*n2 words in size,  * a and b are both n2 words in size.  * n2 must be a power of 2.  * We multiply and return the result.  * t must be 2*n2 words in size  * We calculate  * a[0]*b[0]  * a[0]*b[0]+a[1]*b[1]+(a[0]-a[1])*(b[1]-b[0])  * a[1]*b[1]  */
 end_comment
 
 begin_comment
@@ -1792,10 +1792,10 @@ name|BN_MUL_COMBA
 if|#
 directive|if
 literal|0
-block|if (n2 == 4) 		{ 		bn_mul_comba4(r,a,b); 		return; 		}
+block|if (n2 == 4) {         bn_mul_comba4(r, a, b);         return;     }
 endif|#
 directive|endif
-comment|/* Only call bn_mul_comba 8 if n2 == 8 and the 	 * two arrays are complete [steve] 	 */
+comment|/*      * Only call bn_mul_comba 8 if n2 == 8 and the two arrays are complete      * [steve]      */
 if|if
 condition|(
 name|n2
@@ -2223,8 +2223,8 @@ name|dnb
 operator|==
 literal|0
 condition|)
-comment|/* XXX: bn_mul_comba4 could take 					       extra args to do this well */
 block|{
+comment|/* XXX: bn_mul_comba4 could take                                            * extra args to do this well */
 if|if
 condition|(
 operator|!
@@ -2324,8 +2324,8 @@ name|dnb
 operator|==
 literal|0
 condition|)
-comment|/* XXX: bn_mul_comba8 could 						    take extra args to do this 						    well */
 block|{
+comment|/* XXX: bn_mul_comba8 could                                                   * take extra args to do                                                   * this well */
 if|if
 condition|(
 operator|!
@@ -2535,7 +2535,7 @@ name|p
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* t[32] holds (a[0]-a[1])*(b[1]-b[0]), c1 is the sign 	 * r[10] holds (a[0]*b[0]) 	 * r[32] holds (b[1]*b[1]) 	 */
+comment|/*-      * t[32] holds (a[0]-a[1])*(b[1]-b[0]), c1 is the sign      * r[10] holds (a[0]*b[0])      * r[32] holds (b[1]*b[1])      */
 name|c1
 operator|=
 call|(
@@ -2564,8 +2564,8 @@ if|if
 condition|(
 name|neg
 condition|)
-comment|/* if t[32] is negative */
 block|{
+comment|/* if t[32] is negative */
 name|c1
 operator|-=
 call|(
@@ -2631,7 +2631,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* t[32] holds (a[0]-a[1])*(b[1]-b[0])+(a[0]*b[0])+(a[1]*b[1]) 	 * r[10] holds (a[0]*b[0]) 	 * r[32] holds (b[1]*b[1]) 	 * c1 holds the carry bits 	 */
+comment|/*-      * t[32] holds (a[0]-a[1])*(b[1]-b[0])+(a[0]*b[0])+(a[1]*b[1])      * r[10] holds (a[0]*b[0])      * r[32] holds (b[1]*b[1])      * c1 holds the carry bits      */
 name|c1
 operator|+=
 call|(
@@ -2705,7 +2705,7 @@ name|p
 operator|=
 name|ln
 expr_stmt|;
-comment|/* The overflow will stop before we over write 		 * words we should not overwrite */
+comment|/*          * The overflow will stop before we over write words we should not          * overwrite          */
 if|if
 condition|(
 name|ln
@@ -2755,7 +2755,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* n+tn is the word length  * t needs to be n*4 is size, as does r */
+comment|/*  * n+tn is the word length t needs to be n*4 is size, as does r  */
 end_comment
 
 begin_comment
@@ -3165,11 +3165,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* The zero case isn't yet implemented here. The speedup 		   would probably be negligible. */
+comment|/*      * The zero case isn't yet implemented here. The speedup would probably      * be negligible.      */
 if|#
 directive|if
 literal|0
-block|if (n == 4) 		{ 		bn_mul_comba4(&(t[n2]),t,&(t[n])); 		bn_mul_comba4(r,a,b); 		bn_mul_normal(&(r[n2]),&(a[n]),tn,&(b[n]),tn); 		memset(&(r[n2+tn*2]),0,sizeof(BN_ULONG)*(n2-tn*2)); 		} 	else
+block|if (n == 4) {         bn_mul_comba4(&(t[n2]), t,&(t[n]));         bn_mul_comba4(r, a, b);         bn_mul_normal(&(r[n2]),&(a[n]), tn,&(b[n]), tn);         memset(&(r[n2 + tn * 2]), 0, sizeof(BN_ULONG) * (n2 - tn * 2));     } else
 endif|#
 directive|endif
 if|if
@@ -3337,7 +3337,7 @@ name|n
 operator|/
 literal|2
 expr_stmt|;
-comment|/* If there is only a bottom half to the number, 		 * just do it */
+comment|/*          * If there is only a bottom half to the number, just do it          */
 if|if
 condition|(
 name|tna
@@ -3441,8 +3441,8 @@ name|j
 operator|>
 literal|0
 condition|)
-comment|/* eg, n == 16, i == 8 and tn == 11 */
 block|{
+comment|/* eg, n == 16, i == 8 and tn == 11 */
 name|bn_mul_part_recursive
 argument_list|(
 operator|&
@@ -3514,8 +3514,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* (j< 0) eg, n == 16, i == 8 and tn == 5 */
 block|{
+comment|/* (j< 0) eg, n == 16, i == 8 and tn == 5 */
 name|memset
 argument_list|(
 operator|&
@@ -3591,7 +3591,7 @@ name|i
 operator|/=
 literal|2
 expr_stmt|;
-comment|/* these simplified conditions work 					 * exclusively because difference 					 * between tna and tnb is 1 or 0 */
+comment|/*                      * these simplified conditions work exclusively because                      * difference between tna and tnb is 1 or 0                      */
 if|if
 condition|(
 name|i
@@ -3701,7 +3701,7 @@ block|}
 block|}
 block|}
 block|}
-comment|/* t[32] holds (a[0]-a[1])*(b[1]-b[0]), c1 is the sign 	 * r[10] holds (a[0]*b[0]) 	 * r[32] holds (b[1]*b[1]) 	 */
+comment|/*-      * t[32] holds (a[0]-a[1])*(b[1]-b[0]), c1 is the sign      * r[10] holds (a[0]*b[0])      * r[32] holds (b[1]*b[1])      */
 name|c1
 operator|=
 call|(
@@ -3730,8 +3730,8 @@ if|if
 condition|(
 name|neg
 condition|)
-comment|/* if t[32] is negative */
 block|{
+comment|/* if t[32] is negative */
 name|c1
 operator|-=
 call|(
@@ -3797,7 +3797,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* t[32] holds (a[0]-a[1])*(b[1]-b[0])+(a[0]*b[0])+(a[1]*b[1]) 	 * r[10] holds (a[0]*b[0]) 	 * r[32] holds (b[1]*b[1]) 	 * c1 holds the carry bits 	 */
+comment|/*-      * t[32] holds (a[0]-a[1])*(b[1]-b[0])+(a[0]*b[0])+(a[1]*b[1])      * r[10] holds (a[0]*b[0])      * r[32] holds (b[1]*b[1])      * c1 holds the carry bits      */
 name|c1
 operator|+=
 call|(
@@ -3871,7 +3871,7 @@ name|p
 operator|=
 name|ln
 expr_stmt|;
-comment|/* The overflow will stop before we over write 		 * words we should not overwrite */
+comment|/*          * The overflow will stop before we over write words we should not          * overwrite          */
 if|if
 condition|(
 name|ln
@@ -3921,7 +3921,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* a and b must be the same size, which is n2.  * r needs to be n2 words and t needs to be n2*2  */
+comment|/*-  * a and b must be the same size, which is n2.  * r needs to be n2 words and t needs to be n2*2  */
 end_comment
 
 begin_function
@@ -4257,7 +4257,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* a and b must be the same size, which is n2.  * r needs to be n2 words and t needs to be n2*2  * l is the low words of the output.  * t needs to be n2*3  */
+comment|/*-  * a and b must be the same size, which is n2.  * r needs to be n2 words and t needs to be n2*2  * l is the low words of the output.  * t needs to be n2*3  */
 end_comment
 
 begin_function
@@ -4837,7 +4837,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* s0 == low(al*bl) 	 * s1 == low(ah*bh)+low((al-ah)*(bh-bl))+low(al*bl)+high(al*bl) 	 * We know s0 and s1 so the only unknown is high(al*bl) 	 * high(al*bl) == s1 - low(ah*bh+s0+(al-ah)*(bh-bl)) 	 * high(al*bl) == s1 - (r[0]+l[0]+t[0]) 	 */
+comment|/*-      * s0 == low(al*bl)      * s1 == low(ah*bh)+low((al-ah)*(bh-bl))+low(al*bl)+high(al*bl)      * We know s0 and s1 so the only unknown is high(al*bl)      * high(al*bl) == s1 - low(ah*bh+s0+(al-ah)*(bh-bl))      * high(al*bl) == s1 - (r[0]+l[0]+t[0])      */
 if|if
 condition|(
 name|l
@@ -5065,9 +5065,9 @@ operator|&
 name|BN_MASK2
 expr_stmt|;
 block|}
-comment|/* s[0] = low(al*bl) 	 * t[3] = high(al*bl) 	 * t[10] = (a[0]-a[1])*(b[1]-b[0]) neg is the sign 	 * r[10] = (a[1]*b[1]) 	 */
-comment|/* R[10] = al*bl 	 * R[21] = al*bl + ah*bh + (a[0]-a[1])*(b[1]-b[0]) 	 * R[32] = ah*bh 	 */
-comment|/* R[1]=t[3]+l[0]+r[0](+-)t[0] (have carry/borrow) 	 * R[2]=r[0]+t[3]+r[1](+-)t[1] (have carry/borrow) 	 * R[3]=r[1]+(carry/borrow) 	 */
+comment|/*-      * s[0] = low(al*bl)      * t[3] = high(al*bl)      * t[10] = (a[0]-a[1])*(b[1]-b[0]) neg is the sign      * r[10] = (a[1]*b[1])      */
+comment|/*-      * R[10] = al*bl      * R[21] = al*bl + ah*bh + (a[0]-a[1])*(b[1]-b[0])      * R[32] = ah*bh      */
+comment|/*-      * R[1]=t[3]+l[0]+r[0](+-)t[0] (have carry/borrow)      * R[2]=r[0]+t[3]+r[1](+-)t[1] (have carry/borrow)      * R[3]=r[1]+(carry/borrow)      */
 if|if
 condition|(
 name|l
@@ -5401,8 +5401,8 @@ name|c1
 operator|!=
 literal|0
 condition|)
-comment|/* Add starting at r[0], could be +ve or -ve */
 block|{
+comment|/* Add starting at r[0], could be +ve or -ve */
 name|i
 operator|=
 literal|0
@@ -5508,8 +5508,8 @@ name|c2
 operator|!=
 literal|0
 condition|)
-comment|/* Add starting at r[1] */
 block|{
+comment|/* Add starting at r[1] */
 name|i
 operator|=
 name|n
@@ -5859,7 +5859,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|if (al == 4) 			{ 			if (bn_wexpand(rr,8) == NULL) goto err; 			rr->top=8; 			bn_mul_comba4(rr->d,a->d,b->d); 			goto end; 			}
+block|if (al == 4) {             if (bn_wexpand(rr, 8) == NULL)                 goto err;             rr->top = 8;             bn_mul_comba4(rr->d, a->d, b->d);             goto end;         }
 endif|#
 directive|endif
 if|if
@@ -5942,7 +5942,7 @@ operator|<=
 literal|1
 condition|)
 block|{
-comment|/* Find out the power of two lower or equal 			   to the longest of the two numbers */
+comment|/*              * Find out the power of two lower or equal to the longest of the              * two numbers              */
 if|if
 condition|(
 name|i
@@ -6097,8 +6097,8 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-comment|/* al<= j || bl<= j */
 block|{
+comment|/* al<= j || bl<= j */
 if|if
 condition|(
 name|bn_wexpand
@@ -6174,12 +6174,12 @@ block|}
 if|#
 directive|if
 literal|0
-block|if (i == 1&& !BN_get_flags(b,BN_FLG_STATIC_DATA)) 			{ 			BIGNUM *tmp_bn = (BIGNUM *)b; 			if (bn_wexpand(tmp_bn,al) == NULL) goto err; 			tmp_bn->d[bl]=0; 			bl++; 			i--; 			} 		else if (i == -1&& !BN_get_flags(a,BN_FLG_STATIC_DATA)) 			{ 			BIGNUM *tmp_bn = (BIGNUM *)a; 			if (bn_wexpand(tmp_bn,bl) == NULL) goto err; 			tmp_bn->d[al]=0; 			al++; 			i++; 			} 		if (i == 0) 			{
+block|if (i == 1&& !BN_get_flags(b, BN_FLG_STATIC_DATA)) {             BIGNUM *tmp_bn = (BIGNUM *)b;             if (bn_wexpand(tmp_bn, al) == NULL)                 goto err;             tmp_bn->d[bl] = 0;             bl++;             i--;         } else if (i == -1&& !BN_get_flags(a, BN_FLG_STATIC_DATA)) {             BIGNUM *tmp_bn = (BIGNUM *)a;             if (bn_wexpand(tmp_bn, bl) == NULL)                 goto err;             tmp_bn->d[al] = 0;             al++;             i++;         }         if (i == 0) {
 comment|/* symmetric and> 4 */
 comment|/* 16 or larger */
-block|j=BN_num_bits_word((BN_ULONG)al); 			j=1<<(j-1); 			k=j+j; 			t = BN_CTX_get(ctx); 			if (al == j)
+block|j = BN_num_bits_word((BN_ULONG)al);             j = 1<< (j - 1);             k = j + j;             t = BN_CTX_get(ctx);             if (al == j) {
 comment|/* exact multiple */
-block|{ 				if (bn_wexpand(t,k*2) == NULL) goto err; 				if (bn_wexpand(rr,k*2) == NULL) goto err; 				bn_mul_recursive(rr->d,a->d,b->d,al,t->d); 				} 			else 				{ 				if (bn_wexpand(t,k*4) == NULL) goto err; 				if (bn_wexpand(rr,k*4) == NULL) goto err; 				bn_mul_part_recursive(rr->d,a->d,b->d,al-j,j,t->d); 				} 			rr->top=top; 			goto end; 			}
+block|if (bn_wexpand(t, k * 2) == NULL)                     goto err;                 if (bn_wexpand(rr, k * 2) == NULL)                     goto err;                 bn_mul_recursive(rr->d, a->d, b->d, al, t->d);             } else {                 if (bn_wexpand(t, k * 4) == NULL)                     goto err;                 if (bn_wexpand(rr, k * 4) == NULL)                     goto err;                 bn_mul_part_recursive(rr->d, a->d, b->d, al - j, j, t->d);             }             rr->top = top;             goto end;         }
 endif|#
 directive|endif
 block|}

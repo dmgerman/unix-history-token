@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: exf.c,v 10.62 2013/07/01 23:28:13 zy Exp $"
+literal|"$Id: exf.c,v 10.64 2015/04/05 15:21:55 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -129,94 +129,79 @@ directive|include
 file|"common.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|file_backup
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|file_cinit
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|file_encinit
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|file_comment
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|file_spath
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|FREF
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|stat
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * file_add --  *	Insert a file name into the FREF list, if it doesn't already  *	appear in it.  *  * !!!  * The "if it doesn't already appear" changes vi's semantics slightly.  If  * you do a "vi foo bar", and then execute "next bar baz", the edit of bar  * will reflect the line/column of the previous edit session.  Historic nvi  * did not do this.  The change is a logical extension of the change where  * vi now remembers the last location in any file that it has ever edited,  * not just the previously edited file.  *  * PUBLIC: FREF *file_add __P((SCR *, char *));  */
+comment|/*  * file_add --  *	Insert a file name into the FREF list, if it doesn't already  *	appear in it.  *  * !!!  * The "if it doesn't already appear" changes vi's semantics slightly.  If  * you do a "vi foo bar", and then execute "next bar baz", the edit of bar  * will reflect the line/column of the previous edit session.  Historic nvi  * did not do this.  The change is a logical extension of the change where  * vi now remembers the last location in any file that it has ever edited,  * not just the previously edited file.  *  * PUBLIC: FREF *file_add(SCR *, char *);  */
 end_comment
 
 begin_function
@@ -426,7 +411,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * file_init --  *	Start editing a file, based on the FREF structure.  If successsful,  *	let go of any previous file.  Don't release the previous file until  *	absolutely sure we have the new one.  *  * PUBLIC: int file_init __P((SCR *, FREF *, char *, int));  */
+comment|/*  * file_init --  *	Start editing a file, based on the FREF structure.  If successsful,  *	let go of any previous file.  Don't release the previous file until  *	absolutely sure we have the new one.  *  * PUBLIC: int file_init(SCR *, FREF *, char *, int);  */
 end_comment
 
 begin_function
@@ -1069,6 +1054,18 @@ argument_list|,
 literal|"%s"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|F_ISSET
+argument_list|(
+name|frp
+argument_list|,
+name|FR_NEWFILE
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
 comment|/* 		 * !!! 		 * Historically, vi permitted users to edit files that couldn't 		 * be read.  This isn't useful for single files from a command 		 * line, but it's quite useful for "vi *.c", since you can skip 		 * past files that you can't read. 		 */
 name|open_err
 operator|=
@@ -1238,6 +1235,16 @@ name|readonly
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|F_ISSET
+argument_list|(
+name|sp
+argument_list|,
+name|SC_READONLY
+argument_list|)
+condition|)
+break|break;
 name|msgq_str
 argument_list|(
 name|sp
@@ -2256,7 +2263,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * file_end --  *	Stop editing a file.  *  * PUBLIC: int file_end __P((SCR *, EXF *, int));  */
+comment|/*  * file_end --  *	Stop editing a file.  *  * PUBLIC: int file_end(SCR *, EXF *, int);  */
 end_comment
 
 begin_function
@@ -2660,7 +2667,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * file_write --  *	Write the file to disk.  Historic vi had fairly convoluted  *	semantics for whether or not writes would happen.  That's  *	why all the flags.  *  * PUBLIC: int file_write __P((SCR *, MARK *, MARK *, char *, int));  */
+comment|/*  * file_write --  *	Write the file to disk.  Historic vi had fairly convoluted  *	semantics for whether or not writes would happen.  That's  *	why all the flags.  *  * PUBLIC: int file_write(SCR *, MARK *, MARK *, char *, int);  */
 end_comment
 
 begin_function
@@ -3115,8 +3122,6 @@ literal|1
 operator|)
 return|;
 comment|/* Open the file. */
-name|SIGBLOCK
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3290,8 +3295,6 @@ argument_list|,
 literal|"%s"
 argument_list|)
 expr_stmt|;
-name|SIGUNBLOCK
-expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -3300,8 +3303,6 @@ return|;
 block|}
 name|success_open
 label|:
-name|SIGUNBLOCK
-expr_stmt|;
 comment|/* Try and get a lock. */
 if|if
 condition|(
@@ -5019,7 +5020,7 @@ name|O_FILEENCODING
 argument_list|)
 operator|||
 operator|!
-name|strncasecmp
+name|strcasecmp
 argument_list|(
 name|O_STR
 argument_list|(
@@ -5029,8 +5030,6 @@ name|O_FILEENCODING
 argument_list|)
 argument_list|,
 literal|"utf-8"
-argument_list|,
-literal|5
 argument_list|)
 condition|)
 name|o_set
@@ -5375,7 +5374,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * file_m1 --  * 	First modification check routine.  The :next, :prev, :rewind, :tag,  *	:tagpush, :tagpop, ^^ modifications check.  *  * PUBLIC: int file_m1 __P((SCR *, int, int));  */
+comment|/*  * file_m1 --  * 	First modification check routine.  The :next, :prev, :rewind, :tag,  *	:tagpush, :tagpop, ^^ modifications check.  *  * PUBLIC: int file_m1(SCR *, int, int);  */
 end_comment
 
 begin_function
@@ -5502,7 +5501,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * file_m2 --  * 	Second modification check routine.  The :edit, :quit, :recover  *	modifications check.  *  * PUBLIC: int file_m2 __P((SCR *, int));  */
+comment|/*  * file_m2 --  * 	Second modification check routine.  The :edit, :quit, :recover  *	modifications check.  *  * PUBLIC: int file_m2(SCR *, int);  */
 end_comment
 
 begin_function
@@ -5588,7 +5587,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * file_m3 --  * 	Third modification check routine.  *  * PUBLIC: int file_m3 __P((SCR *, int));  */
+comment|/*  * file_m3 --  * 	Third modification check routine.  *  * PUBLIC: int file_m3(SCR *, int);  */
 end_comment
 
 begin_function
@@ -5671,7 +5670,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * file_aw --  *	Autowrite routine.  If modified, autowrite is set and the readonly bit  *	is not set, write the file.  A routine so there's a place to put the  *	comment.  *  * PUBLIC: int file_aw __P((SCR *, int));  */
+comment|/*  * file_aw --  *	Autowrite routine.  If modified, autowrite is set and the readonly bit  *	is not set, write the file.  A routine so there's a place to put the  *	comment.  *  * PUBLIC: int file_aw(SCR *, int);  */
 end_comment
 
 begin_function
@@ -5764,7 +5763,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * set_alt_name --  *	Set the alternate pathname.  *  * Set the alternate pathname.  It's a routine because I wanted some place  * to hang this comment.  The alternate pathname (normally referenced using  * the special character '#' during file expansion and in the vi ^^ command)  * is set by almost all ex commands that take file names as arguments.  The  * rules go something like this:  *  *    1: If any ex command takes a file name as an argument (except for the  *	 :next command), the alternate pathname is set to that file name.  *	 This excludes the command ":e" and ":w !command" as no file name  *       was specified.  Note, historically, the :source command did not set  *	 the alternate pathname.  It does in nvi, for consistency.  *  *    2: However, if any ex command sets the current pathname, e.g. the  *	 ":e file" or ":rew" commands succeed, then the alternate pathname  *	 is set to the previous file's current pathname, if it had one.  *	 This includes the ":file" command and excludes the ":e" command.  *	 So, by rule #1 and rule #2, if ":edit foo" fails, the alternate  *	 pathname will be "foo", if it succeeds, the alternate pathname will  *	 be the previous current pathname.  The ":e" command will not set  *       the alternate or current pathnames regardless.  *  *    3: However, if it's a read or write command with a file argument and  *	 the current pathname has not yet been set, the file name becomes  *	 the current pathname, and the alternate pathname is unchanged.  *  * If the user edits a temporary file, there may be times when there is no  * alternative file name.  A name argument of NULL turns it off.  *  * PUBLIC: void set_alt_name __P((SCR *, char *));  */
+comment|/*  * set_alt_name --  *	Set the alternate pathname.  *  * Set the alternate pathname.  It's a routine because I wanted some place  * to hang this comment.  The alternate pathname (normally referenced using  * the special character '#' during file expansion and in the vi ^^ command)  * is set by almost all ex commands that take file names as arguments.  The  * rules go something like this:  *  *    1: If any ex command takes a file name as an argument (except for the  *	 :next command), the alternate pathname is set to that file name.  *	 This excludes the command ":e" and ":w !command" as no file name  *       was specified.  Note, historically, the :source command did not set  *	 the alternate pathname.  It does in nvi, for consistency.  *  *    2: However, if any ex command sets the current pathname, e.g. the  *	 ":e file" or ":rew" commands succeed, then the alternate pathname  *	 is set to the previous file's current pathname, if it had one.  *	 This includes the ":file" command and excludes the ":e" command.  *	 So, by rule #1 and rule #2, if ":edit foo" fails, the alternate  *	 pathname will be "foo", if it succeeds, the alternate pathname will  *	 be the previous current pathname.  The ":e" command will not set  *       the alternate or current pathnames regardless.  *  *    3: However, if it's a read or write command with a file argument and  *	 the current pathname has not yet been set, the file name becomes  *	 the current pathname, and the alternate pathname is unchanged.  *  * If the user edits a temporary file, there may be times when there is no  * alternative file name.  A name argument of NULL turns it off.  *  * PUBLIC: void set_alt_name(SCR *, char *);  */
 end_comment
 
 begin_function
@@ -5836,7 +5835,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * file_lock --  *	Get an exclusive lock on a file.  *  * PUBLIC: lockr_t file_lock __P((SCR *, char *, int, int));  */
+comment|/*  * file_lock --  *	Get an exclusive lock on a file.  *  * PUBLIC: lockr_t file_lock(SCR *, char *, int, int);  */
 end_comment
 
 begin_function

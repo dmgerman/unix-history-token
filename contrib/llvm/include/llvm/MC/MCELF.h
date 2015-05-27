@@ -141,6 +141,7 @@ specifier|static
 name|unsigned
 name|GetVisibility
 parameter_list|(
+specifier|const
 name|MCSymbolData
 modifier|&
 name|SD
@@ -162,6 +163,7 @@ specifier|static
 name|unsigned
 name|getOther
 parameter_list|(
+specifier|const
 name|MCSymbolData
 modifier|&
 name|SD

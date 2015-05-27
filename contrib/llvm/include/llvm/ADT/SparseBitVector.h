@@ -153,10 +153,14 @@ name|unsigned
 name|long
 name|BitWord
 typedef|;
-block|enum
+typedef|typedef
+name|unsigned
+name|size_type
+typedef|;
+enum|enum
 block|{
 name|BITWORD_SIZE
-operator|=
+init|=
 sizeof|sizeof
 argument_list|(
 name|BitWord
@@ -165,7 +169,7 @@ operator|*
 name|CHAR_BIT
 block|,
 name|BITWORDS_PER_ELEMENT
-operator|=
+init|=
 operator|(
 name|ElementSize
 operator|+
@@ -177,10 +181,10 @@ operator|/
 name|BITWORD_SIZE
 block|,
 name|BITS_PER_ELEMENT
-operator|=
+init|=
 name|ElementSize
 block|}
-expr_stmt|;
+enum|;
 name|private
 label|:
 comment|// Index of Element in terms of where first bit starts.
@@ -548,7 +552,7 @@ block|}
 end_decl_stmt
 
 begin_expr_stmt
-name|unsigned
+name|size_type
 name|count
 argument_list|()
 specifier|const
@@ -1961,7 +1965,7 @@ name|true
 expr_stmt|;
 return|return;
 block|}
-comment|// Set up for next non zero word in bitmap.
+comment|// Set up for next non-zero word in bitmap.
 name|BitNumber
 operator|=
 name|Iter

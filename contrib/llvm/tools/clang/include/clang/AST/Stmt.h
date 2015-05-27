@@ -229,7 +229,7 @@ argument_list|()
 operator|:
 name|I
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|ExprIterator
@@ -436,7 +436,7 @@ argument_list|()
 operator|:
 name|I
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|ConstExprIterator
@@ -1048,7 +1048,7 @@ range|:
 literal|1
 decl_stmt|;
 name|unsigned
-name|RefersToEnclosingLocal
+name|RefersToEnclosingVariableOrCapture
 range|:
 literal|1
 decl_stmt|;
@@ -1570,13 +1570,11 @@ parameter_list|()
 function_decl|;
 comment|/// \brief Dumps the specified AST fragment and all subtrees to
 comment|/// \c llvm::errs().
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|(
@@ -1600,7 +1598,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// dumpColor - same as dump(), but forces color highlighting.
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dumpColor
 argument_list|()
@@ -1654,6 +1651,18 @@ name|Stmt
 modifier|*
 name|IgnoreImplicit
 parameter_list|()
+function_decl|;
+comment|/// \brief Skip no-op (attributed, compound) container stmts and skip captured
+comment|/// stmt at the top, if \a IgnoreCaptured is true.
+name|Stmt
+modifier|*
+name|IgnoreContainers
+parameter_list|(
+name|bool
+name|IgnoreCaptured
+init|=
+name|false
+parameter_list|)
 function_decl|;
 specifier|const
 name|Stmt
@@ -2090,6 +2099,67 @@ name|const_decl_iterator
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|decl_iterator
+operator|>
+name|decl_range
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|const_decl_iterator
+operator|>
+name|decl_const_range
+expr_stmt|;
+end_typedef
+
+begin_function
+name|decl_range
+name|decls
+parameter_list|()
+block|{
+return|return
+name|decl_range
+argument_list|(
+name|decl_begin
+argument_list|()
+argument_list|,
+name|decl_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_expr_stmt
+name|decl_const_range
+name|decls
+argument_list|()
+specifier|const
+block|{
+return|return
+name|decl_const_range
+argument_list|(
+name|decl_begin
+argument_list|()
+argument_list|,
+name|decl_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_function
 name|decl_iterator
 name|decl_begin
@@ -2365,9 +2435,13 @@ operator|*
 name|Body
 block|;
 name|SourceLocation
-name|LBracLoc
+name|LBraceLoc
 block|,
-name|RBracLoc
+name|RBraceLoc
+block|;
+name|friend
+name|class
+name|ASTStmtReader
 block|;
 name|public
 operator|:
@@ -2396,15 +2470,15 @@ argument_list|)
 block|,
 name|Body
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
-name|LBracLoc
+name|LBraceLoc
 argument_list|(
 name|Loc
 argument_list|)
 block|,
-name|RBracLoc
+name|RBraceLoc
 argument_list|(
 argument|Loc
 argument_list|)
@@ -2431,7 +2505,7 @@ argument_list|)
 block|,
 name|Body
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|CompoundStmtBits
@@ -2480,17 +2554,53 @@ modifier|*
 modifier|*
 name|body_iterator
 typedef|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
 name|body_iterator
+operator|>
+name|body_range
+expr_stmt|;
+end_typedef
+
+begin_function
+name|body_range
+name|body
+parameter_list|()
+block|{
+return|return
+name|body_range
+argument_list|(
 name|body_begin
 argument_list|()
+argument_list|,
+name|body_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|body_iterator
+name|body_begin
+parameter_list|()
 block|{
 return|return
 name|Body
 return|;
 block|}
+end_function
+
+begin_function
 name|body_iterator
 name|body_end
-argument_list|()
+parameter_list|()
 block|{
 return|return
 name|Body
@@ -2499,16 +2609,19 @@ name|size
 argument_list|()
 return|;
 block|}
+end_function
+
+begin_function
 name|Stmt
-operator|*
+modifier|*
 name|body_back
-argument_list|()
+parameter_list|()
 block|{
 return|return
 operator|!
 name|body_empty
 argument_list|()
-operator|?
+condition|?
 name|Body
 index|[
 name|size
@@ -2516,15 +2629,20 @@ argument_list|()
 operator|-
 literal|1
 index|]
-operator|:
-literal|0
+else|:
+name|nullptr
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setLastStmt
-argument_list|(
-argument|Stmt *S
-argument_list|)
+parameter_list|(
+name|Stmt
+modifier|*
+name|S
+parameter_list|)
 block|{
 name|assert
 argument_list|(
@@ -2534,7 +2652,7 @@ argument_list|()
 operator|&&
 literal|"setLastStmt"
 argument_list|)
-block|;
+expr_stmt|;
 name|Body
 index|[
 name|size
@@ -2544,8 +2662,9 @@ literal|1
 index|]
 operator|=
 name|S
-block|;   }
-end_decl_stmt
+expr_stmt|;
+block|}
+end_function
 
 begin_typedef
 typedef|typedef
@@ -2557,6 +2676,37 @@ name|const_body_iterator
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|const_body_iterator
+operator|>
+name|body_const_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|body_const_range
+name|body
+argument_list|()
+specifier|const
+block|{
+return|return
+name|body_const_range
+argument_list|(
+name|body_begin
+argument_list|()
+argument_list|,
+name|body_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
 begin_expr_stmt
 name|const_body_iterator
 name|body_begin
@@ -2605,7 +2755,7 @@ operator|-
 literal|1
 index|]
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt
@@ -2704,7 +2854,7 @@ specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|LBracLoc
+name|LBraceLoc
 return|;
 block|}
 end_expr_stmt
@@ -2717,7 +2867,7 @@ specifier|const
 name|LLVM_READONLY
 block|{
 return|return
-name|RBracLoc
+name|RBraceLoc
 return|;
 block|}
 end_expr_stmt
@@ -2729,25 +2879,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|LBracLoc
+name|LBraceLoc
 return|;
 block|}
 end_expr_stmt
-
-begin_function
-name|void
-name|setLBracLoc
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|)
-block|{
-name|LBracLoc
-operator|=
-name|L
-expr_stmt|;
-block|}
-end_function
 
 begin_expr_stmt
 name|SourceLocation
@@ -2756,25 +2891,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|RBracLoc
+name|RBraceLoc
 return|;
 block|}
 end_expr_stmt
-
-begin_function
-name|void
-name|setRBracLoc
-parameter_list|(
-name|SourceLocation
-name|L
-parameter_list|)
-block|{
-name|RBracLoc
-operator|=
-name|L
-expr_stmt|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -2810,17 +2930,9 @@ block|{
 return|return
 name|child_range
 argument_list|(
-operator|&
 name|Body
-index|[
-literal|0
-index|]
 argument_list|,
-operator|&
 name|Body
-index|[
-literal|0
-index|]
 operator|+
 name|CompoundStmtBits
 operator|.
@@ -2839,17 +2951,9 @@ block|{
 return|return
 name|child_range
 argument_list|(
-operator|&
 name|Body
-index|[
-literal|0
-index|]
 argument_list|,
-operator|&
 name|Body
-index|[
-literal|0
-index|]
 operator|+
 name|CompoundStmtBits
 operator|.
@@ -2901,7 +3005,7 @@ argument_list|)
 block|,
 name|NextSwitchCase
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|KeywordLoc
@@ -2913,7 +3017,7 @@ name|ColonLoc
 argument_list|(
 argument|ColonLoc
 argument_list|)
-block|{}
+block|{   }
 name|SwitchCase
 argument_list|(
 argument|StmtClass SC
@@ -2928,7 +3032,7 @@ argument_list|)
 block|,
 name|NextSwitchCase
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|public
@@ -3125,7 +3229,7 @@ index|[
 name|SUBSTMT
 index|]
 operator|=
-literal|0
+name|nullptr
 block|;
 name|SubExprs
 index|[
@@ -3925,14 +4029,6 @@ block|;
 name|unsigned
 name|NumAttrs
 block|;
-specifier|const
-name|Attr
-operator|*
-name|Attrs
-index|[
-literal|1
-index|]
-block|;
 name|friend
 name|class
 name|ASTStmtReader
@@ -3968,9 +4064,8 @@ argument_list|)
 block|{
 name|memcpy
 argument_list|(
-name|this
-operator|->
-name|Attrs
+name|getAttrArrayPtr
+argument_list|()
 argument_list|,
 name|Attrs
 operator|.
@@ -4011,7 +4106,8 @@ argument_list|)
 block|{
 name|memset
 argument_list|(
-name|Attrs
+name|getAttrArrayPtr
+argument_list|()
 argument_list|,
 literal|0
 argument_list|,
@@ -4024,6 +4120,49 @@ operator|*
 argument_list|)
 argument_list|)
 block|;   }
+name|Attr
+operator|*
+specifier|const
+operator|*
+name|getAttrArrayPtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Attr
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
+name|Attr
+operator|*
+operator|*
+name|getAttrArrayPtr
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Attr
+operator|*
+operator|*
+operator|>
+operator|(
+name|this
+operator|+
+literal|1
+operator|)
+return|;
+block|}
 name|public
 operator|:
 specifier|static
@@ -4071,17 +4210,15 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-specifier|const
-name|Attr
-operator|*
-operator|>
-operator|(
-name|Attrs
-expr|,
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|getAttrArrayPtr
+argument_list|()
+argument_list|,
 name|NumAttrs
-operator|)
+argument_list|)
 return|;
 block|}
 name|Stmt
@@ -4211,8 +4348,7 @@ argument|Stmt *then
 argument_list|,
 argument|SourceLocation EL = SourceLocation()
 argument_list|,
-argument|Stmt *elsev =
-literal|0
+argument|Stmt *elsev = nullptr
 argument_list|)
 block|;
 comment|/// \brief Build an empty if/then/else statement
@@ -4905,6 +5041,19 @@ return|return
 name|SubExprs
 index|[
 name|BODY
+index|]
+operator|?
+name|SubExprs
+index|[
+name|BODY
+index|]
+operator|->
+name|getLocEnd
+argument_list|()
+operator|:
+name|SubExprs
+index|[
+name|COND
 index|]
 operator|->
 name|getLocEnd
@@ -6685,7 +6834,7 @@ argument_list|)
 block|,
 name|RetExpr
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|RetLoc
@@ -6695,9 +6844,9 @@ argument_list|)
 block|,
 name|NRVOCandidate
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
-block|{ }
+block|{}
 name|ReturnStmt
 argument_list|(
 argument|SourceLocation RL
@@ -6837,12 +6986,12 @@ name|LLVM_READONLY
 block|{
 return|return
 name|RetExpr
-operator|?
+condition|?
 name|RetExpr
 operator|->
 name|getLocEnd
 argument_list|()
-operator|:
+else|:
 name|RetLoc
 return|;
 block|}
@@ -7003,7 +7152,7 @@ argument_list|)
 block|,
 name|Exprs
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|SourceLocation
@@ -7231,6 +7380,24 @@ typedef|typedef
 name|ConstExprIterator
 name|const_inputs_iterator
 typedef|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|inputs_iterator
+operator|>
+name|inputs_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|const_inputs_iterator
+operator|>
+name|inputs_const_range
+expr_stmt|;
 name|inputs_iterator
 name|begin_inputs
 argument_list|()
@@ -7259,6 +7426,21 @@ operator|+
 name|NumOutputs
 operator|+
 name|NumInputs
+return|;
+block|}
+name|inputs_range
+name|inputs
+argument_list|()
+block|{
+return|return
+name|inputs_range
+argument_list|(
+name|begin_inputs
+argument_list|()
+argument_list|,
+name|end_inputs
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|const_inputs_iterator
@@ -7291,6 +7473,22 @@ operator|+
 name|NumOutputs
 operator|+
 name|NumInputs
+return|;
+block|}
+name|inputs_const_range
+name|inputs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|inputs_const_range
+argument_list|(
+name|begin_inputs
+argument_list|()
+argument_list|,
+name|end_inputs
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|// Output expr iterators.
@@ -7302,6 +7500,24 @@ typedef|typedef
 name|ConstExprIterator
 name|const_outputs_iterator
 typedef|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|outputs_iterator
+operator|>
+name|outputs_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|const_outputs_iterator
+operator|>
+name|outputs_const_range
+expr_stmt|;
 name|outputs_iterator
 name|begin_outputs
 argument_list|()
@@ -7326,6 +7542,21 @@ literal|0
 index|]
 operator|+
 name|NumOutputs
+return|;
+block|}
+name|outputs_range
+name|outputs
+argument_list|()
+block|{
+return|return
+name|outputs_range
+argument_list|(
+name|begin_outputs
+argument_list|()
+argument_list|,
+name|end_outputs
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|const_outputs_iterator
@@ -7354,6 +7585,22 @@ literal|0
 index|]
 operator|+
 name|NumOutputs
+return|;
+block|}
+name|outputs_const_range
+name|outputs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|outputs_const_range
+argument_list|(
+name|begin_outputs
+argument_list|()
+argument_list|,
+name|end_outputs
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|child_range
@@ -7465,17 +7712,17 @@ argument_list|)
 block|,
 name|Constraints
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Clobbers
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Names
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|SourceLocation
@@ -7559,6 +7806,10 @@ block|;
 name|unsigned
 name|OperandNo
 block|;
+comment|// Source range for operand references.
+name|CharSourceRange
+name|Range
+block|;
 name|public
 operator|:
 name|AsmStringPiece
@@ -7585,7 +7836,11 @@ name|AsmStringPiece
 argument_list|(
 argument|unsigned OpNo
 argument_list|,
-argument|char Modifier
+argument|const std::string&S
+argument_list|,
+argument|SourceLocation Begin
+argument_list|,
+argument|SourceLocation End
 argument_list|)
 operator|:
 name|MyKind
@@ -7594,17 +7849,20 @@ name|Operand
 argument_list|)
 block|,
 name|Str
-argument_list|()
+argument_list|(
+name|S
+argument_list|)
 block|,
 name|OperandNo
 argument_list|(
-argument|OpNo
+name|OpNo
 argument_list|)
-block|{
-name|Str
-operator|+=
-name|Modifier
-block|;     }
+block|,
+name|Range
+argument_list|(
+argument|CharSourceRange::getCharRange(Begin, End)
+argument_list|)
+block|{     }
 name|bool
 name|isString
 argument_list|()
@@ -7636,12 +7894,6 @@ name|getString
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|isString
-argument_list|()
-argument_list|)
-block|;
 return|return
 name|Str
 return|;
@@ -7661,10 +7913,8 @@ return|return
 name|OperandNo
 return|;
 block|}
-comment|/// getModifier - Get the modifier for this operand, if present.  This
-comment|/// returns '\0' if there was no modifier.
-name|char
-name|getModifier
+name|CharSourceRange
+name|getRange
 argument_list|()
 specifier|const
 block|{
@@ -7672,16 +7922,21 @@ name|assert
 argument_list|(
 name|isOperand
 argument_list|()
+operator|&&
+literal|"Range is currently used only for Operands."
 argument_list|)
 block|;
 return|return
-name|Str
-index|[
-literal|0
-index|]
+name|Range
 return|;
 block|}
-expr|}
+comment|/// getModifier - Get the modifier for this operand, if present.  This
+comment|/// returns '\0' if there was no modifier.
+name|char
+name|getModifier
+argument_list|()
+specifier|const
+block|;   }
 block|;
 comment|/// AnalyzeAsmString - Analyze the asm string of the current asm, decomposing
 comment|/// it into pieces.  If the asm string is erroneous, emit errors and return
@@ -8148,17 +8403,17 @@ argument_list|)
 block|,
 name|AsmToks
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Constraints
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Clobbers
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|SourceLocation
@@ -8376,17 +8631,16 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|StringRef
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|Constraints
-expr|,
+argument_list|,
 name|NumInputs
 operator|+
 name|NumOutputs
-operator|)
+argument_list|)
 return|;
 block|}
 name|ArrayRef
@@ -8398,15 +8652,14 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|StringRef
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|Clobbers
-expr|,
+argument_list|,
 name|NumClobbers
-operator|)
+argument_list|)
 return|;
 block|}
 name|ArrayRef
@@ -8419,12 +8672,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|Expr
-operator|*
-operator|>
-operator|(
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
 name|reinterpret_cast
 operator|<
 name|Expr
@@ -8434,11 +8685,11 @@ operator|>
 operator|(
 name|Exprs
 operator|)
-expr|,
+argument_list|,
 name|NumInputs
 operator|+
 name|NumOutputs
-operator|)
+argument_list|)
 return|;
 block|}
 name|StringRef
@@ -8528,7 +8779,9 @@ argument_list|,
 operator|&
 name|Exprs
 index|[
-literal|0
+name|NumInputs
+operator|+
+name|NumOutputs
 index|]
 argument_list|)
 return|;
@@ -9081,6 +9334,116 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// Represents a __leave statement.
+comment|///
+name|class
+name|SEHLeaveStmt
+operator|:
+name|public
+name|Stmt
+block|{
+name|SourceLocation
+name|LeaveLoc
+block|;
+name|public
+operator|:
+name|explicit
+name|SEHLeaveStmt
+argument_list|(
+argument|SourceLocation LL
+argument_list|)
+operator|:
+name|Stmt
+argument_list|(
+name|SEHLeaveStmtClass
+argument_list|)
+block|,
+name|LeaveLoc
+argument_list|(
+argument|LL
+argument_list|)
+block|{}
+comment|/// \brief Build an empty __leave statement.
+name|explicit
+name|SEHLeaveStmt
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Stmt
+argument_list|(
+argument|SEHLeaveStmtClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
+name|SourceLocation
+name|getLeaveLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LeaveLoc
+return|;
+block|}
+name|void
+name|setLeaveLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|LeaveLoc
+operator|=
+name|L
+block|; }
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|LeaveLoc
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|LeaveLoc
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|SEHLeaveStmtClass
+return|;
+block|}
+comment|// Iterators
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|()
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief This captures a statement into a function. For example, the following
 comment|/// pragma annotated compound statement can be represented as a CapturedStmt,
 comment|/// and this compound statement is the body of an anonymous outlined function.
@@ -9098,16 +9461,20 @@ name|Stmt
 block|{
 name|public
 operator|:
-comment|/// \brief The different capture forms: by 'this' or by reference, etc.
+comment|/// \brief The different capture forms: by 'this', by reference, capture for
+comment|/// variable-length array type etc.
 expr|enum
 name|VariableCaptureKind
 block|{
 name|VCK_This
 block|,
 name|VCK_ByRef
-block|}
+block|,
+name|VCK_VLAType
+block|,   }
 block|;
-comment|/// \brief Describes the capture of either a variable or 'this'.
+comment|/// \brief Describes the capture of either a variable, or 'this', or
+comment|/// variable-length array type.
 name|class
 name|Capture
 block|{
@@ -9118,7 +9485,7 @@ operator|<
 name|VarDecl
 operator|*
 block|,
-literal|1
+literal|2
 block|,
 name|VariableCaptureKind
 operator|>
@@ -9143,8 +9510,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|VariableCaptureKind Kind
 argument_list|,
-argument|VarDecl *Var =
-literal|0
+argument|VarDecl *Var = nullptr
 argument_list|)
 operator|:
 name|VarAndKind
@@ -9169,9 +9535,8 @@ name|VCK_This
 case|:
 name|assert
 argument_list|(
+operator|!
 name|Var
-operator|==
-literal|0
 operator|&&
 literal|"'this' capture cannot have a variable!"
 argument_list|)
@@ -9185,6 +9550,18 @@ argument_list|(
 name|Var
 operator|&&
 literal|"capturing by reference must have a variable!"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|VCK_VLAType
+case|:
+name|assert
+argument_list|(
+operator|!
+name|Var
+operator|&&
+literal|"Variable-length array type capture cannot have a variable!"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9236,13 +9613,27 @@ block|{
 return|return
 name|getCaptureKind
 argument_list|()
-operator|!=
-name|VCK_This
+operator|==
+name|VCK_ByRef
+return|;
+block|}
+comment|/// \brief Determine whether this capture handles a variable-length array
+comment|/// type.
+name|bool
+name|capturesVariableArrayType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getCaptureKind
+argument_list|()
+operator|==
+name|VCK_VLAType
 return|;
 block|}
 comment|/// \brief Retrieve the declaration of the variable being captured.
 comment|///
-comment|/// This operation is only valid if this capture does not capture 'this'.
+comment|/// This operation is only valid if this capture captures a variable.
 name|VarDecl
 operator|*
 name|getCapturedVar
@@ -9251,11 +9642,10 @@ specifier|const
 block|{
 name|assert
 argument_list|(
-operator|!
-name|capturesThis
+name|capturesVariable
 argument_list|()
 operator|&&
-literal|"No variable available for 'this' capture"
+literal|"No variable available for 'this' or VAT capture"
 argument_list|)
 block|;
 return|return
@@ -9567,6 +9957,55 @@ name|Capture
 modifier|*
 name|const_capture_iterator
 typedef|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|capture_iterator
+operator|>
+name|capture_range
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|const_capture_iterator
+operator|>
+name|capture_const_range
+expr_stmt|;
+name|capture_range
+name|captures
+argument_list|()
+block|{
+return|return
+name|capture_range
+argument_list|(
+name|capture_begin
+argument_list|()
+argument_list|,
+name|capture_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|capture_const_range
+name|captures
+argument_list|()
+specifier|const
+block|{
+return|return
+name|capture_const_range
+argument_list|(
+name|capture_begin
+argument_list|()
+argument_list|,
+name|capture_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// \brief Retrieve an iterator pointing to the first capture.
 name|capture_iterator
 name|capture_begin
@@ -9618,6 +10057,31 @@ modifier|*
 modifier|*
 name|capture_init_iterator
 typedef|;
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|capture_init_iterator
+operator|>
+name|capture_init_range
+expr_stmt|;
+name|capture_init_range
+name|capture_inits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|capture_init_range
+argument_list|(
+name|capture_init_begin
+argument_list|()
+argument_list|,
+name|capture_init_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// \brief Retrieve the first initialization argument.
 name|capture_init_iterator
 name|capture_init_begin

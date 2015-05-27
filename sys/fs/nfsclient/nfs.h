@@ -97,6 +97,86 @@ define|\
 value|(VFSTONFS((v)->v_mount)->nm_flag& (NFSMNT_NFSV3 | NFSMNT_NFSV4))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nfs_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NFS_DEBUG_ASYNCIO
+value|1
+end_define
+
+begin_comment
+comment|/* asynchronous i/o */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_DEBUG_WG
+value|2
+end_define
+
+begin_comment
+comment|/* server write gathering */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_DEBUG_RC
+value|4
+end_define
+
+begin_comment
+comment|/* server request caching */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NFS_DPF
+parameter_list|(
+name|cat
+parameter_list|,
+name|args
+parameter_list|)
+define|\
+value|do {							\ 		if (nfs_debug& NFS_DEBUG_##cat) printf args;	\ 	} while (0)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|NFS_DPF
+parameter_list|(
+name|cat
+parameter_list|,
+name|args
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * NFS iod threads can be in one of these three states once spawned.  * NFSIOD_NOT_AVAILABLE - Cannot be assigned an I/O operation at this time.  * NFSIOD_AVAILABLE - Available to be assigned an I/O operation.  * NFSIOD_CREATED_FOR_NFS_ASYNCIO - Newly created for nfs_asyncio() and  *	will be used by the thread that called nfs_asyncio().  */
 end_comment

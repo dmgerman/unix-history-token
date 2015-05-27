@@ -141,7 +141,6 @@ comment|/// executable code.
 comment|///
 comment|/// The value of \p Alignment must be a power of two.  If \p Alignment is zero
 comment|/// a default alignment of 16 will be used.
-name|virtual
 name|uint8_t
 operator|*
 name|allocateCodeSection
@@ -154,13 +153,13 @@ argument|unsigned SectionID
 argument_list|,
 argument|StringRef SectionName
 argument_list|)
+name|override
 block|;
 comment|/// \brief Allocates a memory block of (at least) the given size suitable for
 comment|/// executable code.
 comment|///
 comment|/// The value of \p Alignment must be a power of two.  If \p Alignment is zero
 comment|/// a default alignment of 16 will be used.
-name|virtual
 name|uint8_t
 operator|*
 name|allocateDataSection
@@ -175,6 +174,7 @@ argument|StringRef SectionName
 argument_list|,
 argument|bool isReadOnly
 argument_list|)
+name|override
 block|;
 comment|/// \brief Update section-specific memory permissions and other attributes.
 comment|///
@@ -187,18 +187,12 @@ comment|/// until this function has been called.  In addition, any cache coheren
 comment|/// operations needed to reliably use the memory are also performed.
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
-name|virtual
 name|bool
 name|finalizeMemory
 argument_list|(
-name|std
-operator|::
-name|string
-operator|*
-name|ErrMsg
-operator|=
-literal|0
+argument|std::string *ErrMsg = nullptr
 argument_list|)
+name|override
 block|;
 comment|/// \brief Invalidate instruction cache for code sections.
 comment|///
@@ -254,6 +248,8 @@ argument_list|,
 argument|unsigned Alignment
 argument_list|)
 block|;
+name|std
+operator|::
 name|error_code
 name|applyMemoryGroupPermissions
 argument_list|(

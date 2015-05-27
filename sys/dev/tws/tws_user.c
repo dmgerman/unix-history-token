@@ -47,9 +47,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
-name|proc
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -236,9 +237,10 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|d_thread_t
+name|struct
+name|thread
 modifier|*
-name|proc
+name|td
 parameter_list|)
 block|{
 name|struct

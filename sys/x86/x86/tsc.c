@@ -2208,10 +2208,12 @@ goto|goto
 name|init
 goto|;
 block|}
-comment|/* 	 * We cannot use the TSC if it stops incrementing in deep sleep. 	 * Currently only Intel CPUs are known for this problem unless 	 * the invariant TSC bit is set. 	 */
+comment|/* 	 * Intel CPUs without a C-state invariant TSC can stop the TSC 	 * in either C2 or C3.  Disable use of C2 and C3 while using 	 * the TSC as the timecounter.  The timecounter can be changed 	 * to enable C2 and C3. 	 * 	 * Note that the TSC is used as the cputicker for computing 	 * thread runtime regardless of the timecounter setting, so 	 * using an alternate timecounter and enabling C2 or C3 can 	 * result incorrect runtimes for kernel idle threads (but not 	 * for any non-idle threads). 	 */
 if|if
 condition|(
-name|cpu_can_deep_sleep
+name|cpu_deepest_sleep
+operator|>=
+literal|2
 operator|&&
 name|cpu_vendor_id
 operator|==
@@ -2228,16 +2230,9 @@ condition|)
 block|{
 name|tsc_timecounter
 operator|.
-name|tc_quality
-operator|=
-operator|-
-literal|1000
-expr_stmt|;
-name|tsc_timecounter
-operator|.
 name|tc_flags
 operator||=
-name|TC_FLAGS_C3STOP
+name|TC_FLAGS_C2STOP
 expr_stmt|;
 if|if
 condition|(
@@ -2245,12 +2240,9 @@ name|bootverbose
 condition|)
 name|printf
 argument_list|(
-literal|"TSC timecounter disabled: C3 enabled.\n"
+literal|"TSC timecounter disables C2 and C3.\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|init
-goto|;
 block|}
 comment|/* 	 * We can not use the TSC in SMP mode unless the TSCs on all CPUs 	 * are synchronized.  If the user is sure that the system has 	 * synchronized TSCs, set kern.timecounter.smp_tsc tunable to a 	 * non-zero value.  The TSC seems unreliable in virtualized SMP 	 * environments, so it is set to a negative quality in those cases. 	 */
 if|if
@@ -3038,6 +3030,11 @@ name|struct
 name|vdso_timehands
 modifier|*
 name|vdso_th
+parameter_list|,
+name|struct
+name|timecounter
+modifier|*
+name|tc
 parameter_list|)
 block|{
 name|vdso_th
@@ -3050,7 +3047,7 @@ operator|)
 operator|(
 name|intptr_t
 operator|)
-name|timecounter
+name|tc
 operator|->
 name|tc_priv
 expr_stmt|;
@@ -3070,7 +3067,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|timecounter
+name|tc
 operator|==
 operator|&
 name|tsc_timecounter
@@ -3093,6 +3090,11 @@ name|struct
 name|vdso_timehands32
 modifier|*
 name|vdso_th32
+parameter_list|,
+name|struct
+name|timecounter
+modifier|*
+name|tc
 parameter_list|)
 block|{
 name|vdso_th32
@@ -3105,7 +3107,7 @@ operator|)
 operator|(
 name|intptr_t
 operator|)
-name|timecounter
+name|tc
 operator|->
 name|tc_priv
 expr_stmt|;
@@ -3125,7 +3127,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|timecounter
+name|tc
 operator|==
 operator|&
 name|tsc_timecounter

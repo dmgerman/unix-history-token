@@ -70,12 +70,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/MCRelocationInfo.h"
 end_include
 
@@ -89,6 +83,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/DataTypes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -138,7 +144,9 @@ name|MCContext
 modifier|&
 name|Ctx
 decl_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MCRelocationInfo
 operator|>
@@ -153,14 +161,25 @@ name|MCContext
 operator|&
 name|Ctx
 argument_list|,
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MCRelocationInfo
 operator|>
-operator|&
 name|RelInfo
 argument_list|)
-expr_stmt|;
+operator|:
+name|Ctx
+argument_list|(
+name|Ctx
+argument_list|)
+operator|,
+name|RelInfo
+argument_list|(
+argument|std::move(RelInfo)
+argument_list|)
+block|{   }
 name|virtual
 operator|~
 name|MCSymbolizer

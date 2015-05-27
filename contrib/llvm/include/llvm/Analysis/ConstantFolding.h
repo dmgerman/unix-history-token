@@ -134,14 +134,14 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 specifier|const
 name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// ConstantFoldConstantExpression - Attempt to fold the constant expression
@@ -161,14 +161,14 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 specifier|const
 name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// ConstantFoldInstOperands - Attempt to constant fold an instruction with the
@@ -200,14 +200,14 @@ name|DataLayout
 operator|*
 name|TD
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 specifier|const
 name|TargetLibraryInfo
 operator|*
 name|TLI
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// ConstantFoldCompareInstOperands - Attempt to constant fold a compare
@@ -234,14 +234,14 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 specifier|const
 name|TargetLibraryInfo
 modifier|*
 name|TLI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// ConstantFoldInsertValueInstruction - Attempt to constant fold an insertvalue
@@ -282,7 +282,7 @@ name|DataLayout
 modifier|*
 name|TD
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// ConstantFoldLoadThroughGEPConstantExpr - Given a constant and a
@@ -354,7 +354,7 @@ name|TargetLibraryInfo
 operator|*
 name|TLI
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 block|}

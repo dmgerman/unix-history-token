@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/FileSystem.h"
+file|<system_error>
 end_include
 
 begin_decl_stmt
@@ -90,6 +90,12 @@ block|{
 name|class
 name|format_object_base
 decl_stmt|;
+name|class
+name|FormattedString
+decl_stmt|;
+name|class
+name|FormattedNumber
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -98,6 +104,19 @@ operator|>
 name|class
 name|SmallVectorImpl
 expr_stmt|;
+name|namespace
+name|sys
+block|{
+name|namespace
+name|fs
+block|{
+enum_decl|enum
+name|OpenFlags
+enum_decl|:
+name|unsigned
+enum_decl|;
+block|}
+block|}
 comment|/// raw_ostream - This class implements an extremely fast bulk output stream
 comment|/// that can *only* output to a stream.  It does not support seeking, reopening,
 comment|/// rewinding, line buffered disciplines etc. It is a simple buffer that outputs
@@ -209,7 +228,7 @@ name|OutBufEnd
 operator|=
 name|OutBufCur
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 name|virtual
@@ -277,7 +296,7 @@ name|Unbuffered
 operator|&&
 name|OutBufStart
 operator|==
-literal|0
+name|nullptr
 condition|)
 return|return
 name|preferred_buffer_size
@@ -303,7 +322,7 @@ argument_list|()
 expr_stmt|;
 name|SetBufferAndMode
 argument_list|(
-literal|0
+name|nullptr
 argument_list|,
 literal|0
 argument_list|,
@@ -471,11 +490,16 @@ block|;
 comment|// Make sure we can use the fast path.
 if|if
 condition|(
-name|OutBufCur
-operator|+
 name|Size
 operator|>
+call|(
+name|size_t
+call|)
+argument_list|(
 name|OutBufEnd
+operator|-
+name|OutBufCur
+argument_list|)
 condition|)
 return|return
 name|write
@@ -796,6 +820,40 @@ specifier|const
 name|format_object_base
 operator|&
 name|Fmt
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Formatted output, see the leftJustify() function in Support/Format.h.
+end_comment
+
+begin_expr_stmt
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|FormattedString
+operator|&
+operator|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Formatted output, see the formatHex() function in Support/Format.h.
+end_comment
+
+begin_expr_stmt
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|FormattedNumber
+operator|&
 operator|)
 expr_stmt|;
 end_expr_stmt
@@ -1299,7 +1357,6 @@ name|uint64_t
 name|pos
 block|;
 comment|/// write_impl - See raw_ostream::write_impl.
-name|virtual
 name|void
 name|write_impl
 argument_list|(
@@ -1307,28 +1364,26 @@ argument|const char *Ptr
 argument_list|,
 argument|size_t Size
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|/// current_pos - Return the current position within the stream, not
 comment|/// counting the bytes currently in the buffer.
-name|virtual
 name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 name|pos
 return|;
 block|}
 comment|/// preferred_buffer_size - Determine an efficient buffer size.
-name|virtual
 name|size_t
 name|preferred_buffer_size
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|/// error_detected - Set the flag indicating that an output error has
 comment|/// been encountered.
@@ -1342,10 +1397,10 @@ name|true
 block|; }
 name|public
 operator|:
-comment|/// raw_fd_ostream - Open the specified file for writing. If an error occurs,
-comment|/// information about the error is put into ErrorInfo, and the stream should
-comment|/// be immediately destroyed; the string will be empty if no error occurred.
-comment|/// This allows optional flags to control how the file will be opened.
+comment|/// Open the specified file for writing. If an error occurs, information
+comment|/// about the error is put into EC, and the stream should be immediately
+comment|/// destroyed;
+comment|/// \p Flags allows optional flags to control how the file will be opened.
 comment|///
 comment|/// As a special case, if Filename is "-", then the stream will use
 comment|/// STDOUT_FILENO instead of opening a file. Note that it will still consider
@@ -1354,11 +1409,11 @@ comment|/// file descriptor when it is done (this is necessary to detect
 comment|/// output errors).
 name|raw_fd_ostream
 argument_list|(
-argument|const char *Filename
+argument|StringRef Filename
 argument_list|,
-argument|std::string&ErrorInfo
+argument|std::error_code&EC
 argument_list|,
-argument|sys::fs::OpenFlags Flags = sys::fs::F_None
+argument|sys::fs::OpenFlags Flags
 argument_list|)
 block|;
 comment|/// raw_fd_ostream ctor - FD is the file descriptor that this writes to.  If
@@ -1406,7 +1461,6 @@ name|UseAtomicWrites
 operator|=
 name|Value
 block|;   }
-name|virtual
 name|raw_ostream
 operator|&
 name|changeColor
@@ -1417,35 +1471,31 @@ argument|bool bold=false
 argument_list|,
 argument|bool bg=false
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|raw_ostream
 operator|&
 name|resetColor
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|raw_ostream
 operator|&
 name|reverseColor
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|is_displayed
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|has_colors
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|/// has_error - Return the value of the flag in this raw_fd_ostream indicating
 comment|/// whether an output error has been encountered.
@@ -1518,7 +1568,6 @@ operator|&
 name|OS
 block|;
 comment|/// write_impl - See raw_ostream::write_impl.
-name|virtual
 name|void
 name|write_impl
 argument_list|(
@@ -1526,16 +1575,15 @@ argument|const char *Ptr
 argument_list|,
 argument|size_t Size
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|/// current_pos - Return the current position within the stream, not
 comment|/// counting the bytes currently in the buffer.
-name|virtual
 name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 name|OS
@@ -1600,7 +1648,6 @@ operator|&
 name|OS
 block|;
 comment|/// write_impl - See raw_ostream::write_impl.
-name|virtual
 name|void
 name|write_impl
 argument_list|(
@@ -1608,16 +1655,15 @@ argument|const char *Ptr
 argument_list|,
 argument|size_t Size
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|/// current_pos - Return the current position within the stream, not
 comment|/// counting the bytes currently in the buffer.
-name|virtual
 name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 name|public
 operator|:
@@ -1662,7 +1708,6 @@ name|public
 name|raw_ostream
 block|{
 comment|/// write_impl - See raw_ostream::write_impl.
-name|virtual
 name|void
 name|write_impl
 argument_list|(
@@ -1670,16 +1715,15 @@ argument|const char *Ptr
 argument_list|,
 argument|size_t size
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
 comment|/// current_pos - Return the current position within the stream, not
 comment|/// counting the bytes currently in the buffer.
-name|virtual
 name|uint64_t
 name|current_pos
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|;
 name|public
 operator|:

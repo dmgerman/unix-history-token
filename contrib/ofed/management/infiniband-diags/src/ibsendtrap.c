@@ -48,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<infiniband/iba/ib_types.h>
+file|<iba/ib_types.h>
 end_include
 
 begin_include

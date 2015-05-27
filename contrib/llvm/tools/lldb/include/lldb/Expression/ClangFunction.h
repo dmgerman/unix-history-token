@@ -204,6 +204,11 @@ specifier|const
 name|ValueList
 operator|&
 name|arg_value_list
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|name
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -247,6 +252,11 @@ specifier|const
 name|ValueList
 operator|&
 name|arg_value_list
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|name
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
@@ -435,9 +445,11 @@ comment|/// @param[out] results
 comment|///     The result value will be put here after running the function.
 comment|///
 comment|/// @return
-comment|///     Returns one of the ExecutionResults enum indicating function call status.
+comment|///     Returns one of the ExpressionResults enum indicating function call status.
 comment|//------------------------------------------------------------------
-name|ExecutionResults
+name|lldb
+operator|::
+name|ExpressionResults
 name|ExecuteFunction
 argument_list|(
 name|ExecutionContext
@@ -487,10 +499,11 @@ comment|/// @param[in] unwind_on_error
 comment|///     True if the thread plan may simply be discarded if an error occurs.
 comment|///
 comment|/// @return
-comment|///     A ThreadPlan for executing the function.
+comment|///     A ThreadPlan shared pointer for executing the function.
 comment|//------------------------------------------------------------------
-name|ThreadPlan
-operator|*
+name|lldb
+operator|::
+name|ThreadPlanSP
 name|GetThreadPlanToCallFunction
 argument_list|(
 argument|ExecutionContext&exe_ctx
@@ -668,6 +681,16 @@ operator|:
 comment|//------------------------------------------------------------------
 comment|// For ClangFunction only
 comment|//------------------------------------------------------------------
+comment|// Note: the parser needs to be destructed before the execution unit, so
+comment|// declare the the execution unit first.
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|IRExecutionUnit
+operator|>
+name|m_execution_unit_sp
+block|;
 name|std
 operator|::
 name|unique_ptr
@@ -677,14 +700,17 @@ operator|>
 name|m_parser
 block|;
 comment|///< The parser responsible for compiling the function.
+name|lldb
+operator|::
+name|ModuleWP
+name|m_jit_module_wp
+block|;
 name|std
 operator|::
-name|unique_ptr
-operator|<
-name|IRExecutionUnit
-operator|>
-name|m_execution_unit_ap
+name|string
+name|m_name
 block|;
+comment|///< The name of this clang function - for debugging purposes.
 name|Function
 operator|*
 name|m_function_ptr

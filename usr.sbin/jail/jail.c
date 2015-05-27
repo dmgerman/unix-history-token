@@ -426,6 +426,8 @@ name|IP_MOUNT_DEVFS
 block|,
 name|IP_MOUNT_FDESCFS
 block|,
+name|IP_MOUNT_PROCFS
+block|,
 name|IP_EXEC_PRESTART
 block|,
 name|IP__OP
@@ -463,6 +465,8 @@ block|,
 name|IP__OP
 block|,
 name|IP_EXEC_POSTSTOP
+block|,
+name|IP_MOUNT_PROCFS
 block|,
 name|IP_MOUNT_FDESCFS
 block|,
@@ -3376,14 +3380,6 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * The jail already exists, but may be dying. 		 * Make sure it is, in which case an update is appropriate. 		 */
-operator|*
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
 name|jiov
 index|[
 literal|0
@@ -3391,7 +3387,13 @@ index|]
 operator|.
 name|iov_base
 operator|=
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 literal|"jid"
+argument_list|)
 expr_stmt|;
 name|jiov
 index|[
@@ -3427,14 +3429,6 @@ argument_list|(
 name|jid
 argument_list|)
 expr_stmt|;
-operator|*
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
 name|jiov
 index|[
 literal|2
@@ -3442,7 +3436,13 @@ index|]
 operator|.
 name|iov_base
 operator|=
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 literal|"dying"
+argument_list|)
 expr_stmt|;
 name|jiov
 index|[
@@ -3770,14 +3770,6 @@ operator|&=
 operator|~
 name|JF_PERSIST
 expr_stmt|;
-operator|*
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
 name|jiov
 index|[
 literal|0
@@ -3785,7 +3777,13 @@ index|]
 operator|.
 name|iov_base
 operator|=
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 literal|"jid"
+argument_list|)
 expr_stmt|;
 name|jiov
 index|[
@@ -3825,14 +3823,6 @@ operator|->
 name|jid
 argument_list|)
 expr_stmt|;
-operator|*
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
 name|jiov
 index|[
 literal|2
@@ -3840,7 +3830,13 @@ index|]
 operator|.
 name|iov_base
 operator|=
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 literal|"nopersist"
+argument_list|)
 expr_stmt|;
 name|jiov
 index|[
@@ -4666,14 +4662,6 @@ literal|1
 expr_stmt|;
 return|return;
 block|}
-operator|*
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
 name|jiov
 index|[
 literal|0
@@ -4681,7 +4669,13 @@ index|]
 operator|.
 name|iov_base
 operator|=
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 literal|"jid"
+argument_list|)
 expr_stmt|;
 name|jiov
 index|[
@@ -4736,14 +4730,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-operator|*
-operator|(
-specifier|const
-name|void
-operator|*
-operator|*
-operator|)
-operator|&
 name|jiov
 index|[
 literal|0
@@ -4751,7 +4737,13 @@ index|]
 operator|.
 name|iov_base
 operator|=
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
 literal|"name"
+argument_list|)
 expr_stmt|;
 name|jiov
 index|[
@@ -4926,7 +4918,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set jail parameters and possible print them out.  */
+comment|/*  * Set jail parameters and possibly print them out.  */
 end_comment
 
 begin_function

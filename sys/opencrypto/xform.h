@@ -8,7 +8,7 @@ comment|/*	$OpenBSD: xform.h,v 1.8 2001/08/28 12:20:43 ben Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * The author of this code is Angelos D. Keromytis (angelos@cis.upenn.edu)  *  * This code was written by Angelos D. Keromytis in Athens, Greece, in  * February 2000. Network Security Technologies Inc. (NSTI) kindly  * supported the development of this code.  *  * Copyright (c) 2000 Angelos D. Keromytis  *  * Permission to use, copy, and modify this software without fee  * is hereby granted, provided that this entire notice is included in  * all source code copies of any software which is or includes a copy or  * modification of this software.   *  * THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTY. IN PARTICULAR, NONE OF THE AUTHORS MAKES ANY  * REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE  * MERCHANTABILITY OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR  * PURPOSE.  */
+comment|/*-  * The author of this code is Angelos D. Keromytis (angelos@cis.upenn.edu)  *  * This code was written by Angelos D. Keromytis in Athens, Greece, in  * February 2000. Network Security Technologies Inc. (NSTI) kindly  * supported the development of this code.  *  * Copyright (c) 2000 Angelos D. Keromytis  * Copyright (c) 2014 The FreeBSD Foundation  * All rights reserved.  *  * Portions of this software were developed by John-Mark Gurney  * under sponsorship of the FreeBSD Foundation and  * Rubicon Communications, LLC (Netgate).  *  * Permission to use, copy, and modify this software without fee  * is hereby granted, provided that this entire notice is included in  * all source code copies of any software which is or includes a copy or  * modification of this software.   *  * THIS SOFTWARE IS BEING PROVIDED "AS IS", WITHOUT ANY EXPRESS OR  * IMPLIED WARRANTY. IN PARTICULAR, NONE OF THE AUTHORS MAKES ANY  * REPRESENTATION OR WARRANTY OF ANY KIND CONCERNING THE  * MERCHANTABILITY OF THIS SOFTWARE OR ITS FITNESS FOR ANY PARTICULAR  * PURPOSE.  */
 end_comment
 
 begin_ifndef
@@ -47,6 +47,12 @@ directive|include
 file|<opencrypto/rmd160.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<opencrypto/gmac.h>
+end_include
+
 begin_comment
 comment|/* Declarations */
 end_comment
@@ -69,10 +75,10 @@ name|u_int16_t
 name|hashsize
 decl_stmt|;
 name|u_int16_t
-name|blocksize
+name|ctxsize
 decl_stmt|;
 name|u_int16_t
-name|ctxsize
+name|blocksize
 decl_stmt|;
 name|void
 function_decl|(
@@ -84,6 +90,38 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|Setkey
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|u_int8_t
+modifier|*
+parameter_list|,
+name|u_int16_t
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|Reinit
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|u_int8_t
+modifier|*
+parameter_list|,
+name|u_int16_t
+parameter_list|)
+function_decl|;
 name|int
 function_decl|(
 modifier|*
@@ -93,6 +131,7 @@ parameter_list|(
 name|void
 modifier|*
 parameter_list|,
+specifier|const
 name|u_int8_t
 modifier|*
 parameter_list|,
@@ -144,6 +183,9 @@ name|name
 decl_stmt|;
 name|u_int16_t
 name|blocksize
+decl_stmt|;
+name|u_int16_t
+name|ivsize
 decl_stmt|;
 name|u_int16_t
 name|minkey
@@ -290,6 +332,10 @@ decl_stmt|;
 name|SHA512_CTX
 name|sha512ctx
 decl_stmt|;
+name|struct
+name|aes_gmac_ctx
+name|aes_gmac_ctx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -347,6 +393,30 @@ specifier|extern
 name|struct
 name|enc_xform
 name|enc_xform_rijndael128
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|enc_xform
+name|enc_xform_aes_icm
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|enc_xform
+name|enc_xform_aes_nist_gcm
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|enc_xform
+name|enc_xform_aes_nist_gmac
 decl_stmt|;
 end_decl_stmt
 
@@ -443,6 +513,30 @@ specifier|extern
 name|struct
 name|auth_hash
 name|auth_hash_hmac_sha2_512
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|auth_hash
+name|auth_hash_nist_gmac_aes_128
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|auth_hash
+name|auth_hash_nist_gmac_aes_192
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|auth_hash
+name|auth_hash_nist_gmac_aes_256
 decl_stmt|;
 end_decl_stmt
 

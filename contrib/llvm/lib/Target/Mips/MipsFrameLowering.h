@@ -50,25 +50,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPS_FRAMEINFO_H
+name|LLVM_LIB_TARGET_MIPS_MIPSFRAMELOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPS_FRAMEINFO_H
+name|LLVM_LIB_TARGET_MIPS_MIPSFRAMELOWERING_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"Mips.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MipsSubtarget.h"
 end_include
 
 begin_include
@@ -129,10 +123,6 @@ name|MipsFrameLowering
 operator|*
 name|create
 argument_list|(
-name|MipsTargetMachine
-operator|&
-name|TM
-argument_list|,
 specifier|const
 name|MipsSubtarget
 operator|&
@@ -145,6 +135,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|protected
 operator|:

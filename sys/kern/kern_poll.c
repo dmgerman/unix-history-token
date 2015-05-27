@@ -1411,6 +1411,13 @@ decl_stmt|;
 name|int
 name|kern_load
 decl_stmt|;
+if|if
+condition|(
+name|poll_handlers
+operator|==
+literal|0
+condition|)
+return|return;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1625,6 +1632,13 @@ name|arg
 init|=
 name|POLL_ONLY
 decl_stmt|;
+if|if
+condition|(
+name|poll_handlers
+operator|==
+literal|0
+condition|)
+return|return;
 name|mtx_lock
 argument_list|(
 operator|&

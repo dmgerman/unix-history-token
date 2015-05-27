@@ -2420,7 +2420,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Handle being notified that we have data available for us in a TIM/ATIM.  *  * This may schedule a transition from _SLEEP -> _RUN if it's appropriate.  */
+comment|/*  * Handle being notified that we have data available for us in a TIM/ATIM.  *  * This may schedule a transition from _SLEEP -> _RUN if it's appropriate.  *  * In STA mode, we may have put to sleep during scan and need to be dragged  * back out of powersave mode.  */
 end_comment
 
 begin_function
@@ -2436,20 +2436,16 @@ name|int
 name|set
 parameter_list|)
 block|{
-comment|/* 	 * Schedule the driver state change.  It'll happen at some point soon. 	 * Since the hardware shouldn't know that we're running just yet 	 * (and thus tell the peer that we're awake before we actually wake 	 * up said hardware), we leave the actual node state transition 	 * up to the transition to RUN. 	 * 	 * XXX TODO: verify that the transition to RUN will wake up the 	 * BSS node! 	 */
-name|IEEE80211_DPRINTF
-argument_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
 name|vap
-argument_list|,
-name|IEEE80211_MSG_POWER
-argument_list|,
-literal|"%s: TIM=%d\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|set
-argument_list|)
-expr_stmt|;
+operator|->
+name|iv_ic
+decl_stmt|;
+comment|/* 	 * Schedule the driver state change.  It'll happen at some point soon. 	 * Since the hardware shouldn't know that we're running just yet 	 * (and thus tell the peer that we're awake before we actually wake 	 * up said hardware), we leave the actual node state transition 	 * up to the transition to RUN. 	 * 	 * XXX TODO: verify that the transition to RUN will wake up the 	 * BSS node! 	 */
 name|IEEE80211_LOCK
 argument_list|(
 name|vap
@@ -2475,6 +2471,60 @@ argument_list|(
 name|vap
 argument_list|,
 name|IEEE80211_S_RUN
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_POWER
+argument_list|,
+literal|"%s: TIM=%d; wakeup\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|set
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+operator|(
+name|set
+operator|==
+literal|1
+operator|)
+operator|&&
+operator|(
+name|ic
+operator|->
+name|ic_flags_ext
+operator|&
+name|IEEE80211_FEXT_BGSCAN
+operator|)
+condition|)
+block|{
+comment|/* 		 * XXX only do this if we're in RUN state? 		 */
+name|IEEE80211_DPRINTF
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_POWER
+argument_list|,
+literal|"%s: wake up from bgscan vap sleep\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+comment|/* 		 * We may be in BGSCAN mode - this means the VAP is is in STA 		 * mode powersave.  If it is, we need to wake it up so we 		 * can process outbound traffic. 		 */
+name|vap
+operator|->
+name|iv_sta_ps
+argument_list|(
+name|vap
 argument_list|,
 literal|0
 argument_list|)

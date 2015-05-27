@@ -100,7 +100,7 @@ comment|/*  * Character stream routines --  *	These routines return the file a c
 end_comment
 
 begin_comment
-comment|/*  * cs_init --  *	Initialize character stream routines.  *  * PUBLIC: int cs_init __P((SCR *, VCS *));  */
+comment|/*  * cs_init --  *	Initialize character stream routines.  *  * PUBLIC: int cs_init(SCR *, VCS *);  */
 end_comment
 
 begin_function
@@ -227,7 +227,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cs_next --  *	Retrieve the next character.  *  * PUBLIC: int cs_next __P((SCR *, VCS *));  */
+comment|/*  * cs_next --  *	Retrieve the next character.  *  * PUBLIC: int cs_next(SCR *, VCS *);  */
 end_comment
 
 begin_function
@@ -421,7 +421,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cs_fspace --  *	If on a space, eat forward until something other than a  *	whitespace character.  *  * XXX  * Semantics of checking the current character were coded for the fword()  * function -- once the other word routines are converted, they may have  * to change.  *  * PUBLIC: int cs_fspace __P((SCR *, VCS *));  */
+comment|/*  * cs_fspace --  *	If on a space, eat forward until something other than a  *	whitespace character.  *  * XXX  * Semantics of checking the current character were coded for the fword()  * function -- once the other word routines are converted, they may have  * to change.  *  * PUBLIC: int cs_fspace(SCR *, VCS *);  */
 end_comment
 
 begin_function
@@ -505,7 +505,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cs_fblank --  *	Eat forward to the next non-whitespace character.  *  * PUBLIC: int cs_fblank __P((SCR *, VCS *));  */
+comment|/*  * cs_fblank --  *	Eat forward to the next non-whitespace character.  *  * PUBLIC: int cs_fblank(SCR *, VCS *);  */
 end_comment
 
 begin_function
@@ -582,7 +582,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cs_prev --  *	Retrieve the previous character.  *  * PUBLIC: int cs_prev __P((SCR *, VCS *));  */
+comment|/*  * cs_prev --  *	Retrieve the previous character.  *  * PUBLIC: int cs_prev(SCR *, VCS *);  */
 end_comment
 
 begin_function
@@ -806,7 +806,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cs_bblank --  *	Eat backward to the next non-whitespace character.  *  * PUBLIC: int cs_bblank __P((SCR *, VCS *));  */
+comment|/*  * cs_bblank --  *	Eat backward to the next non-whitespace character.  *  * PUBLIC: int cs_bblank(SCR *, VCS *);  */
 end_comment
 
 begin_function

@@ -2589,7 +2589,7 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * do not bring the interface down, and do not anything with 	 * interface, if we are in VMnet mode. just close the device. 	 */
+comment|/* 	 * Do not bring the interface down, and do not anything with 	 * interface, if we are in VMnet mode. Just close the device. 	 */
 if|if
 condition|(
 operator|(
@@ -2609,8 +2609,14 @@ name|ifp
 operator|->
 name|if_flags
 operator|&
+operator|(
 name|IFF_UP
+operator||
+name|IFF_LINK0
 operator|)
+operator|)
+operator|==
+name|IFF_UP
 condition|)
 block|{
 name|mtx_unlock

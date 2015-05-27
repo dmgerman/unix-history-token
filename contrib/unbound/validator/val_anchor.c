@@ -2644,6 +2644,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -2734,6 +2738,10 @@ if|if
 condition|(
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -2770,6 +2778,10 @@ condition|(
 operator|!
 name|isspace
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|)
 name|c
 argument_list|)
 condition|)
@@ -2865,7 +2877,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|sldns_buffer_begin
@@ -3036,7 +3049,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|sldns_buffer_begin
@@ -3368,7 +3382,8 @@ operator|&&
 name|isspace
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|sldns_buffer_current
 argument_list|(

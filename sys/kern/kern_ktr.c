@@ -339,7 +339,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|uint64_t
 name|ktr_mask
 init|=
 name|KTR_MASK
@@ -347,7 +347,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
+name|uint64_t
 name|ktr_compile
 init|=
 name|KTR_COMPILE
@@ -442,7 +442,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_UQUAD
 argument_list|(
 name|_debug_ktr
 argument_list|,
@@ -700,9 +700,10 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
-name|int
+name|uint64_t
 name|mask
-decl_stmt|,
+decl_stmt|;
+name|int
 name|error
 decl_stmt|;
 name|mask
@@ -711,7 +712,7 @@ name|ktr_mask
 expr_stmt|;
 name|error
 operator|=
-name|sysctl_handle_int
+name|sysctl_handle_64
 argument_list|(
 name|oidp
 argument_list|,
@@ -758,7 +759,7 @@ name|OID_AUTO
 argument_list|,
 name|mask
 argument_list|,
-name|CTLTYPE_UINT
+name|CTLTYPE_U64
 operator||
 name|CTLFLAG_RWTUN
 argument_list|,
@@ -768,7 +769,7 @@ literal|0
 argument_list|,
 name|sysctl_debug_ktr_mask
 argument_list|,
-literal|"IU"
+literal|"QU"
 argument_list|,
 literal|"Bitmask of KTR event classes for which logging is enabled"
 argument_list|)
@@ -798,7 +799,7 @@ name|dummy
 name|__unused
 parameter_list|)
 block|{
-name|int
+name|uint64_t
 name|mask
 decl_stmt|;
 comment|/* Temporarily disable ktr in case malloc() is being traced. */
@@ -921,12 +922,13 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+name|uint64_t
+name|mask
+decl_stmt|;
 name|int
 name|entries
 decl_stmt|,
 name|error
-decl_stmt|,
-name|mask
 decl_stmt|;
 name|struct
 name|ktr_entry
@@ -984,13 +986,9 @@ name|mask
 operator|=
 name|ktr_mask
 expr_stmt|;
-name|atomic_store_rel_int
-argument_list|(
-operator|&
 name|ktr_mask
-argument_list|,
+operator|=
 literal|0
-argument_list|)
 expr_stmt|;
 comment|/* Wait for threads to go idle. */
 if|if
@@ -1067,13 +1065,9 @@ name|ktr_idx
 operator|=
 literal|0
 expr_stmt|;
-name|atomic_store_rel_int
-argument_list|(
-operator|&
 name|ktr_mask
-argument_list|,
+operator|=
 name|mask
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1527,7 +1521,7 @@ begin_function
 name|void
 name|ktr_tracepoint
 parameter_list|(
-name|u_int
+name|uint64_t
 name|mask
 parameter_list|,
 specifier|const

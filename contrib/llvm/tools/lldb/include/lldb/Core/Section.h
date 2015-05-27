@@ -402,7 +402,12 @@ argument|lldb::offset_t file_offset
 argument_list|,
 argument|lldb::offset_t file_size
 argument_list|,
+argument|uint32_t log2align
+argument_list|,
 argument|uint32_t flags
+argument_list|,
+argument|uint32_t target_byte_size =
+literal|1
 argument_list|)
 empty_stmt|;
 comment|// Create a section that is a child of parent_section_sp
@@ -429,7 +434,12 @@ argument|lldb::offset_t file_offset
 argument_list|,
 argument|lldb::offset_t file_size
 argument_list|,
+argument|uint32_t log2align
+argument_list|,
 argument|uint32_t flags
+argument_list|,
+argument|uint32_t target_byte_size =
+literal|1
 argument_list|)
 empty_stmt|;
 operator|~
@@ -767,6 +777,36 @@ return|return
 name|m_obj_file
 return|;
 block|}
+name|uint32_t
+name|GetLog2Align
+parameter_list|()
+block|{
+return|return
+name|m_log2align
+return|;
+block|}
+name|void
+name|SetLog2Align
+parameter_list|(
+name|uint32_t
+name|align
+parameter_list|)
+block|{
+name|m_log2align
+operator|=
+name|align
+expr_stmt|;
+block|}
+comment|// Get the number of host bytes required to hold a target byte
+name|uint32_t
+name|GetTargetByteSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_target_byte_size
+return|;
+block|}
 name|protected
 label|:
 name|ObjectFile
@@ -815,6 +855,10 @@ name|offset_t
 name|m_file_size
 expr_stmt|;
 comment|// Object file size (can be smaller than m_byte_size for zero filled sections...)
+name|uint32_t
+name|m_log2align
+decl_stmt|;
+comment|// log_2(align) of the section (i.e. section has to be aligned to 2^m_log2align)
 name|SectionList
 name|m_children
 decl_stmt|;
@@ -838,6 +882,11 @@ range|:
 literal|1
 decl_stmt|;
 comment|// This section is thread specific
+name|uint32_t
+name|m_target_byte_size
+decl_stmt|;
+comment|// Some architectures have non-8-bit byte size. This is specified as
+comment|// as a multiple number of a host bytes
 name|private
 label|:
 name|DISALLOW_COPY_AND_ASSIGN

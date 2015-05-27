@@ -1044,7 +1044,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void casper_message_connection(struct service *service, const nvlist_t *nvl) {  	service_connection_add(&service->s_connections, 	    nvlist_get_descriptor(nvl, "sock")); }  static void casper_message(const cap_channel_t *capcas, struct service *service) { 	const char *cmd; 	nvlist_t *nvl;  	nvl = cap_recv_nvlist(capcas); 	if (nvl == NULL) 		pjdlog_exit(1, "Unable to receive message from Casper"); 	cmd = nvlist_get_string(nvl, "cmd"); 	if (strcmp(cmd, "connection") == 0) 		casper_message_connection(service, nvl); 	else 		PJDLOG_ABORT("Unknown command from Casper: %s.", cmd); }
+unit|static void casper_message_connection(struct service *service, const nvlist_t *nvl) {  	service_connection_add(&service->s_connections, 	    nvlist_get_descriptor(nvl, "sock")); }  static void casper_message(const cap_channel_t *capcas, struct service *service) { 	const char *cmd; 	nvlist_t *nvl;  	nvl = cap_recv_nvlist(capcas, 0); 	if (nvl == NULL) 		pjdlog_exit(1, "Unable to receive message from Casper"); 	cmd = nvlist_get_string(nvl, "cmd"); 	if (strcmp(cmd, "connection") == 0) 		casper_message_connection(service, nvl); 	else 		PJDLOG_ABORT("Unknown command from Casper: %s.", cmd); }
 endif|#
 directive|endif
 end_endif
@@ -1087,6 +1087,8 @@ name|service_connection_get_chan
 argument_list|(
 name|sconn
 argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

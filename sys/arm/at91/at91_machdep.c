@@ -395,13 +395,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-name|uint32_t
-name|at91_master_clock
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* Static device mappings. */
 end_comment
@@ -2422,9 +2415,7 @@ name|CPU_CONTROL_MMU_ENABLE
 argument_list|)
 expr_stmt|;
 name|cpu_setup
-argument_list|(
-literal|""
-argument_list|)
+argument_list|()
 expr_stmt|;
 name|set_stackptrs
 argument_list|(

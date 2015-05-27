@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -118,6 +118,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ACPI_SIG_IORT
+value|"IORT"
+end_define
+
+begin_comment
+comment|/* IO Remapping Table */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|ACPI_SIG_IVRS
 value|"IVRS"
 end_define
@@ -157,6 +168,17 @@ end_define
 
 begin_comment
 comment|/* Management Controller Host Interface table */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_SIG_MSDM
+value|"MSDM"
+end_define
+
+begin_comment
+comment|/* Microsoft Data Management Table */
 end_comment
 
 begin_define
@@ -1116,6 +1138,13 @@ name|ACPI_DMAR_INTR_REMAP
 value|(1)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_DMAR_X2APIC_OPT_OUT
+value|(2)
+end_define
+
 begin_comment
 comment|/* DMAR subtable header */
 end_comment
@@ -1813,6 +1842,445 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*******************************************************************************  *  * IORT - IO Remapping Table  *  * Conforms to "IO Remapping Table System Software on ARM Platforms",  * Document number: ARM DEN 0049A, 2015  *  ******************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_iort
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+name|UINT32
+name|NodeCount
+decl_stmt|;
+name|UINT32
+name|NodeOffset
+decl_stmt|;
+name|UINT32
+name|Reserved
+decl_stmt|;
+block|}
+name|ACPI_TABLE_IORT
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * IORT subtables  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_iort_node
+block|{
+name|UINT8
+name|Type
+decl_stmt|;
+name|UINT16
+name|Length
+decl_stmt|;
+name|UINT8
+name|Revision
+decl_stmt|;
+name|UINT32
+name|Reserved
+decl_stmt|;
+name|UINT32
+name|MappingCount
+decl_stmt|;
+name|UINT32
+name|MappingOffset
+decl_stmt|;
+name|char
+name|NodeData
+index|[
+literal|1
+index|]
+decl_stmt|;
+block|}
+name|ACPI_IORT_NODE
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for subtable Type above */
+end_comment
+
+begin_enum
+enum|enum
+name|AcpiIortNodeType
+block|{
+name|ACPI_IORT_NODE_ITS_GROUP
+init|=
+literal|0x00
+block|,
+name|ACPI_IORT_NODE_NAMED_COMPONENT
+init|=
+literal|0x01
+block|,
+name|ACPI_IORT_NODE_PCI_ROOT_COMPLEX
+init|=
+literal|0x02
+block|,
+name|ACPI_IORT_NODE_SMMU
+init|=
+literal|0x03
+block|}
+enum|;
+end_enum
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_iort_id_mapping
+block|{
+name|UINT32
+name|InputBase
+decl_stmt|;
+comment|/* Lowest value in input range */
+name|UINT32
+name|IdCount
+decl_stmt|;
+comment|/* Number of IDs */
+name|UINT32
+name|OutputBase
+decl_stmt|;
+comment|/* Lowest value in output range */
+name|UINT32
+name|OutputReference
+decl_stmt|;
+comment|/* A reference to the output node */
+name|UINT32
+name|Flags
+decl_stmt|;
+block|}
+name|ACPI_IORT_ID_MAPPING
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Masks for Flags field above for IORT subtable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_ID_SINGLE_MAPPING
+value|(1)
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_iort_memory_access
+block|{
+name|UINT32
+name|CacheCoherency
+decl_stmt|;
+name|UINT8
+name|Hints
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+name|UINT8
+name|MemoryFlags
+decl_stmt|;
+block|}
+name|ACPI_IORT_MEMORY_ACCESS
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for CacheCoherency field above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_NODE_COHERENT
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* The device node is fully coherent */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_NODE_NOT_COHERENT
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* The device node is not coherent */
+end_comment
+
+begin_comment
+comment|/* Masks for Hints field above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_HT_TRANSIENT
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_HT_WRITE
+value|(1<<1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_HT_READ
+value|(1<<2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_HT_OVERRIDE
+value|(1<<3)
+end_define
+
+begin_comment
+comment|/* Masks for MemoryFlags field above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_MF_COHERENCY
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_MF_ATTRIBUTES
+value|(1<<1)
+end_define
+
+begin_comment
+comment|/*  * IORT node specific subtables  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_iort_its_group
+block|{
+name|UINT32
+name|ItsCount
+decl_stmt|;
+name|UINT32
+name|Identifiers
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* GIC ITS identifier arrary */
+block|}
+name|ACPI_IORT_ITS_GROUP
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_iort_named_component
+block|{
+name|UINT32
+name|NodeFlags
+decl_stmt|;
+name|UINT64
+name|MemoryProperties
+decl_stmt|;
+comment|/* Memory access properties */
+name|UINT8
+name|MemoryAddressLimit
+decl_stmt|;
+comment|/* Memory address size limit */
+name|char
+name|DeviceName
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* Path of namespace object */
+block|}
+name|ACPI_IORT_NAMED_COMPONENT
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_iort_root_complex
+block|{
+name|UINT64
+name|MemoryProperties
+decl_stmt|;
+comment|/* Memory access properties */
+name|UINT32
+name|AtsAttribute
+decl_stmt|;
+name|UINT32
+name|PciSegmentNumber
+decl_stmt|;
+block|}
+name|ACPI_IORT_ROOT_COMPLEX
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for AtsAttribute field above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_ATS_SUPPORTED
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* The root complex supports ATS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_ATS_UNSUPPORTED
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* The root complex doesn't support ATS */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_iort_smmu
+block|{
+name|UINT64
+name|BaseAddress
+decl_stmt|;
+comment|/* SMMU base address */
+name|UINT64
+name|Span
+decl_stmt|;
+comment|/* Length of memory range */
+name|UINT32
+name|Model
+decl_stmt|;
+name|UINT32
+name|Flags
+decl_stmt|;
+name|UINT32
+name|GlobalInterruptOffset
+decl_stmt|;
+name|UINT32
+name|ContextInterruptCount
+decl_stmt|;
+name|UINT32
+name|ContextInterruptOffset
+decl_stmt|;
+name|UINT32
+name|PmuInterruptCount
+decl_stmt|;
+name|UINT32
+name|PmuInterruptOffset
+decl_stmt|;
+name|UINT64
+name|Interrupts
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* Interrupt array */
+block|}
+name|ACPI_IORT_SMMU
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Values for Model field above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_SMMU_V1
+value|0x00000000
+end_define
+
+begin_comment
+comment|/* Generic SMMUv1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_SMMU_V2
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* Generic SMMUv2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_SMMU_CORELINK_MMU400
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* ARM Corelink MMU-400 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_SMMU_CORELINK_MMU500
+value|0x00000003
+end_define
+
+begin_comment
+comment|/* ARM Corelink MMU-500 */
+end_comment
+
+begin_comment
+comment|/* Masks for Flags field above */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_SMMU_DVM_SUPPORTED
+value|(1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_IORT_SMMU_COHERENT_WALK
+value|(1<<1)
+end_define
+
+begin_comment
 comment|/*******************************************************************************  *  * IVRS - I/O Virtualization Reporting Structure  *        Version 1  *  * Conforms to "AMD I/O Virtualization Technology (IOMMU) Specification",  * Revision 1.26, February 2009.  *  ******************************************************************************/
 end_comment
 
@@ -2360,7 +2828,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * LPIT - Low Power Idle Table  *  * Conforms to "ACPI Low Power Idle Table (LPIT) and _LPD Proposal (DRAFT)"  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * LPIT - Low Power Idle Table  *  * Conforms to "ACPI Low Power Idle Table (LPIT)" July 2014.  *  ******************************************************************************/
 end_comment
 
 begin_typedef
@@ -2420,9 +2888,10 @@ name|ACPI_LPIT_TYPE_NATIVE_CSTATE
 init|=
 literal|0x00
 block|,
-name|ACPI_LPIT_TYPE_SIMPLE_IO
+name|ACPI_LPIT_TYPE_RESERVED
 init|=
 literal|0x01
+comment|/* 1 and above are reserved */
 block|}
 enum|;
 end_enum
@@ -2478,50 +2947,6 @@ name|CounterFrequency
 decl_stmt|;
 block|}
 name|ACPI_LPIT_NATIVE
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* 0x01: Simple I/O based LPI structure */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_lpit_io
-block|{
-name|ACPI_LPIT_HEADER
-name|Header
-decl_stmt|;
-name|ACPI_GENERIC_ADDRESS
-name|EntryTrigger
-decl_stmt|;
-name|UINT32
-name|TriggerAction
-decl_stmt|;
-name|UINT64
-name|TriggerValue
-decl_stmt|;
-name|UINT64
-name|TriggerMask
-decl_stmt|;
-name|ACPI_GENERIC_ADDRESS
-name|MinimumIdleState
-decl_stmt|;
-name|UINT32
-name|Residency
-decl_stmt|;
-name|UINT32
-name|Latency
-decl_stmt|;
-name|ACPI_GENERIC_ADDRESS
-name|ResidencyCounter
-decl_stmt|;
-name|UINT64
-name|CounterFrequency
-decl_stmt|;
-block|}
-name|ACPI_LPIT_IO
 typedef|;
 end_typedef
 
@@ -2637,6 +3062,28 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*******************************************************************************  *  * MSDM - Microsoft Data Management table  *  * Conforms to "Microsoft Software Licensing Tables (SLIC and MSDM)",  * November 29, 2011. Copyright 2011 Microsoft  *  ******************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Basic MSDM table is only the common ACPI header */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_table_msdm
+block|{
+name|ACPI_TABLE_HEADER
+name|Header
+decl_stmt|;
+comment|/* Common ACPI table header */
+block|}
+name|ACPI_TABLE_MSDM
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*******************************************************************************  *  * MTMR - MID Timer Table  *        Version 1  *  * Conforms to "Simple Firmware Interface Specification",  * Draft 0.8.2, Oct 19, 2010  * NOTE: The ACPI MTMR is equivalent to the SFI MTMR table.  *  ******************************************************************************/
 end_comment
 
@@ -2678,7 +3125,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*******************************************************************************  *  * SLIC - Software Licensing Description Table  *        Version 1  *  * Conforms to "OEM Activation 2.0 for Windows Vista Operating Systems",  * Copyright 2006  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * SLIC - Software Licensing Description Table  *  * Conforms to "Microsoft Software Licensing Tables (SLIC and MSDM)",  * November 29, 2011. Copyright 2011 Microsoft  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -2696,156 +3143,6 @@ decl_stmt|;
 comment|/* Common ACPI table header */
 block|}
 name|ACPI_TABLE_SLIC
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Common SLIC subtable header */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_slic_header
-block|{
-name|UINT32
-name|Type
-decl_stmt|;
-name|UINT32
-name|Length
-decl_stmt|;
-block|}
-name|ACPI_SLIC_HEADER
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* Values for Type field above */
-end_comment
-
-begin_enum
-enum|enum
-name|AcpiSlicType
-block|{
-name|ACPI_SLIC_TYPE_PUBLIC_KEY
-init|=
-literal|0
-block|,
-name|ACPI_SLIC_TYPE_WINDOWS_MARKER
-init|=
-literal|1
-block|,
-name|ACPI_SLIC_TYPE_RESERVED
-init|=
-literal|2
-comment|/* 2 and greater are reserved */
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * SLIC Subtables, correspond to Type in ACPI_SLIC_HEADER  */
-end_comment
-
-begin_comment
-comment|/* 0: Public Key Structure */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_slic_key
-block|{
-name|ACPI_SLIC_HEADER
-name|Header
-decl_stmt|;
-name|UINT8
-name|KeyType
-decl_stmt|;
-name|UINT8
-name|Version
-decl_stmt|;
-name|UINT16
-name|Reserved
-decl_stmt|;
-name|UINT32
-name|Algorithm
-decl_stmt|;
-name|char
-name|Magic
-index|[
-literal|4
-index|]
-decl_stmt|;
-name|UINT32
-name|BitLength
-decl_stmt|;
-name|UINT32
-name|Exponent
-decl_stmt|;
-name|UINT8
-name|Modulus
-index|[
-literal|128
-index|]
-decl_stmt|;
-block|}
-name|ACPI_SLIC_KEY
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* 1: Windows Marker Structure */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_slic_marker
-block|{
-name|ACPI_SLIC_HEADER
-name|Header
-decl_stmt|;
-name|UINT32
-name|Version
-decl_stmt|;
-name|char
-name|OemId
-index|[
-name|ACPI_OEM_ID_SIZE
-index|]
-decl_stmt|;
-comment|/* ASCII OEM identification */
-name|char
-name|OemTableId
-index|[
-name|ACPI_OEM_TABLE_ID_SIZE
-index|]
-decl_stmt|;
-comment|/* ASCII OEM table identification */
-name|char
-name|WindowsFlag
-index|[
-literal|8
-index|]
-decl_stmt|;
-name|UINT32
-name|SlicVersion
-decl_stmt|;
-name|UINT8
-name|Reserved
-index|[
-literal|16
-index|]
-decl_stmt|;
-name|UINT8
-name|Signature
-index|[
-literal|128
-index|]
-decl_stmt|;
-block|}
-name|ACPI_SLIC_MARKER
 typedef|;
 end_typedef
 

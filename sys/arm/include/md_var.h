@@ -17,6 +17,13 @@ end_define
 
 begin_decl_stmt
 specifier|extern
+name|long
+name|Maxmem
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 name|char
 name|sigcode
 index|[]

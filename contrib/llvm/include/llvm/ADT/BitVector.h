@@ -143,6 +143,10 @@ decl_stmt|;
 comment|// Size of allocated memory in BitWord.
 name|public
 label|:
+typedef|typedef
+name|unsigned
+name|size_type
+typedef|;
 comment|// Encapsulation of a single bit.
 name|class
 name|reference
@@ -232,7 +236,10 @@ condition|)
 operator|*
 name|WordRef
 operator||=
-literal|1L
+name|BitWord
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 name|BitPos
 expr_stmt|;
@@ -242,7 +249,10 @@ name|WordRef
 operator|&=
 operator|~
 operator|(
-literal|1L
+name|BitWord
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 name|BitPos
 operator|)
@@ -265,7 +275,10 @@ name|WordRef
 operator|)
 operator|&
 operator|(
-literal|1L
+name|BitWord
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 name|BitPos
 operator|)
@@ -294,7 +307,7 @@ argument_list|)
 block|{
 name|Bits
 operator|=
-literal|0
+name|nullptr
 block|;   }
 comment|/// BitVector ctor - Creates a bitvector of specified number of bits. All
 comment|/// bits are initialized to the specified value.
@@ -376,7 +389,7 @@ condition|)
 block|{
 name|Bits
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|Capacity
 operator|=
@@ -433,12 +446,6 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_expr_stmt
 name|BitVector
 argument_list|(
@@ -470,10 +477,8 @@ name|RHS
 operator|.
 name|Bits
 operator|=
-literal|0
+name|nullptr
 block|;   }
-endif|#
-directive|endif
 operator|~
 name|BitVector
 argument_list|()
@@ -504,7 +509,7 @@ comment|/// size - Returns the number of bits in this bitvector.
 end_comment
 
 begin_expr_stmt
-name|unsigned
+name|size_type
 name|size
 argument_list|()
 specifier|const
@@ -520,7 +525,7 @@ comment|/// count - Returns the number of bits which are set.
 end_comment
 
 begin_expr_stmt
-name|unsigned
+name|size_type
 name|count
 argument_list|()
 specifier|const
@@ -1270,6 +1275,13 @@ name|unsigned
 name|Idx
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|Bits
+operator|&&
+literal|"Bits never allocated"
+argument_list|)
+expr_stmt|;
 name|Bits
 index|[
 name|Idx
@@ -1277,7 +1289,10 @@ operator|/
 name|BITWORD_SIZE
 index|]
 operator||=
-literal|1L
+name|BitWord
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|Idx
@@ -1459,6 +1474,12 @@ operator|)
 operator|-
 literal|1
 decl_stmt|;
+if|if
+condition|(
+name|I
+operator|<
+name|E
+condition|)
 name|Bits
 index|[
 name|I
@@ -1515,7 +1536,10 @@ index|]
 operator|&=
 operator|~
 operator|(
-literal|1L
+name|BitWord
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|Idx
@@ -1699,6 +1723,12 @@ operator|)
 operator|-
 literal|1
 decl_stmt|;
+if|if
+condition|(
+name|I
+operator|<
+name|E
+condition|)
 name|Bits
 index|[
 name|I
@@ -1777,7 +1807,10 @@ operator|/
 name|BITWORD_SIZE
 index|]
 operator|^=
-literal|1L
+name|BitWord
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|Idx
@@ -1848,7 +1881,10 @@ expr_stmt|;
 name|BitWord
 name|Mask
 init|=
-literal|1L
+name|BitWord
+argument_list|(
+literal|1
+argument_list|)
 operator|<<
 operator|(
 name|Idx
@@ -2717,6 +2753,18 @@ name|RHSWords
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|assert
+argument_list|(
+name|Capacity
+operator|>
+literal|0
+operator|&&
+literal|"negative capacity?"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 name|BitWord
 modifier|*
@@ -2789,15 +2837,8 @@ name|this
 return|;
 end_return
 
-begin_if
-unit|}
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_decl_stmt
-unit|const
+unit|}    const
 name|BitVector
 modifier|&
 name|operator
@@ -2860,7 +2901,7 @@ name|RHS
 operator|.
 name|Bits
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 end_expr_stmt
 
@@ -2871,14 +2912,8 @@ name|this
 return|;
 end_return
 
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
 begin_macro
-unit|void
+unit|}    void
 name|swap
 argument_list|(
 argument|BitVector&RHS
@@ -3285,6 +3320,15 @@ argument_list|,
 name|Capacity
 operator|*
 literal|2
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|Capacity
+operator|>
+literal|0
+operator|&&
+literal|"realloc-ing zero space"
 argument_list|)
 expr_stmt|;
 name|Bits

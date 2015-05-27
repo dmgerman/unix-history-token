@@ -4456,6 +4456,10 @@ literal|"BFD_RELOC_PPC64_PLTGOT16_LO_DS"
 block|,
 literal|"BFD_RELOC_PPC_TLS"
 block|,
+literal|"BFD_RELOC_PPC_TLSGD"
+block|,
+literal|"BFD_RELOC_PPC_TLSLD"
+block|,
 literal|"BFD_RELOC_PPC_DTPMOD"
 block|,
 literal|"BFD_RELOC_PPC_TPREL16"

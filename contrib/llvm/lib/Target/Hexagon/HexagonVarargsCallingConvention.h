@@ -180,7 +180,7 @@ operator|=
 name|true
 expr_stmt|;
 block|}
-comment|// Only assign registers for named (non varargs) arguments
+comment|// Only assign registers for named (non-varargs) arguments
 if|if
 condition|(
 operator|!
@@ -412,6 +412,9 @@ operator|.
 name|getTarget
 argument_list|()
 operator|.
+name|getSubtargetImpl
+argument_list|()
+operator|->
 name|getDataLayout
 argument_list|()
 operator|->
@@ -428,6 +431,9 @@ operator|.
 name|getTarget
 argument_list|()
 operator|.
+name|getSubtargetImpl
+argument_list|()
+operator|->
 name|getDataLayout
 argument_list|()
 operator|->
@@ -737,6 +743,9 @@ operator|.
 name|getTarget
 argument_list|()
 operator|.
+name|getSubtargetImpl
+argument_list|()
+operator|->
 name|getDataLayout
 argument_list|()
 operator|->
@@ -753,6 +762,9 @@ operator|.
 name|getTarget
 argument_list|()
 operator|.
+name|getSubtargetImpl
+argument_list|()
+operator|->
 name|getDataLayout
 argument_list|()
 operator|->

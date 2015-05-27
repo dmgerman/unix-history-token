@@ -340,7 +340,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Allow the administrator to limit the number of threads (CPUs) to use for  * netisr.  We don't check netisr_maxthreads before creating the thread for  * CPU 0, so in practice we ignore values<= 1.  This must be set at boot.  * We will create at most one thread per CPU.  */
+comment|/*  * Allow the administrator to limit the number of threads (CPUs) to use for  * netisr.  We don't check netisr_maxthreads before creating the thread for  * CPU 0. This must be set at boot. We will create at most one thread per CPU.  * By default we initialize this to 1 which would assign just 1 cpu (cpu0) and  * therefore only 1 workstream. If set to -1, netisr would use all cpus  * (mp_ncpus) and therefore would have those many workstreams. One workstream  * per thread (CPU).  */
 end_comment
 
 begin_decl_stmt
@@ -348,7 +348,6 @@ specifier|static
 name|int
 name|netisr_maxthreads
 init|=
-operator|-
 literal|1
 decl_stmt|;
 end_decl_stmt
@@ -2591,14 +2590,12 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-operator|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
-operator|)
+argument_list|)
+operator|==
+name|M_HASHTYPE_NONE
 operator|&&
 name|npp
 operator|->
@@ -2632,11 +2629,12 @@ return|;
 block|}
 if|if
 condition|(
+name|M_HASHTYPE_GET
+argument_list|(
 name|m
-operator|->
-name|m_flags
-operator|&
-name|M_FLOWID
+argument_list|)
+operator|!=
+name|M_HASHTYPE_NONE
 condition|)
 block|{
 operator|*
@@ -4514,13 +4512,32 @@ expr_stmt|;
 if|if
 condition|(
 name|netisr_maxthreads
+operator|==
+literal|0
+operator|||
+name|netisr_maxthreads
 operator|<
+operator|-
 literal|1
 condition|)
 name|netisr_maxthreads
 operator|=
 literal|1
 expr_stmt|;
+comment|/* default behavior */
+elseif|else
+if|if
+condition|(
+name|netisr_maxthreads
+operator|==
+operator|-
+literal|1
+condition|)
+name|netisr_maxthreads
+operator|=
+name|mp_ncpus
+expr_stmt|;
+comment|/* use max cpus */
 if|if
 condition|(
 name|netisr_maxthreads

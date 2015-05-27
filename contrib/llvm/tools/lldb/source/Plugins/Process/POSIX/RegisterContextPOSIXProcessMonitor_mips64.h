@@ -46,7 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"Plugins/Process/POSIX/RegisterContextPOSIX_mips64.h"
+file|"Plugins/Process/Utility/RegisterContextPOSIX_mips64.h"
 end_include
 
 begin_decl_stmt
@@ -67,7 +67,7 @@ argument|lldb_private::Thread&thread
 argument_list|,
 argument|uint32_t concrete_frame_idx
 argument_list|,
-argument|RegisterInfoInterface *register_info
+argument|lldb_private::RegisterInfoInterface *register_info
 argument_list|)
 empty_stmt|;
 name|protected

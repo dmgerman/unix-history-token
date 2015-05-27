@@ -822,7 +822,7 @@ decl_stmt|;
 comment|/* cyclic id */
 else|#
 directive|else
-comment|/* FreeBSD */
+comment|/* !illumos */
 ifdef|#
 directive|ifdef
 name|_KERNEL
@@ -895,7 +895,7 @@ decl_stmt|;
 comment|/* number of opens */
 ifndef|#
 directive|ifndef
-name|sun
+name|illumos
 name|boolean_t
 name|spa_splitting_newspa
 decl_stmt|;

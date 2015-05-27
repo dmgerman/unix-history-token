@@ -179,7 +179,13 @@ block|,
 name|MODULE_CODE_GCNAME
 init|=
 literal|11
+block|,
 comment|// GCNAME: [strchr x N]
+name|MODULE_CODE_COMDAT
+init|=
+literal|12
+block|,
+comment|// COMDAT: [selection_kind, name]
 block|}
 enum|;
 comment|/// PARAMATTR blocks have code for defining a parameter attribute set.
@@ -353,30 +359,46 @@ init|=
 literal|1
 block|,
 comment|// MDSTRING:      [values]
-comment|// 2 is unused.
-comment|// 3 is unused.
+name|METADATA_VALUE
+init|=
+literal|2
+block|,
+comment|// VALUE:         [type num, value num]
+name|METADATA_NODE
+init|=
+literal|3
+block|,
+comment|// NODE:          [n x md num]
 name|METADATA_NAME
 init|=
 literal|4
 block|,
 comment|// STRING:        [values]
-comment|// 5 is unused.
+name|METADATA_DISTINCT_NODE
+init|=
+literal|5
+block|,
+comment|// DISTINCT_NODE: [n x md num]
 name|METADATA_KIND
 init|=
 literal|6
 block|,
 comment|// [n x [id, name]]
-comment|// 7 is unused.
-name|METADATA_NODE
+name|METADATA_LOCATION
+init|=
+literal|7
+block|,
+comment|// [distinct, line, col, scope, inlined-at?]
+name|METADATA_OLD_NODE
 init|=
 literal|8
 block|,
-comment|// NODE:          [n x (type num, value num)]
-name|METADATA_FN_NODE
+comment|// OLD_NODE:      [n x (type num, value num)]
+name|METADATA_OLD_FN_NODE
 init|=
 literal|9
 block|,
-comment|// FN_NODE:       [n x (type num, value num)]
+comment|// OLD_FN_NODE:   [n x (type num, value num)]
 name|METADATA_NAMED_NODE
 init|=
 literal|10
@@ -841,7 +863,7 @@ name|FUNC_CODE_INST_ALLOCA
 init|=
 literal|19
 block|,
-comment|// ALLOCA:     [instty, op, align]
+comment|// ALLOCA:     [instty, opty, op, align]
 name|FUNC_CODE_INST_LOAD
 init|=
 literal|20
@@ -906,7 +928,7 @@ name|FUNC_CODE_INST_CALL
 init|=
 literal|34
 block|,
-comment|// CALL:       [attr, fnty, fnid, args...]
+comment|// CALL:    [attr, cc, fnty, fnid, args...]
 name|FUNC_CODE_DEBUG_LOC
 init|=
 literal|35
@@ -956,10 +978,15 @@ enum|;
 enum|enum
 name|UseListCodes
 block|{
-name|USELIST_CODE_ENTRY
+name|USELIST_CODE_DEFAULT
 init|=
 literal|1
-comment|// USELIST_CODE_ENTRY: TBD.
+block|,
+comment|// DEFAULT: [index..., value-id]
+name|USELIST_CODE_BB
+init|=
+literal|2
+comment|// BB: [index..., bb-id]
 block|}
 enum|;
 enum|enum
@@ -1113,7 +1140,47 @@ block|,
 name|ATTR_KIND_OPTIMIZE_NONE
 init|=
 literal|37
+block|,
+name|ATTR_KIND_IN_ALLOCA
+init|=
+literal|38
+block|,
+name|ATTR_KIND_NON_NULL
+init|=
+literal|39
+block|,
+name|ATTR_KIND_JUMP_TABLE
+init|=
+literal|40
+block|,
+name|ATTR_KIND_DEREFERENCEABLE
+init|=
+literal|41
 block|}
+enum|;
+enum|enum
+name|ComdatSelectionKindCodes
+block|{
+name|COMDAT_SELECTION_KIND_ANY
+init|=
+literal|1
+block|,
+name|COMDAT_SELECTION_KIND_EXACT_MATCH
+init|=
+literal|2
+block|,
+name|COMDAT_SELECTION_KIND_LARGEST
+init|=
+literal|3
+block|,
+name|COMDAT_SELECTION_KIND_NO_DUPLICATES
+init|=
+literal|4
+block|,
+name|COMDAT_SELECTION_KIND_SAME_SIZE
+init|=
+literal|5
+block|,   }
 enum|;
 block|}
 comment|// End bitc namespace

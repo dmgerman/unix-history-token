@@ -4,15 +4,15 @@ comment|/* ssl/kssl.c -*- mode: C; c-file-style: "eay" -*- */
 end_comment
 
 begin_comment
-comment|/* Written by Vern Staats<staatsvr@asc.hpc.mil> for the OpenSSL project 2000.  */
+comment|/*  * Written by Vern Staats<staatsvr@asc.hpc.mil> for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/*  ssl/kssl.c  --  Routines to support (& debug) Kerberos5 auth for openssl ** **  19990701	VRS 	Started. **  200011??	Jeffrey Altman, Richard Levitte **          		Generalized for Heimdal, Newer MIT,& Win32. **          		Integrated into main OpenSSL 0.9.7 snapshots. **  20010413	Simon Wilkinson, VRS **          		Real RFC2712 KerberosWrapper replaces AP_REQ. */
+comment|/*-  * ssl/kssl.c  --  Routines to support (& debug) Kerberos5 auth for openssl  *  *  19990701    VRS     Started.  *  200011??    Jeffrey Altman, Richard Levitte  *                      Generalized for Heimdal, Newer MIT,& Win32.  *                      Integrated into main OpenSSL 0.9.7 snapshots.  *  20010413    Simon Wilkinson, VRS  *                      Real RFC2712 KerberosWrapper replaces AP_REQ.  */
 end_comment
 
 begin_include
@@ -89,7 +89,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*   * When OpenSSL is built on Windows, we do not want to require that  * the Kerberos DLLs be available in order for the OpenSSL DLLs to  * work.  Therefore, all Kerberos routines are loaded at run time  * and we do not link to a .LIB file.  */
+comment|/*  * When OpenSSL is built on Windows, we do not want to require that  * the Kerberos DLLs be available in order for the OpenSSL DLLs to  * work.  Therefore, all Kerberos routines are loaded at run time  * and we do not link to a .LIB file.  */
 end_comment
 
 begin_if
@@ -107,7 +107,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*   * The purpose of the following pre-processor statements is to provide  * compatibility with different releases of MIT Kerberos for Windows.  * All versions up to 1.2 used macros.  But macros do not allow for  * a binary compatible interface for DLLs.  Therefore, all macros are  * being replaced by function calls.  The following code will allow  * an OpenSSL DLL built on Windows to work whether or not the macro  * or function form of the routines are utilized.  */
+comment|/*  * The purpose of the following pre-processor statements is to provide  * compatibility with different releases of MIT Kerberos for Windows.  * All versions up to 1.2 used macros.  But macros do not allow for  * a binary compatible interface for DLLs.  Therefore, all macros are  * being replaced by function calls.  The following code will allow  * an OpenSSL DLL built on Windows to work whether or not the macro  * or function form of the routines are utilized.  */
 end_comment
 
 begin_ifdef
@@ -3468,7 +3468,7 @@ comment|/* OPENSSL_SYS_WINDOWS || OPENSSL_SYS_WIN32 */
 end_comment
 
 begin_comment
-comment|/* memory allocation functions for non-temporary storage  * (e.g. stuff that gets saved into the kssl context) */
+comment|/*  * memory allocation functions for non-temporary storage (e.g. stuff that  * gets saved into the kssl context)  */
 end_comment
 
 begin_function
@@ -3586,7 +3586,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Given KRB5 enctype (basically DES or 3DES), **	return closest match openssl EVP_ encryption algorithm. **	Return NULL for unknown or problematic (krb5_dk_encrypt) enctypes. **	Assume ENCTYPE_*_RAW (krb5_raw_encrypt) are OK. */
+comment|/*  * Given KRB5 enctype (basically DES or 3DES), return closest match openssl  * EVP_ encryption algorithm.  Return NULL for unknown or problematic  * (krb5_dk_encrypt) enctypes.  Assume ENCTYPE_*_RAW (krb5_raw_encrypt) are  * OK.  */
 end_comment
 
 begin_function
@@ -3607,7 +3607,7 @@ block|{
 case|case
 name|ENCTYPE_DES_HMAC_SHA1
 case|:
-comment|/*    EVP_des_cbc();       */
+comment|/* EVP_des_cbc(); */
 case|case
 name|ENCTYPE_DES_CBC_CRC
 case|:
@@ -3628,7 +3628,7 @@ break|break;
 case|case
 name|ENCTYPE_DES3_CBC_SHA1
 case|:
-comment|/*    EVP_des_ede3_cbc();  */
+comment|/* EVP_des_ede3_cbc(); */
 case|case
 name|ENCTYPE_DES3_CBC_SHA
 case|:
@@ -3650,7 +3650,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Return true:1 if p "looks like" the start of the real authenticator **	described in kssl_skip_confound() below.  The ASN.1 pattern is **	"62 xx 30 yy" (APPLICATION-2, SEQUENCE), where xx-yy =~ 2, and **	xx and yy are possibly multi-byte length fields. */
+comment|/*  * Return true:1 if p "looks like" the start of the real authenticator  * described in kssl_skip_confound() below.  The ASN.1 pattern is "62 xx 30  * yy" (APPLICATION-2, SEQUENCE), where xx-yy =~ 2, and xx and yy are  * possibly multi-byte length fields.  */
 end_comment
 
 begin_function
@@ -3858,7 +3858,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Allocate, fill, and return cksumlens array of checksum lengths. **	This array holds just the unique elements from the krb5_cksumarray[]. **	array[n] == 0 signals end of data. ** **      The krb5_cksumarray[] was an internal variable that has since been **      replaced by a more general method for storing the data.  It should **      not be used.  Instead we use real API calls and make a guess for  **      what the highest assigned CKSUMTYPE_ constant is.  As of 1.2.2 **      it is 0x000c (CKSUMTYPE_HMAC_SHA1_DES3).  So we will use 0x0010. */
+comment|/*  * Allocate, fill, and return cksumlens array of checksum lengths.  This  * array holds just the unique elements from the krb5_cksumarray[].  array[n]  * == 0 signals end of data.  The krb5_cksumarray[] was an internal variable  * that has since been replaced by a more general method for storing the  * data.  It should not be used.  Instead we use real API calls and make a  * guess for what the highest assigned CKSUMTYPE_ constant is.  As of 1.2.2  * it is 0x000c (CKSUMTYPE_HMAC_SHA1_DES3).  So we will use 0x0010.  */
 end_comment
 
 begin_function
@@ -3955,7 +3955,7 @@ name|i
 argument_list|)
 condition|)
 continue|continue;
-comment|/*  array has holes  */
+comment|/* array has holes */
 for|for
 control|(
 name|j
@@ -3993,7 +3993,7 @@ name|i
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/*  krb5 elem was new: add   */
+comment|/* krb5 elem was new: add */
 block|}
 if|if
 condition|(
@@ -4011,7 +4011,7 @@ argument_list|)
 condition|)
 block|{
 break|break;
-comment|/*  ignore duplicate elements */
+comment|/* ignore duplicate elements */
 block|}
 block|}
 block|}
@@ -4025,7 +4025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Return pointer to start of real authenticator within authenticator, or **	return NULL on error. **	Decrypted authenticator looks like this: **		[0 or 8 byte confounder] [4-24 byte checksum] [real authent'r] **	This hackery wouldn't be necessary if MIT KRB5 1.0.6 had the **	krb5_auth_con_getcksumtype() function advertised in its krb5.h. */
+comment|/*-  *      Return pointer to start of real authenticator within authenticator, or  *      return NULL on error.  *      Decrypted authenticator looks like this:  *              [0 or 8 byte confounder] [4-24 byte checksum] [real authent'r]  *      This hackery wouldn't be necessary if MIT KRB5 1.0.6 had the  *      krb5_auth_con_getcksumtype() function advertised in its krb5.h.  */
 end_comment
 
 begin_function
@@ -4136,7 +4136,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Set kssl_err error info when reason text is a simple string **		kssl_err = struct { int reason; char text[KSSL_ERR_MAX+1]; } */
+comment|/*  * Set kssl_err error info when reason text is a simple string kssl_err =  * struct { int reason; char text[KSSL_ERR_MAX+1]; }  */
 end_comment
 
 begin_function
@@ -4186,7 +4186,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Display contents of krb5_data struct, for debugging */
+comment|/*  * Display contents of krb5_data struct, for debugging  */
 end_comment
 
 begin_function
@@ -4205,8 +4205,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s[%d] "
 argument_list|,
 name|label
@@ -4252,8 +4254,10 @@ name|i
 index|]
 argument_list|)
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%c "
 argument_list|,
 name|kdata
@@ -4265,8 +4269,10 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x "
 argument_list|,
 operator|(
@@ -4282,8 +4288,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -4291,7 +4299,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Display contents of krb5_authdata struct, for debugging */
+comment|/*  * Display contents of krb5_authdata struct, for debugging  */
 end_comment
 
 begin_function
@@ -4315,8 +4323,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s, authdata==0\n"
 argument_list|,
 name|label
@@ -4324,8 +4334,10 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s [%p]\n"
 argument_list|,
 name|label
@@ -4340,14 +4352,14 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|{         int 	i; 	printf("%s[at%d:%d] ", label, adata->ad_type, adata->length); 	for (i=0; i< adata->length; i++)                 {                 printf((isprint(adata->contents[i]))? "%c ": "%02x",                         adata->contents[i]); 		} 	printf("\n"); 	}
+block|{         int i;         fprintf(stderr, "%s[at%d:%d] ", label, adata->ad_type, adata->length);         for (i = 0; i< adata->length; i++) {             fprintf(stderr, (isprint(adata->contents[i])) ? "%c " : "%02x",                     adata->contents[i]);         }         fprintf(stderr, "\n");     }
 endif|#
 directive|endif
 block|}
 end_function
 
 begin_comment
-comment|/*	Display contents of krb5_keyblock struct, for debugging */
+comment|/*  * Display contents of krb5_keyblock struct, for debugging  */
 end_comment
 
 begin_function
@@ -4373,8 +4385,10 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s, keyblk==0\n"
 argument_list|,
 name|label
@@ -4385,8 +4399,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|KRB5_HEIMDAL
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s\n\t[et%d:%d]: "
 argument_list|,
 name|label
@@ -4423,8 +4439,10 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x"
 argument_list|,
 operator|(
@@ -4445,15 +4463,19 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s\n\t[et%d:%d]: "
 argument_list|,
 name|label
@@ -4486,8 +4508,10 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x"
 argument_list|,
 name|keyblk
@@ -4499,8 +4523,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -4510,7 +4536,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Display contents of krb5_principal_data struct, for debugging **	(krb5_principal is typedef'd == krb5_principal_data *) */
+comment|/*  * Display contents of krb5_principal_data struct, for debugging  * (krb5_principal is typedef'd == krb5_principal_data *)  */
 end_comment
 
 begin_function
@@ -4534,8 +4560,10 @@ name|ui
 decl_stmt|,
 name|uj
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%s principal Realm: "
 argument_list|,
 name|label
@@ -4580,8 +4608,10 @@ name|ui
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|" (nametype %d) has %d strings:\n"
 argument_list|,
 name|princ
@@ -4612,8 +4642,10 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\t%d [%d]: "
 argument_list|,
 name|i
@@ -4668,8 +4700,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -4679,7 +4713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Given krb5 service (typically "kssl") and hostname in kssl_ctx, **	Return encrypted Kerberos ticket for service @ hostname. **	If authenp is non-NULL, also return encrypted authenticator, **	whose data should be freed by caller. **	(Originally was: Create Kerberos AP_REQ message for SSL Client.) ** **	19990628	VRS 	Started; Returns Kerberos AP_REQ message. **	20010409	VRS 	Modified for RFC2712; Returns enc tkt. **	20010606	VRS 	May also return optional authenticator. */
+comment|/*-     Given krb5 service (typically "kssl") and hostname in kssl_ctx,  *      Return encrypted Kerberos ticket for service @ hostname.  *      If authenp is non-NULL, also return encrypted authenticator,  *      whose data should be freed by caller.  *      (Originally was: Create Kerberos AP_REQ message for SSL Client.)  *  *      19990628        VRS     Started; Returns Kerberos AP_REQ message.  *      20010409        VRS     Modified for RFC2712; Returns enc tkt.  *      20010606        VRS     May also return optional authenticator.  */
 end_comment
 
 begin_function
@@ -4691,18 +4725,18 @@ name|KSSL_CTX
 modifier|*
 name|kssl_ctx
 parameter_list|,
-comment|/* OUT    */
+comment|/*                                * OUT                                */
 name|krb5_data
 modifier|*
 modifier|*
 name|enc_ticketp
 parameter_list|,
-comment|/* UPDATE */
+comment|/*                                * UPDATE                                */
 name|krb5_data
 modifier|*
 name|authenp
 parameter_list|,
-comment|/* OUT    */
+comment|/*                                * OUT                                */
 name|KSSL_ERR
 modifier|*
 name|kssl_err
@@ -5058,8 +5092,8 @@ name|krb5rc
 operator|=
 name|KRB5KRB_ERR_GENERIC
 expr_stmt|;
-comment|/*	caller should free data of krb5_app_req  */
-comment|/*  20010406 VRS deleted for real KerberosWrapper 	**  20010605 VRS reinstated to offer Authenticator to KerberosWrapper 	*/
+comment|/*      caller should free data of krb5_app_req  */
+comment|/*      * 20010406 VRS deleted for real KerberosWrapper 20010605 VRS reinstated      * to offer Authenticator to KerberosWrapper      */
 name|krb5_app_req
 operator|.
 name|length
@@ -5404,7 +5438,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  Given d2i_-decoded asn1ticket, allocate and return a new krb5_ticket. **  Return Kerberos error code and kssl_err struct on error. **  Allocates krb5_ticket and krb5_principal; caller should free these. ** **	20010410	VRS	Implemented krb5_decode_ticket() as **				old_krb5_decode_ticket(). Missing from MIT1.0.6. **	20010615	VRS 	Re-cast as openssl/asn1 d2i_*() functions. **				Re-used some of the old krb5_decode_ticket() **				code here.  This tkt should alloc/free just **				like the real thing. */
+comment|/*-  *  Given d2i_-decoded asn1ticket, allocate and return a new krb5_ticket.  *  Return Kerberos error code and kssl_err struct on error.  *  Allocates krb5_ticket and krb5_principal; caller should free these.  *  *      20010410        VRS     Implemented krb5_decode_ticket() as  *                              old_krb5_decode_ticket(). Missing from MIT1.0.6.  *      20010615        VRS     Re-cast as openssl/asn1 d2i_*() functions.  *                              Re-used some of the old krb5_decode_ticket()  *                              code here.  This tkt should alloc/free just  *                              like the real thing.  */
 end_comment
 
 begin_function
@@ -5412,22 +5446,22 @@ specifier|static
 name|krb5_error_code
 name|kssl_TKT2tkt
 parameter_list|(
-comment|/* IN     */
+comment|/* IN */
 name|krb5_context
 name|krb5context
 parameter_list|,
-comment|/* IN     */
+comment|/*                                      * IN                                      */
 name|KRB5_TKTBODY
 modifier|*
 name|asn1ticket
 parameter_list|,
-comment|/* OUT    */
+comment|/*                                      * OUT                                      */
 name|krb5_ticket
 modifier|*
 modifier|*
 name|krb5ticket
 parameter_list|,
-comment|/* OUT    */
+comment|/*                                      * OUT                                      */
 name|KSSL_ERR
 modifier|*
 name|kssl_err
@@ -5550,7 +5584,7 @@ expr_stmt|;
 return|return
 name|ENOMEM
 return|;
-comment|/*  or  KRB5KRB_ERR_GENERIC;	*/
+comment|/* or KRB5KRB_ERR_GENERIC; */
 block|}
 name|gstr_svc
 operator|=
@@ -5662,7 +5696,7 @@ expr_stmt|;
 return|return
 name|krb5rc
 return|;
-comment|/*  or  KRB5KRB_ERR_GENERIC;	*/
+comment|/* or KRB5KRB_ERR_GENERIC; */
 block|}
 name|krb5_princ_type
 argument_list|(
@@ -5830,7 +5864,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Given krb5 service name in KSSL_CTX *kssl_ctx (typically "kssl"), **		and krb5 AP_REQ message& message length, **	Return Kerberos session key and client principle **		to SSL Server in KSSL_CTX *kssl_ctx. ** **	19990702	VRS 	Started. */
+comment|/*-  *      Given krb5 service name in KSSL_CTX *kssl_ctx (typically "kssl"),  *              and krb5 AP_REQ message& message length,  *      Return Kerberos session key and client principle  *              to SSL Server in KSSL_CTX *kssl_ctx.  *  *      19990702        VRS     Started.  */
 end_comment
 
 begin_function
@@ -5842,17 +5876,17 @@ name|KSSL_CTX
 modifier|*
 name|kssl_ctx
 parameter_list|,
-comment|/* IN     */
+comment|/*                                * IN                                */
 name|krb5_data
 modifier|*
 name|indata
 parameter_list|,
-comment|/* OUT    */
+comment|/*                                * OUT                                */
 name|krb5_ticket_times
 modifier|*
 name|ttimes
 parameter_list|,
-comment|/* OUT    */
+comment|/*                                * OUT                                */
 name|KSSL_ERR
 modifier|*
 name|kssl_err
@@ -5940,8 +5974,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"in kssl_sget_tkt(%s)\n"
 argument_list|,
 name|kstring
@@ -6199,7 +6235,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/*	kssl_ctx->keytab_file == NULL ==> use Kerberos default 	*/
+comment|/*      * kssl_ctx->keytab_file == NULL ==> use Kerberos default      */
 if|if
 condition|(
 name|kssl_ctx
@@ -6271,8 +6307,8 @@ name|err
 goto|;
 block|}
 block|}
-comment|/*	Actual Kerberos5 krb5_recvauth() has initial conversation here 	**	o	check KRB5_SENDAUTH_BADAUTHVERS 	**		unless KRB5_RECVAUTH_SKIP_VERSION 	**	o	check KRB5_SENDAUTH_BADAPPLVERS 	**	o	send "0" msg if all OK 	*/
-comment|/*  20010411 was using AP_REQ instead of true KerberosWrapper 	** 	**  if ((krb5rc = krb5_rd_req(krb5context,&krb5auth_context, 	**&krb5in_data, krb5server, krb5keytab, 	**&ap_option,&krb5ticket)) != 0)  { Error } 	*/
+comment|/*-     Actual Kerberos5 krb5_recvauth() has initial conversation here      *      o       check KRB5_SENDAUTH_BADAUTHVERS      *              unless KRB5_RECVAUTH_SKIP_VERSION      *      o       check KRB5_SENDAUTH_BADAPPLVERS      *      o       send "0" msg if all OK      */
+comment|/*-      * 20010411 was using AP_REQ instead of true KerberosWrapper      *      *  if ((krb5rc = krb5_rd_req(krb5context,&krb5auth_context,      *&krb5in_data, krb5server, krb5keytab,      *&ap_option,&krb5ticket)) != 0)  { Error }      */
 name|p
 operator|=
 operator|(
@@ -6333,7 +6369,7 @@ goto|goto
 name|err
 goto|;
 block|}
-comment|/* Was:  krb5rc = krb5_decode_ticket(krb5in_data,&krb5ticket)) != 0) */
+comment|/*      * Was: krb5rc = krb5_decode_ticket(krb5in_data,&krb5ticket)) != 0)      */
 if|if
 condition|(
 operator|(
@@ -6544,13 +6580,17 @@ name|enc_part2
 operator|->
 name|caddrs
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"Decrypted ticket fields:\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tflags: %X, transit-type: %X"
 argument_list|,
 name|krb5ticket
@@ -6584,8 +6624,10 @@ name|tr_contents
 operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tcaddrs: %p, authdata: %p\n"
 argument_list|,
 name|krb5ticket
@@ -6606,8 +6648,10 @@ condition|(
 name|paddr
 condition|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tcaddrs:\n"
 argument_list|)
 expr_stmt|;
@@ -6663,8 +6707,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tstart/auth/end times: %d / %d / %d\n"
 argument_list|,
 name|krb5ticket
@@ -6973,7 +7019,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Allocate& return a new kssl_ctx struct. */
+comment|/*  * Allocate& return a new kssl_ctx struct.  */
 end_comment
 
 begin_function
@@ -7005,7 +7051,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Frees a kssl_ctx struct and any allocated memory it holds. **	Returns NULL. */
+comment|/*  * Frees a kssl_ctx struct and any allocated memory it holds.  Returns NULL.  */
 end_comment
 
 begin_function
@@ -7125,7 +7171,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Given an array of (krb5_data *) entity (and optional realm), **	set the plain (char *) client_princ or service_host member **	of the kssl_ctx struct. */
+comment|/*  * Given an array of (krb5_data *) entity (and optional realm), set the plain  * (char *) client_princ or service_host member of the kssl_ctx struct.  */
 end_comment
 
 begin_function
@@ -7385,7 +7431,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Set one of the plain (char *) string members of the kssl_ctx struct. **	Default values should be: **		which == KSSL_SERVICE	=>	"khost" (KRB5SVC) **		which == KSSL_KEYTAB	=>	"/etc/krb5.keytab" (KRB5KEYTAB) */
+comment|/*-     Set one of the plain (char *) string members of the kssl_ctx struct.  *      Default values should be:  *              which == KSSL_SERVICE   =>      "khost" (KRB5SVC)  *              which == KSSL_KEYTAB    =>      "/etc/krb5.keytab" (KRB5KEYTAB)  */
 end_comment
 
 begin_function
@@ -7538,7 +7584,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Copy the Kerberos session key from a (krb5_keyblock *) to a kssl_ctx **	struct.  Clear kssl_ctx->key if Kerberos session key is NULL. */
+comment|/*  * Copy the Kerberos session key from a (krb5_keyblock *) to a kssl_ctx  * struct.  Clear kssl_ctx->key if Kerberos session key is NULL.  */
 end_comment
 
 begin_function
@@ -7738,7 +7784,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*	Display contents of kssl_ctx struct */
+comment|/*  * Display contents of kssl_ctx struct  */
 end_comment
 
 begin_function
@@ -7961,7 +8007,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/*	kssl_ctx->keytab_file == NULL ==> use Kerberos default     */
+comment|/*      * kssl_ctx->keytab_file == NULL ==> use Kerberos default      */
 if|if
 condition|(
 name|kssl_ctx
@@ -8053,11 +8099,11 @@ name|krb5keytab
 argument_list|,
 name|princ
 argument_list|,
-literal|0
 comment|/* IGNORE_VNO */
-argument_list|,
 literal|0
+argument_list|,
 comment|/* IGNORE_ENCTYPE */
+literal|0
 argument_list|,
 operator|&
 name|entry
@@ -8504,7 +8550,7 @@ comment|/* !OPENSSL_SYS_WINDOWS&& !OPENSSL_SYS_WIN32 */
 end_comment
 
 begin_comment
-comment|/*  Given pointers to KerberosTime and struct tm structs, convert the **  KerberosTime string to struct tm.  Note that KerberosTime is a **  ASN1_GENERALIZEDTIME value, constrained to GMT with no fractional **  seconds as defined in RFC 1510. **  Return pointer to the (partially) filled in struct tm on success, **  return NULL on failure. */
+comment|/*  * Given pointers to KerberosTime and struct tm structs, convert the  * KerberosTime string to struct tm.  Note that KerberosTime is a  * ASN1_GENERALIZEDTIME value, constrained to GMT with no fractional seconds  * as defined in RFC 1510.  Return pointer to the (partially) filled in  * struct tm on success, return NULL on failure.  */
 end_comment
 
 begin_function
@@ -8781,7 +8827,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  Helper function for kssl_validate_times(). **  We need context->clockskew, but krb5_context is an opaque struct. **  So we try to sneek the clockskew out through the replay cache. **	If that fails just return a likely default (300 seconds). */
+comment|/*  * Helper function for kssl_validate_times().  We need context->clockskew,  * but krb5_context is an opaque struct.  So we try to sneek the clockskew  * out through the replay cache.  If that fails just return a likely default  * (300 seconds).  */
 end_comment
 
 begin_function
@@ -8861,7 +8907,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  kssl_validate_times() combines (and more importantly exposes) **  the MIT KRB5 internal function krb5_validate_times() and the **  in_clock_skew() macro.  The authenticator client time is checked **  to be within clockskew secs of the current time and the current **  time is checked to be within the ticket start and expire times. **  Either check may be omitted by supplying a NULL value. **  Returns 0 for valid times, SSL_R_KRB5* error codes otherwise. **  See Also: (Kerberos source)/krb5/lib/krb5/krb/valid_times.c **  20010420 VRS */
+comment|/*  * kssl_validate_times() combines (and more importantly exposes) the MIT KRB5  * internal function krb5_validate_times() and the in_clock_skew() macro.  * The authenticator client time is checked to be within clockskew secs of  * the current time and the current time is checked to be within the ticket  * start and expire times.  Either check may be omitted by supplying a NULL  * value.  Returns 0 for valid times, SSL_R_KRB5* error codes otherwise.  See  * Also: (Kerberos source)/krb5/lib/krb5/krb/valid_times.c 20010420 VRS  */
 end_comment
 
 begin_function
@@ -9005,8 +9051,10 @@ return|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"kssl_validate_times: %d |<-  | %d - %d |< %d  ->| %d\n"
 argument_list|,
 name|start
@@ -9032,29 +9080,29 @@ block|}
 end_function
 
 begin_comment
-comment|/*  Decode and decrypt given DER-encoded authenticator, then pass **  authenticator ctime back in *atimep (or 0 if time unavailable). **  Returns krb5_error_code and kssl_err on error.  A NULL  **  authenticator (authentp->length == 0) is not considered an error. **  Note that kssl_check_authent() makes use of the KRB5 session key; **  you must call kssl_sget_tkt() to get the key before calling this routine. */
+comment|/*  * Decode and decrypt given DER-encoded authenticator, then pass  * authenticator ctime back in *atimep (or 0 if time unavailable).  Returns  * krb5_error_code and kssl_err on error.  A NULL authenticator  * (authentp->length == 0) is not considered an error.  Note that  * kssl_check_authent() makes use of the KRB5 session key; you must call  * kssl_sget_tkt() to get the key before calling this routine.  */
 end_comment
 
 begin_function
 name|krb5_error_code
 name|kssl_check_authent
 parameter_list|(
-comment|/* IN     */
+comment|/*                                        * IN                                        */
 name|KSSL_CTX
 modifier|*
 name|kssl_ctx
 parameter_list|,
-comment|/* IN     */
+comment|/*                                        * IN                                        */
 name|krb5_data
 modifier|*
 name|authentp
 parameter_list|,
-comment|/* OUT    */
+comment|/*                                        * OUT                                        */
 name|krb5_timestamp
 modifier|*
 name|atimep
 parameter_list|,
-comment|/* OUT    */
+comment|/*                                        * OUT                                        */
 name|KSSL_ERR
 modifier|*
 name|kssl_err
@@ -9200,8 +9248,10 @@ name|unsigned
 name|int
 name|ui
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"kssl_check_authent: authenticator[%d]:\n"
 argument_list|,
 name|authentp
@@ -9230,8 +9280,10 @@ condition|;
 name|ui
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x "
 argument_list|,
 name|p
@@ -9240,8 +9292,10 @@ name|ui
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -9369,7 +9423,7 @@ block|{
 case|case
 name|ENCTYPE_DES3_CBC_SHA1
 case|:
-comment|/*    EVP_des_ede3_cbc();  */
+comment|/* EVP_des_ede3_cbc(); */
 case|case
 name|ENCTYPE_DES3_CBC_SHA
 case|:
@@ -9412,7 +9466,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/*  Disable kssl_check_authent for ENCTYPE_DES3_CBC_SHA1. 		**  This enctype indicates the authenticator was encrypted 		**  using key-usage derived keys which openssl cannot decrypt. 		*/
+comment|/*          * Disable kssl_check_authent for ENCTYPE_DES3_CBC_SHA1.  This          * enctype indicates the authenticator was encrypted using key-usage          * derived keys which openssl cannot decrypt.          */
 goto|goto
 name|err
 goto|;
@@ -9512,8 +9566,10 @@ block|{
 name|int
 name|padl
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"kssl_check_authent: decrypted authenticator[%d] =\n"
 argument_list|,
 name|outl
@@ -9532,8 +9588,10 @@ condition|;
 name|padl
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x "
 argument_list|,
 name|unenc_authent
@@ -9542,8 +9600,10 @@ name|padl
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -9740,8 +9800,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"kssl_check_authent: returns %d for client time "
 argument_list|,
 operator|*
@@ -9768,8 +9830,10 @@ name|ctime
 operator|->
 name|data
 condition|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%.*s\n"
 argument_list|,
 name|auth
@@ -9786,8 +9850,10 @@ name|data
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"NULL\n"
 argument_list|)
 expr_stmt|;
@@ -9840,23 +9906,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*  Replaces krb5_build_principal_ext(), with varargs length == 2 (svc, host), **  because I dont't know how to stub varargs. **  Returns krb5_error_code == ENOMEM on alloc error, otherwise **  passes back newly constructed principal, which should be freed by caller. */
+comment|/*  * Replaces krb5_build_principal_ext(), with varargs length == 2 (svc, host),  * because I don't know how to stub varargs.  Returns krb5_error_code ==  * ENOMEM on alloc error, otherwise passes back newly constructed principal,  * which should be freed by caller.  */
 end_comment
 
 begin_function
 name|krb5_error_code
 name|kssl_build_principal_2
 parameter_list|(
-comment|/* UPDATE */
+comment|/*                                            * UPDATE                                            */
 name|krb5_context
 name|context
 parameter_list|,
-comment|/* OUT    */
+comment|/*                                            * OUT                                            */
 name|krb5_principal
 modifier|*
 name|princ
 parameter_list|,
-comment|/* IN     */
+comment|/*                                            * IN                                            */
 name|int
 name|rlen
 parameter_list|,
@@ -9865,7 +9931,7 @@ name|char
 modifier|*
 name|realm
 parameter_list|,
-comment|/* IN	  */
+comment|/*                                            * IN                                            */
 name|int
 name|slen
 parameter_list|,
@@ -9874,7 +9940,7 @@ name|char
 modifier|*
 name|svc
 parameter_list|,
-comment|/* IN	  */
+comment|/*                                            * IN                                            */
 name|int
 name|hlen
 parameter_list|,
@@ -10307,7 +10373,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* !OPENSSL_NO_KRB5	*/
+comment|/* !OPENSSL_NO_KRB5 */
 end_comment
 
 end_unit

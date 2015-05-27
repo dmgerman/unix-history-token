@@ -27,7 +27,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|cpackf
+name|CMPLXF
 argument_list|(
 name|crealf
 argument_list|(

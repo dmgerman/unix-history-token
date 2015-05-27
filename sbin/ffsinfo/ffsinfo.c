@@ -140,6 +140,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1592,8 +1598,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x"
+literal|"Inode 0x%08jx"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|)
 expr_stmt|;
@@ -1713,8 +1722,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x: indirect 0"
+literal|"Inode 0x%08jx: indirect 0"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|)
 expr_stmt|;
@@ -1816,8 +1828,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x: indirect 1"
+literal|"Inode 0x%08jx: indirect 1"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|)
 expr_stmt|;
@@ -1957,8 +1972,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x: indirect 1->%d"
+literal|"Inode 0x%08jx: indirect 1->%d"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|,
 name|ind2ctr
@@ -2063,8 +2081,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x: indirect 2"
+literal|"Inode 0x%08jx: indirect 2"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|)
 expr_stmt|;
@@ -2217,8 +2238,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x: indirect 2->%d"
+literal|"Inode 0x%08jx: indirect 2->%d"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|,
 name|ind3ctr
@@ -2360,8 +2384,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x: indirect 2->%d->%d"
+literal|"Inode 0x%08jx: indirect 2->%d->%d"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|,
 name|ind3ctr
@@ -2521,8 +2548,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x"
+literal|"Inode 0x%08jx"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|)
 expr_stmt|;
@@ -2642,8 +2672,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x: indirect 0"
+literal|"Inode 0x%08jx: indirect 0"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|)
 expr_stmt|;
@@ -2745,8 +2778,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x: indirect 1"
+literal|"Inode 0x%08jx: indirect 1"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|)
 expr_stmt|;
@@ -2886,8 +2922,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x: indirect 1->%d"
+literal|"Inode 0x%08jx: indirect 1->%d"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|,
 name|ind2ctr
@@ -2992,8 +3031,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x: indirect 2"
+literal|"Inode 0x%08jx: indirect 2"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|)
 expr_stmt|;
@@ -3146,8 +3188,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x: indirect 2->%d"
+literal|"Inode 0x%08jx: indirect 2->%d"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|,
 name|ind3ctr
@@ -3289,8 +3334,11 @@ argument_list|(
 name|comment
 argument_list|)
 argument_list|,
-literal|"Inode 0x%08x: indirect 2->%d->%d"
+literal|"Inode 0x%08jx: indirect 2->%d->%d"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inode
 argument_list|,
 name|ind3ctr

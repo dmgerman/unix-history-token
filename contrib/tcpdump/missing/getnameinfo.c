@@ -24,29 +24,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/missing/getnameinfo.c,v 1.11 2003-11-16 09:36:49 guy Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -383,7 +360,7 @@ decl_stmt|,
 modifier|*
 name|p
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|v4a
 decl_stmt|;
 name|int
@@ -646,7 +623,7 @@ case|:
 name|v4a
 operator|=
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|)
 name|ntohl
 argument_list|(

@@ -521,6 +521,14 @@ name|devices_max
 operator|=
 name|OHCI_MAX_DEVICES
 expr_stmt|;
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|dma_bits
+operator|=
+literal|32
+expr_stmt|;
 if|if
 condition|(
 name|usb_bus_mem_alloc_all

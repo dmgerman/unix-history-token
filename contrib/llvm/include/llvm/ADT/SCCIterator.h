@@ -32,43 +32,51 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//
+comment|/// \file
 end_comment
 
 begin_comment
-comment|// This builds on the llvm/ADT/GraphTraits.h file to find the strongly connected
+comment|///
 end_comment
 
 begin_comment
-comment|// components (SCCs) of a graph in O(N+E) time using Tarjan's DFS algorithm.
+comment|/// This builds on the llvm/ADT/GraphTraits.h file to find the strongly
 end_comment
 
 begin_comment
-comment|//
+comment|/// connected components (SCCs) of a graph in O(N+E) time using Tarjan's DFS
 end_comment
 
 begin_comment
-comment|// The SCC iterator has the important property that if a node in SCC S1 has an
+comment|/// algorithm.
 end_comment
 
 begin_comment
-comment|// edge to a node in SCC S2, then it visits S1 *after* S2.
+comment|///
 end_comment
 
 begin_comment
-comment|//
+comment|/// The SCC iterator has the important property that if a node in SCC S1 has an
 end_comment
 
 begin_comment
-comment|// To visit S1 *before* S2, use the scc_iterator on the Inverse graph.
+comment|/// edge to a node in SCC S2, then it visits S1 *after* S2.
 end_comment
 
 begin_comment
-comment|// (NOTE: This requires some simple wrappers and is not supported yet.)
+comment|///
 end_comment
 
 begin_comment
-comment|//
+comment|/// To visit S1 *before* S2, use the scc_iterator on the Inverse graph. (NOTE:
+end_comment
+
+begin_comment
+comment|/// This requires some simple wrappers and is not supported yet.)
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_comment
@@ -102,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -109,11 +123,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|//===----------------------------------------------------------------------===//
+comment|/// \brief Enumerate the SCCs of a directed graph in reverse topological order
+comment|/// of the SCC DAG.
 comment|///
-comment|/// scc_iterator - Enumerate the SCCs of a directed graph, in
-comment|/// reverse topological order of the SCC DAG.
-comment|///
+comment|/// This is implemented using Tarjan's DFS algorithm using an internal stack to
+comment|/// build up a vector of nodes in a particular SCC. Note that it is a forward
+comment|/// iterator and thus you cannot backtrack or re-visit nodes.
 name|template
 operator|<
 name|class
@@ -125,20 +140,25 @@ operator|=
 name|GraphTraits
 operator|<
 name|GraphT
-operator|>
-expr|>
+operator|>>
 name|class
 name|scc_iterator
 operator|:
 name|public
-name|std
-operator|::
-name|iterator
+name|iterator_facade_base
 operator|<
+name|scc_iterator
+operator|<
+name|GraphT
+operator|,
+name|GT
+operator|>
+operator|,
 name|std
 operator|::
 name|forward_iterator_tag
 operator|,
+specifier|const
 name|std
 operator|::
 name|vector
@@ -147,6 +167,7 @@ name|typename
 name|GT
 operator|::
 name|NodeType
+operator|*
 operator|>
 operator|,
 name|ptrdiff_t
@@ -177,45 +198,90 @@ operator|>
 name|SccTy
 expr_stmt|;
 typedef|typedef
-name|std
-operator|::
-name|iterator
-operator|<
-name|std
-operator|::
-name|forward_iterator_tag
-operator|,
-name|std
-operator|::
-name|vector
-operator|<
 name|typename
-name|GT
+name|scc_iterator
 operator|::
+name|reference
+name|reference
+expr_stmt|;
+comment|/// Element of VisitStack during DFS.
+struct|struct
+name|StackElement
+block|{
 name|NodeType
-operator|>
+modifier|*
+name|Node
+decl_stmt|;
+comment|///< The current node pointer.
+name|ChildItTy
+name|NextChild
+decl_stmt|;
+comment|///< The next child, modified inplace during DFS.
+name|unsigned
+name|MinVisited
+decl_stmt|;
+comment|///< Minimum uplink value of all children of Node.
+name|StackElement
+argument_list|(
+argument|NodeType *Node
+argument_list|,
+argument|const ChildItTy&Child
+argument_list|,
+argument|unsigned Min
+argument_list|)
+block|:
+name|Node
+argument_list|(
+name|Node
+argument_list|)
 operator|,
-name|ptrdiff_t
-operator|>
-name|super
-expr_stmt|;
-typedef|typedef
-name|typename
-name|super
-operator|::
-name|reference
-name|reference
-expr_stmt|;
-typedef|typedef
-name|typename
-name|super
-operator|::
-name|pointer
-name|pointer
-expr_stmt|;
-comment|// The visit counters used to detect when a complete SCC is on the stack.
-comment|// visitNum is the global counter.
-comment|// nodeVisitNumbers are per-node visit numbers, also used as DFS flags.
+name|NextChild
+argument_list|(
+name|Child
+argument_list|)
+operator|,
+name|MinVisited
+argument_list|(
+argument|Min
+argument_list|)
+block|{}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|StackElement
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|Node
+operator|==
+name|Other
+operator|.
+name|Node
+operator|&&
+name|NextChild
+operator|==
+name|Other
+operator|.
+name|NextChild
+operator|&&
+name|MinVisited
+operator|==
+name|Other
+operator|.
+name|MinVisited
+return|;
+block|}
+block|}
+struct|;
+comment|/// The visit counters used to detect when a complete SCC is on the stack.
+comment|/// visitNum is the global counter.
+comment|///
+comment|/// nodeVisitNumbers are per-node visit numbers, also used as DFS flags.
 name|unsigned
 name|visitNum
 decl_stmt|;
@@ -228,7 +294,7 @@ name|unsigned
 operator|>
 name|nodeVisitNumbers
 expr_stmt|;
-comment|// SCCNodeStack - Stack holding nodes of the SCC.
+comment|/// Stack holding nodes of the SCC.
 name|std
 operator|::
 name|vector
@@ -238,40 +304,21 @@ operator|*
 operator|>
 name|SCCNodeStack
 expr_stmt|;
-comment|// CurrentSCC - The current SCC, retrieved using operator*().
+comment|/// The current SCC, retrieved using operator*().
 name|SccTy
 name|CurrentSCC
 decl_stmt|;
-comment|// VisitStack - Used to maintain the ordering.  Top = current block
-comment|// First element is basic block pointer, second is the 'next child' to visit
+comment|/// DFS stack, Used to maintain the ordering.  The top contains the current
+comment|/// node, the next child to visit, and the minimum uplink value of all child
 name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|NodeType
-operator|*
-operator|,
-name|ChildItTy
+name|StackElement
 operator|>
-expr|>
 name|VisitStack
 expr_stmt|;
-comment|// MinVisitNumStack - Stack holding the "min" values for each node in the DFS.
-comment|// This is used to track the minimum uplink values for all children of
-comment|// the corresponding node on the VisitStack.
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|MinVisitNumStack
-expr_stmt|;
-comment|// A single "visit" within the non-recursive DFS traversal.
+comment|/// A single "visit" within the non-recursive DFS traversal.
 name|void
 name|DFSVisitOne
 parameter_list|(
@@ -279,39 +326,270 @@ name|NodeType
 modifier|*
 name|N
 parameter_list|)
+function_decl|;
+comment|/// The stack-based DFS traversal; defined below.
+name|void
+name|DFSVisitChildren
+parameter_list|()
+function_decl|;
+comment|/// Compute the next SCC using the DFS traversal.
+name|void
+name|GetNextSCC
+parameter_list|()
+function_decl|;
+name|scc_iterator
+argument_list|(
+name|NodeType
+operator|*
+name|entryN
+argument_list|)
+operator|:
+name|visitNum
+argument_list|(
+literal|0
+argument_list|)
+block|{
+name|DFSVisitOne
+argument_list|(
+name|entryN
+argument_list|)
+block|;
+name|GetNextSCC
+argument_list|()
+block|;   }
+comment|/// End is when the DFS stack is empty.
+name|scc_iterator
+argument_list|()
+block|{}
+name|public
+operator|:
+specifier|static
+name|scc_iterator
+name|begin
+argument_list|(
+argument|const GraphT&G
+argument_list|)
+block|{
+return|return
+name|scc_iterator
+argument_list|(
+name|GT
+operator|::
+name|getEntryNode
+argument_list|(
+name|G
+argument_list|)
+argument_list|)
+return|;
+block|}
+specifier|static
+name|scc_iterator
+name|end
+parameter_list|(
+specifier|const
+name|GraphT
+modifier|&
+parameter_list|)
+block|{
+return|return
+name|scc_iterator
+argument_list|()
+return|;
+block|}
+comment|/// \brief Direct loop termination test which is more efficient than
+comment|/// comparison with \c end().
+name|bool
+name|isAtEnd
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|CurrentSCC
+operator|.
+name|empty
+argument_list|()
+operator|||
+name|VisitStack
+operator|.
+name|empty
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|CurrentSCC
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|scc_iterator
+operator|&
+name|x
+operator|)
+specifier|const
+block|{
+return|return
+name|VisitStack
+operator|==
+name|x
+operator|.
+name|VisitStack
+operator|&&
+name|CurrentSCC
+operator|==
+name|x
+operator|.
+name|CurrentSCC
+return|;
+block|}
+name|scc_iterator
+operator|&
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+name|GetNextSCC
+argument_list|()
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|reference
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|CurrentSCC
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Dereferencing END SCC iterator!"
+argument_list|)
+block|;
+return|return
+name|CurrentSCC
+return|;
+block|}
+comment|/// \brief Test if the current SCC has a loop.
+comment|///
+comment|/// If the SCC has more than one node, this is trivially true.  If not, it may
+comment|/// still contain a loop if the node has an edge back to itself.
+name|bool
+name|hasLoop
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// This informs the \c scc_iterator that the specified \c Old node
+comment|/// has been deleted, and \c New is to be used in its place.
+name|void
+name|ReplaceNode
+parameter_list|(
+name|NodeType
+modifier|*
+name|Old
+parameter_list|,
+name|NodeType
+modifier|*
+name|New
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|nodeVisitNumbers
+operator|.
+name|count
+argument_list|(
+name|Old
+argument_list|)
+operator|&&
+literal|"Old not in scc_iterator?"
+argument_list|)
+expr_stmt|;
+name|nodeVisitNumbers
+index|[
+name|New
+index|]
+operator|=
+name|nodeVisitNumbers
+index|[
+name|Old
+index|]
+expr_stmt|;
+name|nodeVisitNumbers
+operator|.
+name|erase
+argument_list|(
+name|Old
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|GraphT
+operator|,
+name|class
+name|GT
+operator|>
+name|void
+name|scc_iterator
+operator|<
+name|GraphT
+operator|,
+name|GT
+operator|>
+operator|::
+name|DFSVisitOne
+argument_list|(
+argument|NodeType *N
+argument_list|)
 block|{
 operator|++
 name|visitNum
-expr_stmt|;
-comment|// Global counter for the visit order
+block|;
 name|nodeVisitNumbers
 index|[
 name|N
 index|]
 operator|=
 name|visitNum
-expr_stmt|;
+block|;
 name|SCCNodeStack
 operator|.
 name|push_back
 argument_list|(
 name|N
 argument_list|)
-expr_stmt|;
-name|MinVisitNumStack
-operator|.
-name|push_back
-argument_list|(
-name|visitNum
-argument_list|)
-expr_stmt|;
+block|;
 name|VisitStack
 operator|.
 name|push_back
 argument_list|(
-name|std
-operator|::
-name|make_pair
+name|StackElement
 argument_list|(
 name|N
 argument_list|,
@@ -321,16 +599,37 @@ name|child_begin
 argument_list|(
 name|N
 argument_list|)
+argument_list|,
+name|visitNum
 argument_list|)
 argument_list|)
-expr_stmt|;
-comment|//dbgs()<< "TarjanSCC: Node "<< N<<
-comment|//      " : visitNum = "<< visitNum<< "\n";
+block|;
+if|#
+directive|if
+literal|0
+comment|// Enable if needed when debugging.
+block|dbgs()<< "TarjanSCC: Node "<< N<<         " : visitNum = "<< visitNum<< "\n";
+endif|#
+directive|endif
 block|}
-comment|// The stack-based DFS traversal; defined below.
+name|template
+operator|<
+name|class
+name|GraphT
+operator|,
+name|class
+name|GT
+operator|>
 name|void
+name|scc_iterator
+operator|<
+name|GraphT
+operator|,
+name|GT
+operator|>
+operator|::
 name|DFSVisitChildren
-parameter_list|()
+argument_list|()
 block|{
 name|assert
 argument_list|(
@@ -340,7 +639,7 @@ operator|.
 name|empty
 argument_list|()
 argument_list|)
-expr_stmt|;
+block|;
 while|while
 condition|(
 name|VisitStack
@@ -348,7 +647,7 @@ operator|.
 name|back
 argument_list|()
 operator|.
-name|second
+name|NextChild
 operator|!=
 name|GT
 operator|::
@@ -359,7 +658,7 @@ operator|.
 name|back
 argument_list|()
 operator|.
-name|first
+name|Node
 argument_list|)
 condition|)
 block|{
@@ -374,18 +673,36 @@ operator|.
 name|back
 argument_list|()
 operator|.
-name|second
+name|NextChild
 operator|++
 decl_stmt|;
-if|if
-condition|(
-operator|!
+name|typename
+name|DenseMap
+operator|<
+name|NodeType
+operator|*
+operator|,
+name|unsigned
+operator|>
+operator|::
+name|iterator
+name|Visited
+operator|=
 name|nodeVisitNumbers
 operator|.
-name|count
+name|find
 argument_list|(
 name|childN
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Visited
+operator|==
+name|nodeVisitNumbers
+operator|.
+name|end
+argument_list|()
 condition|)
 block|{
 comment|// this node has never been seen.
@@ -398,53 +715,62 @@ continue|continue;
 block|}
 name|unsigned
 name|childNum
-init|=
-name|nodeVisitNumbers
-index|[
-name|childN
-index|]
-decl_stmt|;
+operator|=
+name|Visited
+operator|->
+name|second
+expr_stmt|;
+end_expr_stmt
+
+begin_if
 if|if
 condition|(
-name|MinVisitNumStack
+name|VisitStack
 operator|.
 name|back
 argument_list|()
+operator|.
+name|MinVisited
 operator|>
 name|childNum
 condition|)
-name|MinVisitNumStack
+name|VisitStack
 operator|.
 name|back
 argument_list|()
+operator|.
+name|MinVisited
 operator|=
 name|childNum
 expr_stmt|;
-block|}
-block|}
-comment|// Compute the next SCC using the DFS traversal.
+end_if
+
+begin_expr_stmt
+unit|} }
+name|template
+operator|<
+name|class
+name|GraphT
+operator|,
+name|class
+name|GT
+operator|>
 name|void
+name|scc_iterator
+operator|<
+name|GraphT
+operator|,
+name|GT
+operator|>
+operator|::
 name|GetNextSCC
-parameter_list|()
+argument_list|()
 block|{
-name|assert
-argument_list|(
-name|VisitStack
-operator|.
-name|size
-argument_list|()
-operator|==
-name|MinVisitNumStack
-operator|.
-name|size
-argument_list|()
-argument_list|)
-expr_stmt|;
 name|CurrentSCC
 operator|.
 name|clear
 argument_list|()
-expr_stmt|;
+block|;
 comment|// Prepare to compute the next SCC
 while|while
 condition|(
@@ -458,28 +784,7 @@ block|{
 name|DFSVisitChildren
 argument_list|()
 expr_stmt|;
-name|assert
-argument_list|(
-name|VisitStack
-operator|.
-name|back
-argument_list|()
-operator|.
-name|second
-operator|==
-name|GT
-operator|::
-name|child_end
-argument_list|(
-name|VisitStack
-operator|.
-name|back
-argument_list|()
-operator|.
-name|first
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|// Pop the leaf on top of the VisitStack.
 name|NodeType
 modifier|*
 name|visitingN
@@ -489,51 +794,74 @@ operator|.
 name|back
 argument_list|()
 operator|.
-name|first
+name|Node
 decl_stmt|;
 name|unsigned
 name|minVisitNum
 init|=
-name|MinVisitNumStack
+name|VisitStack
 operator|.
 name|back
 argument_list|()
+operator|.
+name|MinVisited
 decl_stmt|;
+name|assert
+argument_list|(
+name|VisitStack
+operator|.
+name|back
+argument_list|()
+operator|.
+name|NextChild
+operator|==
+name|GT
+operator|::
+name|child_end
+argument_list|(
+name|visitingN
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|VisitStack
 operator|.
 name|pop_back
 argument_list|()
 expr_stmt|;
-name|MinVisitNumStack
-operator|.
-name|pop_back
-argument_list|()
-expr_stmt|;
+comment|// Propagate MinVisitNum to parent so we can detect the SCC starting node.
 if|if
 condition|(
 operator|!
-name|MinVisitNumStack
+name|VisitStack
 operator|.
 name|empty
 argument_list|()
 operator|&&
-name|MinVisitNumStack
+name|VisitStack
 operator|.
 name|back
 argument_list|()
+operator|.
+name|MinVisited
 operator|>
 name|minVisitNum
 condition|)
-name|MinVisitNumStack
+name|VisitStack
 operator|.
 name|back
 argument_list|()
+operator|.
+name|MinVisited
 operator|=
 name|minVisitNum
 expr_stmt|;
-comment|//dbgs()<< "TarjanSCC: Popped node "<< visitingN<<
-comment|//      " : minVisitNum = "<< minVisitNum<< "; Node visit num = "<<
-comment|//      nodeVisitNumbers[visitingN]<< "\n";
+if|#
+directive|if
+literal|0
+comment|// Enable if needed when debugging.
+block|dbgs()<< "TarjanSCC: Popped node "<< visitingN<<           " : minVisitNum = "<< minVisitNum<< "; Node visit num = "<<           nodeVisitNumbers[visitingN]<< "\n";
+endif|#
+directive|endif
 if|if
 condition|(
 name|minVisitNum
@@ -577,7 +905,10 @@ operator|~
 literal|0U
 expr_stmt|;
 block|}
-do|while
+end_expr_stmt
+
+begin_while
+while|while
 condition|(
 name|CurrentSCC
 operator|.
@@ -586,255 +917,31 @@ argument_list|()
 operator|!=
 name|visitingN
 condition|)
-do|;
+empty_stmt|;
+end_while
+
+begin_return
 return|return;
-block|}
-block|}
-specifier|inline
-name|scc_iterator
-argument_list|(
-name|NodeType
-operator|*
-name|entryN
-argument_list|)
-operator|:
-name|visitNum
-argument_list|(
-literal|0
-argument_list|)
-block|{
-name|DFSVisitOne
-argument_list|(
-name|entryN
-argument_list|)
-block|;
-name|GetNextSCC
-argument_list|()
-block|;   }
-specifier|inline
-name|scc_iterator
-argument_list|()
-block|{
-comment|/* End is when DFS stack is empty */
-block|}
-name|public
-operator|:
-typedef|typedef
+end_return
+
+begin_expr_stmt
+unit|} }
+name|template
+operator|<
+name|class
+name|GraphT
+operator|,
+name|class
+name|GT
+operator|>
+name|bool
 name|scc_iterator
 operator|<
 name|GraphT
 operator|,
 name|GT
 operator|>
-name|_Self
-expr_stmt|;
-comment|// Provide static "constructors"...
-specifier|static
-specifier|inline
-name|_Self
-name|begin
-parameter_list|(
-specifier|const
-name|GraphT
-modifier|&
-name|G
-parameter_list|)
-block|{
-return|return
-name|_Self
-argument_list|(
-name|GT
 operator|::
-name|getEntryNode
-argument_list|(
-name|G
-argument_list|)
-argument_list|)
-return|;
-block|}
-specifier|static
-specifier|inline
-name|_Self
-name|end
-parameter_list|(
-specifier|const
-name|GraphT
-modifier|&
-parameter_list|)
-block|{
-return|return
-name|_Self
-argument_list|()
-return|;
-block|}
-comment|// Direct loop termination test: I.isAtEnd() is more efficient than I == end()
-specifier|inline
-name|bool
-name|isAtEnd
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|!
-name|CurrentSCC
-operator|.
-name|empty
-argument_list|()
-operator|||
-name|VisitStack
-operator|.
-name|empty
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|CurrentSCC
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-specifier|inline
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|_Self
-operator|&
-name|x
-operator|)
-specifier|const
-block|{
-return|return
-name|VisitStack
-operator|==
-name|x
-operator|.
-name|VisitStack
-operator|&&
-name|CurrentSCC
-operator|==
-name|x
-operator|.
-name|CurrentSCC
-return|;
-block|}
-specifier|inline
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|_Self
-operator|&
-name|x
-operator|)
-specifier|const
-block|{
-return|return
-operator|!
-name|operator
-operator|==
-operator|(
-name|x
-operator|)
-return|;
-block|}
-comment|// Iterator traversal: forward iteration only
-specifier|inline
-name|_Self
-operator|&
-name|operator
-operator|++
-operator|(
-operator|)
-block|{
-comment|// Preincrement
-name|GetNextSCC
-argument_list|()
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-specifier|inline
-name|_Self
-name|operator
-operator|++
-operator|(
-name|int
-operator|)
-block|{
-comment|// Postincrement
-name|_Self
-name|tmp
-operator|=
-operator|*
-name|this
-block|;
-operator|++
-operator|*
-name|this
-block|;
-return|return
-name|tmp
-return|;
-block|}
-comment|// Retrieve a reference to the current SCC
-specifier|inline
-specifier|const
-name|SccTy
-operator|&
-name|operator
-operator|*
-operator|(
-operator|)
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|!
-name|CurrentSCC
-operator|.
-name|empty
-argument_list|()
-operator|&&
-literal|"Dereferencing END SCC iterator!"
-argument_list|)
-block|;
-return|return
-name|CurrentSCC
-return|;
-block|}
-specifier|inline
-name|SccTy
-modifier|&
-name|operator
-modifier|*
-parameter_list|()
-block|{
-name|assert
-argument_list|(
-operator|!
-name|CurrentSCC
-operator|.
-name|empty
-argument_list|()
-operator|&&
-literal|"Dereferencing END SCC iterator!"
-argument_list|)
-expr_stmt|;
-return|return
-name|CurrentSCC
-return|;
-block|}
-comment|// hasLoop() -- Test if the current SCC has a loop.  If it has more than one
-comment|// node, this is trivially true.  If not, it may still contain a loop if the
-comment|// node has an edge back to itself.
-name|bool
 name|hasLoop
 argument_list|()
 specifier|const
@@ -871,6 +978,9 @@ operator|.
 name|front
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|ChildItTy
@@ -909,72 +1019,21 @@ condition|)
 return|return
 name|true
 return|;
+end_for
+
+begin_return
 return|return
 name|false
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
-comment|/// ReplaceNode - This informs the scc_iterator that the specified Old node
-end_comment
-
-begin_comment
-comment|/// has been deleted, and New is to be used in its place.
-end_comment
-
-begin_function
-name|void
-name|ReplaceNode
-parameter_list|(
-name|NodeType
-modifier|*
-name|Old
-parameter_list|,
-name|NodeType
-modifier|*
-name|New
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|nodeVisitNumbers
-operator|.
-name|count
-argument_list|(
-name|Old
-argument_list|)
-operator|&&
-literal|"Old not in scc_iterator?"
-argument_list|)
-expr_stmt|;
-name|nodeVisitNumbers
-index|[
-name|New
-index|]
-operator|=
-name|nodeVisitNumbers
-index|[
-name|Old
-index|]
-expr_stmt|;
-name|nodeVisitNumbers
-operator|.
-name|erase
-argument_list|(
-name|Old
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-unit|};
-comment|// Global constructor for the SCC iterator.
+unit|}
+comment|/// \brief Construct the begin iterator for a deduced graph type T.
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|class
 name|T
@@ -1001,6 +1060,10 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Construct the end iterator for a deduced graph type T.
+end_comment
 
 begin_expr_stmt
 name|template
@@ -1030,6 +1093,10 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Construct the begin iterator for a deduced graph type T's Inverse<T>.
+end_comment
 
 begin_expr_stmt
 name|template
@@ -1065,6 +1132,10 @@ argument_list|)
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Construct the end iterator for a deduced graph type T's Inverse<T>.
+end_comment
 
 begin_expr_stmt
 name|template

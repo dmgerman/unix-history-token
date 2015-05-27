@@ -3539,7 +3539,7 @@ parameter_list|)
 function_decl|;
 ifndef|#
 directive|ifndef
-name|sun
+name|illumos
 specifier|extern
 name|int
 name|zmount
@@ -3570,7 +3570,6 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/* !sun */
 ifdef|#
 directive|ifdef
 name|__cplusplus

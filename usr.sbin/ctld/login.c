@@ -32,18 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
 end_include
 
@@ -452,16 +440,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|ISCSI_SNLT
+argument_list|(
 name|ntohl
 argument_list|(
 name|bhslr
 operator|->
 name|bhslr_cmdsn
 argument_list|)
-operator|<
+argument_list|,
 name|conn
 operator|->
 name|conn_cmdsn
+argument_list|)
 condition|)
 block|{
 name|login_send_error
@@ -478,7 +469,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Login PDU with decreasing CmdSN: "
-literal|"was %d, is %d"
+literal|"was %u, is %u"
 argument_list|,
 name|conn
 operator|->
@@ -525,7 +516,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Login PDU with wrong ExpStatSN: "
-literal|"is %d, should be %d"
+literal|"is %u, should be %u"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -2064,7 +2055,8 @@ parameter_list|)
 block|{
 name|int
 name|which
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|tmp
 decl_stmt|;
 name|struct
@@ -2633,22 +2625,28 @@ if|if
 condition|(
 name|tmp
 operator|>
-name|MAX_DATA_SEGMENT_LENGTH
+name|conn
+operator|->
+name|conn_data_segment_limit
 condition|)
 block|{
 name|log_debugx
 argument_list|(
 literal|"capping MaxRecvDataSegmentLength "
-literal|"from %d to %d"
+literal|"from %zd to %zd"
 argument_list|,
 name|tmp
 argument_list|,
-name|MAX_DATA_SEGMENT_LENGTH
+name|conn
+operator|->
+name|conn_data_segment_limit
 argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
-name|MAX_DATA_SEGMENT_LENGTH
+name|conn
+operator|->
+name|conn_data_segment_limit
 expr_stmt|;
 block|}
 name|conn
@@ -2724,7 +2722,7 @@ condition|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"capping MaxBurstLength from %d to %d"
+literal|"capping MaxBurstLength from %zd to %d"
 argument_list|,
 name|tmp
 argument_list|,
@@ -2805,21 +2803,27 @@ if|if
 condition|(
 name|tmp
 operator|>
-name|MAX_DATA_SEGMENT_LENGTH
+name|conn
+operator|->
+name|conn_data_segment_limit
 condition|)
 block|{
 name|log_debugx
 argument_list|(
-literal|"capping FirstBurstLength from %d to %d"
+literal|"capping FirstBurstLength from %zd to %zd"
 argument_list|,
 name|tmp
 argument_list|,
-name|MAX_DATA_SEGMENT_LENGTH
+name|conn
+operator|->
+name|conn_data_segment_limit
 argument_list|)
 expr_stmt|;
 name|tmp
 operator|=
-name|MAX_DATA_SEGMENT_LENGTH
+name|conn
+operator|->
+name|conn_data_segment_limit
 expr_stmt|;
 block|}
 comment|/* 		 * We don't pass the value to the kernel; it only enforces 		 * hardcoded limit anyway. 		 */
@@ -3361,6 +3365,51 @@ name|skipped_security
 decl_stmt|;
 if|if
 condition|(
+name|conn
+operator|->
+name|conn_session_type
+operator|==
+name|CONN_SESSION_TYPE_NORMAL
+condition|)
+block|{
+comment|/* 		 * Query the kernel for MaxDataSegmentLength it can handle. 		 * In case of offload, it depends on hardware capabilities. 		 */
+name|assert
+argument_list|(
+name|conn
+operator|->
+name|conn_target
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|kernel_limits
+argument_list|(
+name|conn
+operator|->
+name|conn_portal
+operator|->
+name|p_portal_group
+operator|->
+name|pg_offload
+argument_list|,
+operator|&
+name|conn
+operator|->
+name|conn_data_segment_limit
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|conn
+operator|->
+name|conn_data_segment_limit
+operator|=
+name|MAX_DATA_SEGMENT_LENGTH
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|request
 operator|==
 name|NULL
@@ -3864,7 +3913,6 @@ operator|->
 name|conn_initiator_name
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX: This doesn't work (does nothing) because of Capsicum. 	 */
 name|setproctitle
 argument_list|(
 literal|"%s (%s)"
@@ -4074,13 +4122,11 @@ expr_stmt|;
 block|}
 name|conn
 operator|->
-name|conn_target
+name|conn_port
 operator|=
-name|target_find
+name|port_find_in_pg
 argument_list|(
 name|pg
-operator|->
-name|pg_conf
 argument_list|,
 name|target_name
 argument_list|)
@@ -4089,7 +4135,7 @@ if|if
 condition|(
 name|conn
 operator|->
-name|conn_target
+name|conn_port
 operator|==
 name|NULL
 condition|)
@@ -4113,6 +4159,16 @@ name|target_name
 argument_list|)
 expr_stmt|;
 block|}
+name|conn
+operator|->
+name|conn_target
+operator|=
+name|conn
+operator|->
+name|conn_port
+operator|->
+name|p_target
+expr_stmt|;
 block|}
 comment|/* 	 * At this point we know what kind of authentication we need. 	 */
 if|if
@@ -4124,6 +4180,20 @@ operator|==
 name|CONN_SESSION_TYPE_NORMAL
 condition|)
 block|{
+name|ag
+operator|=
+name|conn
+operator|->
+name|conn_port
+operator|->
+name|p_auth_group
+expr_stmt|;
+if|if
+condition|(
+name|ag
+operator|==
+name|NULL
+condition|)
 name|ag
 operator|=
 name|conn

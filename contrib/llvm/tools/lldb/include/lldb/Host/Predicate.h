@@ -55,6 +55,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|"lldb/lldb-defines.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/Mutex.h"
 end_include
 
@@ -176,7 +182,7 @@ block|{     }
 comment|//------------------------------------------------------------------
 comment|/// Destructor.
 comment|///
-comment|/// Destrory the condition, mutex, and T objects.
+comment|/// Destroy the condition, mutex, and T objects.
 comment|//------------------------------------------------------------------
 operator|~
 name|Predicate
@@ -223,7 +229,7 @@ comment|/// @param[in] value
 comment|///     The new value to set.
 comment|///
 comment|/// @param[in] broadcast_type
-comment|///     A value indicating when and if to broadast. See the
+comment|///     A value indicating when and if to broadcast. See the
 comment|///     PredicateBroadcastType enumeration for details.
 comment|///
 comment|/// @see Predicate::Broadcast()
@@ -287,7 +293,7 @@ comment|/// @param[in] bits
 comment|///     The bits to set in \a m_value.
 comment|///
 comment|/// @param[in] broadcast_type
-comment|///     A value indicating when and if to broadast. See the
+comment|///     A value indicating when and if to broadcast. See the
 comment|///     PredicateBroadcastType enumeration for details.
 comment|///
 comment|/// @see Predicate::Broadcast()
@@ -351,7 +357,7 @@ comment|/// @param[in] bits
 comment|///     The bits to clear in \a m_value.
 comment|///
 comment|/// @param[in] broadcast_type
-comment|///     A value indicating when and if to broadast. See the
+comment|///     A value indicating when and if to broadcast. See the
 comment|///     PredicateBroadcastType enumeration for details.
 comment|///
 comment|/// @see Predicate::Broadcast()
@@ -1062,7 +1068,7 @@ block|}
 name|protected
 label|:
 comment|//----------------------------------------------------------------------
-comment|// pthread condition and mutex variable to controll access and allow
+comment|// pthread condition and mutex variable to control access and allow
 comment|// blocking between the main thread and the spotlight index thread.
 comment|//----------------------------------------------------------------------
 name|T
@@ -1084,7 +1090,7 @@ comment|//------------------------------------------------------------------
 comment|/// Broadcast if needed.
 comment|///
 comment|/// Check to see if we need to broadcast to our condition variable
-comment|/// depedning on the \a old_value and on the \a broadcast_type.
+comment|/// depending on the \a old_value and on the \a broadcast_type.
 comment|///
 comment|/// If \a broadcast_type is eBroadcastNever, no broadcast will be
 comment|/// sent.

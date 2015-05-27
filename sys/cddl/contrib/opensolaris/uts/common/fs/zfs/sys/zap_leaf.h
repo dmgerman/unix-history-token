@@ -107,7 +107,7 @@ parameter_list|,
 name|idx
 parameter_list|)
 define|\
-value|((zap_leaf_chunk_t *) \ 	((l)->l_phys->l_hash + ZAP_LEAF_HASH_NUMENTRIES(l)))[idx]
+value|((zap_leaf_chunk_t *) \ 	(zap_leaf_phys(l)->l_hash + ZAP_LEAF_HASH_NUMENTRIES(l)))[idx]
 define|#
 directive|define
 name|ZAP_LEAF_ENTRY
@@ -316,13 +316,29 @@ name|dmu_buf_t
 modifier|*
 name|l_dbuf
 decl_stmt|;
-name|zap_leaf_phys_t
-modifier|*
-name|l_phys
-decl_stmt|;
 block|}
 name|zap_leaf_t
 typedef|;
+specifier|inline
+name|zap_leaf_phys_t
+modifier|*
+name|zap_leaf_phys
+parameter_list|(
+name|zap_leaf_t
+modifier|*
+name|l
+parameter_list|)
+block|{
+return|return
+operator|(
+name|l
+operator|->
+name|l_dbuf
+operator|->
+name|db_data
+operator|)
+return|;
+block|}
 typedef|typedef
 struct|struct
 name|zap_entry_handle

@@ -79,6 +79,12 @@ directive|include
 file|"llvm/MC/MCSymbolizer.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -92,6 +98,8 @@ range|:
 name|public
 name|MCSymbolizer
 block|{
+name|protected
+operator|:
 comment|/// \name Hooks for symbolic disassembly via the public 'C' interface.
 comment|/// @{
 comment|/// The function to get the symbolic information for operands.
@@ -114,7 +122,7 @@ name|MCExternalSymbolizer
 argument_list|(
 argument|MCContext&Ctx
 argument_list|,
-argument|OwningPtr<MCRelocationInfo>&RelInfo
+argument|std::unique_ptr<MCRelocationInfo> RelInfo
 argument_list|,
 argument|LLVMOpInfoCallback getOpInfo
 argument_list|,
@@ -127,7 +135,12 @@ name|MCSymbolizer
 argument_list|(
 name|Ctx
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|RelInfo
+argument_list|)
 argument_list|)
 block|,
 name|GetOpInfo
@@ -162,6 +175,7 @@ argument|uint64_t Offset
 argument_list|,
 argument|uint64_t InstSize
 argument_list|)
+name|override
 block|;
 name|void
 name|tryAddingPcLoadReferenceComment
@@ -172,6 +186,7 @@ argument|int64_t Value
 argument_list|,
 argument|uint64_t Address
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

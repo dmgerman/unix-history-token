@@ -101,20 +101,17 @@ decl_stmt|;
 comment|// Displacement if not register.
 name|public
 label|:
-name|enum
-name|LLVM_ENUM_INT_TYPE
-function|(
+enum_decl|enum :
 name|uint32_t
-function|)
 block|{
 comment|// The target register number for an abstract frame pointer. The value is
 comment|// an arbitrary value that doesn't collide with any real target register.
 name|VirtualFP
-operator|=
+init|=
 operator|~
 literal|0U
 block|}
-empty_stmt|;
+enum_decl|;
 name|MachineLocation
 argument_list|()
 operator|:
@@ -340,6 +337,31 @@ endif|#
 directive|endif
 block|}
 empty_stmt|;
+specifier|inline
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|MachineLocation
+operator|&
+name|LHS
+operator|,
+specifier|const
+name|MachineLocation
+operator|&
+name|RHS
+operator|)
+block|{
+return|return
+operator|!
+operator|(
+name|LHS
+operator|==
+name|RHS
+operator|)
+return|;
+block|}
 block|}
 end_decl_stmt
 

@@ -70,6 +70,13 @@ name|RM_SLEEPABLE
 value|0x00000004
 end_define
 
+begin_define
+define|#
+directive|define
+name|RM_NEW
+value|0x00000008
+end_define
+
 begin_function_decl
 name|void
 name|rm_init

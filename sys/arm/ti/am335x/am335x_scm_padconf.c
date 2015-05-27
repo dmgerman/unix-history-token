@@ -116,7 +116,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/ti/ti_scm.h>
+file|<arm/ti/ti_pinmux.h>
 end_include
 
 begin_include
@@ -162,7 +162,7 @@ begin_decl_stmt
 specifier|const
 specifier|static
 name|struct
-name|ti_scm_padstate
+name|ti_pinmux_padstate
 name|ti_padstate_devmap
 index|[]
 init|=
@@ -217,14 +217,14 @@ begin_decl_stmt
 specifier|const
 specifier|static
 name|struct
-name|ti_scm_padconf
+name|ti_pinmux_padconf
 name|ti_padconf_devmap
 index|[]
 init|=
 block|{
 name|_PIN
 argument_list|(
-literal|0x800
+literal|0x000
 argument_list|,
 literal|"GPMC_AD0"
 argument_list|,
@@ -251,7 +251,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x804
+literal|0x004
 argument_list|,
 literal|"GPMC_AD1"
 argument_list|,
@@ -278,7 +278,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x808
+literal|0x008
 argument_list|,
 literal|"GPMC_AD2"
 argument_list|,
@@ -305,7 +305,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x80C
+literal|0x00C
 argument_list|,
 literal|"GPMC_AD3"
 argument_list|,
@@ -332,7 +332,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x810
+literal|0x010
 argument_list|,
 literal|"GPMC_AD4"
 argument_list|,
@@ -359,7 +359,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x814
+literal|0x014
 argument_list|,
 literal|"GPMC_AD5"
 argument_list|,
@@ -386,7 +386,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x818
+literal|0x018
 argument_list|,
 literal|"GPMC_AD6"
 argument_list|,
@@ -413,7 +413,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x81C
+literal|0x01C
 argument_list|,
 literal|"GPMC_AD7"
 argument_list|,
@@ -440,7 +440,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x820
+literal|0x020
 argument_list|,
 literal|"GPMC_AD8"
 argument_list|,
@@ -467,7 +467,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x824
+literal|0x024
 argument_list|,
 literal|"GPMC_AD9"
 argument_list|,
@@ -494,7 +494,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x828
+literal|0x028
 argument_list|,
 literal|"GPMC_AD10"
 argument_list|,
@@ -521,7 +521,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x82C
+literal|0x02C
 argument_list|,
 literal|"GPMC_AD11"
 argument_list|,
@@ -548,7 +548,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x830
+literal|0x030
 argument_list|,
 literal|"GPMC_AD12"
 argument_list|,
@@ -575,7 +575,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x834
+literal|0x034
 argument_list|,
 literal|"GPMC_AD13"
 argument_list|,
@@ -602,7 +602,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x838
+literal|0x038
 argument_list|,
 literal|"GPMC_AD14"
 argument_list|,
@@ -629,7 +629,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x83C
+literal|0x03C
 argument_list|,
 literal|"GPMC_AD15"
 argument_list|,
@@ -656,7 +656,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x840
+literal|0x040
 argument_list|,
 literal|"GPMC_A0"
 argument_list|,
@@ -683,7 +683,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x844
+literal|0x044
 argument_list|,
 literal|"GPMC_A1"
 argument_list|,
@@ -710,7 +710,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x848
+literal|0x048
 argument_list|,
 literal|"GPMC_A2"
 argument_list|,
@@ -737,7 +737,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x84C
+literal|0x04C
 argument_list|,
 literal|"GPMC_A3"
 argument_list|,
@@ -764,7 +764,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x850
+literal|0x050
 argument_list|,
 literal|"GPMC_A4"
 argument_list|,
@@ -791,7 +791,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x854
+literal|0x054
 argument_list|,
 literal|"GPMC_A5"
 argument_list|,
@@ -818,7 +818,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x858
+literal|0x058
 argument_list|,
 literal|"GPMC_A6"
 argument_list|,
@@ -845,7 +845,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x85C
+literal|0x05C
 argument_list|,
 literal|"GPMC_A7"
 argument_list|,
@@ -872,7 +872,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x860
+literal|0x060
 argument_list|,
 literal|"GPMC_A8"
 argument_list|,
@@ -899,7 +899,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x864
+literal|0x064
 argument_list|,
 literal|"GPMC_A9"
 argument_list|,
@@ -926,7 +926,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x868
+literal|0x068
 argument_list|,
 literal|"GPMC_A10"
 argument_list|,
@@ -953,7 +953,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x86C
+literal|0x06C
 argument_list|,
 literal|"GPMC_A11"
 argument_list|,
@@ -980,7 +980,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x870
+literal|0x070
 argument_list|,
 literal|"GPMC_WAIT0"
 argument_list|,
@@ -1007,7 +1007,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x874
+literal|0x074
 argument_list|,
 literal|"GPMC_WPn"
 argument_list|,
@@ -1034,7 +1034,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x878
+literal|0x078
 argument_list|,
 literal|"GPMC_BEn1"
 argument_list|,
@@ -1061,7 +1061,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x87c
+literal|0x07c
 argument_list|,
 literal|"GPMC_CSn0"
 argument_list|,
@@ -1088,7 +1088,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x880
+literal|0x080
 argument_list|,
 literal|"GPMC_CSn1"
 argument_list|,
@@ -1115,7 +1115,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x884
+literal|0x084
 argument_list|,
 literal|"GPMC_CSn2"
 argument_list|,
@@ -1142,7 +1142,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x888
+literal|0x088
 argument_list|,
 literal|"GPMC_CSn3"
 argument_list|,
@@ -1169,7 +1169,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x88c
+literal|0x08c
 argument_list|,
 literal|"GPMC_CLK"
 argument_list|,
@@ -1196,7 +1196,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x890
+literal|0x090
 argument_list|,
 literal|"GPMC_ADVn_ALE"
 argument_list|,
@@ -1223,7 +1223,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x894
+literal|0x094
 argument_list|,
 literal|"GPMC_OEn_REn"
 argument_list|,
@@ -1250,7 +1250,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x898
+literal|0x098
 argument_list|,
 literal|"GPMC_WEn"
 argument_list|,
@@ -1277,7 +1277,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x89c
+literal|0x09c
 argument_list|,
 literal|"GPMC_BEn0_CLE"
 argument_list|,
@@ -1304,7 +1304,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8a0
+literal|0x0a0
 argument_list|,
 literal|"LCD_DATA0"
 argument_list|,
@@ -1331,7 +1331,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8a4
+literal|0x0a4
 argument_list|,
 literal|"LCD_DATA1"
 argument_list|,
@@ -1358,7 +1358,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8a8
+literal|0x0a8
 argument_list|,
 literal|"LCD_DATA2"
 argument_list|,
@@ -1385,7 +1385,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8ac
+literal|0x0ac
 argument_list|,
 literal|"LCD_DATA3"
 argument_list|,
@@ -1412,7 +1412,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8b0
+literal|0x0b0
 argument_list|,
 literal|"LCD_DATA4"
 argument_list|,
@@ -1439,7 +1439,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8b4
+literal|0x0b4
 argument_list|,
 literal|"LCD_DATA5"
 argument_list|,
@@ -1466,7 +1466,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8b8
+literal|0x0b8
 argument_list|,
 literal|"LCD_DATA6"
 argument_list|,
@@ -1493,7 +1493,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8bc
+literal|0x0bc
 argument_list|,
 literal|"LCD_DATA7"
 argument_list|,
@@ -1520,7 +1520,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8c0
+literal|0x0c0
 argument_list|,
 literal|"LCD_DATA8"
 argument_list|,
@@ -1547,7 +1547,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8c4
+literal|0x0c4
 argument_list|,
 literal|"LCD_DATA9"
 argument_list|,
@@ -1574,7 +1574,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8c8
+literal|0x0c8
 argument_list|,
 literal|"LCD_DATA10"
 argument_list|,
@@ -1601,7 +1601,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8cc
+literal|0x0cc
 argument_list|,
 literal|"LCD_DATA11"
 argument_list|,
@@ -1628,7 +1628,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8d0
+literal|0x0d0
 argument_list|,
 literal|"LCD_DATA12"
 argument_list|,
@@ -1655,7 +1655,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8d4
+literal|0x0d4
 argument_list|,
 literal|"LCD_DATA13"
 argument_list|,
@@ -1682,7 +1682,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8d8
+literal|0x0d8
 argument_list|,
 literal|"LCD_DATA14"
 argument_list|,
@@ -1709,7 +1709,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8dc
+literal|0x0dc
 argument_list|,
 literal|"LCD_DATA15"
 argument_list|,
@@ -1736,7 +1736,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8e0
+literal|0x0e0
 argument_list|,
 literal|"LCD_VSYNC"
 argument_list|,
@@ -1763,7 +1763,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8e4
+literal|0x0e4
 argument_list|,
 literal|"LCD_HSYNC"
 argument_list|,
@@ -1790,7 +1790,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8e8
+literal|0x0e8
 argument_list|,
 literal|"LCD_PCLK"
 argument_list|,
@@ -1817,7 +1817,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8ec
+literal|0x0ec
 argument_list|,
 literal|"LCD_AC_BIAS_EN"
 argument_list|,
@@ -1844,7 +1844,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8f0
+literal|0x0f0
 argument_list|,
 literal|"MMC0_DAT3"
 argument_list|,
@@ -1871,7 +1871,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8f4
+literal|0x0f4
 argument_list|,
 literal|"MMC0_DAT2"
 argument_list|,
@@ -1898,7 +1898,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8f8
+literal|0x0f8
 argument_list|,
 literal|"MMC0_DAT1"
 argument_list|,
@@ -1925,7 +1925,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x8fc
+literal|0x0fc
 argument_list|,
 literal|"MMC0_DAT0"
 argument_list|,
@@ -1952,7 +1952,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x900
+literal|0x100
 argument_list|,
 literal|"MMC0_CLK"
 argument_list|,
@@ -1979,7 +1979,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x904
+literal|0x104
 argument_list|,
 literal|"MMC0_CMD"
 argument_list|,
@@ -2006,7 +2006,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x908
+literal|0x108
 argument_list|,
 literal|"MII1_COL"
 argument_list|,
@@ -2033,7 +2033,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x90c
+literal|0x10c
 argument_list|,
 literal|"MII1_CRS"
 argument_list|,
@@ -2060,7 +2060,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x910
+literal|0x110
 argument_list|,
 literal|"MII1_RX_ER"
 argument_list|,
@@ -2087,7 +2087,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x914
+literal|0x114
 argument_list|,
 literal|"MII1_TX_EN"
 argument_list|,
@@ -2114,7 +2114,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x918
+literal|0x118
 argument_list|,
 literal|"MII1_RX_DV"
 argument_list|,
@@ -2141,7 +2141,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x91c
+literal|0x11c
 argument_list|,
 literal|"MII1_TXD3"
 argument_list|,
@@ -2168,7 +2168,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x920
+literal|0x120
 argument_list|,
 literal|"MII1_TXD2"
 argument_list|,
@@ -2195,7 +2195,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x924
+literal|0x124
 argument_list|,
 literal|"MII1_TXD1"
 argument_list|,
@@ -2222,7 +2222,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x928
+literal|0x128
 argument_list|,
 literal|"MII1_TXD0"
 argument_list|,
@@ -2249,7 +2249,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x92c
+literal|0x12c
 argument_list|,
 literal|"MII1_TX_CLK"
 argument_list|,
@@ -2276,7 +2276,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x930
+literal|0x130
 argument_list|,
 literal|"MII1_RX_CLK"
 argument_list|,
@@ -2303,7 +2303,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x934
+literal|0x134
 argument_list|,
 literal|"MII1_RXD3"
 argument_list|,
@@ -2330,7 +2330,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x938
+literal|0x138
 argument_list|,
 literal|"MII1_RXD2"
 argument_list|,
@@ -2357,7 +2357,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x93c
+literal|0x13c
 argument_list|,
 literal|"MII1_RXD1"
 argument_list|,
@@ -2384,7 +2384,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x940
+literal|0x140
 argument_list|,
 literal|"MII1_RXD0"
 argument_list|,
@@ -2411,7 +2411,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x944
+literal|0x144
 argument_list|,
 literal|"RMII1_REF_CLK"
 argument_list|,
@@ -2438,7 +2438,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x948
+literal|0x148
 argument_list|,
 literal|"MDIO"
 argument_list|,
@@ -2465,7 +2465,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x94c
+literal|0x14c
 argument_list|,
 literal|"MDC"
 argument_list|,
@@ -2492,7 +2492,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x950
+literal|0x150
 argument_list|,
 literal|"SPI0_SCLK"
 argument_list|,
@@ -2519,7 +2519,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x954
+literal|0x154
 argument_list|,
 literal|"SPI0_D0"
 argument_list|,
@@ -2546,7 +2546,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x958
+literal|0x158
 argument_list|,
 literal|"SPI0_D1"
 argument_list|,
@@ -2573,7 +2573,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x95c
+literal|0x15c
 argument_list|,
 literal|"SPI0_CS0"
 argument_list|,
@@ -2600,7 +2600,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x960
+literal|0x160
 argument_list|,
 literal|"SPI0_CS1"
 argument_list|,
@@ -2627,7 +2627,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x964
+literal|0x164
 argument_list|,
 literal|"ECAP0_IN_PWM0_OUT"
 argument_list|,
@@ -2654,7 +2654,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x968
+literal|0x168
 argument_list|,
 literal|"UART0_CTSn"
 argument_list|,
@@ -2681,7 +2681,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x96c
+literal|0x16c
 argument_list|,
 literal|"UART0_RTSn"
 argument_list|,
@@ -2708,7 +2708,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x970
+literal|0x170
 argument_list|,
 literal|"UART0_rxd"
 argument_list|,
@@ -2735,7 +2735,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x974
+literal|0x174
 argument_list|,
 literal|"UART0_txd"
 argument_list|,
@@ -2762,7 +2762,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x978
+literal|0x178
 argument_list|,
 literal|"UART1_CTSn"
 argument_list|,
@@ -2789,7 +2789,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x97c
+literal|0x17c
 argument_list|,
 literal|"UART1_RTSn"
 argument_list|,
@@ -2816,7 +2816,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x980
+literal|0x180
 argument_list|,
 literal|"UART1_RXD"
 argument_list|,
@@ -2843,7 +2843,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x984
+literal|0x184
 argument_list|,
 literal|"UART1_TXD"
 argument_list|,
@@ -2870,7 +2870,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x988
+literal|0x188
 argument_list|,
 literal|"I2C0_SDA"
 argument_list|,
@@ -2897,7 +2897,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x98c
+literal|0x18c
 argument_list|,
 literal|"I2C0_SCL"
 argument_list|,
@@ -2924,7 +2924,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x990
+literal|0x190
 argument_list|,
 literal|"MCASP0_ACLKX"
 argument_list|,
@@ -2951,7 +2951,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x994
+literal|0x194
 argument_list|,
 literal|"MCASP0_FSX"
 argument_list|,
@@ -2978,7 +2978,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x998
+literal|0x198
 argument_list|,
 literal|"MCASP0_AXR0"
 argument_list|,
@@ -3005,7 +3005,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x99c
+literal|0x19c
 argument_list|,
 literal|"MCASP0_AHCLKR"
 argument_list|,
@@ -3032,7 +3032,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x9a0
+literal|0x1a0
 argument_list|,
 literal|"MCASP0_ACLKR"
 argument_list|,
@@ -3059,7 +3059,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x9a4
+literal|0x1a4
 argument_list|,
 literal|"MCASP0_FSR"
 argument_list|,
@@ -3086,7 +3086,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x9a8
+literal|0x1a8
 argument_list|,
 literal|"MCASP0_AXR1"
 argument_list|,
@@ -3113,7 +3113,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x9ac
+literal|0x1ac
 argument_list|,
 literal|"MCASP0_AHCLKX"
 argument_list|,
@@ -3140,7 +3140,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x9b0
+literal|0x1b0
 argument_list|,
 literal|"XDMA_EVENT_INTR0"
 argument_list|,
@@ -3167,7 +3167,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x9b4
+literal|0x1b4
 argument_list|,
 literal|"XDMA_EVENT_INTR1"
 argument_list|,
@@ -3195,12 +3195,12 @@ block|,
 if|#
 directive|if
 literal|0
-block|_PIN(0x9b8, "nresetin_out",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9bc, "porz",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9c0, "nnmi",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9c4, "osc0_in",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9c8, "osc0_out",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9cc, "osc0_vss",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9d0, "tms",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9d4, "tdi",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9d8, "tdo",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9dc, "tck",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9e0, "ntrst",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+block|_PIN(0x1b8, "nresetin_out",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1bc, "porz",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1c0, "nnmi",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1c4, "osc0_in",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1c8, "osc0_out",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1cc, "osc0_vss",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1d0, "tms",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1d4, "tdi",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1d8, "tdo",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1dc, "tck",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1e0, "ntrst",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 endif|#
 directive|endif
 name|_PIN
 argument_list|(
-literal|0x9e4
+literal|0x1e4
 argument_list|,
 literal|"EMU0"
 argument_list|,
@@ -3227,7 +3227,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0x9e8
+literal|0x1e8
 argument_list|,
 literal|"EMU1"
 argument_list|,
@@ -3255,12 +3255,12 @@ block|,
 if|#
 directive|if
 literal|0
-block|_PIN(0x9ec, "osc1_in",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9f0, "osc1_out",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9f4, "osc1_vss",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9f8, "rtc_porz",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x9fc, "pmic_power_en",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa00, "ext_wakeup",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa04, "enz_kaldo_1p8v",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+block|_PIN(0x1ec, "osc1_in",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1f0, "osc1_out",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1f4, "osc1_vss",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1f8, "rtc_porz",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x1fc, "pmic_power_en",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x200, "ext_wakeup",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x204, "enz_kaldo_1p8v",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 endif|#
 directive|endif
 name|_PIN
 argument_list|(
-literal|0xa08
+literal|0x208
 argument_list|,
 literal|"USB0_DM"
 argument_list|,
@@ -3287,7 +3287,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0xa0c
+literal|0x20c
 argument_list|,
 literal|"USB0_DP"
 argument_list|,
@@ -3314,7 +3314,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0xa10
+literal|0x210
 argument_list|,
 literal|"USB0_CE"
 argument_list|,
@@ -3341,7 +3341,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0xa14
+literal|0x214
 argument_list|,
 literal|"USB0_ID"
 argument_list|,
@@ -3368,7 +3368,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0xa18
+literal|0x218
 argument_list|,
 literal|"USB0_VBUS"
 argument_list|,
@@ -3395,7 +3395,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0xa1c
+literal|0x21c
 argument_list|,
 literal|"USB0_DRVVBUS"
 argument_list|,
@@ -3422,7 +3422,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0xa20
+literal|0x220
 argument_list|,
 literal|"USB1_DM"
 argument_list|,
@@ -3449,7 +3449,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0xa24
+literal|0x224
 argument_list|,
 literal|"USB1_DP"
 argument_list|,
@@ -3476,7 +3476,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0xa28
+literal|0x228
 argument_list|,
 literal|"USB1_CE"
 argument_list|,
@@ -3503,7 +3503,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0xa2c
+literal|0x22c
 argument_list|,
 literal|"USB1_ID"
 argument_list|,
@@ -3530,7 +3530,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0xa30
+literal|0x230
 argument_list|,
 literal|"USB1_VBUS"
 argument_list|,
@@ -3557,7 +3557,7 @@ argument_list|)
 block|,
 name|_PIN
 argument_list|(
-literal|0xa34
+literal|0x234
 argument_list|,
 literal|"USB1_DRVVBUS"
 argument_list|,
@@ -3585,7 +3585,7 @@ block|,
 if|#
 directive|if
 literal|0
-block|_PIN(0xa38, "ddr_resetn",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa3c, "ddr_csn0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa40, "ddr_cke",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa44, "ddr_ck",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa48, "ddr_nck",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa4c, "ddr_casn",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa50, "ddr_rasn",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa54, "ddr_wen",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa58, "ddr_ba0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa5c, "ddr_ba1",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa60, "ddr_ba2",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa64, "ddr_a0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa68, "ddr_a1",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa6c, "ddr_a2",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa70, "ddr_a3",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa74, "ddr_a4",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa78, "ddr_a5",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa7c, "ddr_a6",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa80, "ddr_a7",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa84, "ddr_a8",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa88, "ddr_a9",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa8c, "ddr_a10",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa90, "ddr_a11",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa94, "ddr_a12",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa98, "ddr_a13",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xa9c, "ddr_a14",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xaa0, "ddr_a15",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xaa4, "ddr_odt",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xaa8, "ddr_d0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xaac, "ddr_d1",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xab0, "ddr_d2",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xab4, "ddr_d3",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xab8, "ddr_d4",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xabc, "ddr_d5",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xac0, "ddr_d6",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xac4, "ddr_d7",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xac8, "ddr_d8",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xacc, "ddr_d9",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xad0, "ddr_d10",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xad4, "ddr_d11",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xad8, "ddr_d12",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xadc, "ddr_d13",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xae0, "ddr_d14",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xae4, "ddr_d15",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xae8, "ddr_dqm0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xaec, "ddr_dqm1",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xaf0, "ddr_dqs0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xaf4, "ddr_dqsn0",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xaf8, "ddr_dqs1",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xafc, "ddr_dqsn1",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb00, "ddr_vref",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb04, "ddr_vtp",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb08, "ddr_strben0",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb0c, "ddr_strben1",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb2c, "ain0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb28, "ain1",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb24, "ain2",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb20, "ain3",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb1c, "ain4",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb18, "ain5",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb14, "ain6",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb10, "ain7",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb30, "vrefp",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb34, "vrefn",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb38, "avdd",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb3c, "avss",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb40, "iforce",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb44, "vsense",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0xb48, "testout",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+block|_PIN(0x238, "ddr_resetn",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x23c, "ddr_csn0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x240, "ddr_cke",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x244, "ddr_ck",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x248, "ddr_nck",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x24c, "ddr_casn",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x250, "ddr_rasn",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x254, "ddr_wen",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x258, "ddr_ba0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x25c, "ddr_ba1",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x260, "ddr_ba2",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x264, "ddr_a0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x268, "ddr_a1",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x26c, "ddr_a2",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x270, "ddr_a3",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x274, "ddr_a4",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x278, "ddr_a5",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x27c, "ddr_a6",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x280, "ddr_a7",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x284, "ddr_a8",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x288, "ddr_a9",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x28c, "ddr_a10",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x290, "ddr_a11",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x294, "ddr_a12",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x298, "ddr_a13",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x29c, "ddr_a14",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2a0, "ddr_a15",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2a4, "ddr_odt",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2a8, "ddr_d0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2ac, "ddr_d1",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2b0, "ddr_d2",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2b4, "ddr_d3",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2b8, "ddr_d4",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2bc, "ddr_d5",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2c0, "ddr_d6",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2c4, "ddr_d7",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2c8, "ddr_d8",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2cc, "ddr_d9",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2d0, "ddr_d10",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2d4, "ddr_d11",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2d8, "ddr_d12",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2dc, "ddr_d13",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2e0, "ddr_d14",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2e4, "ddr_d15",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2e8, "ddr_dqm0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2ec, "ddr_dqm1",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2f0, "ddr_dqs0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2f4, "ddr_dqsn0",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2f8, "ddr_dqs1",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x2fc, "ddr_dqsn1",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x300, "ddr_vref",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x304, "ddr_vtp",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x308, "ddr_strben0",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x30c, "ddr_strben1",	0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x32c, "ain0",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x328, "ain1",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x324, "ain2",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x320, "ain3",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x31c, "ain4",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x318, "ain5",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x314, "ain6",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x310, "ain7",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x330, "vrefp",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x334, "vrefn",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x338, "avdd",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x33c, "avss",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x340, "iforce",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x344, "vsense",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), 	_PIN(0x348, "testout",		0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 endif|#
 directive|endif
 block|{
@@ -3601,8 +3601,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|struct
-name|ti_scm_device
-name|ti_scm_dev
+name|ti_pinmux_device
+name|ti_pinmux_dev
 init|=
 block|{
 operator|.
@@ -3618,23 +3618,11 @@ block|,
 operator|.
 name|padstate
 operator|=
-operator|(
-expr|struct
-name|ti_scm_padstate
-operator|*
-operator|)
-operator|&
 name|ti_padstate_devmap
 block|,
 operator|.
 name|padconf
 operator|=
-operator|(
-expr|struct
-name|ti_scm_padconf
-operator|*
-operator|)
-operator|&
 name|ti_padconf_devmap
 block|, }
 decl_stmt|;

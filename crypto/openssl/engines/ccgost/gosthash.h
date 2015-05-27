@@ -160,7 +160,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Cleans up all fields, except cipher ctx preparing ctx for computing  * of new hash value */
+comment|/*  * Cleans up all fields, except cipher ctx preparing ctx for computing of new  * hash value  */
 end_comment
 
 begin_function_decl
@@ -198,7 +198,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Finalizes computation of hash  and fills buffer (which should be at  * least 32 bytes long) with value of computed hash. */
+comment|/*  * Finalizes computation of hash and fills buffer (which should be at least  * 32 bytes long) with value of computed hash.  */
 end_comment
 
 begin_function_decl

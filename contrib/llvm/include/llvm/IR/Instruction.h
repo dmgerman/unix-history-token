@@ -66,19 +66,25 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ilist_node.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/User.h"
+file|"llvm/IR/DebugLoc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DebugLoc.h"
+file|"llvm/IR/User.h"
 end_include
 
 begin_decl_stmt
@@ -94,6 +100,9 @@ decl_stmt|;
 name|class
 name|MDNode
 decl_stmt|;
+struct_decl|struct
+name|AAMDNodes
+struct_decl|;
 name|template
 operator|<
 name|typename
@@ -159,11 +168,11 @@ operator|~
 name|Instruction
 argument_list|()
 expr_stmt|;
-comment|/// use_back - Specialize the methods defined in Value, as we know that an
+comment|/// user_back - Specialize the methods defined in Value, as we know that an
 comment|/// instruction can only be used by other instructions.
 name|Instruction
 modifier|*
-name|use_back
+name|user_back
 parameter_list|()
 block|{
 return|return
@@ -173,7 +182,7 @@ name|Instruction
 operator|>
 operator|(
 operator|*
-name|use_begin
+name|user_begin
 argument_list|()
 operator|)
 return|;
@@ -181,7 +190,7 @@ block|}
 specifier|const
 name|Instruction
 operator|*
-name|use_back
+name|user_back
 argument_list|()
 specifier|const
 block|{
@@ -192,7 +201,7 @@ name|Instruction
 operator|>
 operator|(
 operator|*
-name|use_begin
+name|user_begin
 argument_list|()
 operator|)
 return|;
@@ -219,6 +228,13 @@ return|return
 name|Parent
 return|;
 block|}
+specifier|const
+name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// removeFromParent - This method unlinks 'this' from the containing basic
 comment|/// block, but does not delete it.
 comment|///
@@ -519,7 +535,7 @@ name|hasMetadata
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|getMetadataImpl
@@ -546,7 +562,7 @@ name|hasMetadata
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|getMetadataImpl
@@ -571,8 +587,7 @@ name|unsigned
 argument_list|,
 name|MDNode
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|&
 name|MDs
 argument_list|)
@@ -604,8 +619,7 @@ name|unsigned
 argument_list|,
 name|MDNode
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|&
 name|MDs
 argument_list|)
@@ -622,6 +636,23 @@ name|MDs
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// getAAMetadata - Fills the AAMDNodes structure with AA metadata from
+comment|/// this instruction. When Merge is true, the existing AA metadata is
+comment|/// merged with that from this instruction providing the most-general result.
+name|void
+name|getAAMetadata
+argument_list|(
+name|AAMDNodes
+operator|&
+name|N
+argument_list|,
+name|bool
+name|Merge
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// setMetadata - Set the metadata of the specified kind to the specified
 comment|/// node.  This updates/replaces metadata if already present, or removes it if
 comment|/// Node is null.
@@ -645,6 +676,85 @@ parameter_list|,
 name|MDNode
 modifier|*
 name|Node
+parameter_list|)
+function_decl|;
+comment|/// \brief Drop unknown metadata.
+comment|/// Passes are required to drop metadata they don't understand. This is a
+comment|/// convenience method for passes to do so.
+name|void
+name|dropUnknownMetadata
+argument_list|(
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|KnownIDs
+argument_list|)
+decl_stmt|;
+name|void
+name|dropUnknownMetadata
+parameter_list|()
+block|{
+return|return
+name|dropUnknownMetadata
+argument_list|(
+name|None
+argument_list|)
+return|;
+block|}
+name|void
+name|dropUnknownMetadata
+parameter_list|(
+name|unsigned
+name|ID1
+parameter_list|)
+block|{
+return|return
+name|dropUnknownMetadata
+argument_list|(
+name|makeArrayRef
+argument_list|(
+name|ID1
+argument_list|)
+argument_list|)
+return|;
+block|}
+name|void
+name|dropUnknownMetadata
+parameter_list|(
+name|unsigned
+name|ID1
+parameter_list|,
+name|unsigned
+name|ID2
+parameter_list|)
+block|{
+name|unsigned
+name|IDs
+index|[]
+init|=
+block|{
+name|ID1
+block|,
+name|ID2
+block|}
+decl_stmt|;
+return|return
+name|dropUnknownMetadata
+argument_list|(
+name|IDs
+argument_list|)
+return|;
+block|}
+comment|/// setAAMetadata - Sets the metadata on this instruction from the
+comment|/// AAMDNodes structure.
+name|void
+name|setAAMetadata
+parameter_list|(
+specifier|const
+name|AAMDNodes
+modifier|&
+name|N
 parameter_list|)
 function_decl|;
 comment|/// setDebugLoc - Set the debug location information for this instruction.
@@ -724,11 +834,21 @@ name|bool
 name|B
 parameter_list|)
 function_decl|;
-comment|/// Convenience function for setting all the fast-math flags on this
+comment|/// Convenience function for setting multiple fast-math flags on this
 comment|/// instruction, which must be an operator which supports these flags. See
-comment|/// LangRef.html for the meaning of these flats.
+comment|/// LangRef.html for the meaning of these flags.
 name|void
 name|setFastMathFlags
+parameter_list|(
+name|FastMathFlags
+name|FMF
+parameter_list|)
+function_decl|;
+comment|/// Convenience function for transferring all fast-math flag values to this
+comment|/// instruction, which must be an operator which supports these flags. See
+comment|/// LangRef.html for the meaning of these flags.
+name|void
+name|copyFastMathFlags
 parameter_list|(
 name|FastMathFlags
 name|FMF
@@ -766,7 +886,7 @@ specifier|const
 expr_stmt|;
 comment|/// Convenience function for getting all the fast-math flags, which must be an
 comment|/// operator which supports these flags. See LangRef.html for the meaning of
-comment|/// these flats.
+comment|/// these flags.
 name|FastMathFlags
 name|getFastMathFlags
 argument_list|()
@@ -834,8 +954,7 @@ name|unsigned
 argument_list|,
 name|MDNode
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|&
 argument_list|)
 decl|const
@@ -853,8 +972,7 @@ name|unsigned
 argument_list|,
 name|MDNode
 operator|*
-operator|>
-expr|>
+operator|>>
 operator|&
 argument_list|)
 decl|const
@@ -1002,6 +1120,14 @@ name|mayWriteToMemory
 argument_list|()
 return|;
 block|}
+comment|/// isAtomic - Return true if this instruction has an
+comment|/// AtomicOrdering of unordered or higher.
+comment|///
+name|bool
+name|isAtomic
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// mayThrow - Return true if this instruction may throw an exception.
 comment|///
 name|bool
@@ -1467,8 +1593,7 @@ argument|Use *Ops
 argument_list|,
 argument|unsigned NumOps
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 empty_stmt|;
 name|Instruction

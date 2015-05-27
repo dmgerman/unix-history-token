@@ -53,14 +53,11 @@ directive|include
 file|<ctype.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -85,15 +82,11 @@ directive|include
 file|<dt_pq.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_include
 include|#
@@ -1559,6 +1552,20 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|data
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * The standard approximation for standard deviation is 	 * sqrt(average(x**2) - average(x)**2), i.e. the square root 	 * of the average of the squares minus the square of the average. 	 */
 name|dt_divide_128
 argument_list|(
@@ -3376,7 +3383,6 @@ literal|"sun-color"
 argument_list|)
 operator|==
 literal|0
-operator|)
 operator|||
 name|strcmp
 argument_list|(
@@ -3386,6 +3392,7 @@ literal|"dumb"
 argument_list|)
 operator|==
 literal|0
+operator|)
 condition|)
 block|{
 name|utf8
@@ -15468,12 +15475,9 @@ name|dtbd_cpu
 operator|=
 name|cpu
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 if|if
 condition|(
 name|dt_ioctl

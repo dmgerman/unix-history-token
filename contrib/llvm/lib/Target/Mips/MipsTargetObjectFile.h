@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_MIPS_TARGETOBJECTFILE_H
+name|LLVM_LIB_TARGET_MIPS_MIPSTARGETOBJECTFILE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_MIPS_TARGETOBJECTFILE_H
+name|LLVM_LIB_TARGET_MIPS_MIPSTARGETOBJECTFILE_H
 end_define
 
 begin_include
@@ -70,27 +70,23 @@ operator|*
 name|SmallBSSSection
 block|;
 specifier|const
-name|MCSection
+name|TargetMachine
 operator|*
-name|ReginfoSection
+name|TM
 block|;
 name|public
 operator|:
 name|void
 name|Initialize
 argument_list|(
-name|MCContext
-operator|&
-name|Ctx
+argument|MCContext&Ctx
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|const TargetMachine&TM
 argument_list|)
+name|override
 block|;
-comment|/// IsGlobalInSmallSection - Return true if this global address should be
-comment|/// placed into small data/bss section.
+comment|/// Return true if this global address should be placed into small data/bss
+comment|/// section.
 name|bool
 name|IsGlobalInSmallSection
 argument_list|(
@@ -104,6 +100,15 @@ specifier|const
 block|;
 name|bool
 name|IsGlobalInSmallSection
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|IsGlobalInSmallSectionImpl
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
@@ -120,26 +125,37 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|SectionKind Kind
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Return true if this constant should be placed into small data section.
+name|bool
+name|IsConstantInSmallSection
+argument_list|(
+argument|const Constant *CN
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
 block|;
-comment|// TODO: Classify globals as mips wishes.
 specifier|const
 name|MCSection
 operator|*
-name|getReginfoSection
-argument_list|()
+name|getSectionForConstant
+argument_list|(
+argument|SectionKind Kind
+argument_list|,
+argument|const Constant *C
+argument_list|)
 specifier|const
-block|{
-return|return
-name|ReginfoSection
-return|;
+name|override
+block|;   }
+decl_stmt|;
 block|}
-expr|}
-block|; }
 end_decl_stmt
 
 begin_comment

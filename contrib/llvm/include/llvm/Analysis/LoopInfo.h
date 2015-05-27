@@ -144,13 +144,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallPtrSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/Dominators.h"
+file|"llvm/IR/CFG.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Instruction.h"
 end_include
 
 begin_include
@@ -249,6 +261,14 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
+name|template
+operator|<
+name|class
+name|N
+operator|>
+name|class
+name|DominatorTreeBase
+expr_stmt|;
 name|template
 operator|<
 name|class
@@ -358,7 +378,7 @@ argument_list|()
 operator|:
 name|ParentLoop
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 operator|~
@@ -491,9 +511,8 @@ name|true
 return|;
 if|if
 condition|(
+operator|!
 name|L
-operator|==
-literal|0
 condition|)
 return|return
 name|false
@@ -1138,6 +1157,96 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// getLoopLatches - Return all loop latch blocks of this loop. A latch block
+end_comment
+
+begin_comment
+comment|/// is a block that contains a branch back to the header.
+end_comment
+
+begin_decl_stmt
+name|void
+name|getLoopLatches
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|BlockT
+operator|*
+operator|>
+operator|&
+name|LoopLatches
+argument_list|)
+decl|const
+block|{
+name|BlockT
+modifier|*
+name|H
+init|=
+name|getHeader
+argument_list|()
+decl_stmt|;
+typedef|typedef
+name|GraphTraits
+operator|<
+name|Inverse
+operator|<
+name|BlockT
+operator|*
+operator|>
+expr|>
+name|InvBlockTraits
+expr_stmt|;
+for|for
+control|(
+name|typename
+name|InvBlockTraits
+operator|::
+name|ChildIteratorType
+name|I
+operator|=
+name|InvBlockTraits
+operator|::
+name|child_begin
+argument_list|(
+name|H
+argument_list|)
+operator|,
+name|E
+operator|=
+name|InvBlockTraits
+operator|::
+name|child_end
+argument_list|(
+name|H
+argument_list|)
+init|;
+name|I
+operator|!=
+name|E
+condition|;
+operator|++
+name|I
+control|)
+if|if
+condition|(
+name|contains
+argument_list|(
+operator|*
+name|I
+argument_list|)
+condition|)
+name|LoopLatches
+operator|.
+name|push_back
+argument_list|(
+operator|*
+name|I
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 
@@ -1247,11 +1356,10 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
+operator|!
 name|NewChild
 operator|->
 name|ParentLoop
-operator|==
-literal|0
 operator|&&
 literal|"NewChild already has a parent!"
 argument_list|)
@@ -1351,7 +1459,7 @@ name|Child
 operator|->
 name|ParentLoop
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 return|return
 name|Child
@@ -1658,7 +1766,7 @@ argument_list|)
 operator|:
 name|ParentLoop
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{
 name|Blocks
@@ -1812,7 +1920,7 @@ name|Instruction
 operator|*
 name|InsertPt
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1840,7 +1948,7 @@ name|Instruction
 operator|*
 name|InsertPt
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1964,8 +2072,91 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Return the debug location of the start of this loop.
+comment|/// This looks for a BB terminating instruction with a known debug
+comment|/// location by looking at the preheader and header blocks. If it
+comment|/// cannot find a terminating instruction with location information,
+comment|/// it returns an unknown location.
+name|DebugLoc
+name|getStartLoc
+argument_list|()
+specifier|const
+block|{
+name|DebugLoc
+name|StartLoc
+block|;
+name|BasicBlock
+operator|*
+name|HeadBB
+block|;
+comment|// Try the pre-header first.
+if|if
+condition|(
+operator|(
+name|HeadBB
+operator|=
+name|getLoopPreheader
+argument_list|()
+operator|)
+operator|!=
+name|nullptr
+condition|)
+block|{
+name|StartLoc
+operator|=
+name|HeadBB
+operator|->
+name|getTerminator
+argument_list|()
+operator|->
+name|getDebugLoc
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|StartLoc
+operator|.
+name|isUnknown
+argument_list|()
+condition|)
+return|return
+name|StartLoc
+return|;
+block|}
+comment|// If we have no pre-header or there are no instructions with debug
+comment|// info in it, try the header.
+name|HeadBB
+operator|=
+name|getHeader
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|HeadBB
+condition|)
+name|StartLoc
+operator|=
+name|HeadBB
+operator|->
+name|getTerminator
+argument_list|()
+operator|->
+name|getDebugLoc
+argument_list|()
+expr_stmt|;
+return|return
+name|StartLoc
+return|;
+block|}
+end_decl_stmt
+
+begin_label
 name|private
 label|:
+end_label
+
+begin_expr_stmt
 name|friend
 name|class
 name|LoopInfoBase
@@ -1975,7 +2166,13 @@ operator|,
 name|Loop
 operator|>
 expr_stmt|;
+end_expr_stmt
+
+begin_macro
 name|explicit
+end_macro
+
+begin_expr_stmt
 name|Loop
 argument_list|(
 name|BasicBlock
@@ -1993,14 +2190,10 @@ operator|(
 name|BB
 operator|)
 block|{}
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
@@ -2459,12 +2652,11 @@ name|I
 decl_stmt|;
 name|assert
 argument_list|(
+operator|!
 name|L
 operator|->
 name|getParentLoop
 argument_list|()
-operator|==
-literal|0
 operator|&&
 literal|"Not a top-level loop!"
 argument_list|)
@@ -2611,17 +2803,15 @@ name|NewLoop
 expr_stmt|;
 name|assert
 argument_list|(
+operator|!
 name|NewLoop
 operator|->
 name|ParentLoop
-operator|==
-literal|0
 operator|&&
+operator|!
 name|OldLoop
 operator|->
 name|ParentLoop
-operator|==
-literal|0
 operator|&&
 literal|"Loops already embedded into a subloop!"
 argument_list|)
@@ -2648,12 +2838,11 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
+operator|!
 name|New
 operator|->
 name|getParentLoop
 argument_list|()
-operator|==
-literal|0
 operator|&&
 literal|"Loop already in subloop!"
 argument_list|)
@@ -2778,9 +2967,8 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
 name|SubLoop
-operator|==
-literal|0
 condition|)
 return|return
 name|true
@@ -3198,32 +3386,32 @@ begin_comment
 comment|///
 end_comment
 
-begin_function_decl
-name|virtual
+begin_decl_stmt
 name|bool
 name|runOnFunction
-parameter_list|(
+argument_list|(
 name|Function
-modifier|&
+operator|&
 name|F
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|override
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
-name|virtual
 name|void
 name|verifyAnalysis
 argument_list|()
 specifier|const
+name|override
 expr_stmt|;
 end_expr_stmt
 
 begin_function
-name|virtual
 name|void
 name|releaseMemory
 parameter_list|()
+function|override
 block|{
 name|LI
 operator|.
@@ -3234,7 +3422,6 @@ block|}
 end_function
 
 begin_decl_stmt
-name|virtual
 name|void
 name|print
 argument_list|(
@@ -3247,14 +3434,14 @@ name|Module
 operator|*
 name|M
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
@@ -3263,6 +3450,7 @@ operator|&
 name|AU
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 end_decl_stmt
 

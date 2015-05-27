@@ -171,6 +171,14 @@ argument_list|,
 literal|0x100000
 argument_list|)
 expr_stmt|;
+comment|/* FPGA memory window, 256MB */
+name|arm_devmap_add_entry
+argument_list|(
+literal|0xd0000000
+argument_list|,
+literal|0x10000000
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0

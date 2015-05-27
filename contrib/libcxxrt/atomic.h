@@ -64,7 +64,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|__c11_atomic_exchange((_Atomic(__typeof__(val))*)addr, val, __ATOMIC_ACQ_REL)
+value|__c11_atomic_exchange(reinterpret_cast<_Atomic(__typeof__(val))*>(addr), val, __ATOMIC_ACQ_REL)
 end_define
 
 begin_elif
@@ -129,7 +129,7 @@ parameter_list|(
 name|addr
 parameter_list|)
 define|\
-value|__c11_atomic_load((_Atomic(__typeof__(*addr))*)addr, __ATOMIC_ACQUIRE)
+value|__c11_atomic_load(reinterpret_cast<_Atomic(__typeof__(*addr))*>(addr), __ATOMIC_ACQUIRE)
 end_define
 
 begin_else

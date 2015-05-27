@@ -71,6 +71,7 @@ modifier|*
 modifier|*
 name|options
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator

@@ -589,8 +589,6 @@ name|OPTION_HTTP_USER_AGENT
 block|,
 name|OPTION_NO_PROXY
 block|,
-name|OPTION_SSL_ALLOW_SSL2
-block|,
 name|OPTION_SSL_CA_CERT_FILE
 block|,
 name|OPTION_SSL_CA_CERT_PATH
@@ -915,16 +913,6 @@ block|,
 name|NULL
 block|,
 name|OPTION_NO_PROXY
-block|}
-block|,
-block|{
-literal|"allow-sslv2"
-block|,
-name|no_argument
-block|,
-name|NULL
-block|,
-name|OPTION_SSL_ALLOW_SSL2
 block|}
 block|,
 block|{
@@ -4603,27 +4591,27 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: fetch [-146AadFlMmnPpqRrsUv] [--allow-sslv2] [-B bytes]"
+literal|"usage: fetch [-146AadFlMmnPpqRrsUv] [-B bytes] [--bind-address=host]"
 argument_list|,
-literal|"       [--bind-address=host] [--ca-cert=file] [--ca-path=dir] [--cert=file]"
+literal|"       [--ca-cert=file] [--ca-path=dir] [--cert=file] [--crl=file]"
 argument_list|,
-literal|"       [--crl=file] [-i file] [--key=file] [-N file] [--no-passive]"
+literal|"       [-i file] [--key=file] [-N file] [--no-passive] [--no-proxy=list]"
 argument_list|,
-literal|"       [--no-proxy=list] [--no-sslv3] [--no-tlsv1] [--no-verify-hostname]"
+literal|"       [--no-sslv3] [--no-tlsv1] [--no-verify-hostname] [--no-verify-peer]"
 argument_list|,
-literal|"       [--no-verify-peer] [-o file] [--referer=URL] [-S bytes] [-T seconds]"
+literal|"       [-o file] [--referer=URL] [-S bytes] [-T seconds]"
 argument_list|,
 literal|"       [--user-agent=agent-string] [-w seconds] URL ..."
 argument_list|,
-literal|"       fetch [-146AadFlMmnPpqRrsUv] [--allow-sslv2] [-B bytes]"
+literal|"       fetch [-146AadFlMmnPpqRrsUv] [-B bytes] [--bind-address=host]"
 argument_list|,
-literal|"       [--bind-address=host] [--ca-cert=file] [--ca-path=dir] [--cert=file]"
+literal|"       [--ca-cert=file] [--ca-path=dir] [--cert=file] [--crl=file]"
 argument_list|,
-literal|"       [--crl=file] [-i file] [--key=file] [-N file] [--no-passive]"
+literal|"       [-i file] [--key=file] [-N file] [--no-passive] [--no-proxy=list]"
 argument_list|,
-literal|"       [--no-proxy=list] [--no-sslv3] [--no-tlsv1] [--no-verify-hostname]"
+literal|"       [--no-sslv3] [--no-tlsv1] [--no-verify-hostname] [--no-verify-peer]"
 argument_list|,
-literal|"       [--no-verify-peer] [-o file] [--referer=URL] [-S bytes] [-T seconds]"
+literal|"       [-o file] [--referer=URL] [-S bytes] [-T seconds]"
 argument_list|,
 literal|"       [--user-agent=agent-string] [-w seconds] -h host -f file [-c dir]"
 argument_list|)
@@ -5180,19 +5168,6 @@ argument_list|(
 literal|"NO_PROXY"
 argument_list|,
 name|optarg
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|OPTION_SSL_ALLOW_SSL2
-case|:
-name|setenv
-argument_list|(
-literal|"SSL_ALLOW_SSL2"
-argument_list|,
-literal|""
 argument_list|,
 literal|1
 argument_list|)

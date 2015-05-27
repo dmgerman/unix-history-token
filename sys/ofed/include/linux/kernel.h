@@ -18,6 +18,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -49,6 +61,12 @@ begin_include
 include|#
 directive|include
 file|<sys/stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/syslog.h>
 end_include
 
 begin_include
@@ -171,6 +189,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|BUILD_BUG_ON
+parameter_list|(
+name|x
+parameter_list|)
+value|CTASSERT(!(x))
+end_define
+
+begin_define
+define|#
+directive|define
 name|BUG
 parameter_list|()
 value|panic("BUG")
@@ -211,11 +239,41 @@ parameter_list|)
 value|roundup2((x), (y))
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|PTR_ALIGN
+end_undef
+
+begin_define
+define|#
+directive|define
+name|PTR_ALIGN
+parameter_list|(
+name|p
+parameter_list|,
+name|a
+parameter_list|)
+value|((__typeof(p))ALIGN((uintptr_t)(p), (a)))
+end_define
+
 begin_define
 define|#
 directive|define
 name|DIV_ROUND_UP
 value|howmany
+end_define
+
+begin_define
+define|#
+directive|define
+name|FIELD_SIZEOF
+parameter_list|(
+name|t
+parameter_list|,
+name|f
+parameter_list|)
+value|sizeof(((t *)0)->f)
 end_define
 
 begin_define
@@ -229,6 +287,16 @@ parameter_list|)
 value|printf(X)
 end_define
 
+begin_comment
+comment|/*  * The "pr_debug()" and "pr_devel()" macros should produce zero code  * unless DEBUG is defined:  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -238,8 +306,58 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-value|printk(KERN_DEBUG # fmt, ##__VA_ARGS__)
+define|\
+value|log(LOG_DEBUG, fmt, ##__VA_ARGS__)
 end_define
+
+begin_define
+define|#
+directive|define
+name|pr_devel
+parameter_list|(
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|log(LOG_DEBUG, pr_fmt(fmt), ##__VA_ARGS__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|pr_debug
+parameter_list|(
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|({ if (0) log(LOG_DEBUG, fmt, ##__VA_ARGS__); 0; })
+end_define
+
+begin_define
+define|#
+directive|define
+name|pr_devel
+parameter_list|(
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|({ if (0) log(LOG_DEBUG, pr_fmt(fmt), ##__VA_ARGS__); 0; })
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -249,6 +367,18 @@ parameter_list|(
 name|t
 parameter_list|)
 value|DELAY(t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|usleep_range
+parameter_list|(
+name|min
+parameter_list|,
+name|max
+parameter_list|)
+value|DELAY(min)
 end_define
 
 begin_ifndef
@@ -281,10 +411,25 @@ define|#
 directive|define
 name|printk_once
 parameter_list|(
-name|x
 modifier|...
 parameter_list|)
-value|({                    \         static bool __print_once;               \                                                 \         if (!__print_once) {                    \                 __print_once = true;            \                 printk(x);                      \         }                                       \ })
+value|do {			\ 	static bool __print_once;		\ 						\ 	if (!__print_once) {			\ 		__print_once = true;		\ 		printk(__VA_ARGS__);		\ 	}					\ } while (0)
+end_define
+
+begin_comment
+comment|/*  * Log a one-time message (analogous to WARN_ONCE() et al):  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|log_once
+parameter_list|(
+name|level
+parameter_list|,
+modifier|...
+parameter_list|)
+value|do {		\ 	static bool __log_once;			\ 						\ 	if (!__log_once) {			\ 		__log_once = true;		\ 		log(level, __VA_ARGS__);	\ 	}					\ } while (0)
 end_define
 
 begin_define
@@ -297,7 +442,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|printk(KERN_EMERG pr_fmt(fmt), ##__VA_ARGS__)
+value|log(LOG_EMERG, pr_fmt(fmt), ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -310,7 +455,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|printk(KERN_ALERT pr_fmt(fmt), ##__VA_ARGS__)
+value|log(LOG_ALERT, pr_fmt(fmt), ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -323,7 +468,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|printk(KERN_CRIT pr_fmt(fmt), ##__VA_ARGS__)
+value|log(LOG_CRIT, pr_fmt(fmt), ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -336,7 +481,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
+value|log(LOG_ERR, pr_fmt(fmt), ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -349,7 +494,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|printk(KERN_WARNING pr_fmt(fmt), ##__VA_ARGS__)
+value|log(LOG_WARNING, pr_fmt(fmt), ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -369,7 +514,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|printk(KERN_NOTICE pr_fmt(fmt), ##__VA_ARGS__)
+value|log(LOG_NOTICE, pr_fmt(fmt), ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -382,7 +527,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+value|log(LOG_INFO, pr_fmt(fmt), ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -395,7 +540,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|printk_once(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+value|log_once(LOG_INFO, pr_fmt(fmt), ##__VA_ARGS__)
 end_define
 
 begin_define
@@ -410,52 +555,6 @@ parameter_list|)
 define|\
 value|printk(KERN_CONT fmt, ##__VA_ARGS__)
 end_define
-
-begin_comment
-comment|/* pr_devel() should produce zero code unless DEBUG is defined */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEBUG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|pr_devel
-parameter_list|(
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-define|\
-value|printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|pr_devel
-parameter_list|(
-name|fmt
-parameter_list|,
-modifier|...
-parameter_list|)
-define|\
-value|({ if (0) printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__); 0; })
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
@@ -543,7 +642,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(x< y ? x : y)
+value|((x)< (y) ? (x) : (y))
 end_define
 
 begin_define
@@ -555,7 +654,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
-value|(x> y ? x : y)
+value|((x)> (y) ? (x) : (y))
 end_define
 
 begin_define
@@ -569,7 +668,7 @@ name|_x
 parameter_list|,
 name|_y
 parameter_list|)
-value|(type)(_x)< (type)(_y) ? (type)(_x) : (_y)
+value|((type)(_x)< (type)(_y) ? (type)(_x) : (type)(_y))
 end_define
 
 begin_define
@@ -583,7 +682,7 @@ name|_x
 parameter_list|,
 name|_y
 parameter_list|)
-value|(type)(_x)> (type)(_y) ? (type)(_x) : (_y)
+value|((type)(_x)> (type)(_y) ? (type)(_x) : (type)(_y))
 end_define
 
 begin_comment
@@ -630,6 +729,14 @@ begin_define
 define|#
 directive|define
 name|num_possible_cpus
+parameter_list|()
+value|mp_ncpus
+end_define
+
+begin_define
+define|#
+directive|define
+name|num_online_cpus
 parameter_list|()
 value|mp_ncpus
 end_define

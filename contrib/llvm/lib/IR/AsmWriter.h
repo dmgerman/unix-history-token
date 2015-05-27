@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_IR_ASSEMBLYWRITER_H
+name|LLVM_LIB_IR_ASMWRITER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_IR_ASSEMBLYWRITER_H
+name|LLVM_LIB_IR_ASMWRITER_H
 end_define
 
 begin_include
@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/ADT/SetVector.h"
 end_include
 
 begin_include
@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/UseListOrder.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/FormattedStream.h"
 end_include
 
@@ -111,6 +117,9 @@ name|Function
 decl_stmt|;
 name|class
 name|GlobalValue
+decl_stmt|;
+name|class
+name|Comdat
 decl_stmt|;
 name|class
 name|Module
@@ -231,7 +240,9 @@ name|TheModule
 decl_stmt|;
 name|private
 label|:
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|SlotTracker
 operator|>
@@ -247,6 +258,17 @@ decl_stmt|;
 name|AssemblyAnnotationWriter
 modifier|*
 name|AnnotationWriter
+decl_stmt|;
+name|SetVector
+operator|<
+specifier|const
+name|Comdat
+operator|*
+operator|>
+name|Comdats
+expr_stmt|;
+name|UseListOrderStack
+name|UseListOrders
 decl_stmt|;
 name|public
 label|:
@@ -358,6 +380,19 @@ name|SynchScope
 parameter_list|)
 function_decl|;
 name|void
+name|writeAtomicCmpXchg
+parameter_list|(
+name|AtomicOrdering
+name|SuccessOrdering
+parameter_list|,
+name|AtomicOrdering
+name|FailureOrdering
+parameter_list|,
+name|SynchronizationScope
+name|SynchScope
+parameter_list|)
+function_decl|;
+name|void
 name|writeAllMDNodes
 parameter_list|()
 function_decl|;
@@ -397,6 +432,15 @@ specifier|const
 name|GlobalAlias
 modifier|*
 name|GV
+parameter_list|)
+function_decl|;
+name|void
+name|printComdat
+parameter_list|(
+specifier|const
+name|Comdat
+modifier|*
+name|C
 parameter_list|)
 function_decl|;
 name|void
@@ -450,6 +494,24 @@ modifier|&
 name|I
 parameter_list|)
 function_decl|;
+name|void
+name|printUseListOrder
+parameter_list|(
+specifier|const
+name|UseListOrder
+modifier|&
+name|Order
+parameter_list|)
+function_decl|;
+name|void
+name|printUseLists
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|F
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|void
@@ -480,10 +542,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|//LLVM_IR_ASMWRITER_H
-end_comment
 
 end_unit
 

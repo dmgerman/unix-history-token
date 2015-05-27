@@ -5721,7 +5721,7 @@ name|Leaf
 operator|::
 name|Capacity
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
 name|size
 argument_list|,
@@ -6030,7 +6030,7 @@ name|Leaf
 operator|::
 name|Capacity
 argument_list|,
-name|NULL
+name|nullptr
 argument_list|,
 name|Size
 argument_list|,
@@ -6953,7 +6953,7 @@ argument_list|()
 operator|:
 name|map
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// setMap - Change the map iterated over. This call must be followed by a

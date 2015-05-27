@@ -705,6 +705,7 @@ begin_define
 define|#
 directive|define
 name|NEED_YYPARSE_WRAPPER
+value|1
 end_define
 
 begin_comment
@@ -724,6 +725,10 @@ define|#
 directive|define
 name|NETINET_IF_ETHER_H_DECLARES_ETHER_HOSTTON
 end_define
+
+begin_comment
+comment|/**/
+end_comment
 
 begin_comment
 comment|/* do not use protochain */
@@ -778,6 +783,17 @@ value|""
 end_define
 
 begin_comment
+comment|/* Define to the home page for this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_URL
+value|""
+end_define
+
+begin_comment
 comment|/* Define to the version of this package. */
 end_comment
 
@@ -805,6 +821,14 @@ comment|/* #undef PCAP_SUPPORT_BT */
 end_comment
 
 begin_comment
+comment|/* target host supports Bluetooth Monitor */
+end_comment
+
+begin_comment
+comment|/* #undef PCAP_SUPPORT_BT_MONITOR */
+end_comment
+
+begin_comment
 comment|/* target host supports CAN sniffing */
 end_comment
 
@@ -818,6 +842,14 @@ end_comment
 
 begin_comment
 comment|/* #undef PCAP_SUPPORT_CANUSB */
+end_comment
+
+begin_comment
+comment|/* support D-Bus sniffing */
+end_comment
+
+begin_comment
+comment|/* #undef PCAP_SUPPORT_DBUS */
 end_comment
 
 begin_comment
@@ -883,19 +915,33 @@ comment|/* #undef YYDEBUG */
 end_comment
 
 begin_comment
+comment|/* Enable large inode numbers on Mac OS X 10.5.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_DARWIN_USE_64_BIT_INODE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_DARWIN_USE_64_BIT_INODE
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/* Number of bits in a file offset, on hosts where this is settable. */
 end_comment
 
 begin_comment
 comment|/* #undef _FILE_OFFSET_BITS */
-end_comment
-
-begin_comment
-comment|/* needed on HP-UX */
-end_comment
-
-begin_comment
-comment|/* #undef _HPUX_SOURCE */
 end_comment
 
 begin_comment
@@ -921,6 +967,17 @@ end_comment
 begin_comment
 comment|/* #undef _SUN */
 end_comment
+
+begin_comment
+comment|/* define if your compiler allows __attribute__((format)) without a warning */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__ATTRIBUTE___FORMAT_OK
+value|1
+end_define
 
 begin_comment
 comment|/* to handle Ultrix compilers that don't support const in prototypes */

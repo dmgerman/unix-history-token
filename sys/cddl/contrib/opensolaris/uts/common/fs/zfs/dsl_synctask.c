@@ -559,11 +559,12 @@ decl_stmt|;
 name|uint64_t
 name|used
 init|=
+name|dsl_dir_phys
+argument_list|(
 name|dp
 operator|->
 name|dp_root_dir
-operator|->
-name|dd_phys
+argument_list|)
 operator|->
 name|dd_used_bytes
 decl_stmt|;

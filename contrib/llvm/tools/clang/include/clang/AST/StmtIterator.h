@@ -50,25 +50,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_STMT_ITR_H
+name|LLVM_CLANG_AST_STMTITERATOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_STMT_ITR_H
+name|LLVM_CLANG_AST_STMTITERATOR_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DataTypes.h"
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Compiler.h"
+file|"llvm/Support/DataTypes.h"
 end_include
 
 begin_include
@@ -295,7 +295,7 @@ argument_list|)
 operator|,
 name|DGI
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|RawVAPtr
@@ -329,12 +329,12 @@ argument_list|()
 operator|:
 name|stmt
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|DGI
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|RawVAPtr

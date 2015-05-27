@@ -160,12 +160,12 @@ argument_list|)
 block|,
 name|ExceptionDecl
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|HandlerBlock
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|SourceLocation

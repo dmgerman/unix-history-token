@@ -2372,11 +2372,6 @@ condition|(
 name|skey
 condition|)
 block|{
-name|sctp_free_sharedkey
-argument_list|(
-name|skey
-argument_list|)
-expr_stmt|;
 name|SCTPDBG
 argument_list|(
 name|SCTP_DEBUG_AUTH2
@@ -2406,7 +2401,7 @@ name|skey
 operator|->
 name|refcount
 operator|<=
-literal|1
+literal|2
 operator|)
 operator|&&
 operator|(
@@ -2452,6 +2447,11 @@ name|refcount
 argument_list|)
 expr_stmt|;
 block|}
+name|sctp_free_sharedkey
+argument_list|(
+name|skey
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 end_function

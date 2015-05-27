@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_ANALYSIS_DS_COCOA
+name|LLVM_CLANG_ANALYSIS_DOMAINSPECIFIC_COCOACONVENTIONS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_ANALYSIS_DS_COCOA
+name|LLVM_CLANG_ANALYSIS_DOMAINSPECIFIC_COCOACONVENTIONS_H
 end_define
 
 begin_include

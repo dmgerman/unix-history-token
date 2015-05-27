@@ -22,7 +22,7 @@ file|"gosthash.h"
 end_include
 
 begin_comment
-comment|/* Use OPENSSL_malloc for memory allocation if compiled with   * -DOPENSSL_BUILD, and libc malloc otherwise  */
+comment|/*  * Use OPENSSL_malloc for memory allocation if compiled with  * -DOPENSSL_BUILD, and libc malloc otherwise  */
 end_comment
 
 begin_ifndef
@@ -99,7 +99,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* Following functions are various bit meshing routines used in  * GOST R 34.11-94 algorithms */
+comment|/*  * Following functions are various bit meshing routines used in GOST R  * 34.11-94 algorithms  */
 end_comment
 
 begin_function
@@ -521,7 +521,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * 	Calculate H(i+1) = Hash(Hi,Mi)   * 	Where H and M are 32 bytes long  */
+comment|/*  *      Calculate H(i+1) = Hash(Hi,Mi)  *      Where H and M are 32 bytes long  */
 end_comment
 
 begin_function
@@ -591,7 +591,7 @@ argument_list|,
 name|Key
 argument_list|)
 expr_stmt|;
-comment|/* Encrypt first 8 bytes of H with first key*/
+comment|/* Encrypt first 8 bytes of H with first key */
 name|gost_enc_with_key
 argument_list|(
 name|c
@@ -603,7 +603,7 @@ argument_list|,
 name|S
 argument_list|)
 expr_stmt|;
-comment|/* Compute second key*/
+comment|/* Compute second key */
 name|circle_xor8
 argument_list|(
 name|H
@@ -643,7 +643,7 @@ argument_list|,
 name|Key
 argument_list|)
 expr_stmt|;
-comment|/* encrypt second 8 bytes of H with second key*/
+comment|/* encrypt second 8 bytes of H with second key */
 name|gost_enc_with_key
 argument_list|(
 name|c
@@ -875,7 +875,7 @@ argument_list|,
 name|Key
 argument_list|)
 expr_stmt|;
-comment|/* encrypt third 8 bytes of H with third key*/
+comment|/* encrypt third 8 bytes of H with third key */
 name|gost_enc_with_key
 argument_list|(
 name|c
@@ -1026,7 +1026,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Initialize gost_hash ctx - cleans up temporary structures and  * set up substitution blocks  */
+comment|/*  * Initialize gost_hash ctx - cleans up temporary structures and set up  * substitution blocks  */
 end_comment
 
 begin_function
@@ -1111,7 +1111,7 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
-comment|/* No need to use gost_destroy, because cipher keys are not really 	 * secret when hashing */
+comment|/*      * No need to use gost_destroy, because cipher keys are not really secret      * when hashing      */
 name|MYFREE
 argument_list|(
 name|ctx
@@ -1219,7 +1219,7 @@ operator|->
 name|left
 condition|)
 block|{
-comment|/*There are some bytes from previous step*/
+comment|/*          * There are some bytes from previous step          */
 name|unsigned
 name|int
 name|add_bytes
@@ -1543,7 +1543,7 @@ name|fin_len
 operator|<<=
 literal|3
 expr_stmt|;
-comment|/* Hash length in BITS!!*/
+comment|/* Hash length in BITS!! */
 while|while
 condition|(
 name|fin_len

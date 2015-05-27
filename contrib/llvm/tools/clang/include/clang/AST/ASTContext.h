@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/ExternalASTSource.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/NestedNameSpecifier.h"
 end_include
 
@@ -150,6 +156,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/SanitizerBlacklist.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/VersionTuple.h"
 end_include
 
@@ -174,12 +186,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -193,6 +199,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -237,9 +249,6 @@ name|class
 name|Expr
 decl_stmt|;
 name|class
-name|ExternalASTSource
-decl_stmt|;
-name|class
 name|ASTMutationListener
 decl_stmt|;
 name|class
@@ -279,6 +288,9 @@ decl_stmt|;
 name|class
 name|UsingShadowDecl
 decl_stmt|;
+name|class
+name|VTableContextBase
+decl_stmt|;
 name|namespace
 name|Builtin
 block|{
@@ -293,6 +305,64 @@ name|class
 name|FullComment
 decl_stmt|;
 block|}
+struct|struct
+name|TypeInfo
+block|{
+name|uint64_t
+name|Width
+decl_stmt|;
+name|unsigned
+name|Align
+decl_stmt|;
+name|bool
+name|AlignIsRequired
+range|:
+literal|1
+decl_stmt|;
+name|TypeInfo
+argument_list|()
+operator|:
+name|Width
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Align
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|AlignIsRequired
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|TypeInfo
+argument_list|(
+argument|uint64_t Width
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|bool AlignIsRequired
+argument_list|)
+operator|:
+name|Width
+argument_list|(
+name|Width
+argument_list|)
+operator|,
+name|Align
+argument_list|(
+name|Align
+argument_list|)
+operator|,
+name|AlignIsRequired
+argument_list|(
+argument|AlignIsRequired
+argument_list|)
+block|{}
+block|}
+struct|;
 comment|/// \brief Holds long-lived AST nodes (such as types and decls) that can be
 comment|/// referred to throughout the semantic analysis of a file.
 name|class
@@ -356,9 +426,9 @@ name|llvm
 operator|::
 name|FoldingSet
 operator|<
-name|DecayedType
+name|AdjustedType
 operator|>
-name|DecayedTypes
+name|AdjustedTypes
 block|;
 name|mutable
 name|llvm
@@ -723,15 +793,9 @@ specifier|const
 name|Type
 operator|*
 operator|,
-name|std
-operator|::
-name|pair
-operator|<
-name|uint64_t
-operator|,
-name|unsigned
+expr_stmt|struct
+name|TypeInfo
 operator|>
-expr|>
 name|TypeInfoMap
 expr_stmt|;
 name|mutable
@@ -1038,9 +1102,6 @@ name|FunctionDecl
 modifier|*
 name|cudaConfigureCallDecl
 decl_stmt|;
-name|TypeSourceInfo
-name|NullTypeSourceInfo
-decl_stmt|;
 comment|/// \brief Keeps track of all declaration attributes.
 comment|///
 comment|/// Since so few decls have attrs, we keep them in a hash map instead of
@@ -1251,6 +1312,18 @@ name|unsigned
 operator|>
 name|MangleNumbers
 expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|VarDecl
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|StaticLocalNumbers
+expr_stmt|;
 comment|/// \brief Mapping that stores parameterIndex values for ParmVarDecls when
 comment|/// that value exceeds the bitfield size of ParmVarDeclBits.ParameterIndex.
 typedef|typedef
@@ -1292,6 +1365,16 @@ name|LangOptions
 modifier|&
 name|LangOpts
 decl_stmt|;
+comment|/// \brief Blacklist object that is used by sanitizers to decide which
+comment|/// entities should not be instrumented.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|SanitizerBlacklist
+operator|>
+name|SanitizerBL
+expr_stmt|;
 comment|/// \brief The allocator used to create AST objects.
 comment|///
 comment|/// AST objects are never destructed; rather, all memory associated with the
@@ -1309,7 +1392,9 @@ name|StorageAllocator
 name|DiagAllocator
 expr_stmt|;
 comment|/// \brief The current C++ ABI.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|CXXABI
 operator|>
@@ -1384,7 +1469,7 @@ name|mutable
 name|DeclarationNameTable
 name|DeclarationNames
 decl_stmt|;
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|ExternalASTSource
 operator|>
@@ -1404,7 +1489,7 @@ name|ast_type_traits
 operator|::
 name|DynTypedNode
 operator|,
-literal|1
+literal|2
 operator|>
 name|ParentVector
 expr_stmt|;
@@ -1418,8 +1503,18 @@ specifier|const
 name|void
 operator|*
 operator|,
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|*
+operator|,
 name|ParentVector
-operator|>
+operator|*
+operator|>>
 name|ParentMap
 expr_stmt|;
 comment|/// \brief Returns the parents of the given node.
@@ -1451,7 +1546,12 @@ operator|<
 name|typename
 name|NodeT
 operator|>
-name|ParentVector
+name|ArrayRef
+operator|<
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|>
 name|getParents
 argument_list|(
 argument|const NodeT&Node
@@ -1471,7 +1571,12 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-name|ParentVector
+name|ArrayRef
+operator|<
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|>
 name|getParents
 argument_list|(
 specifier|const
@@ -1481,7 +1586,7 @@ name|DynTypedNode
 operator|&
 name|Node
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 specifier|const
 name|clang
 operator|::
@@ -1665,6 +1770,18 @@ specifier|const
 block|{
 return|return
 name|LangOpts
+return|;
+block|}
+specifier|const
+name|SanitizerBlacklist
+operator|&
+name|getSanitizerBlacklist
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|SanitizerBL
 return|;
 block|}
 name|DiagnosticsEngine
@@ -1961,7 +2078,7 @@ operator|*
 operator|*
 name|OriginalDecl
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2015,293 +2132,6 @@ operator|::
 name|CommandTraits
 name|CommentCommandTraits
 expr_stmt|;
-name|public
-label|:
-name|comments
-operator|::
-name|CommandTraits
-operator|&
-name|getCommentCommandTraits
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CommentCommandTraits
-return|;
-block|}
-comment|/// \brief Retrieve the attributes for the given declaration.
-name|AttrVec
-modifier|&
-name|getDeclAttrs
-parameter_list|(
-specifier|const
-name|Decl
-modifier|*
-name|D
-parameter_list|)
-function_decl|;
-comment|/// \brief Erase the attributes corresponding to the given declaration.
-name|void
-name|eraseDeclAttrs
-parameter_list|(
-specifier|const
-name|Decl
-modifier|*
-name|D
-parameter_list|)
-function_decl|;
-comment|/// \brief If this variable is an instantiated static data member of a
-comment|/// class template specialization, returns the templated static data member
-comment|/// from which it was instantiated.
-comment|// FIXME: Remove ?
-name|MemberSpecializationInfo
-modifier|*
-name|getInstantiatedFromStaticDataMember
-parameter_list|(
-specifier|const
-name|VarDecl
-modifier|*
-name|Var
-parameter_list|)
-function_decl|;
-name|TemplateOrSpecializationInfo
-name|getTemplateOrSpecializationInfo
-parameter_list|(
-specifier|const
-name|VarDecl
-modifier|*
-name|Var
-parameter_list|)
-function_decl|;
-name|FunctionDecl
-modifier|*
-name|getClassScopeSpecializationPattern
-parameter_list|(
-specifier|const
-name|FunctionDecl
-modifier|*
-name|FD
-parameter_list|)
-function_decl|;
-name|void
-name|setClassScopeSpecializationPattern
-parameter_list|(
-name|FunctionDecl
-modifier|*
-name|FD
-parameter_list|,
-name|FunctionDecl
-modifier|*
-name|Pattern
-parameter_list|)
-function_decl|;
-comment|/// \brief Note that the static data member \p Inst is an instantiation of
-comment|/// the static data member template \p Tmpl of a class template.
-name|void
-name|setInstantiatedFromStaticDataMember
-parameter_list|(
-name|VarDecl
-modifier|*
-name|Inst
-parameter_list|,
-name|VarDecl
-modifier|*
-name|Tmpl
-parameter_list|,
-name|TemplateSpecializationKind
-name|TSK
-parameter_list|,
-name|SourceLocation
-name|PointOfInstantiation
-init|=
-name|SourceLocation
-argument_list|()
-parameter_list|)
-function_decl|;
-name|void
-name|setTemplateOrSpecializationInfo
-parameter_list|(
-name|VarDecl
-modifier|*
-name|Inst
-parameter_list|,
-name|TemplateOrSpecializationInfo
-name|TSI
-parameter_list|)
-function_decl|;
-comment|/// \brief If the given using decl \p Inst is an instantiation of a
-comment|/// (possibly unresolved) using decl from a template instantiation,
-comment|/// return it.
-name|NamedDecl
-modifier|*
-name|getInstantiatedFromUsingDecl
-parameter_list|(
-name|UsingDecl
-modifier|*
-name|Inst
-parameter_list|)
-function_decl|;
-comment|/// \brief Remember that the using decl \p Inst is an instantiation
-comment|/// of the using decl \p Pattern of a class template.
-name|void
-name|setInstantiatedFromUsingDecl
-parameter_list|(
-name|UsingDecl
-modifier|*
-name|Inst
-parameter_list|,
-name|NamedDecl
-modifier|*
-name|Pattern
-parameter_list|)
-function_decl|;
-name|void
-name|setInstantiatedFromUsingShadowDecl
-parameter_list|(
-name|UsingShadowDecl
-modifier|*
-name|Inst
-parameter_list|,
-name|UsingShadowDecl
-modifier|*
-name|Pattern
-parameter_list|)
-function_decl|;
-name|UsingShadowDecl
-modifier|*
-name|getInstantiatedFromUsingShadowDecl
-parameter_list|(
-name|UsingShadowDecl
-modifier|*
-name|Inst
-parameter_list|)
-function_decl|;
-name|FieldDecl
-modifier|*
-name|getInstantiatedFromUnnamedFieldDecl
-parameter_list|(
-name|FieldDecl
-modifier|*
-name|Field
-parameter_list|)
-function_decl|;
-name|void
-name|setInstantiatedFromUnnamedFieldDecl
-parameter_list|(
-name|FieldDecl
-modifier|*
-name|Inst
-parameter_list|,
-name|FieldDecl
-modifier|*
-name|Tmpl
-parameter_list|)
-function_decl|;
-comment|// Access to the set of methods overridden by the given C++ method.
-typedef|typedef
-name|CXXMethodVector
-operator|::
-name|const_iterator
-name|overridden_cxx_method_iterator
-expr_stmt|;
-name|overridden_cxx_method_iterator
-name|overridden_methods_begin
-argument_list|(
-specifier|const
-name|CXXMethodDecl
-operator|*
-name|Method
-argument_list|)
-decl|const
-decl_stmt|;
-name|overridden_cxx_method_iterator
-name|overridden_methods_end
-argument_list|(
-specifier|const
-name|CXXMethodDecl
-operator|*
-name|Method
-argument_list|)
-decl|const
-decl_stmt|;
-name|unsigned
-name|overridden_methods_size
-argument_list|(
-specifier|const
-name|CXXMethodDecl
-operator|*
-name|Method
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Note that the given C++ \p Method overrides the given \p
-comment|/// Overridden method.
-name|void
-name|addOverriddenMethod
-parameter_list|(
-specifier|const
-name|CXXMethodDecl
-modifier|*
-name|Method
-parameter_list|,
-specifier|const
-name|CXXMethodDecl
-modifier|*
-name|Overridden
-parameter_list|)
-function_decl|;
-comment|/// \brief Return C++ or ObjC overridden methods for the given \p Method.
-comment|///
-comment|/// An ObjC method is considered to override any method in the class's
-comment|/// base classes, its protocols, or its categories' protocols, that has
-comment|/// the same selector and is of the same kind (class or instance).
-comment|/// A method in an implementation is not considered as overriding the same
-comment|/// method in the interface or its categories.
-name|void
-name|getOverriddenMethods
-argument_list|(
-specifier|const
-name|NamedDecl
-operator|*
-name|Method
-argument_list|,
-name|SmallVectorImpl
-operator|<
-specifier|const
-name|NamedDecl
-operator|*
-operator|>
-operator|&
-name|Overridden
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// \brief Notify the AST context that a new import declaration has been
-comment|/// parsed or implicitly created within this translation unit.
-name|void
-name|addedLocalImportDecl
-parameter_list|(
-name|ImportDecl
-modifier|*
-name|Import
-parameter_list|)
-function_decl|;
-specifier|static
-name|ImportDecl
-modifier|*
-name|getNextLocalImport
-parameter_list|(
-name|ImportDecl
-modifier|*
-name|Import
-parameter_list|)
-block|{
-return|return
-name|Import
-operator|->
-name|NextLocalImport
-return|;
-block|}
 comment|/// \brief Iterator that visits import declarations.
 name|class
 name|import_iterator
@@ -2342,7 +2172,7 @@ argument_list|()
 operator|:
 name|Import
 argument_list|()
-block|{ }
+block|{}
 name|explicit
 name|import_iterator
 argument_list|(
@@ -2355,7 +2185,7 @@ name|Import
 argument_list|(
 argument|Import
 argument_list|)
-block|{ }
+block|{}
 name|reference
 name|operator
 operator|*
@@ -2474,30 +2304,469 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_label
+name|public
+label|:
+end_label
+
 begin_expr_stmt
-name|import_iterator
-name|local_import_begin
+name|comments
+operator|::
+name|CommandTraits
+operator|&
+name|getCommentCommandTraits
 argument_list|()
 specifier|const
 block|{
 return|return
-name|import_iterator
-argument_list|(
-name|FirstLocalImport
-argument_list|)
+name|CommentCommandTraits
 return|;
 block|}
 end_expr_stmt
 
-begin_expr_stmt
+begin_comment
+comment|/// \brief Retrieve the attributes for the given declaration.
+end_comment
+
+begin_function_decl
+name|AttrVec
+modifier|&
+name|getDeclAttrs
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Erase the attributes corresponding to the given declaration.
+end_comment
+
+begin_function_decl
+name|void
+name|eraseDeclAttrs
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief If this variable is an instantiated static data member of a
+end_comment
+
+begin_comment
+comment|/// class template specialization, returns the templated static data member
+end_comment
+
+begin_comment
+comment|/// from which it was instantiated.
+end_comment
+
+begin_comment
+comment|// FIXME: Remove ?
+end_comment
+
+begin_function_decl
+name|MemberSpecializationInfo
+modifier|*
+name|getInstantiatedFromStaticDataMember
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|Var
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|TemplateOrSpecializationInfo
+name|getTemplateOrSpecializationInfo
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|Var
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|FunctionDecl
+modifier|*
+name|getClassScopeSpecializationPattern
+parameter_list|(
+specifier|const
+name|FunctionDecl
+modifier|*
+name|FD
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|setClassScopeSpecializationPattern
+parameter_list|(
+name|FunctionDecl
+modifier|*
+name|FD
+parameter_list|,
+name|FunctionDecl
+modifier|*
+name|Pattern
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Note that the static data member \p Inst is an instantiation of
+end_comment
+
+begin_comment
+comment|/// the static data member template \p Tmpl of a class template.
+end_comment
+
+begin_function_decl
+name|void
+name|setInstantiatedFromStaticDataMember
+parameter_list|(
+name|VarDecl
+modifier|*
+name|Inst
+parameter_list|,
+name|VarDecl
+modifier|*
+name|Tmpl
+parameter_list|,
+name|TemplateSpecializationKind
+name|TSK
+parameter_list|,
+name|SourceLocation
+name|PointOfInstantiation
+init|=
+name|SourceLocation
+argument_list|()
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|setTemplateOrSpecializationInfo
+parameter_list|(
+name|VarDecl
+modifier|*
+name|Inst
+parameter_list|,
+name|TemplateOrSpecializationInfo
+name|TSI
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief If the given using decl \p Inst is an instantiation of a
+end_comment
+
+begin_comment
+comment|/// (possibly unresolved) using decl from a template instantiation,
+end_comment
+
+begin_comment
+comment|/// return it.
+end_comment
+
+begin_function_decl
+name|NamedDecl
+modifier|*
+name|getInstantiatedFromUsingDecl
+parameter_list|(
+name|UsingDecl
+modifier|*
+name|Inst
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Remember that the using decl \p Inst is an instantiation
+end_comment
+
+begin_comment
+comment|/// of the using decl \p Pattern of a class template.
+end_comment
+
+begin_function_decl
+name|void
+name|setInstantiatedFromUsingDecl
+parameter_list|(
+name|UsingDecl
+modifier|*
+name|Inst
+parameter_list|,
+name|NamedDecl
+modifier|*
+name|Pattern
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|setInstantiatedFromUsingShadowDecl
+parameter_list|(
+name|UsingShadowDecl
+modifier|*
+name|Inst
+parameter_list|,
+name|UsingShadowDecl
+modifier|*
+name|Pattern
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|UsingShadowDecl
+modifier|*
+name|getInstantiatedFromUsingShadowDecl
+parameter_list|(
+name|UsingShadowDecl
+modifier|*
+name|Inst
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|FieldDecl
+modifier|*
+name|getInstantiatedFromUnnamedFieldDecl
+parameter_list|(
+name|FieldDecl
+modifier|*
+name|Field
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|setInstantiatedFromUnnamedFieldDecl
+parameter_list|(
+name|FieldDecl
+modifier|*
+name|Inst
+parameter_list|,
+name|FieldDecl
+modifier|*
+name|Tmpl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// Access to the set of methods overridden by the given C++ method.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|CXXMethodVector
+operator|::
+name|const_iterator
+name|overridden_cxx_method_iterator
+expr_stmt|;
+end_typedef
+
+begin_decl_stmt
+name|overridden_cxx_method_iterator
+name|overridden_methods_begin
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|Method
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|overridden_cxx_method_iterator
+name|overridden_methods_end
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|Method
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|overridden_methods_size
+argument_list|(
+specifier|const
+name|CXXMethodDecl
+operator|*
+name|Method
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Note that the given C++ \p Method overrides the given \p
+end_comment
+
+begin_comment
+comment|/// Overridden method.
+end_comment
+
+begin_function_decl
+name|void
+name|addOverriddenMethod
+parameter_list|(
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|Method
+parameter_list|,
+specifier|const
+name|CXXMethodDecl
+modifier|*
+name|Overridden
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Return C++ or ObjC overridden methods for the given \p Method.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// An ObjC method is considered to override any method in the class's
+end_comment
+
+begin_comment
+comment|/// base classes, its protocols, or its categories' protocols, that has
+end_comment
+
+begin_comment
+comment|/// the same selector and is of the same kind (class or instance).
+end_comment
+
+begin_comment
+comment|/// A method in an implementation is not considered as overriding the same
+end_comment
+
+begin_comment
+comment|/// method in the interface or its categories.
+end_comment
+
+begin_decl_stmt
+name|void
+name|getOverriddenMethods
+argument_list|(
+specifier|const
+name|NamedDecl
+operator|*
+name|Method
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|NamedDecl
+operator|*
+operator|>
+operator|&
+name|Overridden
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Notify the AST context that a new import declaration has been
+end_comment
+
+begin_comment
+comment|/// parsed or implicitly created within this translation unit.
+end_comment
+
+begin_function_decl
+name|void
+name|addedLocalImportDecl
+parameter_list|(
+name|ImportDecl
+modifier|*
+name|Import
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+name|ImportDecl
+modifier|*
+name|getNextLocalImport
+parameter_list|(
+name|ImportDecl
+modifier|*
+name|Import
+parameter_list|)
+block|{
+return|return
+name|Import
+operator|->
+name|NextLocalImport
+return|;
+block|}
+end_function
+
+begin_typedef
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
 name|import_iterator
-name|local_import_end
+operator|>
+name|import_range
+expr_stmt|;
+end_typedef
+
+begin_expr_stmt
+name|import_range
+name|local_imports
 argument_list|()
 specifier|const
 block|{
 return|return
+name|import_range
+argument_list|(
+name|import_iterator
+argument_list|(
+name|FirstLocalImport
+argument_list|)
+argument_list|,
 name|import_iterator
 argument_list|()
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -2830,30 +3099,33 @@ name|VaListTagTy
 decl_stmt|;
 end_decl_stmt
 
-begin_macro
+begin_expr_stmt
 name|ASTContext
 argument_list|(
-argument|LangOptions& LOpts
+name|LangOptions
+operator|&
+name|LOpts
 argument_list|,
-argument|SourceManager&SM
+name|SourceManager
+operator|&
+name|SM
 argument_list|,
-argument|const TargetInfo *t
+name|IdentifierTable
+operator|&
+name|idents
 argument_list|,
-argument|IdentifierTable&idents
+name|SelectorTable
+operator|&
+name|sels
 argument_list|,
-argument|SelectorTable&sels
-argument_list|,
-argument|Builtin::Context&builtins
-argument_list|,
-argument|unsigned size_reserve
-argument_list|,
-argument|bool DelayInitialization = false
+name|Builtin
+operator|::
+name|Context
+operator|&
+name|builtins
 argument_list|)
-end_macro
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 operator|~
@@ -2886,11 +3158,10 @@ begin_decl_stmt
 name|void
 name|setExternalSource
 argument_list|(
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|ExternalASTSource
 operator|>
-operator|&
 name|Source
 argument_list|)
 decl_stmt|;
@@ -3004,6 +3275,52 @@ name|Types
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Create a new implicit TU-level CXXRecordDecl or RecordDecl
+end_comment
+
+begin_comment
+comment|/// declaration.
+end_comment
+
+begin_decl_stmt
+name|RecordDecl
+modifier|*
+name|buildImplicitRecord
+argument_list|(
+name|StringRef
+name|Name
+argument_list|,
+name|RecordDecl
+operator|::
+name|TagKind
+name|TK
+operator|=
+name|TTK_Struct
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Create a new implicit TU-level typedef declaration.
+end_comment
+
+begin_decl_stmt
+name|TypedefDecl
+modifier|*
+name|buildImplicitTypedef
+argument_list|(
+name|QualType
+name|T
+argument_list|,
+name|StringRef
+name|Name
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Retrieve the declaration for the 128-bit signed integer type.
@@ -3345,6 +3662,37 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// \brief Change the exception specification on a function once it is
+end_comment
+
+begin_comment
+comment|/// delay-parsed, instantiated, or computed.
+end_comment
+
+begin_decl_stmt
+name|void
+name|adjustExceptionSpec
+argument_list|(
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|,
+specifier|const
+name|FunctionProtoType
+operator|::
+name|ExceptionSpecInfo
+operator|&
+name|ESI
+argument_list|,
+name|bool
+name|AsWritten
+operator|=
+name|false
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Return the uniqued reference to the type for a complex
 end_comment
 
@@ -3428,6 +3776,62 @@ operator|(
 name|QualType
 operator|)
 name|T
+argument_list|)
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Return the uniqued reference to a type adjusted from the original
+end_comment
+
+begin_comment
+comment|/// type to a new type.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getAdjustedType
+argument_list|(
+name|QualType
+name|Orig
+argument_list|,
+name|QualType
+name|New
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|CanQualType
+name|getAdjustedType
+argument_list|(
+name|CanQualType
+name|Orig
+argument_list|,
+name|CanQualType
+name|New
+argument_list|)
+decl|const
+block|{
+return|return
+name|CanQualType
+operator|::
+name|CreateUnsafe
+argument_list|(
+name|getAdjustedType
+argument_list|(
+operator|(
+name|QualType
+operator|)
+name|Orig
+argument_list|,
+operator|(
+name|QualType
+operator|)
+name|New
 argument_list|)
 argument_list|)
 return|;
@@ -4062,7 +4466,7 @@ name|TypeDecl
 operator|*
 name|PrevDecl
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 block|{
@@ -4267,7 +4671,7 @@ name|TemplateTypeParmDecl
 operator|*
 name|ParmDecl
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4502,7 +4906,7 @@ name|ObjCInterfaceDecl
 operator|*
 name|PrevDecl
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -4527,6 +4931,46 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|bool
+name|ObjCObjectAdoptsQTypeProtocols
+parameter_list|(
+name|QualType
+name|QT
+parameter_list|,
+name|ObjCInterfaceDecl
+modifier|*
+name|Decl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// QIdProtocolsAdoptObjCObjectProtocols - Checks that protocols in
+end_comment
+
+begin_comment
+comment|/// QT's qualified-id protocol list adopt all protocols in IDecl's list
+end_comment
+
+begin_comment
+comment|/// of protocols.
+end_comment
+
+begin_function_decl
+name|bool
+name|QIdProtocolsAdoptObjCObjectProtocols
+parameter_list|(
+name|QualType
+name|QT
+parameter_list|,
+name|ObjCInterfaceDecl
+modifier|*
+name|IDecl
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Return a ObjCObjectPointerType type for the given ObjCObjectType.
@@ -5515,7 +5959,38 @@ name|FieldDecl
 operator|*
 name|Field
 operator|=
-literal|0
+name|nullptr
+argument_list|,
+name|QualType
+operator|*
+name|NotEncodedT
+operator|=
+name|nullptr
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Emit the Objective-C property type encoding for the given
+end_comment
+
+begin_comment
+comment|/// type \p T into \p S.
+end_comment
+
+begin_decl_stmt
+name|void
+name|getObjCEncodingForPropertyType
+argument_list|(
+name|QualType
+name|T
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|S
 argument_list|)
 decl|const
 decl_stmt|;
@@ -5709,6 +6184,25 @@ argument_list|,
 name|ObjCProtocolDecl
 operator|*
 name|rProto
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ObjCPropertyImplDecl
+modifier|*
+name|getObjCPropertyImplDeclForPropertyDecl
+argument_list|(
+specifier|const
+name|ObjCPropertyDecl
+operator|*
+name|PD
+argument_list|,
+specifier|const
+name|Decl
+operator|*
+name|Container
 argument_list|)
 decl|const
 decl_stmt|;
@@ -6498,7 +6992,7 @@ name|unsigned
 operator|*
 name|IntegerConstantArgs
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -6520,22 +7014,18 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_expr_stmt
-name|std
-operator|::
-name|pair
-operator|<
-name|uint64_t
-operator|,
-name|unsigned
-operator|>
+begin_decl_stmt
+name|TypeInfo
 name|getTypeInfoImpl
 argument_list|(
-argument|const Type *T
-argument_list|)
 specifier|const
-expr_stmt|;
-end_expr_stmt
+name|Type
+operator|*
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -6671,37 +7161,27 @@ begin_comment
 comment|/// \brief Get the size and alignment of the specified complete type in bits.
 end_comment
 
-begin_expr_stmt
-name|std
-operator|::
-name|pair
-operator|<
-name|uint64_t
-operator|,
-name|unsigned
-operator|>
+begin_decl_stmt
+name|TypeInfo
 name|getTypeInfo
 argument_list|(
-argument|const Type *T
-argument_list|)
 specifier|const
-expr_stmt|;
-end_expr_stmt
+name|Type
+operator|*
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
-begin_expr_stmt
-name|std
-operator|::
-name|pair
-operator|<
-name|uint64_t
-operator|,
-name|unsigned
-operator|>
+begin_decl_stmt
+name|TypeInfo
 name|getTypeInfo
 argument_list|(
-argument|QualType T
+name|QualType
+name|T
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|getTypeInfo
@@ -6713,7 +7193,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Return the size of the specified (complete) type \p T, in bits.
@@ -6734,7 +7214,7 @@ argument_list|(
 name|T
 argument_list|)
 operator|.
-name|first
+name|Width
 return|;
 block|}
 end_decl_stmt
@@ -6756,7 +7236,7 @@ argument_list|(
 name|T
 argument_list|)
 operator|.
-name|first
+name|Width
 return|;
 block|}
 end_decl_stmt
@@ -6865,7 +7345,7 @@ argument_list|(
 name|T
 argument_list|)
 operator|.
-name|second
+name|Align
 return|;
 block|}
 end_decl_stmt
@@ -6887,7 +7367,7 @@ argument_list|(
 name|T
 argument_list|)
 operator|.
-name|second
+name|Align
 return|;
 block|}
 end_decl_stmt
@@ -6982,6 +7462,38 @@ argument_list|)
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine if the alignment the type has was required using an
+end_comment
+
+begin_comment
+comment|/// alignment attribute.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isAlignmentRequired
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|isAlignmentRequired
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Return the "preferred" alignment of the specified type \p T for
@@ -7359,6 +7871,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+name|VTableContextBase
+modifier|*
+name|getVTableContext
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|MangleContext
 modifier|*
 name|createMangleContext
@@ -7563,6 +8083,36 @@ name|QualType
 name|T1
 argument_list|,
 name|QualType
+name|T2
+argument_list|)
+decl|const
+block|{
+return|return
+name|getCanonicalType
+argument_list|(
+name|T1
+argument_list|)
+operator|==
+name|getCanonicalType
+argument_list|(
+name|T2
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|hasSameType
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|T1
+argument_list|,
+specifier|const
+name|Type
+operator|*
 name|T2
 argument_list|)
 decl|const
@@ -8883,7 +9433,7 @@ end_function_decl
 
 begin_function_decl
 name|QualType
-name|mergeFunctionArgumentTypes
+name|mergeFunctionParameterTypes
 parameter_list|(
 name|QualType
 parameter_list|,
@@ -8966,7 +9516,7 @@ index|[
 name|CD
 index|]
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 end_function
@@ -9039,19 +9589,10 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|SmallVectorImpl
-operator|<
-name|Type
-operator|*
-operator|>
+name|llvm
 operator|::
-name|iterator
-name|type_iterator
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
+name|iterator_range
+operator|<
 name|SmallVectorImpl
 operator|<
 name|Type
@@ -9059,64 +9600,30 @@ operator|*
 operator|>
 operator|::
 name|const_iterator
-name|const_type_iterator
+operator|>
+name|type_const_range
 expr_stmt|;
 end_typedef
 
-begin_function
-name|type_iterator
-name|types_begin
-parameter_list|()
-block|{
-return|return
-name|Types
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-end_function
-
-begin_function
-name|type_iterator
-name|types_end
-parameter_list|()
-block|{
-return|return
-name|Types
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-end_function
-
 begin_expr_stmt
-name|const_type_iterator
-name|types_begin
+name|type_const_range
+name|types
 argument_list|()
 specifier|const
 block|{
 return|return
+name|type_const_range
+argument_list|(
 name|Types
 operator|.
 name|begin
 argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|const_type_iterator
-name|types_end
-argument_list|()
-specifier|const
-block|{
-return|return
+argument_list|,
 name|Types
 operator|.
 name|end
 argument_list|()
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -9515,19 +10022,6 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_function
-name|TypeSourceInfo
-modifier|*
-name|getNullTypeSourceInfo
-parameter_list|()
-block|{
-return|return
-operator|&
-name|NullTypeSourceInfo
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/// \brief Add a deallocation callback that will be invoked when the
 end_comment
@@ -9577,17 +10071,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|GVALinkage
 name|GetGVALinkageForFunction
-parameter_list|(
+argument_list|(
 specifier|const
 name|FunctionDecl
-modifier|*
+operator|*
 name|FD
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|GVALinkage
@@ -9660,6 +10155,34 @@ specifier|const
 name|NamedDecl
 operator|*
 name|ND
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
+name|void
+name|setStaticLocalNumber
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|VD
+parameter_list|,
+name|unsigned
+name|Number
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|unsigned
+name|getStaticLocalNumber
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|VD
 argument_list|)
 decl|const
 decl_stmt|;
@@ -9979,15 +10502,7 @@ comment|/// This routine may only be invoked once for a given ASTContext object.
 end_comment
 
 begin_comment
-comment|/// It is normally invoked by the ASTContext constructor. However, the
-end_comment
-
-begin_comment
-comment|/// constructor can be asked to delay initialization, which places the burden
-end_comment
-
-begin_comment
-comment|/// of calling this function on the user of that object.
+comment|/// It is normally invoked after ASTContext construction.
 end_comment
 
 begin_comment
@@ -10088,6 +10603,12 @@ name|bool
 name|EncodePointerToObjCTypedef
 operator|=
 name|false
+argument_list|,
+name|QualType
+operator|*
+name|NotEncodedT
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -10120,10 +10641,21 @@ name|bool
 name|includeVBases
 operator|=
 name|true
+argument_list|,
+name|QualType
+operator|*
+name|NotEncodedT
+operator|=
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_label
+name|public
+label|:
+end_label
 
 begin_comment
 comment|// Adds the encoding of a method parameter or return type.
@@ -10154,6 +10686,32 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/// \brief Returns true if this is an inline-initialized static data member
+end_comment
+
+begin_comment
+comment|/// which is treated as a definition for MSVC compatibility.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isMSStaticDataMemberInlineDefinition
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|VD
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_label
+name|private
+label|:
+end_label
+
 begin_decl_stmt
 specifier|const
 name|ASTRecordLayout
@@ -10173,11 +10731,6 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
-
-begin_label
-name|private
-label|:
-end_label
 
 begin_comment
 comment|/// \brief A set of deallocations that should be performed when the
@@ -10269,14 +10822,126 @@ parameter_list|()
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ReleaseParentMapEntries
+parameter_list|()
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 name|ParentMap
 operator|>
 name|AllParents
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|VTableContextBase
+operator|>
+name|VTContext
+expr_stmt|;
+end_expr_stmt
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_enum
+enum|enum
+name|PragmaSectionFlag
+enum|:
+name|unsigned
+block|{
+name|PSF_None
+init|=
+literal|0
+block|,
+name|PSF_Read
+init|=
+literal|0x1
+block|,
+name|PSF_Write
+init|=
+literal|0x2
+block|,
+name|PSF_Execute
+init|=
+literal|0x4
+block|,
+name|PSF_Implicit
+init|=
+literal|0x8
+block|,
+name|PSF_Invalid
+init|=
+literal|0x80000000U
+block|,   }
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|SectionInfo
+block|{
+name|DeclaratorDecl
+modifier|*
+name|Decl
+decl_stmt|;
+name|SourceLocation
+name|PragmaSectionLocation
+decl_stmt|;
+name|int
+name|SectionFlags
+decl_stmt|;
+name|SectionInfo
+argument_list|()
+block|{}
+name|SectionInfo
+argument_list|(
+argument|DeclaratorDecl *Decl
+argument_list|,
+argument|SourceLocation PragmaSectionLocation
+argument_list|,
+argument|int SectionFlags
+argument_list|)
+block|:
+name|Decl
+argument_list|(
+name|Decl
+argument_list|)
+operator|,
+name|PragmaSectionLocation
+argument_list|(
+name|PragmaSectionLocation
+argument_list|)
+operator|,
+name|SectionFlags
+argument_list|(
+argument|SectionFlags
+argument_list|)
+block|{}
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|SectionInfo
+operator|>
+name|SectionInfos
 expr_stmt|;
 end_expr_stmt
 
@@ -10463,15 +11128,15 @@ comment|/// @endcode
 end_comment
 
 begin_comment
-comment|/// Please note that you cannot use delete on the pointer; it must be
+comment|/// Memory allocated through this placement new operator does not need to be
 end_comment
 
 begin_comment
-comment|/// deallocated using an explicit destructor call followed by
+comment|/// explicitly freed, as ASTContext will free all of this memory when it gets
 end_comment
 
 begin_comment
-comment|/// @c Context.Deallocate(Ptr).
+comment|/// destroyed. Please note that you cannot use delete on the pointer.
 end_comment
 
 begin_comment
@@ -10643,15 +11308,15 @@ comment|/// @endcode
 end_comment
 
 begin_comment
-comment|/// Please note that you cannot use delete on the pointer; it must be
+comment|/// Memory allocated through this placement new[] operator does not need to be
 end_comment
 
 begin_comment
-comment|/// deallocated using an explicit destructor call followed by
+comment|/// explicitly freed, as ASTContext will free all of this memory when it gets
 end_comment
 
 begin_comment
-comment|/// @c Context.Deallocate(Ptr).
+comment|/// destroyed. Please note that you cannot use delete on the pointer.
 end_comment
 
 begin_comment
@@ -10770,7 +11435,99 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// \brief Create the representation of a LazyGenerationalUpdatePtr.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Owner
+operator|,
+name|typename
+name|T
+operator|,
+name|void
+argument_list|(
+name|clang
+operator|::
+name|ExternalASTSource
+operator|::
+operator|*
+name|Update
+argument_list|)
+argument_list|(
+name|Owner
+argument_list|)
+operator|>
+name|typename
+name|clang
+operator|::
+name|LazyGenerationalUpdatePtr
+operator|<
+name|Owner
+operator|,
+name|T
+operator|,
+name|Update
+operator|>
+operator|::
+name|ValueType
+name|clang
+operator|::
+name|LazyGenerationalUpdatePtr
+operator|<
+name|Owner
+operator|,
+name|T
+operator|,
+name|Update
+operator|>
+operator|::
+name|makeValue
+argument_list|(
+argument|const clang::ASTContext&Ctx
+argument_list|,
+argument|T Value
+argument_list|)
+block|{
+comment|// Note, this is implemented here so that ExternalASTSource.h doesn't need to
+comment|// include ASTContext.h. We explicitly instantiate it for all relevant types
+comment|// in ASTContext.cpp.
+if|if
+condition|(
+name|auto
+operator|*
+name|Source
+operator|=
+name|Ctx
+operator|.
+name|getExternalSource
+argument_list|()
+condition|)
+return|return
+name|new
+argument_list|(
+argument|Ctx
+argument_list|)
+name|LazyData
+argument_list|(
+name|Source
+argument_list|,
+name|Value
+argument_list|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|Value
+return|;
+end_return
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

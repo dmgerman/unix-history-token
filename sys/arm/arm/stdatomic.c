@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpufunc.h>
 end_include
 
@@ -120,15 +126,9 @@ end_function
 begin_elif
 elif|#
 directive|elif
-name|defined
-argument_list|(
-name|__ARM_ARCH_7__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ARM_ARCH_7A__
-argument_list|)
+name|__ARM_ARCH
+operator|>=
+literal|7
 end_elif
 
 begin_function
@@ -147,32 +147,9 @@ end_function
 begin_elif
 elif|#
 directive|elif
-name|defined
-argument_list|(
-name|__ARM_ARCH_6__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ARM_ARCH_6J__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__ARM_ARCH_6K__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ARM_ARCH_6Z__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__ARM_ARCH_6ZK__
-argument_list|)
+name|__ARM_ARCH
+operator|>=
+literal|6
 end_elif
 
 begin_function
@@ -211,60 +188,17 @@ begin_comment
 comment|/*  * New C11 __atomic_* API.  */
 end_comment
 
+begin_comment
+comment|/* ARMv6+ systems should be supported by the compiler. */
+end_comment
+
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__ARM_ARCH_6__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ARM_ARCH_6J__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__ARM_ARCH_6K__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ARM_ARCH_6Z__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__ARM_ARCH_6ZK__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__ARM_ARCH_7__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ARM_ARCH_7A__
-argument_list|)
+name|__ARM_ARCH
+operator|<=
+literal|5
 end_if
-
-begin_comment
-comment|/* These systems should be supported by the compiler. */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* __ARM_ARCH_5__ */
-end_comment
 
 begin_comment
 comment|/* Clang doesn't allow us to reimplement builtins without this. */
@@ -649,6 +583,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* __ARM_ARCH */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -858,43 +796,9 @@ end_comment
 begin_if
 if|#
 directive|if
-name|defined
-argument_list|(
-name|__ARM_ARCH_6__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ARM_ARCH_6J__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__ARM_ARCH_6K__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ARM_ARCH_6Z__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__ARM_ARCH_6ZK__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__ARM_ARCH_7__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ARM_ARCH_7A__
-argument_list|)
+name|__ARM_ARCH
+operator|>=
+literal|6
 end_if
 
 begin_comment
@@ -1946,7 +1850,7 @@ directive|else
 end_else
 
 begin_comment
-comment|/* __ARM_ARCH_5__ */
+comment|/* __ARM_ARCH< 6 */
 end_comment
 
 begin_ifdef
@@ -2176,6 +2080,47 @@ define|\
 value|EMIT_LOCK_TEST_AND_SET_N(N, uintN_t, ldr, str)				\ EMIT_VAL_COMPARE_AND_SWAP_N(N, uintN_t, ldr, streq)			\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_add, "add")		\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_and, "and")		\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_or, "orr")		\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_sub, "sub")		\ EMIT_FETCH_AND_OP_N(N, uintN_t, ldr, str, fetch_and_xor, "eor")
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__clang__
+end_ifdef
+
+begin_macro
+name|EMIT_ALL_OPS_N
+argument_list|(
+literal|1
+argument_list|,
+argument|uint8_t
+argument_list|,
+literal|"ldrb"
+argument_list|,
+literal|"strb"
+argument_list|,
+literal|"strbeq"
+argument_list|)
+end_macro
+
+begin_macro
+name|EMIT_ALL_OPS_N
+argument_list|(
+literal|2
+argument_list|,
+argument|uint16_t
+argument_list|,
+literal|"ldrh"
+argument_list|,
+literal|"strh"
+argument_list|,
+literal|"strheq"
+argument_list|)
+end_macro
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_macro
 name|EMIT_ALL_OPS_N
 argument_list|(
@@ -2205,6 +2150,11 @@ argument_list|,
 literal|"streqh"
 argument_list|)
 end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_macro
 name|EMIT_ALL_OPS_N
@@ -2441,6 +2391,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __ARM_ARCH */
+end_comment
 
 begin_endif
 endif|#

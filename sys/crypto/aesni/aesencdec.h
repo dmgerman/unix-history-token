@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<crypto/aesni/aesni_os.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<wmmintrin.h>
 end_include
 

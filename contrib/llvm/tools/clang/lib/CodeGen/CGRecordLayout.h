@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_CODEGEN_CGRECORDLAYOUT_H
+name|LLVM_CLANG_LIB_CODEGEN_CGRECORDLAYOUT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_CODEGEN_CGRECORDLAYOUT_H
+name|LLVM_CLANG_LIB_CODEGEN_CGRECORDLAYOUT_H
 end_define
 
 begin_include
@@ -335,7 +335,7 @@ operator|>
 name|BitFields
 expr_stmt|;
 comment|// FIXME: Maybe we could use a CXXBaseSpecifier as the key and use a single
-comment|// map for both virtual and non virtual bases.
+comment|// map for both virtual and non-virtual bases.
 name|llvm
 operator|::
 name|DenseMap
@@ -472,6 +472,13 @@ name|FD
 argument_list|)
 decl|const
 block|{
+name|FD
+operator|=
+name|FD
+operator|->
+name|getCanonicalDecl
+argument_list|()
+expr_stmt|;
 name|assert
 argument_list|(
 name|FieldInfo
@@ -570,6 +577,13 @@ name|FD
 argument_list|)
 decl|const
 block|{
+name|FD
+operator|=
+name|FD
+operator|->
+name|getCanonicalDecl
+argument_list|()
+expr_stmt|;
 name|assert
 argument_list|(
 name|FD
@@ -577,7 +591,7 @@ operator|->
 name|isBitField
 argument_list|()
 operator|&&
-literal|"Invalid call for non bit-field decl!"
+literal|"Invalid call for non-bit-field decl!"
 argument_list|)
 expr_stmt|;
 name|llvm

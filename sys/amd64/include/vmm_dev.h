@@ -107,10 +107,6 @@ block|{
 name|int
 name|cpuid
 decl_stmt|;
-name|uint64_t
-name|rip
-decl_stmt|;
-comment|/* start running here */
 name|struct
 name|vm_exit
 name|vm_exit
@@ -134,6 +130,9 @@ name|error_code
 decl_stmt|;
 name|int
 name|error_code_valid
+decl_stmt|;
+name|int
+name|restart_instruction
 decl_stmt|;
 block|}
 struct|;
@@ -547,6 +546,31 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|vm_rtc_time
+block|{
+name|time_t
+name|secs
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|vm_rtc_data
+block|{
+name|int
+name|offset
+decl_stmt|;
+name|uint8_t
+name|value
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_enum
 enum|enum
 block|{
@@ -654,6 +678,10 @@ name|IOCNUM_IOAPIC_PINCOUNT
 init|=
 literal|38
 block|,
+name|IOCNUM_RESTART_INSTRUCTION
+init|=
+literal|39
+block|,
 comment|/* PCI pass-thru */
 name|IOCNUM_BIND_PPTDEV
 init|=
@@ -722,6 +750,23 @@ block|,
 name|IOCNUM_GET_CPUSET
 init|=
 literal|91
+block|,
+comment|/* RTC */
+name|IOCNUM_RTC_READ
+init|=
+literal|100
+block|,
+name|IOCNUM_RTC_WRITE
+init|=
+literal|101
+block|,
+name|IOCNUM_RTC_SETTIME
+init|=
+literal|102
+block|,
+name|IOCNUM_RTC_GETTIME
+init|=
+literal|103
 block|, }
 enum|;
 end_enum
@@ -1044,6 +1089,46 @@ directive|define
 name|VM_GET_INTINFO
 define|\
 value|_IOWR('v', IOCNUM_GET_INTINFO, struct vm_intinfo)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RTC_WRITE
+define|\
+value|_IOW('v', IOCNUM_RTC_WRITE, struct vm_rtc_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RTC_READ
+define|\
+value|_IOWR('v', IOCNUM_RTC_READ, struct vm_rtc_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RTC_SETTIME
+define|\
+value|_IOW('v', IOCNUM_RTC_SETTIME, struct vm_rtc_time)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RTC_GETTIME
+define|\
+value|_IOR('v', IOCNUM_RTC_GETTIME, struct vm_rtc_time)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RESTART_INSTRUCTION
+define|\
+value|_IOW('v', IOCNUM_RESTART_INSTRUCTION, int)
 end_define
 
 begin_endif

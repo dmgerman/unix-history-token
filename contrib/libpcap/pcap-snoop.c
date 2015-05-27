@@ -3,29 +3,6 @@ begin_comment
 comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/pcap-snoop.c,v 1.59 2008-12-02 16:25:14 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -192,6 +169,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Private data for capturing on snoop devices.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pcap_snoop
+block|{
+name|struct
+name|pcap_stat
+name|stat
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function
 specifier|static
 name|int
@@ -212,6 +205,15 @@ modifier|*
 name|user
 parameter_list|)
 block|{
+name|struct
+name|pcap_snoop
+modifier|*
+name|psn
+init|=
+name|p
+operator|->
+name|priv
+decl_stmt|;
 name|int
 name|cc
 decl_stmt|;
@@ -491,10 +493,8 @@ name|pcap_pkthdr
 name|h
 decl_stmt|;
 operator|++
-name|p
+name|psn
 operator|->
-name|md
-operator|.
 name|stat
 operator|.
 name|ps_recv
@@ -651,6 +651,15 @@ modifier|*
 name|ps
 parameter_list|)
 block|{
+name|struct
+name|pcap_snoop
+modifier|*
+name|psn
+init|=
+name|p
+operator|->
+name|priv
+decl_stmt|;
 specifier|register
 name|struct
 name|rawstats
@@ -728,10 +737,8 @@ operator|)
 return|;
 block|}
 comment|/* 	 * "ifdrops" are those dropped by the network interface 	 * due to resource shortages or hardware errors. 	 * 	 * "sbdrops" are those dropped due to socket buffer limits. 	 * 	 * As filter is done in userland, "sbdrops" counts packets 	 * regardless of whether they would've passed the filter. 	 * 	 * XXX - does this count *all* Snoop or Drain sockets, 	 * rather than just this socket?  If not, why does it have 	 * both Snoop and Drain statistics? 	 */
-name|p
+name|psn
 operator|->
-name|md
-operator|.
 name|stat
 operator|.
 name|ps_drop
@@ -764,10 +771,8 @@ comment|/* 	 * "ps_recv" counts only packets that passed the filter. 	 * As filt
 operator|*
 name|ps
 operator|=
-name|p
+name|psn
 operator|->
-name|md
-operator|.
 name|stat
 expr_stmt|;
 return|return
@@ -1888,6 +1893,12 @@ argument_list|(
 name|device
 argument_list|,
 name|ebuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pcap_snoop
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

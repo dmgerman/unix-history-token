@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * AES Key Wrap Algorithm (128-bit KEK) (RFC3394)  *  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
+comment|/*  * AES Key Wrap Algorithm (RFC3394)  *  * Copyright (c) 2003-2007, Jouni Malinen<j@w1.fi>  *  * This software may be distributed under the terms of the BSD license.  * See README for more details.  */
 end_comment
 
 begin_include
@@ -28,7 +28,7 @@ file|"aes_wrap.h"
 end_include
 
 begin_comment
-comment|/**  * aes_wrap - Wrap keys with AES Key Wrap Algorithm (128-bit KEK) (RFC3394)  * @kek: 16-octet Key encryption key (KEK)  * @n: Length of the plaintext key in 64-bit units; e.g., 2 = 128-bit = 16  * bytes  * @plain: Plaintext key to be wrapped, n * 64 bits  * @cipher: Wrapped key, (n + 1) * 64 bits  * Returns: 0 on success, -1 on failure  */
+comment|/**  * aes_wrap - Wrap keys with AES Key Wrap Algorithm (RFC3394)  * @kek: Key encryption key (KEK)  * @kek_len: Length of KEK in octets  * @n: Length of the plaintext key in 64-bit units; e.g., 2 = 128-bit = 16  * bytes  * @plain: Plaintext key to be wrapped, n * 64 bits  * @cipher: Wrapped key, (n + 1) * 64 bits  * Returns: 0 on success, -1 on failure  */
 end_comment
 
 begin_function
@@ -39,6 +39,9 @@ specifier|const
 name|u8
 modifier|*
 name|kek
+parameter_list|,
+name|size_t
+name|kek_len
 parameter_list|,
 name|int
 name|n
@@ -62,7 +65,7 @@ name|r
 decl_stmt|,
 name|b
 index|[
-literal|16
+name|AES_BLOCK_SIZE
 index|]
 decl_stmt|;
 name|int
@@ -73,6 +76,10 @@ decl_stmt|;
 name|void
 modifier|*
 name|ctx
+decl_stmt|;
+name|unsigned
+name|int
+name|t
 decl_stmt|;
 name|a
 operator|=
@@ -111,7 +118,7 @@ name|aes_encrypt_init
 argument_list|(
 name|kek
 argument_list|,
-literal|16
+name|kek_len
 argument_list|)
 expr_stmt|;
 if|if
@@ -197,16 +204,47 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-name|a
-index|[
-literal|7
-index|]
-operator|^=
+name|t
+operator|=
 name|n
 operator|*
 name|j
 operator|+
 name|i
+expr_stmt|;
+name|a
+index|[
+literal|7
+index|]
+operator|^=
+name|t
+expr_stmt|;
+name|a
+index|[
+literal|6
+index|]
+operator|^=
+name|t
+operator|>>
+literal|8
+expr_stmt|;
+name|a
+index|[
+literal|5
+index|]
+operator|^=
+name|t
+operator|>>
+literal|16
+expr_stmt|;
+name|a
+index|[
+literal|4
+index|]
+operator|^=
+name|t
+operator|>>
+literal|24
 expr_stmt|;
 name|os_memcpy
 argument_list|(

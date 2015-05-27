@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<arm/ti/ti_scm.h>
+file|<arm/ti/ti_pinmux.h>
 end_include
 
 begin_include
@@ -130,7 +130,7 @@ begin_decl_stmt
 specifier|const
 specifier|static
 name|struct
-name|ti_scm_padstate
+name|ti_pinmux_padstate
 name|ti_padstate_devmap
 index|[]
 init|=
@@ -177,14 +177,14 @@ begin_decl_stmt
 specifier|const
 specifier|static
 name|struct
-name|ti_scm_padconf
+name|ti_pinmux_padconf
 name|ti_padconf_devmap
 index|[]
 init|=
 block|{
 name|_PINDEF
 argument_list|(
-literal|0x0040
+literal|0x0000
 argument_list|,
 literal|"c12"
 argument_list|,
@@ -211,7 +211,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0042
+literal|0x0002
 argument_list|,
 literal|"d12"
 argument_list|,
@@ -238,7 +238,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0044
+literal|0x0004
 argument_list|,
 literal|"c13"
 argument_list|,
@@ -265,7 +265,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0046
+literal|0x0006
 argument_list|,
 literal|"d13"
 argument_list|,
@@ -292,7 +292,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0048
+literal|0x0008
 argument_list|,
 literal|"c15"
 argument_list|,
@@ -319,7 +319,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x004a
+literal|0x000a
 argument_list|,
 literal|"d15"
 argument_list|,
@@ -346,7 +346,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x004c
+literal|0x000c
 argument_list|,
 literal|"a16"
 argument_list|,
@@ -373,7 +373,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x004e
+literal|0x000e
 argument_list|,
 literal|"b16"
 argument_list|,
@@ -400,7 +400,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0050
+literal|0x0010
 argument_list|,
 literal|"c16"
 argument_list|,
@@ -427,7 +427,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0052
+literal|0x0012
 argument_list|,
 literal|"d16"
 argument_list|,
@@ -454,7 +454,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0054
+literal|0x0014
 argument_list|,
 literal|"c17"
 argument_list|,
@@ -481,7 +481,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0056
+literal|0x0016
 argument_list|,
 literal|"d17"
 argument_list|,
@@ -508,7 +508,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0058
+literal|0x0018
 argument_list|,
 literal|"c18"
 argument_list|,
@@ -535,7 +535,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x005a
+literal|0x001a
 argument_list|,
 literal|"d18"
 argument_list|,
@@ -562,7 +562,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x005c
+literal|0x001c
 argument_list|,
 literal|"c19"
 argument_list|,
@@ -589,7 +589,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x005e
+literal|0x001e
 argument_list|,
 literal|"d19"
 argument_list|,
@@ -616,7 +616,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0060
+literal|0x0020
 argument_list|,
 literal|"b17"
 argument_list|,
@@ -643,7 +643,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0062
+literal|0x0022
 argument_list|,
 literal|"a18"
 argument_list|,
@@ -670,7 +670,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0064
+literal|0x0024
 argument_list|,
 literal|"b18"
 argument_list|,
@@ -697,7 +697,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0066
+literal|0x0026
 argument_list|,
 literal|"a19"
 argument_list|,
@@ -724,7 +724,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0068
+literal|0x0028
 argument_list|,
 literal|"b19"
 argument_list|,
@@ -751,7 +751,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x006a
+literal|0x002a
 argument_list|,
 literal|"b20"
 argument_list|,
@@ -778,7 +778,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x006c
+literal|0x002c
 argument_list|,
 literal|"a21"
 argument_list|,
@@ -805,7 +805,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x006e
+literal|0x002e
 argument_list|,
 literal|"b21"
 argument_list|,
@@ -832,7 +832,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0070
+literal|0x0030
 argument_list|,
 literal|"c20"
 argument_list|,
@@ -859,7 +859,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0072
+literal|0x0032
 argument_list|,
 literal|"d20"
 argument_list|,
@@ -886,7 +886,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0074
+literal|0x0034
 argument_list|,
 literal|"b25"
 argument_list|,
@@ -913,7 +913,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0076
+literal|0x0036
 argument_list|,
 literal|"c21"
 argument_list|,
@@ -940,7 +940,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0078
+literal|0x0038
 argument_list|,
 literal|"d21"
 argument_list|,
@@ -967,7 +967,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x007a
+literal|0x003a
 argument_list|,
 literal|"c22"
 argument_list|,
@@ -994,7 +994,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x007c
+literal|0x003c
 argument_list|,
 literal|"c25"
 argument_list|,
@@ -1021,7 +1021,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x007e
+literal|0x003e
 argument_list|,
 literal|"b22"
 argument_list|,
@@ -1048,7 +1048,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0080
+literal|0x0040
 argument_list|,
 literal|"d25"
 argument_list|,
@@ -1075,7 +1075,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0082
+literal|0x0042
 argument_list|,
 literal|"b11"
 argument_list|,
@@ -1102,7 +1102,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0084
+literal|0x0044
 argument_list|,
 literal|"b12"
 argument_list|,
@@ -1129,7 +1129,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0086
+literal|0x0046
 argument_list|,
 literal|"c23"
 argument_list|,
@@ -1156,7 +1156,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0088
+literal|0x0048
 argument_list|,
 literal|"d22"
 argument_list|,
@@ -1183,7 +1183,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x008a
+literal|0x004a
 argument_list|,
 literal|"b26"
 argument_list|,
@@ -1210,7 +1210,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x008c
+literal|0x004c
 argument_list|,
 literal|"b23"
 argument_list|,
@@ -1237,7 +1237,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x008e
+literal|0x004e
 argument_list|,
 literal|"d23"
 argument_list|,
@@ -1264,7 +1264,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0090
+literal|0x0050
 argument_list|,
 literal|"a24"
 argument_list|,
@@ -1291,7 +1291,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0092
+literal|0x0052
 argument_list|,
 literal|"b24"
 argument_list|,
@@ -1318,7 +1318,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0094
+literal|0x0054
 argument_list|,
 literal|"c24"
 argument_list|,
@@ -1345,7 +1345,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0096
+literal|0x0056
 argument_list|,
 literal|"d24"
 argument_list|,
@@ -1372,7 +1372,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0098
+literal|0x0058
 argument_list|,
 literal|"b9"
 argument_list|,
@@ -1399,7 +1399,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x009a
+literal|0x005a
 argument_list|,
 literal|"b10"
 argument_list|,
@@ -1426,7 +1426,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x009c
+literal|0x005c
 argument_list|,
 literal|"a8"
 argument_list|,
@@ -1453,7 +1453,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x009e
+literal|0x005e
 argument_list|,
 literal|"b8"
 argument_list|,
@@ -1480,7 +1480,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00a0
+literal|0x0060
 argument_list|,
 literal|"r26"
 argument_list|,
@@ -1507,7 +1507,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00a2
+literal|0x0062
 argument_list|,
 literal|"r25"
 argument_list|,
@@ -1534,7 +1534,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00a4
+literal|0x0064
 argument_list|,
 literal|"t26"
 argument_list|,
@@ -1561,7 +1561,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00a6
+literal|0x0066
 argument_list|,
 literal|"t25"
 argument_list|,
@@ -1588,7 +1588,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00a8
+literal|0x0068
 argument_list|,
 literal|"u26"
 argument_list|,
@@ -1615,7 +1615,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00aa
+literal|0x006a
 argument_list|,
 literal|"u25"
 argument_list|,
@@ -1642,7 +1642,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00ac
+literal|0x006c
 argument_list|,
 literal|"v26"
 argument_list|,
@@ -1669,7 +1669,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00ae
+literal|0x006e
 argument_list|,
 literal|"v25"
 argument_list|,
@@ -1696,7 +1696,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00b0
+literal|0x0070
 argument_list|,
 literal|"w26"
 argument_list|,
@@ -1723,7 +1723,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00b2
+literal|0x0072
 argument_list|,
 literal|"w25"
 argument_list|,
@@ -1750,7 +1750,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00b4
+literal|0x0074
 argument_list|,
 literal|"m26"
 argument_list|,
@@ -1777,7 +1777,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00b6
+literal|0x0076
 argument_list|,
 literal|"m25"
 argument_list|,
@@ -1804,7 +1804,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00b8
+literal|0x0078
 argument_list|,
 literal|"n26"
 argument_list|,
@@ -1831,7 +1831,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00ba
+literal|0x007a
 argument_list|,
 literal|"n25"
 argument_list|,
@@ -1858,7 +1858,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00bc
+literal|0x007c
 argument_list|,
 literal|"t27"
 argument_list|,
@@ -1885,7 +1885,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00be
+literal|0x007e
 argument_list|,
 literal|"u27"
 argument_list|,
@@ -1912,7 +1912,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00c0
+literal|0x0080
 argument_list|,
 literal|"v27"
 argument_list|,
@@ -1939,7 +1939,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00c2
+literal|0x0082
 argument_list|,
 literal|"ae18"
 argument_list|,
@@ -1966,7 +1966,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00c4
+literal|0x0084
 argument_list|,
 literal|"ag19"
 argument_list|,
@@ -1993,7 +1993,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00c6
+literal|0x0086
 argument_list|,
 literal|"af19"
 argument_list|,
@@ -2020,7 +2020,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00c8
+literal|0x0088
 argument_list|,
 literal|"ae19"
 argument_list|,
@@ -2047,7 +2047,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00ca
+literal|0x008a
 argument_list|,
 literal|"af18"
 argument_list|,
@@ -2074,7 +2074,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00cc
+literal|0x008c
 argument_list|,
 literal|"ag18"
 argument_list|,
@@ -2101,7 +2101,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00ce
+literal|0x008e
 argument_list|,
 literal|"ae17"
 argument_list|,
@@ -2128,7 +2128,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00d0
+literal|0x0090
 argument_list|,
 literal|"af17"
 argument_list|,
@@ -2155,7 +2155,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00d2
+literal|0x0092
 argument_list|,
 literal|"ah17"
 argument_list|,
@@ -2182,7 +2182,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00d4
+literal|0x0094
 argument_list|,
 literal|"ae16"
 argument_list|,
@@ -2209,7 +2209,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00d6
+literal|0x0096
 argument_list|,
 literal|"af16"
 argument_list|,
@@ -2236,7 +2236,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00d8
+literal|0x0098
 argument_list|,
 literal|"ag16"
 argument_list|,
@@ -2263,7 +2263,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00da
+literal|0x009a
 argument_list|,
 literal|"af14"
 argument_list|,
@@ -2290,7 +2290,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00dc
+literal|0x009c
 argument_list|,
 literal|"ae14"
 argument_list|,
@@ -2317,7 +2317,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00de
+literal|0x009e
 argument_list|,
 literal|"h2"
 argument_list|,
@@ -2344,7 +2344,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00e0
+literal|0x00a0
 argument_list|,
 literal|"h3"
 argument_list|,
@@ -2371,7 +2371,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00e2
+literal|0x00a2
 argument_list|,
 literal|"d2"
 argument_list|,
@@ -2398,7 +2398,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00e4
+literal|0x00a4
 argument_list|,
 literal|"e3"
 argument_list|,
@@ -2425,7 +2425,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00e6
+literal|0x00a6
 argument_list|,
 literal|"e4"
 argument_list|,
@@ -2452,7 +2452,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00e8
+literal|0x00a8
 argument_list|,
 literal|"e2"
 argument_list|,
@@ -2479,7 +2479,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00ea
+literal|0x00aa
 argument_list|,
 literal|"e1"
 argument_list|,
@@ -2506,7 +2506,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00ec
+literal|0x00ac
 argument_list|,
 literal|"f4"
 argument_list|,
@@ -2533,7 +2533,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00ee
+literal|0x00ae
 argument_list|,
 literal|"f3"
 argument_list|,
@@ -2560,7 +2560,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00f0
+literal|0x00b0
 argument_list|,
 literal|"f1"
 argument_list|,
@@ -2587,7 +2587,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00f2
+literal|0x00b2
 argument_list|,
 literal|"g4"
 argument_list|,
@@ -2614,7 +2614,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00f4
+literal|0x00b4
 argument_list|,
 literal|"g3"
 argument_list|,
@@ -2641,7 +2641,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00f6
+literal|0x00b6
 argument_list|,
 literal|"ad27"
 argument_list|,
@@ -2668,7 +2668,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00f8
+literal|0x00b8
 argument_list|,
 literal|"ad26"
 argument_list|,
@@ -2695,7 +2695,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00fa
+literal|0x00ba
 argument_list|,
 literal|"ad25"
 argument_list|,
@@ -2722,7 +2722,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00fc
+literal|0x00bc
 argument_list|,
 literal|"ac28"
 argument_list|,
@@ -2749,7 +2749,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x00fe
+literal|0x00be
 argument_list|,
 literal|"ac26"
 argument_list|,
@@ -2776,7 +2776,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0100
+literal|0x00c0
 argument_list|,
 literal|"ac25"
 argument_list|,
@@ -2803,7 +2803,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0102
+literal|0x00c2
 argument_list|,
 literal|"ab25"
 argument_list|,
@@ -2830,7 +2830,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0104
+literal|0x00c4
 argument_list|,
 literal|"ac27"
 argument_list|,
@@ -2857,7 +2857,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0106
+literal|0x00c6
 argument_list|,
 literal|"ag25"
 argument_list|,
@@ -2884,7 +2884,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0108
+literal|0x00c8
 argument_list|,
 literal|"af25"
 argument_list|,
@@ -2911,7 +2911,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x010a
+literal|0x00ca
 argument_list|,
 literal|"ae25"
 argument_list|,
@@ -2938,7 +2938,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x010c
+literal|0x00cc
 argument_list|,
 literal|"af26"
 argument_list|,
@@ -2965,7 +2965,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x010e
+literal|0x00ce
 argument_list|,
 literal|"ah26"
 argument_list|,
@@ -2992,7 +2992,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0110
+literal|0x00d0
 argument_list|,
 literal|"ae24"
 argument_list|,
@@ -3019,7 +3019,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0112
+literal|0x00d2
 argument_list|,
 literal|"af24"
 argument_list|,
@@ -3046,7 +3046,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0114
+literal|0x00d4
 argument_list|,
 literal|"ag24"
 argument_list|,
@@ -3073,7 +3073,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0116
+literal|0x00d6
 argument_list|,
 literal|"ah24"
 argument_list|,
@@ -3100,7 +3100,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0118
+literal|0x00d8
 argument_list|,
 literal|"ab26"
 argument_list|,
@@ -3127,7 +3127,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x011a
+literal|0x00da
 argument_list|,
 literal|"ab27"
 argument_list|,
@@ -3154,7 +3154,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x011c
+literal|0x00dc
 argument_list|,
 literal|"aa25"
 argument_list|,
@@ -3181,7 +3181,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x011e
+literal|0x00de
 argument_list|,
 literal|"aa26"
 argument_list|,
@@ -3208,7 +3208,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0120
+literal|0x00e0
 argument_list|,
 literal|"aa27"
 argument_list|,
@@ -3235,7 +3235,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0122
+literal|0x00e2
 argument_list|,
 literal|"ae28"
 argument_list|,
@@ -3262,7 +3262,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0124
+literal|0x00e4
 argument_list|,
 literal|"ae26"
 argument_list|,
@@ -3289,7 +3289,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0126
+literal|0x00e6
 argument_list|,
 literal|"c26"
 argument_list|,
@@ -3316,7 +3316,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0128
+literal|0x00e8
 argument_list|,
 literal|"d26"
 argument_list|,
@@ -3343,7 +3343,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x012a
+literal|0x00ea
 argument_list|,
 literal|"w27"
 argument_list|,
@@ -3370,7 +3370,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x012c
+literal|0x00ec
 argument_list|,
 literal|"y27"
 argument_list|,
@@ -3397,7 +3397,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x012e
+literal|0x00ee
 argument_list|,
 literal|"ag21"
 argument_list|,
@@ -3424,7 +3424,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0130
+literal|0x00f0
 argument_list|,
 literal|"ah22"
 argument_list|,
@@ -3451,7 +3451,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0132
+literal|0x00f2
 argument_list|,
 literal|"af22"
 argument_list|,
@@ -3478,7 +3478,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0134
+literal|0x00f4
 argument_list|,
 literal|"ae22"
 argument_list|,
@@ -3505,7 +3505,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0136
+literal|0x00f6
 argument_list|,
 literal|"ag22"
 argument_list|,
@@ -3532,7 +3532,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0138
+literal|0x00f8
 argument_list|,
 literal|"ae23"
 argument_list|,
@@ -3559,7 +3559,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x013a
+literal|0x00fa
 argument_list|,
 literal|"af23"
 argument_list|,
@@ -3586,7 +3586,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x013c
+literal|0x00fc
 argument_list|,
 literal|"ag23"
 argument_list|,
@@ -3613,7 +3613,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x013e
+literal|0x00fe
 argument_list|,
 literal|"ah23"
 argument_list|,
@@ -3640,7 +3640,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0140
+literal|0x0100
 argument_list|,
 literal|"f27"
 argument_list|,
@@ -3667,7 +3667,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0142
+literal|0x0102
 argument_list|,
 literal|"f28"
 argument_list|,
@@ -3694,7 +3694,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0144
+literal|0x0104
 argument_list|,
 literal|"g27"
 argument_list|,
@@ -3721,7 +3721,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0146
+literal|0x0106
 argument_list|,
 literal|"g28"
 argument_list|,
@@ -3748,7 +3748,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0148
+literal|0x0108
 argument_list|,
 literal|"ae5"
 argument_list|,
@@ -3775,7 +3775,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x014a
+literal|0x010a
 argument_list|,
 literal|"af5"
 argument_list|,
@@ -3802,7 +3802,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x014c
+literal|0x010c
 argument_list|,
 literal|"ae4"
 argument_list|,
@@ -3829,7 +3829,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x014e
+literal|0x010e
 argument_list|,
 literal|"af4"
 argument_list|,
@@ -3856,7 +3856,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0150
+literal|0x0110
 argument_list|,
 literal|"ag3"
 argument_list|,
@@ -3883,7 +3883,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0152
+literal|0x0112
 argument_list|,
 literal|"af3"
 argument_list|,
@@ -3910,7 +3910,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0154
+literal|0x0114
 argument_list|,
 literal|"ae21"
 argument_list|,
@@ -3937,7 +3937,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0156
+literal|0x0116
 argument_list|,
 literal|"af20"
 argument_list|,
@@ -3964,7 +3964,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0158
+literal|0x0118
 argument_list|,
 literal|"af21"
 argument_list|,
@@ -3991,7 +3991,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x015a
+literal|0x011a
 argument_list|,
 literal|"ae20"
 argument_list|,
@@ -4018,7 +4018,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x015c
+literal|0x011c
 argument_list|,
 literal|"ag20"
 argument_list|,
@@ -4045,7 +4045,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x015e
+literal|0x011e
 argument_list|,
 literal|"ah19"
 argument_list|,
@@ -4072,7 +4072,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0160
+literal|0x0120
 argument_list|,
 literal|"ag12"
 argument_list|,
@@ -4099,7 +4099,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0162
+literal|0x0122
 argument_list|,
 literal|"af12"
 argument_list|,
@@ -4126,7 +4126,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0164
+literal|0x0124
 argument_list|,
 literal|"ae12"
 argument_list|,
@@ -4153,7 +4153,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0166
+literal|0x0126
 argument_list|,
 literal|"ag13"
 argument_list|,
@@ -4180,7 +4180,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0168
+literal|0x0128
 argument_list|,
 literal|"ae11"
 argument_list|,
@@ -4207,7 +4207,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x016a
+literal|0x012a
 argument_list|,
 literal|"af11"
 argument_list|,
@@ -4234,7 +4234,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x016c
+literal|0x012c
 argument_list|,
 literal|"ag11"
 argument_list|,
@@ -4261,7 +4261,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x016e
+literal|0x012e
 argument_list|,
 literal|"ah11"
 argument_list|,
@@ -4288,7 +4288,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0170
+literal|0x0130
 argument_list|,
 literal|"ae10"
 argument_list|,
@@ -4315,7 +4315,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0172
+literal|0x0132
 argument_list|,
 literal|"af10"
 argument_list|,
@@ -4342,7 +4342,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0174
+literal|0x0134
 argument_list|,
 literal|"ag10"
 argument_list|,
@@ -4369,7 +4369,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0176
+literal|0x0136
 argument_list|,
 literal|"ae9"
 argument_list|,
@@ -4396,7 +4396,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0178
+literal|0x0138
 argument_list|,
 literal|"af13"
 argument_list|,
@@ -4423,7 +4423,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x017a
+literal|0x013a
 argument_list|,
 literal|"ae13"
 argument_list|,
@@ -4450,7 +4450,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x017c
+literal|0x013c
 argument_list|,
 literal|"g26"
 argument_list|,
@@ -4477,7 +4477,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x017e
+literal|0x013e
 argument_list|,
 literal|"g25"
 argument_list|,
@@ -4504,7 +4504,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0180
+literal|0x0140
 argument_list|,
 literal|"h26"
 argument_list|,
@@ -4531,7 +4531,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0182
+literal|0x0142
 argument_list|,
 literal|"h25"
 argument_list|,
@@ -4558,7 +4558,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0184
+literal|0x0144
 argument_list|,
 literal|"j27"
 argument_list|,
@@ -4585,7 +4585,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0186
+literal|0x0146
 argument_list|,
 literal|"h27"
 argument_list|,
@@ -4612,7 +4612,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0188
+literal|0x0148
 argument_list|,
 literal|"j26"
 argument_list|,
@@ -4639,7 +4639,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x018a
+literal|0x014a
 argument_list|,
 literal|"j25"
 argument_list|,
@@ -4666,7 +4666,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x018c
+literal|0x014c
 argument_list|,
 literal|"k26"
 argument_list|,
@@ -4693,7 +4693,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x018e
+literal|0x014e
 argument_list|,
 literal|"k25"
 argument_list|,
@@ -4720,7 +4720,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0190
+literal|0x0150
 argument_list|,
 literal|"l27"
 argument_list|,
@@ -4747,7 +4747,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0192
+literal|0x0152
 argument_list|,
 literal|"k27"
 argument_list|,
@@ -4774,7 +4774,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0194
+literal|0x0154
 argument_list|,
 literal|"c3"
 argument_list|,
@@ -4801,7 +4801,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0196
+literal|0x0156
 argument_list|,
 literal|"b5"
 argument_list|,
@@ -4828,7 +4828,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x0198
+literal|0x0158
 argument_list|,
 literal|"b4"
 argument_list|,
@@ -4855,7 +4855,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x019a
+literal|0x015a
 argument_list|,
 literal|"aa28"
 argument_list|,
@@ -4882,7 +4882,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x019c
+literal|0x015c
 argument_list|,
 literal|"y28"
 argument_list|,
@@ -4909,7 +4909,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x019e
+literal|0x015e
 argument_list|,
 literal|"ae6"
 argument_list|,
@@ -4936,7 +4936,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01a0
+literal|0x0160
 argument_list|,
 literal|"af6"
 argument_list|,
@@ -4963,7 +4963,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01a2
+literal|0x0162
 argument_list|,
 literal|"f26"
 argument_list|,
@@ -4990,7 +4990,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01a4
+literal|0x0164
 argument_list|,
 literal|"e27"
 argument_list|,
@@ -5017,7 +5017,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01a6
+literal|0x0166
 argument_list|,
 literal|"e26"
 argument_list|,
@@ -5044,7 +5044,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01a8
+literal|0x0168
 argument_list|,
 literal|"e25"
 argument_list|,
@@ -5071,7 +5071,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01aa
+literal|0x016a
 argument_list|,
 literal|"d28"
 argument_list|,
@@ -5098,7 +5098,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01ac
+literal|0x016c
 argument_list|,
 literal|"d27"
 argument_list|,
@@ -5125,7 +5125,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01ae
+literal|0x016e
 argument_list|,
 literal|"m2"
 argument_list|,
@@ -5152,7 +5152,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01b0
+literal|0x0170
 argument_list|,
 literal|"n2"
 argument_list|,
@@ -5179,7 +5179,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01b2
+literal|0x0172
 argument_list|,
 literal|"p2"
 argument_list|,
@@ -5206,7 +5206,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01b4
+literal|0x0174
 argument_list|,
 literal|"v1"
 argument_list|,
@@ -5233,7 +5233,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01b6
+literal|0x0176
 argument_list|,
 literal|"v2"
 argument_list|,
@@ -5260,7 +5260,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01b8
+literal|0x0178
 argument_list|,
 literal|"w1"
 argument_list|,
@@ -5287,7 +5287,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01ba
+literal|0x017a
 argument_list|,
 literal|"w2"
 argument_list|,
@@ -5314,7 +5314,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01bc
+literal|0x017c
 argument_list|,
 literal|"w3"
 argument_list|,
@@ -5341,7 +5341,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01be
+literal|0x017e
 argument_list|,
 literal|"w4"
 argument_list|,
@@ -5368,7 +5368,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01c0
+literal|0x0180
 argument_list|,
 literal|"y2"
 argument_list|,
@@ -5395,7 +5395,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01c2
+literal|0x0182
 argument_list|,
 literal|"y3"
 argument_list|,
@@ -5422,7 +5422,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01c4
+literal|0x0184
 argument_list|,
 literal|"y4"
 argument_list|,
@@ -5449,7 +5449,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01c6
+literal|0x0186
 argument_list|,
 literal|"aa1"
 argument_list|,
@@ -5476,7 +5476,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01c8
+literal|0x0188
 argument_list|,
 literal|"aa2"
 argument_list|,
@@ -5503,7 +5503,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01ca
+literal|0x018a
 argument_list|,
 literal|"aa3"
 argument_list|,
@@ -5530,7 +5530,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01cc
+literal|0x018c
 argument_list|,
 literal|"aa4"
 argument_list|,
@@ -5557,7 +5557,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01ce
+literal|0x018e
 argument_list|,
 literal|"ab2"
 argument_list|,
@@ -5584,7 +5584,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01d0
+literal|0x0190
 argument_list|,
 literal|"ab3"
 argument_list|,
@@ -5611,7 +5611,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01d2
+literal|0x0192
 argument_list|,
 literal|"ab4"
 argument_list|,
@@ -5638,7 +5638,7 @@ argument_list|)
 block|,
 name|_PINDEF
 argument_list|(
-literal|0x01d4
+literal|0x0194
 argument_list|,
 literal|"ac4"
 argument_list|,
@@ -5676,8 +5676,8 @@ end_decl_stmt
 begin_decl_stmt
 specifier|const
 name|struct
-name|ti_scm_device
-name|ti_scm_dev
+name|ti_pinmux_device
+name|ti_pinmux_dev
 init|=
 block|{
 operator|.
@@ -5693,23 +5693,11 @@ block|,
 operator|.
 name|padstate
 operator|=
-operator|(
-expr|struct
-name|ti_scm_padstate
-operator|*
-operator|)
-operator|&
 name|ti_padstate_devmap
 block|,
 operator|.
 name|padconf
 operator|=
-operator|(
-expr|struct
-name|ti_scm_padconf
-operator|*
-operator|)
-operator|&
 name|ti_padconf_devmap
 block|, }
 decl_stmt|;

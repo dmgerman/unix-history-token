@@ -100,6 +100,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|CallInst
+decl_stmt|;
+name|class
 name|LandingPadInst
 decl_stmt|;
 name|class
@@ -313,13 +316,13 @@ name|Function
 modifier|*
 name|Parent
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|BasicBlock
 modifier|*
 name|InsertBefore
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 name|public
@@ -381,13 +384,13 @@ name|Function
 modifier|*
 name|Parent
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|BasicBlock
 modifier|*
 name|InsertBefore
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -429,6 +432,13 @@ return|return
 name|Parent
 return|;
 block|}
+specifier|const
+name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief Returns the terminator instruction if the block is well formed or
 comment|/// null if the block is not well formed.
 name|TerminatorInst
@@ -443,6 +453,35 @@ name|getTerminator
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Returns the call instruction marked 'musttail' prior to the
+comment|/// terminating return instruction of this basic block, if such a call is
+comment|/// present.  Otherwise, returns null.
+name|CallInst
+modifier|*
+name|getTerminatingMustTailCall
+parameter_list|()
+function_decl|;
+specifier|const
+name|CallInst
+operator|*
+name|getTerminatingMustTailCall
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getTerminatingMustTailCall
+argument_list|()
+return|;
+block|}
 comment|/// \brief Returns a pointer to the first instruction in this block that is
 comment|/// not a PHINode instruction.
 comment|///
@@ -588,8 +627,28 @@ modifier|*
 name|MovePos
 parameter_list|)
 function_decl|;
-comment|/// \brief Return this block if it has a single predecessor block. Otherwise
-comment|/// return a null pointer.
+comment|/// \brief Insert unlinked basic block into a function.
+comment|///
+comment|/// Inserts an unlinked basic block into \c Parent.  If \c InsertBefore is
+comment|/// provided, inserts before that basic block, otherwise inserts at the end.
+comment|///
+comment|/// \pre \a getParent() is \c nullptr.
+name|void
+name|insertInto
+parameter_list|(
+name|Function
+modifier|*
+name|Parent
+parameter_list|,
+name|BasicBlock
+modifier|*
+name|InsertBefore
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// \brief Return the predecessor of this block if it has a single predecessor
+comment|/// block. Otherwise return a null pointer.
 name|BasicBlock
 modifier|*
 name|getSinglePredecessor
@@ -616,7 +675,8 @@ name|getSinglePredecessor
 argument_list|()
 return|;
 block|}
-comment|/// \brief Return this block if it has a unique predecessor block. Otherwise return a null pointer.
+comment|/// \brief Return the predecessor of this block if it has a unique predecessor
+comment|/// block. Otherwise return a null pointer.
 comment|///
 comment|/// Note that unique predecessor doesn't mean single edge, there can be
 comment|/// multiple edges from the unique predecessor to this block (for example a

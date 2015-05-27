@@ -722,10 +722,10 @@ name|zio_flags
 init|=
 name|ZIO_FLAG_CANFAIL
 decl_stmt|;
-name|uint32_t
+name|arc_flags_t
 name|aflags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|arc_buf_t
 modifier|*
@@ -1164,10 +1164,10 @@ name|lr
 operator|->
 name|lr_blkptr
 decl_stmt|;
-name|uint32_t
+name|arc_flags_t
 name|aflags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|arc_buf_t
 modifier|*
@@ -9597,7 +9597,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|//printf("ZFS: Replaying ZIL on %s...\n", os->os->os_spa->spa_name);
 name|zr
 operator|.
 name|zr_replay
@@ -9721,7 +9720,6 @@ name|zl_replay
 operator|=
 name|B_FALSE
 expr_stmt|;
-comment|//printf("ZFS: Replay of ZIL on %s finished.\n", os->os->os_spa->spa_name);
 block|}
 end_function
 

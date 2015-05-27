@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FRONTEND_LOG_DIAGNOSTIC_PRINTER_H_
+name|LLVM_CLANG_FRONTEND_LOGDIAGNOSTICPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FRONTEND_LOG_DIAGNOSTIC_PRINTER_H_
+name|LLVM_CLANG_FRONTEND_LOGDIAGNOSTICPRINTER_H
 end_define
 
 begin_include
@@ -109,6 +109,12 @@ comment|/// The ID of the diagnostic.
 name|unsigned
 name|DiagnosticID
 block|;
+comment|/// The Option Flag for the diagnostic
+name|std
+operator|::
+name|string
+name|WarningOption
+block|;
 comment|/// The level of the diagnostic.
 name|DiagnosticsEngine
 operator|::
@@ -116,9 +122,37 @@ name|Level
 name|DiagnosticLevel
 block|;   }
 block|;
+name|void
+name|EmitDiagEntry
+argument_list|(
+name|llvm
+operator|::
 name|raw_ostream
 operator|&
 name|OS
+argument_list|,
+specifier|const
+name|LogDiagnosticPrinter
+operator|::
+name|DiagEntry
+operator|&
+name|DE
+argument_list|)
+block|;
+comment|// Conditional ownership (when StreamOwner is non-null, it's keeping OS
+comment|// alive). We might want to replace this with a wrapper for conditional
+comment|// ownership eventually - it seems to pop up often enough.
+name|raw_ostream
+operator|&
+name|OS
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|raw_ostream
+operator|>
+name|StreamOwner
 block|;
 specifier|const
 name|LangOptions
@@ -136,11 +170,6 @@ name|LastWarningLoc
 block|;
 name|FullSourceLoc
 name|LastLoc
-block|;
-name|unsigned
-name|OwnsOutputStream
-operator|:
-literal|1
 block|;
 name|SmallVector
 operator|<
@@ -164,17 +193,22 @@ name|public
 operator|:
 name|LogDiagnosticPrinter
 argument_list|(
-argument|raw_ostream&OS
+name|raw_ostream
+operator|&
+name|OS
 argument_list|,
-argument|DiagnosticOptions *Diags
+name|DiagnosticOptions
+operator|*
+name|Diags
 argument_list|,
-argument|bool OwnsOutputStream = false
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|raw_ostream
+operator|>
+name|StreamOwner
 argument_list|)
-block|;
-name|virtual
-operator|~
-name|LogDiagnosticPrinter
-argument_list|()
 block|;
 name|void
 name|setDwarfDebugFlags
@@ -193,6 +227,7 @@ argument|const LangOptions&LO
 argument_list|,
 argument|const Preprocessor *PP
 argument_list|)
+name|override
 block|{
 name|LangOpts
 operator|=
@@ -202,8 +237,8 @@ block|;   }
 name|void
 name|EndSourceFile
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
@@ -211,6 +246,7 @@ argument|DiagnosticsEngine::Level DiagLevel
 argument_list|,
 argument|const Diagnostic&Info
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

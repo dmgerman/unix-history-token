@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_MACROARGS_H
+name|LLVM_CLANG_LEX_MACROARGS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_MACROARGS_H
+name|LLVM_CLANG_LEX_MACROARGS_H
 end_define
 
 begin_include
@@ -164,7 +164,7 @@ argument_list|)
 operator|,
 name|ArgCache
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 operator|~

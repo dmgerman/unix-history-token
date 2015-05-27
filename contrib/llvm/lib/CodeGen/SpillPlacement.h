@@ -102,13 +102,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_SPILLPLACEMENT_H
+name|LLVM_LIB_CODEGEN_SPILLPLACEMENT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_SPILLPLACEMENT_H
+name|LLVM_LIB_CODEGEN_SPILLPLACEMENT_H
 end_define
 
 begin_include
@@ -152,6 +152,9 @@ name|class
 name|MachineLoopInfo
 decl_stmt|;
 name|class
+name|MachineBlockFrequencyInfo
+decl_stmt|;
+name|class
 name|SpillPlacement
 range|:
 name|public
@@ -173,6 +176,11 @@ specifier|const
 name|MachineLoopInfo
 operator|*
 name|loops
+block|;
+specifier|const
+name|MachineBlockFrequencyInfo
+operator|*
+name|MBFI
 block|;
 name|Node
 operator|*
@@ -208,9 +216,14 @@ name|SmallVector
 operator|<
 name|BlockFrequency
 block|,
-literal|4
+literal|8
 operator|>
 name|BlockFrequencies
+block|;
+comment|/// Decision threshold. A node gets the output value 0 if the weighted sum of
+comment|/// its inputs falls in the open interval (-Threshold;Threshold).
+name|BlockFrequency
+name|Threshold
 block|;
 name|public
 operator|:
@@ -229,7 +242,7 @@ argument_list|)
 block|,
 name|nodes
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 operator|~
@@ -398,31 +411,39 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
+argument|MachineFunction&
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|releaseMemory
 argument_list|()
+name|override
 block|;
 name|void
 name|activate
 argument_list|(
 name|unsigned
+argument_list|)
+block|;
+name|void
+name|setThreshold
+argument_list|(
+specifier|const
+name|BlockFrequency
+operator|&
+name|Entry
 argument_list|)
 block|; }
 decl_stmt|;

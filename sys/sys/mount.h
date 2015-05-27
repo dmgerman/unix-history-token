@@ -1482,6 +1482,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MNTK_USES_BCACHE
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* FS uses the buffer cache. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MNTK_NOASYNC
 value|0x00800000
 end_define
@@ -4361,6 +4372,24 @@ name|vfs_sysctl_t
 name|vfs_stdsysctl
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|syncer_suspend
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|syncer_resume
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_else
 else|#

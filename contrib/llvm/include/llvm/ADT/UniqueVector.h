@@ -78,49 +78,73 @@ operator|>
 name|class
 name|UniqueVector
 block|{
-name|private
+name|public
 operator|:
-comment|// Map - Used to handle the correspondence of entry to ID.
-name|std
-operator|::
-name|map
-operator|<
-name|T
-block|,
-name|unsigned
-operator|>
-name|Map
-block|;
-comment|// Vector - ID ordered vector of entries. Entries can be indexed by ID - 1.
-comment|//
+typedef|typedef
+name|typename
 name|std
 operator|::
 name|vector
 operator|<
 name|T
 operator|>
+name|VectorType
+expr_stmt|;
+typedef|typedef
+name|typename
+name|VectorType
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+typedef|typedef
+name|typename
+name|VectorType
+operator|::
+name|const_iterator
+name|const_iterator
+expr_stmt|;
+name|private
+label|:
+comment|// Map - Used to handle the correspondence of entry to ID.
+name|std
+operator|::
+name|map
+operator|<
+name|T
+operator|,
+name|unsigned
+operator|>
+name|Map
+expr_stmt|;
+comment|// Vector - ID ordered vector of entries. Entries can be indexed by ID - 1.
+comment|//
+name|VectorType
 name|Vector
-block|;
+decl_stmt|;
 name|public
-operator|:
+label|:
 comment|/// insert - Append entry to the vector if it doesn't already exist.  Returns
 comment|/// the entry's index + 1 to be used as a unique ID.
 name|unsigned
 name|insert
-argument_list|(
-argument|const T&Entry
-argument_list|)
+parameter_list|(
+specifier|const
+name|T
+modifier|&
+name|Entry
+parameter_list|)
 block|{
 comment|// Check if the entry is already in the map.
 name|unsigned
-operator|&
+modifier|&
 name|Val
-operator|=
+init|=
 name|Map
 index|[
 name|Entry
 index|]
-block|;
+decl_stmt|;
 comment|// See if entry exists, if so return prior ID.
 if|if
 condition|(
@@ -144,7 +168,7 @@ argument_list|()
 operator|)
 operator|+
 literal|1
-block|;
+expr_stmt|;
 comment|// Insert in vector.
 name|Vector
 operator|.
@@ -152,7 +176,7 @@ name|push_back
 argument_list|(
 name|Entry
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|Val
 return|;
@@ -242,6 +266,56 @@ name|ID
 operator|-
 literal|1
 index|]
+return|;
+block|}
+comment|/// \brief Return an iterator to the start of the vector.
+name|iterator
+name|begin
+parameter_list|()
+block|{
+return|return
+name|Vector
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+comment|/// \brief Return an iterator to the start of the vector.
+name|const_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Vector
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+comment|/// \brief Return an iterator to the end of the vector.
+name|iterator
+name|end
+parameter_list|()
+block|{
+return|return
+name|Vector
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+comment|/// \brief Return an iterator to the end of the vector.
+name|const_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Vector
+operator|.
+name|end
+argument_list|()
 return|;
 block|}
 comment|/// size - Returns the number of entries in the vector.

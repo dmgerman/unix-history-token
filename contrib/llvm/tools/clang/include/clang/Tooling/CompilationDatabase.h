@@ -106,13 +106,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_TOOLING_COMPILATION_DATABASE_H
+name|LLVM_CLANG_TOOLING_COMPILATIONDATABASE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_TOOLING_COMPILATION_DATABASE_H
+name|LLVM_CLANG_TOOLING_COMPILATIONDATABASE_H
 end_define
 
 begin_include
@@ -130,12 +130,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -143,6 +137,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/Twine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -175,7 +175,7 @@ name|CompileCommand
 argument_list|(
 argument|Twine Directory
 argument_list|,
-argument|ArrayRef<std::string> CommandLine
+argument|std::vector<std::string> CommandLine
 argument_list|)
 block|:
 name|Directory
@@ -188,7 +188,7 @@ argument_list|)
 operator|,
 name|CommandLine
 argument_list|(
-argument|CommandLine
+argument|std::move(CommandLine)
 argument_list|)
 block|{}
 comment|/// \brief The working directory the command was executed from.
@@ -266,58 +266,55 @@ comment|/// FIXME: Currently only supports JSON compilation databases, which
 comment|/// are named 'compile_commands.json' in the given directory. Extend this
 comment|/// for other build types (like ninja build files).
 specifier|static
-name|CompilationDatabase
-modifier|*
-name|loadFromDirectory
-argument_list|(
-name|StringRef
-name|BuildDirectory
-argument_list|,
 name|std
 operator|::
-name|string
-operator|&
-name|ErrorMessage
+name|unique_ptr
+operator|<
+name|CompilationDatabase
+operator|>
+name|loadFromDirectory
+argument_list|(
+argument|StringRef BuildDirectory
+argument_list|,
+argument|std::string&ErrorMessage
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief Tries to detect a compilation database location and load it.
 comment|///
 comment|/// Looks for a compilation database in all parent paths of file 'SourceFile'
 comment|/// by calling loadFromDirectory.
 specifier|static
-name|CompilationDatabase
-modifier|*
-name|autoDetectFromSource
-argument_list|(
-name|StringRef
-name|SourceFile
-argument_list|,
 name|std
 operator|::
-name|string
-operator|&
-name|ErrorMessage
+name|unique_ptr
+operator|<
+name|CompilationDatabase
+operator|>
+name|autoDetectFromSource
+argument_list|(
+argument|StringRef SourceFile
+argument_list|,
+argument|std::string&ErrorMessage
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief Tries to detect a compilation database location and load it.
 comment|///
 comment|/// Looks for a compilation database in directory 'SourceDir' and all
 comment|/// its parent paths by calling loadFromDirectory.
 specifier|static
-name|CompilationDatabase
-modifier|*
-name|autoDetectFromDirectory
-argument_list|(
-name|StringRef
-name|SourceDir
-argument_list|,
 name|std
 operator|::
-name|string
-operator|&
-name|ErrorMessage
+name|unique_ptr
+operator|<
+name|CompilationDatabase
+operator|>
+name|autoDetectFromDirectory
+argument_list|(
+argument|StringRef SourceDir
+argument_list|,
+argument|std::string&ErrorMessage
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// \brief Returns all compile commands in which the specified file was
 comment|/// compiled.
 comment|///
@@ -403,22 +400,21 @@ comment|/// \brief Loads a compilation database from a build directory.
 comment|///
 comment|/// \see CompilationDatabase::loadFromDirectory().
 name|virtual
-name|CompilationDatabase
-modifier|*
-name|loadFromDirectory
-argument_list|(
-name|StringRef
-name|Directory
-argument_list|,
 name|std
 operator|::
-name|string
-operator|&
-name|ErrorMessage
+name|unique_ptr
+operator|<
+name|CompilationDatabase
+operator|>
+name|loadFromDirectory
+argument_list|(
+argument|StringRef Directory
+argument_list|,
+argument|std::string&ErrorMessage
 argument_list|)
-init|=
+operator|=
 literal|0
-decl_stmt|;
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief A compilation database that returns a single compile command line.
@@ -447,7 +443,7 @@ comment|///
 comment|/// The argument list is meant to be compatible with normal llvm command line
 comment|/// parsing in main methods.
 comment|/// int main(int argc, char **argv) {
-comment|///   OwningPtr<FixedCompilationDatabase> Compilations(
+comment|///   std::unique_ptr<FixedCompilationDatabase> Compilations(
 comment|///     FixedCompilationDatabase::loadFromCommandLine(argc, argv));
 comment|///   cl::ParseCommandLineOptions(argc, argv);
 comment|///   ...
@@ -485,7 +481,6 @@ comment|///
 comment|/// Will always return a vector with one entry that contains the directory
 comment|/// and command line specified at construction with "clang-tool" as argv[0]
 comment|/// and 'FilePath' as positional argument.
-name|virtual
 name|std
 operator|::
 name|vector
@@ -497,11 +492,11 @@ argument_list|(
 argument|StringRef FilePath
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// \brief Returns the list of all files available in the compilation database.
 comment|///
 comment|/// Note: This is always an empty list for the fixed compilation database.
-name|virtual
 name|std
 operator|::
 name|vector
@@ -513,12 +508,12 @@ operator|>
 name|getAllFiles
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \brief Returns all compile commands for all the files in the compilation
 comment|/// database.
 comment|///
 comment|/// Note: This is always an empty list for the fixed compilation database.
-name|virtual
 name|std
 operator|::
 name|vector
@@ -528,6 +523,7 @@ operator|>
 name|getAllCompileCommands
 argument_list|()
 specifier|const
+name|override
 block|;
 name|private
 operator|:
@@ -555,10 +551,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_TOOLING_COMPILATION_DATABASE_H
-end_comment
 
 end_unit
 

@@ -148,6 +148,8 @@ parameter_list|,
 name|int
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -155,13 +157,13 @@ end_function_decl
 begin_define
 define|#
 directive|define
-name|min
+name|MIN
 parameter_list|(
 name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|(a)< (b) ? a : b
+value|((a)< (b) ? a : b)
 end_define
 
 begin_comment
@@ -181,7 +183,7 @@ name|parmj
 parameter_list|,
 name|n
 parameter_list|)
-value|{ 		\ 	long i = (n) / sizeof (TYPE); 			\ 	TYPE *pi = (TYPE *) (parmi); 		\ 	TYPE *pj = (TYPE *) (parmj); 		\ 	do { 						\ 		TYPE	t = *pi;		\ 		*pi++ = *pj;				\ 		*pj++ = t;				\         } while (--i> 0);				\ }
+value|{		\ 	long i = (n) / sizeof (TYPE);			\ 	TYPE *pi = (TYPE *) (parmi);		\ 	TYPE *pj = (TYPE *) (parmj);		\ 	do { 						\ 		TYPE	t = *pi;		\ 		*pi++ = *pj;				\ 		*pj++ = t;				\ 	} while (--i> 0);				\ }
 end_define
 
 begin_define
@@ -189,11 +191,13 @@ define|#
 directive|define
 name|SWAPINIT
 parameter_list|(
+name|TYPE
+parameter_list|,
 name|a
 parameter_list|,
 name|es
 parameter_list|)
-value|swaptype = ((char *)a - (char *)0) % sizeof(long) || \ 	es % sizeof(long) ? 2 : es == sizeof(long)? 0 : 1;
+value|swaptype_ ## TYPE =	\ 	((char *)a - (char *)0) % sizeof(TYPE) ||	\ 	es % sizeof(TYPE) ? 2 : es == sizeof(TYPE) ? 0 : 1;
 end_define
 
 begin_function
@@ -208,7 +212,9 @@ name|b
 parameter_list|,
 name|n
 parameter_list|,
-name|swaptype
+name|swaptype_long
+parameter_list|,
+name|swaptype_int
 parameter_list|)
 name|char
 modifier|*
@@ -223,7 +229,9 @@ begin_decl_stmt
 name|int
 name|n
 decl_stmt|,
-name|swaptype
+name|swaptype_long
+decl_stmt|,
+name|swaptype_int
 decl_stmt|;
 end_decl_stmt
 
@@ -231,13 +239,30 @@ begin_block
 block|{
 if|if
 condition|(
-name|swaptype
+name|swaptype_long
 operator|<=
 literal|1
 condition|)
 name|swapcode
 argument_list|(
 argument|long
+argument_list|,
+argument|a
+argument_list|,
+argument|b
+argument_list|,
+argument|n
+argument_list|)
+elseif|else
+if|if
+condition|(
+name|swaptype_int
+operator|<=
+literal|1
+condition|)
+name|swapcode
+argument_list|(
+argument|int
 argument_list|,
 argument|a
 argument_list|,
@@ -269,7 +294,7 @@ parameter_list|,
 name|b
 parameter_list|)
 define|\
-value|if (swaptype == 0) {				\ 		long t = *(long *)(a);			\ 		*(long *)(a) = *(long *)(b);		\ 		*(long *)(b) = t;			\ 	} else						\ 		swapfunc(a, b, es, swaptype)
+value|if (swaptype_long == 0) {			\ 		long t = *(long *)(a);			\ 		*(long *)(a) = *(long *)(b);		\ 		*(long *)(b) = t;			\ 	} else if (swaptype_int == 0) {			\ 		int t = *(int *)(a);			\ 		*(int *)(a) = *(int *)(b);		\ 		*(int *)(b) = t;			\ 	} else						\ 		swapfunc(a, b, es, swaptype_long, swaptype_int)
 end_define
 
 begin_define
@@ -283,7 +308,8 @@ name|b
 parameter_list|,
 name|n
 parameter_list|)
-value|if ((n)> 0) swapfunc(a, b, n, swaptype)
+define|\
+value|if ((n)> 0) swapfunc(a, b, n, swaptype_long, swaptype_int)
 end_define
 
 begin_ifdef
@@ -528,7 +554,9 @@ name|int
 name|cmp_result
 decl_stmt|;
 name|int
-name|swaptype
+name|swaptype_long
+decl_stmt|,
+name|swaptype_int
 decl_stmt|,
 name|swap_cnt
 decl_stmt|;
@@ -536,6 +564,17 @@ name|loop
 label|:
 name|SWAPINIT
 argument_list|(
+name|long
+argument_list|,
+name|a
+argument_list|,
+name|es
+argument_list|)
+expr_stmt|;
+name|SWAPINIT
+argument_list|(
+name|int
+argument_list|,
 name|a
 argument_list|,
 name|es
@@ -1022,7 +1061,7 @@ name|es
 expr_stmt|;
 name|r
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|pa
 operator|-
@@ -1050,7 +1089,7 @@ argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|pd
 operator|-

@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1990, 1991, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * Format and print trivial file transfer protocol packets.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-tftp.c,v 1.39 2008-04-11 16:47:38 gianluca Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -49,33 +32,6 @@ directive|include
 file|<tcpdump-stdinc.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SEGSIZE
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|SEGSIZE
-end_undef
-
-begin_comment
-comment|/* SINIX sucks */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
 begin_include
 include|#
 directive|include
@@ -91,20 +47,255 @@ end_include
 begin_include
 include|#
 directive|include
-file|"addrtoname.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"extract.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"tftp.h"
-end_include
+begin_comment
+comment|/*  * Trivial File Transfer Protocol (IEN-133)  */
+end_comment
+
+begin_comment
+comment|/*  * Packet types.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RRQ
+value|01
+end_define
+
+begin_comment
+comment|/* read request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WRQ
+value|02
+end_define
+
+begin_comment
+comment|/* write request */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DATA
+value|03
+end_define
+
+begin_comment
+comment|/* data packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACK
+value|04
+end_define
+
+begin_comment
+comment|/* acknowledgement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TFTP_ERROR
+value|05
+end_define
+
+begin_comment
+comment|/* error code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|OACK
+value|06
+end_define
+
+begin_comment
+comment|/* option acknowledgement */
+end_comment
+
+begin_struct
+struct|struct
+name|tftphdr
+block|{
+name|unsigned
+name|short
+name|th_opcode
+decl_stmt|;
+comment|/* packet type */
+union|union
+block|{
+name|unsigned
+name|short
+name|tu_block
+decl_stmt|;
+comment|/* block # */
+name|unsigned
+name|short
+name|tu_code
+decl_stmt|;
+comment|/* error code */
+name|char
+name|tu_stuff
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* request packet stuff */
+block|}
+name|th_u
+union|;
+name|char
+name|th_data
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* data or error string */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|th_block
+value|th_u.tu_block
+end_define
+
+begin_define
+define|#
+directive|define
+name|th_code
+value|th_u.tu_code
+end_define
+
+begin_define
+define|#
+directive|define
+name|th_stuff
+value|th_u.tu_stuff
+end_define
+
+begin_define
+define|#
+directive|define
+name|th_msg
+value|th_data
+end_define
+
+begin_comment
+comment|/*  * Error codes.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EUNDEF
+value|0
+end_define
+
+begin_comment
+comment|/* not defined */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENOTFOUND
+value|1
+end_define
+
+begin_comment
+comment|/* file not found */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EACCESS
+value|2
+end_define
+
+begin_comment
+comment|/* access violation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENOSPACE
+value|3
+end_define
+
+begin_comment
+comment|/* disk full or allocation exceeded */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EBADOP
+value|4
+end_define
+
+begin_comment
+comment|/* illegal TFTP operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EBADID
+value|5
+end_define
+
+begin_comment
+comment|/* unknown transfer ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EEXISTS
+value|6
+end_define
+
+begin_comment
+comment|/* file already exists */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ENOUSER
+value|7
+end_define
+
+begin_comment
+comment|/* no such user */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|" [|tftp]"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* op code to string mapping */
@@ -112,6 +303,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|op2str
@@ -175,6 +367,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|err2str
@@ -254,6 +447,10 @@ begin_function
 name|void
 name|tftp_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -289,13 +486,6 @@ name|opcode
 decl_stmt|,
 name|i
 decl_stmt|;
-specifier|static
-name|char
-name|tstr
-index|[]
-init|=
-literal|" [|tftp]"
-decl_stmt|;
 name|tp
 operator|=
 operator|(
@@ -307,15 +497,19 @@ operator|)
 name|bp
 expr_stmt|;
 comment|/* Print length */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %d"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Print tftp request type */
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|tp
 operator|->
@@ -343,11 +537,15 @@ argument_list|,
 name|opcode
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|cp
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Bail if bogus opcode */
@@ -383,9 +581,13 @@ name|tp
 operator|->
 name|th_stuff
 expr_stmt|;
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|' '
+operator|(
+name|ndo
+operator|,
+literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Print filename or first option */
@@ -395,18 +597,26 @@ name|opcode
 operator|!=
 name|OACK
 condition|)
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|'"'
+operator|(
+name|ndo
+operator|,
+literal|"\""
+operator|)
 argument_list|)
 expr_stmt|;
 name|i
 operator|=
 name|fn_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 argument_list|)
 expr_stmt|;
 if|if
@@ -415,9 +625,13 @@ name|opcode
 operator|!=
 name|OACK
 condition|)
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|'"'
+operator|(
+name|ndo
+operator|,
+literal|"\""
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Print the mode (RRQ and WRQ only) and any options */
@@ -480,16 +694,24 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|' '
+operator|(
+name|ndo
+operator|,
+literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 name|fn_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 argument_list|)
 expr_stmt|;
 block|}
@@ -508,17 +730,20 @@ case|:
 case|case
 name|DATA
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|tp
 operator|->
 name|th_block
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" block %d"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -526,6 +751,7 @@ name|tp
 operator|->
 name|th_block
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -533,17 +759,20 @@ case|case
 name|TFTP_ERROR
 case|:
 comment|/* Print error code string */
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|tp
 operator|->
 name|th_code
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s \""
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|err2str
@@ -558,6 +787,7 @@ operator|->
 name|th_code
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Print error message string */
@@ -565,6 +795,8 @@ name|i
 operator|=
 name|fn_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 specifier|const
 name|u_char
@@ -574,12 +806,18 @@ name|tp
 operator|->
 name|th_data
 argument_list|,
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|'"'
+operator|(
+name|ndo
+operator|,
+literal|"\""
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -592,11 +830,15 @@ goto|;
 break|break;
 default|default:
 comment|/* We shouldn't get here */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"(unknown #%d)"
-argument_list|,
+operator|,
 name|opcode
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -604,11 +846,15 @@ block|}
 return|return;
 name|trunc
 label|:
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
 name|tstr
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;

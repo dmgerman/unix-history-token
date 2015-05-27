@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_PreprocessorLexer_H
+name|LLVM_CLANG_LEX_PREPROCESSORLEXER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_PreprocessorLexer_H
+name|LLVM_CLANG_LEX_PREPROCESSORLEXER_H
 end_define
 
 begin_include
@@ -190,7 +190,7 @@ argument_list|()
 operator|:
 name|PP
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|InitialNumSLocEntries

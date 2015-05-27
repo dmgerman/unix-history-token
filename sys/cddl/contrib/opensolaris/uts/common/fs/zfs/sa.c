@@ -6927,8 +6927,6 @@ argument_list|,
 name|NULL
 argument_list|,
 name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -7175,8 +7173,6 @@ argument_list|(
 name|db
 argument_list|,
 name|handle
-argument_list|,
-name|NULL
 argument_list|,
 name|sa_evict
 argument_list|)
@@ -9846,8 +9842,6 @@ argument_list|,
 name|oldhdl
 argument_list|,
 name|newhdl
-argument_list|,
-name|NULL
 argument_list|,
 name|sa_evict
 argument_list|)

@@ -264,6 +264,13 @@ name|uint8_t
 modifier|*
 name|device_id
 decl_stmt|;
+name|uint32_t
+name|ext_inq_len
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|ext_inq
+decl_stmt|;
 name|uint8_t
 name|physpath_len
 decl_stmt|;

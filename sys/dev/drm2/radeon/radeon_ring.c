@@ -50,7 +50,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_comment
@@ -76,7 +76,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 begin_comment
@@ -538,18 +538,13 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* if we can't remember our last VM flush then flush now! */
+comment|/* XXX figure out why we have to flush for every IB */
 if|if
 condition|(
 name|ib
 operator|->
 name|vm
-operator|&&
-operator|!
-name|ib
-operator|->
-name|vm
-operator|->
-name|last_flush
+comment|/*&& !ib->vm->last_flush*/
 condition|)
 block|{
 name|radeon_ring_vm_flush
@@ -794,7 +789,7 @@ name|true
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 if|if
 condition|(
 name|radeon_debugfs_sa_init
@@ -815,7 +810,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 return|return
 literal|0
 return|;
@@ -999,7 +994,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_comment
@@ -1030,21 +1025,8 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|DRM_DEBUG_CODE
-argument_list|)
-operator|&&
-name|DRM_DEBUG_CODE
-operator|!=
-literal|0
-end_if
 
 begin_comment
 comment|/**  * radeon_ring_write - write a value to the ring  *  * @ring: radeon_ring structure holding ring information  * @v: dword (dw) value to write  *  * Write a value to the requested ring buffer (all asics).  */
@@ -1115,11 +1097,6 @@ operator|--
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/**  * radeon_ring_supports_scratch_reg - check if the ring supports  * writing to scratch registers  *  * @rdev: radeon_device pointer  * @ring: radeon_ring structure holding ring information  *  * Check if a specific ring supports writing to scratch registers (all asics).  * Returns true if the ring supports writing to scratch regs, false if not.  */
@@ -2120,7 +2097,7 @@ argument_list|)
 argument_list|,
 name|DRM_MEM_DRIVER
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2346,6 +2323,7 @@ name|void
 modifier|*
 name|ring_ptr
 decl_stmt|;
+comment|/* FreeBSD: to please GCC 4.2. */
 name|ring
 operator|->
 name|ring_size
@@ -2657,7 +2635,7 @@ expr_stmt|;
 block|}
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 if|if
 condition|(
 name|radeon_debugfs_ring_init
@@ -2676,7 +2654,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 name|radeon_ring_lockup_update
 argument_list|(
 name|ring
@@ -3359,7 +3337,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DUMBBELL_WIP
+name|FREEBSD_WIP
 end_ifdef
 
 begin_function
@@ -3516,7 +3494,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* DUMBBELL_WIP */
+comment|/* FREEBSD_WIP */
 end_comment
 
 end_unit

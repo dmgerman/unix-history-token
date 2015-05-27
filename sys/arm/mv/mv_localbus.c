@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<arm/mv/mvvar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<arm/mv/mvwin.h>
 end_include
 

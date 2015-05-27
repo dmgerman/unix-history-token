@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTConsumer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/Diagnostic.h"
 end_include
 
@@ -59,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Frontend/CompilerInvocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Frontend/Utils.h"
 end_include
 
 begin_include
@@ -88,12 +100,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -107,6 +113,12 @@ begin_include
 include|#
 directive|include
 file|<list>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -228,6 +240,15 @@ name|TargetInfo
 operator|>
 name|Target
 block|;
+comment|/// The virtual file system.
+name|IntrusiveRefCntPtr
+operator|<
+name|vfs
+operator|::
+name|FileSystem
+operator|>
+name|VirtualFileSystem
+block|;
 comment|/// The file manager.
 name|IntrusiveRefCntPtr
 operator|<
@@ -257,28 +278,36 @@ operator|>
 name|Context
 block|;
 comment|/// The AST consumer.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|ASTConsumer
 operator|>
 name|Consumer
 block|;
 comment|/// The code completion consumer.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|CodeCompleteConsumer
 operator|>
 name|CompletionConsumer
 block|;
 comment|/// \brief The semantic analysis object.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Sema
 operator|>
 name|TheSema
 block|;
 comment|/// \brief The frontend timer
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|llvm
 operator|::
@@ -286,10 +315,42 @@ name|Timer
 operator|>
 name|FrontendTimer
 block|;
-comment|/// \brief Non-owning reference to the ASTReader, if one exists.
+comment|/// \brief The ASTReader, if one exists.
+name|IntrusiveRefCntPtr
+operator|<
 name|ASTReader
-operator|*
+operator|>
 name|ModuleManager
+block|;
+comment|/// \brief The module dependency collector for crashdumps
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|ModuleDependencyCollector
+operator|>
+name|ModuleDepCollector
+block|;
+comment|/// \brief The dependency file generator.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DependencyFileGenerator
+operator|>
+name|TheDependencyFileGenerator
+block|;
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|DependencyCollector
+operator|>>
+name|DependencyCollectors
 block|;
 comment|/// \brief The set of top-level modules that has already been loaded,
 comment|/// along with the module map
@@ -306,6 +367,17 @@ operator|*
 operator|>
 name|KnownModules
 block|;
+comment|/// \brief Module names that have an override for the target file.
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|ModuleFileOverrides
+block|;
 comment|/// \brief The location of the module-import keyword for the last module
 comment|/// import.
 name|SourceLocation
@@ -321,6 +393,10 @@ comment|/// have finished with this translation unit.
 name|bool
 name|BuildGlobalModuleIndex
 block|;
+comment|/// \brief We have a full global module index, with all modules.
+name|bool
+name|HaveFullGlobalModuleIndex
+block|;
 comment|/// \brief One or more modules failed to build.
 name|bool
 name|ModuleBuildFailed
@@ -328,7 +404,7 @@ block|;
 comment|/// \brief Holds information about the output file.
 comment|///
 comment|/// If TempFilename is not empty we must rename it to Filename at the end.
-comment|/// TempFilename may be empty and Filename non empty if creating the temporary
+comment|/// TempFilename may be empty and Filename non-empty if creating the temporary
 comment|/// failed.
 block|struct
 name|OutputFile
@@ -412,8 +488,11 @@ name|LLVM_DELETED_FUNCTION
 block|;
 name|public
 operator|:
+name|explicit
 name|CompilerInstance
-argument_list|()
+argument_list|(
+argument|bool BuildingModule = false
+argument_list|)
 block|;
 operator|~
 name|CompilerInstance
@@ -470,7 +549,7 @@ block|{
 return|return
 name|Invocation
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|CompilerInvocation
@@ -606,6 +685,18 @@ return|return
 name|Invocation
 operator|->
 name|getDiagnosticOpts
+argument_list|()
+return|;
+block|}
+name|FileSystemOptions
+operator|&
+name|getFileSystemOpts
+argument_list|()
+block|{
+return|return
+name|Invocation
+operator|->
+name|getFileSystemOpts
 argument_list|()
 return|;
 block|}
@@ -792,7 +883,7 @@ block|{
 return|return
 name|Diagnostics
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// Get the current diagnostics engine.
@@ -860,7 +951,7 @@ block|{
 return|return
 name|Target
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|TargetInfo
@@ -891,6 +982,55 @@ name|Value
 argument_list|)
 block|;
 comment|/// }
+comment|/// @name Virtual File System
+comment|/// {
+name|bool
+name|hasVirtualFileSystem
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VirtualFileSystem
+operator|!=
+name|nullptr
+return|;
+block|}
+name|vfs
+operator|::
+name|FileSystem
+operator|&
+name|getVirtualFileSystem
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|hasVirtualFileSystem
+argument_list|()
+operator|&&
+literal|"Compiler instance has no virtual file system"
+argument_list|)
+block|;
+return|return
+operator|*
+name|VirtualFileSystem
+return|;
+block|}
+comment|/// \brief Replace the current virtual file system.
+comment|///
+comment|/// \note Most clients should use setFileManager, which will implicitly reset
+comment|/// the virtual file system to the one contained in the file manager.
+name|void
+name|setVirtualFileSystem
+argument_list|(
+argument|IntrusiveRefCntPtr<vfs::FileSystem> FS
+argument_list|)
+block|{
+name|VirtualFileSystem
+operator|=
+name|FS
+block|;   }
+comment|/// }
 comment|/// @name File Manager
 comment|/// {
 name|bool
@@ -901,7 +1041,7 @@ block|{
 return|return
 name|FileMgr
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// Return the current file manager to the caller.
@@ -927,12 +1067,20 @@ name|void
 name|resetAndLeakFileManager
 argument_list|()
 block|{
+name|BuryPointer
+argument_list|(
+name|FileMgr
+operator|.
+name|get
+argument_list|()
+argument_list|)
+block|;
 name|FileMgr
 operator|.
 name|resetWithoutRelease
 argument_list|()
 block|;   }
-comment|/// setFileManager - Replace the current file manager.
+comment|/// \brief Replace the current file manager and virtual file system.
 name|void
 name|setFileManager
 argument_list|(
@@ -952,7 +1100,7 @@ block|{
 return|return
 name|SourceMgr
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// Return the current source manager.
@@ -978,6 +1126,14 @@ name|void
 name|resetAndLeakSourceManager
 argument_list|()
 block|{
+name|BuryPointer
+argument_list|(
+name|SourceMgr
+operator|.
+name|get
+argument_list|()
+argument_list|)
+block|;
 name|SourceMgr
 operator|.
 name|resetWithoutRelease
@@ -1003,7 +1159,7 @@ block|{
 return|return
 name|PP
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// Return the current preprocessor.
@@ -1029,6 +1185,14 @@ name|void
 name|resetAndLeakPreprocessor
 argument_list|()
 block|{
+name|BuryPointer
+argument_list|(
+name|PP
+operator|.
+name|get
+argument_list|()
+argument_list|)
+block|;
 name|PP
 operator|.
 name|resetWithoutRelease
@@ -1054,7 +1218,7 @@ block|{
 return|return
 name|Context
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|ASTContext
@@ -1079,6 +1243,14 @@ name|void
 name|resetAndLeakASTContext
 argument_list|()
 block|{
+name|BuryPointer
+argument_list|(
+name|Context
+operator|.
+name|get
+argument_list|()
+argument_list|)
+block|;
 name|Context
 operator|.
 name|resetWithoutRelease
@@ -1112,10 +1284,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|bool
+operator|)
 name|Consumer
-operator|.
-name|isValid
-argument_list|()
 return|;
 block|}
 name|ASTConsumer
@@ -1138,16 +1310,22 @@ return|;
 block|}
 comment|/// takeASTConsumer - Remove the current AST consumer and give ownership to
 comment|/// the caller.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|takeASTConsumer
 argument_list|()
 block|{
 return|return
+name|std
+operator|::
+name|move
+argument_list|(
 name|Consumer
-operator|.
-name|take
-argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// setASTConsumer - Replace the current AST consumer; the compiler instance
@@ -1155,8 +1333,12 @@ comment|/// takes ownership of \p Value.
 name|void
 name|setASTConsumer
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|Value
 argument_list|)
 block|;
@@ -1169,10 +1351,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|bool
+operator|)
 name|TheSema
-operator|.
-name|isValid
-argument_list|()
 return|;
 block|}
 name|Sema
@@ -1193,41 +1375,62 @@ operator|*
 name|TheSema
 return|;
 block|}
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Sema
-operator|*
+operator|>
 name|takeSema
 argument_list|()
-block|{
-return|return
-name|TheSema
-operator|.
-name|take
+block|;
+name|void
+name|resetAndLeakSema
 argument_list|()
-return|;
-block|}
+block|;
 comment|/// }
 comment|/// @name Module Management
 comment|/// {
+name|IntrusiveRefCntPtr
+operator|<
 name|ASTReader
-operator|*
+operator|>
 name|getModuleManager
 argument_list|()
 specifier|const
-block|{
-return|return
-name|ModuleManager
-return|;
-block|}
+block|;
 name|void
 name|setModuleManager
 argument_list|(
-argument|ASTReader *Reader
-argument_list|)
-block|{
-name|ModuleManager
-operator|=
+name|IntrusiveRefCntPtr
+operator|<
+name|ASTReader
+operator|>
 name|Reader
-block|; }
+argument_list|)
+block|;
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|ModuleDependencyCollector
+operator|>
+name|getModuleDepCollector
+argument_list|()
+specifier|const
+block|;
+name|void
+name|setModuleDepCollector
+argument_list|(
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|ModuleDependencyCollector
+operator|>
+name|Collector
+argument_list|)
+block|;
 comment|/// }
 comment|/// @name Code Completion
 comment|/// {
@@ -1237,10 +1440,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|bool
+operator|)
 name|CompletionConsumer
-operator|.
-name|isValid
-argument_list|()
 return|;
 block|}
 name|CodeCompleteConsumer
@@ -1259,20 +1462,6 @@ block|;
 return|return
 operator|*
 name|CompletionConsumer
-return|;
-block|}
-comment|/// takeCodeCompletionConsumer - Remove the current code completion consumer
-comment|/// and give ownership to the caller.
-name|CodeCompleteConsumer
-operator|*
-name|takeCodeCompletionConsumer
-argument_list|()
-block|{
-return|return
-name|CompletionConsumer
-operator|.
-name|take
-argument_list|()
 return|;
 block|}
 comment|/// setCodeCompletionConsumer - Replace the current code completion consumer;
@@ -1294,10 +1483,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
+name|bool
+operator|)
 name|FrontendTimer
-operator|.
-name|isValid
-argument_list|()
 return|;
 block|}
 name|llvm
@@ -1363,8 +1552,7 @@ comment|/// the diagnostic object should take ownership of the client.
 name|void
 name|createDiagnostics
 argument_list|(
-argument|DiagnosticConsumer *Client =
-literal|0
+argument|DiagnosticConsumer *Client = nullptr
 argument_list|,
 argument|bool ShouldOwnClient = true
 argument_list|)
@@ -1396,13 +1584,11 @@ name|createDiagnostics
 argument_list|(
 argument|DiagnosticOptions *Opts
 argument_list|,
-argument|DiagnosticConsumer *Client =
-literal|0
+argument|DiagnosticConsumer *Client = nullptr
 argument_list|,
 argument|bool ShouldOwnClient = true
 argument_list|,
-argument|const CodeGenOptions *CodeGenOpts =
-literal|0
+argument|const CodeGenOptions *CodeGenOpts = nullptr
 argument_list|)
 block|;
 comment|/// Create the file manager and replace any existing one with it.
@@ -1423,7 +1609,9 @@ comment|/// Create the preprocessor, using the invocation, file, and source mana
 comment|/// and replace any existing one with it.
 name|void
 name|createPreprocessor
-argument_list|()
+argument_list|(
+argument|TranslationUnitKind TUKind
+argument_list|)
 block|;
 comment|/// Create the AST context.
 name|void
@@ -1442,6 +1630,8 @@ argument_list|,
 argument|bool AllowPCHWithCompilerErrors
 argument_list|,
 argument|void *DeserializationListener
+argument_list|,
+argument|bool OwnDeserializationListener
 argument_list|)
 block|;
 comment|/// Create an external AST source to read a PCH file.
@@ -1465,6 +1655,8 @@ argument_list|,
 argument|ASTContext&Context
 argument_list|,
 argument|void *DeserializationListener
+argument_list|,
+argument|bool OwnDeserializationListener
 argument_list|,
 argument|bool Preamble
 argument_list|,
@@ -1569,7 +1761,7 @@ comment|/// is true, createOutputFile will create a new temporary file that must
 comment|/// renamed to \p OutputPath in the end.
 comment|///
 comment|/// \param OutputPath - If given, the path to the output file.
-comment|/// \param Error [out] - On failure, the error message.
+comment|/// \param Error [out] - On failure, the error.
 comment|/// \param BaseInput - If \p OutputPath is empty, the input path name to use
 comment|/// for deriving the output path.
 comment|/// \param Extension - The extension to use for derived output names.
@@ -1594,7 +1786,7 @@ name|createOutputFile
 argument_list|(
 argument|StringRef OutputPath
 argument_list|,
-argument|std::string&Error
+argument|std::error_code&Error
 argument_list|,
 argument|bool Binary
 argument_list|,
@@ -1612,6 +1804,13 @@ argument|std::string *ResultPathName
 argument_list|,
 argument|std::string *TempPathName
 argument_list|)
+block|;
+name|llvm
+operator|::
+name|raw_null_ostream
+operator|*
+name|createNullOutputFile
+argument_list|()
 block|;
 comment|/// }
 comment|/// @name Initialization Utility Methods
@@ -1661,7 +1860,17 @@ name|Opts
 argument_list|)
 block|;
 comment|/// }
-name|virtual
+comment|// Create module manager.
+name|void
+name|createModuleManager
+argument_list|()
+block|;
+name|bool
+name|loadModuleFile
+argument_list|(
+argument|StringRef FileName
+argument_list|)
+block|;
 name|ModuleLoadResult
 name|loadModule
 argument_list|(
@@ -1673,8 +1882,8 @@ argument|Module::NameVisibilityKind Visibility
 argument_list|,
 argument|bool IsInclusionDirective
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|makeModuleVisible
 argument_list|(
@@ -1686,6 +1895,7 @@ argument|SourceLocation ImportLoc
 argument_list|,
 argument|bool Complain
 argument_list|)
+name|override
 block|;
 name|bool
 name|hadModuleLoaderFatalFailure
@@ -1698,8 +1908,44 @@ operator|::
 name|HadFatalFailure
 return|;
 block|}
-expr|}
-block|;  }
+name|GlobalModuleIndex
+operator|*
+name|loadGlobalModuleIndex
+argument_list|(
+argument|SourceLocation TriggerLoc
+argument_list|)
+name|override
+block|;
+name|bool
+name|lookupMissingImports
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|SourceLocation TriggerLoc
+argument_list|)
+name|override
+block|;
+name|void
+name|addDependencyCollector
+argument_list|(
+argument|std::shared_ptr<DependencyCollector> Listener
+argument_list|)
+block|{
+name|DependencyCollectors
+operator|.
+name|push_back
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Listener
+argument_list|)
+argument_list|)
+block|;   }
+block|}
+decl_stmt|;
+block|}
 end_decl_stmt
 
 begin_comment

@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Expression/ClangModulesDeclVendor.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Expression/ClangPersistentVariables.h"
 end_include
 
@@ -271,6 +277,17 @@ specifier|const
 block|;
 name|void
 name|SetDisableASLR
+argument_list|(
+argument|bool b
+argument_list|)
+block|;
+name|bool
+name|GetDetachOnError
+argument_list|()
+specifier|const
+block|;
+name|void
+name|SetDetachOnError
 argument_list|(
 argument|bool b
 argument_list|)
@@ -557,6 +574,16 @@ argument_list|(
 name|true
 argument_list|)
 operator|,
+name|m_generate_debug_info
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|m_result_is_internal
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|m_use_dynamic
 argument_list|(
 name|lldb
@@ -566,9 +593,24 @@ argument_list|)
 operator|,
 name|m_timeout_usec
 argument_list|(
-argument|default_timeout
+name|default_timeout
 argument_list|)
-block|{}
+operator|,
+name|m_one_thread_timeout_usec
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|m_cancel_callback
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|m_cancel_callback_baton
+argument_list|(
+argument|nullptr
+argument_list|)
+block|{     }
 name|ExecutionPolicy
 name|GetExecutionPolicy
 argument_list|()
@@ -761,6 +803,29 @@ operator|=
 name|timeout
 expr_stmt|;
 block|}
+name|uint32_t
+name|GetOneThreadTimeoutUsec
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_one_thread_timeout_usec
+return|;
+block|}
+name|void
+name|SetOneThreadTimeoutUsec
+parameter_list|(
+name|uint32_t
+name|timeout
+init|=
+literal|0
+parameter_list|)
+block|{
+name|m_one_thread_timeout_usec
+operator|=
+name|timeout
+expr_stmt|;
+block|}
 name|bool
 name|GetTryAllThreads
 argument_list|()
@@ -827,6 +892,35 @@ name|m_debug
 operator|=
 name|b
 expr_stmt|;
+if|if
+condition|(
+name|m_debug
+condition|)
+name|m_generate_debug_info
+operator|=
+name|true
+expr_stmt|;
+block|}
+name|bool
+name|GetGenerateDebugInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_generate_debug_info
+return|;
+block|}
+name|void
+name|SetGenerateDebugInfo
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|m_generate_debug_info
+operator|=
+name|b
+expr_stmt|;
 block|}
 name|bool
 name|GetTrapExceptions
@@ -848,6 +942,78 @@ name|m_trap_exceptions
 operator|=
 name|b
 expr_stmt|;
+block|}
+name|void
+name|SetCancelCallback
+argument_list|(
+name|lldb
+operator|::
+name|ExpressionCancelCallback
+name|callback
+argument_list|,
+name|void
+operator|*
+name|baton
+argument_list|)
+block|{
+name|m_cancel_callback_baton
+operator|=
+name|baton
+expr_stmt|;
+name|m_cancel_callback
+operator|=
+name|callback
+expr_stmt|;
+block|}
+name|bool
+name|InvokeCancelCallback
+argument_list|(
+name|lldb
+operator|::
+name|ExpressionEvaluationPhase
+name|phase
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|m_cancel_callback
+operator|==
+name|nullptr
+condition|)
+return|return
+name|false
+return|;
+else|else
+return|return
+name|m_cancel_callback
+argument_list|(
+name|phase
+argument_list|,
+name|m_cancel_callback_baton
+argument_list|)
+return|;
+block|}
+name|void
+name|SetResultIsInternal
+parameter_list|(
+name|bool
+name|b
+parameter_list|)
+block|{
+name|m_result_is_internal
+operator|=
+name|b
+expr_stmt|;
+block|}
+name|bool
+name|GetResultIsInternal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_result_is_internal
+return|;
 block|}
 name|private
 label|:
@@ -883,6 +1049,12 @@ decl_stmt|;
 name|bool
 name|m_trap_exceptions
 decl_stmt|;
+name|bool
+name|m_generate_debug_info
+decl_stmt|;
+name|bool
+name|m_result_is_internal
+decl_stmt|;
 name|lldb
 operator|::
 name|DynamicValueType
@@ -890,6 +1062,18 @@ name|m_use_dynamic
 expr_stmt|;
 name|uint32_t
 name|m_timeout_usec
+decl_stmt|;
+name|uint32_t
+name|m_one_thread_timeout_usec
+decl_stmt|;
+name|lldb
+operator|::
+name|ExpressionCancelCallback
+name|m_cancel_callback
+expr_stmt|;
+name|void
+modifier|*
+name|m_cancel_callback_baton
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -1169,28 +1353,41 @@ comment|/// @see TargetList::CreateTarget(const FileSpec*, const ArchSpec*)
 comment|//------------------------------------------------------------------
 name|Target
 argument_list|(
-name|Debugger
-operator|&
-name|debugger
+argument|Debugger&debugger
 argument_list|,
-specifier|const
-name|ArchSpec
-operator|&
-name|target_arch
+argument|const ArchSpec&target_arch
 argument_list|,
-specifier|const
-name|lldb
-operator|::
-name|PlatformSP
-operator|&
-name|platform_sp
+argument|const lldb::PlatformSP&platform_sp
+argument_list|,
+argument|bool is_dummy_target
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 comment|// Helper function.
 name|bool
 name|ProcessIsValid
 parameter_list|()
 function_decl|;
+comment|// Copy breakpoints, stop hooks and so forth from the dummy target:
+name|void
+name|PrimeFromDummyTarget
+parameter_list|(
+name|Target
+modifier|*
+name|dummy_target
+parameter_list|)
+function_decl|;
+name|void
+name|AddBreakpoint
+argument_list|(
+name|lldb
+operator|::
+name|BreakpointSP
+name|breakpoint_sp
+argument_list|,
+name|bool
+name|internal
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 operator|~
@@ -1224,7 +1421,7 @@ comment|/// is called, so this is a good way to see what has been parsed
 comment|/// in a target.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|//------------------------------------------------------------------
 name|void
 name|Dump
@@ -1285,15 +1482,16 @@ function_decl|;
 name|Error
 name|Launch
 parameter_list|(
-name|Listener
-modifier|&
-name|listener
-parameter_list|,
 name|ProcessLaunchInfo
 modifier|&
 name|launch_info
+parameter_list|,
+name|Stream
+modifier|*
+name|stream
 parameter_list|)
 function_decl|;
+comment|// Optional stream to receive first stop info
 comment|//------------------------------------------------------------------
 comment|// This part handles the breakpoints.
 comment|//------------------------------------------------------------------
@@ -2008,9 +2206,9 @@ block|}
 comment|//------------------------------------------------------------------
 comment|/// Return whether this FileSpec corresponds to a module that should be considered for general searches.
 comment|///
-comment|/// This API will be consulted by the SearchFilterForNonModuleSpecificSearches
+comment|/// This API will be consulted by the SearchFilterForUnconstrainedSearches
 comment|/// and any module that returns \b true will not be searched.  Note the
-comment|/// SearchFilterForNonModuleSpecificSearches is the search filter that
+comment|/// SearchFilterForUnconstrainedSearches is the search filter that
 comment|/// gets used in the CreateBreakpoint calls when no modules is provided.
 comment|///
 comment|/// The target call at present just consults the Platform's call of the
@@ -2022,7 +2220,7 @@ comment|///
 comment|/// @return \b true if the module should be excluded, \b false otherwise.
 comment|//------------------------------------------------------------------
 name|bool
-name|ModuleIsExcludedForNonModuleSpecificSearches
+name|ModuleIsExcludedForUnconstrainedSearches
 parameter_list|(
 specifier|const
 name|FileSpec
@@ -2033,9 +2231,9 @@ function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Return whether this module should be considered for general searches.
 comment|///
-comment|/// This API will be consulted by the SearchFilterForNonModuleSpecificSearches
+comment|/// This API will be consulted by the SearchFilterForUnconstrainedSearches
 comment|/// and any module that returns \b true will not be searched.  Note the
-comment|/// SearchFilterForNonModuleSpecificSearches is the search filter that
+comment|/// SearchFilterForUnconstrainedSearches is the search filter that
 comment|/// gets used in the CreateBreakpoint calls when no modules is provided.
 comment|///
 comment|/// The target call at present just consults the Platform's call of the
@@ -2050,7 +2248,7 @@ comment|///
 comment|/// @return \b true if the module should be excluded, \b false otherwise.
 comment|//------------------------------------------------------------------
 name|bool
-name|ModuleIsExcludedForNonModuleSpecificSearches
+name|ModuleIsExcludedForUnconstrainedSearches
 argument_list|(
 specifier|const
 name|lldb
@@ -2390,6 +2588,19 @@ name|launch_info
 parameter_list|)
 function_decl|;
 name|bool
+name|ResolveFileAddress
+argument_list|(
+name|lldb
+operator|::
+name|addr_t
+name|load_addr
+argument_list|,
+name|Address
+operator|&
+name|so_addr
+argument_list|)
+decl_stmt|;
+name|bool
 name|ResolveLoadAddress
 argument_list|(
 name|lldb
@@ -2430,6 +2641,26 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
+name|size_t
+name|UnloadModuleSections
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|ModuleSP
+operator|&
+name|module_sp
+argument_list|)
+decl_stmt|;
+name|size_t
+name|UnloadModuleSections
+parameter_list|(
+specifier|const
+name|ModuleList
+modifier|&
+name|module_list
+parameter_list|)
+function_decl|;
 name|bool
 name|SetSectionUnloaded
 argument_list|(
@@ -2466,7 +2697,9 @@ comment|// and the const expression results are available after a process is gon
 comment|// we provide a way for expressions to be evaluated from the Target itself.
 comment|// If an expression is going to be run, then it should have a frame filled
 comment|// in in th execution context.
-name|ExecutionResults
+name|lldb
+operator|::
+name|ExpressionResults
 name|EvaluateExpression
 argument_list|(
 specifier|const
@@ -2492,7 +2725,7 @@ operator|=
 name|EvaluateExpressionOptions
 argument_list|()
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|ClangPersistentVariables
 modifier|&
 name|GetPersistentVariables
@@ -2869,6 +3102,11 @@ modifier|&
 name|GetSourceManager
 parameter_list|()
 function_decl|;
+name|ClangModulesDeclVendor
+modifier|*
+name|GetClangModulesDeclVendor
+parameter_list|()
+function_decl|;
 comment|//------------------------------------------------------------------
 comment|// Methods.
 comment|//------------------------------------------------------------------
@@ -2998,6 +3236,14 @@ name|ClangASTImporter
 operator|>
 name|m_ast_importer_ap
 expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|ClangModulesDeclVendor
+operator|>
+name|m_clang_modules_decl_vendor_ap
+expr_stmt|;
 name|ClangPersistentVariables
 name|m_persistent_variables
 decl_stmt|;
@@ -3036,6 +3282,9 @@ name|m_valid
 decl_stmt|;
 name|bool
 name|m_suppress_stop_hooks
+decl_stmt|;
+name|bool
+name|m_is_dummy_target
 decl_stmt|;
 specifier|static
 name|void

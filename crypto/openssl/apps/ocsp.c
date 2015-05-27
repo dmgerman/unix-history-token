@@ -4,11 +4,11 @@ comment|/* ocsp.c */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2000.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2000.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1999 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1999 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_ifndef
@@ -30,7 +30,7 @@ name|_XOPEN_SOURCE_EXTENDED
 end_define
 
 begin_comment
-comment|/* So fd_set and friends get properly defined 				   on OpenVMS */
+comment|/* So fd_set and friends get properly defined                                  * on OpenVMS */
 end_comment
 
 begin_endif
@@ -75,7 +75,7 @@ file|"apps.h"
 end_include
 
 begin_comment
-comment|/* needs to be included before the openssl headers! */
+comment|/* needs to be included before the openssl                                  * headers! */
 end_comment
 
 begin_include
@@ -2817,203 +2817,203 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-out file          output filename\n"
+literal|"-out file            output filename\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-issuer file       issuer certificate\n"
+literal|"-issuer file         issuer certificate\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-cert file         certificate to check\n"
+literal|"-cert file           certificate to check\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-serial n          serial number to check\n"
+literal|"-serial n            serial number to check\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-signer file       certificate to sign OCSP request with\n"
+literal|"-signer file         certificate to sign OCSP request with\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-signkey file      private key to sign OCSP request with\n"
+literal|"-signkey file        private key to sign OCSP request with\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-sign_other file   additional certificates to include in signed request\n"
+literal|"-sign_other file     additional certificates to include in signed request\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-no_certs          don't include any certificates in signed request\n"
+literal|"-no_certs            don't include any certificates in signed request\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-req_text          print text form of request\n"
+literal|"-req_text            print text form of request\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-resp_text         print text form of response\n"
+literal|"-resp_text           print text form of response\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-text              print text form of request and response\n"
+literal|"-text                print text form of request and response\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-reqout file       write DER encoded OCSP request to \"file\"\n"
+literal|"-reqout file         write DER encoded OCSP request to \"file\"\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-respout file      write DER encoded OCSP reponse to \"file\"\n"
+literal|"-respout file        write DER encoded OCSP reponse to \"file\"\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-reqin file        read DER encoded OCSP request from \"file\"\n"
+literal|"-reqin file          read DER encoded OCSP request from \"file\"\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-respin file       read DER encoded OCSP reponse from \"file\"\n"
+literal|"-respin file         read DER encoded OCSP reponse from \"file\"\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-nonce             add OCSP nonce to request\n"
+literal|"-nonce               add OCSP nonce to request\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-no_nonce          don't add OCSP nonce to request\n"
+literal|"-no_nonce            don't add OCSP nonce to request\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-url URL           OCSP responder URL\n"
+literal|"-url URL             OCSP responder URL\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-host host:n       send OCSP request to host on port n\n"
+literal|"-host host:n         send OCSP request to host on port n\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-path              path to use in OCSP request\n"
+literal|"-path                path to use in OCSP request\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-CApath dir        trusted certificates directory\n"
+literal|"-CApath dir          trusted certificates directory\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-CAfile file       trusted certificates file\n"
+literal|"-CAfile file         trusted certificates file\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-VAfile file       validator certificates file\n"
+literal|"-VAfile file         validator certificates file\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-validity_period n maximum validity discrepancy in seconds\n"
+literal|"-validity_period n   maximum validity discrepancy in seconds\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-status_age n      maximum status age in seconds\n"
+literal|"-status_age n        maximum status age in seconds\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-noverify          don't verify response at all\n"
+literal|"-noverify            don't verify response at all\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-verify_other file additional certificates to search for signer\n"
+literal|"-verify_other file   additional certificates to search for signer\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-trust_other       don't verify additional certificates\n"
+literal|"-trust_other         don't verify additional certificates\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-no_intern         don't search certificates contained in response for signer\n"
+literal|"-no_intern           don't search certificates contained in response for signer\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
@@ -3027,105 +3027,112 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-no_cert_verify    don't check signing certificate\n"
+literal|"-no_cert_verify      don't check signing certificate\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-no_chain          don't chain verify response\n"
+literal|"-no_chain            don't chain verify response\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-no_cert_checks    don't do additional checks on signing certificate\n"
+literal|"-no_cert_checks      don't do additional checks on signing certificate\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-port num		 port to run responder on\n"
+literal|"-port num            port to run responder on\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-index file	 certificate status index file\n"
+literal|"-index file          certificate status index file\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-CA file		 CA certificate\n"
+literal|"-CA file             CA certificate\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-rsigner file	 responder certificate to sign responses with\n"
+literal|"-rsigner file        responder certificate to sign responses with\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-rkey file	 responder key to sign responses with\n"
+literal|"-rkey file           responder key to sign responses with\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-rother file	 other certificates to include in response\n"
+literal|"-rother file         other certificates to include in response\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-resp_no_certs     don't include any certificates in response\n"
+literal|"-resp_no_certs       don't include any certificates in response\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-nmin n	 	 number of minutes before next update\n"
+literal|"-nmin n              number of minutes before next update\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-ndays n	 	 number of days before next update\n"
+literal|"-ndays n             number of days before next update\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-resp_key_id       identify reponse by signing certificate key ID\n"
+literal|"-resp_key_id         identify reponse by signing certificate key ID\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-nrequest n        number of requests to accept (default unlimited)\n"
+literal|"-nrequest n          number of requests to accept (default unlimited)\n"
 argument_list|)
 expr_stmt|;
 name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|"-<dgst alg>     use specified digest in the request\n"
+literal|"-<dgst alg>          use specified digest in the request\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
+literal|"-timeout n           timeout connection to OCSP responder after n seconds\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4965,7 +4972,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Check validity: if invalid write to output BIO so we 		 * know which response this refers to. 		 */
+comment|/*          * Check validity: if invalid write to output BIO so we know which          * response this refers to.          */
 if|if
 condition|(
 operator|!
@@ -5742,7 +5749,7 @@ argument_list|(
 name|bn
 argument_list|)
 expr_stmt|;
-comment|/* FIXME: should report an error at this point and abort */
+comment|/* FIXME: should report an error at this                                  * point and abort */
 if|if
 condition|(
 name|BN_is_zero
@@ -6796,19 +6803,6 @@ name|BIO
 modifier|*
 name|sbio
 decl_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_NO_SSL2
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_NO_SSL3
-argument_list|)
 name|ctx
 operator|=
 name|SSL_CTX_new
@@ -6817,50 +6811,6 @@ name|SSLv23_client_method
 argument_list|()
 argument_list|)
 expr_stmt|;
-elif|#
-directive|elif
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_NO_SSL3
-argument_list|)
-name|ctx
-operator|=
-name|SSL_CTX_new
-argument_list|(
-name|SSLv3_client_method
-argument_list|()
-argument_list|)
-expr_stmt|;
-elif|#
-directive|elif
-operator|!
-name|defined
-argument_list|(
-name|OPENSSL_NO_SSL2
-argument_list|)
-name|ctx
-operator|=
-name|SSL_CTX_new
-argument_list|(
-name|SSLv2_client_method
-argument_list|()
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|BIO_printf
-argument_list|(
-name|err
-argument_list|,
-literal|"SSL is disabled\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|end
-goto|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ctx

@@ -305,7 +305,7 @@ name|M_NEWNFSREQ
 argument_list|,
 literal|"newnfsclient_req"
 argument_list|,
-literal|"New NFS request header"
+literal|"NFS request header"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -317,7 +317,7 @@ name|M_NEWNFSMNT
 argument_list|,
 literal|"newnfsmnt"
 argument_list|,
-literal|"New NFS mount struct"
+literal|"NFS mount struct"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -423,6 +423,44 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|NFS_DEBUG
+end_ifdef
+
+begin_decl_stmt
+name|int
+name|nfs_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_nfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfs_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"Toggle debug flag"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -798,12 +836,6 @@ name|defined
 argument_list|(
 name|NFS_ROOT
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|NFSCLIENT
-argument_list|)
 end_if
 
 begin_decl_stmt
@@ -1084,13 +1116,13 @@ name|nmp
 operator|->
 name|nm_rsize
 operator|>
-name|MAXBSIZE
+name|NFS_MAXBSIZE
 condition|)
 name|nmp
 operator|->
 name|nm_rsize
 operator|=
-name|MAXBSIZE
+name|NFS_MAXBSIZE
 expr_stmt|;
 if|if
 condition|(
@@ -1156,13 +1188,13 @@ name|nmp
 operator|->
 name|nm_wsize
 operator|>
-name|MAXBSIZE
+name|NFS_MAXBSIZE
 condition|)
 name|nmp
 operator|->
 name|nm_wsize
 operator|=
-name|MAXBSIZE
+name|NFS_MAXBSIZE
 expr_stmt|;
 comment|/* 	 * Calculate the size used for io buffers.  Use the larger 	 * of the two sizes to minimise nfs requests but make sure 	 * that it is at least one VM page to avoid wasting buffer 	 * space. 	 */
 name|iosize
@@ -3965,7 +3997,7 @@ name|PSOCK
 argument_list|,
 literal|0
 argument_list|,
-literal|"newnfscon"
+literal|"nfscon"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6397,7 +6429,7 @@ goto|goto
 name|out
 goto|;
 block|}
-comment|/* 		 * If a change from TCP->UDP is done and there are thread(s) 		 * that have I/O RPC(s) in progress with a tranfer size 		 * greater than NFS_MAXDGRAMDATA, those thread(s) will be 		 * hung, retrying the RPC(s) forever. Usually these threads 		 * will be seen doing an uninterruptible sleep on wait channel 		 * "newnfsreq" (truncated to "newnfsre" by procstat). 		 */
+comment|/* 		 * If a change from TCP->UDP is done and there are thread(s) 		 * that have I/O RPC(s) in progress with a tranfer size 		 * greater than NFS_MAXDGRAMDATA, those thread(s) will be 		 * hung, retrying the RPC(s) forever. Usually these threads 		 * will be seen doing an uninterruptible sleep on wait channel 		 * "nfsreq". 		 */
 if|if
 condition|(
 name|args
@@ -7134,6 +7166,8 @@ operator||=
 name|MNTK_LOOKUP_SHARED
 operator||
 name|MNTK_NO_IOPF
+operator||
+name|MNTK_USES_BCACHE
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
@@ -7746,32 +7780,41 @@ name|nm_readahead
 operator|=
 name|NFS_DEFRAHEAD
 expr_stmt|;
-if|if
+comment|/* This is empirical approximation of sqrt(hibufspace) * 256. */
+name|nmp
+operator|->
+name|nm_wcommitsize
+operator|=
+name|NFS_MAXBSIZE
+operator|/
+literal|256
+expr_stmt|;
+while|while
 condition|(
-name|desiredvnodes
-operator|>=
-literal|11000
+operator|(
+name|long
+operator|)
+name|nmp
+operator|->
+name|nm_wcommitsize
+operator|*
+name|nmp
+operator|->
+name|nm_wcommitsize
+operator|<
+name|hibufspace
 condition|)
 name|nmp
 operator|->
 name|nm_wcommitsize
-operator|=
-name|hibufspace
-operator|/
-operator|(
-name|desiredvnodes
-operator|/
-literal|1000
-operator|)
+operator|*=
+literal|2
 expr_stmt|;
-else|else
 name|nmp
 operator|->
 name|nm_wcommitsize
-operator|=
-name|hibufspace
-operator|/
-literal|10
+operator|*=
+literal|256
 expr_stmt|;
 if|if
 condition|(

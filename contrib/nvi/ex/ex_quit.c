@@ -78,7 +78,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_quit -- :quit[!]  *	Quit.  *  * PUBLIC: int ex_quit __P((SCR *, EXCMD *));  */
+comment|/*  * ex_quit -- :quit[!]  *	Quit.  *  * PUBLIC: int ex_quit(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

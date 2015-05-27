@@ -226,6 +226,32 @@ directive|include
 file|<security/audit/audit.h>
 end_include
 
+begin_comment
+comment|/*  * The following macro defines how many bytes will be allocated from  * the stack instead of memory allocated when passing the IOCTL data  * structures from userspace and to the kernel. Some IOCTLs having  * small data structures are used very frequently and this small  * buffer on the stack gives a significant speedup improvement for  * those requests. The value of this define should be greater or equal  * to 64 bytes and should also be power of two. The data structure is  * currently hard-aligned to a 8-byte boundary on the stack. This  * should currently be sufficient for all supported platforms.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS_IOCTL_SMALL_SIZE
+value|128
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYS_IOCTL_SMALL_ALIGN
+value|8
+end_define
+
+begin_comment
+comment|/* bytes */
+end_comment
+
 begin_decl_stmt
 name|int
 name|iosize_max_clamp
@@ -994,6 +1020,15 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+end_if
+
 begin_function
 name|int
 name|freebsd6_pread
@@ -1062,6 +1097,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Scatter read system call.  */
@@ -2062,6 +2102,15 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|COMPAT_FREEBSD6
+argument_list|)
+end_if
+
 begin_function
 name|int
 name|freebsd6_pwrite
@@ -2130,6 +2179,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Gather write system call.  */
@@ -3198,15 +3252,6 @@ modifier|*
 name|uap
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|SYS_IOCTL_SMALL_SIZE
-define|#
-directive|define
-name|SYS_IOCTL_SMALL_SIZE
-value|128
-endif|#
-directive|endif
 name|u_char
 name|smalldata
 index|[
@@ -3214,7 +3259,7 @@ name|SYS_IOCTL_SMALL_SIZE
 index|]
 name|__aligned
 argument_list|(
-literal|8
+name|SYS_IOCTL_SMALL_ALIGN
 argument_list|)
 decl_stmt|;
 name|u_long
@@ -5794,8 +5839,6 @@ name|fd
 argument_list|,
 operator|&
 name|rights
-argument_list|,
-literal|0
 argument_list|,
 name|fpp
 argument_list|,

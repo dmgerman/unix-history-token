@@ -148,25 +148,6 @@ operator|,
 name|E
 operator|)
 block|{}
-comment|/// Copy ctor.
-name|SmallString
-argument_list|(
-specifier|const
-name|SmallString
-operator|&
-name|RHS
-argument_list|)
-operator|:
-name|SmallVector
-operator|<
-name|char
-block|,
-name|InternalLen
-operator|>
-operator|(
-name|RHS
-operator|)
-block|{}
 comment|// Note that in order to add new overloads for append& assign, we have to
 comment|// duplicate the inherited versions so as not to inadvertently hide them.
 comment|/// @}

@@ -53,15 +53,11 @@ directive|include
 file|<libproc.h>
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_include
 include|#
@@ -2255,12 +2251,9 @@ comment|/*  * DTrace Vector Interface  *  * The DTrace library normally speaks d
 struct|struct
 name|dtrace_vector
 block|{
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|int
 function_decl|(
 modifier|*
@@ -2531,15 +2524,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|illumos
+end_ifndef
 
 begin_define
 define|#

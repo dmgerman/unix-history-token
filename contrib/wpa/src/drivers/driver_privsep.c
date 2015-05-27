@@ -140,9 +140,16 @@ name|res
 operator|<
 literal|0
 condition|)
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"sendto"
+name|MSG_ERROR
+argument_list|,
+literal|"sendto: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -309,9 +316,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"sendmsg(cmd_socket)"
+name|MSG_ERROR
+argument_list|,
+literal|"sendmsg(cmd_socket): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -394,9 +408,16 @@ operator|!=
 name|EINTR
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"select"
+name|MSG_ERROR
+argument_list|,
+literal|"select: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -440,9 +461,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"recv"
+name|MSG_ERROR
+argument_list|,
+literal|"recv: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1229,6 +1257,8 @@ argument_list|,
 name|params
 operator|->
 name|freq
+operator|.
+name|freq
 argument_list|,
 name|params
 operator|->
@@ -1324,11 +1354,33 @@ name|ssid_len
 expr_stmt|;
 name|data
 operator|->
+name|hwmode
+operator|=
+name|params
+operator|->
+name|freq
+operator|.
+name|mode
+expr_stmt|;
+name|data
+operator|->
 name|freq
 operator|=
 name|params
 operator|->
 name|freq
+operator|.
+name|freq
+expr_stmt|;
+name|data
+operator|->
+name|channel
+operator|=
+name|params
+operator|->
+name|freq
+operator|.
+name|channel
 expr_stmt|;
 name|data
 operator|->
@@ -2455,9 +2507,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"recvfrom(priv_socket)"
+name|MSG_ERROR
+argument_list|,
+literal|"recvfrom(priv_socket): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|os_free
@@ -3375,9 +3434,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket(PF_UNIX)"
+name|MSG_ERROR
+argument_list|,
+literal|"socket(PF_UNIX): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|os_free
@@ -3460,9 +3526,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"privsep-set-params priv-sock: bind(PF_UNIX)"
+name|MSG_ERROR
+argument_list|,
+literal|"privsep-set-params priv-sock: bind(PF_UNIX): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -3539,9 +3612,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"socket(PF_UNIX)"
+name|MSG_ERROR
+argument_list|,
+literal|"socket(PF_UNIX): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|os_free
@@ -3624,9 +3704,16 @@ operator|<
 literal|0
 condition|)
 block|{
-name|perror
+name|wpa_printf
 argument_list|(
-literal|"privsep-set-params cmd-sock: bind(PF_UNIX)"
+name|MSG_ERROR
+argument_list|,
+literal|"privsep-set-params cmd-sock: bind(PF_UNIX): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close

@@ -135,6 +135,21 @@ begin_comment
 comment|/* 				 * How do we know that 16 will suffice? 				 * Because the biggest number that we will 				 * ever convert will be 2^32-1, which is 10 				 * digits. 				 */
 end_comment
 
+begin_assert
+assert|_Static_assert
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|int
+argument_list|)
+operator|<=
+literal|4
+argument_list|,
+literal|"buffer too small for this sized int"
+argument_list|)
+assert|;
+end_assert
+
 begin_function
 name|char
 modifier|*

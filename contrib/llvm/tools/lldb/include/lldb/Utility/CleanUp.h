@@ -49,6 +49,12 @@ directive|include
 file|"lldb/lldb-public.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_utility
@@ -66,7 +72,7 @@ comment|// This class is designed to be used with simple types for type T (like
 comment|// file descriptors, opaque handles, pointers, etc). If more complex
 comment|// type T objects are desired, we need to probably specialize this class
 comment|// to take "const T&" for all input T parameters. Yet if a type T is
-comment|// complex already it might be better to build the cleanup funcionality
+comment|// complex already it might be better to build the cleanup functionality
 comment|// into T.
 comment|//
 comment|// The cleanup function must take one argument that is of type T.
@@ -111,15 +117,17 @@ name|T
 name|value_type
 typedef|;
 typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
 name|R
-function_decl|(
-modifier|*
-name|CallbackType
-function_decl|)
-parameter_list|(
+argument_list|(
 name|value_type
-parameter_list|)
-function_decl|;
+argument_list|)
+operator|>
+name|CallbackType
+expr_stmt|;
 comment|//----------------------------------------------------------------------
 comment|// Constructor that sets the current value only. No values are
 comment|// considered to be invalid and the cleanup function will be called
@@ -351,7 +359,7 @@ comment|// if it was valid. This function can be used to release the value
 end_comment
 
 begin_comment
-comment|// contained in this object so ownership can be transfered to the caller.
+comment|// contained in this object so ownership can be transferred to the caller.
 end_comment
 
 begin_comment
@@ -447,17 +455,19 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
+name|std
+operator|::
+name|function
+operator|<
 name|R
-function_decl|(
-modifier|*
-name|CallbackType
-function_decl|)
-parameter_list|(
+argument_list|(
 name|value_type
-parameter_list|,
+argument_list|,
 name|A0
-parameter_list|)
-function_decl|;
+argument_list|)
+operator|>
+name|CallbackType
+expr_stmt|;
 end_typedef
 
 begin_comment
@@ -789,7 +799,7 @@ comment|// if it was valid. This function can be used to release the value
 end_comment
 
 begin_comment
-comment|// contained in this object so ownership can be transfered to the caller.
+comment|// contained in this object so ownership can be transferred to the caller.
 end_comment
 
 begin_comment

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|Hexagon_ISELLOWERING_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|Hexagon_ISELLOWERING_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONISELLOWERING_H
 end_define
 
 begin_include
@@ -91,6 +91,15 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+comment|// Return true when the given node fits in a positive half word.
+name|bool
+name|isPositiveHalfWord
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 name|namespace
 name|HexagonISD
 block|{
@@ -157,7 +166,11 @@ block|,
 comment|// Jump table.
 name|BARRIER
 block|,
-comment|// Memory barrier.
+comment|// Memory barrier
+name|POPCOUNT
+block|,
+name|COMBINE
+block|,
 name|WrapperJT
 block|,
 name|WrapperCP
@@ -187,6 +200,8 @@ block|,
 name|TC_RETURN
 block|,
 name|EH_RETURN
+block|,
+name|DCFETCH
 block|}
 enum|;
 block|}
@@ -211,14 +226,16 @@ specifier|const
 block|;
 name|public
 operator|:
-name|HexagonTargetMachine
+specifier|const
+name|TargetMachine
 operator|&
 name|TM
 block|;
 name|explicit
 name|HexagonTargetLowering
 argument_list|(
-name|HexagonTargetMachine
+specifier|const
+name|TargetMachine
 operator|&
 name|targetmachine
 argument_list|)
@@ -249,7 +266,6 @@ argument|SelectionDAG& DAG
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|bool
 name|isTruncateFree
 argument_list|(
@@ -258,8 +274,8 @@ argument_list|,
 argument|Type *Ty2
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isTruncateFree
 argument_list|(
@@ -268,8 +284,8 @@ argument_list|,
 argument|EVT VT2
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|allowTruncateForTailCall
 argument_list|(
@@ -278,8 +294,8 @@ argument_list|,
 argument|Type *Ty2
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|LowerOperation
 argument_list|(
@@ -288,8 +304,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
@@ -298,6 +314,7 @@ argument_list|(
 argument|unsigned Opcode
 argument_list|)
 specifier|const
+name|override
 block|;
 name|SDValue
 name|LowerBR_JT
@@ -362,6 +379,7 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
 name|SDValue
 name|LowerGLOBALADDRESS
@@ -389,6 +407,7 @@ argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
 argument_list|)
 specifier|const
+name|override
 block|;
 name|SDValue
 name|LowerCallResult
@@ -412,15 +431,6 @@ argument_list|,
 argument|const SmallVectorImpl<SDValue>&OutVals
 argument_list|,
 argument|SDValue Callee
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|LowerSELECT_CC
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
@@ -469,8 +479,8 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -480,6 +490,7 @@ argument_list|,
 argument|MachineBasicBlock *BB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|SDValue
 name|LowerVASTART
@@ -499,7 +510,6 @@ argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|EVT
 name|getSetCCResultType
 argument_list|(
@@ -508,6 +518,7 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|{
 if|if
 condition|(
@@ -541,7 +552,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|virtual
 name|bool
 name|getPostIndexedAddressParts
 argument_list|(
@@ -558,6 +568,7 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 name|std
 operator|::
@@ -576,9 +587,9 @@ argument_list|,
 argument|MVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Intrinsics
-name|virtual
 name|SDValue
 name|LowerINTRINSIC_WO_CHAIN
 argument_list|(
@@ -593,7 +604,6 @@ comment|/// by AM is legal for this target, for a load/store of the specified ty
 comment|/// The type may be VoidTy, in which case only return true if the addressing
 comment|/// mode is legal for a load/store of any legal type.
 comment|/// TODO: Handle pre/postinc as well.
-name|virtual
 name|bool
 name|isLegalAddressingMode
 argument_list|(
@@ -602,8 +612,8 @@ argument_list|,
 argument|Type *Ty
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isFPImmLegal
 argument_list|(
@@ -612,18 +622,19 @@ argument_list|,
 argument|EVT VT
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// isLegalICmpImmediate - Return true if the specified immediate is legal
 comment|/// icmp immediate, that is the target has icmp instructions which can
 comment|/// compare a register against the immediate without having to materialize
 comment|/// the immediate into a register.
-name|virtual
 name|bool
 name|isLegalICmpImmediate
 argument_list|(
 argument|int64_t Imm
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 block|}

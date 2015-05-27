@@ -3628,6 +3628,40 @@ operator|->
 name|fw_status
 argument_list|)
 expr_stmt|;
+switch|switch
+condition|(
+name|context
+operator|->
+name|fw_status
+condition|)
+block|{
+case|case
+name|CMD_STAT_BAD_PARAM
+case|:
+name|mlx4_err
+argument_list|(
+name|dev
+argument_list|,
+literal|"Parameter is not supported, "
+literal|"parameter is out of range\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_STAT_EXCEED_LIM
+case|:
+name|mlx4_err
+argument_list|(
+name|dev
+argument_list|,
+literal|"Required capability exceeded "
+literal|"device limits\n"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 goto|goto
 name|out
 goto|;

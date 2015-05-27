@@ -437,12 +437,12 @@ argument_list|)
 operator|,
 name|DetectedVirtual
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|DeclsFound
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|NumDeclsFound
@@ -530,12 +530,17 @@ name|front
 argument_list|()
 return|;
 block|}
+typedef|typedef
+name|llvm
+operator|::
+name|iterator_range
+operator|<
 name|decl_iterator
-name|found_decls_begin
-parameter_list|()
-function_decl|;
-name|decl_iterator
-name|found_decls_end
+operator|>
+name|decl_range
+expr_stmt|;
+name|decl_range
+name|found_decls
 parameter_list|()
 function_decl|;
 comment|/// \brief Determine whether the path from the most-derived type to the
@@ -656,7 +661,7 @@ argument_list|()
 operator|:
 name|Method
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Subobject
@@ -666,7 +671,7 @@ argument_list|)
 operator|,
 name|InVirtualSubobject
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|UniqueVirtualMethod

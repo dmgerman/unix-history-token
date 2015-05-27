@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -37,6 +31,12 @@ begin_include
 include|#
 directive|include
 file|<libgen.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_include
@@ -349,7 +349,7 @@ decl_stmt|;
 name|char
 name|bakname
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|,
 modifier|*
@@ -883,6 +883,58 @@ literal|"out of memory\n"
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+name|rv
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Allocate a unique area for a string.  Call fatal if out of memory.  */
+end_comment
+
+begin_function
+name|char
+modifier|*
+name|xstrdup
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|rv
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|s
+condition|)
+name|s
+operator|=
+literal|"Oops"
+expr_stmt|;
+name|rv
+operator|=
+name|strdup
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rv
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"out of memory\n"
+argument_list|)
+expr_stmt|;
 return|return
 name|rv
 return|;
@@ -1740,7 +1792,7 @@ name|filedir
 decl_stmt|,
 name|tmpbuf
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|struct
@@ -1848,10 +1900,8 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|fprintf
+name|printf
 argument_list|(
-name|stderr
-argument_list|,
 literal|"patch 2.0-12u10 FreeBSD\n"
 argument_list|)
 expr_stmt|;

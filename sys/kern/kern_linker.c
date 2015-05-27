@@ -501,6 +501,7 @@ name|linker_file
 modifier|*
 name|parent
 parameter_list|,
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -525,6 +526,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -6108,6 +6110,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -6500,6 +6503,7 @@ modifier|*
 modifier|*
 name|nmdp
 decl_stmt|;
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -7794,6 +7798,7 @@ parameter_list|,
 name|int
 name|modnamelen
 parameter_list|,
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -8053,9 +8058,7 @@ name|vattr
 operator|.
 name|va_size
 operator|>
-literal|100
-operator|*
-literal|1024
+name|LINKER_HINTS_MAX
 condition|)
 block|{
 name|printf
@@ -8582,6 +8585,7 @@ parameter_list|,
 name|int
 name|modnamelen
 parameter_list|,
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -9062,6 +9066,7 @@ name|linker_file
 modifier|*
 name|parent
 parameter_list|,
+specifier|const
 name|struct
 name|mod_depend
 modifier|*
@@ -9354,6 +9359,7 @@ decl_stmt|,
 modifier|*
 name|nmp
 decl_stmt|;
+specifier|const
 name|struct
 name|mod_depend
 modifier|*

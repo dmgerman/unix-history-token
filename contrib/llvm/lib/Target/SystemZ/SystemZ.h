@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SYSTEMZ_H
+name|LLVM_LIB_TARGET_SYSTEMZ_SYSTEMZ_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SYSTEMZ_H
+name|LLVM_LIB_TARGET_SYSTEMZ_SYSTEMZ_H
 end_define
 
 begin_include
@@ -467,6 +467,7 @@ literal|0
 return|;
 block|}
 block|}
+comment|// end namespace SystemZ
 name|FunctionPass
 modifier|*
 name|createSystemZISelDag
@@ -512,7 +513,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace llvm;
+comment|// end namespace llvm
 end_comment
 
 begin_endif

@@ -157,14 +157,11 @@ block|{
 name|int
 name|error
 decl_stmt|;
-ifndef|#
-directive|ifndef
-name|XEN
 name|device_t
 name|acpi_dev
+init|=
+name|NULL
 decl_stmt|;
-endif|#
-directive|endif
 name|nexus_init_resources
 argument_list|()
 expr_stmt|;
@@ -173,9 +170,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|XEN
 if|if
 condition|(
 name|xen_initial_domain
@@ -220,8 +214,6 @@ literal|"Unable to add ACPI bus to Xen Dom0"
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|error
 operator|=
 name|bus_generic_attach
@@ -229,9 +221,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|XEN
 if|if
 condition|(
 name|xen_initial_domain
@@ -251,8 +240,6 @@ name|acpi_dev
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 return|return
 operator|(
 name|error

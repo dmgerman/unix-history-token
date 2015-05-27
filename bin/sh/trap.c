@@ -248,10 +248,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* indicates SIGINT/SIGQUIT received */
+comment|/* indicates wait builtin should be interrupted */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|in_dotrap
 decl_stmt|;
@@ -779,14 +780,12 @@ condition|(
 operator|*
 name|argv
 operator|&&
-name|sigstring_to_signum
+operator|!
+name|is_number
 argument_list|(
 operator|*
 name|argv
 argument_list|)
-operator|==
-operator|-
-literal|1
 condition|)
 block|{
 if|if
@@ -1535,6 +1534,17 @@ operator|==
 name|NULL
 condition|)
 block|{
+comment|/* 		 * The !in_dotrap here is safe.  The only way we can arrive 		 * here with in_dotrap set is that a trap handler set SIGINT to 		 * SIG_DFL and killed itself. 		 */
+if|if
+condition|(
+name|suppressint
+operator|&&
+operator|!
+name|in_dotrap
+condition|)
+name|SET_PENDING_INT
+expr_stmt|;
+else|else
 name|onint
 argument_list|()
 expr_stmt|;
@@ -1592,6 +1602,10 @@ operator|=
 literal|1
 expr_stmt|;
 name|pendingsig
+operator|=
+name|signo
+expr_stmt|;
+name|pendingsig_waitcmd
 operator|=
 name|signo
 expr_stmt|;

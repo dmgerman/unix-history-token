@@ -492,7 +492,7 @@ argument|const lzma_filter *src
 argument_list|,
 argument|lzma_filter *dest
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|)
 end_macro
 
@@ -975,6 +975,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator

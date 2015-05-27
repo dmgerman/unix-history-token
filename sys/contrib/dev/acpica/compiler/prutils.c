@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -373,12 +373,22 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|FILE
+modifier|*
 name|PrOpenIncludeFile
 parameter_list|(
 name|char
 modifier|*
 name|Filename
+parameter_list|,
+name|char
+modifier|*
+name|OpenMode
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|FullPathname
 parameter_list|)
 block|{
 name|FILE
@@ -432,6 +442,10 @@ argument_list|(
 literal|""
 argument_list|,
 name|Filename
+argument_list|,
+name|OpenMode
+argument_list|,
+name|FullPathname
 argument_list|)
 expr_stmt|;
 if|if
@@ -444,7 +458,11 @@ goto|goto
 name|ErrorExit
 goto|;
 block|}
-return|return;
+return|return
+operator|(
+name|IncludeFile
+operator|)
+return|;
 block|}
 comment|/*      * The include filename is not an absolute path.      *      * First, search for the file within the "local" directory -- meaning      * the same directory that contains the source file.      *      * Construct the file pathname from the global directory name.      */
 name|IncludeFile
@@ -454,6 +472,10 @@ argument_list|(
 name|Gbl_DirectoryPath
 argument_list|,
 name|Filename
+argument_list|,
+name|OpenMode
+argument_list|,
+name|FullPathname
 argument_list|)
 expr_stmt|;
 if|if
@@ -461,7 +483,11 @@ condition|(
 name|IncludeFile
 condition|)
 block|{
-return|return;
+return|return
+operator|(
+name|IncludeFile
+operator|)
+return|;
 block|}
 comment|/*      * Second, search for the file within the (possibly multiple)      * directories specified by the -I option on the command line.      */
 name|NextDir
@@ -482,6 +508,10 @@ operator|->
 name|Dir
 argument_list|,
 name|Filename
+argument_list|,
+name|OpenMode
+argument_list|,
+name|FullPathname
 argument_list|)
 expr_stmt|;
 if|if
@@ -489,7 +519,11 @@ condition|(
 name|IncludeFile
 condition|)
 block|{
-return|return;
+return|return
+operator|(
+name|IncludeFile
+operator|)
+return|;
 block|}
 name|NextDir
 operator|=
@@ -524,6 +558,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 end_function
 
@@ -543,6 +582,15 @@ parameter_list|,
 name|char
 modifier|*
 name|Filename
+parameter_list|,
+name|char
+modifier|*
+name|OpenMode
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|FullPathname
 parameter_list|)
 block|{
 name|FILE
@@ -582,7 +630,7 @@ name|fopen
 argument_list|(
 name|Pathname
 argument_list|,
-literal|"r"
+name|OpenMode
 argument_list|)
 expr_stmt|;
 if|if
@@ -613,6 +661,11 @@ name|IncludeFile
 argument_list|,
 name|Pathname
 argument_list|)
+expr_stmt|;
+operator|*
+name|FullPathname
+operator|=
+name|Pathname
 expr_stmt|;
 return|return
 operator|(

@@ -4096,7 +4096,7 @@ literal|16
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|50
 argument_list|)
@@ -4455,7 +4455,7 @@ operator|>>
 literal|16
 argument_list|)
 expr_stmt|;
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 literal|50
 argument_list|)

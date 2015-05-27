@@ -6523,10 +6523,10 @@ name|bp
 argument_list|)
 condition|)
 block|{
-name|uint32_t
+name|arc_flags_t
 name|flags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|int
 name|i
@@ -10685,6 +10685,8 @@ argument_list|)
 expr_stmt|;
 name|refdbytes
 operator|=
+name|dsl_dir_phys
+argument_list|(
 name|os
 operator|->
 name|os_spa
@@ -10692,8 +10694,7 @@ operator|->
 name|spa_dsl_pool
 operator|->
 name|dp_mos_dir
-operator|->
-name|dd_phys
+argument_list|)
 operator|->
 name|dd_used_bytes
 expr_stmt|;

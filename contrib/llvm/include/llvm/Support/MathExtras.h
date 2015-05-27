@@ -74,13 +74,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/type_traits.h"
+file|<cassert>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<cstring>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<type_traits>
 end_include
 
 begin_ifdef
@@ -93,12 +99,6 @@ begin_include
 include|#
 directive|include
 file|<intrin.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits>
 end_include
 
 begin_endif
@@ -137,7 +137,9 @@ name|typename
 name|T
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 name|std
 operator|::
@@ -288,7 +290,9 @@ name|typename
 name|T
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 name|std
 operator|::
@@ -316,9 +320,9 @@ operator|::
 name|type
 name|countTrailingZeros
 argument_list|(
-argument|T Val
+argument|T
 argument_list|,
-argument|ZeroBehavior ZB = ZB_Width
+argument|ZeroBehavior = ZB_Width
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 expr_stmt|;
@@ -377,9 +381,11 @@ argument_list|(
 name|__builtin_ctz
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -488,9 +494,11 @@ argument_list|(
 name|__builtin_ctzll
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -586,7 +594,9 @@ name|typename
 name|T
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 name|std
 operator|::
@@ -715,7 +725,9 @@ name|typename
 name|T
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 name|std
 operator|::
@@ -743,9 +755,9 @@ operator|::
 name|type
 name|countLeadingZeros
 argument_list|(
-argument|T Val
+argument|T
 argument_list|,
-argument|ZeroBehavior ZB = ZB_Width
+argument|ZeroBehavior = ZB_Width
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 expr_stmt|;
@@ -804,9 +816,11 @@ argument_list|(
 name|__builtin_clz
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -917,9 +931,11 @@ argument_list|(
 name|__builtin_clzll
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -1017,7 +1033,9 @@ name|typename
 name|T
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 name|std
 operator|::
@@ -1095,7 +1113,9 @@ name|typename
 name|T
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 name|std
 operator|::
@@ -1121,9 +1141,9 @@ operator|::
 name|type
 name|findFirstSet
 argument_list|(
-argument|T Val
+argument|T
 argument_list|,
-argument|ZeroBehavior ZB = ZB_Max
+argument|ZeroBehavior = ZB_Max
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 expr_stmt|;
@@ -1164,7 +1184,9 @@ name|typename
 name|T
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 name|std
 operator|::
@@ -1263,7 +1285,9 @@ name|typename
 name|T
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 name|std
 operator|::
@@ -1289,9 +1313,9 @@ operator|::
 name|type
 name|findLastSet
 argument_list|(
-argument|T Val
+argument|T
 argument_list|,
-argument|ZeroBehavior ZB = ZB_Max
+argument|ZeroBehavior = ZB_Max
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 expr_stmt|;
@@ -1360,6 +1384,15 @@ name|R6
 argument_list|(
 literal|3
 argument_list|)
+undef|#
+directive|undef
+name|R2
+undef|#
+directive|undef
+name|R4
+undef|#
+directive|undef
+name|R6
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1538,6 +1571,44 @@ operator|>
 operator|(
 name|Value
 operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// Make_64 - This functions makes a 64-bit integer from a high / low pair of
+end_comment
+
+begin_comment
+comment|///           32-bit integers.
+end_comment
+
+begin_function
+specifier|inline
+name|uint64_t
+name|Make_64
+parameter_list|(
+name|uint32_t
+name|High
+parameter_list|,
+name|uint32_t
+name|Low
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|uint64_t
+operator|)
+name|High
+operator|<<
+literal|32
+operator|)
+operator||
+operator|(
+name|uint64_t
+operator|)
+name|Low
 return|;
 block|}
 end_function
@@ -3101,6 +3172,131 @@ block|}
 end_function
 
 begin_comment
+comment|/// \brief Aligns \c Addr to \c Alignment bytes, rounding up.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Alignment should be a power of two.  This method rounds up, so
+end_comment
+
+begin_comment
+comment|/// alignAddr(7, 4) == 8 and alignAddr(8, 4) == 8.
+end_comment
+
+begin_function
+specifier|inline
+name|uintptr_t
+name|alignAddr
+parameter_list|(
+name|void
+modifier|*
+name|Addr
+parameter_list|,
+name|size_t
+name|Alignment
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Alignment
+operator|&&
+name|isPowerOf2_64
+argument_list|(
+operator|(
+name|uint64_t
+operator|)
+name|Alignment
+argument_list|)
+operator|&&
+literal|"Alignment is not a power of two!"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|uintptr_t
+operator|)
+name|Addr
+operator|+
+name|Alignment
+operator|-
+literal|1
+operator|>=
+operator|(
+name|uintptr_t
+operator|)
+name|Addr
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|(
+operator|(
+name|uintptr_t
+operator|)
+name|Addr
+operator|+
+name|Alignment
+operator|-
+literal|1
+operator|)
+operator|&
+operator|~
+call|(
+name|uintptr_t
+call|)
+argument_list|(
+name|Alignment
+operator|-
+literal|1
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Returns the necessary adjustment for aligning \c Ptr to \c Alignment
+end_comment
+
+begin_comment
+comment|/// bytes, rounding up.
+end_comment
+
+begin_function
+specifier|inline
+name|size_t
+name|alignmentAdjustment
+parameter_list|(
+name|void
+modifier|*
+name|Ptr
+parameter_list|,
+name|size_t
+name|Alignment
+parameter_list|)
+block|{
+return|return
+name|alignAddr
+argument_list|(
+name|Ptr
+argument_list|,
+name|Alignment
+argument_list|)
+operator|-
+operator|(
+name|uintptr_t
+operator|)
+name|Ptr
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// NextPowerOf2 - Returns the next power of two (in 64-bits)
 end_comment
 
@@ -3174,6 +3370,48 @@ block|}
 end_function
 
 begin_comment
+comment|/// Returns the power of two which is less than or equal to the given value.
+end_comment
+
+begin_comment
+comment|/// Essentially, it is a floor operation across the domain of powers of two.
+end_comment
+
+begin_function
+specifier|inline
+name|uint64_t
+name|PowerOf2Floor
+parameter_list|(
+name|uint64_t
+name|A
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|A
+condition|)
+return|return
+literal|0
+return|;
+return|return
+literal|1ull
+operator|<<
+operator|(
+literal|63
+operator|-
+name|countLeadingZeros
+argument_list|(
+name|A
+argument_list|,
+name|ZB_Undefined
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// Returns the next integer (mod 2**64) that is greater than or equal to
 end_comment
 
@@ -3206,6 +3444,10 @@ comment|///   RoundUpToAlignment(~0LL, 8) = 0
 end_comment
 
 begin_comment
+comment|///   RoundUpToAlignment(321, 255) = 510
+end_comment
+
+begin_comment
 comment|/// \endcode
 end_comment
 
@@ -3223,7 +3465,6 @@ parameter_list|)
 block|{
 return|return
 operator|(
-operator|(
 name|Value
 operator|+
 name|Align
@@ -3232,7 +3473,6 @@ literal|1
 operator|)
 operator|/
 name|Align
-operator|)
 operator|*
 name|Align
 return|;
@@ -3478,58 +3718,13 @@ return|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-end_if
-
-begin_comment
-comment|// Visual Studio defines the HUGE_VAL class of macros using purposeful
-end_comment
-
-begin_comment
-comment|// constant arithmetic overflow, which it then warns on when encountered.
-end_comment
-
 begin_decl_stmt
+specifier|extern
 specifier|const
 name|float
 name|huge_valf
-init|=
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|float
-operator|>
-operator|::
-name|infinity
-argument_list|()
 decl_stmt|;
 end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_decl_stmt
-specifier|const
-name|float
-name|huge_valf
-init|=
-name|HUGE_VALF
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 unit|}

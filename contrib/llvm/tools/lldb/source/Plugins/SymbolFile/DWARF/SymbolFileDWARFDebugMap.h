@@ -1658,7 +1658,7 @@ comment|//------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// Given a line table full of lines with "file adresses" that are
+comment|/// Given a line table full of lines with "file addresses" that are
 end_comment
 
 begin_comment
@@ -1706,7 +1706,7 @@ comment|///     Returns a valid line table full of linked addresses, or NULL
 end_comment
 
 begin_comment
-comment|///     if none of the line table adresses exist in the main
+comment|///     if none of the line table addresses exist in the main
 end_comment
 
 begin_comment

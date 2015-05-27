@@ -5798,6 +5798,8 @@ operator||
 name|UHCI_STS_HSE
 operator||
 name|UHCI_STS_HCPE
+operator||
+name|UHCI_STS_HCH
 operator|)
 expr_stmt|;
 if|if

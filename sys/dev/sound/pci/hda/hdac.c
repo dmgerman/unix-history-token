@@ -280,6 +280,26 @@ literal|0
 block|}
 block|,
 block|{
+name|HDA_INTEL_BDW1
+block|,
+literal|"Intel Broadwell"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_BDW2
+block|,
+literal|"Intel Broadwell"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|HDA_INTEL_CPT
 block|,
 literal|"Intel Cougar Point"
@@ -323,6 +343,16 @@ block|{
 name|HDA_INTEL_LPT2
 block|,
 literal|"Intel Lynx Point"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_WCPT
+block|,
+literal|"Intel Wildcat Point"
 block|,
 literal|0
 block|,
@@ -5492,7 +5522,7 @@ name|sc
 operator|->
 name|poll_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 for|for

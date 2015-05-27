@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MSP430SELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_MSP430_MSP430SELECTIONDAGINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MSP430SELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_MSP430_MSP430SELECTIONDAGINFO_H
 end_define
 
 begin_include
@@ -84,9 +84,9 @@ name|explicit
 name|MSP430SelectionDAGInfo
 argument_list|(
 specifier|const
-name|MSP430TargetMachine
+name|DataLayout
 operator|&
-name|TM
+name|DL
 argument_list|)
 block|;
 operator|~

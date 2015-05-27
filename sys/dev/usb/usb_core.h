@@ -329,6 +329,12 @@ literal|1
 decl_stmt|;
 comment|/* set if control transfer should be stalled */
 name|uint8_t
+name|control_did_data
+range|:
+literal|1
+decl_stmt|;
+comment|/* set if control DATA has been transferred */
+name|uint8_t
 name|short_frames_ok
 range|:
 literal|1

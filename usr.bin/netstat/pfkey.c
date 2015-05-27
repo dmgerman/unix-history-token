@@ -130,6 +130,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"netstat.h"
 end_include
 
@@ -318,10 +330,15 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s:\n"
+literal|"{T:/%s}:\n"
 argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|xo_open_container
+argument_list|(
 name|name
 argument_list|)
 expr_stmt|;
@@ -350,20 +367,22 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (pfkeystat.f || sflag<= 1) \     printf(m, (uintmax_t)pfkeystat.f, plural(pfkeystat.f))
+value|if (pfkeystat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)pfkeystat.f, plural(pfkeystat.f))
 comment|/* userland -> kernel */
 name|p
 argument_list|(
 name|out_total
 argument_list|,
-literal|"\t%ju request%s sent from userland\n"
+literal|"\t{:sent-requests//%ju} "
+literal|"{N:/request%s sent from userland}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_bytes
 argument_list|,
-literal|"\t%ju byte%s sent from userland\n"
+literal|"\t{:sent-bytes/%ju} "
+literal|"{N:/byte%s sent from userland}\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -416,9 +435,14 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_open_list
 argument_list|(
-literal|"\thistogram by message type:\n"
+literal|"output-histogram"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t{T:histogram by message type}:\n"
 argument_list|)
 expr_stmt|;
 name|first
@@ -426,9 +450,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"\t\t%s: %ju\n"
+literal|"output-histogram"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t\t{k::type/%s}: {:count/%ju}\n"
 argument_list|,
 name|pfkey_msgtype_names
 argument_list|(
@@ -446,68 +475,92 @@ name|type
 index|]
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"output-histogram"
+argument_list|)
+expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"output-histogram"
+argument_list|)
+expr_stmt|;
 name|p
 argument_list|(
 name|out_invlen
 argument_list|,
-literal|"\t%ju message%s with invalid length field\n"
+literal|"\t{:dropped-bad-length/%ju} "
+literal|"{N:/message%s with invalid length field}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invver
 argument_list|,
-literal|"\t%ju message%s with invalid version field\n"
+literal|"\t{:dropped-bad-version/%ju} "
+literal|"{N:/message%s with invalid version field}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invmsgtype
 argument_list|,
-literal|"\t%ju message%s with invalid message type field\n"
+literal|"\t{:dropped-bad-type/%ju} "
+literal|"{N:/message%s with invalid message type field}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_tooshort
 argument_list|,
-literal|"\t%ju message%s too short\n"
+literal|"\t{:dropped-too-short/%ju} "
+literal|"{N:/message%s too short}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_nomem
 argument_list|,
-literal|"\t%ju message%s with memory allocation failure\n"
+literal|"\t{:dropped-no-memory/%ju} "
+literal|"{N:/message%s with memory allocation failure}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_dupext
 argument_list|,
-literal|"\t%ju message%s with duplicate extension\n"
+literal|"\t{:dropped-duplicate-extension/%ju} "
+literal|"{N:/message%s with duplicate extension}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invexttype
 argument_list|,
-literal|"\t%ju message%s with invalid extension type\n"
+literal|"\t{:dropped-bad-extension/%ju} "
+literal|"{N:/message%s with invalid extension type}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invsatype
 argument_list|,
-literal|"\t%ju message%s with invalid sa type\n"
+literal|"\t:dropped-bad-sa-type/%ju} "
+literal|"{N:/message%s with invalid sa type}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|out_invaddr
 argument_list|,
-literal|"\t%ju message%s with invalid address extension\n"
+literal|"\t{:dropped-bad-address-extension/%ju} "
+literal|"{N:/message%s with invalid address extension}\n"
 argument_list|)
 expr_stmt|;
 comment|/* kernel -> userland */
@@ -515,14 +568,16 @@ name|p
 argument_list|(
 name|in_total
 argument_list|,
-literal|"\t%ju request%s sent to userland\n"
+literal|"\t{:received-requests/%ju} "
+literal|"{N:/request%s sent to userland}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_bytes
 argument_list|,
-literal|"\t%ju byte%s sent to userland\n"
+literal|"\t{:received-bytes/%ju} "
+literal|"{N:/byte%s sent to userland}\n"
 argument_list|)
 expr_stmt|;
 for|for
@@ -575,9 +630,14 @@ condition|(
 name|first
 condition|)
 block|{
-name|printf
+name|xo_open_list
 argument_list|(
-literal|"\thistogram by message type:\n"
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t{T:histogram by message type}:\n"
 argument_list|)
 expr_stmt|;
 name|first
@@ -585,9 +645,14 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"\t\t%s: %ju\n"
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\t\t{k:type/%s}: {:count/%ju}\n"
 argument_list|,
 name|pfkey_msgtype_names
 argument_list|(
@@ -605,7 +670,22 @@ name|type
 index|]
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"input-histogram"
+argument_list|)
+expr_stmt|;
 name|p
 argument_list|(
 name|in_msgtarget
@@ -613,7 +693,8 @@ index|[
 name|KEY_SENDUP_ONE
 index|]
 argument_list|,
-literal|"\t%ju message%s toward single socket\n"
+literal|"\t{:received-one-socket/%ju} "
+literal|"{N:/message%s toward single socket}\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -623,7 +704,8 @@ index|[
 name|KEY_SENDUP_ALL
 index|]
 argument_list|,
-literal|"\t%ju message%s toward all sockets\n"
+literal|"\t{:received-all-sockets/%ju} "
+literal|"{N:/message%s toward all sockets}\n"
 argument_list|)
 expr_stmt|;
 name|p
@@ -633,19 +715,26 @@ index|[
 name|KEY_SENDUP_REGISTERED
 index|]
 argument_list|,
-literal|"\t%ju message%s toward registered sockets\n"
+literal|"\t{:received-registered-sockets/%ju} "
+literal|"{N:/message%s toward registered sockets}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|in_nomem
 argument_list|,
-literal|"\t%ju message%s with memory allocation failure\n"
+literal|"\t{:discarded-no-memory/%ju} "
+literal|"{N:/message%s with memory allocation failure}\n"
 argument_list|)
 expr_stmt|;
 undef|#
 directive|undef
 name|p
+name|xo_close_container
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

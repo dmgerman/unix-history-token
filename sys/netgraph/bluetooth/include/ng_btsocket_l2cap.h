@@ -125,6 +125,14 @@ name|bdaddr_t
 name|dst
 decl_stmt|;
 comment|/* dest address */
+name|uint8_t
+name|srctype
+decl_stmt|;
+comment|/*source addr type*/
+name|uint8_t
+name|dsttype
+decl_stmt|;
+comment|/*source addr type*/
 name|ng_btsocket_l2cap_rtentry_p
 name|rt
 decl_stmt|;
@@ -438,6 +446,14 @@ name|bdaddr_t
 name|dst
 decl_stmt|;
 comment|/* Destination address */
+name|uint8_t
+name|srctype
+decl_stmt|;
+comment|/*source addr type*/
+name|uint8_t
+name|dsttype
+decl_stmt|;
+comment|/*source addr type*/
 name|u_int16_t
 name|psm
 decl_stmt|;

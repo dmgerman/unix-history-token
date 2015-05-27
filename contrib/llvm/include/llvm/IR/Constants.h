@@ -114,13 +114,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/OperandTraits.h"
+file|"llvm/IR/DerivedTypes.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/IR/DerivedTypes.h"
+file|"llvm/IR/OperandTraits.h"
 end_include
 
 begin_decl_stmt
@@ -145,41 +145,16 @@ decl_stmt|;
 name|class
 name|SequentialType
 decl_stmt|;
+struct_decl|struct
+name|ConstantExprKeyType
+struct_decl|;
 name|template
 operator|<
 name|class
 name|ConstantClass
-operator|,
-name|class
-name|TypeClass
-operator|,
-name|class
-name|ValType
 operator|>
 expr|struct
-name|ConstantCreator
-expr_stmt|;
-name|template
-operator|<
-name|class
-name|ConstantClass
-operator|,
-name|class
-name|TypeClass
-operator|>
-expr|struct
-name|ConstantArrayCreator
-expr_stmt|;
-name|template
-operator|<
-name|class
-name|ConstantClass
-operator|,
-name|class
-name|TypeClass
-operator|>
-expr|struct
-name|ConvertConstantType
+name|ConstantAggrKeyType
 expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// This is the shared class of boolean and integer constants. This class
@@ -191,10 +166,10 @@ range|:
 name|public
 name|Constant
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|void
 operator|*
@@ -725,10 +700,10 @@ block|{
 name|APFloat
 name|Val
 block|;
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|void
 operator|*
@@ -843,7 +818,7 @@ name|V
 argument_list|)
 block|;
 specifier|static
-name|ConstantFP
+name|Constant
 operator|*
 name|getNegativeZero
 argument_list|(
@@ -853,7 +828,7 @@ name|Ty
 argument_list|)
 block|;
 specifier|static
-name|ConstantFP
+name|Constant
 operator|*
 name|getInfinity
 argument_list|(
@@ -912,6 +887,19 @@ return|return
 name|Val
 operator|.
 name|isNegative
+argument_list|()
+return|;
+block|}
+comment|/// isInfinity - Return true if the value is infinity
+name|bool
+name|isInfinity
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Val
+operator|.
+name|isInfinity
 argument_list|()
 return|;
 block|}
@@ -1042,7 +1030,7 @@ argument|ty
 argument_list|,
 argument|ConstantAggregateZeroVal
 argument_list|,
-literal|0
+argument|nullptr
 argument_list|,
 literal|0
 argument_list|)
@@ -1082,10 +1070,10 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
 comment|/// getSequentialElement - If this CAZ has array or vector type, return a zero
 comment|/// with the right element type.
@@ -1125,6 +1113,12 @@ argument|unsigned Idx
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Return the number of elements in the array, vector, or struct.
+name|unsigned
+name|getNumElements
+argument_list|()
+specifier|const
+block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 comment|///
 specifier|static
@@ -1156,11 +1150,9 @@ name|Constant
 block|{
 name|friend
 expr|struct
-name|ConstantArrayCreator
+name|ConstantAggrKeyType
 operator|<
 name|ConstantArray
-block|,
-name|ArrayType
 operator|>
 block|;
 name|ConstantArray
@@ -1205,6 +1197,27 @@ operator|>
 name|V
 argument_list|)
 block|;
+name|private
+operator|:
+specifier|static
+name|Constant
+operator|*
+name|getImpl
+argument_list|(
+name|ArrayType
+operator|*
+name|T
+argument_list|,
+name|ArrayRef
+operator|<
+name|Constant
+operator|*
+operator|>
+name|V
+argument_list|)
+block|;
+name|public
+operator|:
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1234,27 +1247,21 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|replaceUsesOfWithOnConstant
 argument_list|(
-name|Value
-operator|*
-name|From
+argument|Value *From
 argument_list|,
-name|Value
-operator|*
-name|To
+argument|Value *To
 argument_list|,
-name|Use
-operator|*
-name|U
+argument|Use *U
 argument_list|)
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -1308,11 +1315,9 @@ name|Constant
 block|{
 name|friend
 expr|struct
-name|ConstantArrayCreator
+name|ConstantAggrKeyType
 operator|<
 name|ConstantStruct
-block|,
-name|StructType
 operator|>
 block|;
 name|ConstantStruct
@@ -1366,7 +1371,7 @@ argument|StructType *T
 argument_list|,
 argument|...
 argument_list|)
-name|END_WITH_NULL
+name|LLVM_END_WITH_NULL
 block|;
 comment|/// getAnon - Return an anonymous struct that has the specified
 comment|/// elements.  If the struct is possibly empty, then you must specify a
@@ -1476,27 +1481,21 @@ argument_list|()
 operator|)
 return|;
 block|}
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|replaceUsesOfWithOnConstant
 argument_list|(
-name|Value
-operator|*
-name|From
+argument|Value *From
 argument_list|,
-name|Value
-operator|*
-name|To
+argument|Value *To
 argument_list|,
-name|Use
-operator|*
-name|U
+argument|Use *U
 argument_list|)
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -1550,11 +1549,9 @@ name|Constant
 block|{
 name|friend
 expr|struct
-name|ConstantArrayCreator
+name|ConstantAggrKeyType
 operator|<
 name|ConstantVector
-block|,
-name|VectorType
 operator|>
 block|;
 name|ConstantVector
@@ -1595,6 +1592,23 @@ operator|>
 name|V
 argument_list|)
 block|;
+name|private
+operator|:
+specifier|static
+name|Constant
+operator|*
+name|getImpl
+argument_list|(
+name|ArrayRef
+operator|<
+name|Constant
+operator|*
+operator|>
+name|V
+argument_list|)
+block|;
+name|public
+operator|:
 comment|/// getSplat - Return a ConstantVector with the specified constant in each
 comment|/// element.
 specifier|static
@@ -1644,27 +1658,21 @@ name|getSplatValue
 argument_list|()
 specifier|const
 block|;
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|replaceUsesOfWithOnConstant
 argument_list|(
-name|Value
-operator|*
-name|From
+argument|Value *From
 argument_list|,
-name|Value
-operator|*
-name|To
+argument|Value *To
 argument_list|,
-name|Use
-operator|*
-name|U
+argument|Use *U
 argument_list|)
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -1749,7 +1757,7 @@ argument|T
 argument_list|,
 argument|Value::ConstantPointerNullVal
 argument_list|,
-literal|0
+argument|nullptr
 argument_list|,
 literal|0
 argument_list|)
@@ -1790,10 +1798,10 @@ operator|*
 name|T
 argument_list|)
 block|;
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
 comment|/// getType - Specialize the getType() method to always return an PointerType,
 comment|/// which reduces the amount of casting needed in parts of the compiler.
@@ -1906,7 +1914,7 @@ name|ty
 argument_list|,
 name|VT
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
 literal|0
 argument_list|)
@@ -1918,7 +1926,7 @@ argument_list|)
 block|,
 name|Next
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 operator|~
@@ -2149,10 +2157,10 @@ name|getRawDataValues
 argument_list|()
 specifier|const
 block|;
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 comment|///
@@ -2220,10 +2228,10 @@ argument|const ConstantDataArray&
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 block|;
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|friend
 name|class
@@ -2464,10 +2472,10 @@ argument|const ConstantDataVector&
 argument_list|)
 name|LLVM_DELETED_FUNCTION
 block|;
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|friend
 name|class
@@ -2762,6 +2770,21 @@ operator|*
 name|BB
 argument_list|)
 block|;
+comment|/// \brief Lookup an existing \c BlockAddress constant for the given
+comment|/// BasicBlock.
+comment|///
+comment|/// \returns 0 if \c !BB->hasAddressTaken(), otherwise the \c BlockAddress.
+specifier|static
+name|BlockAddress
+operator|*
+name|lookup
+argument_list|(
+specifier|const
+name|BasicBlock
+operator|*
+name|BB
+argument_list|)
+block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -2812,27 +2835,21 @@ name|get
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|replaceUsesOfWithOnConstant
 argument_list|(
-name|Value
-operator|*
-name|From
+argument|Value *From
 argument_list|,
-name|Value
-operator|*
-name|To
+argument|Value *To
 argument_list|,
-name|Use
-operator|*
-name|U
+argument|Use *U
 argument_list|)
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -2893,36 +2910,7 @@ name|Constant
 block|{
 name|friend
 expr|struct
-name|ConstantCreator
-operator|<
-name|ConstantExpr
-block|,
-name|Type
-block|,
-name|std
-operator|::
-name|pair
-operator|<
-name|unsigned
-block|,
-name|std
-operator|::
-name|vector
-operator|<
-name|Constant
-operator|*
-operator|>
-expr|>
-operator|>
-block|;
-name|friend
-expr|struct
-name|ConvertConstantType
-operator|<
-name|ConstantExpr
-block|,
-name|Type
-operator|>
+name|ConstantExprKeyType
 block|;
 name|protected
 operator|:
@@ -3297,13 +3285,11 @@ name|Constant
 operator|*
 name|getTrunc
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|,
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -3311,13 +3297,11 @@ name|Constant
 operator|*
 name|getSExt
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|,
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -3325,13 +3309,11 @@ name|Constant
 operator|*
 name|getZExt
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|,
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -3339,13 +3321,11 @@ name|Constant
 operator|*
 name|getFPTrunc
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|,
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -3353,13 +3333,11 @@ name|Constant
 operator|*
 name|getFPExtend
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|,
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -3367,13 +3345,11 @@ name|Constant
 operator|*
 name|getUIToFP
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|,
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -3381,13 +3357,11 @@ name|Constant
 operator|*
 name|getSIToFP
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|,
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -3395,13 +3369,11 @@ name|Constant
 operator|*
 name|getFPToUI
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|,
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -3409,13 +3381,11 @@ name|Constant
 operator|*
 name|getFPToSI
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|,
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -3423,13 +3393,11 @@ name|Constant
 operator|*
 name|getPtrToInt
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|,
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -3437,13 +3405,11 @@ name|Constant
 operator|*
 name|getIntToPtr
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|,
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -3451,13 +3417,11 @@ name|Constant
 operator|*
 name|getBitCast
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|,
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -3465,13 +3429,11 @@ name|Constant
 operator|*
 name|getAddrSpaceCast
 argument_list|(
-name|Constant
-operator|*
-name|C
+argument|Constant *C
 argument_list|,
-name|Type
-operator|*
-name|Ty
+argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -3813,8 +3775,12 @@ argument_list|(
 name|Constant
 argument_list|)
 block|;
-comment|// @brief Convenience function for getting one of the casting operations
-comment|// using a CastOps opcode.
+comment|/// \brief Convenience function for getting a Cast operation.
+comment|///
+comment|/// \param ops The opcode for the conversion
+comment|/// \param C  The constant to be converted
+comment|/// \param Ty The type to which the constant is converted
+comment|/// \param OnlyIfReduced see \a getWithOperands() docs.
 specifier|static
 name|Constant
 operator|*
@@ -3822,12 +3788,11 @@ name|getCast
 argument_list|(
 argument|unsigned ops
 argument_list|,
-comment|///< The opcode for the conversion
 argument|Constant *C
 argument_list|,
-comment|///< The constant to be converted
 argument|Type *Ty
-comment|///< The type to which the constant is converted
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 comment|// @brief Create a ZExt or BitCast cast constant expression
@@ -3981,6 +3946,7 @@ specifier|const
 block|;
 comment|/// Select constant expr
 comment|///
+comment|/// \param OnlyIfReducedTy see \a getWithOperands() docs.
 specifier|static
 name|Constant
 operator|*
@@ -3997,11 +3963,18 @@ argument_list|,
 name|Constant
 operator|*
 name|V2
+argument_list|,
+name|Type
+operator|*
+name|OnlyIfReducedTy
+operator|=
+name|nullptr
 argument_list|)
 block|;
 comment|/// get - Return a binary or shift operator constant expression,
 comment|/// folding if possible.
 comment|///
+comment|/// \param OnlyIfReducedTy see \a getWithOperands() docs.
 specifier|static
 name|Constant
 operator|*
@@ -4015,9 +3988,13 @@ argument|Constant *C2
 argument_list|,
 argument|unsigned Flags =
 literal|0
+argument_list|,
+argument|Type *OnlyIfReducedTy = nullptr
 argument_list|)
 block|;
-comment|/// @brief Return an ICmp or FCmp comparison operator constant expression.
+comment|/// \brief Return an ICmp or FCmp comparison operator constant expression.
+comment|///
+comment|/// \param OnlyIfReduced see \a getWithOperands() docs.
 specifier|static
 name|Constant
 operator|*
@@ -4028,6 +4005,8 @@ argument_list|,
 argument|Constant *C1
 argument_list|,
 argument|Constant *C2
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 comment|/// get* - Return some common constants without having to
@@ -4043,6 +4022,8 @@ argument_list|,
 argument|Constant *LHS
 argument_list|,
 argument|Constant *RHS
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 specifier|static
@@ -4055,11 +4036,14 @@ argument_list|,
 argument|Constant *LHS
 argument_list|,
 argument|Constant *RHS
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 block|;
 comment|/// Getelementptr form.  Value* is only accepted for convenience;
 comment|/// all elements must be Constant's.
 comment|///
+comment|/// \param OnlyIfReducedTy see \a getWithOperands() docs.
 specifier|static
 name|Constant
 operator|*
@@ -4070,6 +4054,8 @@ argument_list|,
 argument|ArrayRef<Constant *> IdxList
 argument_list|,
 argument|bool InBounds = false
+argument_list|,
+argument|Type *OnlyIfReducedTy = nullptr
 argument_list|)
 block|{
 return|return
@@ -4097,6 +4083,8 @@ argument_list|()
 argument_list|)
 argument_list|,
 name|InBounds
+argument_list|,
+name|OnlyIfReducedTy
 argument_list|)
 return|;
 block|}
@@ -4110,6 +4098,8 @@ argument_list|,
 argument|Constant *Idx
 argument_list|,
 argument|bool InBounds = false
+argument_list|,
+argument|Type *OnlyIfReducedTy = nullptr
 argument_list|)
 block|{
 comment|// This form of the function only exists to avoid ambiguous overload
@@ -4129,6 +4119,8 @@ name|Idx
 operator|)
 argument_list|,
 name|InBounds
+argument_list|,
+name|OnlyIfReducedTy
 argument_list|)
 return|;
 block|}
@@ -4142,6 +4134,8 @@ argument_list|,
 argument|ArrayRef<Value *> IdxList
 argument_list|,
 argument|bool InBounds = false
+argument_list|,
+argument|Type *OnlyIfReducedTy = nullptr
 argument_list|)
 block|;
 comment|/// Create an "inbounds" getelementptr. See the documentation for the
@@ -4224,6 +4218,12 @@ argument_list|,
 name|Constant
 operator|*
 name|Idx
+argument_list|,
+name|Type
+operator|*
+name|OnlyIfReducedTy
+operator|=
+name|nullptr
 argument_list|)
 block|;
 specifier|static
@@ -4242,6 +4242,12 @@ argument_list|,
 name|Constant
 operator|*
 name|Idx
+argument_list|,
+name|Type
+operator|*
+name|OnlyIfReducedTy
+operator|=
+name|nullptr
 argument_list|)
 block|;
 specifier|static
@@ -4260,6 +4266,12 @@ argument_list|,
 name|Constant
 operator|*
 name|Mask
+argument_list|,
+name|Type
+operator|*
+name|OnlyIfReducedTy
+operator|=
+name|nullptr
 argument_list|)
 block|;
 specifier|static
@@ -4276,6 +4288,12 @@ operator|<
 name|unsigned
 operator|>
 name|Idxs
+argument_list|,
+name|Type
+operator|*
+name|OnlyIfReducedTy
+operator|=
+name|nullptr
 argument_list|)
 block|;
 specifier|static
@@ -4296,6 +4314,12 @@ operator|<
 name|unsigned
 operator|>
 name|Idxs
+argument_list|,
+name|Type
+operator|*
+name|OnlyIfReducedTy
+operator|=
+name|nullptr
 argument_list|)
 block|;
 comment|/// getOpcode - Return the opcode at the root of this constant expression
@@ -4367,17 +4391,24 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// getWithOperands - This returns the current constant expression with the
-comment|/// operands replaced with the specified values and with the specified result
-comment|/// type.  The specified array must have the same number of operands as our
-comment|/// current one.
+comment|/// \brief Get the current expression with the operands replaced.
+comment|///
+comment|/// Return the current constant expression with the operands replaced with \c
+comment|/// Ops and the type with \c Ty.  The new operands must have the same number
+comment|/// as the current ones.
+comment|///
+comment|/// If \c OnlyIfReduced is \c true, nullptr will be returned unless something
+comment|/// gets constant-folded, the type changes, or the expression is otherwise
+comment|/// canonicalized.  This parameter should almost always be \c false.
 name|Constant
 operator|*
 name|getWithOperands
 argument_list|(
-argument|ArrayRef<Constant*> Ops
+argument|ArrayRef<Constant *> Ops
 argument_list|,
 argument|Type *Ty
+argument_list|,
+argument|bool OnlyIfReduced = false
 argument_list|)
 specifier|const
 block|;
@@ -4393,27 +4424,21 @@ operator|*
 name|getAsInstruction
 argument_list|()
 block|;
-name|virtual
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|replaceUsesOfWithOnConstant
 argument_list|(
-name|Value
-operator|*
-name|From
+argument|Value *From
 argument_list|,
-name|Value
-operator|*
-name|To
+argument|Value *To
 argument_list|,
-name|Use
-operator|*
-name|U
+argument|Use *U
 argument_list|)
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
@@ -4525,7 +4550,7 @@ argument|T
 argument_list|,
 argument|UndefValueVal
 argument_list|,
-literal|0
+argument|nullptr
 argument_list|,
 literal|0
 argument_list|)
@@ -4606,10 +4631,16 @@ argument|unsigned Idx
 argument_list|)
 specifier|const
 block|;
-name|virtual
+comment|/// \brief Return the number of elements in the array, vector, or struct.
+name|unsigned
+name|getNumElements
+argument_list|()
+specifier|const
+block|;
 name|void
 name|destroyConstant
 argument_list|()
+name|override
 block|;
 comment|/// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static

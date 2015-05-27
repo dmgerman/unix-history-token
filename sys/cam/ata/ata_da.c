@@ -801,6 +801,24 @@ name|ADA_Q_4K
 block|}
 block|,
 block|{
+comment|/* WDC Caviar Red Advanced Format (4k) drives */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"WDC WD????CX*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
 comment|/* WDC Caviar Green Advanced Format (4k) drives */
 block|{
 name|T_DIRECT
@@ -819,7 +837,7 @@ name|ADA_Q_4K
 block|}
 block|,
 block|{
-comment|/* WDC Caviar Green Advanced Format (4k) drives */
+comment|/* WDC Caviar Green/Red Advanced Format (4k) drives */
 block|{
 name|T_DIRECT
 block|,
@@ -828,6 +846,42 @@ block|,
 literal|"*"
 block|,
 literal|"WDC WD????RX*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
+comment|/* WDC Caviar Red Advanced Format (4k) drives */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"WDC WD??????CX*"
+block|,
+literal|"*"
+block|}
+block|,
+comment|/*quirks*/
+name|ADA_Q_4K
+block|}
+block|,
+block|{
+comment|/* WDC Caviar Black Advanced Format (4k) drives */
+block|{
+name|T_DIRECT
+block|,
+name|SIP_MEDIA_FIXED
+block|,
+literal|"*"
+block|,
+literal|"WDC WD??????EX*"
 block|,
 literal|"*"
 block|}
@@ -8368,6 +8422,7 @@ argument_list|,
 name|bio_queue
 argument_list|)
 expr_stmt|;
+comment|/* 			 * Normally, the xpt_release_ccb() above would make sure 			 * that when we have more work to do, that work would 			 * get kicked off. However, we specifically keep 			 * trim_running set to 0 before the call above to allow 			 * other I/O to progress when many BIO_DELETE requests 			 * are pushed down. We set trim_running to 0 and call 			 * daschedule again so that we don't stall if there are 			 * no other I/Os pending apart from BIO_DELETEs. 			 */
 name|softc
 operator|->
 name|trim_running

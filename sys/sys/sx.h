@@ -1484,6 +1484,13 @@ name|SX_RECURSE
 value|0x20
 end_define
 
+begin_define
+define|#
+directive|define
+name|SX_NEW
+value|0x40
+end_define
+
 begin_comment
 comment|/*  * Options passed to sx_*lock_hard().  */
 end_comment

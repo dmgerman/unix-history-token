@@ -198,6 +198,13 @@ argument_list|)
 block|,
 name|AXGE_DEV
 argument_list|(
+name|LENOVO
+argument_list|,
+name|GIGALAN
+argument_list|)
+block|,
+name|AXGE_DEV
+argument_list|(
 name|SITECOMEU
 argument_list|,
 name|LN032
@@ -698,7 +705,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|axge_debug

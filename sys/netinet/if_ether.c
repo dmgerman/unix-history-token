@@ -729,7 +729,7 @@ name|s_addr
 operator|=
 name|addr
 expr_stmt|;
-name|IF_AFDATA_RLOCK
+name|IF_AFDATA_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -756,7 +756,7 @@ operator|&
 name|addr4
 argument_list|)
 expr_stmt|;
-name|IF_AFDATA_RUNLOCK
+name|IF_AFDATA_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -809,6 +809,25 @@ operator|&
 name|LLE_STATIC
 condition|)
 block|{
+return|return;
+block|}
+name|LLE_WLOCK
+argument_list|(
+name|lle
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|callout_pending
+argument_list|(
+operator|&
+name|lle
+operator|->
+name|la_timer
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * Here we are a bit odd here in the treatment of  		 * active/pending. If the pending bit is set, it got 		 * rescheduled before I ran. The active 		 * bit we ignore, since if it was stopped 		 * in ll_tablefree() and was currently running 		 * it would have return 0 so the code would 		 * not have deleted it since the callout could 		 * not be stopped so we want to go through 		 * with the delete here now. If the callout 		 * was restarted, the pending bit will be back on and 		 * we just want to bail since the callout_reset would 		 * return 1 and our reference would have been removed 		 * by arpresolve() below. 		 */
 name|LLE_WUNLOCK
 argument_list|(
 name|lle
@@ -1213,7 +1232,7 @@ name|m
 operator|->
 name|m_len
 expr_stmt|;
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -1387,7 +1406,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Resolve an IP address into an ethernet address.  * On input:  *    ifp is the interface we use  *    rt0 is the route to the final destination (possibly useless)  *    m is the mbuf. May be NULL if we don't have a packet.  *    dst is the next hop,  *    desten is where we want the address.  *  * On success, desten is filled in and the function returns 0;  * If the packet must be held pending resolution, we return EWOULDBLOCK  * On other errors, we return the corresponding error code.  * Note that m_freem() handles NULL.  */
+comment|/*  * Resolve an IP address into an ethernet address.  * On input:  *    ifp is the interface we use  *    is_gw != if @dst represents gateway to some destination  *    m is the mbuf. May be NULL if we don't have a packet.  *    dst is the next hop,  *    desten is where we want the address.  *    flags returns lle entry flags.  *  * On success, desten and flags are filled in and the function returns 0;  * If the packet must be held pending resolution, we return EWOULDBLOCK  * On other errors, we return the corresponding error code.  * Note that m_freem() handles NULL.  */
 end_comment
 
 begin_function
@@ -1399,10 +1418,8 @@ name|ifnet
 modifier|*
 name|ifp
 parameter_list|,
-name|struct
-name|rtentry
-modifier|*
-name|rt0
+name|int
+name|is_gw
 parameter_list|,
 name|struct
 name|mbuf
@@ -1419,11 +1436,9 @@ name|u_char
 modifier|*
 name|desten
 parameter_list|,
-name|struct
-name|llentry
+name|uint32_t
 modifier|*
-modifier|*
-name|lle
+name|pflags
 parameter_list|)
 block|{
 name|struct
@@ -1457,10 +1472,16 @@ name|error
 decl_stmt|,
 name|renew
 decl_stmt|;
-operator|*
-name|lle
-operator|=
+if|if
+condition|(
+name|pflags
+operator|!=
 name|NULL
+condition|)
+operator|*
+name|pflags
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -1508,12 +1529,6 @@ operator|->
 name|m_flags
 operator|&
 name|M_MCAST
-operator|&&
-name|ifp
-operator|->
-name|if_type
-operator|!=
-name|IFT_ARCNET
 condition|)
 block|{
 comment|/* multicast */
@@ -1763,10 +1778,18 @@ name|la_preempt
 operator|--
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pflags
+operator|!=
+name|NULL
+condition|)
 operator|*
-name|lle
+name|pflags
 operator|=
 name|la
+operator|->
+name|la_flags
 expr_stmt|;
 name|error
 operator|=
@@ -2013,17 +2036,9 @@ comment|/* First request. */
 else|else
 name|error
 operator|=
-name|rt0
+name|is_gw
 operator|!=
-name|NULL
-operator|&&
-operator|(
-name|rt0
-operator|->
-name|rt_flags
-operator|&
-name|RTF_GATEWAY
-operator|)
+literal|0
 condition|?
 name|EHOSTUNREACH
 else|:

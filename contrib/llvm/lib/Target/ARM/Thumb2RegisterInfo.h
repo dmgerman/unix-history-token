@@ -54,31 +54,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|THUMB2REGISTERINFO_H
+name|LLVM_LIB_TARGET_ARM_THUMB2REGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|THUMB2REGISTERINFO_H
+name|LLVM_LIB_TARGET_ARM_THUMB2REGISTERINFO_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"ARM.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ARMBaseRegisterInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
 begin_decl_stmt
@@ -129,6 +117,7 @@ argument_list|,
 argument|unsigned MIFlags = MachineInstr::NoFlags
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}
@@ -138,10 +127,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// THUMB2REGISTERINFO_H
-end_comment
 
 end_unit
 

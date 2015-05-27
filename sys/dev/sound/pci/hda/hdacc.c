@@ -308,6 +308,14 @@ literal|"Realtek ALC276"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC292
+block|,
+literal|0
+block|,
+literal|"Realtek ALC292"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ALC660
 block|,
 literal|0
@@ -2161,6 +2169,14 @@ block|,
 literal|0
 block|,
 literal|"Intel Haswell"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELBDW
+block|,
+literal|0
+block|,
+literal|"Intel Broadwell"
 block|}
 block|,
 block|{

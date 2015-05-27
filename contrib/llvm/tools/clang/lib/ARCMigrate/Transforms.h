@@ -551,14 +551,12 @@ name|ASTTraverser
 block|{
 name|public
 operator|:
-name|virtual
 name|void
 name|traverseObjCImplementation
 argument_list|(
-name|ObjCImplementationContext
-operator|&
-name|ImplCtx
+argument|ObjCImplementationContext&ImplCtx
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -569,14 +567,12 @@ name|ASTTraverser
 block|{
 name|public
 operator|:
-name|virtual
 name|void
 name|traverseBody
 argument_list|(
-name|BodyContext
-operator|&
-name|BodyCtx
+argument|BodyContext&BodyCtx
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -587,14 +583,12 @@ name|ASTTraverser
 block|{
 name|public
 operator|:
-name|virtual
 name|void
 name|traverseBody
 argument_list|(
-name|BodyContext
-operator|&
-name|BodyCtx
+argument|BodyContext&BodyCtx
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 comment|// GC transformations
@@ -606,14 +600,12 @@ name|ASTTraverser
 block|{
 name|public
 operator|:
-name|virtual
 name|void
 name|traverseTU
 argument_list|(
-name|MigrationContext
-operator|&
-name|MigrateCtx
+argument|MigrationContext&MigrateCtx
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -624,14 +616,12 @@ name|ASTTraverser
 block|{
 name|public
 operator|:
-name|virtual
 name|void
 name|traverseBody
 argument_list|(
-name|BodyContext
-operator|&
-name|BodyCtx
+argument|BodyContext&BodyCtx
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -792,7 +782,7 @@ argument_list|)
 operator|,
 name|ParentD
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{ }
 name|bool

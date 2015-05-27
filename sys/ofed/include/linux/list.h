@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -124,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/vnet.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -131,6 +143,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_var.h>
 end_include
 
 begin_include

@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FORMAT_TOKEN_ANNOTATOR_H
+name|LLVM_CLANG_LIB_FORMAT_TOKENANNOTATOR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FORMAT_TOKEN_ANNOTATOR_H
+name|LLVM_CLANG_LIB_FORMAT_TOKENANNOTATOR_H
 end_define
 
 begin_include
@@ -100,11 +100,7 @@ name|LineType
 block|{
 name|LT_Invalid
 block|,
-name|LT_Other
-block|,
-name|LT_PreprocessorDirective
-block|,
-name|LT_VirtualFunctionDecl
+name|LT_ImportStatement
 block|,
 name|LT_ObjCDecl
 block|,
@@ -112,7 +108,13 @@ comment|// An @interface, @implementation, or @protocol line.
 name|LT_ObjCMethodDecl
 block|,
 name|LT_ObjCProperty
+block|,
 comment|// An @property line.
+name|LT_Other
+block|,
+name|LT_PreprocessorDirective
+block|,
+name|LT_VirtualFunctionDecl
 block|}
 enum|;
 name|class
@@ -166,7 +168,17 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|StartsDefinition
+name|Affected
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|LeadingEmptyLinesAffected
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|ChildrenAffected
 argument_list|(
 argument|false
 argument_list|)
@@ -189,7 +201,7 @@ name|First
 operator|->
 name|Previous
 operator|=
-name|NULL
+name|nullptr
 block|;
 name|FormatToken
 operator|*
@@ -334,7 +346,7 @@ name|Last
 operator|->
 name|Next
 operator|=
-name|NULL
+name|nullptr
 expr_stmt|;
 block|}
 operator|~
@@ -403,8 +415,19 @@ decl_stmt|;
 name|bool
 name|MightBeFunctionDecl
 decl_stmt|;
+comment|/// \c True if this line should be formatted, i.e. intersects directly or
+comment|/// indirectly with one of the input ranges.
 name|bool
-name|StartsDefinition
+name|Affected
+decl_stmt|;
+comment|/// \c True if the leading empty lines of this line intersect with one of the
+comment|/// input ranges.
+name|bool
+name|LeadingEmptyLinesAffected
+decl_stmt|;
+comment|/// \c True if a one of this line's children intersects with an input range.
+name|bool
+name|ChildrenAffected
 decl_stmt|;
 name|private
 label|:
@@ -441,9 +464,10 @@ name|FormatStyle
 operator|&
 name|Style
 argument_list|,
-name|IdentifierInfo
+specifier|const
+name|AdditionalKeywords
 operator|&
-name|Ident_in
+name|Keywords
 argument_list|)
 operator|:
 name|Style
@@ -451,9 +475,9 @@ argument_list|(
 name|Style
 argument_list|)
 operator|,
-name|Ident_in
+name|Keywords
 argument_list|(
-argument|Ident_in
+argument|Keywords
 argument_list|)
 block|{}
 comment|/// \brief Adapts the indent levels of comment lines to the indent of the
@@ -590,10 +614,10 @@ name|FormatStyle
 modifier|&
 name|Style
 decl_stmt|;
-comment|// Contextual keywords:
-name|IdentifierInfo
+specifier|const
+name|AdditionalKeywords
 modifier|&
-name|Ident_in
+name|Keywords
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -613,10 +637,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_FORMAT_TOKEN_ANNOTATOR_H
-end_comment
 
 end_unit
 

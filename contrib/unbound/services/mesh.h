@@ -673,7 +673,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Attach subquery.  * Creates it if it does not exist already.  * Keeps sub and super references correct.  * Performs a cycle detection - for double check - and fails if there is one.  * Also fails if the sub-sub-references become too large.  * Updates stat items in mesh_area structure.  * Pass if it is priming query or not.  * return:  * 	o if error (malloc) happened.  * 	o need to initialise the new state (module init; it is a new state).  * 	  so that the next run of the query with this module is successful.  * 	o no init needed, attachment successful.  *  * @param qstate: the state to find mesh state, and that wants to receive  * 	the results from the new subquery.  * @param qinfo: what to query for (copied).  * @param qflags: what flags to use (RD / CD flag or not).  * @param prime: if it is a (stub) priming query.  * @param newq: If the new subquery needs initialisation, it is returned,  * 	otherwise NULL is returned.  * @return: false on error, true if success (and init may be needed).  */
+comment|/**  * Attach subquery.  * Creates it if it does not exist already.  * Keeps sub and super references correct.  * Performs a cycle detection - for double check - and fails if there is one.  * Also fails if the sub-sub-references become too large.  * Updates stat items in mesh_area structure.  * Pass if it is priming query or not.  * return:  * 	o if error (malloc) happened.  * 	o need to initialise the new state (module init; it is a new state).  * 	  so that the next run of the query with this module is successful.  * 	o no init needed, attachment successful.  *  * @param qstate: the state to find mesh state, and that wants to receive  * 	the results from the new subquery.  * @param qinfo: what to query for (copied).  * @param qflags: what flags to use (RD / CD flag or not).  * @param prime: if it is a (stub) priming query.  * @param valrec: if it is a validation recursion query (lookup of key, DS).  * @param newq: If the new subquery needs initialisation, it is returned,  * 	otherwise NULL is returned.  * @return: false on error, true if success (and init may be needed).  */
 end_comment
 
 begin_function_decl
@@ -695,6 +695,9 @@ name|qflags
 parameter_list|,
 name|int
 name|prime
+parameter_list|,
+name|int
+name|valrec
 parameter_list|,
 name|struct
 name|module_qstate
@@ -763,7 +766,7 @@ comment|/* ------------------- Functions for mesh -------------------- */
 end_comment
 
 begin_comment
-comment|/**  * Create and initialize a new mesh state and its query state  * Does not put the mesh state into rbtrees and so on.  * @param env: module environment to set.  * @param qinfo: query info that the mesh is for.  * @param qflags: flags for query (RD / CD flag).  * @param prime: if true, it is a priming query, set is_priming on mesh state.  * @return: new mesh state or NULL on allocation error.  */
+comment|/**  * Create and initialize a new mesh state and its query state  * Does not put the mesh state into rbtrees and so on.  * @param env: module environment to set.  * @param qinfo: query info that the mesh is for.  * @param qflags: flags for query (RD / CD flag).  * @param prime: if true, it is a priming query, set is_priming on mesh state.  * @param valrec: if true, it is a validation recursion query, and sets  * 	is_valrec on the mesh state.  * @return: new mesh state or NULL on allocation error.  */
 end_comment
 
 begin_function_decl
@@ -787,6 +790,9 @@ name|qflags
 parameter_list|,
 name|int
 name|prime
+parameter_list|,
+name|int
+name|valrec
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -824,7 +830,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Find a mesh state in the mesh area. Pass relevant flags.  *  * @param mesh: the mesh area to look in.  * @param qinfo: what query  * @param qflags: if RD / CD bit is set or not.  * @param prime: if it is a priming query.  * @return: mesh state or NULL if not found.  */
+comment|/**  * Find a mesh state in the mesh area. Pass relevant flags.  *  * @param mesh: the mesh area to look in.  * @param qinfo: what query  * @param qflags: if RD / CD bit is set or not.  * @param prime: if it is a priming query.  * @param valrec: if it is a validation-recursion query.  * @return: mesh state or NULL if not found.  */
 end_comment
 
 begin_function_decl
@@ -848,6 +854,9 @@ name|qflags
 parameter_list|,
 name|int
 name|prime
+parameter_list|,
+name|int
+name|valrec
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1048,7 +1057,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Find cycle; see if the given mesh is in the targets sub, or sub-sub, ...  * trees.  * If the sub-sub structure is too large, it returns 'a cycle'=2.  * @param qstate: given mesh querystate.  * @param qinfo: query info for dependency.  * @param flags: query flags of dependency.  * @param prime: if dependency is a priming query or not.  * @return true if the name,type,class exists and the given qstate mesh exists  * 	as a dependency of that name. Thus if qstate becomes dependent on  * 	name,type,class then a cycle is created, this is return value 1.  * 	Too large to search is value 2 (also true).  */
+comment|/**  * Find cycle; see if the given mesh is in the targets sub, or sub-sub, ...  * trees.  * If the sub-sub structure is too large, it returns 'a cycle'=2.  * @param qstate: given mesh querystate.  * @param qinfo: query info for dependency.  * @param flags: query flags of dependency.  * @param prime: if dependency is a priming query or not.  * @param valrec: if it is a validation recursion query (lookup of key, DS).  * @return true if the name,type,class exists and the given qstate mesh exists  * 	as a dependency of that name. Thus if qstate becomes dependent on  * 	name,type,class then a cycle is created, this is return value 1.  * 	Too large to search is value 2 (also true).  */
 end_comment
 
 begin_function_decl
@@ -1070,6 +1079,9 @@ name|flags
 parameter_list|,
 name|int
 name|prime
+parameter_list|,
+name|int
+name|valrec
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -1533,7 +1533,7 @@ block|{
 name|uint32_t
 name|imm32
 decl_stmt|;
-comment|// the expaned result
+comment|// the expanded result
 specifier|const
 name|uint32_t
 name|i

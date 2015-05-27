@@ -48,79 +48,6 @@ begin_comment
 comment|/*  * The SMP parts are setup in pmap.c and locore.s for the BSP, and  * mp_machdep.c sets up the data for the AP's to "see" when they awake.  * The reason for doing it via a struct is so that an array of pointers  * to each CPU's data can be set up for things like "check curproc on all  * other processors"  */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|XEN
-argument_list|)
-end_if
-
-begin_comment
-comment|/* These are peridically updated in shared_info, and then copied here. */
-end_comment
-
-begin_struct
-struct|struct
-name|shadow_time_info
-block|{
-name|uint64_t
-name|tsc_timestamp
-decl_stmt|;
-comment|/* TSC at last update of time vals.  */
-name|uint64_t
-name|system_timestamp
-decl_stmt|;
-comment|/* Time, in nanosecs, since boot.    */
-name|uint32_t
-name|tsc_to_nsec_mul
-decl_stmt|;
-name|uint32_t
-name|tsc_to_usec_mul
-decl_stmt|;
-name|int
-name|tsc_shift
-decl_stmt|;
-name|uint32_t
-name|version
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|PCPU_XEN_FIELDS
-define|\
-value|;								\ 	u_int	pc_cr3;
-comment|/* track cr3 for R1/R3*/
-value|\ 	vm_paddr_t *pc_pdir_shadow;					\ 	uint64_t pc_processed_system_time;				\ 	struct shadow_time_info pc_shadow_time;				\ 	char	__pad[185]
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* !XEN */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PCPU_XEN_FIELDS
-define|\
-value|;								\ 	char	__pad[233]
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -136,9 +63,9 @@ value|\ 	u_int	pc_apic_id;						\ 	int	pc_private_tss;
 comment|/* Flag indicating private tss*/
 value|\ 	u_int	pc_cmci_mask;
 comment|/* MCx banks for CMCI */
-value|\ 	u_int	pc_vcpu_id
+value|\ 	u_int	pc_vcpu_id;
 comment|/* Xen vCPU ID */
-value|\ 	PCPU_XEN_FIELDS
+value|\ 	char	__pad[233]
 end_define
 
 begin_ifdef

@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|HexagonTARGETOBJECTFILE_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONTARGETOBJECTFILE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|HexagonTARGETOBJECTFILE_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONTARGETOBJECTFILE_H
 end_define
 
 begin_include
@@ -77,19 +77,14 @@ name|SmallBSSSection
 block|;
 name|public
 operator|:
-name|virtual
 name|void
 name|Initialize
 argument_list|(
-name|MCContext
-operator|&
-name|Ctx
+argument|MCContext&Ctx
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|const TargetMachine&TM
 argument_list|)
+name|override
 block|;
 comment|/// IsGlobalInSmallSection - Return true if this global address should be
 comment|/// placed into small data/bss section.
@@ -127,11 +122,12 @@ argument|const GlobalValue *GV
 argument_list|,
 argument|SectionKind Kind
 argument_list|,
-argument|Mangler *Mang
+argument|Mangler&Mang
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 block|}

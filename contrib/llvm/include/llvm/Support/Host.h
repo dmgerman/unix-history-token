@@ -202,12 +202,10 @@ comment|/// of the name is target dependent, and suitable for passing as -mcpu t
 comment|/// target which matches the host.
 comment|///
 comment|/// \return - The host CPU name, or empty if the CPU could not be determined.
-name|std
-operator|::
-name|string
+name|StringRef
 name|getHostCPUName
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// getHostCPUFeatures - Get the LLVM names for the host CPU features.
 comment|/// The particular format of the names are target dependent, and suitable for
 comment|/// passing as -mattr to the target which matches the host.

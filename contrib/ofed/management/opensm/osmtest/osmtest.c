@@ -11626,6 +11626,9 @@ name|printf
 argument_list|(
 literal|"-I- Start time is : %09ld:%06ld [sec:usec]\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|start_tv
 operator|.
 name|tv_sec
@@ -11767,6 +11770,9 @@ name|printf
 argument_list|(
 literal|"-I- End time is : %09ld:%06ld [sec:usec]\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|end_tv
 operator|.
 name|tv_sec
@@ -11852,6 +11858,9 @@ name|printf
 argument_list|(
 literal|"-I- End time is : %09ld:%06ld [sec:usec]\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|end_tv
 operator|.
 name|tv_sec
@@ -12027,6 +12036,9 @@ name|printf
 argument_list|(
 literal|"-I- Start time is : %09ld:%06ld [sec:usec]\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|start_tv
 operator|.
 name|tv_sec
@@ -12212,6 +12224,9 @@ name|printf
 argument_list|(
 literal|"-I- End time is : %09ld:%06ld [sec:usec]\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|end_tv
 operator|.
 name|tv_sec
@@ -12270,6 +12285,9 @@ name|printf
 argument_list|(
 literal|"-I- End time is : %09ld:%06ld [sec:usec]\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|end_tv
 operator|.
 name|tv_sec
@@ -12450,6 +12468,9 @@ name|printf
 argument_list|(
 literal|"-I- Start time is : %09ld:%06ld [sec:usec]\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|start_tv
 operator|.
 name|tv_sec
@@ -12612,6 +12633,9 @@ name|printf
 argument_list|(
 literal|"-I- End time is : %09ld:%06ld [sec:usec]\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|end_tv
 operator|.
 name|tv_sec
@@ -12657,6 +12681,9 @@ name|printf
 argument_list|(
 literal|"-I- End time is : %09ld:%06ld [sec:usec]\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|end_tv
 operator|.
 name|tv_sec
@@ -13371,6 +13398,7 @@ comment|/********************************************************************** 
 end_comment
 
 begin_function
+specifier|static
 specifier|inline
 name|uint32_t
 name|osmtest_path_rec_key_get

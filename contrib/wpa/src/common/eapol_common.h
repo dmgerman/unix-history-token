@@ -64,6 +64,30 @@ name|STRUCT_PACKED
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ieee8023_hdr
+block|{
+name|u8
+name|dest
+index|[
+name|ETH_ALEN
+index|]
+decl_stmt|;
+name|u8
+name|src
+index|[
+name|ETH_ALEN
+index|]
+decl_stmt|;
+name|u16
+name|ethertype
+decl_stmt|;
+block|}
+name|STRUCT_PACKED
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -88,12 +112,43 @@ begin_comment
 comment|/* _MSC_VER */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CONFIG_MACSEC
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|EAPOL_VERSION
+value|3
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* CONFIG_MACSEC */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|EAPOL_VERSION
 value|2
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* CONFIG_MACSEC */
+end_comment
 
 begin_enum
 enum|enum
@@ -117,7 +172,11 @@ block|,
 name|IEEE802_1X_TYPE_EAPOL_ENCAPSULATED_ASF_ALERT
 init|=
 literal|4
-block|}
+block|,
+name|IEEE802_1X_TYPE_EAPOL_MKA
+init|=
+literal|5
+block|, }
 enum|;
 end_enum
 

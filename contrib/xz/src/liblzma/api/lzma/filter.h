@@ -117,7 +117,7 @@ argument|const lzma_filter *src
 argument_list|,
 argument|lzma_filter *dest
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|)
 end_macro
 
@@ -255,7 +255,7 @@ name|lzma_raw_buffer_encode
 argument_list|(
 argument|const lzma_filter *filters
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|,
 argument|const uint8_t *in
 argument_list|,
@@ -288,7 +288,7 @@ name|lzma_raw_buffer_decode
 argument_list|(
 argument|const lzma_filter *filters
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|,
 argument|const uint8_t *in
 argument_list|,
@@ -369,7 +369,7 @@ name|lzma_properties_decode
 argument_list|(
 argument|lzma_filter *filter
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|,
 argument|const uint8_t *props
 argument_list|,
@@ -448,7 +448,7 @@ name|lzma_filter_flags_decode
 argument_list|(
 argument|lzma_filter *filter
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|,
 argument|const uint8_t *in
 argument_list|,

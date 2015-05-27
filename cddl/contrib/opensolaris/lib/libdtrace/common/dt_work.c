@@ -285,12 +285,9 @@ expr_stmt|;
 return|return;
 comment|/* sleep duration has already past */
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|tv
 operator|.
 name|tv_sec

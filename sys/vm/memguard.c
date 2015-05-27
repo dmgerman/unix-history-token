@@ -313,7 +313,7 @@ operator|&
 name|malloc_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If mtp is NULL, it will be initialized in memguard_cmp(). 	 */
+comment|/* If mtp is NULL, it will be initialized in memguard_cmp() */
 name|vm_memguard_mtype
 operator|=
 name|malloc_desc2type
@@ -801,6 +801,7 @@ name|vm_memguard_divisor
 operator|=
 literal|10
 expr_stmt|;
+comment|/* CTFLAG_RDTUN doesn't work during the early boot process. */
 name|TUNABLE_INT_FETCH
 argument_list|(
 literal|"vm.memguard.divisor"

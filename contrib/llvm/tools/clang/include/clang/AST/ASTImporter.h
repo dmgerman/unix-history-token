@@ -675,7 +675,7 @@ name|To
 parameter_list|)
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 comment|/// \brief Determine whether the given types are structurally

@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_ARCMIGRATE_ARCMT_ACTION_H
+name|LLVM_CLANG_ARCMIGRATE_ARCMTACTIONS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_ARCMIGRATE_ARCMT_ACTION_H
+name|LLVM_CLANG_ARCMIGRATE_ARCMTACTIONS_H
 end_define
 
 begin_include
@@ -58,7 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -76,14 +76,12 @@ name|WrapperFrontendAction
 block|{
 name|protected
 operator|:
-name|virtual
 name|bool
 name|BeginInvocation
 argument_list|(
-name|CompilerInstance
-operator|&
-name|CI
+argument|CompilerInstance&CI
 argument_list|)
+name|override
 block|;
 name|public
 operator|:
@@ -103,14 +101,12 @@ name|WrapperFrontendAction
 block|{
 name|protected
 operator|:
-name|virtual
 name|bool
 name|BeginInvocation
 argument_list|(
-name|CompilerInstance
-operator|&
-name|CI
+argument|CompilerInstance&CI
 argument_list|)
+name|override
 block|;
 name|public
 operator|:
@@ -133,24 +129,26 @@ name|Remapper
 block|;
 name|protected
 operator|:
-name|virtual
 name|bool
 name|BeginInvocation
 argument_list|(
-name|CompilerInstance
-operator|&
-name|CI
+argument|CompilerInstance&CI
 argument_list|)
+name|override
 block|;
-name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 name|class
@@ -174,14 +172,12 @@ name|EmitPremigrationARCErros
 block|;
 name|protected
 operator|:
-name|virtual
 name|bool
 name|BeginInvocation
 argument_list|(
-name|CompilerInstance
-operator|&
-name|CI
+argument|CompilerInstance&CI
 argument_list|)
+name|override
 block|;
 name|public
 operator|:
@@ -232,24 +228,26 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|BeginInvocation
 argument_list|(
-name|CompilerInstance
-operator|&
-name|CI
+argument|CompilerInstance&CI
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -128,8 +134,7 @@ decl_stmt|;
 name|class
 name|ValueDecl
 decl_stmt|;
-comment|/// \brief Represents a template argument within a class template
-comment|/// specialization.
+comment|/// \brief Represents a template argument.
 name|class
 name|TemplateArgument
 block|{
@@ -168,8 +173,11 @@ comment|/// The template argument is a pack expansion of a template name that wa
 comment|/// provided for a template template parameter.
 name|TemplateExpansion
 block|,
-comment|/// The template argument is a value- or type-dependent expression or a
-comment|/// non-dependent __uuidof expression stored in an Expr*.
+comment|/// The template argument is an expression, and we've not resolved it to one
+comment|/// of the other forms yet, either because it's dependent or because we're
+comment|/// representing a non-canonical template argument (for instance, in a
+comment|/// TemplateSpecializationType). Also used to represent a non-dependent
+comment|/// __uuidof expression (a Microsoft extension).
 name|Expression
 block|,
 comment|/// The template argument is actually a parameter pack. Arguments are stored
@@ -186,8 +194,9 @@ block|{
 name|unsigned
 name|Kind
 decl_stmt|;
-name|bool
-name|ForRefParam
+name|void
+modifier|*
+name|QT
 decl_stmt|;
 name|ValueDecl
 modifier|*
@@ -368,7 +377,7 @@ name|TemplateArgument
 argument_list|(
 argument|ValueDecl *D
 argument_list|,
-argument|bool ForRefParam
+argument|QualType QT
 argument_list|)
 block|{
 name|assert
@@ -386,15 +395,18 @@ name|Declaration
 expr_stmt|;
 name|DeclArg
 operator|.
-name|D
+name|QT
 operator|=
-name|D
+name|QT
+operator|.
+name|getAsOpaquePtr
+argument_list|()
 expr_stmt|;
 name|DeclArg
 operator|.
-name|ForRefParam
+name|D
 operator|=
-name|ForRefParam
+name|D
 expr_stmt|;
 block|}
 comment|/// \brief Construct an integral constant template argument. The memory to
@@ -599,7 +611,7 @@ operator|(
 name|TemplateArgument
 operator|*
 operator|)
-literal|0
+name|nullptr
 argument_list|,
 literal|0
 argument_list|)
@@ -738,10 +750,8 @@ operator|.
 name|D
 return|;
 block|}
-comment|/// \brief Retrieve whether a declaration is binding to a
-comment|/// reference parameter in a declaration non-type template argument.
-name|bool
-name|isDeclForReferenceParam
+name|QualType
+name|getParamTypeForDecl
 argument_list|()
 specifier|const
 block|{
@@ -756,9 +766,14 @@ literal|"Unexpected kind"
 argument_list|)
 block|;
 return|return
+name|QualType
+operator|::
+name|getFromOpaquePtr
+argument_list|(
 name|DeclArg
 operator|.
-name|ForRefParam
+name|QT
+argument_list|)
 return|;
 block|}
 comment|/// \brief Retrieve the type for null non-type template argument.
@@ -1091,6 +1106,31 @@ operator|.
 name|NumArgs
 return|;
 block|}
+comment|/// \brief Iterator range referencing all of the elements of a template
+comment|/// argument pack.
+name|llvm
+operator|::
+name|iterator_range
+operator|<
+name|pack_iterator
+operator|>
+name|pack_elements
+argument_list|()
+specifier|const
+block|{
+return|return
+name|llvm
+operator|::
+name|make_range
+argument_list|(
+name|pack_begin
+argument_list|()
+argument_list|,
+name|pack_end
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// \brief The number of template arguments in the given template argument
 comment|/// pack.
 name|unsigned
@@ -1113,8 +1153,6 @@ name|NumArgs
 return|;
 block|}
 comment|/// \brief Return the array of arguments in this template argument pack.
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|TemplateArgument
@@ -1134,19 +1172,16 @@ block|;
 return|return
 name|llvm
 operator|::
-name|ArrayRef
-operator|<
-name|TemplateArgument
-operator|>
-operator|(
+name|makeArrayRef
+argument_list|(
 name|Args
 operator|.
 name|Args
-operator|,
+argument_list|,
 name|Args
 operator|.
 name|NumArgs
-operator|)
+argument_list|)
 return|;
 block|}
 comment|/// \brief Determines whether two template arguments are superficially the
@@ -2024,6 +2059,22 @@ name|I
 index|]
 return|;
 block|}
+name|TemplateArgumentLoc
+modifier|&
+name|operator
+function|[]
+parameter_list|(
+name|unsigned
+name|I
+parameter_list|)
+block|{
+return|return
+name|Arguments
+index|[
+name|I
+index|]
+return|;
+block|}
 name|void
 name|addArgument
 parameter_list|(
@@ -2086,10 +2137,23 @@ name|NumTemplateArgs
 decl_stmt|;
 comment|/// Force ASTTemplateArgumentListInfo to the right alignment
 comment|/// for the following array of TemplateArgumentLocs.
-name|void
-modifier|*
+name|llvm
+operator|::
+name|AlignedCharArray
+operator|<
+name|llvm
+operator|::
+name|AlignOf
+operator|<
+name|TemplateArgumentLoc
+operator|>
+operator|::
+name|Alignment
+operator|,
+literal|1
+operator|>
 name|Aligner
-decl_stmt|;
+expr_stmt|;
 block|}
 union|;
 comment|/// \brief Retrieve the template arguments

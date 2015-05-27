@@ -49,14 +49,8 @@ directive|include
 file|"private.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"tuklib_cpucores.h"
-end_include
-
 begin_comment
-comment|/// Maximum number of free *coder* threads. This can be set with
+comment|/// Maximum number of worker threads. This can be set with
 end_comment
 
 begin_comment
@@ -66,7 +60,9 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|uint32_t
-name|threadlimit
+name|threads_max
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -106,41 +102,56 @@ end_decl_stmt
 begin_function
 specifier|extern
 name|void
-name|hardware_threadlimit_set
+name|hardware_threads_set
 parameter_list|(
 name|uint32_t
-name|new_threadlimit
+name|n
 parameter_list|)
 block|{
 if|if
 condition|(
-name|new_threadlimit
+name|n
 operator|==
 literal|0
 condition|)
 block|{
-comment|// The default is the number of available CPU cores.
-name|threadlimit
+comment|// Automatic number of threads was requested.
+comment|// If threading support was enabled at build time,
+comment|// use the number of available CPU cores. Otherwise
+comment|// use one thread since disabling threading support
+comment|// omits lzma_cputhreads() from liblzma.
+ifdef|#
+directive|ifdef
+name|MYTHREAD_ENABLED
+name|threads_max
 operator|=
-name|tuklib_cpucores
+name|lzma_cputhreads
 argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|threadlimit
+name|threads_max
 operator|==
 literal|0
 condition|)
-name|threadlimit
+name|threads_max
 operator|=
 literal|1
 expr_stmt|;
+else|#
+directive|else
+name|threads_max
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{
-name|threadlimit
+name|threads_max
 operator|=
-name|new_threadlimit
+name|n
 expr_stmt|;
 block|}
 return|return;
@@ -150,13 +161,13 @@ end_function
 begin_function
 specifier|extern
 name|uint32_t
-name|hardware_threadlimit_get
+name|hardware_threads_get
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 return|return
-name|threadlimit
+name|threads_max
 return|;
 block|}
 end_function
@@ -470,11 +481,6 @@ argument_list|,
 name|true
 argument_list|,
 name|false
-argument_list|)
-expr_stmt|;
-name|hardware_threadlimit_set
-argument_list|(
-literal|0
 argument_list|)
 expr_stmt|;
 return|return;

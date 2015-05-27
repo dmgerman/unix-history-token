@@ -3476,13 +3476,6 @@ argument_list|(
 name|if_id
 argument_list|)
 expr_stmt|;
-name|srandom
-argument_list|(
-name|arc4random
-argument_list|()
-argument_list|)
-expr_stmt|;
-comment|/* random entropy seed */
 name|read_random
 argument_list|(
 name|fwcmd

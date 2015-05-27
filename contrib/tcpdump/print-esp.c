@@ -7,28 +7,11 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-esp.c,v 1.58 2007-12-07 00:03:07 mcr Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -50,13 +33,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<tcpdump-stdinc.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<tcpdump-stdinc.h>
+file|<string.h>
 end_include
 
 begin_include
@@ -64,6 +47,10 @@ include|#
 directive|include
 file|<stdlib.h>
 end_include
+
+begin_comment
+comment|/* Any code in this file that depends on HAVE_LIBCRYPTO depends on  * HAVE_OPENSSL_EVP_H too. Undefining the former when the latter isn't defined  * is the simplest way of handling the dependency.  */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -83,32 +70,31 @@ directive|include
 file|<openssl/evp.h>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|HAVE_LIBCRYPTO
+end_undef
 
 begin_endif
 endif|#
 directive|endif
 end_endif
 
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
 directive|include
 file|"ip.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"esp.h"
 end_include
 
 begin_ifdef
@@ -131,13 +117,7 @@ end_endif
 begin_include
 include|#
 directive|include
-file|"netdissect.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"addrtoname.h"
+file|"interface.h"
 end_include
 
 begin_include
@@ -146,70 +126,68 @@ directive|include
 file|"extract.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|HAVE_SOCKADDR_STORAGE
-end_ifndef
+begin_comment
+comment|/*  * Copyright (C) 1995, 1996, 1997, and 1998 WIDE Project.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the project nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE PROJECT OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
+begin_comment
+comment|/*  * RFC1827/2406 Encapsulated Security Payload.  */
+end_comment
 
 begin_struct
 struct|struct
-name|sockaddr_storage
+name|newesp
 block|{
-union|union
-block|{
-name|struct
-name|sockaddr_in
-name|sin
+name|uint32_t
+name|esp_spi
 decl_stmt|;
-name|struct
-name|sockaddr_in6
-name|sin6
+comment|/* ESP */
+name|uint32_t
+name|esp_seq
 decl_stmt|;
-block|}
-name|un
-union|;
+comment|/* Sequence number */
+comment|/*variable size*/
+comment|/* (IV and) Payload data */
+comment|/*variable size*/
+comment|/* padding */
+comment|/*8bit*/
+comment|/* pad size */
+comment|/*8bit*/
+comment|/* next header */
+comment|/*8bit*/
+comment|/* next header */
+comment|/*variable size, 32bit bound*/
+comment|/* Authentication data */
 block|}
 struct|;
 end_struct
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|sockaddr_storage
-value|sockaddr
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* HAVE_SOCKADDR_STORAGE */
-end_comment
 
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|HAVE_LIBCRYPTO
 end_ifdef
+
+begin_union
+union|union
+name|inaddr_u
+block|{
+name|struct
+name|in_addr
+name|in4
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|struct
+name|in6_addr
+name|in6
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+union|;
+end_union
 
 begin_struct
 struct|struct
@@ -220,11 +198,14 @@ name|sa_list
 modifier|*
 name|next
 decl_stmt|;
-name|struct
-name|sockaddr_storage
+name|u_int
+name|daddr_version
+decl_stmt|;
+name|union
+name|inaddr_u
 name|daddr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|spi
 decl_stmt|;
 comment|/* if == 0, then IKEv2 */
@@ -283,6 +264,7 @@ comment|/*  * this will adjust ndo_packetp and ndo_snapend to new buffer!  */
 end_comment
 
 begin_function
+name|USES_APPLE_DEPRECATED_API
 name|int
 name|esp_print_decrypt_buffer_by_ikev2
 parameter_list|(
@@ -554,6 +536,7 @@ block|}
 end_function
 
 begin_function
+name|USES_APPLE_RST
 specifier|static
 name|void
 name|esp_print_addsa
@@ -905,6 +888,7 @@ comment|/*  * decode the form:    SPINUM@IP<tab> ALGONAME:0xsecret  */
 end_comment
 
 begin_function
+name|USES_APPLE_DEPRECATED_API
 specifier|static
 name|int
 name|espprint_decode_encalgo
@@ -923,9 +907,6 @@ modifier|*
 name|sa
 parameter_list|)
 block|{
-name|int
-name|len
-decl_stmt|;
 name|size_t
 name|i
 decl_stmt|;
@@ -984,12 +965,6 @@ operator|*
 name|colon
 operator|=
 literal|'\0'
-expr_stmt|;
-name|len
-operator|=
-name|colon
-operator|-
-name|decode
 expr_stmt|;
 if|if
 condition|(
@@ -1292,11 +1267,9 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * for the moment, ignore the auth algorith, just hard code the authenticator  * length. Need to research how openssl looks up HMAC stuff.  */
-end_comment
-
 begin_function
+name|USES_APPLE_RST
+comment|/*  * for the moment, ignore the auth algorith, just hard code the authenticator  * length. Need to research how openssl looks up HMAC stuff.  */
 specifier|static
 name|int
 name|espprint_decode_authalgo
@@ -1834,6 +1807,7 @@ name|spikey
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* sa1.daddr.version = 0; */
 comment|/* memset(&sa1.daddr, 0, sizeof(sa1.daddr)); */
 comment|/* sa1.spi = 0; */
 name|sa_def
@@ -2032,24 +2006,9 @@ decl_stmt|,
 modifier|*
 name|foo
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|spino
 decl_stmt|;
-name|struct
-name|sockaddr_in
-modifier|*
-name|sin
-decl_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
-name|struct
-name|sockaddr_in6
-modifier|*
-name|sin6
-decl_stmt|;
-endif|#
-directive|endif
 name|spistr
 operator|=
 name|strsep
@@ -2104,33 +2063,9 @@ name|spi
 operator|=
 name|spino
 expr_stmt|;
-name|sin
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|sa1
-operator|.
-name|daddr
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
-name|sin6
-operator|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-operator|&
-name|sa1
-operator|.
-name|daddr
-expr_stmt|;
 if|if
 condition|(
 name|inet_pton
@@ -2140,34 +2075,21 @@ argument_list|,
 name|spikey
 argument_list|,
 operator|&
-name|sin6
-operator|->
-name|sin6_addr
+name|sa1
+operator|.
+name|daddr
+operator|.
+name|in6
 argument_list|)
 operator|==
 literal|1
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|HAVE_SOCKADDR_SA_LEN
-name|sin6
-operator|->
-name|sin6_len
+name|sa1
+operator|.
+name|daddr_version
 operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_in6
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|sin6
-operator|->
-name|sin6_family
-operator|=
-name|AF_INET6
+literal|6
 expr_stmt|;
 block|}
 elseif|else
@@ -2182,34 +2104,21 @@ argument_list|,
 name|spikey
 argument_list|,
 operator|&
-name|sin
-operator|->
-name|sin_addr
+name|sa1
+operator|.
+name|daddr
+operator|.
+name|in4
 argument_list|)
 operator|==
 literal|1
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|HAVE_SOCKADDR_SA_LEN
-name|sin
-operator|->
-name|sin_len
+name|sa1
+operator|.
+name|daddr_version
 operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sockaddr_in
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-name|sin
-operator|->
-name|sin_family
-operator|=
-name|AF_INET
+literal|4
 expr_stmt|;
 block|}
 else|else
@@ -2283,6 +2192,7 @@ block|}
 end_function
 
 begin_function
+name|USES_APPLE_DEPRECATED_API
 specifier|static
 name|void
 name|esp_init
@@ -2307,6 +2217,7 @@ block|}
 end_function
 
 begin_function
+name|USES_APPLE_RST
 name|void
 name|esp_print_decodesecret
 parameter_list|(
@@ -2416,7 +2327,16 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBCRYPTO
+end_ifdef
+
 begin_function
+name|USES_APPLE_DEPRECATED_API
+endif|#
+directive|endif
 name|int
 name|esp_print
 parameter_list|(
@@ -2493,9 +2413,6 @@ name|sa
 init|=
 name|NULL
 decl_stmt|;
-name|int
-name|espsecret_keylen
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -2533,9 +2450,6 @@ name|p
 decl_stmt|;
 name|EVP_CIPHER_CTX
 name|ctx
-decl_stmt|;
-name|int
-name|blocksz
 decl_stmt|;
 endif|#
 directive|endif
@@ -2590,28 +2504,26 @@ operator|>=
 name|ep
 condition|)
 block|{
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|ESP]"
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 goto|goto
 name|fail
 goto|;
 block|}
-call|(
-modifier|*
-name|ndo
-operator|->
-name|ndo_printf
-call|)
+name|ND_PRINT
 argument_list|(
+operator|(
 name|ndo
-argument_list|,
+operator|,
 literal|"ESP(spi=0x%08x"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -2619,19 +2531,16 @@ name|esp
 operator|->
 name|esp_spi
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-call|(
-modifier|*
-name|ndo
-operator|->
-name|ndo_printf
-call|)
+name|ND_PRINT
 argument_list|(
+operator|(
 name|ndo
-argument_list|,
+operator|,
 literal|",seq=0x%x)"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -2639,20 +2548,18 @@ name|esp
 operator|->
 name|esp_seq
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-call|(
-modifier|*
-name|ndo
-operator|->
-name|ndo_printf
-call|)
+name|ND_PRINT
 argument_list|(
+operator|(
 name|ndo
-argument_list|,
+operator|,
 literal|", length %u"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 ifndef|#
@@ -2784,21 +2691,6 @@ operator|->
 name|next
 control|)
 block|{
-name|struct
-name|sockaddr_in6
-modifier|*
-name|sin6
-init|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-operator|&
-name|sa
-operator|->
-name|daddr
-decl_stmt|;
 if|if
 condition|(
 name|sa
@@ -2813,18 +2705,20 @@ operator|->
 name|esp_spi
 argument_list|)
 operator|&&
-name|sin6
+name|sa
 operator|->
-name|sin6_family
+name|daddr_version
 operator|==
-name|AF_INET6
+literal|6
 operator|&&
-name|memcmp
+name|UNALIGNED_MEMCMP
 argument_list|(
 operator|&
-name|sin6
+name|sa
 operator|->
-name|sin6_addr
+name|daddr
+operator|.
+name|in6
 argument_list|,
 operator|&
 name|ip6
@@ -2897,21 +2791,6 @@ operator|->
 name|next
 control|)
 block|{
-name|struct
-name|sockaddr_in
-modifier|*
-name|sin
-init|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|&
-name|sa
-operator|->
-name|daddr
-decl_stmt|;
 if|if
 condition|(
 name|sa
@@ -2926,23 +2805,34 @@ operator|->
 name|esp_spi
 argument_list|)
 operator|&&
-name|sin
+name|sa
 operator|->
-name|sin_family
+name|daddr_version
 operator|==
-name|AF_INET
+literal|4
 operator|&&
-name|sin
+name|UNALIGNED_MEMCMP
+argument_list|(
+operator|&
+name|sa
 operator|->
-name|sin_addr
+name|daddr
 operator|.
-name|s_addr
-operator|==
+name|in4
+argument_list|,
+operator|&
 name|ip
 operator|->
 name|ip_dst
-operator|.
-name|s_addr
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 break|break;
@@ -3032,12 +2922,6 @@ name|sa
 operator|->
 name|secret
 expr_stmt|;
-name|espsecret_keylen
-operator|=
-name|sa
-operator|->
-name|secretlen
-expr_stmt|;
 name|ep
 operator|=
 name|ep
@@ -3096,14 +2980,6 @@ argument_list|(
 name|ndo
 argument_list|,
 literal|"espkey init failed"
-argument_list|)
-expr_stmt|;
-name|blocksz
-operator|=
-name|EVP_CIPHER_CTX_block_size
-argument_list|(
-operator|&
-name|ctx
 argument_list|)
 expr_stmt|;
 name|p
@@ -3221,15 +3097,13 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-call|(
-name|ndo
-operator|->
-name|ndo_printf
-call|)
+name|ND_PRINT
 argument_list|(
+operator|(
 name|ndo
-argument_list|,
+operator|,
 literal|": "
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3245,6 +3119,21 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBCRYPTO
+end_ifdef
+
+begin_macro
+name|USES_APPLE_RST
+end_macro
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Local Variables:  * c-style: whitesmith  * c-basic-offset: 8  * End:  */

@@ -77,9 +77,6 @@ decl|const
 name|endianTest
 init|=
 block|{
-operator|(
-name|uint16_t
-operator|)
 literal|0x01020304
 block|}
 union|;

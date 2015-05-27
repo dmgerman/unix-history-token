@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TARGET_SPARC_TARGETOBJECTFILE_H
+name|LLVM_LIB_TARGET_SPARC_SPARCTARGETOBJECTFILE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TARGET_SPARC_TARGETOBJECTFILE_H
+name|LLVM_LIB_TARGET_SPARC_SPARCTARGETOBJECTFILE_H
 end_define
 
 begin_include
@@ -80,15 +80,18 @@ name|getTTypeGlobalReference
 argument_list|(
 argument|const GlobalValue *GV
 argument_list|,
-argument|Mangler *Mang
+argument|unsigned Encoding
+argument_list|,
+argument|Mangler&Mang
+argument_list|,
+argument|const TargetMachine&TM
 argument_list|,
 argument|MachineModuleInfo *MMI
-argument_list|,
-argument|unsigned Encoding
 argument_list|,
 argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

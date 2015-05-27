@@ -142,6 +142,11 @@ return|return
 operator|(
 name|_libelf_memory
 argument_list|(
+operator|(
+name|unsigned
+name|char
+operator|*
+operator|)
 name|image
 argument_list|,
 name|sz

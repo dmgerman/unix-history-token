@@ -26,31 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/queue.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/cpuset.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
 end_include
 
 begin_include
@@ -63,12 +39,6 @@ begin_include
 include|#
 directive|include
 file|<machine/vmm_instruction_emul.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<x86/psl.h>
 end_include
 
 begin_include
@@ -87,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|"vpmtmr.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"vrtc.h"
 end_include
 
 begin_include
@@ -191,6 +167,20 @@ name|IO_PMTMR
 index|]
 operator|=
 name|vpmtmr_handler
+block|,
+index|[
+name|IO_RTC
+index|]
+operator|=
+name|vrtc_addr_handler
+block|,
+index|[
+name|IO_RTC
+operator|+
+literal|1
+index|]
+operator|=
+name|vrtc_data_handler
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -242,6 +232,7 @@ block|,
 literal|"outsw"
 block|,
 literal|"outsd"
+block|,
 literal|"insb"
 block|,
 literal|"insw"

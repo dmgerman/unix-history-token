@@ -149,12 +149,10 @@ name|SourceManager
 modifier|&
 name|SourceMgr
 decl_stmt|;
-name|IntrusiveRefCntPtr
-operator|<
 name|DiagnosticsEngine
-operator|>
+modifier|&
 name|Diags
-expr_stmt|;
+decl_stmt|;
 specifier|const
 name|LangOptions
 modifier|&
@@ -213,23 +211,32 @@ name|Modules
 expr_stmt|;
 name|public
 label|:
-comment|/// \brief Describes the role of a module header.
+comment|/// \brief Flags describing the role of a module header.
 enum|enum
 name|ModuleHeaderRole
 block|{
 comment|/// \brief This header is normally included in the module.
 name|NormalHeader
+init|=
+literal|0x0
 block|,
 comment|/// \brief This header is included but private.
 name|PrivateHeader
+init|=
+literal|0x1
 block|,
-comment|/// \brief This header is explicitly excluded from the module.
-name|ExcludedHeader
+comment|/// \brief This header is part of the module (for layering purposes) but
+comment|/// should be textually included.
+name|TextualHeader
+init|=
+literal|0x2
+block|,
 comment|// Caution: Adding an enumerator needs other changes.
 comment|// Adjust the number of bits for KnownHeader::Storage.
 comment|// Adjust the bitfield HeaderFileInfo::HeaderRole size.
 comment|// Adjust the HeaderFileInfoTrait::ReadData streaming.
 comment|// Adjust the HeaderFileInfoTrait::EmitData streaming.
+comment|// Adjust ModuleMap::addHeader.
 block|}
 enum|;
 comment|/// \brief A header that is known to reside within a given module,
@@ -257,7 +264,7 @@ argument_list|()
 operator|:
 name|Storage
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|,
 argument|NormalHeader
 argument_list|)
@@ -310,11 +317,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getRole
-argument_list|()
-operator|!=
-name|ExcludedHeader
-operator|&&
 name|getModule
 argument_list|()
 operator|->
@@ -336,11 +338,24 @@ operator|.
 name|getPointer
 argument_list|()
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 block|}
 empty_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+operator|,
+literal|1
+operator|>
+name|AdditionalModMapsSet
+expr_stmt|;
 name|private
 label|:
 typedef|typedef
@@ -385,6 +400,42 @@ operator|*
 operator|>
 name|UmbrellaDirs
 expr_stmt|;
+comment|/// \brief The set of attributes that can be attached to a module.
+struct|struct
+name|Attributes
+block|{
+name|Attributes
+argument_list|()
+operator|:
+name|IsSystem
+argument_list|()
+operator|,
+name|IsExternC
+argument_list|()
+operator|,
+name|IsExhaustive
+argument_list|()
+block|{}
+comment|/// \brief Whether this is a system module.
+name|unsigned
+name|IsSystem
+operator|:
+literal|1
+expr_stmt|;
+comment|/// \brief Whether this is an extern "C" module.
+name|unsigned
+name|IsExternC
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this is an exhaustive set of configuration macros.
+name|unsigned
+name|IsExhaustive
+range|:
+literal|1
+decl_stmt|;
+block|}
+struct|;
 comment|/// \brief A directory for which framework modules can be inferred.
 struct|struct
 name|InferredDirectory
@@ -394,21 +445,23 @@ argument_list|()
 operator|:
 name|InferModules
 argument_list|()
-operator|,
-name|InferSystemModules
-argument_list|()
-block|{ }
+block|{}
 comment|/// \brief Whether to infer modules from this directory.
 name|unsigned
 name|InferModules
 operator|:
 literal|1
 expr_stmt|;
-comment|/// \brief Whether the modules we infer are [system] modules.
-name|unsigned
-name|InferSystemModules
-range|:
-literal|1
+comment|/// \brief The attributes to use for inferred modules.
+name|Attributes
+name|Attrs
+decl_stmt|;
+comment|/// \brief If \c InferModules is non-zero, the module map file that allowed
+comment|/// inferred modules.  Otherwise, nullptr.
+specifier|const
+name|FileEntry
+modifier|*
+name|ModuleMapFile
 decl_stmt|;
 comment|/// \brief The names of modules that cannot be inferred within this
 comment|/// directory.
@@ -437,6 +490,34 @@ operator|,
 name|InferredDirectory
 operator|>
 name|InferredDirectories
+expr_stmt|;
+comment|/// A mapping from an inferred module to the module map that allowed the
+comment|/// inference.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Module
+operator|*
+operator|,
+specifier|const
+name|FileEntry
+operator|*
+operator|>
+name|InferredModuleAllowedBy
+expr_stmt|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Module
+operator|*
+operator|,
+name|AdditionalModMapsSet
+operator|>
+name|AdditionalModMaps
 expr_stmt|;
 comment|/// \brief Describes whether we haved parsed a particular file as a module
 comment|/// map.
@@ -510,6 +591,102 @@ name|Complain
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Looks up the modules that \p File corresponds to.
+comment|///
+comment|/// If \p File represents a builtin header within Clang's builtin include
+comment|/// directory, this also loads all of the module maps to see if it will get
+comment|/// associated with a specific module (e.g. in /usr/include).
+name|HeadersMap
+operator|::
+name|iterator
+name|findKnownHeader
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|File
+argument_list|)
+expr_stmt|;
+comment|/// \brief Searches for a module whose umbrella directory contains \p File.
+comment|///
+comment|/// \param File The header to search for.
+comment|///
+comment|/// \param IntermediateDirs On success, contains the set of directories
+comment|/// searched before finding \p File.
+name|KnownHeader
+name|findHeaderInUmbrellaDirs
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|File
+argument_list|,
+name|SmallVectorImpl
+operator|<
+specifier|const
+name|DirectoryEntry
+operator|*
+operator|>
+operator|&
+name|IntermediateDirs
+argument_list|)
+decl_stmt|;
+comment|/// \brief A convenience method to determine if \p File is (possibly nested)
+comment|/// in an umbrella directory.
+name|bool
+name|isHeaderInUmbrellaDirs
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+block|{
+name|SmallVector
+operator|<
+specifier|const
+name|DirectoryEntry
+operator|*
+operator|,
+literal|2
+operator|>
+name|IntermediateDirs
+expr_stmt|;
+return|return
+name|static_cast
+operator|<
+name|bool
+operator|>
+operator|(
+name|findHeaderInUmbrellaDirs
+argument_list|(
+name|File
+argument_list|,
+name|IntermediateDirs
+argument_list|)
+operator|)
+return|;
+block|}
+name|Module
+modifier|*
+name|inferFrameworkModule
+parameter_list|(
+name|StringRef
+name|ModuleName
+parameter_list|,
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|FrameworkDir
+parameter_list|,
+name|Attributes
+name|Attrs
+parameter_list|,
+name|Module
+modifier|*
+name|Parent
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|/// \brief Construct a new module map.
@@ -518,8 +695,7 @@ comment|/// \param SourceMgr The source manager used to find module files and he
 comment|/// This source manager should be shared with the header-search mechanism,
 comment|/// since they will refer to the same headers.
 comment|///
-comment|/// \param DC A diagnostic consumer that will be cloned for use in generating
-comment|/// diagnostics.
+comment|/// \param Diags A diagnostic engine used for diagnostics.
 comment|///
 comment|/// \param LangOpts Language options for this translation unit.
 comment|///
@@ -530,9 +706,9 @@ name|SourceManager
 operator|&
 name|SourceMgr
 argument_list|,
-name|DiagnosticConsumer
+name|DiagnosticsEngine
 operator|&
-name|DC
+name|Diags
 argument_list|,
 specifier|const
 name|LangOptions
@@ -589,6 +765,10 @@ comment|/// \param RequestingModule Specifies the module the header is intended 
 comment|/// used from.  Used to disambiguate if a header is present in multiple
 comment|/// modules.
 comment|///
+comment|/// \param IncludeTextualHeaders If \c true, also find textual headers. By
+comment|/// default, these are treated like excluded headers and result in no known
+comment|/// header being found.
+comment|///
 comment|/// \returns The module KnownHeader, which provides the module that owns the
 comment|/// given header file.  The KnownHeader is default constructed to indicate
 comment|/// that no module owns this header file.
@@ -604,7 +784,40 @@ name|Module
 modifier|*
 name|RequestingModule
 init|=
-name|NULL
+name|nullptr
+parameter_list|,
+name|bool
+name|IncludeTextualHeaders
+init|=
+name|false
+parameter_list|)
+function_decl|;
+comment|/// \brief Reports errors if a module must not include a specific file.
+comment|///
+comment|/// \param RequestingModule The module including a file.
+comment|///
+comment|/// \param FilenameLoc The location of the inclusion's filename.
+comment|///
+comment|/// \param Filename The included filename as written.
+comment|///
+comment|/// \param File The included file.
+name|void
+name|diagnoseHeaderInclusion
+parameter_list|(
+name|Module
+modifier|*
+name|RequestingModule
+parameter_list|,
+name|SourceLocation
+name|FilenameLoc
+parameter_list|,
+name|StringRef
+name|Filename
+parameter_list|,
+specifier|const
+name|FileEntry
+modifier|*
+name|File
 parameter_list|)
 function_decl|;
 comment|/// \brief Determine whether the given header is part of a module
@@ -616,6 +829,23 @@ specifier|const
 name|FileEntry
 operator|*
 name|Header
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Determine whether the given header is unavailable as part
+comment|/// of the specified module.
+name|bool
+name|isHeaderUnavailableInModule
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|Header
+argument_list|,
+specifier|const
+name|Module
+operator|*
+name|RequestingModule
 argument_list|)
 decl|const
 decl_stmt|;
@@ -711,36 +941,6 @@ argument_list|,
 argument|bool IsExplicit
 argument_list|)
 expr_stmt|;
-comment|/// \brief Determine whether we can infer a framework module a framework
-comment|/// with the given name in the given
-comment|///
-comment|/// \param ParentDir The directory that is the parent of the framework
-comment|/// directory.
-comment|///
-comment|/// \param Name The name of the module.
-comment|///
-comment|/// \param IsSystem Will be set to 'true' if the inferred module must be a
-comment|/// system module.
-comment|///
-comment|/// \returns true if we are allowed to infer a framework module, and false
-comment|/// otherwise.
-name|bool
-name|canInferFrameworkModule
-argument_list|(
-specifier|const
-name|DirectoryEntry
-operator|*
-name|ParentDir
-argument_list|,
-name|StringRef
-name|Name
-argument_list|,
-name|bool
-operator|&
-name|IsSystem
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// \brief Infer the contents of a framework module map from the given
 comment|/// framework directory.
 name|Module
@@ -775,12 +975,115 @@ name|FileEntry
 modifier|*
 name|getContainingModuleMapFile
 argument_list|(
+specifier|const
 name|Module
 operator|*
 name|Module
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Get the module map file that (along with the module name) uniquely
+comment|/// identifies this module.
+comment|///
+comment|/// The particular module that \c Name refers to may depend on how the module
+comment|/// was found in header search. However, the combination of \c Name and
+comment|/// this module map will be globally unique for top-level modules. In the case
+comment|/// of inferred modules, returns the module map that allowed the inference
+comment|/// (e.g. contained 'module *'). Otherwise, returns
+comment|/// getContainingModuleMapFile().
+specifier|const
+name|FileEntry
+modifier|*
+name|getModuleMapFileForUniquing
+argument_list|(
+specifier|const
+name|Module
+operator|*
+name|M
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|setInferredModuleAllowedBy
+parameter_list|(
+name|Module
+modifier|*
+name|M
+parameter_list|,
+specifier|const
+name|FileEntry
+modifier|*
+name|ModuleMap
+parameter_list|)
+function_decl|;
+comment|/// \brief Get any module map files other than getModuleMapFileForUniquing(M)
+comment|/// that define submodules of a top-level module \p M. This is cheaper than
+comment|/// getting the module map file for each submodule individually, since the
+comment|/// expected number of results is very small.
+name|AdditionalModMapsSet
+modifier|*
+name|getAdditionalModuleMapFiles
+parameter_list|(
+specifier|const
+name|Module
+modifier|*
+name|M
+parameter_list|)
+block|{
+name|auto
+name|I
+init|=
+name|AdditionalModMaps
+operator|.
+name|find
+argument_list|(
+name|M
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|I
+operator|==
+name|AdditionalModMaps
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|nullptr
+return|;
+return|return
+operator|&
+name|I
+operator|->
+name|second
+return|;
+block|}
+name|void
+name|addAdditionalModuleMapFile
+parameter_list|(
+specifier|const
+name|Module
+modifier|*
+name|M
+parameter_list|,
+specifier|const
+name|FileEntry
+modifier|*
+name|ModuleMap
+parameter_list|)
+block|{
+name|AdditionalModMaps
+index|[
+name|M
+index|]
+operator|.
+name|insert
+argument_list|(
+name|ModuleMap
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// \brief Resolve all of the unresolved exports in the given module.
 comment|///
 comment|/// \param Mod The module whose exports should be resolved.
@@ -888,20 +1191,34 @@ comment|/// \brief Adds this header to the given module.
 comment|/// \param Role The role of the header wrt the module.
 name|void
 name|addHeader
-parameter_list|(
+argument_list|(
 name|Module
-modifier|*
+operator|*
 name|Mod
-parameter_list|,
-specifier|const
-name|FileEntry
-modifier|*
+argument_list|,
+name|Module
+operator|::
 name|Header
-parameter_list|,
+name|Header
+argument_list|,
 name|ModuleHeaderRole
 name|Role
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
+comment|/// \brief Marks this header as being excluded from the given module.
+name|void
+name|excludeHeader
+argument_list|(
+name|Module
+operator|*
+name|Mod
+argument_list|,
+name|Module
+operator|::
+name|Header
+name|Header
+argument_list|)
+decl_stmt|;
 comment|/// \brief Parse the given module map file, and record any modules we
 comment|/// encounter.
 comment|///
@@ -909,6 +1226,9 @@ comment|/// \param File The file to be parsed.
 comment|///
 comment|/// \param IsSystem Whether this module map file is in a system header
 comment|/// directory, and therefore should be considered a system module.
+comment|///
+comment|/// \param HomeDir The directory in which relative paths within this module
+comment|///        map file will be resolved.
 comment|///
 comment|/// \returns true if an error occurred, false otherwise.
 name|bool
@@ -921,6 +1241,11 @@ name|File
 parameter_list|,
 name|bool
 name|IsSystem
+parameter_list|,
+specifier|const
+name|DirectoryEntry
+modifier|*
+name|HomeDir
 parameter_list|)
 function_decl|;
 comment|/// \brief Dump the contents of the module map, for debugging purposes.

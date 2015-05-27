@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARMHAZARDRECOGNIZER_H
+name|LLVM_LIB_TARGET_ARM_ARMHAZARDRECOGNIZER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARMHAZARDRECOGNIZER_H
+name|LLVM_LIB_TARGET_ARM_ARMHAZARDRECOGNIZER_H
 end_define
 
 begin_include
@@ -124,10 +124,9 @@ argument_list|)
 block|,
 name|LastMI
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
-name|virtual
 name|HazardType
 name|getHazardType
 argument_list|(
@@ -135,30 +134,29 @@ argument|SUnit *SU
 argument_list|,
 argument|int Stalls
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|Reset
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|EmitInstruction
 argument_list|(
-name|SUnit
-operator|*
-name|SU
+argument|SUnit *SU
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|AdvanceCycle
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|RecedeCycle
 argument_list|()
+name|override
 block|; }
 decl_stmt|;
 block|}
@@ -172,10 +170,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// ARMHAZARDRECOGNIZER_H
-end_comment
 
 end_unit
 

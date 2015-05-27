@@ -34,14 +34,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MC_TARGETPARSER_H
+name|LLVM_MC_MCTARGETASMPARSER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MC_TARGETPARSER_H
+name|LLVM_MC_MCTARGETASMPARSER_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCExpr.h"
+end_include
 
 begin_include
 include|#
@@ -52,7 +58,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCExpr.h"
+file|"llvm/MC/MCTargetOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -60,22 +72,22 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCStreamer
-decl_stmt|;
-name|class
-name|StringRef
-decl_stmt|;
-name|class
-name|SMLoc
-decl_stmt|;
-name|class
 name|AsmToken
+decl_stmt|;
+name|class
+name|MCInst
 decl_stmt|;
 name|class
 name|MCParsedAsmOperand
 decl_stmt|;
 name|class
-name|MCInst
+name|MCStreamer
+decl_stmt|;
+name|class
+name|SMLoc
+decl_stmt|;
+name|class
+name|StringRef
 decl_stmt|;
 name|template
 operator|<
@@ -84,6 +96,17 @@ name|T
 operator|>
 name|class
 name|SmallVectorImpl
+expr_stmt|;
+typedef|typedef
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MCParsedAsmOperand
+operator|>>
+name|OperandVector
 expr_stmt|;
 enum|enum
 name|AsmRewriteKind
@@ -118,6 +141,9 @@ comment|// Rewrite in terms of $N.
 name|AOK_SizeDirective
 block|,
 comment|// Add a sizing directive (e.g., dword ptr).
+name|AOK_Label
+block|,
+comment|// Rewrite local labels.
 name|AOK_Skip
 comment|// Skip emission (e.g., offset/type operators).
 block|}
@@ -131,31 +157,34 @@ block|{
 literal|0
 block|,
 comment|// AOK_Delete
-literal|1
+literal|2
 block|,
 comment|// AOK_Align
-literal|1
+literal|2
 block|,
 comment|// AOK_DotOperator
-literal|1
+literal|2
 block|,
 comment|// AOK_Emit
-literal|3
+literal|4
 block|,
 comment|// AOK_Imm
-literal|3
+literal|4
 block|,
 comment|// AOK_ImmPrefix
-literal|2
+literal|3
 block|,
 comment|// AOK_Input
-literal|2
+literal|3
 block|,
 comment|// AOK_Output
-literal|4
+literal|5
 block|,
 comment|// AOK_SizeDirective
 literal|1
+block|,
+comment|// AOK_Label
+literal|2
 comment|// AOK_Skip
 block|}
 decl_stmt|;
@@ -173,6 +202,9 @@ name|Len
 decl_stmt|;
 name|unsigned
 name|Val
+decl_stmt|;
+name|StringRef
+name|Label
 decl_stmt|;
 name|public
 label|:
@@ -209,6 +241,42 @@ argument_list|(
 argument|val
 argument_list|)
 block|{}
+name|AsmRewrite
+argument_list|(
+argument|AsmRewriteKind kind
+argument_list|,
+argument|SMLoc loc
+argument_list|,
+argument|unsigned len
+argument_list|,
+argument|StringRef label
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|kind
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+name|loc
+argument_list|)
+operator|,
+name|Len
+argument_list|(
+name|len
+argument_list|)
+operator|,
+name|Val
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Label
+argument_list|(
+argument|label
+argument_list|)
+block|{}
 block|}
 struct|;
 struct|struct
@@ -226,7 +294,7 @@ argument_list|()
 operator|:
 name|AsmRewrites
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|ParseInstructionInfo
@@ -298,7 +366,7 @@ name|MCTargetAsmParser
 argument_list|()
 block|;
 comment|/// AvailableFeatures - The current set of available features.
-name|unsigned
+name|uint64_t
 name|AvailableFeatures
 block|;
 comment|/// ParsingInlineAsm - Are we parsing ms-style inline assembly?
@@ -311,6 +379,10 @@ name|MCAsmParserSemaCallback
 operator|*
 name|SemaCallback
 block|;
+comment|/// Set of options which affects instrumentation of inline assembly.
+name|MCTargetOptions
+name|MCOptions
+block|;
 name|public
 operator|:
 name|virtual
@@ -318,7 +390,7 @@ operator|~
 name|MCTargetAsmParser
 argument_list|()
 block|;
-name|unsigned
+name|uint64_t
 name|getAvailableFeatures
 argument_list|()
 specifier|const
@@ -330,7 +402,7 @@ block|}
 name|void
 name|setAvailableFeatures
 argument_list|(
-argument|unsigned Value
+argument|uint64_t Value
 argument_list|)
 block|{
 name|AvailableFeatures
@@ -355,6 +427,15 @@ name|ParsingInlineAsm
 operator|=
 name|Value
 block|; }
+name|MCTargetOptions
+name|getTargetOptions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MCOptions
+return|;
+block|}
 name|void
 name|setSemaCallback
 argument_list|(
@@ -384,6 +465,14 @@ argument_list|)
 operator|=
 literal|0
 block|;
+comment|/// Sets frame register corresponding to the current MachineFunction.
+name|virtual
+name|void
+name|SetFrameRegister
+argument_list|(
+argument|unsigned RegNo
+argument_list|)
+block|{}
 comment|/// ParseInstruction - Parse one assembly instruction.
 comment|///
 comment|/// The parser is positioned following the instruction name. The target
@@ -407,7 +496,7 @@ argument|StringRef Name
 argument_list|,
 argument|SMLoc NameLoc
 argument_list|,
-argument|SmallVectorImpl<MCParsedAsmOperand*>&Operands
+argument|OperandVector&Operands
 argument_list|)
 operator|=
 literal|0
@@ -458,17 +547,29 @@ argument|SMLoc IDLoc
 argument_list|,
 argument|unsigned&Opcode
 argument_list|,
-argument|SmallVectorImpl<MCParsedAsmOperand*>&Operands
+argument|OperandVector&Operands
 argument_list|,
 argument|MCStreamer&Out
 argument_list|,
-argument|unsigned&ErrorInfo
+argument|uint64_t&ErrorInfo
 argument_list|,
 argument|bool MatchingInlineAsm
 argument_list|)
 operator|=
 literal|0
 block|;
+comment|/// Allows targets to let registers opt out of clobber lists.
+name|virtual
+name|bool
+name|OmitRegisterFromClobberLists
+argument_list|(
+argument|unsigned RegNo
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Allow a target to add special case operand matching for things that
 comment|/// tblgen doesn't/can't handle effectively. For example, literal
 comment|/// immediates on ARM. TableGen expects a token operand, but the parser
@@ -477,7 +578,7 @@ name|virtual
 name|unsigned
 name|validateTargetOperandClass
 argument_list|(
-argument|MCParsedAsmOperand *Op
+argument|MCParsedAsmOperand&Op
 argument_list|,
 argument|unsigned Kind
 argument_list|)
@@ -505,7 +606,7 @@ name|convertToMapAndConstraints
 argument_list|(
 argument|unsigned Kind
 argument_list|,
-argument|const SmallVectorImpl<MCParsedAsmOperand*>&Operands
+argument|const OperandVector&Operands
 argument_list|)
 operator|=
 literal|0
@@ -524,7 +625,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual

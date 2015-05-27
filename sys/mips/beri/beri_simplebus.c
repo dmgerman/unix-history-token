@@ -877,6 +877,8 @@ operator|&
 name|di
 operator|->
 name|di_res
+argument_list|,
+name|NULL
 argument_list|)
 condition|)
 block|{

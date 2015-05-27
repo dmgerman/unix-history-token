@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_CONSUMED_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_CONSUMED_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_CONSUMED_H
+name|LLVM_CLANG_ANALYSIS_ANALYSES_CONSUMED_H
 end_define
 
 begin_include
@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Analysis/AnalysisContext.h"
+file|"clang/Analysis/Analyses/PostOrderCFGView.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Analysis/Analyses/PostOrderCFGView.h"
+file|"clang/Analysis/AnalysisContext.h"
 end_include
 
 begin_include
@@ -375,7 +375,7 @@ argument_list|)
 operator|,
 name|From
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{}
 name|ConsumedStateMap
@@ -541,14 +541,14 @@ name|ConsumedState
 name|State
 parameter_list|)
 function_decl|;
-comment|/// \brief Remove the variable from our state map.
+comment|/// \brief Remove the temporary value from our state map.
 name|void
 name|remove
 parameter_list|(
 specifier|const
-name|VarDecl
+name|CXXBindTemporaryExpr
 modifier|*
-name|Var
+name|Tmp
 parameter_list|)
 function_decl|;
 comment|/// \brief Tests to see if there is a mismatch in the states stored in two
@@ -594,18 +594,29 @@ label|:
 name|ConsumedBlockInfo
 argument_list|()
 block|{ }
+operator|~
+name|ConsumedBlockInfo
+argument_list|()
+block|{
+name|llvm
+operator|::
+name|DeleteContainerPointers
+argument_list|(
+name|StateMapsArray
+argument_list|)
+block|; }
 name|ConsumedBlockInfo
 argument_list|(
 argument|unsigned int NumBlocks
 argument_list|,
 argument|PostOrderCFGView *SortedGraph
 argument_list|)
-block|:
+operator|:
 name|StateMapsArray
 argument_list|(
 name|NumBlocks
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|VisitOrder

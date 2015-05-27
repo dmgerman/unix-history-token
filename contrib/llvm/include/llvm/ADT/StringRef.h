@@ -46,12 +46,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/type_traits.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<algorithm>
 end_include
 
@@ -189,51 +183,6 @@ comment|/// The length of the string.
 name|size_t
 name|Length
 decl_stmt|;
-comment|// Workaround PR5482: nearly all gcc 4.x miscompile StringRef and std::min()
-comment|// Changing the arg of min to be an integer, instead of a reference to an
-comment|// integer works around this bug.
-specifier|static
-name|size_t
-name|min
-parameter_list|(
-name|size_t
-name|a
-parameter_list|,
-name|size_t
-name|b
-parameter_list|)
-block|{
-return|return
-name|a
-operator|<
-name|b
-condition|?
-name|a
-else|:
-name|b
-return|;
-block|}
-specifier|static
-name|size_t
-name|max
-parameter_list|(
-name|size_t
-name|a
-parameter_list|,
-name|size_t
-name|b
-parameter_list|)
-block|{
-return|return
-name|a
-operator|>
-name|b
-condition|?
-name|a
-else|:
-name|b
-return|;
-block|}
 comment|// Workaround memcmp issue with null pointers (undefined behavior)
 comment|// by providing a specialized version
 specifier|static
@@ -288,7 +237,7 @@ argument_list|()
 operator|:
 name|Data
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Length
@@ -408,6 +357,50 @@ operator|+
 name|Length
 return|;
 block|}
+specifier|const
+name|unsigned
+name|char
+operator|*
+name|bytes_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|>
+operator|(
+name|begin
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|const
+name|unsigned
+name|char
+operator|*
+name|bytes_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|unsigned
+name|char
+operator|*
+operator|>
+operator|(
+name|end
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// @}
 comment|/// @name String Operations
 comment|/// @{
@@ -486,6 +479,56 @@ name|Length
 operator|-
 literal|1
 index|]
+return|;
+block|}
+comment|// copy - Allocate copy in Allocator and return StringRef to it.
+name|template
+operator|<
+name|typename
+name|Allocator
+operator|>
+name|StringRef
+name|copy
+argument_list|(
+argument|Allocator&A
+argument_list|)
+specifier|const
+block|{
+name|char
+operator|*
+name|S
+operator|=
+name|A
+operator|.
+name|template
+name|Allocate
+operator|<
+name|char
+operator|>
+operator|(
+name|Length
+operator|)
+block|;
+name|std
+operator|::
+name|copy
+argument_list|(
+name|begin
+argument_list|()
+argument_list|,
+name|end
+argument_list|()
+argument_list|,
+name|S
+argument_list|)
+block|;
+return|return
+name|StringRef
+argument_list|(
+name|S
+argument_list|,
+name|Length
+argument_list|)
 return|;
 block|}
 comment|/// equals - Check for string equality, this is more efficient than
@@ -571,6 +614,8 @@ name|RHS
 operator|.
 name|Data
 argument_list|,
+name|std
+operator|::
 name|min
 argument_list|(
 name|Length
@@ -681,9 +726,8 @@ specifier|const
 block|{
 if|if
 condition|(
+operator|!
 name|Data
-operator|==
-literal|0
 condition|)
 return|return
 name|std
@@ -860,6 +904,8 @@ control|(
 name|size_t
 name|i
 init|=
+name|std
+operator|::
 name|min
 argument_list|(
 name|From
@@ -930,6 +976,8 @@ decl|const
 block|{
 name|From
 operator|=
+name|std
+operator|::
 name|min
 argument_list|(
 name|From
@@ -1201,7 +1249,9 @@ name|typename
 name|T
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 name|std
 operator|::
@@ -1270,7 +1320,9 @@ name|typename
 name|T
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
 operator|!
 name|std
@@ -1299,6 +1351,9 @@ name|long
 name|long
 name|ULLVal
 block|;
+comment|// The additional cast to unsigned long long is required to avoid the
+comment|// Visual C++ warning C4805: '!=' : unsafe mix of type 'bool' and type
+comment|// 'unsigned __int64' when instantiating getAsInteger with T = bool.
 if|if
 condition|(
 name|getAsUnsignedInteger
@@ -1313,10 +1368,18 @@ argument_list|)
 operator|||
 name|static_cast
 operator|<
+name|unsigned
+name|long
+name|long
+operator|>
+operator|(
+name|static_cast
+operator|<
 name|T
 operator|>
 operator|(
 name|ULLVal
+operator|)
 operator|)
 operator|!=
 name|ULLVal
@@ -1496,6 +1559,8 @@ decl|const
 block|{
 name|Start
 operator|=
+name|std
+operator|::
 name|min
 argument_list|(
 name|Start
@@ -1510,6 +1575,8 @@ name|Data
 operator|+
 name|Start
 argument_list|,
+name|std
+operator|::
 name|min
 argument_list|(
 name|N
@@ -1658,6 +1725,8 @@ decl|const
 block|{
 name|Start
 operator|=
+name|std
+operator|::
 name|min
 argument_list|(
 name|Start
@@ -1667,8 +1736,12 @@ argument_list|)
 expr_stmt|;
 name|End
 operator|=
+name|std
+operator|::
 name|min
 argument_list|(
+name|std
+operator|::
 name|max
 argument_list|(
 name|Start
@@ -2471,32 +2544,6 @@ name|true
 block|; }
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/// Construct a string ref from a boolean.
-end_comment
-
-begin_function
-specifier|inline
-name|StringRef
-name|toStringRef
-parameter_list|(
-name|bool
-name|B
-parameter_list|)
-block|{
-return|return
-name|StringRef
-argument_list|(
-name|B
-condition|?
-literal|"true"
-else|:
-literal|"false"
-argument_list|)
-return|;
-block|}
-end_function
 
 begin_endif
 unit|}

@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/vmem.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -363,14 +369,16 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|dmar_flush_root_to_ram
+argument_list|(
+name|dmar
+argument_list|,
+name|re
+argument_list|)
+expr_stmt|;
 name|dmar_unmap_pgtbl
 argument_list|(
 name|sf
-argument_list|,
-name|DMAR_IS_COHERENT
-argument_list|(
-name|dmar
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|TD_PINNED_ASSERT
@@ -766,6 +774,13 @@ name|DMAR_CTX1_P
 argument_list|)
 expr_stmt|;
 block|}
+name|dmar_flush_ctx_to_ram
+argument_list|(
+name|unit
+argument_list|,
+name|ctxp
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1424,7 +1439,10 @@ name|dmar_ensure_ctx_page
 argument_list|(
 name|dmar
 argument_list|,
-name|bus
+name|PCI_RID2BUS
+argument_list|(
+name|rid
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|ctx1
@@ -1790,8 +1808,6 @@ expr_stmt|;
 name|dmar_unmap_pgtbl
 argument_list|(
 name|sf
-argument_list|,
-name|true
 argument_list|)
 expr_stmt|;
 name|dmar_ctx_dtr
@@ -1856,7 +1872,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"dmar%d pci%d:%d:%d:%d domain %d mgaw %d "
+literal|"dmar%d pci%d:%d:%d:%d rid %x domain %d mgaw %d "
 literal|"agaw %d %s-mapped\n"
 argument_list|,
 name|dmar
@@ -1872,6 +1888,8 @@ argument_list|,
 name|slot
 argument_list|,
 name|func
+argument_list|,
+name|rid
 argument_list|,
 name|ctx
 operator|->
@@ -1908,11 +1926,6 @@ block|}
 name|dmar_unmap_pgtbl
 argument_list|(
 name|sf
-argument_list|,
-name|DMAR_IS_COHERENT
-argument_list|(
-name|dmar
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2282,11 +2295,6 @@ expr_stmt|;
 name|dmar_unmap_pgtbl
 argument_list|(
 name|sf
-argument_list|,
-name|DMAR_IS_COHERENT
-argument_list|(
-name|dmar
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|TD_PINNED_ASSERT
@@ -2345,6 +2353,13 @@ operator|->
 name|ctx2
 operator|=
 literal|0
+expr_stmt|;
+name|dmar_flush_ctx_to_ram
+argument_list|(
+name|dmar
+argument_list|,
+name|ctxp
+argument_list|)
 expr_stmt|;
 name|dmar_inv_ctx_glob
 argument_list|(
@@ -2427,11 +2442,6 @@ expr_stmt|;
 name|dmar_unmap_pgtbl
 argument_list|(
 name|sf
-argument_list|,
-name|DMAR_IS_COHERENT
-argument_list|(
-name|dmar
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|free_unr

@@ -163,7 +163,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_vfs
@@ -840,6 +839,30 @@ operator|->
 name|de_dirent
 operator|->
 name|d_type
+condition|)
+continue|continue;
+comment|/* 		 * The race with finding non-active name is not 		 * completely closed by the check, but it is similar 		 * to the devfs_allocv() in making it unlikely enough. 		 */
+if|if
+condition|(
+name|de
+operator|->
+name|de_dirent
+operator|->
+name|d_type
+operator|==
+name|DT_CHR
+operator|&&
+operator|(
+name|de
+operator|->
+name|de_cdp
+operator|->
+name|cdp_flags
+operator|&
+name|CDP_ACTIVE
+operator|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 if|if

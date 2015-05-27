@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ddb.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -51,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kdb.h>
 end_include
 
 begin_include
@@ -1531,7 +1543,7 @@ argument_list|(
 operator|&
 name|wd_pretimeo_handle
 argument_list|,
-name|true
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -1539,7 +1551,7 @@ argument_list|(
 operator|&
 name|wd_softtimeo_handle
 argument_list|,
-name|true
+literal|1
 argument_list|)
 expr_stmt|;
 name|wd_dev

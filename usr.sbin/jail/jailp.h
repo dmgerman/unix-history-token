@@ -432,6 +432,9 @@ comment|/* Mount /dev under prison root */
 name|IP_MOUNT_FDESCFS
 block|,
 comment|/* Mount /dev/fd under prison root */
+name|IP_MOUNT_PROCFS
+block|,
+comment|/* Mount /proc under prison root */
 name|IP_MOUNT_FSTAB
 block|,
 comment|/* A standard fstab(5) file */

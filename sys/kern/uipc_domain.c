@@ -565,6 +565,15 @@ argument_list|,
 name|sopoll_generic
 argument_list|)
 expr_stmt|;
+name|DEFAULT
+argument_list|(
+name|pu
+operator|->
+name|pru_ready
+argument_list|,
+name|pru_ready_notsupp
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|DEFAULT
@@ -929,7 +938,7 @@ argument_list|(
 operator|&
 name|pffast_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -937,7 +946,7 @@ argument_list|(
 operator|&
 name|pfslow_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|mtx_lock

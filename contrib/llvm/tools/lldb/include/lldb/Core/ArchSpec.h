@@ -144,15 +144,21 @@ name|eCore_thumbv6m
 block|,
 name|eCore_thumbv7
 block|,
-name|eCore_thumbv7f
-block|,
 name|eCore_thumbv7s
 block|,
 name|eCore_thumbv7k
 block|,
+name|eCore_thumbv7f
+block|,
 name|eCore_thumbv7m
 block|,
 name|eCore_thumbv7em
+block|,
+name|eCore_arm_arm64
+block|,
+name|eCore_arm_armv8
+block|,
+name|eCore_arm_aarch64
 block|,
 name|eCore_mips64
 block|,
@@ -196,6 +202,8 @@ name|eCore_x86_32_i486
 block|,
 name|eCore_x86_32_i486sx
 block|,
+name|eCore_x86_32_i686
+block|,
 name|eCore_x86_64_x86_64
 block|,
 name|eCore_x86_64_x86_64h
@@ -211,6 +219,12 @@ name|eCore_uknownMach32
 block|,
 name|eCore_uknownMach64
 block|,
+name|eCore_kalimba3
+block|,
+name|eCore_kalimba4
+block|,
+name|eCore_kalimba5
+block|,
 name|kNumCores
 block|,
 name|kCore_invalid
@@ -225,6 +239,8 @@ block|,
 name|kCore_ppc64_any
 block|,
 name|kCore_x86_32_any
+block|,
+name|kCore_x86_64_any
 block|,
 name|kCore_hexagon_any
 block|,
@@ -266,7 +282,15 @@ name|eCore_x86_32_i386
 block|,
 name|kCore_x86_32_last
 init|=
-name|eCore_x86_32_i486sx
+name|eCore_x86_32_i686
+block|,
+name|kCore_x86_64_first
+init|=
+name|eCore_x86_64_x86_64
+block|,
+name|kCore_x86_64_last
+init|=
+name|eCore_x86_64_x86_64h
 block|,
 name|kCore_hexagon_first
 init|=
@@ -275,8 +299,30 @@ block|,
 name|kCore_hexagon_last
 init|=
 name|eCore_hexagon_hexagonv5
+block|,
+name|kCore_kalimba_first
+init|=
+name|eCore_kalimba3
+block|,
+name|kCore_kalimba_last
+init|=
+name|eCore_kalimba5
 block|}
 enum|;
+typedef|typedef
+name|void
+argument_list|(
+operator|*
+name|StopInfoOverrideCallbackType
+argument_list|)
+argument_list|(
+name|lldb_private
+operator|::
+name|Thread
+operator|&
+name|thread
+argument_list|)
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Default constructor.
 comment|///
@@ -451,7 +497,7 @@ comment|/// Set the distribution id of the architecture.
 comment|///
 comment|/// This will be something like "ubuntu", "fedora", etc. on Linux.
 comment|/// This should be the same value returned by
-comment|/// Host::GetDistributionId ().
+comment|/// HostInfo::GetDistributionId ().
 comment|///------------------------------------------------------------------
 name|void
 name|SetDistributionId
@@ -559,7 +605,7 @@ comment|/// @param[in] arch_type The object type of this ArchSpec.
 comment|///
 comment|/// @param[in] cpu The required CPU type.
 comment|///
-comment|/// @return True if the object and CPU type were sucessfully set.
+comment|/// @return True if the object and CPU type were successfully set.
 comment|//------------------------------------------------------------------
 name|bool
 name|SetArchitecture
@@ -635,6 +681,28 @@ specifier|const
 expr_stmt|;
 name|uint32_t
 name|GetMachOCPUSubType
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Architecture data byte width accessor
+comment|///
+comment|/// @return the size in 8-bit (host) bytes of a minimum addressable
+comment|/// unit from the Architecture's data bus
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|GetDataByteSize
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Architecture code byte width accessor
+comment|///
+comment|/// @return the size in 8-bit (host) bytes of a minimum addressable
+comment|/// unit from the Architecture's code bus
+comment|//------------------------------------------------------------------
+name|uint32_t
+name|GetCodeByteSize
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -764,6 +832,32 @@ name|rhs
 argument_list|)
 decl|const
 decl_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Get a stop info override callback for the current architecture.
+comment|///
+comment|/// Most platform specific code should go in lldb_private::Platform,
+comment|/// but there are cases where no matter which platform you are on
+comment|/// certain things hold true.
+comment|///
+comment|/// This callback is currently intended to handle cases where a
+comment|/// program stops at an instruction that won't get executed and it
+comment|/// allows the stop reasonm, like "breakpoint hit", to be replaced
+comment|/// with a different stop reason like "no stop reason".
+comment|///
+comment|/// This is specifically used for ARM in Thumb code when we stop in
+comment|/// an IT instruction (if/then/else) where the instruction won't get
+comment|/// executed and therefore it wouldn't be correct to show the program
+comment|/// stopped at the current PC. The code is generic and applies to all
+comment|/// ARM CPUs.
+comment|///
+comment|/// @return NULL or a valid stop info override callback for the
+comment|///     current architecture.
+comment|//------------------------------------------------------------------
+name|StopInfoOverrideCallbackType
+name|GetStopInfoOverrideCallback
+argument_list|()
+specifier|const
+expr_stmt|;
 name|protected
 label|:
 name|bool

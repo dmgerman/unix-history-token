@@ -572,6 +572,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|len
 operator|!=
 name|paylen
@@ -773,6 +776,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|size_t
+operator|)
 name|len
 operator|!=
 name|buflen
@@ -966,13 +972,7 @@ begin_function
 name|int
 name|main
 parameter_list|(
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-name|argv
-index|[]
+name|void
 parameter_list|)
 block|{
 name|struct
@@ -1644,7 +1644,7 @@ expr_stmt|;
 comment|/* 	 * Test for PR 181741. Receiver sets LOCAL_CREDS, and kernel 	 * prepends a control message to the data. Sender sends large 	 * payload. Payload + SCM_RIGHTS + LOCAL_CREDS hit socket buffer 	 * limit, and receiver receives truncated data. 	 */
 name|test
 operator|=
-literal|"test8-rigths+creds+payload"
+literal|"test8-rights+creds+payload"
 expr_stmt|;
 name|printf
 argument_list|(

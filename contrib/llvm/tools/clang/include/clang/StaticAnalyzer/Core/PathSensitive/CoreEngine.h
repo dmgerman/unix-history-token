@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_COREENGINE
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_COREENGINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_COREENGINE
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_COREENGINE_H
 end_define
 
 begin_include
@@ -102,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -205,16 +205,16 @@ modifier|&
 name|SubEng
 decl_stmt|;
 comment|/// G - The simulation graph.  Each node is a (location,state) pair.
-name|OwningPtr
-operator|<
+name|mutable
 name|ExplodedGraph
-operator|>
 name|G
-expr_stmt|;
+decl_stmt|;
 comment|/// WList - A set of queued nodes that need to be processed by the
 comment|///  worklist algorithm.  It is up to the implementation of WList to decide
 comment|///  the order that nodes are processed.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|WorkList
 operator|>
@@ -338,6 +338,24 @@ modifier|*
 name|Pred
 parameter_list|)
 function_decl|;
+name|void
+name|HandleCleanupTemporaryBranch
+parameter_list|(
+specifier|const
+name|CXXBindTemporaryExpr
+modifier|*
+name|BTE
+parameter_list|,
+specifier|const
+name|CFGBlock
+modifier|*
+name|B
+parameter_list|,
+name|ExplodedNode
+modifier|*
+name|Pred
+parameter_list|)
+function_decl|;
 comment|/// Handle conditional logic for running static initializers.
 name|void
 name|HandleStaticInit
@@ -403,11 +421,6 @@ argument_list|(
 name|subengine
 argument_list|)
 operator|,
-name|G
-argument_list|(
-argument|new ExplodedGraph()
-argument_list|)
-operator|,
 name|WList
 argument_list|(
 name|WorkList
@@ -419,7 +432,7 @@ operator|,
 name|BCounterFactory
 argument_list|(
 name|G
-operator|->
+operator|.
 name|getAllocator
 argument_list|()
 argument_list|)
@@ -436,25 +449,7 @@ name|getGraph
 argument_list|()
 block|{
 return|return
-operator|*
 name|G
-operator|.
-name|get
-argument_list|()
-return|;
-block|}
-comment|/// takeGraph - Returns the exploded graph.  Ownership of the graph is
-comment|///  transferred to the caller.
-name|ExplodedGraph
-modifier|*
-name|takeGraph
-parameter_list|()
-block|{
-return|return
-name|G
-operator|.
-name|take
-argument_list|()
 return|;
 block|}
 comment|/// ExecuteWorkList - Run the worklist algorithm for a maximum number of
@@ -1275,10 +1270,10 @@ range|:
 name|public
 name|NodeBuilder
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|protected
 operator|:
@@ -1339,8 +1334,7 @@ argument|ProgramStateRef State
 argument_list|,
 argument|ExplodedNode *Pred
 argument_list|,
-argument|const ProgramPointTag *Tag =
-literal|0
+argument|const ProgramPointTag *Tag = nullptr
 argument_list|)
 block|{
 specifier|const
@@ -1382,8 +1376,7 @@ argument|ProgramStateRef State
 argument_list|,
 argument|ExplodedNode *Pred
 argument_list|,
-argument|const ProgramPointTag *Tag =
-literal|0
+argument|const ProgramPointTag *Tag = nullptr
 argument_list|)
 block|{
 specifier|const
@@ -1494,7 +1487,7 @@ name|NodeBuilder
 operator|*
 name|Enclosing
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|NodeBuilder
@@ -1542,7 +1535,7 @@ name|NodeBuilder
 operator|*
 name|Enclosing
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|NodeBuilder
@@ -1623,8 +1616,7 @@ argument|ExplodedNode *Pred
 argument_list|,
 argument|ProgramStateRef St
 argument_list|,
-argument|const ProgramPointTag *tag =
-literal|0
+argument|const ProgramPointTag *tag = nullptr
 argument_list|,
 argument|ProgramPoint::Kind K = ProgramPoint::PostStmtKind
 argument_list|)
@@ -1673,8 +1665,7 @@ argument|ExplodedNode *Pred
 argument_list|,
 argument|ProgramStateRef St
 argument_list|,
-argument|const ProgramPointTag *tag =
-literal|0
+argument|const ProgramPointTag *tag = nullptr
 argument_list|,
 argument|ProgramPoint::Kind K = ProgramPoint::PostStmtKind
 argument_list|)
@@ -1723,10 +1714,10 @@ operator|:
 name|public
 name|NodeBuilder
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 specifier|const
 name|CFGBlock

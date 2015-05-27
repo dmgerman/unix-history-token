@@ -475,6 +475,15 @@ name|ENXIO
 operator|)
 return|;
 block|}
+else|#
+directive|else
+name|device_printf
+argument_list|(
+name|cbdev
+argument_list|,
+literal|"Your bus numbers may be AFU\n"
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 return|return
@@ -517,6 +526,13 @@ operator|=
 name|device_get_softc
 argument_list|(
 name|cbdev
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|cbdev
+argument_list|,
+literal|"Freeing up the allocatd bus\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -776,6 +792,14 @@ name|cbdev
 argument_list|)
 expr_stmt|;
 comment|/* detach existing cards */
+name|POWER_DISABLE_SOCKET
+argument_list|(
+name|brdev
+argument_list|,
+name|cbdev
+argument_list|)
+expr_stmt|;
+comment|/* Turn the socket off first */
 name|POWER_ENABLE_SOCKET
 argument_list|(
 name|brdev

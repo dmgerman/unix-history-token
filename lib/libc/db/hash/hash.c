@@ -4319,9 +4319,6 @@ index|[
 name|new_segnum
 index|]
 operator|=
-operator|(
-name|SEGMENT
-operator|)
 name|calloc
 argument_list|(
 name|hashp
@@ -4626,10 +4623,6 @@ name|hashp
 operator|->
 name|dir
 operator|=
-operator|(
-name|SEGMENT
-operator|*
-operator|)
 name|calloc
 argument_list|(
 name|hashp
@@ -4693,9 +4686,6 @@ condition|(
 operator|(
 name|store
 operator|=
-operator|(
-name|SEGMENT
-operator|)
 name|calloc
 argument_list|(
 name|nsegs

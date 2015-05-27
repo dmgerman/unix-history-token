@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SetVector.h"
 end_include
 
@@ -102,8 +96,37 @@ end_include
 begin_include
 include|#
 directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|template
+operator|<
+name|typename
+name|Info
+operator|>
+name|class
+name|OnDiskChainedHashTable
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|Info
+operator|>
+name|class
+name|OnDiskIterableChainedHashTable
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -118,14 +141,6 @@ decl_stmt|;
 name|class
 name|Module
 decl_stmt|;
-name|template
-operator|<
-name|typename
-name|Info
-operator|>
-name|class
-name|OnDiskChainedHashTable
-expr_stmt|;
 name|namespace
 name|serialization
 block|{
@@ -140,9 +155,12 @@ comment|/// \brief Specifies the kind of module that has been loaded.
 enum|enum
 name|ModuleKind
 block|{
-name|MK_Module
+name|MK_ImplicitModule
 block|,
-comment|///< File is a module proper.
+comment|///< File is an implicitly-loaded module.
+name|MK_ExplicitModule
+block|,
+comment|///< File is an explicitly-loaded module.
 name|MK_PCH
 block|,
 comment|///< File is a PCH file treated as such.
@@ -169,7 +187,9 @@ operator|,
 name|NumLexicalDecls
 argument_list|()
 block|{}
-name|OnDiskChainedHashTable
+name|llvm
+operator|::
+name|OnDiskIterableChainedHashTable
 operator|<
 name|reader
 operator|::
@@ -191,7 +211,7 @@ block|}
 struct|;
 comment|/// \brief The input file that has been loaded from this AST file, along with
 comment|/// bools indicating whether this was an overridden buffer or if it was
-comment|/// out-of-date.
+comment|/// out-of-date or not-found.
 name|class
 name|InputFile
 block|{
@@ -204,6 +224,10 @@ block|,
 name|OutOfDate
 init|=
 literal|2
+block|,
+name|NotFound
+init|=
+literal|3
 block|}
 enum|;
 name|llvm
@@ -278,6 +302,27 @@ name|intVal
 argument_list|)
 expr_stmt|;
 block|}
+specifier|static
+name|InputFile
+name|getNotFound
+parameter_list|()
+block|{
+name|InputFile
+name|File
+decl_stmt|;
+name|File
+operator|.
+name|Val
+operator|.
+name|setInt
+argument_list|(
+name|NotFound
+argument_list|)
+expr_stmt|;
+return|return
+name|File
+return|;
+block|}
 specifier|const
 name|FileEntry
 operator|*
@@ -320,8 +365,26 @@ operator|==
 name|OutOfDate
 return|;
 block|}
+name|bool
+name|isNotFound
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Val
+operator|.
+name|getInt
+argument_list|()
+operator|==
+name|NotFound
+return|;
+block|}
 block|}
 empty_stmt|;
+typedef|typedef
+name|unsigned
+name|ASTFileSignature
+typedef|;
 comment|/// \brief Information about a module that has been loaded by the ASTReader.
 comment|///
 comment|/// Each instance of the Module class corresponds to a single AST file, which
@@ -360,6 +423,31 @@ operator|::
 name|string
 name|FileName
 expr_stmt|;
+comment|/// \brief The name of the module.
+name|std
+operator|::
+name|string
+name|ModuleName
+expr_stmt|;
+comment|/// \brief The base directory of the module.
+name|std
+operator|::
+name|string
+name|BaseDirectory
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|getTimestampFilename
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FileName
+operator|+
+literal|".timestamp"
+return|;
+block|}
 comment|/// \brief The original source file name that was used to build the
 comment|/// primary AST file, which may have been modified for
 comment|/// relocatable-pch support.
@@ -387,6 +475,11 @@ operator|::
 name|string
 name|OriginalDir
 expr_stmt|;
+name|std
+operator|::
+name|string
+name|ModuleMapPath
+expr_stmt|;
 comment|/// \brief Whether this precompiled header is a relocatable PCH file.
 name|bool
 name|RelocatablePCH
@@ -396,6 +489,11 @@ specifier|const
 name|FileEntry
 modifier|*
 name|File
+decl_stmt|;
+comment|/// \brief The signature of the module file, which may be used along with size
+comment|/// and modification time to identify this particular file.
+name|ASTFileSignature
+name|Signature
 decl_stmt|;
 comment|/// \brief Whether this module has been directly imported by the
 comment|/// user.
@@ -408,7 +506,9 @@ name|Generation
 decl_stmt|;
 comment|/// \brief The memory buffer that stores the data associated with
 comment|/// this AST file.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|llvm
 operator|::
@@ -442,6 +542,9 @@ comment|///
 comment|/// If module A depends on and imports module B, both modules will have the
 comment|/// same DirectImportLoc, but different ImportLoc (B's ImportLoc will be a
 comment|/// source location inside module A).
+comment|///
+comment|/// WARNING: This is largely useless. It doesn't tell you when a module was
+comment|/// made visible, just when the first submodule of that module was imported.
 name|SourceLocation
 name|DirectImportLoc
 decl_stmt|;
@@ -475,6 +578,13 @@ name|InputFile
 operator|>
 name|InputFilesLoaded
 expr_stmt|;
+comment|/// \brief If non-zero, specifies the time when we last validated input
+comment|/// files.  Zero means we never validated them.
+comment|///
+comment|/// The time is specified in seconds since the start of the Epoch.
+name|uint64_t
+name|InputFilesValidationTimestamp
+decl_stmt|;
 comment|// === Source Locations ===
 comment|/// \brief Cursor used to read source location entries.
 name|llvm

@@ -337,11 +337,6 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
-name|xo_open_list
-argument_list|(
-literal|"employee"
-argument_list|)
-expr_stmt|;
 name|rc
 operator|=
 name|xo_emit
@@ -357,6 +352,11 @@ argument_list|(
 literal|"{:columns/%d}\n"
 argument_list|,
 name|rc
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"employee"
 argument_list|)
 expr_stmt|;
 for|for

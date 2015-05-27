@@ -1438,6 +1438,9 @@ name|eap_sim_msg
 modifier|*
 name|msg
 parameter_list|,
+name|int
+name|type
+parameter_list|,
 specifier|const
 name|u8
 modifier|*

@@ -4,14 +4,8 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|__EXREGION_C__
-end_define
 
 begin_include
 include|#
@@ -287,6 +281,10 @@ expr_stmt|;
 comment|/*          * If mapping the entire remaining portion of the region will cross          * a page boundary, just map up to the page boundary, do not cross.          * On some systems, crossing a page boundary while mapping regions          * can cause warnings if the pages have different attributes          * due to resource management.          *          * This has the added benefit of constraining a single mapping to          * one page, which is similar to the original code that used a 4k          * maximum window.          */
 name|PageBoundaryMapLength
 operator|=
+call|(
+name|ACPI_SIZE
+call|)
+argument_list|(
 name|ACPI_ROUND_UP
 argument_list|(
 name|Address
@@ -295,6 +293,7 @@ name|ACPI_DEFAULT_PAGE_SIZE
 argument_list|)
 operator|-
 name|Address
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -327,9 +326,6 @@ name|MappedLogicalAddress
 operator|=
 name|AcpiOsMapMemory
 argument_list|(
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
 name|Address
 argument_list|,
 name|MapLength
@@ -350,7 +346,7 @@ name|AE_INFO
 operator|,
 literal|"Could not map memory at 0x%8.8X%8.8X, size %u"
 operator|,
-name|ACPI_FORMAT_NATIVE_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)
@@ -420,7 +416,7 @@ name|BitWidth
 operator|,
 name|Function
 operator|,
-name|ACPI_FORMAT_NATIVE_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)
@@ -641,7 +637,7 @@ name|BitWidth
 operator|,
 name|Function
 operator|,
-name|ACPI_FORMAT_NATIVE_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|Address
 argument_list|)

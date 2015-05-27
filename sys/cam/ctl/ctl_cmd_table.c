@@ -1749,7 +1749,7 @@ block|,
 name|CTL_LUN_PAT_NONE
 block|}
 block|,
-comment|/* 10 */
+comment|/* 10 READ CAPACITY(16) */
 block|{
 name|ctl_read_capacity_16
 block|,
@@ -1804,7 +1804,69 @@ literal|0x07
 block|}
 block|}
 block|,
-comment|/* 11-1f */
+comment|/* 11 */
+block|{
+name|NULL
+block|,
+name|CTL_SERIDX_INVLD
+block|,
+name|CTL_CMD_FLAG_NONE
+block|,
+name|CTL_LUN_PAT_NONE
+block|}
+block|,
+comment|/* 12 GET LBA STATUS */
+block|{
+name|ctl_get_lba_status
+block|,
+name|CTL_SERIDX_READ
+block|,
+name|CTL_CMD_FLAG_OK_ON_SLUN
+operator||
+name|CTL_FLAG_DATA_IN
+operator||
+name|CTL_CMD_FLAG_ALLOW_ON_PR_WRESV
+block|,
+name|CTL_LUN_PAT_READ
+operator||
+name|CTL_LUN_PAT_RANGE
+block|,
+literal|16
+block|,
+block|{
+literal|0x12
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0xff
+block|,
+literal|0
+block|,
+literal|0x07
+block|}
+block|}
+block|,
+comment|/* 13-1f */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2020,7 +2082,7 @@ block|,
 block|{
 literal|0x0c
 block|,
-literal|0x07
+literal|0x87
 block|,
 literal|0xff
 block|,
@@ -3273,6 +3335,12 @@ name|CTL_SERIDX_MD_SEL
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
 operator||
+name|CTL_CMD_FLAG_OK_ON_STOPPED
+operator||
+name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
+operator||
 name|CTL_FLAG_DATA_OUT
 block|,
 name|CTL_LUN_PAT_NONE
@@ -3307,6 +3375,12 @@ block|,
 name|CTL_SERIDX_MD_SNS
 block|,
 name|CTL_CMD_FLAG_OK_ON_BOTH
+operator||
+name|CTL_CMD_FLAG_OK_ON_STOPPED
+operator||
+name|CTL_CMD_FLAG_OK_ON_INOPERABLE
+operator||
+name|CTL_CMD_FLAG_OK_ON_OFFLINE
 operator||
 name|CTL_FLAG_DATA_IN
 operator||

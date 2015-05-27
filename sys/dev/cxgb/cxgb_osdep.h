@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/kdb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/mii/mii.h>
 end_include
 
@@ -509,16 +515,6 @@ name|L1_CACHE_BYTES
 value|128
 end_define
 
-begin_function_decl
-specifier|extern
-name|void
-name|kdb_backtrace
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define
@@ -526,7 +522,7 @@ name|WARN_ON
 parameter_list|(
 name|condition
 parameter_list|)
-value|do { \        if (__predict_false((condition)!=0)) {  \                 log(LOG_WARNING, "BUG: warning at %s:%d/%s()\n", __FILE__, __LINE__, __FUNCTION__); \                 kdb_backtrace(); \         } \ } while (0)
+value|do { \ 	if (__predict_false((condition)!=0)) {  \                 log(LOG_WARNING, "BUG: warning at %s:%d/%s()\n", __FILE__, __LINE__, __FUNCTION__); \                 kdb_backtrace(); \         } \ } while (0)
 end_define
 
 begin_else

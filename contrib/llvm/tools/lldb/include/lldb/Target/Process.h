@@ -188,6 +188,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/HostThread.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/ProcessRunLock.h"
 end_include
 
@@ -212,7 +218,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Target/JITLoaderList.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Target/Memory.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/MemoryRegionInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/ProcessInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"lldb/Target/ProcessLaunchInfo.h"
 end_include
 
 begin_include
@@ -239,6 +269,12 @@ directive|include
 file|"lldb/Utility/PseudoTerminal.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Target/InstrumentationRuntime.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -254,9 +290,14 @@ name|Properties
 block|{
 name|public
 operator|:
+comment|// Pass NULL for "process" if the ProcessProperties are to be the global copy
 name|ProcessProperties
 argument_list|(
-argument|bool is_global
+name|lldb_private
+operator|::
+name|Process
+operator|*
+name|process
 argument_list|)
 block|;
 name|virtual
@@ -266,6 +307,11 @@ argument_list|()
 block|;
 name|bool
 name|GetDisableMemoryCache
+argument_list|()
+specifier|const
+block|;
+name|uint64_t
+name|GetMemoryCacheLineSize
 argument_list|()
 specifier|const
 block|;
@@ -340,7 +386,28 @@ name|SetDetachKeepsStopped
 argument_list|(
 argument|bool keep_stopped
 argument_list|)
-block|; }
+block|;
+name|protected
+operator|:
+specifier|static
+name|void
+name|OptionValueChangedCallback
+argument_list|(
+name|void
+operator|*
+name|baton
+argument_list|,
+name|OptionValue
+operator|*
+name|option_value
+argument_list|)
+block|;
+name|Process
+operator|*
+name|m_process
+block|;
+comment|// Can be NULL for global ProcessProperties
+block|}
 decl_stmt|;
 typedef|typedef
 name|std
@@ -352,574 +419,11 @@ operator|>
 name|ProcessPropertiesSP
 expr_stmt|;
 comment|//----------------------------------------------------------------------
-comment|// ProcessInfo
-comment|//
-comment|// A base class for information for a process. This can be used to fill
-comment|// out information for a process prior to launching it, or it can be
-comment|// used for an instance of a process and can be filled in with the
-comment|// existing values for that process.
-comment|//----------------------------------------------------------------------
-name|class
-name|ProcessInfo
-block|{
-name|public
-label|:
-name|ProcessInfo
-argument_list|()
-operator|:
-name|m_executable
-argument_list|()
-operator|,
-name|m_arguments
-argument_list|()
-operator|,
-name|m_environment
-argument_list|()
-operator|,
-name|m_uid
-argument_list|(
-name|UINT32_MAX
-argument_list|)
-operator|,
-name|m_gid
-argument_list|(
-name|UINT32_MAX
-argument_list|)
-operator|,
-name|m_arch
-argument_list|()
-operator|,
-name|m_pid
-argument_list|(
-argument|LLDB_INVALID_PROCESS_ID
-argument_list|)
-block|{     }
-name|ProcessInfo
-argument_list|(
-argument|const char *name
-argument_list|,
-argument|const ArchSpec&arch
-argument_list|,
-argument|lldb::pid_t pid
-argument_list|)
-operator|:
-name|m_executable
-argument_list|(
-name|name
-argument_list|,
-name|false
-argument_list|)
-operator|,
-name|m_arguments
-argument_list|()
-operator|,
-name|m_environment
-argument_list|()
-operator|,
-name|m_uid
-argument_list|(
-name|UINT32_MAX
-argument_list|)
-operator|,
-name|m_gid
-argument_list|(
-name|UINT32_MAX
-argument_list|)
-operator|,
-name|m_arch
-argument_list|(
-name|arch
-argument_list|)
-operator|,
-name|m_pid
-argument_list|(
-argument|pid
-argument_list|)
-block|{     }
-name|void
-name|Clear
-argument_list|()
-block|{
-name|m_executable
-operator|.
-name|Clear
-argument_list|()
-block|;
-name|m_arguments
-operator|.
-name|Clear
-argument_list|()
-block|;
-name|m_environment
-operator|.
-name|Clear
-argument_list|()
-block|;
-name|m_uid
-operator|=
-name|UINT32_MAX
-block|;
-name|m_gid
-operator|=
-name|UINT32_MAX
-block|;
-name|m_arch
-operator|.
-name|Clear
-argument_list|()
-block|;
-name|m_pid
-operator|=
-name|LLDB_INVALID_PROCESS_ID
-block|;     }
-specifier|const
-name|char
-operator|*
-name|GetName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_executable
-operator|.
-name|GetFilename
-argument_list|()
-operator|.
-name|GetCString
-argument_list|()
-return|;
-block|}
-name|size_t
-name|GetNameLength
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_executable
-operator|.
-name|GetFilename
-argument_list|()
-operator|.
-name|GetLength
-argument_list|()
-return|;
-block|}
-name|FileSpec
-modifier|&
-name|GetExecutableFile
-parameter_list|()
-block|{
-return|return
-name|m_executable
-return|;
-block|}
-name|void
-name|SetExecutableFile
-parameter_list|(
-specifier|const
-name|FileSpec
-modifier|&
-name|exe_file
-parameter_list|,
-name|bool
-name|add_exe_file_as_first_arg
-parameter_list|)
-block|{
-if|if
-condition|(
-name|exe_file
-condition|)
-block|{
-name|m_executable
-operator|=
-name|exe_file
-expr_stmt|;
-if|if
-condition|(
-name|add_exe_file_as_first_arg
-condition|)
-block|{
-name|char
-name|filename
-index|[
-name|PATH_MAX
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|exe_file
-operator|.
-name|GetPath
-argument_list|(
-name|filename
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|filename
-argument_list|)
-argument_list|)
-condition|)
-name|m_arguments
-operator|.
-name|InsertArgumentAtIndex
-argument_list|(
-literal|0
-argument_list|,
-name|filename
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-else|else
-block|{
-name|m_executable
-operator|.
-name|Clear
-argument_list|()
-expr_stmt|;
-block|}
-block|}
-specifier|const
-name|FileSpec
-operator|&
-name|GetExecutableFile
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_executable
-return|;
-block|}
-name|uint32_t
-name|GetUserID
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_uid
-return|;
-block|}
-name|uint32_t
-name|GetGroupID
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_gid
-return|;
-block|}
-name|bool
-name|UserIDIsValid
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_uid
-operator|!=
-name|UINT32_MAX
-return|;
-block|}
-name|bool
-name|GroupIDIsValid
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_gid
-operator|!=
-name|UINT32_MAX
-return|;
-block|}
-name|void
-name|SetUserID
-parameter_list|(
-name|uint32_t
-name|uid
-parameter_list|)
-block|{
-name|m_uid
-operator|=
-name|uid
-expr_stmt|;
-block|}
-name|void
-name|SetGroupID
-parameter_list|(
-name|uint32_t
-name|gid
-parameter_list|)
-block|{
-name|m_gid
-operator|=
-name|gid
-expr_stmt|;
-block|}
-name|ArchSpec
-modifier|&
-name|GetArchitecture
-parameter_list|()
-block|{
-return|return
-name|m_arch
-return|;
-block|}
-specifier|const
-name|ArchSpec
-operator|&
-name|GetArchitecture
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_arch
-return|;
-block|}
-name|void
-name|SetArchitecture
-parameter_list|(
-name|ArchSpec
-name|arch
-parameter_list|)
-block|{
-name|m_arch
-operator|=
-name|arch
-expr_stmt|;
-block|}
-name|lldb
-operator|::
-name|pid_t
-name|GetProcessID
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_pid
-return|;
-block|}
-name|void
-name|SetProcessID
-argument_list|(
-name|lldb
-operator|::
-name|pid_t
-name|pid
-argument_list|)
-block|{
-name|m_pid
-operator|=
-name|pid
-expr_stmt|;
-block|}
-name|bool
-name|ProcessIDIsValid
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_pid
-operator|!=
-name|LLDB_INVALID_PROCESS_ID
-return|;
-block|}
-name|void
-name|Dump
-argument_list|(
-name|Stream
-operator|&
-name|s
-argument_list|,
-name|Platform
-operator|*
-name|platform
-argument_list|)
-decl|const
-decl_stmt|;
-name|Args
-modifier|&
-name|GetArguments
-parameter_list|()
-block|{
-return|return
-name|m_arguments
-return|;
-block|}
-specifier|const
-name|Args
-operator|&
-name|GetArguments
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_arguments
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|GetArg0
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|m_arg0
-operator|.
-name|empty
-argument_list|()
-condition|)
-return|return
-name|NULL
-return|;
-return|return
-name|m_arg0
-operator|.
-name|c_str
-argument_list|()
-return|;
-block|}
-name|void
-name|SetArg0
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|arg
-parameter_list|)
-block|{
-if|if
-condition|(
-name|arg
-operator|&&
-name|arg
-index|[
-literal|0
-index|]
-condition|)
-name|m_arg0
-operator|=
-name|arg
-expr_stmt|;
-else|else
-name|m_arg0
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-block|}
-name|void
-name|SetArguments
-parameter_list|(
-specifier|const
-name|Args
-modifier|&
-name|args
-parameter_list|,
-name|bool
-name|first_arg_is_executable
-parameter_list|)
-function_decl|;
-name|void
-name|SetArguments
-parameter_list|(
-name|char
-specifier|const
-modifier|*
-modifier|*
-name|argv
-parameter_list|,
-name|bool
-name|first_arg_is_executable
-parameter_list|)
-function_decl|;
-name|Args
-modifier|&
-name|GetEnvironmentEntries
-parameter_list|()
-block|{
-return|return
-name|m_environment
-return|;
-block|}
-specifier|const
-name|Args
-operator|&
-name|GetEnvironmentEntries
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_environment
-return|;
-block|}
-name|protected
-label|:
-name|FileSpec
-name|m_executable
-decl_stmt|;
-name|std
-operator|::
-name|string
-name|m_arg0
-expr_stmt|;
-comment|// argv[0] if supported. If empty, then use m_executable.
-comment|// Not all process plug-ins support specifying an argv[0]
-comment|// that differs from the resolved platform executable
-comment|// (which is in m_executable)
-name|Args
-name|m_arguments
-decl_stmt|;
-comment|// All program arguments except argv[0]
-name|Args
-name|m_environment
-decl_stmt|;
-name|uint32_t
-name|m_uid
-decl_stmt|;
-name|uint32_t
-name|m_gid
-decl_stmt|;
-name|ArchSpec
-name|m_arch
-decl_stmt|;
-name|lldb
-operator|::
-name|pid_t
-name|m_pid
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
-comment|//----------------------------------------------------------------------
-end_comment
-
-begin_comment
 comment|// ProcessInstanceInfo
-end_comment
-
-begin_comment
 comment|//
-end_comment
-
-begin_comment
 comment|// Describes an existing process and any discoverable information that
-end_comment
-
-begin_comment
 comment|// pertains to that process.
-end_comment
-
-begin_comment
 comment|//----------------------------------------------------------------------
-end_comment
-
-begin_decl_stmt
 name|class
 name|ProcessInstanceInfo
 range|:
@@ -1144,1514 +648,11 @@ name|pid_t
 name|m_parent_pid
 block|; }
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|//----------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|// ProcessLaunchInfo
-end_comment
-
-begin_comment
+comment|// ProcessAttachInfo
 comment|//
-end_comment
-
-begin_comment
-comment|// Describes any information that is required to launch a process.
-end_comment
-
-begin_comment
+comment|// Describes any information that is required to attach to a process.
 comment|//----------------------------------------------------------------------
-end_comment
-
-begin_decl_stmt
-name|class
-name|ProcessLaunchInfo
-range|:
-name|public
-name|ProcessInfo
-block|{
-name|public
-operator|:
-name|class
-name|FileAction
-block|{
-name|public
-operator|:
-expr|enum
-name|Action
-block|{
-name|eFileActionNone
-block|,
-name|eFileActionClose
-block|,
-name|eFileActionDuplicate
-block|,
-name|eFileActionOpen
-block|}
-block|;
-name|FileAction
-argument_list|()
-operator|:
-name|m_action
-argument_list|(
-name|eFileActionNone
-argument_list|)
-block|,
-name|m_fd
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-block|,
-name|m_arg
-argument_list|(
-operator|-
-literal|1
-argument_list|)
-block|,
-name|m_path
-argument_list|()
-block|{         }
-name|void
-name|Clear
-argument_list|()
-block|{
-name|m_action
-operator|=
-name|eFileActionNone
-block|;
-name|m_fd
-operator|=
-operator|-
-literal|1
-block|;
-name|m_arg
-operator|=
-operator|-
-literal|1
-block|;
-name|m_path
-operator|.
-name|clear
-argument_list|()
-block|;         }
-name|bool
-name|Close
-argument_list|(
-argument|int fd
-argument_list|)
-block|;
-name|bool
-name|Duplicate
-argument_list|(
-argument|int fd
-argument_list|,
-argument|int dup_fd
-argument_list|)
-block|;
-name|bool
-name|Open
-argument_list|(
-argument|int fd
-argument_list|,
-argument|const char *path
-argument_list|,
-argument|bool read
-argument_list|,
-argument|bool write
-argument_list|)
-block|;
-ifndef|#
-directive|ifndef
-name|LLDB_DISABLE_POSIX
-specifier|static
-name|bool
-name|AddPosixSpawnFileAction
-argument_list|(
-name|void
-operator|*
-name|file_actions
-argument_list|,
-specifier|const
-name|FileAction
-operator|*
-name|info
-argument_list|,
-name|Log
-operator|*
-name|log
-argument_list|,
-name|Error
-operator|&
-name|error
-argument_list|)
-block|;
-endif|#
-directive|endif
-name|int
-name|GetFD
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_fd
-return|;
-block|}
-name|Action
-name|GetAction
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_action
-return|;
-block|}
-name|int
-name|GetActionArgument
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_arg
-return|;
-block|}
-specifier|const
-name|char
-operator|*
-name|GetPath
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|m_path
-operator|.
-name|empty
-argument_list|()
-condition|)
-return|return
-name|NULL
-return|;
-return|return
-name|m_path
-operator|.
-name|c_str
-argument_list|()
-return|;
-block|}
-name|protected
-operator|:
-name|Action
-name|m_action
-block|;
-comment|// The action for this file
-name|int
-name|m_fd
-block|;
-comment|// An existing file descriptor
-name|int
-name|m_arg
-block|;
-comment|// oflag for eFileActionOpen*, dup_fd for eFileActionDuplicate
-name|std
-operator|::
-name|string
-name|m_path
-block|;
-comment|// A file path to use for opening after fork or posix_spawn
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|ProcessLaunchInfo
-argument_list|()
-operator|:
-name|ProcessInfo
-argument_list|()
-operator|,
-name|m_working_dir
-argument_list|()
-operator|,
-name|m_plugin_name
-argument_list|()
-operator|,
-name|m_shell
-argument_list|()
-operator|,
-name|m_flags
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|m_file_actions
-argument_list|()
-operator|,
-name|m_pty
-argument_list|()
-operator|,
-name|m_resume_count
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|m_monitor_callback
-argument_list|(
-name|NULL
-argument_list|)
-operator|,
-name|m_monitor_callback_baton
-argument_list|(
-name|NULL
-argument_list|)
-operator|,
-name|m_monitor_signals
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|m_hijack_listener_sp
-argument_list|()
-block|{     }
-name|ProcessLaunchInfo
-argument_list|(
-argument|const char *stdin_path
-argument_list|,
-argument|const char *stdout_path
-argument_list|,
-argument|const char *stderr_path
-argument_list|,
-argument|const char *working_directory
-argument_list|,
-argument|uint32_t launch_flags
-argument_list|)
-operator|:
-name|ProcessInfo
-argument_list|()
-operator|,
-name|m_working_dir
-argument_list|()
-operator|,
-name|m_plugin_name
-argument_list|()
-operator|,
-name|m_shell
-argument_list|()
-operator|,
-name|m_flags
-argument_list|(
-name|launch_flags
-argument_list|)
-operator|,
-name|m_file_actions
-argument_list|()
-operator|,
-name|m_pty
-argument_list|()
-operator|,
-name|m_resume_count
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|m_monitor_callback
-argument_list|(
-name|NULL
-argument_list|)
-operator|,
-name|m_monitor_callback_baton
-argument_list|(
-name|NULL
-argument_list|)
-operator|,
-name|m_monitor_signals
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|m_hijack_listener_sp
-argument_list|()
-block|{
-if|if
-condition|(
-name|stdin_path
-condition|)
-block|{
-name|ProcessLaunchInfo
-operator|::
-name|FileAction
-name|file_action
-expr_stmt|;
-specifier|const
-name|bool
-name|read
-init|=
-name|true
-decl_stmt|;
-specifier|const
-name|bool
-name|write
-init|=
-name|false
-decl_stmt|;
-if|if
-condition|(
-name|file_action
-operator|.
-name|Open
-argument_list|(
-name|STDIN_FILENO
-argument_list|,
-name|stdin_path
-argument_list|,
-name|read
-argument_list|,
-name|write
-argument_list|)
-condition|)
-name|AppendFileAction
-argument_list|(
-name|file_action
-argument_list|)
-expr_stmt|;
-block|}
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|stdout_path
-condition|)
-block|{
-name|ProcessLaunchInfo
-operator|::
-name|FileAction
-name|file_action
-expr_stmt|;
-specifier|const
-name|bool
-name|read
-init|=
-name|false
-decl_stmt|;
-specifier|const
-name|bool
-name|write
-init|=
-name|true
-decl_stmt|;
-if|if
-condition|(
-name|file_action
-operator|.
-name|Open
-argument_list|(
-name|STDOUT_FILENO
-argument_list|,
-name|stdout_path
-argument_list|,
-name|read
-argument_list|,
-name|write
-argument_list|)
-condition|)
-name|AppendFileAction
-argument_list|(
-name|file_action
-argument_list|)
-expr_stmt|;
-block|}
-end_if
-
-begin_if
-if|if
-condition|(
-name|stderr_path
-condition|)
-block|{
-name|ProcessLaunchInfo
-operator|::
-name|FileAction
-name|file_action
-expr_stmt|;
-specifier|const
-name|bool
-name|read
-init|=
-name|false
-decl_stmt|;
-specifier|const
-name|bool
-name|write
-init|=
-name|true
-decl_stmt|;
-if|if
-condition|(
-name|file_action
-operator|.
-name|Open
-argument_list|(
-name|STDERR_FILENO
-argument_list|,
-name|stderr_path
-argument_list|,
-name|read
-argument_list|,
-name|write
-argument_list|)
-condition|)
-name|AppendFileAction
-argument_list|(
-name|file_action
-argument_list|)
-expr_stmt|;
-block|}
-end_if
-
-begin_if
-if|if
-condition|(
-name|working_directory
-condition|)
-name|SetWorkingDirectory
-argument_list|(
-name|working_directory
-argument_list|)
-expr_stmt|;
-end_if
-
-begin_macro
-unit|}      void
-name|AppendFileAction
-argument_list|(
-argument|const FileAction&info
-argument_list|)
-end_macro
-
-begin_block
-block|{
-name|m_file_actions
-operator|.
-name|push_back
-argument_list|(
-name|info
-argument_list|)
-expr_stmt|;
-block|}
-end_block
-
-begin_function
-name|bool
-name|AppendCloseFileAction
-parameter_list|(
-name|int
-name|fd
-parameter_list|)
-block|{
-name|FileAction
-name|file_action
-decl_stmt|;
-if|if
-condition|(
-name|file_action
-operator|.
-name|Close
-argument_list|(
-name|fd
-argument_list|)
-condition|)
-block|{
-name|AppendFileAction
-argument_list|(
-name|file_action
-argument_list|)
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
-return|return
-name|false
-return|;
-block|}
-end_function
-
-begin_function
-name|bool
-name|AppendDuplicateFileAction
-parameter_list|(
-name|int
-name|fd
-parameter_list|,
-name|int
-name|dup_fd
-parameter_list|)
-block|{
-name|FileAction
-name|file_action
-decl_stmt|;
-if|if
-condition|(
-name|file_action
-operator|.
-name|Duplicate
-argument_list|(
-name|fd
-argument_list|,
-name|dup_fd
-argument_list|)
-condition|)
-block|{
-name|AppendFileAction
-argument_list|(
-name|file_action
-argument_list|)
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
-return|return
-name|false
-return|;
-block|}
-end_function
-
-begin_function
-name|bool
-name|AppendOpenFileAction
-parameter_list|(
-name|int
-name|fd
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|path
-parameter_list|,
-name|bool
-name|read
-parameter_list|,
-name|bool
-name|write
-parameter_list|)
-block|{
-name|FileAction
-name|file_action
-decl_stmt|;
-if|if
-condition|(
-name|file_action
-operator|.
-name|Open
-argument_list|(
-name|fd
-argument_list|,
-name|path
-argument_list|,
-name|read
-argument_list|,
-name|write
-argument_list|)
-condition|)
-block|{
-name|AppendFileAction
-argument_list|(
-name|file_action
-argument_list|)
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
-return|return
-name|false
-return|;
-block|}
-end_function
-
-begin_function
-name|bool
-name|AppendSuppressFileAction
-parameter_list|(
-name|int
-name|fd
-parameter_list|,
-name|bool
-name|read
-parameter_list|,
-name|bool
-name|write
-parameter_list|)
-block|{
-name|FileAction
-name|file_action
-decl_stmt|;
-if|if
-condition|(
-name|file_action
-operator|.
-name|Open
-argument_list|(
-name|fd
-argument_list|,
-literal|"/dev/null"
-argument_list|,
-name|read
-argument_list|,
-name|write
-argument_list|)
-condition|)
-block|{
-name|AppendFileAction
-argument_list|(
-name|file_action
-argument_list|)
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
-return|return
-name|false
-return|;
-block|}
-end_function
-
-begin_function_decl
-name|void
-name|FinalizeFileActions
-parameter_list|(
-name|Target
-modifier|*
-name|target
-parameter_list|,
-name|bool
-name|default_to_use_pty
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_expr_stmt
-name|size_t
-name|GetNumFileActions
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_file_actions
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_decl_stmt
-specifier|const
-name|FileAction
-modifier|*
-name|GetFileActionAtIndex
-argument_list|(
-name|size_t
-name|idx
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|idx
-operator|<
-name|m_file_actions
-operator|.
-name|size
-argument_list|()
-condition|)
-return|return
-operator|&
-name|m_file_actions
-index|[
-name|idx
-index|]
-return|;
-return|return
-name|NULL
-return|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-specifier|const
-name|FileAction
-modifier|*
-name|GetFileActionForFD
-argument_list|(
-name|int
-name|fd
-argument_list|)
-decl|const
-block|{
-for|for
-control|(
-name|size_t
-name|idx
-init|=
-literal|0
-init|,
-name|count
-init|=
-name|m_file_actions
-operator|.
-name|size
-argument_list|()
-init|;
-name|idx
-operator|<
-name|count
-condition|;
-operator|++
-name|idx
-control|)
-block|{
-if|if
-condition|(
-name|m_file_actions
-index|[
-name|idx
-index|]
-operator|.
-name|GetFD
-argument_list|()
-operator|==
-name|fd
-condition|)
-return|return
-operator|&
-name|m_file_actions
-index|[
-name|idx
-index|]
-return|;
-block|}
-return|return
-name|NULL
-return|;
-block|}
-end_decl_stmt
-
-begin_function
-name|Flags
-modifier|&
-name|GetFlags
-parameter_list|()
-block|{
-return|return
-name|m_flags
-return|;
-block|}
-end_function
-
-begin_expr_stmt
-specifier|const
-name|Flags
-operator|&
-name|GetFlags
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_flags
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-specifier|const
-name|char
-operator|*
-name|GetWorkingDirectory
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|m_working_dir
-operator|.
-name|empty
-argument_list|()
-condition|)
-return|return
-name|NULL
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|m_working_dir
-operator|.
-name|c_str
-argument_list|()
-return|;
-end_return
-
-begin_macro
-unit|}      void
-name|SetWorkingDirectory
-argument_list|(
-argument|const char *working_dir
-argument_list|)
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-name|working_dir
-operator|&&
-name|working_dir
-index|[
-literal|0
-index|]
-condition|)
-name|m_working_dir
-operator|.
-name|assign
-argument_list|(
-name|working_dir
-argument_list|)
-expr_stmt|;
-else|else
-name|m_working_dir
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_decl_stmt
-name|void
-name|SwapWorkingDirectory
-argument_list|(
-name|std
-operator|::
-name|string
-operator|&
-name|working_dir
-argument_list|)
-block|{
-name|m_working_dir
-operator|.
-name|swap
-argument_list|(
-name|working_dir
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_expr_stmt
-specifier|const
-name|char
-operator|*
-name|GetProcessPluginName
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|m_plugin_name
-operator|.
-name|empty
-argument_list|()
-condition|)
-return|return
-name|NULL
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|m_plugin_name
-operator|.
-name|c_str
-argument_list|()
-return|;
-end_return
-
-begin_macro
-unit|}      void
-name|SetProcessPluginName
-argument_list|(
-argument|const char *plugin
-argument_list|)
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-name|plugin
-operator|&&
-name|plugin
-index|[
-literal|0
-index|]
-condition|)
-name|m_plugin_name
-operator|.
-name|assign
-argument_list|(
-name|plugin
-argument_list|)
-expr_stmt|;
-else|else
-name|m_plugin_name
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-block|}
-end_block
-
-begin_expr_stmt
-specifier|const
-name|char
-operator|*
-name|GetShell
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|m_shell
-operator|.
-name|empty
-argument_list|()
-condition|)
-return|return
-name|NULL
-return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|m_shell
-operator|.
-name|c_str
-argument_list|()
-return|;
-end_return
-
-begin_macro
-unit|}      void
-name|SetShell
-argument_list|(
-argument|const char * path
-argument_list|)
-end_macro
-
-begin_block
-block|{
-if|if
-condition|(
-name|path
-operator|&&
-name|path
-index|[
-literal|0
-index|]
-condition|)
-block|{
-name|m_shell
-operator|.
-name|assign
-argument_list|(
-name|path
-argument_list|)
-expr_stmt|;
-name|m_flags
-operator|.
-name|Set
-argument_list|(
-name|lldb
-operator|::
-name|eLaunchFlagLaunchInShell
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|m_shell
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-name|m_flags
-operator|.
-name|Clear
-argument_list|(
-name|lldb
-operator|::
-name|eLaunchFlagLaunchInShell
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-end_block
-
-begin_expr_stmt
-name|uint32_t
-name|GetResumeCount
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_resume_count
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|void
-name|SetResumeCount
-parameter_list|(
-name|uint32_t
-name|c
-parameter_list|)
-block|{
-name|m_resume_count
-operator|=
-name|c
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|bool
-name|GetLaunchInSeparateProcessGroup
-parameter_list|()
-block|{
-return|return
-name|m_flags
-operator|.
-name|Test
-argument_list|(
-name|lldb
-operator|::
-name|eLaunchFlagLaunchInSeparateProcessGroup
-argument_list|)
-return|;
-block|}
-end_function
-
-begin_function
-name|void
-name|SetLaunchInSeparateProcessGroup
-parameter_list|(
-name|bool
-name|separate
-parameter_list|)
-block|{
-if|if
-condition|(
-name|separate
-condition|)
-name|m_flags
-operator|.
-name|Set
-argument_list|(
-name|lldb
-operator|::
-name|eLaunchFlagLaunchInSeparateProcessGroup
-argument_list|)
-expr_stmt|;
-else|else
-name|m_flags
-operator|.
-name|Clear
-argument_list|(
-name|lldb
-operator|::
-name|eLaunchFlagLaunchInSeparateProcessGroup
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|Clear
-parameter_list|()
-block|{
-name|ProcessInfo
-operator|::
-name|Clear
-argument_list|()
-expr_stmt|;
-name|m_working_dir
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-name|m_plugin_name
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-name|m_shell
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-name|m_flags
-operator|.
-name|Clear
-argument_list|()
-expr_stmt|;
-name|m_file_actions
-operator|.
-name|clear
-argument_list|()
-expr_stmt|;
-name|m_resume_count
-operator|=
-literal|0
-expr_stmt|;
-name|m_hijack_listener_sp
-operator|.
-name|reset
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_function_decl
-name|bool
-name|ConvertArgumentsForLaunchingInShell
-parameter_list|(
-name|Error
-modifier|&
-name|error
-parameter_list|,
-name|bool
-name|localhost
-parameter_list|,
-name|bool
-name|will_debug
-parameter_list|,
-name|bool
-name|first_arg_is_full_shell_command
-parameter_list|,
-name|int32_t
-name|num_resumes
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
-name|void
-name|SetMonitorProcessCallback
-argument_list|(
-name|Host
-operator|::
-name|MonitorChildProcessCallback
-name|callback
-argument_list|,
-name|void
-operator|*
-name|baton
-argument_list|,
-name|bool
-name|monitor_signals
-argument_list|)
-block|{
-name|m_monitor_callback
-operator|=
-name|callback
-expr_stmt|;
-name|m_monitor_callback_baton
-operator|=
-name|baton
-expr_stmt|;
-name|m_monitor_signals
-operator|=
-name|monitor_signals
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_expr_stmt
-name|Host
-operator|::
-name|MonitorChildProcessCallback
-name|GetMonitorProcessCallback
-argument_list|()
-block|{
-return|return
-name|m_monitor_callback
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-specifier|const
-name|void
-operator|*
-name|GetMonitorProcessBaton
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_monitor_callback_baton
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|// If the LaunchInfo has a monitor callback, then arrange to monitor the process.
-end_comment
-
-begin_comment
-comment|// Return true if the LaunchInfo has taken care of monitoring the process, and false if the
-end_comment
-
-begin_comment
-comment|// caller might want to monitor the process themselves.
-end_comment
-
-begin_expr_stmt
-name|bool
-name|MonitorProcess
-argument_list|()
-specifier|const
-block|{
-if|if
-condition|(
-name|GetFlags
-argument_list|()
-operator|.
-name|Test
-argument_list|(
-name|lldb
-operator|::
-name|eLaunchFlagsDontMonitorProcess
-argument_list|)
-condition|)
-return|return
-name|true
-return|;
-end_expr_stmt
-
-begin_if
-if|if
-condition|(
-name|m_monitor_callback
-operator|&&
-name|ProcessIDIsValid
-argument_list|()
-condition|)
-block|{
-name|Host
-operator|::
-name|StartMonitoringChildProcess
-argument_list|(
-name|m_monitor_callback
-argument_list|,
-name|m_monitor_callback_baton
-argument_list|,
-name|GetProcessID
-argument_list|()
-argument_list|,
-name|m_monitor_signals
-argument_list|)
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
-end_if
-
-begin_return
-return|return
-name|false
-return|;
-end_return
-
-begin_expr_stmt
-unit|}          lldb_utility
-operator|::
-name|PseudoTerminal
-operator|&
-name|GetPTY
-argument_list|()
-block|{
-return|return
-name|m_pty
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|lldb
-operator|::
-name|ListenerSP
-name|GetHijackListener
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_hijack_listener_sp
-return|;
-block|}
-end_expr_stmt
-
-begin_decl_stmt
-name|void
-name|SetHijackListener
-argument_list|(
-specifier|const
-name|lldb
-operator|::
-name|ListenerSP
-operator|&
-name|listener_sp
-argument_list|)
-block|{
-name|m_hijack_listener_sp
-operator|=
-name|listener_sp
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_label
-name|protected
-label|:
-end_label
-
-begin_expr_stmt
-name|std
-operator|::
-name|string
-name|m_working_dir
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|std
-operator|::
-name|string
-name|m_plugin_name
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|std
-operator|::
-name|string
-name|m_shell
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|Flags
-name|m_flags
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// Bitwise OR of bits from lldb::LaunchFlags
-end_comment
-
-begin_expr_stmt
-name|std
-operator|::
-name|vector
-operator|<
-name|FileAction
-operator|>
-name|m_file_actions
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|// File actions for any other files
-end_comment
-
-begin_expr_stmt
-name|lldb_utility
-operator|::
-name|PseudoTerminal
-name|m_pty
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|uint32_t
-name|m_resume_count
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|// How many times do we resume after launching
-end_comment
-
-begin_expr_stmt
-name|Host
-operator|::
-name|MonitorChildProcessCallback
-name|m_monitor_callback
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|void
-modifier|*
-name|m_monitor_callback_baton
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|bool
-name|m_monitor_signals
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|lldb
-operator|::
-name|ListenerSP
-name|m_hijack_listener_sp
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|};
-comment|//----------------------------------------------------------------------
-end_comment
-
-begin_comment
-comment|// ProcessLaunchInfo
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_comment
-comment|// Describes any information that is required to launch a process.
-end_comment
-
-begin_comment
-comment|//----------------------------------------------------------------------
-end_comment
-
-begin_decl_stmt
 name|class
 name|ProcessAttachInfo
 range|:
@@ -2664,6 +665,12 @@ name|ProcessAttachInfo
 argument_list|()
 operator|:
 name|ProcessInstanceInfo
+argument_list|()
+block|,
+name|m_listener_sp
+argument_list|()
+block|,
+name|m_hijack_listener_sp
 argument_list|()
 block|,
 name|m_plugin_name
@@ -2686,7 +693,12 @@ argument_list|)
 block|,
 name|m_continue_once_attached
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|m_detach_on_error
+argument_list|(
+argument|true
 argument_list|)
 block|{     }
 name|ProcessAttachInfo
@@ -2700,6 +712,12 @@ operator|:
 name|ProcessInstanceInfo
 argument_list|()
 block|,
+name|m_listener_sp
+argument_list|()
+block|,
+name|m_hijack_listener_sp
+argument_list|()
+block|,
 name|m_plugin_name
 argument_list|()
 block|,
@@ -2720,7 +738,12 @@ argument_list|)
 block|,
 name|m_continue_once_attached
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|m_detach_on_error
+argument_list|(
+argument|true
 argument_list|)
 block|{
 name|ProcessInfo
@@ -2747,6 +770,14 @@ name|GetResumeCount
 argument_list|()
 argument_list|)
 block|;
+name|SetListener
+argument_list|(
+name|launch_info
+operator|.
+name|GetListener
+argument_list|()
+argument_list|)
+block|;
 name|SetHijackListener
 argument_list|(
 name|launch_info
@@ -2754,6 +785,13 @@ operator|.
 name|GetHijackListener
 argument_list|()
 argument_list|)
+block|;
+name|m_detach_on_error
+operator|=
+name|launch_info
+operator|.
+name|GetDetachOnError
+argument_list|()
 block|;     }
 name|bool
 name|GetWaitForLaunch
@@ -2855,9 +893,6 @@ name|c_str
 argument_list|()
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 name|void
 name|SetProcessPluginName
 parameter_list|(
@@ -2890,9 +925,6 @@ name|clear
 argument_list|()
 expr_stmt|;
 block|}
-end_function
-
-begin_function
 name|void
 name|Clear
 parameter_list|()
@@ -2924,9 +956,6 @@ operator|=
 name|false
 expr_stmt|;
 block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|ProcessInfoSpecified
 argument_list|()
@@ -2940,9 +969,6 @@ condition|)
 return|return
 name|true
 return|;
-end_expr_stmt
-
-begin_if
 if|if
 condition|(
 name|GetProcessID
@@ -2953,9 +979,6 @@ condition|)
 return|return
 name|true
 return|;
-end_if
-
-begin_if
 if|if
 condition|(
 name|GetParentProcessID
@@ -2966,16 +989,14 @@ condition|)
 return|return
 name|true
 return|;
-end_if
-
-begin_return
 return|return
 name|false
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_expr_stmt
-unit|}          lldb
+name|lldb
 operator|::
 name|ListenerSP
 name|GetHijackListener
@@ -3007,10 +1028,94 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_expr_stmt
+name|bool
+name|GetDetachOnError
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_detach_on_error
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|SetDetachOnError
+parameter_list|(
+name|bool
+name|enable
+parameter_list|)
+block|{
+name|m_detach_on_error
+operator|=
+name|enable
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Get and set the actual listener that will be used for the process events
+end_comment
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|ListenerSP
+name|GetListener
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_listener_sp
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|SetListener
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|ListenerSP
+operator|&
+name|listener_sp
+argument_list|)
+block|{
+name|m_listener_sp
+operator|=
+name|listener_sp
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_function_decl
+name|Listener
+modifier|&
+name|GetListenerForProcess
+parameter_list|(
+name|Debugger
+modifier|&
+name|debugger
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|protected
 label|:
 end_label
+
+begin_expr_stmt
+name|lldb
+operator|::
+name|ListenerSP
+name|m_listener_sp
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|lldb
@@ -3061,6 +1166,16 @@ comment|// Supports the use-case scenario of immediately continuing the process 
 end_comment
 
 begin_decl_stmt
+name|bool
+name|m_detach_on_error
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// If we are debugging remotely, instruct the stub to detach rather than killing the target on error.
+end_comment
+
+begin_decl_stmt
 unit|};
 name|class
 name|ProcessLaunchCommandOptions
@@ -3106,6 +1221,10 @@ name|launch_info
 operator|.
 name|Clear
 argument_list|()
+block|;
+name|disable_aslr
+operator|=
+name|eLazyBoolCalculate
 block|;     }
 specifier|const
 name|OptionDefinition
@@ -3126,6 +1245,11 @@ block|;
 comment|// Instance variables to hold the values for command options.
 name|ProcessLaunchInfo
 name|launch_info
+block|;
+name|lldb_private
+operator|::
+name|LazyBool
+name|disable_aslr
 block|; }
 decl_stmt|;
 end_decl_stmt
@@ -3974,189 +2098,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_decl_stmt
-name|class
-name|MemoryRegionInfo
-block|{
-name|public
-label|:
-typedef|typedef
-name|Range
-operator|<
-name|lldb
-operator|::
-name|addr_t
-operator|,
-name|lldb
-operator|::
-name|addr_t
-operator|>
-name|RangeType
-expr_stmt|;
-enum|enum
-name|OptionalBool
-block|{
-name|eDontKnow
-init|=
-operator|-
-literal|1
-block|,
-name|eNo
-init|=
-literal|0
-block|,
-name|eYes
-init|=
-literal|1
-block|}
-enum|;
-name|MemoryRegionInfo
-argument_list|()
-operator|:
-name|m_range
-argument_list|()
-operator|,
-name|m_read
-argument_list|(
-name|eDontKnow
-argument_list|)
-operator|,
-name|m_write
-argument_list|(
-name|eDontKnow
-argument_list|)
-operator|,
-name|m_execute
-argument_list|(
-argument|eDontKnow
-argument_list|)
-block|{     }
-operator|~
-name|MemoryRegionInfo
-argument_list|()
-block|{     }
-name|RangeType
-operator|&
-name|GetRange
-argument_list|()
-block|{
-return|return
-name|m_range
-return|;
-block|}
-name|void
-name|Clear
-parameter_list|()
-block|{
-name|m_range
-operator|.
-name|Clear
-argument_list|()
-expr_stmt|;
-name|m_read
-operator|=
-name|m_write
-operator|=
-name|m_execute
-operator|=
-name|eDontKnow
-expr_stmt|;
-block|}
-specifier|const
-name|RangeType
-operator|&
-name|GetRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_range
-return|;
-block|}
-name|OptionalBool
-name|GetReadable
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_read
-return|;
-block|}
-name|OptionalBool
-name|GetWritable
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_write
-return|;
-block|}
-name|OptionalBool
-name|GetExecutable
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_execute
-return|;
-block|}
-name|void
-name|SetReadable
-parameter_list|(
-name|OptionalBool
-name|val
-parameter_list|)
-block|{
-name|m_read
-operator|=
-name|val
-expr_stmt|;
-block|}
-name|void
-name|SetWritable
-parameter_list|(
-name|OptionalBool
-name|val
-parameter_list|)
-block|{
-name|m_write
-operator|=
-name|val
-expr_stmt|;
-block|}
-name|void
-name|SetExecutable
-parameter_list|(
-name|OptionalBool
-name|val
-parameter_list|)
-block|{
-name|m_execute
-operator|=
-name|val
-expr_stmt|;
-block|}
-name|protected
-label|:
-name|RangeType
-name|m_range
-decl_stmt|;
-name|OptionalBool
-name|m_read
-decl_stmt|;
-name|OptionalBool
-name|m_write
-decl_stmt|;
-name|OptionalBool
-name|m_execute
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|//----------------------------------------------------------------------
 end_comment
@@ -4205,6 +2146,11 @@ name|class
 name|ClangFunction
 decl_stmt|;
 comment|// For WaitForStateChangeEventsPrivate
+name|friend
+name|class
+name|Debugger
+decl_stmt|;
+comment|// For PopProcessIOHandler and ProcessIOHandlerIsActive
 name|friend
 name|class
 name|ProcessEventData
@@ -4757,6 +2703,7 @@ parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Construct with a shared pointer to a target, and the Process listener.
+comment|/// Uses the Host UnixSignalsSP by default.
 comment|//------------------------------------------------------------------
 name|Process
 argument_list|(
@@ -4767,6 +2714,26 @@ argument_list|,
 name|Listener
 operator|&
 name|listener
+argument_list|)
+expr_stmt|;
+comment|//------------------------------------------------------------------
+comment|/// Construct with a shared pointer to a target, the Process listener,
+comment|/// and the appropriate UnixSignalsSP for the process.
+comment|//------------------------------------------------------------------
+name|Process
+argument_list|(
+name|Target
+operator|&
+name|target
+argument_list|,
+name|Listener
+operator|&
+name|listener
+argument_list|,
+specifier|const
+name|UnixSignalsSP
+operator|&
+name|unix_signals_sp
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -4967,10 +2934,6 @@ comment|/// Launch a new process.
 comment|///
 comment|/// Launch a new process by spawning a new process using the
 comment|/// target object's executable module's file as the file to launch.
-comment|/// Arguments are given in \a argv, and the environment variables
-comment|/// are in \a envp. Standard input and output files can be
-comment|/// optionally re-directed to \a stdin_path, \a stdout_path, and
-comment|/// \a stderr_path.
 comment|///
 comment|/// This function is not meant to be overridden by Process
 comment|/// subclasses. It will first call Process::WillLaunch (Module *)
@@ -4980,32 +2943,9 @@ comment|/// const char *) will be called to actually do the launching. If
 comment|/// DoLaunch returns \b true, then Process::DidLaunch() will be
 comment|/// called.
 comment|///
-comment|/// @param[in] argv
-comment|///     The argument array.
-comment|///
-comment|/// @param[in] envp
-comment|///     The environment array.
-comment|///
-comment|/// @param[in] launch_flags
-comment|///     Flags to modify the launch (@see lldb::LaunchFlags)
-comment|///
-comment|/// @param[in] stdin_path
-comment|///     The path to use when re-directing the STDIN of the new
-comment|///     process. If all stdXX_path arguments are NULL, a pseudo
-comment|///     terminal will be used.
-comment|///
-comment|/// @param[in] stdout_path
-comment|///     The path to use when re-directing the STDOUT of the new
-comment|///     process. If all stdXX_path arguments are NULL, a pseudo
-comment|///     terminal will be used.
-comment|///
-comment|/// @param[in] stderr_path
-comment|///     The path to use when re-directing the STDERR of the new
-comment|///     process. If all stdXX_path arguments are NULL, a pseudo
-comment|///     terminal will be used.
-comment|///
-comment|/// @param[in] working_directory
-comment|///     The working directory to have the child process run in
+comment|/// @param[in] launch_info
+comment|///     Details regarding the environment, STDIN/STDOUT/STDERR
+comment|///     redirection, working path, etc. related to the requested launch.
 comment|///
 comment|/// @return
 comment|///     An error object. Call GetID() to get the process ID if
@@ -5065,6 +3005,32 @@ modifier|*
 name|GetDynamicLoader
 parameter_list|()
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|// Returns AUXV structure found in many ELF-based environments.
+comment|//
+comment|// The default action is to return an empty data buffer.
+comment|//
+comment|// @return
+comment|//    A data buffer containing the contents of the AUXV data.
+comment|//------------------------------------------------------------------
+name|virtual
+specifier|const
+name|lldb
+operator|::
+name|DataBufferSP
+name|GetAuxvData
+argument_list|()
+expr_stmt|;
+name|protected
+label|:
+name|virtual
+name|JITLoaderList
+modifier|&
+name|GetJITLoaders
+parameter_list|()
+function_decl|;
+name|public
+label|:
 comment|//------------------------------------------------------------------
 comment|/// Get the system runtime plug-in for this process.
 comment|///
@@ -5221,7 +3187,7 @@ function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Register for process and thread notifications.
 comment|///
-comment|/// Clients can register nofication callbacks by filling out a
+comment|/// Clients can register notification callbacks by filling out a
 comment|/// Process::Notifications structure and calling this function.
 comment|///
 comment|/// @param[in] callbacks
@@ -5249,7 +3215,7 @@ directive|endif
 comment|//------------------------------------------------------------------
 comment|/// Unregister for process and thread notifications.
 comment|///
-comment|/// Clients can unregister nofication callbacks by passing a copy of
+comment|/// Clients can unregister notification callbacks by passing a copy of
 comment|/// the original baton and callbacks in \a callbacks.
 comment|///
 comment|/// @param[in] callbacks
@@ -5312,6 +3278,14 @@ comment|//------------------------------------------------------------------
 name|Error
 name|Resume
 parameter_list|()
+function_decl|;
+name|Error
+name|ResumeSynchronous
+parameter_list|(
+name|Stream
+modifier|*
+name|stream
+parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Halts a running process.
@@ -5387,14 +3361,42 @@ name|int
 name|signal
 parameter_list|)
 function_decl|;
-name|virtual
+name|void
+name|SetUnixSignals
+parameter_list|(
+specifier|const
+name|UnixSignalsSP
+modifier|&
+name|signals_sp
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|signals_sp
+operator|&&
+literal|"null signals_sp"
+argument_list|)
+expr_stmt|;
+name|m_unix_signals_sp
+operator|=
+name|signals_sp
+expr_stmt|;
+block|}
 name|UnixSignals
 modifier|&
 name|GetUnixSignals
 parameter_list|()
 block|{
+name|assert
+argument_list|(
+name|m_unix_signals_sp
+operator|&&
+literal|"null m_unix_signals_sp"
+argument_list|)
+expr_stmt|;
 return|return
-name|m_unix_signals
+operator|*
+name|m_unix_signals_sp
 return|;
 block|}
 comment|//==================================================================
@@ -5628,14 +3630,27 @@ block|}
 comment|//------------------------------------------------------------------
 comment|/// Called after attaching a process.
 comment|///
+comment|/// @param[in] process_arch
+comment|///     If you can figure out the process architecture after attach, fill it in here.
+comment|///
 comment|/// Allow Process plug-ins to execute some code after attaching to
 comment|/// a process.
 comment|//------------------------------------------------------------------
 name|virtual
 name|void
 name|DidAttach
-parameter_list|()
-block|{}
+parameter_list|(
+name|ArchSpec
+modifier|&
+name|process_arch
+parameter_list|)
+block|{
+name|process_arch
+operator|.
+name|Clear
+argument_list|()
+expr_stmt|;
+block|}
 comment|//------------------------------------------------------------------
 comment|/// Called after a process re-execs itself.
 comment|///
@@ -5685,46 +3700,21 @@ block|}
 comment|//------------------------------------------------------------------
 comment|/// Launch a new process.
 comment|///
-comment|/// Launch a new process by spawning a new process using \a module's
-comment|/// file as the file to launch. Arguments are given in \a argv,
-comment|/// and the environment variables are in \a envp. Standard input
-comment|/// and output files can be optionally re-directed to \a stdin_path,
-comment|/// \a stdout_path, and \a stderr_path.
+comment|/// Launch a new process by spawning a new process using
+comment|/// \a exe_module's file as the file to launch. Launch details are
+comment|/// provided in \a launch_info.
 comment|///
-comment|/// @param[in] module
+comment|/// @param[in] exe_module
 comment|///     The module from which to extract the file specification and
 comment|///     launch.
 comment|///
-comment|/// @param[in] argv
-comment|///     The argument array.
-comment|///
-comment|/// @param[in] envp
-comment|///     The environment array.
-comment|///
-comment|/// @param[in] launch_flags
-comment|///     Flags to modify the launch (@see lldb::LaunchFlags)
-comment|///
-comment|/// @param[in] stdin_path
-comment|///     The path to use when re-directing the STDIN of the new
-comment|///     process. If all stdXX_path arguments are NULL, a pseudo
-comment|///     terminal will be used.
-comment|///
-comment|/// @param[in] stdout_path
-comment|///     The path to use when re-directing the STDOUT of the new
-comment|///     process. If all stdXX_path arguments are NULL, a pseudo
-comment|///     terminal will be used.
-comment|///
-comment|/// @param[in] stderr_path
-comment|///     The path to use when re-directing the STDERR of the new
-comment|///     process. If all stdXX_path arguments are NULL, a pseudo
-comment|///     terminal will be used.
-comment|///
-comment|/// @param[in] working_directory
-comment|///     The working directory to have the child process run in
+comment|/// @param[in] launch_info
+comment|///     Details (e.g. arguments, stdio redirection, etc.) for the
+comment|///     requested launch.
 comment|///
 comment|/// @return
-comment|///     A new valid process ID, or LLDB_INVALID_PROCESS_ID if
-comment|///     launching fails.
+comment|///     An Error instance indicating success or failure of the
+comment|///     operation.
 comment|//------------------------------------------------------------------
 name|virtual
 name|Error
@@ -6035,7 +4025,7 @@ name|error
 operator|.
 name|SetErrorStringWithFormat
 argument_list|(
-literal|"error: %s does not support senging signals to processes"
+literal|"error: %s does not support sending signals to processes"
 argument_list|,
 name|GetPluginName
 argument_list|()
@@ -6172,7 +4162,9 @@ name|StateType
 name|GetState
 argument_list|()
 expr_stmt|;
-name|ExecutionResults
+name|lldb
+operator|::
+name|ExpressionResults
 name|RunThreadPlan
 argument_list|(
 name|ExecutionContext
@@ -6194,17 +4186,19 @@ name|Stream
 operator|&
 name|errors
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 specifier|static
 specifier|const
 name|char
 modifier|*
 name|ExecutionResultAsCString
-parameter_list|(
-name|ExecutionResults
+argument_list|(
+name|lldb
+operator|::
+name|ExpressionResults
 name|result
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|GetStatus
 parameter_list|(
@@ -6236,6 +4230,14 @@ function_decl|;
 name|void
 name|SendAsyncInterrupt
 parameter_list|()
+function_decl|;
+name|void
+name|ModulesDidLoad
+parameter_list|(
+name|ModuleList
+modifier|&
+name|module_list
+parameter_list|)
 function_decl|;
 name|protected
 label|:
@@ -6793,7 +4795,7 @@ comment|/// Write all or part of a scalar value to memory.
 comment|///
 comment|/// The value contained in \a scalar will be swapped to match the
 comment|/// byte order of the process that is being debugged. If \a size is
-comment|/// less than the size of scalar, the least significate \a size bytes
+comment|/// less than the size of scalar, the least significant \a size bytes
 comment|/// from scalar will be written. If \a size is larger than the byte
 comment|/// size of scalar, then the extra space will be padded with zeros
 comment|/// and the scalar value will be placed in the least significant
@@ -7115,6 +5117,9 @@ argument_list|(
 argument|const FileSpec& file_spec
 argument_list|,
 argument|lldb::addr_t header_addr
+argument_list|,
+argument|size_t size_to_read =
+literal|512
 argument_list|)
 expr_stmt|;
 comment|//------------------------------------------------------------------
@@ -7363,17 +5368,26 @@ decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Get any available STDOUT.
 comment|///
-comment|/// If the process was launched without supplying valid file paths
-comment|/// for stdin, stdout, and stderr, then the Process class might
-comment|/// try to cache the STDOUT for the process if it is able. Events
-comment|/// will be queued indicating that there is STDOUT available that
-comment|/// can be retrieved using this function.
+comment|/// Calling this method is a valid operation only if all of the
+comment|/// following conditions are true:
+comment|/// 1) The process was launched, and not attached to.
+comment|/// 2) The process was not launched with eLaunchFlagDisableSTDIO.
+comment|/// 3) The process was launched without supplying a valid file path
+comment|///    for STDOUT.
+comment|///
+comment|/// Note that the implementation will probably need to start a read
+comment|/// thread in the background to make sure that the pipe is drained
+comment|/// and the STDOUT buffered appropriately, to prevent the process
+comment|/// from deadlocking trying to write to a full buffer.
+comment|///
+comment|/// Events will be queued indicating that there is STDOUT available
+comment|/// that can be retrieved using this function.
 comment|///
 comment|/// @param[out] buf
 comment|///     A buffer that will receive any STDOUT bytes that are
 comment|///     currently available.
 comment|///
-comment|/// @param[out] buf_size
+comment|/// @param[in] buf_size
 comment|///     The size in bytes for the buffer \a buf.
 comment|///
 comment|/// @return
@@ -7400,13 +5414,22 @@ function_decl|;
 comment|//------------------------------------------------------------------
 comment|/// Get any available STDERR.
 comment|///
-comment|/// If the process was launched without supplying valid file paths
-comment|/// for stdin, stdout, and stderr, then the Process class might
-comment|/// try to cache the STDERR for the process if it is able. Events
-comment|/// will be queued indicating that there is STDERR available that
-comment|/// can be retrieved using this function.
+comment|/// Calling this method is a valid operation only if all of the
+comment|/// following conditions are true:
+comment|/// 1) The process was launched, and not attached to.
+comment|/// 2) The process was not launched with eLaunchFlagDisableSTDIO.
+comment|/// 3) The process was launched without supplying a valid file path
+comment|///    for STDERR.
 comment|///
-comment|/// @param[out] buf
+comment|/// Note that the implementation will probably need to start a read
+comment|/// thread in the background to make sure that the pipe is drained
+comment|/// and the STDERR buffered appropriately, to prevent the process
+comment|/// from deadlocking trying to write to a full buffer.
+comment|///
+comment|/// Events will be queued indicating that there is STDERR available
+comment|/// that can be retrieved using this function.
+comment|///
+comment|/// @param[in] buf
 comment|///     A buffer that will receive any STDERR bytes that are
 comment|///     currently available.
 comment|///
@@ -7434,6 +5457,27 @@ modifier|&
 name|error
 parameter_list|)
 function_decl|;
+comment|//------------------------------------------------------------------
+comment|/// Puts data into this process's STDIN.
+comment|///
+comment|/// Calling this method is a valid operation only if all of the
+comment|/// following conditions are true:
+comment|/// 1) The process was launched, and not attached to.
+comment|/// 2) The process was not launched with eLaunchFlagDisableSTDIO.
+comment|/// 3) The process was launched without supplying a valid file path
+comment|///    for STDIN.
+comment|///
+comment|/// @param[in] buf
+comment|///     A buffer that contains the data to write to the process's STDIN.
+comment|///
+comment|/// @param[in] buf_size
+comment|///     The size in bytes for the buffer \a buf.
+comment|///
+comment|/// @return
+comment|///     The number of bytes written into \a buf. If this value is
+comment|///     less than \a buf_size, another call to this function should
+comment|///     be made to write the rest of the data.
+comment|//------------------------------------------------------------------
 name|virtual
 name|size_t
 name|PutSTDIN
@@ -7851,8 +5895,31 @@ argument_list|,
 argument|bool wait_always = true
 argument_list|,
 argument|Listener *hijack_listener = NULL
+argument_list|,
+argument|Stream *stream = NULL
 argument_list|)
 expr_stmt|;
+comment|//--------------------------------------------------------------------------------------
+comment|/// Waits for the process state to be running within a given msec timeout.
+comment|///
+comment|/// The main purpose of this is to implement an interlock waiting for HandlePrivateEvent
+comment|/// to push an IOHandler.
+comment|///
+comment|/// @param[in] timeout_msec
+comment|///     The maximum time length to wait for the process to transition to the
+comment|///     eStateRunning state, specified in milliseconds.
+comment|///
+comment|/// @return
+comment|///     true if successfully signalled that process started and IOHandler pushes, false
+comment|///     if it timed out.
+comment|//--------------------------------------------------------------------------------------
+name|bool
+name|SyncIOHandler
+parameter_list|(
+name|uint64_t
+name|timeout_msec
+parameter_list|)
+function_decl|;
 name|lldb
 operator|::
 name|StateType
@@ -7875,6 +5942,43 @@ name|hijack_listener
 argument_list|)
 expr_stmt|;
 comment|// Pass NULL to use builtin listener
+comment|//--------------------------------------------------------------------------------------
+comment|/// Centralize the code that handles and prints descriptions for process state changes.
+comment|///
+comment|/// @param[in] event_sp
+comment|///     The process state changed event
+comment|///
+comment|/// @param[in] stream
+comment|///     The output stream to get the state change description
+comment|///
+comment|/// @param[inout] pop_process_io_handler
+comment|///     If this value comes in set to \b true, then pop the Process IOHandler if needed.
+comment|///     Else this variable will be set to \b true or \b false to indicate if the process
+comment|///     needs to have its process IOHandler popped.
+comment|///
+comment|/// @return
+comment|///     \b true if the event describes a process state changed event, \b false otherwise.
+comment|//--------------------------------------------------------------------------------------
+specifier|static
+name|bool
+name|HandleProcessStateChangedEvent
+argument_list|(
+specifier|const
+name|lldb
+operator|::
+name|EventSP
+operator|&
+name|event_sp
+argument_list|,
+name|Stream
+operator|*
+name|stream
+argument_list|,
+name|bool
+operator|&
+name|pop_process_io_handler
+argument_list|)
+decl_stmt|;
 name|Event
 modifier|*
 name|PeekAtStateChangedEvents
@@ -7928,6 +6032,10 @@ empty_stmt|;
 name|friend
 name|class
 name|ProcessEventHijacker
+decl_stmt|;
+name|friend
+name|class
+name|ProcessProperties
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// If you need to ensure that you and only you will hear about some public
@@ -8005,6 +6113,17 @@ name|m_os_ap
 operator|.
 name|get
 argument_list|()
+return|;
+block|}
+name|ArchSpec
+operator|::
+name|StopInfoOverrideCallbackType
+name|GetStopInfoOverrideCallback
+argument_list|()
+specifier|const
+block|{
+return|return
+name|m_stop_info_override_callback
 return|;
 block|}
 name|virtual
@@ -8195,21 +6314,6 @@ name|int
 name|file_descriptor
 parameter_list|)
 function_decl|;
-name|void
-name|WatchForSTDIN
-parameter_list|(
-name|IOHandler
-modifier|&
-name|io_handler
-parameter_list|)
-function_decl|;
-name|void
-name|CancelWatchForSTDIN
-parameter_list|(
-name|bool
-name|exited
-parameter_list|)
-function_decl|;
 comment|//------------------------------------------------------------------
 comment|// Add a permanent region of memory that should never be read or
 comment|// written to. This can be used to ensure that memory reads or writes
@@ -8283,12 +6387,15 @@ parameter_list|()
 block|{
 if|if
 condition|(
+name|m_private_state_thread
+operator|.
+name|EqualsThread
+argument_list|(
 name|Host
 operator|::
 name|GetCurrentThread
 argument_list|()
-operator|==
-name|m_private_state_thread
+argument_list|)
 condition|)
 return|return
 name|m_private_run_lock
@@ -8298,6 +6405,44 @@ return|return
 name|m_public_run_lock
 return|;
 block|}
+name|public
+label|:
+name|virtual
+name|Error
+name|SendEventData
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|data
+parameter_list|)
+block|{
+name|Error
+name|return_error
+argument_list|(
+literal|"Sending an event is not supported for this process."
+argument_list|)
+decl_stmt|;
+return|return
+name|return_error
+return|;
+block|}
+name|lldb
+operator|::
+name|ThreadCollectionSP
+name|GetHistoryThreads
+argument_list|(
+argument|lldb::addr_t addr
+argument_list|)
+expr_stmt|;
+name|lldb
+operator|::
+name|InstrumentationRuntimeSP
+name|GetInstrumentationRuntime
+argument_list|(
+argument|lldb::InstrumentationRuntimeType type
+argument_list|)
+expr_stmt|;
 name|protected
 label|:
 comment|//------------------------------------------------------------------
@@ -8443,17 +6588,7 @@ argument|Process *process
 argument_list|,
 argument|uint32_t exec_count
 argument_list|)
-operator|:
-name|NextEventAction
-argument_list|(
-name|process
-argument_list|)
-block|,
-name|m_exec_count
-argument_list|(
-argument|exec_count
-argument_list|)
-block|{         }
+block|;
 name|virtual
 operator|~
 name|AttachCompletionHandler
@@ -8511,10 +6646,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IS_VALID_LLDB_HOST_THREAD
-argument_list|(
 name|m_private_state_thread
-argument_list|)
+operator|.
+name|IsJoinable
+argument_list|()
 return|;
 block|}
 name|void
@@ -8624,12 +6759,10 @@ operator|>
 name|m_private_state_control_wait
 expr_stmt|;
 comment|/// This Predicate is used to signal that a control operation is complete.
-name|lldb
-operator|::
-name|thread_t
+name|HostThread
 name|m_private_state_thread
-expr_stmt|;
-comment|// Thread ID for the thread that watches interal state events
+decl_stmt|;
+comment|// Thread ID for the thread that watches internal state events
 name|ProcessModID
 name|m_mod_id
 decl_stmt|;
@@ -8662,6 +6795,10 @@ name|string
 name|m_exit_string
 expr_stmt|;
 comment|///< A textual description of why a process exited.
+name|Mutex
+name|m_exit_status_mutex
+decl_stmt|;
+comment|///< Mutex so m_exit_status m_exit_string can be safely accessed from multiple threads
 name|Mutex
 name|m_thread_mutex
 decl_stmt|;
@@ -8729,6 +6866,14 @@ name|std
 operator|::
 name|unique_ptr
 operator|<
+name|JITLoaderList
+operator|>
+name|m_jit_loaders_ap
+expr_stmt|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|DynamicCheckerFunctions
 operator|>
 name|m_dynamic_checkers_ap
@@ -8750,8 +6895,8 @@ name|SystemRuntime
 operator|>
 name|m_system_runtime_ap
 expr_stmt|;
-name|UnixSignals
-name|m_unix_signals
+name|UnixSignalsSP
+name|m_unix_signals_sp
 decl_stmt|;
 comment|/// This is the current signal set for this process.
 name|lldb
@@ -8793,6 +6938,12 @@ name|string
 operator|>
 name|m_profile_data
 expr_stmt|;
+name|Predicate
+operator|<
+name|bool
+operator|>
+name|m_iohandler_sync
+expr_stmt|;
 name|MemoryCache
 name|m_memory_cache
 decl_stmt|;
@@ -8805,6 +6956,9 @@ decl_stmt|;
 comment|/// Should we detach if the process object goes away with an explicit call to Kill or Detach?
 name|LanguageRuntimeCollection
 name|m_language_runtimes
+decl_stmt|;
+name|InstrumentationRuntimeCollection
+name|m_instrumentation_runtimes
 decl_stmt|;
 name|std
 operator|::
@@ -8835,6 +6989,11 @@ operator|>
 name|m_currently_handling_event
 expr_stmt|;
 comment|// This predicate is set in HandlePrivateEvent while all its business is being done.
+name|ArchSpec
+operator|::
+name|StopInfoOverrideCallbackType
+name|m_stop_info_override_callback
+expr_stmt|;
 name|bool
 name|m_currently_handling_do_on_removals
 decl_stmt|;
@@ -9120,16 +7279,16 @@ name|size_t
 name|src_len
 parameter_list|)
 function_decl|;
-name|void
+name|bool
 name|PushProcessIOHandler
 parameter_list|()
 function_decl|;
-name|void
+name|bool
 name|PopProcessIOHandler
 parameter_list|()
 function_decl|;
-name|void
-name|ResetProcessIOHandler
+name|bool
+name|ProcessIOHandlerIsActive
 parameter_list|()
 function_decl|;
 name|Error
@@ -9142,6 +7301,17 @@ operator|&
 name|exit_event_sp
 argument_list|)
 decl_stmt|;
+name|bool
+name|StateChangedIsExternallyHijacked
+parameter_list|()
+function_decl|;
+name|void
+name|LoadOperatingSystemPlugin
+parameter_list|(
+name|bool
+name|flush
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|//------------------------------------------------------------------

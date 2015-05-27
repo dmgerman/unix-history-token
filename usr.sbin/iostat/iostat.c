@@ -2690,7 +2690,9 @@ name|double
 name|transfers_per_second
 decl_stmt|,
 name|transfers_per_second_read
-decl_stmt|,
+decl_stmt|;
+name|long
+name|double
 name|transfers_per_second_write
 decl_stmt|;
 name|long
@@ -2700,7 +2702,9 @@ decl_stmt|,
 name|mb_per_second
 decl_stmt|,
 name|mb_per_second_read
-decl_stmt|,
+decl_stmt|;
+name|long
+name|double
 name|mb_per_second_write
 decl_stmt|;
 name|u_int64_t
@@ -2732,14 +2736,20 @@ decl_stmt|;
 name|long
 name|double
 name|total_mb
+decl_stmt|,
+name|blocks_per_second
+decl_stmt|,
+name|total_duration
 decl_stmt|;
 name|long
 name|double
-name|blocks_per_second
+name|ms_per_other
+decl_stmt|,
+name|ms_per_read
+decl_stmt|,
+name|ms_per_write
 decl_stmt|,
 name|ms_per_transaction
-decl_stmt|,
-name|total_duration
 decl_stmt|;
 name|int
 name|firstline
@@ -2798,8 +2808,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"device     r/s   w/s    kr/s    kw/s qlen "
-literal|"svc_t  %%b  "
+literal|"device     r/s   w/s     kr/s     kw/s "
+literal|" ms/r  ms/w  ms/o  ms/t qlen  %%b  "
 argument_list|)
 expr_stmt|;
 block|}
@@ -3008,6 +3018,21 @@ name|DSM_MS_PER_TRANSACTION
 argument_list|,
 operator|&
 name|ms_per_transaction
+argument_list|,
+name|DSM_MS_PER_TRANSACTION_READ
+argument_list|,
+operator|&
+name|ms_per_read
+argument_list|,
+name|DSM_MS_PER_TRANSACTION_WRITE
+argument_list|,
+operator|&
+name|ms_per_write
+argument_list|,
+name|DSM_MS_PER_TRANSACTION_OTHER
+argument_list|,
+operator|&
+name|ms_per_other
 argument_list|,
 name|DSM_BUSY_PCT
 argument_list|,
@@ -3226,14 +3251,22 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%-8.8s %5.1Lf %5.1Lf %7.1Lf %7.1Lf %4"
+literal|"%-8.8s %5d %5d %8.1Lf "
+literal|"%8.1Lf %5d %5d %5d %5d "
+literal|"%4"
 name|PRIu64
-literal|" %5.1Lf %3.0Lf "
+literal|" %3.0Lf "
 argument_list|,
 name|devname
 argument_list|,
+operator|(
+name|int
+operator|)
 name|transfers_per_second_read
 argument_list|,
+operator|(
+name|int
+operator|)
 name|transfers_per_second_write
 argument_list|,
 name|mb_per_second_read
@@ -3244,9 +3277,27 @@ name|mb_per_second_write
 operator|*
 literal|1024
 argument_list|,
-name|queue_len
+operator|(
+name|int
+operator|)
+name|ms_per_read
 argument_list|,
+operator|(
+name|int
+operator|)
+name|ms_per_write
+argument_list|,
+operator|(
+name|int
+operator|)
+name|ms_per_other
+argument_list|,
+operator|(
+name|int
+operator|)
 name|ms_per_transaction
+argument_list|,
+name|queue_len
 argument_list|,
 name|busy_pct
 argument_list|)

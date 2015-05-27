@@ -116,7 +116,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netgraph/ng_car.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_cisco.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netgraph/ng_deflate.h>
 end_include
 
 begin_include
@@ -147,6 +159,12 @@ begin_include
 include|#
 directive|include
 file|<netgraph/ng_ether.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netgraph/ng_ether_echo.h>
 end_include
 
 begin_include
@@ -230,7 +248,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netgraph/netflow/ng_netflow.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netgraph/ng_one2many.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netgraph/ng_patch.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netgraph/ng_pipe.h>
 end_include
 
 begin_include
@@ -249,6 +285,12 @@ begin_include
 include|#
 directive|include
 file|<netgraph/ng_pptpgre.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netgraph/ng_pred1.h>
 end_include
 
 begin_include
@@ -279,6 +321,12 @@ begin_include
 include|#
 directive|include
 file|<netgraph/ng_sppp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netgraph/ng_tag.h>
 end_include
 
 begin_include
@@ -499,7 +547,17 @@ argument_list|)
 block|,
 name|COOKIE
 argument_list|(
+name|CAR
+argument_list|)
+block|,
+name|COOKIE
+argument_list|(
 name|CISCO
+argument_list|)
+block|,
+name|COOKIE
+argument_list|(
+name|DEFLATE
 argument_list|)
 block|,
 name|COOKIE
@@ -525,6 +583,11 @@ block|,
 name|COOKIE
 argument_list|(
 name|ETHER
+argument_list|)
+block|,
+name|COOKIE
+argument_list|(
+name|ETHER_ECHO
 argument_list|)
 block|,
 name|COOKIE
@@ -599,7 +662,22 @@ argument_list|)
 block|,
 name|COOKIE
 argument_list|(
+name|NETFLOW
+argument_list|)
+block|,
+name|COOKIE
+argument_list|(
 name|ONE2MANY
+argument_list|)
+block|,
+name|COOKIE
+argument_list|(
+name|PATCH
+argument_list|)
+block|,
+name|COOKIE
+argument_list|(
+name|PIPE
 argument_list|)
 block|,
 name|COOKIE
@@ -615,6 +693,11 @@ block|,
 name|COOKIE
 argument_list|(
 name|PPTPGRE
+argument_list|)
+block|,
+name|COOKIE
+argument_list|(
+name|PRED1
 argument_list|)
 block|,
 name|COOKIE
@@ -640,6 +723,11 @@ block|,
 name|COOKIE
 argument_list|(
 name|SPPP
+argument_list|)
+block|,
+name|COOKIE
+argument_list|(
+name|TAG
 argument_list|)
 block|,
 name|COOKIE
@@ -721,13 +809,9 @@ decl_stmt|;
 if|if
 condition|(
 name|level
-operator|<
+operator|>=
 literal|0
 condition|)
-name|level
-operator|=
-name|old
-expr_stmt|;
 name|_gNgDebugLevel
 operator|=
 name|level
@@ -926,7 +1010,7 @@ argument_list|)
 expr_stmt|;
 name|NGLOGX
 argument_list|(
-literal|"  arglen %d"
+literal|"  arglen %u"
 argument_list|,
 name|msg
 operator|->
@@ -937,7 +1021,7 @@ argument_list|)
 expr_stmt|;
 name|NGLOGX
 argument_list|(
-literal|"  flags  %ld"
+literal|"  flags  %x"
 argument_list|,
 name|msg
 operator|->
@@ -948,11 +1032,8 @@ argument_list|)
 expr_stmt|;
 name|NGLOGX
 argument_list|(
-literal|"  token  %lu"
+literal|"  token  %u"
 argument_list|,
-operator|(
-name|u_long
-operator|)
 name|msg
 operator|->
 name|header
@@ -962,7 +1043,7 @@ argument_list|)
 expr_stmt|;
 name|NGLOGX
 argument_list|(
-literal|"  cookie %s (%d)"
+literal|"  cookie %s (%u)"
 argument_list|,
 name|NgCookie
 argument_list|(

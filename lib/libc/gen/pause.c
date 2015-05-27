@@ -54,12 +54,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"namespace.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<signal.h>
 end_include
 
@@ -72,7 +66,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"un-namespace.h"
+file|"libc_private.h"
 end_include
 
 begin_comment
@@ -91,7 +85,7 @@ name|oset
 decl_stmt|;
 if|if
 condition|(
-name|_sigprocmask
+name|sigprocmask
 argument_list|(
 name|SIG_BLOCK
 argument_list|,
@@ -112,7 +106,7 @@ operator|)
 return|;
 return|return
 operator|(
-name|_sigsuspend
+name|sigsuspend
 argument_list|(
 operator|&
 name|oset

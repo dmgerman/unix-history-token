@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/route.h>
 end_include
 
@@ -108,12 +102,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nlist.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdint.h>
 end_include
 
@@ -127,6 +115,18 @@ begin_include
 include|#
 directive|include
 file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
 end_include
 
 begin_define
@@ -153,61 +153,6 @@ include|#
 directive|include
 file|"netstat.h"
 end_include
-
-begin_comment
-comment|/*  * kvm(3) bindings for every needed symbol  */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|nlist
-name|mrl
-index|[]
-init|=
-block|{
-define|#
-directive|define
-name|N_MF6CTABLE
-value|0
-block|{
-operator|.
-name|n_name
-operator|=
-literal|"_mf6ctable"
-block|}
-block|,
-define|#
-directive|define
-name|N_MIF6TABLE
-value|1
-block|{
-operator|.
-name|n_name
-operator|=
-literal|"_mif6table"
-block|}
-block|,
-define|#
-directive|define
-name|N_MRT6STAT
-value|2
-block|{
-operator|.
-name|n_name
-operator|=
-literal|"_mrt6stat"
-block|}
-block|,
-block|{
-operator|.
-name|n_name
-operator|=
-name|NULL
-block|}
-block|, }
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -248,7 +193,7 @@ modifier|*
 name|mfcp
 decl_stmt|;
 name|struct
-name|mif6
+name|mif6_sctl
 name|mif6table
 index|[
 name|MAXMIFS
@@ -266,14 +211,9 @@ modifier|*
 name|rtep
 decl_stmt|;
 name|struct
-name|mif6
+name|mif6_sctl
 modifier|*
 name|mifp
-decl_stmt|;
-name|u_long
-name|mfcaddr
-decl_stmt|,
-name|mifaddr
 decl_stmt|;
 name|mifi_t
 name|mifi
@@ -299,49 +239,13 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|kresolve_list
-argument_list|(
-name|mrl
-argument_list|)
-expr_stmt|;
-name|mfcaddr
-operator|=
-name|mrl
-index|[
-name|N_MF6CTABLE
-index|]
-operator|.
-name|n_value
-expr_stmt|;
-name|mifaddr
-operator|=
-name|mrl
-index|[
-name|N_MIF6TABLE
-index|]
-operator|.
-name|n_value
-expr_stmt|;
 if|if
 condition|(
-name|mfcaddr
-operator|==
-literal|0
-operator|||
-name|mifaddr
+name|live
 operator|==
 literal|0
 condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"No IPv6 MROUTING kernel support.\n"
-argument_list|)
-expr_stmt|;
 return|return;
-block|}
 name|len
 operator|=
 sizeof|sizeof
@@ -349,11 +253,6 @@ argument_list|(
 name|mif6table
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|live
-condition|)
-block|{
 if|if
 condition|(
 name|sysctlbyname
@@ -373,31 +272,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet6.ip6.mif6table"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-block|}
-else|else
-name|kread
-argument_list|(
-name|mifaddr
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|mif6table
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mif6table
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|saved_numeric_addr
 operator|=
 name|numeric_addr
@@ -431,10 +312,6 @@ operator|++
 name|mifp
 control|)
 block|{
-name|struct
-name|ifnet
-name|ifnet
-decl_stmt|;
 name|char
 name|ifname
 index|[
@@ -447,32 +324,9 @@ name|mifp
 operator|->
 name|m6_ifp
 operator|==
-name|NULL
+literal|0
 condition|)
 continue|continue;
-comment|/* XXX KVM */
-name|kread
-argument_list|(
-operator|(
-name|u_long
-operator|)
-name|mifp
-operator|->
-name|m6_ifp
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|ifnet
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|ifnet
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|maxmif
 operator|=
 name|mifi
@@ -483,11 +337,15 @@ operator|!
 name|banner_printed
 condition|)
 block|{
-name|printf
+name|xo_open_list
 argument_list|(
-literal|"\nIPv6 Multicast Interface Table\n"
-literal|" Mif   Rate   PhyIF   "
-literal|"Pkts-In   Pkts-Out\n"
+literal|"multicast-interface"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"\n{T:IPv6 Multicast Interface Table}\n"
+literal|"{T: Mif   Rate   PhyIF   Pkts-In   Pkts-Out}\n"
 argument_list|)
 expr_stmt|;
 name|banner_printed
@@ -495,9 +353,14 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|"  %2u   %4d"
+literal|"multicast-interface"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"  {:mif/%2u}   {:rate-limit/%4d}"
 argument_list|,
 name|mifi
 argument_list|,
@@ -506,9 +369,9 @@ operator|->
 name|m6_rate_limit
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"   %5s"
+literal|"   {:ifname/%5s}"
 argument_list|,
 operator|(
 name|mifp
@@ -522,17 +385,17 @@ literal|"reg0"
 else|:
 name|if_indextoname
 argument_list|(
-name|ifnet
-operator|.
-name|if_index
+name|mifp
+operator|->
+name|m6_ifp
 argument_list|,
 name|ifname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %9ju  %9ju\n"
+literal|" {:received-packets/%9ju}  {:sent-packets/%9ju}\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -549,15 +412,25 @@ operator|->
 name|m6_pkt_out
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"multicast-interface"
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|banner_printed
 condition|)
-name|printf
+name|xo_open_list
 argument_list|(
-literal|"\nIPv6 Multicast Interface Table is empty\n"
+literal|"multicast-interface"
+argument_list|)
+expr_stmt|;
+else|else
+name|xo_emit
+argument_list|(
+literal|"\n{T:IPv6 Multicast Interface Table is empty}\n"
 argument_list|)
 expr_stmt|;
 name|len
@@ -567,11 +440,6 @@ argument_list|(
 name|mf6ctable
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|live
-condition|)
-block|{
 if|if
 condition|(
 name|sysctlbyname
@@ -591,31 +459,13 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet6.ip6.mf6ctable"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-block|}
-else|else
-name|kread
-argument_list|(
-name|mfcaddr
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-name|mf6ctable
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mf6ctable
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|banner_printed
 operator|=
 literal|0
@@ -672,14 +522,20 @@ operator|!
 name|banner_printed
 condition|)
 block|{
-name|printf
+name|xo_open_list
 argument_list|(
-literal|"\nIPv6 Multicast Forwarding Cache\n"
+literal|"multicast-forwarding-cache"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %-*.*s %-*.*s %s"
+literal|"\n"
+literal|"{T:IPv6 Multicast Forwarding Cache}\n"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|" {T:%-*.*s} {T:%-*.*s} {T:%s}"
 argument_list|,
 name|WID_ORG
 argument_list|,
@@ -701,9 +557,14 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-name|printf
+name|xo_open_instance
 argument_list|(
-literal|" %-*.*s"
+literal|"multicast-forwarding-cache"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|" {:origin/%-*.*s}"
 argument_list|,
 name|WID_ORG
 argument_list|,
@@ -718,9 +579,9 @@ name|mf6c_origin
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %-*.*s"
+literal|" {:group/%-*.*s}"
 argument_list|,
 name|WID_GRP
 argument_list|,
@@ -735,9 +596,9 @@ name|mf6c_mcastgrp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %9ju"
+literal|" {:total-packets/%9ju}"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -794,9 +655,9 @@ operator|.
 name|next
 expr_stmt|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"   %3ld"
+literal|"   {:waitings/%3ld}"
 argument_list|,
 name|waitings
 argument_list|)
@@ -809,19 +670,24 @@ name|mf6c_parent
 operator|==
 name|MF6C_INCOMPLETE_PARENT
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|" ---   "
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|xo_emit
 argument_list|(
-literal|"  %3d   "
+literal|"  {:parent/%3d}   "
 argument_list|,
 name|mfc
 operator|.
 name|mf6c_parent
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"mif"
 argument_list|)
 expr_stmt|;
 for|for
@@ -850,15 +716,20 @@ operator|.
 name|mf6c_ifset
 argument_list|)
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|" %u"
+literal|" {l:%u}"
 argument_list|,
 name|mifi
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|xo_close_list
+argument_list|(
+literal|"mif"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -869,19 +740,29 @@ name|mfc
 operator|.
 name|mf6c_next
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"multicast-forwarding-cache"
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 if|if
 condition|(
-operator|!
 name|banner_printed
 condition|)
-name|printf
+name|xo_close_list
 argument_list|(
-literal|"\nIPv6 Multicast Forwarding Table is empty\n"
+literal|"multicast-forwarding-cache"
 argument_list|)
 expr_stmt|;
-name|printf
+else|else
+name|xo_emit
+argument_list|(
+literal|"\n{T:IPv6 Multicast Forwarding Table is empty}\n"
+argument_list|)
+expr_stmt|;
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
@@ -902,50 +783,12 @@ name|struct
 name|mrt6stat
 name|mrtstat
 decl_stmt|;
-name|u_long
-name|mstaddr
-decl_stmt|;
 name|size_t
 name|len
 init|=
 sizeof|sizeof
 name|mrtstat
 decl_stmt|;
-name|kresolve_list
-argument_list|(
-name|mrl
-argument_list|)
-expr_stmt|;
-name|mstaddr
-operator|=
-name|mrl
-index|[
-name|N_MRT6STAT
-index|]
-operator|.
-name|n_value
-expr_stmt|;
-if|if
-condition|(
-name|mstaddr
-operator|==
-literal|0
-condition|)
-block|{
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"No IPv6 MROUTING kernel support.\n"
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-if|if
-condition|(
-name|live
-condition|)
-block|{
 if|if
 condition|(
 name|sysctlbyname
@@ -966,35 +809,21 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"sysctl: net.inet6.ip6.mrt6stat"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-block|}
-else|else
-name|kread
+name|xo_open_container
 argument_list|(
-name|mstaddr
-argument_list|,
-operator|(
-name|char
-operator|*
-operator|)
-operator|&
-name|mrtstat
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|mrtstat
-argument_list|)
+literal|"multicast-statistics"
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"IPv6 multicast forwarding:\n"
+literal|"{T:IPv6 multicast forwarding}:\n"
 argument_list|)
 expr_stmt|;
 define|#
@@ -1005,7 +834,7 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (mrtstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)mrtstat.f, plural(mrtstat.f))
+value|if (mrtstat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)mrtstat.f, plural(mrtstat.f))
 define|#
 directive|define
 name|p2
@@ -1014,96 +843,109 @@ name|f
 parameter_list|,
 name|m
 parameter_list|)
-value|if (mrtstat.f || sflag<= 1) \ 	printf(m, (uintmax_t)mrtstat.f, plurales(mrtstat.f))
+value|if (mrtstat.f || sflag<= 1) \ 	xo_emit(m, (uintmax_t)mrtstat.f, plurales(mrtstat.f))
 name|p
 argument_list|(
 name|mrt6s_mfc_lookups
 argument_list|,
-literal|"\t%ju multicast forwarding cache lookup%s\n"
+literal|"\t{:cache-lookups/%ju} "
+literal|"{N:/multicast forwarding cache lookup%s}\n"
 argument_list|)
 expr_stmt|;
 name|p2
 argument_list|(
 name|mrt6s_mfc_misses
 argument_list|,
-literal|"\t%ju multicast forwarding cache miss%s\n"
+literal|"\t{:cache-misses/%ju} "
+literal|"{N:/multicast forwarding cache miss%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_upcalls
 argument_list|,
-literal|"\t%ju upcall%s to multicast routing daemon\n"
+literal|"\t{:upcalls/%ju} "
+literal|"{N:/upcall%s to multicast routing daemon}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_upq_ovflw
 argument_list|,
-literal|"\t%ju upcall queue overflow%s\n"
+literal|"\t{:upcall-overflows/%ju} "
+literal|"{N:/upcall queue overflow%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_upq_sockfull
 argument_list|,
-literal|"\t%ju upcall%s dropped due to full socket buffer\n"
+literal|"\t{:upcalls-dropped-full-buffer/%ju} "
+literal|"{N:/upcall%s dropped due to full socket buffer}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_cache_cleanups
 argument_list|,
-literal|"\t%ju cache cleanup%s\n"
+literal|"\t{:cache-cleanups/%ju} "
+literal|"{N:/cache cleanup%s}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_no_route
 argument_list|,
-literal|"\t%ju datagram%s with no route for origin\n"
+literal|"\t{:dropped-no-origin/%ju} "
+literal|"{N:/datagram%s with no route for origin}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_bad_tunnel
 argument_list|,
-literal|"\t%ju datagram%s arrived with bad tunneling\n"
+literal|"\t{:dropped-bad-tunnel/%ju} "
+literal|"{N:/datagram%s arrived with bad tunneling}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_cant_tunnel
 argument_list|,
-literal|"\t%ju datagram%s could not be tunneled\n"
+literal|"\t{:dropped-could-not-tunnel/%ju} "
+literal|"{N:/datagram%s could not be tunneled}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_wrong_if
 argument_list|,
-literal|"\t%ju datagram%s arrived on wrong interface\n"
+literal|"\t{:dropped-wrong-incoming-interface/%ju} "
+literal|"{N:/datagram%s arrived on wrong interface}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_drop_sel
 argument_list|,
-literal|"\t%ju datagram%s selectively dropped\n"
+literal|"\t{:dropped-selectively/%ju} "
+literal|"{N:/datagram%s selectively dropped}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_q_overflow
 argument_list|,
-literal|"\t%ju datagram%s dropped due to queue overflow\n"
+literal|"\t{:dropped-queue-overflow/%ju} "
+literal|"{N:/datagram%s dropped due to queue overflow}\n"
 argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
 name|mrt6s_pkt2large
 argument_list|,
-literal|"\t%ju datagram%s dropped for being too large\n"
+literal|"\t{:dropped-too-large/%ju} "
+literal|"{N:/datagram%s dropped for being too large}\n"
 argument_list|)
 expr_stmt|;
 undef|#
@@ -1112,6 +954,11 @@ name|p2
 undef|#
 directive|undef
 name|p
+name|xo_close_container
+argument_list|(
+literal|"multicast-statistics"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

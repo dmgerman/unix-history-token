@@ -85,7 +85,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * Allocate a dns_msg with malloc/alloc structure and store in dns cache.  *  * @param env: environment, with alloc structure and dns cache.  * @param qinf: query info, the query for which answer is stored.  * 	this is allocated in a region, and will be copied to malloc area  * 	before insertion.  * @param rep: reply in dns_msg from dns_alloc_msg for example.  * 	this is allocated in a region, and will be copied to malloc area  * 	before insertion.  * @param is_referral: If true, then the given message to be stored is a  *      referral. The cache implementation may use this as a hint.  *      It will store only the RRsets, not the message.  * @param leeway: TTL value, if not 0, other rrsets are considered expired  *	that many seconds before actual TTL expiry.  * @param pside: if true, information came from a server which was fetched  * 	from the parentside of the zonecut.  This means that the type NS  * 	can be updated to full TTL even in prefetch situations.  * @param region: region to allocate better entries from cache into.  *   (used when is_referral is false).  * @return 0 on alloc error (out of memory).  */
+comment|/**  * Allocate a dns_msg with malloc/alloc structure and store in dns cache.  *  * @param env: environment, with alloc structure and dns cache.  * @param qinf: query info, the query for which answer is stored.  * 	this is allocated in a region, and will be copied to malloc area  * 	before insertion.  * @param rep: reply in dns_msg from dns_alloc_msg for example.  * 	this is allocated in a region, and will be copied to malloc area  * 	before insertion.  * @param is_referral: If true, then the given message to be stored is a  *      referral. The cache implementation may use this as a hint.  *      It will store only the RRsets, not the message.  * @param leeway: TTL value, if not 0, other rrsets are considered expired  *	that many seconds before actual TTL expiry.  * @param pside: if true, information came from a server which was fetched  * 	from the parentside of the zonecut.  This means that the type NS  * 	can be updated to full TTL even in prefetch situations.  * @param region: region to allocate better entries from cache into.  *   (used when is_referral is false).  * @param flags: flags with BIT_CD for AAAA queries in dns64 translation.  * @return 0 on alloc error (out of memory).  */
 end_comment
 
 begin_function_decl
@@ -120,6 +120,9 @@ name|struct
 name|regional
 modifier|*
 name|region
+parameter_list|,
+name|uint16_t
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -215,7 +218,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**   * Find cached message   * @param env: module environment with the DNS cache.  * @param qname: query name.  * @param qnamelen: length of qname.  * @param qtype: query type.  * @param qclass: query class.  * @param region: where to allocate result.  * @param scratch: where to allocate temporary data.  * @return new response message (alloced in region, rrsets do not have IDs).  * 	or NULL on error or if not found in cache.  *	TTLs are made relative to the current time.  */
+comment|/**   * Find cached message   * @param env: module environment with the DNS cache.  * @param qname: query name.  * @param qnamelen: length of qname.  * @param qtype: query type.  * @param qclass: query class.  * @param flags: flags with BIT_CD for AAAA queries in dns64 translation.  * @param region: where to allocate result.  * @param scratch: where to allocate temporary data.  * @return new response message (alloced in region, rrsets do not have IDs).  * 	or NULL on error or if not found in cache.  *	TTLs are made relative to the current time.  */
 end_comment
 
 begin_function_decl
@@ -241,6 +244,9 @@ name|qtype
 parameter_list|,
 name|uint16_t
 name|qclass
+parameter_list|,
+name|uint16_t
+name|flags
 parameter_list|,
 name|struct
 name|regional
@@ -343,6 +349,33 @@ name|rrset
 parameter_list|,
 name|time_t
 name|now
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * Adjust the prefetch_ttl for a cached message.  This adds a value to the  * prefetch ttl - postponing the time when it will be prefetched for future  * incoming queries.  * @param env: module environment with caches and time.  * @param qinfo: query info for the query that needs adjustment.  * @param adjust: time in seconds to add to the prefetch_leeway.  * @param flags: flags with BIT_CD for AAAA queries in dns64 translation.  * @return false if not in cache. true if added.  */
+end_comment
+
+begin_function_decl
+name|int
+name|dns_cache_prefetch_adjust
+parameter_list|(
+name|struct
+name|module_env
+modifier|*
+name|env
+parameter_list|,
+name|struct
+name|query_info
+modifier|*
+name|qinfo
+parameter_list|,
+name|time_t
+name|adjust
+parameter_list|,
+name|uint16_t
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl

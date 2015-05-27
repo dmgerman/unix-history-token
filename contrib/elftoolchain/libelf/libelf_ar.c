@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<assert.h>
 end_include
 
@@ -54,7 +48,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelf_ar.c 2225 2011-11-26 18:55:54Z jkoshy $"
+literal|"$Id: libelf_ar.c 3174 2015-03-27 17:13:41Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -88,13 +82,13 @@ name|Elf
 modifier|*
 name|parent
 decl_stmt|;
-name|char
-modifier|*
-name|namelen
-decl_stmt|;
 name|Elf_Arhdr
 modifier|*
 name|eh
+decl_stmt|;
+name|char
+modifier|*
+name|namelen
 decl_stmt|;
 name|size_t
 name|n
@@ -546,6 +540,7 @@ operator|.
 name|e_rawhdr
 operator|=
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -579,25 +574,25 @@ name|Elf
 modifier|*
 name|e
 decl_stmt|;
-name|char
-modifier|*
-name|member
-decl_stmt|,
-modifier|*
-name|namelen
+name|off_t
+name|next
 decl_stmt|;
 name|size_t
 name|nsz
 decl_stmt|,
 name|sz
 decl_stmt|;
-name|off_t
-name|next
-decl_stmt|;
 name|struct
 name|ar_hdr
 modifier|*
 name|arh
+decl_stmt|;
+name|char
+modifier|*
+name|member
+decl_stmt|,
+modifier|*
+name|namelen
 decl_stmt|;
 name|assert
 argument_list|(
@@ -792,10 +787,6 @@ name|e
 operator|=
 name|elf_memory
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|member
 argument_list|,
 name|sz
@@ -828,6 +819,7 @@ operator|.
 name|e_rawhdr
 operator|=
 operator|(
+name|unsigned
 name|char
 operator|*
 operator|)
@@ -861,7 +853,7 @@ comment|/*  * A BSD-style ar(1) symbol table has the following layout:  *  * - A
 end_comment
 
 begin_comment
-comment|/*  * A helper macro to read in a 'long' value from the archive.  We use  * memcpy() since the source pointer may be misaligned with respect to  * the natural alignment for a C 'long'.  */
+comment|/*  * A helper macro to read in a 'long' value from the archive.  *  * We use memcpy() since the source pointer may be misaligned with  * respect to the natural alignment for a C 'long'.  */
 end_comment
 
 begin_define
@@ -898,6 +890,12 @@ modifier|*
 name|sym
 decl_stmt|;
 name|unsigned
+name|int
+name|n
+decl_stmt|,
+name|nentries
+decl_stmt|;
+name|unsigned
 name|char
 modifier|*
 name|end
@@ -915,8 +913,7 @@ modifier|*
 name|s0
 decl_stmt|;
 specifier|const
-name|unsigned
-name|int
+name|size_t
 name|entrysize
 init|=
 literal|2
@@ -930,10 +927,6 @@ name|long
 name|arraysize
 decl_stmt|,
 name|fileoffset
-decl_stmt|,
-name|n
-decl_stmt|,
-name|nentries
 decl_stmt|,
 name|stroffset
 decl_stmt|,
@@ -1030,6 +1023,10 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|arraysize
+operator|<
+literal|0
+operator|||
 name|p0
 operator|+
 name|arraysize
@@ -1037,6 +1034,9 @@ operator|>=
 name|end
 operator|||
 operator|(
+operator|(
+name|size_t
+operator|)
 name|arraysize
 operator|%
 name|entrysize
@@ -1068,6 +1068,10 @@ expr_stmt|;
 comment|/* Start of string table. */
 if|if
 condition|(
+name|strtabsize
+operator|<
+literal|0
+operator|||
 name|s0
 operator|+
 name|strtabsize
@@ -1079,6 +1083,9 @@ name|symtaberror
 goto|;
 name|nentries
 operator|=
+operator|(
+name|size_t
+operator|)
 name|arraysize
 operator|/
 name|entrysize
@@ -1156,6 +1163,28 @@ argument_list|,
 name|fileoffset
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|stroffset
+operator|<
+literal|0
+operator|||
+name|fileoffset
+operator|<
+literal|0
+operator|||
+operator|(
+name|size_t
+operator|)
+name|fileoffset
+operator|>=
+name|e
+operator|->
+name|e_rawsize
+condition|)
+goto|goto
+name|symtaberror
+goto|;
 name|s
 operator|=
 name|s0
@@ -1175,6 +1204,9 @@ name|sym
 operator|->
 name|as_off
 operator|=
+operator|(
+name|off_t
+operator|)
 name|fileoffset
 expr_stmt|;
 name|sym
@@ -1318,12 +1350,13 @@ modifier|*
 name|count
 parameter_list|)
 block|{
+name|uint32_t
+name|off
+decl_stmt|;
 name|size_t
 name|n
 decl_stmt|,
 name|nentries
-decl_stmt|,
-name|off
 decl_stmt|;
 name|Elf_Arsym
 modifier|*
@@ -1519,10 +1552,6 @@ condition|)
 goto|goto
 name|symtaberror
 goto|;
-name|off
-operator|=
-literal|0
-expr_stmt|;
 name|GET_WORD
 argument_list|(
 name|p
@@ -1530,10 +1559,24 @@ argument_list|,
 name|off
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|off
+operator|>=
+name|e
+operator|->
+name|e_rawsize
+condition|)
+goto|goto
+name|symtaberror
+goto|;
 name|sym
 operator|->
 name|as_off
 operator|=
+operator|(
+name|off_t
+operator|)
 name|off
 expr_stmt|;
 name|sym

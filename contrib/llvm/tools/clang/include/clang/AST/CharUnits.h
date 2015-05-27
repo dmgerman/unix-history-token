@@ -630,12 +630,13 @@ comment|/// greater than or equal to this quantity and is a multiple of \p Align
 comment|/// Align must be non-zero.
 name|CharUnits
 name|RoundUpToAlignment
-parameter_list|(
+argument_list|(
 specifier|const
 name|CharUnits
-modifier|&
+operator|&
 name|Align
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 return|return
 name|CharUnits
@@ -662,38 +663,19 @@ name|CharUnits
 name|offset
 parameter_list|)
 block|{
-comment|// alignment: 0010000
-comment|// offset:    1011100
-comment|// lowBits:   0001011
-comment|// result:    0000100
-name|QuantityType
-name|lowBits
-init|=
-operator|(
-name|Quantity
-operator|-
-literal|1
-operator|)
-operator|&
-operator|(
-name|offset
-operator|.
-name|Quantity
-operator|-
-literal|1
-operator|)
-decl_stmt|;
 return|return
 name|CharUnits
 argument_list|(
-operator|(
-name|lowBits
-operator|+
-literal|1
-operator|)
-operator|&
-operator|~
-name|lowBits
+name|llvm
+operator|::
+name|MinAlign
+argument_list|(
+name|Quantity
+argument_list|,
+name|offset
+operator|.
+name|Quantity
+argument_list|)
 argument_list|)
 return|;
 block|}

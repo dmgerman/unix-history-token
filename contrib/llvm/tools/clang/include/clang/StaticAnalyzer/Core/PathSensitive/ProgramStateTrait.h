@@ -62,14 +62,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_PROGRAMSTATETRAIT_H
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_PROGRAMSTATETRAIT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_PROGRAMSTATETRAIT_H
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_PROGRAMSTATETRAIT_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
+end_include
 
 begin_include
 include|#
@@ -81,9 +87,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|BumpPtrAllocator
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -249,7 +252,7 @@ argument_list|)
 else|:
 name|data_type
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -501,7 +504,7 @@ argument_list|)
 else|:
 name|data_type
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -797,7 +800,7 @@ argument_list|)
 else|:
 name|data_type
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}

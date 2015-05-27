@@ -172,35 +172,6 @@ directive|include
 file|<machine/cpu.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XEN
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<vm/vm.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/vm_param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vm/pmap.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -369,60 +340,6 @@ argument_list|(
 name|sched
 argument_list|, , ,
 name|preempt
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/*  * These probes reference Solaris features that are not implemented in FreeBSD.  * Create the probes anyway for compatibility with existing D scripts; they'll  * just never fire.  */
-end_comment
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE
-argument_list|(
-name|sched
-argument_list|, , ,
-name|cpucaps__sleep
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE
-argument_list|(
-name|sched
-argument_list|, , ,
-name|cpucaps__wakeup
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE
-argument_list|(
-name|sched
-argument_list|, , ,
-name|schedctl__nopreempt
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE
-argument_list|(
-name|sched
-argument_list|, , ,
-name|schedctl__preempt
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SDT_PROBE_DEFINE
-argument_list|(
-name|sched
-argument_list|, , ,
-name|schedctl__yield
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2044,14 +1961,6 @@ argument_list|, , ,
 name|preempt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|XEN
-name|PT_UPDATES_FLUSH
-argument_list|()
-expr_stmt|;
-endif|#
-directive|endif
 name|sched_switch
 argument_list|(
 name|td
@@ -2425,7 +2334,7 @@ argument_list|(
 operator|&
 name|loadav_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Kick off timeout driven events by calling first time. */

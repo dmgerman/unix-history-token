@@ -167,6 +167,30 @@ operator|>
 name|class
 name|SparseMultiSet
 block|{
+name|static_assert
+argument_list|(
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|SparseT
+operator|>
+operator|::
+name|is_integer
+operator|&&
+operator|!
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|SparseT
+operator|>
+operator|::
+name|is_signed
+argument_list|,
+literal|"SparseT must be an unsigned integer type"
+argument_list|)
+block|;
 comment|/// The actual data that's stored, as a doubly-linked list implemented via
 comment|/// indices into the DenseVector.  The doubly linked list is implemented
 comment|/// circular in Prev indices, and INVALID-terminated in Next indices. This
@@ -607,12 +631,16 @@ name|ValueT
 modifier|*
 name|const_pointer
 typedef|;
+typedef|typedef
+name|unsigned
+name|size_type
+typedef|;
 name|SparseMultiSet
 argument_list|()
 operator|:
 name|Sparse
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Universe
@@ -631,7 +659,7 @@ name|NumFree
 argument_list|(
 literal|0
 argument_list|)
-block|{ }
+block|{}
 operator|~
 name|SparseMultiSet
 argument_list|()
@@ -975,71 +1003,6 @@ name|reference
 name|reference
 expr_stmt|;
 end_typedef
-
-begin_expr_stmt
-name|iterator_base
-argument_list|(
-specifier|const
-name|iterator_base
-operator|&
-name|RHS
-argument_list|)
-operator|:
-name|SMS
-argument_list|(
-name|RHS
-operator|.
-name|SMS
-argument_list|)
-operator|,
-name|Idx
-argument_list|(
-name|RHS
-operator|.
-name|Idx
-argument_list|)
-operator|,
-name|SparseIdx
-argument_list|(
-argument|RHS.SparseIdx
-argument_list|)
-block|{ }
-specifier|const
-name|iterator_base
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|iterator_base
-operator|&
-name|RHS
-operator|)
-block|{
-name|SMS
-operator|=
-name|RHS
-operator|.
-name|SMS
-block|;
-name|Idx
-operator|=
-name|RHS
-operator|.
-name|Idx
-block|;
-name|SparseIdx
-operator|=
-name|RHS
-operator|.
-name|SparseIdx
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-end_expr_stmt
 
 begin_expr_stmt
 name|reference
@@ -1499,7 +1462,7 @@ comment|///
 end_comment
 
 begin_expr_stmt
-name|unsigned
+name|size_type
 name|size
 argument_list|()
 specifier|const
@@ -1594,30 +1557,6 @@ operator|<
 name|Universe
 operator|&&
 literal|"Key out of range"
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|SparseT
-operator|>
-operator|::
-name|is_integer
-operator|&&
-operator|!
-name|std
-operator|::
-name|numeric_limits
-operator|<
-name|SparseT
-operator|>
-operator|::
-name|is_signed
-operator|&&
-literal|"SparseT must be an unsigned integer type"
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -1825,7 +1764,7 @@ comment|/// the number of elements of that key.
 end_comment
 
 begin_decl_stmt
-name|unsigned
+name|size_type
 name|count
 argument_list|(
 specifier|const

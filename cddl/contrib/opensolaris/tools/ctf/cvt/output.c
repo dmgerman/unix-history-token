@@ -7,13 +7,6 @@ begin_comment
 comment|/*  * Copyright 2006 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
-begin_pragma
-pragma|#
-directive|pragma
-name|ident
-literal|"%Z%%M%	%I%	%E% SMI"
-end_pragma
-
 begin_comment
 comment|/*  * Routines for preparing tdata trees for conversion into CTF data, and  * for placing the resulting data into an output file.  */
 end_comment
@@ -2350,13 +2343,9 @@ name|sh_name
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 if|if
 condition|(
 name|gelf_update_shdr
@@ -2426,12 +2415,9 @@ argument_list|,
 name|sname
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|bcopy
 argument_list|(
 name|sdata
@@ -2749,13 +2735,9 @@ expr_stmt|;
 block|}
 block|}
 block|}
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifndef|#
+directive|ifndef
+name|illumos
 if|if
 condition|(
 name|ddata

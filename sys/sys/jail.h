@@ -474,6 +474,13 @@ name|HOSTUUIDLEN
 value|64
 end_define
 
+begin_define
+define|#
+directive|define
+name|OSRELEASELEN
+value|32
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|racct
@@ -630,9 +637,13 @@ comment|/* (p) devfs ruleset */
 name|int
 name|pr_spare
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
+name|int
+name|pr_osreldate
+decl_stmt|;
+comment|/* (c) kern.osreldate value */
 name|unsigned
 name|long
 name|pr_hostid
@@ -673,6 +684,13 @@ name|HOSTUUIDLEN
 index|]
 decl_stmt|;
 comment|/* (p) jail hostuuid */
+name|char
+name|pr_osrelease
+index|[
+name|OSRELEASELEN
+index|]
+decl_stmt|;
+comment|/* (c) kern.osrelease value */
 block|}
 struct|;
 end_struct
@@ -777,28 +795,6 @@ end_define
 
 begin_comment
 comment|/* Virtual network stack */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PR_IP4_DISABLE
-value|0x00000020
-end_define
-
-begin_comment
-comment|/* Disable IPv4 */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PR_IP6_DISABLE
-value|0x00000040
-end_define
-
-begin_comment
-comment|/* Disable IPv6 */
 end_comment
 
 begin_define
@@ -967,8 +963,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|PR_ALLOW_MOUNT_FDESCFS
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|PR_ALLOW_ALL
-value|0x0fff
+value|0x1fff
 end_define
 
 begin_comment
@@ -1405,6 +1408,15 @@ parameter_list|,
 name|unsigned
 name|long
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|prison0_init
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

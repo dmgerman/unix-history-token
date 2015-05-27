@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-domain.c,v 1.98 2007-12-09 01:40:32 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -53,12 +36,6 @@ begin_include
 include|#
 directive|include
 file|"nameser.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include
@@ -116,7 +93,7 @@ literal|" op7"
 block|,
 literal|" op8"
 block|,
-literal|" updataA"
+literal|" updateA"
 block|,
 literal|" updateD"
 block|,
@@ -188,6 +165,10 @@ name|u_char
 modifier|*
 name|ns_nskip
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -202,7 +183,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -279,7 +260,7 @@ comment|/* unknown ELT */
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -331,7 +312,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -370,6 +351,10 @@ name|u_char
 modifier|*
 name|blabel_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -397,7 +382,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -444,9 +429,13 @@ operator|+
 name|slen
 expr_stmt|;
 comment|/* print the bit string as a hex string */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\\[x"
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -477,18 +466,22 @@ name|bitp
 operator|++
 control|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|bitp
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%02x"
-argument_list|,
+operator|,
 operator|*
 name|bitp
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -499,7 +492,7 @@ operator|>
 literal|4
 condition|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|bitp
@@ -511,10 +504,13 @@ operator|*
 name|bitp
 operator|++
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%02x"
-argument_list|,
+operator|,
 name|tc
 operator|&
 operator|(
@@ -524,6 +520,7 @@ operator|(
 literal|8
 operator|-
 name|b
+operator|)
 operator|)
 operator|)
 argument_list|)
@@ -537,7 +534,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|bitp
@@ -549,10 +546,13 @@ operator|*
 name|bitp
 operator|++
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%1x"
-argument_list|,
+operator|,
 operator|(
 operator|(
 name|tc
@@ -572,14 +572,19 @@ operator|-
 name|b
 operator|)
 operator|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"/%d]"
-argument_list|,
+operator|,
 name|bitlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -587,11 +592,15 @@ name|lim
 return|;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|".../%d]"
-argument_list|,
+operator|,
 name|bitlen
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -605,6 +614,10 @@ specifier|static
 name|int
 name|labellen
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -618,7 +631,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -669,11 +682,15 @@ operator|!=
 name|EDNS0_ELT_BITLABEL
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<ELT %d>"
-argument_list|,
+operator|,
 name|elt
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -686,7 +703,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 operator|(
@@ -754,6 +771,10 @@ name|u_char
 modifier|*
 name|ns_nprint
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -796,7 +817,9 @@ decl_stmt|;
 name|int
 name|data_size
 init|=
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|bp
 decl_stmt|;
@@ -807,6 +830,8 @@ name|l
 operator|=
 name|labellen
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 operator|)
@@ -825,7 +850,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -882,7 +907,9 @@ name|i
 operator|&&
 name|cp
 operator|<
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 block|{
 if|if
@@ -916,7 +943,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -955,6 +982,8 @@ name|l
 operator|=
 name|labellen
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 operator|)
@@ -973,7 +1002,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -1003,9 +1032,13 @@ operator|>=
 name|data_size
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<LOOP>"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1048,6 +1081,8 @@ if|if
 condition|(
 name|blabel_print
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 operator|==
@@ -1061,11 +1096,15 @@ return|;
 break|break;
 default|default:
 comment|/* unknown ELT */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<ELT %d>"
-argument_list|,
+operator|,
 name|elt
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1081,11 +1120,15 @@ if|if
 condition|(
 name|fn_printn
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|l
 argument_list|,
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 argument_list|)
 condition|)
 return|return
@@ -1102,9 +1145,13 @@ name|chars_processed
 operator|+=
 name|l
 expr_stmt|;
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|'.'
+operator|(
+name|ndo
+operator|,
+literal|"."
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1114,6 +1161,8 @@ name|l
 operator|=
 name|labellen
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 operator|)
@@ -1132,7 +1181,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -1167,9 +1216,13 @@ literal|1
 expr_stmt|;
 block|}
 else|else
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|'.'
+operator|(
+name|ndo
+operator|,
+literal|"."
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1191,6 +1244,10 @@ name|u_char
 modifier|*
 name|ns_cprint
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -1205,7 +1262,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -1228,11 +1285,15 @@ if|if
 condition|(
 name|fn_printn
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|i
 argument_list|,
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 argument_list|)
 condition|)
 return|return
@@ -1255,6 +1316,7 @@ comment|/* http://www.iana.org/assignments/dns-parameters */
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|ns_type2str
@@ -1690,6 +1752,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|const
 name|struct
 name|tok
 name|ns_class2str
@@ -1741,6 +1804,10 @@ name|u_char
 modifier|*
 name|ns_qprint
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -1775,6 +1842,8 @@ name|cp
 operator|=
 name|ns_nskip
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
@@ -1785,7 +1854,7 @@ operator|==
 name|NULL
 operator|||
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -1810,10 +1879,13 @@ name|cp
 operator|+=
 literal|2
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ns_type2str
@@ -1822,6 +1894,7 @@ literal|"Type%d"
 argument_list|,
 name|i
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* print the qclass (if it's not IN) */
@@ -1860,10 +1933,13 @@ name|class
 operator|!=
 name|C_IN
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ns_class2str
@@ -1872,6 +1948,7 @@ literal|"(Class %d)"
 argument_list|,
 name|class
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1879,35 +1956,37 @@ condition|(
 name|is_mdns
 condition|)
 block|{
-if|if
-condition|(
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
 name|i
 operator|&
 name|C_QU
-condition|)
-name|printf
-argument_list|(
+condition|?
 literal|" (QU)"
-argument_list|)
-expr_stmt|;
-else|else
-name|printf
-argument_list|(
+else|:
 literal|" (QM)"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"? "
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
 operator|=
 name|ns_nprint
 argument_list|(
+name|ndo
+argument_list|,
 name|np
 argument_list|,
 name|bp
@@ -1938,6 +2017,10 @@ name|u_char
 modifier|*
 name|ns_rprint
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -1978,12 +2061,18 @@ name|rp
 decl_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|' '
+operator|(
+name|ndo
+operator|,
+literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1993,6 +2082,8 @@ name|cp
 operator|=
 name|ns_nprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -2010,6 +2101,8 @@ name|cp
 operator|=
 name|ns_nskip
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
@@ -2020,7 +2113,7 @@ operator|==
 name|NULL
 operator|||
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -2030,7 +2123,9 @@ argument_list|)
 condition|)
 return|return
 operator|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|)
 return|;
 comment|/* print the type/qtype */
@@ -2085,10 +2180,13 @@ name|typ
 operator|!=
 name|T_OPT
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ns_class2str
@@ -2097,6 +2195,7 @@ literal|"(Class %d)"
 argument_list|,
 name|class
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2110,9 +2209,13 @@ name|i
 operator|&
 name|C_CACHE_FLUSH
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" (Cache flush)"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2144,28 +2247,40 @@ block|}
 elseif|else
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|2
 condition|)
 block|{
 comment|/* print ttl */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" ["
+operator|)
 argument_list|)
 expr_stmt|;
 name|relts_print
 argument_list|(
+name|ndo
+argument_list|,
 name|EXTRACT_32BITS
 argument_list|(
 name|cp
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"]"
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -2198,10 +2313,13 @@ name|cp
 operator|+
 name|len
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ns_type2str
@@ -2210,13 +2328,16 @@ literal|"Type%d"
 argument_list|,
 name|typ
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|rp
 operator|>
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 return|return
 operator|(
@@ -2234,7 +2355,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -2251,10 +2372,13 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|intoa
 argument_list|(
 name|htonl
@@ -2265,6 +2389,7 @@ name|cp
 argument_list|)
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2285,15 +2410,21 @@ name|T_DNAME
 case|:
 endif|#
 directive|endif
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|' '
+operator|(
+name|ndo
+operator|,
+literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|ns_nprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -2313,12 +2444,18 @@ case|:
 if|if
 condition|(
 operator|!
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 break|break;
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|' '
+operator|(
+name|ndo
+operator|,
+literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2328,6 +2465,8 @@ name|cp
 operator|=
 name|ns_nprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -2341,9 +2480,13 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|' '
+operator|(
+name|ndo
+operator|,
+literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2353,6 +2496,8 @@ name|cp
 operator|=
 name|ns_nprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -2369,7 +2514,7 @@ return|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -2384,70 +2529,90 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
 operator|+=
 literal|4
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
 operator|+=
 literal|4
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
 operator|+=
 literal|4
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
 operator|+=
 literal|4
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -2458,15 +2623,19 @@ break|break;
 case|case
 name|T_MX
 case|:
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|' '
+operator|(
+name|ndo
+operator|,
+literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -2483,6 +2652,8 @@ if|if
 condition|(
 name|ns_nprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 operator|+
 literal|2
@@ -2497,14 +2668,18 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %d"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2518,15 +2693,21 @@ operator|<
 name|rp
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" \""
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
 operator|=
 name|ns_cprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
@@ -2541,9 +2722,13 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|'"'
+operator|(
+name|ndo
+operator|,
+literal|"\""
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2551,15 +2736,19 @@ break|break;
 case|case
 name|T_SRV
 case|:
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|' '
+operator|(
+name|ndo
+operator|,
+literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -2576,6 +2765,8 @@ if|if
 condition|(
 name|ns_nprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 operator|+
 literal|6
@@ -2590,28 +2781,32 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|":%d %d %d"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|cp
 operator|+
 literal|4
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|cp
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|cp
 operator|+
 literal|2
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2635,7 +2830,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -2666,10 +2861,13 @@ name|in6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|inet_ntop
 argument_list|(
 name|AF_INET6
@@ -2684,6 +2882,7 @@ argument_list|(
 name|ntop_buf
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2710,7 +2909,7 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -2746,11 +2945,15 @@ operator|>
 literal|128
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %u(bad plen)"
-argument_list|,
+operator|,
 name|pbit
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2766,7 +2969,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 operator|(
@@ -2823,12 +3026,15 @@ operator|-
 name|pbyte
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %u %s"
-argument_list|,
+operator|,
 name|pbit
-argument_list|,
+operator|,
 name|inet_ntop
 argument_list|(
 name|AF_INET6
@@ -2843,6 +3049,7 @@ argument_list|(
 name|ntop_buf
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2853,15 +3060,21 @@ operator|>
 literal|0
 condition|)
 block|{
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|' '
+operator|(
+name|ndo
+operator|,
+literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|ns_nprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 operator|+
 literal|1
@@ -2892,11 +3105,15 @@ comment|/*INET6*/
 case|case
 name|T_OPT
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" UDPsize=%u"
-argument_list|,
+operator|,
 name|class
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2905,9 +3122,13 @@ name|opt_flags
 operator|&
 literal|0x8000
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" OK"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2918,7 +3139,7 @@ comment|/* One long string */
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -2935,11 +3156,15 @@ if|if
 condition|(
 name|fn_printn
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|len
 argument_list|,
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 argument_list|)
 condition|)
 return|return
@@ -2958,7 +3183,9 @@ name|cp
 operator|+
 name|len
 operator|>
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 return|return
 operator|(
@@ -2968,12 +3195,18 @@ return|;
 if|if
 condition|(
 operator|!
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 break|break;
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|' '
+operator|(
+name|ndo
+operator|,
+literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2983,6 +3216,8 @@ name|cp
 operator|=
 name|ns_nprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -3003,7 +3238,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -3016,14 +3251,18 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" fudge=%u"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -3033,7 +3272,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -3046,14 +3285,18 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" maclen=%u"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -3068,7 +3311,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -3081,14 +3324,18 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" origid=%u"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -3098,7 +3345,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -3111,14 +3358,18 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" error=%u"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -3128,7 +3379,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|TTEST2
+name|ND_TTEST2
 argument_list|(
 operator|*
 name|cp
@@ -3141,14 +3392,18 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" otherlen=%u"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 name|cp
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -3170,6 +3425,10 @@ begin_function
 name|void
 name|ns_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -3205,7 +3464,7 @@ name|u_char
 modifier|*
 name|cp
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|b2
 decl_stmt|;
 name|np
@@ -3217,7 +3476,7 @@ operator|*
 operator|)
 name|bp
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|np
@@ -3273,10 +3532,13 @@ argument_list|)
 condition|)
 block|{
 comment|/* this is a response */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%d%s%s%s%s%s%s"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -3284,7 +3546,7 @@ name|np
 operator|->
 name|id
 argument_list|)
-argument_list|,
+operator|,
 name|ns_ops
 index|[
 name|DNS_OPCODE
@@ -3292,7 +3554,7 @@ argument_list|(
 name|np
 argument_list|)
 index|]
-argument_list|,
+operator|,
 name|ns_resp
 index|[
 name|DNS_RCODE
@@ -3300,7 +3562,7 @@ argument_list|(
 name|np
 argument_list|)
 index|]
-argument_list|,
+operator|,
 name|DNS_AA
 argument_list|(
 name|np
@@ -3309,7 +3571,7 @@ condition|?
 literal|"*"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|DNS_RA
 argument_list|(
 name|np
@@ -3318,7 +3580,7 @@ condition|?
 literal|""
 else|:
 literal|"-"
-argument_list|,
+operator|,
 name|DNS_TC
 argument_list|(
 name|np
@@ -3327,7 +3589,7 @@ condition|?
 literal|"|"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|DNS_AD
 argument_list|(
 name|np
@@ -3336,6 +3598,7 @@ condition|?
 literal|"$"
 else|:
 literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3344,11 +3607,15 @@ name|qdcount
 operator|!=
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [%dq]"
-argument_list|,
+operator|,
 name|qdcount
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Print QUESTION section on -vv */
@@ -3385,23 +3652,31 @@ argument_list|)
 operator|-
 literal|1
 condition|)
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|','
+operator|(
+name|ndo
+operator|,
+literal|","
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
 block|{
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" q:"
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3411,6 +3686,8 @@ name|cp
 operator|=
 name|ns_qprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -3434,6 +3711,8 @@ name|cp
 operator|=
 name|ns_nskip
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|)
 operator|)
@@ -3450,15 +3729,19 @@ expr_stmt|;
 comment|/* skip QTYPE and QCLASS */
 block|}
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %d/%d/%d"
-argument_list|,
+operator|,
 name|ancount
-argument_list|,
+operator|,
 name|nscount
-argument_list|,
+operator|,
 name|arcount
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3474,6 +3757,8 @@ name|cp
 operator|=
 name|ns_rprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -3491,15 +3776,21 @@ while|while
 condition|(
 name|cp
 operator|<
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|&&
 name|ancount
 operator|--
 condition|)
 block|{
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|','
+operator|(
+name|ndo
+operator|,
+literal|","
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3509,6 +3800,8 @@ name|cp
 operator|=
 name|ns_rprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -3536,7 +3829,9 @@ goto|;
 comment|/* Print NS and AR sections on -vv */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
@@ -3545,17 +3840,21 @@ if|if
 condition|(
 name|cp
 operator|<
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|&&
 name|nscount
 operator|--
 condition|)
 block|{
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" ns:"
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3565,6 +3864,8 @@ name|cp
 operator|=
 name|ns_rprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -3582,15 +3883,21 @@ while|while
 condition|(
 name|cp
 operator|<
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|&&
 name|nscount
 operator|--
 condition|)
 block|{
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|','
+operator|(
+name|ndo
+operator|,
+literal|","
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3600,6 +3907,8 @@ name|cp
 operator|=
 name|ns_rprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -3628,17 +3937,21 @@ if|if
 condition|(
 name|cp
 operator|<
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|&&
 name|arcount
 operator|--
 condition|)
 block|{
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" ar:"
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3648,6 +3961,8 @@ name|cp
 operator|=
 name|ns_rprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -3665,15 +3980,21 @@ while|while
 condition|(
 name|cp
 operator|<
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|&&
 name|arcount
 operator|--
 condition|)
 block|{
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|','
+operator|(
+name|ndo
+operator|,
+literal|","
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3683,6 +4004,8 @@ name|cp
 operator|=
 name|ns_rprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -3712,10 +4035,13 @@ block|}
 else|else
 block|{
 comment|/* this is a request */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%d%s%s%s"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -3723,7 +4049,7 @@ name|np
 operator|->
 name|id
 argument_list|)
-argument_list|,
+operator|,
 name|ns_ops
 index|[
 name|DNS_OPCODE
@@ -3731,7 +4057,7 @@ argument_list|(
 name|np
 argument_list|)
 index|]
-argument_list|,
+operator|,
 name|DNS_RD
 argument_list|(
 name|np
@@ -3740,7 +4066,7 @@ condition|?
 literal|"+"
 else|:
 literal|""
-argument_list|,
+operator|,
 name|DNS_CD
 argument_list|(
 name|np
@@ -3749,6 +4075,7 @@ condition|?
 literal|"%"
 else|:
 literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* any weirdness? */
@@ -3773,11 +4100,15 @@ name|b2
 operator|&
 literal|0x6cf
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [b2&3=0x%x]"
-argument_list|,
+operator|,
 name|b2
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3794,11 +4125,15 @@ if|if
 condition|(
 name|qdcount
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [%dq]"
-argument_list|,
+operator|,
 name|qdcount
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3807,11 +4142,15 @@ name|ancount
 operator|!=
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [%da]"
-argument_list|,
+operator|,
 name|ancount
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3821,11 +4160,15 @@ if|if
 condition|(
 name|ancount
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [%da]"
-argument_list|,
+operator|,
 name|ancount
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3834,11 +4177,15 @@ name|qdcount
 operator|!=
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [%dq]"
-argument_list|,
+operator|,
 name|qdcount
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3846,22 +4193,30 @@ if|if
 condition|(
 name|nscount
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [%dn]"
-argument_list|,
+operator|,
 name|nscount
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|arcount
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [%dau]"
-argument_list|,
+operator|,
 name|arcount
+operator|)
 argument_list|)
 expr_stmt|;
 name|cp
@@ -3887,6 +4242,8 @@ name|cp
 operator|=
 name|ns_qprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 operator|(
@@ -3911,7 +4268,9 @@ while|while
 condition|(
 name|cp
 operator|<
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|&&
 name|qdcount
 operator|--
@@ -3921,6 +4280,8 @@ name|cp
 operator|=
 name|ns_qprint
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 specifier|const
 name|u_char
@@ -3960,7 +4321,9 @@ goto|;
 comment|/* Print remaining sections on -vv */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
@@ -3978,6 +4341,8 @@ name|cp
 operator|=
 name|ns_rprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -3995,15 +4360,21 @@ while|while
 condition|(
 name|cp
 operator|<
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|&&
 name|ancount
 operator|--
 condition|)
 block|{
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|','
+operator|(
+name|ndo
+operator|,
+literal|","
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4013,6 +4384,8 @@ name|cp
 operator|=
 name|ns_rprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -4041,17 +4414,21 @@ if|if
 condition|(
 name|cp
 operator|<
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|&&
 name|nscount
 operator|--
 condition|)
 block|{
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" ns:"
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4061,6 +4438,8 @@ name|cp
 operator|=
 name|ns_rprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -4081,12 +4460,18 @@ operator|--
 operator|&&
 name|cp
 operator|<
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 block|{
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|','
+operator|(
+name|ndo
+operator|,
+literal|","
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4096,6 +4481,8 @@ name|cp
 operator|=
 name|ns_rprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -4124,17 +4511,21 @@ if|if
 condition|(
 name|cp
 operator|<
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|&&
 name|arcount
 operator|--
 condition|)
 block|{
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" ar:"
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4144,6 +4535,8 @@ name|cp
 operator|=
 name|ns_rprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -4161,15 +4554,21 @@ while|while
 condition|(
 name|cp
 operator|<
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|&&
 name|arcount
 operator|--
 condition|)
 block|{
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|','
+operator|(
+name|ndo
+operator|,
+literal|","
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4179,6 +4578,8 @@ name|cp
 operator|=
 name|ns_rprint
 argument_list|(
+name|ndo
+argument_list|,
 name|cp
 argument_list|,
 name|bp
@@ -4205,22 +4606,29 @@ name|trunc
 goto|;
 block|}
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" (%d)"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|domain]"
+operator|)
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 end_function
 

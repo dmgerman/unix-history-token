@@ -82,6 +82,9 @@ decl_stmt|;
 name|class
 name|AliasSetTracker
 decl_stmt|;
+name|class
+name|AssumptionCache
+decl_stmt|;
 comment|/// \brief Return true if this alloca is legal for promotion.
 comment|///
 comment|/// This is true if there are only loads, stores, and lifetime markers
@@ -124,7 +127,13 @@ name|AliasSetTracker
 operator|*
 name|AST
 operator|=
-literal|0
+name|nullptr
+argument_list|,
+name|AssumptionCache
+operator|*
+name|AC
+operator|=
+name|nullptr
 argument_list|)
 decl_stmt|;
 block|}

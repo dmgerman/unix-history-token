@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/system_error.h"
+file|<system_error>
 end_include
 
 begin_include
@@ -111,6 +111,20 @@ comment|/// file.
 name|LFS_Error
 block|}
 enum|;
+comment|/// \brief Describes the result of waiting for the owner to release the lock.
+enum|enum
+name|WaitForUnlockResult
+block|{
+comment|/// \brief The lock was released successfully.
+name|Res_Success
+block|,
+comment|/// \brief Owner died while holding the lock.
+name|Res_OwnerDied
+block|,
+comment|/// \brief Reached timeout while waiting for the owner to release the lock.
+name|Res_Timeout
+block|}
+enum|;
 name|private
 label|:
 name|SmallString
@@ -148,6 +162,8 @@ name|Owner
 expr_stmt|;
 name|Optional
 operator|<
+name|std
+operator|::
 name|error_code
 operator|>
 name|Error
@@ -227,7 +243,7 @@ argument_list|()
 return|;
 block|}
 comment|/// \brief For a shared lock, wait until the owner releases the lock.
-name|void
+name|WaitForUnlockResult
 name|waitForUnlock
 parameter_list|()
 function_decl|;

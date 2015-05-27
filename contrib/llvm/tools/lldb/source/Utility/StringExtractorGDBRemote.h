@@ -166,6 +166,8 @@ name|eServerPacketType_QLaunchArch
 block|,
 name|eServerPacketType_QSetDisableASLR
 block|,
+name|eServerPacketType_QSetDetachOnError
+block|,
 name|eServerPacketType_QSetSTDIN
 block|,
 name|eServerPacketType_QSetSTDOUT
@@ -249,6 +251,8 @@ name|eServerPacketType_qShlibInfoAddr
 block|,
 name|eServerPacketType_qStepPacketSupported
 block|,
+name|eServerPacketType_qSupported
+block|,
 name|eServerPacketType_qSyncThreadStateSupported
 block|,
 name|eServerPacketType_qThreadExtraInfo
@@ -260,6 +264,8 @@ block|,
 name|eServerPacketType_qWatchpointSupportInfo
 block|,
 name|eServerPacketType_qWatchpointSupportInfoSupported
+block|,
+name|eServerPacketType_qXfer_auxv_read
 block|,
 name|eServerPacketType_vAttach
 block|,

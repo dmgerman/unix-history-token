@@ -62,6 +62,12 @@ block|{
 name|class
 name|Decl
 decl_stmt|;
+name|class
+name|MacroDefinition
+decl_stmt|;
+name|class
+name|SourceManager
+decl_stmt|;
 name|namespace
 name|index
 block|{
@@ -75,7 +81,7 @@ return|return
 literal|"c:"
 return|;
 block|}
-comment|/// \brief Generate a USR for a Decl, including the prefix.
+comment|/// \brief Generate a USR for a Decl, including the USR prefix.
 comment|/// \returns true if the results should be ignored, false otherwise.
 name|bool
 name|generateUSRForDecl
@@ -173,6 +179,30 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
+comment|/// \brief Generate a USR for a macro, including the USR prefix.
+comment|///
+comment|/// \returns true on error, false on success.
+name|bool
+name|generateUSRForMacro
+argument_list|(
+specifier|const
+name|MacroDefinition
+operator|*
+name|MD
+argument_list|,
+specifier|const
+name|SourceManager
+operator|&
+name|SM
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Buf
+argument_list|)
+decl_stmt|;
 block|}
 comment|// namespace index
 block|}

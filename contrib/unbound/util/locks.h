@@ -19,6 +19,16 @@ begin_comment
 comment|/**  * \file  * Locking primitives.  * If pthreads is available, these are used.  * If no locking exists, they do nothing.  *  * The idea is to have different sorts of locks for different tasks.  * This allows the locking code to be ported more easily.  *  * Types of locks that are supported.  *   o lock_rw: lock that has many readers and one writer (to a data entry).  *   o lock_basic: simple mutex. Blocking, one person has access only.  *     This lock is meant for non performance sensitive uses.  *   o lock_quick: speed lock. For performance sensitive locking of critical  *     sections. Could be implemented by a mutex or a spinlock.  *   * Also thread creation and deletion functions are defined here.  */
 end_comment
 
+begin_comment
+comment|/* if you define your own LOCKRET before including locks.h, you can get most  * locking functions without the dependency on log_err. */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LOCKRET
+end_ifndef
+
 begin_include
 include|#
 directive|include
@@ -38,6 +48,11 @@ name|func
 parameter_list|)
 value|do {\ 	int lockret_err;		\ 	if( (lockret_err=(func)) != 0)		\ 		log_err("%s at %d could not " #func ": %s", \ 		__FILE__, __LINE__, strerror(lockret_err));	\  	} while(0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/** DEBUG: use thread debug whenever possible */

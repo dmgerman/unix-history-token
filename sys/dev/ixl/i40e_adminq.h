@@ -28,6 +28,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"i40e_status.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"i40e_adminq_cmd.h"
 end_include
 
@@ -237,6 +243,10 @@ name|u16
 name|fw_min_ver
 decl_stmt|;
 comment|/* firmware minor version */
+name|u32
+name|fw_build
+decl_stmt|;
+comment|/* firmware build number */
 name|u16
 name|api_maj_ver
 decl_stmt|;
@@ -245,9 +255,6 @@ name|u16
 name|api_min_ver
 decl_stmt|;
 comment|/* api minor version */
-name|bool
-name|nvm_busy
-decl_stmt|;
 name|bool
 name|nvm_release_on_done
 decl_stmt|;
@@ -289,7 +296,7 @@ begin_define
 define|#
 directive|define
 name|I40E_ASQ_CMD_TIMEOUT
-value|100
+value|250
 end_define
 
 begin_comment

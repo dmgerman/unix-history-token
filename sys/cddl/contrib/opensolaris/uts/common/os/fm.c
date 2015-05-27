@@ -165,7 +165,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_decl_stmt
@@ -314,7 +314,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -392,7 +392,7 @@ name|ksp
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 operator|(
 name|void
 operator|)
@@ -452,7 +452,7 @@ name|ERPT_DATA_SZ
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|ereport_errorq
 operator|=
 name|errorq_nvcreate
@@ -566,7 +566,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -2122,7 +2122,7 @@ return|return;
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|sysevent_evc_bind
@@ -5312,7 +5312,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -5479,7 +5479,7 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function

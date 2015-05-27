@@ -470,7 +470,7 @@ comment|///    A void * pointer that will get passed back to the callback functi
 comment|/// @param[in] is_synchronous
 comment|///    If \b true the callback will be run on the private event thread
 comment|///    before the stop event gets reported.  If false, the callback will get
-comment|///    handled on the public event thead after the stop has been posted.
+comment|///    handled on the public event thread after the stop has been posted.
 comment|///
 comment|/// @return
 comment|///    \b true if the process should stop when you hit the watchpoint.
@@ -632,7 +632,7 @@ name|uint32_t
 name|m_disabled_count
 decl_stmt|;
 comment|// Keep track of the count that the watchpoint is disabled while in ephemeral mode.
-comment|// At the end of the ephemeral mode when the watchpoint is to be enabled agian,
+comment|// At the end of the ephemeral mode when the watchpoint is to be enabled again,
 comment|// we check the count, if it is more than 1, it means the user-supplied actions
 comment|// actually want the watchpoint to be disabled!
 name|uint32_t

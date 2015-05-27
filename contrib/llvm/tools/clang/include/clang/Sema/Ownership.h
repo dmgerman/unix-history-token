@@ -169,7 +169,7 @@ argument_list|()
 operator|:
 name|Ptr
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 specifier|static
@@ -274,7 +274,7 @@ block|{
 return|return
 name|Ptr
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 name|void
@@ -674,27 +674,21 @@ operator|&&
 name|Val
 return|;
 block|}
+name|bool
+name|isUnset
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|Invalid
+operator|&&
+operator|!
+name|Val
+return|;
+block|}
 name|PtrTy
 name|get
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Val
-return|;
-block|}
-comment|// FIXME: Replace with get.
-name|PtrTy
-name|release
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Val
-return|;
-block|}
-name|PtrTy
-name|take
 argument_list|()
 specifier|const
 block|{
@@ -709,7 +703,7 @@ name|T
 operator|>
 name|T
 operator|*
-name|takeAs
+name|getAs
 argument_list|()
 block|{
 return|return
@@ -914,6 +908,20 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|bool
+name|isUnset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PtrWithInvalid
+operator|==
+literal|0
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|PtrTy
 name|get
 argument_list|()
@@ -946,36 +954,6 @@ return|;
 block|}
 end_expr_stmt
 
-begin_comment
-comment|// FIXME: Replace with get.
-end_comment
-
-begin_expr_stmt
-name|PtrTy
-name|take
-argument_list|()
-specifier|const
-block|{
-return|return
-name|get
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|PtrTy
-name|release
-argument_list|()
-specifier|const
-block|{
-return|return
-name|get
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
 begin_expr_stmt
 name|template
 operator|<
@@ -984,7 +962,7 @@ name|T
 operator|>
 name|T
 operator|*
-name|takeAs
+name|getAs
 argument_list|()
 block|{
 return|return
@@ -1353,8 +1331,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|llvm
-operator|::
 name|MutableArrayRef
 operator|<
 name|Expr
@@ -1366,8 +1342,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|llvm
-operator|::
 name|MutableArrayRef
 operator|<
 name|Stmt
@@ -1379,8 +1353,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|llvm
-operator|::
 name|MutableArrayRef
 operator|<
 name|ParsedTemplateArgument
@@ -1391,8 +1363,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|llvm
-operator|::
 name|MutableArrayRef
 operator|<
 name|ParsedType
@@ -1403,8 +1373,6 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|llvm
-operator|::
 name|MutableArrayRef
 operator|<
 name|TemplateParameterList

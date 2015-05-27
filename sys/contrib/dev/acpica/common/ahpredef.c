@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -373,6 +373,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_BTH"
+argument_list|,
+literal|"Battery Throttle Limit"
+argument_list|,
+literal|"Thermal limit for charging and discharging"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_BTM"
 argument_list|,
 literal|"Battery Time"
@@ -441,6 +450,15 @@ argument_list|,
 literal|"Continuous Performance Control"
 argument_list|,
 literal|"Returns a list of performance control interfaces"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_CR3"
+argument_list|,
+literal|"Warm/Standby Temperature"
+argument_list|,
+literal|"Temperature for a fast low power state"
 argument_list|)
 block|,
 name|AH_PREDEF
@@ -1102,6 +1120,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_LPI"
+argument_list|,
+literal|"Low Power Idle States"
+argument_list|,
+literal|"Returns a list of supported low power idle states"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_MAF"
 argument_list|,
 literal|"Maximum Address Fixed"
@@ -1197,6 +1224,15 @@ argument_list|,
 literal|"Memory Set Monitoring"
 argument_list|,
 literal|"Sets bandwidth monitoring parameters for a memory device"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_MTL"
+argument_list|,
+literal|"Minimum Throttle Limit"
+argument_list|,
+literal|"Returns the minimum throttle limit for a thermal zone"
 argument_list|)
 block|,
 name|AH_PREDEF
@@ -1410,7 +1446,7 @@ name|AH_PREDEF
 argument_list|(
 literal|"_PPC"
 argument_list|,
-literal|"Performance Present Capabilites"
+literal|"Performance Present Capabilities"
 argument_list|,
 literal|"Returns a list of the performance states currently supported by the platform"
 argument_list|)
@@ -1494,6 +1530,15 @@ argument_list|,
 literal|"Power Source Redundancy List"
 argument_list|,
 literal|"Returns a list of power source devices in the same redundancy grouping"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_PRR"
+argument_list|,
+literal|"Power Resource for Reset"
+argument_list|,
+literal|"Execute a reset on a device"
 argument_list|)
 block|,
 name|AH_PREDEF
@@ -1705,6 +1750,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_RDI"
+argument_list|,
+literal|"Resource Dependencies for Idle"
+argument_list|,
+literal|"Returns a list of dependencies for idle states"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_REG"
 argument_list|,
 literal|"Region Availability"
@@ -1737,6 +1791,15 @@ argument_list|,
 literal|"Range"
 argument_list|,
 literal|"Memory range type, Resource Descriptor field"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_RST"
+argument_list|,
+literal|"Device Reset"
+argument_list|,
+literal|"Executes a reset on a device"
 argument_list|)
 block|,
 name|AH_PREDEF
@@ -2191,6 +2254,15 @@ argument_list|)
 block|,
 name|AH_PREDEF
 argument_list|(
+literal|"_TFP"
+argument_list|,
+literal|"Thermal Fast Sampling Period"
+argument_list|,
+literal|"Returns the sampling period for passive cooling"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
 literal|"_TIP"
 argument_list|,
 literal|"Expired Timer Wake Policy"
@@ -2277,6 +2349,15 @@ argument_list|,
 literal|"Type-Specific Flags"
 argument_list|,
 literal|"Resource Descriptor field"
+argument_list|)
+block|,
+name|AH_PREDEF
+argument_list|(
+literal|"_TSN"
+argument_list|,
+literal|"Thermal Sensor Device"
+argument_list|,
+literal|"Returns a reference to a thermal sensor"
 argument_list|)
 block|,
 name|AH_PREDEF

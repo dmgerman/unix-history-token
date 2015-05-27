@@ -209,9 +209,9 @@ name|td
 operator|->
 name|td_pcb
 operator|->
-name|un_32
+name|pcb_regs
 operator|.
-name|pcb32_r11
+name|sf_r11
 expr_stmt|;
 name|stack_zero
 argument_list|(

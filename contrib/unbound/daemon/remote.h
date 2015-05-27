@@ -160,6 +160,10 @@ name|listen_list
 modifier|*
 name|accept_list
 decl_stmt|;
+comment|/* if certificates are used */
+name|int
+name|use_cert
+decl_stmt|;
 comment|/** number of active commpoints that are handling remote control */
 name|int
 name|active

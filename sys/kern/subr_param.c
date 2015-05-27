@@ -405,25 +405,6 @@ begin_comment
 comment|/* Limit on pipe KVA */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|XEN
-end_ifdef
-
-begin_decl_stmt
-name|int
-name|vm_guest
-init|=
-name|VM_GUEST_XEN
-decl_stmt|;
-end_decl_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_decl_stmt
 name|int
 name|vm_guest
@@ -435,11 +416,6 @@ end_decl_stmt
 begin_comment
 comment|/* Running as virtual machine guest? */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|u_long
@@ -1395,7 +1371,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|SYSCTL_OUT
+name|SYSCTL_OUT_STR
 argument_list|(
 name|req
 argument_list|,
@@ -1403,14 +1379,6 @@ name|vm_guest_sysctl_names
 index|[
 name|vm_guest
 index|]
-argument_list|,
-name|strlen
-argument_list|(
-name|vm_guest_sysctl_names
-index|[
-name|vm_guest
-index|]
-argument_list|)
 argument_list|)
 operator|)
 return|;

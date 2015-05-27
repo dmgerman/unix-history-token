@@ -50,14 +50,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_MC_MCBJECTFILEINFO_H
+name|LLVM_MC_MCOBJECTFILEINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_MC_MCBJECTFILEINFO_H
+name|LLVM_MC_MCOBJECTFILEINFO_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Triple.h"
+end_include
 
 begin_include
 include|#
@@ -79,9 +85,6 @@ name|class
 name|StringRef
 decl_stmt|;
 name|class
-name|Triple
-decl_stmt|;
-name|class
 name|MCObjectFileInfo
 block|{
 name|protected
@@ -97,23 +100,19 @@ comment|/// weak_definition of constant 0 for an omitted EH frame.
 name|bool
 name|SupportsWeakOmittedEHFrame
 decl_stmt|;
-comment|/// IsFunctionEHFrameSymbolPrivate - This flag is set to true if the
-comment|/// "EH_frame" symbol for EH information should be an assembler temporary (aka
-comment|/// private linkage, aka an L or .L label) or false if it should be a normal
-comment|/// non-.globl label.  This defaults to true.
+comment|/// SupportsCompactUnwindWithoutEHFrame - True if the target object file
+comment|/// supports emitting a compact unwind section without an associated EH frame
+comment|/// section.
 name|bool
-name|IsFunctionEHFrameSymbolPrivate
+name|SupportsCompactUnwindWithoutEHFrame
 decl_stmt|;
-comment|/// PersonalityEncoding, LSDAEncoding, FDEEncoding, TTypeEncoding - Some
-comment|/// encoding values for EH.
+comment|/// PersonalityEncoding, LSDAEncoding, TTypeEncoding - Some encoding values
+comment|/// for EH.
 name|unsigned
 name|PersonalityEncoding
 decl_stmt|;
 name|unsigned
 name|LSDAEncoding
-decl_stmt|;
-name|unsigned
-name|FDEEncoding
 decl_stmt|;
 name|unsigned
 name|FDECFIEncoding
@@ -289,6 +288,11 @@ decl_stmt|;
 specifier|const
 name|MCSection
 modifier|*
+name|DwarfTypesDWOSection
+decl_stmt|;
+specifier|const
+name|MCSection
+modifier|*
 name|DwarfAbbrevDWOSection
 decl_stmt|;
 specifier|const
@@ -326,6 +330,11 @@ specifier|const
 name|MCSection
 modifier|*
 name|DwarfGnuPubTypesSection
+decl_stmt|;
+specifier|const
+name|MCSection
+modifier|*
+name|COFFDebugSymbolsSection
 decl_stmt|;
 comment|// Extra TLS Variable Data section.  If the target needs to put additional
 comment|// information for a TLS variable, it'll go here.
@@ -526,21 +535,21 @@ name|ctx
 argument_list|)
 decl_stmt|;
 name|bool
-name|isFunctionEHFrameSymbolPrivate
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsFunctionEHFrameSymbolPrivate
-return|;
-block|}
-name|bool
 name|getSupportsWeakOmittedEHFrame
 argument_list|()
 specifier|const
 block|{
 return|return
 name|SupportsWeakOmittedEHFrame
+return|;
+block|}
+name|bool
+name|getSupportsCompactUnwindWithoutEHFrame
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SupportsCompactUnwindWithoutEHFrame
 return|;
 block|}
 name|bool
@@ -572,18 +581,11 @@ return|;
 block|}
 name|unsigned
 name|getFDEEncoding
-argument_list|(
-name|bool
-name|CFI
-argument_list|)
-decl|const
+argument_list|()
+specifier|const
 block|{
 return|return
-name|CFI
-condition|?
 name|FDECFIEncoding
-else|:
-name|FDEEncoding
 return|;
 block|}
 name|unsigned
@@ -871,6 +873,27 @@ return|;
 block|}
 specifier|const
 name|MCSection
+modifier|*
+name|getDwarfTypesSection
+argument_list|(
+name|uint64_t
+name|Hash
+argument_list|)
+decl|const
+decl_stmt|;
+specifier|const
+name|MCSection
+operator|*
+name|getDwarfTypesDWOSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfTypesDWOSection
+return|;
+block|}
+specifier|const
+name|MCSection
 operator|*
 name|getDwarfAbbrevDWOSection
 argument_list|()
@@ -933,6 +956,17 @@ specifier|const
 block|{
 return|return
 name|DwarfAddrSection
+return|;
+block|}
+specifier|const
+name|MCSection
+operator|*
+name|getCOFFDebugSymbolsSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|COFFDebugSymbolsSection
 return|;
 block|}
 specifier|const
@@ -1278,8 +1312,6 @@ return|return
 name|EHFrameSection
 return|;
 block|}
-name|private
-label|:
 enum|enum
 name|Environment
 block|{
@@ -1290,6 +1322,28 @@ block|,
 name|IsCOFF
 block|}
 enum|;
+name|Environment
+name|getObjectFileType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Env
+return|;
+block|}
+name|Reloc
+operator|::
+name|Model
+name|getRelocM
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RelocM
+return|;
+block|}
+name|private
+label|:
 name|Environment
 name|Env
 decl_stmt|;
@@ -1306,6 +1360,9 @@ expr_stmt|;
 name|MCContext
 modifier|*
 name|Ctx
+decl_stmt|;
+name|Triple
+name|TT
 decl_stmt|;
 name|void
 name|InitMachOMCObjectFileInfo
@@ -1334,6 +1391,19 @@ name|void
 name|InitEHFrameSection
 parameter_list|()
 function_decl|;
+name|public
+label|:
+specifier|const
+name|Triple
+operator|&
+name|getTargetTriple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TT
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

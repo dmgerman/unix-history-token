@@ -136,19 +136,16 @@ directive|include
 file|"cl.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|cl_rdiv
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function
 specifier|static
@@ -331,7 +328,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_waddstr --  *	Add len bytes from the string at the cursor, advancing the cursor.  *  * PUBLIC: int cl_waddstr __P((SCR *, const CHAR_T *, size_t));  */
+comment|/*  * cl_waddstr --  *	Add len bytes from the string at the cursor, advancing the cursor.  *  * PUBLIC: int cl_waddstr(SCR *, const CHAR_T *, size_t);  */
 end_comment
 
 begin_function
@@ -371,7 +368,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_addstr --  *	Add len bytes from the string at the cursor, advancing the cursor.  *  * PUBLIC: int cl_addstr __P((SCR *, const char *, size_t));  */
+comment|/*  * cl_addstr --  *	Add len bytes from the string at the cursor, advancing the cursor.  *  * PUBLIC: int cl_addstr(SCR *, const char *, size_t);  */
 end_comment
 
 begin_function
@@ -411,7 +408,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_attr --  *	Toggle a screen attribute on/off.  *  * PUBLIC: int cl_attr __P((SCR *, scr_attr_t, int));  */
+comment|/*  * cl_attr --  *	Toggle a screen attribute on/off.  *  * PUBLIC: int cl_attr(SCR *, scr_attr_t, int);  */
 end_comment
 
 begin_function
@@ -722,7 +719,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_baud --  *	Return the baud rate.  *  * PUBLIC: int cl_baud __P((SCR *, u_long *));  */
+comment|/*  * cl_baud --  *	Return the baud rate.  *  * PUBLIC: int cl_baud(SCR *, u_long *);  */
 end_comment
 
 begin_function
@@ -817,7 +814,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_bell --  *	Ring the bell/flash the screen.  *  * PUBLIC: int cl_bell __P((SCR *));  */
+comment|/*  * cl_bell --  *	Ring the bell/flash the screen.  *  * PUBLIC: int cl_bell(SCR *);  */
 end_comment
 
 begin_function
@@ -890,7 +887,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_clrtoeol --  *	Clear from the current cursor to the end of the line.  *  * PUBLIC: int cl_clrtoeol __P((SCR *));  */
+comment|/*  * cl_clrtoeol --  *	Clear from the current cursor to the end of the line.  *  * PUBLIC: int cl_clrtoeol(SCR *);  */
 end_comment
 
 begin_function
@@ -948,7 +945,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_cursor --  *	Return the current cursor position.  *  * PUBLIC: int cl_cursor __P((SCR *, size_t *, size_t *));  */
+comment|/*  * cl_cursor --  *	Return the current cursor position.  *  * PUBLIC: int cl_cursor(SCR *, size_t *, size_t *);  */
 end_comment
 
 begin_function
@@ -1008,7 +1005,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_deleteln --  *	Delete the current line, scrolling all lines below it.  *  * PUBLIC: int cl_deleteln __P((SCR *));  */
+comment|/*  * cl_deleteln --  *	Delete the current line, scrolling all lines below it.  *  * PUBLIC: int cl_deleteln(SCR *);  */
 end_comment
 
 begin_function
@@ -1134,7 +1131,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * cl_discard --  *	Discard a screen.  *  * PUBLIC: int cl_discard __P((SCR *, SCR **));  */
+comment|/*   * cl_discard --  *	Discard a screen.  *  * PUBLIC: int cl_discard(SCR *, SCR **);  */
 end_comment
 
 begin_function
@@ -1292,7 +1289,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * cl_ex_adjust --  *	Adjust the screen for ex.  This routine is purely for standalone  *	ex programs.  All special purpose, all special case.  *  * PUBLIC: int cl_ex_adjust __P((SCR *, exadj_t));  */
+comment|/*   * cl_ex_adjust --  *	Adjust the screen for ex.  This routine is purely for standalone  *	ex programs.  All special purpose, all special case.  *  * PUBLIC: int cl_ex_adjust(SCR *, exadj_t);  */
 end_comment
 
 begin_function
@@ -1504,7 +1501,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_insertln --  *	Push down the current line, discarding the bottom line.  *  * PUBLIC: int cl_insertln __P((SCR *));  */
+comment|/*  * cl_insertln --  *	Push down the current line, discarding the bottom line.  *  * PUBLIC: int cl_insertln(SCR *);  */
 end_comment
 
 begin_function
@@ -1549,7 +1546,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_keyval --  *	Return the value for a special key.  *  * PUBLIC: int cl_keyval __P((SCR *, scr_keyval_t, CHAR_T *, int *));  */
+comment|/*  * cl_keyval --  *	Return the value for a special key.  *  * PUBLIC: int cl_keyval(SCR *, scr_keyval_t, CHAR_T *, int *);  */
 end_comment
 
 begin_function
@@ -1703,7 +1700,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_move --  *	Move the cursor.  *  * PUBLIC: int cl_move __P((SCR *, size_t, size_t));  */
+comment|/*  * cl_move --  *	Move the cursor.  *  * PUBLIC: int cl_move(SCR *, size_t, size_t);  */
 end_comment
 
 begin_function
@@ -1800,7 +1797,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_refresh --  *	Refresh the screen.  *  * PUBLIC: int cl_refresh __P((SCR *, int));  */
+comment|/*  * cl_refresh --  *	Refresh the screen.  *  * PUBLIC: int cl_refresh(SCR *, int);  */
 end_comment
 
 begin_function
@@ -2131,7 +2128,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_rename --  *	Rename the file.  *  * PUBLIC: int cl_rename __P((SCR *, char *, int));  */
+comment|/*  * cl_rename --  *	Rename the file.  *  * PUBLIC: int cl_rename(SCR *, char *, int);  */
 end_comment
 
 begin_function
@@ -2419,7 +2416,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_setname --  *	Set a X11 icon/window name.  *  * PUBLIC: void cl_setname __P((GS *, char *));  */
+comment|/*  * cl_setname --  *	Set a X11 icon/window name.  *  * PUBLIC: void cl_setname(GS *, char *);  */
 end_comment
 
 begin_function
@@ -2476,7 +2473,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*   * cl_split --  *	Split a screen.  *  * PUBLIC: int cl_split __P((SCR *, SCR *));  */
+comment|/*   * cl_split --  *	Split a screen.  *  * PUBLIC: int cl_split(SCR *, SCR *);  */
 end_comment
 
 begin_function
@@ -2585,7 +2582,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_suspend --  *	Suspend a screen.  *  * PUBLIC: int cl_suspend __P((SCR *, int *));  */
+comment|/*  * cl_suspend --  *	Suspend a screen.  *  * PUBLIC: int cl_suspend(SCR *, int *);  */
 end_comment
 
 begin_function
@@ -3006,7 +3003,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_usage --  *	Print out the curses usage messages.  *   * PUBLIC: void cl_usage __P((void));  */
+comment|/*  * cl_usage --  *	Print out the curses usage messages.  *   * PUBLIC: void cl_usage(void);  */
 end_comment
 
 begin_function

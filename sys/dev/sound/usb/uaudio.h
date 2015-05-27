@@ -236,7 +236,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|void
 name|uaudio_chan_start
 parameter_list|(
 name|struct
@@ -249,7 +249,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
+name|void
 name|uaudio_chan_stop
 parameter_list|(
 name|struct

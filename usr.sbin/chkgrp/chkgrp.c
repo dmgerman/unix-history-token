@@ -77,18 +77,6 @@ directive|include
 file|<sysexits.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|empty
-index|[]
-init|=
-block|{
-literal|0
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -102,7 +90,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: chkgrp [groupfile]\n"
+literal|"usage: chkgrp [-q] [groupfile]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -126,6 +114,14 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+name|FILE
+modifier|*
+name|gf
+decl_stmt|;
+name|unsigned
+name|long
+name|gid
+decl_stmt|;
 name|unsigned
 name|int
 name|i
@@ -134,10 +130,9 @@ name|size_t
 name|len
 decl_stmt|;
 name|int
+name|opt
+decl_stmt|,
 name|quiet
-decl_stmt|;
-name|int
-name|ch
 decl_stmt|;
 name|int
 name|n
@@ -150,9 +145,10 @@ name|e
 init|=
 literal|0
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
-name|line
+name|cp
 decl_stmt|,
 modifier|*
 name|f
@@ -161,19 +157,14 @@ literal|4
 index|]
 decl_stmt|,
 modifier|*
-name|p
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|cp
+name|gfn
 decl_stmt|,
 modifier|*
-name|gfn
+name|p
 decl_stmt|;
-name|FILE
+name|char
 modifier|*
-name|gf
+name|line
 decl_stmt|;
 name|quiet
 operator|=
@@ -182,7 +173,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|(
-name|ch
+name|opt
 operator|=
 name|getopt
 argument_list|(
@@ -200,7 +191,7 @@ condition|)
 block|{
 switch|switch
 condition|(
-name|ch
+name|opt
 condition|)
 block|{
 case|case
@@ -211,20 +202,25 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-case|case
-literal|'?'
-case|:
 default|default:
 name|usage
 argument_list|()
 expr_stmt|;
 block|}
 block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 if|if
 condition|(
-name|optind
-operator|==
 name|argc
+operator|==
+literal|0
 condition|)
 name|gfn
 operator|=
@@ -233,17 +229,15 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
-name|optind
-operator|==
 name|argc
-operator|-
+operator|==
 literal|1
 condition|)
 name|gfn
 operator|=
 name|argv
 index|[
-name|optind
+literal|0
 index|]
 expr_stmt|;
 else|else
@@ -355,11 +349,9 @@ name|line
 init|;
 name|p
 operator|<
-operator|(
 name|line
 operator|+
 name|len
-operator|)
 condition|;
 name|p
 operator|++
@@ -379,24 +371,28 @@ condition|(
 operator|!
 name|len
 operator|||
-operator|(
 operator|*
 name|p
 operator|==
 literal|'#'
-operator|)
 condition|)
-block|{
-if|#
-directive|if
-literal|0
-comment|/* entry is correct, so print it */
-block|printf("%*.*s\n", len, len, line);
-endif|#
-directive|endif
 continue|continue;
-block|}
-comment|/* 	 * A correct group entry has four colon-separated fields, the third 	 * of which must be entirely numeric and the fourth of which may 	 * be empty. 	 */
+comment|/* 		 * Hack: special case for + line 		 */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|line
+argument_list|,
+literal|"+:::"
+argument_list|,
+name|len
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
+comment|/* 		 * A correct group entry has four colon-separated fields, 		 * the third of which must be entirely numeric and the 		 * fourth of which may be empty. 		 */
 for|for
 control|(
 name|i
@@ -424,20 +420,16 @@ name|line
 operator|+
 name|i
 init|;
-operator|(
 name|i
 operator|<
 name|len
-operator|)
 operator|&&
-operator|(
 name|line
 index|[
 name|i
 index|]
 operator|!=
 literal|':'
-operator|)
 condition|;
 name|i
 operator|++
@@ -446,20 +438,16 @@ comment|/* nothing */
 empty_stmt|;
 if|if
 condition|(
-operator|(
 name|k
 operator|<
 literal|3
-operator|)
 operator|&&
-operator|(
 name|line
 index|[
 name|i
 index|]
 operator|!=
 literal|':'
-operator|)
 condition|)
 break|break;
 name|line
@@ -487,22 +475,19 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
+while|while
+condition|(
 name|k
 operator|<
 literal|4
-condition|;
-name|k
-operator|++
-control|)
+condition|)
 name|f
 index|[
 name|k
+operator|++
 index|]
 operator|=
-name|empty
+literal|""
 expr_stmt|;
 name|e
 operator|=
@@ -747,7 +732,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: line %d: GID is not numeric"
+literal|"%s: line %d: group id is not numeric"
 argument_list|,
 name|gfn
 argument_list|,
@@ -764,10 +749,8 @@ name|errno
 operator|=
 literal|0
 expr_stmt|;
-name|unsigned
-name|long
-name|groupid
-init|=
+name|gid
+operator|=
 name|strtoul
 argument_list|(
 name|f
@@ -779,7 +762,7 @@ name|NULL
 argument_list|,
 literal|10
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|errno
@@ -800,18 +783,23 @@ block|}
 elseif|else
 if|if
 condition|(
-name|groupid
+name|gid
 operator|>
 name|GID_MAX
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"%s: line %d: group id is too large (> %ju)"
+literal|"%s: line %d: group id is too large (%ju> %ju)"
 argument_list|,
 name|gfn
 argument_list|,
 name|n
+argument_list|,
+operator|(
+name|uintmax_t
+operator|)
+name|gid
 argument_list|,
 operator|(
 name|uintmax_t
@@ -824,13 +812,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|#
-directive|if
-literal|0
-comment|/* entry is correct, so print it */
-block|printf("%s:%s:%s:%s\n", f[0], f[1], f[2], f[3]);
-endif|#
-directive|endif
 block|}
 comment|/* check what broke the loop */
 if|if

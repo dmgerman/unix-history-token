@@ -71,7 +71,7 @@ end_endif
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelf_open.c 2932 2013-03-30 01:26:04Z jkoshy $"
+literal|"$Id: libelf_open.c 3007 2014-03-22 08:10:14Z jkoshy $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -185,11 +185,14 @@ expr_stmt|;
 block|}
 do|do
 block|{
-name|readsz
-operator|=
+name|assert
+argument_list|(
 name|bufsz
 operator|-
 name|datasz
+operator|>
+literal|0
+argument_list|)
 expr_stmt|;
 name|t
 operator|=
@@ -208,7 +211,9 @@ name|fd
 argument_list|,
 name|t
 argument_list|,
-name|readsz
+name|bufsz
+operator|-
+name|datasz
 argument_list|)
 operator|)
 operator|<=
@@ -217,6 +222,9 @@ condition|)
 break|break;
 name|datasz
 operator|+=
+operator|(
+name|size_t
+operator|)
 name|readsz
 expr_stmt|;
 block|}

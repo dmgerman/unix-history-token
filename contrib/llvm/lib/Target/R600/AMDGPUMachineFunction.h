@@ -46,13 +46,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPUMACHINEFUNCTION_H
+name|LLVM_LIB_TARGET_R600_AMDGPUMACHINEFUNCTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPUMACHINEFUNCTION_H
+name|LLVM_LIB_TARGET_R600_AMDGPUMACHINEFUNCTION_H
 end_define
 
 begin_include
@@ -82,6 +82,9 @@ name|void
 name|anchor
 argument_list|()
 block|;
+name|unsigned
+name|ShaderType
+block|;
 name|public
 operator|:
 name|AMDGPUMachineFunction
@@ -91,9 +94,6 @@ name|MachineFunction
 operator|&
 name|MF
 argument_list|)
-block|;
-name|unsigned
-name|ShaderType
 block|;
 comment|/// A map to keep track of local memory objects and their offsets within
 comment|/// the local memory space.
@@ -112,6 +112,25 @@ block|;
 comment|/// Number of bytes in the LDS that are being used.
 name|unsigned
 name|LDSSize
+block|;
+comment|/// Start of implicit kernel args
+name|unsigned
+name|ABIArgOffset
+block|;
+name|unsigned
+name|getShaderType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ShaderType
+return|;
+block|}
+name|unsigned
+name|ScratchSize
+block|;
+name|bool
+name|IsKernel
 block|; }
 decl_stmt|;
 block|}
@@ -121,10 +140,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDGPUMACHINEFUNCTION_H
-end_comment
 
 end_unit
 

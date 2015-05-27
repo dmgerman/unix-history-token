@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SEMA_EXTERNAL_SEMA_SOURCE_H
+name|LLVM_CLANG_SEMA_EXTERNALSEMASOURCE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SEMA_EXTERNAL_SEMA_SOURCE_H
+name|LLVM_CLANG_SEMA_EXTERNALSEMASOURCE_H
 end_define
 
 begin_include
@@ -94,6 +94,24 @@ include|#
 directive|include
 file|<utility>
 end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|unsigned
+name|n
+operator|>
+name|class
+name|SmallSetVector
+expr_stmt|;
+block|}
+end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -322,6 +340,23 @@ argument_list|(
 argument|SmallVectorImpl<CXXRecordDecl *>&Decls
 argument_list|)
 block|{}
+comment|/// \brief Read the set of potentially unused typedefs known to the source.
+comment|///
+comment|/// The external source should append its own potentially unused local
+comment|/// typedefs to the given vector of declarations. Note that this routine may
+comment|/// be invoked multiple times; the external source should take care not to
+comment|/// introduce the same declarations repeatedly.
+name|virtual
+name|void
+name|ReadUnusedLocalTypedefNameCandidates
+argument_list|(
+argument|llvm::SmallSetVector<const TypedefNameDecl *
+argument_list|,
+literal|4
+argument|>&Decls
+argument_list|)
+block|{}
+block|;
 comment|/// \brief Read the set of locally-scoped external declarations known to the
 comment|/// external Sema source.
 comment|///

@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_Hexagon_CODEGEN_CALLINGCONVLOWER_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONCALLINGCONVLOWER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_Hexagon_CODEGEN_CALLINGCONVLOWER_H
+name|LLVM_LIB_TARGET_HEXAGON_HEXAGONCALLINGCONVLOWER_H
 end_define
 
 begin_include
@@ -83,12 +83,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/SelectionDAGNodes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
 begin_comment
@@ -119,6 +113,9 @@ decl_stmt|;
 name|class
 name|SDNode
 decl_stmt|;
+struct_decl|struct
+name|EVT
+struct_decl|;
 comment|/// Hexagon_CCAssignFn - This function assigns a location for Val, updating
 comment|/// State to reflect the change.
 typedef|typedef

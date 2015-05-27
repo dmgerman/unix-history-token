@@ -93,6 +93,27 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|__has_extension
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__has_extension
+parameter_list|(
+name|x
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__has_attribute
 end_ifndef
 
@@ -133,17 +154,21 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/// \macro __GNUC_PREREQ
+comment|/// \macro LLVM_GNUC_PREREQ
 end_comment
 
 begin_comment
-comment|/// \brief Defines __GNUC_PREREQ if glibc's features.h isn't available.
+comment|/// \brief Extend the default __GNUC_PREREQ even if glibc's features.h isn't
+end_comment
+
+begin_comment
+comment|/// available.
 end_comment
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 end_ifndef
 
 begin_if
@@ -158,19 +183,55 @@ name|defined
 argument_list|(
 name|__GNUC_MINOR__
 argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC_PATCHLEVEL__
+argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 parameter_list|(
 name|maj
 parameter_list|,
 name|min
+parameter_list|,
+name|patch
 parameter_list|)
 define|\
-value|((__GNUC__<< 16) + __GNUC_MINOR__>= ((maj)<< 16) + (min))
+value|((__GNUC__<< 20) + (__GNUC_MINOR__<< 10) + __GNUC_PATCHLEVEL__>= \      ((maj)<< 20) + ((min)<< 10) + (patch))
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__GNUC_MINOR__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|LLVM_GNUC_PREREQ
+parameter_list|(
+name|maj
+parameter_list|,
+name|min
+parameter_list|,
+name|patch
+parameter_list|)
+define|\
+value|((__GNUC__<< 20) + (__GNUC_MINOR__<< 10)>= ((maj)<< 20) + ((min)<< 10))
 end_define
 
 begin_else
@@ -181,11 +242,13 @@ end_else
 begin_define
 define|#
 directive|define
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 parameter_list|(
 name|maj
 parameter_list|,
 name|min
+parameter_list|,
+name|patch
 parameter_list|)
 value|0
 end_define
@@ -201,51 +264,111 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/// \brief Does the compiler support r-value references?
+comment|/// \macro LLVM_MSC_PREREQ
 end_comment
 
 begin_comment
-comment|/// This implies that<utility> provides the one-argument std::move;  it
+comment|/// \brief Is the compiler MSVC of at least the specified version?
 end_comment
 
 begin_comment
-comment|/// does not imply the existence of any other C++ library features.
+comment|/// The common \param version values to check for are:
+end_comment
+
+begin_comment
+comment|///  * 1700: Microsoft Visual Studio 2012 / 11.0
+end_comment
+
+begin_comment
+comment|///  * 1800: Microsoft Visual Studio 2013 / 12.0
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|LLVM_MSC_PREREQ
+parameter_list|(
+name|version
+parameter_list|)
+value|(_MSC_VER>= (version))
+end_define
+
+begin_comment
+comment|// We require at least MSVC 2012.
 end_comment
 
 begin_if
 if|#
 directive|if
-operator|(
-name|__has_feature
+operator|!
+name|LLVM_MSC_PREREQ
 argument_list|(
-name|cxx_rvalue_references
+literal|1700
 argument_list|)
-expr|\
-operator|||
-name|defined
-argument_list|(
-name|__GXX_EXPERIMENTAL_CXX0X__
-argument_list|)
-expr|\
-operator|||
-operator|(
+end_if
+
+begin_error
+error|#
+directive|error
+error|LLVM requires at least MSVC 2012.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_MSC_PREREQ
+parameter_list|(
+name|version
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
 name|defined
 argument_list|(
 name|_MSC_VER
 argument_list|)
-operator|&&
-name|_MSC_VER
-operator|>=
-literal|1600
-operator|)
-operator|)
+operator|||
+name|defined
+argument_list|(
+name|__clang__
+argument_list|)
+operator|||
+name|LLVM_MSC_PREREQ
+argument_list|(
+literal|1900
+argument_list|)
 end_if
 
 begin_define
 define|#
 directive|define
-name|LLVM_HAS_RVALUE_REFERENCES
-value|1
+name|LLVM_NOEXCEPT
+value|noexcept
 end_define
 
 begin_else
@@ -256,8 +379,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|LLVM_HAS_RVALUE_REFERENCES
-value|0
+name|LLVM_NOEXCEPT
 end_define
 
 begin_endif
@@ -278,15 +400,7 @@ comment|/// Sadly, this is separate from just r-value reference support because 
 end_comment
 
 begin_comment
-comment|/// implemented everything but this thus far. No release of GCC yet has support
-end_comment
-
-begin_comment
-comment|/// for this feature so it is enabled with Clang only.
-end_comment
-
-begin_comment
-comment|/// FIXME: This should change to a version check when GCC grows support for it.
+comment|/// implemented this later than everything else.
 end_comment
 
 begin_if
@@ -296,6 +410,15 @@ name|__has_feature
 argument_list|(
 name|cxx_rvalue_references
 argument_list|)
+operator|||
+name|LLVM_GNUC_PREREQ
+argument_list|(
+literal|4
+operator|,
+literal|8
+operator|,
+literal|1
+argument_list|)
 end_if
 
 begin_define
@@ -314,148 +437,6 @@ begin_define
 define|#
 directive|define
 name|LLVM_HAS_RVALUE_REFERENCE_THIS
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/// \macro LLVM_HAS_CXX11_TYPETRAITS
-end_comment
-
-begin_comment
-comment|/// \brief Does the compiler have the C++11 type traits.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// #include<type_traits>
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// * enable_if
-end_comment
-
-begin_comment
-comment|/// * {true,false}_type
-end_comment
-
-begin_comment
-comment|/// * is_constructible
-end_comment
-
-begin_comment
-comment|/// * etc...
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GXX_EXPERIMENTAL_CXX0X__
-argument_list|)
-expr|\
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-operator|&&
-name|_MSC_VER
-operator|>=
-literal|1700
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_HAS_CXX11_TYPETRAITS
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_HAS_CXX11_TYPETRAITS
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/// \macro LLVM_HAS_CXX11_STDLIB
-end_comment
-
-begin_comment
-comment|/// \brief Does the compiler have the C++11 standard library.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Implies LLVM_HAS_RVALUE_REFERENCES, LLVM_HAS_CXX11_TYPETRAITS
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GXX_EXPERIMENTAL_CXX0X__
-argument_list|)
-expr|\
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-operator|&&
-name|_MSC_VER
-operator|>=
-literal|1700
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_HAS_CXX11_STDLIB
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_HAS_CXX11_STDLIB
 value|0
 end_define
 
@@ -487,6 +468,11 @@ name|__has_feature
 argument_list|(
 name|cxx_variadic_templates
 argument_list|)
+operator|||
+name|LLVM_MSC_PREREQ
+argument_list|(
+literal|1800
+argument_list|)
 end_if
 
 begin_define
@@ -506,50 +492,6 @@ define|#
 directive|define
 name|LLVM_HAS_VARIADIC_TEMPLATES
 value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/// llvm_move - Expands to ::std::move if the compiler supports
-end_comment
-
-begin_comment
-comment|/// r-value references; otherwise, expands to the argument.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
-begin_define
-define|#
-directive|define
-name|llvm_move
-parameter_list|(
-name|value
-parameter_list|)
-value|(::std::move(value))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|llvm_move
-parameter_list|(
-name|value
-parameter_list|)
-value|(value)
 end_define
 
 begin_endif
@@ -649,23 +591,22 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|__has_feature
 argument_list|(
 name|cxx_deleted_functions
 argument_list|)
-expr|\
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|__GXX_EXPERIMENTAL_CXX0X__
 argument_list|)
-operator|)
+operator|||
+name|LLVM_MSC_PREREQ
+argument_list|(
+literal|1800
+argument_list|)
 end_if
-
-begin_comment
-comment|// No version of MSVC currently supports this.
-end_comment
 
 begin_define
 define|#
@@ -683,110 +624,6 @@ begin_define
 define|#
 directive|define
 name|LLVM_DELETED_FUNCTION
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/// LLVM_FINAL - Expands to 'final' if the compiler supports it.
-end_comment
-
-begin_comment
-comment|/// Use to mark classes or virtual methods as final.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__has_feature
-argument_list|(
-name|cxx_override_control
-argument_list|)
-expr|\
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-operator|&&
-name|_MSC_VER
-operator|>=
-literal|1700
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_FINAL
-value|final
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_FINAL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/// LLVM_OVERRIDE - Expands to 'override' if the compiler supports it.
-end_comment
-
-begin_comment
-comment|/// Use to mark virtual methods as overriding a base class method.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__has_feature
-argument_list|(
-name|cxx_override_control
-argument_list|)
-expr|\
-operator|||
-operator|(
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-operator|&&
-name|_MSC_VER
-operator|>=
-literal|1700
-operator|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_OVERRIDE
-value|override
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_OVERRIDE
 end_define
 
 begin_endif
@@ -860,9 +697,11 @@ argument_list|(
 name|visibility
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -916,14 +755,57 @@ if|#
 directive|if
 name|__has_attribute
 argument_list|(
+name|sentinel
+argument_list|)
+operator|||
+name|LLVM_GNUC_PREREQ
+argument_list|(
+literal|3
+operator|,
+literal|0
+operator|,
+literal|0
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_END_WITH_NULL
+value|__attribute__((sentinel))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_END_WITH_NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__has_attribute
+argument_list|(
 name|used
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|3
 operator|,
 literal|1
+operator|,
+literal|0
 argument_list|)
 end_if
 
@@ -958,11 +840,13 @@ argument_list|(
 name|warn_unused_result
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|3
 operator|,
 literal|4
+operator|,
+literal|0
 argument_list|)
 end_if
 
@@ -1029,11 +913,13 @@ argument_list|(
 name|unused
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|3
 operator|,
 literal|1
+operator|,
+literal|0
 argument_list|)
 end_if
 
@@ -1073,9 +959,11 @@ argument_list|(
 name|weak
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -1224,9 +1112,11 @@ argument_list|(
 name|__builtin_expect
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -1372,11 +1262,13 @@ argument_list|(
 name|noinline
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|3
 operator|,
 literal|4
+operator|,
+literal|0
 argument_list|)
 end_if
 
@@ -1443,9 +1335,11 @@ argument_list|(
 name|always_inline
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
+operator|,
+literal|0
 operator|,
 literal|0
 argument_list|)
@@ -1528,6 +1422,47 @@ begin_define
 define|#
 directive|define
 name|LLVM_ATTRIBUTE_NORETURN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|__has_attribute
+argument_list|(
+name|returns_nonnull
+argument_list|)
+operator|||
+name|LLVM_GNUC_PREREQ
+argument_list|(
+literal|4
+operator|,
+literal|9
+operator|,
+literal|0
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_RETURNS_NONNULL
+value|__attribute__((returns_nonnull))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_ATTRIBUTE_RETURNS_NONNULL
 end_define
 
 begin_endif
@@ -1685,11 +1620,13 @@ argument_list|(
 name|__builtin_unreachable
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
 operator|,
 literal|5
+operator|,
+literal|0
 argument_list|)
 end_if
 
@@ -1737,11 +1674,13 @@ argument_list|(
 name|__builtin_trap
 argument_list|)
 operator|||
-name|__GNUC_PREREQ
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
 operator|,
 literal|3
+operator|,
+literal|0
 argument_list|)
 end_if
 
@@ -1784,12 +1723,14 @@ name|__has_builtin
 argument_list|(
 name|__builtin_assume_aligned
 argument_list|)
-operator|&&
-name|__GNUC_PREREQ
+operator|||
+name|LLVM_GNUC_PREREQ
 argument_list|(
 literal|4
 operator|,
 literal|7
+operator|,
+literal|0
 argument_list|)
 end_if
 
@@ -1898,53 +1839,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|HAVE_SANITIZER_MSAN_INTERFACE_H
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|<sanitizer/msan_interface.h>
-end_include
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__msan_allocated_memory
-parameter_list|(
-name|p
-parameter_list|,
-name|size
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__msan_unpoison
-parameter_list|(
-name|p
-parameter_list|,
-name|size
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/// \macro LLVM_MEMORY_SANITIZER_BUILD
 end_comment
@@ -1969,6 +1863,12 @@ name|LLVM_MEMORY_SANITIZER_BUILD
 value|1
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sanitizer/msan_interface.h>
+end_include
+
 begin_else
 else|#
 directive|else
@@ -1979,6 +1879,28 @@ define|#
 directive|define
 name|LLVM_MEMORY_SANITIZER_BUILD
 value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|__msan_allocated_memory
+parameter_list|(
+name|p
+parameter_list|,
+name|size
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__msan_unpoison
+parameter_list|(
+name|p
+parameter_list|,
+name|size
+parameter_list|)
 end_define
 
 begin_endif
@@ -2142,18 +2064,21 @@ end_comment
 begin_if
 if|#
 directive|if
-operator|(
 name|__has_feature
 argument_list|(
 name|cxx_explicit_conversions
 argument_list|)
-expr|\
 operator|||
+expr|\
 name|defined
 argument_list|(
 name|__GXX_EXPERIMENTAL_CXX0X__
 argument_list|)
-operator|)
+operator|||
+name|LLVM_MSC_PREREQ
+argument_list|(
+literal|1800
+argument_list|)
 end_if
 
 begin_define
@@ -2180,163 +2105,19 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/// \macro LLVM_STATIC_ASSERT
-end_comment
-
-begin_comment
-comment|/// \brief Expands to C/C++'s static_assert on compilers which support it.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__has_feature
-argument_list|(
-name|cxx_static_assert
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_STATIC_ASSERT
-parameter_list|(
-name|expr
-parameter_list|,
-name|msg
-parameter_list|)
-value|static_assert(expr, msg)
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|__has_feature
-argument_list|(
-name|c_static_assert
-argument_list|)
-end_elif
-
-begin_define
-define|#
-directive|define
-name|LLVM_STATIC_ASSERT
-parameter_list|(
-name|expr
-parameter_list|,
-name|msg
-parameter_list|)
-value|_Static_assert(expr, msg)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_STATIC_ASSERT
-parameter_list|(
-name|expr
-parameter_list|,
-name|msg
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/// \macro LLVM_ENUM_INT_TYPE
-end_comment
-
-begin_comment
-comment|/// \brief Expands to colon followed by the given integral type on compilers
-end_comment
-
-begin_comment
-comment|/// which support C++11 strong enums.  This can be used to make enums unsigned
-end_comment
-
-begin_comment
-comment|/// with MSVC.
-end_comment
-
-begin_if
-if|#
-directive|if
-name|__has_feature
-argument_list|(
-name|cxx_strong_enums
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LLVM_ENUM_INT_TYPE
-parameter_list|(
-name|intty
-parameter_list|)
-value|: intty
-end_define
-
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-operator|&&
-name|_MSC_VER
-operator|>=
-literal|1600
-end_elif
-
-begin_comment
-comment|// Added in MSVC 2010.
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_ENUM_INT_TYPE
-parameter_list|(
-name|intty
-parameter_list|)
-value|: intty
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LLVM_ENUM_INT_TYPE
-parameter_list|(
-name|intty
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/// \brief Does the compiler support generalized initializers (using braced
 end_comment
 
 begin_comment
-comment|/// lists and std::initializer_list).
+comment|/// lists and std::initializer_list).  While clang may claim it supports general
+end_comment
+
+begin_comment
+comment|/// initializers, if we're using MSVC's headers, we might not have a usable
+end_comment
+
+begin_comment
+comment|/// std::initializer list type from the STL.  Disable this for now.
 end_comment
 
 begin_if
@@ -2345,6 +2126,12 @@ directive|if
 name|__has_feature
 argument_list|(
 name|cxx_generalized_initializers
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_MSC_VER
 argument_list|)
 end_if
 
@@ -2365,6 +2152,57 @@ define|#
 directive|define
 name|LLVM_HAS_INITIALIZER_LISTS
 value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/// \brief Mark debug helper function definitions like dump() that should not be
+end_comment
+
+begin_comment
+comment|/// stripped from debug builds.
+end_comment
+
+begin_comment
+comment|// FIXME: Move this to a private config.h as it's not usable in public headers.
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NDEBUG
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LLVM_ENABLE_DUMP
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LLVM_DUMP_METHOD
+value|LLVM_ATTRIBUTE_NOINLINE LLVM_ATTRIBUTE_USED
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|LLVM_DUMP_METHOD
+value|LLVM_ATTRIBUTE_NOINLINE
 end_define
 
 begin_endif

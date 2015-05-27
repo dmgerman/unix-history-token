@@ -2356,9 +2356,10 @@ name|nvl
 argument_list|,
 name|ZPOOL_HIST_DSID
 argument_list|,
+name|dsl_dir_phys
+argument_list|(
 name|dd
-operator|->
-name|dd_phys
+argument_list|)
 operator|->
 name|dd_head_dataset_obj
 argument_list|)

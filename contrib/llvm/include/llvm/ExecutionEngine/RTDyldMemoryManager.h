@@ -50,14 +50,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_EXECUTIONENGINE_RT_DYLD_MEMORY_MANAGER_H
+name|LLVM_EXECUTIONENGINE_RTDYLDMEMORYMANAGER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_EXECUTIONENGINE_RT_DYLD_MEMORY_MANAGER_H
+name|LLVM_EXECUTIONENGINE_RTDYLDMEMORYMANAGER_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm-c/ExecutionEngine.h"
+end_include
 
 begin_include
 include|#
@@ -77,12 +83,6 @@ directive|include
 file|"llvm/Support/Memory.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm-c/ExecutionEngine.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -90,9 +90,13 @@ block|{
 name|class
 name|ExecutionEngine
 decl_stmt|;
+name|namespace
+name|object
+block|{
 name|class
-name|ObjectImage
+name|ObjectFile
 decl_stmt|;
+block|}
 comment|// RuntimeDyld clients often want to handle the memory management of
 comment|// what gets placed where. For JIT clients, this is the subset of
 comment|// JITMemoryManager required for dynamic loading of binaries.
@@ -178,6 +182,38 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
+comment|/// Inform the memory manager about the total amount of memory required to
+comment|/// allocate all sections to be loaded:
+comment|/// \p CodeSize - the total size of all code sections
+comment|/// \p DataSizeRO - the total size of all read-only data sections
+comment|/// \p DataSizeRW - the total size of all read-write data sections
+comment|///
+comment|/// Note that by default the callback is disabled. To enable it
+comment|/// redefine the method needsToReserveAllocationSpace to return true.
+name|virtual
+name|void
+name|reserveAllocationSpace
+parameter_list|(
+name|uintptr_t
+name|CodeSize
+parameter_list|,
+name|uintptr_t
+name|DataSizeRO
+parameter_list|,
+name|uintptr_t
+name|DataSizeRW
+parameter_list|)
+block|{ }
+comment|/// Override to return true to enable the reserveAllocationSpace callback.
+name|virtual
+name|bool
+name|needsToReserveAllocationSpace
+parameter_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// Register the EH frames with the runtime so that c++ exceptions work.
 comment|///
 comment|/// \p Addr parameter provides the local address of the EH frame section
@@ -214,6 +250,20 @@ name|size_t
 name|Size
 parameter_list|)
 function_decl|;
+comment|/// This method returns the address of the specified function or variable in
+comment|/// the current process.
+specifier|static
+name|uint64_t
+name|getSymbolAddressInProcess
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|)
+decl_stmt|;
 comment|/// This method returns the address of the specified function or variable.
 comment|/// It is used to resolve symbols during module linking.
 name|virtual
@@ -227,7 +277,14 @@ name|string
 operator|&
 name|Name
 argument_list|)
-decl_stmt|;
+block|{
+return|return
+name|getSymbolAddressInProcess
+argument_list|(
+name|Name
+argument_list|)
+return|;
+block|}
 comment|/// This method returns the address of the specified function. As such it is
 comment|/// only useful for resolving library symbols, not code generated symbols.
 comment|///
@@ -268,15 +325,17 @@ comment|/// newly loaded object.
 name|virtual
 name|void
 name|notifyObjectLoaded
-parameter_list|(
+argument_list|(
 name|ExecutionEngine
-modifier|*
+operator|*
 name|EE
-parameter_list|,
+argument_list|,
 specifier|const
-name|ObjectImage
-modifier|*
-parameter_list|)
+name|object
+operator|::
+name|ObjectFile
+operator|&
+argument_list|)
 block|{}
 comment|/// This method is called when object loading is complete and section page
 comment|/// permissions can be applied.  It is up to the memory manager implementation
@@ -297,7 +356,7 @@ name|string
 operator|*
 name|ErrMsg
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 init|=
 literal|0
@@ -322,10 +381,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_EXECUTIONENGINE_RT_DYLD_MEMORY_MANAGER_H
-end_comment
 
 end_unit
 

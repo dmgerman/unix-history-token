@@ -1136,22 +1136,12 @@ name|CIPHY_AUXCSR_SPEED
 expr_stmt|;
 if|if
 condition|(
-name|strcmp
-argument_list|(
-name|device_get_name
-argument_list|(
-name|device_get_parent
+name|mii_phy_mac_match
 argument_list|(
 name|sc
-operator|->
-name|mii_dev
-argument_list|)
-argument_list|)
 argument_list|,
 literal|"nfe"
 argument_list|)
-operator|==
-literal|0
 condition|)
 block|{
 comment|/* need to set for 2.5V RGMII for NVIDIA adapters */

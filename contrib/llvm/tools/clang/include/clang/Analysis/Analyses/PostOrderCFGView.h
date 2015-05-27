@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_POSTORDER_CFGVIEW
+name|LLVM_CLANG_ANALYSIS_ANALYSES_POSTORDERCFGVIEW_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_POSTORDER_CFGVIEW
+name|LLVM_CLANG_ANALYSIS_ANALYSES_POSTORDERCFGVIEW_H
 end_define
 
 begin_include
@@ -165,7 +165,16 @@ argument_list|)
 block|{}
 comment|/// \brief Set the bit associated with a particular CFGBlock.
 comment|/// This is the important method for the SetType template parameter.
+name|std
+operator|::
+name|pair
+operator|<
+name|llvm
+operator|::
+name|NoneType
+block|,
 name|bool
+operator|>
 name|insert
 argument_list|(
 argument|const CFGBlock *Block
@@ -177,12 +186,18 @@ comment|// occasionally hand out null pointers for pruned edges, so we catch tho
 comment|// here.
 if|if
 condition|(
+operator|!
 name|Block
-operator|==
-literal|0
 condition|)
 return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|None
+argument_list|,
 name|false
+argument_list|)
 return|;
 comment|// if an edge is trivially false.
 if|if
@@ -198,7 +213,14 @@ argument_list|()
 argument_list|)
 condition|)
 return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|None
+argument_list|,
 name|false
+argument_list|)
 return|;
 name|VisitedBlockIDs
 operator|.
@@ -211,7 +233,14 @@ argument_list|()
 argument_list|)
 block|;
 return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|None
+argument_list|,
 name|true
+argument_list|)
 return|;
 block|}
 comment|/// \brief Check if the bit for a CFGBlock has been already set.
@@ -324,6 +353,22 @@ name|iterator
 expr_stmt|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|CFGBlock
+operator|*
+operator|>
+operator|::
+name|const_reverse_iterator
+name|const_iterator
+expr_stmt|;
+end_typedef
+
 begin_expr_stmt
 name|PostOrderCFGView
 argument_list|(
@@ -363,10 +408,41 @@ return|;
 block|}
 end_function
 
-begin_function
+begin_expr_stmt
+name|const_iterator
+name|begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Blocks
+operator|.
+name|rbegin
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|const_iterator
+name|end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Blocks
+operator|.
+name|rend
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|empty
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|begin
@@ -376,7 +452,7 @@ name|end
 argument_list|()
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_struct_decl
 struct_decl|struct

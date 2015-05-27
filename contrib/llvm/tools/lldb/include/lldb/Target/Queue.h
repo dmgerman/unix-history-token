@@ -301,6 +301,24 @@ argument_list|(
 name|item
 argument_list|)
 block|;     }
+comment|//------------------------------------------------------------------
+comment|/// Return the kind (serial, concurrent) of this queue
+comment|///
+comment|/// @return
+comment|//      Whether this is a serial or a concurrent queue
+comment|//------------------------------------------------------------------
+name|lldb
+operator|::
+name|QueueKind
+name|GetKind
+argument_list|()
+block|;
+name|void
+name|SetKind
+argument_list|(
+argument|lldb::QueueKind kind
+argument_list|)
+block|;
 name|private
 operator|:
 comment|//------------------------------------------------------------------
@@ -343,6 +361,11 @@ name|addr_t
 name|m_dispatch_queue_t_addr
 block|;
 comment|// address of libdispatch dispatch_queue_t for this Queue
+name|lldb
+operator|::
+name|QueueKind
+name|m_kind
+block|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(
 name|Queue

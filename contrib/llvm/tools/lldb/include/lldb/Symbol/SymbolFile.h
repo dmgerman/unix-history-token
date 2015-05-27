@@ -212,7 +212,7 @@ comment|///
 comment|/// Each symbol file gets to respond with a mask of abilities that
 comment|/// it supports for each object file. This happens when we are
 comment|/// trying to figure out which symbol file plug-in will get used
-comment|/// for a given object file. The plug-in that resoonds with the
+comment|/// for a given object file. The plug-in that responds with the
 comment|/// best mix of "SymbolFile::Abilities" bits set, will get chosen to
 comment|/// be the symbol file parser. This allows each plug-in to check for
 comment|/// sections that contain data a symbol file plug-in would need. For
@@ -625,6 +625,15 @@ return|return
 name|m_obj_file
 return|;
 block|}
+comment|//------------------------------------------------------------------
+comment|/// Notify the SymbolFile that the file addresses in the Sections
+comment|/// for this module have been changed.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|SectionFileAddressesChanged
+argument_list|()
+block|{      }
 name|protected
 operator|:
 name|ObjectFile

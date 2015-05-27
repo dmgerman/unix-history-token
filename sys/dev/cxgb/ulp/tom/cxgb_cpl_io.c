@@ -5564,7 +5564,10 @@ name|t_state
 operator|==
 name|TCPS_SYN_SENT
 condition|)
-name|mbufq_tail
+operator|(
+name|void
+operator|)
+name|mbufq_enqueue
 argument_list|(
 operator|&
 name|toep
@@ -6169,6 +6172,8 @@ argument_list|(
 name|so_rcv
 argument_list|,
 name|m
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|sorwakeup_locked

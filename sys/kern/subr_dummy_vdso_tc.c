@@ -43,6 +43,11 @@ name|struct
 name|vdso_timehands
 modifier|*
 name|vdso_th
+parameter_list|,
+name|struct
+name|timecounter
+modifier|*
+name|tc
 parameter_list|)
 block|{
 return|return
@@ -67,6 +72,11 @@ name|struct
 name|vdso_timehands32
 modifier|*
 name|vdso_th32
+parameter_list|,
+name|struct
+name|timecounter
+modifier|*
+name|tc
 parameter_list|)
 block|{
 return|return

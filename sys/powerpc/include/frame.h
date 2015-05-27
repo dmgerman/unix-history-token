@@ -56,14 +56,15 @@ decl_stmt|;
 name|register_t
 name|exc
 decl_stmt|;
+name|register_t
+name|dar
+decl_stmt|;
+comment|/* DAR/DEAR filled in on DSI traps */
 union|union
 block|{
 struct|struct
 block|{
-comment|/* dar& dsisr are only filled on a DSI trap */
-name|register_t
-name|dar
-decl_stmt|;
+comment|/* dsisr only filled on a DSI trap */
 name|register_t
 name|dsisr
 decl_stmt|;
@@ -72,9 +73,6 @@ name|aim
 struct|;
 struct|struct
 block|{
-name|register_t
-name|dear
-decl_stmt|;
 name|register_t
 name|esr
 decl_stmt|;

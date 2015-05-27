@@ -99,43 +99,88 @@ comment|/// value permissible by the class. MinTime is some point
 comment|/// in the distant past, about 300 billion years BCE.
 comment|/// @brief The smallest possible time value.
 specifier|static
-specifier|const
 name|TimeValue
 name|MinTime
-decl_stmt|;
+parameter_list|()
+block|{
+return|return
+name|TimeValue
+argument_list|(
+name|INT64_MIN
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
 comment|/// A constant TimeValue representing the largest time
 comment|/// value permissible by the class. MaxTime is some point
 comment|/// in the distant future, about 300 billion years AD.
 comment|/// @brief The largest possible time value.
 specifier|static
-specifier|const
 name|TimeValue
 name|MaxTime
-decl_stmt|;
+parameter_list|()
+block|{
+return|return
+name|TimeValue
+argument_list|(
+name|INT64_MAX
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
 comment|/// A constant TimeValue representing the base time,
 comment|/// or zero time of 00:00:00 (midnight) January 1st, 2000.
 comment|/// @brief 00:00:00 Jan 1, 2000 UTC.
 specifier|static
-specifier|const
 name|TimeValue
 name|ZeroTime
-decl_stmt|;
+parameter_list|()
+block|{
+return|return
+name|TimeValue
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
 comment|/// A constant TimeValue for the Posix base time which is
 comment|/// 00:00:00 (midnight) January 1st, 1970.
 comment|/// @brief 00:00:00 Jan 1, 1970 UTC.
 specifier|static
-specifier|const
 name|TimeValue
 name|PosixZeroTime
-decl_stmt|;
+parameter_list|()
+block|{
+return|return
+name|TimeValue
+argument_list|(
+name|PosixZeroTimeSeconds
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
 comment|/// A constant TimeValue for the Win32 base time which is
 comment|/// 00:00:00 (midnight) January 1st, 1601.
 comment|/// @brief 00:00:00 Jan 1, 1601 UTC.
 specifier|static
-specifier|const
 name|TimeValue
 name|Win32ZeroTime
-decl_stmt|;
+parameter_list|()
+block|{
+return|return
+name|TimeValue
+argument_list|(
+name|Win32ZeroTimeSeconds
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
 comment|/// @}
 comment|/// @name Types
 comment|/// @{
@@ -179,15 +224,10 @@ init|=
 literal|1000000
 block|,
 comment|///< One Million
-name|NANOSECONDS_PER_POSIX_TICK
-init|=
-literal|100
-block|,
-comment|///< Posix tick is 100 Hz (10ms)
 name|NANOSECONDS_PER_WIN32_TICK
 init|=
 literal|100
-comment|///< Win32 tick is 100 Hz (10ms)
+comment|///< Win32 tick is 10^7 Hz (10ns)
 block|}
 enum|;
 comment|/// @}
@@ -745,31 +785,6 @@ name|nanos_
 operator|/
 name|NANOSECONDS_PER_MILLISECOND
 operator|)
-return|;
-block|}
-comment|/// Converts the TimeValue into the corresponding number of "ticks" for
-comment|/// Posix, correcting for the difference in Posix zero time.
-comment|/// @brief Convert to unix time (100 nanoseconds since 12:00:00a Jan 1,1970)
-name|uint64_t
-name|toPosixTime
-argument_list|()
-specifier|const
-block|{
-name|uint64_t
-name|result
-operator|=
-name|seconds_
-operator|-
-name|PosixZeroTimeSeconds
-block|;
-name|result
-operator|+=
-name|nanos_
-operator|/
-name|NANOSECONDS_PER_POSIX_TICK
-block|;
-return|return
-name|result
 return|;
 block|}
 comment|/// Converts the TimeValue into the corresponding number of seconds

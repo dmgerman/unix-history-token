@@ -38,13 +38,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPU_MCINSTLOWER_H
+name|LLVM_LIB_TARGET_R600_AMDGPUMCINSTLOWER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPU_MCINSTLOWER_H
+name|LLVM_LIB_TARGET_R600_AMDGPUMCINSTLOWER_H
 end_define
 
 begin_decl_stmt
@@ -52,13 +52,16 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MCInst
+name|AMDGPUSubtarget
+decl_stmt|;
+name|class
+name|MachineInstr
 decl_stmt|;
 name|class
 name|MCContext
 decl_stmt|;
 name|class
-name|MachineInstr
+name|MCInst
 decl_stmt|;
 name|class
 name|AMDGPUMCInstLower
@@ -67,6 +70,11 @@ name|MCContext
 modifier|&
 name|Ctx
 decl_stmt|;
+specifier|const
+name|AMDGPUSubtarget
+modifier|&
+name|ST
+decl_stmt|;
 name|public
 label|:
 name|AMDGPUMCInstLower
@@ -74,6 +82,11 @@ argument_list|(
 name|MCContext
 operator|&
 name|ctx
+argument_list|,
+specifier|const
+name|AMDGPUSubtarget
+operator|&
+name|ST
 argument_list|)
 expr_stmt|;
 comment|/// \brief Lower a MachineInstr to an MCInst
@@ -104,10 +117,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|//AMDGPU_MCINSTLOWER_H
-end_comment
 
 end_unit
 

@@ -92,7 +92,7 @@ block|{
 specifier|const
 name|DataLayout
 modifier|&
-name|TD
+name|DL
 decl_stmt|;
 name|bool
 name|Warned
@@ -105,12 +105,12 @@ argument_list|(
 specifier|const
 name|DataLayout
 operator|&
-name|td
+name|DL
 argument_list|)
 operator|:
-name|TD
+name|DL
 argument_list|(
-name|td
+name|DL
 argument_list|)
 operator|,
 name|Warned

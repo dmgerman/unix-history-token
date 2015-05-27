@@ -141,6 +141,7 @@ end_expr_stmt
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 block|{
 name|uint32_t
@@ -184,6 +185,8 @@ block|,
 literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 name|AHCI_Q_ATI_PMP_BUG
+operator||
+name|AHCI_Q_1MSI
 block|}
 block|,
 block|{
@@ -194,6 +197,8 @@ block|,
 literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 name|AHCI_Q_ATI_PMP_BUG
+operator||
+name|AHCI_Q_1MSI
 block|}
 block|,
 block|{
@@ -204,6 +209,8 @@ block|,
 literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 name|AHCI_Q_ATI_PMP_BUG
+operator||
+name|AHCI_Q_1MSI
 block|}
 block|,
 block|{
@@ -214,6 +221,8 @@ block|,
 literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 name|AHCI_Q_ATI_PMP_BUG
+operator||
+name|AHCI_Q_1MSI
 block|}
 block|,
 block|{
@@ -224,6 +233,8 @@ block|,
 literal|"AMD SB7x0/SB8x0/SB9x0"
 block|,
 name|AHCI_Q_ATI_PMP_BUG
+operator||
+name|AHCI_Q_1MSI
 block|}
 block|,
 comment|/* Not sure SB8x0/SB9x0 needs this quirk. Be conservative though */
@@ -1083,6 +1094,86 @@ block|,
 literal|0x00
 block|,
 literal|"Intel Lynx Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c828086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c838086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c848086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c858086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c868086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c878086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c8e8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+literal|0x8c8f8086
+block|,
+literal|0x00
+block|,
+literal|"Intel Wildcat Point (RAID)"
 block|,
 literal|0
 block|}
@@ -2394,6 +2485,30 @@ literal|0
 block|}
 block|,
 block|{
+literal|0xa01c177d
+block|,
+literal|0x00
+block|,
+literal|"ThunderX"
+block|,
+name|AHCI_Q_ABAR0
+operator||
+name|AHCI_Q_1MSI
+block|}
+block|,
+block|{
+literal|0x00311c36
+block|,
+literal|0x00
+block|,
+literal|"Annapurna"
+block|,
+name|AHCI_Q_FORCE_PI
+operator||
+name|AHCI_Q_RESTORE_CAP
+block|}
+block|,
+block|{
 literal|0x00000000
 block|,
 literal|0x00
@@ -2665,7 +2780,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2689,7 +2804,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2815,7 +2930,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2829,7 +2944,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_VENDOR
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2954,7 +3069,6 @@ name|quirks
 operator||=
 name|AHCI_Q_SATA1_UNIT0
 expr_stmt|;
-comment|/* if we have a memory BAR(5) we are likely on an AHCI part */
 name|ctlr
 operator|->
 name|vendorid
@@ -2991,6 +3105,25 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* Default AHCI Base Address is BAR(5), Cavium uses BAR(0) */
+if|if
+condition|(
+name|ctlr
+operator|->
+name|quirks
+operator|&
+name|AHCI_Q_ABAR0
+condition|)
+name|ctlr
+operator|->
+name|r_rid
+operator|=
+name|PCIR_BAR
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
 name|ctlr
 operator|->
 name|r_rid
@@ -3070,12 +3203,6 @@ block|}
 empty_stmt|;
 comment|/* Setup interrupts. */
 comment|/* Setup MSI register parameters */
-name|ctlr
-operator|->
-name|msi
-operator|=
-literal|2
-expr_stmt|;
 comment|/* Process hints. */
 if|if
 condition|(
@@ -3090,6 +3217,28 @@ operator|->
 name|msi
 operator|=
 literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|ctlr
+operator|->
+name|quirks
+operator|&
+name|AHCI_Q_1MSI
+condition|)
+name|ctlr
+operator|->
+name|msi
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|ctlr
+operator|->
+name|msi
+operator|=
+literal|2
 expr_stmt|;
 name|resource_int_value
 argument_list|(
@@ -3467,11 +3616,7 @@ argument_list|,
 name|ahci_get_dma_tag
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3506,9 +3651,9 @@ name|ahci_driver
 argument_list|,
 name|ahci_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3597,11 +3742,7 @@ argument_list|,
 name|ahci_child_location_str
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3636,9 +3777,9 @@ name|ahci_ata_driver
 argument_list|,
 name|ahci_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

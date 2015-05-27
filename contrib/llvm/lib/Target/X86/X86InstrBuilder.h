@@ -90,13 +90,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86INSTRBUILDER_H
+name|LLVM_LIB_TARGET_X86_X86INSTRBUILDER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86INSTRBUILDER_H
+name|LLVM_LIB_TARGET_X86_X86INSTRBUILDER_H
 end_define
 
 begin_include
@@ -189,7 +189,7 @@ argument_list|)
 operator|,
 name|GV
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|GVOpFlags

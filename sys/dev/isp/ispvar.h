@@ -1482,7 +1482,11 @@ literal|24
 expr_stmt|;
 name|uint32_t
 label|:
-literal|6
+literal|5
+operator|,
+name|reported_gone
+operator|:
+literal|1
 operator|,
 name|announced
 operator|:

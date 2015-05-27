@@ -1449,7 +1449,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* XLP 8XX evaluation boards have the following phy-addr  * assignment. There are two external mdio buses in XLP --  * bus 0 and bus 1. The management ports (16 and 17) are  * on mdio bus 0 while blocks/complexes[0 to 3] are all   * on mdio bus 1. The phy_addr on bus 0 (mgmt ports 16  * and 17) match the port numbers.  * These are the details:  * block  port   phy_addr   mdio_bus  * ====================================  * 0         0     4          1  * 0         1     7          1  * 0         2     6          1  * 0         3     5          1  * 1         0     8          1  * 1         1     11         1  * 1         2     10         1  * 1         3     9          1  * 2         0     0          1  * 2         1     3          1  * 2         2     2          1  * 2         3     1          1  * 3         0     12         1  * 3         1     15         1  * 3         2     14         1  * 3         3     13         1  *  * 4         0     16         0   * 4         1     17         0  *  * The XLP 3XX evaluation boards have the following phy-addr  * assignments.  * block  port   phy_addr   mdio_bus  * ====================================  * 0         0     4          0  * 0         1     7          0  * 0         2     6          0  * 0         3     5          0  * 1         0     8          0  * 1         1     11         0  * 1         2     10         0  * 1         3     9          0  */
+comment|/* XLP 8XX evaluation boards have the following phy-addr  * assignment. There are two external mdio buses in XLP --  * bus 0 and bus 1. The management ports (16 and 17) are  * on mdio bus 0 while blocks/complexes[0 to 3] are all  * on mdio bus 1. The phy_addr on bus 0 (mgmt ports 16  * and 17) match the port numbers.  * These are the details:  * block  port   phy_addr   mdio_bus  * ====================================  * 0         0     4          1  * 0         1     7          1  * 0         2     6          1  * 0         3     5          1  * 1         0     8          1  * 1         1     11         1  * 1         2     10         1  * 1         3     9          1  * 2         0     0          1  * 2         1     3          1  * 2         2     2          1  * 2         3     1          1  * 3         0     12         1  * 3         1     15         1  * 3         2     14         1  * 3         3     13         1  *  * 4         0     16         0  * 4         1     17         0  *  * The XLP 3XX evaluation boards have the following phy-addr  * assignments.  * block  port   phy_addr   mdio_bus  * ====================================  * 0         0     4          0  * 0         1     7          0  * 0         2     6          0  * 0         3     5          0  * 1         0     8          0  * 1         1     11         0  * 1         2     10         0  * 1         3     9          0  */
 end_comment
 
 begin_function
@@ -1845,7 +1845,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * All our knowledge of chip and board that cannot be detected by probing   * at run-time goes here  */
+comment|/*  * All our knowledge of chip and board that cannot be detected by probing  * at run-time goes here  */
 end_comment
 
 begin_function

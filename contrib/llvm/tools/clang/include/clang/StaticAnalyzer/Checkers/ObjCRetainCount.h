@@ -70,19 +70,43 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_OBJCRETAINCOUNT_H
+name|LLVM_CLANG_STATICANALYZER_CHECKERS_OBJCRETAINCOUNT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_OBJCRETAINCOUNT_H
+name|LLVM_CLANG_STATICANALYZER_CHECKERS_OBJCRETAINCOUNT_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
 
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|FunctionDecl
+decl_stmt|;
+name|class
+name|ObjCMethodDecl
+decl_stmt|;
 name|namespace
 name|ento
 block|{
@@ -194,9 +218,6 @@ comment|/// Indicates that the object is not owned and controlled by the
 comment|/// Garbage collector.
 name|GCNotOwnedSymbol
 block|,
-comment|/// Indicates that the object is not owned and controlled by ARC.
-name|ARCNotOwnedSymbol
-block|,
 comment|/// Indicates that the return value is an owned object when the
 comment|/// receiver is also a tracked object.
 name|OwnedWhenTrackedReceiver
@@ -296,10 +317,6 @@ return|return
 name|K
 operator|==
 name|NotOwnedSymbol
-operator|||
-name|K
-operator|==
-name|ARCNotOwnedSymbol
 return|;
 block|}
 name|bool
@@ -400,20 +417,6 @@ return|;
 block|}
 specifier|static
 name|RetEffect
-name|MakeARCNotOwned
-parameter_list|()
-block|{
-return|return
-name|RetEffect
-argument_list|(
-name|ARCNotOwnedSymbol
-argument_list|,
-name|ObjC
-argument_list|)
-return|;
-block|}
-specifier|static
-name|RetEffect
 name|MakeNoRet
 parameter_list|()
 block|{
@@ -481,8 +484,6 @@ block|{}
 name|public
 operator|:
 comment|/// Returns the argument effects for a call.
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|ArgEffect

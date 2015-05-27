@@ -2074,7 +2074,7 @@ name|p_stats
 operator|->
 name|p_prof
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_PROFLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2111,7 +2111,7 @@ name|uap
 operator|->
 name|size
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_PROFUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2203,7 +2203,7 @@ name|p_stats
 operator|->
 name|p_prof
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_PROFLOCK
 argument_list|(
 name|td
 operator|->
@@ -2234,7 +2234,7 @@ operator|->
 name|pr_size
 condition|)
 block|{
-name|PROC_SUNLOCK
+name|PROC_PROFUNLOCK
 argument_list|(
 name|td
 operator|->
@@ -2252,7 +2252,7 @@ name|pr_base
 operator|+
 name|i
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_PROFUNLOCK
 argument_list|(
 name|td
 operator|->
@@ -2417,7 +2417,7 @@ name|p_stats
 operator|->
 name|p_prof
 expr_stmt|;
-name|PROC_SLOCK
+name|PROC_PROFLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2446,7 +2446,7 @@ operator|->
 name|pr_size
 condition|)
 block|{
-name|PROC_SUNLOCK
+name|PROC_PROFUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2463,7 +2463,7 @@ name|pr_base
 operator|+
 name|i
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_PROFUNLOCK
 argument_list|(
 name|p
 argument_list|)

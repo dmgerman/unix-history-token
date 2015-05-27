@@ -4,7 +4,7 @@ comment|/*     NetBSD: print-juniper.c,v 1.2 2007/07/24 11:53:45 drochner Exp   
 end_comment
 
 begin_comment
-comment|/*   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Hannes Gredler (hannes@juniper.net)  */
+comment|/*  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code  * distributions retain the above copyright notice and this paragraph  * in its entirety, and (2) distributions including binary code include  * the above copyright notice and this paragraph in its entirety in  * the documentation or other materials provided with the distribution.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND  * WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT  * LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE.  *  * Original code by Hannes Gredler (hannes@juniper.net)  */
 end_comment
 
 begin_ifndef
@@ -12,18 +12,6 @@ ifndef|#
 directive|ifndef
 name|lint
 end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-juniper.c,v 1.34 2007-08-29 02:31:44 mcr Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
 
 begin_else
 else|#
@@ -42,6 +30,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -64,18 +58,6 @@ begin_include
 include|#
 directive|include
 file|<tcpdump-stdinc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pcap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include
@@ -314,6 +296,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|juniper_ipsec_type_values
@@ -361,6 +344,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|juniper_direction_values
@@ -442,6 +426,8 @@ value|2
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|jnx_ext_tlv_values
@@ -506,6 +492,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|jnx_flag_values
@@ -972,6 +960,8 @@ value|60
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|juniper_ifmt_values
@@ -1762,6 +1752,8 @@ value|67
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|juniper_ifle_values
@@ -2147,11 +2139,11 @@ begin_struct
 struct|struct
 name|juniper_cookie_table_t
 block|{
-name|u_int32_t
+name|uint32_t
 name|pictype
 decl_stmt|;
 comment|/* pic type */
-name|u_int8_t
+name|uint8_t
 name|cookie_len
 decl_stmt|;
 comment|/* cookie len */
@@ -2167,6 +2159,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|juniper_cookie_table_t
 name|juniper_cookie_table
@@ -2331,40 +2324,40 @@ begin_struct
 struct|struct
 name|juniper_l2info_t
 block|{
-name|u_int32_t
+name|uint32_t
 name|length
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|caplen
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pictype
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|direction
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|header_len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|cookie_len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|cookie_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|cookie
 index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|bundle
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|proto
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|flags
 decl_stmt|;
 block|}
@@ -2464,6 +2457,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|juniper_protocol_values
@@ -2498,9 +2492,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|ip_heuristic_guess
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -2512,28 +2510,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|juniper_ppp_heuristic_guess
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
 modifier|*
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|juniper_read_tlv_value
-parameter_list|(
-specifier|const
-name|u_char
-modifier|*
-parameter_list|,
-name|u_int
 parameter_list|,
 name|u_int
 parameter_list|)
@@ -2545,6 +2532,9 @@ specifier|static
 name|int
 name|juniper_parse_header
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2571,6 +2561,10 @@ begin_function
 name|u_int
 name|juniper_ggsn_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -2591,25 +2585,25 @@ decl_stmt|;
 struct|struct
 name|juniper_ggsn_header
 block|{
-name|u_int8_t
+name|uint8_t
 name|svc_id
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|flags_len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|proto
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|flags
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|vlan_id
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|res
 index|[
 literal|2
@@ -2633,6 +2627,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -2668,13 +2664,18 @@ name|cookie
 expr_stmt|;
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"proto %s (%u), vlan %u: "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|juniper_protocol_values
@@ -2685,11 +2686,11 @@ name|gh
 operator|->
 name|proto
 argument_list|)
-argument_list|,
+operator|,
 name|gh
 operator|->
 name|proto
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -2700,6 +2701,7 @@ index|[
 literal|0
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2715,7 +2717,7 @@ name|JUNIPER_PROTO_IPV4
 case|:
 name|ip_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -2733,7 +2735,7 @@ name|JUNIPER_PROTO_IPV6
 case|:
 name|ip6_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -2750,15 +2752,21 @@ default|default:
 if|if
 condition|(
 operator|!
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"unknown GGSN proto (%u)"
-argument_list|,
+operator|,
 name|gh
 operator|->
 name|proto
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2785,6 +2793,10 @@ begin_function
 name|u_int
 name|juniper_es_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -2805,31 +2817,31 @@ decl_stmt|;
 struct|struct
 name|juniper_ipsec_header
 block|{
-name|u_int8_t
+name|uint8_t
 name|sa_index
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|ttl
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|spi
 index|[
 literal|4
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|src_ip
 index|[
 literal|4
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dst_ip
 index|[
 literal|4
@@ -2858,6 +2870,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -2927,18 +2941,23 @@ name|es_type_bundle
 operator|=
 literal|0
 expr_stmt|;
+break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ES Invalid type %u, length %u"
-argument_list|,
+operator|,
 name|ih
 operator|->
 name|type
-argument_list|,
+operator|,
 name|l2info
 operator|.
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2959,7 +2978,9 @@ name|rewrite_len
 expr_stmt|;
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 block|{
 if|if
@@ -2968,10 +2989,13 @@ operator|!
 name|es_type_bundle
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ES SA, index %u, ttl %u type %s (%u), spi %u, Tunnel %s> %s, length %u\n"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -2979,11 +3003,11 @@ name|ih
 operator|->
 name|sa_index
 argument_list|)
-argument_list|,
+operator|,
 name|ih
 operator|->
 name|ttl
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|juniper_ipsec_type_values
@@ -2994,11 +3018,11 @@ name|ih
 operator|->
 name|type
 argument_list|)
-argument_list|,
+operator|,
 name|ih
 operator|->
 name|type
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -3006,35 +3030,43 @@ name|ih
 operator|->
 name|spi
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ih
 operator|->
 name|src_ip
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ih
 operator|->
 name|dst_ip
 argument_list|)
-argument_list|,
+operator|,
 name|l2info
 operator|.
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ES SA, index %u, ttl %u type %s (%u), length %u\n"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -3042,11 +3074,11 @@ name|ih
 operator|->
 name|sa_index
 argument_list|)
-argument_list|,
+operator|,
 name|ih
 operator|->
 name|ttl
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|juniper_ipsec_type_values
@@ -3057,21 +3089,22 @@ name|ih
 operator|->
 name|type
 argument_list|)
-argument_list|,
+operator|,
 name|ih
 operator|->
 name|type
-argument_list|,
+operator|,
 name|l2info
 operator|.
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 name|ip_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -3103,6 +3136,10 @@ begin_function
 name|u_int
 name|juniper_monitor_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -3123,19 +3160,19 @@ decl_stmt|;
 struct|struct
 name|juniper_monitor_header
 block|{
-name|u_int8_t
+name|uint8_t
 name|pkt_type
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|padding
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|iif
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|service_id
 index|[
 literal|4
@@ -3159,6 +3196,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -3191,12 +3230,17 @@ name|p
 expr_stmt|;
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"service-id %u, iif %u, pkt-type %u: "
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -3204,7 +3248,7 @@ name|mh
 operator|->
 name|service_id
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -3212,15 +3256,18 @@ name|mh
 operator|->
 name|iif
 argument_list|)
-argument_list|,
+operator|,
 name|mh
 operator|->
 name|pkt_type
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* no proto field - lets guess by first byte of IP header*/
 name|ip_heuristic_guess
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -3251,6 +3298,10 @@ begin_function
 name|u_int
 name|juniper_services_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -3271,19 +3322,19 @@ decl_stmt|;
 struct|struct
 name|juniper_services_header
 block|{
-name|u_int8_t
+name|uint8_t
 name|svc_id
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|flags_len
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|svc_set_id
 index|[
 literal|2
 index|]
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|dir_iif
 index|[
 literal|4
@@ -3307,6 +3358,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -3339,20 +3392,25 @@ name|p
 expr_stmt|;
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"service-id %u flags 0x%02x service-set-id 0x%04x iif %u: "
-argument_list|,
+operator|,
 name|sh
 operator|->
 name|svc_id
-argument_list|,
+operator|,
 name|sh
 operator|->
 name|flags_len
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -3360,7 +3418,7 @@ name|sh
 operator|->
 name|svc_set_id
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_24BITS
 argument_list|(
 operator|&
@@ -3371,11 +3429,14 @@ index|[
 literal|1
 index|]
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* no proto field - lets guess by first byte of IP header*/
 name|ip_heuristic_guess
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -3406,6 +3467,10 @@ begin_function
 name|u_int
 name|juniper_pppoe_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -3433,6 +3498,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -3457,7 +3524,7 @@ expr_stmt|;
 comment|/* this DLT contains nothing but raw ethernet frames */
 name|ether_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -3497,6 +3564,10 @@ begin_function
 name|u_int
 name|juniper_ether_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -3524,6 +3595,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -3548,7 +3621,7 @@ expr_stmt|;
 comment|/* this DLT contains nothing but raw Ethernet frames */
 name|ether_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -3588,6 +3661,10 @@ begin_function
 name|u_int
 name|juniper_ppp_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -3615,6 +3692,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -3639,6 +3718,8 @@ expr_stmt|;
 comment|/* this DLT contains nothing but raw ppp frames */
 name|ppp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -3669,6 +3750,10 @@ begin_function
 name|u_int
 name|juniper_frelay_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -3696,6 +3781,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -3720,6 +3807,8 @@ expr_stmt|;
 comment|/* this DLT contains nothing but raw frame-relay frames */
 name|fr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -3750,6 +3839,10 @@ begin_function
 name|u_int
 name|juniper_chdlc_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -3777,6 +3870,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -3801,6 +3896,8 @@ expr_stmt|;
 comment|/* this DLT contains nothing but raw c-hdlc frames */
 name|chdlc_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -3831,6 +3928,10 @@ begin_function
 name|u_int
 name|juniper_pppoe_atm_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -3848,7 +3949,7 @@ name|struct
 name|juniper_l2info_t
 name|l2info
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|extracted_ethertype
 decl_stmt|;
 name|l2info
@@ -3861,6 +3962,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -3894,7 +3997,7 @@ if|if
 condition|(
 name|ethertype_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|extracted_ethertype
 argument_list|,
@@ -3918,11 +4021,15 @@ operator|==
 literal|0
 condition|)
 comment|/* ether_type not known, probably it wasn't one */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"unknown ethertype 0x%04x"
-argument_list|,
+operator|,
 name|extracted_ethertype
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3948,6 +4055,10 @@ begin_function
 name|u_int
 name|juniper_mlppp_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -3975,6 +4086,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -3993,7 +4106,9 @@ return|;
 comment|/* suppress Bundle-ID if frame was captured on a child-link          * best indicator if the cookie looks like a proto */
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 operator|&&
 name|EXTRACT_16BITS
 argument_list|(
@@ -4021,13 +4136,17 @@ operator||
 name|PPP_CONTROL
 operator|)
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Bundle-ID %u: "
-argument_list|,
+operator|,
 name|l2info
 operator|.
 name|bundle
+operator|)
 argument_list|)
 expr_stmt|;
 name|p
@@ -4065,6 +4184,8 @@ operator|)
 condition|)
 name|ppp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -4075,7 +4196,7 @@ expr_stmt|;
 else|else
 name|ip_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -4097,7 +4218,7 @@ name|JUNIPER_LSQ_L3_PROTO_IPV6
 case|:
 name|ip6_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -4118,6 +4239,8 @@ name|JUNIPER_LSQ_L3_PROTO_MPLS
 case|:
 name|mpls_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -4135,6 +4258,8 @@ name|JUNIPER_LSQ_L3_PROTO_ISO
 case|:
 name|isoclns_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -4171,6 +4296,8 @@ name|PPP_OSI
 case|:
 name|ppp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|-
 literal|2
@@ -4196,6 +4323,8 @@ comment|/* fall through */
 default|default:
 name|ppp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -4228,6 +4357,10 @@ begin_function
 name|u_int
 name|juniper_mfr_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -4255,6 +4388,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -4288,6 +4423,8 @@ condition|)
 block|{
 name|mfr_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -4323,7 +4460,7 @@ name|JUNIPER_LSQ_L3_PROTO_IPV4
 case|:
 name|ip_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -4345,7 +4482,7 @@ name|JUNIPER_LSQ_L3_PROTO_IPV6
 case|:
 name|ip6_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -4366,6 +4503,8 @@ name|JUNIPER_LSQ_L3_PROTO_MPLS
 case|:
 name|mpls_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -4383,6 +4522,8 @@ name|JUNIPER_LSQ_L3_PROTO_ISO
 case|:
 name|isoclns_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -4411,7 +4552,9 @@ block|}
 comment|/* suppress Bundle-ID if frame was captured on a child-link */
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 operator|&&
 name|EXTRACT_32BITS
 argument_list|(
@@ -4422,13 +4565,17 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Bundle-ID %u, "
-argument_list|,
+operator|,
 name|l2info
 operator|.
 name|bundle
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -4449,6 +4596,8 @@ operator|)
 case|:
 name|isoclns_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|+
 literal|1
@@ -4497,6 +4646,8 @@ case|:
 comment|/* pass IP{4,6} to the OSI layer for proper link-layer printing */
 name|isoclns_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|-
 literal|1
@@ -4516,17 +4667,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"unknown protocol 0x%04x, length %u"
-argument_list|,
+operator|,
 name|l2info
 operator|.
 name|proto
-argument_list|,
+operator|,
 name|l2info
 operator|.
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4553,6 +4708,10 @@ begin_function
 name|u_int
 name|juniper_mlfr_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -4580,6 +4739,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -4604,7 +4765,9 @@ expr_stmt|;
 comment|/* suppress Bundle-ID if frame was captured on a child-link */
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 operator|&&
 name|EXTRACT_32BITS
 argument_list|(
@@ -4615,13 +4778,17 @@ argument_list|)
 operator|!=
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Bundle-ID %u, "
-argument_list|,
+operator|,
 name|l2info
 operator|.
 name|bundle
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -4645,6 +4812,8 @@ operator|)
 case|:
 name|isoclns_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -4687,6 +4856,8 @@ case|:
 comment|/* pass IP{4,6} to the OSI layer for proper link-layer printing */
 name|isoclns_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|-
 literal|1
@@ -4706,17 +4877,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"unknown protocol 0x%04x, length %u"
-argument_list|,
+operator|,
 name|l2info
 operator|.
 name|proto
-argument_list|,
+operator|,
 name|l2info
 operator|.
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4747,6 +4922,10 @@ begin_function
 name|u_int
 name|juniper_atm1_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -4760,7 +4939,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|extracted_ethertype
 decl_stmt|;
 name|struct
@@ -4777,6 +4956,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -4813,6 +4994,8 @@ block|{
 comment|/* OAM cell ? */
 name|oam_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -4851,6 +5034,8 @@ if|if
 condition|(
 name|llc_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -4890,6 +5075,8 @@ block|{
 comment|/* Cisco style NLPID encaps ? */
 name|isoclns_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|+
 literal|1
@@ -4918,6 +5105,8 @@ if|if
 condition|(
 name|ip_heuristic_guess
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -4960,6 +5149,10 @@ begin_function
 name|u_int
 name|juniper_atm2_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -4973,7 +5166,7 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|u_int16_t
+name|uint16_t
 name|extracted_ethertype
 decl_stmt|;
 name|struct
@@ -4990,6 +5183,8 @@ if|if
 condition|(
 name|juniper_parse_header
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h
@@ -5026,6 +5221,8 @@ block|{
 comment|/* OAM cell ? */
 name|oam_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -5064,6 +5261,8 @@ if|if
 condition|(
 name|llc_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -5113,7 +5312,7 @@ condition|)
 block|{
 name|ether_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -5149,6 +5348,8 @@ block|{
 comment|/* Cisco style NLPID encaps ? */
 name|isoclns_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|+
 literal|1
@@ -5177,6 +5378,8 @@ if|if
 condition|(
 name|juniper_ppp_heuristic_guess
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -5196,6 +5399,8 @@ if|if
 condition|(
 name|ip_heuristic_guess
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|l2info
@@ -5229,9 +5434,14 @@ comment|/* try to guess, based on all PPP protos that are supported in  * a juni
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|juniper_ppp_heuristic_guess
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -5296,6 +5506,8 @@ endif|#
 directive|endif
 name|ppp_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|length
@@ -5317,9 +5529,14 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|ip_heuristic_guess
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -5373,7 +5590,7 @@ literal|0x4f
 case|:
 name|ip_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -5434,7 +5651,7 @@ literal|0x6f
 case|:
 name|ip6_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -5459,6 +5676,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|juniper_read_tlv_value
 parameter_list|(
@@ -5611,6 +5829,10 @@ specifier|static
 name|int
 name|juniper_parse_header
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -5628,6 +5850,7 @@ modifier|*
 name|l2info
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|juniper_cookie_table_t
 modifier|*
@@ -5644,12 +5867,12 @@ name|jnx_header_len
 init|=
 literal|0
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|tlv_type
 decl_stmt|,
 name|tlv_len
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|control_word
 decl_stmt|;
 name|int
@@ -5694,7 +5917,7 @@ name|h
 operator|->
 name|caplen
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|p
 index|[
@@ -5735,9 +5958,13 @@ name|JUNIPER_MGC_NUMBER
 condition|)
 block|{
 comment|/* magic number found ? */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"no magic-number found!"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5746,13 +5973,18 @@ return|;
 block|}
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
 comment|/* print direction */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%3s "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|juniper_direction_values
@@ -5763,6 +5995,7 @@ name|l2info
 operator|->
 name|direction
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* magic number + flags */
@@ -5772,14 +6005,19 @@ literal|4
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tJuniper PCAP Flags [%s]"
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|jnx_flag_values
@@ -5790,6 +6028,7 @@ name|l2info
 operator|->
 name|flags
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* extensions present ?  - calculate how much bytes to skip */
@@ -5813,7 +6052,7 @@ operator|+
 name|jnx_header_len
 expr_stmt|;
 comment|/* ok to read extension length ? */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -5845,18 +6084,24 @@ name|jnx_ext_len
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", PCAP Extension(s) total length %u"
-argument_list|,
+operator|,
 name|jnx_ext_len
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|tptr
 index|[
@@ -5907,14 +6152,19 @@ condition|)
 break|break;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  %s Extension TLV #%u, length %u, value "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|jnx_ext_tlv_values
@@ -5923,10 +6173,11 @@ literal|"Unknown"
 argument_list|,
 name|tlv_type
 argument_list|)
-argument_list|,
+operator|,
 name|tlv_type
-argument_list|,
+operator|,
 name|tlv_len
+operator|)
 argument_list|)
 expr_stmt|;
 name|tlv_value
@@ -5966,14 +6217,19 @@ condition|)
 block|{
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s (%u)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|juniper_ifmt_values
@@ -5982,8 +6238,9 @@ literal|"Unknown"
 argument_list|,
 name|tlv_value
 argument_list|)
-argument_list|,
+operator|,
 name|tlv_value
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6004,14 +6261,19 @@ condition|)
 block|{
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s (%u)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|juniper_ifle_values
@@ -6020,8 +6282,9 @@ literal|"Unknown"
 argument_list|,
 name|tlv_value
 argument_list|)
-argument_list|,
+operator|,
 name|tlv_value
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6047,15 +6310,21 @@ condition|)
 block|{
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%u"
-argument_list|,
+operator|,
 name|tlv_value
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6074,13 +6343,19 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t-----original packet-----\n\t"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6099,15 +6374,21 @@ condition|)
 block|{
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"no-L2-hdr, "
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* there is no link-layer present -          * perform the v4/v6 heuristics          * to figure out what it is          */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|p
 index|[
@@ -6123,6 +6404,8 @@ if|if
 condition|(
 name|ip_heuristic_guess
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 operator|+
 name|jnx_header_len
@@ -6142,9 +6425,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"no IP-hdr found!"
+operator|)
 argument_list|)
 expr_stmt|;
 name|l2info
@@ -6330,19 +6617,25 @@ name|cookie_len
 expr_stmt|;
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s-PIC, cookie-len %u"
-argument_list|,
+operator|,
 name|lp
 operator|->
 name|s
-argument_list|,
+operator|,
 name|l2info
 operator|->
 name|cookie_len
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6354,7 +6647,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|p
 index|[
@@ -6368,11 +6661,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", cookie 0x"
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -6406,27 +6705,39 @@ expr_stmt|;
 comment|/* copy cookie data */
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%02x"
-argument_list|,
+operator|,
 name|p
 index|[
 name|idx
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|": "
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* print demarc b/w L2/L3*/
@@ -6796,7 +7107,7 @@ name|DLT_JUNIPER_ATM2
 case|case
 name|DLT_JUNIPER_ATM2
 case|:
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|p
 index|[
@@ -6856,13 +7167,19 @@ break|break;
 block|}
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"control-word 0x%08x "
-argument_list|,
+operator|,
 name|control_word
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6924,34 +7241,44 @@ break|break;
 endif|#
 directive|endif
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Unknown Juniper DLT_ type %u: "
-argument_list|,
+operator|,
 name|l2info
 operator|->
 name|pictype
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 if|if
 condition|(
-name|eflag
+name|ndo
+operator|->
+name|ndo_eflag
 operator|>
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"hlen %u, proto 0x%04x, "
-argument_list|,
+operator|,
 name|l2info
 operator|->
 name|header_len
-argument_list|,
+operator|,
 name|l2info
 operator|->
 name|proto
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6960,13 +7287,17 @@ return|;
 comment|/* everything went ok so far. continue parsing */
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|juniper_hdr], length %u"
-argument_list|,
+operator|,
 name|h
 operator|->
 name|len
+operator|)
 argument_list|)
 expr_stmt|;
 return|return

@@ -1327,6 +1327,7 @@ end_comment
 
 begin_function
 specifier|static
+name|__noinline
 name|void
 name|txg_quiesce
 parameter_list|(

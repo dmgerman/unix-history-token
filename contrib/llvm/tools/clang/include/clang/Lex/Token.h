@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_TOKEN_H
+name|LLVM_CLANG_LEX_TOKEN_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_TOKEN_H
+name|LLVM_CLANG_LEX_TOKEN_H
 end_define
 
 begin_include
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/TokenKinds.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
@@ -132,6 +138,8 @@ comment|///    This is a pointer to the start of the token in a text buffer, whi
 comment|///    may be dirty (have trigraphs / escaped newlines).
 comment|///  Annotations (resolved type names, C++ scopes, etc): isAnnotation().
 comment|///    This is a pointer to sema-specific data for the annotation token.
+comment|///  Eof:
+comment|//     This is a pointer to a Decl.
 comment|///  Other:
 comment|///    This is null.
 name|void
@@ -139,14 +147,14 @@ modifier|*
 name|PtrData
 decl_stmt|;
 comment|/// Kind - The actual flavor of token this is.
-comment|///
-name|unsigned
-name|short
+name|tok
+operator|::
+name|TokenKind
 name|Kind
-decl_stmt|;
+expr_stmt|;
 comment|/// Flags - Bits we track about this token, members of the TokenFlags enum.
 name|unsigned
-name|char
+name|short
 name|Flags
 decl_stmt|;
 name|public
@@ -195,7 +203,14 @@ comment|// This identifier contains a UCN.
 name|IgnoredComma
 init|=
 literal|0x80
+block|,
 comment|// This comma is not a macro argument separator (MS).
+name|StringifiedInMacro
+init|=
+literal|0x100
+block|,
+comment|// This string or character literal is formed by
+comment|// macro stringizing or charizing operator.
 block|}
 enum|;
 name|tok
@@ -206,11 +221,6 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|tok
-operator|::
-name|TokenKind
-operator|)
 name|Kind
 return|;
 block|}
@@ -243,9 +253,6 @@ block|{
 return|return
 name|Kind
 operator|==
-operator|(
-name|unsigned
-operator|)
 name|K
 return|;
 block|}
@@ -262,9 +269,6 @@ block|{
 return|return
 name|Kind
 operator|!=
-operator|(
-name|unsigned
-operator|)
 name|K
 return|;
 block|}
@@ -495,11 +499,6 @@ name|tok
 operator|::
 name|getTokenName
 argument_list|(
-operator|(
-name|tok
-operator|::
-name|TokenKind
-operator|)
 name|Kind
 argument_list|)
 return|;
@@ -521,7 +520,7 @@ literal|0
 expr_stmt|;
 name|PtrData
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|UintData
 operator|=
@@ -566,7 +565,19 @@ name|isLiteral
 argument_list|()
 condition|)
 return|return
-literal|0
+name|nullptr
+return|;
+if|if
+condition|(
+name|is
+argument_list|(
+name|tok
+operator|::
+name|eof
+argument_list|)
+condition|)
+return|return
+name|nullptr
 return|;
 return|return
 operator|(
@@ -593,13 +604,77 @@ operator|)
 name|II
 expr_stmt|;
 block|}
-comment|/// getRawIdentifierData - For a raw identifier token (i.e., an identifier
-comment|/// lexed in raw mode), returns a pointer to the start of it in the text
-comment|/// buffer if known, null otherwise.
 specifier|const
-name|char
+name|void
 operator|*
-name|getRawIdentifierData
+name|getEofData
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|is
+argument_list|(
+name|tok
+operator|::
+name|eof
+argument_list|)
+argument_list|)
+block|;
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|void
+operator|*
+operator|>
+operator|(
+name|PtrData
+operator|)
+return|;
+block|}
+name|void
+name|setEofData
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|D
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|is
+argument_list|(
+name|tok
+operator|::
+name|eof
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|!
+name|PtrData
+argument_list|)
+expr_stmt|;
+name|PtrData
+operator|=
+name|const_cast
+operator|<
+name|void
+operator|*
+operator|>
+operator|(
+name|D
+operator|)
+expr_stmt|;
+block|}
+comment|/// getRawIdentifier - For a raw identifier token (i.e., an identifier
+comment|/// lexed in raw mode), returns a reference to the text substring in the
+comment|/// buffer if known.
+name|StringRef
+name|getRawIdentifier
 argument_list|()
 specifier|const
 block|{
@@ -614,6 +689,8 @@ argument_list|)
 argument_list|)
 block|;
 return|return
+name|StringRef
+argument_list|(
 name|reinterpret_cast
 operator|<
 specifier|const
@@ -623,6 +700,10 @@ operator|>
 operator|(
 name|PtrData
 operator|)
+argument_list|,
+name|getLength
+argument_list|()
+argument_list|)
 return|;
 block|}
 name|void
@@ -964,6 +1045,25 @@ operator|(
 name|Flags
 operator|&
 name|HasUCN
+operator|)
+operator|?
+name|true
+operator|:
+name|false
+return|;
+block|}
+comment|/// Returns true if this token is formed by macro by stringizing or charizing
+comment|/// operator.
+name|bool
+name|stringifiedInMacro
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Flags
+operator|&
+name|StringifiedInMacro
 operator|)
 operator|?
 name|true

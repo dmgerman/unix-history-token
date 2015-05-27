@@ -3066,7 +3066,7 @@ name|sc
 operator|->
 name|cxgb_tick_ch
 argument_list|,
-name|TRUE
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -5194,7 +5194,7 @@ name|p
 operator|->
 name|link_check_ch
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|TASK_INIT
@@ -11586,6 +11586,14 @@ name|caps
 operator|&
 name|SUPPORTED_LINK_IRQ
 operator|)
+operator|||
+name|pi
+operator|->
+name|link_config
+operator|.
+name|link_ok
+operator|==
+literal|0
 condition|)
 name|callout_reset
 argument_list|(

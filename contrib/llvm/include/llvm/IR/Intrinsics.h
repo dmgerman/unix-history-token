@@ -101,10 +101,9 @@ decl_stmt|;
 name|class
 name|AttributeSet
 decl_stmt|;
-comment|/// Intrinsic Namespace - This namespace contains an enum with a value for
-comment|/// every intrinsic/builtin function known by LLVM.  These enum values are
-comment|/// returned by Function::getIntrinsicID().
-comment|///
+comment|/// This namespace contains an enum with a value for every intrinsic/builtin
+comment|/// function known by LLVM. The enum values are returned by
+comment|/// Function::getIntrinsicID().
 name|namespace
 name|Intrinsic
 block|{
@@ -130,8 +129,7 @@ block|,
 name|num_intrinsics
 block|}
 enum|;
-comment|/// Intrinsic::getName(ID) - Return the LLVM name for an intrinsic, such as
-comment|/// "llvm.ppc.altivec.lvx".
+comment|/// Return the LLVM name for an intrinsic, such as "llvm.ppc.altivec.lvx".
 name|std
 operator|::
 name|string
@@ -142,8 +140,7 @@ argument_list|,
 argument|ArrayRef<Type*> Tys = None
 argument_list|)
 expr_stmt|;
-comment|/// Intrinsic::getType(ID) - Return the function type for an intrinsic.
-comment|///
+comment|/// Return the function type for an intrinsic.
 name|FunctionType
 modifier|*
 name|getType
@@ -165,8 +162,7 @@ operator|=
 name|None
 argument_list|)
 decl_stmt|;
-comment|/// Intrinsic::isOverloaded(ID) - Returns true if the intrinsic can be
-comment|/// overloaded.
+comment|/// Returns true if the intrinsic can be overloaded.
 name|bool
 name|isOverloaded
 parameter_list|(
@@ -174,8 +170,7 @@ name|ID
 name|id
 parameter_list|)
 function_decl|;
-comment|/// Intrinsic::getAttributes(ID) - Return the attributes for an intrinsic.
-comment|///
+comment|/// Return the attributes for an intrinsic.
 name|AttributeSet
 name|getAttributes
 parameter_list|(
@@ -187,8 +182,8 @@ name|ID
 name|id
 parameter_list|)
 function_decl|;
-comment|/// Intrinsic::getDeclaration(M, ID) - Create or insert an LLVM Function
-comment|/// declaration for an intrinsic, and return it.
+comment|/// Create or insert an LLVM Function declaration for an intrinsic, and return
+comment|/// it.
 comment|///
 comment|/// The Tys parameter is for intrinsics with overloaded types (e.g., those
 comment|/// using iAny, fAny, vAny, or iPTRAny).  For a declaration of an overloaded
@@ -230,9 +225,23 @@ modifier|*
 name|BuiltinName
 parameter_list|)
 function_decl|;
-comment|/// IITDescriptor - This is a type descriptor which explains the type
-comment|/// requirements of an intrinsic.  This is returned by
-comment|/// getIntrinsicInfoTableEntries.
+comment|/// Map a MS builtin name to an intrinsic ID.
+name|ID
+name|getIntrinsicForMSBuiltin
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Prefix
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|BuiltinName
+parameter_list|)
+function_decl|;
+comment|/// This is a type descriptor which explains the type requirements of an
+comment|/// intrinsic. This is returned by getIntrinsicInfoTableEntries.
 struct|struct
 name|IITDescriptor
 block|{
@@ -263,9 +272,15 @@ name|Struct
 block|,
 name|Argument
 block|,
-name|ExtendVecArgument
+name|ExtendArgument
 block|,
-name|TruncVecArgument
+name|TruncArgument
+block|,
+name|HalfVecArgument
+block|,
+name|SameVecWidthArgument
+block|,
+name|PtrToArgument
 block|}
 name|Kind
 enum|;
@@ -316,11 +331,23 @@ name|Argument
 operator|||
 name|Kind
 operator|==
-name|ExtendVecArgument
+name|ExtendArgument
 operator|||
 name|Kind
 operator|==
-name|TruncVecArgument
+name|TruncArgument
+operator|||
+name|Kind
+operator|==
+name|HalfVecArgument
+operator|||
+name|Kind
+operator|==
+name|SameVecWidthArgument
+operator|||
+name|Kind
+operator|==
+name|PtrToArgument
 argument_list|)
 block|;
 return|return
@@ -342,11 +369,23 @@ name|Argument
 operator|||
 name|Kind
 operator|==
-name|ExtendVecArgument
+name|ExtendArgument
 operator|||
 name|Kind
 operator|==
-name|TruncVecArgument
+name|TruncArgument
+operator|||
+name|Kind
+operator|==
+name|HalfVecArgument
+operator|||
+name|Kind
+operator|==
+name|SameVecWidthArgument
+operator|||
+name|Kind
+operator|==
+name|PtrToArgument
 argument_list|)
 block|;
 return|return
@@ -388,9 +427,8 @@ return|;
 block|}
 block|}
 struct|;
-comment|/// getIntrinsicInfoTableEntries - Return the IIT table descriptor for the
-comment|/// specified intrinsic into an array of IITDescriptors.
-comment|///
+comment|/// Return the IIT table descriptor for the specified intrinsic into an array
+comment|/// of IITDescriptors.
 name|void
 name|getIntrinsicInfoTableEntries
 argument_list|(

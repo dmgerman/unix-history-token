@@ -11,28 +11,11 @@ begin_comment
 comment|/* Cisco NetFlow protocol */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-cnfp.c,v 1.17 2005-04-20 20:53:18 guy Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -103,24 +86,24 @@ begin_struct
 struct|struct
 name|nfhdr
 block|{
-name|u_int32_t
+name|uint32_t
 name|ver_cnt
 decl_stmt|;
 comment|/* version [15], and # of records */
-name|u_int32_t
+name|uint32_t
 name|msys_uptime
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|utc_sec
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|utc_nsec
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|sequence
 decl_stmt|;
 comment|/* v5 flow sequence number */
-name|u_int32_t
+name|uint32_t
 name|reserved
 decl_stmt|;
 comment|/* v5 only */
@@ -144,37 +127,37 @@ name|struct
 name|in_addr
 name|nhop_ina
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ifaces
 decl_stmt|;
 comment|/* src,dst ifaces */
-name|u_int32_t
+name|uint32_t
 name|packets
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|octets
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|start_time
 decl_stmt|;
 comment|/* sys_uptime value */
-name|u_int32_t
+name|uint32_t
 name|last_time
 decl_stmt|;
 comment|/* sys_uptime value */
-name|u_int32_t
+name|uint32_t
 name|ports
 decl_stmt|;
 comment|/* src,dst ports */
-name|u_int32_t
+name|uint32_t
 name|proto_tos
 decl_stmt|;
 comment|/* proto, tos, pad, flags(v5) */
-name|u_int32_t
+name|uint32_t
 name|asses
 decl_stmt|;
 comment|/* v1: flags; v5: src,dst AS */
-name|u_int32_t
+name|uint32_t
 name|masks
 decl_stmt|;
 comment|/* src,dst addr prefix; v6: encaps */
@@ -191,6 +174,10 @@ begin_function
 name|void
 name|cnfp_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -256,7 +243,9 @@ operator|+
 literal|1
 operator|)
 operator|>
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 return|return;
 name|nrecs
@@ -294,12 +283,15 @@ comment|/* 	 * This is seconds since the UN*X epoch, and is followed by 	 * nano
 block|t = EXTRACT_32BITS(&nh->utc_sec);
 endif|#
 directive|endif
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"NetFlow v%x, %u.%03u uptime, %u.%09u, "
-argument_list|,
+operator|,
 name|ver
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -309,7 +301,7 @@ name|msys_uptime
 argument_list|)
 operator|/
 literal|1000
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -319,7 +311,7 @@ name|msys_uptime
 argument_list|)
 operator|%
 literal|1000
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -327,7 +319,7 @@ name|nh
 operator|->
 name|utc_sec
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -335,6 +327,7 @@ name|nh
 operator|->
 name|utc_nsec
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -348,10 +341,13 @@ operator|==
 literal|6
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"#%u, "
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -359,6 +355,7 @@ name|nh
 operator|->
 name|sequence
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|nr
@@ -375,7 +372,9 @@ index|[
 literal|1
 index|]
 expr_stmt|;
-name|snaplen
+name|ndo
+operator|->
+name|ndo_snaplen
 operator|-=
 literal|24
 expr_stmt|;
@@ -395,16 +394,22 @@ name|nh
 operator|->
 name|sequence
 expr_stmt|;
-name|snaplen
+name|ndo
+operator|->
+name|ndo_snaplen
 operator|-=
 literal|16
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%2u recs"
-argument_list|,
+operator|,
 name|nrecs
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -424,7 +429,9 @@ operator|+
 literal|1
 operator|)
 operator|<=
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|;
 name|nr
 operator|++
@@ -442,10 +449,13 @@ index|[
 literal|20
 index|]
 decl_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n  started %u.%03u, last %u.%03u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -455,7 +465,7 @@ name|start_time
 argument_list|)
 operator|/
 literal|1000
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -465,7 +475,7 @@ name|start_time
 argument_list|)
 operator|%
 literal|1000
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -475,7 +485,7 @@ name|last_time
 argument_list|)
 operator|/
 literal|1000
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -485,6 +495,7 @@ name|last_time
 argument_list|)
 operator|%
 literal|1000
+operator|)
 argument_list|)
 expr_stmt|;
 name|asbuf
@@ -563,10 +574,13 @@ literal|0xffff
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n    %s%s%s:%u "
-argument_list|,
+operator|,
 name|intoa
 argument_list|(
 name|nr
@@ -575,11 +589,11 @@ name|src_ina
 operator|.
 name|s_addr
 argument_list|)
-argument_list|,
+operator|,
 name|buf
-argument_list|,
+operator|,
 name|asbuf
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -589,6 +603,7 @@ name|ports
 argument_list|)
 operator|>>
 literal|16
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -651,10 +666,13 @@ literal|0xffff
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"> %s%s%s:%u "
-argument_list|,
+operator|,
 name|intoa
 argument_list|(
 name|nr
@@ -663,11 +681,11 @@ name|dst_ina
 operator|.
 name|s_addr
 argument_list|)
-argument_list|,
+operator|,
 name|buf
-argument_list|,
+operator|,
 name|asbuf
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -677,12 +695,16 @@ name|ports
 argument_list|)
 operator|&
 literal|0xffff
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|">> %s\n    "
-argument_list|,
+operator|,
 name|intoa
 argument_list|(
 name|nr
@@ -691,6 +713,7 @@ name|nhop_ina
 operator|.
 name|s_addr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|pent
@@ -717,12 +740,17 @@ condition|(
 operator|!
 name|pent
 operator|||
-name|nflag
+name|ndo
+operator|->
+name|ndo_nflag
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%u "
-argument_list|,
+operator|,
 operator|(
 name|EXTRACT_32BITS
 argument_list|(
@@ -736,16 +764,21 @@ literal|8
 operator|)
 operator|&
 literal|0xff
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s "
-argument_list|,
+operator|,
 name|pent
 operator|->
 name|p_name
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* tcp flags for tcp only */
@@ -802,79 +835,67 @@ operator|)
 operator|&
 literal|0xff
 expr_stmt|;
-if|if
-condition|(
+name|ND_PRINT
+argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s%s%s%s%s%s%s"
+operator|,
 name|flags
 operator|&
 name|TH_FIN
-condition|)
-name|putchar
-argument_list|(
-literal|'F'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+condition|?
+literal|"F"
+else|:
+literal|""
+operator|,
 name|flags
 operator|&
 name|TH_SYN
-condition|)
-name|putchar
-argument_list|(
-literal|'S'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+condition|?
+literal|"S"
+else|:
+literal|""
+operator|,
 name|flags
 operator|&
 name|TH_RST
-condition|)
-name|putchar
-argument_list|(
-literal|'R'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+condition|?
+literal|"R"
+else|:
+literal|""
+operator|,
 name|flags
 operator|&
 name|TH_PUSH
-condition|)
-name|putchar
-argument_list|(
-literal|'P'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+condition|?
+literal|"P"
+else|:
+literal|""
+operator|,
 name|flags
 operator|&
 name|TH_ACK
-condition|)
-name|putchar
-argument_list|(
-literal|'A'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+condition|?
+literal|"A"
+else|:
+literal|""
+operator|,
 name|flags
 operator|&
 name|TH_URG
-condition|)
-name|putchar
-argument_list|(
-literal|'U'
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+condition|?
+literal|"U"
+else|:
+literal|""
+operator|,
 name|flags
-condition|)
-name|putchar
-argument_list|(
-literal|' '
+condition|?
+literal|" "
+else|:
+literal|""
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -931,10 +952,13 @@ literal|0xff
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"tos %u, %u (%u octets) %s"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -944,7 +968,7 @@ name|proto_tos
 argument_list|)
 operator|&
 literal|0xff
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -952,7 +976,7 @@ name|nr
 operator|->
 name|packets
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -960,8 +984,9 @@ name|nr
 operator|->
 name|octets
 argument_list|)
-argument_list|,
+operator|,
 name|buf
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

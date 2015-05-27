@@ -113,6 +113,10 @@ argument_list|,
 argument|const SymbolContext&addr_context
 argument_list|,
 argument|lldb::RunMode stop_others
+argument_list|,
+argument|LazyBool step_in_avoids_code_without_debug_info
+argument_list|,
+argument|LazyBool step_out_avoids_code_without_debug_info
 argument_list|)
 empty_stmt|;
 name|ThreadPlanStepInRange
@@ -126,6 +130,10 @@ argument_list|,
 argument|const char *step_into_function_name
 argument_list|,
 argument|lldb::RunMode stop_others
+argument_list|,
+argument|LazyBool step_in_avoids_code_without_debug_info
+argument_list|,
+argument|LazyBool step_out_avoids_code_without_debug_info
 argument_list|)
 empty_stmt|;
 name|virtual
@@ -183,25 +191,6 @@ argument_list|)
 expr_stmt|;
 block|}
 specifier|static
-name|lldb
-operator|::
-name|ThreadPlanSP
-name|DefaultShouldStopHereCallback
-argument_list|(
-name|ThreadPlan
-operator|*
-name|current_plan
-argument_list|,
-name|Flags
-operator|&
-name|flags
-argument_list|,
-name|void
-operator|*
-name|baton
-argument_list|)
-expr_stmt|;
-specifier|static
 name|void
 name|SetDefaultFlagValue
 parameter_list|(
@@ -215,6 +204,28 @@ parameter_list|()
 function_decl|;
 name|protected
 label|:
+specifier|static
+name|bool
+name|DefaultShouldStopHereCallback
+argument_list|(
+name|ThreadPlan
+operator|*
+name|current_plan
+argument_list|,
+name|Flags
+operator|&
+name|flags
+argument_list|,
+name|lldb
+operator|::
+name|FrameComparison
+name|operation
+argument_list|,
+name|void
+operator|*
+name|baton
+argument_list|)
+decl_stmt|;
 name|virtual
 name|bool
 name|DoWillResume
@@ -241,7 +252,43 @@ name|virtual
 name|void
 name|SetFlagsToDefault
 parameter_list|()
-function_decl|;
+block|{
+name|GetFlags
+argument_list|()
+operator|.
+name|Set
+argument_list|(
+name|ThreadPlanStepInRange
+operator|::
+name|s_default_flag_values
+argument_list|)
+expr_stmt|;
+block|}
+name|void
+name|SetCallbacks
+parameter_list|()
+block|{
+name|ThreadPlanShouldStopHere
+operator|::
+name|ThreadPlanShouldStopHereCallbacks
+name|callbacks
+argument_list|(
+name|ThreadPlanStepInRange
+operator|::
+name|DefaultShouldStopHereCallback
+argument_list|,
+name|nullptr
+argument_list|)
+expr_stmt|;
+name|SetShouldStopHereCallbacks
+argument_list|(
+operator|&
+name|callbacks
+argument_list|,
+name|nullptr
+argument_list|)
+expr_stmt|;
+block|}
 name|bool
 name|FrameMatchesAvoidCriteria
 parameter_list|()
@@ -263,6 +310,8 @@ argument_list|,
 argument|const SymbolContext&addr_context
 argument_list|,
 argument|lldb::RunMode stop_others
+argument_list|,
+argument|LazyBool avoid_code_without_debug_info
 argument_list|)
 expr_stmt|;
 name|friend
@@ -283,15 +332,28 @@ argument|const char *step_in_target
 argument_list|,
 argument|lldb::RunMode stop_others
 argument_list|,
-argument|bool avoid_code_without_debug_info
+argument|LazyBool step_in_avoids_code_without_debug_info
+argument_list|,
+argument|LazyBool step_out_avoids_code_without_debug_info
 argument_list|)
 expr_stmt|;
+name|void
+name|SetupAvoidNoDebug
+parameter_list|(
+name|LazyBool
+name|step_in_avoids_code_without_debug_info
+parameter_list|,
+name|LazyBool
+name|step_out_avoids_code_without_debug_info
+parameter_list|)
+function_decl|;
 comment|// Need an appropriate marker for the current stack so we can tell step out
 comment|// from step in.
 specifier|static
 name|uint32_t
 name|s_default_flag_values
 decl_stmt|;
+comment|// These are the default flag values for the ThreadPlanStepThrough.
 name|lldb
 operator|::
 name|ThreadPlanSP

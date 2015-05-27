@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -1707,7 +1713,7 @@ literal|"auid=%d\n"
 literal|"mask.success=0x%08x\n"
 literal|"mask.failure=0x%08x\n"
 literal|"asid=%d\n"
-literal|"termid_addr.port=0x%08x\n"
+literal|"termid_addr.port=0x%08jx\n"
 literal|"termid_addr.addr[0]=0x%08x\n"
 literal|"termid_addr.addr[1]=0x%08x\n"
 literal|"termid_addr.addr[2]=0x%08x\n"
@@ -1733,6 +1739,9 @@ name|ainfo_addr
 operator|.
 name|ai_asid
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|ainfo_addr
 operator|.
 name|ai_termid
@@ -1788,7 +1797,7 @@ literal|"auid=%d\n"
 literal|"mask.success=0x%08x\n"
 literal|"mask.failure=0x%08x\n"
 literal|"asid=%d\n"
-literal|"termid.port=0x%08x\n"
+literal|"termid.port=0x%08jx\n"
 literal|"termid.machine=0x%08x\n"
 argument_list|,
 name|auditinfo
@@ -1811,6 +1820,9 @@ name|auditinfo
 operator|.
 name|ai_asid
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|auditinfo
 operator|.
 name|ai_termid

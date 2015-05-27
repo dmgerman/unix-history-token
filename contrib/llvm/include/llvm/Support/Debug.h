@@ -60,19 +60,27 @@ comment|// enabled automatically if you specify '-debug' on the command-line.
 end_comment
 
 begin_comment
-comment|// Alternatively, you can also use the SET_DEBUG_TYPE("foo") macro to specify
+comment|// Alternatively, you can also define the DEBUG_TYPE macro to "foo" specify
 end_comment
 
 begin_comment
-comment|// that your debug code belongs to class "foo".  Then, on the command line, you
+comment|// that your debug code belongs to class "foo". Be careful that you only do
 end_comment
 
 begin_comment
-comment|// can specify '-debug-only=foo' to enable JUST the debug information for the
+comment|// this after including Debug.h and not around any #include of headers. Headers
 end_comment
 
 begin_comment
-comment|// foo class.
+comment|// should define and undef the macro acround the code that needs to use the
+end_comment
+
+begin_comment
+comment|// DEBUG() macro. Then, on the command line, you can specify '-debug-only=foo'
+end_comment
+
+begin_comment
+comment|// to enable JUST the debug information for the foo class.
 end_comment
 
 begin_comment
@@ -117,17 +125,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// DEBUG_TYPE macro - Files can specify a DEBUG_TYPE as a string, which causes
-comment|/// all of their DEBUG statements to be activatable with -debug-only=thatstring.
-ifndef|#
-directive|ifndef
-name|DEBUG_TYPE
-define|#
-directive|define
-name|DEBUG_TYPE
-value|""
-endif|#
-directive|endif
 ifndef|#
 directive|ifndef
 name|NDEBUG

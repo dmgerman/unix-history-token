@@ -90,13 +90,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_CODEGEN_ABITYPES_H
+name|LLVM_CLANG_CODEGEN_CODEGENABITYPES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_CODEGEN_ABITYPES_H
+name|LLVM_CLANG_CODEGEN_CODEGENABITYPES_H
 end_define
 
 begin_include
@@ -149,6 +149,9 @@ decl_stmt|;
 name|class
 name|ObjCMethodDecl
 decl_stmt|;
+name|class
+name|CoverageSourceInfo
+decl_stmt|;
 name|namespace
 name|CodeGen
 block|{
@@ -169,11 +172,6 @@ name|ASTContext
 operator|&
 name|C
 argument_list|,
-specifier|const
-name|CodeGenOptions
-operator|&
-name|CodeGenOpts
-argument_list|,
 name|llvm
 operator|::
 name|Module
@@ -187,9 +185,11 @@ name|DataLayout
 operator|&
 name|TD
 argument_list|,
-name|DiagnosticsEngine
-operator|&
-name|Diags
+name|CoverageSourceInfo
+operator|*
+name|CoverageInfo
+operator|=
+name|nullptr
 argument_list|)
 expr_stmt|;
 operator|~
@@ -255,13 +255,11 @@ function_decl|;
 specifier|const
 name|CGFunctionInfo
 modifier|&
-name|arrangeLLVMFunctionInfo
+name|arrangeFreeFunctionCall
 argument_list|(
 name|CanQualType
 name|returnType
 argument_list|,
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|CanQualType
@@ -279,6 +277,14 @@ argument_list|)
 decl_stmt|;
 name|private
 label|:
+comment|/// Default CodeGenOptions object used to initialize the
+comment|/// CodeGenModule and otherwise not used. More specifically, it is
+comment|/// not used in ABI type generation, so none of the options matter.
+name|CodeGenOptions
+modifier|*
+name|CGO
+decl_stmt|;
+comment|/// The CodeGenModule we use get to the CodeGenTypes object.
 name|CodeGen
 operator|::
 name|CodeGenModule

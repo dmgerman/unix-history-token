@@ -295,6 +295,22 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|struct
+name|file_format
+name|multiboot
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|file_format
+name|multiboot_obj
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|struct
 name|file_format
 modifier|*
@@ -302,6 +318,12 @@ name|file_formats
 index|[]
 init|=
 block|{
+operator|&
+name|multiboot
+block|,
+operator|&
+name|multiboot_obj
+block|,
 ifdef|#
 directive|ifdef
 name|LOADER_PREFER_AMD64

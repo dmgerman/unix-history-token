@@ -67,6 +67,12 @@ begin_comment
 comment|// Other libraries and framework includes
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
 begin_comment
 comment|// Project includes
 end_comment
@@ -150,7 +156,7 @@ block|{
 comment|/// ValueObject:
 comment|///
 comment|/// This abstract class provides an interface to a particular value, be it a register, a local or global variable,
-comment|/// that is evaluated in some particular scope.  The ValueObject also has the capibility of being the "child" of
+comment|/// that is evaluated in some particular scope.  The ValueObject also has the capability of being the "child" of
 comment|/// some other variable object, and in turn of having children.
 comment|/// If a ValueObject is a root variable object - having no parent - then it must be constructed with respect to some
 comment|/// particular ExecutionContextScope.  If it is a child, it inherits the ExecutionContextScope from its parent.
@@ -223,6 +229,9 @@ comment|// out of data to parse
 name|eExpressionPathScanEndReasonNoSuchChild
 block|,
 comment|// child element not found
+name|eExpressionPathScanEndReasonNoSuchSyntheticChild
+block|,
+comment|// (synthetic) child element not found
 name|eExpressionPathScanEndReasonEmptyRangeNotAllowed
 block|,
 comment|// [] only allowed for arrays
@@ -342,6 +351,12 @@ operator|=
 literal|1u
 operator|<<
 literal|5
+block|,
+name|eClearUserVisibleDataItemsValidator
+operator|=
+literal|1u
+operator|<<
+literal|6
 block|,
 name|eClearUserVisibleDataItemsAllStrings
 operator|=
@@ -619,15 +634,6 @@ name|m_mod_id
 operator|=
 name|new_id
 block|;         }
-name|bool
-name|IsFirstEvaluation
-argument_list|()
-specifier|const
-block|{
-return|return
-name|m_first_update
-return|;
-block|}
 name|void
 name|SetNeedsUpdate
 argument_list|()
@@ -720,9 +726,6 @@ name|m_exe_ctx_ref
 block|;
 name|bool
 name|m_needs_update
-block|;
-name|bool
-name|m_first_update
 block|;     }
 block|;
 specifier|const
@@ -846,8 +849,13 @@ name|TypeImpl
 name|GetTypeImpl
 argument_list|()
 block|;
+name|virtual
+name|bool
+name|CanProvideValue
+argument_list|()
+block|;
 comment|//------------------------------------------------------------------
-comment|// Sublasses must implement the functions below.
+comment|// Subclasses must implement the functions below.
 comment|//------------------------------------------------------------------
 name|virtual
 name|uint64_t
@@ -867,11 +875,16 @@ operator|=
 literal|0
 block|;
 comment|//------------------------------------------------------------------
-comment|// Sublasses can implement the functions below.
+comment|// Subclasses can implement the functions below.
 comment|//------------------------------------------------------------------
 name|virtual
 name|ConstString
 name|GetTypeName
+argument_list|()
+block|;
+name|virtual
+name|ConstString
+name|GetDisplayTypeName
 argument_list|()
 block|;
 name|virtual
@@ -936,6 +949,14 @@ return|return
 name|false
 return|;
 block|}
+name|bool
+name|IsBaseClass
+argument_list|(
+name|uint32_t
+operator|&
+name|depth
+argument_list|)
+block|;
 name|virtual
 name|bool
 name|IsDereferenceOfParent
@@ -1081,7 +1102,9 @@ name|true
 return|;
 block|}
 name|virtual
-name|off_t
+name|lldb
+operator|::
+name|offset_t
 name|GetByteOffset
 argument_list|()
 block|{
@@ -1227,7 +1250,7 @@ name|decl
 argument_list|)
 block|;
 comment|//------------------------------------------------------------------
-comment|// The functions below should NOT be modified by sublasses
+comment|// The functions below should NOT be modified by subclasses
 comment|//------------------------------------------------------------------
 specifier|const
 name|Error
@@ -1532,6 +1555,53 @@ operator|&
 name|destination
 argument_list|)
 block|;
+name|bool
+name|GetSummaryAsCString
+argument_list|(
+name|std
+operator|::
+name|string
+operator|&
+name|destination
+argument_list|,
+specifier|const
+name|TypeSummaryOptions
+operator|&
+name|options
+argument_list|)
+block|;
+name|bool
+name|GetSummaryAsCString
+argument_list|(
+name|TypeSummaryImpl
+operator|*
+name|summary_ptr
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|destination
+argument_list|,
+specifier|const
+name|TypeSummaryOptions
+operator|&
+name|options
+argument_list|)
+block|;
+name|std
+operator|::
+name|pair
+operator|<
+name|TypeValidatorResult
+block|,
+name|std
+operator|::
+name|string
+operator|>
+name|GetValidationStatus
+argument_list|()
+block|;
 specifier|const
 name|char
 operator|*
@@ -1719,6 +1789,19 @@ name|virtual
 name|lldb
 operator|::
 name|ValueObjectSP
+name|GetSyntheticBase
+argument_list|(
+argument|uint32_t offset
+argument_list|,
+argument|const ClangASTType& type
+argument_list|,
+argument|bool can_create
+argument_list|)
+block|;
+name|virtual
+name|lldb
+operator|::
+name|ValueObjectSP
 name|GetDynamicValue
 argument_list|(
 argument|lldb::DynamicValueType valueType
@@ -1766,6 +1849,16 @@ return|return
 name|false
 return|;
 block|}
+name|lldb
+operator|::
+name|ValueObjectSP
+name|GetQualifiedRepresentationIfAvailable
+argument_list|(
+argument|lldb::DynamicValueType dynValue
+argument_list|,
+argument|bool synthValue
+argument_list|)
+block|;
 name|virtual
 name|lldb
 operator|::
@@ -1820,6 +1913,18 @@ argument_list|,
 argument|AddressType address_type = eAddressTypeLoad
 argument_list|)
 block|{     }
+comment|// Find the address of the C++ vtable pointer
+name|virtual
+name|lldb
+operator|::
+name|addr_t
+name|GetCPPVTableAddress
+argument_list|(
+name|AddressType
+operator|&
+name|address_type
+argument_list|)
+block|;
 name|virtual
 name|lldb
 operator|::
@@ -1892,6 +1997,25 @@ name|false
 return|;
 block|}
 name|virtual
+name|bool
+name|DoesProvideSyntheticValue
+argument_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+name|bool
+name|IsSyntheticChildrenGenerated
+argument_list|()
+block|;
+name|void
+name|SetSyntheticChildrenGenerated
+argument_list|(
+argument|bool b
+argument_list|)
+block|;
+name|virtual
 name|SymbolContextScope
 operator|*
 name|GetSymbolContextScope
@@ -1944,6 +2068,33 @@ specifier|static
 name|lldb
 operator|::
 name|ValueObjectSP
+name|CreateValueObjectFromExpression
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|expression
+argument_list|,
+specifier|const
+name|ExecutionContext
+operator|&
+name|exe_ctx
+argument_list|,
+specifier|const
+name|EvaluateExpressionOptions
+operator|&
+name|options
+argument_list|)
+block|;
+specifier|static
+name|lldb
+operator|::
+name|ValueObjectSP
 name|CreateValueObjectFromAddress
 argument_list|(
 argument|const char* name
@@ -1963,7 +2114,7 @@ name|CreateValueObjectFromData
 argument_list|(
 argument|const char* name
 argument_list|,
-argument|DataExtractor& data
+argument|const DataExtractor& data
 argument_list|,
 argument|const ExecutionContext& exe_ctx
 argument_list|,
@@ -1991,6 +2142,12 @@ operator|&
 name|options
 argument_list|)
 block|;
+name|lldb
+operator|::
+name|ValueObjectSP
+name|Persist
+argument_list|()
+block|;
 comment|// returns true if this is a char* or a char[]
 comment|// if it is a char* and check_pointer is true,
 comment|// it also checks that the pointer is valid
@@ -2003,7 +2160,7 @@ block|;
 name|size_t
 name|ReadPointedString
 argument_list|(
-argument|Stream& s
+argument|lldb::DataBufferSP& buffer_sp
 argument_list|,
 argument|Error& error
 argument_list|,
@@ -2035,6 +2192,10 @@ argument_list|(
 name|DataExtractor
 operator|&
 name|data
+argument_list|,
+name|Error
+operator|&
+name|error
 argument_list|)
 block|;
 name|virtual
@@ -2099,6 +2260,13 @@ name|m_format
 operator|=
 name|format
 block|;     }
+name|virtual
+name|lldb
+operator|::
+name|LanguageType
+name|GetPreferredDisplayLanguage
+argument_list|()
+block|;
 name|lldb
 operator|::
 name|TypeSummaryImplSP
@@ -2125,6 +2293,34 @@ block|;
 name|ClearUserVisibleData
 argument_list|(
 name|eClearUserVisibleDataItemsSummary
+argument_list|)
+block|;     }
+name|lldb
+operator|::
+name|TypeValidatorImplSP
+name|GetValidator
+argument_list|()
+block|{
+name|UpdateFormatsIfNeeded
+argument_list|()
+block|;
+return|return
+name|m_type_validator_sp
+return|;
+block|}
+name|void
+name|SetValidator
+argument_list|(
+argument|lldb::TypeValidatorImplSP format
+argument_list|)
+block|{
+name|m_type_validator_sp
+operator|=
+name|format
+block|;
+name|ClearUserVisibleData
+argument_list|(
+name|eClearUserVisibleDataItemsValidator
 argument_list|)
 block|;     }
 name|void
@@ -2437,9 +2633,10 @@ name|size_t
 name|count
 parameter_list|)
 block|{
-name|m_children_count
-operator|=
+name|Clear
+argument_list|(
 name|count
+argument_list|)
 expr_stmt|;
 block|}
 name|size_t
@@ -2452,12 +2649,13 @@ return|;
 block|}
 name|void
 name|Clear
-parameter_list|()
-block|{
-name|m_children_count
-operator|=
+parameter_list|(
+name|size_t
+name|new_count
+init|=
 literal|0
-expr_stmt|;
+parameter_list|)
+block|{
 name|Mutex
 operator|::
 name|Locker
@@ -2465,6 +2663,10 @@ name|locker
 argument_list|(
 name|m_mutex
 argument_list|)
+expr_stmt|;
+name|m_children_count
+operator|=
+name|new_count
 expr_stmt|;
 name|m_children
 operator|.
@@ -2574,6 +2776,22 @@ name|m_object_desc_str
 expr_stmt|;
 comment|// Cached result of the "object printer".  This differs from the summary
 comment|// in that the summary is consed up by us, the object_desc_string is builtin.
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|TypeValidatorResult
+operator|,
+name|std
+operator|::
+name|string
+operator|>>
+name|m_validation_result
+expr_stmt|;
 name|ClangASTType
 name|m_override_type
 decl_stmt|;
@@ -2648,12 +2866,27 @@ operator|::
 name|SyntheticChildrenSP
 name|m_synthetic_children_sp
 expr_stmt|;
+name|lldb
+operator|::
+name|TypeValidatorImplSP
+name|m_type_validator_sp
+expr_stmt|;
 name|ProcessModID
 name|m_user_id_of_forced_summary
 decl_stmt|;
 name|AddressType
 name|m_address_type_of_ptr_or_ref_children
 decl_stmt|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|uint8_t
+operator|,
+literal|16
+operator|>
+name|m_value_checksum
+expr_stmt|;
 name|bool
 name|m_value_is_valid
 range|:
@@ -2692,6 +2925,10 @@ range|:
 literal|1
 decl_stmt|,
 name|m_did_calculate_complete_objc_class_type
+range|:
+literal|1
+decl_stmt|,
+name|m_is_synthetic_children_generated
 range|:
 literal|1
 decl_stmt|;
@@ -2877,7 +3114,7 @@ name|ClearDynamicTypeInformation
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
-comment|// Sublasses must implement the functions below.
+comment|// Subclasses must implement the functions below.
 comment|//------------------------------------------------------------------
 name|virtual
 name|ClangASTType
@@ -2901,6 +3138,10 @@ name|DataExtractor
 modifier|&
 name|data
 parameter_list|)
+function_decl|;
+name|bool
+name|IsChecksumEmpty
+parameter_list|()
 function_decl|;
 name|private
 label|:

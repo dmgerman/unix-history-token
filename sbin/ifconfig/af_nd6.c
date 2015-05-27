@@ -122,12 +122,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/in_var.h>
 end_include
 
@@ -166,7 +160,7 @@ begin_define
 define|#
 directive|define
 name|ND6BITS
-value|"\020\001PERFORMNUD\002ACCEPT_RTADV\003PREFER_SOURCE" \ 		"\004IFDISABLED\005DONT_SET_IFROUTE\006AUTO_LINKLOCAL" \ 		"\007NO_RADR\010NO_PREFER_IFACE\020DEFAULTIF"
+value|"\020\001PERFORMNUD\002ACCEPT_RTADV\003PREFER_SOURCE" \ 		"\004IFDISABLED\005DONT_SET_IFROUTE\006AUTO_LINKLOCAL" \ 		"\007NO_RADR\010NO_PREFER_IFACE\011IGNORELOOP\012NO_DAD" \ 		"\020DEFAULTIF"
 end_define
 
 begin_function_decl

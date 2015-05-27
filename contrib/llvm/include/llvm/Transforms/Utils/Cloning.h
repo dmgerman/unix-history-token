@@ -90,13 +90,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/ValueMap.h"
+file|"llvm/IR/ValueHandle.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ValueHandle.h"
+file|"llvm/IR/ValueMap.h"
 end_include
 
 begin_include
@@ -159,6 +159,12 @@ name|LoopInfo
 decl_stmt|;
 name|class
 name|AllocaInst
+decl_stmt|;
+name|class
+name|AliasAnalysis
+decl_stmt|;
+name|class
+name|AssumptionCacheTracker
 decl_stmt|;
 comment|/// CloneModule - Return an exact copy of the specified module
 comment|///
@@ -270,13 +276,13 @@ name|Function
 modifier|*
 name|F
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|ClonedCodeInfo
 modifier|*
 name|CodeInfo
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// CloneFunction - Return a copy of the specified function, but without
@@ -289,7 +295,7 @@ comment|/// the function from their old to new values.  The final argument captu
 comment|/// information about the cloned code if non-null.
 comment|///
 comment|/// If ModuleLevelChanges is false, VMap contains no non-identity GlobalValue
-comment|/// mappings.
+comment|/// mappings, and debug info metadata will not be cloned.
 comment|///
 name|Function
 modifier|*
@@ -311,7 +317,7 @@ name|ClonedCodeInfo
 modifier|*
 name|CodeInfo
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// Clone OldFunc into NewFunc, transforming the old arguments into references
@@ -361,19 +367,19 @@ name|ClonedCodeInfo
 operator|*
 name|CodeInfo
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|ValueMapTypeRemapper
 operator|*
 name|TypeMapper
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|ValueMaterializer
 operator|*
 name|Materializer
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// CloneAndPruneFunctionInto - This works exactly like CloneFunctionInto,
@@ -425,20 +431,20 @@ name|ClonedCodeInfo
 operator|*
 name|CodeInfo
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 specifier|const
 name|DataLayout
 operator|*
-name|TD
+name|DL
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|Instruction
 operator|*
 name|TheCall
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// InlineFunctionInfo - This class captures the data input to the
@@ -455,14 +461,26 @@ name|CallGraph
 operator|*
 name|cg
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 specifier|const
 name|DataLayout
 operator|*
-name|td
+name|DL
 operator|=
-literal|0
+name|nullptr
+argument_list|,
+name|AliasAnalysis
+operator|*
+name|AA
+operator|=
+name|nullptr
+argument_list|,
+name|AssumptionCacheTracker
+operator|*
+name|ACT
+operator|=
+name|nullptr
 argument_list|)
 operator|:
 name|CG
@@ -470,9 +488,19 @@ argument_list|(
 name|cg
 argument_list|)
 operator|,
-name|TD
+name|DL
 argument_list|(
-argument|td
+name|DL
+argument_list|)
+operator|,
+name|AA
+argument_list|(
+name|AA
+argument_list|)
+operator|,
+name|ACT
+argument_list|(
+argument|ACT
 argument_list|)
 block|{}
 comment|/// CG - If non-null, InlineFunction will update the callgraph to reflect the
@@ -484,7 +512,15 @@ expr_stmt|;
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
+decl_stmt|;
+name|AliasAnalysis
+modifier|*
+name|AA
+decl_stmt|;
+name|AssumptionCacheTracker
+modifier|*
+name|ACT
 decl_stmt|;
 comment|/// StaticAllocas - InlineFunction fills this in with all static allocas that
 comment|/// get copied into the caller.

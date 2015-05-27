@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -77,103 +83,66 @@ name|class
 name|Module
 decl_stmt|;
 name|class
-name|MemoryBuffer
-decl_stmt|;
-name|class
 name|SMDiagnostic
 decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
-comment|/// If the given MemoryBuffer holds a bitcode image, return a Module for it
-comment|/// which does lazy deserialization of function bodies.  Otherwise, attempt to
-comment|/// parse it as LLVM Assembly and return a fully populated Module. This
-comment|/// function *always* takes ownership of the given MemoryBuffer.
-name|Module
-modifier|*
-name|getLazyIRModule
-parameter_list|(
-name|MemoryBuffer
-modifier|*
-name|Buffer
-parameter_list|,
-name|SMDiagnostic
-modifier|&
-name|Err
-parameter_list|,
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|)
-function_decl|;
 comment|/// If the given file holds a bitcode image, return a Module
 comment|/// for it which does lazy deserialization of function bodies.  Otherwise,
 comment|/// attempt to parse it as LLVM Assembly and return a fully populated
 comment|/// Module.
-name|Module
-modifier|*
-name|getLazyIRFileModule
-argument_list|(
-specifier|const
 name|std
 operator|::
-name|string
-operator|&
-name|Filename
+name|unique_ptr
+operator|<
+name|Module
+operator|>
+name|getLazyIRFileModule
+argument_list|(
+argument|StringRef Filename
 argument_list|,
-name|SMDiagnostic
-operator|&
-name|Err
+argument|SMDiagnostic&Err
 argument_list|,
-name|LLVMContext
-operator|&
-name|Context
+argument|LLVMContext&Context
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// If the given MemoryBuffer holds a bitcode image, return a Module
 comment|/// for it.  Otherwise, attempt to parse it as LLVM Assembly and return
-comment|/// a Module for it. This function *always* takes ownership of the given
-comment|/// MemoryBuffer.
+comment|/// a Module for it.
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Module
-modifier|*
-name|ParseIR
-parameter_list|(
-name|MemoryBuffer
-modifier|*
-name|Buffer
-parameter_list|,
-name|SMDiagnostic
-modifier|&
-name|Err
-parameter_list|,
-name|LLVMContext
-modifier|&
-name|Context
-parameter_list|)
-function_decl|;
+operator|>
+name|parseIR
+argument_list|(
+argument|MemoryBufferRef Buffer
+argument_list|,
+argument|SMDiagnostic&Err
+argument_list|,
+argument|LLVMContext&Context
+argument_list|)
+expr_stmt|;
 comment|/// If the given file holds a bitcode image, return a Module for it.
 comment|/// Otherwise, attempt to parse it as LLVM Assembly and return a Module
 comment|/// for it.
-name|Module
-modifier|*
-name|ParseIRFile
-argument_list|(
-specifier|const
 name|std
 operator|::
-name|string
-operator|&
-name|Filename
+name|unique_ptr
+operator|<
+name|Module
+operator|>
+name|parseIRFile
+argument_list|(
+argument|StringRef Filename
 argument_list|,
-name|SMDiagnostic
-operator|&
-name|Err
+argument|SMDiagnostic&Err
 argument_list|,
-name|LLVMContext
-operator|&
-name|Context
+argument|LLVMContext&Context
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 block|}
 end_decl_stmt
 

@@ -193,7 +193,7 @@ operator|(
 name|ItemParentClass
 operator|*
 operator|)
-literal|0
+name|nullptr
 operator|->*
 name|ItemParentClass
 operator|::
@@ -205,7 +205,7 @@ name|ValueSubClass
 operator|*
 operator|>
 operator|(
-literal|0
+name|nullptr
 operator|)
 argument_list|)
 operator|)
@@ -275,7 +275,7 @@ operator|(
 name|ValueSubClass
 operator|*
 operator|)
-literal|0
+name|nullptr
 argument_list|)
 operator|)
 return|;
@@ -301,7 +301,7 @@ name|getValueSymbolTable
 argument_list|()
 argument_list|)
 else|:
-literal|0
+name|nullptr
 return|;
 block|}
 name|void

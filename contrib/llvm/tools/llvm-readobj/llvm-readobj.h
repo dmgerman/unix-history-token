@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_TOOLS_READ_OBJ_H
+name|LLVM_TOOLS_LLVM_READOBJ_LLVM_READOBJ_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_TOOLS_READ_OBJ_H
+name|LLVM_TOOLS_LLVM_READOBJ_LLVM_READOBJ_H
 end_define
 
 begin_include
@@ -66,17 +66,16 @@ name|class
 name|RelocationRef
 decl_stmt|;
 block|}
-name|class
-name|error_code
-decl_stmt|;
 comment|// Various helper functions.
 name|bool
 name|error
-parameter_list|(
+argument_list|(
+name|std
+operator|::
 name|error_code
 name|ec
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|bool
 name|relocAddressLess
 argument_list|(
@@ -113,6 +112,9 @@ extern|extern llvm::cl::opt<bool> Symbols;
 extern|extern llvm::cl::opt<bool> DynamicSymbols;
 extern|extern llvm::cl::opt<bool> UnwindInfo;
 extern|extern llvm::cl::opt<bool> ExpandRelocs;
+extern|extern llvm::cl::opt<bool> CodeViewLineTables;
+extern|extern llvm::cl::opt<bool> ARMAttributes;
+extern|extern llvm::cl::opt<bool> MipsPLTGOT;
 block|}
 end_decl_stmt
 

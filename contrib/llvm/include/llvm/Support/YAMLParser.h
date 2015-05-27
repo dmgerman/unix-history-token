@@ -158,12 +158,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -182,19 +176,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Support/MemoryBuffer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/SMLoc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<map>
+file|<limits>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<limits>
+file|<map>
 end_include
 
 begin_include
@@ -207,9 +207,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MemoryBuffer
-decl_stmt|;
 name|class
 name|SourceMgr
 decl_stmt|;
@@ -237,8 +234,8 @@ decl_stmt|;
 struct_decl|struct
 name|Token
 struct_decl|;
-comment|/// @brief Dump all the tokens in this stream to OS.
-comment|/// @returns true if there was an error, false otherwise.
+comment|/// \brief Dump all the tokens in this stream to OS.
+comment|/// \returns true if there was an error, false otherwise.
 name|bool
 name|dumpTokens
 parameter_list|(
@@ -249,9 +246,9 @@ name|raw_ostream
 modifier|&
 parameter_list|)
 function_decl|;
-comment|/// @brief Scans all tokens in input without outputting anything. This is used
+comment|/// \brief Scans all tokens in input without outputting anything. This is used
 comment|///        for benchmarking the tokenizer.
-comment|/// @returns true if there was an error, false otherwise.
+comment|/// \returns true if there was an error, false otherwise.
 name|bool
 name|scanTokens
 parameter_list|(
@@ -259,7 +256,7 @@ name|StringRef
 name|Input
 parameter_list|)
 function_decl|;
-comment|/// @brief Escape \a Input for a double quoted scalar.
+comment|/// \brief Escape \a Input for a double quoted scalar.
 name|std
 operator|::
 name|string
@@ -268,14 +265,14 @@ argument_list|(
 argument|StringRef Input
 argument_list|)
 expr_stmt|;
-comment|/// @brief This class represents a YAML stream potentially containing multiple
+comment|/// \brief This class represents a YAML stream potentially containing multiple
 comment|///        documents.
 name|class
 name|Stream
 block|{
 name|public
 label|:
-comment|/// @brief This keeps a reference to the string referenced by \p Input.
+comment|/// \brief This keeps a reference to the string referenced by \p Input.
 name|Stream
 argument_list|(
 argument|StringRef Input
@@ -283,17 +280,13 @@ argument_list|,
 argument|SourceMgr&
 argument_list|)
 empty_stmt|;
-comment|/// @brief This takes ownership of \p InputBuffer.
 name|Stream
 argument_list|(
-name|MemoryBuffer
-operator|*
-name|InputBuffer
+argument|MemoryBufferRef InputBuffer
 argument_list|,
-name|SourceMgr
-operator|&
+argument|SourceMgr&
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 operator|~
 name|Stream
 argument_list|()
@@ -342,13 +335,17 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Scanner
 operator|>
 name|scanner
 expr_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Document
 operator|>
@@ -360,7 +357,7 @@ name|Document
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// @brief Abstract base class for all Nodes.
+comment|/// \brief Abstract base class for all Nodes.
 name|class
 name|Node
 block|{
@@ -391,14 +388,14 @@ name|Node
 argument_list|(
 argument|unsigned int Type
 argument_list|,
-argument|OwningPtr<Document>&
+argument|std::unique_ptr<Document>&
 argument_list|,
 argument|StringRef Anchor
 argument_list|,
 argument|StringRef Tag
 argument_list|)
 empty_stmt|;
-comment|/// @brief Get the value of the anchor attached to this node. If it does not
+comment|/// \brief Get the value of the anchor attached to this node. If it does not
 comment|///        have one, getAnchor().size() will be 0.
 name|StringRef
 name|getAnchor
@@ -548,6 +545,7 @@ modifier|&
 name|Alloc
 parameter_list|,
 name|size_t
+name|Size
 parameter_list|)
 function|throw
 parameter_list|()
@@ -557,12 +555,16 @@ operator|.
 name|Deallocate
 argument_list|(
 name|Ptr
+argument_list|,
+name|Size
 argument_list|)
 expr_stmt|;
 block|}
 name|protected
 label|:
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Document
 operator|>
@@ -602,7 +604,7 @@ name|Tag
 decl_stmt|;
 block|}
 empty_stmt|;
-comment|/// @brief A null value.
+comment|/// \brief A null value.
 comment|///
 comment|/// Example:
 comment|///   !!null null
@@ -612,16 +614,18 @@ range|:
 name|public
 name|Node
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
 name|NullNode
 argument_list|(
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Document
 operator|>
@@ -659,7 +663,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// @brief A scalar node is an opaque datum that can be presented as a
+comment|/// \brief A scalar node is an opaque datum that can be presented as a
 comment|///        series of zero or more Unicode scalar values.
 comment|///
 comment|/// Example:
@@ -670,16 +674,16 @@ operator|:
 name|public
 name|Node
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
 name|ScalarNode
 argument_list|(
-argument|OwningPtr<Document>&D
+argument|std::unique_ptr<Document>&D
 argument_list|,
 argument|StringRef Anchor
 argument_list|,
@@ -751,9 +755,9 @@ return|return
 name|Value
 return|;
 block|}
-comment|/// @brief Gets the value of this node as a StringRef.
+comment|/// \brief Gets the value of this node as a StringRef.
 comment|///
-comment|/// @param Storage is used to store the content of the returned StringRef iff
+comment|/// \param Storage is used to store the content of the returned StringRef iff
 comment|///        it requires any modification from how it appeared in the source.
 comment|///        This happens with escaped characters and multi-line literals.
 name|StringRef
@@ -797,7 +801,7 @@ argument_list|)
 specifier|const
 block|; }
 block|;
-comment|/// @brief A key and value pair. While not technically a Node under the YAML
+comment|/// \brief A key and value pair. While not technically a Node under the YAML
 comment|///        representation graph, it is easier to treat them this way.
 comment|///
 comment|/// TODO: Consider making this not a child of Node.
@@ -810,16 +814,18 @@ operator|:
 name|public
 name|Node
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
 name|KeyValueNode
 argument_list|(
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Document
 operator|>
@@ -842,39 +848,38 @@ argument_list|)
 block|,
 name|Key
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Value
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
-comment|/// @brief Parse and return the key.
+comment|/// \brief Parse and return the key.
 comment|///
 comment|/// This may be called multiple times.
 comment|///
-comment|/// @returns The key, or nullptr if failed() == true.
+comment|/// \returns The key, or nullptr if failed() == true.
 name|Node
 operator|*
 name|getKey
 argument_list|()
 block|;
-comment|/// @brief Parse and return the value.
+comment|/// \brief Parse and return the value.
 comment|///
 comment|/// This may be called multiple times.
 comment|///
-comment|/// @returns The value, or nullptr if failed() == true.
+comment|/// \returns The value, or nullptr if failed() == true.
 name|Node
 operator|*
 name|getValue
 argument_list|()
 block|;
-name|virtual
 name|void
 name|skip
 argument_list|()
-name|LLVM_OVERRIDE
+name|override
 block|{
 name|getKey
 argument_list|()
@@ -916,7 +921,7 @@ operator|*
 name|Value
 block|; }
 block|;
-comment|/// @brief This is an iterator abstraction over YAML collections shared by both
+comment|/// \brief This is an iterator abstraction over YAML collections shared by both
 comment|///        sequences and maps.
 comment|///
 comment|/// BaseT must have a ValueT* member named CurrentEntry and a member function
@@ -951,7 +956,7 @@ argument_list|()
 operator|:
 name|Base
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|basic_collection_iterator
@@ -1105,15 +1110,14 @@ block|;
 comment|// Create an end iterator.
 if|if
 condition|(
+operator|!
 name|Base
 operator|->
 name|CurrentEntry
-operator|==
-literal|0
 condition|)
 name|Base
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 return|return
 operator|*
@@ -1256,7 +1260,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// @brief Represents a YAML map created from either a block map for a flow map.
+comment|/// \brief Represents a YAML map created from either a block map for a flow map.
 end_comment
 
 begin_comment
@@ -1290,10 +1294,10 @@ range|:
 name|public
 name|Node
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -1310,7 +1314,7 @@ block|}
 block|;
 name|MappingNode
 argument_list|(
-argument|OwningPtr<Document>&D
+argument|std::unique_ptr<Document>&D
 argument_list|,
 argument|StringRef Anchor
 argument_list|,
@@ -1347,7 +1351,7 @@ argument_list|)
 block|,
 name|CurrentEntry
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|friend
@@ -1436,11 +1440,10 @@ block|}
 end_function
 
 begin_function
-name|virtual
 name|void
 name|skip
 parameter_list|()
-function|LLVM_OVERRIDE
+function|override
 block|{
 name|yaml
 operator|::
@@ -1515,7 +1518,7 @@ end_function_decl
 
 begin_comment
 unit|};
-comment|/// @brief Represents a YAML sequence created from either a block sequence for a
+comment|/// \brief Represents a YAML sequence created from either a block sequence for a
 end_comment
 
 begin_comment
@@ -1553,10 +1556,10 @@ range|:
 name|public
 name|Node
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -1579,7 +1582,7 @@ block|}
 block|;
 name|SequenceNode
 argument_list|(
-argument|OwningPtr<Document>&D
+argument|std::unique_ptr<Document>&D
 argument_list|,
 argument|StringRef Anchor
 argument_list|,
@@ -1622,7 +1625,7 @@ block|,
 comment|// Start with an imaginary ','.
 name|CurrentEntry
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|friend
@@ -1718,11 +1721,10 @@ block|}
 end_function
 
 begin_function
-name|virtual
 name|void
 name|skip
 parameter_list|()
-function|LLVM_OVERRIDE
+function|override
 block|{
 name|yaml
 operator|::
@@ -1796,7 +1798,7 @@ end_decl_stmt
 
 begin_comment
 unit|};
-comment|/// @brief Represents an alias to a Node with an anchor.
+comment|/// \brief Represents an alias to a Node with an anchor.
 end_comment
 
 begin_comment
@@ -1818,16 +1820,16 @@ range|:
 name|public
 name|Node
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
 name|AliasNode
 argument_list|(
-argument|OwningPtr<Document>&D
+argument|std::unique_ptr<Document>&D
 argument_list|,
 argument|StringRef Val
 argument_list|)
@@ -1890,7 +1892,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// @brief A YAML Stream is a sequence of Documents. A document contains a root
+comment|/// \brief A YAML Stream is a sequence of Documents. A document contains a root
 end_comment
 
 begin_comment
@@ -1903,7 +1905,7 @@ name|Document
 block|{
 name|public
 label|:
-comment|/// @brief Root for parsing a node. Returns a single node.
+comment|/// \brief Root for parsing a node. Returns a single node.
 name|Node
 modifier|*
 name|parseBlockNode
@@ -1916,13 +1918,13 @@ operator|&
 name|ParentStream
 argument_list|)
 expr_stmt|;
-comment|/// @brief Finish parsing the current document and return true if there are
+comment|/// \brief Finish parsing the current document and return true if there are
 comment|///        more. Return false otherwise.
 name|bool
 name|skip
 parameter_list|()
 function_decl|;
-comment|/// @brief Parse and return the root level node.
+comment|/// \brief Parse and return the root level node.
 name|Node
 modifier|*
 name|getRoot
@@ -1970,17 +1972,17 @@ name|friend
 name|class
 name|document_iterator
 decl_stmt|;
-comment|/// @brief Stream to read tokens from.
+comment|/// \brief Stream to read tokens from.
 name|Stream
 modifier|&
 name|stream
 decl_stmt|;
-comment|/// @brief Used to allocate nodes to. All are destroyed without calling their
+comment|/// \brief Used to allocate nodes to. All are destroyed without calling their
 comment|///        destructor when the document is destroyed.
 name|BumpPtrAllocator
 name|NodeAllocator
 decl_stmt|;
-comment|/// @brief The root node. Used to support skipping a partially parsed
+comment|/// \brief The root node. Used to support skipping a partially parsed
 comment|///        document.
 name|Node
 modifier|*
@@ -2025,7 +2027,7 @@ name|failed
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// @brief Parse %BLAH directives and return true if any were encountered.
+comment|/// \brief Parse %BLAH directives and return true if any were encountered.
 name|bool
 name|parseDirectives
 parameter_list|()
@@ -2040,7 +2042,7 @@ name|void
 name|parseTAGDirective
 parameter_list|()
 function_decl|;
-comment|/// @brief Consume the next token and error if it is not \a TK.
+comment|/// \brief Consume the next token and error if it is not \a TK.
 name|bool
 name|expectToken
 parameter_list|(
@@ -2056,7 +2058,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// @brief Iterator abstraction for Documents over a Stream.
+comment|/// \brief Iterator abstraction for Documents over a Stream.
 end_comment
 
 begin_decl_stmt
@@ -2070,12 +2072,14 @@ argument_list|()
 operator|:
 name|Doc
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|document_iterator
 argument_list|(
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Document
 operator|>
@@ -2160,8 +2164,6 @@ block|{
 name|assert
 argument_list|(
 name|Doc
-operator|!=
-literal|0
 operator|&&
 literal|"incrementing iterator past the end."
 argument_list|)
@@ -2182,7 +2184,7 @@ name|Doc
 operator|->
 name|reset
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 block|}
@@ -2238,7 +2240,9 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Document
 operator|>
@@ -2281,7 +2285,9 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Document
 operator|>
@@ -2290,8 +2296,17 @@ name|Doc
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+unit|};  }
+comment|// End namespace yaml.
+end_comment
+
+begin_comment
+unit|}
+comment|// End namespace llvm.
+end_comment
+
 begin_endif
-unit|};  } }
 endif|#
 directive|endif
 end_endif

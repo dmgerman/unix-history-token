@@ -104,6 +104,24 @@ begin_comment
 comment|/* 1 ms */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DWC_OTG_TX_MAX_FIFO_SIZE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|DWC_OTG_TX_MAX_FIFO_SIZE
+value|DWC_OTG_MAX_TXN
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define

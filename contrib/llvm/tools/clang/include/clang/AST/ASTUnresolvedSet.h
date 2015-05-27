@@ -137,22 +137,6 @@ block|;
 name|DeclsTy
 name|Decls
 block|;
-name|ASTUnresolvedSet
-argument_list|(
-argument|const ASTUnresolvedSet&
-argument_list|)
-name|LLVM_DELETED_FUNCTION
-block|;
-name|void
-name|operator
-operator|=
-operator|(
-specifier|const
-name|ASTUnresolvedSet
-operator|&
-operator|)
-name|LLVM_DELETED_FUNCTION
-block|;
 name|friend
 name|class
 name|LazyASTUnresolvedSet

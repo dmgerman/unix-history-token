@@ -70,22 +70,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|int
-name|radeon_msi_ok
-parameter_list|(
-name|struct
-name|drm_device
-modifier|*
-name|dev
-parameter_list|,
-name|unsigned
-name|long
-name|flags
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

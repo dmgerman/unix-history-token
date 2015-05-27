@@ -167,6 +167,39 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * Shared object information, found in SHT_MIPS_LIBLIST.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|Elf32_Word
+name|l_name
+decl_stmt|;
+comment|/* The name of a shared object. */
+name|Elf32_Word
+name|l_time_stamp
+decl_stmt|;
+comment|/* 32-bit timestamp. */
+name|Elf32_Word
+name|l_checksum
+decl_stmt|;
+comment|/* Checksum of visible symbols, sizes. */
+name|Elf32_Word
+name|l_version
+decl_stmt|;
+comment|/* Interface version string index. */
+name|Elf32_Word
+name|l_flags
+decl_stmt|;
+comment|/* Flags (LL_*). */
+block|}
+name|Elf32_Lib
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Section header.  */
 end_comment
 

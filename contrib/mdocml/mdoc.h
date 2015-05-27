@@ -1,23 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: mdoc.h,v 1.125 2013/12/24 19:11:45 schwarze Exp $ */
+comment|/*	$Id: mdoc.h,v 1.136 2015/02/12 12:24:33 schwarze Exp $ */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (c) 2008, 2009, 2010, 2011 Kristaps Dzonsons<kristaps@bsd.lv>  * Copyright (c) 2014, 2015 Ingo Schwarze<schwarze@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MDOC_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MDOC_H
-end_define
 
 begin_enum
 enum|enum
@@ -269,6 +257,8 @@ name|MDOC__U
 block|,
 name|MDOC_Ta
 block|,
+name|MDOC_ll
+block|,
 name|MDOC_MAX
 block|}
 enum|;
@@ -390,7 +380,7 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*   * Section (named/unnamed) of `Sh'.   Note that these appear in the  * conventional order imposed by mdoc.7.  In the case of SEC_NONE, no  * section has been invoked (this shouldn't happen).  SEC_CUSTOM refers  * to other sections.  */
+comment|/*  * Section (named/unnamed) of `Sh'.   Note that these appear in the  * conventional order imposed by mdoc.7.  In the case of SEC_NONE, no  * section has been invoked (this shouldn't happen).  SEC_CUSTOM refers  * to other sections.  */
 end_comment
 
 begin_enum
@@ -413,6 +403,9 @@ comment|/* SYNOPSIS */
 name|SEC_DESCRIPTION
 block|,
 comment|/* DESCRIPTION */
+name|SEC_CONTEXT
+block|,
+comment|/* CONTEXT */
 name|SEC_IMPLEMENTATION
 block|,
 comment|/* IMPLEMENTATION NOTES */
@@ -512,7 +505,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*   * An argument to a macro (multiple values = `-column xxx yyy').   */
+comment|/*  * An argument to a macro (multiple values = `-column xxx yyy').  */
 end_comment
 
 begin_struct
@@ -643,7 +636,7 @@ name|DISP__NONE
 init|=
 literal|0
 block|,
-name|DISP_centred
+name|DISP_centered
 block|,
 comment|/* -centered */
 name|DISP_ragged
@@ -828,6 +821,11 @@ name|mdoc_bl
 name|Bl
 decl_stmt|;
 name|struct
+name|mdoc_node
+modifier|*
+name|Es
+decl_stmt|;
+name|struct
 name|mdoc_rs
 name|Rs
 decl_stmt|;
@@ -836,7 +834,7 @@ union|;
 end_union
 
 begin_comment
-comment|/*   * Single node in tree-linked AST.   */
+comment|/*  * Single node in tree-linked AST.  */
 end_comment
 
 begin_struct
@@ -885,10 +883,6 @@ name|int
 name|pos
 decl_stmt|;
 comment|/* parse column */
-name|int
-name|lastline
-decl_stmt|;
-comment|/* the node ends on this line */
 name|enum
 name|mdoct
 name|tok
@@ -902,6 +896,11 @@ directive|define
 name|MDOC_VALID
 value|(1<< 0)
 comment|/* has been validated */
+define|#
+directive|define
+name|MDOC_ENDED
+value|(1<< 1)
+comment|/* gone past body end mark */
 define|#
 directive|define
 name|MDOC_EOS
@@ -919,9 +918,9 @@ value|(1<< 4)
 comment|/* SYNOPSIS-style formatting */
 define|#
 directive|define
-name|MDOC_ENDED
+name|MDOC_BROKEN
 value|(1<< 5)
-comment|/* rendering has been ended */
+comment|/* must validate parent when ending */
 define|#
 directive|define
 name|MDOC_DELIMO
@@ -946,9 +945,7 @@ modifier|*
 name|norm
 decl_stmt|;
 comment|/* normalised args */
-specifier|const
-name|void
-modifier|*
+name|int
 name|prev_font
 decl_stmt|;
 comment|/* before entering this node */
@@ -962,12 +959,6 @@ comment|/* BLOCK/ELEM */
 name|struct
 name|mdoc_node
 modifier|*
-name|pending
-decl_stmt|;
-comment|/* BLOCK */
-name|struct
-name|mdoc_node
-modifier|*
 name|head
 decl_stmt|;
 comment|/* BLOCK */
@@ -976,7 +967,7 @@ name|mdoc_node
 modifier|*
 name|body
 decl_stmt|;
-comment|/* BLOCK */
+comment|/* BLOCK/ENDBODY */
 name|struct
 name|mdoc_node
 modifier|*
@@ -1081,18 +1072,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|mdoc_deroff
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|mdoc_node
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_macro
 name|__END_DECLS
 end_macro
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/*!MDOC_H*/
-end_comment
 
 end_unit
 

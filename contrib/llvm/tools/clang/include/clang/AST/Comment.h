@@ -260,7 +260,9 @@ decl_stmt|;
 name|unsigned
 name|CommandID
 range|:
-literal|8
+name|CommandInfo
+operator|::
+name|NumCommandIDBits
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -270,7 +272,39 @@ name|NumInlineCommandCommentBits
 init|=
 name|NumInlineContentCommentBits
 operator|+
-literal|10
+literal|2
+operator|+
+name|CommandInfo
+operator|::
+name|NumCommandIDBits
+block|}
+enum|;
+name|class
+name|HTMLTagCommentBitfields
+block|{
+name|friend
+name|class
+name|HTMLTagComment
+decl_stmt|;
+name|unsigned
+label|:
+name|NumInlineContentCommentBits
+expr_stmt|;
+comment|/// True if we found that this tag is malformed in some way.
+name|unsigned
+name|IsMalformed
+range|:
+literal|1
+decl_stmt|;
+block|}
+empty_stmt|;
+enum|enum
+block|{
+name|NumHTMLTagCommentBits
+init|=
+name|NumInlineContentCommentBits
+operator|+
+literal|1
 block|}
 enum|;
 name|class
@@ -282,7 +316,7 @@ name|HTMLStartTagComment
 decl_stmt|;
 name|unsigned
 label|:
-name|NumInlineContentCommentBits
+name|NumHTMLTagCommentBits
 expr_stmt|;
 comment|/// True if this tag is self-closing (e. g.,<br />).  This is based on tag
 comment|/// spelling in comment (plain<br> would not set this flag).
@@ -297,7 +331,7 @@ enum|enum
 block|{
 name|NumHTMLStartTagCommentBits
 init|=
-name|NumInlineContentCommentBits
+name|NumHTMLTagCommentBits
 operator|+
 literal|1
 block|}
@@ -352,7 +386,9 @@ expr_stmt|;
 name|unsigned
 name|CommandID
 range|:
-literal|8
+name|CommandInfo
+operator|::
+name|NumCommandIDBits
 decl_stmt|;
 comment|/// Describes the syntax that was used in a documentation command.
 comment|/// Contains values from CommandMarkerKind enum.
@@ -369,7 +405,11 @@ name|NumBlockCommandCommentBits
 init|=
 name|NumCommentBits
 operator|+
-literal|9
+name|CommandInfo
+operator|::
+name|NumCommandIDBits
+operator|+
+literal|1
 block|}
 enum|;
 name|class
@@ -419,6 +459,9 @@ name|TextCommentBits
 decl_stmt|;
 name|InlineCommandCommentBitfields
 name|InlineCommandCommentBits
+decl_stmt|;
+name|HTMLTagCommentBitfields
+name|HTMLTagCommentBits
 decl_stmt|;
 name|HTMLStartTagCommentBitfields
 name|HTMLStartTagCommentBits
@@ -560,19 +603,16 @@ name|getCommentKindName
 argument_list|()
 specifier|const
 expr_stmt|;
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dumpColor
 argument_list|()
 specifier|const
 expr_stmt|;
-name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|(
@@ -826,7 +866,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|child_iterator
@@ -835,7 +875,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|StringRef
@@ -1014,7 +1054,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|child_iterator
@@ -1023,7 +1063,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|unsigned
@@ -1142,8 +1182,7 @@ block|}
 expr|}
 block|;
 comment|/// Abstract class for opening and closing HTML tags.  HTML tags are always
-comment|/// treated as inline content (regardless HTML semantics); opening and closing
-comment|/// tags are not matched.
+comment|/// treated as inline content (regardless HTML semantics).
 name|class
 name|HTMLTagComment
 operator|:
@@ -1198,6 +1237,12 @@ name|setLocation
 argument_list|(
 name|TagNameBegin
 argument_list|)
+block|;
+name|HTMLTagCommentBits
+operator|.
+name|IsMalformed
+operator|=
+literal|0
 block|;   }
 name|public
 operator|:
@@ -1270,6 +1315,27 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+name|bool
+name|isMalformed
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HTMLTagCommentBits
+operator|.
+name|IsMalformed
+return|;
+block|}
+name|void
+name|setIsMalformed
+argument_list|()
+block|{
+name|HTMLTagCommentBits
+operator|.
+name|IsMalformed
+operator|=
+literal|1
+block|;   }
 expr|}
 block|;
 comment|/// An opening HTML tag with attributes.
@@ -1476,7 +1542,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|child_iterator
@@ -1485,7 +1551,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|unsigned
@@ -1679,7 +1745,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|child_iterator
@@ -1688,7 +1754,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 expr|}
@@ -2026,7 +2092,7 @@ argument_list|)
 block|,
 name|Paragraph
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{
 name|setLocation
@@ -2071,7 +2137,7 @@ argument_list|)
 block|,
 name|Paragraph
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{
 name|setLocation
@@ -2426,10 +2492,8 @@ block|;
 name|public
 operator|:
 expr|enum
-name|LLVM_ENUM_INT_TYPE
-argument_list|(
-argument|unsigned
-argument_list|)
+operator|:
+name|unsigned
 block|{
 name|InvalidParamIndex
 operator|=
@@ -2953,7 +3017,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|child_iterator
@@ -2962,7 +3026,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|StringRef
@@ -3222,7 +3286,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|child_iterator
@@ -3231,7 +3295,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 name|StringRef
@@ -3294,10 +3358,10 @@ operator|*
 operator|>
 name|ParamVars
 block|;
-comment|/// Function result type if \c CommentDecl is something that we consider
+comment|/// Function return type if \c CommentDecl is something that we consider
 comment|/// a "function".
 name|QualType
-name|ResultType
+name|ReturnType
 block|;
 comment|/// Template parameters that can be referenced by \\tparam if \c CommentDecl is
 comment|/// a template (\c IsTemplateDecl or \c IsTemplatePartialSpecialization is

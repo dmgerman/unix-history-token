@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -210,7 +210,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    MpEmitMappingInfo  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: External interface.  *              Create and open the mapfile and emit all of the collected  *              hardware mapping information. Includes: GPIO information,  *              Serial information, and a dump of the entire ACPI device tree.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    MpEmitMappingInfo  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: External interface.  *              Map file has already been opened. Emit all of the collected  *              hardware mapping information. Includes: GPIO information,  *              Serial information, and a dump of the entire ACPI device tree.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -220,10 +220,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|char
-modifier|*
-name|NewFilename
-decl_stmt|;
 comment|/* Mapfile option enabled? */
 if|if
 condition|(
@@ -233,62 +229,6 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/* Create/Open a map file */
-name|NewFilename
-operator|=
-name|FlGenerateFilename
-argument_list|(
-name|Gbl_OutputFilenamePrefix
-argument_list|,
-name|FILE_SUFFIX_MAP
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|NewFilename
-condition|)
-block|{
-name|AslCommonError
-argument_list|(
-name|ASL_ERROR
-argument_list|,
-name|ASL_MSG_LISTING_FILENAME
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* Open the hex file, text mode (closed at compiler exit) */
-name|FlOpenFile
-argument_list|(
-name|ASL_FILE_MAP_OUTPUT
-argument_list|,
-name|NewFilename
-argument_list|,
-literal|"w+t"
-argument_list|)
-expr_stmt|;
-name|AslCompilerSignon
-argument_list|(
-name|ASL_FILE_MAP_OUTPUT
-argument_list|)
-expr_stmt|;
-name|AslCompilerFileHeader
-argument_list|(
-name|ASL_FILE_MAP_OUTPUT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -1547,15 +1487,6 @@ operator|->
 name|TargetNode
 condition|)
 block|{
-name|DevicePathname
-operator|=
-name|AcpiNsGetExternalPathname
-argument_list|(
-name|Info
-operator|->
-name|TargetNode
-argument_list|)
-expr_stmt|;
 while|while
 condition|(
 name|ParentOp
@@ -1633,6 +1564,11 @@ name|Info
 operator|->
 name|References
 operator|++
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|DevicePathname
+argument_list|)
 expr_stmt|;
 block|}
 block|}

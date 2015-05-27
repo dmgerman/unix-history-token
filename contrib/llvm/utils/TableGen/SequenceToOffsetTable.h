@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TBLGEN_SEQUENCE_TO_OFFSET_TABLE_H
+name|LLVM_UTILS_TABLEGEN_SEQUENCETOOFFSETTABLE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TBLGEN_SEQUENCE_TO_OFFSET_TABLE_H
+name|LLVM_UTILS_TABLEGEN_SEQUENCETOOFFSETTABLE_H
 end_define
 
 begin_include
@@ -407,6 +407,25 @@ name|Seqs
 operator|.
 name|empty
 argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|unsigned
+name|size
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Entries
+operator|&&
+literal|"Call layout() before size()"
+argument_list|)
+block|;
+return|return
+name|Entries
 return|;
 block|}
 end_expr_stmt

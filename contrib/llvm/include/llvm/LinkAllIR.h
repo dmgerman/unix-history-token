@@ -70,12 +70,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Analysis/Verifier.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/IR/InlineAsm.h"
 end_include
 
@@ -101,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Module.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/Verifier.h"
 end_include
 
 begin_include

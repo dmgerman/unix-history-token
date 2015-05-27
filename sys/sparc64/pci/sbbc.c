@@ -4046,7 +4046,12 @@ operator|.
 name|uc_rclk
 operator|=
 literal|0x5bbc
+block|,
 comment|/* arbitrary */
+operator|.
+name|uc_rshift
+operator|=
+literal|0
 block|}
 decl_stmt|;
 end_decl_stmt

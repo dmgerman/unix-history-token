@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MCInstPrinter.h - Convert an MCInst to target assembly syntax -----===//
+comment|//===- MCInstPrinter.h - MCInst to target assembly syntax -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -172,7 +172,7 @@ argument_list|)
 operator|:
 name|CommentStream
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|MAI

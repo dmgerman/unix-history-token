@@ -144,6 +144,13 @@ operator|~
 name|SBThread
 argument_list|()
 expr_stmt|;
+name|lldb
+operator|::
+name|SBQueue
+name|GetQueue
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|IsValid
 argument_list|()
@@ -190,6 +197,16 @@ name|uint32_t
 name|idx
 parameter_list|)
 function_decl|;
+name|bool
+name|GetStopReasonExtendedInfoAsJSON
+argument_list|(
+name|lldb
+operator|::
+name|SBStream
+operator|&
+name|stream
+argument_list|)
+decl_stmt|;
 name|size_t
 name|GetStopDescription
 parameter_list|(
@@ -238,6 +255,19 @@ name|GetQueueID
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|GetInfoItemByPathAsString
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|,
+name|SBStream
+modifier|&
+name|strm
+parameter_list|)
+function_decl|;
 name|void
 name|StepOver
 argument_list|(
@@ -323,6 +353,15 @@ name|line
 argument_list|)
 decl_stmt|;
 name|SBError
+name|StepUsingScriptedThreadPlan
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|script_class_name
+parameter_list|)
+function_decl|;
+name|SBError
 name|JumpToLine
 argument_list|(
 name|lldb
@@ -363,8 +402,8 @@ comment|/// call here tells our process to suspend a thread and not let it run w
 comment|/// the other threads in a process are allowed to run. So when
 comment|/// SBProcess::Continue() is called, any threads that aren't suspended will
 comment|/// be allowed to run. If any of the SBThread functions for stepping are
-comment|/// called (StepOver, StepInto, StepOut, StepInstruction, RunToAddres), the
-comment|/// thread will not be allowed to run and these funtions will simply return.
+comment|/// called (StepOver, StepInto, StepOut, StepInstruction, RunToAddress), the
+comment|/// thread will not be allowed to run and these functions will simply return.
 comment|///
 comment|/// Eventually we plan to add support for thread centric debugging where
 comment|/// each thread is controlled individually and each thread would broadcast
@@ -532,6 +571,31 @@ name|uint32_t
 name|GetExtendedBacktraceOriginatingIndexID
 parameter_list|()
 function_decl|;
+name|bool
+name|SafeToCallFunctions
+parameter_list|()
+function_decl|;
+ifndef|#
+directive|ifndef
+name|SWIG
+name|lldb_private
+operator|::
+name|Thread
+operator|*
+name|operator
+operator|->
+expr|(
+block|)
+decl_stmt|;
+name|lldb_private
+operator|::
+name|Thread
+operator|*
+name|get
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|protected
 label|:
 name|friend
@@ -541,6 +605,10 @@ decl_stmt|;
 name|friend
 name|class
 name|SBBreakpointLocation
+decl_stmt|;
+name|friend
+name|class
+name|SBExecutionContext
 decl_stmt|;
 name|friend
 name|class
@@ -608,11 +676,14 @@ name|ExecutionContextRefSP
 name|m_opaque_sp
 expr_stmt|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// namespace lldb
 end_comment
 

@@ -2,13 +2,13 @@ begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FORMAT_PARSING_H
+name|LLVM_CLANG_LIB_ANALYSIS_FORMATSTRINGPARSING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FORMAT_PARSING_H
+name|LLVM_CLANG_LIB_ANALYSIS_FORMATSTRINGPARSING_H
 end_define
 
 begin_include
@@ -276,7 +276,7 @@ argument_list|)
 operator|:
 name|Start
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|Stop
@@ -340,7 +340,7 @@ block|{
 return|return
 name|Start
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|const

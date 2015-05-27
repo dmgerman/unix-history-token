@@ -768,20 +768,12 @@ name|CLK_ROTATOR
 value|278
 end_define
 
-begin_comment
-comment|/* Exynos4210 only */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|CLK_MDMA
 value|279
 end_define
-
-begin_comment
-comment|/* Exynos4210 only */
-end_comment
 
 begin_define
 define|#
@@ -790,10 +782,6 @@ name|CLK_SMMU_G2D
 value|280
 end_define
 
-begin_comment
-comment|/* Exynos4210 only */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -801,20 +789,12 @@ name|CLK_SMMU_ROTATOR
 value|281
 end_define
 
-begin_comment
-comment|/* Exynos4210 only */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|CLK_SMMU_MDMA
 value|282
 end_define
-
-begin_comment
-comment|/* Exynos4210 only */
-end_comment
 
 begin_define
 define|#
@@ -1760,6 +1740,20 @@ begin_comment
 comment|/* Exynos4x12 only */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_HDMI
+value|396
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_MOUT_MIXER
+value|397
+end_define
+
 begin_comment
 comment|/* gate clocks - ppmu */
 end_comment
@@ -1950,6 +1944,45 @@ begin_comment
 comment|/* Exynos4x12 only */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CLK_DIV_ACP
+value|456
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_DIV_DMC
+value|457
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_DIV_C2C
+value|458
+end_define
+
+begin_comment
+comment|/* Exynos4x12 only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLK_DIV_GDL
+value|459
+end_define
+
+begin_define
+define|#
+directive|define
+name|CLK_DIV_GDR
+value|460
+end_define
+
 begin_comment
 comment|/* must be greater than maximal clock id */
 end_comment
@@ -1958,7 +1991,7 @@ begin_define
 define|#
 directive|define
 name|CLK_NR_CLKS
-value|456
+value|461
 end_define
 
 begin_endif

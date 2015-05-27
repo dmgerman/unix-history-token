@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: lst.h,v 1.18 2009/01/23 21:58:27 dsl Exp $	*/
+comment|/*	$NetBSD: lst.h,v 1.20 2014/09/07 20:55:34 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -574,22 +574,6 @@ end_comment
 begin_function_decl
 name|ReturnStatus
 name|Lst_EnQueue
-parameter_list|(
-name|Lst
-parameter_list|,
-name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* Same but only if not on list */
-end_comment
-
-begin_function_decl
-name|ReturnStatus
-name|Lst_EnQueueOnce
 parameter_list|(
 name|Lst
 parameter_list|,

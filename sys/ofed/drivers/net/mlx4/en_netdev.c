@@ -3255,6 +3255,11 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|if_maddr_rlock
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
@@ -3307,6 +3312,13 @@ argument_list|,
 name|GFP_ATOMIC
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|==
+name|NULL
+condition|)
+break|break;
 name|memcpy
 argument_list|(
 name|tmp
@@ -3342,6 +3354,11 @@ name|mc_list
 argument_list|)
 expr_stmt|;
 block|}
+name|if_maddr_runlock
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -6578,7 +6595,7 @@ name|en_err
 argument_list|(
 name|priv
 argument_list|,
-literal|"Failed allocating Tx CQ\n"
+literal|"Failed activating Tx CQ\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -6679,7 +6696,9 @@ name|en_err
 argument_list|(
 name|priv
 argument_list|,
-literal|"Failed allocating Tx ring\n"
+literal|"Failed activating Tx ring %d\n"
+argument_list|,
+name|i
 argument_list|)
 expr_stmt|;
 name|mlx4_en_deactivate_cq
@@ -9870,14 +9889,6 @@ break|break;
 case|case
 name|SIOCSIFFLAGS
 case|:
-name|mutex_lock
-argument_list|(
-operator|&
-name|mdev
-operator|->
-name|state_lock
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dev
@@ -9899,20 +9910,48 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|mutex_lock
+argument_list|(
+operator|&
+name|mdev
+operator|->
+name|state_lock
+argument_list|)
+expr_stmt|;
 name|mlx4_en_start_port
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+name|mutex_unlock
+argument_list|(
+operator|&
+name|mdev
+operator|->
+name|state_lock
+argument_list|)
+expr_stmt|;
+block|}
 else|else
+block|{
 name|mlx4_en_set_rx_mode
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 else|else
 block|{
+name|mutex_lock
+argument_list|(
+operator|&
+name|mdev
+operator|->
+name|state_lock
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|dev
@@ -9935,7 +9974,6 @@ name|LINK_STATE_DOWN
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 name|mutex_unlock
 argument_list|(
 operator|&
@@ -9944,6 +9982,7 @@ operator|->
 name|state_lock
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SIOCADDMULTI

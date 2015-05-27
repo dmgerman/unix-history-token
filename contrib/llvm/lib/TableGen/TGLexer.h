@@ -50,14 +50,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TGLEXER_H
+name|LLVM_LIB_TABLEGEN_TGLEXER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TGLEXER_H
+name|LLVM_LIB_TABLEGEN_TGLEXER_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
 
 begin_include
 include|#
@@ -93,9 +99,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MemoryBuffer
-decl_stmt|;
 name|class
 name|SourceMgr
 decl_stmt|;
@@ -196,11 +199,15 @@ name|XConcat
 block|,
 name|XADD
 block|,
+name|XAND
+block|,
 name|XSRA
 block|,
 name|XSRL
 block|,
 name|XSHL
+block|,
+name|XListConcat
 block|,
 name|XStrConcat
 block|,
@@ -222,6 +229,10 @@ name|XEq
 block|,
 comment|// Integer value.
 name|IntVal
+block|,
+comment|// Binary constant.  Note that these are sized according to the number of
+comment|// bits given.
+name|BinaryIntVal
 block|,
 comment|// String valued tokens.
 name|Id
@@ -247,9 +258,7 @@ name|char
 modifier|*
 name|CurPtr
 decl_stmt|;
-specifier|const
-name|MemoryBuffer
-modifier|*
+name|StringRef
 name|CurBuf
 decl_stmt|;
 comment|// Information about the current token.
@@ -275,7 +284,7 @@ decl_stmt|;
 comment|// This is valid for INTVAL.
 comment|/// CurBuffer - This is the current buffer index we're lexing from as managed
 comment|/// by the SourceMgr object.
-name|int
+name|unsigned
 name|CurBuffer
 decl_stmt|;
 name|public
@@ -409,6 +418,46 @@ argument_list|)
 block|;
 return|return
 name|CurIntVal
+return|;
+block|}
+name|std
+operator|::
+name|pair
+operator|<
+name|int64_t
+operator|,
+name|unsigned
+operator|>
+name|getCurBinaryIntVal
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|CurCode
+operator|==
+name|tgtok
+operator|::
+name|BinaryIntVal
+operator|&&
+literal|"This token isn't a binary integer"
+argument_list|)
+block|;
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|CurIntVal
+argument_list|,
+operator|(
+name|CurPtr
+operator|-
+name|TokStart
+operator|)
+operator|-
+literal|2
+argument_list|)
 return|;
 block|}
 name|SMLoc

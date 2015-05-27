@@ -1508,7 +1508,7 @@ name|second
 return|;
 block|}
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_decl_stmt
@@ -1546,7 +1546,7 @@ name|getValue
 argument_list|()
 operator|)
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 end_expr_stmt

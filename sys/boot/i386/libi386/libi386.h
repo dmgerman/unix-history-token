@@ -597,15 +597,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|smbios_detect
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|i386_autoload
 parameter_list|(
@@ -685,12 +676,18 @@ modifier|*
 name|args
 parameter_list|,
 name|vm_offset_t
+name|addr
+parameter_list|,
+name|vm_offset_t
 modifier|*
 name|modulep
 parameter_list|,
 name|vm_offset_t
 modifier|*
 name|kernend
+parameter_list|,
+name|int
+name|add_smap
 parameter_list|)
 function_decl|;
 end_function_decl

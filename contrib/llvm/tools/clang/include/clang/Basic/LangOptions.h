@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_LANGOPTIONS_H
+name|LLVM_CLANG_BASIC_LANGOPTIONS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_LANGOPTIONS_H
+name|LLVM_CLANG_BASIC_LANGOPTIONS_H
 end_define
 
 begin_include
@@ -84,13 +84,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/Basic/Visibility.h"
+file|"clang/Basic/Sanitizers.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/IntrusiveRefCntPtr.h"
+file|"clang/Basic/Visibility.h"
 end_include
 
 begin_include
@@ -103,29 +103,6 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-struct|struct
-name|SanitizerOptions
-block|{
-define|#
-directive|define
-name|SANITIZER
-parameter_list|(
-name|NAME
-parameter_list|,
-name|ID
-parameter_list|)
-value|unsigned ID : 1;
-include|#
-directive|include
-file|"clang/Basic/Sanitizers.def"
-comment|/// \brief Cached set of sanitizer options with all sanitizers disabled.
-specifier|static
-specifier|const
-name|SanitizerOptions
-name|Disabled
-decl_stmt|;
-block|}
-struct|;
 comment|/// Bitfields of LangOptions, split out from LangOptions in order to ensure that
 comment|/// this large collection of bitfields is a trivial class type.
 name|class
@@ -164,9 +141,6 @@ parameter_list|)
 include|#
 directive|include
 file|"clang/Basic/LangOptions.def"
-name|SanitizerOptions
-name|Sanitize
-decl_stmt|;
 name|protected
 label|:
 comment|// Define language options of enumeration type. These are private, and will
@@ -210,23 +184,17 @@ name|class
 name|LangOptions
 range|:
 name|public
-name|RefCountedBase
-operator|<
-name|LangOptions
-operator|>
-decl_stmt|,
-name|public
 name|LangOptionsBase
 block|{
 name|public
-label|:
+operator|:
 typedef|typedef
 name|clang
 operator|::
 name|Visibility
 name|Visibility
 expr_stmt|;
-enum|enum
+block|enum
 name|GCMode
 block|{
 name|NonGC
@@ -235,13 +203,15 @@ name|GCOnly
 block|,
 name|HybridGC
 block|}
-enum|;
+decl_stmt|;
 enum|enum
 name|StackProtectorMode
 block|{
 name|SSPOff
 block|,
 name|SSPOn
+block|,
+name|SSPStrong
 block|,
 name|SSPReq
 block|}
@@ -260,6 +230,18 @@ comment|// -ftrapv
 block|}
 enum|;
 enum|enum
+name|PragmaMSPointersToMembersKind
+block|{
+name|PPTMK_BestCase
+block|,
+name|PPTMK_FullGeneralitySingleInheritance
+block|,
+name|PPTMK_FullGeneralityMultipleInheritance
+block|,
+name|PPTMK_FullGeneralityVirtualInheritance
+block|}
+enum|;
+enum|enum
 name|AddrSpaceMapMangling
 block|{
 name|ASMM_Target
@@ -271,6 +253,17 @@ block|}
 enum|;
 name|public
 label|:
+comment|/// \brief Set of enabled sanitizers.
+name|SanitizerSet
+name|Sanitize
+decl_stmt|;
+comment|/// \brief Path to blacklist file specifying which objects
+comment|/// (files, functions, variables) should not be instrumented.
+name|std
+operator|::
+name|string
+name|SanitizerBlacklistFile
+expr_stmt|;
 name|clang
 operator|::
 name|ObjCRuntime
@@ -295,6 +288,14 @@ name|std
 operator|::
 name|string
 name|CurrentModule
+expr_stmt|;
+comment|/// \brief The name of the module that the translation unit is an
+comment|/// implementation of. Prevents semantic imports, but does not otherwise
+comment|/// treat this as the CurrentModule.
+name|std
+operator|::
+name|string
+name|ImplementationOfModule
 expr_stmt|;
 comment|/// \brief Options for parsing comments.
 name|CommentOptions
@@ -369,8 +370,17 @@ name|resetNonModularOptions
 parameter_list|()
 function_decl|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Floating point control options
+end_comment
+
+begin_decl_stmt
 name|class
 name|FPOptions
 block|{
@@ -403,8 +413,17 @@ argument|LangOpts.DefaultFPContract
 argument_list|)
 block|{}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief OpenCL volatile options
+end_comment
+
+begin_decl_stmt
 name|class
 name|OpenCLOptions
 block|{
@@ -435,8 +454,17 @@ directive|include
 file|"clang/Basic/OpenCLExtensions.def"
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Describes the kind of translation unit being processed.
+end_comment
+
+begin_enum
 enum|enum
 name|TranslationUnitKind
 block|{
@@ -451,10 +479,10 @@ comment|/// \brief The translation unit is a module.
 name|TU_Module
 block|}
 enum|;
-block|}
-end_decl_stmt
+end_enum
 
 begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

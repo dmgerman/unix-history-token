@@ -1410,14 +1410,9 @@ block|}
 if|if
 condition|(
 name|best
-operator|!=
+operator|==
 name|NULL
-condition|)
-return|return
-name|best
-return|;
-if|if
-condition|(
+operator|&&
 name|match
 operator|==
 name|CRYPTOCAP_F_HARDWARE
@@ -1620,12 +1615,25 @@ name|cc_sessions
 operator|++
 expr_stmt|;
 block|}
+else|else
+name|CRYPTDEB
+argument_list|(
+literal|"dev newsession failed"
+argument_list|)
+expr_stmt|;
 block|}
 else|else
+block|{
+name|CRYPTDEB
+argument_list|(
+literal|"no driver"
+argument_list|)
+expr_stmt|;
 name|err
 operator|=
 name|EINVAL
 expr_stmt|;
+block|}
 name|CRYPTO_DRIVER_UNLOCK
 argument_list|()
 expr_stmt|;

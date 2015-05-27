@@ -110,7 +110,7 @@ argument_list|()
 operator|:
 name|data
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{
 name|uval
@@ -190,6 +190,12 @@ name|U
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief extracts a value in data at offset *offset_ptr.
+comment|///
+comment|/// The passed DWARFUnit is allowed to be nullptr, in which
+comment|/// case no relocation processing will be performed and some
+comment|/// kind of forms that depend on Unit information are disallowed.
+comment|/// \returns wether the extraction succeeded.
 name|bool
 name|extractValue
 parameter_list|(
@@ -216,7 +222,7 @@ name|Value
 operator|.
 name|data
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|Value
 operator|.
@@ -279,6 +285,16 @@ operator|<
 name|uint64_t
 operator|>
 name|getAsSectionOffset
+argument_list|()
+specifier|const
+expr_stmt|;
+name|Optional
+operator|<
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>>
+name|getAsBlock
 argument_list|()
 specifier|const
 expr_stmt|;

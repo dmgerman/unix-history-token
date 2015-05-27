@@ -78,6 +78,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Argument.h"
 end_include
 
@@ -102,7 +108,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/IR/GlobalValue.h"
+file|"llvm/IR/GlobalObject.h"
 end_include
 
 begin_include
@@ -318,7 +324,7 @@ name|class
 name|Function
 range|:
 name|public
-name|GlobalValue
+name|GlobalObject
 decl_stmt|,
 name|public
 name|ilist_node
@@ -388,10 +394,7 @@ name|AttributeSet
 name|AttributeSets
 decl_stmt|;
 comment|///< Parameter attributes
-comment|// HasLazyArguments is stored in Value::SubclassData.
-comment|/*bool HasLazyArguments;*/
-comment|// The Calling Convention is stored in Value::SubclassData.
-comment|/*CallingConv::ID CallingConvention;*/
+comment|/*    * Value::SubclassData    *    * bit 0  : HasLazyArguments    * bit 1  : HasPrefixData    * bit 2  : HasPrologueData    * bit 3-6: CallingConvention    */
 name|friend
 name|class
 name|SymbolTableListTraits
@@ -422,7 +425,11 @@ return|return
 name|getSubclassDataFromValue
 argument_list|()
 operator|&
+operator|(
 literal|1
+operator|<<
+literal|0
+operator|)
 return|;
 block|}
 name|void
@@ -481,8 +488,7 @@ argument_list|,
 argument|const Twine&N =
 literal|""
 argument_list|,
-argument|Module *M =
-literal|0
+argument|Module *M = nullptr
 argument_list|)
 empty_stmt|;
 name|public
@@ -510,7 +516,7 @@ name|Module
 modifier|*
 name|M
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 return|return
@@ -563,6 +569,18 @@ name|isVarArg
 argument_list|()
 specifier|const
 expr_stmt|;
+name|bool
+name|isMaterializable
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setIsMaterializable
+parameter_list|(
+name|bool
+name|V
+parameter_list|)
+function_decl|;
 comment|/// getIntrinsicID - This method returns the ID number of the specified
 comment|/// function, or Intrinsic::not_intrinsic if the function is not an
 comment|/// intrinsic, or if the pointer is null.  This value is always defined to be
@@ -614,7 +632,7 @@ operator|(
 name|getSubclassDataFromValue
 argument_list|()
 operator|>>
-literal|2
+literal|3
 operator|)
 return|;
 block|}
@@ -633,7 +651,7 @@ operator|(
 name|getSubclassDataFromValue
 argument_list|()
 operator|&
-literal|3
+literal|7
 operator|)
 operator||
 operator|(
@@ -645,7 +663,7 @@ operator|(
 name|CC
 operator|)
 operator|<<
-literal|2
+literal|3
 operator|)
 argument_list|)
 expr_stmt|;
@@ -955,6 +973,25 @@ name|i
 argument_list|)
 return|;
 block|}
+comment|/// @brief Extract the number of dereferenceable bytes for a call or
+comment|/// parameter (0=unknown).
+name|uint64_t
+name|getDereferenceableBytes
+argument_list|(
+name|unsigned
+name|i
+argument_list|)
+decl|const
+block|{
+return|return
+name|AttributeSets
+operator|.
+name|getDereferenceableBytes
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
 comment|/// @brief Determine if the function does not access memory.
 name|bool
 name|doesNotAccessMemory
@@ -1190,6 +1227,17 @@ name|Attribute
 operator|::
 name|StructRet
 argument_list|)
+operator|||
+name|AttributeSets
+operator|.
+name|hasAttribute
+argument_list|(
+literal|2
+argument_list|,
+name|Attribute
+operator|::
+name|StructRet
+argument_list|)
 return|;
 block|}
 comment|/// @brief Determine if the parameter does not alias other parameters.
@@ -1357,13 +1405,14 @@ comment|/// copyAttributesFrom - copy all additional attributes (those not neede
 comment|/// create a Function) from the Function Src to this one.
 name|void
 name|copyAttributesFrom
-parameter_list|(
+argument_list|(
 specifier|const
 name|GlobalValue
-modifier|*
+operator|*
 name|Src
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 comment|/// deleteBody - This method deletes the body of the function, and converts
 comment|/// the linkage to external.
 comment|///
@@ -1383,19 +1432,19 @@ block|}
 comment|/// removeFromParent - This method unlinks 'this' from the containing module,
 comment|/// but does not delete it.
 comment|///
-name|virtual
 name|void
 name|removeFromParent
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 comment|/// eraseFromParent - This method unlinks 'this' from the containing module
 comment|/// and deletes it.
 comment|///
-name|virtual
 name|void
 name|eraseFromParent
-parameter_list|()
-function_decl|;
+argument_list|()
+name|override
+expr_stmt|;
 comment|/// Get the underlying elements of the Function... the basic block list is
 comment|/// empty for external functions.
 comment|///
@@ -1660,9 +1709,8 @@ name|back
 argument_list|()
 return|;
 block|}
-comment|//===--------------------------------------------------------------------===//
-comment|// Argument iterator forwarding functions
-comment|//
+comment|/// @name Function Argument Iteration
+comment|/// @{
 name|arg_iterator
 name|arg_begin
 parameter_list|()
@@ -1721,6 +1769,50 @@ name|end
 argument_list|()
 return|;
 block|}
+name|iterator_range
+operator|<
+name|arg_iterator
+operator|>
+name|args
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|arg_iterator
+operator|>
+operator|(
+name|arg_begin
+argument_list|()
+operator|,
+name|arg_end
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|const_arg_iterator
+operator|>
+name|args
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|const_arg_iterator
+operator|>
+operator|(
+name|arg_begin
+argument_list|()
+operator|,
+name|arg_end
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// @}
 name|size_t
 name|arg_size
 argument_list|()
@@ -1740,7 +1832,11 @@ return|return
 name|getSubclassDataFromValue
 argument_list|()
 operator|&
-literal|2
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
 return|;
 block|}
 name|Constant
@@ -1755,6 +1851,36 @@ parameter_list|(
 name|Constant
 modifier|*
 name|PrefixData
+parameter_list|)
+function_decl|;
+name|bool
+name|hasPrologueData
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSubclassDataFromValue
+argument_list|()
+operator|&
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+return|;
+block|}
+name|Constant
+operator|*
+name|getPrologueData
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setPrologueData
+parameter_list|(
+name|Constant
+modifier|*
+name|PrologueData
 parameter_list|)
 function_decl|;
 comment|/// viewCFG - This function is meant for use from the debugger.  You can just
@@ -1829,7 +1955,7 @@ name|User
 operator|*
 operator|*
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1893,7 +2019,7 @@ operator|->
 name|getValueSymbolTable
 argument_list|()
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|inline
@@ -1918,7 +2044,7 @@ operator|->
 name|getValueSymbolTable
 argument_list|()
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 block|}

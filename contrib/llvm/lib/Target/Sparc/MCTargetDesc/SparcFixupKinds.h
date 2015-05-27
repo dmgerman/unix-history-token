@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SPARC_FIXUPKINDS_H
+name|LLVM_LIB_TARGET_SPARC_MCTARGETDESC_SPARCFIXUPKINDS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SPARC_FIXUPKINDS_H
+name|LLVM_LIB_TARGET_SPARC_MCTARGETDESC_SPARCFIXUPKINDS_H
 end_define
 
 begin_include
@@ -71,6 +71,11 @@ block|,
 comment|/// fixup_sparc_br19 - 19-bit PC relative relocation for
 comment|/// branches on icc/xcc
 name|fixup_sparc_br19
+block|,
+comment|/// fixup_sparc_bpr  - 16-bit fixup for bpr
+name|fixup_sparc_br16_2
+block|,
+name|fixup_sparc_br16_14
 block|,
 comment|/// fixup_sparc_hi22  - 22-bit fixup corresponding to %hi(foo)
 comment|/// for sethi

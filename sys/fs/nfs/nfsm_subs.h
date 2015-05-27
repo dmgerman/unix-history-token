@@ -32,26 +32,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|M_HASCL
-parameter_list|(
-name|m
-parameter_list|)
-value|((m)->m_flags& M_EXT)
-end_define
-
-begin_define
-define|#
-directive|define
-name|NFSMSIZ
-parameter_list|(
-name|m
-parameter_list|)
-value|((M_HASCL(m))?MCLBYTES: 			\ 				(((m)->m_flags& M_PKTHDR)?MHLEN:MLEN))
-end_define
-
-begin_define
-define|#
-directive|define
 name|NFSM_DATAP
 parameter_list|(
 name|m

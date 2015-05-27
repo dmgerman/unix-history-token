@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -60,6 +60,19 @@ argument_list|(
 literal|"dmtable"
 argument_list|)
 end_macro
+
+begin_function_decl
+specifier|const
+name|AH_TABLE
+modifier|*
+name|AcpiAhGetTableInfo
+parameter_list|(
+name|char
+modifier|*
+name|Signature
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/* Local Prototypes */
@@ -139,7 +152,7 @@ literal|"ASF RMCP Boot Options"
 block|,
 literal|"ASF Address"
 block|,
-literal|"Unknown SubTable Type"
+literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -164,7 +177,7 @@ literal|"Remapping Hardware Static Affinity"
 block|,
 literal|"ACPI Namespace Device Declaration"
 block|,
-literal|"Unknown SubTable Type"
+literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -366,7 +379,7 @@ literal|"Generic Timer Block"
 block|,
 literal|"Generic Watchdog Timer"
 block|,
-literal|"Unknown SubTable Type"
+literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -404,7 +417,7 @@ literal|"PCI Express/PCI-X Bridge AER"
 block|,
 literal|"Generic Hardware Error Source"
 block|,
-literal|"Unknown SubTable Type"
+literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -495,7 +508,46 @@ comment|/* ACPI_MADT_GENERIC_MSI_FRAME */
 literal|"Generic Interrupt Redistributor"
 block|,
 comment|/* ACPI_MADT_GENERIC_REDISTRIBUTOR */
-literal|"Unknown SubTable Type"
+literal|"Generic Interrupt Translator"
+block|,
+comment|/* ACPI_MADT_GENERIC_TRANSLATOR */
+literal|"Unknown Subtable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmNfitSubnames
+index|[]
+init|=
+block|{
+literal|"System Physical Address Range"
+block|,
+comment|/* ACPI_NFIT_TYPE_SYSTEM_ADDRESS */
+literal|"Memory Range Map"
+block|,
+comment|/* ACPI_NFIT_TYPE_MEMORY_MAP */
+literal|"Interleave Info"
+block|,
+comment|/* ACPI_NFIT_TYPE_INTERLEAVE */
+literal|"SMBIOS Information"
+block|,
+comment|/* ACPI_NFIT_TYPE_SMBIOS */
+literal|"NVDIMM Control Region"
+block|,
+comment|/* ACPI_NFIT_TYPE_CONTROL_REGION */
+literal|"NVDIMM Block Data Window Region"
+block|,
+comment|/* ACPI_NFIT_TYPE_DATA_REGION */
+literal|"Flush Hint Address"
+block|,
+comment|/* ACPI_NFIT_TYPE_FLUSH_ADDRESS */
+literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -513,9 +565,10 @@ block|{
 literal|"Generic Communications Subspace"
 block|,
 comment|/* ACPI_PCCT_TYPE_GENERIC_SUBSPACE */
-literal|"HW-Reduced Communications Subspace"
+literal|"HW-Reduced Comm Subspace"
 block|,
-literal|"Unknown SubTable Type"
+comment|/* ACPI_PCCT_TYPE_HW_REDUCED_SUBSPACE */
+literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -539,26 +592,7 @@ comment|/* ACPI_PMTT_TYPE_CONTROLLER */
 literal|"Physical Component (DIMM)"
 block|,
 comment|/* ACPI_PMTT_TYPE_DIMM  */
-literal|"Unknown SubTable Type"
-comment|/* Reserved */
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|AcpiDmSlicSubnames
-index|[]
-init|=
-block|{
-literal|"Public Key Structure"
-block|,
-literal|"Windows Marker Structure"
-block|,
-literal|"Unknown SubTable Type"
+literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -581,7 +615,7 @@ literal|"Processor Local x2APIC Affinity"
 block|,
 literal|"GICC Affinity"
 block|,
-literal|"Unknown SubTable Type"
+literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -600,7 +634,7 @@ literal|"Hardware Definition Block"
 block|,
 literal|"Memory Definition Block"
 block|,
-literal|"Unknown SubTable Type"
+literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -617,9 +651,7 @@ init|=
 block|{
 literal|"Native C-state Idle Structure"
 block|,
-literal|"Simple I/O Idle Structure"
-block|,
-literal|"Unknown SubTable Type"
+literal|"Unknown Subtable Type"
 comment|/* Reserved */
 block|}
 decl_stmt|;
@@ -696,10 +728,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*******************************************************************************  *  * ACPI Table Data, indexed by signature.  *  * Each entry contains: Signature, Table Info, Handler, DtHandler,  *  Template, Description  *  * Simple tables have only a TableInfo structure, complex tables have a  * handler. This table must be NULL terminated. RSDP and FACS are  * special-cased elsewhere.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * ACPI Table Data, indexed by signature.  *  * Each entry contains: Signature, Table Info, Handler, DtHandler,  *  Template, Description  *  * Simple tables have only a TableInfo structure, complex tables have a  * handler. This table must be NULL terminated. RSDP and FACS are  * special-cased elsewhere.  *  * Note: Any tables added here should be duplicated within AcpiSupportedTables  * in the file common/ahtable.c  *  ******************************************************************************/
 end_comment
 
 begin_decl_stmt
+specifier|const
 name|ACPI_DMTABLE_DATA
 name|AcpiDmTableData
 index|[]
@@ -715,8 +748,6 @@ block|,
 name|DtCompileAsf
 block|,
 name|TemplateAsf
-block|,
-literal|"Alert Standard Format table"
 block|}
 block|,
 block|{
@@ -729,8 +760,6 @@ block|,
 name|NULL
 block|,
 name|TemplateBert
-block|,
-literal|"Boot Error Record Table"
 block|}
 block|,
 block|{
@@ -743,8 +772,6 @@ block|,
 name|NULL
 block|,
 name|TemplateBgrt
-block|,
-literal|"Boot Graphics Resource Table"
 block|}
 block|,
 block|{
@@ -757,8 +784,6 @@ block|,
 name|NULL
 block|,
 name|TemplateBoot
-block|,
-literal|"Simple Boot Flag Table"
 block|}
 block|,
 block|{
@@ -771,8 +796,6 @@ block|,
 name|DtCompileCpep
 block|,
 name|TemplateCpep
-block|,
-literal|"Corrected Platform Error Polling table"
 block|}
 block|,
 block|{
@@ -785,8 +808,6 @@ block|,
 name|DtCompileCsrt
 block|,
 name|TemplateCsrt
-block|,
-literal|"Core System Resource Table"
 block|}
 block|,
 block|{
@@ -799,8 +820,6 @@ block|,
 name|DtCompileDbg2
 block|,
 name|TemplateDbg2
-block|,
-literal|"Debug Port table type 2"
 block|}
 block|,
 block|{
@@ -813,8 +832,6 @@ block|,
 name|NULL
 block|,
 name|TemplateDbgp
-block|,
-literal|"Debug Port table"
 block|}
 block|,
 block|{
@@ -827,8 +844,18 @@ block|,
 name|DtCompileDmar
 block|,
 name|TemplateDmar
+block|}
 block|,
-literal|"DMA Remapping table"
+block|{
+name|ACPI_SIG_DRTM
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpDrtm
+block|,
+name|DtCompileDrtm
+block|,
+name|TemplateDrtm
 block|}
 block|,
 block|{
@@ -841,8 +868,6 @@ block|,
 name|NULL
 block|,
 name|TemplateEcdt
-block|,
-literal|"Embedded Controller Boot Resources Table"
 block|}
 block|,
 block|{
@@ -855,8 +880,6 @@ block|,
 name|DtCompileEinj
 block|,
 name|TemplateEinj
-block|,
-literal|"Error Injection table"
 block|}
 block|,
 block|{
@@ -869,8 +892,6 @@ block|,
 name|DtCompileErst
 block|,
 name|TemplateErst
-block|,
-literal|"Error Record Serialization Table"
 block|}
 block|,
 block|{
@@ -883,8 +904,6 @@ block|,
 name|DtCompileFadt
 block|,
 name|TemplateFadt
-block|,
-literal|"Fixed ACPI Description Table (FADT)"
 block|}
 block|,
 block|{
@@ -897,8 +916,6 @@ block|,
 name|DtCompileFpdt
 block|,
 name|TemplateFpdt
-block|,
-literal|"Firmware Performance Data Table"
 block|}
 block|,
 block|{
@@ -911,8 +928,6 @@ block|,
 name|DtCompileGtdt
 block|,
 name|TemplateGtdt
-block|,
-literal|"Generic Timer Description Table"
 block|}
 block|,
 block|{
@@ -925,8 +940,6 @@ block|,
 name|DtCompileHest
 block|,
 name|TemplateHest
-block|,
-literal|"Hardware Error Source Table"
 block|}
 block|,
 block|{
@@ -939,8 +952,18 @@ block|,
 name|NULL
 block|,
 name|TemplateHpet
+block|}
 block|,
-literal|"High Precision Event Timer table"
+block|{
+name|ACPI_SIG_IORT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpIort
+block|,
+name|DtCompileIort
+block|,
+name|TemplateIort
 block|}
 block|,
 block|{
@@ -953,8 +976,6 @@ block|,
 name|DtCompileIvrs
 block|,
 name|TemplateIvrs
-block|,
-literal|"I/O Virtualization Reporting Structure"
 block|}
 block|,
 block|{
@@ -967,8 +988,6 @@ block|,
 name|DtCompileLpit
 block|,
 name|TemplateLpit
-block|,
-literal|"Low Power Idle Table"
 block|}
 block|,
 block|{
@@ -981,8 +1000,6 @@ block|,
 name|DtCompileMadt
 block|,
 name|TemplateMadt
-block|,
-literal|"Multiple APIC Description Table (MADT)"
 block|}
 block|,
 block|{
@@ -995,8 +1012,6 @@ block|,
 name|DtCompileMcfg
 block|,
 name|TemplateMcfg
-block|,
-literal|"Memory Mapped Configuration table"
 block|}
 block|,
 block|{
@@ -1009,8 +1024,6 @@ block|,
 name|NULL
 block|,
 name|TemplateMchi
-block|,
-literal|"Management Controller Host Interface table"
 block|}
 block|,
 block|{
@@ -1023,8 +1036,6 @@ block|,
 name|DtCompileMpst
 block|,
 name|TemplateMpst
-block|,
-literal|"Memory Power State Table"
 block|}
 block|,
 block|{
@@ -1037,8 +1048,18 @@ block|,
 name|DtCompileMsct
 block|,
 name|TemplateMsct
+block|}
 block|,
-literal|"Maximum System Characteristics Table"
+block|{
+name|ACPI_SIG_MSDM
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpSlic
+block|,
+name|DtCompileSlic
+block|,
+name|TemplateMsdm
 block|}
 block|,
 block|{
@@ -1051,8 +1072,18 @@ block|,
 name|DtCompileMtmr
 block|,
 name|TemplateMtmr
+block|}
 block|,
-literal|"MID Timer Table"
+block|{
+name|ACPI_SIG_NFIT
+block|,
+name|AcpiDmTableInfoNfit
+block|,
+name|AcpiDmDumpNfit
+block|,
+name|DtCompileNfit
+block|,
+name|TemplateNfit
 block|}
 block|,
 block|{
@@ -1065,8 +1096,6 @@ block|,
 name|DtCompilePcct
 block|,
 name|TemplatePcct
-block|,
-literal|"Platform Communications Channel Table"
 block|}
 block|,
 block|{
@@ -1079,8 +1108,6 @@ block|,
 name|DtCompilePmtt
 block|,
 name|TemplatePmtt
-block|,
-literal|"Platform Memory Topology Table"
 block|}
 block|,
 block|{
@@ -1093,8 +1120,6 @@ block|,
 name|DtCompileRsdt
 block|,
 name|TemplateRsdt
-block|,
-literal|"Root System Description Table"
 block|}
 block|,
 block|{
@@ -1107,8 +1132,6 @@ block|,
 name|NULL
 block|,
 name|TemplateS3pt
-block|,
-literal|"S3 Performance Table"
 block|}
 block|,
 block|{
@@ -1121,8 +1144,6 @@ block|,
 name|NULL
 block|,
 name|TemplateSbst
-block|,
-literal|"Smart Battery Specification Table"
 block|}
 block|,
 block|{
@@ -1135,8 +1156,6 @@ block|,
 name|DtCompileSlic
 block|,
 name|TemplateSlic
-block|,
-literal|"Software Licensing Description Table"
 block|}
 block|,
 block|{
@@ -1149,8 +1168,6 @@ block|,
 name|DtCompileSlit
 block|,
 name|TemplateSlit
-block|,
-literal|"System Locality Information Table"
 block|}
 block|,
 block|{
@@ -1163,8 +1180,6 @@ block|,
 name|NULL
 block|,
 name|TemplateSpcr
-block|,
-literal|"Serial Port Console Redirection table"
 block|}
 block|,
 block|{
@@ -1177,8 +1192,6 @@ block|,
 name|NULL
 block|,
 name|TemplateSpmi
-block|,
-literal|"Server Platform Management Interface table"
 block|}
 block|,
 block|{
@@ -1191,8 +1204,18 @@ block|,
 name|DtCompileSrat
 block|,
 name|TemplateSrat
+block|}
 block|,
-literal|"System Resource Affinity Table"
+block|{
+name|ACPI_SIG_STAO
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpStao
+block|,
+name|DtCompileStao
+block|,
+name|TemplateStao
 block|}
 block|,
 block|{
@@ -1205,8 +1228,6 @@ block|,
 name|NULL
 block|,
 name|TemplateTcpa
-block|,
-literal|"Trusted Computing Platform Alliance table"
 block|}
 block|,
 block|{
@@ -1219,8 +1240,6 @@ block|,
 name|NULL
 block|,
 name|TemplateTpm2
-block|,
-literal|"Trusted Platform Module hardware interface table"
 block|}
 block|,
 block|{
@@ -1233,8 +1252,6 @@ block|,
 name|DtCompileUefi
 block|,
 name|TemplateUefi
-block|,
-literal|"UEFI Boot Optimization Table"
 block|}
 block|,
 block|{
@@ -1247,8 +1264,6 @@ block|,
 name|DtCompileVrtc
 block|,
 name|TemplateVrtc
-block|,
-literal|"Virtual Real-Time Clock Table"
 block|}
 block|,
 block|{
@@ -1261,8 +1276,6 @@ block|,
 name|NULL
 block|,
 name|TemplateWaet
-block|,
-literal|"Windows ACPI Emulated Devices Table"
 block|}
 block|,
 block|{
@@ -1275,8 +1288,6 @@ block|,
 name|DtCompileWdat
 block|,
 name|TemplateWdat
-block|,
-literal|"Watchdog Action Table"
 block|}
 block|,
 block|{
@@ -1289,8 +1300,6 @@ block|,
 name|NULL
 block|,
 name|TemplateWddt
-block|,
-literal|"Watchdog Description Table"
 block|}
 block|,
 block|{
@@ -1303,8 +1312,30 @@ block|,
 name|NULL
 block|,
 name|TemplateWdrt
+block|}
 block|,
-literal|"Watchdog Resource Table"
+block|{
+name|ACPI_SIG_WPBT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpWpbt
+block|,
+name|DtCompileWpbt
+block|,
+name|TemplateWpbt
+block|}
+block|,
+block|{
+name|ACPI_SIG_XENV
+block|,
+name|AcpiDmTableInfoXenv
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateXenv
 block|}
 block|,
 block|{
@@ -1317,13 +1348,9 @@ block|,
 name|DtCompileXsdt
 block|,
 name|TemplateXsdt
-block|,
-literal|"Extended System Description Table"
 block|}
 block|,
 block|{
-name|NULL
-block|,
 name|NULL
 block|,
 name|NULL
@@ -1411,6 +1438,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
+specifier|const
 name|ACPI_DMTABLE_DATA
 modifier|*
 name|AcpiDmGetTableData
@@ -1420,21 +1448,22 @@ modifier|*
 name|Signature
 parameter_list|)
 block|{
+specifier|const
 name|ACPI_DMTABLE_DATA
 modifier|*
-name|TableData
+name|Info
 decl_stmt|;
 for|for
 control|(
-name|TableData
+name|Info
 operator|=
 name|AcpiDmTableData
 init|;
-name|TableData
+name|Info
 operator|->
 name|Signature
 condition|;
-name|TableData
+name|Info
 operator|++
 control|)
 block|{
@@ -1444,7 +1473,7 @@ name|ACPI_COMPARE_NAME
 argument_list|(
 name|Signature
 argument_list|,
-name|TableData
+name|Info
 operator|->
 name|Signature
 argument_list|)
@@ -1452,7 +1481,7 @@ condition|)
 block|{
 return|return
 operator|(
-name|TableData
+name|Info
 operator|)
 return|;
 block|}
@@ -1481,6 +1510,7 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+specifier|const
 name|ACPI_DMTABLE_DATA
 modifier|*
 name|TableData
@@ -1701,7 +1731,7 @@ else|else
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"\n**** Unknown ACPI table type [%4.4s]\n\n"
+literal|"\n**** Unknown ACPI table signature [%4.4s]\n\n"
 argument_list|,
 name|Table
 operator|->
@@ -1712,13 +1742,37 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Unknown ACPI table signature [%4.4s], decoding header only\n"
+literal|"Unknown ACPI table signature [%4.4s], "
 argument_list|,
 name|Table
 operator|->
 name|Signature
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|AcpiGbl_ForceAmlDisassembly
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"decoding ACPI table header only\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"assuming table contains valid AML code\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else
@@ -1805,7 +1859,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmLineHeader  *  * PARAMETERS:  Offset              - Current byte offset, from table start  *              ByteLength          - Length of the field in bytes, 0 for flags  *              Name                - Name of this field  *              Value               - Optional value, displayed on left of ':'  *  * RETURN:      None  *  * DESCRIPTION: Utility routines for formatting output lines. Displays the  *              current table offset in hex and decimal, the field length,  *              and the field name.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiDmLineHeader  *  * PARAMETERS:  Offset              - Current byte offset, from table start  *              ByteLength          - Length of the field in bytes, 0 for flags  *              Name                - Name of this field  *  * RETURN:      None  *  * DESCRIPTION: Utility routines for formatting output lines. Displays the  *              current table offset in hex and decimal, the field length,  *              and the field name.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -2083,10 +2137,14 @@ decl_stmt|;
 name|UINT16
 name|Temp16
 decl_stmt|;
+name|UINT32
+name|Temp32
+decl_stmt|;
 name|UINT64
 name|Value
 decl_stmt|;
-name|ACPI_DMTABLE_DATA
+specifier|const
+name|AH_TABLE
 modifier|*
 name|TableData
 decl_stmt|;
@@ -2157,16 +2215,9 @@ name|Info
 operator|->
 name|Offset
 expr_stmt|;
-comment|/* Check for beyond EOT or beyond subtable end */
+comment|/* Check for beyond subtable end or (worse) beyond EOT */
 if|if
 condition|(
-operator|(
-name|CurrentOffset
-operator|>=
-name|TableLength
-operator|)
-operator|||
-operator|(
 name|SubtableLength
 operator|&&
 operator|(
@@ -2176,12 +2227,32 @@ name|Offset
 operator|>=
 name|SubtableLength
 operator|)
-operator|)
 condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** ACPI table terminates in the middle of a data structure!\n"
+literal|"/**** ACPI subtable terminates early - "
+literal|"may be older version (dump table) */\n"
+argument_list|)
+expr_stmt|;
+comment|/* Move on to next subtable */
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|CurrentOffset
+operator|>=
+name|TableLength
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"/**** ACPI table terminates "
+literal|"in the middle of a data structure! (dump table) */\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2266,6 +2337,9 @@ case|:
 case|case
 name|ACPI_DMT_HEST
 case|:
+case|case
+name|ACPI_DMT_NFIT
+case|:
 name|ByteLength
 operator|=
 literal|2
@@ -2287,9 +2361,6 @@ name|ACPI_DMT_NAME4
 case|:
 case|case
 name|ACPI_DMT_SIG
-case|:
-case|case
-name|ACPI_DMT_SLIC
 case|:
 case|case
 name|ACPI_DMT_LPIT
@@ -2368,6 +2439,20 @@ literal|128
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_UNICODE
+case|:
+case|case
+name|ACPI_DMT_BUFFER
+case|:
+case|case
+name|ACPI_DMT_RAW_BUFFER
+case|:
+name|ByteLength
+operator|=
+name|SubtableLength
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_STRING
 case|:
 name|ByteLength
@@ -2439,6 +2524,28 @@ name|ACPI_HEST_NOTIFY
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_DMT_IORTMEM
+case|:
+if|if
+condition|(
+operator|!
+name|LastOutputBlankLine
+condition|)
+block|{
+name|LastOutputBlankLine
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
+name|ByteLength
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_IORT_MEMORY_ACCESS
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 name|ByteLength
 operator|=
@@ -2446,6 +2553,7 @@ literal|0
 expr_stmt|;
 break|break;
 block|}
+comment|/* Check if we are beyond a subtable, or (worse) beyond EOT */
 if|if
 condition|(
 name|CurrentOffset
@@ -2455,9 +2563,28 @@ operator|>
 name|TableLength
 condition|)
 block|{
+if|if
+condition|(
+name|SubtableLength
+condition|)
+block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"**** ACPI table terminates in the middle of a data structure!\n"
+literal|"/**** ACPI subtable terminates early - "
+literal|"may be older version (dump table) */\n"
+argument_list|)
+expr_stmt|;
+comment|/* Move on to next subtable */
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+literal|"/**** ACPI table terminates "
+literal|"in the middle of a data structure! */\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2884,7 +3011,7 @@ argument_list|)
 expr_stmt|;
 name|TableData
 operator|=
-name|AcpiDmGetTableData
+name|AcpiAhGetTableInfo
 argument_list|(
 name|ACPI_CAST_PTR
 argument_list|(
@@ -2905,7 +3032,7 @@ name|STRING_FORMAT
 argument_list|,
 name|TableData
 operator|->
-name|Name
+name|Description
 argument_list|)
 expr_stmt|;
 block|}
@@ -3088,7 +3215,8 @@ name|AcpiOsPrintf
 argument_list|(
 name|UINT8_FORMAT
 argument_list|,
-name|Temp8
+operator|*
+name|Target
 argument_list|,
 name|AcpiDmGasAccessWidth
 index|[
@@ -3539,6 +3667,37 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_IORTMEM
+case|:
+name|AcpiOsPrintf
+argument_list|(
+name|STRING_FORMAT
+argument_list|,
+literal|"IORT Memory Access Properties"
+argument_list|)
+expr_stmt|;
+name|AcpiDmDumpTable
+argument_list|(
+name|TableLength
+argument_list|,
+name|CurrentOffset
+argument_list|,
+name|Target
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ACPI_IORT_MEMORY_ACCESS
+argument_list|)
+argument_list|,
+name|AcpiDmTableInfoIortAcc
+argument_list|)
+expr_stmt|;
+name|LastOutputBlankLine
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_MADT
 case|:
 comment|/* MADT subtable types */
@@ -3569,6 +3728,45 @@ argument_list|,
 name|AcpiDmMadtSubnames
 index|[
 name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_NFIT
+case|:
+comment|/* NFIT subtable types */
+name|Temp16
+operator|=
+name|ACPI_GET16
+argument_list|(
+name|Target
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Temp16
+operator|>
+name|ACPI_NFIT_TYPE_RESERVED
+condition|)
+block|{
+name|Temp16
+operator|=
+name|ACPI_NFIT_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT16_FORMAT
+argument_list|,
+name|ACPI_GET16
+argument_list|(
+name|Target
+argument_list|)
+argument_list|,
+name|AcpiDmNfitSubnames
+index|[
+name|Temp16
 index|]
 argument_list|)
 expr_stmt|;
@@ -3644,37 +3842,60 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|ACPI_DMT_SLIC
+name|ACPI_DMT_UNICODE
 case|:
-comment|/* SLIC subtable types */
-name|Temp8
-operator|=
-operator|*
-name|Target
-expr_stmt|;
 if|if
 condition|(
-name|Temp8
-operator|>
-name|ACPI_SLIC_TYPE_RESERVED
+name|ByteLength
+operator|==
+literal|0
 condition|)
 block|{
-name|Temp8
-operator|=
-name|ACPI_SLIC_TYPE_RESERVED
-expr_stmt|;
-block|}
 name|AcpiOsPrintf
 argument_list|(
-name|UINT32_FORMAT
+literal|"/* Zero-length Data */\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|AcpiDmDumpUnicode
+argument_list|(
+name|Table
 argument_list|,
-operator|*
-name|Target
+name|CurrentOffset
 argument_list|,
-name|AcpiDmSlicSubnames
-index|[
-name|Temp8
-index|]
+name|ByteLength
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_RAW_BUFFER
+case|:
+if|if
+condition|(
+name|ByteLength
+operator|==
+literal|0
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"/* Zero-length Data */\n"
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|AcpiDmDumpBuffer
+argument_list|(
+name|Table
+argument_list|,
+name|CurrentOffset
+argument_list|,
+name|ByteLength
+argument_list|,
+name|CurrentOffset
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3815,56 +4036,38 @@ case|case
 name|ACPI_DMT_LPIT
 case|:
 comment|/* LPIT subtable types */
-name|Temp8
+name|Temp32
 operator|=
-operator|*
+name|ACPI_GET32
+argument_list|(
 name|Target
+argument_list|)
 expr_stmt|;
-switch|switch
+if|if
 condition|(
-name|Temp8
+name|Temp32
+operator|>
+name|ACPI_LPIT_TYPE_RESERVED
 condition|)
 block|{
-case|case
-name|ACPI_LPIT_TYPE_NATIVE_CSTATE
-case|:
-name|Name
+name|Temp32
 operator|=
-name|AcpiDmLpitSubnames
-index|[
-literal|0
-index|]
+name|ACPI_LPIT_TYPE_RESERVED
 expr_stmt|;
-break|break;
-case|case
-name|ACPI_LPIT_TYPE_SIMPLE_IO
-case|:
-name|Name
-operator|=
-name|AcpiDmLpitSubnames
-index|[
-literal|1
-index|]
-expr_stmt|;
-break|break;
-default|default:
-name|Name
-operator|=
-name|AcpiDmLpitSubnames
-index|[
-literal|2
-index|]
-expr_stmt|;
-break|break;
 block|}
 name|AcpiOsPrintf
 argument_list|(
 name|UINT32_FORMAT
 argument_list|,
-operator|*
+name|ACPI_GET32
+argument_list|(
 name|Target
+argument_list|)
 argument_list|,
-name|Name
+name|AcpiDmLpitSubnames
+index|[
+name|Temp32
+index|]
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3905,7 +4108,7 @@ operator|!
 name|SubtableLength
 condition|)
 block|{
-comment|/* If this table is not the main table, subtable must have valid length */
+comment|/*          * If this table is not the main table, the subtable must have a          * valid length          */
 name|AcpiOsPrintf
 argument_list|(
 literal|"Invalid zero length subtable\n"

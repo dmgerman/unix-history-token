@@ -372,18 +372,18 @@ value|0x2
 end_define
 
 begin_comment
-comment|/* if DOWAIT_BLOCK, abort on SIGINT/SIGQUIT */
+comment|/* if DOWAIT_BLOCK, abort on signal */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|DOWAIT_SIG_ANY
+name|DOWAIT_SIG_TRAP
 value|0x4
 end_define
 
 begin_comment
-comment|/* if DOWAIT_SIG, abort on any signal */
+comment|/* if DOWAIT_SIG, abort on trapped signal only */
 end_comment
 
 begin_if
@@ -1111,11 +1111,13 @@ name|bgcmd
 parameter_list|(
 name|int
 name|argc
+name|__unused
 parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|argv
+name|__unused
 parameter_list|)
 block|{
 name|struct
@@ -5210,7 +5212,7 @@ name|Tflag
 condition|?
 name|DOWAIT_SIG
 operator||
-name|DOWAIT_SIG_ANY
+name|DOWAIT_SIG_TRAP
 else|:
 literal|0
 operator|)
@@ -5392,8 +5394,6 @@ elseif|else
 if|if
 condition|(
 name|rootshell
-operator|&&
-name|iflag
 operator|&&
 name|propagate_int
 operator|&&
@@ -5698,7 +5698,7 @@ operator|(
 operator|(
 name|mode
 operator|&
-name|DOWAIT_SIG_ANY
+name|DOWAIT_SIG_TRAP
 operator|)
 operator|!=
 literal|0

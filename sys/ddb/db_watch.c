@@ -81,10 +81,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|boolean_t
+name|bool
 name|db_watchpoints_inserted
 init|=
-name|TRUE
+name|true
 decl_stmt|;
 end_decl_stmt
 
@@ -180,7 +180,7 @@ end_ifdef
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|bool
 name|db_find_watchpoint
 parameter_list|(
 name|vm_map_t
@@ -236,7 +236,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|db_watchpoint_t
 name|watch
 decl_stmt|;
@@ -337,7 +336,6 @@ name|vm_size_t
 name|size
 parameter_list|)
 block|{
-specifier|register
 name|db_watchpoint_t
 name|watch
 decl_stmt|;
@@ -460,7 +458,7 @@ name|watch
 expr_stmt|;
 name|db_watchpoints_inserted
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 end_function
@@ -477,11 +475,9 @@ name|db_addr_t
 name|addr
 parameter_list|)
 block|{
-specifier|register
 name|db_watchpoint_t
 name|watch
 decl_stmt|;
-specifier|register
 name|db_watchpoint_t
 modifier|*
 name|prev
@@ -567,7 +563,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|db_watchpoint_t
 name|watch
 decl_stmt|;
@@ -639,31 +634,31 @@ literal|" "
 argument|, 		      (void *)watch->map, (long)watch->loaddr, 		      (long)watch->hiaddr - (long)watch->loaddr); }
 comment|/* Delete watchpoint */
 comment|/*ARGSUSED*/
-argument|void db_deletewatch_cmd(db_expr_t addr, boolean_t have_addr, db_expr_t count,    char *modif) { 	db_delete_watchpoint(db_map_addr(addr), addr); }
+argument|void db_deletewatch_cmd(db_expr_t addr, bool have_addr, db_expr_t count,    char *modif) { 	db_delete_watchpoint(db_map_addr(addr), addr); }
 comment|/* Set watchpoint */
 comment|/*ARGSUSED*/
-argument|void db_watchpoint_cmd(db_expr_t addr, boolean_t have_addr, db_expr_t count,    char *modif) { 	vm_size_t	size; 	db_expr_t	value;  	if (db_expression(&value)) 	    size = (vm_size_t) value; 	else 	    size =
+argument|void db_watchpoint_cmd(db_expr_t addr, bool have_addr, db_expr_t count,    char *modif) { 	vm_size_t	size; 	db_expr_t	value;  	if (db_expression(&value)) 	    size = (vm_size_t) value; 	else 	    size =
 literal|4
 argument|; 	db_skip_to_eol();  	db_set_watchpoint(db_map_addr(addr), addr, size); }
 comment|/*  * At least one non-optional show-command must be implemented using  * DB_SHOW_COMMAND() so that db_show_cmd_set gets created.  Here is one.  */
-argument|DB_SHOW_COMMAND(watches, db_listwatch_cmd) { 	db_list_watchpoints(); 	db_md_list_watchpoints(); }  void db_set_watchpoints(void) { 	register db_watchpoint_t	watch;  	if (!db_watchpoints_inserted) { 	    for (watch = db_watchpoint_list; 	         watch !=
+argument|DB_SHOW_COMMAND(watches, db_listwatch_cmd) { 	db_list_watchpoints(); 	db_md_list_watchpoints(); }  void db_set_watchpoints(void) { 	db_watchpoint_t	watch;  	if (!db_watchpoints_inserted) { 	    for (watch = db_watchpoint_list; 	         watch !=
 literal|0
-argument|; 	         watch = watch->link) 		pmap_protect(watch->map->pmap, 			     trunc_page(watch->loaddr), 			     round_page(watch->hiaddr), 			     VM_PROT_READ);  	    db_watchpoints_inserted = TRUE; 	} }  void db_clear_watchpoints(void) { 	db_watchpoints_inserted = FALSE; }
+argument|; 	         watch = watch->link) 		pmap_protect(watch->map->pmap, 			     trunc_page(watch->loaddr), 			     round_page(watch->hiaddr), 			     VM_PROT_READ);  	    db_watchpoints_inserted = true; 	} }  void db_clear_watchpoints(void) { 	db_watchpoints_inserted = false; }
 ifdef|#
 directive|ifdef
 name|notused
-argument|static boolean_t db_find_watchpoint(vm_map_t map, db_addr_t addr, db_regs_t regs) { 	register db_watchpoint_t watch; 	db_watchpoint_t found =
+argument|static bool db_find_watchpoint(vm_map_t map, db_addr_t addr, db_regs_t regs) { 	db_watchpoint_t watch; 	db_watchpoint_t found =
 literal|0
 argument|;  	for (watch = db_watchpoint_list; 	     watch !=
 literal|0
-argument|; 	     watch = watch->link) 	    if (db_map_equal(watch->map, map)) { 		if ((watch->loaddr<= addr)&& 		    (addr< watch->hiaddr)) 		    return (TRUE); 		else if ((trunc_page(watch->loaddr)<= addr)&& 			 (addr< round_page(watch->hiaddr))) 		    found = watch; 	    }
+argument|; 	     watch = watch->link) 	    if (db_map_equal(watch->map, map)) { 		if ((watch->loaddr<= addr)&& 		    (addr< watch->hiaddr)) 		    return (true); 		else if ((trunc_page(watch->loaddr)<= addr)&& 			 (addr< round_page(watch->hiaddr))) 		    found = watch; 	    }
 comment|/* 	 *	We didn't hit exactly on a watchpoint, but we are 	 *	in a protected region.  We want to single-step 	 *	and then re-protect. 	 */
-argument|if (found) { 	    db_watchpoints_inserted = FALSE; 	    db_single_step(regs); 	}  	return (FALSE); }
+argument|if (found) { 	    db_watchpoints_inserted = false; 	    db_single_step(regs); 	}  	return (false); }
 endif|#
 directive|endif
 comment|/* Delete hardware watchpoint */
 comment|/*ARGSUSED*/
-argument|void db_deletehwatch_cmd(db_expr_t addr, boolean_t have_addr, db_expr_t count,    char *modif) { 	int rc;  	if (count<
+argument|void db_deletehwatch_cmd(db_expr_t addr, bool have_addr, db_expr_t count,    char *modif) { 	int rc;  	if (count<
 literal|0
 argument|) 		count =
 literal|4
@@ -674,7 +669,7 @@ literal|"hardware watchpoint could not be deleted\n"
 argument|); }
 comment|/* Set hardware watchpoint */
 comment|/*ARGSUSED*/
-argument|void db_hwatchpoint_cmd(db_expr_t addr, boolean_t have_addr, db_expr_t count,    char *modif) { 	int rc;  	if (count<
+argument|void db_hwatchpoint_cmd(db_expr_t addr, bool have_addr, db_expr_t count,    char *modif) { 	int rc;  	if (count<
 literal|0
 argument|) 		count =
 literal|4

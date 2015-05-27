@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SYSTEMZASMPRINTER_H
+name|LLVM_LIB_TARGET_SYSTEMZ_SYSTEMZASMPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SYSTEMZASMPRINTER_H
+name|LLVM_LIB_TARGET_SYSTEMZ_SYSTEMZASMPRINTER_H
 end_define
 
 begin_include
@@ -127,36 +127,32 @@ operator|(
 operator|)
 block|;   }
 comment|// Override AsmPrinter.
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getPassName
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 literal|"SystemZ Assembly Printer"
 return|;
 block|}
-name|virtual
 name|void
 name|EmitInstruction
 argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|EmitMachineConstantPoolValue
 argument_list|(
 argument|MachineConstantPoolValue *MCPV
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|PrintAsmOperand
 argument_list|(
@@ -170,9 +166,8 @@ argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&OS
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|bool
 name|PrintAsmMemoryOperand
 argument_list|(
@@ -186,15 +181,14 @@ argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&OS
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|;
-name|virtual
 name|void
 name|EmitEndOfAsmFile
 argument_list|(
 argument|Module&M
 argument_list|)
-name|LLVM_OVERRIDE
+name|override
 block|; }
 decl_stmt|;
 block|}

@@ -46,13 +46,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPUINSTPRINTER_H
+name|LLVM_LIB_TARGET_R600_INSTPRINTER_AMDGPUINSTPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPUINSTPRINTER_H
+name|LLVM_LIB_TARGET_R600_INSTPRINTER_AMDGPUINSTPRINTER_H
 end_define
 
 begin_include
@@ -135,7 +135,6 @@ argument_list|(
 argument|unsigned RegNo
 argument_list|)
 block|;
-name|virtual
 name|void
 name|printInst
 argument_list|(
@@ -145,13 +144,180 @@ argument|raw_ostream&O
 argument_list|,
 argument|StringRef Annot
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
 name|void
+name|printU8ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printU16ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printU8ImmDecOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printU16ImmDecOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printU32ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printOffen
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printIdxen
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printAddr64
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printMBUFOffset
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printDSOffset
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printDSOffset0
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printDSOffset1
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printGLC
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printSLC
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printTFE
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printRegOperand
 argument_list|(
 argument|unsigned RegNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printImmediate32
+argument_list|(
+argument|uint32_t I
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printImmediate64
+argument_list|(
+argument|uint64_t I
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -166,6 +332,17 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+name|void
+name|printOperandAndMods
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+specifier|static
 name|void
 name|printInterpSlot
 argument_list|(
@@ -186,6 +363,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printIfSet
 argument_list|(
@@ -201,6 +379,7 @@ argument|StringRef Default =
 literal|""
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printAbs
 argument_list|(
@@ -211,6 +390,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printClamp
 argument_list|(
@@ -221,6 +401,29 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
+name|void
+name|printClampSI
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+specifier|static
+name|void
+name|printOModSI
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+specifier|static
 name|void
 name|printLiteral
 argument_list|(
@@ -231,6 +434,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printLast
 argument_list|(
@@ -241,6 +445,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printNeg
 argument_list|(
@@ -251,6 +456,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printOMOD
 argument_list|(
@@ -261,6 +467,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printRel
 argument_list|(
@@ -271,6 +478,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printUpdateExecMask
 argument_list|(
@@ -281,6 +489,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printUpdatePred
 argument_list|(
@@ -291,6 +500,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printWrite
 argument_list|(
@@ -301,6 +511,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printSel
 argument_list|(
@@ -311,6 +522,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printBankSwizzle
 argument_list|(
@@ -321,6 +533,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printRSel
 argument_list|(
@@ -331,6 +544,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printCT
 argument_list|(
@@ -341,6 +555,7 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
 name|void
 name|printKCache
 argument_list|(
@@ -351,6 +566,18 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
+specifier|static
+name|void
+name|printSendMsg
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+specifier|static
 name|void
 name|printWaitFlag
 argument_list|(
@@ -373,10 +600,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDGPUINSTRPRINTER_H
-end_comment
 
 end_unit
 

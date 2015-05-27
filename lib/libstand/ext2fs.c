@@ -1285,7 +1285,9 @@ operator|=
 name|fs
 expr_stmt|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -1548,7 +1550,9 @@ name|len
 argument_list|)
 expr_stmt|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -1972,7 +1976,9 @@ goto|goto
 name|out
 goto|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2213,7 +2219,9 @@ name|fs_bsize
 argument_list|)
 expr_stmt|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2576,7 +2584,9 @@ name|fs_bsize
 argument_list|)
 expr_stmt|;
 name|twiddle
-argument_list|()
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -2910,7 +2920,9 @@ block|}
 else|else
 block|{
 name|twiddle
-argument_list|()
+argument_list|(
+literal|4
+argument_list|)
 expr_stmt|;
 name|error
 operator|=

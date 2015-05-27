@@ -117,6 +117,11 @@ decl_stmt|;
 name|class
 name|MultiKeywordSelector
 decl_stmt|;
+enum_decl|enum
+name|OverloadedOperatorKind
+enum_decl|:
+name|int
+enum_decl|;
 name|class
 name|QualType
 decl_stmt|;
@@ -179,6 +184,15 @@ block|,
 name|CXXUsingDirective
 block|}
 enum|;
+specifier|static
+specifier|const
+name|unsigned
+name|NumNameKinds
+init|=
+name|CXXUsingDirective
+operator|+
+literal|1
+decl_stmt|;
 name|private
 label|:
 comment|/// StoredNameKind - The kind of name that is actually stored in the
@@ -323,7 +337,7 @@ name|PtrMask
 operator|)
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getAsCXXOperatorIdName
@@ -354,7 +368,7 @@ name|PtrMask
 operator|)
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 end_decl_stmt
@@ -390,7 +404,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 
@@ -804,7 +818,7 @@ end_expr_stmt
 
 begin_return
 return|return
-literal|0
+name|nullptr
 return|;
 end_return
 

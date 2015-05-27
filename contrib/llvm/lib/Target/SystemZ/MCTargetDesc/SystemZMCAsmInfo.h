@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SystemZTARGETASMINFO_H
+name|LLVM_LIB_TARGET_SYSTEMZ_MCTARGETDESC_SYSTEMZMCASMINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SystemZTARGETASMINFO_H
+name|LLVM_LIB_TARGET_SYSTEMZ_MCTARGETDESC_SYSTEMZMCASMINFO_H
 end_define
 
 begin_include
@@ -75,25 +75,13 @@ name|SystemZMCAsmInfo
 argument_list|(
 argument|StringRef TT
 argument_list|)
-block|;
-comment|// Override MCAsmInfo;
-name|virtual
-specifier|const
-name|MCSection
-operator|*
-name|getNonexecutableStackSection
-argument_list|(
-argument|MCContext&Ctx
-argument_list|)
-specifier|const
-name|LLVM_OVERRIDE
 block|; }
 decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// namespace llvm
+comment|// end namespace llvm
 end_comment
 
 begin_endif

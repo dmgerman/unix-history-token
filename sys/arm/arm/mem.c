@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -158,6 +164,27 @@ name|mem_range_softc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|struct
+name|sx
+name|tmppt_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SX_SYSINIT
+argument_list|(
+name|tmppt
+argument_list|,
+operator|&
+name|tmppt_lock
+argument_list|,
+literal|"mem4map"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* ARGSUSED */
 end_comment
@@ -205,8 +232,6 @@ name|addr
 decl_stmt|,
 name|eaddr
 decl_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 while|while
 condition|(
 name|uio
@@ -348,6 +373,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|sx_xlock
+argument_list|(
+operator|&
+name|tmppt_lock
+argument_list|)
+expr_stmt|;
 name|pmap_kenter
 argument_list|(
 operator|(
@@ -358,6 +389,21 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ARM_NEW_PMAP
+name|pmap_tlb_flush
+argument_list|(
+name|kernel_pmap
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|_tmppt
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|o
 operator|=
 operator|(
@@ -448,6 +494,12 @@ operator|)
 name|_tmppt
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|sx_xunlock
+argument_list|(
+operator|&
+name|tmppt_lock
 argument_list|)
 expr_stmt|;
 continue|continue;

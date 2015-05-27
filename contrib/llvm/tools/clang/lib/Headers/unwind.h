@@ -22,6 +22,11 @@ end_define
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__APPLE__
+argument_list|)
+operator|&&
 name|__has_include_next
 argument_list|(
 operator|<
@@ -33,7 +38,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/* Darwin (from 11.x on) and libunwind provide an unwind.h. If that's available,  * use it. libunwind wraps some of its definitions in #ifdef _GNU_SOURCE,  * so define that around the include.*/
+comment|/* Darwin (from 11.x on) provide an unwind.h. If that's available,  * use it. libunwind wraps some of its definitions in #ifdef _GNU_SOURCE,  * so define that around the include.*/
 end_comment
 
 begin_ifndef
@@ -710,6 +715,14 @@ parameter_list|)
 function_decl|;
 name|_Unwind_Word
 name|_Unwind_GetCFA
+parameter_list|(
+name|struct
+name|_Unwind_Context
+modifier|*
+parameter_list|)
+function_decl|;
+name|_Unwind_Word
+name|_Unwind_GetBSP
 parameter_list|(
 name|struct
 name|_Unwind_Context

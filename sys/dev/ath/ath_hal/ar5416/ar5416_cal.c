@@ -2349,6 +2349,7 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
 comment|/* Don't write to EXT radio CCA registers unless in HT/40 mode */
 comment|/* XXX this check should really be cleaner! */
 if|if
@@ -2421,6 +2422,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function

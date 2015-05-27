@@ -246,15 +246,6 @@ return|;
 block|}
 end_function
 
-begin_function
-name|void
-name|acpi_cpu_c1
-parameter_list|()
-block|{
-asm|__asm __volatile("sti; hlt");
-block|}
-end_function
-
 begin_comment
 comment|/*  * Support for mapping ACPI tables during early boot.  Currently this  * uses the crashdump map to map each table.  However, the crashdump  * map is created in pmap_bootstrap() right after the direct map, so  * we should be able to just use pmap_mapbios() here instead.  *  * This makes the following assumptions about how we use this KVA:  * pages 0 and 1 are used to map in the header of each table found via  * the RSDT or XSDT and pages 2 to n are used to map in the RSDT or  * XSDT.  This has to use 2 pages for the table headers in case a  * header spans a page boundary.  *  * XXX: We don't ensure the table fits in the available address space  * in the crashdump map.  */
 end_comment

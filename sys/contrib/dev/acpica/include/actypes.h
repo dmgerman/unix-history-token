@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -357,6 +357,16 @@ name|ACPI_SIZE
 typedef|;
 end_typedef
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_32BIT_PHYSICAL_ADDRESS
+end_ifdef
+
+begin_comment
+comment|/*  * OSPMs can define this to shrink the size of the structures for 32-bit  * none PAE environment. ASL compiler may always define this to generate  * 32-bit OSPM compliant tables.  */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|UINT32
@@ -370,6 +380,42 @@ name|UINT32
 name|ACPI_PHYSICAL_ADDRESS
 typedef|;
 end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ACPI_32BIT_PHYSICAL_ADDRESS */
+end_comment
+
+begin_comment
+comment|/*  * It is reported that, after some calculations, the physical addresses can  * wrap over the 32-bit boundary on 32-bit PAE environment.  * https://bugzilla.kernel.org/show_bug.cgi?id=87971  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|UINT64
+name|ACPI_IO_ADDRESS
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|UINT64
+name|ACPI_PHYSICAL_ADDRESS
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ACPI_32BIT_PHYSICAL_ADDRESS */
+end_comment
 
 begin_define
 define|#
@@ -1530,6 +1576,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_SUB_PTR
+parameter_list|(
+name|t
+parameter_list|,
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|ACPI_CAST_PTR (t, (ACPI_CAST_PTR (UINT8, (a)) - (ACPI_SIZE)(b)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_PTR_DIFF
 parameter_list|(
 name|a
@@ -2452,7 +2512,7 @@ value|ACPI_EVENT_MAX + 1
 end_define
 
 begin_comment
-comment|/*  * Event Status - Per event  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +-------------+-+-+-+-+  * |   Bits 31:4 |3|2|1|0|  * +-------------+-+-+-+-+  *          |     | | | |  *          |     | | | +- Enabled?  *          |     | | +--- Enabled for wake?  *          |     | +----- Set?  *          |     +------- Has a handler?  *          +-------------<Reserved>  */
+comment|/*  * Event Status - Per event  * -------------  * The encoding of ACPI_EVENT_STATUS is illustrated below.  * Note that a set bit (1) indicates the property is TRUE  * (e.g. if bit 0 is set then the event is enabled).  * +-------------+-+-+-+-+-+  * |   Bits 31:5 |4|3|2|1|0|  * +-------------+-+-+-+-+-+  *          |     | | | | |  *          |     | | | | +- Enabled?  *          |     | | | +--- Enabled for wake?  *          |     | | +----- Status bit set?  *          |     | +------- Enable bit set?  *          |     +--------- Has a handler?  *          +---------------<Reserved>  */
 end_comment
 
 begin_typedef
@@ -2486,15 +2546,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_EVENT_FLAG_SET
+name|ACPI_EVENT_FLAG_STATUS_SET
 value|(ACPI_EVENT_STATUS) 0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|ACPI_EVENT_FLAG_HAS_HANDLER
+name|ACPI_EVENT_FLAG_ENABLE_SET
 value|(ACPI_EVENT_STATUS) 0x08
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_FLAG_HAS_HANDLER
+value|(ACPI_EVENT_STATUS) 0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EVENT_FLAG_SET
+value|ACPI_EVENT_FLAG_STATUS_SET
 end_define
 
 begin_comment
@@ -2522,8 +2596,29 @@ name|ACPI_GPE_CONDITIONAL_ENABLE
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_SAVE_MASK
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_ENABLE_SAVE
+value|(ACPI_GPE_ENABLE | ACPI_GPE_SAVE_MASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISABLE_SAVE
+value|(ACPI_GPE_DISABLE | ACPI_GPE_SAVE_MASK)
+end_define
+
 begin_comment
-comment|/*  * GPE info flags - Per GPE  * +-------+-+-+---+  * |  7:4  |3|2|1:0|  * +-------+-+-+---+  *     |    | |  |  *     |    | |  +-- Type of dispatch:to method, handler, notify, or none  *     |    | +----- Interrupt type: edge or level triggered  *     |    +------- Is a Wake GPE  *     +------------<Reserved>  */
+comment|/*  * GPE info flags - Per GPE  * +-------+-+-+---+  * |  7:5  |4|3|2:0|  * +-------+-+-+---+  *     |    | |  |  *     |    | |  +-- Type of dispatch:to method, handler, notify, or none  *     |    | +----- Interrupt type: edge or level triggered  *     |    +------- Is a Wake GPE  *     +------------<Reserved>  */
 end_comment
 
 begin_define
@@ -2557,15 +2652,32 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_GPE_DISPATCH_RAW_HANDLER
+value|(UINT8) 0x04
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_GPE_DISPATCH_MASK
-value|(UINT8) 0x03
+value|(UINT8) 0x07
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GPE_DISPATCH_TYPE
+parameter_list|(
+name|flags
+parameter_list|)
+value|((UINT8) ((flags)& ACPI_GPE_DISPATCH_MASK))
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_GPE_LEVEL_TRIGGERED
-value|(UINT8) 0x04
+value|(UINT8) 0x08
 end_define
 
 begin_define
@@ -2579,14 +2691,14 @@ begin_define
 define|#
 directive|define
 name|ACPI_GPE_XRUPT_TYPE_MASK
-value|(UINT8) 0x04
+value|(UINT8) 0x08
 end_define
 
 begin_define
 define|#
 directive|define
 name|ACPI_GPE_CAN_WAKE
-value|(UINT8) 0x08
+value|(UINT8) 0x10
 end_define
 
 begin_comment
@@ -4457,6 +4569,13 @@ define|#
 directive|define
 name|ACPI_OSI_WIN_8
 value|0x0C
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OSI_WIN_10
+value|0x0D
 end_define
 
 begin_comment

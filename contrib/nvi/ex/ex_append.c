@@ -102,28 +102,25 @@ block|}
 enum|;
 end_enum
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ex_aci
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|EXCMD
-operator|*
-operator|,
-expr|enum
+modifier|*
+parameter_list|,
+name|enum
 name|which
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_append -- :[line] a[ppend][!]  *	Append one or more lines of new text after the specified line,  *	or the current line if no address is specified.  *  * PUBLIC: int ex_append __P((SCR *, EXCMD *));  */
+comment|/*  * ex_append -- :[line] a[ppend][!]  *	Append one or more lines of new text after the specified line,  *	or the current line if no address is specified.  *  * PUBLIC: int ex_append(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -155,7 +152,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_change -- :[line[,line]] c[hange][!] [count]  *	Change one or more lines to the input text.  *  * PUBLIC: int ex_change __P((SCR *, EXCMD *));  */
+comment|/*  * ex_change -- :[line[,line]] c[hange][!] [count]  *	Change one or more lines to the input text.  *  * PUBLIC: int ex_change(SCR *, EXCMD *);  */
 end_comment
 
 begin_function
@@ -187,7 +184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_insert -- :[line] i[nsert][!]  *	Insert one or more lines of new text before the specified line,  *	or the current line if no address is specified.  *  * PUBLIC: int ex_insert __P((SCR *, EXCMD *));  */
+comment|/*  * ex_insert -- :[line] i[nsert][!]  *	Insert one or more lines of new text before the specified line,  *	or the current line if no address is specified.  *  * PUBLIC: int ex_insert(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

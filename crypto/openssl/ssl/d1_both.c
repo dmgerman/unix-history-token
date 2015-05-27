@@ -4,15 +4,15 @@ comment|/* ssl/d1_both.c */
 end_comment
 
 begin_comment
-comment|/*   * DTLS implementation written by Nagendra Modadugu  * (nagendra@cs.stanford.edu) for the OpenSSL project 2005.    */
+comment|/*  * DTLS implementation written by Nagendra Modadugu  * (nagendra@cs.stanford.edu) for the OpenSSL project 2005.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2005 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -90,7 +90,7 @@ name|start
 parameter_list|,
 name|end
 parameter_list|)
-value|{ \ 			if ((end) - (start)<= 8) { \ 				long ii; \ 				for (ii = (start); ii< (end); ii++) bitmask[((ii)>> 3)] |= (1<< ((ii)& 7)); \ 			} else { \ 				long ii; \ 				bitmask[((start)>> 3)] |= bitmask_start_values[((start)& 7)]; \ 				for (ii = (((start)>> 3) + 1); ii< ((((end) - 1))>> 3); ii++) bitmask[ii] = 0xff; \ 				bitmask[(((end) - 1)>> 3)] |= bitmask_end_values[((end)& 7)]; \ 			} }
+value|{ \                         if ((end) - (start)<= 8) { \                                 long ii; \                                 for (ii = (start); ii< (end); ii++) bitmask[((ii)>> 3)] |= (1<< ((ii)& 7)); \                         } else { \                                 long ii; \                                 bitmask[((start)>> 3)] |= bitmask_start_values[((start)& 7)]; \                                 for (ii = (((start)>> 3) + 1); ii< ((((end) - 1))>> 3); ii++) bitmask[ii] = 0xff; \                                 bitmask[(((end) - 1)>> 3)] |= bitmask_end_values[((end)& 7)]; \                         } }
 end_define
 
 begin_define
@@ -104,7 +104,7 @@ name|msg_len
 parameter_list|,
 name|is_complete
 parameter_list|)
-value|{ \ 			long ii; \ 			OPENSSL_assert((msg_len)> 0); \ 			is_complete = 1; \ 			if (bitmask[(((msg_len) - 1)>> 3)] != bitmask_end_values[((msg_len)& 7)]) is_complete = 0; \ 			if (is_complete) for (ii = (((msg_len) - 1)>> 3) - 1; ii>= 0 ; ii--) \ 				if (bitmask[ii] != 0xff) { is_complete = 0; break; } }
+value|{ \                         long ii; \                         OPENSSL_assert((msg_len)> 0); \                         is_complete = 1; \                         if (bitmask[(((msg_len) - 1)>> 3)] != bitmask_end_values[((msg_len)& 7)]) is_complete = 0; \                         if (is_complete) for (ii = (((msg_len) - 1)>> 3) - 1; ii>= 0 ; ii--) \                                 if (bitmask[ii] != 0xff) { is_complete = 0; break; } }
 end_define
 
 begin_if
@@ -122,7 +122,7 @@ name|bitmask
 parameter_list|,
 name|msg_len
 parameter_list|)
-value|{ \ 			long ii; \ 			printf("bitmask: "); for (ii = 0; ii< (msg_len); ii++) \ 			printf("%d ", (bitmask[ii>> 3]& (1<< (ii& 7)))>> (ii& 7)); \ 			printf("\n"); }
+value|{ \                         long ii; \                         printf("bitmask: "); for (ii = 0; ii< (msg_len); ii++) \                         printf("%d ", (bitmask[ii>> 3]& (1<< (ii& 7)))>> (ii& 7)); \                         printf("\n"); }
 end_define
 
 begin_endif
@@ -190,6 +190,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|unsigned
 name|int
 name|g_probable_mtu
@@ -197,32 +198,13 @@ index|[]
 init|=
 block|{
 literal|1500
-operator|-
-literal|28
 block|,
 literal|512
-operator|-
-literal|28
 block|,
 literal|256
-operator|-
-literal|28
 block|}
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|unsigned
-name|int
-name|dtls1_guess_mtu
-parameter_list|(
-name|unsigned
-name|int
-name|curr_mtu
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -492,7 +474,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|dtls1_hm_fragment_free
 parameter_list|(
@@ -567,38 +548,54 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* send s->init_buf in records of type 'type' (SSL3_RT_HANDSHAKE or SSL3_RT_CHANGE_CIPHER_SPEC) */
-end_comment
-
 begin_function
+specifier|static
 name|int
-name|dtls1_do_write
+name|dtls1_query_mtu
 parameter_list|(
 name|SSL
 modifier|*
 name|s
-parameter_list|,
-name|int
-name|type
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
-name|int
-name|curr_mtu
-decl_stmt|;
-name|unsigned
-name|int
-name|len
-decl_stmt|,
-name|frag_off
-decl_stmt|,
-name|mac_size
-decl_stmt|,
-name|blocksize
-decl_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|d1
+operator|->
+name|link_mtu
+condition|)
+block|{
+name|s
+operator|->
+name|d1
+operator|->
+name|mtu
+operator|=
+name|s
+operator|->
+name|d1
+operator|->
+name|link_mtu
+operator|-
+name|BIO_dgram_get_mtu_overhead
+argument_list|(
+name|SSL_get_wbio
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|d1
+operator|->
+name|link_mtu
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* AHA!  Figure out the MTU, and stick to the right size */
 if|if
 condition|(
@@ -609,8 +606,13 @@ operator|->
 name|mtu
 operator|<
 name|dtls1_min_mtu
-argument_list|()
-operator|&&
+argument_list|(
+name|s
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
 operator|!
 operator|(
 name|SSL_get_options
@@ -642,7 +644,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* I've seen the kernel return bogus numbers when it doesn't know 		 * (initial write), so just make sure we have a reasonable number */
+comment|/*              * I've seen the kernel return bogus numbers when it doesn't know              * (initial write), so just make sure we have a reasonable number              */
 if|if
 condition|(
 name|s
@@ -652,30 +654,21 @@ operator|->
 name|mtu
 operator|<
 name|dtls1_min_mtu
-argument_list|()
-condition|)
-block|{
-name|s
-operator|->
-name|d1
-operator|->
-name|mtu
-operator|=
-literal|0
-expr_stmt|;
-name|s
-operator|->
-name|d1
-operator|->
-name|mtu
-operator|=
-name|dtls1_guess_mtu
 argument_list|(
 name|s
+argument_list|)
+condition|)
+block|{
+comment|/* Set to min mtu */
+name|s
 operator|->
 name|d1
 operator|->
 name|mtu
+operator|=
+name|dtls1_min_mtu
+argument_list|(
+name|s
 argument_list|)
 expr_stmt|;
 name|BIO_ctrl
@@ -698,12 +691,69 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|#
-directive|if
+else|else
+return|return
 literal|0
-block|mtu = s->d1->mtu;  	fprintf(stderr, "using MTU = %d\n", mtu);  	mtu -= (DTLS1_HM_HEADER_LENGTH + DTLS1_RT_HEADER_LENGTH);  	curr_mtu = mtu - BIO_wpending(SSL_get_wbio(s));  	if ( curr_mtu> 0) 		mtu = curr_mtu; 	else if ( ( ret = BIO_flush(SSL_get_wbio(s)))<= 0) 		return ret;  	if ( BIO_wpending(SSL_get_wbio(s)) + s->init_num>= mtu) 		{ 		ret = BIO_flush(SSL_get_wbio(s)); 		if ( ret<= 0) 			return ret; 		mtu = s->d1->mtu - (DTLS1_HM_HEADER_LENGTH + DTLS1_RT_HEADER_LENGTH); 		}
-endif|#
-directive|endif
+return|;
+block|}
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * send s->init_buf in records of type 'type' (SSL3_RT_HANDSHAKE or  * SSL3_RT_CHANGE_CIPHER_SPEC)  */
+end_comment
+
+begin_function
+name|int
+name|dtls1_do_write
+parameter_list|(
+name|SSL
+modifier|*
+name|s
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+block|{
+name|int
+name|ret
+decl_stmt|;
+name|unsigned
+name|int
+name|curr_mtu
+decl_stmt|;
+name|int
+name|retry
+init|=
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
+name|len
+decl_stmt|,
+name|frag_off
+decl_stmt|,
+name|mac_size
+decl_stmt|,
+name|blocksize
+decl_stmt|,
+name|used_len
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|dtls1_query_mtu
+argument_list|(
+name|s
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|OPENSSL_assert
 argument_list|(
 name|s
@@ -713,10 +763,12 @@ operator|->
 name|mtu
 operator|>=
 name|dtls1_min_mtu
-argument_list|()
+argument_list|(
+name|s
+argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* should have something reasonable now */
+comment|/* should have something                                                      * reasonable now */
 if|if
 condition|(
 name|s
@@ -810,13 +862,42 @@ name|frag_off
 operator|=
 literal|0
 expr_stmt|;
+comment|/* s->init_num shouldn't ever be< 0...but just in case */
 while|while
 condition|(
 name|s
 operator|->
 name|init_num
+operator|>
+literal|0
 condition|)
 block|{
+name|used_len
+operator|=
+name|BIO_wpending
+argument_list|(
+name|SSL_get_wbio
+argument_list|(
+name|s
+argument_list|)
+argument_list|)
+operator|+
+name|DTLS1_RT_HEADER_LENGTH
+operator|+
+name|mac_size
+operator|+
+name|blocksize
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|d1
+operator|->
+name|mtu
+operator|>
+name|used_len
+condition|)
 name|curr_mtu
 operator|=
 name|s
@@ -825,19 +906,12 @@ name|d1
 operator|->
 name|mtu
 operator|-
-name|BIO_wpending
-argument_list|(
-name|SSL_get_wbio
-argument_list|(
-name|s
-argument_list|)
-argument_list|)
-operator|-
-name|DTLS1_RT_HEADER_LENGTH
-operator|-
-name|mac_size
-operator|-
-name|blocksize
+name|used_len
+expr_stmt|;
+else|else
+name|curr_mtu
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -846,7 +920,7 @@ operator|<=
 name|DTLS1_HM_HEADER_LENGTH
 condition|)
 block|{
-comment|/* grr.. we could get an error if MTU picked was wrong */
+comment|/*              * grr.. we could get an error if MTU picked was wrong              */
 name|ret
 operator|=
 name|BIO_flush
@@ -866,6 +940,27 @@ condition|)
 return|return
 name|ret
 return|;
+name|used_len
+operator|=
+name|DTLS1_RT_HEADER_LENGTH
+operator|+
+name|mac_size
+operator|+
+name|blocksize
+expr_stmt|;
+if|if
+condition|(
+name|s
+operator|->
+name|d1
+operator|->
+name|mtu
+operator|>
+name|used_len
+operator|+
+name|DTLS1_HM_HEADER_LENGTH
+condition|)
+block|{
 name|curr_mtu
 operator|=
 name|s
@@ -874,18 +969,30 @@ name|d1
 operator|->
 name|mtu
 operator|-
-name|DTLS1_RT_HEADER_LENGTH
-operator|-
-name|mac_size
-operator|-
-name|blocksize
+name|used_len
 expr_stmt|;
 block|}
+else|else
+block|{
+comment|/* Shouldn't happen */
+return|return
+operator|-
+literal|1
+return|;
+block|}
+block|}
+comment|/*          * We just checked that s->init_num> 0 so this cast should be safe          */
 if|if
 condition|(
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|s
 operator|->
 name|init_num
+operator|)
 operator|>
 name|curr_mtu
 condition|)
@@ -900,7 +1007,18 @@ name|s
 operator|->
 name|init_num
 expr_stmt|;
-comment|/* XDTLS: this function is too long.  split out the CCS part */
+comment|/* Shouldn't ever happen */
+if|if
+condition|(
+name|len
+operator|>
+name|INT_MAX
+condition|)
+name|len
+operator|=
+name|INT_MAX
+expr_stmt|;
+comment|/*          * XDTLS: this function is too long.  split out the CCS part          */
 if|if
 condition|(
 name|type
@@ -938,11 +1056,18 @@ name|init_num
 operator|+=
 name|DTLS1_HM_HEADER_LENGTH
 expr_stmt|;
+comment|/*                  * We just checked that s->init_num> 0 so this cast should                  * be safe                  */
 if|if
 condition|(
+operator|(
+operator|(
+name|unsigned
+name|int
+operator|)
 name|s
 operator|->
 name|init_num
+operator|)
 operator|>
 name|curr_mtu
 condition|)
@@ -957,6 +1082,30 @@ name|s
 operator|->
 name|init_num
 expr_stmt|;
+block|}
+comment|/* Shouldn't ever happen */
+if|if
+condition|(
+name|len
+operator|>
+name|INT_MAX
+condition|)
+name|len
+operator|=
+name|INT_MAX
+expr_stmt|;
+if|if
+condition|(
+name|len
+operator|<
+name|DTLS1_HM_HEADER_LENGTH
+condition|)
+block|{
+comment|/*                  * len is so small that we really can't do anything sensible                  * so fail                  */
+return|return
+operator|-
+literal|1
+return|;
 block|}
 name|dtls1_fix_message_header
 argument_list|(
@@ -991,13 +1140,6 @@ name|init_off
 index|]
 argument_list|)
 expr_stmt|;
-name|OPENSSL_assert
-argument_list|(
-name|len
-operator|>=
-name|DTLS1_HM_HEADER_LENGTH
-argument_list|)
-expr_stmt|;
 block|}
 name|ret
 operator|=
@@ -1029,9 +1171,11 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* might need to update MTU here, but we don't know 			 * which previous packet caused the failure -- so can't 			 * really retransmit anything.  continue as if everything 			 * is fine and wait for an alert to handle the 			 * retransmit  			 */
+comment|/*              * might need to update MTU here, but we don't know which              * previous packet caused the failure -- so can't really              * retransmit anything.  continue as if everything is fine and              * wait for an alert to handle the retransmit              */
 if|if
 condition|(
+name|retry
+operator|&&
 name|BIO_ctrl
 argument_list|(
 name|SSL_get_wbio
@@ -1048,27 +1192,46 @@ argument_list|)
 operator|>
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|SSL_get_options
+argument_list|(
 name|s
-operator|->
-name|d1
-operator|->
-name|mtu
+argument_list|)
+operator|&
+name|SSL_OP_NO_QUERY_MTU
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|dtls1_query_mtu
+argument_list|(
+name|s
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+comment|/* Have one more go */
+name|retry
 operator|=
-name|BIO_ctrl
-argument_list|(
-name|SSL_get_wbio
-argument_list|(
-name|s
-argument_list|)
-argument_list|,
-name|BIO_CTRL_DGRAM_QUERY_MTU
-argument_list|,
 literal|0
-argument_list|,
-name|NULL
-argument_list|)
 expr_stmt|;
+block|}
 else|else
+return|return
+operator|-
+literal|1
+return|;
+block|}
+else|else
+block|{
 return|return
 operator|(
 operator|-
@@ -1076,9 +1239,10 @@ literal|1
 operator|)
 return|;
 block|}
+block|}
 else|else
 block|{
-comment|/* bad if this assert fails, only part of the handshake 			 * message got sent.  but why would this happen? */
+comment|/*              * bad if this assert fails, only part of the handshake message              * got sent.  but why would this happen?              */
 name|OPENSSL_assert
 argument_list|(
 name|len
@@ -1104,7 +1268,7 @@ operator|->
 name|retransmitting
 condition|)
 block|{
-comment|/* should not be done for 'Hello Request's, but in that case 				 * we'll ignore the result anyway */
+comment|/*                  * should not be done for 'Hello Request's, but in that case                  * we'll ignore the result anyway                  */
 name|unsigned
 name|char
 modifier|*
@@ -1156,7 +1320,7 @@ operator|!=
 name|DTLS1_BAD_VER
 condition|)
 block|{
-comment|/* reconstruct message header is if it 					 * is being sent in single fragment */
+comment|/*                      * reconstruct message header is if it is being sent in                      * single fragment                      */
 operator|*
 name|p
 operator|++
@@ -1334,7 +1498,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Obtain handshake message of message type 'mt' (any if mt == -1),  * maximum acceptable body length 'max'.  * Read an entire handshake message.  Handshake messages arrive in  * fragments.  */
+comment|/*  * Obtain handshake message of message type 'mt' (any if mt == -1), maximum  * acceptable body length 'max'. Read an entire handshake message.  Handshake  * messages arrive in fragments.  */
 end_comment
 
 begin_function
@@ -1381,7 +1545,7 @@ name|unsigned
 name|long
 name|msg_len
 decl_stmt|;
-comment|/* s3->tmp is used to store messages that are unexpected, caused 	 * by the absence of an optional handshake message */
+comment|/*      * s3->tmp is used to store messages that are unexpected, caused by the      * absence of an optional handshake message      */
 if|if
 condition|(
 name|s
@@ -1526,10 +1690,12 @@ name|i
 operator|==
 name|DTLS1_HM_FRAGMENT_RETRY
 condition|)
+block|{
 comment|/* bad fragment received */
 goto|goto
 name|again
 goto|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -1541,9 +1707,11 @@ operator|!
 operator|*
 name|ok
 condition|)
+block|{
 return|return
 name|i
 return|;
+block|}
 name|p
 operator|=
 operator|(
@@ -1834,9 +2002,9 @@ name|frag_off
 operator|==
 literal|0
 condition|)
-comment|/* first fragment */
 block|{
-comment|/* msg_len is limited to 2^24, but is effectively checked 		 * against max above */
+comment|/* first fragment */
+comment|/*          * msg_len is limited to 2^24, but is effectively checked against max          * above          */
 if|if
 condition|(
 operator|!
@@ -1934,7 +2102,7 @@ operator|.
 name|msg_len
 condition|)
 block|{
-comment|/* They must be playing with us! BTW, failure to enforce 		 * upper limit would open possibility for buffer overrun. */
+comment|/*          * They must be playing with us! BTW, failure to enforce upper limit          * would open possibility for buffer overrun.          */
 name|SSLerr
 argument_list|(
 name|SSL_F_DTLS1_PREPROCESS_FRAGMENT
@@ -1970,7 +2138,7 @@ modifier|*
 name|ok
 parameter_list|)
 block|{
-comment|/* (0) check whether the desired fragment is available 	 * if so: 	 * (1) copy over the fragment to s->init_buf->data[] 	 * (2) update s->init_num 	 */
+comment|/*-      * (0) check whether the desired fragment is available      * if so:      * (1) copy over the fragment to s->init_buf->data[]      * (2) update s->init_num      */
 name|pitem
 modifier|*
 name|item
@@ -2083,8 +2251,8 @@ name|al
 operator|==
 literal|0
 condition|)
-comment|/* no alert */
 block|{
+comment|/* no alert */
 name|unsigned
 name|char
 modifier|*
@@ -2186,7 +2354,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* dtls1_max_handshake_message_len returns the maximum number of bytes  * permitted in a DTLS handshake message for |s|. The minimum is 16KB, but may  * be greater if the maximum certificate list size requires it. */
+comment|/*  * dtls1_max_handshake_message_len returns the maximum number of bytes  * permitted in a DTLS handshake message for |s|. The minimum is 16KB, but  * may be greater if the maximum certificate list size requires it.  */
 end_comment
 
 begin_function
@@ -2482,7 +2650,7 @@ name|err
 goto|;
 block|}
 block|}
-comment|/* If message is already reassembled, this must be a 	 * retransmit and can be dropped. In this case item != NULL and so frag 	 * does not need to be freed. 	 */
+comment|/*      * If message is already reassembled, this must be a retransmit and can      * be dropped. In this case item != NULL and so frag does not need to be      * freed.      */
 if|if
 condition|(
 name|frag
@@ -2708,7 +2876,7 @@ argument_list|,
 name|item
 argument_list|)
 expr_stmt|;
-comment|/* pqueue_insert fails iff a duplicate item is inserted. 		 * However, |item| cannot be a duplicate. If it were, 		 * |pqueue_find|, above, would have returned it and control 		 * would never have reached this branch. */
+comment|/*          * pqueue_insert fails iff a duplicate item is inserted. However,          * |item| cannot be a duplicate. If it were, |pqueue_find|, above,          * would have returned it and control would never have reached this          * branch.          */
 name|OPENSSL_assert
 argument_list|(
 name|item
@@ -2874,7 +3042,7 @@ argument_list|,
 name|seq64be
 argument_list|)
 expr_stmt|;
-comment|/* If we already have an entry and this one is a fragment, 	 * don't discard it and rather try to reassemble it. 	 */
+comment|/*      * If we already have an entry and this one is a fragment, don't discard      * it and rather try to reassemble it.      */
 if|if
 condition|(
 name|item
@@ -2891,7 +3059,7 @@ name|item
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* Discard the message if sequence number was already there, is 	 * too far in the future, already in the queue or if we received 	 * a FINISHED before the SERVER_HELLO, which then must be a stale 	 * retransmit. 	 */
+comment|/*      * Discard the message if sequence number was already there, is too far      * in the future, already in the queue or if we received a FINISHED      * before the SERVER_HELLO, which then must be a stale retransmit.      */
 if|if
 condition|(
 name|msg_hdr
@@ -3068,7 +3236,7 @@ condition|(
 name|frag_len
 condition|)
 block|{
-comment|/* read the body of the fragment (header has already been read */
+comment|/*              * read the body of the fragment (header has already been read              */
 name|i
 operator|=
 name|s
@@ -3146,7 +3314,7 @@ argument_list|,
 name|item
 argument_list|)
 expr_stmt|;
-comment|/* pqueue_insert fails iff a duplicate item is inserted. 		 * However, |item| cannot be a duplicate. If it were, 		 * |pqueue_find|, above, would have returned it. Then, either 		 * |frag_len| != |msg_hdr->msg_len| in which case |item| is set 		 * to NULL and it will have been processed with 		 * |dtls1_reassemble_fragment|, above, or the record will have 		 * been discarded. */
+comment|/*          * pqueue_insert fails iff a duplicate item is inserted. However,          * |item| cannot be a duplicate. If it were, |pqueue_find|, above,          * would have returned it. Then, either |frag_len| !=          * |msg_hdr->msg_len| in which case |item| is set to NULL and it will          * have been processed with |dtls1_reassemble_fragment|, above, or          * the record will have been discarded.          */
 name|OPENSSL_assert
 argument_list|(
 name|item
@@ -3296,8 +3464,8 @@ name|i
 operator|<=
 literal|0
 condition|)
-comment|/* nbio, or an error */
 block|{
+comment|/* nbio, or an error */
 name|s
 operator|->
 name|rwstate
@@ -3345,7 +3513,7 @@ operator|&
 name|msg_hdr
 argument_list|)
 expr_stmt|;
-comment|/*  	 * if this is a future (or stale) message it gets buffered 	 * (or dropped)--no further processing at this time 	 * While listening, we accept seq 1 (ClientHello with cookie) 	 * although we're still expecting seq 0 (ClientHello) 	 */
+comment|/*      * if this is a future (or stale) message it gets buffered      * (or dropped)--no further processing at this time      * While listening, we accept seq 1 (ClientHello with cookie)      * although we're still expecting seq 0 (ClientHello)      */
 if|if
 condition|(
 name|msg_hdr
@@ -3446,7 +3614,7 @@ operator|==
 name|SSL3_MT_HELLO_REQUEST
 condition|)
 block|{
-comment|/* The server may always send 'Hello Request' messages -- 		 * we are doing a handshake anyway now, so ignore them 		 * if their format is correct. Does not count for 		 * 'Finished' MAC. */
+comment|/*          * The server may always send 'Hello Request' messages -- we are          * doing a handshake anyway now, so ignore them if their format is          * correct. Does not count for 'Finished' MAC.          */
 if|if
 condition|(
 name|wire
@@ -3511,8 +3679,8 @@ name|redo
 goto|;
 block|}
 else|else
-comment|/* Incorrectly formated Hello request */
 block|{
+comment|/* Incorrectly formated Hello request */
 name|al
 operator|=
 name|SSL_AD_UNEXPECTED_MESSAGE
@@ -3603,7 +3771,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* XDTLS:  fix this--message fragments cannot span multiple packets */
+comment|/*          * XDTLS: fix this--message fragments cannot span multiple packets          */
 if|if
 condition|(
 name|i
@@ -3632,7 +3800,7 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
-comment|/* XDTLS:  an incorrectly formatted fragment should cause the  	 * handshake to fail */
+comment|/*      * XDTLS: an incorrectly formatted fragment should cause the handshake      * to fail      */
 if|if
 condition|(
 name|i
@@ -3663,7 +3831,7 @@ name|ok
 operator|=
 literal|1
 expr_stmt|;
-comment|/* Note that s->init_num is *not* used as current offset in 	 * s->init_buf->data, but as a counter summing up fragments' 	 * lengths: as soon as they sum up to handshake packet 	 * length, we assume we have got all the fragments. */
+comment|/*      * Note that s->init_num is *not* used as current offset in      * s->init_buf->data, but as a counter summing up fragments' lengths: as      * soon as they sum up to handshake packet length, we assume we have got      * all the fragments.      */
 name|s
 operator|->
 name|init_num
@@ -3832,7 +4000,7 @@ name|l
 operator|=
 name|i
 expr_stmt|;
-comment|/* Copy the finished so we can use it for 	 * renegotiation checks 	 */
+comment|/*          * Copy the finished so we can use it for renegotiation checks          */
 if|if
 condition|(
 name|s
@@ -3917,7 +4085,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|OPENSSL_SYS_WIN16
-comment|/* MSVC 1.5 does not clear the top bytes of the word unless 		 * I do this. 		 */
+comment|/*          * MSVC 1.5 does not clear the top bytes of the word unless I do          * this.          */
 name|l
 operator|&=
 literal|0xffff
@@ -3988,7 +4156,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* for these 2 messages, we need to  * ssl->enc_read_ctx			re-init  * ssl->s3->read_sequence		zero  * ssl->s3->read_mac_secret		re-init  * ssl->session->read_sym_enc		assign  * ssl->session->read_compression	assign  * ssl->session->read_hash		assign  */
+comment|/*-  * for these 2 messages, we need to  * ssl->enc_read_ctx                    re-init  * ssl->s3->read_sequence               zero  * ssl->s3->read_mac_secret             re-init  * ssl->session->read_sym_enc           assign  * ssl->session->read_compression       assign  * ssl->session->read_hash              assign  */
 end_comment
 
 begin_function
@@ -4618,7 +4786,7 @@ name|s
 argument_list|)
 condition|)
 block|{
-comment|/* not a timeout, none of our business,  		   let higher layers handle this.  in fact it's probably an error */
+comment|/*          * not a timeout, none of our business, let higher layers handle          * this.  in fact it's probably an error          */
 return|return
 name|code
 return|;
@@ -4626,6 +4794,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_HEARTBEATS
+comment|/* done, no need to send a retransmit */
 if|if
 condition|(
 operator|!
@@ -4639,9 +4808,9 @@ name|s
 operator|->
 name|tlsext_hb_pending
 condition|)
-comment|/* done, no need to send a retransmit */
 else|#
 directive|else
+comment|/* done, no need to send a retransmit */
 if|if
 condition|(
 operator|!
@@ -4650,7 +4819,6 @@ argument_list|(
 name|s
 argument_list|)
 condition|)
-comment|/* done, no need to send a retransmit */
 endif|#
 directive|endif
 block|{
@@ -4671,17 +4839,17 @@ block|}
 if|#
 directive|if
 literal|0
-comment|/* for now, each alert contains only one record number */
-block|item = pqueue_peek(state->rcvd_records); 	if ( item ) 		{
+comment|/* for now, each alert contains only one                                  * record number */
+block|item = pqueue_peek(state->rcvd_records);     if (item) {
 comment|/* send an alert immediately for all the missing records */
-block|} 	else
+block|} else
 endif|#
 directive|endif
 if|#
 directive|if
 literal|0
-comment|/* no more alert sending, just retransmit the last set of messages */
-block|if ( state->timeout.read_timeouts>= DTLS1_TMO_READ_COUNT) 		ssl3_send_alert(s,SSL3_AL_WARNING, 			DTLS1_AD_MISSING_HANDSHAKE_MESSAGE);
+comment|/* no more alert sending, just retransmit the                                  * last set of messages */
+block|if (state->timeout.read_timeouts>= DTLS1_TMO_READ_COUNT)         ssl3_send_alert(s, SSL3_AL_WARNING,                         DTLS1_AD_MISSING_HANDSHAKE_MESSAGE);
 endif|#
 directive|endif
 return|return
@@ -4705,7 +4873,7 @@ name|int
 name|is_ccs
 parameter_list|)
 block|{
-comment|/* The index of the retransmission queue actually is the message sequence number, 	 * since the queue only contains messages of a single handshake. However, the 	 * ChangeCipherSpec has no message sequence number and so using only the sequence 	 * will result in the CCS and Finished having the same index. To prevent this, 	 * the sequence number is multiplied by 2. In case of a CCS 1 is subtracted. 	 * This does not only differ CSS and Finished, it also maintains the order of the 	 * index (important for priority queues) and fits in the unsigned short variable. 	 */
+comment|/*      * The index of the retransmission queue actually is the message sequence      * number, since the queue only contains messages of a single handshake.      * However, the ChangeCipherSpec has no message sequence number and so      * using only the sequence will result in the CCS and Finished having the      * same index. To prevent this, the sequence number is multiplied by 2.      * In case of a CCS 1 is subtracted. This does not only differ CSS and      * Finished, it also maintains the order of the index (important for      * priority queues) and fits in the unsigned short variable.      */
 return|return
 name|seq
 operator|*
@@ -4872,7 +5040,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* this function is called immediately after a message has  	 * been serialized */
+comment|/*      * this function is called immediately after a message has been      * serialized      */
 name|OPENSSL_assert
 argument_list|(
 name|s
@@ -5053,7 +5221,7 @@ name|is_ccs
 operator|=
 name|is_ccs
 expr_stmt|;
-comment|/* save current state*/
+comment|/* save current state */
 name|frag
 operator|->
 name|msg_header
@@ -5210,7 +5378,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|fprintf( stderr, "buffered messge: \ttype = %xx\n", msg_buf->type); 	fprintf( stderr, "\t\t\t\t\tlen = %d\n", msg_buf->len); 	fprintf( stderr, "\t\t\t\t\tseq_num = %d\n", msg_buf->seq_num);
+block|fprintf(stderr, "buffered messge: \ttype = %xx\n", msg_buf->type);     fprintf(stderr, "\t\t\t\t\tlen = %d\n", msg_buf->len);     fprintf(stderr, "\t\t\t\t\tseq_num = %d\n", msg_buf->seq_num);
 endif|#
 directive|endif
 name|pqueue_insert
@@ -5285,7 +5453,7 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-comment|/* 	  OPENSSL_assert(s->init_num == 0); 	  OPENSSL_assert(s->init_off == 0); 	 */
+comment|/*-       OPENSSL_assert(s->init_num == 0);       OPENSSL_assert(s->init_off == 0);      */
 comment|/* XDTLS:  the requested message ought to be found, otherwise error */
 name|memset
 argument_list|(
@@ -6158,7 +6326,7 @@ end_function
 begin_function
 name|unsigned
 name|int
-name|dtls1_min_mtu
+name|dtls1_link_min_mtu
 parameter_list|(
 name|void
 parameter_list|)
@@ -6190,73 +6358,26 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|unsigned
 name|int
-name|dtls1_guess_mtu
+name|dtls1_min_mtu
 parameter_list|(
-name|unsigned
-name|int
-name|curr_mtu
+name|SSL
+modifier|*
+name|s
 parameter_list|)
 block|{
-name|unsigned
-name|int
-name|i
-decl_stmt|;
-if|if
-condition|(
-name|curr_mtu
-operator|==
-literal|0
-condition|)
 return|return
-name|g_probable_mtu
-index|[
-literal|0
-index|]
-return|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-sizeof|sizeof
+name|dtls1_link_min_mtu
+argument_list|()
+operator|-
+name|BIO_dgram_get_mtu_overhead
 argument_list|(
-name|g_probable_mtu
-argument_list|)
-operator|/
-sizeof|sizeof
+name|SSL_get_wbio
 argument_list|(
-name|g_probable_mtu
-index|[
-literal|0
-index|]
+name|s
 argument_list|)
-condition|;
-name|i
-operator|++
-control|)
-if|if
-condition|(
-name|curr_mtu
-operator|>
-name|g_probable_mtu
-index|[
-name|i
-index|]
-condition|)
-return|return
-name|g_probable_mtu
-index|[
-name|i
-index|]
-return|;
-return|return
-name|curr_mtu
+argument_list|)
 return|;
 block|}
 end_function
@@ -6701,7 +6822,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* Allocate memory for the response, size is 1 byte 		 * message type, plus 2 bytes payload length, plus 		 * payload, plus padding 		 */
+comment|/*          * Allocate memory for the response, size is 1 byte message type,          * plus 2 bytes payload length, plus payload, plus padding          */
 name|buffer
 operator|=
 name|OPENSSL_malloc
@@ -6821,7 +6942,7 @@ name|unsigned
 name|int
 name|seq
 decl_stmt|;
-comment|/* We only send sequence numbers (2 bytes unsigned int), 		 * and 16 random bytes, so we just try to read the 		 * sequence number */
+comment|/*          * We only send sequence numbers (2 bytes unsigned int), and 16          * random bytes, so we just try to read the sequence number          */
 name|n2s
 argument_list|(
 name|pl
@@ -6976,7 +7097,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* Check if padding is too long, payload and padding 	 * must not exceed 2^14 - 3 = 16381 bytes in total. 	 */
+comment|/*      * Check if padding is too long, payload and padding must not exceed 2^14      * - 3 = 16381 bytes in total.      */
 name|OPENSSL_assert
 argument_list|(
 name|payload
@@ -6986,7 +7107,7 @@ operator|<=
 literal|16381
 argument_list|)
 expr_stmt|;
-comment|/* Create HeartBeat message, we just use a sequence number 	 * as payload to distuingish different messages and add 	 * some random stuff. 	 *  - Message Type, 1 byte 	 *  - Payload Length, 2 bytes (unsigned int) 	 *  - Payload, the sequence number (2 bytes uint) 	 *  - Payload, random bytes (16 bytes uint) 	 *  - Padding 	 */
+comment|/*-      * Create HeartBeat message, we just use a sequence number      * as payload to distuingish different messages and add      * some random stuff.      *  - Message Type, 1 byte      *  - Payload Length, 2 bytes (unsigned int)      *  - Payload, the sequence number (2 bytes uint)      *  - Payload, random bytes (16 bytes uint)      *  - Padding      */
 name|buf
 operator|=
 name|OPENSSL_malloc

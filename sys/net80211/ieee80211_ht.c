@@ -5258,6 +5258,12 @@ name|txa_ni
 operator|=
 name|ni
 expr_stmt|;
+name|tap
+operator|->
+name|txa_lastsample
+operator|=
+name|ticks
+expr_stmt|;
 comment|/* NB: further initialization deferred */
 block|}
 name|ni
@@ -6021,6 +6027,12 @@ operator|->
 name|txa_tid
 operator|=
 name|tid
+expr_stmt|;
+name|tap
+operator|->
+name|txa_lastsample
+operator|=
+name|ticks
 expr_stmt|;
 block|}
 comment|/* NB: AMPDU tx/rx governed by IEEE80211_FHT_AMPDU_{TX,RX} */
@@ -8026,7 +8038,7 @@ name|tap
 operator|->
 name|txa_timer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|tap
@@ -8034,6 +8046,12 @@ operator|->
 name|txa_flags
 operator||=
 name|IEEE80211_AGGR_SETUP
+expr_stmt|;
+name|tap
+operator|->
+name|txa_lastsample
+operator|=
+name|ticks
 expr_stmt|;
 block|}
 end_function
@@ -8130,11 +8148,12 @@ argument_list|(
 name|tap
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Reset packet estimate. 	 */
 name|tap
 operator|->
 name|txa_lastsample
 operator|=
-literal|0
+name|ticks
 expr_stmt|;
 name|tap
 operator|->
@@ -12514,7 +12533,7 @@ operator|&=
 operator|~
 name|IEEE80211_HTCAP_CHWIDTH40
 expr_stmt|;
-comment|/* use advertised setting (XXX locally constraint) */
+comment|/* Start by using the advertised settings */
 name|rxmax
 operator|=
 name|MS
@@ -12536,6 +12555,36 @@ name|ni_htparam
 argument_list|,
 name|IEEE80211_HTCAP_MPDUDENSITY
 argument_list|)
+expr_stmt|;
+comment|/* Cap at VAP rxmax */
+if|if
+condition|(
+name|rxmax
+operator|>
+name|vap
+operator|->
+name|iv_ampdu_rxmax
+condition|)
+name|rxmax
+operator|=
+name|vap
+operator|->
+name|iv_ampdu_rxmax
+expr_stmt|;
+comment|/* 		 * If the VAP ampdu density value greater, use that. 		 * 		 * (Larger density value == larger minimum gap between A-MPDU 		 * subframes.) 		 */
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_ampdu_density
+operator|>
+name|density
+condition|)
+name|density
+operator|=
+name|vap
+operator|->
+name|iv_ampdu_density
 expr_stmt|;
 comment|/* 		 * NB: Hardware might support HT40 on some but not all 		 * channels. We can't determine this earlier because only 		 * after association the channel is upgraded to HT based 		 * on the negotiated capabilities. 		 */
 if|if
@@ -12600,6 +12649,7 @@ operator|&=
 operator|~
 name|IEEE80211_HTCAP_CHWIDTH40
 expr_stmt|;
+comment|/* XXX TODO should it start by using advertised settings? */
 name|rxmax
 operator|=
 name|vap

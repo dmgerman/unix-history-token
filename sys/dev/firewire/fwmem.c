@@ -1693,8 +1693,6 @@ name|err
 init|=
 literal|0
 decl_stmt|,
-name|s
-decl_stmt|,
 name|iolen
 decl_stmt|;
 name|dev
@@ -1704,11 +1702,6 @@ operator|->
 name|bio_dev
 expr_stmt|;
 comment|/* XXX check request length */
-name|s
-operator|=
-name|splfw
-argument_list|()
-expr_stmt|;
 name|fms
 operator|=
 name|dev
@@ -1993,11 +1986,6 @@ name|iolen
 expr_stmt|;
 name|error
 label|:
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|err

@@ -504,7 +504,7 @@ argument_list|,
 name|MSCHAPV2_AUTH_RESPONSE_LEN
 argument_list|)
 operator|||
-name|os_memcmp
+name|os_memcmp_const
 argument_list|(
 name|auth_response
 argument_list|,

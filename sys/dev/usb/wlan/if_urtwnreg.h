@@ -1047,13 +1047,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|R92C_USTIME_TSF
-value|0x551
-end_define
-
-begin_define
-define|#
-directive|define
 name|R92C_MBID_NUM
 value|0x552
 end_define
@@ -1091,6 +1084,13 @@ define|#
 directive|define
 name|R92C_ATIMWND
 value|0x55a
+end_define
+
+begin_define
+define|#
+directive|define
+name|R92C_USTIME_TSF
+value|0x55c
 end_define
 
 begin_define

@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/link_elf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resource.h>
 end_include
 
@@ -1580,8 +1586,8 @@ name|int
 name|fd
 decl_stmt|,
 name|first
-init|=
-literal|0
+decl_stmt|,
+name|dlopened
 decl_stmt|;
 comment|/* Check if this function has already been called: */
 if|if
@@ -1635,6 +1641,9 @@ argument_list|(
 name|jmp_table
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|__thr_interpose_libc
+argument_list|()
 expr_stmt|;
 comment|/* 	 * Check for the special case of this process running as 	 * or in place of init as pid = 1: 	 */
 if|if
@@ -1777,6 +1786,13 @@ name|curthread
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+block|{
+name|first
+operator|=
+literal|0
+expr_stmt|;
+block|}
 comment|/* 	 * Add the thread to the thread list queue. 	 */
 name|THR_LIST_ADD
 argument_list|(
@@ -1804,8 +1820,20 @@ name|_thr_initial
 operator|=
 name|curthread
 expr_stmt|;
+name|dlopened
+operator|=
+name|_rtld_is_dlopened
+argument_list|(
+operator|&
+name|_thread_autoinit_dummy_decl
+argument_list|)
+operator|!=
+literal|0
+expr_stmt|;
 name|_thr_signal_init
-argument_list|()
+argument_list|(
+name|dlopened
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

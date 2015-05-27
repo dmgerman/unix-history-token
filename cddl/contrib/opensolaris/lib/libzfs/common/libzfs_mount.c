@@ -363,7 +363,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 			 * the protocol field is the third field 			 * skip over second field 			 */
 name|ptr
 operator|=
@@ -486,7 +486,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -1042,7 +1042,7 @@ block|}
 block|}
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* FreeBSD: overlay mounts are not checked. */
 comment|/* 	 * Determine if the mountpoint is empty.  If so, refuse to perform the 	 * mount.  We don't perform this check if MS_OVERLAY is specified, which 	 * would defeat the point.  We also avoid this check if 'remount' is 	 * specified. 	 */
 if|if
@@ -1926,7 +1926,7 @@ end_comment
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function_decl
@@ -2139,7 +2139,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|void
 modifier|*
 name|libshare
@@ -2588,7 +2588,7 @@ name|SA_OK
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|_sa_init
@@ -2727,7 +2727,7 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|_sa_fini
@@ -2771,7 +2771,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|_sa_parse_legacy_options
@@ -2817,7 +2817,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_comment
@@ -2949,7 +2949,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_comment
@@ -3163,7 +3163,7 @@ condition|)
 continue|continue;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|share
 operator|=
 name|zfs_sa_find_share
@@ -3545,7 +3545,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|sa_share_t
 name|share
 decl_stmt|;

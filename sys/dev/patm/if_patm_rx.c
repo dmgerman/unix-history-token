@@ -2422,7 +2422,7 @@ name|len
 operator|=
 literal|53
 expr_stmt|;
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -2505,7 +2505,7 @@ name|len
 operator|=
 literal|52
 expr_stmt|;
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -2581,7 +2581,7 @@ name|len
 operator|=
 literal|64
 expr_stmt|;
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,

@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/ConstantRange.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Function.h"
 end_include
 
@@ -120,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/ValueHandle.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -132,19 +144,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ConstantRange.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/ValueHandle.h"
 end_include
 
 begin_include
@@ -159,6 +159,9 @@ name|llvm
 block|{
 name|class
 name|APInt
+decl_stmt|;
+name|class
+name|AssumptionCache
 decl_stmt|;
 name|class
 name|Constant
@@ -406,13 +409,28 @@ argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|NDEBUG
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|LLVM_ENABLE_DUMP
+argument_list|)
 comment|/// dump - This method is used for debugging.
 comment|///
 name|void
 name|dump
 argument_list|()
 specifier|const
-block|;   }
+block|;
+endif|#
+directive|endif
+block|}
 decl_stmt|;
 comment|// Specialize FoldingSetTrait for SCEV to avoid needing to compute
 comment|// temporary FoldingSetNodeID values.
@@ -673,19 +691,17 @@ name|ScalarEvolution
 operator|*
 name|SE
 block|;
-name|virtual
 name|void
 name|deleted
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|allUsesReplacedWith
 argument_list|(
-name|Value
-operator|*
-name|New
+argument|Value *New
 argument_list|)
+name|override
 block|;
 name|public
 operator|:
@@ -699,7 +715,7 @@ name|ScalarEvolution
 operator|*
 name|SE
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;     }
 block|;
@@ -721,17 +737,23 @@ name|Function
 operator|*
 name|F
 block|;
+comment|/// The tracker for @llvm.assume intrinsics in this function.
+name|AssumptionCache
+operator|*
+name|AC
+block|;
 comment|/// LI - The loop information for the function we are currently analyzing.
 comment|///
 name|LoopInfo
 operator|*
 name|LI
 block|;
-comment|/// TD - The target data information for the target we are targeting.
+comment|/// The DataLayout information for the target we are targeting.
 comment|///
+specifier|const
 name|DataLayout
 operator|*
-name|TD
+name|DL
 block|;
 comment|/// TLI - The target library information for the target we are targeting.
 comment|///
@@ -782,10 +804,10 @@ operator|*
 operator|>
 name|PendingLoopPredicates
 block|;
-comment|/// ExitLimit - Information about the number of loop iterations for
-comment|/// which a loop exit's branch condition evaluates to the not-taken path.
-comment|/// This is a temporary pair of exact and max expressions that are
-comment|/// eventually summarized in ExitNotTakenInfo and BackedgeTakenInfo.
+comment|/// ExitLimit - Information about the number of loop iterations for which a
+comment|/// loop exit's branch condition evaluates to the not-taken path.  This is a
+comment|/// temporary pair of exact and max expressions that are eventually
+comment|/// summarized in ExitNotTakenInfo and BackedgeTakenInfo.
 block|struct
 name|ExitLimit
 block|{
@@ -900,12 +922,12 @@ argument_list|()
 operator|:
 name|ExitingBlock
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|ExactNotTaken
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// isCompleteList - Return true if all loop exits are computable.
@@ -988,7 +1010,7 @@ argument_list|()
 operator|:
 name|Max
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 comment|/// Initialize BackedgeTakenInfo from a list of exact exit counts.
@@ -1515,6 +1537,21 @@ argument_list|,
 argument|BasicBlock *TBB
 argument_list|,
 argument|BasicBlock *FBB
+argument_list|,
+argument|bool IsSubExpr
+argument_list|)
+block|;
+comment|/// ComputeExitLimitFromSingleExitSwitch - Compute the number of times the
+comment|/// backedge of the specified loop will execute if its exit condition were a
+comment|/// switch with a single exiting case to ExitingBB.
+name|ExitLimit
+name|ComputeExitLimitFromSingleExitSwitch
+argument_list|(
+argument|const Loop *L
+argument_list|,
+argument|SwitchInst *Switch
+argument_list|,
+argument|BasicBlock *ExitingBB
 argument_list|,
 argument|bool IsSubExpr
 argument_list|)
@@ -2137,6 +2174,22 @@ block|;
 specifier|const
 name|SCEV
 operator|*
+name|getUDivExactExpr
+argument_list|(
+specifier|const
+name|SCEV
+operator|*
+name|LHS
+argument_list|,
+specifier|const
+name|SCEV
+operator|*
+name|RHS
+argument_list|)
+block|;
+specifier|const
+name|SCEV
+operator|*
 name|getAddRecExpr
 argument_list|(
 argument|const SCEV *Start
@@ -2620,6 +2673,19 @@ argument_list|,
 argument|const SCEV *RHS
 argument_list|)
 block|;
+comment|/// \brief Returns the maximum trip count of the loop if it is a single-exit
+comment|/// loop and we can compute a small maximum for that loop.
+comment|///
+comment|/// Implemented in terms of the \c getSmallConstantTripCount overload with
+comment|/// the single exiting block passed to it. See that routine for details.
+name|unsigned
+name|getSmallConstantTripCount
+argument_list|(
+name|Loop
+operator|*
+name|L
+argument_list|)
+block|;
 comment|/// getSmallConstantTripCount - Returns the maximum trip count of this loop
 comment|/// as a normal unsigned value. Returns 0 if the trip count is unknown or
 comment|/// not constant. This "trip count" assumes that control exits via
@@ -2637,6 +2703,20 @@ argument_list|,
 name|BasicBlock
 operator|*
 name|ExitingBlock
+argument_list|)
+block|;
+comment|/// \brief Returns the largest constant divisor of the trip count of the
+comment|/// loop if it is a single-exit loop and we can compute a small maximum for
+comment|/// that loop.
+comment|///
+comment|/// Implemented in terms of the \c getSmallConstantTripMultiple overload with
+comment|/// the single exiting block passed to it. See that routine for details.
+name|unsigned
+name|getSmallConstantTripMultiple
+argument_list|(
+name|Loop
+operator|*
+name|L
 argument_list|)
 block|;
 comment|/// getSmallConstantTripMultiple - Returns the largest constant divisor of
@@ -2723,7 +2803,8 @@ argument_list|)
 block|;
 comment|/// forgetLoop - This method should be called by the client when it has
 comment|/// changed a loop in a way that may effect ScalarEvolution's ability to
-comment|/// compute a trip count, or if the loop is deleted.
+comment|/// compute a trip count, or if the loop is deleted.  This call is
+comment|/// potentially expensive for large loop bodies.
 name|void
 name|forgetLoop
 argument_list|(
@@ -2744,6 +2825,22 @@ operator|*
 name|V
 argument_list|)
 block|;
+comment|/// \brief Called when the client has changed the disposition of values in
+comment|/// this loop.
+comment|///
+comment|/// We don't have a way to invalidate per-loop dispositions. Clear and
+comment|/// recompute is simpler.
+name|void
+name|forgetLoopDispositions
+argument_list|(
+argument|const Loop *L
+argument_list|)
+block|{
+name|LoopDispositions
+operator|.
+name|clear
+argument_list|()
+block|; }
 comment|/// GetMinTrailingZeros - Determine the minimum number of zero bits that S
 comment|/// is guaranteed to end in (at every loop iteration).  It is, at the same
 comment|/// time, the minimum number of times S is divisible by 2.  For example,
@@ -2978,44 +3075,65 @@ argument|const SCEV *Op
 argument_list|)
 specifier|const
 block|;
-name|virtual
+comment|/// Return the size of an element read or written by Inst.
+specifier|const
+name|SCEV
+operator|*
+name|getElementSize
+argument_list|(
+name|Instruction
+operator|*
+name|Inst
+argument_list|)
+block|;
+comment|/// Compute the array dimensions Sizes from the set of Terms extracted from
+comment|/// the memory access function of this SCEVAddRecExpr.
+name|void
+name|findArrayDimensions
+argument_list|(
+argument|SmallVectorImpl<const SCEV *>&Terms
+argument_list|,
+argument|SmallVectorImpl<const SCEV *>&Sizes
+argument_list|,
+argument|const SCEV *ElementSize
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|F
+argument|Function&F
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|releaseMemory
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|print
 argument_list|(
 argument|raw_ostream&OS
 argument_list|,
-argument|const Module* =
-literal|0
+argument|const Module* = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|verifyAnalysis
 argument_list|()
 specifier|const
+name|override
 block|;
 name|private
 operator|:

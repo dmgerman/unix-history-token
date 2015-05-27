@@ -355,6 +355,22 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Count entries in slabhash.  * @param table: slabbed hash table;  * @return the number of items  */
+end_comment
+
+begin_function_decl
+name|size_t
+name|count_slabhash_entries
+parameter_list|(
+name|struct
+name|slabhash
+modifier|*
+name|table
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* --- test representation --- */
 end_comment
 

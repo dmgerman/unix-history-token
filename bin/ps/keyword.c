@@ -113,6 +113,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libxo/xo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ps.h"
 end_include
 
@@ -221,6 +227,8 @@ literal|"%CPU"
 block|,
 name|NULL
 block|,
+literal|"percent-cpu"
+block|,
 literal|0
 block|,
 name|pcpu
@@ -241,6 +249,8 @@ literal|"%MEM"
 block|,
 name|NULL
 block|,
+literal|"percent-memory"
+block|,
 literal|0
 block|,
 name|pmem
@@ -260,6 +270,8 @@ block|,
 literal|"ACFLG"
 block|,
 name|NULL
+block|,
+literal|"accounting-flag"
 block|,
 literal|0
 block|,
@@ -284,6 +296,8 @@ literal|""
 block|,
 literal|"acflag"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -303,6 +317,8 @@ block|,
 literal|"COMMAND"
 block|,
 name|NULL
+block|,
+literal|"arguments"
 block|,
 name|COMM
 operator||
@@ -328,6 +344,8 @@ literal|""
 block|,
 literal|"sigmask"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -347,6 +365,8 @@ block|,
 literal|""
 block|,
 literal|"sigcatch"
+block|,
+name|NULL
 block|,
 literal|0
 block|,
@@ -368,6 +388,8 @@ literal|"CLASS"
 block|,
 name|NULL
 block|,
+literal|"login-class"
+block|,
 name|LJUST
 block|,
 name|loginclass
@@ -388,6 +410,8 @@ literal|"COMMAND"
 block|,
 name|NULL
 block|,
+literal|"command"
+block|,
 name|LJUST
 block|,
 name|ucomm
@@ -407,6 +431,8 @@ block|,
 literal|"COMMAND"
 block|,
 name|NULL
+block|,
+literal|"command"
 block|,
 name|COMM
 operator||
@@ -432,6 +458,8 @@ literal|"COW"
 block|,
 name|NULL
 block|,
+literal|"copy-on-write-faults"
+block|,
 literal|0
 block|,
 name|kvar
@@ -454,6 +482,8 @@ block|,
 literal|"CPU"
 block|,
 name|NULL
+block|,
+literal|"cpu-usage"
 block|,
 literal|0
 block|,
@@ -478,6 +508,8 @@ literal|""
 block|,
 literal|"time"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -497,6 +529,8 @@ block|,
 literal|"DSIZ"
 block|,
 name|NULL
+block|,
+literal|"data-size"
 block|,
 literal|0
 block|,
@@ -521,6 +555,8 @@ literal|""
 block|,
 literal|"gid"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -540,6 +576,8 @@ block|,
 literal|""
 block|,
 literal|"group"
+block|,
+name|NULL
 block|,
 literal|0
 block|,
@@ -561,6 +599,8 @@ literal|"EMUL"
 block|,
 name|NULL
 block|,
+literal|"emulation-envirnment"
+block|,
 name|LJUST
 block|,
 name|emulname
@@ -580,6 +620,8 @@ block|,
 literal|"ELAPSED"
 block|,
 name|NULL
+block|,
+literal|"elapsed-time"
 block|,
 name|USER
 block|,
@@ -601,6 +643,8 @@ literal|"ELAPSED"
 block|,
 name|NULL
 block|,
+literal|"elapsed-times"
+block|,
 name|USER
 block|,
 name|elapseds
@@ -621,6 +665,8 @@ literal|""
 block|,
 literal|"uid"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -640,6 +686,8 @@ block|,
 literal|"F"
 block|,
 name|NULL
+block|,
+literal|"flags"
 block|,
 literal|0
 block|,
@@ -664,6 +712,8 @@ literal|"F2"
 block|,
 name|NULL
 block|,
+literal|"flags2"
+block|,
 literal|0
 block|,
 name|kvar
@@ -686,6 +736,8 @@ block|,
 literal|"FIB"
 block|,
 name|NULL
+block|,
+literal|"fib"
 block|,
 literal|0
 block|,
@@ -710,6 +762,8 @@ literal|""
 block|,
 literal|"f"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -730,6 +784,8 @@ literal|""
 block|,
 literal|"f2"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -749,6 +805,8 @@ block|,
 literal|"GID"
 block|,
 name|NULL
+block|,
+literal|"gid"
 block|,
 literal|0
 block|,
@@ -773,6 +831,8 @@ literal|"GROUP"
 block|,
 name|NULL
 block|,
+literal|"group"
+block|,
 name|LJUST
 block|,
 name|egroupname
@@ -793,6 +853,8 @@ literal|""
 block|,
 literal|"sigignore"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -812,6 +874,8 @@ block|,
 literal|"INBLK"
 block|,
 name|NULL
+block|,
+literal|"read-blocks"
 block|,
 name|USER
 block|,
@@ -836,6 +900,8 @@ literal|""
 block|,
 literal|"inblk"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -855,6 +921,8 @@ block|,
 literal|"JID"
 block|,
 name|NULL
+block|,
+literal|"jail-id"
 block|,
 literal|0
 block|,
@@ -879,6 +947,8 @@ literal|"JOBC"
 block|,
 name|NULL
 block|,
+literal|"job-control-count"
+block|,
 literal|0
 block|,
 name|kvar
@@ -901,6 +971,8 @@ block|,
 literal|"KTRACE"
 block|,
 name|NULL
+block|,
+literal|"ktrace"
 block|,
 literal|0
 block|,
@@ -925,6 +997,8 @@ literal|"LABEL"
 block|,
 name|NULL
 block|,
+literal|"label"
+block|,
 name|LJUST
 block|,
 name|label
@@ -944,6 +1018,8 @@ block|,
 literal|"LIM"
 block|,
 name|NULL
+block|,
+literal|"memory-limit"
 block|,
 literal|0
 block|,
@@ -965,6 +1041,8 @@ literal|"LOCK"
 block|,
 name|NULL
 block|,
+literal|"lock-name"
+block|,
 name|LJUST
 block|,
 name|lockname
@@ -984,6 +1062,8 @@ block|,
 literal|"LOGIN"
 block|,
 name|NULL
+block|,
+literal|"login-name"
 block|,
 name|LJUST
 block|,
@@ -1005,6 +1085,8 @@ literal|""
 block|,
 literal|"login"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -1024,6 +1106,8 @@ block|,
 literal|"STARTED"
 block|,
 name|NULL
+block|,
+literal|"start-time"
 block|,
 name|LJUST
 operator||
@@ -1046,6 +1130,8 @@ block|,
 literal|"LWP"
 block|,
 name|NULL
+block|,
+literal|"process-thread-id"
 block|,
 literal|0
 block|,
@@ -1070,6 +1156,8 @@ literal|"MAJFLT"
 block|,
 name|NULL
 block|,
+literal|"major-faults"
+block|,
 name|USER
 block|,
 name|rvar
@@ -1092,6 +1180,8 @@ block|,
 literal|"MINFLT"
 block|,
 name|NULL
+block|,
+literal|"minor-faults"
 block|,
 name|USER
 block|,
@@ -1116,6 +1206,8 @@ literal|"MSGRCV"
 block|,
 name|NULL
 block|,
+literal|"received-messages"
+block|,
 name|USER
 block|,
 name|rvar
@@ -1138,6 +1230,8 @@ block|,
 literal|"MSGSND"
 block|,
 name|NULL
+block|,
+literal|"sent-messages"
 block|,
 name|USER
 block|,
@@ -1162,6 +1256,8 @@ literal|"MWCHAN"
 block|,
 name|NULL
 block|,
+literal|"wait-channel"
+block|,
 name|LJUST
 block|,
 name|mwchan
@@ -1182,6 +1278,8 @@ literal|""
 block|,
 literal|"nice"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -1201,6 +1299,8 @@ block|,
 literal|"NI"
 block|,
 name|NULL
+block|,
+literal|"nice"
 block|,
 literal|0
 block|,
@@ -1225,6 +1325,8 @@ literal|"NIVCSW"
 block|,
 name|NULL
 block|,
+literal|"involuntary-context-switches"
+block|,
 name|USER
 block|,
 name|rvar
@@ -1247,6 +1349,8 @@ block|,
 literal|"NLWP"
 block|,
 name|NULL
+block|,
+literal|"threads"
 block|,
 literal|0
 block|,
@@ -1271,6 +1375,8 @@ literal|""
 block|,
 literal|"nsigs"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -1290,6 +1396,8 @@ block|,
 literal|"NSIGS"
 block|,
 name|NULL
+block|,
+literal|"signals-taken"
 block|,
 name|USER
 block|,
@@ -1314,6 +1422,8 @@ literal|"NSWAP"
 block|,
 name|NULL
 block|,
+literal|"swaps"
+block|,
 name|USER
 block|,
 name|rvar
@@ -1336,6 +1446,8 @@ block|,
 literal|"NVCSW"
 block|,
 name|NULL
+block|,
+literal|"voluntary-context-switches"
 block|,
 name|USER
 block|,
@@ -1360,6 +1472,8 @@ literal|"NWCHAN"
 block|,
 name|NULL
 block|,
+literal|"wait-channel-address"
+block|,
 name|LJUST
 block|,
 name|nwchan
@@ -1379,6 +1493,8 @@ block|,
 literal|"OUBLK"
 block|,
 name|NULL
+block|,
+literal|"written-blocks"
 block|,
 name|USER
 block|,
@@ -1403,6 +1519,8 @@ literal|""
 block|,
 literal|"oublk"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -1422,6 +1540,8 @@ block|,
 literal|"PADDR"
 block|,
 name|NULL
+block|,
+literal|"process-address"
 block|,
 literal|0
 block|,
@@ -1446,6 +1566,8 @@ literal|"PAGEIN"
 block|,
 name|NULL
 block|,
+literal|"pageins"
+block|,
 name|USER
 block|,
 name|pagein
@@ -1465,6 +1587,8 @@ block|,
 literal|""
 block|,
 literal|"%cpu"
+block|,
+name|NULL
 block|,
 literal|0
 block|,
@@ -1486,6 +1610,8 @@ literal|""
 block|,
 literal|"sig"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -1505,6 +1631,8 @@ block|,
 literal|"PGID"
 block|,
 name|NULL
+block|,
+literal|"process-group"
 block|,
 literal|0
 block|,
@@ -1529,6 +1657,8 @@ literal|"PID"
 block|,
 name|NULL
 block|,
+literal|"pid"
+block|,
 literal|0
 block|,
 name|kvar
@@ -1552,6 +1682,8 @@ literal|""
 block|,
 literal|"%mem"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -1571,6 +1703,8 @@ block|,
 literal|"PPID"
 block|,
 name|NULL
+block|,
+literal|"ppid"
 block|,
 literal|0
 block|,
@@ -1595,6 +1729,8 @@ literal|"PRI"
 block|,
 name|NULL
 block|,
+literal|"priority"
+block|,
 literal|0
 block|,
 name|pri
@@ -1614,6 +1750,8 @@ block|,
 literal|"RE"
 block|,
 name|NULL
+block|,
+literal|"residency-time"
 block|,
 name|INF127
 block|,
@@ -1638,6 +1776,8 @@ literal|"RGID"
 block|,
 name|NULL
 block|,
+literal|"real-gid"
+block|,
 literal|0
 block|,
 name|kvar
@@ -1661,6 +1801,8 @@ literal|"RGROUP"
 block|,
 name|NULL
 block|,
+literal|"real-group"
+block|,
 name|LJUST
 block|,
 name|rgroupname
@@ -1680,6 +1822,8 @@ block|,
 literal|"RSS"
 block|,
 name|NULL
+block|,
+literal|"rss"
 block|,
 literal|0
 block|,
@@ -1704,6 +1848,8 @@ literal|"RTPRIO"
 block|,
 name|NULL
 block|,
+literal|"realtime-priority"
+block|,
 literal|0
 block|,
 name|priorityr
@@ -1726,6 +1872,8 @@ block|,
 literal|"RUID"
 block|,
 name|NULL
+block|,
+literal|"real-uid"
 block|,
 literal|0
 block|,
@@ -1750,6 +1898,8 @@ literal|"RUSER"
 block|,
 name|NULL
 block|,
+literal|"real-user"
+block|,
 name|LJUST
 block|,
 name|runame
@@ -1769,6 +1919,8 @@ block|,
 literal|"SID"
 block|,
 name|NULL
+block|,
+literal|"sid"
 block|,
 literal|0
 block|,
@@ -1793,6 +1945,8 @@ literal|"PENDING"
 block|,
 name|NULL
 block|,
+literal|"signals-pending"
+block|,
 literal|0
 block|,
 name|kvar
@@ -1815,6 +1969,8 @@ block|,
 literal|"CAUGHT"
 block|,
 name|NULL
+block|,
+literal|"signals-caught"
 block|,
 literal|0
 block|,
@@ -1839,6 +1995,8 @@ literal|"IGNORED"
 block|,
 name|NULL
 block|,
+literal|"signals-ignored"
+block|,
 literal|0
 block|,
 name|kvar
@@ -1861,6 +2019,8 @@ block|,
 literal|"BLOCKED"
 block|,
 name|NULL
+block|,
+literal|"signal-mask"
 block|,
 literal|0
 block|,
@@ -1885,6 +2045,8 @@ literal|"SL"
 block|,
 name|NULL
 block|,
+literal|"sleep-time"
+block|,
 name|INF127
 block|,
 name|kvar
@@ -1907,6 +2069,8 @@ block|,
 literal|"SSIZ"
 block|,
 name|NULL
+block|,
+literal|"stack-size"
 block|,
 literal|0
 block|,
@@ -1931,6 +2095,8 @@ literal|"STARTED"
 block|,
 name|NULL
 block|,
+literal|"start-time"
+block|,
 name|LJUST
 operator||
 name|USER
@@ -1953,6 +2119,8 @@ literal|""
 block|,
 literal|"state"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -1973,6 +2141,8 @@ literal|"STAT"
 block|,
 name|NULL
 block|,
+literal|"state"
+block|,
 name|LJUST
 block|,
 name|state
@@ -1992,6 +2162,8 @@ block|,
 literal|"SVGID"
 block|,
 name|NULL
+block|,
+literal|"saved-gid"
 block|,
 literal|0
 block|,
@@ -2016,6 +2188,8 @@ literal|"SVUID"
 block|,
 name|NULL
 block|,
+literal|"saved-uid"
+block|,
 literal|0
 block|,
 name|kvar
@@ -2039,6 +2213,8 @@ literal|"SYSTIME"
 block|,
 name|NULL
 block|,
+literal|"system-time"
+block|,
 name|USER
 block|,
 name|systime
@@ -2058,6 +2234,8 @@ block|,
 literal|"TDADDR"
 block|,
 name|NULL
+block|,
+literal|"thread-address"
 block|,
 literal|0
 block|,
@@ -2082,6 +2260,8 @@ literal|"TDEV"
 block|,
 name|NULL
 block|,
+literal|"terminal-device"
+block|,
 literal|0
 block|,
 name|tdev
@@ -2101,6 +2281,8 @@ block|,
 literal|"TDNAM"
 block|,
 name|NULL
+block|,
+literal|"terminal-device-name"
 block|,
 name|LJUST
 block|,
@@ -2122,6 +2304,8 @@ literal|"TIME"
 block|,
 name|NULL
 block|,
+literal|"cpu-time"
+block|,
 name|USER
 block|,
 name|cputime
@@ -2141,6 +2325,8 @@ block|,
 literal|"TPGID"
 block|,
 name|NULL
+block|,
+literal|"terminal-process-gid"
 block|,
 literal|0
 block|,
@@ -2165,6 +2351,8 @@ literal|"TRACER"
 block|,
 name|NULL
 block|,
+literal|"tracer"
+block|,
 literal|0
 block|,
 name|kvar
@@ -2187,6 +2375,8 @@ block|,
 literal|"TSID"
 block|,
 name|NULL
+block|,
+literal|"terminal-sid"
 block|,
 literal|0
 block|,
@@ -2211,6 +2401,8 @@ literal|"TSIZ"
 block|,
 name|NULL
 block|,
+literal|"text-size"
+block|,
 literal|0
 block|,
 name|kvar
@@ -2234,6 +2426,8 @@ literal|"TT "
 block|,
 name|NULL
 block|,
+literal|"terminal-name"
+block|,
 literal|0
 block|,
 name|tname
@@ -2253,6 +2447,8 @@ block|,
 literal|"TTY"
 block|,
 name|NULL
+block|,
+literal|"tty"
 block|,
 name|LJUST
 block|,
@@ -2274,6 +2470,8 @@ literal|"UCOMM"
 block|,
 name|NULL
 block|,
+literal|"accounting-name"
+block|,
 name|LJUST
 block|,
 name|ucomm
@@ -2293,6 +2491,8 @@ block|,
 literal|"UID"
 block|,
 name|NULL
+block|,
+literal|"uid"
 block|,
 literal|0
 block|,
@@ -2317,6 +2517,8 @@ literal|"UPR"
 block|,
 name|NULL
 block|,
+literal|"user-priority"
+block|,
 literal|0
 block|,
 name|upr
@@ -2336,6 +2538,8 @@ block|,
 literal|"UPROCP"
 block|,
 name|NULL
+block|,
+literal|"process-address"
 block|,
 literal|0
 block|,
@@ -2360,6 +2564,8 @@ literal|"USER"
 block|,
 name|NULL
 block|,
+literal|"user"
+block|,
 name|LJUST
 block|,
 name|uname
@@ -2379,6 +2585,8 @@ block|,
 literal|"USERTIME"
 block|,
 name|NULL
+block|,
+literal|"user-time"
 block|,
 name|USER
 block|,
@@ -2400,6 +2608,8 @@ literal|""
 block|,
 literal|"upr"
 block|,
+name|NULL
+block|,
 literal|0
 block|,
 name|NULL
@@ -2419,6 +2629,8 @@ block|,
 literal|""
 block|,
 literal|"vsz"
+block|,
+name|NULL
 block|,
 literal|0
 block|,
@@ -2440,6 +2652,8 @@ literal|"VSZ"
 block|,
 name|NULL
 block|,
+literal|"virtual-size"
+block|,
 literal|0
 block|,
 name|vsize
@@ -2459,6 +2673,8 @@ block|,
 literal|"WCHAN"
 block|,
 name|NULL
+block|,
+literal|"wait-channel"
 block|,
 name|LJUST
 block|,
@@ -2480,6 +2696,8 @@ literal|"XSTAT"
 block|,
 name|NULL
 block|,
+literal|"exit-status"
+block|,
 literal|0
 block|,
 name|kvar
@@ -2498,6 +2716,8 @@ block|}
 block|,
 block|{
 literal|""
+block|,
+name|NULL
 block|,
 name|NULL
 block|,
@@ -2548,6 +2768,11 @@ expr_stmt|;
 name|sep
 operator|=
 literal|""
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"key"
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -2600,12 +2825,9 @@ operator|=
 literal|"\n"
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%s%s"
+literal|"{P:/%s}{l:key/%s}"
 argument_list|,
 name|sep
 argument_list|,
@@ -2617,13 +2839,18 @@ operator|=
 literal|" "
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|xo_emit
 argument_list|(
 literal|"\n"
 argument_list|)
+expr_stmt|;
+name|xo_close_list
+argument_list|(
+literal|"key"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 block|}
 end_function

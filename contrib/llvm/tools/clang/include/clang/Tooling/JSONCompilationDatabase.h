@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_TOOLING_JSON_COMPILATION_DATABASE_H
+name|LLVM_CLANG_TOOLING_JSONCOMPILATIONDATABASE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_TOOLING_JSON_COMPILATION_DATABASE_H
+name|LLVM_CLANG_TOOLING_JSONCOMPILATIONDATABASE_H
 end_define
 
 begin_include
@@ -79,12 +79,6 @@ begin_include
 include|#
 directive|include
 file|"clang/Tooling/FileMatchTrie.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
@@ -115,6 +109,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/YAMLParser.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -166,8 +166,12 @@ comment|///
 comment|/// Returns NULL and sets ErrorMessage if the database could not be
 comment|/// loaded from the given file.
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|JSONCompilationDatabase
-operator|*
+operator|>
 name|loadFromFile
 argument_list|(
 argument|StringRef FilePath
@@ -179,8 +183,12 @@ comment|/// \brief Loads a JSON compilation database from a data buffer.
 comment|///
 comment|/// Returns NULL and sets ErrorMessage if the database could not be loaded.
 specifier|static
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|JSONCompilationDatabase
-operator|*
+operator|>
 name|loadFromBuffer
 argument_list|(
 argument|StringRef DatabaseString
@@ -193,7 +201,6 @@ comment|/// compiled.
 comment|///
 comment|/// FIXME: Currently FilePath must be an absolute path inside the
 comment|/// source directory which does not have symlinks resolved.
-name|virtual
 name|std
 operator|::
 name|vector
@@ -205,11 +212,11 @@ argument_list|(
 argument|StringRef FilePath
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// \brief Returns the list of all files available in the compilation database.
 comment|///
 comment|/// These are the 'file' entries of the JSON objects.
-name|virtual
 name|std
 operator|::
 name|vector
@@ -221,10 +228,10 @@ operator|>
 name|getAllFiles
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \brief Returns all compile commands for all the files in the compilation
 comment|/// database.
-name|virtual
 name|std
 operator|::
 name|vector
@@ -234,27 +241,37 @@ operator|>
 name|getAllCompileCommands
 argument_list|()
 specifier|const
+name|override
 block|;
 name|private
 operator|:
 comment|/// \brief Constructs a JSON compilation database on a memory buffer.
 name|JSONCompilationDatabase
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|llvm
 operator|::
 name|MemoryBuffer
-operator|*
+operator|>
 name|Database
 argument_list|)
 operator|:
 name|Database
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|Database
+argument_list|)
 argument_list|)
 block|,
 name|YAMLStream
 argument_list|(
-argument|Database->getBuffer()
+argument|this->Database->getBuffer()
 argument_list|,
 argument|SM
 argument_list|)
@@ -323,7 +340,9 @@ expr_stmt|;
 name|FileMatchTrie
 name|MatchTrie
 decl_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|llvm
 operator|::
@@ -361,10 +380,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_TOOLING_JSON_COMPILATION_DATABASE_H
-end_comment
 
 end_unit
 

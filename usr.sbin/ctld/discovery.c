@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -179,16 +173,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ISCSI_SNLT
+argument_list|(
 name|ntohl
 argument_list|(
 name|bhstr
 operator|->
 name|bhstr_cmdsn
 argument_list|)
-operator|<
+argument_list|,
 name|conn
 operator|->
 name|conn_cmdsn
+argument_list|)
 condition|)
 block|{
 name|log_errx
@@ -196,7 +193,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Text PDU with decreasing CmdSN: "
-literal|"was %d, is %d"
+literal|"was %u, is %u"
 argument_list|,
 name|conn
 operator|->
@@ -230,7 +227,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Text PDU with wrong StatSN: "
-literal|"is %d, should be %d"
+literal|"is %u, should be %u"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -255,6 +252,23 @@ name|bhstr
 operator|->
 name|bhstr_cmdsn
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bhstr
+operator|->
+name|bhstr_opcode
+operator|&
+name|ISCSI_BHS_OPCODE_IMMEDIATE
+operator|)
+operator|==
+literal|0
+condition|)
+name|conn
+operator|->
+name|conn_cmdsn
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -510,16 +524,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ISCSI_SNLT
+argument_list|(
 name|ntohl
 argument_list|(
 name|bhslr
 operator|->
 name|bhslr_cmdsn
 argument_list|)
-operator|<
+argument_list|,
 name|conn
 operator|->
 name|conn_cmdsn
+argument_list|)
 condition|)
 block|{
 name|log_errx
@@ -527,7 +544,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Logout PDU with decreasing CmdSN: "
-literal|"was %d, is %d"
+literal|"was %u, is %u"
 argument_list|,
 name|conn
 operator|->
@@ -561,7 +578,7 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"received Logout PDU with wrong StatSN: "
-literal|"is %d, should be %d"
+literal|"is %u, should be %u"
 argument_list|,
 name|ntohl
 argument_list|(
@@ -586,6 +603,23 @@ name|bhslr
 operator|->
 name|bhslr_cmdsn
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|bhslr
+operator|->
+name|bhslr_opcode
+operator|&
+name|ISCSI_BHS_OPCODE_IMMEDIATE
+operator|)
+operator|==
+literal|0
+condition|)
+name|conn
+operator|->
+name|conn_cmdsn
+operator|++
 expr_stmt|;
 return|return
 operator|(
@@ -749,6 +783,11 @@ name|targ
 parameter_list|)
 block|{
 name|struct
+name|port
+modifier|*
+name|port
+decl_stmt|;
+name|struct
 name|portal
 modifier|*
 name|portal
@@ -789,9 +828,27 @@ argument_list|)
 expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
+argument|port
+argument_list|,
+argument|&targ->t_ports
+argument_list|,
+argument|p_ts
+argument_list|)
+block|{
+if|if
+condition|(
+name|port
+operator|->
+name|p_portal_group
+operator|==
+name|NULL
+condition|)
+continue|continue;
+name|TAILQ_FOREACH
+argument_list|(
 argument|portal
 argument_list|,
-argument|&targ->t_portal_group->pg_portals
+argument|&port->p_portal_group->pg_portals
 argument_list|,
 argument|p_next
 argument_list|)
@@ -889,9 +946,9 @@ name|hbuf
 argument_list|,
 name|sbuf
 argument_list|,
-name|targ
+name|port
 operator|->
-name|t_portal_group
+name|p_portal_group
 operator|->
 name|pg_tag
 argument_list|)
@@ -925,9 +982,9 @@ name|hbuf
 argument_list|,
 name|sbuf
 argument_list|,
-name|targ
+name|port
 operator|->
-name|t_portal_group
+name|p_portal_group
 operator|->
 name|pg_tag
 argument_list|)
@@ -965,6 +1022,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 end_function
 
 begin_function
@@ -980,9 +1038,9 @@ name|conn
 parameter_list|,
 specifier|const
 name|struct
-name|target
+name|port
 modifier|*
-name|targ
+name|port
 parameter_list|)
 block|{
 specifier|const
@@ -999,6 +1057,12 @@ name|pg
 decl_stmt|;
 specifier|const
 name|struct
+name|target
+modifier|*
+name|targ
+decl_stmt|;
+specifier|const
+name|struct
 name|auth
 modifier|*
 name|auth
@@ -1006,6 +1070,24 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|targ
+operator|=
+name|port
+operator|->
+name|p_target
+expr_stmt|;
+name|ag
+operator|=
+name|port
+operator|->
+name|p_auth_group
+expr_stmt|;
+if|if
+condition|(
+name|ag
+operator|==
+name|NULL
+condition|)
 name|ag
 operator|=
 name|targ
@@ -1277,15 +1359,15 @@ name|response_keys
 decl_stmt|;
 specifier|const
 name|struct
-name|portal_group
+name|port
 modifier|*
-name|pg
+name|port
 decl_stmt|;
 specifier|const
 name|struct
-name|target
+name|portal_group
 modifier|*
-name|targ
+name|pg
 decl_stmt|;
 specifier|const
 name|char
@@ -1372,41 +1454,20 @@ condition|)
 block|{
 name|TAILQ_FOREACH
 argument_list|(
-argument|targ
+argument|port
 argument_list|,
-argument|&pg->pg_conf->conf_targets
+argument|&pg->pg_ports
 argument_list|,
-argument|t_next
+argument|p_pgs
 argument_list|)
 block|{
-if|if
-condition|(
-name|targ
-operator|->
-name|t_portal_group
-operator|!=
-name|pg
-condition|)
-block|{
-name|log_debugx
-argument_list|(
-literal|"not returning target \"%s\"; "
-literal|"belongs to a different portal group"
-argument_list|,
-name|targ
-operator|->
-name|t_name
-argument_list|)
-expr_stmt|;
-continue|continue;
-block|}
 if|if
 condition|(
 name|discovery_target_filtered_out
 argument_list|(
 name|conn
 argument_list|,
-name|targ
+name|port
 argument_list|)
 condition|)
 block|{
@@ -1417,27 +1478,27 @@ name|discovery_add_target
 argument_list|(
 name|response_keys
 argument_list|,
-name|targ
+name|port
+operator|->
+name|p_target
 argument_list|)
 expr_stmt|;
 block|}
 block|}
 else|else
 block|{
-name|targ
+name|port
 operator|=
-name|target_find
+name|port_find_in_pg
 argument_list|(
 name|pg
-operator|->
-name|pg_conf
 argument_list|,
 name|send_targets
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|targ
+name|port
 operator|==
 name|NULL
 condition|)
@@ -1459,7 +1520,7 @@ name|discovery_target_filtered_out
 argument_list|(
 name|conn
 argument_list|,
-name|targ
+name|port
 argument_list|)
 condition|)
 block|{
@@ -1471,7 +1532,9 @@ name|discovery_add_target
 argument_list|(
 name|response_keys
 argument_list|,
-name|targ
+name|port
+operator|->
+name|p_target
 argument_list|)
 expr_stmt|;
 block|}

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- RegionPass.h - RegionPass class ------------------------------------===//
+comment|//===- RegionPass.h - RegionPass class --------------------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -176,6 +176,7 @@ argument_list|,
 argument|const std::string&Banner
 argument_list|)
 specifier|const
+name|override
 block|;
 name|using
 name|llvm
@@ -221,12 +222,10 @@ comment|//@{
 name|void
 name|preparePassManager
 argument_list|(
-name|PMStack
-operator|&
-name|PMS
+argument|PMStack&PMS
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|assignPassManager
 argument_list|(
@@ -234,12 +233,13 @@ argument|PMStack&PMS
 argument_list|,
 argument|PassManagerType PMT = PMT_RegionPassManager
 argument_list|)
+name|override
 block|;
-name|virtual
 name|PassManagerType
 name|getPotentialPassManagerType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|PMT_RegionPassManager
@@ -297,10 +297,9 @@ comment|/// @return True if any of the passes modifies the function.
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|F
+argument|Function&F
 argument_list|)
+name|override
 block|;
 comment|/// Pass Manager itself does not invalidate any analysis info.
 comment|/// RGPassManager needs RegionInfo.
@@ -310,34 +309,35 @@ argument_list|(
 argument|AnalysisUsage&Info
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"Region Pass Manager"
 return|;
 block|}
-name|virtual
 name|PMDataManager
 operator|*
 name|getAsPMDataManager
 argument_list|()
+name|override
 block|{
 return|return
 name|this
 return|;
 block|}
-name|virtual
 name|Pass
 operator|*
 name|getAsPass
 argument_list|()
+name|override
 block|{
 return|return
 name|this
@@ -349,6 +349,7 @@ name|dumpPassStructure
 argument_list|(
 argument|unsigned Offset
 argument_list|)
+name|override
 block|;
 comment|/// @brief Get passes contained by this manager.
 name|Pass
@@ -390,11 +391,11 @@ return|return
 name|FP
 return|;
 block|}
-name|virtual
 name|PassManagerType
 name|getPassManagerType
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|PMT_RegionPassManager

@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<geom/geom_disk.h>
 end_include
 
@@ -177,6 +183,13 @@ decl_stmt|;
 name|int
 name|suspend
 decl_stmt|;
+name|int
+name|log_count
+decl_stmt|;
+name|struct
+name|timeval
+name|log_time
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -206,6 +219,17 @@ literal|"NO MEMORY"
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|LOG_PPS
+value|5
+end_define
+
+begin_comment
+comment|/* Log no more than 5 errors per second. */
+end_comment
 
 begin_comment
 comment|/* bus entry points */
@@ -1735,6 +1759,24 @@ operator|!=
 name|MMC_ERR_NONE
 condition|)
 block|{
+if|if
+condition|(
+name|ppsratecheck
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|log_time
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|log_count
+argument_list|,
+name|LOG_PPS
+argument_list|)
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -1757,6 +1799,7 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 block|}
 name|block

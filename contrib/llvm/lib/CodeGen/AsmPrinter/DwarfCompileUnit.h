@@ -50,61 +50,37 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CODEGEN_ASMPRINTER_DWARFCOMPILEUNIT_H
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DWARFCOMPILEUNIT_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CODEGEN_ASMPRINTER_DWARFCOMPILEUNIT_H
+name|LLVM_LIB_CODEGEN_ASMPRINTER_DWARFCOMPILEUNIT_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"DIE.h"
+file|"DwarfUnit.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"DwarfDebug.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseMap.h"
+file|"llvm/IR/DebugInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/Optional.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/DebugInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCExpr.h"
+file|"llvm/Support/Dwarf.h"
 end_include
 
 begin_decl_stmt
@@ -112,265 +88,640 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|MachineLocation
-decl_stmt|;
-name|class
-name|MachineOperand
-decl_stmt|;
-name|class
-name|ConstantInt
-decl_stmt|;
-name|class
-name|ConstantFP
-decl_stmt|;
-name|class
-name|DbgVariable
-decl_stmt|;
-comment|//===----------------------------------------------------------------------===//
-comment|/// CompileUnit - This dwarf writer support class manages information associated
-comment|/// with a source file.
-name|class
-name|CompileUnit
-block|{
-comment|/// UniqueID - a numeric ID unique among all CUs in the module
-comment|///
-name|unsigned
-name|UniqueID
-decl_stmt|;
-comment|/// Node - MDNode for the compile unit.
-name|DICompileUnit
-name|Node
-decl_stmt|;
-comment|/// CUDie - Compile unit debug information entry.
-comment|///
-specifier|const
-name|OwningPtr
-operator|<
-name|DIE
-operator|>
-name|CUDie
-expr_stmt|;
-comment|/// Asm - Target of Dwarf emission.
 name|AsmPrinter
-modifier|*
-name|Asm
 decl_stmt|;
-comment|// Holders for some common dwarf information.
+name|class
+name|DIE
+decl_stmt|;
+name|class
 name|DwarfDebug
-modifier|*
-name|DD
 decl_stmt|;
-name|DwarfUnits
-modifier|*
-name|DU
+name|class
+name|DwarfFile
 decl_stmt|;
-comment|/// IndexTyDie - An anonymous type for index type.  Owned by CUDie.
-name|DIE
-modifier|*
-name|IndexTyDie
+name|class
+name|MCSymbol
 decl_stmt|;
-comment|/// MDNodeToDieMap - Tracks the mapping of unit level debug information
-comment|/// variables to debug information entries.
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
+name|class
+name|LexicalScope
+decl_stmt|;
+name|class
+name|DwarfCompileUnit
+range|:
+name|public
+name|DwarfUnit
+block|{
+comment|/// The attribute index of DW_AT_stmt_list in the compile unit DIE, avoiding
+comment|/// the need to search for it in applyStmtList.
+name|unsigned
+name|stmtListIndex
+block|;
+comment|/// Skeleton unit associated with this unit.
+name|DwarfCompileUnit
 operator|*
-operator|,
-name|DIE
+name|Skeleton
+block|;
+comment|/// A label at the start of the non-dwo section related to this unit.
+name|MCSymbol
 operator|*
-operator|>
-name|MDNodeToDieMap
-expr_stmt|;
-comment|/// MDNodeToDIEEntryMap - Tracks the mapping of unit level debug information
-comment|/// descriptors to debug information entries using a DIEEntry proxy.
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
+name|SectionSym
+block|;
+comment|/// The start of the unit within its section.
+name|MCSymbol
 operator|*
-operator|,
-name|DIEEntry
-operator|*
-operator|>
-name|MDNodeToDIEEntryMap
-expr_stmt|;
+name|LabelBegin
+block|;
 comment|/// GlobalNames - A map of globally visible named entities for this unit.
-comment|///
 name|StringMap
 operator|<
+specifier|const
 name|DIE
 operator|*
 operator|>
 name|GlobalNames
-expr_stmt|;
+block|;
 comment|/// GlobalTypes - A map of globally visible types for this unit.
-comment|///
 name|StringMap
 operator|<
+specifier|const
 name|DIE
 operator|*
 operator|>
 name|GlobalTypes
-expr_stmt|;
-comment|/// AccelNames - A map of names for the name accelerator table.
-comment|///
-name|StringMap
+block|;
+comment|// List of range lists for a given compile unit, separate from the ranges for
+comment|// the CU itself.
+name|SmallVector
 operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|DIE
-operator|*
+name|RangeSpanList
+block|,
+literal|1
 operator|>
-expr|>
-name|AccelNames
-expr_stmt|;
-name|StringMap
+name|CURangeLists
+block|;
+comment|// List of ranges for a given compile unit.
+name|SmallVector
 operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|DIE
-operator|*
+name|RangeSpan
+block|,
+literal|2
 operator|>
-expr|>
-name|AccelObjC
-expr_stmt|;
-name|StringMap
-operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|DIE
-operator|*
-operator|>
-expr|>
-name|AccelNamespace
-expr_stmt|;
-name|StringMap
-operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|DIE
-operator|*
-operator|,
-name|unsigned
-operator|>
-expr|>
-operator|>
-name|AccelTypes
-expr_stmt|;
-comment|/// DIEBlocks - A list of all the DIEBlocks in use.
-name|std
-operator|::
-name|vector
-operator|<
-name|DIEBlock
-operator|*
-operator|>
-name|DIEBlocks
-expr_stmt|;
-comment|/// ContainingTypeMap - This map is used to keep track of subprogram DIEs that
-comment|/// need DW_AT_containing_type attribute. This attribute points to a DIE that
-comment|/// corresponds to the MDNode mapped with the subprogram DIE.
-name|DenseMap
-operator|<
-name|DIE
-operator|*
-operator|,
+name|CURanges
+block|;
+comment|// The base address of this unit, if any. Used for relative references in
+comment|// ranges/locs.
 specifier|const
-name|MDNode
+name|MCSymbol
 operator|*
+name|BaseAddress
+block|;
+comment|/// \brief Construct a DIE for the given DbgVariable without initializing the
+comment|/// DbgVariable's DIE reference.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DIE
 operator|>
-name|ContainingTypeMap
-expr_stmt|;
-comment|// DIEValueAllocator - All DIEValues are allocated through this allocator.
-name|BumpPtrAllocator
-name|DIEValueAllocator
-decl_stmt|;
-comment|// DIEIntegerOne - A preallocated DIEValue because 1 is used frequently.
-name|DIEInteger
-modifier|*
-name|DIEIntegerOne
-decl_stmt|;
+name|constructVariableDIEImpl
+argument_list|(
+argument|const DbgVariable&DV
+argument_list|,
+argument|bool Abstract
+argument_list|)
+block|;
+name|bool
+name|isDwoUnit
+argument_list|()
+specifier|const
+name|override
+block|;
+name|bool
+name|includeMinimalInlineScopes
+argument_list|()
+specifier|const
+block|;
 name|public
-label|:
-name|CompileUnit
+operator|:
+name|DwarfCompileUnit
 argument_list|(
 argument|unsigned UID
 argument_list|,
-argument|DIE *D
-argument_list|,
-argument|DICompileUnit CU
+argument|DICompileUnit Node
 argument_list|,
 argument|AsmPrinter *A
 argument_list|,
 argument|DwarfDebug *DW
 argument_list|,
-argument|DwarfUnits *DWU
+argument|DwarfFile *DWU
 argument_list|)
-empty_stmt|;
-operator|~
-name|CompileUnit
-argument_list|()
-expr_stmt|;
-comment|// Accessors.
-name|unsigned
-name|getUniqueID
+block|;
+name|DwarfCompileUnit
+operator|*
+name|getSkeleton
 argument_list|()
 specifier|const
 block|{
 return|return
-name|UniqueID
+name|Skeleton
 return|;
 block|}
-name|uint16_t
-name|getLanguage
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Node
-operator|.
-name|getLanguage
-argument_list|()
-return|;
-block|}
-name|DICompileUnit
-name|getNode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Node
-return|;
-block|}
+name|void
+name|initStmtList
+argument_list|(
+name|MCSymbol
+operator|*
+name|DwarfLineSectionSym
+argument_list|)
+block|;
+comment|/// Apply the DW_AT_stmt_list from this compile unit to the specified DIE.
+name|void
+name|applyStmtList
+argument_list|(
+name|DIE
+operator|&
+name|D
+argument_list|)
+block|;
+comment|/// getOrCreateGlobalVariableDIE - get or create global variable DIE.
 name|DIE
 operator|*
-name|getCUDie
+name|getOrCreateGlobalVariableDIE
+argument_list|(
+argument|DIGlobalVariable GV
+argument_list|)
+block|;
+comment|/// addLabelAddress - Add a dwarf label attribute data and value using
+comment|/// either DW_FORM_addr or DW_FORM_GNU_addr_index.
+name|void
+name|addLabelAddress
+argument_list|(
+argument|DIE&Die
+argument_list|,
+argument|dwarf::Attribute Attribute
+argument_list|,
+argument|const MCSymbol *Label
+argument_list|)
+block|;
+comment|/// addLocalLabelAddress - Add a dwarf label attribute data and value using
+comment|/// DW_FORM_addr only.
+name|void
+name|addLocalLabelAddress
+argument_list|(
+argument|DIE&Die
+argument_list|,
+argument|dwarf::Attribute Attribute
+argument_list|,
+argument|const MCSymbol *Label
+argument_list|)
+block|;
+comment|/// addSectionDelta - Add a label delta attribute data and value.
+name|void
+name|addSectionDelta
+argument_list|(
+argument|DIE&Die
+argument_list|,
+argument|dwarf::Attribute Attribute
+argument_list|,
+argument|const MCSymbol *Hi
+argument_list|,
+argument|const MCSymbol *Lo
+argument_list|)
+block|;
+name|DwarfCompileUnit
+operator|&
+name|getCU
+argument_list|()
+name|override
+block|{
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|unsigned
+name|getOrCreateSourceID
+argument_list|(
+argument|StringRef FileName
+argument_list|,
+argument|StringRef DirName
+argument_list|)
+name|override
+block|;
+comment|/// addRange - Add an address range to the list of ranges for this unit.
+name|void
+name|addRange
+argument_list|(
+argument|RangeSpan Range
+argument_list|)
+block|;
+name|void
+name|attachLowHighPC
+argument_list|(
+name|DIE
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|Begin
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|End
+argument_list|)
+block|;
+comment|/// addSectionLabel - Add a Dwarf section label attribute data and value.
+comment|///
+name|void
+name|addSectionLabel
+argument_list|(
+argument|DIE&Die
+argument_list|,
+argument|dwarf::Attribute Attribute
+argument_list|,
+argument|const MCSymbol *Label
+argument_list|,
+argument|const MCSymbol *Sec
+argument_list|)
+block|;
+comment|/// \brief Find DIE for the given subprogram and attach appropriate
+comment|/// DW_AT_low_pc and DW_AT_high_pc attributes. If there are global
+comment|/// variables in this scope then create and insert DIEs for these
+comment|/// variables.
+name|DIE
+operator|&
+name|updateSubprogramScopeDIE
+argument_list|(
+argument|DISubprogram SP
+argument_list|)
+block|;
+name|void
+name|constructScopeDIE
+argument_list|(
+name|LexicalScope
+operator|*
+name|Scope
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DIE
+operator|>>
+operator|&
+name|FinalChildren
+argument_list|)
+block|;
+comment|/// \brief A helper function to construct a RangeSpanList for a given
+comment|/// lexical scope.
+name|void
+name|addScopeRangeList
+argument_list|(
+name|DIE
+operator|&
+name|ScopeDIE
+argument_list|,
+name|SmallVector
+operator|<
+name|RangeSpan
+argument_list|,
+literal|2
+operator|>
+name|Range
+argument_list|)
+block|;
+name|void
+name|attachRangesOrLowHighPC
+argument_list|(
+name|DIE
+operator|&
+name|D
+argument_list|,
+name|SmallVector
+operator|<
+name|RangeSpan
+argument_list|,
+literal|2
+operator|>
+name|Ranges
+argument_list|)
+block|;
+name|void
+name|attachRangesOrLowHighPC
+argument_list|(
+name|DIE
+operator|&
+name|D
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|InsnRange
+operator|>
+operator|&
+name|Ranges
+argument_list|)
+block|;
+comment|/// \brief This scope represents inlined body of a function. Construct
+comment|/// DIE to represent this concrete inlined copy of the function.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DIE
+operator|>
+name|constructInlinedScopeDIE
+argument_list|(
+name|LexicalScope
+operator|*
+name|Scope
+argument_list|)
+block|;
+comment|/// \brief Construct new DW_TAG_lexical_block for this scope and
+comment|/// attach DW_AT_low_pc/DW_AT_high_pc labels.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DIE
+operator|>
+name|constructLexicalScopeDIE
+argument_list|(
+name|LexicalScope
+operator|*
+name|Scope
+argument_list|)
+block|;
+comment|/// constructVariableDIE - Construct a DIE for the given DbgVariable.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DIE
+operator|>
+name|constructVariableDIE
+argument_list|(
+argument|DbgVariable&DV
+argument_list|,
+argument|bool Abstract = false
+argument_list|)
+block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DIE
+operator|>
+name|constructVariableDIE
+argument_list|(
+name|DbgVariable
+operator|&
+name|DV
+argument_list|,
+specifier|const
+name|LexicalScope
+operator|&
+name|Scope
+argument_list|,
+name|DIE
+operator|*
+operator|&
+name|ObjectPointer
+argument_list|)
+block|;
+comment|/// A helper function to create children of a Scope DIE.
+name|DIE
+operator|*
+name|createScopeChildrenDIE
+argument_list|(
+name|LexicalScope
+operator|*
+name|Scope
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DIE
+operator|>>
+operator|&
+name|Children
+argument_list|,
+name|unsigned
+operator|*
+name|ChildScopeCount
+operator|=
+name|nullptr
+argument_list|)
+block|;
+comment|/// \brief Construct a DIE for this subprogram scope.
+name|void
+name|constructSubprogramScopeDIE
+argument_list|(
+name|LexicalScope
+operator|*
+name|Scope
+argument_list|)
+block|;
+name|DIE
+operator|*
+name|createAndAddScopeChildren
+argument_list|(
+name|LexicalScope
+operator|*
+name|Scope
+argument_list|,
+name|DIE
+operator|&
+name|ScopeDIE
+argument_list|)
+block|;
+name|void
+name|constructAbstractSubprogramScopeDIE
+argument_list|(
+name|LexicalScope
+operator|*
+name|Scope
+argument_list|)
+block|;
+comment|/// \brief Construct import_module DIE.
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DIE
+operator|>
+name|constructImportedEntityDIE
+argument_list|(
+specifier|const
+name|DIImportedEntity
+operator|&
+name|Module
+argument_list|)
+block|;
+name|void
+name|finishSubprogramDefinition
+argument_list|(
+argument|DISubprogram SP
+argument_list|)
+block|;
+name|void
+name|collectDeadVariables
+argument_list|(
+argument|DISubprogram SP
+argument_list|)
+block|;
+comment|/// Set the skeleton unit associated with this unit.
+name|void
+name|setSkeleton
+argument_list|(
+argument|DwarfCompileUnit&Skel
+argument_list|)
+block|{
+name|Skeleton
+operator|=
+operator|&
+name|Skel
+block|; }
+name|MCSymbol
+operator|*
+name|getSectionSym
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|Section
+argument_list|)
+block|;
 return|return
-name|CUDie
+name|SectionSym
+return|;
+block|}
+comment|/// Pass in the SectionSym even though we could recreate it in every compile
+comment|/// unit (type units will have actually distinct symbols once they're in
+comment|/// comdat sections).
+name|void
+name|initSection
+argument_list|(
+argument|const MCSection *Section
+argument_list|,
+argument|MCSymbol *SectionSym
+argument_list|)
+block|{
+name|DwarfUnit
+operator|::
+name|initSection
+argument_list|(
+name|Section
+argument_list|)
+block|;
+name|this
+operator|->
+name|SectionSym
+operator|=
+name|SectionSym
+block|;
+comment|// Don't bother labeling the .dwo unit, as its offset isn't used.
+if|if
+condition|(
+operator|!
+name|Skeleton
+condition|)
+name|LabelBegin
+operator|=
+name|Asm
+operator|->
+name|GetTempSymbol
+argument_list|(
+name|Section
+operator|->
+name|getLabelBeginName
+argument_list|()
+argument_list|,
+name|getUniqueID
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
+name|unsigned
+name|getLength
+argument_list|()
+block|{
+return|return
+sizeof|sizeof
+argument_list|(
+name|uint32_t
+argument_list|)
+operator|+
+comment|// Length field
+name|getHeaderSize
+argument_list|()
+operator|+
+name|UnitDie
 operator|.
-name|get
+name|getSize
 argument_list|()
 return|;
 block|}
+name|void
+name|emitHeader
+argument_list|(
+argument|const MCSymbol *ASectionSym
+argument_list|)
+specifier|const
+name|override
+block|;
+name|MCSymbol
+operator|*
+name|getLabelBegin
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Section
+argument_list|)
+block|;
+return|return
+name|LabelBegin
+return|;
+block|}
+comment|/// Add a new global name to the compile unit.
+name|void
+name|addGlobalName
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|DIE&Die
+argument_list|,
+argument|DIScope Context
+argument_list|)
+name|override
+block|;
+comment|/// Add a new global type to the compile unit.
+name|void
+name|addGlobalType
+argument_list|(
+argument|DIType Ty
+argument_list|,
+argument|const DIE&Die
+argument_list|,
+argument|DIScope Context
+argument_list|)
+name|override
+block|;
 specifier|const
 name|StringMap
 operator|<
+specifier|const
 name|DIE
 operator|*
 operator|>
@@ -386,6 +737,7 @@ block|}
 specifier|const
 name|StringMap
 operator|<
+specifier|const
 name|DIE
 operator|*
 operator|>
@@ -398,1345 +750,169 @@ return|return
 name|GlobalTypes
 return|;
 block|}
-specifier|const
-name|StringMap
-operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|DIE
-operator|*
-operator|>
-expr|>
-operator|&
-name|getAccelNames
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AccelNames
-return|;
-block|}
-specifier|const
-name|StringMap
-operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|DIE
-operator|*
-operator|>
-expr|>
-operator|&
-name|getAccelObjC
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AccelObjC
-return|;
-block|}
-specifier|const
-name|StringMap
-operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|DIE
-operator|*
-operator|>
-expr|>
-operator|&
-name|getAccelNamespace
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AccelNamespace
-return|;
-block|}
-specifier|const
-name|StringMap
-operator|<
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|DIE
-operator|*
-operator|,
-name|unsigned
-operator|>
-expr|>
-operator|>
-operator|&
-name|getAccelTypes
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AccelTypes
-return|;
-block|}
-name|unsigned
-name|getDebugInfoOffset
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DebugInfoOffset
-return|;
-block|}
+comment|/// Add DW_AT_location attribute for a DbgVariable based on provided
+comment|/// MachineLocation.
 name|void
-name|setDebugInfoOffset
-parameter_list|(
-name|unsigned
-name|DbgInfoOff
-parameter_list|)
-block|{
-name|DebugInfoOffset
-operator|=
-name|DbgInfoOff
-expr_stmt|;
-block|}
-comment|/// hasContent - Return true if this compile unit has something to write out.
-comment|///
-name|bool
-name|hasContent
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|!
-name|CUDie
-operator|->
-name|getChildren
-argument_list|()
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-comment|/// getParentContextString - Get a string containing the language specific
-comment|/// context for a global name.
-name|std
-operator|::
-name|string
-name|getParentContextString
+name|addVariableAddress
 argument_list|(
-argument|DIScope Context
+argument|const DbgVariable&DV
+argument_list|,
+argument|DIE&Die
+argument_list|,
+argument|MachineLocation Location
 argument_list|)
-specifier|const
-expr_stmt|;
-comment|/// addGlobalName - Add a new global entity to the compile unit.
-comment|///
-name|void
-name|addGlobalName
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|,
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-name|DIScope
-name|Context
-parameter_list|)
-function_decl|;
-comment|/// addGlobalType - Add a new global type to the compile unit.
-comment|///
-name|void
-name|addGlobalType
-parameter_list|(
-name|DIType
-name|Ty
-parameter_list|)
-function_decl|;
-comment|/// addPubTypes - Add a set of types from the subprogram to the global types.
-name|void
-name|addPubTypes
-parameter_list|(
-name|DISubprogram
-name|SP
-parameter_list|)
-function_decl|;
-comment|/// addAccelName - Add a new name to the name accelerator table.
-name|void
-name|addAccelName
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|,
-name|DIE
-modifier|*
-name|Die
-parameter_list|)
-function_decl|;
-comment|/// addAccelObjC - Add a new name to the ObjC accelerator table.
-name|void
-name|addAccelObjC
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|,
-name|DIE
-modifier|*
-name|Die
-parameter_list|)
-function_decl|;
-comment|/// addAccelNamespace - Add a new name to the namespace accelerator table.
-name|void
-name|addAccelNamespace
-parameter_list|(
-name|StringRef
-name|Name
-parameter_list|,
-name|DIE
-modifier|*
-name|Die
-parameter_list|)
-function_decl|;
-comment|/// addAccelType - Add a new type to the type accelerator table.
-name|void
-name|addAccelType
-argument_list|(
-name|StringRef
-name|Name
-argument_list|,
-name|std
-operator|::
-name|pair
-operator|<
-name|DIE
-operator|*
-argument_list|,
-name|unsigned
-operator|>
-name|Die
-argument_list|)
-decl_stmt|;
-comment|/// getDIE - Returns the debug information entry map slot for the
-comment|/// specified debug variable. We delegate the request to DwarfDebug
-comment|/// when the MDNode can be part of the type system, since DIEs for
-comment|/// the type system can be shared across CUs and the mappings are
-comment|/// kept in DwarfDebug.
-name|DIE
-modifier|*
-name|getDIE
-argument_list|(
-name|DIDescriptor
-name|D
-argument_list|)
-decl|const
-decl_stmt|;
-name|DIEBlock
-modifier|*
-name|getDIEBlock
-parameter_list|()
-block|{
-return|return
-name|new
-argument_list|(
-argument|DIEValueAllocator
-argument_list|)
-name|DIEBlock
-argument_list|()
-return|;
-block|}
-comment|/// insertDIE - Insert DIE into the map. We delegate the request to DwarfDebug
-comment|/// when the MDNode can be part of the type system, since DIEs for
-comment|/// the type system can be shared across CUs and the mappings are
-comment|/// kept in DwarfDebug.
-name|void
-name|insertDIE
-parameter_list|(
-name|DIDescriptor
-name|Desc
-parameter_list|,
-name|DIE
-modifier|*
-name|D
-parameter_list|)
-function_decl|;
-comment|/// addDie - Adds or interns the DIE to the compile unit.
-comment|///
-name|void
-name|addDie
-parameter_list|(
-name|DIE
-modifier|*
-name|Buffer
-parameter_list|)
-block|{
-name|CUDie
-operator|->
-name|addChild
-argument_list|(
-name|Buffer
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// addFlag - Add a flag that is true to the DIE.
-name|void
-name|addFlag
-argument_list|(
-name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|)
-decl_stmt|;
-comment|/// addUInt - Add an unsigned integer attribute data and value.
-comment|///
-name|void
-name|addUInt
-argument_list|(
-name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-name|Optional
-operator|<
-name|dwarf
-operator|::
-name|Form
-operator|>
-name|Form
-argument_list|,
-name|uint64_t
-name|Integer
-argument_list|)
-decl_stmt|;
-name|void
-name|addUInt
-argument_list|(
-name|DIEBlock
-operator|*
-name|Block
-argument_list|,
-name|dwarf
-operator|::
-name|Form
-name|Form
-argument_list|,
-name|uint64_t
-name|Integer
-argument_list|)
-decl_stmt|;
-comment|/// addSInt - Add an signed integer attribute data and value.
-comment|///
-name|void
-name|addSInt
-argument_list|(
-name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-name|Optional
-operator|<
-name|dwarf
-operator|::
-name|Form
-operator|>
-name|Form
-argument_list|,
-name|int64_t
-name|Integer
-argument_list|)
-decl_stmt|;
-name|void
-name|addSInt
-argument_list|(
-name|DIEBlock
-operator|*
-name|Die
-argument_list|,
-name|Optional
-operator|<
-name|dwarf
-operator|::
-name|Form
-operator|>
-name|Form
-argument_list|,
-name|int64_t
-name|Integer
-argument_list|)
-decl_stmt|;
-comment|/// addString - Add a string attribute data and value.
-comment|///
-name|void
-name|addString
-argument_list|(
-name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-specifier|const
-name|StringRef
-name|Str
-argument_list|)
-decl_stmt|;
-comment|/// addLocalString - Add a string attribute data and value.
-comment|///
-name|void
-name|addLocalString
-argument_list|(
-name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-specifier|const
-name|StringRef
-name|Str
-argument_list|)
-decl_stmt|;
-comment|/// addExpr - Add a Dwarf expression attribute data and value.
-comment|///
-name|void
-name|addExpr
-argument_list|(
-name|DIEBlock
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Form
-name|Form
-argument_list|,
-specifier|const
-name|MCExpr
-operator|*
-name|Expr
-argument_list|)
-decl_stmt|;
-comment|/// addLabel - Add a Dwarf label attribute data and value.
-comment|///
-name|void
-name|addLabel
-argument_list|(
-name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-name|dwarf
-operator|::
-name|Form
-name|Form
-argument_list|,
-specifier|const
-name|MCSymbol
-operator|*
-name|Label
-argument_list|)
-decl_stmt|;
-name|void
-name|addLabel
-argument_list|(
-name|DIEBlock
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Form
-name|Form
-argument_list|,
-specifier|const
-name|MCSymbol
-operator|*
-name|Label
-argument_list|)
-decl_stmt|;
-comment|/// addSectionLabel - Add a Dwarf section label attribute data and value.
-comment|///
-name|void
-name|addSectionLabel
-argument_list|(
-name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-specifier|const
-name|MCSymbol
-operator|*
-name|Label
-argument_list|)
-decl_stmt|;
-comment|/// addSectionOffset - Add an offset into a section attribute data and value.
-comment|///
-name|void
-name|addSectionOffset
-argument_list|(
-name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-name|uint64_t
-name|Integer
-argument_list|)
-decl_stmt|;
-comment|/// addLabelAddress - Add a dwarf label attribute data and value using
-comment|/// either DW_FORM_addr or DW_FORM_GNU_addr_index.
-comment|///
-name|void
-name|addLabelAddress
-argument_list|(
-name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-name|MCSymbol
-operator|*
-name|Label
-argument_list|)
-decl_stmt|;
-comment|/// addOpAddress - Add a dwarf op address data and value using the
-comment|/// form given and an op of either DW_FORM_addr or DW_FORM_GNU_addr_index.
-comment|///
-name|void
-name|addOpAddress
-parameter_list|(
-name|DIEBlock
-modifier|*
-name|Die
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|Label
-parameter_list|)
-function_decl|;
-comment|/// addSectionDelta - Add a label delta attribute data and value.
-name|void
-name|addSectionDelta
-argument_list|(
-name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-specifier|const
-name|MCSymbol
-operator|*
-name|Hi
-argument_list|,
-specifier|const
-name|MCSymbol
-operator|*
-name|Lo
-argument_list|)
-decl_stmt|;
-comment|/// addDIEEntry - Add a DIE attribute data and value.
-comment|///
-name|void
-name|addDIEEntry
-argument_list|(
-name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-name|DIE
-operator|*
-name|Entry
-argument_list|)
-decl_stmt|;
-comment|/// addDIEEntry - Add a DIE attribute data and value.
-comment|///
-name|void
-name|addDIEEntry
-argument_list|(
-name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-name|DIEEntry
-operator|*
-name|Entry
-argument_list|)
-decl_stmt|;
-comment|/// addBlock - Add block data.
-comment|///
-name|void
-name|addBlock
-argument_list|(
-name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-name|DIEBlock
-operator|*
-name|Block
-argument_list|)
-decl_stmt|;
-comment|/// addSourceLine - Add location information to specified debug information
-comment|/// entry.
-name|void
-name|addSourceLine
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-name|DIVariable
-name|V
-parameter_list|)
-function_decl|;
-name|void
-name|addSourceLine
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-name|DIGlobalVariable
-name|G
-parameter_list|)
-function_decl|;
-name|void
-name|addSourceLine
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-name|DISubprogram
-name|SP
-parameter_list|)
-function_decl|;
-name|void
-name|addSourceLine
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-name|DIType
-name|Ty
-parameter_list|)
-function_decl|;
-name|void
-name|addSourceLine
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-name|DINameSpace
-name|NS
-parameter_list|)
-function_decl|;
-name|void
-name|addSourceLine
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-name|DIObjCProperty
-name|Ty
-parameter_list|)
-function_decl|;
-comment|/// addAddress - Add an address attribute to a die based on the location
-comment|/// provided.
+block|;
+comment|/// Add an address attribute to a die based on the location provided.
 name|void
 name|addAddress
 argument_list|(
-name|DIE
-operator|*
-name|Die
+argument|DIE&Die
 argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
+argument|dwarf::Attribute Attribute
 argument_list|,
-specifier|const
-name|MachineLocation
-operator|&
-name|Location
+argument|const MachineLocation&Location
 argument_list|,
-name|bool
-name|Indirect
-operator|=
-name|false
+argument|bool Indirect = false
 argument_list|)
-decl_stmt|;
-comment|/// addConstantValue - Add constant value entry in variable DIE.
-name|void
-name|addConstantValue
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-specifier|const
-name|MachineOperand
-modifier|&
-name|MO
-parameter_list|,
-name|DIType
-name|Ty
-parameter_list|)
-function_decl|;
-name|void
-name|addConstantValue
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-specifier|const
-name|ConstantInt
-modifier|*
-name|CI
-parameter_list|,
-name|bool
-name|Unsigned
-parameter_list|)
-function_decl|;
-name|void
-name|addConstantValue
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-specifier|const
-name|APInt
-modifier|&
-name|Val
-parameter_list|,
-name|bool
-name|Unsigned
-parameter_list|)
-function_decl|;
-comment|/// addConstantFPValue - Add constant value entry in variable DIE.
-name|void
-name|addConstantFPValue
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-specifier|const
-name|MachineOperand
-modifier|&
-name|MO
-parameter_list|)
-function_decl|;
-name|void
-name|addConstantFPValue
-parameter_list|(
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-specifier|const
-name|ConstantFP
-modifier|*
-name|CFP
-parameter_list|)
-function_decl|;
-comment|/// addTemplateParams - Add template parameters in buffer.
-name|void
-name|addTemplateParams
-parameter_list|(
-name|DIE
-modifier|&
-name|Buffer
-parameter_list|,
-name|DIArray
-name|TParams
-parameter_list|)
-function_decl|;
-comment|/// addRegisterOp - Add register operand.
-name|void
-name|addRegisterOp
-parameter_list|(
-name|DIEBlock
-modifier|*
-name|TheDie
-parameter_list|,
-name|unsigned
-name|Reg
-parameter_list|)
-function_decl|;
-comment|/// addRegisterOffset - Add register offset.
-name|void
-name|addRegisterOffset
-parameter_list|(
-name|DIEBlock
-modifier|*
-name|TheDie
-parameter_list|,
-name|unsigned
-name|Reg
-parameter_list|,
-name|int64_t
-name|Offset
-parameter_list|)
-function_decl|;
-comment|/// addComplexAddress - Start with the address based on the location provided,
-comment|/// and generate the DWARF information necessary to find the actual variable
-comment|/// (navigating the extra location information encoded in the type) based on
-comment|/// the starting location.  Add the DWARF information to the die.
-comment|///
+block|;
+comment|/// Start with the address based on the location provided, and generate the
+comment|/// DWARF information necessary to find the actual variable (navigating the
+comment|/// extra location information encoded in the type) based on the starting
+comment|/// location.  Add the DWARF information to the die.
 name|void
 name|addComplexAddress
 argument_list|(
-specifier|const
-name|DbgVariable
-operator|&
-name|DV
+argument|const DbgVariable&DV
 argument_list|,
-name|DIE
-operator|*
-name|Die
+argument|DIE&Die
 argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
+argument|dwarf::Attribute Attribute
 argument_list|,
-specifier|const
-name|MachineLocation
-operator|&
-name|Location
+argument|const MachineLocation&Location
 argument_list|)
-decl_stmt|;
-comment|// FIXME: Should be reformulated in terms of addComplexAddress.
-comment|/// addBlockByrefAddress - Start with the address based on the location
-comment|/// provided, and generate the DWARF information necessary to find the
-comment|/// actual Block variable (navigating the Block struct) based on the
-comment|/// starting location.  Add the DWARF information to the die.  Obsolete,
-comment|/// please use addComplexAddress instead.
-comment|///
+block|;
+comment|/// Add a Dwarf loclistptr attribute data and value.
 name|void
-name|addBlockByrefAddress
+name|addLocationList
+argument_list|(
+argument|DIE&Die
+argument_list|,
+argument|dwarf::Attribute Attribute
+argument_list|,
+argument|unsigned Index
+argument_list|)
+block|;
+name|void
+name|applyVariableAttributes
 argument_list|(
 specifier|const
 name|DbgVariable
 operator|&
-name|DV
+name|Var
 argument_list|,
 name|DIE
-operator|*
-name|Die
-argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-argument_list|,
-specifier|const
-name|MachineLocation
 operator|&
-name|Location
+name|VariableDie
 argument_list|)
-decl_stmt|;
-comment|/// addVariableAddress - Add DW_AT_location attribute for a
-comment|/// DbgVariable based on provided MachineLocation.
+block|;
+comment|/// Add a Dwarf expression attribute data and value.
 name|void
-name|addVariableAddress
-parameter_list|(
-specifier|const
-name|DbgVariable
-modifier|&
-name|DV
-parameter_list|,
-name|DIE
-modifier|*
-name|Die
-parameter_list|,
-name|MachineLocation
-name|Location
-parameter_list|)
-function_decl|;
-comment|/// addType - Add a new type attribute to the specified entity. This takes
-comment|/// and attribute parameter because DW_AT_friend attributes are also
-comment|/// type references.
-name|void
-name|addType
+name|addExpr
 argument_list|(
-name|DIE
-operator|*
-name|Entity
+argument|DIELoc&Die
 argument_list|,
-name|DIType
-name|Ty
+argument|dwarf::Form Form
 argument_list|,
-name|dwarf
-operator|::
-name|Attribute
-name|Attribute
-operator|=
-name|dwarf
-operator|::
-name|DW_AT_type
+argument|const MCExpr *Expr
 argument_list|)
-decl_stmt|;
-comment|/// getOrCreateNameSpace - Create a DIE for DINameSpace.
-name|DIE
-modifier|*
-name|getOrCreateNameSpace
-parameter_list|(
-name|DINameSpace
-name|NS
-parameter_list|)
-function_decl|;
-comment|/// getOrCreateSubprogramDIE - Create new DIE using SP.
-name|DIE
-modifier|*
-name|getOrCreateSubprogramDIE
-parameter_list|(
-name|DISubprogram
-name|SP
-parameter_list|)
-function_decl|;
-comment|/// getOrCreateTypeDIE - Find existing DIE or create new DIE for the
-comment|/// given DIType.
-name|DIE
-modifier|*
-name|getOrCreateTypeDIE
-parameter_list|(
+block|;
+name|void
+name|applySubprogramAttributesToDefinition
+argument_list|(
+argument|DISubprogram SP
+argument_list|,
+argument|DIE&SPDie
+argument_list|)
+block|;
+comment|/// getRangeLists - Get the vector of range lists.
 specifier|const
-name|MDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// getOrCreateContextDIE - Get context owner's DIE.
-name|DIE
-modifier|*
-name|getOrCreateContextDIE
-parameter_list|(
-name|DIScope
-name|Context
-parameter_list|)
-function_decl|;
-comment|/// createGlobalVariableDIE - create global variable DIE.
-name|void
-name|createGlobalVariableDIE
-parameter_list|(
-name|DIGlobalVariable
-name|GV
-parameter_list|)
-function_decl|;
-comment|/// constructContainingTypeDIEs - Construct DIEs for types that contain
-comment|/// vtables.
-name|void
-name|constructContainingTypeDIEs
-parameter_list|()
-function_decl|;
-comment|/// constructVariableDIE - Construct a DIE for the given DbgVariable.
-name|DIE
-modifier|*
-name|constructVariableDIE
-parameter_list|(
-name|DbgVariable
-modifier|&
-name|DV
-parameter_list|,
-name|bool
-name|isScopeAbstract
-parameter_list|)
-function_decl|;
-comment|/// Create a DIE with the given Tag, add the DIE to its parent, and
-comment|/// call insertDIE if MD is not null.
-name|DIE
-modifier|*
-name|createAndAddDIE
-parameter_list|(
-name|unsigned
-name|Tag
-parameter_list|,
-name|DIE
-modifier|&
-name|Parent
-parameter_list|,
-name|DIDescriptor
-name|N
-init|=
-name|DIDescriptor
-argument_list|()
-parameter_list|)
-function_decl|;
-comment|/// Compute the size of a header for this unit, not including the initial
-comment|/// length field.
-name|unsigned
-name|getHeaderSize
+name|SmallVectorImpl
+operator|<
+name|RangeSpanList
+operator|>
+operator|&
+name|getRangeLists
 argument_list|()
 specifier|const
 block|{
 return|return
-sizeof|sizeof
-argument_list|(
-name|int16_t
-argument_list|)
-operator|+
-comment|// DWARF version number
-sizeof|sizeof
-argument_list|(
-name|int32_t
-argument_list|)
-operator|+
-comment|// Offset Into Abbrev. Section
-sizeof|sizeof
-argument_list|(
-name|int8_t
-argument_list|)
+operator|(
+name|Skeleton
+operator|?
+name|Skeleton
+operator|:
+name|this
+operator|)
+operator|->
+name|CURangeLists
 return|;
-comment|// Pointer Size (in bytes)
 block|}
-comment|/// Emit the header for this unit, not including the initial length field.
-name|void
-name|emitHeader
-parameter_list|(
+comment|/// getRanges - Get the list of ranges for this unit.
 specifier|const
-name|MCSection
-modifier|*
-name|ASection
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|ASectionSym
-parameter_list|)
-function_decl|;
-name|private
-label|:
-comment|/// constructSubprogramArguments - Construct function argument DIEs.
-name|void
-name|constructSubprogramArguments
-parameter_list|(
-name|DIE
-modifier|&
-name|Buffer
-parameter_list|,
-name|DIArray
-name|Args
-parameter_list|)
-function_decl|;
-comment|/// constructTypeDIE - Construct basic type die from DIBasicType.
-name|void
-name|constructTypeDIE
-parameter_list|(
-name|DIE
-modifier|&
-name|Buffer
-parameter_list|,
-name|DIBasicType
-name|BTy
-parameter_list|)
-function_decl|;
-comment|/// constructTypeDIE - Construct derived type die from DIDerivedType.
-name|void
-name|constructTypeDIE
-parameter_list|(
-name|DIE
-modifier|&
-name|Buffer
-parameter_list|,
-name|DIDerivedType
-name|DTy
-parameter_list|)
-function_decl|;
-comment|/// constructTypeDIE - Construct type DIE from DICompositeType.
-name|void
-name|constructTypeDIE
-parameter_list|(
-name|DIE
-modifier|&
-name|Buffer
-parameter_list|,
-name|DICompositeType
-name|CTy
-parameter_list|)
-function_decl|;
-comment|/// constructSubrangeDIE - Construct subrange DIE from DISubrange.
-name|void
-name|constructSubrangeDIE
-parameter_list|(
-name|DIE
-modifier|&
-name|Buffer
-parameter_list|,
-name|DISubrange
-name|SR
-parameter_list|,
-name|DIE
-modifier|*
-name|IndexTy
-parameter_list|)
-function_decl|;
-comment|/// constructArrayTypeDIE - Construct array type DIE from DICompositeType.
-name|void
-name|constructArrayTypeDIE
-parameter_list|(
-name|DIE
-modifier|&
-name|Buffer
-parameter_list|,
-name|DICompositeType
-name|CTy
-parameter_list|)
-function_decl|;
-comment|/// constructEnumTypeDIE - Construct enum type DIE from DIEnumerator.
-name|void
-name|constructEnumTypeDIE
-parameter_list|(
-name|DIE
-modifier|&
-name|Buffer
-parameter_list|,
-name|DICompositeType
-name|CTy
-parameter_list|)
-function_decl|;
-comment|/// constructMemberDIE - Construct member DIE from DIDerivedType.
-name|void
-name|constructMemberDIE
-parameter_list|(
-name|DIE
-modifier|&
-name|Buffer
-parameter_list|,
-name|DIDerivedType
-name|DT
-parameter_list|)
-function_decl|;
-comment|/// constructTemplateTypeParameterDIE - Construct new DIE for the given
-comment|/// DITemplateTypeParameter.
-name|void
-name|constructTemplateTypeParameterDIE
-parameter_list|(
-name|DIE
-modifier|&
-name|Buffer
-parameter_list|,
-name|DITemplateTypeParameter
-name|TP
-parameter_list|)
-function_decl|;
-comment|/// constructTemplateValueParameterDIE - Construct new DIE for the given
-comment|/// DITemplateValueParameter.
-name|void
-name|constructTemplateValueParameterDIE
-parameter_list|(
-name|DIE
-modifier|&
-name|Buffer
-parameter_list|,
-name|DITemplateValueParameter
-name|TVP
-parameter_list|)
-function_decl|;
-comment|/// getOrCreateStaticMemberDIE - Create new static data member DIE.
-name|DIE
-modifier|*
-name|getOrCreateStaticMemberDIE
-parameter_list|(
-name|DIDerivedType
-name|DT
-parameter_list|)
-function_decl|;
-comment|/// Offset of the CUDie from beginning of debug info section.
-name|unsigned
-name|DebugInfoOffset
-decl_stmt|;
-comment|/// getLowerBoundDefault - Return the default lower bound for an array. If the
-comment|/// DWARF version doesn't handle the language, return -1.
-name|int64_t
-name|getDefaultLowerBound
+name|SmallVectorImpl
+operator|<
+name|RangeSpan
+operator|>
+operator|&
+name|getRanges
 argument_list|()
 specifier|const
-expr_stmt|;
-comment|/// getDIEEntry - Returns the debug information entry for the specified
-comment|/// debug variable.
-name|DIEEntry
-modifier|*
-name|getDIEEntry
-argument_list|(
-specifier|const
-name|MDNode
-operator|*
-name|N
-argument_list|)
-decl|const
 block|{
 return|return
-name|MDNodeToDIEEntryMap
-operator|.
-name|lookup
-argument_list|(
-name|N
-argument_list|)
+name|CURanges
 return|;
 block|}
-comment|/// insertDIEEntry - Insert debug information entry into the map.
-name|void
-name|insertDIEEntry
-parameter_list|(
-specifier|const
-name|MDNode
-modifier|*
-name|N
-parameter_list|,
-name|DIEEntry
-modifier|*
-name|E
-parameter_list|)
+name|SmallVector
+operator|<
+name|RangeSpan
+block|,
+literal|2
+operator|>
+name|takeRanges
+argument_list|()
 block|{
-name|MDNodeToDIEEntryMap
-operator|.
-name|insert
-argument_list|(
+return|return
 name|std
 operator|::
-name|make_pair
+name|move
 argument_list|(
-name|N
-argument_list|,
-name|E
+name|CURanges
 argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|// getIndexTyDie - Get an anonymous type for index type.
-name|DIE
-modifier|*
-name|getIndexTyDie
-parameter_list|()
-block|{
-return|return
-name|IndexTyDie
 return|;
 block|}
-comment|// setIndexTyDie - Set D as anonymous type for index which can be reused
-comment|// later.
 name|void
-name|setIndexTyDie
-parameter_list|(
-name|DIE
-modifier|*
-name|D
-parameter_list|)
-block|{
-name|IndexTyDie
-operator|=
-name|D
-expr_stmt|;
-block|}
-comment|/// createDIEEntry - Creates a new DIEEntry to be a proxy for a debug
-comment|/// information entry.
-name|DIEEntry
-modifier|*
-name|createDIEEntry
-parameter_list|(
-name|DIE
-modifier|*
-name|Entry
-parameter_list|)
-function_decl|;
-comment|/// resolve - Look in the DwarfDebug map for the MDNode that
-comment|/// corresponds to the reference.
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|T
-name|resolve
+name|setBaseAddress
 argument_list|(
-argument|DIRef<T> Ref
+argument|const MCSymbol *Base
 argument_list|)
+block|{
+name|BaseAddress
+operator|=
+name|Base
+block|; }
+specifier|const
+name|MCSymbol
+operator|*
+name|getBaseAddress
+argument_list|()
 specifier|const
 block|{
 return|return
-name|DD
-operator|->
-name|resolve
-argument_list|(
-name|Ref
-argument_list|)
+name|BaseAddress
 return|;
 block|}
-block|}
-empty_stmt|;
-block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|Mips16ISELLOWERING_H
+name|LLVM_LIB_TARGET_MIPS_MIPS16ISELLOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|Mips16ISELLOWERING_H
+name|LLVM_LIB_TARGET_MIPS_MIPS16ISELLOWERING_H
 end_define
 
 begin_include
@@ -80,22 +80,31 @@ operator|:
 name|explicit
 name|Mips16TargetLowering
 argument_list|(
+specifier|const
 name|MipsTargetMachine
 operator|&
 name|TM
+argument_list|,
+specifier|const
+name|MipsSubtarget
+operator|&
+name|STI
 argument_list|)
 block|;
-name|virtual
 name|bool
-name|allowsUnalignedMemoryAccesses
+name|allowsMisalignedMemoryAccesses
 argument_list|(
 argument|EVT VT
+argument_list|,
+argument|unsigned AddrSpace
+argument_list|,
+argument|unsigned Align
 argument_list|,
 argument|bool *Fast
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineBasicBlock
 operator|*
 name|EmitInstrWithCustomInserter
@@ -105,20 +114,21 @@ argument_list|,
 argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|private
 operator|:
-name|virtual
 name|bool
 name|isEligibleForTailCallOptimization
 argument_list|(
-argument|const MipsCC&MipsCCInfo
+argument|const CCState&CCInfo
 argument_list|,
 argument|unsigned NextStackOffset
 argument_list|,
-argument|const MipsFunctionInfo& FI
+argument|const MipsFunctionInfo&FI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|setMips16HardFloatLibCalls
@@ -145,7 +155,6 @@ argument|bool&needHelper
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|void
 name|getOpndList
 argument_list|(
@@ -161,6 +170,8 @@ argument|bool GlobalOrExternal
 argument_list|,
 argument|bool InternalLinkage
 argument_list|,
+argument|bool IsCallReloc
+argument_list|,
 argument|CallLoweringInfo&CLI
 argument_list|,
 argument|SDValue Callee
@@ -168,6 +179,7 @@ argument_list|,
 argument|SDValue Chain
 argument_list|)
 specifier|const
+name|override
 block|;
 name|MachineBasicBlock
 operator|*
@@ -275,10 +287,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// Mips16ISELLOWERING_H
-end_comment
 
 end_unit
 

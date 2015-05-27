@@ -19,11 +19,11 @@ begin_struct
 struct|struct
 name|cpack_state
 block|{
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|c_buf
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|c_next
 decl_stmt|;
@@ -42,7 +42,7 @@ name|struct
 name|cpack_state
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|,
 name|size_t
@@ -58,7 +58,7 @@ name|struct
 name|cpack_state
 modifier|*
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -72,7 +72,7 @@ name|struct
 name|cpack_state
 modifier|*
 parameter_list|,
-name|u_int16_t
+name|uint16_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -86,7 +86,7 @@ name|struct
 name|cpack_state
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -100,22 +100,22 @@ name|struct
 name|cpack_state
 modifier|*
 parameter_list|,
-name|u_int64_t
+name|uint64_t
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|cpack_next_boundary
 parameter_list|(
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|buf
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|p
 parameter_list|,
@@ -126,7 +126,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|cpack_align_and_reserve
 parameter_list|(
@@ -150,7 +150,7 @@ name|__s
 parameter_list|,
 name|__p
 parameter_list|)
-value|cpack_uint8((__s),  (u_int8_t*)(__p))
+value|cpack_uint8((__s),  (uint8_t*)(__p))
 end_define
 
 begin_define
@@ -162,7 +162,7 @@ name|__s
 parameter_list|,
 name|__p
 parameter_list|)
-value|cpack_uint16((__s), (u_int16_t*)(__p))
+value|cpack_uint16((__s), (uint16_t*)(__p))
 end_define
 
 begin_define
@@ -174,7 +174,7 @@ name|__s
 parameter_list|,
 name|__p
 parameter_list|)
-value|cpack_uint32((__s), (u_int32_t*)(__p))
+value|cpack_uint32((__s), (uint32_t*)(__p))
 end_define
 
 begin_define
@@ -186,8 +186,23 @@ name|__s
 parameter_list|,
 name|__p
 parameter_list|)
-value|cpack_uint64((__s), (u_int64_t*)(__p))
+value|cpack_uint64((__s), (uint64_t*)(__p))
 end_define
+
+begin_function_decl
+specifier|extern
+name|int
+name|cpack_advance
+parameter_list|(
+name|struct
+name|cpack_state
+modifier|*
+parameter_list|,
+specifier|const
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

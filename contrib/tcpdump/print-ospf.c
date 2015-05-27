@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * OSPF support contributed by Jeffrey Honig (jch@mitchell.cit.cornell.edu)  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-ospf.c,v 1.66 2007-10-08 07:53:21 hannes Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -47,12 +30,6 @@ begin_include
 include|#
 directive|include
 file|<tcpdump-stdinc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
 end_include
 
 begin_include
@@ -85,14 +62,20 @@ directive|include
 file|"ospf.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"ip.h"
-end_include
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|" [|ospf2]"
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|ospf_option_values
@@ -159,6 +142,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|ospf_authtype_values
@@ -194,6 +178,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|ospf_rla_flag_values
@@ -235,6 +220,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|type2str
@@ -288,6 +274,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|lsa_values
@@ -365,6 +352,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|ospf_dd_flag_values
@@ -406,6 +394,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|lsa_opaque_values
@@ -441,6 +430,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|lsa_opaque_te_tlv_values
@@ -470,6 +460,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|lsa_opaque_te_link_tlv_subtlv_values
@@ -571,6 +562,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|lsa_opaque_grace_tlv_values
@@ -606,6 +598,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|lsa_opaque_grace_tlv_reason_values
@@ -647,6 +640,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|lsa_opaque_te_tlv_link_type_sub_tlv_values
@@ -676,6 +670,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|lsa_opaque_ri_tlv_values
@@ -699,6 +694,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|lsa_opaque_ri_tlv_cap_values
@@ -776,6 +772,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|ospf_lls_tlv_values
@@ -805,6 +802,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|ospf_lls_eo_options
@@ -832,105 +830,16 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|char
-name|tstr
-index|[]
-init|=
-literal|" [|ospf2]"
-decl_stmt|;
-end_decl_stmt
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|WIN32
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|inline
-value|__inline
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* WIN32 */
-end_comment
-
-begin_function_decl
-specifier|static
-name|int
-name|ospf_print_lshdr
-parameter_list|(
-specifier|const
-name|struct
-name|lsa_hdr
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-specifier|const
-name|u_char
-modifier|*
-name|ospf_print_lsa
-parameter_list|(
-specifier|const
-name|struct
-name|lsa
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ospf_decode_v2
-parameter_list|(
-specifier|const
-name|struct
-name|ospfhdr
-modifier|*
-parameter_list|,
-specifier|const
-name|u_char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|ospf_decode_lls
-parameter_list|(
-specifier|const
-name|struct
-name|ospfhdr
-modifier|*
-parameter_list|,
-specifier|register
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|ospf_print_grace_lsa
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tptr
 parameter_list|,
@@ -950,7 +859,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -965,11 +874,15 @@ operator|<
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Remaining LS length %u< 4"
-argument_list|,
+operator|,
 name|ls_length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1001,10 +914,13 @@ name|ls_length
 operator|-=
 literal|4
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    %s TLV (%u), length %u, value: "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|lsa_opaque_grace_tlv_values
@@ -1013,10 +929,11 @@ literal|"unknown"
 argument_list|,
 name|tlv_type
 argument_list|)
-argument_list|,
+operator|,
 name|tlv_type
-argument_list|,
+operator|,
 name|tlv_length
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1026,13 +943,17 @@ operator|>
 name|ls_length
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Bogus length %u> %u"
-argument_list|,
+operator|,
 name|tlv_length
-argument_list|,
+operator|,
 name|ls_length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1057,7 +978,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -1080,11 +1001,15 @@ operator|!=
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Bogus length %u != 4"
-argument_list|,
+operator|,
 name|tlv_length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1092,14 +1017,18 @@ operator|-
 literal|1
 return|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%us"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1113,11 +1042,15 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Bogus length %u != 1"
-argument_list|,
+operator|,
 name|tlv_length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1125,10 +1058,13 @@ operator|-
 literal|1
 return|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s (%u)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|lsa_opaque_grace_tlv_reason_values
@@ -1138,9 +1074,10 @@ argument_list|,
 operator|*
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 operator|*
 name|tptr
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1154,11 +1091,15 @@ operator|!=
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Bogus length %u != 4"
-argument_list|,
+operator|,
 name|tlv_length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1166,21 +1107,29 @@ operator|-
 literal|1
 return|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
@@ -1190,6 +1139,8 @@ condition|(
 operator|!
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t      "
@@ -1248,8 +1199,12 @@ begin_function
 name|int
 name|ospf_print_te_lsa
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tptr
 parameter_list|,
@@ -1279,7 +1234,7 @@ comment|/* int to float conversion buffer for several subTLVs */
 name|float
 name|f
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|i
 decl_stmt|;
 block|}
@@ -1292,7 +1247,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -1307,11 +1262,15 @@ operator|<
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Remaining LS length %u< 4"
-argument_list|,
+operator|,
 name|ls_length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1343,10 +1302,13 @@ name|ls_length
 operator|-=
 literal|4
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    %s TLV (%u), length: %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|lsa_opaque_te_tlv_values
@@ -1355,10 +1317,11 @@ literal|"unknown"
 argument_list|,
 name|tlv_type
 argument_list|)
-argument_list|,
+operator|,
 name|tlv_type
-argument_list|,
+operator|,
 name|tlv_length
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1368,13 +1331,17 @@ operator|>
 name|ls_length
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Bogus length %u> %u"
-argument_list|,
+operator|,
 name|tlv_length
-argument_list|,
+operator|,
 name|ls_length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1429,11 +1396,15 @@ operator|<
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Remaining TLV length %u< 4"
-argument_list|,
+operator|,
 name|tlv_length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1441,7 +1412,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -1473,10 +1444,13 @@ name|tlv_length
 operator|-=
 literal|4
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s subTLV (%u), length: %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|lsa_opaque_te_link_tlv_subtlv_values
@@ -1485,13 +1459,14 @@ literal|"unknown"
 argument_list|,
 name|subtlv_type
 argument_list|)
-argument_list|,
+operator|,
 name|subtlv_type
-argument_list|,
+operator|,
 name|subtlv_length
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -1507,14 +1482,18 @@ block|{
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_ADMIN_GROUP
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", 0x%08x"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1524,19 +1503,25 @@ case|:
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_LINK_LOCAL_REMOTE_ID
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s (0x%08x)"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1546,23 +1531,29 @@ operator|==
 literal|8
 condition|)
 comment|/* rfc4203 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s (0x%08x)"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 operator|+
 literal|4
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1572,14 +1563,20 @@ case|:
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_REMOTE_IP
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1598,10 +1595,13 @@ argument_list|(
 name|tptr
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %.3f Mbps"
-argument_list|,
+operator|,
 name|bw
 operator|.
 name|f
@@ -1609,6 +1609,7 @@ operator|*
 literal|8
 operator|/
 literal|1000000
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1642,12 +1643,15 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\tTE-Class %u: %.3f Mbps"
-argument_list|,
+operator|,
 name|te_class
-argument_list|,
+operator|,
 name|bw
 operator|.
 name|f
@@ -1655,6 +1659,7 @@ operator|*
 literal|8
 operator|/
 literal|1000000
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1662,10 +1667,13 @@ break|break;
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_BW_CONSTRAINTS
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\tBandwidth Constraints Model ID: %s (%u)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|diffserv_te_bc_values
@@ -1675,9 +1683,10 @@ argument_list|,
 operator|*
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 operator|*
 name|tptr
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* decode BCs until the subTLV ends */
@@ -1716,12 +1725,15 @@ operator|*
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t  Bandwidth constraint CT%u: %.3f Mbps"
-argument_list|,
+operator|,
 name|te_class
-argument_list|,
+operator|,
 name|bw
 operator|.
 name|f
@@ -1729,6 +1741,7 @@ operator|*
 literal|8
 operator|/
 literal|1000000
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1736,24 +1749,31 @@ break|break;
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_TE_METRIC
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Metric %u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_LINK_PROTECTION_TYPE
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s, Priority %u"
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|gmpls_link_prot_values
@@ -1763,12 +1783,13 @@ argument_list|,
 operator|*
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 operator|*
 operator|(
 name|tptr
 operator|+
 literal|1
+operator|)
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1776,10 +1797,13 @@ break|break;
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_INTF_SW_CAP_DESCR
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\tInterface Switching Capability: %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|gmpls_switch_cap_values
@@ -1791,12 +1815,16 @@ operator|(
 name|tptr
 operator|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\tLSP Encoding: %s\n\t\tMax LSP Bandwidth:"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|gmpls_encoding_values
@@ -1810,6 +1838,7 @@ operator|+
 literal|1
 operator|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1843,12 +1872,15 @@ literal|4
 operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t  priority level %d: %.3f Mbps"
-argument_list|,
+operator|,
 name|priority_level
-argument_list|,
+operator|,
 name|bw
 operator|.
 name|f
@@ -1856,6 +1888,7 @@ operator|*
 literal|8
 operator|/
 literal|1000000
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1863,10 +1896,13 @@ break|break;
 case|case
 name|LS_OPAQUE_TE_LINK_SUBTLV_LINK_TYPE
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s (%u)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|lsa_opaque_te_tlv_link_type_sub_tlv_values
@@ -1876,9 +1912,10 @@ argument_list|,
 operator|*
 name|tptr
 argument_list|)
-argument_list|,
+operator|,
 operator|*
 name|tptr
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1897,9 +1934,13 @@ name|count_srlg
 operator|!=
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\t  Shared risk group: "
+operator|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -1918,13 +1959,17 @@ argument_list|(
 name|tptr
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%d"
-argument_list|,
+operator|,
 name|bw
 operator|.
 name|i
+operator|)
 argument_list|)
 expr_stmt|;
 name|tptr
@@ -1940,9 +1985,13 @@ name|count_srlg
 operator|>
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", "
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1950,7 +1999,9 @@ break|break;
 default|default:
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
@@ -1960,6 +2011,8 @@ condition|(
 operator|!
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t\t"
@@ -2013,11 +2066,15 @@ operator|<
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    TLV length %u< 4"
-argument_list|,
+operator|,
 name|tlv_length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2025,7 +2082,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -2033,21 +2090,29 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
@@ -2057,6 +2122,8 @@ condition|(
 operator|!
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t      "
@@ -2116,6 +2183,10 @@ specifier|static
 name|int
 name|ospf_print_lshdr
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|struct
@@ -2127,7 +2198,7 @@ block|{
 name|u_int
 name|ls_length
 decl_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|lshp
 operator|->
@@ -2155,12 +2226,15 @@ name|lsa_hdr
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Bogus length %u< header (%lu)"
-argument_list|,
+operator|,
 name|ls_length
-argument_list|,
+operator|,
 operator|(
 name|unsigned
 name|long
@@ -2170,6 +2244,7 @@ argument_list|(
 expr|struct
 name|lsa_hdr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2179,7 +2254,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|lshp
 operator|->
@@ -2187,18 +2262,23 @@ name|ls_seq
 argument_list|)
 expr_stmt|;
 comment|/* XXX - ls_length check checked this */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Advertising Router %s, seq 0x%08x, age %us, length %u"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|lshp
 operator|->
 name|ls_router
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -2206,7 +2286,7 @@ name|lshp
 operator|->
 name|ls_seq
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -2214,7 +2294,7 @@ name|lshp
 operator|->
 name|ls_age
 argument_list|)
-argument_list|,
+operator|,
 name|ls_length
 operator|-
 operator|(
@@ -2225,9 +2305,10 @@ argument_list|(
 expr|struct
 name|lsa_hdr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|lshp
 operator|->
@@ -2252,10 +2333,13 @@ case|:
 case|case
 name|LS_TYPE_OPAQUE_DW
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    %s LSA (%d), Opaque-Type %s LSA (%u), Opaque-ID %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|lsa_values
@@ -2266,11 +2350,11 @@ name|lshp
 operator|->
 name|ls_type
 argument_list|)
-argument_list|,
+operator|,
 name|lshp
 operator|->
 name|ls_type
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|lsa_opaque_values
@@ -2289,7 +2373,7 @@ operator|.
 name|opaque_type
 operator|)
 argument_list|)
-argument_list|,
+operator|,
 operator|*
 operator|(
 operator|&
@@ -2301,7 +2385,7 @@ name|opaque_field
 operator|.
 name|opaque_type
 operator|)
-argument_list|,
+operator|,
 name|EXTRACT_24BITS
 argument_list|(
 operator|&
@@ -2313,15 +2397,19 @@ name|opaque_field
 operator|.
 name|opaque_id
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 comment|/* all other LSA types use regular style LSA headers */
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    %s LSA (%d), LSA-ID: %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|lsa_values
@@ -2332,13 +2420,15 @@ name|lshp
 operator|->
 name|ls_type
 argument_list|)
-argument_list|,
+operator|,
 name|lshp
 operator|->
 name|ls_type
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|lshp
 operator|->
@@ -2346,11 +2436,12 @@ name|un_lsa_id
 operator|.
 name|lsa_id
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|lshp
 operator|->
@@ -2358,10 +2449,13 @@ name|ls_options
 argument_list|)
 expr_stmt|;
 comment|/* XXX - ls_length check checked this */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Options: [%s]"
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|ospf_option_values
@@ -2372,6 +2466,7 @@ name|lshp
 operator|->
 name|ls_options
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2396,6 +2491,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|ospf_topology_values
@@ -2438,6 +2534,10 @@ specifier|static
 name|void
 name|ospf_print_tos_metrics
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|union
 name|un_tos
@@ -2471,10 +2571,13 @@ condition|(
 name|toscount
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\ttopology %s(%u), metric %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ospf_topology_values
@@ -2491,7 +2594,7 @@ name|tos_type
 else|:
 literal|0
 argument_list|)
-argument_list|,
+operator|,
 name|metric_count
 condition|?
 name|tos
@@ -2501,7 +2604,7 @@ operator|.
 name|tos_type
 else|:
 literal|0
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -2511,6 +2614,7 @@ name|metrics
 operator|.
 name|tos_metric
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|metric_count
@@ -2533,10 +2637,14 @@ end_comment
 begin_function
 specifier|static
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|ospf_print_lsa
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|struct
@@ -2547,7 +2655,7 @@ parameter_list|)
 block|{
 specifier|register
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|ls_end
 decl_stmt|;
@@ -2581,7 +2689,7 @@ name|mcp
 decl_stmt|;
 specifier|register
 specifier|const
-name|u_int32_t
+name|uint32_t
 modifier|*
 name|lp
 decl_stmt|;
@@ -2600,14 +2708,14 @@ name|int
 name|ls_length
 decl_stmt|;
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tptr
 decl_stmt|;
 name|tptr
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|lsap
@@ -2621,6 +2729,8 @@ name|ls_length
 operator|=
 name|ospf_print_lshdr
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|lsap
 operator|->
@@ -2642,7 +2752,7 @@ return|;
 name|ls_end
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|lsap
@@ -2669,7 +2779,7 @@ block|{
 case|case
 name|LS_TYPE_ROUTER
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|lsap
 operator|->
@@ -2680,10 +2790,13 @@ operator|.
 name|rla_flags
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Router LSA Options: [%s]"
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|ospf_rla_flag_values
@@ -2698,9 +2811,10 @@ name|un_rla
 operator|.
 name|rla_flags
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|lsap
 operator|->
@@ -2725,7 +2839,7 @@ operator|.
 name|rla_count
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|lsap
 operator|->
@@ -2752,7 +2866,7 @@ name|j
 operator|--
 condition|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|rlp
@@ -2772,108 +2886,143 @@ block|{
 case|case
 name|RLA_TYPE_VIRTUAL
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Virtual Link: Neighbor Router-ID: %s, Interface Address: %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|rlp
 operator|->
 name|link_id
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|rlp
 operator|->
 name|link_data
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|RLA_TYPE_ROUTER
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Neighbor Router-ID: %s, Interface Address: %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|rlp
 operator|->
 name|link_id
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|rlp
 operator|->
 name|link_data
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|RLA_TYPE_TRANSIT
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Neighbor Network-ID: %s, Interface Address: %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|rlp
 operator|->
 name|link_id
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|rlp
 operator|->
 name|link_data
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|RLA_TYPE_STUB
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Stub Network: %s, Mask: %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|rlp
 operator|->
 name|link_id
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|rlp
 operator|->
 name|link_data
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Unknown Router Link Type (%u)"
-argument_list|,
+operator|,
 name|rlp
 operator|->
 name|un_tos
@@ -2881,6 +3030,7 @@ operator|.
 name|link
 operator|.
 name|link_type
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2891,6 +3041,8 @@ return|;
 block|}
 name|ospf_print_tos_metrics
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|rlp
 operator|->
@@ -2939,7 +3091,7 @@ break|break;
 case|case
 name|LS_TYPE_NETWORK
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|lsap
 operator|->
@@ -2950,12 +3102,17 @@ operator|.
 name|nla_mask
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Mask %s\n\t    Connected Routers:"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|lsap
 operator|->
@@ -2965,6 +3122,7 @@ name|un_nla
 operator|.
 name|nla_mask
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ap
@@ -2988,20 +3146,26 @@ operator|<
 name|ls_end
 condition|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|ap
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|ap
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 operator|++
@@ -3012,7 +3176,7 @@ break|break;
 case|case
 name|LS_TYPE_SUM_IP
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|lsap
 operator|->
@@ -3023,12 +3187,17 @@ operator|.
 name|nla_mask
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Mask %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|lsap
 operator|->
@@ -3038,9 +3207,10 @@ name|un_sla
 operator|.
 name|sla_mask
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|lsap
 operator|->
@@ -3073,10 +3243,10 @@ name|ls_end
 condition|)
 block|{
 specifier|register
-name|u_int32_t
+name|uint32_t
 name|ul
 decl_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|lp
@@ -3099,10 +3269,13 @@ operator|)
 operator|>>
 name|SLA_SHIFT_TOS
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\ttopology %s(%u) metric %d"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ospf_topology_values
@@ -3111,12 +3284,13 @@ literal|""
 argument_list|,
 name|topology
 argument_list|)
-argument_list|,
+operator|,
 name|topology
-argument_list|,
+operator|,
 name|ul
 operator|&
 name|SLA_MASK_METRIC
+operator|)
 argument_list|)
 expr_stmt|;
 operator|++
@@ -3127,7 +3301,7 @@ break|break;
 case|case
 name|LS_TYPE_SUM_ABR
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|lsap
 operator|->
@@ -3160,10 +3334,10 @@ name|ls_end
 condition|)
 block|{
 specifier|register
-name|u_int32_t
+name|uint32_t
 name|ul
 decl_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|lp
@@ -3186,10 +3360,13 @@ operator|)
 operator|>>
 name|SLA_SHIFT_TOS
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\ttopology %s(%u) metric %d"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ospf_topology_values
@@ -3198,12 +3375,13 @@ literal|""
 argument_list|,
 name|topology
 argument_list|)
-argument_list|,
+operator|,
 name|topology
-argument_list|,
+operator|,
 name|ul
 operator|&
 name|SLA_MASK_METRIC
+operator|)
 argument_list|)
 expr_stmt|;
 operator|++
@@ -3218,7 +3396,7 @@ case|case
 name|LS_TYPE_NSSA
 case|:
 comment|/* fall through - those LSAs share the same format */
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|lsap
 operator|->
@@ -3229,12 +3407,17 @@ operator|.
 name|nla_mask
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Mask %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|lsap
 operator|->
@@ -3244,9 +3427,10 @@ name|un_asla
 operator|.
 name|asla_mask
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|lsap
 operator|->
@@ -3279,10 +3463,10 @@ name|ls_end
 condition|)
 block|{
 specifier|register
-name|u_int32_t
+name|uint32_t
 name|ul
 decl_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|almp
 operator|->
@@ -3311,10 +3495,13 @@ operator|>>
 name|ASLA_SHIFT_TOS
 operator|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t\ttopology %s(%u), type %d, metric"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ospf_topology_values
@@ -3323,9 +3510,9 @@ literal|""
 argument_list|,
 name|topology
 argument_list|)
-argument_list|,
+operator|,
 name|topology
-argument_list|,
+operator|,
 operator|(
 name|ul
 operator|&
@@ -3335,6 +3522,7 @@ condition|?
 literal|2
 else|:
 literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3347,24 +3535,32 @@ operator|)
 operator|==
 literal|0xffffff
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" infinite"
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %d"
-argument_list|,
+operator|,
 operator|(
 name|ul
 operator|&
 name|ASLA_MASK_METRIC
 operator|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|almp
 operator|->
@@ -3380,21 +3576,27 @@ operator|.
 name|s_addr
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", forward %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|almp
 operator|->
 name|asla_forward
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|almp
 operator|->
@@ -3410,17 +3612,23 @@ operator|.
 name|s_addr
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", tag %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|almp
 operator|->
 name|asla_tag
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3452,7 +3660,7 @@ operator|<
 name|ls_end
 condition|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|mcp
 operator|->
@@ -3473,42 +3681,57 @@ block|{
 case|case
 name|MCLA_VERTEX_ROUTER
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Router Router-ID %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|mcp
 operator|->
 name|mcla_vid
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|MCLA_VERTEX_NETWORK
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Network Designated Router %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|mcp
 operator|->
 name|mcla_vid
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    unknown VertexType (%u)"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -3516,6 +3739,7 @@ name|mcp
 operator|->
 name|mcla_vtype
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3558,7 +3782,7 @@ case|:
 name|tptr
 operator|=
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|(
@@ -3579,7 +3803,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -3594,11 +3818,15 @@ operator|<
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Remaining LS length %u< 4"
-argument_list|,
+operator|,
 name|ls_length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3631,10 +3859,13 @@ name|ls_length
 operator|-=
 literal|4
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    %s TLV (%u), length: %u, value: "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|lsa_opaque_ri_tlv_values
@@ -3643,10 +3874,11 @@ literal|"unknown"
 argument_list|,
 name|tlv_type
 argument_list|)
-argument_list|,
+operator|,
 name|tlv_type
-argument_list|,
+operator|,
 name|tlv_length
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3656,13 +3888,17 @@ operator|>
 name|ls_length
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Bogus length %u> %u"
-argument_list|,
+operator|,
 name|tlv_length
-argument_list|,
+operator|,
 name|ls_length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3671,7 +3907,7 @@ name|ls_end
 operator|)
 return|;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|tptr
@@ -3694,11 +3930,15 @@ operator|!=
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    Bogus length %u != 4"
-argument_list|,
+operator|,
 name|tlv_length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -3707,10 +3947,13 @@ name|ls_end
 operator|)
 return|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"Capabilities: %s"
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|lsa_opaque_ri_tlv_cap_values
@@ -3722,13 +3965,16 @@ argument_list|(
 name|tptr
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
@@ -3738,6 +3984,8 @@ condition|(
 operator|!
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 name|tptr
 argument_list|,
 literal|"\n\t      "
@@ -3770,8 +4018,10 @@ if|if
 condition|(
 name|ospf_print_grace_lsa
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|(
@@ -3806,8 +4056,10 @@ if|if
 condition|(
 name|ospf_print_te_lsa
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 operator|(
@@ -3838,7 +4090,9 @@ break|break;
 default|default:
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|<=
 literal|1
 condition|)
@@ -3848,8 +4102,10 @@ condition|(
 operator|!
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|lsap
@@ -3875,7 +4131,9 @@ block|}
 comment|/* do we want to see an additionally hexdump ? */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
@@ -3884,8 +4142,10 @@ condition|(
 operator|!
 name|print_unknown_data
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
-name|u_int8_t
+name|uint8_t
 operator|*
 operator|)
 name|lsap
@@ -3926,6 +4186,10 @@ specifier|static
 name|int
 name|ospf_decode_lls
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|struct
@@ -3955,13 +4219,13 @@ name|u_int
 name|length2
 decl_stmt|;
 specifier|register
-name|u_int16_t
+name|uint16_t
 name|lls_type
 decl_stmt|,
 name|lls_len
 decl_stmt|;
 specifier|register
-name|u_int32_t
+name|uint32_t
 name|lls_flags
 decl_stmt|;
 switch|switch
@@ -4094,9 +4358,13 @@ operator|>=
 name|length
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t[LLS truncated]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -4105,7 +4373,7 @@ literal|1
 operator|)
 return|;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|dptr
@@ -4113,10 +4381,13 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  LLS: checksum: 0x%04x"
-argument_list|,
+operator|,
 operator|(
 name|u_int
 operator|)
@@ -4124,13 +4395,14 @@ name|EXTRACT_16BITS
 argument_list|(
 name|dptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|dptr
 operator|+=
 literal|2
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|dptr
@@ -4145,18 +4417,22 @@ argument_list|(
 name|dptr
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", length: %u"
-argument_list|,
+operator|,
 name|length2
+operator|)
 argument_list|)
 expr_stmt|;
 name|dptr
 operator|+=
 literal|2
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|dptr
@@ -4169,7 +4445,7 @@ operator|<
 name|dataend
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|dptr
@@ -4184,10 +4460,13 @@ argument_list|(
 name|dptr
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    %s (%u)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ospf_lls_tlv_values
@@ -4196,15 +4475,16 @@ literal|"Unknown TLV"
 argument_list|,
 name|lls_type
 argument_list|)
-argument_list|,
+operator|,
 name|lls_type
+operator|)
 argument_list|)
 expr_stmt|;
 name|dptr
 operator|+=
 literal|2
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|dptr
@@ -4219,11 +4499,15 @@ argument_list|(
 name|dptr
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", length: %u"
-argument_list|,
+operator|,
 name|lls_len
+operator|)
 argument_list|)
 expr_stmt|;
 name|dptr
@@ -4245,9 +4529,13 @@ operator|!=
 literal|4
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [should be 4]"
+operator|)
 argument_list|)
 expr_stmt|;
 name|lls_len
@@ -4255,7 +4543,7 @@ operator|=
 literal|4
 expr_stmt|;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|dptr
@@ -4270,12 +4558,15 @@ argument_list|(
 name|dptr
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Options: 0x%08x [%s]"
-argument_list|,
+operator|,
 name|lls_flags
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|ospf_lls_eo_options
@@ -4284,6 +4575,7 @@ literal|"?"
 argument_list|,
 name|lls_flags
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4297,9 +4589,13 @@ operator|!=
 literal|20
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [should be 20]"
+operator|)
 argument_list|)
 expr_stmt|;
 name|lls_len
@@ -4307,7 +4603,7 @@ operator|=
 literal|20
 expr_stmt|;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|dptr
@@ -4315,14 +4611,18 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t      Sequence number: 0x%08x"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 name|dptr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4352,6 +4652,10 @@ specifier|static
 name|int
 name|ospf_decode_v2
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|struct
@@ -4395,7 +4699,7 @@ modifier|*
 name|lsap
 decl_stmt|;
 specifier|register
-name|u_int32_t
+name|uint32_t
 name|lsa_count
 decl_stmt|,
 name|lsa_count_max
@@ -4415,10 +4719,13 @@ break|break;
 case|case
 name|OSPF_TYPE_HELLO
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tOptions [%s]"
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|ospf_option_values
@@ -4431,9 +4738,10 @@ name|ospf_hello
 operator|.
 name|hello_options
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|op
 operator|->
@@ -4442,10 +4750,13 @@ operator|.
 name|hello_deadint
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Hello Timer %us, Dead Timer %us, Mask %s, Priority %u"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -4455,7 +4766,7 @@ name|ospf_hello
 operator|.
 name|hello_helloint
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -4465,9 +4776,11 @@ name|ospf_hello
 operator|.
 name|hello_deadint
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|op
 operator|->
@@ -4475,15 +4788,16 @@ name|ospf_hello
 operator|.
 name|hello_mask
 argument_list|)
-argument_list|,
+operator|,
 name|op
 operator|->
 name|ospf_hello
 operator|.
 name|hello_priority
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|op
 operator|->
@@ -4504,12 +4818,17 @@ name|s_addr
 operator|!=
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Designated Router %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|op
 operator|->
@@ -4517,9 +4836,10 @@ name|ospf_hello
 operator|.
 name|hello_dr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|op
 operator|->
@@ -4540,12 +4860,17 @@ name|s_addr
 operator|!=
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Backup Designated Router %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|op
 operator|->
@@ -4553,6 +4878,7 @@ name|ospf_hello
 operator|.
 name|hello_bdr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ap
@@ -4573,9 +4899,13 @@ name|ap
 operator|<
 name|dataend
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Neighbor List:"
+operator|)
 argument_list|)
 expr_stmt|;
 while|while
@@ -4589,20 +4919,26 @@ operator|<
 name|dataend
 condition|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|ap
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t    %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|ap
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 operator|++
@@ -4614,7 +4950,7 @@ comment|/* HELLO */
 case|case
 name|OSPF_TYPE_DD
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|op
 operator|->
@@ -4623,10 +4959,13 @@ operator|.
 name|db_options
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tOptions [%s]"
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|ospf_option_values
@@ -4639,9 +4978,10 @@ name|ospf_db
 operator|.
 name|db_options
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|op
 operator|->
@@ -4650,10 +4990,13 @@ operator|.
 name|db_flags
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", DD Flags [%s]"
-argument_list|,
+operator|,
 name|bittok2str
 argument_list|(
 name|ospf_dd_flag_values
@@ -4666,9 +5009,10 @@ name|ospf_db
 operator|.
 name|db_flags
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|op
 operator|->
@@ -4686,10 +5030,13 @@ operator|.
 name|db_ifmtu
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", MTU: %u"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -4699,10 +5046,11 @@ name|ospf_db
 operator|.
 name|db_ifmtu
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|op
 operator|->
@@ -4711,10 +5059,13 @@ operator|.
 name|db_seq
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Sequence: 0x%08x"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -4724,6 +5075,7 @@ name|ospf_db
 operator|.
 name|db_seq
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Print all the LS adv's */
@@ -4749,6 +5101,8 @@ operator|)
 operator|&&
 name|ospf_print_lshdr
 argument_list|(
+name|ndo
+argument_list|,
 name|lshp
 argument_list|)
 operator|!=
@@ -4781,24 +5135,29 @@ operator|<
 name|dataend
 condition|)
 block|{
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|lsrp
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  Advertising Router: %s, %s LSA (%u)"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|lsrp
 operator|->
 name|ls_router
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|lsa_values
@@ -4812,7 +5171,7 @@ operator|->
 name|ls_type
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -4820,6 +5179,7 @@ name|lsrp
 operator|->
 name|ls_type
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -4842,10 +5202,13 @@ case|:
 case|case
 name|LS_TYPE_OPAQUE_DW
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Opaque-Type: %s LSA (%u), Opaque-ID: %u"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|lsa_opaque_values
@@ -4860,7 +5223,7 @@ name|opaque_field
 operator|.
 name|opaque_type
 argument_list|)
-argument_list|,
+operator|,
 name|lsrp
 operator|->
 name|un_ls_stateid
@@ -4868,7 +5231,7 @@ operator|.
 name|opaque_field
 operator|.
 name|opaque_type
-argument_list|,
+operator|,
 name|EXTRACT_24BITS
 argument_list|(
 operator|&
@@ -4880,16 +5243,22 @@ name|opaque_field
 operator|.
 name|opaque_id
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", LSA-ID: %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|lsrp
 operator|->
@@ -4897,6 +5266,7 @@ name|un_ls_stateid
 operator|.
 name|ls_stateid
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4917,7 +5287,7 @@ name|ospf_lsu
 operator|.
 name|lsu_lsa
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|op
 operator|->
@@ -4938,16 +5308,20 @@ operator|.
 name|lsu_count
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", %d LSA%s"
-argument_list|,
+operator|,
 name|lsa_count_max
-argument_list|,
+operator|,
 name|PLURAL_SUFFIX
 argument_list|(
 name|lsa_count_max
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -4964,11 +5338,15 @@ name|lsa_count
 operator|++
 control|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\t  LSA #%u"
-argument_list|,
+operator|,
 name|lsa_count
+operator|)
 argument_list|)
 expr_stmt|;
 name|lsap
@@ -4981,6 +5359,8 @@ operator|*
 operator|)
 name|ospf_print_lsa
 argument_list|(
+name|ndo
+argument_list|,
 name|lsap
 argument_list|)
 expr_stmt|;
@@ -5010,6 +5390,8 @@ while|while
 condition|(
 name|ospf_print_lshdr
 argument_list|(
+name|ndo
+argument_list|,
 name|lshp
 argument_list|)
 operator|!=
@@ -5044,6 +5426,10 @@ begin_function
 name|void
 name|ospf_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -5090,7 +5476,7 @@ operator|)
 name|bp
 expr_stmt|;
 comment|/* XXX Before we do anything else, strip off the MD5 trailer */
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|op
 operator|->
@@ -5114,14 +5500,16 @@ name|length
 operator|-=
 name|OSPF_AUTH_MD5_LEN
 expr_stmt|;
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-=
 name|OSPF_AUTH_MD5_LEN
 expr_stmt|;
 block|}
 comment|/* If the type is valid translate it, or just print the type */
 comment|/* value.  If it's not valid, say so and return */
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|op
 operator|->
@@ -5141,17 +5529,21 @@ operator|->
 name|ospf_type
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"OSPFv%u, %s, length %u"
-argument_list|,
+operator|,
 name|op
 operator|->
 name|ospf_version
-argument_list|,
+operator|,
 name|cp
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5165,13 +5557,15 @@ return|return;
 if|if
 condition|(
 operator|!
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
 comment|/* non verbose - so lets bail out here */
 return|return;
 block|}
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|op
 operator|->
@@ -5191,10 +5585,13 @@ name|ospf_len
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [len %d]"
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -5202,6 +5599,7 @@ name|op
 operator|->
 name|ospf_len
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5240,27 +5638,33 @@ operator|+
 name|length
 expr_stmt|;
 block|}
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|op
 operator|->
 name|ospf_routerid
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tRouter-ID %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|op
 operator|->
 name|ospf_routerid
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|op
 operator|->
@@ -5277,32 +5681,44 @@ name|s_addr
 operator|!=
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Area %s"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|op
 operator|->
 name|ospf_areaid
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Backbone Area"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
 comment|/* Print authentication data (should we really do this?) */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|op
 operator|->
@@ -5319,10 +5735,13 @@ name|ospf_authdata
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|", Authentication Type: %s (%u)"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ospf_authtype_values
@@ -5337,7 +5756,7 @@ operator|->
 name|ospf_authtype
 argument_list|)
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -5345,6 +5764,7 @@ name|op
 operator|->
 name|ospf_authtype
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -5365,18 +5785,19 @@ break|break;
 case|case
 name|OSPF_AUTH_SIMPLE
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tSimple text password: "
+operator|)
 argument_list|)
 expr_stmt|;
 name|safeputs
 argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
+name|ndo
+argument_list|,
 name|op
 operator|->
 name|ospf_authdata
@@ -5388,10 +5809,13 @@ break|break;
 case|case
 name|OSPF_AUTH_MD5
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"\n\tKey-ID: %u, Auth-Length: %u, Crypto Sequence Number: 0x%08x"
-argument_list|,
+operator|,
 operator|*
 operator|(
 operator|(
@@ -5402,7 +5826,7 @@ operator|)
 operator|+
 literal|2
 operator|)
-argument_list|,
+operator|,
 operator|*
 operator|(
 operator|(
@@ -5413,7 +5837,7 @@ operator|)
 operator|+
 literal|3
 operator|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|(
@@ -5424,6 +5848,7 @@ operator|)
 operator|+
 literal|4
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5447,6 +5872,8 @@ if|if
 condition|(
 name|ospf_decode_v2
 argument_list|(
+name|ndo
+argument_list|,
 name|op
 argument_list|,
 name|dataend
@@ -5472,6 +5899,8 @@ if|if
 condition|(
 name|ospf_decode_lls
 argument_list|(
+name|ndo
+argument_list|,
 name|op
 argument_list|,
 name|length
@@ -5483,13 +5912,17 @@ goto|;
 block|}
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" ospf [version %d]"
-argument_list|,
+operator|,
 name|op
 operator|->
 name|ospf_version
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5498,11 +5931,15 @@ comment|/* end switch on version */
 return|return;
 name|trunc
 label|:
-name|fputs
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
 name|tstr
-argument_list|,
-name|stdout
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

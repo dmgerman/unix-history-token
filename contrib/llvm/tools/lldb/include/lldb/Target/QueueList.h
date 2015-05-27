@@ -200,7 +200,7 @@ comment|///     The QueueID (same as returned by Thread::GetQueueID()) to find.
 comment|///
 comment|/// @return
 comment|///     A QueueSP to the queue requested, if it is present in the QueueList.
-comment|///     An empty QueueSP willbe returned if this queue was not found.
+comment|///     An empty QueueSP will be returned if this queue was not found.
 comment|//------------------------------------------------------------------
 name|lldb
 operator|::
@@ -221,7 +221,7 @@ comment|///     will tend to be an integral value like 1 or 7.
 comment|///
 comment|/// @return
 comment|///     A QueueSP to the queue requested, if it is present in the QueueList.
-comment|///     An empty QueueSP willbe returned if this queue was not found.
+comment|///     An empty QueueSP will be returned if this queue was not found.
 comment|//------------------------------------------------------------------
 name|lldb
 operator|::

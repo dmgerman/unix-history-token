@@ -62,25 +62,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SERIALIZATION_GLOBAL_MODULE_INDEX_H
+name|LLVM_CLANG_SERIALIZATION_GLOBALMODULEINDEX_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SERIALIZATION_GLOBAL_MODULE_INDEX_H
+name|LLVM_CLANG_SERIALIZATION_GLOBALMODULEINDEX_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/OwningPtr.h"
 end_include
 
 begin_include
@@ -105,6 +99,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
 end_include
 
 begin_include
@@ -185,9 +185,9 @@ name|GlobalModuleIndex
 block|{
 comment|/// \brief Buffer containing the index file, which is lazily accessed so long
 comment|/// as the global module index is live.
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 name|llvm
 operator|::
@@ -307,10 +307,14 @@ comment|/// \brief Internal constructor. Use \c readIndex() to read an index.
 name|explicit
 name|GlobalModuleIndex
 argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|llvm
 operator|::
 name|MemoryBuffer
-operator|*
+operator|>
 name|Buffer
 argument_list|,
 name|llvm
@@ -473,6 +477,11 @@ function_decl|;
 comment|/// \brief Print statistics to standard error.
 name|void
 name|printStats
+parameter_list|()
+function_decl|;
+comment|/// \brief Print debugging view to standard error.
+name|void
+name|dump
 parameter_list|()
 function_decl|;
 comment|/// \brief Write a global index into the given

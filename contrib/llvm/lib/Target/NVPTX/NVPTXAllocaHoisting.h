@@ -50,19 +50,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NVPTX_ALLOCA_HOISTING_H_
+name|LLVM_LIB_TARGET_NVPTX_NVPTXALLOCAHOISTING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NVPTX_ALLOCA_HOISTING_H_
+name|LLVM_LIB_TARGET_NVPTX_NVPTXALLOCAHOISTING_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineFunctionAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/StackProtector.h"
 end_include
 
 begin_include
@@ -116,12 +122,13 @@ argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|{
 name|AU
 operator|.
 name|addRequired
 operator|<
-name|DataLayout
+name|DataLayoutPass
 operator|>
 operator|(
 operator|)
@@ -134,27 +141,34 @@ name|MachineFunctionAnalysis
 operator|>
 operator|(
 operator|)
+block|;
+name|AU
+operator|.
+name|addPreserved
+operator|<
+name|StackProtector
+operator|>
+operator|(
+operator|)
 block|;   }
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"NVPTX specific alloca hoisting"
 return|;
 block|}
-name|virtual
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|function
+argument|Function&function
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 specifier|extern
@@ -174,10 +188,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// NVPTX_ALLOCA_HOISTING_H_
-end_comment
 
 end_unit
 

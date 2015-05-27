@@ -73,20 +73,53 @@ name|class
 name|MachineFrameInfo
 decl_stmt|;
 name|class
+name|MachineMemOperand
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|MachineMemOperand
+operator|&
+name|MMO
+operator|)
+expr_stmt|;
 comment|/// PseudoSourceValue - Special value supplied for machine level alias
 comment|/// analysis. It indicates that a memory access references the functions
 comment|/// stack frame (e.g., a spill slot), below the stack frame (e.g., argument
 comment|/// space), or constant pool.
 name|class
 name|PseudoSourceValue
-range|:
-name|public
-name|Value
 block|{
 name|private
-operator|:
+label|:
+name|friend
+name|raw_ostream
+operator|&
+name|llvm
+operator|::
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|MachineMemOperand
+operator|&
+name|MMO
+operator|)
+expr_stmt|;
 comment|/// printCustom - Implement printing for PseudoSourceValue. This is called
 comment|/// from Value::print or Value's operator<<.
 comment|///
@@ -94,18 +127,32 @@ name|virtual
 name|void
 name|printCustom
 argument_list|(
-argument|raw_ostream&O
+name|raw_ostream
+operator|&
+name|O
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
 name|public
-operator|:
+label|:
+comment|/// isFixed - Whether this is a FixedStackPseudoSourceValue.
+name|bool
+name|isFixed
+decl_stmt|;
 name|explicit
 name|PseudoSourceValue
-argument_list|(
-argument|enum ValueTy Subclass = PseudoSourceValueVal
-argument_list|)
-block|;
+parameter_list|(
+name|bool
+name|isFixed
+init|=
+name|false
+parameter_list|)
+function_decl|;
+name|virtual
+operator|~
+name|PseudoSourceValue
+argument_list|()
+expr_stmt|;
 comment|/// isConstant - Test whether the memory pointed to by this
 comment|/// PseudoSourceValue has a constant value.
 comment|///
@@ -113,106 +160,87 @@ name|virtual
 name|bool
 name|isConstant
 argument_list|(
-argument|const MachineFrameInfo *
-argument_list|)
 specifier|const
-block|;
+name|MachineFrameInfo
+operator|*
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// isAliased - Test whether the memory pointed to by this
 comment|/// PseudoSourceValue may also be pointed to by an LLVM IR Value.
 name|virtual
 name|bool
 name|isAliased
 argument_list|(
-argument|const MachineFrameInfo *
-argument_list|)
 specifier|const
-block|;
+name|MachineFrameInfo
+operator|*
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// mayAlias - Return true if the memory pointed to by this
 comment|/// PseudoSourceValue can ever alias an LLVM IR Value.
 name|virtual
 name|bool
 name|mayAlias
 argument_list|(
-argument|const MachineFrameInfo *
-argument_list|)
 specifier|const
-block|;
-comment|/// classof - Methods for support type inquiry through isa, cast, and
-comment|/// dyn_cast:
-comment|///
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Value *V
+name|MachineFrameInfo
+operator|*
 argument_list|)
-block|{
-return|return
-name|V
-operator|->
-name|getValueID
-argument_list|()
-operator|==
-name|PseudoSourceValueVal
-operator|||
-name|V
-operator|->
-name|getValueID
-argument_list|()
-operator|==
-name|FixedStackPseudoSourceValueVal
-return|;
-block|}
+decl|const
+decl_stmt|;
 comment|/// A pseudo source value referencing a fixed stack frame entry,
 comment|/// e.g., a spill slot.
 specifier|static
 specifier|const
 name|PseudoSourceValue
-operator|*
+modifier|*
 name|getFixedStack
-argument_list|(
-argument|int FI
-argument_list|)
-block|;
+parameter_list|(
+name|int
+name|FI
+parameter_list|)
+function_decl|;
 comment|/// A pseudo source value referencing the area below the stack frame of
 comment|/// a function, e.g., the argument space.
 specifier|static
 specifier|const
 name|PseudoSourceValue
-operator|*
+modifier|*
 name|getStack
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// A pseudo source value referencing the global offset table
 comment|/// (or something the like).
 specifier|static
 specifier|const
 name|PseudoSourceValue
-operator|*
+modifier|*
 name|getGOT
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// A pseudo source value referencing the constant pool. Since constant
 comment|/// pools are constant, this doesn't need to identify a specific constant
 comment|/// pool entry.
 specifier|static
 specifier|const
 name|PseudoSourceValue
-operator|*
+modifier|*
 name|getConstantPool
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
 comment|/// A pseudo source value referencing a jump table. Since jump tables are
 comment|/// constant, this doesn't need to identify a specific jump table.
 specifier|static
 specifier|const
 name|PseudoSourceValue
-operator|*
+modifier|*
 name|getJumpTable
-argument_list|()
-block|;   }
-decl_stmt|;
+parameter_list|()
+function_decl|;
+block|}
+empty_stmt|;
 comment|/// FixedStackPseudoSourceValue - A specialized PseudoSourceValue
 comment|/// for holding FixedStack values, which must include a frame
 comment|/// index.
@@ -236,7 +264,7 @@ argument_list|)
 operator|:
 name|PseudoSourceValue
 argument_list|(
-name|FixedStackPseudoSourceValueVal
+name|true
 argument_list|)
 block|,
 name|FI
@@ -252,49 +280,48 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const Value *V
+argument|const PseudoSourceValue *V
 argument_list|)
 block|{
 return|return
 name|V
 operator|->
-name|getValueID
-argument_list|()
+name|isFixed
 operator|==
-name|FixedStackPseudoSourceValueVal
+name|true
 return|;
 block|}
-name|virtual
 name|bool
 name|isConstant
 argument_list|(
 argument|const MachineFrameInfo *MFI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isAliased
 argument_list|(
 argument|const MachineFrameInfo *MFI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|mayAlias
 argument_list|(
 argument|const MachineFrameInfo *
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|printCustom
 argument_list|(
 argument|raw_ostream&OS
 argument_list|)
 specifier|const
+name|override
 block|;
 name|int
 name|getFrameIndex

@@ -74,50 +74,13 @@ define|\
 value|(FIRST_EVTCHN_INT + NUM_EVTCHN_INTS - 1)
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|XEN
-argument_list|)
-end_elif
-
-begin_include
-include|#
-directive|include
-file|<xen/xen-os.h>
-end_include
-
-begin_define
-define|#
-directive|define
-name|NUM_EVTCHN_INTS
-value|NR_EVENT_CHANNELS
-end_define
-
-begin_define
-define|#
-directive|define
-name|FIRST_EVTCHN_INT
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|LAST_EVTCHN_INT
-define|\
-value|(FIRST_EVTCHN_INT + NUM_EVTCHN_INTS - 1)
-end_define
-
 begin_else
 else|#
 directive|else
 end_else
 
 begin_comment
-comment|/* !XEN&& !XENHVM */
+comment|/* !XENHVM */
 end_comment
 
 begin_define
@@ -367,6 +330,17 @@ modifier|*
 parameter_list|,
 name|u_int
 name|apic_id
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|pic_reprogram_pin
+function_decl|)
+parameter_list|(
+name|struct
+name|intsrc
+modifier|*
 parameter_list|)
 function_decl|;
 name|TAILQ_ENTRY
@@ -719,6 +693,15 @@ end_function_decl
 begin_function_decl
 name|void
 name|intr_suspend
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|intr_reprogram
 parameter_list|(
 name|void
 parameter_list|)

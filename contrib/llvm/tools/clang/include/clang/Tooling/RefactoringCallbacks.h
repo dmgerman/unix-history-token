@@ -110,13 +110,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_TOOLING_REFACTORING_CALLBACKS_H
+name|LLVM_CLANG_TOOLING_REFACTORINGCALLBACKS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_TOOLING_REFACTORING_CALLBACKS_H
+name|LLVM_CLANG_TOOLING_REFACTORINGCALLBACKS_H
 end_define
 
 begin_include
@@ -184,19 +184,12 @@ argument_list|,
 argument|StringRef ToText
 argument_list|)
 block|;
-name|virtual
 name|void
 name|run
 argument_list|(
-specifier|const
-name|ast_matchers
-operator|::
-name|MatchFinder
-operator|::
-name|MatchResult
-operator|&
-name|Result
+argument|const ast_matchers::MatchFinder::MatchResult&Result
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -228,19 +221,12 @@ argument_list|,
 argument|StringRef ToId
 argument_list|)
 block|;
-name|virtual
 name|void
 name|run
 argument_list|(
-specifier|const
-name|ast_matchers
-operator|::
-name|MatchFinder
-operator|::
-name|MatchResult
-operator|&
-name|Result
+argument|const ast_matchers::MatchFinder::MatchResult&Result
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -273,19 +259,12 @@ argument_list|,
 argument|bool PickTrueBranch
 argument_list|)
 block|;
-name|virtual
 name|void
 name|run
 argument_list|(
-specifier|const
-name|ast_matchers
-operator|::
-name|MatchFinder
-operator|::
-name|MatchResult
-operator|&
-name|Result
+argument|const ast_matchers::MatchFinder::MatchResult&Result
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -312,10 +291,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_TOOLING_REFACTORING_CALLBACKS_H
-end_comment
 
 end_unit
 

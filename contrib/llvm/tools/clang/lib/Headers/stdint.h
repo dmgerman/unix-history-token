@@ -24,12 +24,6 @@ if|#
 directive|if
 name|__STDC_HOSTED__
 operator|&&
-expr|\
-name|defined
-argument_list|(
-name|__has_include_next
-argument_list|)
-operator|&&
 name|__has_include_next
 argument_list|(
 operator|<
@@ -258,7 +252,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|signed
 name|__INT64_TYPE__
 name|int64_t
 typedef|;
@@ -275,8 +268,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|__INT64_TYPE__
+name|__UINT64_TYPE__
 name|uint64_t
 typedef|;
 end_typedef
@@ -397,7 +389,6 @@ end_ifdef
 
 begin_typedef
 typedef|typedef
-name|signed
 name|__INT56_TYPE__
 name|int56_t
 typedef|;
@@ -405,8 +396,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|__INT56_TYPE__
+name|__UINT56_TYPE__
 name|uint56_t
 typedef|;
 end_typedef
@@ -498,7 +488,6 @@ end_ifdef
 
 begin_typedef
 typedef|typedef
-name|signed
 name|__INT48_TYPE__
 name|int48_t
 typedef|;
@@ -506,8 +495,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|__INT48_TYPE__
+name|__UINT48_TYPE__
 name|uint48_t
 typedef|;
 end_typedef
@@ -599,7 +587,6 @@ end_ifdef
 
 begin_typedef
 typedef|typedef
-name|signed
 name|__INT40_TYPE__
 name|int40_t
 typedef|;
@@ -607,8 +594,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|__INT40_TYPE__
+name|__UINT40_TYPE__
 name|uint40_t
 typedef|;
 end_typedef
@@ -710,7 +696,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|signed
 name|__INT32_TYPE__
 name|int32_t
 typedef|;
@@ -743,8 +728,7 @@ end_define
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|__INT32_TYPE__
+name|__UINT32_TYPE__
 name|uint32_t
 typedef|;
 end_typedef
@@ -860,7 +844,6 @@ end_ifdef
 
 begin_typedef
 typedef|typedef
-name|signed
 name|__INT24_TYPE__
 name|int24_t
 typedef|;
@@ -868,8 +851,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|__INT24_TYPE__
+name|__UINT24_TYPE__
 name|uint24_t
 typedef|;
 end_typedef
@@ -957,7 +939,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|signed
 name|__INT16_TYPE__
 name|int16_t
 typedef|;
@@ -974,8 +955,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|__INT16_TYPE__
+name|__UINT16_TYPE__
 name|uint16_t
 typedef|;
 end_typedef
@@ -1078,7 +1058,6 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|signed
 name|__INT8_TYPE__
 name|int8_t
 typedef|;
@@ -1095,8 +1074,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|unsigned
-name|__INT8_TYPE__
+name|__UINT8_TYPE__
 name|uint8_t
 typedef|;
 end_typedef

@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/Ownership.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -140,8 +146,7 @@ argument|const DeclarationName&Name
 argument_list|,
 argument|NamedDecl *NameDecl
 argument_list|,
-argument|NestedNameSpecifier *NNS =
-literal|0
+argument|NestedNameSpecifier *NNS = nullptr
 argument_list|,
 argument|unsigned CharDistance =
 literal|0
@@ -201,8 +206,7 @@ name|TypoCorrection
 argument_list|(
 argument|NamedDecl *Name
 argument_list|,
-argument|NestedNameSpecifier *NNS =
-literal|0
+argument|NestedNameSpecifier *NNS = nullptr
 argument_list|,
 argument|unsigned CharDistance =
 literal|0
@@ -262,8 +266,7 @@ name|TypoCorrection
 argument_list|(
 argument|DeclarationName Name
 argument_list|,
-argument|NestedNameSpecifier *NNS =
-literal|0
+argument|NestedNameSpecifier *NNS = nullptr
 argument_list|,
 argument|unsigned CharDistance =
 literal|0
@@ -309,7 +312,7 @@ argument_list|()
 operator|:
 name|CorrectionNameSpec
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|CharDistance
@@ -388,7 +391,7 @@ operator|=
 operator|(
 name|NNS
 operator|!=
-literal|0
+name|nullptr
 operator|)
 expr_stmt|;
 block|}
@@ -556,7 +559,7 @@ name|begin
 argument_list|()
 operator|)
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 name|template
@@ -720,7 +723,7 @@ name|CorrectionDecls
 operator|.
 name|push_back
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 name|ForceSpecifierReplacement
@@ -747,7 +750,7 @@ operator|.
 name|front
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 comment|// Check if this TypoCorrection is the given keyword.
@@ -820,9 +823,14 @@ name|TypoName
 parameter_list|)
 block|{
 name|CorrectionRange
+operator|=
+name|TypoName
 operator|.
-name|setBegin
-argument_list|(
+name|getSourceRange
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
 name|ForceSpecifierReplacement
 operator|&&
 name|SS
@@ -832,25 +840,14 @@ name|SS
 operator|->
 name|isEmpty
 argument_list|()
-condition|?
+condition|)
+name|CorrectionRange
+operator|.
+name|setBegin
+argument_list|(
 name|SS
 operator|->
 name|getBeginLoc
-argument_list|()
-else|:
-name|TypoName
-operator|.
-name|getLoc
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|CorrectionRange
-operator|.
-name|setEnd
-argument_list|(
-name|TypoName
-operator|.
-name|getLoc
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -1043,8 +1040,21 @@ name|TypoCorrection
 operator|::
 name|InvalidDistance
 decl_stmt|;
+name|explicit
 name|CorrectionCandidateCallback
-argument_list|()
+argument_list|(
+name|IdentifierInfo
+operator|*
+name|Typo
+operator|=
+name|nullptr
+argument_list|,
+name|NestedNameSpecifier
+operator|*
+name|TypoNNS
+operator|=
+name|nullptr
+argument_list|)
 operator|:
 name|WantTypeSpecifiers
 argument_list|(
@@ -1061,6 +1071,11 @@ argument_list|(
 name|true
 argument_list|)
 operator|,
+name|WantFunctionLikeCasts
+argument_list|(
+name|true
+argument_list|)
+operator|,
 name|WantRemainingKeywords
 argument_list|(
 name|true
@@ -1073,7 +1088,22 @@ argument_list|)
 operator|,
 name|IsObjCIvarLookup
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|IsAddressOfOperand
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Typo
+argument_list|(
+name|Typo
+argument_list|)
+operator|,
+name|TypoNNS
+argument_list|(
+argument|TypoNNS
 argument_list|)
 block|{}
 name|virtual
@@ -1118,17 +1148,52 @@ name|candidate
 parameter_list|)
 block|{
 return|return
+operator|(
+operator|!
+name|MatchesTypo
+argument_list|(
+name|candidate
+argument_list|)
+operator|&&
 name|ValidateCandidate
 argument_list|(
 name|candidate
 argument_list|)
+operator|)
 condition|?
 literal|0
 else|:
 name|InvalidDistance
 return|;
 block|}
-comment|// Flags for context-dependent keywords.
+name|void
+name|setTypoName
+parameter_list|(
+name|IdentifierInfo
+modifier|*
+name|II
+parameter_list|)
+block|{
+name|Typo
+operator|=
+name|II
+expr_stmt|;
+block|}
+name|void
+name|setTypoNNS
+parameter_list|(
+name|NestedNameSpecifier
+modifier|*
+name|NNS
+parameter_list|)
+block|{
+name|TypoNNS
+operator|=
+name|NNS
+expr_stmt|;
+block|}
+comment|// Flags for context-dependent keywords. WantFunctionLikeCasts is only
+comment|// used/meaningful when WantCXXNamedCasts is false.
 comment|// TODO: Expand these to apply to non-keywords or possibly remove them.
 name|bool
 name|WantTypeSpecifiers
@@ -1140,6 +1205,9 @@ name|bool
 name|WantCXXNamedCasts
 decl_stmt|;
 name|bool
+name|WantFunctionLikeCasts
+decl_stmt|;
+name|bool
 name|WantRemainingKeywords
 decl_stmt|;
 name|bool
@@ -1149,6 +1217,59 @@ comment|// Temporary hack for the one case where a CorrectTypoContext enum is us
 comment|// when looking up results.
 name|bool
 name|IsObjCIvarLookup
+decl_stmt|;
+name|bool
+name|IsAddressOfOperand
+decl_stmt|;
+name|protected
+label|:
+name|bool
+name|MatchesTypo
+parameter_list|(
+specifier|const
+name|TypoCorrection
+modifier|&
+name|candidate
+parameter_list|)
+block|{
+return|return
+name|Typo
+operator|&&
+name|candidate
+operator|.
+name|isResolved
+argument_list|()
+operator|&&
+operator|!
+name|candidate
+operator|.
+name|requiresImport
+argument_list|()
+operator|&&
+name|candidate
+operator|.
+name|getCorrectionAsIdentifierInfo
+argument_list|()
+operator|==
+name|Typo
+operator|&&
+comment|// FIXME: This probably does not return true when both
+comment|// NestedNameSpecifiers have the same textual representation.
+name|candidate
+operator|.
+name|getCorrectionSpecifier
+argument_list|()
+operator|==
+name|TypoNNS
+return|;
+block|}
+name|IdentifierInfo
+modifier|*
+name|Typo
+decl_stmt|;
+name|NestedNameSpecifier
+modifier|*
+name|TypoNNS
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -1167,12 +1288,12 @@ name|CorrectionCandidateCallback
 block|{
 name|public
 operator|:
-name|virtual
 name|bool
 name|ValidateCandidate
 argument_list|(
 argument|const TypoCorrection&candidate
 argument_list|)
+name|override
 block|{
 return|return
 name|candidate
@@ -1205,17 +1326,16 @@ argument_list|,
 argument|unsigned NumArgs
 argument_list|,
 argument|bool HasExplicitTemplateArgs
+argument_list|,
+argument|MemberExpr *ME = nullptr
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|ValidateCandidate
 argument_list|(
-specifier|const
-name|TypoCorrection
-operator|&
-name|candidate
+argument|const TypoCorrection&candidate
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -1224,6 +1344,14 @@ name|NumArgs
 block|;
 name|bool
 name|HasExplicitTemplateArgs
+block|;
+name|DeclContext
+operator|*
+name|CurContext
+block|;
+name|MemberExpr
+operator|*
+name|MemberFn
 block|; }
 block|;
 comment|// @brief Callback class that effectively disabled typo correction
@@ -1250,16 +1378,20 @@ name|WantCXXNamedCasts
 operator|=
 name|false
 block|;
+name|WantFunctionLikeCasts
+operator|=
+name|false
+block|;
 name|WantRemainingKeywords
 operator|=
 name|false
 block|;   }
-name|virtual
 name|bool
 name|ValidateCandidate
 argument_list|(
 argument|const TypoCorrection&candidate
 argument_list|)
+name|override
 block|{
 return|return
 name|false

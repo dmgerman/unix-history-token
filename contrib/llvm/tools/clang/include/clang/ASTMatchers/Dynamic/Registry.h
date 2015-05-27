@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_MATCHERS_DYNAMIC_REGISTRY_H
+name|LLVM_CLANG_ASTMATCHERS_DYNAMIC_REGISTRY_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_MATCHERS_DYNAMIC_REGISTRY_H
+name|LLVM_CLANG_ASTMATCHERS_DYNAMIC_REGISTRY_H
 end_define
 
 begin_include
@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -111,17 +117,179 @@ block|{
 name|namespace
 name|dynamic
 block|{
+name|namespace
+name|internal
+block|{
+name|class
+name|MatcherDescriptor
+decl_stmt|;
+block|}
+typedef|typedef
+specifier|const
+name|internal
+operator|::
+name|MatcherDescriptor
+operator|*
+name|MatcherCtor
+expr_stmt|;
+struct|struct
+name|MatcherCompletion
+block|{
+name|MatcherCompletion
+argument_list|()
+block|{}
+name|MatcherCompletion
+argument_list|(
+argument|StringRef TypedText
+argument_list|,
+argument|StringRef MatcherDecl
+argument_list|,
+argument|unsigned Specificity
+argument_list|)
+block|:
+name|TypedText
+argument_list|(
+name|TypedText
+argument_list|)
+operator|,
+name|MatcherDecl
+argument_list|(
+name|MatcherDecl
+argument_list|)
+operator|,
+name|Specificity
+argument_list|(
+argument|Specificity
+argument_list|)
+block|{}
+comment|/// \brief The text to type to select this matcher.
+name|std
+operator|::
+name|string
+name|TypedText
+expr_stmt|;
+comment|/// \brief The "declaration" of the matcher, with type information.
+name|std
+operator|::
+name|string
+name|MatcherDecl
+expr_stmt|;
+comment|/// \brief Value corresponding to the "specificity" of the converted matcher.
+comment|///
+comment|/// Zero specificity indicates that this conversion would produce a trivial
+comment|/// matcher that will either always or never match.
+comment|/// Such matchers are excluded from code completion results.
+name|unsigned
+name|Specificity
+decl_stmt|;
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|MatcherCompletion
+operator|&
+name|Other
+operator|)
+specifier|const
+block|{
+return|return
+name|TypedText
+operator|==
+name|Other
+operator|.
+name|TypedText
+operator|&&
+name|MatcherDecl
+operator|==
+name|Other
+operator|.
+name|MatcherDecl
+return|;
+block|}
+block|}
+struct|;
 name|class
 name|Registry
 block|{
 name|public
 label|:
-comment|/// \brief Construct a matcher from the registry by name.
+comment|/// \brief Look up a matcher in the registry by name,
 comment|///
-comment|/// Consult the registry of known matchers and construct the appropriate
-comment|/// matcher by name.
+comment|/// \return An opaque value which may be used to refer to the matcher
+comment|/// constructor, or Optional<MatcherCtor>() if not found.
+specifier|static
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|MatcherCtor
+operator|>
+name|lookupMatcherCtor
+argument_list|(
+argument|StringRef MatcherName
+argument_list|)
+expr_stmt|;
+comment|/// \brief Compute the list of completion types for \p Context.
 comment|///
-comment|/// \param MatcherName The name of the matcher to instantiate.
+comment|/// Each element of \p Context represents a matcher invocation, going from
+comment|/// outermost to innermost. Elements are pairs consisting of a reference to
+comment|/// the matcher constructor and the index of the next element in the
+comment|/// argument list of that matcher (or for the last element, the index of
+comment|/// the completion point in the argument list). An empty list requests
+comment|/// completion for the root matcher.
+specifier|static
+name|std
+operator|::
+name|vector
+operator|<
+name|ArgKind
+operator|>
+name|getAcceptedCompletionTypes
+argument_list|(
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MatcherCtor
+argument_list|,
+name|unsigned
+operator|>>
+name|Context
+argument_list|)
+expr_stmt|;
+comment|/// \brief Compute the list of completions that match any of
+comment|/// \p AcceptedTypes.
+comment|///
+comment|/// \param AcceptedTypes All types accepted for this completion.
+comment|///
+comment|/// \return All completions for the specified types.
+comment|/// Completions should be valid when used in \c lookupMatcherCtor().
+comment|/// The matcher constructed from the return of \c lookupMatcherCtor()
+comment|/// should be convertible to some type in \p AcceptedTypes.
+specifier|static
+name|std
+operator|::
+name|vector
+operator|<
+name|MatcherCompletion
+operator|>
+name|getMatcherCompletions
+argument_list|(
+name|ArrayRef
+operator|<
+name|ArgKind
+operator|>
+name|AcceptedTypes
+argument_list|)
+expr_stmt|;
+comment|/// \brief Construct a matcher from the registry.
+comment|///
+comment|/// \param Ctor The matcher constructor to instantiate.
 comment|///
 comment|/// \param NameRange The location of the name in the matcher source.
 comment|///   Useful for error reporting.
@@ -131,15 +299,15 @@ comment|///   values must be valid for the matcher requested. Otherwise, the fun
 comment|///   will return an error.
 comment|///
 comment|/// \return The matcher object constructed if no error was found.
-comment|///   A null matcher if the matcher is not found, or if the number of
-comment|///   arguments or argument types do not match the signature.
-comment|///   In that case \c Error will contain the description of the error.
+comment|///   A null matcher if the number of arguments or argument types do not match
+comment|///   the signature.  In that case \c Error will contain the description of
+comment|///   the error.
 specifier|static
 name|VariantMatcher
 name|constructMatcher
 argument_list|(
-name|StringRef
-name|MatcherName
+name|MatcherCtor
+name|Ctor
 argument_list|,
 specifier|const
 name|SourceRange
@@ -167,8 +335,8 @@ specifier|static
 name|VariantMatcher
 name|constructBoundMatcher
 argument_list|(
-name|StringRef
-name|MatcherName
+name|MatcherCtor
+name|Ctor
 argument_list|,
 specifier|const
 name|SourceRange

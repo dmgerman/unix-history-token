@@ -89,26 +89,23 @@ directive|include
 file|"vi.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|goto_adjust
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|VICMD
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * The historic vi had a problem in that all movements were by physical  * lines, not by logical, or screen lines.  Arguments can be made that this  * is the right thing to do.  For example, single line movements, such as  * 'j' or 'k', should probably work on physical lines.  Commands like "dj",  * or "j.", where '.' is a change command, make more sense for physical lines  * than they do for logical lines.  *  * These arguments, however, don't apply to scrolling commands like ^D and  * ^F -- if the window is fairly small, using physical lines can result in  * a half-page scroll repainting the entire screen, which is not what the  * user wanted.  Second, if the line is larger than the screen, using physical  * lines can make it impossible to display parts of the line -- there aren't  * any commands that don't display the beginning of the line in historic vi,  * and if both the beginning and end of the line can't be on the screen at  * the same time, you lose.  This is even worse in the case of the H, L, and  * M commands -- for large lines, they may all refer to the same line and  * will result in no movement at all.  *  * Another issue is that page and half-page scrolling commands historically  * moved to the first non-blank character in the new line.  If the line is  * approximately the same size as the screen, this loses because the cursor  * before and after a ^D, may refer to the same location on the screen.  In  * this implementation, scrolling commands set the cursor to the first non-  * blank character if the line changes because of the scroll.  Otherwise,  * the cursor is left alone.  *  * This implementation does the scrolling (^B, ^D, ^F, ^U, ^Y, ^E), and the  * cursor positioning commands (H, L, M) commands using logical lines, not  * physical.  */
 end_comment
 
 begin_comment
-comment|/*  * v_lgoto -- [count]G  *	Go to first non-blank character of the line count, the last line  *	of the file by default.  *  * PUBLIC: int v_lgoto __P((SCR *, VICMD *));  */
+comment|/*  * v_lgoto -- [count]G  *	Go to first non-blank character of the line count, the last line  *	of the file by default.  *  * PUBLIC: int v_lgoto(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -258,7 +255,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_home -- [count]H  *	Move to the first non-blank character of the logical line  *	count - 1 from the top of the screen, 0 by default.  *  * PUBLIC: int v_home __P((SCR *, VICMD *));  */
+comment|/*  * v_home -- [count]H  *	Move to the first non-blank character of the logical line  *	count - 1 from the top of the screen, 0 by default.  *  * PUBLIC: int v_home(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -322,7 +319,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_middle -- M  *	Move to the first non-blank character of the logical line  *	in the middle of the screen.  *  * PUBLIC: int v_middle __P((SCR *, VICMD *));  */
+comment|/*  * v_middle -- M  *	Move to the first non-blank character of the logical line  *	in the middle of the screen.  *  * PUBLIC: int v_middle(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -374,7 +371,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_bottom -- [count]L  *	Move to the first non-blank character of the logical line  *	count - 1 from the bottom of the screen, 0 by default.  *  * PUBLIC: int v_bottom __P((SCR *, VICMD *));  */
+comment|/*  * v_bottom -- [count]L  *	Move to the first non-blank character of the logical line  *	count - 1 from the bottom of the screen, 0 by default.  *  * PUBLIC: int v_bottom(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -569,7 +566,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_up -- [count]^P, [count]k, [count]-  *	Move up by lines.  *  * PUBLIC: int v_up __P((SCR *, VICMD *));  */
+comment|/*  * v_up -- [count]^P, [count]k, [count]-  *	Move up by lines.  *  * PUBLIC: int v_up(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -661,7 +658,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_cr -- [count]^M  *	In a script window, send the line to the shell.  *	In a regular window, move down by lines.  *  * PUBLIC: int v_cr __P((SCR *, VICMD *));  */
+comment|/*  * v_cr -- [count]^M  *	In a script window, send the line to the shell.  *	In a regular window, move down by lines.  *  * PUBLIC: int v_cr(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -734,7 +731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_down -- [count]^J, [count]^N, [count]j, [count]^M, [count]+  *	Move down by lines.  *  * PUBLIC: int v_down __P((SCR *, VICMD *));  */
+comment|/*  * v_down -- [count]^J, [count]^N, [count]j, [count]^M, [count]+  *	Move down by lines.  *  * PUBLIC: int v_down(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -837,7 +834,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_hpageup -- [count]^U  *	Page up half screens.  *  * PUBLIC: int v_hpageup __P((SCR *, VICMD *));  */
+comment|/*  * v_hpageup -- [count]^U  *	Page up half screens.  *  * PUBLIC: int v_hpageup(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -911,7 +908,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_hpagedown -- [count]^D  *	Page down half screens.  *  * PUBLIC: int v_hpagedown __P((SCR *, VICMD *));  */
+comment|/*  * v_hpagedown -- [count]^D  *	Page down half screens.  *  * PUBLIC: int v_hpagedown(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -985,7 +982,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_pagedown -- [count]^F  *	Page down full screens.  * !!!  * Historic vi did not move to the EOF if the screen couldn't move, i.e.  * if EOF was already displayed on the screen.  This implementation does  * move to EOF in that case, making ^F more like the the historic ^D.  *  * PUBLIC: int v_pagedown __P((SCR *, VICMD *));  */
+comment|/*  * v_pagedown -- [count]^F  *	Page down full screens.  * !!!  * Historic vi did not move to the EOF if the screen couldn't move, i.e.  * if EOF was already displayed on the screen.  This implementation does  * move to EOF in that case, making ^F more like the the historic ^D.  *  * PUBLIC: int v_pagedown(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -1100,7 +1097,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_pageup -- [count]^B  *	Page up full screens.  *  * !!!  * Historic vi did not move to the SOF if the screen couldn't move, i.e.  * if SOF was already displayed on the screen.  This implementation does  * move to SOF in that case, making ^B more like the the historic ^U.  *  * PUBLIC: int v_pageup __P((SCR *, VICMD *));  */
+comment|/*  * v_pageup -- [count]^B  *	Page up full screens.  *  * !!!  * Historic vi did not move to the SOF if the screen couldn't move, i.e.  * if SOF was already displayed on the screen.  This implementation does  * move to SOF in that case, making ^B more like the the historic ^U.  *  * PUBLIC: int v_pageup(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -1215,7 +1212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_lineup -- [count]^Y  *	Page up by lines.  *  * PUBLIC: int v_lineup __P((SCR *, VICMD *));  */
+comment|/*  * v_lineup -- [count]^Y  *	Page up by lines.  *  * PUBLIC: int v_lineup(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -1281,7 +1278,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_linedown -- [count]^E  *	Page down by lines.  *  * PUBLIC: int v_linedown __P((SCR *, VICMD *));  */
+comment|/*  * v_linedown -- [count]^E  *	Page down by lines.  *  * PUBLIC: int v_linedown(SCR *, VICMD *);  */
 end_comment
 
 begin_function

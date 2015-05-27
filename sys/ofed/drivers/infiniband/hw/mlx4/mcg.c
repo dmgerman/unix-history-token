@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<linux/rbtree.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/delay.h>
 end_include
 
@@ -814,6 +820,8 @@ name|IB_QP1_QKEY
 argument_list|,
 operator|&
 name|ah_attr
+argument_list|,
+literal|0
 argument_list|,
 name|mad
 argument_list|)
@@ -2947,6 +2955,9 @@ operator|->
 name|refcount
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|queue_work
 argument_list|(
 name|group
@@ -2960,7 +2971,7 @@ name|group
 operator|->
 name|work
 argument_list|)
-expr_stmt|;
+condition|)
 name|safe_atomic_dec
 argument_list|(
 operator|&
@@ -3483,8 +3494,6 @@ argument_list|,
 operator|(
 name|long
 name|long
-name|unsigned
-name|int
 operator|)
 name|be64_to_cpu
 argument_list|(
@@ -3500,8 +3509,6 @@ argument_list|,
 operator|(
 name|long
 name|long
-name|unsigned
-name|int
 operator|)
 name|be64_to_cpu
 argument_list|(
@@ -4070,8 +4077,6 @@ argument_list|,
 operator|(
 name|long
 name|long
-name|unsigned
-name|int
 operator|)
 name|be64_to_cpu
 argument_list|(
@@ -4089,8 +4094,6 @@ argument_list|,
 operator|(
 name|long
 name|long
-name|unsigned
-name|int
 operator|)
 name|be64_to_cpu
 argument_list|(
@@ -4595,8 +4598,6 @@ argument_list|,
 operator|(
 name|long
 name|long
-name|unsigned
-name|int
 operator|)
 name|be64_to_cpu
 argument_list|(
@@ -4614,8 +4615,6 @@ argument_list|,
 operator|(
 name|long
 name|long
-name|unsigned
-name|int
 operator|)
 name|be64_to_cpu
 argument_list|(
@@ -4849,6 +4848,9 @@ name|pending
 argument_list|)
 expr_stmt|;
 comment|/* calls mlx4_ib_mcg_work_handler */
+if|if
+condition|(
+operator|!
 name|queue_work
 argument_list|(
 name|group
@@ -4862,7 +4864,7 @@ name|group
 operator|->
 name|work
 argument_list|)
-expr_stmt|;
+condition|)
 name|safe_atomic_dec
 argument_list|(
 operator|&
@@ -5099,6 +5101,9 @@ operator|->
 name|refcount
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|queue_work
 argument_list|(
 name|ctx
@@ -5110,7 +5115,7 @@ name|group
 operator|->
 name|work
 argument_list|)
-expr_stmt|;
+condition|)
 name|safe_atomic_dec
 argument_list|(
 operator|&
@@ -5608,8 +5613,6 @@ argument_list|,
 operator|(
 name|long
 name|long
-name|unsigned
-name|int
 operator|)
 name|be64_to_cpu
 argument_list|(
@@ -5664,8 +5667,6 @@ argument_list|,
 operator|(
 name|long
 name|long
-name|unsigned
-name|int
 operator|)
 name|be64_to_cpu
 argument_list|(

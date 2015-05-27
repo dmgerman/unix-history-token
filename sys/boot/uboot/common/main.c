@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stand.h>
 end_include
 
@@ -89,6 +95,18 @@ end_comment
 begin_decl_stmt
 name|int
 name|devs_no
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uintptr_t
+name|uboot_heap_start
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uintptr_t
+name|uboot_heap_end
 decl_stmt|;
 end_decl_stmt
 
@@ -892,7 +910,18 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Empty device string, or unknown device name, or a bare, known  	 * device name.  	 */
+comment|/* Ignore optional spaces after the device name. */
+while|while
+condition|(
+operator|*
+name|p
+operator|==
+literal|' '
+condition|)
+name|p
+operator|++
+expr_stmt|;
+comment|/* Unknown device name, or a known name without unit number.  */
 if|if
 condition|(
 operator|(
@@ -1682,25 +1711,37 @@ name|__bss_start
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialise the heap as early as possible.  Once this is done, 	 * alloc() is usable. The stack is buried inside us, so this is safe. 	 */
+name|uboot_heap_start
+operator|=
+name|round_page
+argument_list|(
+operator|(
+name|uintptr_t
+operator|)
+name|end
+argument_list|)
+expr_stmt|;
+name|uboot_heap_end
+operator|=
+name|uboot_heap_start
+operator|+
+literal|512
+operator|*
+literal|1024
+expr_stmt|;
 name|setheap
 argument_list|(
 operator|(
 name|void
 operator|*
 operator|)
-name|end
+name|uboot_heap_start
 argument_list|,
 operator|(
 name|void
 operator|*
 operator|)
-operator|(
-name|end
-operator|+
-literal|512
-operator|*
-literal|1024
-operator|)
+name|uboot_heap_end
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Set up console. 	 */
@@ -2032,6 +2073,12 @@ literal|"loader>"
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+name|archsw
+operator|.
+name|arch_loadaddr
+operator|=
+name|uboot_loadaddr
 expr_stmt|;
 name|archsw
 operator|.

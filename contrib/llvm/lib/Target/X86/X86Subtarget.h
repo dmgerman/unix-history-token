@@ -50,14 +50,38 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86SUBTARGET_H
+name|LLVM_LIB_TARGET_X86_X86SUBTARGET_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86SUBTARGET_H
+name|LLVM_LIB_TARGET_X86_X86SUBTARGET_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"X86FrameLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"X86ISelLowering.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"X86InstrInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"X86SelectionDAGInfo.h"
+end_include
 
 begin_include
 include|#
@@ -135,6 +159,7 @@ enum|;
 block|}
 name|class
 name|X86Subtarget
+name|final
 range|:
 name|public
 name|X86GenSubtargetInfo
@@ -292,6 +317,10 @@ comment|/// HasSHA - Processor has SHA instructions.
 name|bool
 name|HasSHA
 block|;
+comment|/// HasSGX - Processor has SGX instructions.
+name|bool
+name|HasSGX
+block|;
 comment|/// HasPRFCHW - Processor has PRFCHW instructions.
 name|bool
 name|HasPRFCHW
@@ -300,18 +329,30 @@ comment|/// HasRDSEED - Processor has RDSEED instructions.
 name|bool
 name|HasRDSEED
 block|;
+comment|/// HasSMAP - Processor has SMAP instructions.
+name|bool
+name|HasSMAP
+block|;
 comment|/// IsBTMemSlow - True if BT (bit test) of memory instructions are slow.
 name|bool
 name|IsBTMemSlow
+block|;
+comment|/// IsSHLDSlow - True if SHLD instructions are slow.
+name|bool
+name|IsSHLDSlow
 block|;
 comment|/// IsUAMemFast - True if unaligned memory access is fast.
 name|bool
 name|IsUAMemFast
 block|;
-comment|/// HasVectorUAMem - True if SIMD operations can have unaligned memory
-comment|/// operands. This may require setting a feature bit in the processor.
+comment|/// True if unaligned 32-byte memory accesses are slow.
 name|bool
-name|HasVectorUAMem
+name|IsUAMem32Slow
+block|;
+comment|/// True if SSE operations can have unaligned memory operands.
+comment|/// This may require setting a configuration bit in the processor.
+name|bool
+name|HasSSEUnalignedMem
 block|;
 comment|/// HasCmpxchg16b - True if this processor has the CMPXCHG16B instruction;
 comment|/// this is true for most x86-64 chips, but not the first AMD chips.
@@ -323,14 +364,15 @@ comment|/// the stack pointer. This is an optimization for Intel Atom processors
 name|bool
 name|UseLeaForSP
 block|;
-comment|/// HasSlowDivide - True if smaller divides are significantly faster than
-comment|/// full divides and should be used when possible.
+comment|/// HasSlowDivide32 - True if 8-bit divisions are significantly faster than
+comment|/// 32-bit divisions and should be used when possible.
 name|bool
-name|HasSlowDivide
+name|HasSlowDivide32
 block|;
-comment|/// PostRAScheduler - True if using post-register-allocation scheduler.
+comment|/// HasSlowDivide64 - True if 16-bit divides are significantly faster than
+comment|/// 64-bit divisions and should be used when possible.
 name|bool
-name|PostRAScheduler
+name|HasSlowDivide64
 block|;
 comment|/// PadShortFunctions - True if the short functions should be padded to prevent
 comment|/// a stall when returning too early.
@@ -347,6 +389,26 @@ comment|///             address generation (AG) time.
 name|bool
 name|LEAUsesAG
 block|;
+comment|/// SlowLEA - True if the LEA instruction with certain arguments is slow
+name|bool
+name|SlowLEA
+block|;
+comment|/// SlowIncDec - True if INC and DEC instructions are slow when writing to flags
+name|bool
+name|SlowIncDec
+block|;
+comment|/// Use the RSQRT* instructions to optimize square root calculations.
+comment|/// For this to be profitable, the cost of FSQRT and FDIV must be
+comment|/// substantially higher than normal FP ops like FADD and FMUL.
+name|bool
+name|UseSqrtEst
+block|;
+comment|/// Use the RCP* instructions to optimize FP division calculations.
+comment|/// For this to be profitable, the cost of FDIV must be
+comment|/// substantially higher than normal FP ops like FADD and FMUL.
+name|bool
+name|UseReciprocalEst
+block|;
 comment|/// Processor has AVX-512 PreFetch Instructions
 name|bool
 name|HasPFI
@@ -358,6 +420,18 @@ block|;
 comment|/// Processor has AVX-512 Conflict Detection Instructions
 name|bool
 name|HasCDI
+block|;
+comment|/// Processor has AVX-512 Doubleword and Quadword instructions
+name|bool
+name|HasDQI
+block|;
+comment|/// Processor has AVX-512 Byte and Word instructions
+name|bool
+name|HasBWI
+block|;
+comment|/// Processor has AVX-512 Vector Length eXtenstions
+name|bool
+name|HasVLX
 block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
@@ -379,13 +453,40 @@ name|InstrItins
 block|;
 name|private
 operator|:
+comment|// Calculates type size& alignment
+specifier|const
+name|DataLayout
+name|DL
+block|;
 comment|/// StackAlignOverride - Override the stack alignment.
 name|unsigned
 name|StackAlignOverride
 block|;
-comment|/// In64BitMode - True if compiling for 64-bit, false for 32-bit.
+comment|/// In64BitMode - True if compiling for 64-bit, false for 16-bit or 32-bit.
 name|bool
 name|In64BitMode
+block|;
+comment|/// In32BitMode - True if compiling for 32-bit, false for 16-bit or 64-bit.
+name|bool
+name|In32BitMode
+block|;
+comment|/// In16BitMode - True if compiling for 16-bit, false for 32-bit or 64-bit.
+name|bool
+name|In16BitMode
+block|;
+name|X86SelectionDAGInfo
+name|TSInfo
+block|;
+comment|// Ordering here is important. X86InstrInfo initializes X86RegisterInfo which
+comment|// X86TargetLowering needs.
+name|X86InstrInfo
+name|InstrInfo
+block|;
+name|X86TargetLowering
+name|TLInfo
+block|;
+name|X86FrameLowering
+name|FrameLowering
 block|;
 name|public
 operator|:
@@ -400,11 +501,93 @@ argument|const std::string&CPU
 argument_list|,
 argument|const std::string&FS
 argument_list|,
-argument|unsigned StackAlignOverride
+argument|const X86TargetMachine&TM
 argument_list|,
-argument|bool is64Bit
+argument|unsigned StackAlignOverride
 argument_list|)
 block|;
+specifier|const
+name|X86TargetLowering
+operator|*
+name|getTargetLowering
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|TLInfo
+return|;
+block|}
+specifier|const
+name|X86InstrInfo
+operator|*
+name|getInstrInfo
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|InstrInfo
+return|;
+block|}
+specifier|const
+name|DataLayout
+operator|*
+name|getDataLayout
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|DL
+return|;
+block|}
+specifier|const
+name|X86FrameLowering
+operator|*
+name|getFrameLowering
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|FrameLowering
+return|;
+block|}
+specifier|const
+name|X86SelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|TSInfo
+return|;
+block|}
+specifier|const
+name|X86RegisterInfo
+operator|*
+name|getRegisterInfo
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|&
+name|getInstrInfo
+argument_list|()
+operator|->
+name|getRegisterInfo
+argument_list|()
+return|;
+block|}
 comment|/// getStackAlignment - Returns the minimum alignment known to hold of the
 comment|/// stack frame on entry to the function and which must be maintained by every
 comment|/// function for this subtarget.
@@ -438,31 +621,25 @@ argument_list|,
 argument|StringRef FS
 argument_list|)
 block|;
-comment|/// AutoDetectSubtargetFeatures - Auto-detect CPU features using CPUID
-comment|/// instruction.
-name|void
-name|AutoDetectSubtargetFeatures
-argument_list|()
-block|;
-comment|/// \brief Reset the features for the X86 target.
-name|virtual
-name|void
-name|resetSubtargetFeatures
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|*
-name|MF
-argument_list|)
-block|;
 name|private
 operator|:
+comment|/// \brief Initialize the full set of dependencies so we can use an initializer
+comment|/// list for X86Subtarget.
+name|X86Subtarget
+operator|&
+name|initializeSubtargetDependencies
+argument_list|(
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|)
+block|;
 name|void
 name|initializeEnvironment
 argument_list|()
 block|;
 name|void
-name|resetSubtargetFeatures
+name|initSubtargetFeatures
 argument_list|(
 argument|StringRef CPU
 argument_list|,
@@ -479,6 +656,24 @@ specifier|const
 block|{
 return|return
 name|In64BitMode
+return|;
+block|}
+name|bool
+name|is32Bit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|In32BitMode
+return|;
+block|}
+name|bool
+name|is16Bit
+argument_list|()
+specifier|const
+block|{
+return|return
+name|In16BitMode
 return|;
 block|}
 comment|/// Is this x86_64 with the ILP32 programming model (x32 ABI)?
@@ -499,6 +694,11 @@ operator|==
 name|Triple
 operator|::
 name|GNUX32
+operator|||
+name|TargetTriple
+operator|.
+name|isOSNaCl
+argument_list|()
 operator|)
 return|;
 block|}
@@ -520,6 +720,12 @@ operator|!=
 name|Triple
 operator|::
 name|GNUX32
+operator|&&
+operator|!
+name|TargetTriple
+operator|.
+name|isOSNaCl
+argument_list|()
 operator|)
 return|;
 block|}
@@ -881,6 +1087,15 @@ name|HasSHA
 return|;
 block|}
 name|bool
+name|hasSGX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSGX
+return|;
+block|}
+name|bool
 name|hasPRFCHW
 argument_list|()
 specifier|const
@@ -899,12 +1114,30 @@ name|HasRDSEED
 return|;
 block|}
 name|bool
+name|hasSMAP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSMAP
+return|;
+block|}
+name|bool
 name|isBTMemSlow
 argument_list|()
 specifier|const
 block|{
 return|return
 name|IsBTMemSlow
+return|;
+block|}
+name|bool
+name|isSHLDSlow
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsSHLDSlow
 return|;
 block|}
 name|bool
@@ -917,12 +1150,21 @@ name|IsUAMemFast
 return|;
 block|}
 name|bool
-name|hasVectorUAMem
+name|isUnalignedMem32Slow
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasVectorUAMem
+name|IsUAMem32Slow
+return|;
+block|}
+name|bool
+name|hasSSEUnalignedMem
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSSEUnalignedMem
 return|;
 block|}
 name|bool
@@ -944,12 +1186,21 @@ name|UseLeaForSP
 return|;
 block|}
 name|bool
-name|hasSlowDivide
+name|hasSlowDivide32
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasSlowDivide
+name|HasSlowDivide32
+return|;
+block|}
+name|bool
+name|hasSlowDivide64
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasSlowDivide64
 return|;
 block|}
 name|bool
@@ -980,6 +1231,42 @@ name|LEAUsesAG
 return|;
 block|}
 name|bool
+name|slowLEA
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SlowLEA
+return|;
+block|}
+name|bool
+name|slowIncDec
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SlowIncDec
+return|;
+block|}
+name|bool
+name|useSqrtEst
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseSqrtEst
+return|;
+block|}
+name|bool
+name|useReciprocalEst
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseReciprocalEst
+return|;
+block|}
+name|bool
 name|hasCDI
 argument_list|()
 specifier|const
@@ -1007,6 +1294,33 @@ name|HasERI
 return|;
 block|}
 name|bool
+name|hasDQI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasDQI
+return|;
+block|}
+name|bool
+name|hasBWI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasBWI
+return|;
+block|}
+name|bool
+name|hasVLX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVLX
+return|;
+block|}
+name|bool
 name|isAtom
 argument_list|()
 specifier|const
@@ -1015,6 +1329,17 @@ return|return
 name|X86ProcFamily
 operator|==
 name|IntelAtom
+return|;
+block|}
+name|bool
+name|isSLM
+argument_list|()
+specifier|const
+block|{
+return|return
+name|X86ProcFamily
+operator|==
+name|IntelSLM
 return|;
 block|}
 specifier|const
@@ -1048,12 +1373,20 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isOSFreeBSD
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|FreeBSD
+return|;
+block|}
+name|bool
+name|isTargetDragonFly
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSDragonFly
+argument_list|()
 return|;
 block|}
 name|bool
@@ -1064,12 +1397,8 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isOSSolaris
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|Solaris
 return|;
 block|}
 name|bool
@@ -1078,21 +1407,34 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|TargetTriple
-operator|.
-name|getEnvironment
-argument_list|()
-operator|==
-name|Triple
-operator|::
-name|ELF
-operator|||
 name|TargetTriple
 operator|.
 name|isOSBinFormatELF
 argument_list|()
-operator|)
+return|;
+block|}
+name|bool
+name|isTargetCOFF
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSBinFormatCOFF
+argument_list|()
+return|;
+block|}
+name|bool
+name|isTargetMachO
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isOSBinFormatMachO
+argument_list|()
 return|;
 block|}
 name|bool
@@ -1147,51 +1489,63 @@ argument_list|()
 return|;
 block|}
 name|bool
-name|isTargetWindows
+name|isTargetWindowsMSVC
 argument_list|()
 specifier|const
 block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isWindowsMSVCEnvironment
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|Win32
 return|;
 block|}
 name|bool
-name|isTargetMingw
+name|isTargetKnownWindowsMSVC
 argument_list|()
 specifier|const
 block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isKnownWindowsMSVCEnvironment
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|MinGW32
 return|;
 block|}
 name|bool
-name|isTargetCygwin
+name|isTargetWindowsCygwin
 argument_list|()
 specifier|const
 block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isWindowsCygwinEnvironment
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|Cygwin
+return|;
+block|}
+name|bool
+name|isTargetWindowsGNU
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isWindowsGNUEnvironment
+argument_list|()
+return|;
+block|}
+name|bool
+name|isTargetWindowsItanium
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|isWindowsItaniumEnvironment
+argument_list|()
 return|;
 block|}
 name|bool
@@ -1203,41 +1557,6 @@ return|return
 name|TargetTriple
 operator|.
 name|isOSCygMing
-argument_list|()
-return|;
-block|}
-name|bool
-name|isTargetCOFF
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-name|TargetTriple
-operator|.
-name|getEnvironment
-argument_list|()
-operator|!=
-name|Triple
-operator|::
-name|ELF
-operator|&&
-name|TargetTriple
-operator|.
-name|isOSBinFormatCOFF
-argument_list|()
-operator|)
-return|;
-block|}
-name|bool
-name|isTargetEnvMacho
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TargetTriple
-operator|.
-name|isEnvironmentMachO
 argument_list|()
 return|;
 block|}
@@ -1280,7 +1599,7 @@ operator|(
 name|isTargetCygMing
 argument_list|()
 operator|||
-name|isTargetWindows
+name|isTargetKnownWindowsMSVC
 argument_list|()
 operator|)
 return|;
@@ -1450,44 +1769,43 @@ name|bool
 name|enableMachineScheduler
 argument_list|()
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-comment|/// enablePostRAScheduler - run for Atom optimization.
 name|bool
-name|enablePostRAScheduler
-argument_list|(
-argument|CodeGenOpt::Level OptLevel
-argument_list|,
-argument|TargetSubtargetInfo::AntiDepBreakMode& Mode
-argument_list|,
-argument|RegClassVector& CriticalPathRCs
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|postRAScheduler
+name|enableEarlyIfConversion
 argument_list|()
 specifier|const
-block|{
-return|return
-name|PostRAScheduler
-return|;
-block|}
+name|override
+block|;
 comment|/// getInstrItins = Return the instruction itineraries based on the
 comment|/// subtarget selection.
 specifier|const
 name|InstrItineraryData
-operator|&
+operator|*
 name|getInstrItineraryData
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
+operator|&
 name|InstrItins
+return|;
+block|}
+name|AntiDepBreakMode
+name|getAntiDepBreakMode
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|TargetSubtargetInfo
+operator|::
+name|ANTIDEP_CRITICAL
 return|;
 block|}
 expr|}

@@ -68,7 +68,7 @@ name|table_size
 argument_list|,
 name|PAGE_SIZE
 argument_list|,
-literal|0xFFFFFFFFUL
+name|BUS_SPACE_MAXADDR
 argument_list|)
 expr_stmt|;
 if|if
@@ -304,6 +304,14 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_ati_pcigart_cleanup
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|int
@@ -832,12 +840,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__i386
+name|__i386__
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__amd64
+name|__x86_64__
 argument_list|)
 name|wbinvd
 argument_list|()
@@ -868,6 +876,14 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_ati_pcigart_init
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

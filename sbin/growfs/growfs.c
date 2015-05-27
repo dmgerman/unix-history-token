@@ -728,7 +728,7 @@ name|csum
 modifier|*
 name|dbg_csp
 decl_stmt|;
-name|int
+name|u_int32_t
 name|dbg_csc
 decl_stmt|;
 name|char
@@ -1140,7 +1140,7 @@ name|csum
 modifier|*
 name|dbg_csp
 decl_stmt|;
-name|int
+name|u_int32_t
 name|dbg_csc
 decl_stmt|;
 name|char

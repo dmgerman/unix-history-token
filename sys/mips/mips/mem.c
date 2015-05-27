@@ -216,8 +216,6 @@ name|error
 operator|=
 literal|0
 expr_stmt|;
-name|GIANT_REQUIRED
-expr_stmt|;
 name|pmap_page_init
 argument_list|(
 operator|&

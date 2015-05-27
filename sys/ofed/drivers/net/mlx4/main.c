@@ -9,10 +9,6 @@ directive|include
 file|<linux/kmod.h>
 end_include
 
-begin_comment
-comment|/*   * kmod.h must be included before module.h since it includes (indirectly) sys/module.h  * To use the FBSD macro sys/module.h should define MODULE_VERSION before linux/module does. */
-end_comment
-
 begin_include
 include|#
 directive|include
@@ -2627,19 +2623,6 @@ return|return
 operator|-
 name|EINVAL
 return|;
-if|if
-condition|(
-operator|!
-name|pdev
-operator|->
-name|bus
-condition|)
-block|{
-return|return
-operator|-
-name|EINVAL
-return|;
-block|}
 name|dbdf
 operator|=
 name|dbdf_to_u64
@@ -7566,6 +7549,7 @@ name|info
 operator|->
 name|dev
 decl_stmt|;
+comment|/* When port type is eth, port mtu value isn't used. */
 if|if
 condition|(
 name|mdev
@@ -7581,13 +7565,10 @@ index|]
 operator|==
 name|MLX4_PORT_TYPE_ETH
 condition|)
-name|mlx4_warn
-argument_list|(
-name|mdev
-argument_list|,
-literal|"port level mtu is only used for IB ports\n"
-argument_list|)
-expr_stmt|;
+return|return
+operator|-
+name|EINVAL
+return|;
 name|sprintf
 argument_list|(
 name|buf
@@ -16123,6 +16104,26 @@ argument_list|(
 name|entries
 argument_list|)
 expr_stmt|;
+comment|/* if error, or can't alloc even 1 IRQ */
+if|if
+condition|(
+name|err
+operator|<
+literal|0
+condition|)
+block|{
+name|mlx4_err
+argument_list|(
+name|dev
+argument_list|,
+literal|"No IRQs left, device can't "
+literal|"be started.\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|no_irq
+goto|;
+block|}
 goto|goto
 name|no_msi
 goto|;
@@ -16276,6 +16277,25 @@ operator|->
 name|pdev
 operator|->
 name|irq
+expr_stmt|;
+return|return;
+name|no_irq
+label|:
+name|dev
+operator|->
+name|caps
+operator|.
+name|num_comp_vectors
+operator|=
+literal|0
+expr_stmt|;
+name|dev
+operator|->
+name|caps
+operator|.
+name|comp_pool
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -18157,6 +18177,33 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* no MSIX and no shared IRQ */
+if|if
+condition|(
+operator|!
+name|dev
+operator|->
+name|caps
+operator|.
+name|num_comp_vectors
+operator|&&
+operator|!
+name|dev
+operator|->
+name|caps
+operator|.
+name|comp_pool
+condition|)
+block|{
+name|err
+operator|=
+operator|-
+name|ENOSPC
+expr_stmt|;
+goto|goto
+name|err_free_eq
+goto|;
+block|}
 if|if
 condition|(
 operator|(
@@ -20425,12 +20472,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_include
-include|#
-directive|include
-file|<sys/module.h>
-end_include
-
 begin_function
 specifier|static
 name|int
@@ -20494,6 +20535,22 @@ argument_list|,
 name|SI_SUB_OFED_PREINIT
 argument_list|,
 name|SI_ORDER_ANY
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|mlx4
+argument_list|,
+name|linuxapi
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt

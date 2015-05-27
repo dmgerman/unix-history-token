@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- DAGISelMatcher.h - Representation of DAG pattern matcher -----------===//
+comment|//===- DAGISelMatcher.h - Representation of DAG pattern matcher -*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -34,19 +34,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TBLGEN_DAGISELMATCHER_H
+name|LLVM_UTILS_TABLEGEN_DAGISELMATCHER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TBLGEN_DAGISELMATCHER_H
+name|LLVM_UTILS_TABLEGEN_DAGISELMATCHER_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
@@ -64,7 +64,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|"llvm/CodeGen/MachineValueType.h"
 end_include
 
 begin_include
@@ -125,20 +125,24 @@ modifier|&
 name|CGP
 parameter_list|)
 function_decl|;
-name|Matcher
-modifier|*
+name|void
 name|OptimizeMatcher
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Matcher
-modifier|*
+operator|>
+operator|&
 name|Matcher
-parameter_list|,
+argument_list|,
 specifier|const
 name|CodeGenDAGPatterns
-modifier|&
+operator|&
 name|CGP
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|void
 name|EmitMatcherTable
 parameter_list|(
@@ -164,7 +168,9 @@ name|Matcher
 block|{
 comment|// The next matcher node that is executed after this one.  Null if this is the
 comment|// last stage of a match.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Matcher
 operator|>
@@ -232,6 +238,9 @@ comment|// Fail if child has wrong type.
 name|CheckInteger
 block|,
 comment|// Fail if wrong val.
+name|CheckChildInteger
+block|,
+comment|// Fail if child is wrong val.
 name|CheckCondCode
 block|,
 comment|// Fail if not condcode.
@@ -362,11 +371,13 @@ block|{
 return|return
 name|Next
 operator|.
-name|take
+name|release
 argument_list|()
 return|;
 block|}
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|Matcher
 operator|>
@@ -488,6 +499,9 @@ name|CheckChildType
 case|:
 case|case
 name|CheckInteger
+case|:
+case|case
+name|CheckChildInteger
 case|:
 case|case
 name|CheckCondCode
@@ -714,9 +728,12 @@ name|public
 operator|:
 name|ScopeMatcher
 argument_list|(
-argument|Matcher *const *children
-argument_list|,
-argument|unsigned numchildren
+name|ArrayRef
+operator|<
+name|Matcher
+operator|*
+operator|>
+name|children
 argument_list|)
 operator|:
 name|Matcher
@@ -726,9 +743,9 @@ argument_list|)
 block|,
 name|Children
 argument_list|(
-argument|children
+argument|children.begin()
 argument_list|,
-argument|children+numchildren
+argument|children.end()
 argument_list|)
 block|{   }
 name|virtual
@@ -820,7 +837,7 @@ index|[
 name|i
 index|]
 operator|=
-literal|0
+name|nullptr
 block|;
 return|return
 name|Res
@@ -898,7 +915,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -907,24 +923,25 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|12312
@@ -1014,11 +1031,11 @@ operator|==
 name|RecordNode
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -1026,7 +1043,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -1035,24 +1051,25 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|0
@@ -1163,11 +1180,11 @@ operator|==
 name|RecordChild
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -1175,7 +1192,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -1184,14 +1200,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -1209,11 +1226,11 @@ name|getChildNo
 argument_list|()
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getChildNo
@@ -1256,11 +1273,11 @@ operator|==
 name|RecordMemRef
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -1268,7 +1285,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -1277,24 +1293,25 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|0
@@ -1337,11 +1354,11 @@ operator|==
 name|CaptureGlueInput
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -1349,7 +1366,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -1358,24 +1374,25 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|0
@@ -1437,11 +1454,11 @@ operator|==
 name|MoveChild
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -1449,7 +1466,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -1458,14 +1474,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -1483,11 +1500,11 @@ name|getChildNo
 argument_list|()
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getChildNo
@@ -1531,11 +1548,11 @@ operator|==
 name|MoveParent
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -1543,7 +1560,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -1552,24 +1568,25 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|0
@@ -1632,11 +1649,11 @@ operator|==
 name|CheckSame
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -1644,7 +1661,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -1653,14 +1669,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -1678,11 +1695,11 @@ name|getMatchNumber
 argument_list|()
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getMatchNumber
@@ -1765,11 +1782,11 @@ operator|==
 name|CheckChildSame
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -1777,7 +1794,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -1786,14 +1802,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -1821,11 +1838,11 @@ operator|==
 name|MatchNumber
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|(
@@ -1896,11 +1913,11 @@ operator|==
 name|CheckPatternPredicate
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -1908,7 +1925,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -1917,14 +1933,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -1941,11 +1958,11 @@ operator|==
 name|Predicate
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// CheckPredicateMatcher - This checks the target-specific predicate to
@@ -1996,7 +2013,6 @@ comment|// TODO: Ok?
 comment|//virtual bool isSafeToReorderWithPatternPredicate() const { return true; }
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -2005,14 +2021,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -2028,11 +2045,11 @@ operator|==
 name|Pred
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// CheckOpcodeMatcher - This checks to see if the current node has the
@@ -2096,11 +2113,11 @@ operator|==
 name|CheckOpcode
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -2108,7 +2125,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -2117,28 +2133,29 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isContradictoryImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// SwitchOpcodeMatcher - Switch based on the current node's opcode, dispatching
@@ -2173,11 +2190,21 @@ name|public
 operator|:
 name|SwitchOpcodeMatcher
 argument_list|(
-argument|const std::pair<const SDNodeInfo*
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|SDNodeInfo
+operator|*
 argument_list|,
-argument|Matcher*> *cases
-argument_list|,
-argument|unsigned numcases
+name|Matcher
+operator|*
+operator|>
+expr|>
+name|cases
 argument_list|)
 operator|:
 name|Matcher
@@ -2187,11 +2214,16 @@ argument_list|)
 block|,
 name|Cases
 argument_list|(
-argument|cases
+argument|cases.begin()
 argument_list|,
-argument|cases+numcases
+argument|cases.end()
 argument_list|)
 block|{}
+name|virtual
+operator|~
+name|SwitchOpcodeMatcher
+argument_list|()
+block|;
 specifier|static
 specifier|inline
 name|bool
@@ -2276,7 +2308,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -2285,24 +2316,25 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|4123
@@ -2387,11 +2419,11 @@ operator|==
 name|CheckType
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -2399,7 +2431,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -2408,14 +2439,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -2431,23 +2463,23 @@ operator|==
 name|Type
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Type
 return|;
 block|}
-name|virtual
 name|bool
 name|isContradictoryImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// SwitchTypeMatcher - Switch based on the current node's type, dispatching
@@ -2482,11 +2514,21 @@ name|public
 operator|:
 name|SwitchTypeMatcher
 argument_list|(
-argument|const std::pair<MVT::SimpleValueType
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MVT
+operator|::
+name|SimpleValueType
 argument_list|,
-argument|Matcher*> *cases
-argument_list|,
-argument|unsigned numcases
+name|Matcher
+operator|*
+operator|>
+expr|>
+name|cases
 argument_list|)
 operator|:
 name|Matcher
@@ -2496,11 +2538,16 @@ argument_list|)
 block|,
 name|Cases
 argument_list|(
-argument|cases
+argument|cases.begin()
 argument_list|,
-argument|cases+numcases
+argument|cases.end()
 argument_list|)
 block|{}
+name|virtual
+operator|~
+name|SwitchTypeMatcher
+argument_list|()
+block|;
 specifier|static
 specifier|inline
 name|bool
@@ -2584,7 +2631,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -2593,24 +2639,25 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|4123
@@ -2695,11 +2742,11 @@ operator|==
 name|CheckChildType
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -2707,7 +2754,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -2716,14 +2762,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -2751,11 +2798,11 @@ operator|==
 name|Type
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|(
@@ -2767,13 +2814,13 @@ operator||
 name|ChildNo
 return|;
 block|}
-name|virtual
 name|bool
 name|isContradictoryImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// CheckIntegerMatcher - This checks to see if the current node is a
@@ -2830,11 +2877,11 @@ operator|==
 name|CheckInteger
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -2842,7 +2889,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -2851,14 +2897,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -2874,9 +2921,74 @@ operator|==
 name|Value
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|Value
+return|;
+block|}
+name|bool
+name|isContradictoryImpl
+argument_list|(
+argument|const Matcher *M
+argument_list|)
+specifier|const
+name|override
+block|; }
+block|;
+comment|/// CheckChildIntegerMatcher - This checks to see if the child node is a
+comment|/// ConstantSDNode with a specified integer value, if not it fails to match.
+name|class
+name|CheckChildIntegerMatcher
+operator|:
+name|public
+name|Matcher
+block|{
+name|unsigned
+name|ChildNo
+block|;
+name|int64_t
+name|Value
+block|;
+name|public
+operator|:
+name|CheckChildIntegerMatcher
+argument_list|(
+argument|unsigned childno
+argument_list|,
+argument|int64_t value
+argument_list|)
+operator|:
+name|Matcher
+argument_list|(
+name|CheckChildInteger
+argument_list|)
+block|,
+name|ChildNo
+argument_list|(
+name|childno
+argument_list|)
+block|,
+name|Value
+argument_list|(
+argument|value
+argument_list|)
+block|{}
+name|unsigned
+name|getChildNo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ChildNo
+return|;
+block|}
+name|int64_t
+name|getValue
 argument_list|()
 specifier|const
 block|{
@@ -2884,13 +2996,102 @@ return|return
 name|Value
 return|;
 block|}
-name|virtual
+specifier|static
+specifier|inline
+name|bool
+name|classof
+argument_list|(
+argument|const Matcher *N
+argument_list|)
+block|{
+return|return
+name|N
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|CheckChildInteger
+return|;
+block|}
+name|bool
+name|isSafeToReorderWithPatternPredicate
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+name|true
+return|;
+block|}
+name|private
+operator|:
+name|void
+name|printImpl
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|unsigned indent
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|isEqualImpl
+argument_list|(
+argument|const Matcher *M
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|cast
+operator|<
+name|CheckChildIntegerMatcher
+operator|>
+operator|(
+name|M
+operator|)
+operator|->
+name|ChildNo
+operator|==
+name|ChildNo
+operator|&&
+name|cast
+operator|<
+name|CheckChildIntegerMatcher
+operator|>
+operator|(
+name|M
+operator|)
+operator|->
+name|Value
+operator|==
+name|Value
+return|;
+block|}
+name|unsigned
+name|getHashImpl
+argument_list|()
+specifier|const
+name|override
+block|{
+return|return
+operator|(
+name|Value
+operator|<<
+literal|3
+operator|)
+operator||
+name|ChildNo
+return|;
+block|}
 name|bool
 name|isContradictoryImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// CheckCondCodeMatcher - This checks to see if the current node is a
@@ -2947,11 +3148,11 @@ operator|==
 name|CheckCondCode
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -2959,7 +3160,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -2968,14 +3168,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -2991,11 +3192,11 @@ operator|==
 name|CondCodeName
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// CheckValueTypeMatcher - This checks to see if the current node is a
@@ -3052,11 +3253,11 @@ operator|==
 name|CheckValueType
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -3064,7 +3265,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -3073,14 +3273,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -3096,11 +3297,11 @@ operator|==
 name|TypeName
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|bool
 name|isContradictoryImpl
@@ -3108,6 +3309,7 @@ argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// CheckComplexPatMatcher - This node runs the specified ComplexPattern on
@@ -3236,11 +3438,11 @@ name|CheckComplexPat
 return|;
 block|}
 comment|// Not safe to move a pattern predicate past a complex pattern.
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -3248,7 +3450,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -3257,14 +3458,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 operator|&
@@ -3294,11 +3496,11 @@ operator|==
 name|MatchNumber
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 call|(
@@ -3369,11 +3571,11 @@ operator|==
 name|CheckAndImm
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -3381,7 +3583,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -3390,14 +3591,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -3413,11 +3615,11 @@ operator|==
 name|Value
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Value
@@ -3479,11 +3681,11 @@ operator|==
 name|CheckOrImm
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -3491,7 +3693,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -3500,14 +3701,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -3523,11 +3725,11 @@ operator|==
 name|Value
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Value
@@ -3570,11 +3772,11 @@ operator|==
 name|CheckFoldableChainNode
 return|;
 block|}
-name|virtual
 name|bool
 name|isSafeToReorderWithPatternPredicate
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -3582,7 +3784,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -3591,24 +3792,25 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|true
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|0
@@ -3694,7 +3896,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -3703,14 +3904,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -3738,11 +3940,11 @@ operator|==
 name|VT
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|(
@@ -3841,7 +4043,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -3850,14 +4051,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -3885,11 +4087,11 @@ operator|==
 name|VT
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// EmitRegisterMatcher - This creates a new TargetConstant.
@@ -3976,7 +4178,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -3985,14 +4186,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -4020,11 +4222,11 @@ operator|==
 name|VT
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 operator|(
@@ -4101,7 +4303,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -4110,14 +4311,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -4133,11 +4335,11 @@ operator|==
 name|Slot
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Slot
@@ -4167,9 +4369,11 @@ name|public
 operator|:
 name|EmitMergeInputChainsMatcher
 argument_list|(
-argument|const unsigned *nodes
-argument_list|,
-argument|unsigned NumNodes
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|nodes
 argument_list|)
 operator|:
 name|Matcher
@@ -4179,9 +4383,9 @@ argument_list|)
 block|,
 name|ChainNodes
 argument_list|(
-argument|nodes
+argument|nodes.begin()
 argument_list|,
-argument|nodes+NumNodes
+argument|nodes.end()
 argument_list|)
 block|{}
 name|unsigned
@@ -4239,7 +4443,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -4248,14 +4451,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -4271,11 +4475,11 @@ operator|==
 name|ChainNodes
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// EmitCopyToRegMatcher - Emit a CopyToReg node from a value to a physreg,
@@ -4357,7 +4561,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -4366,14 +4569,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -4401,11 +4605,11 @@ operator|==
 name|DestPhysReg
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|SrcSlot
@@ -4502,7 +4706,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -4511,14 +4714,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -4546,11 +4750,11 @@ operator|==
 name|NodeXForm
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Slot
@@ -4624,13 +4828,9 @@ name|EmitNodeMatcherCommon
 argument_list|(
 argument|const std::string&opcodeName
 argument_list|,
-argument|const MVT::SimpleValueType *vts
+argument|ArrayRef<MVT::SimpleValueType> vts
 argument_list|,
-argument|unsigned numvts
-argument_list|,
-argument|const unsigned *operands
-argument_list|,
-argument|unsigned numops
+argument|ArrayRef<unsigned> operands
 argument_list|,
 argument|bool hasChain
 argument_list|,
@@ -4662,19 +4862,27 @@ block|,
 name|VTs
 argument_list|(
 name|vts
+operator|.
+name|begin
+argument_list|()
 argument_list|,
 name|vts
-operator|+
-name|numvts
+operator|.
+name|end
+argument_list|()
 argument_list|)
 block|,
 name|Operands
 argument_list|(
 name|operands
+operator|.
+name|begin
+argument_list|()
 argument_list|,
 name|operands
-operator|+
-name|numops
+operator|.
+name|end
+argument_list|()
 argument_list|)
 block|,
 name|HasChain
@@ -4890,7 +5098,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -4899,20 +5106,21 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// EmitNodeMatcher - This signals a successful match and generates a node.
@@ -4922,10 +5130,10 @@ operator|:
 name|public
 name|EmitNodeMatcherCommon
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|unsigned
 name|FirstResultSlot
@@ -4936,13 +5144,9 @@ name|EmitNodeMatcher
 argument_list|(
 argument|const std::string&opcodeName
 argument_list|,
-argument|const MVT::SimpleValueType *vts
+argument|ArrayRef<MVT::SimpleValueType> vts
 argument_list|,
-argument|unsigned numvts
-argument_list|,
-argument|const unsigned *operands
-argument_list|,
-argument|unsigned numops
+argument|ArrayRef<unsigned> operands
 argument_list|,
 argument|bool hasChain
 argument_list|,
@@ -4963,11 +5167,7 @@ name|opcodeName
 argument_list|,
 name|vts
 argument_list|,
-name|numvts
-argument_list|,
 name|operands
-argument_list|,
-name|numops
 argument_list|,
 name|hasChain
 argument_list|,
@@ -5021,10 +5221,10 @@ operator|:
 name|public
 name|EmitNodeMatcherCommon
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 specifier|const
 name|PatternToMatch
@@ -5037,13 +5237,9 @@ name|MorphNodeToMatcher
 argument_list|(
 argument|const std::string&opcodeName
 argument_list|,
-argument|const MVT::SimpleValueType *vts
+argument|ArrayRef<MVT::SimpleValueType> vts
 argument_list|,
-argument|unsigned numvts
-argument_list|,
-argument|const unsigned *operands
-argument_list|,
-argument|unsigned numops
+argument|ArrayRef<unsigned> operands
 argument_list|,
 argument|bool hasChain
 argument_list|,
@@ -5064,11 +5260,7 @@ name|opcodeName
 argument_list|,
 name|vts
 argument_list|,
-name|numvts
-argument_list|,
 name|operands
-argument_list|,
-name|numops
 argument_list|,
 name|hasChain
 argument_list|,
@@ -5139,9 +5331,11 @@ name|public
 operator|:
 name|MarkGlueResultsMatcher
 argument_list|(
-argument|const unsigned *nodes
-argument_list|,
-argument|unsigned NumNodes
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|nodes
 argument_list|)
 operator|:
 name|Matcher
@@ -5151,9 +5345,9 @@ argument_list|)
 block|,
 name|GlueResultNodes
 argument_list|(
-argument|nodes
+argument|nodes.begin()
 argument_list|,
-argument|nodes+NumNodes
+argument|nodes.end()
 argument_list|)
 block|{}
 name|unsigned
@@ -5211,7 +5405,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -5220,14 +5413,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -5243,11 +5437,11 @@ operator|==
 name|GlueResultNodes
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// CompleteMatchMatcher - Complete a match by replacing the results of the
@@ -5276,11 +5470,16 @@ name|public
 operator|:
 name|CompleteMatchMatcher
 argument_list|(
-argument|const unsigned *results
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|results
 argument_list|,
-argument|unsigned numresults
-argument_list|,
-argument|const PatternToMatch&pattern
+specifier|const
+name|PatternToMatch
+operator|&
+name|pattern
 argument_list|)
 operator|:
 name|Matcher
@@ -5291,10 +5490,14 @@ block|,
 name|Results
 argument_list|(
 name|results
+operator|.
+name|begin
+argument_list|()
 argument_list|,
 name|results
-operator|+
-name|numresults
+operator|.
+name|end
+argument_list|()
 argument_list|)
 block|,
 name|Pattern
@@ -5358,7 +5561,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|void
 name|printImpl
 argument_list|(
@@ -5367,14 +5569,15 @@ argument_list|,
 argument|unsigned indent
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isEqualImpl
 argument_list|(
 argument|const Matcher *M
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|cast
@@ -5404,11 +5607,11 @@ operator|&
 name|Pattern
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getHashImpl
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;  }
 end_decl_stmt

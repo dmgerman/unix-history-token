@@ -69,7 +69,10 @@ name|eStepTypeOver
 block|,
 comment|///< Single step over a specified context.
 name|eStepTypeOut
+block|,
 comment|///< Single step out a specified context.
+name|eStepTypeScripted
+comment|///< A step type implemented by the script interpreter.
 block|}
 name|StepType
 typedef|;
@@ -220,62 +223,6 @@ name|eSortOrderByName
 block|}
 name|SortOrder
 typedef|;
-comment|//----------------------------------------------------------------------
-comment|// Used in conjunction with Host::GetLLDBPath () to find files that
-comment|// are related to
-comment|//----------------------------------------------------------------------
-typedef|typedef
-enum|enum
-name|PathType
-block|{
-name|ePathTypeLLDBShlibDir
-block|,
-comment|// The directory where the lldb.so (unix) or LLDB mach-o file in LLDB.framework (MacOSX) exists
-name|ePathTypeSupportExecutableDir
-block|,
-comment|// Find LLDB support executable directory (debugserver, etc)
-name|ePathTypeHeaderDir
-block|,
-comment|// Find LLDB header file directory
-name|ePathTypePythonDir
-block|,
-comment|// Find Python modules (PYTHONPATH) directory
-name|ePathTypeLLDBSystemPlugins
-block|,
-comment|// System plug-ins directory
-name|ePathTypeLLDBUserPlugins
-block|,
-comment|// User plug-ins directory
-name|ePathTypeLLDBTempSystemDir
-comment|// The LLDB temp directory for this system
-block|}
-name|PathType
-typedef|;
-comment|//----------------------------------------------------------------------
-comment|// We can execute ThreadPlans on one thread with various fall-back modes
-comment|// (try other threads after timeout, etc.) This enum gives the result of
-comment|// thread plan executions.
-comment|//----------------------------------------------------------------------
-typedef|typedef
-enum|enum
-name|ExecutionResults
-block|{
-name|eExecutionSetupError
-block|,
-name|eExecutionCompleted
-block|,
-name|eExecutionDiscarded
-block|,
-name|eExecutionInterrupted
-block|,
-name|eExecutionHitBreakpoint
-block|,
-name|eExecutionTimedOut
-block|,
-name|eExecutionStoppedForDebug
-block|}
-name|ExecutionResults
-typedef|;
 typedef|typedef
 enum|enum
 name|ObjCRuntimeVersions
@@ -351,7 +298,7 @@ block|,
 comment|// Support for any instructions at all (at least one)
 name|eInstructionTypePrologueEpilogue
 block|,
-comment|// All prologue and epilogue instructons that push and pop register values and modify sp/fp
+comment|// All prologue and epilogue instructions that push and pop register values and modify sp/fp
 name|eInstructionTypePCModifying
 block|,
 comment|// Any instruction that modifies the program counter/instruction pointer
@@ -398,6 +345,14 @@ block|,
 name|eFormatCategoryItemRegexValue
 init|=
 literal|0x0080
+block|,
+name|eFormatCategoryItemValidator
+init|=
+literal|0x0100
+block|,
+name|eFormatCategoryItemRegexValidator
+init|=
+literal|0x0200
 block|}
 name|FormatCategoryItem
 typedef|;
@@ -524,6 +479,45 @@ name|Done
 comment|// Lines are complete
 block|}
 empty_stmt|;
+comment|//----------------------------------------------------------------------
+comment|// Exit Type for inferior processes
+comment|//----------------------------------------------------------------------
+typedef|typedef
+enum|enum
+name|ExitType
+block|{
+name|eExitTypeInvalid
+block|,
+name|eExitTypeExit
+block|,
+comment|// The exit status represents the return code from normal program exit (i.e. WIFEXITED() was true)
+name|eExitTypeSignal
+block|,
+comment|// The exit status represents the signal number that caused the program to exit (i.e. WIFSIGNALED() was true)
+name|eExitTypeStop
+block|,
+comment|// The exit status represents the stop signal that caused the program to exit (i.e. WIFSTOPPED() was true)
+block|}
+name|ExitType
+typedef|;
+comment|//----------------------------------------------------------------------
+comment|// Boolean result of running a Type Validator
+comment|//----------------------------------------------------------------------
+name|enum
+name|class
+name|TypeValidatorResult
+range|:
+name|bool
+block|{
+name|Success
+operator|=
+name|true
+block|,
+name|Failure
+operator|=
+name|false
+block|}
+decl_stmt|;
 block|}
 end_decl_stmt
 

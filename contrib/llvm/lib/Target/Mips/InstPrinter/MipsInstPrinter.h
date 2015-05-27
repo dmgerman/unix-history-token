@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPSINSTPRINTER_H
+name|LLVM_LIB_TARGET_MIPS_INSTPRINTER_MIPSINSTPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPSINSTPRINTER_H
+name|LLVM_LIB_TARGET_MIPS_INSTPRINTER_MIPSINSTPRINTER_H
 end_define
 
 begin_include
@@ -237,7 +237,6 @@ argument_list|(
 argument|unsigned RegNo
 argument_list|)
 block|;
-name|virtual
 name|void
 name|printRegName
 argument_list|(
@@ -246,8 +245,8 @@ argument_list|,
 argument|unsigned RegNo
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|printInst
 argument_list|(
@@ -257,6 +256,7 @@ argument|raw_ostream&O
 argument_list|,
 argument|StringRef Annot
 argument_list|)
+name|override
 block|;
 name|bool
 name|printAliasInstr
@@ -269,6 +269,18 @@ argument_list|,
 name|raw_ostream
 operator|&
 name|OS
+argument_list|)
+block|;
+name|void
+name|printCustomAliasOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpIdx
+argument_list|,
+argument|unsigned PrintMethodIdx
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|;
 name|private
@@ -334,6 +346,16 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printRegisterPair
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int opNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printSHFMask
 argument_list|(
 argument|const MCInst *MI
@@ -380,6 +402,29 @@ argument_list|,
 name|raw_ostream
 operator|&
 name|OS
+argument_list|)
+block|;
+name|void
+name|printSaveRestore
+argument_list|(
+specifier|const
+name|MCInst
+operator|*
+name|MI
+argument_list|,
+name|raw_ostream
+operator|&
+name|O
+argument_list|)
+block|;
+name|void
+name|printRegisterList
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|int opNum
+argument_list|,
+argument|raw_ostream&O
 argument_list|)
 block|; }
 decl_stmt|;

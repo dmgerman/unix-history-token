@@ -140,7 +140,7 @@ name|getOpDecl
 parameter_list|()
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// isToken - Is this a token operand?

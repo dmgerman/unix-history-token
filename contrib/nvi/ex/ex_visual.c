@@ -102,7 +102,7 @@ file|"../vi/vi.h"
 end_include
 
 begin_comment
-comment|/*  * ex_visual -- :[line] vi[sual] [^-.+] [window_size] [flags]  *	Switch to visual mode.  *  * PUBLIC: int ex_visual __P((SCR *, EXCMD *));  */
+comment|/*  * ex_visual -- :[line] vi[sual] [^-.+] [window_size] [flags]  *	Switch to visual mode.  *  * PUBLIC: int ex_visual(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

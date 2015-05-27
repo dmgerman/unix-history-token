@@ -2426,7 +2426,7 @@ index|]
 decl_stmt|,
 name|desc
 index|[
-literal|64
+literal|256
 index|]
 decl_stmt|;
 name|char
@@ -2667,7 +2667,7 @@ name|sscanf
 argument_list|(
 name|p
 argument_list|,
-literal|"%64[^:]:%64[^:]:%64[^:\n]"
+literal|"%64[^:]:%64[^:]:%256[^:\n]"
 argument_list|,
 name|keym
 argument_list|,

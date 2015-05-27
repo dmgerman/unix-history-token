@@ -7,28 +7,11 @@ begin_comment
 comment|/*  * This code unmangles RX packets.  RX is the mutant form of RPC that AFS  * uses to communicate between clients and servers.  *  * In this code, I mainly concern myself with decoding the AFS calls, not  * with the guts of RX, per se.  *  * Bah.  If I never look at rx_packet.h again, it will be too soon.  *  * Ken Hornstein<kenh@cmf.nrl.navy.mil>  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-rx.c,v 1.42 2008-07-01 07:44:50 guy Exp $"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -92,17 +75,398 @@ end_include
 begin_include
 include|#
 directive|include
-file|"rx.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"ip.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|FS_RX_PORT
+value|7000
+end_define
+
+begin_define
+define|#
+directive|define
+name|CB_RX_PORT
+value|7001
+end_define
+
+begin_define
+define|#
+directive|define
+name|PROT_RX_PORT
+value|7002
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLDB_RX_PORT
+value|7003
+end_define
+
+begin_define
+define|#
+directive|define
+name|KAUTH_RX_PORT
+value|7004
+end_define
+
+begin_define
+define|#
+directive|define
+name|VOL_RX_PORT
+value|7005
+end_define
+
+begin_define
+define|#
+directive|define
+name|ERROR_RX_PORT
+value|7006
+end_define
+
+begin_comment
+comment|/* Doesn't seem to be used */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOS_RX_PORT
+value|7007
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFSNAMEMAX
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFSOPAQUEMAX
+value|1024
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRNAMEMAX
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|VLNAMEMAX
+value|65
+end_define
+
+begin_define
+define|#
+directive|define
+name|KANAMEMAX
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
+name|BOSNAMEMAX
+value|256
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRSFS_READ
+value|1
+end_define
+
+begin_comment
+comment|/* Read files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRSFS_WRITE
+value|2
+end_define
+
+begin_comment
+comment|/* Write files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRSFS_INSERT
+value|4
+end_define
+
+begin_comment
+comment|/* Insert files into a directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRSFS_LOOKUP
+value|8
+end_define
+
+begin_comment
+comment|/* Lookup files into a directory */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRSFS_DELETE
+value|16
+end_define
+
+begin_comment
+comment|/* Delete files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRSFS_LOCK
+value|32
+end_define
+
+begin_comment
+comment|/* Lock files */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRSFS_ADMINISTER
+value|64
+end_define
+
+begin_comment
+comment|/* Change ACL's */
+end_comment
+
+begin_struct
+struct|struct
+name|rx_header
+block|{
+name|uint32_t
+name|epoch
+decl_stmt|;
+name|uint32_t
+name|cid
+decl_stmt|;
+name|uint32_t
+name|callNumber
+decl_stmt|;
+name|uint32_t
+name|seq
+decl_stmt|;
+name|uint32_t
+name|serial
+decl_stmt|;
+name|uint8_t
+name|type
+decl_stmt|;
+define|#
+directive|define
+name|RX_PACKET_TYPE_DATA
+value|1
+define|#
+directive|define
+name|RX_PACKET_TYPE_ACK
+value|2
+define|#
+directive|define
+name|RX_PACKET_TYPE_BUSY
+value|3
+define|#
+directive|define
+name|RX_PACKET_TYPE_ABORT
+value|4
+define|#
+directive|define
+name|RX_PACKET_TYPE_ACKALL
+value|5
+define|#
+directive|define
+name|RX_PACKET_TYPE_CHALLENGE
+value|6
+define|#
+directive|define
+name|RX_PACKET_TYPE_RESPONSE
+value|7
+define|#
+directive|define
+name|RX_PACKET_TYPE_DEBUG
+value|8
+define|#
+directive|define
+name|RX_PACKET_TYPE_PARAMS
+value|9
+define|#
+directive|define
+name|RX_PACKET_TYPE_VERSION
+value|13
+name|uint8_t
+name|flags
+decl_stmt|;
+define|#
+directive|define
+name|RX_CLIENT_INITIATED
+value|1
+define|#
+directive|define
+name|RX_REQUEST_ACK
+value|2
+define|#
+directive|define
+name|RX_LAST_PACKET
+value|4
+define|#
+directive|define
+name|RX_MORE_PACKETS
+value|8
+define|#
+directive|define
+name|RX_FREE_PACKET
+value|16
+define|#
+directive|define
+name|RX_SLOW_START_OK
+value|32
+define|#
+directive|define
+name|RX_JUMBO_PACKET
+value|32
+name|uint8_t
+name|userStatus
+decl_stmt|;
+name|uint8_t
+name|securityIndex
+decl_stmt|;
+name|uint16_t
+name|spare
+decl_stmt|;
+comment|/* How clever: even though the AFS */
+name|uint16_t
+name|serviceId
+decl_stmt|;
+comment|/* header files indicate that the */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* serviceId is first, it's really */
+end_comment
+
+begin_comment
+comment|/* encoded _after_ the spare field */
+end_comment
+
+begin_comment
+comment|/* I wasted a day figuring that out! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NUM_RX_FLAGS
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|RX_MAXACKS
+value|255
+end_define
+
+begin_struct
+struct|struct
+name|rx_ackPacket
+block|{
+name|uint16_t
+name|bufferSpace
+decl_stmt|;
+comment|/* Number of packet buffers available */
+name|uint16_t
+name|maxSkew
+decl_stmt|;
+comment|/* Max diff between ack'd packet and */
+comment|/* highest packet received */
+name|uint32_t
+name|firstPacket
+decl_stmt|;
+comment|/* The first packet in ack list */
+name|uint32_t
+name|previousPacket
+decl_stmt|;
+comment|/* Previous packet recv'd (obsolete) */
+name|uint32_t
+name|serial
+decl_stmt|;
+comment|/* # of packet that prompted the ack */
+name|uint8_t
+name|reason
+decl_stmt|;
+comment|/* Reason for acknowledgement */
+name|uint8_t
+name|nAcks
+decl_stmt|;
+comment|/* Number of acknowledgements */
+name|uint8_t
+name|acks
+index|[
+name|RX_MAXACKS
+index|]
+decl_stmt|;
+comment|/* Up to RX_MAXACKS acknowledgements */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Values for the acks array  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RX_ACK_TYPE_NACK
+value|0
+end_define
+
+begin_comment
+comment|/* Don't have this packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RX_ACK_TYPE_ACK
+value|1
+end_define
+
+begin_comment
+comment|/* I have this packet */
+end_comment
+
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|rx_types
@@ -180,6 +544,7 @@ end_decl_stmt
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|double_tok
 block|{
@@ -263,6 +628,7 @@ end_struct
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|fs_req
@@ -526,6 +892,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|cb_req
@@ -651,6 +1018,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|pt_req
@@ -806,6 +1174,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|vldb_req
@@ -1027,6 +1396,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|kauth_req
@@ -1152,6 +1522,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|vol_req
@@ -1361,6 +1732,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|bos_req
@@ -1600,6 +1972,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|ubik_req
@@ -1777,6 +2150,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|cb_types
@@ -1812,6 +2186,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|ubik_lock_types
@@ -1865,6 +2240,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|afs_fs_errors
@@ -1944,12 +2320,12 @@ literal|"AFS IO error"
 block|}
 block|,
 block|{
-operator|-
-literal|100
+literal|0xffffff9c
 block|,
 literal|"restarting fileserver"
 block|}
 block|,
+comment|/* -100, sic! */
 block|{
 literal|0
 block|,
@@ -1965,6 +2341,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|rx_ack_reasons
@@ -2042,7 +2419,7 @@ begin_struct
 struct|struct
 name|rx_cache_entry
 block|{
-name|u_int32_t
+name|uint32_t
 name|callnum
 decl_stmt|;
 comment|/* Call number (net order) */
@@ -2064,7 +2441,7 @@ name|u_short
 name|serviceId
 decl_stmt|;
 comment|/* Service identifier (net order) */
-name|u_int32_t
+name|uint32_t
 name|opcode
 decl_stmt|;
 comment|/* RX opcode (host order) */
@@ -2113,6 +2490,9 @@ specifier|static
 name|void
 name|rx_cache_insert
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2155,6 +2535,9 @@ specifier|static
 name|void
 name|fs_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2169,6 +2552,9 @@ specifier|static
 name|void
 name|fs_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2185,6 +2571,9 @@ specifier|static
 name|void
 name|acl_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
@@ -2201,6 +2590,9 @@ specifier|static
 name|void
 name|cb_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2215,6 +2607,9 @@ specifier|static
 name|void
 name|cb_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2231,6 +2626,9 @@ specifier|static
 name|void
 name|prot_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2245,6 +2643,9 @@ specifier|static
 name|void
 name|prot_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2261,6 +2662,9 @@ specifier|static
 name|void
 name|vldb_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2275,6 +2679,9 @@ specifier|static
 name|void
 name|vldb_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2291,6 +2698,9 @@ specifier|static
 name|void
 name|kauth_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2305,6 +2715,9 @@ specifier|static
 name|void
 name|kauth_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2321,6 +2734,9 @@ specifier|static
 name|void
 name|vol_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2335,6 +2751,9 @@ specifier|static
 name|void
 name|vol_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2351,6 +2770,9 @@ specifier|static
 name|void
 name|bos_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2365,6 +2787,9 @@ specifier|static
 name|void
 name|bos_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2381,6 +2806,9 @@ specifier|static
 name|void
 name|ubik_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2393,6 +2821,9 @@ specifier|static
 name|void
 name|ubik_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2409,6 +2840,9 @@ specifier|static
 name|void
 name|rx_ack_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2423,7 +2857,7 @@ specifier|static
 name|int
 name|is_ubik
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2436,6 +2870,10 @@ begin_function
 name|void
 name|rx_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -2470,7 +2908,9 @@ name|opcode
 decl_stmt|;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|bp
 operator|<
@@ -2484,11 +2924,15 @@ name|rx_header
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|rx] (%d)"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2502,10 +2946,13 @@ operator|*
 operator|)
 name|bp
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rx %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|rx_types
@@ -2516,11 +2963,14 @@ name|rxh
 operator|->
 name|type
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
 name|int
@@ -2530,14 +2980,19 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" cid %08x call# %d"
-argument_list|,
+operator|,
 operator|(
 name|int
 operator|)
@@ -2548,7 +3003,7 @@ name|rxh
 operator|->
 name|cid
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|int
 operator|)
@@ -2559,12 +3014,16 @@ name|rxh
 operator|->
 name|callNumber
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" seq %d ser %d"
-argument_list|,
+operator|,
 operator|(
 name|int
 operator|)
@@ -2575,7 +3034,7 @@ name|rxh
 operator|->
 name|seq
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|int
 operator|)
@@ -2586,25 +3045,31 @@ name|rxh
 operator|->
 name|serial
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|2
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" secindex %d serviceid %hu"
-argument_list|,
+operator|,
 operator|(
 name|int
 operator|)
 name|rxh
 operator|->
 name|securityIndex
-argument_list|,
+operator|,
 name|EXTRACT_16BITS
 argument_list|(
 operator|&
@@ -2612,11 +3077,14 @@ name|rxh
 operator|->
 name|serviceId
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
@@ -2679,30 +3147,42 @@ name|firstflag
 operator|=
 literal|1
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|","
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<%s>"
-argument_list|,
+operator|,
 name|rx_flags
 index|[
 name|i
 index|]
 operator|.
 name|s
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2737,6 +3217,8 @@ block|{
 comment|/* 		 * Insert this call into the call cache table, so we 		 * have a chance to print out replies 		 */
 name|rx_cache_insert
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 operator|(
@@ -2761,6 +3243,8 @@ case|:
 comment|/* AFS file service */
 name|fs_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -2773,6 +3257,8 @@ case|:
 comment|/* AFS callback service */
 name|cb_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -2785,6 +3271,8 @@ case|:
 comment|/* AFS protection service */
 name|prot_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -2797,6 +3285,8 @@ case|:
 comment|/* AFS VLDB service */
 name|vldb_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -2809,6 +3299,8 @@ case|:
 comment|/* AFS Kerberos auth service */
 name|kauth_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -2821,6 +3313,8 @@ case|:
 comment|/* AFS Volume service */
 name|vol_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -2833,6 +3327,8 @@ case|:
 comment|/* AFS BOS service */
 name|bos_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -2913,6 +3409,8 @@ case|:
 comment|/* AFS file service */
 name|fs_reply_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -2927,6 +3425,8 @@ case|:
 comment|/* AFS callback service */
 name|cb_reply_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -2941,6 +3441,8 @@ case|:
 comment|/* AFS PT service */
 name|prot_reply_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -2955,6 +3457,8 @@ case|:
 comment|/* AFS VLDB service */
 name|vldb_reply_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -2969,6 +3473,8 @@ case|:
 comment|/* AFS Kerberos auth service */
 name|kauth_reply_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -2983,6 +3489,8 @@ case|:
 comment|/* AFS Volume service */
 name|vol_reply_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -2997,6 +3505,8 @@ case|:
 comment|/* AFS BOS service */
 name|bos_reply_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -3021,16 +3531,22 @@ name|RX_PACKET_TYPE_ACK
 condition|)
 name|rx_ack_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" (%d)"
-argument_list|,
+operator|,
 name|length
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3045,6 +3561,10 @@ specifier|static
 name|void
 name|rx_cache_insert
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -3081,7 +3601,9 @@ name|bp
 decl_stmt|;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|bp
 operator|+
@@ -3216,7 +3738,7 @@ name|rx_cache_entry
 modifier|*
 name|rxent
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|clip
 init|=
 name|ip
@@ -3225,7 +3747,7 @@ name|ip_dst
 operator|.
 name|s_addr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|sip
 init|=
 name|ip
@@ -3312,7 +3834,7 @@ if|if
 condition|(
 operator|++
 name|i
-operator|>
+operator|>=
 name|RX_CACHE_SIZE
 condition|)
 name|i
@@ -3345,7 +3867,7 @@ define|#
 directive|define
 name|FIDOUT
 parameter_list|()
-value|{ unsigned long n1, n2, n3; \ 			TCHECK2(bp[0], sizeof(int32_t) * 3); \ 			n1 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			n2 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			n3 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			printf(" fid %d/%d/%d", (int) n1, (int) n2, (int) n3); \ 		}
+value|{ unsigned long n1, n2, n3; \ 			ND_TCHECK2(bp[0], sizeof(int32_t) * 3); \ 			n1 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			n2 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			n3 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			ND_PRINT((ndo, " fid %d/%d/%d", (int) n1, (int) n2, (int) n3)); \ 		}
 end_define
 
 begin_define
@@ -3355,7 +3877,7 @@ name|STROUT
 parameter_list|(
 name|MAX
 parameter_list|)
-value|{ unsigned int i; \ 			TCHECK2(bp[0], sizeof(int32_t)); \ 			i = EXTRACT_32BITS(bp); \ 			if (i> (MAX)) \ 				goto trunc; \ 			bp += sizeof(int32_t); \ 			printf(" \""); \ 			if (fn_printn(bp, i, snapend)) \ 				goto trunc; \ 			printf("\""); \ 			bp += ((i + sizeof(int32_t) - 1) / sizeof(int32_t)) * sizeof(int32_t); \ 		}
+value|{ unsigned int i; \ 			ND_TCHECK2(bp[0], sizeof(int32_t)); \ 			i = EXTRACT_32BITS(bp); \ 			if (i> (MAX)) \ 				goto trunc; \ 			bp += sizeof(int32_t); \ 			ND_PRINT((ndo, " \"")); \ 			if (fn_printn(ndo, bp, i, ndo->ndo_snapend)) \ 				goto trunc; \ 			ND_PRINT((ndo, "\"")); \ 			bp += ((i + sizeof(int32_t) - 1) / sizeof(int32_t)) * sizeof(int32_t); \ 		}
 end_define
 
 begin_define
@@ -3363,7 +3885,7 @@ define|#
 directive|define
 name|INTOUT
 parameter_list|()
-value|{ int i; \ 			TCHECK2(bp[0], sizeof(int32_t)); \ 			i = (int) EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			printf(" %d", i); \ 		}
+value|{ int i; \ 			ND_TCHECK2(bp[0], sizeof(int32_t)); \ 			i = (int) EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			ND_PRINT((ndo, " %d", i)); \ 		}
 end_define
 
 begin_define
@@ -3371,7 +3893,7 @@ define|#
 directive|define
 name|UINTOUT
 parameter_list|()
-value|{ unsigned long i; \ 			TCHECK2(bp[0], sizeof(int32_t)); \ 			i = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			printf(" %lu", i); \ 		}
+value|{ unsigned long i; \ 			ND_TCHECK2(bp[0], sizeof(int32_t)); \ 			i = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			ND_PRINT((ndo, " %lu", i)); \ 		}
 end_define
 
 begin_define
@@ -3379,7 +3901,7 @@ define|#
 directive|define
 name|UINT64OUT
 parameter_list|()
-value|{ u_int64_t i; \ 			TCHECK2(bp[0], sizeof(u_int64_t)); \ 			i = EXTRACT_64BITS(bp); \ 			bp += sizeof(u_int64_t); \ 			printf(" %" PRIu64, i); \ 		}
+value|{ uint64_t i; \ 			ND_TCHECK2(bp[0], sizeof(uint64_t)); \ 			i = EXTRACT_64BITS(bp); \ 			bp += sizeof(uint64_t); \ 			ND_PRINT((ndo, " %" PRIu64, i)); \ 		}
 end_define
 
 begin_define
@@ -3387,7 +3909,7 @@ define|#
 directive|define
 name|DATEOUT
 parameter_list|()
-value|{ time_t t; struct tm *tm; char str[256]; \ 			TCHECK2(bp[0], sizeof(int32_t)); \ 			t = (time_t) EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			tm = localtime(&t); \ 			strftime(str, 256, "%Y/%m/%d %T", tm); \ 			printf(" %s", str); \ 		}
+value|{ time_t t; struct tm *tm; char str[256]; \ 			ND_TCHECK2(bp[0], sizeof(int32_t)); \ 			t = (time_t) EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			tm = localtime(&t); \ 			strftime(str, 256, "%Y/%m/%d %T", tm); \ 			ND_PRINT((ndo, " %s", str)); \ 		}
 end_define
 
 begin_define
@@ -3395,9 +3917,9 @@ define|#
 directive|define
 name|STOREATTROUT
 parameter_list|()
-value|{ unsigned long mask, i; \ 			TCHECK2(bp[0], (sizeof(int32_t)*6)); \ 			mask = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 			if (mask) printf (" StoreStatus"); \ 		        if (mask& 1) { printf(" date"); DATEOUT(); } \ 			else bp += sizeof(int32_t); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 2) printf(" owner %lu", i);  \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 4) printf(" group %lu", i); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 8) printf(" mode %lo", i& 07777); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 16) printf(" segsize %lu", i); \
+value|{ unsigned long mask, i; \ 			ND_TCHECK2(bp[0], (sizeof(int32_t)*6)); \ 			mask = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 			if (mask) ND_PRINT((ndo, " StoreStatus")); \ 		        if (mask& 1) { ND_PRINT((ndo, " date")); DATEOUT(); } \ 			else bp += sizeof(int32_t); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 2) ND_PRINT((ndo, " owner %lu", i));  \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 4) ND_PRINT((ndo, " group %lu", i)); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 8) ND_PRINT((ndo, " mode %lo", i& 07777)); \ 			i = EXTRACT_32BITS(bp); bp += sizeof(int32_t); \ 		        if (mask& 16) ND_PRINT((ndo, " segsize %lu", i)); \
 comment|/* undocumented in 3.3 docu */
-value|\ 		        if (mask& 1024) printf(" fsync");  \ 		}
+value|\ 		        if (mask& 1024) ND_PRINT((ndo, " fsync"));  \ 		}
 end_define
 
 begin_define
@@ -3405,7 +3927,7 @@ define|#
 directive|define
 name|UBIK_VERSIONOUT
 parameter_list|()
-value|{int32_t epoch; int32_t counter; \ 			TCHECK2(bp[0], sizeof(int32_t) * 2); \ 			epoch = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			counter = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			printf(" %d.%d", epoch, counter); \ 		}
+value|{int32_t epoch; int32_t counter; \ 			ND_TCHECK2(bp[0], sizeof(int32_t) * 2); \ 			epoch = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			counter = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			ND_PRINT((ndo, " %d.%d", epoch, counter)); \ 		}
 end_define
 
 begin_define
@@ -3413,7 +3935,7 @@ define|#
 directive|define
 name|AFSUUIDOUT
 parameter_list|()
-value|{u_int32_t temp; int i; \ 			TCHECK2(bp[0], 11*sizeof(u_int32_t)); \ 			temp = EXTRACT_32BITS(bp); \ 			bp += sizeof(u_int32_t); \ 			printf(" %08x", temp); \ 			temp = EXTRACT_32BITS(bp); \ 			bp += sizeof(u_int32_t); \ 			printf("%04x", temp); \ 			temp = EXTRACT_32BITS(bp); \ 			bp += sizeof(u_int32_t); \ 			printf("%04x", temp); \ 			for (i = 0; i< 8; i++) { \ 				temp = EXTRACT_32BITS(bp); \ 				bp += sizeof(u_int32_t); \ 				printf("%02x", (unsigned char) temp); \ 			} \ 		}
+value|{uint32_t temp; int i; \ 			ND_TCHECK2(bp[0], 11*sizeof(uint32_t)); \ 			temp = EXTRACT_32BITS(bp); \ 			bp += sizeof(uint32_t); \ 			ND_PRINT((ndo, " %08x", temp)); \ 			temp = EXTRACT_32BITS(bp); \ 			bp += sizeof(uint32_t); \ 			ND_PRINT((ndo, "%04x", temp)); \ 			temp = EXTRACT_32BITS(bp); \ 			bp += sizeof(uint32_t); \ 			ND_PRINT((ndo, "%04x", temp)); \ 			for (i = 0; i< 8; i++) { \ 				temp = EXTRACT_32BITS(bp); \ 				bp += sizeof(uint32_t); \ 				ND_PRINT((ndo, "%02x", (unsigned char) temp)); \ 			} \ 		}
 end_define
 
 begin_comment
@@ -3427,7 +3949,7 @@ name|VECOUT
 parameter_list|(
 name|MAX
 parameter_list|)
-value|{ u_char *sp; \ 			u_char s[AFSNAMEMAX]; \ 			int k; \ 			if ((MAX) + 1> sizeof(s)) \ 				goto trunc; \ 			TCHECK2(bp[0], (MAX) * sizeof(int32_t)); \ 			sp = s; \ 			for (k = 0; k< (MAX); k++) { \ 				*sp++ = (u_char) EXTRACT_32BITS(bp); \ 				bp += sizeof(int32_t); \ 			} \ 			s[(MAX)] = '\0'; \ 			printf(" \""); \ 			fn_print(s, NULL); \ 			printf("\""); \ 		}
+value|{ u_char *sp; \ 			u_char s[AFSNAMEMAX]; \ 			int k; \ 			if ((MAX) + 1> sizeof(s)) \ 				goto trunc; \ 			ND_TCHECK2(bp[0], (MAX) * sizeof(int32_t)); \ 			sp = s; \ 			for (k = 0; k< (MAX); k++) { \ 				*sp++ = (u_char) EXTRACT_32BITS(bp); \ 				bp += sizeof(int32_t); \ 			} \ 			s[(MAX)] = '\0'; \ 			ND_PRINT((ndo, " \"")); \ 			fn_print(ndo, s, NULL); \ 			ND_PRINT((ndo, "\"")); \ 		}
 end_define
 
 begin_define
@@ -3435,7 +3957,7 @@ define|#
 directive|define
 name|DESTSERVEROUT
 parameter_list|()
-value|{ unsigned long n1, n2, n3; \ 			TCHECK2(bp[0], sizeof(int32_t) * 3); \ 			n1 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			n2 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			n3 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			printf(" server %d:%d:%d", (int) n1, (int) n2, (int) n3); \ 		}
+value|{ unsigned long n1, n2, n3; \ 			ND_TCHECK2(bp[0], sizeof(int32_t) * 3); \ 			n1 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			n2 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			n3 = EXTRACT_32BITS(bp); \ 			bp += sizeof(int32_t); \ 			ND_PRINT((ndo, " server %d:%d:%d", (int) n1, (int) n2, (int) n3)); \ 		}
 end_define
 
 begin_comment
@@ -3447,6 +3969,10 @@ specifier|static
 name|void
 name|fs_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -3480,7 +4006,9 @@ condition|)
 return|return;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|bp
 operator|+
@@ -3521,10 +4049,13 @@ name|rx_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" fs call %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|fs_req
@@ -3533,6 +4064,7 @@ literal|"op#%d"
 argument_list|,
 name|fs_op
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Print out arguments to some of the AFS calls.  This stuff is 	 * all from afsint.xg 	 */
@@ -3559,17 +4091,25 @@ comment|/* Fetch data */
 name|FIDOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" offset"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" length"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -3633,25 +4173,37 @@ expr_stmt|;
 name|STOREATTROUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" offset"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" length"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" flen"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -3674,7 +4226,7 @@ decl_stmt|;
 name|FIDOUT
 argument_list|()
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -3698,7 +4250,7 @@ argument_list|(
 name|int32_t
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -3739,6 +4291,8 @@ literal|'\0'
 expr_stmt|;
 name|acl_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -3802,9 +4356,13 @@ case|case
 literal|138
 case|:
 comment|/* Rename file */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" old"
+operator|)
 argument_list|)
 expr_stmt|;
 name|FIDOUT
@@ -3815,9 +4373,13 @@ argument_list|(
 name|AFSNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" new"
+operator|)
 argument_list|)
 expr_stmt|;
 name|FIDOUT
@@ -3841,9 +4403,13 @@ argument_list|(
 name|AFSNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" link to"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -3864,9 +4430,13 @@ argument_list|(
 name|AFSNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" link to"
+operator|)
 argument_list|)
 expr_stmt|;
 name|FIDOUT
@@ -3891,9 +4461,13 @@ case|case
 literal|150
 case|:
 comment|/* Set volume stats */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" volid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -3904,9 +4478,13 @@ case|case
 literal|154
 case|:
 comment|/* New get volume info */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" volname"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -3928,7 +4506,7 @@ name|unsigned
 name|long
 name|j
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -3977,9 +4555,13 @@ name|j
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|","
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3989,9 +4571,13 @@ name|j
 operator|==
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<none!>"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4002,17 +4588,25 @@ comment|/* Fetch data 64 */
 name|FIDOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" offset"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINT64OUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" length"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINT64OUT
@@ -4029,25 +4623,37 @@ expr_stmt|;
 name|STOREATTROUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" offset"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINT64OUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" length"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINT64OUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" flen"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINT64OUT
@@ -4058,9 +4664,13 @@ case|case
 literal|65541
 case|:
 comment|/* CallBack rx conn address */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" addr"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -4072,9 +4682,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|fs]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4089,6 +4703,10 @@ specifier|static
 name|void
 name|fs_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -4135,10 +4753,13 @@ operator|)
 name|bp
 expr_stmt|;
 comment|/* 	 * Print out the afs call we're invoking.  The table used here was 	 * gleaned from fsint/afsint.xg 	 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" fs reply %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|fs_req
@@ -4147,6 +4768,7 @@ literal|"op#%d"
 argument_list|,
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -4185,7 +4807,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -4209,7 +4831,7 @@ argument_list|(
 name|int32_t
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -4250,6 +4872,8 @@ literal|'\0'
 expr_stmt|;
 name|acl_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -4280,9 +4904,13 @@ case|case
 literal|141
 case|:
 comment|/* MakeDir */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" new"
+operator|)
 argument_list|)
 expr_stmt|;
 name|FIDOUT
@@ -4293,9 +4921,13 @@ case|case
 literal|151
 case|:
 comment|/* Get root volume */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" root volume"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -4330,7 +4962,7 @@ name|int
 name|i
 decl_stmt|;
 comment|/* 		 * Otherwise, just print out the return code 		 */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -4360,10 +4992,13 @@ argument_list|(
 name|int32_t
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" error %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|afs_fs_errors
@@ -4372,27 +5007,36 @@ literal|"#%d"
 argument_list|,
 name|i
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" strange fs reply of type %d"
-argument_list|,
+operator|,
 name|rxh
 operator|->
 name|type
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|fs]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4407,6 +5051,10 @@ specifier|static
 name|void
 name|acl_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|u_char
 modifier|*
 name|s
@@ -4507,7 +5155,7 @@ parameter_list|(
 name|acl
 parameter_list|)
 define|\
-value|if (acl& PRSFS_READ) \ 		printf("r"); \ 	if (acl& PRSFS_LOOKUP) \ 		printf("l"); \ 	if (acl& PRSFS_INSERT) \ 		printf("i"); \ 	if (acl& PRSFS_DELETE) \ 		printf("d"); \ 	if (acl& PRSFS_WRITE) \ 		printf("w"); \ 	if (acl& PRSFS_LOCK) \ 		printf("k"); \ 	if (acl& PRSFS_ADMINISTER) \ 		printf("a");
+value|ND_PRINT((ndo, "%s%s%s%s%s%s%s", \ 	          acl& PRSFS_READ       ? "r" : "", \ 	          acl& PRSFS_LOOKUP     ? "l" : "", \ 	          acl& PRSFS_INSERT     ? "i" : "", \ 	          acl& PRSFS_DELETE     ? "d" : "", \ 	          acl& PRSFS_WRITE      ? "w" : "", \ 	          acl& PRSFS_LOCK       ? "k" : "", \ 	          acl& PRSFS_ADMINISTER ? "a" : ""));
 for|for
 control|(
 name|i
@@ -4568,13 +5216,19 @@ name|s
 operator|+=
 name|n
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" +{"
+operator|)
 argument_list|)
 expr_stmt|;
 name|fn_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -4584,9 +5238,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 name|ACLOUT
@@ -4594,9 +5252,13 @@ argument_list|(
 name|acl
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"}"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4669,13 +5331,19 @@ name|s
 operator|+=
 name|n
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" -{"
+operator|)
 argument_list|)
 expr_stmt|;
 name|fn_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -4685,9 +5353,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" "
+operator|)
 argument_list|)
 expr_stmt|;
 name|ACLOUT
@@ -4695,9 +5367,13 @@ argument_list|(
 name|acl
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"}"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4736,6 +5412,10 @@ specifier|static
 name|void
 name|cb_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -4769,7 +5449,9 @@ condition|)
 return|return;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|bp
 operator|+
@@ -4810,10 +5492,13 @@ name|rx_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" cb call %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|cb_req
@@ -4822,6 +5507,7 @@ literal|"op#%d"
 argument_list|,
 name|cb_op
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -4851,7 +5537,7 @@ name|j
 decl_stmt|,
 name|t
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -4900,9 +5586,13 @@ name|j
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|","
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4912,9 +5602,13 @@ name|j
 operator|==
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<none!>"
+operator|)
 argument_list|)
 expr_stmt|;
 name|j
@@ -4937,9 +5631,13 @@ name|j
 operator|!=
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|";"
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -4956,23 +5654,31 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" ver"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" expires"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
 argument_list|()
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -5011,9 +5717,13 @@ case|case
 literal|214
 case|:
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" afsuuid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|AFSUUIDOUT
@@ -5027,9 +5737,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|cb]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5044,6 +5758,10 @@ specifier|static
 name|void
 name|cb_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -5086,10 +5804,13 @@ operator|)
 name|bp
 expr_stmt|;
 comment|/* 	 * Print out the afs call we're invoking.  The table used here was 	 * gleaned from fsint/afscbint.xg 	 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" cb reply %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|cb_req
@@ -5098,6 +5819,7 @@ literal|"op#%d"
 argument_list|,
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -5136,9 +5858,13 @@ block|}
 else|else
 block|{
 comment|/* 		 * Otherwise, just print out the return code 		 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" errcode"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -5148,9 +5874,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|cb]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5165,6 +5895,10 @@ specifier|static
 name|void
 name|prot_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -5198,7 +5932,9 @@ condition|)
 return|return;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|bp
 operator|+
@@ -5239,9 +5975,13 @@ name|rx_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" pt"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5254,15 +5994,20 @@ condition|)
 block|{
 name|ubik_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" call %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|pt_req
@@ -5271,6 +6016,7 @@ literal|"op#%d"
 argument_list|,
 name|pt_op
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Decode some of the arguments to the PT calls 	 */
@@ -5298,17 +6044,25 @@ argument_list|(
 name|PRNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" id"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" oldid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -5351,9 +6105,13 @@ case|case
 literal|530
 case|:
 comment|/* List super groups */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" id"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -5364,9 +6122,13 @@ case|case
 literal|502
 case|:
 comment|/* Dump entry */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" pos"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -5385,17 +6147,25 @@ case|case
 literal|515
 case|:
 comment|/* Is a member of? */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" uid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" gid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -5411,7 +6181,7 @@ name|unsigned
 name|long
 name|j
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -5462,9 +6232,13 @@ name|j
 operator|==
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<none!>"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5478,12 +6252,16 @@ name|unsigned
 name|long
 name|j
 decl_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" ids:"
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -5529,9 +6307,13 @@ name|j
 operator|==
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<none!>"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5545,17 +6327,25 @@ argument_list|(
 name|PRNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" flag"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" oid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -5566,17 +6356,25 @@ case|case
 literal|511
 case|:
 comment|/* Set max */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" id"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" gflag"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -5587,9 +6385,13 @@ case|case
 literal|513
 case|:
 comment|/* Change entry */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" id"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -5600,17 +6402,25 @@ argument_list|(
 name|PRNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" oldid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" newid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -5621,9 +6431,13 @@ case|case
 literal|520
 case|:
 comment|/* Update entry */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" id"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -5641,9 +6455,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|pt]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5658,6 +6476,10 @@ specifier|static
 name|void
 name|prot_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -5704,9 +6526,13 @@ operator|)
 name|bp
 expr_stmt|;
 comment|/* 	 * Print out the afs call we're invoking.  The table used here was 	 * gleaned from ptserver/ptint.xg.  Check to see if it's a 	 * Ubik call, however. 	 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" pt"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5719,6 +6545,8 @@ condition|)
 block|{
 name|ubik_reply_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -5728,10 +6556,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" reply %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|pt_req
@@ -5740,6 +6571,7 @@ literal|"op#%d"
 argument_list|,
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -5773,12 +6605,16 @@ name|unsigned
 name|long
 name|j
 decl_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" ids:"
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -5824,9 +6660,13 @@ name|j
 operator|==
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<none!>"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5840,7 +6680,7 @@ name|unsigned
 name|long
 name|j
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -5891,9 +6731,13 @@ name|j
 operator|==
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<none!>"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5923,7 +6767,7 @@ name|unsigned
 name|long
 name|j
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -5971,9 +6815,13 @@ name|j
 operator|==
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<none!>"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5982,17 +6830,25 @@ case|case
 literal|510
 case|:
 comment|/* List max */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" maxuid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" maxgid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -6005,9 +6861,13 @@ block|}
 else|else
 block|{
 comment|/* 		 * Otherwise, just print out the return code 		 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" errcode"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -6017,9 +6877,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|pt]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6034,6 +6898,10 @@ specifier|static
 name|void
 name|vldb_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -6067,7 +6935,9 @@ condition|)
 return|return;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|bp
 operator|+
@@ -6108,9 +6978,13 @@ name|rx_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" vldb"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6123,15 +6997,20 @@ condition|)
 block|{
 name|ubik_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" call %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|vldb_req
@@ -6140,6 +7019,7 @@ literal|"op#%d"
 argument_list|,
 name|vldb_op
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Decode some of the arguments to the VLDB calls 	 */
@@ -6196,15 +7076,19 @@ case|case
 literal|518
 case|:
 comment|/* Get entry by ID N */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" volid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -6237,14 +7121,18 @@ name|i
 operator|<=
 literal|2
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" type %s"
-argument_list|,
+operator|,
 name|voltype
 index|[
 name|i
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6274,9 +7162,13 @@ case|case
 literal|505
 case|:
 comment|/* Get new vol id */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" bump"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -6291,15 +7183,19 @@ case|case
 literal|520
 case|:
 comment|/* Replace entry N */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" volid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -6332,14 +7228,18 @@ name|i
 operator|<=
 literal|2
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" type %s"
-argument_list|,
+operator|,
 name|voltype
 index|[
 name|i
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 name|VECOUT
@@ -6356,9 +7256,13 @@ case|case
 literal|521
 case|:
 comment|/* List entry N */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" index"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -6371,9 +7275,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|vldb]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6388,6 +7296,10 @@ specifier|static
 name|void
 name|vldb_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -6434,9 +7346,13 @@ operator|)
 name|bp
 expr_stmt|;
 comment|/* 	 * Print out the afs call we're invoking.  The table used here was 	 * gleaned from vlserver/vldbint.xg.  Check to see if it's a 	 * Ubik call, however. 	 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" vldb"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -6449,6 +7365,8 @@ condition|)
 block|{
 name|ubik_reply_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -6458,10 +7376,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" reply %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|vldb_req
@@ -6470,6 +7391,7 @@ literal|"op#%d"
 argument_list|,
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -6498,17 +7420,25 @@ case|case
 literal|510
 case|:
 comment|/* List entry */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" count"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" nextindex"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -6534,7 +7464,7 @@ argument_list|(
 name|VLNAMEMAX
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -6554,12 +7484,16 @@ argument_list|(
 name|int32_t
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" numservers"
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -6586,16 +7520,24 @@ argument_list|(
 name|int32_t
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %lu"
-argument_list|,
+operator|,
 name|nservers
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" servers"
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -6612,7 +7554,7 @@ name|i
 operator|++
 control|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -6631,10 +7573,13 @@ name|i
 operator|<
 name|nservers
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|intoa
 argument_list|(
 operator|(
@@ -6648,6 +7593,7 @@ operator|)
 operator|->
 name|s_addr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -6658,9 +7604,13 @@ name|int32_t
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" partitions"
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -6677,7 +7627,7 @@ name|i
 operator|++
 control|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -6707,16 +7657,20 @@ name|j
 operator|<=
 literal|26
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %c"
-argument_list|,
+operator|,
 literal|'a'
 operator|+
 operator|(
 name|int
 operator|)
 name|j
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -6726,11 +7680,15 @@ name|i
 operator|<
 name|nservers
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %lu"
-argument_list|,
+operator|,
 name|j
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -6741,7 +7699,7 @@ name|int32_t
 argument_list|)
 expr_stmt|;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -6765,25 +7723,37 @@ argument_list|(
 name|int32_t
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rwvol"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rovol"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" backup"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -6795,9 +7765,13 @@ case|case
 literal|505
 case|:
 comment|/* Get new volume ID */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" newvol"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -6812,17 +7786,25 @@ case|case
 literal|529
 case|:
 comment|/* List entry U */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" count"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" nextindex"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -6848,12 +7830,16 @@ argument_list|(
 name|VLNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" numservers"
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -6880,16 +7866,24 @@ argument_list|(
 name|int32_t
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %lu"
-argument_list|,
+operator|,
 name|nservers
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" servers"
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -6906,7 +7900,7 @@ name|i
 operator|++
 control|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -6925,10 +7919,13 @@ name|i
 operator|<
 name|nservers
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|intoa
 argument_list|(
 operator|(
@@ -6942,6 +7939,7 @@ operator|)
 operator|->
 name|s_addr
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -6952,9 +7950,13 @@ name|int32_t
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" partitions"
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -6971,7 +7973,7 @@ name|i
 operator|++
 control|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -7001,16 +8003,20 @@ name|j
 operator|<=
 literal|26
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %c"
-argument_list|,
+operator|,
 literal|'a'
 operator|+
 operator|(
 name|int
 operator|)
 name|j
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -7020,11 +8026,15 @@ name|i
 operator|<
 name|nservers
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %lu"
-argument_list|,
+operator|,
 name|j
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -7035,7 +8045,7 @@ name|int32_t
 argument_list|)
 expr_stmt|;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -7059,25 +8069,37 @@ argument_list|(
 name|int32_t
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rwvol"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rovol"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" backup"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -7105,12 +8127,16 @@ argument_list|(
 name|VLNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" numservers"
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -7137,16 +8163,24 @@ argument_list|(
 name|int32_t
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %lu"
-argument_list|,
+operator|,
 name|nservers
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" servers"
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -7170,9 +8204,13 @@ operator|<
 name|nservers
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" afsuuid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|AFSUUIDOUT
@@ -7181,7 +8219,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -7197,7 +8235,7 @@ literal|44
 expr_stmt|;
 block|}
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -7215,9 +8253,13 @@ literal|4
 operator|*
 literal|13
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" partitions"
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -7234,7 +8276,7 @@ name|i
 operator|++
 control|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -7264,16 +8306,20 @@ name|j
 operator|<=
 literal|26
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %c"
-argument_list|,
+operator|,
 literal|'a'
 operator|+
 operator|(
 name|int
 operator|)
 name|j
+operator|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -7283,11 +8329,15 @@ name|i
 operator|<
 name|nservers
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %lu"
-argument_list|,
+operator|,
 name|j
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -7298,7 +8348,7 @@ name|int32_t
 argument_list|)
 expr_stmt|;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -7322,25 +8372,37 @@ argument_list|(
 name|int32_t
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rwvol"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rovol"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" backup"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -7353,9 +8415,13 @@ block|}
 else|else
 block|{
 comment|/* 		 * Otherwise, just print out the return code 		 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" errcode"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -7365,9 +8431,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|vldb]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7382,6 +8452,10 @@ specifier|static
 name|void
 name|kauth_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -7411,7 +8485,9 @@ condition|)
 return|return;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|bp
 operator|+
@@ -7452,9 +8528,13 @@ name|rx_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" kauth"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -7467,15 +8547,20 @@ condition|)
 block|{
 name|ubik_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" call %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|kauth_req
@@ -7484,6 +8569,7 @@ literal|"op#%d"
 argument_list|,
 name|kauth_op
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Decode some of the arguments to the KA calls 	 */
@@ -7543,9 +8629,13 @@ case|case
 literal|15
 case|:
 comment|/* Lock status */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" principal"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -7571,17 +8661,25 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" kvno"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" domain"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -7589,7 +8687,7 @@ argument_list|(
 name|KANAMEMAX
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -7619,7 +8717,7 @@ argument_list|(
 name|int32_t
 argument_list|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -7633,9 +8731,13 @@ name|bp
 operator|+=
 name|i
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" principal"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -7654,9 +8756,13 @@ case|case
 literal|4
 case|:
 comment|/* Set Password */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" principal"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -7669,9 +8775,13 @@ argument_list|(
 name|KANAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" kvno"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -7682,9 +8792,13 @@ case|case
 literal|12
 case|:
 comment|/* Get password */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" name"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -7699,9 +8813,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|kauth]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7716,6 +8834,10 @@ specifier|static
 name|void
 name|kauth_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -7758,9 +8880,13 @@ operator|)
 name|bp
 expr_stmt|;
 comment|/* 	 * Print out the afs call we're invoking.  The table used here was 	 * gleaned from kauth/kauth.rg 	 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" kauth"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -7773,6 +8899,8 @@ condition|)
 block|{
 name|ubik_reply_print
 argument_list|(
+name|ndo
+argument_list|,
 name|bp
 argument_list|,
 name|length
@@ -7782,10 +8910,13 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" reply %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|kauth_req
@@ -7794,6 +8925,7 @@ literal|"op#%d"
 argument_list|,
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -7818,9 +8950,13 @@ empty_stmt|;
 else|else
 block|{
 comment|/* 		 * Otherwise, just print out the return code 		 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" errcode"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -7830,9 +8966,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|kauth]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -7847,6 +8987,10 @@ specifier|static
 name|void
 name|vol_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -7876,7 +9020,9 @@ condition|)
 return|return;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|bp
 operator|+
@@ -7917,10 +9063,13 @@ name|rx_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" vol call %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|vol_req
@@ -7929,6 +9078,7 @@ literal|"op#%d"
 argument_list|,
 name|vol_op
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -7950,17 +9100,25 @@ case|case
 literal|100
 case|:
 comment|/* Create volume */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" partition"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" name"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -7968,17 +9126,25 @@ argument_list|(
 name|AFSNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" type"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" parent"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -7993,9 +9159,13 @@ case|case
 literal|107
 case|:
 comment|/* Get flags */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" trans"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8006,17 +9176,25 @@ case|case
 literal|102
 case|:
 comment|/* Restore */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" totrans"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" flags"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8027,17 +9205,25 @@ case|case
 literal|103
 case|:
 comment|/* Forward */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" fromtrans"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" fromdate"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
@@ -8046,9 +9232,13 @@ expr_stmt|;
 name|DESTSERVEROUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" desttrans"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -8059,9 +9249,13 @@ case|case
 literal|104
 case|:
 comment|/* End trans */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" trans"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8072,33 +9266,49 @@ case|case
 literal|105
 case|:
 comment|/* Clone */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" trans"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" purgevol"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" newtype"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" newname"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -8111,17 +9321,25 @@ case|case
 literal|106
 case|:
 comment|/* Set flags */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" trans"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" flags"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8132,25 +9350,37 @@ case|case
 literal|108
 case|:
 comment|/* Trans create */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" vol"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" partition"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" flags"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8165,17 +9395,25 @@ case|case
 literal|655537
 case|:
 comment|/* Get size */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" fromtrans"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" fromdate"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
@@ -8186,9 +9424,13 @@ case|case
 literal|110
 case|:
 comment|/* Get n-th volume */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" index"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8199,17 +9441,25 @@ case|case
 literal|111
 case|:
 comment|/* Set forwarding */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" tid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" newsite"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8224,9 +9474,13 @@ case|case
 literal|113
 case|:
 comment|/* Get status */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" tid"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -8234,9 +9488,13 @@ case|case
 literal|114
 case|:
 comment|/* Signal restore */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" name"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -8244,25 +9502,37 @@ argument_list|(
 name|AFSNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" type"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" pid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" cloneid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8273,17 +9543,25 @@ case|case
 literal|116
 case|:
 comment|/* List volumes */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" partition"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" flags"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8294,17 +9572,25 @@ case|case
 literal|117
 case|:
 comment|/* Set id types */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" tid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" name"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -8312,33 +9598,49 @@ argument_list|(
 name|AFSNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" type"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" pid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" clone"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" backup"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8349,9 +9651,13 @@ case|case
 literal|119
 case|:
 comment|/* Partition info */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" name"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -8364,9 +9670,13 @@ case|case
 literal|120
 case|:
 comment|/* Reclone */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" tid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8393,17 +9703,25 @@ case|case
 literal|65536
 case|:
 comment|/* Convert RO to RW volume */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" partid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" volid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8414,17 +9732,25 @@ case|case
 literal|123
 case|:
 comment|/* Set date */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" tid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" date"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
@@ -8435,9 +9761,13 @@ case|case
 literal|126
 case|:
 comment|/* Set info */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" tid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8448,17 +9778,25 @@ case|case
 literal|128
 case|:
 comment|/* Forward multiple */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" fromtrans"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" fromdate"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
@@ -8471,7 +9809,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -8520,9 +9858,13 @@ name|j
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|","
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -8532,9 +9874,13 @@ name|j
 operator|==
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<none!>"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -8543,25 +9889,37 @@ case|case
 literal|65538
 case|:
 comment|/* Dump version 2 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" fromtrans"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" fromdate"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" flags"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8574,9 +9932,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|vol]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -8591,6 +9953,10 @@ specifier|static
 name|void
 name|vol_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -8633,10 +9999,13 @@ operator|)
 name|bp
 expr_stmt|;
 comment|/* 	 * Print out the afs call we're invoking.  The table used here was 	 * gleaned from volser/volint.xg 	 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" vol reply %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|vol_req
@@ -8645,6 +10014,7 @@ literal|"op#%d"
 argument_list|,
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -8674,17 +10044,25 @@ case|case
 literal|100
 case|:
 comment|/* Create volume */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" volid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" trans"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8703,9 +10081,13 @@ case|case
 literal|105
 case|:
 comment|/* Clone */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" newvol"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8724,9 +10106,13 @@ case|case
 literal|108
 case|:
 comment|/* Transaction create */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" trans"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8737,17 +10123,25 @@ case|case
 literal|110
 case|:
 comment|/* Get n-th volume */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" volume"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" partition"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -8768,129 +10162,193 @@ case|case
 literal|113
 case|:
 comment|/* Get status */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" volid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" nextuniq"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" type"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" parentid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" clone"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" backup"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" restore"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" maxquota"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" minquota"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" owner"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" create"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" access"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" update"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" expire"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" backup"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" copy"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
@@ -8917,7 +10375,7 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -8955,9 +10413,13 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" name"
+operator|)
 argument_list|)
 expr_stmt|;
 name|VECOUT
@@ -8965,17 +10427,25 @@ argument_list|(
 literal|32
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" volid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" type"
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -8995,9 +10465,13 @@ name|j
 operator|-
 literal|1
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|","
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9007,9 +10481,13 @@ name|j
 operator|==
 literal|0
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<none!>"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9021,9 +10499,13 @@ block|}
 else|else
 block|{
 comment|/* 		 * Otherwise, just print out the return code 		 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" errcode"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -9033,9 +10515,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|vol]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9050,6 +10536,10 @@ specifier|static
 name|void
 name|bos_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -9079,7 +10569,9 @@ condition|)
 return|return;
 if|if
 condition|(
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 operator|-
 name|bp
 operator|+
@@ -9120,10 +10612,13 @@ name|rx_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" bos call %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|bos_req
@@ -9132,6 +10627,7 @@ literal|"op#%d"
 argument_list|,
 name|bos_op
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Decode some of the arguments to the BOS calls 	 */
@@ -9154,9 +10650,13 @@ case|case
 literal|80
 case|:
 comment|/* Create B node */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" type"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -9164,9 +10664,13 @@ argument_list|(
 name|BOSNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" instance"
+operator|)
 argument_list|)
 expr_stmt|;
 name|STROUT
@@ -9246,9 +10750,13 @@ argument_list|(
 name|BOSNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" status"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -9264,9 +10772,13 @@ argument_list|(
 name|BOSNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" num"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -9310,25 +10822,37 @@ argument_list|(
 name|BOSNAMEMAX
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" size"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" flags"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" date"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -9341,9 +10865,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|bos]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9358,6 +10886,10 @@ specifier|static
 name|void
 name|bos_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -9400,10 +10932,13 @@ operator|)
 name|bp
 expr_stmt|;
 comment|/* 	 * Print out the afs call we're invoking.  The table used here was 	 * gleaned from volser/volint.xg 	 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" bos reply %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|bos_req
@@ -9412,6 +10947,7 @@ literal|"op#%d"
 argument_list|,
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -9436,9 +10972,13 @@ empty_stmt|;
 else|else
 block|{
 comment|/* 		 * Otherwise, just print out the return code 		 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" errcode"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -9448,9 +10988,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|bos]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9465,7 +11009,7 @@ specifier|static
 name|int
 name|is_ubik
 parameter_list|(
-name|u_int32_t
+name|uint32_t
 name|opcode
 parameter_list|)
 block|{
@@ -9514,6 +11058,10 @@ specifier|static
 name|void
 name|ubik_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -9541,10 +11089,13 @@ name|rx_header
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" ubik call %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ubik_req
@@ -9553,6 +11104,7 @@ literal|"op#%d"
 argument_list|,
 name|ubik_op
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Decode some of the arguments to the Ubik calls 	 */
@@ -9575,7 +11127,7 @@ case|case
 literal|10000
 case|:
 comment|/* Beacon */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -9599,36 +11151,52 @@ argument_list|(
 name|int32_t
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" syncsite %s"
-argument_list|,
+operator|,
 name|temp
 condition|?
 literal|"yes"
 else|:
 literal|"no"
+operator|)
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" votestart"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" dbversion"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UBIK_VERSIONOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" tid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UBIK_VERSIONOUT
@@ -9639,9 +11207,13 @@ case|case
 literal|10003
 case|:
 comment|/* Get sync site */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" site"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UINTOUT
@@ -9668,9 +11240,13 @@ case|case
 literal|20010
 case|:
 comment|/* Writev */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" tid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UBIK_VERSIONOUT
@@ -9681,33 +11257,49 @@ case|case
 literal|20002
 case|:
 comment|/* Lock */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" tid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UBIK_VERSIONOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" file"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" pos"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" length"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -9741,25 +11333,37 @@ case|case
 literal|20003
 case|:
 comment|/* Write */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" tid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UBIK_VERSIONOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" file"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" pos"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -9770,9 +11374,13 @@ case|case
 literal|20005
 case|:
 comment|/* Get file */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" file"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -9783,25 +11391,37 @@ case|case
 literal|20006
 case|:
 comment|/* Send file */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" file"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" length"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" dbversion"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UBIK_VERSIONOUT
@@ -9812,25 +11432,37 @@ case|case
 literal|20009
 case|:
 comment|/* Truncate */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" tid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UBIK_VERSIONOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" file"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" length"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -9841,25 +11473,37 @@ case|case
 literal|20012
 case|:
 comment|/* Set version */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" tid"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UBIK_VERSIONOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" oldversion"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UBIK_VERSIONOUT
 argument_list|()
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" newversion"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UBIK_VERSIONOUT
@@ -9872,9 +11516,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|ubik]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -9889,6 +11537,10 @@ specifier|static
 name|void
 name|ubik_reply_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -9931,10 +11583,13 @@ operator|)
 name|bp
 expr_stmt|;
 comment|/* 	 * Print out the ubik call we're invoking.  This table was gleaned 	 * from ubik/ubik_int.xg 	 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" ubik reply %s"
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|ubik_req
@@ -9943,6 +11598,7 @@ literal|"op#%d"
 argument_list|,
 name|opcode
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -9971,9 +11627,13 @@ case|case
 literal|10000
 case|:
 comment|/* Beacon */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" vote no"
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -9981,9 +11641,13 @@ case|case
 literal|20004
 case|:
 comment|/* Get version */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" dbversion"
+operator|)
 argument_list|)
 expr_stmt|;
 name|UBIK_VERSIONOUT
@@ -10004,9 +11668,13 @@ case|case
 literal|10000
 case|:
 comment|/* Beacon */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" vote yes until"
+operator|)
 argument_list|)
 expr_stmt|;
 name|DATEOUT
@@ -10014,9 +11682,13 @@ argument_list|()
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" errcode"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -10026,9 +11698,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|ubik]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -10043,6 +11719,10 @@ specifier|static
 name|void
 name|rx_ack_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -10065,7 +11745,7 @@ name|start
 decl_stmt|,
 name|last
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|firstPacket
 decl_stmt|;
 if|if
@@ -10091,7 +11771,7 @@ name|rx_header
 argument_list|)
 expr_stmt|;
 comment|/* 	 * This may seem a little odd .... the rx_ackPacket structure 	 * contains an array of individual packet acknowledgements 	 * (used for selective ack/nack), but since it's variable in size, 	 * we don't want to truncate based on the size of the whole 	 * rx_ackPacket structure. 	 */
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -10131,14 +11811,19 @@ expr_stmt|;
 comment|/* 	 * Print out a few useful things from the ack packet structure 	 */
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|2
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" bufspace %d maxskew %d"
-argument_list|,
+operator|,
 operator|(
 name|int
 operator|)
@@ -10149,7 +11834,7 @@ name|rxa
 operator|->
 name|bufferSpace
 argument_list|)
-argument_list|,
+operator|,
 operator|(
 name|int
 operator|)
@@ -10160,6 +11845,7 @@ name|rxa
 operator|->
 name|maxSkew
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|firstPacket
@@ -10172,12 +11858,15 @@ operator|->
 name|firstPacket
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" first %d serial %d reason %s"
-argument_list|,
+operator|,
 name|firstPacket
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -10185,7 +11874,7 @@ name|rxa
 operator|->
 name|serial
 argument_list|)
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|rx_ack_reasons
@@ -10199,6 +11888,7 @@ name|rxa
 operator|->
 name|reason
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Okay, now we print out the ack array.  The way _this_ works 	 * is that we start at "first", and step through the ack array. 	 * If we have a contiguous range of acks/nacks, try to 	 * collapse them into a range. 	 * 	 * If you're really clever, you might have noticed that this 	 * doesn't seem quite correct.  Specifically, due to structure 	 * padding, sizeof(struct rx_ackPacket) - RX_MAXACKS won't actually 	 * yield the start of the ack array (because RX_MAXACKS is 255 	 * and the structure will likely get padded to a 2 or 4 byte 	 * boundary).  However, this is the way it's implemented inside 	 * of AFS - the start of the extra fields are at 	 * sizeof(struct rx_ackPacket) - RX_MAXACKS + nAcks, which _isn't_ 	 * the exact start of the ack array.  Sigh.  That's why we aren't 	 * using bp, but instead use rxa->acks[].  But nAcks gets added 	 * to bp after this, so bp ends up at the right spot.  Go figure. 	 */
@@ -10211,7 +11901,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|bp
 index|[
@@ -10267,13 +11957,17 @@ operator|-
 literal|2
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" acked %d"
-argument_list|,
+operator|,
 name|firstPacket
 operator|+
 name|i
+operator|)
 argument_list|)
 expr_stmt|;
 name|start
@@ -10281,7 +11975,7 @@ operator|=
 name|i
 expr_stmt|;
 block|}
-comment|/* 				 * Otherwise, if the there is a skip in 				 * the range (such as an nacked packet in 				 * the middle of some acked packets), 				 * then print the current packet number 				 * seperated from the last number by 				 * a comma. 				 */
+comment|/* 				 * Otherwise, if there is a skip in 				 * the range (such as an nacked packet in 				 * the middle of some acked packets), 				 * then print the current packet number 				 * seperated from the last number by 				 * a comma. 				 */
 elseif|else
 if|if
 condition|(
@@ -10292,13 +11986,17 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|",%d"
-argument_list|,
+operator|,
 name|firstPacket
 operator|+
 name|i
+operator|)
 argument_list|)
 expr_stmt|;
 name|start
@@ -10326,15 +12024,19 @@ name|start
 operator|!=
 name|last
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"-%d"
-argument_list|,
+operator|,
 name|firstPacket
 operator|+
 name|i
 operator|-
 literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * So, what's going on here?  We ran off the end of the 		 * ack list, and if we got a range we need to finish it up. 		 * So we need to determine if the last packet in the list 		 * was an ack (if so, then last will be set to it) and 		 * we need to see if the last range didn't start with the 		 * last packet (because if it _did_, then that would mean 		 * that the packet number has already been printed and 		 * we don't need to print it again). 		 */
@@ -10350,15 +12052,19 @@ name|start
 operator|!=
 name|last
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"-%d"
-argument_list|,
+operator|,
 name|firstPacket
 operator|+
 name|i
 operator|-
 literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Same as above, just without comments 		 */
@@ -10404,13 +12110,17 @@ operator|-
 literal|2
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" nacked %d"
-argument_list|,
+operator|,
 name|firstPacket
 operator|+
 name|i
+operator|)
 argument_list|)
 expr_stmt|;
 name|start
@@ -10428,13 +12138,17 @@ operator|-
 literal|1
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|",%d"
-argument_list|,
+operator|,
 name|firstPacket
 operator|+
 name|i
+operator|)
 argument_list|)
 expr_stmt|;
 name|start
@@ -10460,15 +12174,19 @@ name|start
 operator|!=
 name|last
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"-%d"
-argument_list|,
+operator|,
 name|firstPacket
 operator|+
 name|i
 operator|-
 literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -10483,15 +12201,19 @@ name|start
 operator|!=
 name|last
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"-%d"
-argument_list|,
+operator|,
 name|firstPacket
 operator|+
 name|i
 operator|-
 literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 name|bp
@@ -10508,10 +12230,12 @@ name|TRUNCRET
 parameter_list|(
 name|n
 parameter_list|)
-value|if (snapend - bp + 1<= n) return;
+value|if (ndo->ndo_snapend - bp + 1<= n) return;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 operator|>
 literal|1
 condition|)
@@ -10521,9 +12245,13 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" ifmtu"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -10534,9 +12262,13 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" maxmtu"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -10547,9 +12279,13 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" rwind"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -10560,9 +12296,13 @@ argument_list|(
 literal|4
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" maxpackets"
+operator|)
 argument_list|)
 expr_stmt|;
 name|INTOUT
@@ -10572,9 +12312,13 @@ block|}
 return|return;
 name|trunc
 label|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" [|ack]"
+operator|)
 argument_list|)
 expr_stmt|;
 block|}

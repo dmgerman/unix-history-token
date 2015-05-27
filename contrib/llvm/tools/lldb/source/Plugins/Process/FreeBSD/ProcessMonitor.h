@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"lldb/Host/HostThread.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/Host/Mutex.h"
 end_include
 
@@ -210,6 +216,13 @@ specifier|const
 name|char
 operator|*
 name|working_dir
+argument_list|,
+specifier|const
+name|lldb_private
+operator|::
+name|ProcessLaunchInfo
+operator|&
+name|launch_info
 argument_list|,
 name|lldb_private
 operator|::
@@ -665,11 +678,9 @@ name|uint32_t
 name|signo
 argument_list|)
 decl_stmt|;
-comment|/// Sends the inferior process a PTRACE_KILL signal.  The inferior will
-comment|/// still exists and can be interrogated.  Once resumed it will exit as
-comment|/// though it received a SIGKILL.
+comment|/// Terminate the traced process.
 name|bool
-name|BringProcessIntoLimbo
+name|Kill
 parameter_list|()
 function_decl|;
 name|lldb_private
@@ -700,14 +711,14 @@ name|ProcessFreeBSD
 modifier|*
 name|m_process
 decl_stmt|;
-name|lldb
+name|lldb_private
 operator|::
-name|thread_t
+name|HostThread
 name|m_operation_thread
 expr_stmt|;
-name|lldb
+name|lldb_private
 operator|::
-name|thread_t
+name|HostThread
 name|m_monitor_thread
 expr_stmt|;
 name|lldb
@@ -954,7 +965,7 @@ name|args
 parameter_list|)
 function_decl|;
 specifier|static
-name|bool
+name|void
 name|Attach
 parameter_list|(
 name|AttachArgs

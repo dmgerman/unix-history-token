@@ -198,15 +198,6 @@ operator|*
 name|reg_info
 argument_list|)
 block|;
-name|virtual
-name|bool
-name|StackUsesFrames
-argument_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
 comment|// The SysV x86_64 ABI requires that stack frames be 16 byte aligned.
 comment|// When there is a trap handler on the stack, e.g. _sigtramp in userland
 comment|// code, we've seen that the stack pointer is often not aligned properly
@@ -278,18 +269,6 @@ name|true
 return|;
 block|}
 end_decl_stmt
-
-begin_function
-name|virtual
-name|bool
-name|FunctionCallsChangeCFA
-parameter_list|()
-block|{
-return|return
-name|true
-return|;
-block|}
-end_function
 
 begin_expr_stmt
 name|virtual

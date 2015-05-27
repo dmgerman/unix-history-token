@@ -189,7 +189,7 @@ decl_stmt|;
 name|uint16_t
 name|min_io_size
 decl_stmt|;
-name|uint16_t
+name|uint32_t
 name|opt_io_size
 decl_stmt|;
 block|}

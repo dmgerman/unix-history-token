@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sdt.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/smp.h>
 end_include
 
@@ -157,6 +163,12 @@ begin_include
 include|#
 directive|include
 file|<netinet/in.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet/in_kdtrace.h>
 end_include
 
 begin_include
@@ -663,6 +675,14 @@ decl_stmt|;
 comment|/* Number of segments currently in the reassembly queue. */
 name|int
 name|t_segqlen
+decl_stmt|;
+comment|/* Flowid for the connection. */
+name|u_int
+name|flowid
+decl_stmt|;
+comment|/* Flow type for the connection. */
+name|u_int
+name|flowtype
 decl_stmt|;
 comment|/* Link to next pkt_node in the list. */
 name|STAILQ_ENTRY
@@ -1647,7 +1667,7 @@ name|MAX_LOG_MSG_LEN
 argument_list|,
 literal|"%c,0x%08x,%zd.%06ld,%x:%x:%x:%x:%x:%x:%x:%x,%u,%x:%x:%x:"
 literal|"%x:%x:%x:%x:%x,%u,%ld,%ld,%ld,%ld,%ld,%u,%u,%u,%u,%u,%u,"
-literal|"%u,%d,%u,%u,%u,%u,%u,%u\n"
+literal|"%u,%d,%u,%u,%u,%u,%u,%u,%u,%u\n"
 argument_list|,
 name|direction
 index|[
@@ -1921,6 +1941,14 @@ argument_list|,
 name|pkt_node
 operator|->
 name|t_segqlen
+argument_list|,
+name|pkt_node
+operator|->
+name|flowid
+argument_list|,
+name|pkt_node
+operator|->
+name|flowtype
 argument_list|)
 expr_stmt|;
 block|}
@@ -2080,7 +2108,7 @@ argument_list|,
 name|MAX_LOG_MSG_LEN
 argument_list|,
 literal|"%c,0x%08x,%jd.%06ld,%u.%u.%u.%u,%u,%u.%u.%u.%u,%u,%ld,%ld,"
-literal|"%ld,%ld,%ld,%u,%u,%u,%u,%u,%u,%u,%d,%u,%u,%u,%u,%u,%u\n"
+literal|"%ld,%ld,%ld,%u,%u,%u,%u,%u,%u,%u,%d,%u,%u,%u,%u,%u,%u,%u,%u\n"
 argument_list|,
 name|direction
 index|[
@@ -2253,6 +2281,14 @@ argument_list|,
 name|pkt_node
 operator|->
 name|t_segqlen
+argument_list|,
+name|pkt_node
+operator|->
+name|flowid
+argument_list|,
+name|pkt_node
+operator|->
+name|flowtype
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3327,6 +3363,22 @@ name|tp
 operator|->
 name|t_segqlen
 expr_stmt|;
+name|pn
+operator|->
+name|flowid
+operator|=
+name|inp
+operator|->
+name|inp_flowid
+expr_stmt|;
+name|pn
+operator|->
+name|flowtype
+operator|=
+name|inp
+operator|->
+name|inp_flowtype
+expr_stmt|;
 comment|/* We've finished accessing the tcb so release the lock. */
 if|if
 condition|(
@@ -3356,6 +3408,14 @@ operator|&
 name|pn
 operator|->
 name|tval
+argument_list|)
+expr_stmt|;
+name|TCP_PROBE1
+argument_list|(
+name|siftr
+argument_list|,
+operator|&
+name|pn
 argument_list|)
 expr_stmt|;
 block|}

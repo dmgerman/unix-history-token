@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_SERIALIZATION_CONTINUOUS_RANGE_MAP_H
+name|LLVM_CLANG_SERIALIZATION_CONTINUOUSRANGEMAP_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_SERIALIZATION_CONTINUOUS_RANGE_MAP_H
+name|LLVM_CLANG_SERIALIZATION_CONTINUOUSRANGEMAP_H
 end_define
 
 begin_include
@@ -603,6 +603,62 @@ argument_list|()
 argument_list|,
 name|Compare
 argument_list|()
+argument_list|)
+block|;
+name|std
+operator|::
+name|unique
+argument_list|(
+name|Self
+operator|.
+name|Rep
+operator|.
+name|begin
+argument_list|()
+argument_list|,
+name|Self
+operator|.
+name|Rep
+operator|.
+name|end
+argument_list|()
+argument_list|,
+index|[]
+operator|(
+name|const_reference
+name|A
+operator|,
+name|const_reference
+name|B
+operator|)
+block|{
+comment|// FIXME: we should not allow any duplicate keys, but there are a lot of
+comment|// duplicate 0 -> 0 mappings to remove first.
+name|assert
+argument_list|(
+operator|(
+name|A
+operator|==
+name|B
+operator|||
+name|A
+operator|.
+name|first
+operator|!=
+name|B
+operator|.
+name|first
+operator|)
+operator|&&
+literal|"ContinuousRangeMap::Builder given non-unique keys"
+argument_list|)
+block|;
+return|return
+name|A
+operator|==
+name|B
+return|;
+block|}
 argument_list|)
 block|;     }
 name|void

@@ -204,7 +204,7 @@ end_endif
 begin_function_decl
 specifier|static
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli_alloc_locked
 parameter_list|(
@@ -246,7 +246,7 @@ name|void
 name|mld_dispatch_queue
 parameter_list|(
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 parameter_list|,
 name|int
@@ -264,7 +264,7 @@ name|in6_multi
 modifier|*
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -290,7 +290,7 @@ name|in6_multi
 modifier|*
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -306,7 +306,7 @@ name|in6_multi
 modifier|*
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|,
 specifier|const
@@ -344,7 +344,7 @@ name|void
 name|mld_set_version
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|,
 specifier|const
@@ -413,7 +413,7 @@ name|void
 name|mld_v1_process_group_timer
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|,
 name|struct
@@ -429,7 +429,7 @@ name|void
 name|mld_v1_process_querier_timers
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -471,7 +471,7 @@ name|void
 name|mld_v2_cancel_link_timers
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -483,7 +483,7 @@ name|void
 name|mld_v2_dispatch_general_query
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -513,7 +513,7 @@ name|int
 name|mld_v2_enqueue_filter_change
 parameter_list|(
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 parameter_list|,
 name|struct
@@ -529,7 +529,7 @@ name|int
 name|mld_v2_enqueue_group_record
 parameter_list|(
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 parameter_list|,
 name|struct
@@ -588,7 +588,7 @@ name|in6_multi
 modifier|*
 parameter_list|,
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 parameter_list|)
 function_decl|;
@@ -600,15 +600,15 @@ name|void
 name|mld_v2_process_group_timers
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 parameter_list|,
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 parameter_list|,
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 parameter_list|,
 name|struct
@@ -631,7 +631,7 @@ name|in6_multi
 modifier|*
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|,
@@ -734,7 +734,7 @@ name|VNET_DEFINE
 argument_list|(
 name|LIST_HEAD
 argument_list|(,
-name|mld_ifinfo
+name|mld_ifsoftc
 argument_list|)
 argument_list|,
 name|mli_head
@@ -1346,7 +1346,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Expose struct mld_ifinfo to userland, keyed by ifindex.  * For use by ifmcstat(8).  *  * SMPng: NOTE: Does an unlocked ifindex space read.  * VIMAGE: Assume curvnet set by caller. The node handler itself  * is not directly virtualized.  */
+comment|/*  * Expose struct mld_ifsoftc to userland, keyed by ifindex.  * For use by ifmcstat(8).  *  * SMPng: NOTE: Does an unlocked ifindex space read.  * VIMAGE: Assume curvnet set by caller. The node handler itself  * is not directly virtualized.  */
 end_comment
 
 begin_function
@@ -1373,7 +1373,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -1507,18 +1507,86 @@ operator|->
 name|mli_ifp
 condition|)
 block|{
+name|struct
+name|mld_ifinfo
+name|info
+decl_stmt|;
+name|info
+operator|.
+name|mli_version
+operator|=
+name|mli
+operator|->
+name|mli_version
+expr_stmt|;
+name|info
+operator|.
+name|mli_v1_timer
+operator|=
+name|mli
+operator|->
+name|mli_v1_timer
+expr_stmt|;
+name|info
+operator|.
+name|mli_v2_timer
+operator|=
+name|mli
+operator|->
+name|mli_v2_timer
+expr_stmt|;
+name|info
+operator|.
+name|mli_flags
+operator|=
+name|mli
+operator|->
+name|mli_flags
+expr_stmt|;
+name|info
+operator|.
+name|mli_rv
+operator|=
+name|mli
+operator|->
+name|mli_rv
+expr_stmt|;
+name|info
+operator|.
+name|mli_qi
+operator|=
+name|mli
+operator|->
+name|mli_qi
+expr_stmt|;
+name|info
+operator|.
+name|mli_qri
+operator|=
+name|mli
+operator|->
+name|mli_qri
+expr_stmt|;
+name|info
+operator|.
+name|mli_uri
+operator|=
+name|mli
+operator|->
+name|mli_uri
+expr_stmt|;
 name|error
 operator|=
 name|SYSCTL_OUT
 argument_list|(
 name|req
 argument_list|,
-name|mli
+operator|&
+name|info
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|mld_ifinfo
+name|info
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1551,9 +1619,9 @@ name|void
 name|mld_dispatch_queue
 parameter_list|(
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
-name|ifq
+name|mq
 parameter_list|,
 name|int
 name|limit
@@ -1564,26 +1632,20 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|_IF_DEQUEUE
-argument_list|(
-name|ifq
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-if|if
+while|while
 condition|(
+operator|(
 name|m
-operator|==
+operator|=
+name|mbufq_dequeue
+argument_list|(
+name|mq
+argument_list|)
+operator|)
+operator|!=
 name|NULL
 condition|)
-break|break;
+block|{
 name|CTR3
 argument_list|(
 name|KTR_MLD
@@ -1592,7 +1654,7 @@ literal|"%s: dispatch %p from %p"
 argument_list|,
 name|__func__
 argument_list|,
-name|ifq
+name|mq
 argument_list|,
 name|m
 argument_list|)
@@ -1713,7 +1775,7 @@ end_comment
 
 begin_function
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mld_domifattach
 parameter_list|(
@@ -1724,7 +1786,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -1799,7 +1861,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli_alloc_locked
 parameter_list|(
@@ -1811,7 +1873,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -1825,7 +1887,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 argument_list|)
 argument_list|,
 name|M_MLD
@@ -1894,8 +1956,7 @@ operator|->
 name|mli_relinmhead
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Responses to general queries are subject to bounds. 	 */
-name|IFQ_SET_MAXLEN
+name|mbufq_init
 argument_list|(
 operator|&
 name|mli
@@ -1919,7 +1980,7 @@ name|CTR2
 argument_list|(
 name|KTR_MLD
 argument_list|,
-literal|"allocate mld_ifinfo for ifp %p(%s)"
+literal|"allocate mld_ifsoftc for ifp %p(%s)"
 argument_list|,
 name|ifp
 argument_list|,
@@ -1954,7 +2015,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -2175,7 +2236,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|,
@@ -2186,7 +2247,7 @@ name|CTR3
 argument_list|(
 name|KTR_MLD
 argument_list|,
-literal|"%s: freeing mld_ifinfo for ifp %p(%s)"
+literal|"%s: freeing mld_ifsoftc for ifp %p(%s)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2222,7 +2283,7 @@ name|ifp
 condition|)
 block|{
 comment|/* 			 * Free deferred General Query responses. 			 */
-name|_IF_DRAIN
+name|mbufq_drain
 argument_list|(
 operator|&
 name|mli
@@ -2269,7 +2330,7 @@ directive|ifdef
 name|INVARIANTS
 name|panic
 argument_list|(
-literal|"%s: mld_ifinfo not found for ifp %p\n"
+literal|"%s: mld_ifsoftc not found for ifp %p\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2314,7 +2375,7 @@ modifier|*
 name|ifma
 decl_stmt|;
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -2511,7 +2572,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no mld_ifinfo for ifp %p"
+literal|"%s: no mld_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -2917,7 +2978,7 @@ name|icmp6len
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -3274,7 +3335,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no mld_ifinfo for ifp %p"
+literal|"%s: no mld_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -3549,7 +3610,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|,
@@ -4335,7 +4396,7 @@ name|NULL
 condition|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -4841,12 +4902,12 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|ifqueue
+name|mbufq
 name|scq
 decl_stmt|;
 comment|/* State-change packets */
 name|struct
-name|ifqueue
+name|mbufq
 name|qrq
 decl_stmt|;
 comment|/* Query response packets */
@@ -4856,7 +4917,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -5028,21 +5089,7 @@ operator|*
 name|PR_FASTHZ
 argument_list|)
 expr_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|qrq
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ifqueue
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|IFQ_SET_MAXLEN
+name|mbufq_init
 argument_list|(
 operator|&
 name|qrq
@@ -5050,21 +5097,7 @@ argument_list|,
 name|MLD_MAX_G_GS_PACKETS
 argument_list|)
 expr_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|scq
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ifqueue
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|IFQ_SET_MAXLEN
+name|mbufq_init
 argument_list|(
 operator|&
 name|scq
@@ -5274,7 +5307,7 @@ name|void
 name|mld_v1_process_group_timer
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|,
@@ -5409,17 +5442,17 @@ name|void
 name|mld_v2_process_group_timers
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|,
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 name|qrq
 parameter_list|,
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 name|scq
 parameter_list|,
@@ -5763,7 +5796,7 @@ name|void
 name|mld_set_version
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|,
@@ -5875,7 +5908,7 @@ name|void
 name|mld_v2_cancel_link_timers
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|)
@@ -6062,7 +6095,7 @@ operator|=
 name|MLD_REPORTING_MEMBER
 expr_stmt|;
 comment|/* 			 * Free any pending MLDv2 state-change records. 			 */
-name|_IF_DRAIN
+name|mbufq_drain
 argument_list|(
 operator|&
 name|inm
@@ -6163,7 +6196,7 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -6201,7 +6234,7 @@ name|void
 name|mld_v1_process_querier_timers
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|)
@@ -6417,7 +6450,7 @@ operator|=
 name|md
 expr_stmt|;
 comment|/* 	 * FUTURE: Consider increasing alignment by ETHER_HDR_LEN, so 	 * that ether_output() does not need to allocate another mbuf 	 * for the header in the most common case. 	 */
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|mh
 argument_list|,
@@ -6663,7 +6696,7 @@ name|delay
 parameter_list|)
 block|{
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 decl_stmt|;
@@ -6747,7 +6780,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no mld_ifinfo for ifp %p"
+literal|"%s: no mld_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -6927,7 +6960,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|,
@@ -6942,9 +6975,9 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
-name|ifq
+name|mq
 decl_stmt|;
 name|int
 name|error
@@ -7200,23 +7233,23 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 			 * Immediately enqueue a State-Change Report for 			 * this interface, freeing any previous reports. 			 * Don't kick the timers if there is nothing to do, 			 * or if an error occurred. 			 */
-name|ifq
+name|mq
 operator|=
 operator|&
 name|inm
 operator|->
 name|in6m_scq
 expr_stmt|;
-name|_IF_DRAIN
+name|mbufq_drain
 argument_list|(
-name|ifq
+name|mq
 argument_list|)
 expr_stmt|;
 name|retval
 operator|=
 name|mld_v2_enqueue_group_record
 argument_list|(
-name|ifq
+name|mq
 argument_list|,
 name|inm
 argument_list|,
@@ -7405,7 +7438,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|)
@@ -7592,7 +7625,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|_IF_DRAIN
+name|mbufq_drain
 argument_list|(
 operator|&
 name|inm
@@ -7691,7 +7724,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|)
@@ -7853,7 +7886,7 @@ name|MLD_VERSION_2
 condition|)
 block|{
 comment|/* 			 * Stop group timer and all pending reports. 			 * Immediately enqueue a state-change report 			 * TO_IN {} to be sent on the next fast timeout, 			 * giving us an opportunity to merge reports. 			 */
-name|_IF_DRAIN
+name|mbufq_drain
 argument_list|(
 operator|&
 name|inm
@@ -8097,9 +8130,9 @@ name|int
 name|mld_v2_enqueue_group_record
 parameter_list|(
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
-name|ifq
+name|mq
 parameter_list|,
 name|struct
 name|in6_multi
@@ -8481,7 +8514,7 @@ return|return
 operator|(
 name|mld_v2_enqueue_filter_change
 argument_list|(
-name|ifq
+name|mq
 argument_list|,
 name|inm
 argument_list|)
@@ -8581,9 +8614,10 @@ expr_stmt|;
 comment|/* 	 * Check if we have a packet in the tail of the queue for this 	 * group into which the first group record for this group will fit. 	 * Otherwise allocate a new packet. 	 * Always allocate leading space for IP6+RA+ICMPV6+REPORT. 	 * Note: Group records for G/GSR query responses MUST be sent 	 * in their own packet. 	 */
 name|m0
 operator|=
-name|ifq
-operator|->
-name|ifq_tail
+name|mbufq_last
+argument_list|(
+name|mq
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -8671,9 +8705,9 @@ else|else
 block|{
 if|if
 condition|(
-name|_IF_QFULL
+name|mbufq_full
 argument_list|(
-name|ifq
+name|mq
 argument_list|)
 condition|)
 block|{
@@ -9239,9 +9273,9 @@ name|vt_nrecs
 operator|=
 literal|1
 expr_stmt|;
-name|_IF_ENQUEUE
+name|mbufq_enqueue
 argument_list|(
-name|ifq
+name|mq
 argument_list|,
 name|m
 argument_list|)
@@ -9278,9 +9312,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|_IF_QFULL
+name|mbufq_full
 argument_list|(
-name|ifq
+name|mq
 argument_list|)
 condition|)
 block|{
@@ -9675,9 +9709,9 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|_IF_ENQUEUE
+name|mbufq_enqueue
 argument_list|(
-name|ifq
+name|mq
 argument_list|,
 name|m
 argument_list|)
@@ -9734,9 +9768,9 @@ name|int
 name|mld_v2_enqueue_filter_change
 parameter_list|(
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
-name|ifq
+name|mq
 parameter_list|,
 name|struct
 name|in6_multi
@@ -9963,9 +9997,10 @@ do|do
 block|{
 name|m0
 operator|=
-name|ifq
-operator|->
-name|ifq_tail
+name|mbufq_last
+argument_list|(
+name|mq
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10705,9 +10740,9 @@ name|m
 operator|!=
 name|m0
 condition|)
-name|_IF_ENQUEUE
+name|mbufq_enqueue
 argument_list|(
-name|ifq
+name|mq
 argument_list|,
 name|m
 argument_list|)
@@ -10770,13 +10805,13 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
-name|ifscq
+name|scq
 parameter_list|)
 block|{
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 name|gq
 decl_stmt|;
@@ -10849,9 +10884,10 @@ directive|ifdef
 name|KTR
 if|if
 condition|(
+name|mbufq_first
+argument_list|(
 name|gq
-operator|->
-name|ifq_head
+argument_list|)
 operator|==
 name|NULL
 condition|)
@@ -10872,9 +10908,10 @@ endif|#
 directive|endif
 name|m
 operator|=
+name|mbufq_first
+argument_list|(
 name|gq
-operator|->
-name|ifq_head
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -10890,9 +10927,10 @@ literal|0
 expr_stmt|;
 name|mt
 operator|=
-name|ifscq
-operator|->
-name|ifq_tail
+name|mbufq_last
+argument_list|(
+name|scq
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10962,7 +11000,7 @@ condition|(
 operator|!
 name|domerge
 operator|&&
-name|_IF_QFULL
+name|mbufq_full
 argument_list|(
 name|gq
 argument_list|)
@@ -11018,11 +11056,11 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|_IF_DEQUEUE
+name|m0
+operator|=
+name|mbufq_dequeue
 argument_list|(
 name|gq
-argument_list|,
-name|m0
 argument_list|)
 expr_stmt|;
 name|m
@@ -11088,18 +11126,18 @@ name|CTR3
 argument_list|(
 name|KTR_MLD
 argument_list|,
-literal|"%s: queueing %p to ifscq %p)"
+literal|"%s: queueing %p to scq %p)"
 argument_list|,
 name|__func__
 argument_list|,
 name|m0
 argument_list|,
-name|ifscq
+name|scq
 argument_list|)
 expr_stmt|;
-name|_IF_ENQUEUE
+name|mbufq_enqueue
 argument_list|(
-name|ifscq
+name|scq
 argument_list|,
 name|m0
 argument_list|)
@@ -11190,7 +11228,7 @@ name|void
 name|mld_v2_dispatch_general_query
 parameter_list|(
 name|struct
-name|mld_ifinfo
+name|mld_ifsoftc
 modifier|*
 name|mli
 parameter_list|)
@@ -11398,11 +11436,13 @@ expr_stmt|;
 comment|/* 	 * Slew transmission of bursts over 500ms intervals. 	 */
 if|if
 condition|(
+name|mbufq_first
+argument_list|(
+operator|&
 name|mli
 operator|->
 name|mli_gq
-operator|.
-name|ifq_head
+argument_list|)
 operator|!=
 name|NULL
 condition|)
@@ -11965,7 +12005,7 @@ name|NULL
 operator|)
 return|;
 block|}
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|mh
 argument_list|,

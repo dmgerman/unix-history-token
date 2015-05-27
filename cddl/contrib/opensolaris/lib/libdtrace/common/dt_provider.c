@@ -17,14 +17,11 @@ directive|include
 file|<sys/types.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -61,14 +58,11 @@ directive|include
 file|<stdlib.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -2930,15 +2924,18 @@ operator|&&
 name|pip
 operator|->
 name|pi_rname
-index|[
-literal|0
-index|]
 operator|==
-literal|'\0'
+name|NULL
 operator|)
 operator|||
 operator|(
 name|rname
+operator|!=
+name|NULL
+operator|&&
+name|pip
+operator|->
+name|pi_rname
 operator|!=
 name|NULL
 operator|&&
@@ -2950,9 +2947,9 @@ name|pi_rname
 argument_list|,
 name|rname
 argument_list|)
-operator|)
 operator|==
 literal|0
+operator|)
 operator|)
 condition|)
 break|break;

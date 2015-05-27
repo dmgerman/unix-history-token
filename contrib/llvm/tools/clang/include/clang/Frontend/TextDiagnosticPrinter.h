@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FRONTEND_TEXT_DIAGNOSTIC_PRINTER_H_
+name|LLVM_CLANG_FRONTEND_TEXTDIAGNOSTICPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FRONTEND_TEXT_DIAGNOSTIC_PRINTER_H_
+name|LLVM_CLANG_FRONTEND_TEXTDIAGNOSTICPRINTER_H
 end_define
 
 begin_include
@@ -84,7 +84,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -117,7 +117,9 @@ operator|>
 name|DiagOpts
 block|;
 comment|/// \brief Handle to the currently active text diagnostic emitter.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|TextDiagnostic
 operator|>
@@ -166,20 +168,16 @@ block|; }
 name|void
 name|BeginSourceFile
 argument_list|(
-specifier|const
-name|LangOptions
-operator|&
-name|LO
+argument|const LangOptions&LO
 argument_list|,
-specifier|const
-name|Preprocessor
-operator|*
-name|PP
+argument|const Preprocessor *PP
 argument_list|)
+name|override
 block|;
 name|void
 name|EndSourceFile
 argument_list|()
+name|override
 block|;
 name|void
 name|HandleDiagnostic
@@ -188,6 +186,7 @@ argument|DiagnosticsEngine::Level Level
 argument_list|,
 argument|const Diagnostic&Info
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 block|}

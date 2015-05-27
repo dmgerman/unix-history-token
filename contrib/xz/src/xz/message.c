@@ -49,23 +49,6 @@ directive|include
 file|"private.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TIME_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
@@ -260,17 +243,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Time when we started processing the file
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|uint64_t
-name|start_time
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|// Use alarm() and SIGALRM when they are supported. This has two minor
 end_comment
 
@@ -414,52 +386,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/// Get the current time as microseconds since epoch
-end_comment
-
-begin_function
-specifier|static
-name|uint64_t
-name|my_time
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|struct
-name|timeval
-name|tv
-decl_stmt|;
-name|gettimeofday
-argument_list|(
-operator|&
-name|tv
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-return|return
-call|(
-name|uint64_t
-call|)
-argument_list|(
-name|tv
-operator|.
-name|tv_sec
-argument_list|)
-operator|*
-name|UINT64_C
-argument_list|(
-literal|1000000
-argument_list|)
-operator|+
-name|tv
-operator|.
-name|tv_usec
-return|;
-block|}
-end_function
 
 begin_function
 specifier|extern
@@ -813,15 +739,10 @@ name|progress_strm
 operator|=
 name|strm
 expr_stmt|;
-comment|// Store the processing start time of the file and its expected size.
-comment|// If we aren't printing any statistics, then these are unused. But
-comment|// since it is possible that the user sends us a signal to show
-comment|// statistics, we need to have these available anyway.
-name|start_time
-operator|=
-name|my_time
-argument_list|()
-expr_stmt|;
+comment|// Store the expected size of the file. If we aren't printing any
+comment|// statistics, then is will be unused. But since it is possible
+comment|// that the user sends us a signal to show statistics, we need
+comment|// to have it available anyway.
 name|expected_in_size
 operator|=
 name|in_size
@@ -874,7 +795,7 @@ name|true
 expr_stmt|;
 name|progress_next_update
 operator|=
-literal|1000000
+literal|1000
 expr_stmt|;
 endif|#
 directive|endif
@@ -1148,7 +1069,7 @@ if|if
 condition|(
 name|elapsed
 operator|<
-literal|3000000
+literal|3000
 condition|)
 return|return
 literal|""
@@ -1197,7 +1118,7 @@ operator|*
 operator|(
 literal|1024.0
 operator|/
-literal|1e6
+literal|1000.0
 operator|)
 operator|)
 decl_stmt|;
@@ -1290,7 +1211,7 @@ modifier|*
 name|progress_time
 parameter_list|(
 name|uint64_t
-name|useconds
+name|mseconds
 parameter_list|)
 block|{
 comment|// 9999 hours = 416 days
@@ -1307,9 +1228,9 @@ decl_stmt|;
 name|uint32_t
 name|seconds
 init|=
-name|useconds
+name|mseconds
 operator|/
-literal|1000000
+literal|1000
 decl_stmt|;
 comment|// Don't show anything if the time is zero or ridiculously big.
 if|if
@@ -1472,7 +1393,7 @@ operator|)
 operator|||
 name|elapsed
 operator|<
-literal|8000000
+literal|8000
 condition|)
 return|return
 literal|""
@@ -1500,7 +1421,7 @@ argument_list|(
 name|elapsed
 argument_list|)
 operator|/
-literal|1e6
+literal|1000.0
 operator|)
 operator|/
 call|(
@@ -1890,32 +1811,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// Calculate the elapsed time as microseconds.
-end_comment
-
-begin_function
-specifier|static
-name|uint64_t
-name|progress_elapsed
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-name|my_time
-argument_list|()
-operator|-
-name|start_time
-return|;
-block|}
-end_function
-
-begin_comment
-comment|/// Get information about position in the stream. This is currently simple,
-end_comment
-
-begin_comment
-comment|/// but it will become more complicated once we have multithreading support.
+comment|/// Get how much uncompressed and compressed data has been processed.
 end_comment
 
 begin_function
@@ -1936,12 +1832,39 @@ modifier|*
 name|uncompressed_pos
 parameter_list|)
 block|{
+name|uint64_t
+name|out_pos
+decl_stmt|;
+name|lzma_get_progress
+argument_list|(
+name|progress_strm
+argument_list|,
+name|in_pos
+argument_list|,
+operator|&
+name|out_pos
+argument_list|)
+expr_stmt|;
+comment|// It cannot have processed more input than it has been given.
+name|assert
+argument_list|(
 operator|*
 name|in_pos
-operator|=
+operator|<=
 name|progress_strm
 operator|->
 name|total_in
+argument_list|)
+expr_stmt|;
+comment|// It cannot have produced more output than it claims to have ready.
+name|assert
+argument_list|(
+name|out_pos
+operator|>=
+name|progress_strm
+operator|->
+name|total_out
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1953,16 +1876,13 @@ block|{
 operator|*
 name|compressed_pos
 operator|=
-name|progress_strm
-operator|->
-name|total_out
+name|out_pos
 expr_stmt|;
 operator|*
 name|uncompressed_pos
 operator|=
-name|progress_strm
-operator|->
-name|total_in
+operator|*
+name|in_pos
 expr_stmt|;
 block|}
 else|else
@@ -1970,16 +1890,13 @@ block|{
 operator|*
 name|compressed_pos
 operator|=
-name|progress_strm
-operator|->
-name|total_in
+operator|*
+name|in_pos
 expr_stmt|;
 operator|*
 name|uncompressed_pos
 operator|=
-name|progress_strm
-operator|->
-name|total_out
+name|out_pos
 expr_stmt|;
 block|}
 return|return;
@@ -2005,7 +1922,7 @@ specifier|const
 name|uint64_t
 name|elapsed
 init|=
-name|progress_elapsed
+name|mytime_get_elapsed
 argument_list|()
 decl_stmt|;
 ifndef|#
@@ -2022,7 +1939,7 @@ name|progress_next_update
 operator|=
 name|elapsed
 operator|+
-literal|1000000
+literal|1000
 expr_stmt|;
 endif|#
 directive|endif
@@ -2320,7 +2237,7 @@ specifier|const
 name|uint64_t
 name|elapsed
 init|=
-name|progress_elapsed
+name|mytime_get_elapsed
 argument_list|()
 decl_stmt|;
 name|signals_block
@@ -4027,6 +3944,16 @@ if|if
 condition|(
 name|long_help
 condition|)
+block|{
+name|puts
+argument_list|(
+name|_
+argument_list|(
+literal|"      --single-stream decompress only the first stream, and silently\n"
+literal|"                      ignore possible remaining input data"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|puts
 argument_list|(
 name|_
@@ -4040,6 +3967,7 @@ literal|"      --files0[=FILE] like --files but use the null character as termin
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|long_help
@@ -4064,6 +3992,14 @@ literal|"                      `crc32', `crc64' (default), or `sha256'"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|puts
+argument_list|(
+name|_
+argument_list|(
+literal|"      --ignore-check  don't verify the integrity check when decompressing"
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 name|puts
 argument_list|(
@@ -4083,11 +4019,51 @@ literal|"                      does not affect decompressor memory requirements"
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|puts
+argument_list|(
+name|_
+argument_list|(
+literal|"  -T, --threads=NUM   use at most NUM threads; the default is 1; set to 0\n"
+literal|"                      to use as many threads as there are processor cores"
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|long_help
 condition|)
 block|{
+name|puts
+argument_list|(
+name|_
+argument_list|(
+literal|"      --block-size=SIZE\n"
+literal|"                      start a new .xz block after every SIZE bytes of input;\n"
+literal|"                      use this to set the block size for threaded compression"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+name|_
+argument_list|(
+literal|"      --block-list=SIZES\n"
+literal|"                      start a new .xz block after the given comma-separated\n"
+literal|"                      intervals of uncompressed data"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|puts
+argument_list|(
+name|_
+argument_list|(
+literal|"      --flush-timeout=TIMEOUT\n"
+literal|"                      when compressing, if more than TIMEOUT milliseconds has\n"
+literal|"                      passed since the previous flush and reading more input\n"
+literal|"                      would block, all pending data is flushed out"
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|puts
 argument_list|(
 name|_
@@ -4332,6 +4308,21 @@ argument_list|,
 name|PACKAGE_URL
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|LZMA_VERSION_STABILITY
+operator|!=
+name|LZMA_VERSION_STABILITY_STABLE
+name|puts
+argument_list|(
+name|_
+argument_list|(
+literal|"THIS IS A DEVELOPMENT VERSION NOT INTENDED FOR PRODUCTION USE."
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|tuklib_exit
 argument_list|(
 name|E_SUCCESS

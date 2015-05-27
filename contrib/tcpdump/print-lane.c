@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Marko Kiiskila carnil@cs.tut.fi  *  * Tampere University of Technology - Telecommunications Laboratory  *  * Permission to use, copy, modify and distribute this  * software and its documentation is hereby granted,  * provided that both the copyright notice and this  * permission notice appear in all copies of the software,  * derivative works or modified versions, and any portions  * thereof, that both notices appear in supporting  * documentation, and that the use of this software is  * acknowledged in any publications resulting from using  * the software.  *  * TUT ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"  * CONDITION AND DISCLAIMS ANY LIABILITY OF ANY KIND FOR  * ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS  * SOFTWARE.  *  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-lane.c,v 1.25 2005-11-13 12:12:42 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -52,25 +35,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pcap.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"addrtoname.h"
 end_include
 
 begin_include
@@ -85,11 +50,51 @@ directive|include
 file|"ether.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"lane.h"
-end_include
+begin_struct
+struct|struct
+name|lecdatahdr_8023
+block|{
+name|uint16_t
+name|le_header
+decl_stmt|;
+name|uint8_t
+name|h_dest
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint8_t
+name|h_source
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+name|uint16_t
+name|h_type
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|lane_controlhdr
+block|{
+name|uint16_t
+name|lec_header
+decl_stmt|;
+name|uint8_t
+name|lec_proto
+decl_stmt|;
+name|uint8_t
+name|lec_vers
+decl_stmt|;
+name|uint16_t
+name|lec_opcode
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|static
@@ -220,9 +225,6 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
 name|ND_PRINT
 argument_list|(
 operator|(
@@ -248,6 +250,10 @@ begin_function
 name|void
 name|lane_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -276,9 +282,13 @@ name|lane_controlhdr
 argument_list|)
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|lane]"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -306,18 +316,21 @@ literal|0xff00
 condition|)
 block|{
 comment|/* 		 * LE Control. 		 */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"lec: proto %x vers %x %s"
-argument_list|,
+operator|,
 name|lec
 operator|->
 name|lec_proto
-argument_list|,
+operator|,
 name|lec
 operator|->
 name|lec_vers
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|lecop2str
@@ -332,6 +345,7 @@ operator|->
 name|lec_opcode
 argument_list|)
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -352,7 +366,7 @@ expr_stmt|;
 comment|/* 	 * Now print the encapsulated frame, under the assumption 	 * that it's an Ethernet frame. 	 */
 name|ether_print
 argument_list|(
-name|gndo
+name|ndo
 argument_list|,
 name|p
 argument_list|,
@@ -374,6 +388,10 @@ begin_function
 name|u_int
 name|lane_if_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pcap_pkthdr
@@ -388,6 +406,8 @@ parameter_list|)
 block|{
 name|lane_print
 argument_list|(
+name|ndo
+argument_list|,
 name|p
 argument_list|,
 name|h

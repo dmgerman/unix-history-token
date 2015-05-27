@@ -137,7 +137,7 @@ begin_define
 define|#
 directive|define
 name|GIFBITS
-value|"\020\1ACCEPT_REV_ETHIP_VER\5SEND_REV_ETHIP_VER"
+value|"\020\1ACCEPT_REV_ETHIP_VER\2IGNORE_SOURCE\5SEND_REV_ETHIP_VER"
 end_define
 
 begin_function_decl
@@ -339,6 +339,25 @@ literal|"-accept_rev_ethip_ver"
 argument_list|,
 operator|-
 name|GIF_ACCEPT_REVETHIP
+argument_list|,
+name|setgifopts
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
+literal|"ignore_source"
+argument_list|,
+name|GIF_IGNORE_SOURCE
+argument_list|,
+name|setgifopts
+argument_list|)
+block|,
+name|DEF_CMD
+argument_list|(
+literal|"-ignore_source"
+argument_list|,
+operator|-
+name|GIF_IGNORE_SOURCE
 argument_list|,
 name|setgifopts
 argument_list|)

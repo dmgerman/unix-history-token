@@ -3314,6 +3314,12 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|FDT
+end_ifdef
+
 begin_expr_stmt
 name|EARLY_DRIVER_MODULE
 argument_list|(
@@ -3333,6 +3339,34 @@ name|BUS_PASS_INTERRUPT
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|at91_pio
+argument_list|,
+name|atmelarm
+argument_list|,
+name|at91_pio_driver
+argument_list|,
+name|at91_pio_devclass
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

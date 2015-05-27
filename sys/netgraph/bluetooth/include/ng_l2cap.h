@@ -123,8 +123,36 @@ begin_comment
 comment|/* connectionless channel ID */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_A2MP_CID
+value|0x0003
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_ATT_CID
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_LESIGNAL_CID
+value|0x0005
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_SMP_CID
+value|0x0006
+end_define
+
 begin_comment
-comment|/* 0x0003 - 0x003f Reserved */
+comment|/* 0x0007 - 0x003f Reserved */
 end_comment
 
 begin_define
@@ -149,9 +177,23 @@ begin_comment
 comment|/* dynamically alloc. (end) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_LELAST_CID
+value|0x007f
+end_define
+
 begin_comment
 comment|/* L2CAP MTU */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_MTU_LE_MINIMAM
+value|23
+end_define
 
 begin_define
 define|#
@@ -1127,6 +1169,63 @@ name|ng_l2cap_info_rsp_data_p
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_CMD_PARAM_UPDATE_REQUEST
+value|0x12
+end_define
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|uint16_t
+name|interval_min
+decl_stmt|;
+name|uint16_t
+name|interval_max
+decl_stmt|;
+name|uint16_t
+name|slave_latency
+decl_stmt|;
+name|uint16_t
+name|timeout_mpl
+decl_stmt|;
+block|}
+name|__attribute__
+typedef|((
+name|packed
+typedef|))
+name|ng_l2cap_param_update_req_cp
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_CMD_PARAM_UPDATE_RESPONSE
+value|0x13
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_UPDATE_PARAM_ACCEPT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_UPDATE_PARAM_REJECT
+value|1
+end_define
+
+begin_comment
+comment|//typedef uint16_t update_response;
+end_comment
+
 begin_comment
 comment|/**************************************************************************  **************************************************************************  **        Upper layer protocol interface. L2CA_xxx messages   **************************************************************************  **************************************************************************/
 end_comment
@@ -1155,6 +1254,9 @@ name|u_int16_t
 name|lcid
 decl_stmt|;
 comment|/* local channel ID */
+name|uint16_t
+name|idtype
+decl_stmt|;
 block|}
 name|__attribute__
 typedef|((
@@ -1163,6 +1265,27 @@ typedef|))
 name|ng_l2cap_l2ca_hdr_t
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_L2CA_IDTYPE_BREDR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_L2CA_IDTYPE_ATT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|NG_L2CAP_L2CA_IDTYPE_LE
+value|2
+end_define
 
 begin_comment
 comment|/* L2CA_Connect */
@@ -1191,6 +1314,12 @@ name|bdaddr_t
 name|bdaddr
 decl_stmt|;
 comment|/* remote unit address */
+name|uint8_t
+name|linktype
+decl_stmt|;
+name|uint8_t
+name|idtype
+decl_stmt|;
 block|}
 name|ng_l2cap_l2ca_con_ip
 typedef|;
@@ -1208,6 +1337,10 @@ name|u_int16_t
 name|lcid
 decl_stmt|;
 comment|/* local channel ID */
+name|uint16_t
+name|idtype
+decl_stmt|;
+comment|/*ID type*/
 name|u_int16_t
 name|result
 decl_stmt|;
@@ -1257,9 +1390,9 @@ name|ident
 decl_stmt|;
 comment|/* indentifier */
 name|u_int8_t
-name|unused
+name|linktype
 decl_stmt|;
-comment|/* place holder */
+comment|/* link type*/
 block|}
 name|ng_l2cap_l2ca_con_ind_ip
 typedef|;
@@ -1297,9 +1430,9 @@ name|ident
 decl_stmt|;
 comment|/* "ident" from L2CAP_ConnectInd event */
 name|u_int8_t
-name|unused
+name|linktype
 decl_stmt|;
-comment|/* place holder */
+comment|/*link type */
 name|u_int16_t
 name|lcid
 decl_stmt|;
@@ -1559,6 +1692,9 @@ name|u_int16_t
 name|lcid
 decl_stmt|;
 comment|/* local channel ID */
+name|u_int16_t
+name|idtype
+decl_stmt|;
 block|}
 name|ng_l2cap_l2ca_discon_ip
 typedef|;
@@ -1642,6 +1778,9 @@ name|u_int16_t
 name|lcid
 decl_stmt|;
 comment|/* local channel ID */
+name|uint16_t
+name|idtype
+decl_stmt|;
 block|}
 name|ng_l2cap_l2ca_write_op
 typedef|;
@@ -1964,6 +2103,12 @@ name|u_int16_t
 name|info_type
 decl_stmt|;
 comment|/* info type */
+name|uint8_t
+name|linktype
+decl_stmt|;
+name|uint8_t
+name|unused
+decl_stmt|;
 block|}
 name|ng_l2cap_l2ca_get_info_ip
 typedef|;
@@ -2301,9 +2446,17 @@ begin_comment
 comment|/* L2CAP -> Upper */
 end_comment
 
-begin_comment
-comment|/* bdaddr_t bdaddr; -- local (source BDADDR) */
-end_comment
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|bdaddr_t
+name|addr
+decl_stmt|;
+block|}
+name|ng_l2cap_node_hook_info_ep
+typedef|;
+end_typedef
 
 begin_define
 define|#

@@ -121,6 +121,12 @@ directive|include
 file|<dev/terasic/mtl/terasic_mtl.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"fb_if.h"
+end_include
+
 begin_function
 specifier|static
 name|int
@@ -234,7 +240,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"improper register address"
+literal|"improper register address\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -278,7 +284,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"improper register size"
+literal|"improper register size\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -322,7 +328,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"improper pixel frame buffer address"
+literal|"improper pixel frame buffer address\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -366,7 +372,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"improper pixel frame buffer size"
+literal|"improper pixel frame buffer size\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -410,7 +416,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"improper text frame buffer address"
+literal|"improper text frame buffer address\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -454,7 +460,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"improper text frame buffer size"
+literal|"improper text frame buffer size\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -889,6 +895,40 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|struct
+name|fb_info
+modifier|*
+name|terasic_mtl_fb_getinfo
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+name|struct
+name|terasic_mtl_softc
+modifier|*
+name|sc
+decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|&
+name|sc
+operator|->
+name|mtl_fb_info
+operator|)
+return|;
+block|}
+end_function
+
 begin_decl_stmt
 specifier|static
 name|device_method_t
@@ -915,6 +955,13 @@ argument_list|(
 name|device_detach
 argument_list|,
 name|terasic_mtl_nexus_detach
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
+name|fb_getinfo
+argument_list|,
+name|terasic_mtl_fb_getinfo
 argument_list|)
 block|,
 block|{

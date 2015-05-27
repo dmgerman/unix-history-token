@@ -1530,14 +1530,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|int
-name|run_v4server
-init|=
-literal|1
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|int
 name|has_publicfh
 init|=
 literal|0
@@ -1840,7 +1832,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"2deh:lnop:rS"
+literal|"2deh:lnp:rS"
 argument_list|)
 operator|)
 operator|!=
@@ -1899,14 +1891,6 @@ case|:
 name|dolog
 operator|=
 literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'o'
-case|:
-name|run_v4server
-operator|=
-literal|0
 expr_stmt|;
 break|break;
 case|case
@@ -2108,14 +2092,6 @@ argument_list|()
 expr_stmt|;
 block|}
 empty_stmt|;
-comment|/* 	 * Unless the "-o" option was specified, try and run "nfsd". 	 * If "-o" was specified, try and run "nfsserver". 	 */
-if|if
-condition|(
-name|run_v4server
-operator|>
-literal|0
-condition|)
-block|{
 if|if
 condition|(
 name|modfind
@@ -2139,43 +2115,6 @@ operator|||
 name|modfind
 argument_list|(
 literal|"nfsd"
-argument_list|)
-operator|<
-literal|0
-condition|)
-name|errx
-argument_list|(
-literal|1
-argument_list|,
-literal|"NFS server is not available"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-elseif|else
-if|if
-condition|(
-name|modfind
-argument_list|(
-literal|"nfsserver"
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-comment|/* Not present in kernel, try loading it */
-if|if
-condition|(
-name|kldload
-argument_list|(
-literal|"nfsserver"
-argument_list|)
-operator|<
-literal|0
-operator|||
-name|modfind
-argument_list|(
-literal|"nfsserver"
 argument_list|)
 operator|<
 literal|0
@@ -3228,12 +3167,6 @@ argument_list|)
 expr_stmt|;
 name|hints
 operator|.
-name|ai_flags
-operator|=
-name|AI_PASSIVE
-expr_stmt|;
-name|hints
-operator|.
 name|ai_family
 operator|=
 name|si
@@ -3311,6 +3244,12 @@ comment|/* Set invalid for now. */
 name|mallocd_res
 operator|=
 literal|0
+expr_stmt|;
+name|hints
+operator|.
+name|ai_flags
+operator|=
+name|AI_PASSIVE
 expr_stmt|;
 comment|/*	 		 * XXX - using RPC library internal functions. 		 */
 if|if
@@ -7318,6 +7257,28 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|fsb
+operator|.
+name|f_flags
+operator|&
+name|MNT_AUTOMOUNTED
+operator|)
+operator|!=
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Warning: exporting of "
+literal|"automounted fs %s not supported"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|got_nondir
 condition|)
 block|{
@@ -8530,10 +8491,6 @@ name|MNT_DELEXPORT
 expr_stmt|;
 if|if
 condition|(
-name|run_v4server
-operator|>
-literal|0
-operator|&&
 name|nfssvc
 argument_list|(
 name|NFSSVC_V4ROOTEXPORT
@@ -8729,6 +8686,19 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * We do not need to delete "export" flag from 		 * filesystems that do not have it set. 		 */
+if|if
+condition|(
+operator|!
+operator|(
+name|fsp
+operator|->
+name|f_flags
+operator|&
+name|MNT_EXPORTED
+operator|)
+condition|)
+continue|continue;
 comment|/* 		 * Do not delete export for network filesystem by 		 * passing "export" arg to nmount(). 		 * It only makes sense to do this for local filesystems. 		 */
 if|if
 condition|(
@@ -8827,6 +8797,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+comment|/* 		 * EXDEV is returned when path exists but is not a 		 * mount point.  May happens if raced with unmount. 		 */
 if|if
 condition|(
 name|nmount
@@ -8849,6 +8820,10 @@ operator|&&
 name|errno
 operator|!=
 name|ENOTSUP
+operator|&&
+name|errno
+operator|!=
+name|EXDEV
 condition|)
 block|{
 name|syslog
@@ -9055,10 +9030,6 @@ block|}
 comment|/* 	 * If there was no public fh, clear any previous one set. 	 */
 if|if
 condition|(
-name|run_v4server
-operator|>
-literal|0
-operator|&&
 name|has_publicfh
 operator|==
 literal|0
@@ -12096,8 +12067,6 @@ name|ai
 decl_stmt|;
 name|struct
 name|export_args
-name|ea
-decl_stmt|,
 modifier|*
 name|eap
 decl_stmt|;
@@ -12134,24 +12103,12 @@ name|struct
 name|nfsex_args
 name|nfsea
 decl_stmt|;
-if|if
-condition|(
-name|run_v4server
-operator|>
-literal|0
-condition|)
 name|eap
 operator|=
 operator|&
 name|nfsea
 operator|.
 name|export
-expr_stmt|;
-else|else
-name|eap
-operator|=
-operator|&
-name|ea
 expr_stmt|;
 name|cp
 operator|=
@@ -12649,10 +12606,6 @@ name|v4root_dirpath
 expr_stmt|;
 if|if
 condition|(
-name|run_v4server
-operator|>
-literal|0
-operator|&&
 name|nfssvc
 argument_list|(
 name|NFSSVC_V4ROOTEXPORT
@@ -13047,10 +13000,6 @@ block|}
 comment|/* 		 * For the experimental server: 		 * If this is the public directory, get the file handle 		 * and load it into the kernel via the nfssvc() syscall. 		 */
 if|if
 condition|(
-name|run_v4server
-operator|>
-literal|0
-operator|&&
 operator|(
 name|exflags
 operator|&

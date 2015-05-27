@@ -51,6 +51,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|uint32_t
+name|pll4_configure_output
+parameter_list|(
+name|uint32_t
+name|mfi
+parameter_list|,
+name|uint32_t
+name|mfn
+parameter_list|,
+name|uint32_t
+name|mfd
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

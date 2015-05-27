@@ -131,24 +131,22 @@ block|;
 comment|/// getAnalysisUsage - For this class, we declare that we require and preserve
 comment|/// the call graph.  If the derived class implements this method, it should
 comment|/// always explicitly call the implementation here.
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&Info
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Main run interface method, this implements the interface required by the
 comment|// Pass class.
-name|virtual
 name|bool
 name|runOnSCC
 argument_list|(
-name|CallGraphSCC
-operator|&
-name|SCC
+argument|CallGraphSCC&SCC
 argument_list|)
+name|override
 block|;
 name|using
 name|llvm
@@ -159,14 +157,12 @@ name|doFinalization
 block|;
 comment|// doFinalization - Remove now-dead linkonce functions at the end of
 comment|// processing to avoid breaking the SCC traversal.
-name|virtual
 name|bool
 name|doFinalization
 argument_list|(
-name|CallGraph
-operator|&
-name|CG
+argument|CallGraph&CG
 argument_list|)
+name|override
 block|;
 comment|/// This method returns the value specified by the -inline-threshold value,
 comment|/// specified on the command line.  This is typically not directly needed.

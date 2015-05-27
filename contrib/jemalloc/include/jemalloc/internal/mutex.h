@@ -279,6 +279,15 @@ end_function_decl
 
 begin_function_decl
 name|bool
+name|malloc_mutex_first_thread
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|bool
 name|mutex_boot
 parameter_list|(
 name|void

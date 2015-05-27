@@ -312,7 +312,7 @@ parameter_list|,
 name|_descr
 parameter_list|)
 define|\
-value|static int vt_##_name = _default;					\ SYSCTL_INT(_kern_vt, OID_AUTO, _name, CTLFLAG_RWTUN,&vt_##_name, _default,\ 		_descr);
+value|static int vt_##_name = (_default);					\ SYSCTL_INT(_kern_vt, OID_AUTO, _name, CTLFLAG_RWTUN,&vt_##_name, 0, _descr)
 end_define
 
 begin_struct_decl
@@ -325,6 +325,7 @@ begin_function_decl
 name|void
 name|vt_allocate
 parameter_list|(
+specifier|const
 name|struct
 name|vt_driver
 modifier|*
@@ -337,18 +338,15 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vt_resume
+name|vt_deallocate
 parameter_list|(
+specifier|const
+name|struct
+name|vt_driver
+modifier|*
+parameter_list|,
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vt_suspend
-parameter_list|(
-name|void
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -451,6 +449,22 @@ modifier|*
 name|vd_softc
 decl_stmt|;
 comment|/* (u) Driver data. */
+specifier|const
+name|struct
+name|vt_driver
+modifier|*
+name|vd_prev_driver
+decl_stmt|;
+comment|/* (?) Previous driver. */
+name|void
+modifier|*
+name|vd_prev_softc
+decl_stmt|;
+comment|/* (?) Previous driver data. */
+name|device_t
+name|vd_video_dev
+decl_stmt|;
+comment|/* (?) Video adapter. */
 ifndef|#
 directive|ifndef
 name|SC_NO_CUTPASTE
@@ -568,6 +582,11 @@ directive|define
 name|VDF_QUIET_BELL
 value|0x80
 comment|/* Disable bell. */
+define|#
+directive|define
+name|VDF_DOWNGRADE
+value|0x8000
+comment|/* The driver is being downgraded. */
 name|int
 name|vd_keyboard
 decl_stmt|;
@@ -582,6 +601,10 @@ name|int
 name|vd_unit
 decl_stmt|;
 comment|/* (c) Device unit. */
+name|int
+name|vd_altbrk
+decl_stmt|;
+comment|/* (?) Alt break seq. state */
 block|}
 struct|;
 end_struct
@@ -615,6 +638,30 @@ name|vd
 parameter_list|)
 value|((vd)->vd_pastebuf.vpb_len)
 end_define
+
+begin_function_decl
+name|void
+name|vt_resume
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vt_suspend
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * Per-window terminal screen buffer.  *  * Because redrawing is performed asynchronously, the buffer keeps track  * of a rectangle that needs to be redrawn (vb_dirtyrect).  Because this  * approach seemed to cause suboptimal performance (when the top left  * and the bottom right of the screen are modified), it also uses a set  * of bitmasks to keep track of the rows and columns (mod 64) that have  * been modified.  */
@@ -1472,6 +1519,23 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|void
+name|vd_fini_t
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+name|vd
+parameter_list|,
+name|void
+modifier|*
+name|softc
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
 name|vd_postswitch_t
 parameter_list|(
 name|struct
@@ -1657,6 +1721,30 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|void
+name|vd_suspend_t
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|vd_resume_t
+parameter_list|(
+name|struct
+name|vt_device
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_struct
 struct|struct
 name|vt_driver
@@ -1675,6 +1763,10 @@ decl_stmt|;
 name|vd_init_t
 modifier|*
 name|vd_init
+decl_stmt|;
+name|vd_fini_t
+modifier|*
+name|vd_fini
 decl_stmt|;
 comment|/* Drawing. */
 name|vd_blank_t
@@ -1711,6 +1803,15 @@ comment|/* Update display setting on vt switch. */
 name|vd_postswitch_t
 modifier|*
 name|vd_postswitch
+decl_stmt|;
+comment|/* Suspend/resume handlers. */
+name|vd_suspend_t
+modifier|*
+name|vd_suspend
+decl_stmt|;
+name|vd_resume_t
+modifier|*
+name|vd_resume
 decl_stmt|;
 comment|/* Priority to know which one can override */
 name|int

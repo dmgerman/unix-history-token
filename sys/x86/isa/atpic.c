@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mca.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -156,6 +162,23 @@ include|#
 directive|include
 file|<isa/isavar.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_MCA
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<i386/bios/mca_machdep.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#

@@ -260,7 +260,7 @@ name|OID_AUTO
 argument_list|,
 name|no_cs_fail
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_no_cs_fail
@@ -288,7 +288,7 @@ name|OID_AUTO
 argument_list|,
 name|full_ddesc
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_full_ddesc
@@ -430,7 +430,7 @@ name|OID_AUTO
 argument_list|,
 name|ctrl_bus_fail
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_ctrl_debug
@@ -453,7 +453,7 @@ name|OID_AUTO
 argument_list|,
 name|ctrl_dev_fail
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_ctrl_debug
@@ -476,7 +476,7 @@ name|OID_AUTO
 argument_list|,
 name|ctrl_ds_fail
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_ctrl_debug
@@ -499,7 +499,7 @@ name|OID_AUTO
 argument_list|,
 name|ctrl_ss_fail
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_ctrl_debug
@@ -522,7 +522,7 @@ name|OID_AUTO
 argument_list|,
 name|ctrl_ds_delay
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_ctrl_debug
@@ -545,7 +545,7 @@ name|OID_AUTO
 argument_list|,
 name|ctrl_ss_delay
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_ctrl_debug
@@ -568,7 +568,7 @@ name|OID_AUTO
 argument_list|,
 name|ctrl_rt_fail
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_ctrl_debug
@@ -591,7 +591,7 @@ name|OID_AUTO
 argument_list|,
 name|ctrl_rv_fail
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|usb_ctrl_debug

@@ -5594,6 +5594,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|fp
 operator|->
 name|bundle
@@ -6025,6 +6026,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|*
 name|fp
 operator|->
 name|bundle

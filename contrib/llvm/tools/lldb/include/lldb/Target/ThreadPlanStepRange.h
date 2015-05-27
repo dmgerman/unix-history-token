@@ -114,6 +114,8 @@ argument_list|,
 argument|const SymbolContext&addr_context
 argument_list|,
 argument|lldb::RunMode stop_others
+argument_list|,
+argument|bool given_ranges_only = false
 argument_list|)
 block|;
 name|virtual
@@ -279,6 +281,10 @@ name|StackID
 name|m_stack_id
 block|;
 comment|// Use the stack ID so we can tell step out from step in.
+name|StackID
+name|m_parent_stack_id
+block|;
+comment|// Use the parent stack ID so we can identify tail calls and the like.
 name|bool
 name|m_no_more_plans
 block|;
@@ -295,6 +301,9 @@ name|m_next_branch_bp_sp
 block|;
 name|bool
 name|m_use_fast_step
+block|;
+name|bool
+name|m_given_ranges_only
 block|;
 name|private
 operator|:

@@ -79,6 +79,15 @@ name|GetLLDBPythonPath
 argument_list|()
 expr_stmt|;
 specifier|static
+name|lldb
+operator|::
+name|SBFileSpec
+name|GetLLDBPath
+argument_list|(
+argument|lldb::PathType path_type
+argument_list|)
+expr_stmt|;
+specifier|static
 name|void
 name|ThreadCreated
 parameter_list|(
@@ -96,7 +105,7 @@ name|ThreadCreate
 argument_list|(
 argument|const char *name
 argument_list|,
-argument|thread_func_t thread_function
+argument|lldb::thread_func_t thread_function
 argument_list|,
 argument|void *thread_arg
 argument_list|,
@@ -144,6 +153,8 @@ operator|::
 name|thread_t
 name|thread
 argument_list|,
+name|lldb
+operator|::
 name|thread_result_t
 operator|*
 name|result

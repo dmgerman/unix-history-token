@@ -80,6 +80,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"lldb/lldb-private-forward.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"lldb/lldb-public.h"
 end_include
 
@@ -111,6 +117,20 @@ begin_include
 include|#
 directive|include
 file|"lldb/Host/Mutex.h"
+end_include
+
+begin_comment
+comment|// TODO pull NativeDelegate class out of NativeProcessProtocol so we
+end_comment
+
+begin_comment
+comment|// can just forward ref the NativeDelegate rather than include it here.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"../../../source/Host/common/NativeProcessProtocol.h"
 end_include
 
 begin_decl_stmt
@@ -153,7 +173,7 @@ specifier|static
 name|lldb
 operator|::
 name|PlatformSP
-name|GetDefaultPlatform
+name|GetHostPlatform
 argument_list|()
 block|;
 specifier|static
@@ -181,7 +201,7 @@ argument_list|()
 block|;
 specifier|static
 name|void
-name|SetDefaultPlatform
+name|SetHostPlatform
 argument_list|(
 specifier|const
 name|lldb
@@ -191,6 +211,19 @@ operator|&
 name|platform_sp
 argument_list|)
 block|;
+comment|// Find an existing platform plug-in by name
+specifier|static
+name|lldb
+operator|::
+name|PlatformSP
+name|Find
+argument_list|(
+specifier|const
+name|ConstString
+operator|&
+name|name
+argument_list|)
+block|;
 specifier|static
 name|lldb
 operator|::
@@ -198,9 +231,9 @@ name|PlatformSP
 name|Create
 argument_list|(
 specifier|const
-name|char
-operator|*
-name|platform_name
+name|ConstString
+operator|&
+name|name
 argument_list|,
 name|Error
 operator|&
@@ -274,21 +307,8 @@ comment|/// @param[in] plugin_name
 comment|///     An optional name of a specific platform plug-in that
 comment|///     should be used. If NULL, pick the best plug-in.
 comment|//------------------------------------------------------------------
-specifier|static
-name|Platform
-operator|*
-name|FindPlugin
-argument_list|(
-name|Process
-operator|*
-name|process
-argument_list|,
-specifier|const
-name|ConstString
-operator|&
-name|plugin_name
-argument_list|)
-block|;
+comment|//        static lldb::PlatformSP
+comment|//        FindPlugin (Process *process, const ConstString&plugin_name);
 comment|//------------------------------------------------------------------
 comment|/// Set the target's executable based off of the existing
 comment|/// architecture information in \a target given a path to an
@@ -313,14 +333,9 @@ name|Error
 name|ResolveExecutable
 argument_list|(
 specifier|const
-name|FileSpec
+name|ModuleSpec
 operator|&
-name|exe_file
-argument_list|,
-specifier|const
-name|ArchSpec
-operator|&
-name|arch
+name|module_spec
 argument_list|,
 name|lldb
 operator|::
@@ -370,13 +385,13 @@ comment|///                     trying to resolve the symbol file.
 comment|///     m_arch - The architecture we are looking for when resolving
 comment|///              the symbol file.
 comment|///     m_uuid - The UUID of the executable and symbol file. This
-comment|///              can often be used to match up an exectuable with
+comment|///              can often be used to match up an executable with
 comment|///              a symbol file, or resolve an symbol file in a
 comment|///              symbol file bundle.
 comment|///
 comment|/// @param[out] sym_file
 comment|///     The resolved symbol file spec if the returned error
-comment|///     indicates succes.
+comment|///     indicates success.
 comment|///
 comment|/// @return
 comment|///     Returns an error that describes success or failure.
@@ -464,7 +479,7 @@ operator|&
 name|s
 argument_list|)
 block|;
-comment|// Returns the the name of the platform
+comment|// Returns the name of the platform
 name|ConstString
 name|GetName
 argument_list|()
@@ -507,7 +522,7 @@ comment|// Subclasses must be able to fetch the current OS version
 comment|//
 comment|// Remote classes must be connected for this to succeed. Local
 comment|// subclasses don't need to override this function as it will just
-comment|// call the Host::GetOSVersion().
+comment|// call the HostInfo::GetOSVersion().
 comment|//------------------------------------------------------------------
 name|virtual
 name|bool
@@ -663,6 +678,10 @@ argument_list|,
 name|Module
 operator|&
 name|module
+argument_list|,
+name|Stream
+operator|*
+name|feedback_stream
 argument_list|)
 block|;
 name|virtual
@@ -718,7 +737,7 @@ comment|/// @param[in] idx
 comment|///     A zero based architecture index
 comment|///
 comment|/// @param[out] arch
-comment|///     A copy of the archgitecture at index if the return value is
+comment|///     A copy of the architecture at index if the return value is
 comment|///     \b true.
 comment|///
 comment|/// @return
@@ -821,10 +840,6 @@ operator|*
 name|target
 argument_list|,
 comment|// Can be NULL, if NULL create a new target, else use existing one
-name|Listener
-operator|&
-name|listener
-argument_list|,
 name|Error
 operator|&
 name|error
@@ -837,7 +852,7 @@ comment|/// Each platform subclass needs to implement this function and
 comment|/// attempt to attach to the process with the process ID of \a pid.
 comment|/// The platform subclass should return an appropriate ProcessSP
 comment|/// subclass that is attached to the process, or an empty shared
-comment|/// pointer with an appriopriate error.
+comment|/// pointer with an appropriate error.
 comment|///
 comment|/// @param[in] pid
 comment|///     The process ID that we should attempt to attach to.
@@ -846,7 +861,7 @@ comment|/// @return
 comment|///     An appropriate ProcessSP containing a valid shared pointer
 comment|///     to the default Process subclass for the platform that is
 comment|///     attached to the process, or an empty shared pointer with an
-comment|///     appriopriate error fill into the \a error object.
+comment|///     appropriate error fill into the \a error object.
 comment|//------------------------------------------------------------------
 name|virtual
 name|lldb
@@ -867,10 +882,6 @@ operator|*
 name|target
 argument_list|,
 comment|// Can be NULL, if NULL create a new target, else use existing one
-name|Listener
-operator|&
-name|listener
-argument_list|,
 name|Error
 operator|&
 name|error
@@ -1098,6 +1109,34 @@ name|m_sdk_build
 operator|=
 name|sdk_build
 block|;         }
+comment|// Override this to return true if your platform supports Clang modules.
+comment|// You may also need to override AddClangModuleCompilationOptions to pass the right Clang flags for your platform.
+name|virtual
+name|bool
+name|SupportsModules
+argument_list|()
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|// Appends the platform-specific options required to find the modules for the current platform.
+name|virtual
+name|void
+name|AddClangModuleCompilationOptions
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|options
+argument_list|)
+block|;
 name|ConstString
 name|GetWorkingDirectory
 argument_list|()
@@ -1115,7 +1154,7 @@ comment|// There may be modules that we don't want to find by default for operat
 comment|// The platform will return "true" from this call if the passed in module happens to be one of these.
 name|virtual
 name|bool
-name|ModuleIsExcludedForNonModuleSpecificSearches
+name|ModuleIsExcludedForUnconstrainedSearches
 argument_list|(
 argument|Target&target
 argument_list|,
@@ -1727,6 +1766,86 @@ operator|&
 name|GetTrapHandlerSymbolNames
 argument_list|()
 block|;
+comment|//------------------------------------------------------------------
+comment|/// Launch a process for debugging.
+comment|///
+comment|/// This differs from Launch in that it returns a NativeProcessProtocol.
+comment|/// Currently used by lldb-gdbserver.
+comment|///
+comment|/// @param[in] launch_info
+comment|///     Information required to launch the process.
+comment|///
+comment|/// @param[in] native_delegate
+comment|///     The delegate that will receive messages regarding the
+comment|///     inferior.  Must outlive the NativeProcessProtocol
+comment|///     instance.
+comment|///
+comment|/// @param[out] process_sp
+comment|///     On successful return from the method, this parameter
+comment|///     contains the shared pointer to the
+comment|///     NativeProcessProtocol that can be used to manipulate
+comment|///     the native process.
+comment|///
+comment|/// @return
+comment|///     An error object indicating if the operation succeeded,
+comment|///     and if not, what error occurred.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|LaunchNativeProcess
+argument_list|(
+name|ProcessLaunchInfo
+operator|&
+name|launch_info
+argument_list|,
+name|lldb_private
+operator|::
+name|NativeProcessProtocol
+operator|::
+name|NativeDelegate
+operator|&
+name|native_delegate
+argument_list|,
+name|NativeProcessProtocolSP
+operator|&
+name|process_sp
+argument_list|)
+block|;
+comment|//------------------------------------------------------------------
+comment|/// Attach to an existing process on the given platform.
+comment|///
+comment|/// This method differs from Attach() in that it returns a
+comment|/// NativeProcessProtocol.  Currently this is used by lldb-gdbserver.
+comment|///
+comment|/// @param[in] pid
+comment|///     pid of the process locatable by the platform.
+comment|///
+comment|/// @param[in] native_delegate
+comment|///     The delegate that will receive messages regarding the
+comment|///     inferior.  Must outlive the NativeProcessProtocol
+comment|///     instance.
+comment|///
+comment|/// @param[out] process_sp
+comment|///     On successful return from the method, this parameter
+comment|///     contains the shared pointer to the
+comment|///     NativeProcessProtocol that can be used to manipulate
+comment|///     the native process.
+comment|///
+comment|/// @return
+comment|///     An error object indicating if the operation succeeded,
+comment|///     and if not, what error occurred.
+comment|//------------------------------------------------------------------
+name|virtual
+name|Error
+name|AttachNativeProcess
+argument_list|(
+argument|lldb::pid_t pid
+argument_list|,
+argument|lldb_private::NativeProcessProtocol::NativeDelegate&native_delegate
+argument_list|,
+argument|NativeProcessProtocolSP&process_sp
+argument_list|)
+block|;
 name|protected
 operator|:
 name|bool
@@ -1736,7 +1855,7 @@ comment|// Set to true when we are able to actually set the OS version while
 comment|// being connected. For remote platforms, we might set the version ahead
 comment|// of time before we actually connect and this version might change when
 comment|// we actually connect to a remote platform. For the host platform this
-comment|// will be set to the once we call Host::GetOSVersion().
+comment|// will be set to the once we call HostInfo::GetOSVersion().
 name|bool
 name|m_os_version_set_while_connected
 block|;
@@ -1845,6 +1964,9 @@ name|m_trap_handlers
 expr_stmt|;
 name|bool
 name|m_calculated_trap_handlers
+decl_stmt|;
+name|Mutex
+name|m_trap_handler_mutex
 decl_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Ask the Platform subclass to fill in the list of trap handler names

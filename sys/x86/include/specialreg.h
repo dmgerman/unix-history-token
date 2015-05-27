@@ -140,6 +140,13 @@ name|CR3_PCID_SAVE
 value|0x8000000000000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|CR3_PCID_MASK
+value|0xfff
+end_define
+
 begin_comment
 comment|/*  * Bits in PPro special registers  */
 end_comment
@@ -377,6 +384,39 @@ end_define
 
 begin_comment
 comment|/* SVM enable bit for AMD, reserved for Intel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EFER_LMSLE
+value|0x000002000
+end_define
+
+begin_comment
+comment|/* Long Mode Segment Limit Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EFER_FFXSR
+value|0x000004000
+end_define
+
+begin_comment
+comment|/* Fast FXSAVE/FSRSTOR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EFER_TCE
+value|0x000008000
+end_define
+
+begin_comment
+comment|/* Translation Cache Extension */
 end_comment
 
 begin_comment
@@ -796,6 +836,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID2_SDBG
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID2_FMA
 value|0x00001000
 end_define
@@ -994,7 +1041,7 @@ begin_define
 define|#
 directive|define
 name|AMDID_FFXSR
-value|0x01000000
+value|0x02000000
 end_define
 
 begin_define
@@ -2533,6 +2580,13 @@ end_define
 begin_comment
 comment|/*  * X2APIC MSRs  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_APIC_000
+value|0x800
+end_define
 
 begin_define
 define|#

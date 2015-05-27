@@ -13895,6 +13895,7 @@ operator|.
 name|interval
 operator|&&
 operator|!
+operator|*
 name|arg
 operator|->
 name|bundle
@@ -16176,6 +16177,7 @@ operator|.
 name|port_id_type
 operator|&&
 operator|!
+operator|*
 name|arg
 operator|->
 name|bundle

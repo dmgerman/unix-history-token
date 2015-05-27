@@ -5086,7 +5086,8 @@ operator|(
 name|isascii
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|c
 argument_list|)
@@ -5094,7 +5095,8 @@ operator|&&
 name|isgraph
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|c
 argument_list|)
@@ -7617,7 +7619,8 @@ condition|(
 name|isprint
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|c
 argument_list|)
@@ -11606,7 +11609,8 @@ operator|!
 name|isalnum
 argument_list|(
 call|(
-name|int
+name|unsigned
+name|char
 call|)
 argument_list|(
 operator|*
@@ -12278,7 +12282,8 @@ condition|(
 name|isprint
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|data
 index|[

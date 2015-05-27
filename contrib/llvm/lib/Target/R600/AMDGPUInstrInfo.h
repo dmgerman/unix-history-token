@@ -58,20 +58,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPUINSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_R600_AMDGPUINSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPUINSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_R600_AMDGPUINSTRINFO_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"AMDGPUInstrInfo.h"
-end_include
 
 begin_include
 include|#
@@ -148,7 +142,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|AMDGPUTargetMachine
+name|AMDGPUSubtarget
 decl_stmt|;
 name|class
 name|MachineFunction
@@ -171,15 +165,6 @@ specifier|const
 name|AMDGPURegisterInfo
 name|RI
 block|;
-name|bool
-name|getNextBranchInstr
-argument_list|(
-argument|MachineBasicBlock::iterator&iter
-argument_list|,
-argument|MachineBasicBlock&MBB
-argument_list|)
-specifier|const
-block|;
 name|virtual
 name|void
 name|anchor
@@ -187,18 +172,20 @@ argument_list|()
 block|;
 name|protected
 operator|:
-name|TargetMachine
+specifier|const
+name|AMDGPUSubtarget
 operator|&
-name|TM
+name|ST
 block|;
 name|public
 operator|:
 name|explicit
 name|AMDGPUInstrInfo
 argument_list|(
-name|TargetMachine
+specifier|const
+name|AMDGPUSubtarget
 operator|&
-name|tm
+name|st
 argument_list|)
 block|;
 name|virtual
@@ -223,6 +210,7 @@ argument_list|,
 argument|unsigned&SubIdx
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|isLoadFromStackSlot
@@ -232,6 +220,7 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|isLoadFromStackSlotPostFE
@@ -241,6 +230,7 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasLoadFromStackSlot
@@ -252,6 +242,7 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|isStoreFromStackSlot
@@ -293,26 +284,15 @@ argument_list|,
 argument|LiveVariables *LV
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
-name|void
-name|copyPhysReg
+name|bool
+name|expandPostRAPseudo
 argument_list|(
-argument|MachineBasicBlock&MBB
-argument_list|,
 argument|MachineBasicBlock::iterator MI
-argument_list|,
-argument|DebugLoc DL
-argument_list|,
-argument|unsigned DestReg
-argument_list|,
-argument|unsigned SrcReg
-argument_list|,
-argument|bool KillSrc
 argument_list|)
 specifier|const
-operator|=
-literal|0
+name|override
 block|;
 name|void
 name|storeRegToStackSlot
@@ -332,6 +312,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|loadRegFromStackSlot
@@ -349,14 +330,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
-block|;
-name|virtual
-name|bool
-name|expandPostRAPseudo
-argument_list|(
-argument|MachineBasicBlock::iterator MI
-argument_list|)
-specifier|const
+name|override
 block|;
 name|protected
 operator|:
@@ -373,6 +347,7 @@ argument_list|,
 argument|int FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
 name|MachineInstr
 operator|*
@@ -387,10 +362,12 @@ argument_list|,
 argument|MachineInstr *LoadMI
 argument_list|)
 specifier|const
+name|override
 block|;
+name|public
+operator|:
 comment|/// \returns the smallest register index that will be accessed by an indirect
 comment|/// read or write or -1 if indirect addressing is not used by this program.
-name|virtual
 name|int
 name|getIndirectIndexBegin
 argument_list|(
@@ -400,7 +377,6 @@ specifier|const
 block|;
 comment|/// \returns the largest register index that will be accessed by an indirect
 comment|/// read or write or -1 if indirect addressing is not used by this program.
-name|virtual
 name|int
 name|getIndirectIndexEnd
 argument_list|(
@@ -408,8 +384,6 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|public
-operator|:
 name|bool
 name|canFoldMemoryOperand
 argument_list|(
@@ -418,6 +392,7 @@ argument_list|,
 argument|const SmallVectorImpl<unsigned>&Ops
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|unfoldMemoryOperand
@@ -435,6 +410,7 @@ argument_list|,
 argument|SmallVectorImpl<MachineInstr *>&NewMIs
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|unfoldMemoryOperand
@@ -446,6 +422,7 @@ argument_list|,
 argument|SmallVectorImpl<SDNode *>&NewNodes
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getOpcodeAfterMemoryUnfold
@@ -456,10 +433,16 @@ argument|bool UnfoldLoad
 argument_list|,
 argument|bool UnfoldStore
 argument_list|,
-argument|unsigned *LoadRegIndex =
-literal|0
+argument|unsigned *LoadRegIndex = nullptr
 argument_list|)
 specifier|const
+name|override
+block|;
+name|bool
+name|enableClusterLoads
+argument_list|()
+specifier|const
+name|override
 block|;
 name|bool
 name|shouldScheduleLoadsNear
@@ -475,6 +458,7 @@ argument_list|,
 argument|unsigned NumLoads
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|ReverseBranchCondition
@@ -482,6 +466,7 @@ argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|insertNoop
@@ -491,6 +476,7 @@ argument_list|,
 argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isPredicated
@@ -498,6 +484,7 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|SubsumesPredicate
@@ -507,6 +494,7 @@ argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Pred2
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|DefinesPredicate
@@ -516,6 +504,7 @@ argument_list|,
 argument|std::vector<MachineOperand>&Pred
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isPredicable
@@ -523,6 +512,7 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|isSafeToMoveRegClassDefs
@@ -530,64 +520,9 @@ argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Helper functions that check the opcode for status information
-name|bool
-name|isLoadInst
-argument_list|(
-argument|llvm::MachineInstr *MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isExtLoadInst
-argument_list|(
-argument|llvm::MachineInstr *MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isSWSExtLoadInst
-argument_list|(
-argument|llvm::MachineInstr *MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isSExtLoadInst
-argument_list|(
-argument|llvm::MachineInstr *MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isZExtLoadInst
-argument_list|(
-argument|llvm::MachineInstr *MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isAExtLoadInst
-argument_list|(
-argument|llvm::MachineInstr *MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isStoreInst
-argument_list|(
-argument|llvm::MachineInstr *MI
-argument_list|)
-specifier|const
-block|;
-name|bool
-name|isTruncStoreInst
-argument_list|(
-argument|llvm::MachineInstr *MI
-argument_list|)
-specifier|const
-block|;
 name|bool
 name|isRegisterStore
 argument_list|(
@@ -602,17 +537,19 @@ argument|const MachineInstr&MI
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Return a target-specific opcode if Opcode is a pseudo instruction.
+comment|/// Return -1 if the target-specific opcode for the pseudo instruction does
+comment|/// not exist. If Opcode is not a pseudo instruction, this is identity.
+name|int
+name|pseudoToMCOpcode
+argument_list|(
+argument|int Opcode
+argument_list|)
+specifier|const
+block|;
 comment|//===---------------------------------------------------------------------===//
 comment|// Pure virtual funtions to be implemented by sub-classes.
 comment|//===---------------------------------------------------------------------===//
-name|virtual
-name|unsigned
-name|getIEQOpcode
-argument_list|()
-specifier|const
-operator|=
-literal|0
-block|;
 name|virtual
 name|bool
 name|isMov
@@ -696,20 +633,6 @@ specifier|const
 operator|=
 literal|0
 block|;
-comment|/// \brief Convert the AMDIL MachineInstr to a supported ISA
-comment|/// MachineInstr
-name|virtual
-name|void
-name|convertToISA
-argument_list|(
-argument|MachineInstr& MI
-argument_list|,
-argument|MachineFunction&MF
-argument_list|,
-argument|DebugLoc DL
-argument_list|)
-specifier|const
-block|;
 comment|/// \brief Build a MOV instruction.
 name|virtual
 name|MachineInstr
@@ -780,10 +703,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDGPUINSTRINFO_H
-end_comment
 
 end_unit
 

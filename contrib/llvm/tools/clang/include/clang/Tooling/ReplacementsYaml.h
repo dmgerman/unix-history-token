@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_TOOLING_REPLACEMENTS_YAML_H
+name|LLVM_CLANG_TOOLING_REPLACEMENTSYAML_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_TOOLING_REPLACEMENTS_YAML_H
+name|LLVM_CLANG_TOOLING_REPLACEMENTSYAML_H
 end_define
 
 begin_include
@@ -82,13 +82,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<vector>
 end_include
 
 begin_macro
@@ -105,55 +105,6 @@ block|{
 name|namespace
 name|yaml
 block|{
-comment|/// \brief ScalarTraits to read/write std::string objects.
-name|template
-operator|<
-operator|>
-expr|struct
-name|ScalarTraits
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-block|{
-specifier|static
-name|void
-name|output
-argument_list|(
-argument|const std::string&Val
-argument_list|,
-argument|void *
-argument_list|,
-argument|llvm::raw_ostream&Out
-argument_list|)
-block|{
-name|Out
-operator|<<
-name|Val
-block|;   }
-specifier|static
-name|StringRef
-name|input
-argument_list|(
-argument|StringRef Scalar
-argument_list|,
-argument|void *
-argument_list|,
-argument|std::string&Val
-argument_list|)
-block|{
-name|Val
-operator|=
-name|Scalar
-block|;
-return|return
-name|StringRef
-argument_list|()
-return|;
-block|}
-expr|}
-block|;
 comment|/// \brief Specialized MappingTraits to describe how a Replacement is
 comment|/// (de)serialized.
 name|template
@@ -363,7 +314,7 @@ name|ReplacementText
 argument_list|)
 block|;   }
 block|}
-block|;
+expr_stmt|;
 comment|/// \brief Specialized MappingTraits to describe how a
 comment|/// TranslationUnitReplacements is (de)serialized.
 name|template
@@ -427,7 +378,8 @@ name|Replacements
 argument_list|)
 block|;   }
 block|}
-block|; }
+expr_stmt|;
+block|}
 comment|// end namespace yaml
 block|}
 end_decl_stmt
@@ -440,10 +392,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_TOOLING_REPLACEMENTS_YAML_H
-end_comment
 
 end_unit
 

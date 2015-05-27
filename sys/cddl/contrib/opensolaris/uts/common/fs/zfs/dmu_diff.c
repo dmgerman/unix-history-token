@@ -760,10 +760,10 @@ name|arc_buf_t
 modifier|*
 name|abuf
 decl_stmt|;
-name|uint32_t
+name|arc_flags_t
 name|aflags
 init|=
-name|ARC_WAIT
+name|ARC_FLAG_WAIT
 decl_stmt|;
 name|int
 name|blksz
@@ -1137,9 +1137,10 @@ return|;
 block|}
 name|fromtxg
 operator|=
+name|dsl_dataset_phys
+argument_list|(
 name|fromsnap
-operator|->
-name|ds_phys
+argument_list|)
 operator|->
 name|ds_creation_txg
 expr_stmt|;

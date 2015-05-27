@@ -520,6 +520,15 @@ name|ClearSymtab
 parameter_list|()
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|/// Notify the SymbolVendor that the file addresses in the Sections
+comment|/// for this module have been changed.
+comment|//------------------------------------------------------------------
+name|virtual
+name|void
+name|SectionFileAddressesChanged
+parameter_list|()
+function_decl|;
+comment|//------------------------------------------------------------------
 comment|// PluginInterface protocol
 comment|//------------------------------------------------------------------
 name|virtual

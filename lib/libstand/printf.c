@@ -612,7 +612,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Scaled down version of printf(3).  *  * Two additional formats:  *  * The format %b is supported to decode error registers.  * Its usage is:  *  *	printf("reg=%b\n", regval, "<base><arg>*");  *  * where<base> is the output base expressed as a control character, e.g.  * \10 gives octal; \20 gives hex.  Each arg is a sequence of characters,  * the first of which gives the bit number to be inspected (origin 1), and  * the next characters (up to a control character, i.e. a character<= 32),  * give the name of the register.  Thus:  *  *	kvprintf("reg=%b\n", 3, "\10\2BITTWO\1BITONE\n");  *  * would produce output:  *  *	reg=3<BITTWO,BITONE>  *  * XXX:  %D  -- Hexdump, takes pointer and separator string:  *		("%6D", ptr, ":")   -> XX:XX:XX:XX:XX:XX  *		("%*D", len, ptr, " " -> XX XX XX XX ...  */
+comment|/*  * Scaled down version of printf(3).  *  * Two additional formats:  *  * The format %b is supported to decode error registers.  * Its usage is:  *  *	printf("reg=%b\n", regval, "<base><arg>*");  *  * where<base> is the output base expressed as a control character, e.g.  * \10 gives octal; \20 gives hex.  Each arg is a sequence of characters,  * the first of which gives the bit number to be inspected (origin 1), and  * the next characters (up to a control character, i.e. a character<= 32),  * give the name of the register.  Thus:  *  *	kvprintf("reg=%b\n", 3, "\10\2BITTWO\1BITONE");  *  * would produce output:  *  *	reg=3<BITTWO,BITONE>  *  * XXX:  %D  -- Hexdump, takes pointer and separator string:  *		("%6D", ptr, ":")   -> XX:XX:XX:XX:XX:XX  *		("%*D", len, ptr, " " -> XX XX XX XX ...  */
 end_comment
 
 begin_function
@@ -2270,7 +2270,7 @@ name|percent
 operator|++
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Since we ignore an formatting argument it is no  			 * longer safe to obey the remaining formatting 			 * arguments as the arguments will no longer match 			 * the format specs. 			 */
+comment|/* 			 * Since we ignore a formatting argument it is no 			 * longer safe to obey the remaining formatting 			 * arguments as the arguments will no longer match 			 * the format specs. 			 */
 name|stop
 operator|=
 literal|1

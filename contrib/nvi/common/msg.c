@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: msg.c,v 11.0 2012/10/17 06:34:37 zy Exp $"
+literal|"$Id: msg.c,v 11.1 2015/02/09 11:12:44 marc Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -132,7 +132,7 @@ file|"../vi/vi.h"
 end_include
 
 begin_comment
-comment|/*  * msgq --  *	Display a message.  *  * PUBLIC: void msgq __P((SCR *, mtype_t, const char *, ...));  */
+comment|/*  * msgq --  *	Display a message.  *  * PUBLIC: void msgq(SCR *, mtype_t, const char *, ...);  */
 end_comment
 
 begin_function
@@ -1432,7 +1432,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * msgq_wstr --  *	Display a message with an embedded string.  *  * PUBLIC: void msgq_wstr __P((SCR *, mtype_t, const CHAR_T *, const char *));  */
+comment|/*  * msgq_wstr --  *	Display a message with an embedded string.  *  * PUBLIC: void msgq_wstr(SCR *, mtype_t, const CHAR_T *, const char *);  */
 end_comment
 
 begin_function
@@ -1518,7 +1518,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * msgq_str --  *	Display a message with an embedded string.  *  * PUBLIC: void msgq_str __P((SCR *, mtype_t, const char *, const char *));  */
+comment|/*  * msgq_str --  *	Display a message with an embedded string.  *  * PUBLIC: void msgq_str(SCR *, mtype_t, const char *, const char *);  */
 end_comment
 
 begin_function
@@ -1620,7 +1620,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mod_rpt --  *	Report on the lines that changed.  *  * !!!  * Historic vi documentation (USD:15-8) claimed that "The editor will also  * always tell you when a change you make affects text which you cannot see."  * This wasn't true -- edit a large file and do "100d|1".  We don't implement  * this semantic since it requires tracking each line that changes during a  * command instead of just keeping count.  *  * Line counts weren't right in historic vi, either.  For example, given the  * file:  *	abc  *	def  * the command 2d}, from the 'b' would report that two lines were deleted,  * not one.  *  * PUBLIC: void mod_rpt __P((SCR *));  */
+comment|/*  * mod_rpt --  *	Report on the lines that changed.  *  * !!!  * Historic vi documentation (USD:15-8) claimed that "The editor will also  * always tell you when a change you make affects text which you cannot see."  * This wasn't true -- edit a large file and do "100d|1".  We don't implement  * this semantic since it requires tracking each line that changes during a  * command instead of just keeping count.  *  * Line counts weren't right in historic vi, either.  For example, given the  * file:  *	abc  *	def  * the command 2d}, from the 'b' would report that two lines were deleted,  * not one.  *  * PUBLIC: void mod_rpt(SCR *);  */
 end_comment
 
 begin_function
@@ -2090,7 +2090,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * msgq_status --  *	Report on the file's status.  *  * PUBLIC: void msgq_status __P((SCR *, recno_t, u_int));  */
+comment|/*  * msgq_status --  *	Report on the file's status.  *  * PUBLIC: void msgq_status(SCR *, recno_t, u_int);  */
 end_comment
 
 begin_function
@@ -2755,8 +2755,14 @@ name|p
 argument_list|,
 name|t
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|lno
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|last
 argument_list|,
 operator|(
@@ -3005,7 +3011,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * msg_open --  *	Open the message catalogs.  *  * PUBLIC: int msg_open __P((SCR *, char *));  */
+comment|/*  * msg_open --  *	Open the message catalogs.  *  * PUBLIC: int msg_open(SCR *, char *);  */
 end_comment
 
 begin_function
@@ -3254,7 +3260,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * msg_close --  *	Close the message catalogs.  *  * PUBLIC: void msg_close __P((GS *));  */
+comment|/*  * msg_close --  *	Close the message catalogs.  *  * PUBLIC: void msg_close(GS *);  */
 end_comment
 
 begin_function
@@ -3292,7 +3298,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * msg_cont --  *	Return common continuation messages.  *  * PUBLIC: const char *msg_cmsg __P((SCR *, cmsg_t, size_t *));  */
+comment|/*  * msg_cont --  *	Return common continuation messages.  *  * PUBLIC: const char *msg_cmsg(SCR *, cmsg_t, size_t *);  */
 end_comment
 
 begin_function
@@ -3418,7 +3424,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * msg_cat --  *	Return a single message from the catalog, plus its length.  *  * !!!  * Only a single catalog message can be accessed at a time, if multiple  * ones are needed, they must be copied into local memory.  *  * PUBLIC: const char *msg_cat __P((SCR *, const char *, size_t *));  */
+comment|/*  * msg_cat --  *	Return a single message from the catalog, plus its length.  *  * !!!  * Only a single catalog message can be accessed at a time, if multiple  * ones are needed, they must be copied into local memory.  *  * PUBLIC: const char *msg_cat(SCR *, const char *, size_t *);  */
 end_comment
 
 begin_function
@@ -3594,7 +3600,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * msg_print --  *	Return a printable version of a string, in allocated memory.  *  * PUBLIC: char *msg_print __P((SCR *, const char *, int *));  */
+comment|/*  * msg_print --  *	Return a printable version of a string, in allocated memory.  *  * PUBLIC: char *msg_print(SCR *, const char *, int *);  */
 end_comment
 
 begin_function

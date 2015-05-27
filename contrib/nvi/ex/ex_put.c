@@ -90,7 +90,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_put -- [line] pu[t] [buffer]  *	Append a cut buffer into the file.  *  * PUBLIC: int ex_put __P((SCR *, EXCMD *));  */
+comment|/*  * ex_put -- [line] pu[t] [buffer]  *	Append a cut buffer into the file.  *  * PUBLIC: int ex_put(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

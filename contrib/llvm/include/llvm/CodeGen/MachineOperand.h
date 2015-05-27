@@ -128,6 +128,9 @@ name|public
 label|:
 enum|enum
 name|MachineOperandType
+enum|:
+name|unsigned
+name|char
 block|{
 name|MO_Register
 block|,
@@ -168,22 +171,26 @@ comment|///< Address of a basic block
 name|MO_RegisterMask
 block|,
 comment|///< Mask of preserved registers.
+name|MO_RegisterLiveOut
+block|,
+comment|///< Mask of live-out registers.
 name|MO_Metadata
 block|,
 comment|///< Metadata reference (for debug info)
 name|MO_MCSymbol
+block|,
 comment|///< MCSymbol reference (for debug/eh info)
+name|MO_CFIIndex
+comment|///< MCCFIInstruction index.
 block|}
 enum|;
 name|private
 label|:
 comment|/// OpKind - Specify what kind of operand this is.  This discriminates the
 comment|/// union.
-name|unsigned
-name|char
+name|MachineOperandType
 name|OpKind
 decl_stmt|;
-comment|// MachineOperandType
 comment|/// Subregister number for MO_Register.  A value of 0 indicates the
 comment|/// MO_Register has no subReg.
 comment|///
@@ -335,7 +342,7 @@ name|uint32_t
 modifier|*
 name|RegMask
 decl_stmt|;
-comment|// For MO_RegisterMask.
+comment|// For MO_RegisterMask and MO_RegisterLiveOut.
 specifier|const
 name|MDNode
 modifier|*
@@ -346,7 +353,11 @@ name|MCSymbol
 modifier|*
 name|Sym
 decl_stmt|;
-comment|// For MO_MCSymbol
+comment|// For MO_MCSymbol.
+name|unsigned
+name|CFIIndex
+decl_stmt|;
+comment|// For MO_CFI.
 struct|struct
 block|{
 comment|// For MO_Register.
@@ -423,7 +434,7 @@ argument_list|)
 operator|,
 name|ParentMI
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|public
@@ -554,7 +565,7 @@ parameter_list|()
 block|{
 name|ParentMI
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 name|void
@@ -569,7 +580,7 @@ name|TargetMachine
 operator|*
 name|TM
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -600,7 +611,7 @@ operator|==
 name|MO_Immediate
 return|;
 block|}
-comment|/// isCImm - Test if t his is a MO_CImmediate operand.
+comment|/// isCImm - Test if this is a MO_CImmediate operand.
 name|bool
 name|isCImm
 argument_list|()
@@ -732,6 +743,18 @@ operator|==
 name|MO_RegisterMask
 return|;
 block|}
+comment|/// isRegLiveOut - Tests if this is a MO_RegisterLiveOut operand.
+name|bool
+name|isRegLiveOut
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpKind
+operator|==
+name|MO_RegisterLiveOut
+return|;
+block|}
 comment|/// isMetadata - Tests if this is a MO_Metadata operand.
 name|bool
 name|isMetadata
@@ -753,6 +776,17 @@ return|return
 name|OpKind
 operator|==
 name|MO_MCSymbol
+return|;
+block|}
+name|bool
+name|isCFIIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpKind
+operator|==
+name|MO_CFIIndex
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -1470,6 +1504,25 @@ operator|.
 name|Sym
 return|;
 block|}
+name|unsigned
+name|getCFIIndex
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isCFIIndex
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|Contents
+operator|.
+name|CFIIndex
+return|;
+block|}
 comment|/// getOffset - Return the offset from the symbol in this operand. This always
 comment|/// returns 0 for ExternalSymbol operands.
 name|int64_t
@@ -1637,6 +1690,28 @@ operator|.
 name|RegMask
 return|;
 block|}
+comment|/// getRegLiveOut - Returns a bit mask of live-out registers.
+specifier|const
+name|uint32_t
+operator|*
+name|getRegLiveOut
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isRegLiveOut
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|Contents
+operator|.
+name|RegMask
+return|;
+block|}
 specifier|const
 name|MDNode
 operator|*
@@ -1681,6 +1756,30 @@ operator|.
 name|ImmVal
 operator|=
 name|immVal
+expr_stmt|;
+block|}
+name|void
+name|setFPImm
+parameter_list|(
+specifier|const
+name|ConstantFP
+modifier|*
+name|CFP
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isFPImm
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand mutator"
+argument_list|)
+expr_stmt|;
+name|Contents
+operator|.
+name|CFP
+operator|=
+name|CFP
 expr_stmt|;
 block|}
 name|void
@@ -1833,6 +1932,18 @@ name|ChangeToImmediate
 parameter_list|(
 name|int64_t
 name|ImmVal
+parameter_list|)
+function_decl|;
+comment|/// ChangeToFPImmediate - Replace this operand with a new FP immediate operand
+comment|/// of the specified value.  If an operand is known to be an FP immediate
+comment|/// already, the setFPImm method should be used.
+name|void
+name|ChangeToFPImmediate
+parameter_list|(
+specifier|const
+name|ConstantFP
+modifier|*
+name|FPImm
 parameter_list|)
 function_decl|;
 comment|/// ChangeToRegister - Replace this operand with a new register operand of
@@ -2117,7 +2228,7 @@ name|Reg
 operator|.
 name|Prev
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|Op
 operator|.
@@ -2127,7 +2238,7 @@ name|Reg
 operator|.
 name|Next
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|Op
 operator|.
@@ -2568,6 +2679,43 @@ return|;
 block|}
 specifier|static
 name|MachineOperand
+name|CreateRegLiveOut
+parameter_list|(
+specifier|const
+name|uint32_t
+modifier|*
+name|Mask
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|Mask
+operator|&&
+literal|"Missing live-out register mask"
+argument_list|)
+expr_stmt|;
+name|MachineOperand
+name|Op
+argument_list|(
+name|MachineOperand
+operator|::
+name|MO_RegisterLiveOut
+argument_list|)
+decl_stmt|;
+name|Op
+operator|.
+name|Contents
+operator|.
+name|RegMask
+operator|=
+name|Mask
+expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
+specifier|static
+name|MachineOperand
 name|CreateMetadata
 parameter_list|(
 specifier|const
@@ -2625,6 +2773,34 @@ return|return
 name|Op
 return|;
 block|}
+specifier|static
+name|MachineOperand
+name|CreateCFIIndex
+parameter_list|(
+name|unsigned
+name|CFIIndex
+parameter_list|)
+block|{
+name|MachineOperand
+name|Op
+argument_list|(
+name|MachineOperand
+operator|::
+name|MO_CFIIndex
+argument_list|)
+decl_stmt|;
+name|Op
+operator|.
+name|Contents
+operator|.
+name|CFIIndex
+operator|=
+name|CFIIndex
+expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
 name|friend
 name|class
 name|MachineInstr
@@ -2635,6 +2811,10 @@ name|MachineRegisterInfo
 decl_stmt|;
 name|private
 label|:
+name|void
+name|removeRegFromUses
+parameter_list|()
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Methods for handling register use/def lists.
 comment|//===--------------------------------------------------------------------===//
@@ -2661,7 +2841,7 @@ name|Reg
 operator|.
 name|Prev
 operator|!=
-literal|0
+name|nullptr
 return|;
 block|}
 block|}
@@ -2688,7 +2868,7 @@ name|print
 argument_list|(
 name|OS
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 block|;
 return|return

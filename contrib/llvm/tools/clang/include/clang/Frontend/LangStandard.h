@@ -113,7 +113,7 @@ operator|<<
 literal|5
 operator|)
 block|,
-name|CPlusPlus1y
+name|CPlusPlus14
 init|=
 operator|(
 literal|1
@@ -121,7 +121,7 @@ operator|<<
 literal|6
 operator|)
 block|,
-name|Digraphs
+name|CPlusPlus1z
 init|=
 operator|(
 literal|1
@@ -129,7 +129,7 @@ operator|<<
 literal|7
 operator|)
 block|,
-name|GNUMode
+name|Digraphs
 init|=
 operator|(
 literal|1
@@ -137,7 +137,7 @@ operator|<<
 literal|8
 operator|)
 block|,
-name|HexFloat
+name|GNUMode
 init|=
 operator|(
 literal|1
@@ -145,12 +145,20 @@ operator|<<
 literal|9
 operator|)
 block|,
-name|ImplicitInt
+name|HexFloat
 init|=
 operator|(
 literal|1
 operator|<<
 literal|10
+operator|)
+block|,
+name|ImplicitInt
+init|=
+operator|(
+literal|1
+operator|<<
+literal|11
 operator|)
 block|}
 enum|;
@@ -292,7 +300,7 @@ operator|::
 name|CPlusPlus
 return|;
 block|}
-comment|/// isCPlusPlus11 - Language is a C++0x variant.
+comment|/// isCPlusPlus11 - Language is a C++11 variant (or later).
 name|bool
 name|isCPlusPlus11
 argument_list|()
@@ -306,9 +314,9 @@ operator|::
 name|CPlusPlus11
 return|;
 block|}
-comment|/// isCPlusPlus1y - Language is a C++1y variant.
+comment|/// isCPlusPlus14 - Language is a C++14 variant (or later).
 name|bool
-name|isCPlusPlus1y
+name|isCPlusPlus14
 argument_list|()
 specifier|const
 block|{
@@ -317,7 +325,21 @@ name|Flags
 operator|&
 name|frontend
 operator|::
-name|CPlusPlus1y
+name|CPlusPlus14
+return|;
+block|}
+comment|/// isCPlusPlus1z - Language is a C++17 variant (or later).
+name|bool
+name|isCPlusPlus1z
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+name|frontend
+operator|::
+name|CPlusPlus1z
 return|;
 block|}
 comment|/// hasDigraphs - Language supports digraphs.

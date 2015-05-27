@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file declares several CodeGen-specific LLVM IR analysis utilties.
+comment|// This file declares several CodeGen-specific LLVM IR analysis utilities.
 end_comment
 
 begin_comment
@@ -80,7 +80,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|"llvm/IR/CallSite.h"
 end_include
 
 begin_include
@@ -95,24 +95,21 @@ directive|include
 file|"llvm/IR/Instructions.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"llvm/Support/CallSite.h"
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
-name|GlobalVariable
+name|GlobalValue
+decl_stmt|;
+name|class
+name|TargetLoweringBase
 decl_stmt|;
 name|class
 name|TargetLowering
 decl_stmt|;
 name|class
-name|TargetLoweringBase
+name|TargetMachine
 decl_stmt|;
 name|class
 name|SDNode
@@ -123,10 +120,24 @@ decl_stmt|;
 name|class
 name|SelectionDAG
 decl_stmt|;
-comment|/// ComputeLinearIndex - Given an LLVM IR aggregate type and a sequence
-comment|/// of insertvalue or extractvalue indices that identify a member, return
-comment|/// the linearized index of the start of the member.
+struct_decl|struct
+name|EVT
+struct_decl|;
+comment|/// \brief Compute the linearized index of a member in a nested
+comment|/// aggregate/struct/array.
 comment|///
+comment|/// Given an LLVM IR aggregate type and a sequence of insertvalue or
+comment|/// extractvalue indices that identify a member, return the linearized index of
+comment|/// the start of the member, i.e the number of element in memory before the
+comment|/// seeked one. This is disconnected from the number of bytes.
+comment|///
+comment|/// \param Ty is the type indexed by \p Indices.
+comment|/// \param Indices is an optional pointer in the indices list to the current
+comment|/// index.
+comment|/// \param IndicesEnd is the end of the indices list.
+comment|/// \param CurIndex is the current index in the recursion.
+comment|///
+comment|/// \returns \p CurIndex plus the linear index in \p Ty  the indices list.
 name|unsigned
 name|ComputeLinearIndex
 parameter_list|(
@@ -222,7 +233,7 @@ operator|>
 operator|*
 name|Offsets
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|uint64_t
 name|StartingOffset
@@ -231,7 +242,7 @@ literal|0
 argument_list|)
 decl_stmt|;
 comment|/// ExtractTypeInfo - Returns the type info, possibly bitcast, encoded in V.
-name|GlobalVariable
+name|GlobalValue
 modifier|*
 name|ExtractTypeInfo
 parameter_list|(
@@ -303,9 +314,9 @@ name|ImmutableCallSite
 name|CS
 parameter_list|,
 specifier|const
-name|TargetLowering
+name|TargetMachine
 modifier|&
-name|TLI
+name|TM
 parameter_list|)
 function_decl|;
 comment|/// Test if given that the input instruction is in the tail call position if the
@@ -333,6 +344,20 @@ specifier|const
 name|TargetLoweringBase
 modifier|&
 name|TLI
+parameter_list|)
+function_decl|;
+comment|// True if GV can be left out of the object symbol table. This is the case
+comment|// for linkonce_odr values whose address is not significant. While legal, it is
+comment|// not normally profitable to omit them from the .o symbol table. Using this
+comment|// analysis makes sense when the information can be passed down to the linker
+comment|// or we are in LTO.
+name|bool
+name|canBeOmittedFromSymbolTable
+parameter_list|(
+specifier|const
+name|GlobalValue
+modifier|*
+name|GV
 parameter_list|)
 function_decl|;
 block|}

@@ -108,25 +108,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<altq/altq.h>
+file|<net/altq/altq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq_cbq.h>
+file|<net/altq/altq_cbq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq_priq.h>
+file|<net/altq/altq_priq.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<altq/altq_hfsc.h>
+file|<net/altq/altq_hfsc.h>
 end_include
 
 begin_include

@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_ALLOCATIONORDER_H
+name|LLVM_LIB_CODEGEN_ALLOCATIONORDER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_ALLOCATIONORDER_H
+name|LLVM_LIB_CODEGEN_ALLOCATIONORDER_H
 end_define
 
 begin_include
@@ -146,7 +146,12 @@ comment|/// It is safe to call next() again after it returned 0, it will keep
 comment|/// returning 0 until rewind() is called.
 name|unsigned
 name|next
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|Limit
+init|=
+literal|0
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -164,16 +169,25 @@ name|Pos
 operator|++
 index|]
 return|;
+if|if
+condition|(
+operator|!
+name|Limit
+condition|)
+name|Limit
+operator|=
+name|Order
+operator|.
+name|size
+argument_list|()
+expr_stmt|;
 while|while
 condition|(
 name|Pos
 operator|<
 name|int
 argument_list|(
-name|Order
-operator|.
-name|size
-argument_list|()
+name|Limit
 argument_list|)
 condition|)
 block|{

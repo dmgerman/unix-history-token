@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TARGET_XCORE_H
+name|LLVM_LIB_TARGET_XCORE_XCORE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TARGET_XCORE_H
+name|LLVM_LIB_TARGET_XCORE_XCORE_H
 end_define
 
 begin_include
@@ -101,6 +101,11 @@ name|PassRegistry
 modifier|&
 name|p
 parameter_list|)
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createXCoreFrameToArgsOffsetEliminationPass
+parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*

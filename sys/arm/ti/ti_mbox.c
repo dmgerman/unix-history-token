@@ -134,12 +134,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/fdt.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<arm/ti/ti_mbox.h>
 end_include
 
@@ -154,12 +148,6 @@ include|#
 directive|include
 file|"mbox_if.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
 
 begin_ifdef
 ifdef|#
@@ -502,7 +490,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"ti,system-mbox"
+literal|"ti,omap4-mailbox"
 argument_list|)
 condition|)
 block|{

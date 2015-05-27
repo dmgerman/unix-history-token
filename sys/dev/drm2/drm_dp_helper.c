@@ -33,6 +33,10 @@ begin_comment
 comment|/**  * DOC: dp helpers  *  * These functions contain some common logic and helpers at various abstraction  * levels to deal with Display Port sink devices and related things like DP aux  * channel transfers, EDID reading over DP aux channels, decoding certain DPCD  * blocks, ...  */
 end_comment
 
+begin_comment
+comment|/* Helpers for DP link training */
+end_comment
+
 begin_function
 specifier|static
 name|u8
@@ -206,6 +210,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_dp_channel_eq_ok
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|bool
 name|drm_dp_clock_recovery_ok
@@ -268,6 +280,14 @@ name|true
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_dp_clock_recovery_ok
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|u8
@@ -335,6 +355,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_dp_get_adjust_request_voltage
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|u8
 name|drm_dp_get_adjust_request_pre_emphasis
@@ -401,6 +429,14 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_dp_get_adjust_request_pre_emphasis
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
 name|drm_dp_link_train_clock_recovery_delay
@@ -421,13 +457,13 @@ index|]
 operator|==
 literal|0
 condition|)
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
 else|else
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 name|dpcd
 index|[
@@ -439,6 +475,14 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_dp_link_train_clock_recovery_delay
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|void
@@ -460,13 +504,13 @@ index|]
 operator|==
 literal|0
 condition|)
-name|DRM_UDELAY
+name|udelay
 argument_list|(
 literal|400
 argument_list|)
 expr_stmt|;
 else|else
-name|DRM_MDELAY
+name|mdelay
 argument_list|(
 name|dpcd
 index|[
@@ -478,6 +522,14 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_dp_link_train_channel_eq_delay
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|u8
@@ -515,6 +567,14 @@ block|}
 block|}
 end_function
 
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_dp_link_rate_to_bw_code
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 name|drm_dp_bw_code_to_link_rate
@@ -550,6 +610,14 @@ return|;
 block|}
 block|}
 end_function
+
+begin_expr_stmt
+name|EXPORT_SYMBOL
+argument_list|(
+name|drm_dp_bw_code_to_link_rate
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

@@ -110,10 +110,6 @@ name|PPConditionalDirectiveRecord
 modifier|*
 name|PPRec
 decl_stmt|;
-specifier|const
-name|bool
-name|ForceCommitInSystemHeader
-decl_stmt|;
 struct|struct
 name|FileEdit
 block|{
@@ -166,16 +162,24 @@ name|public
 label|:
 name|EditedSource
 argument_list|(
-argument|const SourceManager&SM
+specifier|const
+name|SourceManager
+operator|&
+name|SM
 argument_list|,
-argument|const LangOptions&LangOpts
+specifier|const
+name|LangOptions
+operator|&
+name|LangOpts
 argument_list|,
-argument|const PPConditionalDirectiveRecord *PPRec =
-literal|0
-argument_list|,
-argument|const bool FCommitInSystemHeader = true
+specifier|const
+name|PPConditionalDirectiveRecord
+operator|*
+name|PPRec
+operator|=
+name|nullptr
 argument_list|)
-block|:
+operator|:
 name|SourceMgr
 argument_list|(
 name|SM
@@ -191,16 +195,8 @@ argument_list|(
 name|PPRec
 argument_list|)
 operator|,
-name|ForceCommitInSystemHeader
-argument_list|(
-name|FCommitInSystemHeader
-argument_list|)
-operator|,
 name|StrAlloc
-argument_list|(
-comment|/*size=*/
-literal|512
-argument_list|)
+argument_list|()
 block|{ }
 specifier|const
 name|SourceManager
@@ -233,15 +229,6 @@ specifier|const
 block|{
 return|return
 name|PPRec
-return|;
-block|}
-name|bool
-name|getForceCommitInSystemHeader
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ForceCommitInSystemHeader
 return|;
 block|}
 name|bool

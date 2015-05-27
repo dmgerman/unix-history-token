@@ -94,7 +94,7 @@ comment|/*  * !!!  * In historic vi, a sentence was delimited by a '.', '?' or '
 end_comment
 
 begin_comment
-comment|/*  * v_sentencef -- [count])  *	Move forward count sentences.  *  * PUBLIC: int v_sentencef __P((SCR *, VICMD *));  */
+comment|/*  * v_sentencef -- [count])  *	Move forward count sentences.  *  * PUBLIC: int v_sentencef(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -731,7 +731,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_sentenceb -- [count](  *	Move backward count sentences.  *  * PUBLIC: int v_sentenceb __P((SCR *, VICMD *));  */
+comment|/*  * v_sentenceb -- [count](  *	Move backward count sentences.  *  * PUBLIC: int v_sentenceb(SCR *, VICMD *);  */
 end_comment
 
 begin_function

@@ -187,7 +187,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function_decl
@@ -319,12 +319,21 @@ condition|(
 name|d1
 operator|->
 name|db_state
-operator|<
+operator|==
+name|DB_SEARCH
+condition|)
+block|{
+name|ASSERT3S
+argument_list|(
 name|d2
 operator|->
 name|db_state
-condition|)
-block|{
+argument_list|,
+operator|!=
+argument_list|,
+name|DB_SEARCH
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-
@@ -332,45 +341,33 @@ literal|1
 operator|)
 return|;
 block|}
+elseif|else
 if|if
 condition|(
-name|d1
-operator|->
-name|db_state
-operator|>
 name|d2
 operator|->
 name|db_state
+operator|==
+name|DB_SEARCH
 condition|)
 block|{
+name|ASSERT3S
+argument_list|(
+name|d1
+operator|->
+name|db_state
+argument_list|,
+operator|!=
+argument_list|,
+name|DB_SEARCH
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
 operator|)
 return|;
 block|}
-name|ASSERT3S
-argument_list|(
-name|d1
-operator|->
-name|db_state
-argument_list|,
-operator|!=
-argument_list|,
-name|DB_SEARCH
-argument_list|)
-expr_stmt|;
-name|ASSERT3S
-argument_list|(
-name|d2
-operator|->
-name|db_state
-argument_list|,
-operator|!=
-argument_list|,
-name|DB_SEARCH
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5094,7 +5091,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_ifdef
@@ -5583,7 +5580,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function
@@ -6405,8 +6402,6 @@ operator|->
 name|db
 argument_list|,
 name|children_dnodes
-argument_list|,
-name|NULL
 argument_list|,
 name|dnode_buf_pageout
 argument_list|)

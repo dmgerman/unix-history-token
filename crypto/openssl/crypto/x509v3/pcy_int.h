@@ -4,11 +4,11 @@ comment|/* pcy_int.h */
 end_comment
 
 begin_comment
-comment|/* Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL  * project 2004.  */
+comment|/*  * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project  * 2004.  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 2004 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    licensing@OpenSSL.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_typedef
@@ -31,7 +31,7 @@ comment|/* Internal structures */
 end_comment
 
 begin_comment
-comment|/* This structure and the field names correspond to the Policy 'node' of  * RFC3280. NB this structure contains no pointers to parent or child  * data: X509_POLICY_NODE contains that. This means that the main policy data  * can be kept static and cached with the certificate.  */
+comment|/*  * This structure and the field names correspond to the Policy 'node' of  * RFC3280. NB this structure contains no pointers to parent or child data:  * X509_POLICY_NODE contains that. This means that the main policy data can  * be kept static and cached with the certificate.  */
 end_comment
 
 begin_struct
@@ -70,7 +70,7 @@ comment|/* X509_POLICY_DATA flags values */
 end_comment
 
 begin_comment
-comment|/* This flag indicates the structure has been mapped using a policy mapping  * extension. If policy mapping is not active its references get deleted.   */
+comment|/*  * This flag indicates the structure has been mapped using a policy mapping  * extension. If policy mapping is not active its references get deleted.  */
 end_comment
 
 begin_define
@@ -81,7 +81,7 @@ value|0x1
 end_define
 
 begin_comment
-comment|/* This flag indicates the data doesn't correspond to a policy in Certificate  * Policies: it has been mapped to any policy.  */
+comment|/*  * This flag indicates the data doesn't correspond to a policy in Certificate  * Policies: it has been mapped to any policy.  */
 end_comment
 
 begin_define
@@ -160,11 +160,11 @@ comment|/* If InhibitAnyPolicy present this is its value or -1 if absent. */
 name|long
 name|any_skip
 decl_stmt|;
-comment|/* If policyConstraints and requireExplicitPolicy present this is its 	 * value or -1 if absent. 	 */
+comment|/*      * If policyConstraints and requireExplicitPolicy present this is its      * value or -1 if absent.      */
 name|long
 name|explicit_skip
 decl_stmt|;
-comment|/* If policyConstraints and policyMapping present this is its 	 * value or -1 if absent.          */
+comment|/*      * If policyConstraints and policyMapping present this is its value or -1      * if absent.      */
 name|long
 name|map_skip
 decl_stmt|;
@@ -173,7 +173,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*#define POLICY_CACHE_FLAG_CRITICAL		POLICY_DATA_FLAG_CRITICAL*/
+comment|/*  * #define POLICY_CACHE_FLAG_CRITICAL POLICY_DATA_FLAG_CRITICAL  */
 end_comment
 
 begin_comment
@@ -226,7 +226,7 @@ modifier|*
 name|anyPolicy
 decl_stmt|;
 comment|/* Extra data */
-comment|/*STACK_OF(X509_POLICY_DATA) *extra_data;*/
+comment|/*      * STACK_OF(X509_POLICY_DATA) *extra_data;      */
 name|unsigned
 name|int
 name|flags
@@ -247,7 +247,7 @@ decl_stmt|;
 name|int
 name|nlevel
 decl_stmt|;
-comment|/* Extra policy data when additional nodes (not from the certificate) 	 * are required. 	 */
+comment|/*      * Extra policy data when additional nodes (not from the certificate) are      * required.      */
 name|STACK_OF
 argument_list|(
 name|X509_POLICY_DATA

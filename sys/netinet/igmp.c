@@ -192,7 +192,7 @@ end_endif
 begin_function_decl
 specifier|static
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi_alloc_locked
 parameter_list|(
@@ -222,7 +222,7 @@ name|void
 name|igmp_dispatch_queue
 parameter_list|(
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 parameter_list|,
 name|int
@@ -253,7 +253,7 @@ name|in_multi
 modifier|*
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -269,7 +269,7 @@ name|in_multi
 modifier|*
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -285,7 +285,7 @@ name|in_multi
 modifier|*
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -367,7 +367,7 @@ name|in_multi
 modifier|*
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|,
 name|int
@@ -489,7 +489,7 @@ name|void
 name|igmp_set_version
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|,
 specifier|const
@@ -544,7 +544,7 @@ name|void
 name|igmp_v1v2_process_querier_timers
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -571,7 +571,7 @@ name|void
 name|igmp_v3_cancel_link_timers
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -583,7 +583,7 @@ name|void
 name|igmp_v3_dispatch_general_query
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|)
 function_decl|;
@@ -613,7 +613,7 @@ name|int
 name|igmp_v3_enqueue_group_record
 parameter_list|(
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 parameter_list|,
 name|struct
@@ -638,7 +638,7 @@ name|int
 name|igmp_v3_enqueue_filter_change
 parameter_list|(
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 parameter_list|,
 name|struct
@@ -654,15 +654,15 @@ name|void
 name|igmp_v3_process_group_timers
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 parameter_list|,
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 parameter_list|,
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 parameter_list|,
 name|struct
@@ -685,7 +685,7 @@ name|in_multi
 modifier|*
 parameter_list|,
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 parameter_list|)
 function_decl|;
@@ -765,7 +765,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * System-wide globals.  *  * Unlocked access to these is OK, except for the global IGMP output  * queue. The IGMP subsystem lock ends up being system-wide for the moment,  * because all VIMAGEs have to share a global output queue, as netisrs  * themselves are not virtualized.  *  * Locking:  *  * The permitted lock order is: IN_MULTI_LOCK, IGMP_LOCK, IF_ADDR_LOCK.  *    Any may be taken independently; if any are held at the same  *    time, the above lock order must be followed.  *  * All output is delegated to the netisr.  *    Now that Giant has been eliminated, the netisr may be inlined.  *  * IN_MULTI_LOCK covers in_multi.  *  * IGMP_LOCK covers igmp_ifinfo and any global variables in this file,  *    including the output queue.  *  * IF_ADDR_LOCK covers if_multiaddrs, which is used for a variety of  *    per-link state iterators.  *  * igmp_ifinfo is valid as long as PF_INET is attached to the interface,  *    therefore it is not refcounted.  *    We allow unlocked reads of igmp_ifinfo when accessed via in_multi.  *  * Reference counting  *  * IGMP acquires its own reference every time an in_multi is passed to  *    it and the group is being joined for the first time.  *  * IGMP releases its reference(s) on in_multi in a deferred way,  *    because the operations which process the release run as part of  *    a loop whose control variables are directly affected by the release  *    (that, and not recursing on the IF_ADDR_LOCK).  *  * VIMAGE: Each in_multi corresponds to an ifp, and each ifp corresponds  * to a vnet in ifp->if_vnet.  *  * SMPng: XXX We may potentially race operations on ifma_protospec.  * The problem is that we currently lack a clean way of taking the  * IF_ADDR_LOCK() between the ifnet and in layers w/o recursing,  * as anything which modifies ifma needs to be covered by that lock.  * So check for ifma_protospec being NULL before proceeding.  */
+comment|/*  * System-wide globals.  *  * Unlocked access to these is OK, except for the global IGMP output  * queue. The IGMP subsystem lock ends up being system-wide for the moment,  * because all VIMAGEs have to share a global output queue, as netisrs  * themselves are not virtualized.  *  * Locking:  *  * The permitted lock order is: IN_MULTI_LOCK, IGMP_LOCK, IF_ADDR_LOCK.  *    Any may be taken independently; if any are held at the same  *    time, the above lock order must be followed.  *  * All output is delegated to the netisr.  *    Now that Giant has been eliminated, the netisr may be inlined.  *  * IN_MULTI_LOCK covers in_multi.  *  * IGMP_LOCK covers igmp_ifsoftc and any global variables in this file,  *    including the output queue.  *  * IF_ADDR_LOCK covers if_multiaddrs, which is used for a variety of  *    per-link state iterators.  *  * igmp_ifsoftc is valid as long as PF_INET is attached to the interface,  *    therefore it is not refcounted.  *    We allow unlocked reads of igmp_ifsoftc when accessed via in_multi.  *  * Reference counting  *  * IGMP acquires its own reference every time an in_multi is passed to  *    it and the group is being joined for the first time.  *  * IGMP releases its reference(s) on in_multi in a deferred way,  *    because the operations which process the release run as part of  *    a loop whose control variables are directly affected by the release  *    (that, and not recursing on the IF_ADDR_LOCK).  *  * VIMAGE: Each in_multi corresponds to an ifp, and each ifp corresponds  * to a vnet in ifp->if_vnet.  *  * SMPng: XXX We may potentially race operations on ifma_protospec.  * The problem is that we currently lack a clean way of taking the  * IF_ADDR_LOCK() between the ifnet and in layers w/o recursing,  * as anything which modifies ifma needs to be covered by that lock.  * So check for ifma_protospec being NULL before proceeding.  */
 end_comment
 
 begin_decl_stmt
@@ -876,7 +876,7 @@ name|VNET_DEFINE
 argument_list|(
 name|LIST_HEAD
 argument_list|(,
-name|igmp_ifinfo
+name|igmp_ifsoftc
 argument_list|)
 argument_list|,
 name|igi_head
@@ -1810,7 +1810,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Expose struct igmp_ifinfo to userland, keyed by ifindex.  * For use by ifmcstat(8).  *  * SMPng: NOTE: Does an unlocked ifindex space read.  * VIMAGE: Assume curvnet set by caller. The node handler itself  * is not directly virtualized.  */
+comment|/*  * Expose struct igmp_ifsoftc to userland, keyed by ifindex.  * For use by ifmcstat(8).  *  * SMPng: NOTE: Does an unlocked ifindex space read.  * VIMAGE: Assume curvnet set by caller. The node handler itself  * is not directly virtualized.  */
 end_comment
 
 begin_function
@@ -1837,7 +1837,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -1971,18 +1971,94 @@ operator|->
 name|igi_ifp
 condition|)
 block|{
+name|struct
+name|igmp_ifinfo
+name|info
+decl_stmt|;
+name|info
+operator|.
+name|igi_version
+operator|=
+name|igi
+operator|->
+name|igi_version
+expr_stmt|;
+name|info
+operator|.
+name|igi_v1_timer
+operator|=
+name|igi
+operator|->
+name|igi_v1_timer
+expr_stmt|;
+name|info
+operator|.
+name|igi_v2_timer
+operator|=
+name|igi
+operator|->
+name|igi_v2_timer
+expr_stmt|;
+name|info
+operator|.
+name|igi_v3_timer
+operator|=
+name|igi
+operator|->
+name|igi_v3_timer
+expr_stmt|;
+name|info
+operator|.
+name|igi_flags
+operator|=
+name|igi
+operator|->
+name|igi_flags
+expr_stmt|;
+name|info
+operator|.
+name|igi_rv
+operator|=
+name|igi
+operator|->
+name|igi_rv
+expr_stmt|;
+name|info
+operator|.
+name|igi_qi
+operator|=
+name|igi
+operator|->
+name|igi_qi
+expr_stmt|;
+name|info
+operator|.
+name|igi_qri
+operator|=
+name|igi
+operator|->
+name|igi_qri
+expr_stmt|;
+name|info
+operator|.
+name|igi_uri
+operator|=
+name|igi
+operator|->
+name|igi_uri
+expr_stmt|;
 name|error
 operator|=
 name|SYSCTL_OUT
 argument_list|(
 name|req
 argument_list|,
-name|igi
+operator|&
+name|info
 argument_list|,
 sizeof|sizeof
 argument_list|(
-expr|struct
-name|igmp_ifinfo
+name|info
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2015,9 +2091,9 @@ name|void
 name|igmp_dispatch_queue
 parameter_list|(
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
-name|ifq
+name|mq
 parameter_list|,
 name|int
 name|limit
@@ -2032,26 +2108,20 @@ name|mbuf
 modifier|*
 name|m
 decl_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|_IF_DEQUEUE
-argument_list|(
-name|ifq
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-if|if
+while|while
 condition|(
+operator|(
 name|m
-operator|==
+operator|=
+name|mbufq_dequeue
+argument_list|(
+name|mq
+argument_list|)
+operator|)
+operator|!=
 name|NULL
 condition|)
-break|break;
+block|{
 name|CTR3
 argument_list|(
 name|KTR_IGMPV3
@@ -2060,7 +2130,7 @@ literal|"%s: dispatch %p from %p"
 argument_list|,
 name|__func__
 argument_list|,
-name|ifq
+name|mq
 argument_list|,
 name|m
 argument_list|)
@@ -2271,7 +2341,7 @@ end_comment
 
 begin_function
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igmp_domifattach
 parameter_list|(
@@ -2282,7 +2352,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -2346,7 +2416,7 @@ end_comment
 begin_function
 specifier|static
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi_alloc_locked
 parameter_list|(
@@ -2358,7 +2428,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -2372,7 +2442,7 @@ argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 argument_list|)
 argument_list|,
 name|M_IGMP
@@ -2441,8 +2511,7 @@ operator|->
 name|igi_relinmhead
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Responses to general queries are subject to bounds. 	 */
-name|IFQ_SET_MAXLEN
+name|mbufq_init
 argument_list|(
 operator|&
 name|igi
@@ -2466,7 +2535,7 @@ name|CTR2
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"allocate igmp_ifinfo for ifp %p(%s)"
+literal|"allocate igmp_ifsoftc for ifp %p(%s)"
 argument_list|,
 name|ifp
 argument_list|,
@@ -2500,7 +2569,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -2693,7 +2762,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -2757,7 +2826,7 @@ name|ifp
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|,
@@ -2768,7 +2837,7 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: freeing igmp_ifinfo for ifp %p(%s)"
+literal|"%s: freeing igmp_ifsoftc for ifp %p(%s)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2803,7 +2872,7 @@ name|ifp
 condition|)
 block|{
 comment|/* 			 * Free deferred General Query responses. 			 */
-name|_IF_DRAIN
+name|mbufq_drain
 argument_list|(
 operator|&
 name|igi
@@ -2850,7 +2919,7 @@ directive|ifdef
 name|INVARIANTS
 name|panic
 argument_list|(
-literal|"%s: igmp_ifinfo not found for ifp %p\n"
+literal|"%s: igmp_ifsoftc not found for ifp %p\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -2895,7 +2964,7 @@ modifier|*
 name|ifma
 decl_stmt|;
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -2971,7 +3040,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no igmp_ifinfo for ifp %p"
+literal|"%s: no igmp_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -3195,7 +3264,7 @@ modifier|*
 name|ifma
 decl_stmt|;
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -3291,7 +3360,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no igmp_ifinfo for ifp %p"
+literal|"%s: no igmp_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -3695,7 +3764,7 @@ name|igmpv3
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -3968,7 +4037,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no igmp_ifinfo for ifp %p"
+literal|"%s: no igmp_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -4264,7 +4333,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|,
@@ -4764,7 +4833,7 @@ name|NULL
 condition|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -5222,7 +5291,7 @@ name|NULL
 condition|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -5831,9 +5900,6 @@ name|uint16_t
 name|igmpv3len
 decl_stmt|;
 name|uint16_t
-name|srclen
-decl_stmt|;
-name|int
 name|nsrc
 decl_stmt|;
 name|IGMPSTAT_INC
@@ -5860,16 +5926,6 @@ operator|->
 name|igmp_numsrc
 argument_list|)
 expr_stmt|;
-name|srclen
-operator|=
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|in_addr
-argument_list|)
-operator|*
-name|nsrc
-expr_stmt|;
 if|if
 condition|(
 name|nsrc
@@ -5879,7 +5935,11 @@ argument_list|(
 name|in_addr_t
 argument_list|)
 operator|>
-name|srclen
+name|UINT16_MAX
+operator|-
+name|iphlen
+operator|-
+name|IGMP_V3_QUERY_MINLEN
 condition|)
 block|{
 name|IGMPSTAT_INC
@@ -5900,7 +5960,13 @@ name|iphlen
 operator|+
 name|IGMP_V3_QUERY_MINLEN
 operator|+
-name|srclen
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|in_addr
+argument_list|)
+operator|*
+name|nsrc
 expr_stmt|;
 if|if
 condition|(
@@ -6171,12 +6237,12 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|ifqueue
+name|mbufq
 name|scq
 decl_stmt|;
 comment|/* State-change packets */
 name|struct
-name|ifqueue
+name|mbufq
 name|qrq
 decl_stmt|;
 comment|/* Query response packets */
@@ -6186,7 +6252,7 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -6375,21 +6441,7 @@ operator|*
 name|PR_FASTHZ
 argument_list|)
 expr_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|qrq
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ifqueue
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|IFQ_SET_MAXLEN
+name|mbufq_init
 argument_list|(
 operator|&
 name|qrq
@@ -6397,21 +6449,7 @@ argument_list|,
 name|IGMP_MAX_G_GS_PACKETS
 argument_list|)
 expr_stmt|;
-name|memset
-argument_list|(
-operator|&
-name|scq
-argument_list|,
-literal|0
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|ifqueue
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|IFQ_SET_MAXLEN
+name|mbufq_init
 argument_list|(
 operator|&
 name|scq
@@ -6736,17 +6774,17 @@ name|void
 name|igmp_v3_process_group_timers
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|,
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 name|qrq
 parameter_list|,
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 name|scq
 parameter_list|,
@@ -7152,7 +7190,7 @@ name|void
 name|igmp_set_version
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|,
@@ -7342,7 +7380,7 @@ name|void
 name|igmp_v3_cancel_link_timers
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|)
@@ -7526,7 +7564,7 @@ name|inm_timer
 operator|=
 literal|0
 expr_stmt|;
-name|_IF_DRAIN
+name|mbufq_drain
 argument_list|(
 operator|&
 name|inm
@@ -7580,7 +7618,7 @@ name|void
 name|igmp_v1v2_process_querier_timers
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|)
@@ -7919,7 +7957,7 @@ name|void
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -8018,7 +8056,7 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -8297,7 +8335,7 @@ name|inm
 parameter_list|)
 block|{
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 decl_stmt|;
@@ -8384,7 +8422,7 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"%s: no igmp_ifinfo for ifp %p"
+literal|"%s: no igmp_ifsoftc for ifp %p"
 operator|,
 name|__func__
 operator|,
@@ -8562,7 +8600,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|)
@@ -8573,9 +8611,9 @@ modifier|*
 name|ifp
 decl_stmt|;
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
-name|ifq
+name|mq
 decl_stmt|;
 name|int
 name|error
@@ -8796,23 +8834,23 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 			 * Immediately enqueue a State-Change Report for 			 * this interface, freeing any previous reports. 			 * Don't kick the timers if there is nothing to do, 			 * or if an error occurred. 			 */
-name|ifq
+name|mq
 operator|=
 operator|&
 name|inm
 operator|->
 name|inm_scq
 expr_stmt|;
-name|_IF_DRAIN
+name|mbufq_drain
 argument_list|(
-name|ifq
+name|mq
 argument_list|)
 expr_stmt|;
 name|retval
 operator|=
 name|igmp_v3_enqueue_group_record
 argument_list|(
-name|ifq
+name|mq
 argument_list|,
 name|inm
 argument_list|,
@@ -8971,7 +9009,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|)
@@ -9137,7 +9175,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|_IF_DRAIN
+name|mbufq_drain
 argument_list|(
 operator|&
 name|inm
@@ -9240,7 +9278,7 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|)
@@ -9383,7 +9421,7 @@ name|IGMP_VERSION_3
 condition|)
 block|{
 comment|/* 			 * Stop group timer and all pending reports. 			 * Immediately enqueue a state-change report 			 * TO_IN {} to be sent on the next fast timeout, 			 * giving us an opportunity to merge reports. 			 */
-name|_IF_DRAIN
+name|mbufq_drain
 argument_list|(
 operator|&
 name|inm
@@ -9631,9 +9669,9 @@ name|int
 name|igmp_v3_enqueue_group_record
 parameter_list|(
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
-name|ifq
+name|mq
 parameter_list|,
 name|struct
 name|in_multi
@@ -9974,7 +10012,7 @@ return|return
 operator|(
 name|igmp_v3_enqueue_filter_change
 argument_list|(
-name|ifq
+name|mq
 argument_list|,
 name|inm
 argument_list|)
@@ -10065,9 +10103,10 @@ expr_stmt|;
 comment|/* 	 * Check if we have a packet in the tail of the queue for this 	 * group into which the first group record for this group will fit. 	 * Otherwise allocate a new packet. 	 * Always allocate leading space for IP+RA_OPT+IGMP+REPORT. 	 * Note: Group records for G/GSR query responses MUST be sent 	 * in their own packet. 	 */
 name|m0
 operator|=
-name|ifq
-operator|->
-name|ifq_tail
+name|mbufq_last
+argument_list|(
+name|mq
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -10154,9 +10193,9 @@ else|else
 block|{
 if|if
 condition|(
-name|_IF_QFULL
+name|mbufq_full
 argument_list|(
-name|ifq
+name|mq
 argument_list|)
 condition|)
 block|{
@@ -10252,7 +10291,7 @@ if|if
 condition|(
 name|m
 condition|)
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -10734,9 +10773,9 @@ name|vt_nrecs
 operator|=
 literal|1
 expr_stmt|;
-name|_IF_ENQUEUE
+name|mbufq_enqueue
 argument_list|(
-name|ifq
+name|mq
 argument_list|,
 name|m
 argument_list|)
@@ -10773,9 +10812,9 @@ condition|)
 block|{
 if|if
 condition|(
-name|_IF_QFULL
+name|mbufq_full
 argument_list|(
-name|ifq
+name|mq
 argument_list|)
 condition|)
 block|{
@@ -10836,7 +10875,7 @@ if|if
 condition|(
 name|m
 condition|)
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -11189,9 +11228,9 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|_IF_ENQUEUE
+name|mbufq_enqueue
 argument_list|(
-name|ifq
+name|mq
 argument_list|,
 name|m
 argument_list|)
@@ -11248,9 +11287,9 @@ name|int
 name|igmp_v3_enqueue_filter_change
 parameter_list|(
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
-name|ifq
+name|mq
 parameter_list|,
 name|struct
 name|in_multi
@@ -11468,9 +11507,10 @@ do|do
 block|{
 name|m0
 operator|=
-name|ifq
-operator|->
-name|ifq_tail
+name|mbufq_last
+argument_list|(
+name|mq
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11593,7 +11633,7 @@ if|if
 condition|(
 name|m
 condition|)
-name|MH_ALIGN
+name|M_ALIGN
 argument_list|(
 name|m
 argument_list|,
@@ -12223,9 +12263,9 @@ name|m
 operator|!=
 name|m0
 condition|)
-name|_IF_ENQUEUE
+name|mbufq_enqueue
 argument_list|(
-name|ifq
+name|mq
 argument_list|,
 name|m
 argument_list|)
@@ -12288,13 +12328,13 @@ modifier|*
 name|inm
 parameter_list|,
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
-name|ifscq
+name|scq
 parameter_list|)
 block|{
 name|struct
-name|ifqueue
+name|mbufq
 modifier|*
 name|gq
 decl_stmt|;
@@ -12367,9 +12407,10 @@ directive|ifdef
 name|KTR
 if|if
 condition|(
+name|mbufq_first
+argument_list|(
 name|gq
-operator|->
-name|ifq_head
+argument_list|)
 operator|==
 name|NULL
 condition|)
@@ -12390,9 +12431,10 @@ endif|#
 directive|endif
 name|m
 operator|=
+name|mbufq_first
+argument_list|(
 name|gq
-operator|->
-name|ifq_head
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -12408,9 +12450,10 @@ literal|0
 expr_stmt|;
 name|mt
 operator|=
-name|ifscq
-operator|->
-name|ifq_tail
+name|mbufq_last
+argument_list|(
+name|scq
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -12480,7 +12523,7 @@ condition|(
 operator|!
 name|domerge
 operator|&&
-name|_IF_QFULL
+name|mbufq_full
 argument_list|(
 name|gq
 argument_list|)
@@ -12536,11 +12579,11 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|_IF_DEQUEUE
+name|m0
+operator|=
+name|mbufq_dequeue
 argument_list|(
 name|gq
-argument_list|,
-name|m0
 argument_list|)
 expr_stmt|;
 name|m
@@ -12606,18 +12649,18 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: queueing %p to ifscq %p)"
+literal|"%s: queueing %p to scq %p)"
 argument_list|,
 name|__func__
 argument_list|,
 name|m0
 argument_list|,
-name|ifscq
+name|scq
 argument_list|)
 expr_stmt|;
-name|_IF_ENQUEUE
+name|mbufq_enqueue
 argument_list|(
-name|ifscq
+name|scq
 argument_list|,
 name|m0
 argument_list|)
@@ -12635,7 +12678,7 @@ name|CTR3
 argument_list|(
 name|KTR_IGMPV3
 argument_list|,
-literal|"%s: merging %p with ifscq tail %p)"
+literal|"%s: merging %p with scq tail %p)"
 argument_list|,
 name|__func__
 argument_list|,
@@ -12708,7 +12751,7 @@ name|void
 name|igmp_v3_dispatch_general_query
 parameter_list|(
 name|struct
-name|igmp_ifinfo
+name|igmp_ifsoftc
 modifier|*
 name|igi
 parameter_list|)
@@ -12932,11 +12975,13 @@ expr_stmt|;
 comment|/* 	 * Slew transmission of bursts over 500ms intervals. 	 */
 if|if
 condition|(
+name|mbufq_first
+argument_list|(
+operator|&
 name|igi
 operator|->
 name|igi_gq
-operator|.
-name|ifq_head
+argument_list|)
 operator|!=
 name|NULL
 condition|)

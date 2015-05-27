@@ -363,7 +363,8 @@ operator|&&
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|d1
@@ -372,7 +373,8 @@ operator|!=
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|d2
@@ -384,7 +386,8 @@ condition|(
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|d1
@@ -393,7 +396,8 @@ operator|<
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|d2
@@ -475,7 +479,8 @@ operator|)
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|dname
@@ -621,7 +626,8 @@ operator|)
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|dname
@@ -1040,7 +1046,8 @@ condition|(
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|d1
@@ -1050,7 +1057,8 @@ operator|!=
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|d2
@@ -1063,7 +1071,8 @@ condition|(
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|d1
 index|[
@@ -1075,7 +1084,8 @@ operator|<
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 name|d2
 index|[
@@ -1185,7 +1195,8 @@ operator|)
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|dname
@@ -1330,7 +1341,8 @@ operator|)
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|dname
@@ -1820,7 +1832,8 @@ operator|&&
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p1
@@ -1829,7 +1842,8 @@ operator|!=
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p2
@@ -1841,7 +1855,8 @@ condition|(
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p1
@@ -1850,7 +1865,8 @@ operator|<
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|p2
@@ -2091,7 +2107,8 @@ operator|&&
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|d1
@@ -2100,7 +2117,8 @@ operator|!=
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|d2
@@ -2112,7 +2130,8 @@ condition|(
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|d1
@@ -2121,7 +2140,8 @@ operator|<
 name|tolower
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|d2
@@ -2442,7 +2462,8 @@ condition|(
 name|isalnum
 argument_list|(
 operator|(
-name|int
+name|unsigned
+name|char
 operator|)
 operator|*
 name|dname

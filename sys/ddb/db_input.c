@@ -326,7 +326,6 @@ name|int
 name|bwd
 decl_stmt|;
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -405,7 +404,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* returns TRUE at end-of-line */
+comment|/* returns true at end-of-line */
 end_comment
 
 begin_function
@@ -1056,7 +1055,6 @@ operator|<=
 literal|'~'
 condition|)
 block|{
-specifier|register
 name|char
 modifier|*
 name|p
@@ -1326,7 +1324,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-specifier|register
 name|int
 name|c
 decl_stmt|;

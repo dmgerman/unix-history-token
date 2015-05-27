@@ -199,6 +199,11 @@ operator|!=
 name|m_py_obj
 condition|)
 block|{
+if|if
+condition|(
+name|Py_IsInitialized
+argument_list|()
+condition|)
 name|Py_XDECREF
 argument_list|(
 name|m_py_obj
@@ -208,6 +213,11 @@ name|m_py_obj
 operator|=
 name|py_obj
 expr_stmt|;
+if|if
+condition|(
+name|Py_IsInitialized
+argument_list|()
+condition|)
 name|Py_XINCREF
 argument_list|(
 name|m_py_obj

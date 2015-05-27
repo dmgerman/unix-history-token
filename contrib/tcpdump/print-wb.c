@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1993, 1994, 1995, 1996  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-wb.c,v 1.33 2004-03-24 04:06:28 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -52,12 +35,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"interface.h"
 end_include
 
@@ -72,6 +49,17 @@ include|#
 directive|include
 file|"extract.h"
 end_include
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|"[|wb]"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* XXX need to add byte-swapping macros! */
@@ -132,15 +120,15 @@ begin_struct
 struct|struct
 name|pkt_hdr
 block|{
-name|u_int32_t
+name|uint32_t
 name|ph_src
 decl_stmt|;
 comment|/* site id of source */
-name|u_int32_t
+name|uint32_t
 name|ph_ts
 decl_stmt|;
 comment|/* time stamp (for skew computation) */
-name|u_int16_t
+name|uint16_t
 name|ph_version
 decl_stmt|;
 comment|/* version number */
@@ -288,11 +276,11 @@ begin_struct
 struct|struct
 name|PageID
 block|{
-name|u_int32_t
+name|uint32_t
 name|p_sid
 decl_stmt|;
 comment|/* session id of initiator */
-name|u_int32_t
+name|uint32_t
 name|p_uid
 decl_stmt|;
 comment|/* page number */
@@ -304,11 +292,11 @@ begin_struct
 struct|struct
 name|dophdr
 block|{
-name|u_int32_t
+name|uint32_t
 name|dh_ts
 decl_stmt|;
 comment|/* sender's timestamp */
-name|u_int16_t
+name|uint16_t
 name|dh_len
 decl_stmt|;
 comment|/* body length */
@@ -446,11 +434,11 @@ name|PageID
 name|pd_page
 decl_stmt|;
 comment|/* page that operations apply to */
-name|u_int32_t
+name|uint32_t
 name|pd_sseq
 decl_stmt|;
 comment|/* start sequence number */
-name|u_int32_t
+name|uint32_t
 name|pd_eseq
 decl_stmt|;
 comment|/* end sequence number */
@@ -467,7 +455,7 @@ begin_struct
 struct|struct
 name|pkt_rreq
 block|{
-name|u_int32_t
+name|uint32_t
 name|pr_id
 decl_stmt|;
 comment|/* source id of drawops to be repaired */
@@ -476,11 +464,11 @@ name|PageID
 name|pr_page
 decl_stmt|;
 comment|/* page of drawops */
-name|u_int32_t
+name|uint32_t
 name|pr_sseq
 decl_stmt|;
 comment|/* start seqno */
-name|u_int32_t
+name|uint32_t
 name|pr_eseq
 decl_stmt|;
 comment|/* end seqno */
@@ -496,7 +484,7 @@ begin_struct
 struct|struct
 name|pkt_rrep
 block|{
-name|u_int32_t
+name|uint32_t
 name|pr_id
 decl_stmt|;
 comment|/* original site id of ops  */
@@ -513,10 +501,10 @@ begin_struct
 struct|struct
 name|id_off
 block|{
-name|u_int32_t
+name|uint32_t
 name|id
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|off
 decl_stmt|;
 block|}
@@ -527,17 +515,17 @@ begin_struct
 struct|struct
 name|pgstate
 block|{
-name|u_int32_t
+name|uint32_t
 name|slot
 decl_stmt|;
 name|struct
 name|PageID
 name|page
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|nid
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|rsvd
 decl_stmt|;
 comment|/* seqptr's */
@@ -553,7 +541,7 @@ begin_struct
 struct|struct
 name|pkt_id
 block|{
-name|u_int32_t
+name|uint32_t
 name|pi_mslot
 decl_stmt|;
 name|struct
@@ -579,10 +567,10 @@ name|struct
 name|PageID
 name|pp_page
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pp_low
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pp_high
 decl_stmt|;
 block|}
@@ -593,7 +581,7 @@ begin_struct
 struct|struct
 name|pkt_prep
 block|{
-name|u_int32_t
+name|uint32_t
 name|pp_n
 decl_stmt|;
 comment|/* size of pageid array */
@@ -607,6 +595,10 @@ specifier|static
 name|int
 name|wb_id
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pkt_id
@@ -637,9 +629,13 @@ decl_stmt|;
 name|int
 name|nid
 decl_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" wb-id:"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -662,7 +658,9 @@ operator|+
 literal|1
 operator|)
 operator|>
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 return|return
 operator|(
@@ -678,10 +676,13 @@ operator|*
 name|id
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %u/%s:%u (max %u/%s:%u) "
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -691,9 +692,11 @@ name|pi_ps
 operator|.
 name|slot
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|id
 operator|->
@@ -703,7 +706,7 @@ name|page
 operator|.
 name|p_sid
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -715,7 +718,7 @@ name|page
 operator|.
 name|p_uid
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -723,9 +726,11 @@ name|id
 operator|->
 name|pi_mslot
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|id
 operator|->
@@ -733,7 +738,7 @@ name|pi_mpage
 operator|.
 name|p_sid
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -743,6 +748,7 @@ name|pi_mpage
 operator|.
 name|p_uid
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|nid
@@ -802,19 +808,24 @@ name|cp
 operator|+
 name|len
 operator|<=
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 block|{
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|'"'
+operator|(
+name|ndo
+operator|,
+literal|"\""
+operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|fn_print
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 name|u_char
 operator|*
@@ -830,9 +841,13 @@ operator|+
 name|len
 argument_list|)
 expr_stmt|;
-name|putchar
+name|ND_PRINT
 argument_list|(
-literal|'"'
+operator|(
+name|ndo
+operator|,
+literal|"\""
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -860,7 +875,9 @@ operator|+
 literal|1
 operator|)
 operator|<=
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|;
 operator|++
 name|io
@@ -869,20 +886,25 @@ operator|++
 name|i
 control|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%c%s:%u"
-argument_list|,
+operator|,
 name|c
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|io
 operator|->
 name|id
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -890,6 +912,7 @@ name|io
 operator|->
 name|off
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|c
@@ -904,9 +927,13 @@ operator|>=
 name|nid
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|">"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -929,6 +956,10 @@ specifier|static
 name|int
 name|wb_rreq
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pkt_rreq
@@ -939,9 +970,13 @@ name|u_int
 name|len
 parameter_list|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" wb-rreq:"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -964,7 +999,9 @@ operator|+
 literal|1
 operator|)
 operator|>
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 return|return
 operator|(
@@ -972,20 +1009,27 @@ operator|-
 literal|1
 operator|)
 return|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" please repair %s %s:%u<%u:%u>"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|rreq
 operator|->
 name|pr_id
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|rreq
 operator|->
@@ -993,7 +1037,7 @@ name|pr_page
 operator|.
 name|p_sid
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1003,7 +1047,7 @@ name|pr_page
 operator|.
 name|p_uid
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1011,7 +1055,7 @@ name|rreq
 operator|->
 name|pr_sseq
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1019,6 +1063,7 @@ name|rreq
 operator|->
 name|pr_eseq
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1034,6 +1079,10 @@ specifier|static
 name|int
 name|wb_preq
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pkt_preq
@@ -1044,9 +1093,13 @@ name|u_int
 name|len
 parameter_list|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" wb-preq:"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1069,7 +1122,9 @@ operator|+
 literal|1
 operator|)
 operator|>
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 return|return
 operator|(
@@ -1077,10 +1132,13 @@ operator|-
 literal|1
 operator|)
 return|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" need %u/%s:%u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1088,9 +1146,11 @@ name|preq
 operator|->
 name|pp_low
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|preq
 operator|->
@@ -1098,7 +1158,7 @@ name|pp_page
 operator|.
 name|p_sid
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1108,6 +1168,7 @@ name|pp_page
 operator|.
 name|p_uid
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1123,6 +1184,10 @@ specifier|static
 name|int
 name|wb_prep
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pkt_prep
@@ -1147,11 +1212,17 @@ name|u_char
 modifier|*
 name|ep
 init|=
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 decl_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" wb-prep:"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1230,10 +1301,13 @@ name|c
 init|=
 literal|'<'
 decl_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %u/%s:%u"
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1241,9 +1315,11 @@ name|ps
 operator|->
 name|slot
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|ps
 operator|->
@@ -1251,7 +1327,7 @@ name|page
 operator|.
 name|p_sid
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1261,6 +1337,7 @@ name|page
 operator|.
 name|p_uid
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|io
@@ -1306,20 +1383,25 @@ operator|++
 name|io
 control|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%c%s:%u"
-argument_list|,
+operator|,
 name|c
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|io
 operator|->
 name|id
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1327,6 +1409,7 @@ name|io
 operator|->
 name|off
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|c
@@ -1334,9 +1417,13 @@ operator|=
 literal|','
 expr_stmt|;
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|">"
+operator|)
 argument_list|)
 expr_stmt|;
 name|ps
@@ -1369,6 +1456,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1416,22 +1504,30 @@ specifier|static
 name|int
 name|wb_dops
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|dophdr
 modifier|*
 name|dh
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|ss
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|es
 parameter_list|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"<"
+operator|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1459,23 +1555,31 @@ name|t
 operator|>
 name|DT_MAXTYPE
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" dop-%d!"
-argument_list|,
+operator|,
 name|t
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s"
-argument_list|,
+operator|,
 name|dopstr
 index|[
 name|t
 index|]
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1489,7 +1593,7 @@ operator|==
 name|DT_HOLE
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|ts
 init|=
 name|EXTRACT_32BITS
@@ -1500,15 +1604,19 @@ operator|->
 name|dh_ts
 argument_list|)
 decl_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%d"
-argument_list|,
+operator|,
 name|ts
 operator|-
 name|ss
 operator|+
 literal|1
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1522,9 +1630,13 @@ operator|>
 name|es
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[|]"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1560,20 +1672,32 @@ operator|*
 operator|)
 name|dh
 operator|>
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"[|wb]"
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 block|}
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|">"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1589,6 +1713,10 @@ specifier|static
 name|int
 name|wb_rrep
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pkt_rrep
@@ -1610,9 +1738,13 @@ name|rrep
 operator|->
 name|pr_dop
 decl_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" wb-rrep:"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1635,7 +1767,9 @@ operator|+
 literal|1
 operator|)
 operator|>
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 return|return
 operator|(
@@ -1651,20 +1785,27 @@ operator|*
 name|rrep
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" for %s %s:%u<%u:%u>"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|rrep
 operator|->
 name|pr_id
 argument_list|)
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|dop
 operator|->
@@ -1672,7 +1813,7 @@ name|pd_page
 operator|.
 name|p_sid
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1682,7 +1823,7 @@ name|pd_page
 operator|.
 name|p_uid
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1690,7 +1831,7 @@ name|dop
 operator|->
 name|pd_sseq
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1698,16 +1839,21 @@ name|dop
 operator|->
 name|pd_eseq
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 return|return
 operator|(
 name|wb_dops
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 specifier|const
 expr|struct
@@ -1751,6 +1897,10 @@ specifier|static
 name|int
 name|wb_drawop
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|struct
 name|pkt_dop
@@ -1761,9 +1911,13 @@ name|u_int
 name|len
 parameter_list|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" wb-dop:"
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1786,7 +1940,9 @@ operator|+
 literal|1
 operator|)
 operator|>
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 return|return
 operator|(
@@ -1802,12 +1958,17 @@ operator|*
 name|dop
 argument_list|)
 expr_stmt|;
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" %s:%u<%u:%u>"
-argument_list|,
+operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 name|dop
 operator|->
@@ -1815,7 +1976,7 @@ name|pd_page
 operator|.
 name|p_sid
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1825,7 +1986,7 @@ name|pd_page
 operator|.
 name|p_uid
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1833,7 +1994,7 @@ name|dop
 operator|->
 name|pd_sseq
 argument_list|)
-argument_list|,
+operator|,
 name|EXTRACT_32BITS
 argument_list|(
 operator|&
@@ -1841,16 +2002,21 @@ name|dop
 operator|->
 name|pd_eseq
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 return|return
 operator|(
 name|wb_dops
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 specifier|const
 expr|struct
@@ -1897,6 +2063,10 @@ begin_function
 name|void
 name|wb_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|void
@@ -1945,12 +2115,20 @@ operator|+
 literal|1
 operator|)
 operator|>
-name|snapend
+name|ndo
+operator|->
+name|ndo_snapend
 condition|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"[|wb]"
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1969,9 +2147,13 @@ name|ph
 operator|->
 name|ph_flags
 condition|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"*"
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1984,9 +2166,13 @@ block|{
 case|case
 name|PT_KILL
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" wb-kill"
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1997,6 +2183,8 @@ if|if
 condition|(
 name|wb_id
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 expr|struct
 name|pkt_id
@@ -2022,6 +2210,8 @@ if|if
 condition|(
 name|wb_rreq
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 expr|struct
 name|pkt_rreq
@@ -2047,6 +2237,8 @@ if|if
 condition|(
 name|wb_rrep
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 expr|struct
 name|pkt_rrep
@@ -2072,6 +2264,8 @@ if|if
 condition|(
 name|wb_drawop
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 expr|struct
 name|pkt_dop
@@ -2097,6 +2291,8 @@ if|if
 condition|(
 name|wb_preq
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 expr|struct
 name|pkt_preq
@@ -2122,6 +2318,8 @@ if|if
 condition|(
 name|wb_prep
 argument_list|(
+name|ndo
+argument_list|,
 operator|(
 expr|struct
 name|pkt_prep
@@ -2141,13 +2339,17 @@ condition|)
 return|return;
 break|break;
 default|default:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|" wb-%d!"
-argument_list|,
+operator|,
 name|ph
 operator|->
 name|ph_type
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;

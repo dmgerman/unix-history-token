@@ -148,6 +148,16 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
+comment|// createCFLAliasAnalysisPass - This pass implements a set-based approach to
+comment|// alias analysis.
+comment|//
+name|ImmutablePass
+modifier|*
+name|createCFLAliasAnalysisPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
 comment|/// createLibCallAliasAnalysisPass - Create an alias analysis pass that knows
 comment|/// about the semantics of a set of libcalls specified by LCI.  The newly
 comment|/// constructed pass takes ownership of the pointer that is provided.
@@ -183,6 +193,16 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
+comment|// createScopedNoAliasAAPass - This pass implements metadata-based
+comment|// scoped noalias analysis.
+comment|//
+name|ImmutablePass
+modifier|*
+name|createScopedNoAliasAAPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
 comment|// createObjCARCAliasAnalysisPass - This pass implements ObjC-ARC-based
 comment|// alias analysis.
 comment|//
@@ -191,34 +211,9 @@ modifier|*
 name|createObjCARCAliasAnalysisPass
 parameter_list|()
 function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createDSAAPass - This pass implements simple context sensitive alias
-comment|// analysis.
-comment|//
-name|ModulePass
+name|FunctionPass
 modifier|*
-name|createDSAAPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createDSOptPass - This pass uses DSA to do a series of simple
-comment|// optimizations.
-comment|//
-name|ModulePass
-modifier|*
-name|createDSOptPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createSteensgaardPass - This pass uses the data structure graphs to do a
-comment|// simple context insensitive alias analysis.
-comment|//
-name|ModulePass
-modifier|*
-name|createSteensgaardPass
+name|createPAEvalPass
 parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -293,6 +288,13 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createMemDepPrinter
+parameter_list|()
+function_decl|;
+comment|// createJumpInstrTableInfoPass - This creates a pass that stores information
+comment|// about the jump tables created by JumpInstrTables
+name|ImmutablePass
+modifier|*
+name|createJumpInstrTableInfoPass
 parameter_list|()
 function_decl|;
 block|}

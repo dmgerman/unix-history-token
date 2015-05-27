@@ -815,7 +815,7 @@ begin_define
 define|#
 directive|define
 name|AFMT_CHANNEL_MASK
-value|0x01f00000
+value|0x07f00000
 end_define
 
 begin_define
@@ -828,15 +828,29 @@ end_define
 begin_define
 define|#
 directive|define
+name|AFMT_CHANNEL_MAX
+value|0x7f
+end_define
+
+begin_define
+define|#
+directive|define
 name|AFMT_EXTCHANNEL_MASK
-value|0x0e000000
+value|0x08000000
 end_define
 
 begin_define
 define|#
 directive|define
 name|AFMT_EXTCHANNEL_SHIFT
-value|25
+value|27
+end_define
+
+begin_define
+define|#
+directive|define
+name|AFMT_EXTCHANNEL_MAX
+value|1
 end_define
 
 begin_define

@@ -50,31 +50,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPS_MACHINE_FUNCTION_INFO_H
+name|LLVM_LIB_TARGET_MIPS_MIPSMACHINEFUNCTION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPS_MACHINE_FUNCTION_INFO_H
+name|LLVM_LIB_TARGET_MIPS_MIPSMACHINEFUNCTION_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"MipsSubtarget.h"
+file|"Mips16HardFloatInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/ValueMap.h"
 end_include
 
 begin_include
@@ -110,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IR/ValueMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
@@ -117,6 +117,18 @@ begin_include
 include|#
 directive|include
 file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<map>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
 end_include
 
 begin_include
@@ -142,10 +154,7 @@ operator|:
 name|explicit
 name|MipsCallEntry
 argument_list|(
-specifier|const
-name|StringRef
-operator|&
-name|N
+argument|StringRef N
 argument_list|)
 block|;
 name|explicit
@@ -157,39 +166,39 @@ operator|*
 name|V
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|isConstant
 argument_list|(
 argument|const MachineFrameInfo *
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isAliased
 argument_list|(
 argument|const MachineFrameInfo *
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|mayAlias
 argument_list|(
 argument|const MachineFrameInfo *
 argument_list|)
 specifier|const
+name|override
 block|;
 name|private
 operator|:
-name|virtual
 name|void
 name|printCustom
 argument_list|(
 argument|raw_ostream&O
 argument_list|)
 specifier|const
+name|override
 block|;
 ifndef|#
 directive|ifndef
@@ -252,7 +261,18 @@ argument_list|)
 block|,
 name|CallsEhReturn
 argument_list|(
-argument|false
+name|false
+argument_list|)
+block|,
+name|SaveS2
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|MoveF64ViaSpillFI
+argument_list|(
+argument|-
+literal|1
 argument_list|)
 block|{}
 operator|~
@@ -396,10 +416,7 @@ comment|/// representing a GOT entry for an external function.
 name|MachinePointerInfo
 name|callPtrInfo
 argument_list|(
-specifier|const
-name|StringRef
-operator|&
-name|Name
+argument|StringRef Name
 argument_list|)
 block|;
 comment|/// \brief Create a MachinePointerInfo that has a MipsCallEntr object
@@ -412,6 +429,50 @@ name|GlobalValue
 operator|*
 name|Val
 argument_list|)
+block|;
+name|void
+name|setSaveS2
+argument_list|()
+block|{
+name|SaveS2
+operator|=
+name|true
+block|; }
+name|bool
+name|hasSaveS2
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SaveS2
+return|;
+block|}
+name|int
+name|getMoveF64ViaSpillFI
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|)
+block|;
+name|std
+operator|::
+name|map
+operator|<
+specifier|const
+name|char
+operator|*
+block|,
+specifier|const
+name|llvm
+operator|::
+name|Mips16HardFloatInfo
+operator|::
+name|FuncSignature
+operator|*
+operator|>
+name|StubsNeeded
 block|;
 name|private
 operator|:
@@ -465,6 +526,15 @@ index|[
 literal|4
 index|]
 block|;
+comment|// saveS2
+name|bool
+name|SaveS2
+block|;
+comment|/// FrameIndex for expanding BuildPairF64 nodes to spill and reload when the
+comment|/// O32 FPXX ABI is enabled. -1 is used to denote invalid index.
+name|int
+name|MoveF64ViaSpillFI
+block|;
 comment|/// MipsCallEntry maps.
 name|StringMap
 operator|<
@@ -498,10 +568,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// MIPS_MACHINE_FUNCTION_INFO_H
-end_comment
 
 end_unit
 

@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|R600MACHINESCHEDULER_H_
+name|LLVM_LIB_TARGET_R600_R600MACHINESCHEDULER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|R600MACHINESCHEDULER_H_
+name|LLVM_LIB_TARGET_R600_R600MACHINESCHEDULER_H
 end_define
 
 begin_include
@@ -105,7 +105,7 @@ name|public
 name|MachineSchedStrategy
 block|{
 specifier|const
-name|ScheduleDAGMI
+name|ScheduleDAGMILive
 operator|*
 name|DAG
 block|;
@@ -227,49 +227,44 @@ argument_list|()
 operator|:
 name|DAG
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|TII
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|TRI
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|MRI
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{   }
 name|virtual
 operator|~
 name|R600SchedStrategy
 argument_list|()
-block|{   }
-name|virtual
+block|{}
 name|void
 name|initialize
 argument_list|(
-name|ScheduleDAGMI
-operator|*
-name|dag
+argument|ScheduleDAGMI *dag
 argument_list|)
+name|override
 block|;
-name|virtual
 name|SUnit
 operator|*
 name|pickNode
 argument_list|(
-name|bool
-operator|&
-name|IsTopNode
+argument|bool&IsTopNode
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|schedNode
 argument_list|(
@@ -277,24 +272,21 @@ argument|SUnit *SU
 argument_list|,
 argument|bool IsTopNode
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|releaseTopNode
 argument_list|(
-name|SUnit
-operator|*
-name|SU
+argument|SUnit *SU
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|releaseBottomNode
 argument_list|(
-name|SUnit
-operator|*
-name|SU
+argument|SUnit *SU
 argument_list|)
+name|override
 block|;
 name|private
 operator|:

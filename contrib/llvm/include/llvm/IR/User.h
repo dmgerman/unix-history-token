@@ -82,6 +82,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Value.h"
 end_include
 
@@ -95,9 +107,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// OperandTraits - Compile-time customization of
-comment|/// operand-related allocators and accessors
-comment|/// for use of the User class
+comment|/// \brief Compile-time customization of User operands.
+comment|///
+comment|/// Customizes operand-related allocators and accessors.
 name|template
 operator|<
 name|class
@@ -141,7 +153,8 @@ argument_list|()
 block|;
 name|protected
 operator|:
-comment|/// OperandList - This is a pointer to the array of Uses for this User.
+comment|/// \brief This is a pointer to the array of Uses for this User.
+comment|///
 comment|/// For nodes of fixed arity (e.g. a binary operator) this array will live
 comment|/// prefixed to some derived class instance.  For nodes of resizable variable
 comment|/// arity (e.g. PHINodes, SwitchInst etc.), this memory will be dynamically
@@ -149,11 +162,6 @@ comment|/// allocated and should be destroyed by the classes' virtual dtor.
 name|Use
 operator|*
 name|OperandList
-block|;
-comment|/// NumOperands - The number of values used by this User.
-comment|///
-name|unsigned
-name|NumOperands
 block|;
 name|void
 operator|*
@@ -185,14 +193,13 @@ argument_list|)
 block|,
 name|OperandList
 argument_list|(
-name|OpList
+argument|OpList
 argument_list|)
-block|,
+block|{
 name|NumOperands
-argument_list|(
-argument|NumOps
-argument_list|)
-block|{}
+operator|=
+name|NumOps
+block|;   }
 name|Use
 operator|*
 name|allocHungoffUses
@@ -220,7 +227,7 @@ argument_list|)
 block|;
 name|OperandList
 operator|=
-literal|0
+name|nullptr
 block|;
 comment|// Reset NumOperands so User::operator delete() does the right thing.
 name|NumOperands
@@ -244,7 +251,7 @@ operator|+
 name|NumOperands
 argument_list|)
 block|;   }
-comment|/// operator delete - free memory allocated for User and Use objects
+comment|/// \brief Free memory allocated for User and Use objects.
 name|void
 name|operator
 name|delete
@@ -254,7 +261,7 @@ operator|*
 name|Usr
 argument_list|)
 block|;
-comment|/// placement delete - required by std, but never called.
+comment|/// \brief Placement delete - required by std, but never called.
 name|void
 name|operator
 name|delete
@@ -269,7 +276,7 @@ argument_list|(
 literal|"Constructor throws?"
 argument_list|)
 block|;   }
-comment|/// placement delete - required by std, but never called.
+comment|/// \brief Placement delete - required by std, but never called.
 name|void
 name|operator
 name|delete
@@ -547,6 +554,20 @@ name|Use
 modifier|*
 name|const_op_iterator
 typedef|;
+typedef|typedef
+name|iterator_range
+operator|<
+name|op_iterator
+operator|>
+name|op_range
+expr_stmt|;
+typedef|typedef
+name|iterator_range
+operator|<
+name|const_op_iterator
+operator|>
+name|const_op_range
+expr_stmt|;
 specifier|inline
 name|op_iterator
 name|op_begin
@@ -589,121 +610,80 @@ operator|+
 name|NumOperands
 return|;
 block|}
-comment|/// Convenience iterator for directly iterating over the Values in the
-comment|/// OperandList
-name|class
+specifier|inline
+name|op_range
+name|operands
+parameter_list|()
+block|{
+return|return
+name|op_range
+argument_list|(
+name|op_begin
+argument_list|()
+argument_list|,
+name|op_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|inline
+name|const_op_range
+name|operands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_op_range
+argument_list|(
+name|op_begin
+argument_list|()
+argument_list|,
+name|op_end
+argument_list|()
+argument_list|)
+return|;
+block|}
+comment|/// \brief Iterator for directly iterating over the operand Values.
+name|struct
 name|value_op_iterator
 range|:
-name|public
-name|std
-operator|::
-name|iterator
+name|iterator_adaptor_base
 operator|<
+name|value_op_iterator
+decl_stmt|,
+name|op_iterator
+decl_stmt|,
 name|std
-operator|::
-name|forward_iterator_tag
+decl|::
+name|random_access_iterator_tag
+decl_stmt|,
+name|Value
+modifier|*
+decl_stmt|,
+name|ptrdiff_t
+decl_stmt|,
+name|Value
+modifier|*
 decl_stmt|,
 name|Value
 modifier|*
 decl|>
 block|{
-name|op_iterator
-name|OI
-decl_stmt|;
-name|public
-label|:
 name|explicit
 name|value_op_iterator
 argument_list|(
 name|Use
 operator|*
 name|U
+operator|=
+name|nullptr
 argument_list|)
 operator|:
-name|OI
+name|iterator_adaptor_base
 argument_list|(
 argument|U
 argument_list|)
 block|{}
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|value_op_iterator
-operator|&
-name|x
-operator|)
-specifier|const
-block|{
-return|return
-name|OI
-operator|==
-name|x
-operator|.
-name|OI
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|value_op_iterator
-operator|&
-name|x
-operator|)
-specifier|const
-block|{
-return|return
-operator|!
-name|operator
-operator|==
-operator|(
-name|x
-operator|)
-return|;
-block|}
-comment|/// Iterator traversal: forward iteration only
-name|value_op_iterator
-operator|&
-name|operator
-operator|++
-operator|(
-operator|)
-block|{
-comment|// Preincrement
-operator|++
-name|OI
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|value_op_iterator
-name|operator
-operator|++
-operator|(
-name|int
-operator|)
-block|{
-comment|// Postincrement
-name|value_op_iterator
-name|tmp
-operator|=
-operator|*
-name|this
-block|;
-operator|++
-operator|*
-name|this
-block|;
-return|return
-name|tmp
-return|;
-block|}
-comment|/// Retrieve a pointer to the current Value.
 name|Value
 operator|*
 name|operator
@@ -714,7 +694,7 @@ specifier|const
 block|{
 return|return
 operator|*
-name|OI
+name|I
 return|;
 block|}
 name|Value
@@ -771,36 +751,61 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+specifier|inline
+name|iterator_range
+operator|<
+name|value_op_iterator
+operator|>
+name|operand_values
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|value_op_iterator
+operator|>
+operator|(
+name|value_op_begin
+argument_list|()
+operator|,
+name|value_op_end
+argument_list|()
+operator|)
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-comment|// dropAllReferences() - This function is in charge of "letting go" of all
+comment|/// \brief Drop all references to operands.
 end_comment
 
 begin_comment
-comment|// objects that this User refers to.  This allows one to
+comment|///
 end_comment
 
 begin_comment
-comment|// 'delete' a whole class at a time, even though there may be circular
+comment|/// This function is in charge of "letting go" of all objects that this User
 end_comment
 
 begin_comment
-comment|// references...  First all references are dropped, and all use counts go to
+comment|/// refers to.  This allows one to 'delete' a whole class at a time, even
 end_comment
 
 begin_comment
-comment|// zero.  Then everything is deleted for real.  Note that no operations are
+comment|/// though there may be circular references...  First all references are
 end_comment
 
 begin_comment
-comment|// valid on an object that has "dropped all references", except operator
+comment|/// dropped, and all use counts go to zero.  Then everything is deleted for
 end_comment
 
 begin_comment
-comment|// delete.
+comment|/// real.  Note that no operations are valid on an object that has "dropped
 end_comment
 
 begin_comment
-comment|//
+comment|/// all references", except operator delete.
 end_comment
 
 begin_function
@@ -810,44 +815,37 @@ parameter_list|()
 block|{
 for|for
 control|(
-name|op_iterator
-name|i
-init|=
-name|op_begin
+name|Use
+modifier|&
+name|U
+range|:
+name|operands
 argument_list|()
-init|,
-name|e
-init|=
-name|op_end
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
 control|)
-name|i
-operator|->
+name|U
+operator|.
 name|set
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/// replaceUsesOfWith - Replaces all references to the "From" definition with
-end_comment
-
-begin_comment
-comment|/// references to the "To" definition.
+comment|/// \brief Replace uses of one Value with another.
 end_comment
 
 begin_comment
 comment|///
+end_comment
+
+begin_comment
+comment|/// Replaces all references to the "From" definition with references to the
+end_comment
+
+begin_comment
+comment|/// "To" definition.
 end_comment
 
 begin_function_decl
@@ -978,40 +976,6 @@ end_expr_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_comment
-comment|// value_use_iterator::getOperandNo - Requires the definition of the User class.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|UserTy
-operator|>
-name|unsigned
-name|value_use_iterator
-operator|<
-name|UserTy
-operator|>
-operator|::
-name|getOperandNo
-argument_list|()
-specifier|const
-block|{
-return|return
-name|U
-operator|-
-name|U
-operator|->
-name|getUser
-argument_list|()
-operator|->
-name|op_begin
-argument_list|()
-return|;
-block|}
-end_expr_stmt
 
 begin_comment
 unit|}

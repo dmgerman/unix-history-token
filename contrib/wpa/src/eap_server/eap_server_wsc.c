@@ -1771,6 +1771,10 @@ operator|<
 name|end
 operator|-
 name|pos
+operator|||
+name|message_length
+operator|>
+literal|50000
 condition|)
 block|{
 name|wpa_printf

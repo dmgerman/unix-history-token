@@ -51,7 +51,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Kernel per-process accounting / statistics  * (not necessarily resident except when running).  *  * Locking key:  *      b - created at fork, never changes  *      c - locked by proc mtx  *      j - locked by proc slock  *      k - only accessed by curthread  */
+comment|/*  * Kernel per-process accounting / statistics  * (not necessarily resident except when running).  *  * Locking key:  *      b - created at fork, never changes  *      c - locked by proc mtx  *      k - only accessed by curthread  *      w - locked by proc itim lock  *	w2 - locked by proc prof lock  */
 end_comment
 
 begin_struct
@@ -74,7 +74,7 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* (j) Virtual-time timers. */
+comment|/* (w) Virtual-time timers. */
 define|#
 directive|define
 name|pstat_endzero
@@ -90,19 +90,19 @@ comment|/* Profile arguments. */
 name|caddr_t
 name|pr_base
 decl_stmt|;
-comment|/* (c + j) Buffer base. */
+comment|/* (c + w2) Buffer base. */
 name|u_long
 name|pr_size
 decl_stmt|;
-comment|/* (c + j) Buffer size. */
+comment|/* (c + w2) Buffer size. */
 name|u_long
 name|pr_off
 decl_stmt|;
-comment|/* (c + j) PC offset. */
+comment|/* (c + w2) PC offset. */
 name|u_long
 name|pr_scale
 decl_stmt|;
-comment|/* (c + j) PC scaling. */
+comment|/* (c + w2) PC scaling. */
 block|}
 name|p_prof
 struct|;
@@ -201,12 +201,17 @@ name|u_int
 name|ui_ref
 decl_stmt|;
 comment|/* (b) reference count */
+ifdef|#
+directive|ifdef
+name|RACCT
 name|struct
 name|racct
 modifier|*
 name|ui_racct
 decl_stmt|;
 comment|/* (a) resource accounting */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -743,6 +748,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|RACCT
+end_ifdef
+
 begin_function_decl
 name|void
 name|ui_racct_foreach
@@ -777,6 +788,11 @@ name|arg3
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -78,6 +78,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/AST/ASTConsumer.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/LLVM.h"
 end_include
 
@@ -90,19 +96,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/ASTUnit.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Frontend/FrontendOptions.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|"llvm/ADT/StringRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
+file|<memory>
 end_include
 
 begin_include
@@ -122,13 +134,7 @@ name|namespace
 name|clang
 block|{
 name|class
-name|ASTConsumer
-decl_stmt|;
-name|class
 name|ASTMergeAction
-decl_stmt|;
-name|class
-name|ASTUnit
 decl_stmt|;
 name|class
 name|CompilerInstance
@@ -140,7 +146,9 @@ block|{
 name|FrontendInputFile
 name|CurrentInput
 decl_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|ASTUnit
 operator|>
@@ -160,18 +168,19 @@ name|WrapperFrontendAction
 decl_stmt|;
 name|private
 label|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-modifier|*
+operator|>
 name|CreateWrappedASTConsumer
-parameter_list|(
-name|CompilerInstance
-modifier|&
-name|CI
-parameter_list|,
-name|StringRef
-name|InFile
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|)
+expr_stmt|;
 name|protected
 label|:
 comment|/// @name Implementation Action Interface
@@ -190,20 +199,21 @@ comment|/// getCurrentFile().
 comment|///
 comment|/// \return The new AST consumer, or null on failure.
 name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-modifier|*
+operator|>
 name|CreateASTConsumer
-parameter_list|(
-name|CompilerInstance
-modifier|&
-name|CI
-parameter_list|,
-name|StringRef
-name|InFile
-parameter_list|)
-init|=
+argument_list|(
+argument|CompilerInstance&CI
+argument_list|,
+argument|StringRef InFile
+argument_list|)
+operator|=
 literal|0
-function_decl|;
+expr_stmt|;
 comment|/// \brief Callback before starting processing a single input, giving the
 comment|/// opportunity to modify the CompilerInvocation or do some other action
 comment|/// before BeginSourceFileAction is called.
@@ -339,10 +349,10 @@ literal|"No current file!"
 argument_list|)
 block|;
 return|return
+operator|(
+name|bool
+operator|)
 name|CurrentASTUnit
-operator|.
-name|isValid
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -421,36 +431,61 @@ operator|*
 name|CurrentASTUnit
 return|;
 block|}
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTUnit
-modifier|*
+operator|>
 name|takeCurrentASTUnit
-parameter_list|()
+argument_list|()
 block|{
 return|return
+name|std
+operator|::
+name|move
+argument_list|(
 name|CurrentASTUnit
-operator|.
-name|take
-argument_list|()
+argument_list|)
 return|;
 block|}
 name|void
 name|setCurrentInput
-parameter_list|(
+argument_list|(
 specifier|const
 name|FrontendInputFile
-modifier|&
+operator|&
 name|CurrentInput
-parameter_list|,
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTUnit
-modifier|*
+operator|>
 name|AST
-init|=
-literal|0
-parameter_list|)
-function_decl|;
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 comment|/// @}
 comment|/// @name Supported Modes
 comment|/// @{
+comment|/// \brief Is this action invoked on a model file?
+comment|///
+comment|/// Model files are incomplete translation units that relies on type
+comment|/// information from another translation unit. Check ParseModelFileAction for
+comment|/// details.
+name|virtual
+name|bool
+name|isModelParsingAction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// \brief Does this action only use the preprocessor?
 comment|///
 comment|/// If so no AST context will be created and this action will be invalid
@@ -584,18 +619,21 @@ comment|/// the already-initialized AST consumer.
 comment|///
 comment|/// This will also take care of instantiating a code completion consumer if
 comment|/// the user requested it and the action supports it.
-name|virtual
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
-name|virtual
+name|ASTFrontendAction
+argument_list|()
+block|{}
 name|bool
 name|usesPreprocessorOnly
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
@@ -614,22 +652,24 @@ name|void
 name|anchor
 argument_list|()
 block|;
-name|protected
+name|public
 operator|:
-name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 operator|=
 literal|0
 block|;
-name|public
-operator|:
 comment|/// \brief Parse the given plugin command line arguments.
 comment|///
 comment|/// \param CI - The compiler instance, for use in reporting diagnostics.
@@ -672,23 +712,27 @@ name|protected
 operator|:
 comment|/// \brief Provide a default implementation which returns aborts;
 comment|/// this method should never be called by FrontendAction clients.
-name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|;
 name|public
 operator|:
-name|virtual
 name|bool
 name|usesPreprocessorOnly
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|true
@@ -708,7 +752,9 @@ operator|:
 name|public
 name|FrontendAction
 block|{
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|FrontendAction
 operator|>
@@ -716,26 +762,27 @@ name|WrappedAction
 block|;
 name|protected
 operator|:
-name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|ASTConsumer
-operator|*
+operator|>
 name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef InFile
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|BeginInvocation
 argument_list|(
-name|CompilerInstance
-operator|&
-name|CI
+argument|CompilerInstance&CI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|BeginSourceFileAction
 argument_list|(
@@ -743,16 +790,17 @@ argument|CompilerInstance&CI
 argument_list|,
 argument|StringRef Filename
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|ExecuteAction
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|EndSourceFileAction
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -765,40 +813,40 @@ operator|*
 name|WrappedAction
 argument_list|)
 block|;
-name|virtual
 name|bool
 name|usesPreprocessorOnly
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|TranslationUnitKind
 name|getTranslationUnitKind
 argument_list|()
+name|override
 block|;
-name|virtual
 name|bool
 name|hasPCHSupport
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|hasASTFileSupport
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|hasIRSupport
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|hasCodeCompletionSupport
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;  }
 end_decl_stmt

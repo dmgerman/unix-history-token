@@ -164,6 +164,14 @@ name|user_abort
 operator|=
 name|true
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|TUKLIB_DOSLIKE
+name|io_write_to_user_abort_pipe
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 end_function

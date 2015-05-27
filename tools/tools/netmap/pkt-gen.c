@@ -721,6 +721,14 @@ define|#
 directive|define
 name|OPT_MONITOR_RX
 value|256
+define|#
+directive|define
+name|OPT_RANDOM_SRC
+value|512
+define|#
+directive|define
+name|OPT_RANDOM_DST
+value|1024
 name|int
 name|dev_type
 decl_stmt|;
@@ -2574,6 +2582,35 @@ name|udp
 decl_stmt|;
 do|do
 block|{
+comment|/* XXX for now it doesn't handle non-random src, random dst */
+if|if
+condition|(
+name|g
+operator|->
+name|options
+operator|&
+name|OPT_RANDOM_SRC
+condition|)
+block|{
+name|udp
+operator|->
+name|uh_sport
+operator|=
+name|random
+argument_list|()
+expr_stmt|;
+name|ip
+operator|->
+name|ip_src
+operator|.
+name|s_addr
+operator|=
+name|random
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
 name|p
 operator|=
 name|ntohs
@@ -2687,6 +2724,35 @@ operator|.
 name|port0
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|g
+operator|->
+name|options
+operator|&
+name|OPT_RANDOM_DST
+condition|)
+block|{
+name|udp
+operator|->
+name|uh_dport
+operator|=
+name|random
+argument_list|()
+expr_stmt|;
+name|ip
+operator|->
+name|ip_dst
+operator|.
+name|s_addr
+operator|=
+name|random
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
 name|p
 operator|=
 name|ntohs
@@ -2771,6 +2837,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 break|break;
+block|}
 block|}
 name|ip
 operator|->
@@ -7467,7 +7534,9 @@ literal|"\t-w wait_for_link_time	in seconds\n"
 literal|"\t-R rate		in packets per second\n"
 literal|"\t-X			dump payload\n"
 literal|"\t-H len		add empty virtio-net-header with size 'len'\n"
-literal|"\t-P file		load packet from pcap file"
+literal|"\t-P file		load packet from pcap file\n"
+literal|"\t-z			use random IPv4 src address/port\n"
+literal|"\t-Z			use random IPv4 dst address/port\n"
 literal|""
 argument_list|,
 name|cmd
@@ -8853,7 +8922,7 @@ name|arc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:f:F:n:i:Il:d:s:D:S:b:c:o:p:T:w:WvR:XC:H:e:m:P:"
+literal|"a:f:F:n:i:Il:d:s:D:S:b:c:o:p:T:w:WvR:XC:H:e:m:P:zZ"
 argument_list|)
 operator|)
 operator|!=
@@ -9509,15 +9578,38 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'z'
+case|:
+name|g
+operator|.
+name|options
+operator||=
+name|OPT_RANDOM_SRC
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+name|g
+operator|.
+name|options
+operator||=
+name|OPT_RANDOM_DST
+expr_stmt|;
+break|break;
 block|}
 block|}
 if|if
 condition|(
+name|strlen
+argument_list|(
 name|g
 operator|.
 name|ifname
-operator|==
-name|NULL
+argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 name|D

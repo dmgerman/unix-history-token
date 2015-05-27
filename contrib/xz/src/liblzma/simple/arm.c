@@ -248,6 +248,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -294,6 +295,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -328,6 +330,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator

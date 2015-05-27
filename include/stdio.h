@@ -477,7 +477,7 @@ define|#
 directive|define
 name|__SMBF
 value|0x0080
-comment|/* _buf is from malloc */
+comment|/* _bf._base is from malloc */
 define|#
 directive|define
 name|__SAPP

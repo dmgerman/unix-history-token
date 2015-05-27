@@ -41,12 +41,9 @@ directive|endif
 include|#
 directive|include
 file|<sys/types.h>
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 include|#
 directive|include
 file|<sys/machelf.h>

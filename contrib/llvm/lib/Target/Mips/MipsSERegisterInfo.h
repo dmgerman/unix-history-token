@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|MIPSSEREGISTERINFO_H
+name|LLVM_LIB_TARGET_MIPS_MIPSSEREGISTERINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|MIPSSEREGISTERINFO_H
+name|LLVM_LIB_TARGET_MIPS_MIPSSEREGISTERINFO_H
 end_define
 
 begin_include
@@ -98,6 +98,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|requiresFrameIndexScavenging
@@ -105,8 +106,8 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 specifier|const
 name|TargetRegisterClass
 operator|*
@@ -115,10 +116,10 @@ argument_list|(
 argument|unsigned Size
 argument_list|)
 specifier|const
+name|override
 block|;
 name|private
 operator|:
-name|virtual
 name|void
 name|eliminateFI
 argument_list|(
@@ -133,6 +134,7 @@ argument_list|,
 argument|int64_t SPOffset
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

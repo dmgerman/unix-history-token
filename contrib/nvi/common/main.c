@@ -19,32 +19,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|copyright
-index|[]
-init|=
-literal|"@(#) Copyright (c) 1992, 1993, 1994\n\ 	The Regents of the University of California.  All rights reserved.\n\ @(#) Copyright (c) 1992, 1993, 1994, 1995, 1996\n\ 	Keith Bostic.  All rights reserved.\n"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* not lint */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
 name|sccsid
 index|[]
 init|=
@@ -145,59 +119,50 @@ directive|include
 file|"pathnames.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|attach
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|GS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|v_estr
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|v_obsolete
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
+modifier|*
 index|[]
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * editor --  *	Main editor routine.  *  * PUBLIC: int editor __P((GS *, int, char *[]));  */
+comment|/*  * editor --  *	Main editor routine.  *  * PUBLIC: int editor(GS *, int, char *[]);  */
 end_comment
 
 begin_function
@@ -1838,7 +1803,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_end --  *	End the program, discarding screens and most of the global area.  *  * PUBLIC: void v_end __P((GS *));  */
+comment|/*  * v_end --  *	End the program, discarding screens and most of the global area.  *  * PUBLIC: void v_end(GS *);  */
 end_comment
 
 begin_function
@@ -1951,11 +1916,6 @@ operator|||
 name|defined
 argument_list|(
 name|PURIFY
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|LIBRARY
 argument_list|)
 block|{
 name|FREF
@@ -2165,11 +2125,6 @@ name|defined
 argument_list|(
 name|PURIFY
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|LIBRARY
-argument_list|)
 name|free
 argument_list|(
 name|mp
@@ -2195,11 +2150,6 @@ operator|||
 name|defined
 argument_list|(
 name|PURIFY
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|LIBRARY
 argument_list|)
 comment|/* Free any temporary space. */
 if|if

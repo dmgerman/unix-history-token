@@ -536,13 +536,6 @@ parameter_list|)
 value|((int)((a)-(b)) == 0)
 define|#
 directive|define
-name|HAS_SEQ
-parameter_list|(
-name|type
-parameter_list|)
-value|((type& 0x4) == 0)
-define|#
-directive|define
 name|SEQNO
 parameter_list|(
 name|a
@@ -560,6 +553,8 @@ name|rxseq
 decl_stmt|;
 name|uint8_t
 name|type
+decl_stmt|,
+name|subtype
 decl_stmt|;
 name|uint8_t
 name|tid
@@ -594,13 +589,26 @@ index|]
 operator|&
 name|IEEE80211_FC0_TYPE_MASK
 expr_stmt|;
-comment|/* Types with no sequence number are always treated valid */
+name|subtype
+operator|=
+name|wh
+operator|->
+name|i_fc
+index|[
+literal|0
+index|]
+operator|&
+name|IEEE80211_FC0_SUBTYPE_MASK
+expr_stmt|;
+comment|/* 	 * Types with no sequence number (or QoS (+)Null frames) 	 * are always treated valid. 	 */
 if|if
 condition|(
 operator|!
-name|HAS_SEQ
+name|IEEE80211_HAS_SEQ
 argument_list|(
 name|type
+argument_list|,
+name|subtype
 argument_list|)
 condition|)
 return|return
@@ -743,9 +751,6 @@ name|SEQ_LEQ
 undef|#
 directive|undef
 name|SEQ_EQ
-undef|#
-directive|undef
-name|HAS_SEQ
 undef|#
 directive|undef
 name|SEQNO

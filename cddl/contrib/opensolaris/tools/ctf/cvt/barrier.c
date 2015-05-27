@@ -24,14 +24,11 @@ directive|include
 file|<pthread.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
-end_if
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|illumos
+end_ifdef
 
 begin_include
 include|#
@@ -78,12 +75,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|sema_init
 argument_list|(
 operator|&
@@ -166,12 +160,9 @@ operator|->
 name|bar_lock
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|sema_wait
 argument_list|(
 operator|&
@@ -225,12 +216,9 @@ condition|;
 name|i
 operator|++
 control|)
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 name|sema_post
 argument_list|(
 operator|&

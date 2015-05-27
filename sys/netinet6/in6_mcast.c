@@ -2257,7 +2257,7 @@ name|in6m_state
 operator|=
 name|MLD_NOT_MEMBER
 expr_stmt|;
-name|IFQ_SET_MAXLEN
+name|mbufq_init
 argument_list|(
 operator|&
 name|inm
@@ -5064,7 +5064,7 @@ operator|--
 expr_stmt|;
 block|}
 comment|/* Free state-change requests that might be queued. */
-name|_IF_DRAIN
+name|mbufq_drain
 argument_list|(
 operator|&
 name|inm
@@ -10312,6 +10312,18 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+if|if
+condition|(
+name|ifindex
+operator|==
+literal|0
+condition|)
+name|ifp
+operator|=
+name|NULL
+expr_stmt|;
+else|else
+block|{
 name|ifp
 operator|=
 name|ifnet_byindex
@@ -10324,7 +10336,14 @@ condition|(
 name|ifp
 operator|==
 name|NULL
-operator|||
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+if|if
+condition|(
 operator|(
 name|ifp
 operator|->
@@ -10340,6 +10359,7 @@ operator|(
 name|EADDRNOTAVAIL
 operator|)
 return|;
+block|}
 name|imo
 operator|=
 name|in6p_findmoptions
@@ -12109,11 +12129,13 @@ name|inm
 operator|->
 name|in6m_refcount
 argument_list|,
+name|mbufq_len
+argument_list|(
+operator|&
 name|inm
 operator|->
 name|in6m_scq
-operator|.
-name|ifq_len
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|printf

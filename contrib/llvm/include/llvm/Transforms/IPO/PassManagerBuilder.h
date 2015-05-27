@@ -74,31 +74,34 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Pass
+decl_stmt|;
+name|class
 name|TargetLibraryInfo
 decl_stmt|;
 name|class
-name|Pass
+name|TargetMachine
 decl_stmt|;
 comment|// The old pass manager infrastructure is hidden in a legacy namespace now.
 name|namespace
 name|legacy
 block|{
 name|class
-name|PassManagerBase
+name|FunctionPassManager
 decl_stmt|;
 name|class
-name|FunctionPassManager
+name|PassManagerBase
 decl_stmt|;
 block|}
 name|using
 name|legacy
 operator|::
-name|PassManagerBase
+name|FunctionPassManager
 expr_stmt|;
 name|using
 name|legacy
 operator|::
-name|FunctionPassManager
+name|PassManagerBase
 expr_stmt|;
 comment|/// PassManagerBuilder - This class is used to set up a standard optimization
 comment|/// sequence for languages like C and C++, allowing some APIs to customize the
@@ -177,7 +180,12 @@ comment|/// EP_EnabledOnOptLevel0 - This extension point allows adding passes th
 comment|/// should not be disabled by O0 optimization level. The passes will be
 comment|/// inserted after the inlining pass.
 name|EP_EnabledOnOptLevel0
-block|}
+block|,
+comment|/// EP_Peephole - This extension point allows adding passes that perform
+comment|/// peephole optimizations similar to the instruction combiner. These passes
+comment|/// will be inserted after each instance of the instruction combiner pass.
+name|EP_Peephole
+block|,   }
 enum|;
 comment|/// The Optimization Level - Specify the basic optimization level.
 comment|///    0 = -O0, 1 = -O1, 2 = -O2, 3 = -O3
@@ -203,6 +211,9 @@ modifier|*
 name|Inliner
 decl_stmt|;
 name|bool
+name|DisableTailCalls
+decl_stmt|;
+name|bool
 name|DisableUnitAtATime
 decl_stmt|;
 name|bool
@@ -218,10 +229,25 @@ name|bool
 name|LoopVectorize
 decl_stmt|;
 name|bool
-name|LateVectorize
+name|RerollLoops
 decl_stmt|;
 name|bool
-name|RerollLoops
+name|LoadCombine
+decl_stmt|;
+name|bool
+name|DisableGVNLoadPRE
+decl_stmt|;
+name|bool
+name|VerifyInput
+decl_stmt|;
+name|bool
+name|VerifyOutput
+decl_stmt|;
+name|bool
+name|StripDebug
+decl_stmt|;
+name|bool
+name|MergeFunctions
 decl_stmt|;
 name|private
 label|:
@@ -297,6 +323,14 @@ name|PM
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|addLTOOptimizationPasses
+parameter_list|(
+name|PassManagerBase
+modifier|&
+name|PM
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|/// populateFunctionPassManager - This fills in the function pass manager,
@@ -326,16 +360,11 @@ name|PassManagerBase
 modifier|&
 name|PM
 parameter_list|,
-name|bool
-name|Internalize
-parameter_list|,
-name|bool
-name|RunInliner
-parameter_list|,
-name|bool
-name|DisableGVNLoadPRE
+name|TargetMachine
+modifier|*
+name|TM
 init|=
-name|false
+name|nullptr
 parameter_list|)
 function_decl|;
 block|}

@@ -3670,7 +3670,7 @@ operator||
 name|BUS_SPACE_BARRIER_WRITE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * loop until there are no more new interrupts.  When the card goes 	 * away, the hardware will read back 0xff.  Looking at the interrupts, 	 * it would appear that 0xff is impossible, or at least extremely 	 * unlikely. 	 */
+comment|/* 	 * loop until there are no more new interrupts.  When the card goes 	 * away, the hardware will read back 0xff.  Looking at the interrupts, 	 * it would appear that 0xff is impossible as ED_ISR_RST is normally 	 * clear. ED_ISR_RDC is also normally clear and only set while 	 * we're transferring memory to the card and we're holding the 	 * ED_LOCK (so we can't get into here). 	 */
 while|while
 condition|(
 operator|(
@@ -4707,25 +4707,17 @@ name|MHLEN
 condition|)
 block|{
 comment|/* Attach an mbuf cluster */
+if|if
+condition|(
+operator|!
+operator|(
 name|MCLGET
 argument_list|(
 name|m
 argument_list|,
 name|M_NOWAIT
 argument_list|)
-expr_stmt|;
-comment|/* Insist on getting a cluster */
-if|if
-condition|(
-operator|(
-name|m
-operator|->
-name|m_flags
-operator|&
-name|M_EXT
 operator|)
-operator|==
-literal|0
 condition|)
 block|{
 name|m_freem

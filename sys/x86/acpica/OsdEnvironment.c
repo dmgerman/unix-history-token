@@ -153,7 +153,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|ACPI_SIZE
+name|ACPI_PHYSICAL_ADDRESS
 name|acpi_root
 decl_stmt|;
 if|if

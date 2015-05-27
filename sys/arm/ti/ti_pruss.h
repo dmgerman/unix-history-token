@@ -43,6 +43,27 @@ name|PRUSS_AM33XX_INTC
 value|0x20000
 end_define
 
+begin_define
+define|#
+directive|define
+name|PRUSS_INTC_HIER
+value|0x1500
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRUSS_INTC_HIDISR
+value|0x0038
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRUSS_INTC_HIPIR_BASE
+value|0x0900
+end_define
+
 begin_endif
 endif|#
 directive|endif

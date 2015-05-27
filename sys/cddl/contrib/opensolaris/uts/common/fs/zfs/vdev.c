@@ -4359,12 +4359,7 @@ name|error
 operator|)
 return|;
 block|}
-name|vd
-operator|->
-name|vdev_ms
-index|[
-name|m
-index|]
+name|error
 operator|=
 name|metaslab_init
 argument_list|(
@@ -4377,8 +4372,27 @@ argument_list|,
 name|object
 argument_list|,
 name|txg
+argument_list|,
+operator|&
+operator|(
+name|vd
+operator|->
+name|vdev_ms
+index|[
+name|m
+index|]
+operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -12370,6 +12384,14 @@ name|VDEV_LABEL_START_SIZE
 operator|+
 name|VDEV_LABEL_END_SIZE
 expr_stmt|;
+if|if
+condition|(
+name|vd
+operator|->
+name|vdev_max_asize
+operator|!=
+literal|0
+condition|)
 name|vs
 operator|->
 name|vs_esize
@@ -14598,7 +14620,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 operator|!
@@ -14726,7 +14748,7 @@ return|;
 block|}
 endif|#
 directive|endif
-comment|/* sun */
+comment|/* illumos */
 return|return
 operator|(
 name|B_TRUE

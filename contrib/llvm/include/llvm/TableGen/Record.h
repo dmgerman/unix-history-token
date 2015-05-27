@@ -275,7 +275,7 @@ argument_list|)
 operator|,
 name|ListTy
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|virtual
@@ -348,7 +348,7 @@ name|UI
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -362,7 +362,7 @@ name|BI
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -376,7 +376,7 @@ name|BI
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -390,7 +390,7 @@ name|II
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -404,7 +404,7 @@ name|SI
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -418,7 +418,7 @@ name|LI
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -495,7 +495,7 @@ name|VB
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -509,7 +509,7 @@ name|DI
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -523,7 +523,7 @@ name|DI
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -537,7 +537,7 @@ name|TI
 parameter_list|)
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|virtual
@@ -672,13 +672,13 @@ operator|&
 name|Shared
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|UnsetInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 operator|(
@@ -688,13 +688,13 @@ operator|)
 name|UI
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BitInit *BI
 argument_list|)
+name|override
 block|{
 return|return
 operator|(
@@ -704,57 +704,53 @@ operator|)
 name|BI
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|BitsInit
-operator|*
-name|BI
+argument|BitsInit *BI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|IntInit
-operator|*
-name|II
+argument|IntInit *II
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|StringInit *SI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|ListInit *LI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarBitInit *VB
 argument_list|)
+name|override
 block|{
 return|return
 operator|(
@@ -764,37 +760,37 @@ operator|)
 name|VB
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|DefInit *DI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|DagInit *DI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|UnOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -805,13 +801,13 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BinOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -822,13 +818,13 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|TernOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -839,23 +835,21 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|TypedInit
-operator|*
-name|TI
+argument|TypedInit *TI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarInit *VI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -866,13 +860,13 @@ name|VI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|FieldInit *FI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -883,25 +877,25 @@ name|FI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"bit"
 return|;
 block|}
-name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
 argument|const RecTy *RHS
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|RHS
@@ -912,13 +906,13 @@ name|this
 argument_list|)
 return|;
 block|}
-name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
 argument|const RecTy*
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 comment|/// BitsRecTy - 'bits<n>' - Represent a fixed number of bits
@@ -983,113 +977,105 @@ return|return
 name|Size
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|UnsetInit
-operator|*
-name|UI
+argument|UnsetInit *UI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|BitInit
-operator|*
-name|UI
+argument|BitInit *UI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|BitsInit
-operator|*
-name|BI
+argument|BitsInit *BI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|IntInit
-operator|*
-name|II
+argument|IntInit *II
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|StringInit *SI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|ListInit *LI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarBitInit *VB
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|DefInit *DI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|DagInit *DI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|UnOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1100,13 +1086,13 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BinOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1117,13 +1103,13 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|TernOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1134,23 +1120,21 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|TypedInit
-operator|*
-name|TI
+argument|TypedInit *TI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarInit *VI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1161,13 +1145,13 @@ name|VI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|FieldInit *FI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1178,21 +1162,21 @@ name|FI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
 argument|const RecTy *RHS
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|RHS
@@ -1203,13 +1187,13 @@ name|this
 argument_list|)
 return|;
 block|}
-name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
 argument|const RecTy*
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 comment|/// IntRecTy - 'int' - Represent an integer value of no particular size
@@ -1261,13 +1245,13 @@ operator|&
 name|Shared
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|UnsetInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 operator|(
@@ -1277,33 +1261,29 @@ operator|)
 name|UI
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|BitInit
-operator|*
-name|BI
+argument|BitInit *BI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|BitsInit
-operator|*
-name|BI
+argument|BitsInit *BI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|IntInit *II
 argument_list|)
+name|override
 block|{
 return|return
 operator|(
@@ -1313,73 +1293,73 @@ operator|)
 name|II
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|StringInit *SI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|ListInit *LI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarBitInit *VB
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|DefInit *DI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|DagInit *DI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|UnOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1390,13 +1370,13 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BinOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1407,13 +1387,13 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|TernOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1424,23 +1404,21 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|TypedInit
-operator|*
-name|TI
+argument|TypedInit *TI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarInit *VI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1451,13 +1429,13 @@ name|VI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|FieldInit *FI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1468,25 +1446,25 @@ name|FI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"int"
 return|;
 block|}
-name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
 argument|const RecTy *RHS
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|RHS
@@ -1497,13 +1475,13 @@ name|this
 argument_list|)
 return|;
 block|}
-name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
 argument|const RecTy*
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 comment|/// StringRecTy - 'string' - Represent an string value
@@ -1555,13 +1533,13 @@ operator|&
 name|Shared
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|UnsetInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 operator|(
@@ -1571,49 +1549,49 @@ operator|)
 name|UI
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BitInit *BI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BitsInit *BI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|IntInit *II
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|StringInit *SI
 argument_list|)
+name|override
 block|{
 return|return
 operator|(
@@ -1623,45 +1601,41 @@ operator|)
 name|SI
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|ListInit *LI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|UnOpInit
-operator|*
-name|BO
+argument|UnOpInit *BO
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|BinOpInit
-operator|*
-name|BO
+argument|BinOpInit *BO
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|TernOpInit *BO
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1672,59 +1646,57 @@ name|BO
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarBitInit *VB
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|DefInit *DI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|DagInit *DI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|TypedInit
-operator|*
-name|TI
+argument|TypedInit *TI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarInit *VI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1735,13 +1707,13 @@ name|VI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|FieldInit *FI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1752,25 +1724,25 @@ name|FI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"string"
 return|;
 block|}
-name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
 argument|const RecTy *RHS
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|RHS
@@ -1865,13 +1837,13 @@ return|return
 name|Ty
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|UnsetInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 operator|(
@@ -1881,107 +1853,105 @@ operator|)
 name|UI
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BitInit *BI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BitsInit *BI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|IntInit *II
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|StringInit *SI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|ListInit
-operator|*
-name|LI
+argument|ListInit *LI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarBitInit *VB
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|DefInit *DI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|DagInit *DI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|UnOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -1992,13 +1962,13 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BinOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -2009,13 +1979,13 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|TernOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -2026,23 +1996,21 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|TypedInit
-operator|*
-name|TI
+argument|TypedInit *TI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarInit *VI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -2053,13 +2021,13 @@ name|VI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|FieldInit *FI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -2070,21 +2038,21 @@ name|FI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
 argument|const RecTy *RHS
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|RHS
@@ -2095,13 +2063,13 @@ name|this
 argument_list|)
 return|;
 block|}
-name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
 argument|const RecTy*
 argument_list|)
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// DagRecTy - 'dag' - Represent a dag fragment
@@ -2153,13 +2121,13 @@ operator|&
 name|Shared
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|UnsetInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 operator|(
@@ -2169,117 +2137,113 @@ operator|)
 name|UI
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BitInit *BI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BitsInit *BI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|IntInit *II
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|StringInit *SI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|ListInit *LI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarBitInit *VB
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|DefInit *DI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|UnOpInit
-operator|*
-name|BO
+argument|UnOpInit *BO
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|BinOpInit
-operator|*
-name|BO
+argument|BinOpInit *BO
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|TernOpInit *BO
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -2290,13 +2254,13 @@ name|BO
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|DagInit *CI
 argument_list|)
+name|override
 block|{
 return|return
 operator|(
@@ -2306,23 +2270,21 @@ operator|)
 name|CI
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|TypedInit
-operator|*
-name|TI
+argument|TypedInit *TI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarInit *VI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -2333,13 +2295,13 @@ name|VI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|FieldInit *FI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -2350,25 +2312,25 @@ name|FI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"dag"
 return|;
 block|}
-name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
 argument|const RecTy *RHS
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|RHS
@@ -2454,13 +2416,13 @@ return|return
 name|Rec
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|UnsetInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 operator|(
@@ -2470,85 +2432,85 @@ operator|)
 name|UI
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BitInit *BI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BitsInit *BI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|IntInit *II
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|StringInit *SI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|ListInit *LI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarBitInit *VB
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|UnOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -2559,13 +2521,13 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|BinOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -2576,13 +2538,13 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|TernOpInit *UI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -2593,45 +2555,41 @@ name|UI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|DefInit
-operator|*
-name|DI
+argument|DefInit *DI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|DagInit *DI
 argument_list|)
+name|override
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
-name|TypedInit
-operator|*
-name|VI
+argument|TypedInit *VI
 argument_list|)
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|VarInit *VI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -2642,13 +2600,13 @@ name|VI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertValue
 argument_list|(
 argument|FieldInit *FI
 argument_list|)
+name|override
 block|{
 return|return
 name|RecTy
@@ -2659,21 +2617,21 @@ name|FI
 argument_list|)
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|typeIsConvertibleTo
 argument_list|(
 argument|const RecTy *RHS
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|RHS
@@ -2684,13 +2642,13 @@ name|this
 argument_list|)
 return|;
 block|}
-name|virtual
 name|bool
 name|baseClassOf
 argument_list|(
 argument|const RecTy*
 argument_list|)
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// resolveTypes - Find a common type that T1 and T2 convert to.
@@ -2735,9 +2693,9 @@ name|InitKind
 block|{
 name|IK_BitInit
 block|,
-name|IK_BitsInit
-block|,
 name|IK_FirstTypedInit
+block|,
+name|IK_BitsInit
 block|,
 name|IK_DagInit
 block|,
@@ -2921,7 +2879,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// convertInitListSlice - This method is used to implement the list slice
@@ -2939,7 +2897,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getFieldType - This method is used to implement the FieldInit class.
@@ -2956,7 +2914,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getFieldInit - This method complements getFieldType to return the
@@ -2977,7 +2935,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// resolveReferences - This method is used by classes that refer to other
@@ -3167,7 +3125,6 @@ return|return
 name|Ty
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertInitializerBitRange
@@ -3175,8 +3132,8 @@ argument_list|(
 argument|const std::vector<unsigned>&Bits
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertInitListSlice
@@ -3184,12 +3141,12 @@ argument_list|(
 argument|const std::vector<unsigned>&Elements
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// getFieldType - This method is used to implement the FieldInit class.
 comment|/// Implementors of this method should return the type of the named field if
 comment|/// they are of record type.
 comment|///
-name|virtual
 name|RecTy
 operator|*
 name|getFieldType
@@ -3197,6 +3154,7 @@ argument_list|(
 argument|const std::string&FieldName
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
@@ -3251,10 +3209,10 @@ name|Other
 operator|)
 name|LLVM_DELETED_FUNCTION
 block|;
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -3280,7 +3238,6 @@ operator|*
 name|get
 argument_list|()
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertInitializerTo
@@ -3288,6 +3245,7 @@ argument_list|(
 argument|RecTy *Ty
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Ty
@@ -3305,7 +3263,6 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|getBit
@@ -3313,6 +3270,7 @@ argument_list|(
 argument|unsigned Bit
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|const_cast
@@ -3325,23 +3283,23 @@ name|this
 operator|)
 return|;
 block|}
-name|virtual
 name|bool
 name|isComplete
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"?"
@@ -3393,10 +3351,10 @@ name|Other
 operator|)
 name|LLVM_DELETED_FUNCTION
 block|;
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -3433,7 +3391,6 @@ return|return
 name|Value
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertInitializerTo
@@ -3441,6 +3398,7 @@ argument_list|(
 argument|RecTy *Ty
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Ty
@@ -3458,7 +3416,6 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|getBit
@@ -3466,6 +3423,7 @@ argument_list|(
 argument|unsigned Bit
 argument_list|)
 specifier|const
+name|override
 block|{
 name|assert
 argument_list|(
@@ -3487,13 +3445,13 @@ name|this
 operator|)
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Value
@@ -3512,7 +3470,7 @@ name|class
 name|BitsInit
 operator|:
 name|public
-name|Init
+name|TypedInit
 block|,
 name|public
 name|FoldingSetNode
@@ -3536,9 +3494,19 @@ operator|>
 name|Range
 argument_list|)
 operator|:
-name|Init
+name|TypedInit
 argument_list|(
 name|IK_BitsInit
+argument_list|,
+name|BitsRecTy
+operator|::
+name|get
+argument_list|(
+name|Range
+operator|.
+name|size
+argument_list|()
+argument_list|)
 argument_list|)
 block|,
 name|Bits
@@ -3616,7 +3584,6 @@ name|size
 argument_list|()
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertInitializerTo
@@ -3624,6 +3591,7 @@ argument_list|(
 argument|RecTy *Ty
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Ty
@@ -3641,7 +3609,6 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertInitializerBitRange
@@ -3649,12 +3616,13 @@ argument_list|(
 argument|const std::vector<unsigned>&Bits
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isComplete
 argument_list|()
 specifier|const
+name|override
 block|{
 for|for
 control|(
@@ -3726,15 +3694,35 @@ return|return
 name|true
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
+comment|/// resolveListElementReference - This method is used to implement
+comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
+comment|/// now, we return the resolved value, otherwise we return null.
+name|Init
+operator|*
+name|resolveListElementReference
+argument_list|(
+argument|Record&R
+argument_list|,
+argument|const RecordVal *RV
+argument_list|,
+argument|unsigned Elt
+argument_list|)
+specifier|const
+name|override
+block|{
+name|llvm_unreachable
+argument_list|(
+literal|"Illegal element reference off bits<n>"
+argument_list|)
+block|;   }
 name|Init
 operator|*
 name|resolveReferences
@@ -3744,8 +3732,8 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|getBit
@@ -3753,6 +3741,7 @@ argument_list|(
 argument|unsigned Bit
 argument_list|)
 specifier|const
+name|override
 block|{
 name|assert
 argument_list|(
@@ -3860,7 +3849,6 @@ return|return
 name|Value
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertInitializerTo
@@ -3868,6 +3856,7 @@ argument_list|(
 argument|RecTy *Ty
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Ty
@@ -3885,7 +3874,6 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertInitializerBitRange
@@ -3893,19 +3881,19 @@ argument_list|(
 argument|const std::vector<unsigned>&Bits
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
-name|virtual
 name|Init
 operator|*
 name|resolveListElementReference
@@ -3917,13 +3905,13 @@ argument_list|,
 argument|unsigned Elt
 argument_list|)
 specifier|const
+name|override
 block|{
 name|llvm_unreachable
 argument_list|(
 literal|"Illegal element reference off int"
 argument_list|)
 block|;   }
-name|virtual
 name|Init
 operator|*
 name|getBit
@@ -3931,6 +3919,7 @@ argument_list|(
 argument|unsigned Bit
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|BitInit
@@ -4010,10 +3999,10 @@ name|Other
 operator|)
 name|LLVM_DELETED_FUNCTION
 block|;
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -4054,7 +4043,6 @@ return|return
 name|Value
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|convertInitializerTo
@@ -4062,6 +4050,7 @@ argument_list|(
 argument|RecTy *Ty
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Ty
@@ -4079,13 +4068,13 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"\""
@@ -4095,13 +4084,13 @@ operator|+
 literal|"\""
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsUnquotedString
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Value
@@ -4110,7 +4099,6 @@ block|}
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
-name|virtual
 name|Init
 operator|*
 name|resolveListElementReference
@@ -4122,13 +4110,13 @@ argument_list|,
 argument|unsigned Elt
 argument_list|)
 specifier|const
+name|override
 block|{
 name|llvm_unreachable
 argument_list|(
 literal|"Illegal element reference off string"
 argument_list|)
 block|;   }
-name|virtual
 name|Init
 operator|*
 name|getBit
@@ -4136,6 +4124,7 @@ argument_list|(
 argument|unsigned Bit
 argument_list|)
 specifier|const
+name|override
 block|{
 name|llvm_unreachable
 argument_list|(
@@ -4321,7 +4310,6 @@ argument|unsigned i
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertInitListSlice
@@ -4329,8 +4317,8 @@ argument_list|(
 argument|const std::vector<unsigned>&Elements
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertInitializerTo
@@ -4338,6 +4326,7 @@ argument_list|(
 argument|RecTy *Ty
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Ty
@@ -4360,7 +4349,6 @@ comment|/// variables which may not be defined at the time they expression is fo
 comment|/// If a value is set for the variable later, this method will be called on
 comment|/// users of the value to allow the value to propagate out.
 comment|///
-name|virtual
 name|Init
 operator|*
 name|resolveReferences
@@ -4370,14 +4358,15 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|;
 name|ArrayRef
 operator|<
@@ -4447,7 +4436,6 @@ block|}
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
-name|virtual
 name|Init
 operator|*
 name|resolveListElementReference
@@ -4459,8 +4447,8 @@ argument_list|,
 argument|unsigned Elt
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|getBit
@@ -4468,6 +4456,7 @@ argument_list|(
 argument|unsigned Bit
 argument_list|)
 specifier|const
+name|override
 block|{
 name|llvm_unreachable
 argument_list|(
@@ -4589,7 +4578,6 @@ specifier|const
 operator|=
 literal|0
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertInitializerTo
@@ -4597,6 +4585,7 @@ argument_list|(
 argument|RecTy *Ty
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Ty
@@ -4614,7 +4603,6 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|resolveListElementReference
@@ -4626,8 +4614,8 @@ argument_list|,
 argument|unsigned Elt
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|getBit
@@ -4635,6 +4623,7 @@ argument_list|(
 argument|unsigned Bit
 argument_list|)
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// UnOpInit - !op (X) - Transform an init.
@@ -4743,7 +4732,6 @@ argument|RecTy *Type
 argument_list|)
 block|;
 comment|// Clone - Clone this operator, replacing arguments with the new list
-name|virtual
 name|OpInit
 operator|*
 name|clone
@@ -4751,6 +4739,7 @@ argument_list|(
 argument|std::vector<Init *>&Operands
 argument_list|)
 specifier|const
+name|override
 block|{
 name|assert
 argument_list|(
@@ -4783,17 +4772,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|virtual
 name|int
 name|getNumOperands
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|1
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|getOperand
@@ -4801,6 +4789,7 @@ argument_list|(
 argument|int i
 argument_list|)
 specifier|const
+name|override
 block|{
 name|assert
 argument_list|(
@@ -4837,7 +4826,6 @@ return|;
 block|}
 comment|// Fold - If possible, fold this to a simpler init.  Return this if not
 comment|// possible to fold.
-name|virtual
 name|Init
 operator|*
 name|Fold
@@ -4847,8 +4835,8 @@ argument_list|,
 argument|MultiClass *CurMultiClass
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|resolveReferences
@@ -4858,14 +4846,15 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// BinOpInit - !op (X, Y) - Combine two inits.
@@ -4883,11 +4872,15 @@ name|BinaryOp
 block|{
 name|ADD
 block|,
+name|AND
+block|,
 name|SHL
 block|,
 name|SRA
 block|,
 name|SRL
+block|,
+name|LISTCONCAT
 block|,
 name|STRCONCAT
 block|,
@@ -4992,7 +4985,6 @@ argument|RecTy *Type
 argument_list|)
 block|;
 comment|// Clone - Clone this operator, replacing arguments with the new list
-name|virtual
 name|OpInit
 operator|*
 name|clone
@@ -5000,6 +4992,7 @@ argument_list|(
 argument|std::vector<Init *>&Operands
 argument_list|)
 specifier|const
+name|override
 block|{
 name|assert
 argument_list|(
@@ -5036,17 +5029,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|virtual
 name|int
 name|getNumOperands
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|2
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|getOperand
@@ -5054,6 +5046,7 @@ argument_list|(
 argument|int i
 argument_list|)
 specifier|const
+name|override
 block|{
 name|assert
 argument_list|(
@@ -5121,7 +5114,6 @@ return|;
 block|}
 comment|// Fold - If possible, fold this to a simpler init.  Return this if not
 comment|// possible to fold.
-name|virtual
 name|Init
 operator|*
 name|Fold
@@ -5131,8 +5123,8 @@ argument_list|,
 argument|MultiClass *CurMultiClass
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|resolveReferences
@@ -5142,14 +5134,15 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// TernOpInit - !op (X, Y, Z) - Combine two inits.
@@ -5280,7 +5273,6 @@ argument|RecTy *Type
 argument_list|)
 block|;
 comment|// Clone - Clone this operator, replacing arguments with the new list
-name|virtual
 name|OpInit
 operator|*
 name|clone
@@ -5288,6 +5280,7 @@ argument_list|(
 argument|std::vector<Init *>&Operands
 argument_list|)
 specifier|const
+name|override
 block|{
 name|assert
 argument_list|(
@@ -5329,17 +5322,16 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-name|virtual
 name|int
 name|getNumOperands
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|3
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|getOperand
@@ -5347,6 +5339,7 @@ argument_list|(
 argument|int i
 argument_list|)
 specifier|const
+name|override
 block|{
 name|assert
 argument_list|(
@@ -5441,7 +5434,6 @@ return|;
 block|}
 comment|// Fold - If possible, fold this to a simpler init.  Return this if not
 comment|// possible to fold.
-name|virtual
 name|Init
 operator|*
 name|Fold
@@ -5451,18 +5443,18 @@ argument_list|,
 argument|MultiClass *CurMultiClass
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isComplete
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|false
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|resolveReferences
@@ -5472,14 +5464,15 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// VarInit - 'Opcode' - Represent a reference to an entire variable object.
@@ -5612,7 +5605,6 @@ operator|*
 name|T
 argument_list|)
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertInitializerTo
@@ -5620,6 +5612,7 @@ argument_list|(
 argument|RecTy *Ty
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Ty
@@ -5671,7 +5664,6 @@ name|getAsUnquotedString
 argument_list|()
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|resolveListElementReference
@@ -5683,8 +5675,8 @@ argument_list|,
 argument|unsigned Elt
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|RecTy
 operator|*
 name|getFieldType
@@ -5692,8 +5684,8 @@ argument_list|(
 argument|const std::string&FieldName
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|getFieldInit
@@ -5705,13 +5697,13 @@ argument_list|,
 argument|const std::string&FieldName
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// resolveReferences - This method is used by classes that refer to other
 comment|/// variables which may not be defined at the time they expression is formed.
 comment|/// If a value is set for the variable later, this method will be called on
 comment|/// users of the value to allow the value to propagate out.
 comment|///
-name|virtual
 name|Init
 operator|*
 name|resolveReferences
@@ -5721,8 +5713,8 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|getBit
@@ -5730,14 +5722,15 @@ argument_list|(
 argument|unsigned Bit
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|getName
@@ -5881,7 +5874,6 @@ argument_list|,
 argument|unsigned B
 argument_list|)
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertInitializerTo
@@ -5889,6 +5881,7 @@ argument_list|(
 argument|RecTy *Ty
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Ty
@@ -5906,36 +5899,35 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|getBitVar
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|TI
 return|;
 block|}
-name|virtual
 name|unsigned
 name|getBitNum
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Bit
 return|;
 block|}
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|resolveReferences
@@ -5945,8 +5937,8 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|getBit
@@ -5954,6 +5946,7 @@ argument_list|(
 argument|unsigned B
 argument_list|)
 specifier|const
+name|override
 block|{
 name|assert
 argument_list|(
@@ -6094,7 +6087,6 @@ argument_list|,
 argument|unsigned E
 argument_list|)
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertInitializerTo
@@ -6102,6 +6094,7 @@ argument_list|(
 argument|RecTy *Ty
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Ty
@@ -6141,7 +6134,6 @@ block|}
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
-name|virtual
 name|Init
 operator|*
 name|resolveListElementReference
@@ -6153,16 +6145,16 @@ argument_list|,
 argument|unsigned Elt
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|resolveReferences
@@ -6172,8 +6164,8 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|getBit
@@ -6181,6 +6173,7 @@ argument_list|(
 argument|unsigned Bit
 argument_list|)
 specifier|const
+name|override
 block|; }
 block|;
 comment|/// DefInit - AL - Represent a reference to a 'def' in the description
@@ -6267,7 +6260,6 @@ name|Record
 operator|*
 argument_list|)
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertInitializerTo
@@ -6275,6 +6267,7 @@ argument_list|(
 argument|RecTy *Ty
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Ty
@@ -6303,7 +6296,6 @@ name|Def
 return|;
 block|}
 comment|//virtual Init *convertInitializerBitRange(const std::vector<unsigned>&Bits);
-name|virtual
 name|RecTy
 operator|*
 name|getFieldType
@@ -6311,8 +6303,8 @@ argument_list|(
 argument|const std::string&FieldName
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|getFieldInit
@@ -6324,16 +6316,16 @@ argument_list|,
 argument|const std::string&FieldName
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|getBit
@@ -6341,6 +6333,7 @@ argument_list|(
 argument|unsigned Bit
 argument_list|)
 specifier|const
+name|override
 block|{
 name|llvm_unreachable
 argument_list|(
@@ -6350,7 +6343,6 @@ block|;   }
 comment|/// resolveListElementReference - This method is used to implement
 comment|/// VarListElementInit::resolveReferences.  If the list element is resolvable
 comment|/// now, we return the resolved value, otherwise we return null.
-name|virtual
 name|Init
 operator|*
 name|resolveListElementReference
@@ -6362,6 +6354,7 @@ argument_list|,
 argument|unsigned Elt
 argument_list|)
 specifier|const
+name|override
 block|{
 name|llvm_unreachable
 argument_list|(
@@ -6501,7 +6494,6 @@ operator|*
 name|FN
 argument_list|)
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertInitializerTo
@@ -6509,6 +6501,7 @@ argument_list|(
 argument|RecTy *Ty
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Ty
@@ -6526,7 +6519,6 @@ operator|)
 argument_list|)
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|getBit
@@ -6534,8 +6526,8 @@ argument_list|(
 argument|unsigned Bit
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|resolveListElementReference
@@ -6547,8 +6539,8 @@ argument_list|,
 argument|unsigned Elt
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Init
 operator|*
 name|resolveReferences
@@ -6558,14 +6550,15 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Rec
@@ -6802,7 +6795,6 @@ argument|FoldingSetNodeID&ID
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|Init
 operator|*
 name|convertInitializerTo
@@ -6810,6 +6802,7 @@ argument_list|(
 argument|RecTy *Ty
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Ty
@@ -6919,7 +6912,6 @@ name|Num
 index|]
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|resolveReferences
@@ -6929,14 +6921,15 @@ argument_list|,
 argument|const RecordVal *RV
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|std
 operator|::
 name|string
 name|getAsString
 argument_list|()
 specifier|const
+name|override
 block|;
 typedef|typedef
 name|std
@@ -7067,7 +7060,6 @@ name|empty
 argument_list|()
 return|;
 block|}
-name|virtual
 name|Init
 operator|*
 name|getBit
@@ -7075,13 +7067,13 @@ argument_list|(
 argument|unsigned Bit
 argument_list|)
 specifier|const
+name|override
 block|{
 name|llvm_unreachable
 argument_list|(
 literal|"Illegal bit reference off dag"
 argument_list|)
 block|;   }
-name|virtual
 name|Init
 operator|*
 name|resolveListElementReference
@@ -7093,6 +7085,7 @@ argument_list|,
 argument|unsigned Elt
 argument_list|)
 specifier|const
+name|override
 block|{
 name|llvm_unreachable
 argument_list|(
@@ -7229,12 +7222,12 @@ expr_stmt|;
 return|return
 name|Value
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 name|Value
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 return|return
 name|false
@@ -7355,6 +7348,19 @@ block|;
 name|bool
 name|IsAnonymous
 block|;
+comment|// Class-instance values can be used by other defs.  For example, Struct<i>
+comment|// is used here as a template argument to another class:
+comment|//
+comment|//   multiclass MultiClass<int i> {
+comment|//     def Def : Class<Struct<i>>;
+comment|//
+comment|// These need to get fully resolved before instantiating any other
+comment|// definitions that usie them (e.g. Def).  However, inside a multiclass they
+comment|// can't be immediately resolved so we mark them ResolveFirst to fully
+comment|// resolve them later as soon as the multiclass is instantiated.
+name|bool
+name|ResolveFirst
+block|;
 name|void
 name|init
 argument_list|()
@@ -7414,12 +7420,17 @@ argument_list|)
 block|,
 name|TheInit
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|IsAnonymous
 argument_list|(
-argument|Anonymous
+name|Anonymous
+argument_list|)
+block|,
+name|ResolveFirst
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|init
@@ -7468,12 +7479,17 @@ argument_list|)
 block|,
 name|TheInit
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|,
 name|IsAnonymous
 argument_list|(
-argument|Anonymous
+name|Anonymous
+argument_list|)
+block|,
+name|ResolveFirst
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|init
@@ -7553,7 +7569,14 @@ argument_list|)
 block|,
 name|IsAnonymous
 argument_list|(
-argument|O.IsAnonymous
+name|O
+operator|.
+name|IsAnonymous
+argument_list|)
+block|,
+name|ResolveFirst
+argument_list|(
+argument|O.ResolveFirst
 argument_list|)
 block|{ }
 operator|~
@@ -7831,7 +7854,7 @@ name|i
 index|]
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|const
@@ -7903,7 +7926,7 @@ name|i
 index|]
 return|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 name|RecordVal
@@ -7984,7 +8007,7 @@ name|getNameInit
 argument_list|()
 argument_list|)
 operator|==
-literal|0
+name|nullptr
 operator|&&
 literal|"Value already added!"
 argument_list|)
@@ -8248,7 +8271,7 @@ argument_list|()
 block|{
 name|resolveReferencesTo
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 block|; }
 comment|/// resolveReferencesTo - If anything in this record refers to RV, replace the
@@ -8282,6 +8305,25 @@ return|return
 name|IsAnonymous
 return|;
 block|}
+name|bool
+name|isResolveFirst
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ResolveFirst
+return|;
+block|}
+name|void
+name|setResolveFirst
+argument_list|(
+argument|bool b
+argument_list|)
+block|{
+name|ResolveFirst
+operator|=
+name|b
+block|;   }
 name|void
 name|dump
 argument_list|()
@@ -8434,7 +8476,7 @@ specifier|const
 block|;
 comment|/// getValueAsBitOrUnset - This method looks up the specified field and
 comment|/// returns its value as a bit. If the field is unset, sets Unset to true and
-comment|/// retunrs false.
+comment|/// returns false.
 comment|///
 name|bool
 name|getValueAsBitOrUnset
@@ -8495,9 +8537,12 @@ name|std
 operator|::
 name|vector
 operator|<
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Record
-operator|*
-operator|>
+operator|>>
 name|RecordVector
 expr_stmt|;
 name|RecordVector
@@ -8531,6 +8576,7 @@ decl_stmt|;
 name|class
 name|RecordKeeper
 block|{
+typedef|typedef
 name|std
 operator|::
 name|map
@@ -8539,114 +8585,23 @@ name|std
 operator|::
 name|string
 operator|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Record
-operator|*
-operator|>
-name|Classes
-operator|,
-name|Defs
+operator|>>
+name|RecordMap
 expr_stmt|;
+name|RecordMap
+name|Classes
+decl_stmt|,
+name|Defs
+decl_stmt|;
 name|public
 label|:
-operator|~
-name|RecordKeeper
-argument_list|()
-block|{
-for|for
-control|(
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-name|Record
-operator|*
-operator|>
-operator|::
-name|iterator
-name|I
-operator|=
-name|Classes
-operator|.
-name|begin
-argument_list|()
-operator|,
-name|E
-operator|=
-name|Classes
-operator|.
-name|end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
-control|)
-name|delete
-name|I
-operator|->
-name|second
-decl_stmt|;
-for|for
-control|(
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-name|Record
-operator|*
-operator|>
-operator|::
-name|iterator
-name|I
-operator|=
-name|Defs
-operator|.
-name|begin
-argument_list|()
-operator|,
-name|E
-operator|=
-name|Defs
-operator|.
-name|end
-argument_list|()
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
-control|)
-name|delete
-name|I
-operator|->
-name|second
-decl_stmt|;
-block|}
 specifier|const
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-name|Record
-operator|*
-operator|>
+name|RecordMap
 operator|&
 name|getClasses
 argument_list|()
@@ -8657,17 +8612,7 @@ name|Classes
 return|;
 block|}
 specifier|const
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-name|Record
-operator|*
-operator|>
+name|RecordMap
 operator|&
 name|getDefs
 argument_list|()
@@ -8690,28 +8635,16 @@ name|Name
 argument_list|)
 decl|const
 block|{
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-name|Record
-operator|*
-operator|>
-operator|::
-name|const_iterator
+name|auto
 name|I
-operator|=
+init|=
 name|Classes
 operator|.
 name|find
 argument_list|(
 name|Name
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 return|return
 name|I
 operator|==
@@ -8720,11 +8653,14 @@ operator|.
 name|end
 argument_list|()
 condition|?
-literal|0
+name|nullptr
 else|:
 name|I
 operator|->
 name|second
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|Record
@@ -8740,28 +8676,16 @@ name|Name
 argument_list|)
 decl|const
 block|{
-name|std
-operator|::
-name|map
-operator|<
-name|std
-operator|::
-name|string
-operator|,
-name|Record
-operator|*
-operator|>
-operator|::
-name|const_iterator
+name|auto
 name|I
-operator|=
+init|=
 name|Defs
 operator|.
 name|find
 argument_list|(
 name|Name
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 return|return
 name|I
 operator|==
@@ -8770,20 +8694,27 @@ operator|.
 name|end
 argument_list|()
 condition|?
-literal|0
+name|nullptr
 else|:
 name|I
 operator|->
 name|second
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|void
 name|addClass
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Record
-modifier|*
+operator|>
 name|R
-parameter_list|)
+argument_list|)
 block|{
 name|bool
 name|Ins
@@ -8801,7 +8732,12 @@ operator|->
 name|getName
 argument_list|()
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|R
+argument_list|)
 argument_list|)
 argument_list|)
 operator|.
@@ -8822,11 +8758,15 @@ expr_stmt|;
 block|}
 name|void
 name|addDef
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Record
-modifier|*
+operator|>
 name|R
-parameter_list|)
+argument_list|)
 block|{
 name|bool
 name|Ins
@@ -8844,7 +8784,12 @@ operator|->
 name|getName
 argument_list|()
 argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
 name|R
+argument_list|)
 argument_list|)
 argument_list|)
 operator|.
@@ -8860,72 +8805,6 @@ argument_list|(
 name|Ins
 operator|&&
 literal|"Record already exists"
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// removeClass - Remove, but do not delete, the specified record.
-comment|///
-name|void
-name|removeClass
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Classes
-operator|.
-name|count
-argument_list|(
-name|Name
-argument_list|)
-operator|&&
-literal|"Class does not exist!"
-argument_list|)
-expr_stmt|;
-name|Classes
-operator|.
-name|erase
-argument_list|(
-name|Name
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// removeDef - Remove, but do not delete, the specified record.
-comment|///
-name|void
-name|removeDef
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|Name
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Defs
-operator|.
-name|count
-argument_list|(
-name|Name
-argument_list|)
-operator|&&
-literal|"Def does not exist!"
-argument_list|)
-expr_stmt|;
-name|Defs
-operator|.
-name|erase
-argument_list|(
-name|Name
 argument_list|)
 expr_stmt|;
 block|}
@@ -8953,21 +8832,9 @@ argument_list|()
 specifier|const
 expr_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// LessRecord - Sorting predicate to sort record pointers by name.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_struct
 struct|struct
 name|LessRecord
 block|{
@@ -9009,25 +8876,10 @@ return|;
 block|}
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/// LessRecordByID - Sorting predicate to sort record pointers by their
-end_comment
-
-begin_comment
 comment|/// unique ID. If you just need a deterministic order, use this, since it
-end_comment
-
-begin_comment
 comment|/// just compares two `unsigned`; the other sorting predicates require
-end_comment
-
-begin_comment
 comment|/// string manipulation.
-end_comment
-
-begin_struct
 struct|struct
 name|LessRecordByID
 block|{
@@ -9061,21 +8913,9 @@ return|;
 block|}
 block|}
 struct|;
-end_struct
-
-begin_comment
 comment|/// LessRecordFieldName - Sorting predicate to sort record pointers by their
-end_comment
-
-begin_comment
 comment|/// name field.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_struct
 struct|struct
 name|LessRecordFieldName
 block|{
@@ -9113,9 +8953,6 @@ return|;
 block|}
 block|}
 struct|;
-end_struct
-
-begin_struct
 struct|struct
 name|LessRecordRegister
 block|{
@@ -9725,10 +9562,14 @@ operator|<
 name|RHSNumParts
 return|;
 block|}
-end_struct
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_expr_stmt
-unit|};
 name|raw_ostream
 operator|&
 name|operator

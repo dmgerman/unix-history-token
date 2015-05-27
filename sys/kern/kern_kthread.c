@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/umtx.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/unistd.h>
 end_include
 
@@ -1303,6 +1309,11 @@ name|rw_wunlock
 argument_list|(
 operator|&
 name|tidhash_lock
+argument_list|)
+expr_stmt|;
+name|umtx_thread_exit
+argument_list|(
+name|curthread
 argument_list|)
 expr_stmt|;
 name|PROC_SLOCK

@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_PRAGMA_H
+name|LLVM_CLANG_LEX_PRAGMA_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_PRAGMA_H
+name|LLVM_CLANG_LEX_PRAGMA_H
 end_define
 
 begin_include
@@ -187,7 +187,7 @@ name|getIfNamespace
 parameter_list|()
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 block|}
@@ -205,7 +205,6 @@ operator|:
 name|EmptyPragmaHandler
 argument_list|()
 block|;
-name|virtual
 name|void
 name|HandlePragma
 argument_list|(
@@ -215,6 +214,7 @@ argument|PragmaIntroducerKind Introducer
 argument_list|,
 argument|Token&FirstToken
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 comment|/// PragmaNamespace - This PragmaHandler subdivides the namespace of pragmas,
@@ -302,7 +302,6 @@ name|empty
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|HandlePragma
 argument_list|(
@@ -312,12 +311,13 @@ argument|PragmaIntroducerKind Introducer
 argument_list|,
 argument|Token&FirstToken
 argument_list|)
+name|override
 block|;
-name|virtual
 name|PragmaNamespace
 operator|*
 name|getIfNamespace
 argument_list|()
+name|override
 block|{
 return|return
 name|this

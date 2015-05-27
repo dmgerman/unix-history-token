@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: make.h,v 1.92 2013/09/04 15:38:26 sjg Exp $	*/
+comment|/*	$NetBSD: make.h,v 1.95 2014/09/07 20:55:34 joerg Exp $	*/
 end_comment
 
 begin_comment
@@ -852,12 +852,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|OP_LSTAT
+name|OP_SUBMAKE
 value|0x00400000
 end_define
 
 begin_comment
-comment|/* Use lstat rather that stat */
+comment|/* Possibly a submake node */
 end_comment
 
 begin_comment

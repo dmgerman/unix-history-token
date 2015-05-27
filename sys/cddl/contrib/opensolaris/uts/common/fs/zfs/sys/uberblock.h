@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2014 by Delphix. All rights reserved.  */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -60,23 +64,19 @@ name|uberblock_verify
 parameter_list|(
 name|uberblock_t
 modifier|*
-name|ub
 parameter_list|)
 function_decl|;
 specifier|extern
-name|int
+name|boolean_t
 name|uberblock_update
 parameter_list|(
 name|uberblock_t
 modifier|*
-name|ub
 parameter_list|,
 name|vdev_t
 modifier|*
-name|rvd
 parameter_list|,
 name|uint64_t
-name|txg
 parameter_list|)
 function_decl|;
 ifdef|#

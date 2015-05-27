@@ -538,7 +538,7 @@ literal|0
 decl_stmt|;
 name|DRM_SYSCTL_PRINT
 argument_list|(
-literal|"%s 0x%x"
+literal|"%s 0x%jx"
 argument_list|,
 name|dev
 operator|->
@@ -546,6 +546,9 @@ name|driver
 operator|->
 name|name
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|dev2udev
 argument_list|(
 name|dev

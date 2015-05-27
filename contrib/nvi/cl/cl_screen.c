@@ -22,7 +22,7 @@ name|char
 name|sccsid
 index|[]
 init|=
-literal|"$Id: cl_screen.c,v 10.56 2002/05/03 19:59:44 skimo Exp $"
+literal|"$Id: cl_screen.c,v 10.58 2015/04/08 02:12:11 zy Exp $"
 decl_stmt|;
 end_decl_stmt
 
@@ -130,97 +130,79 @@ directive|include
 file|"cl.h"
 end_include
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|cl_ex_end
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|GS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|cl_ex_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|cl_freecap
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|CL_PRIVATE
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|cl_vi_end
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|GS
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|cl_vi_init
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|cl_putenv
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|u_long
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * cl_screen --  *	Switch screen types.  *  * PUBLIC: int cl_screen __P((SCR *, u_int32_t));  */
+comment|/*  * cl_screen --  *	Switch screen types.  *  * PUBLIC: int cl_screen(SCR *, u_int32_t);  */
 end_comment
 
 begin_function
@@ -287,29 +269,35 @@ condition|)
 block|{
 if|if
 condition|(
-name|CLSP
+operator|(
+operator|!
+name|F_ISSET
 argument_list|(
 name|sp
+argument_list|,
+name|SC_SCR_EX
+operator||
+name|SC_SCR_VI
 argument_list|)
-condition|)
-block|{
-name|delwin
+operator|||
+name|resizeterm
 argument_list|(
-name|CLSP
+name|O_VAL
 argument_list|(
 name|sp
+argument_list|,
+name|O_LINES
 argument_list|)
-argument_list|)
-expr_stmt|;
+argument_list|,
+name|O_VAL
+argument_list|(
 name|sp
-operator|->
-name|cl_private
-operator|=
-name|NULL
-expr_stmt|;
-block|}
-if|if
-condition|(
+argument_list|,
+name|O_COLUMNS
+argument_list|)
+argument_list|)
+operator|)
+operator|&&
 name|cl_quit
 argument_list|(
 name|gp
@@ -573,7 +561,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_quit --  *	Shutdown the screens.  *  * PUBLIC: int cl_quit __P((GS *));  */
+comment|/*  * cl_quit --  *	Shutdown the screens.  *  * PUBLIC: int cl_quit(GS *);  */
 end_comment
 
 begin_function
@@ -905,7 +893,7 @@ name|O_COLUMNS
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * We don't care about the SCREEN reference returned by newterm, we 	 * never have more than one SCREEN at a time. 	 * 	 * XXX 	 * The SunOS initscr() can't be called twice.  Don't even think about 	 * using it.  It fails in subtle ways (e.g. select(2) on fileno(stdin) 	 * stops working).  (The SVID notes that applications should only call 	 * initscr() once.) 	 * 	 * XXX 	 * The HP/UX newterm doesn't support the NULL first argument, so we 	 * have to specify the terminal type. 	 */
+comment|/* 	 * The terminal is aways initialized, either in `main`, or by a 	 * previous call to newterm(3X). 	 */
 operator|(
 name|void
 operator|)
@@ -914,6 +902,7 @@ argument_list|(
 name|cur_term
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We never have more than one SCREEN at a time, so set_term(NULL) will 	 * give us the last SCREEN. 	 */
 name|errno
 operator|=
 literal|0
@@ -1389,6 +1378,15 @@ operator|)
 name|endwin
 argument_list|()
 expr_stmt|;
+comment|/* Free the SCREEN created by newterm(3X). */
+name|delscreen
+argument_list|(
+name|set_term
+argument_list|(
+name|NULL
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * XXX 	 * The screen TE sequence just got sent.  See the comment in 	 * cl_funcs.c:cl_attr(). 	 */
 name|clp
 operator|->
@@ -1769,7 +1767,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * cl_getcap --  *	Retrieve termcap/terminfo strings.  *  * PUBLIC: int cl_getcap __P((SCR *, char *, char **));  */
+comment|/*  * cl_getcap --  *	Retrieve termcap/terminfo strings.  *  * PUBLIC: int cl_getcap(SCR *, char *, char **);  */
 end_comment
 
 begin_function

@@ -4,15 +4,15 @@ comment|/* crypto/bn/bntest.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by   * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the Eric Young open source  * license provided above.  *  * The binary polynomial arithmetic software is originally written by   * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
+comment|/* ====================================================================  * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.  *  * Portions of the attached software ("Contribution") are developed by  * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.  *  * The Contribution is licensed pursuant to the Eric Young open source  * license provided above.  *  * The binary polynomial arithmetic software is originally written by  * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.  *  */
 end_comment
 
 begin_comment
-comment|/* Until the key-gen callbacks are modified to use newer prototypes, we allow  * deprecated functions for openssl-internal code */
+comment|/*  * Until the key-gen callbacks are modified to use newer prototypes, we allow  * deprecated functions for openssl-internal code  */
 end_comment
 
 begin_ifdef
@@ -333,6 +333,21 @@ end_function_decl
 begin_function_decl
 name|int
 name|test_mod_exp_mont_consttime
+parameter_list|(
+name|BIO
+modifier|*
+name|bp
+parameter_list|,
+name|BN_CTX
+modifier|*
+name|ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|test_mod_exp_mont5
 parameter_list|(
 name|BIO
 modifier|*
@@ -1273,6 +1288,19 @@ condition|)
 goto|goto
 name|err
 goto|;
+if|if
+condition|(
+operator|!
+name|test_mod_exp_mont5
+argument_list|(
+name|out
+argument_list|,
+name|ctx
+argument_list|)
+condition|)
+goto|goto
+name|err
+goto|;
 operator|(
 name|void
 operator|)
@@ -1628,7 +1656,6 @@ argument_list|(
 name|out
 argument_list|)
 expr_stmt|;
-comment|/**/
 name|EXIT
 argument_list|(
 literal|0
@@ -1643,7 +1670,7 @@ argument_list|,
 literal|"1\n"
 argument_list|)
 expr_stmt|;
-comment|/* make sure the Perl script fed by bc notices 	                      * the failure, see test_bn in test/Makefile.ssl*/
+comment|/* make sure the Perl script fed by bc                                  * notices the failure, see test_bn in                                  * test/Makefile.ssl */
 operator|(
 name|void
 operator|)
@@ -3763,41 +3790,68 @@ name|ctx
 parameter_list|)
 block|{
 name|BIGNUM
+modifier|*
 name|a
 decl_stmt|,
+modifier|*
 name|c
 decl_stmt|,
+modifier|*
 name|d
 decl_stmt|,
+modifier|*
 name|e
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|ret
+init|=
+literal|0
 decl_stmt|;
-name|BN_init
-argument_list|(
-operator|&
 name|a
-argument_list|)
+operator|=
+name|BN_new
+argument_list|()
 expr_stmt|;
-name|BN_init
-argument_list|(
-operator|&
 name|c
-argument_list|)
+operator|=
+name|BN_new
+argument_list|()
 expr_stmt|;
-name|BN_init
-argument_list|(
-operator|&
 name|d
-argument_list|)
+operator|=
+name|BN_new
+argument_list|()
 expr_stmt|;
-name|BN_init
-argument_list|(
-operator|&
 name|e
-argument_list|)
+operator|=
+name|BN_new
+argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|a
+operator|==
+name|NULL
+operator|||
+name|c
+operator|==
+name|NULL
+operator|||
+name|d
+operator|==
+name|NULL
+operator|||
+name|e
+operator|==
+name|NULL
+condition|)
+block|{
+goto|goto
+name|err
+goto|;
+block|}
 for|for
 control|(
 name|i
@@ -3814,7 +3868,6 @@ control|)
 block|{
 name|BN_bntest_rand
 argument_list|(
-operator|&
 name|a
 argument_list|,
 literal|40
@@ -3829,7 +3882,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 name|a
-operator|.
+operator|->
 name|neg
 operator|=
 name|rand_neg
@@ -3837,10 +3890,8 @@ argument_list|()
 expr_stmt|;
 name|BN_sqr
 argument_list|(
-operator|&
 name|c
 argument_list|,
-operator|&
 name|a
 argument_list|,
 name|ctx
@@ -3863,7 +3914,6 @@ name|BN_print
 argument_list|(
 name|bp
 argument_list|,
-operator|&
 name|a
 argument_list|)
 expr_stmt|;
@@ -3878,7 +3928,6 @@ name|BN_print
 argument_list|(
 name|bp
 argument_list|,
-operator|&
 name|a
 argument_list|)
 expr_stmt|;
@@ -3894,7 +3943,6 @@ name|BN_print
 argument_list|(
 name|bp
 argument_list|,
-operator|&
 name|c
 argument_list|)
 expr_stmt|;
@@ -3908,16 +3956,12 @@ expr_stmt|;
 block|}
 name|BN_div
 argument_list|(
-operator|&
 name|d
 argument_list|,
-operator|&
 name|e
 argument_list|,
-operator|&
 name|c
 argument_list|,
-operator|&
 name|a
 argument_list|,
 name|ctx
@@ -3925,13 +3969,10 @@ argument_list|)
 expr_stmt|;
 name|BN_sub
 argument_list|(
-operator|&
 name|d
 argument_list|,
-operator|&
 name|d
 argument_list|,
-operator|&
 name|a
 argument_list|)
 expr_stmt|;
@@ -3940,14 +3981,12 @@ condition|(
 operator|!
 name|BN_is_zero
 argument_list|(
-operator|&
 name|d
 argument_list|)
 operator|||
 operator|!
 name|BN_is_zero
 argument_list|(
-operator|&
 name|e
 argument_list|)
 condition|)
@@ -3959,39 +3998,281 @@ argument_list|,
 literal|"Square test failed!\n"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
+goto|goto
+name|err
+goto|;
 block|}
 block|}
-name|BN_free
+comment|/* Regression test for a BN_sqr overflow bug. */
+name|BN_hex2bn
 argument_list|(
 operator|&
 name|a
+argument_list|,
+literal|"80000000000000008000000000000001"
+literal|"FFFFFFFFFFFFFFFE0000000000000000"
 argument_list|)
 expr_stmt|;
-name|BN_free
+name|BN_sqr
 argument_list|(
-operator|&
+name|c
+argument_list|,
+name|a
+argument_list|,
+name|ctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|results
+condition|)
+block|{
+name|BN_print
+argument_list|(
+name|bp
+argument_list|,
+name|a
+argument_list|)
+expr_stmt|;
+name|BIO_puts
+argument_list|(
+name|bp
+argument_list|,
+literal|" * "
+argument_list|)
+expr_stmt|;
+name|BN_print
+argument_list|(
+name|bp
+argument_list|,
+name|a
+argument_list|)
+expr_stmt|;
+name|BIO_puts
+argument_list|(
+name|bp
+argument_list|,
+literal|" - "
+argument_list|)
+expr_stmt|;
+block|}
+name|BN_print
+argument_list|(
+name|bp
+argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-name|BN_free
+name|BIO_puts
+argument_list|(
+name|bp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|BN_mul
+argument_list|(
+name|d
+argument_list|,
+name|a
+argument_list|,
+name|a
+argument_list|,
+name|ctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|BN_cmp
+argument_list|(
+name|c
+argument_list|,
+name|d
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Square test failed: BN_sqr and BN_mul produce "
+literal|"different results!\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+comment|/* Regression test for a BN_sqr overflow bug. */
+name|BN_hex2bn
 argument_list|(
 operator|&
+name|a
+argument_list|,
+literal|"80000000000000000000000080000001"
+literal|"FFFFFFFE000000000000000000000000"
+argument_list|)
+expr_stmt|;
+name|BN_sqr
+argument_list|(
+name|c
+argument_list|,
+name|a
+argument_list|,
+name|ctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|results
+condition|)
+block|{
+name|BN_print
+argument_list|(
+name|bp
+argument_list|,
+name|a
+argument_list|)
+expr_stmt|;
+name|BIO_puts
+argument_list|(
+name|bp
+argument_list|,
+literal|" * "
+argument_list|)
+expr_stmt|;
+name|BN_print
+argument_list|(
+name|bp
+argument_list|,
+name|a
+argument_list|)
+expr_stmt|;
+name|BIO_puts
+argument_list|(
+name|bp
+argument_list|,
+literal|" - "
+argument_list|)
+expr_stmt|;
+block|}
+name|BN_print
+argument_list|(
+name|bp
+argument_list|,
+name|c
+argument_list|)
+expr_stmt|;
+name|BIO_puts
+argument_list|(
+name|bp
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|BN_mul
+argument_list|(
+name|d
+argument_list|,
+name|a
+argument_list|,
+name|a
+argument_list|,
+name|ctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|BN_cmp
+argument_list|(
+name|c
+argument_list|,
+name|d
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Square test failed: BN_sqr and BN_mul produce "
+literal|"different results!\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+name|ret
+operator|=
+literal|1
+expr_stmt|;
+name|err
+label|:
+if|if
+condition|(
+name|a
+operator|!=
+name|NULL
+condition|)
+name|BN_free
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|!=
+name|NULL
+condition|)
+name|BN_free
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|d
+operator|!=
+name|NULL
+condition|)
+name|BN_free
+argument_list|(
 name|d
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|e
+operator|!=
+name|NULL
+condition|)
 name|BN_free
 argument_list|(
-operator|&
 name|e
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-literal|1
-operator|)
+name|ret
 return|;
 block|}
 end_function
@@ -4100,7 +4381,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 name|BN_bntest_rand
 argument_list|(
 operator|&
@@ -4113,7 +4393,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 for|for
 control|(
 name|i
@@ -4242,7 +4521,6 @@ argument_list|,
 name|ctx
 argument_list|)
 expr_stmt|;
-comment|/**/
 name|BN_from_montgomery
 argument_list|(
 operator|&
@@ -4256,7 +4534,6 @@ argument_list|,
 name|ctx
 argument_list|)
 expr_stmt|;
-comment|/**/
 if|if
 condition|(
 name|bp
@@ -4541,7 +4818,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 for|for
 control|(
 name|i
@@ -4571,7 +4847,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 name|a
 operator|->
 name|neg
@@ -4597,7 +4872,6 @@ argument_list|,
 name|ctx
 argument_list|)
 expr_stmt|;
-comment|/**/
 if|if
 condition|(
 name|bp
@@ -4815,7 +5089,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 for|for
 control|(
 name|i
@@ -4845,7 +5118,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 name|BN_bntest_rand
 argument_list|(
 name|b
@@ -4861,7 +5133,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 name|a
 operator|->
 name|neg
@@ -4993,7 +5264,7 @@ name|e
 argument_list|)
 condition|)
 block|{
-comment|/* If  (a*b) % c  is negative,  c  must be added 					 * in order to obtain the normalized remainder 					 * (new with OpenSSL 0.9.7, previous versions of 					 * BN_mod_mul could generate negative results) 					 */
+comment|/*                          * If (a*b) % c is negative, c must be added in order                          * to obtain the normalized remainder (new with                          * OpenSSL 0.9.7, previous versions of BN_mod_mul                          * could generate negative results)                          */
 name|BIO_puts
 argument_list|(
 name|bp
@@ -5223,7 +5494,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 name|BN_bntest_rand
 argument_list|(
 name|b
@@ -5237,7 +5507,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 if|if
 condition|(
 operator|!
@@ -5515,7 +5784,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 name|BN_bntest_rand
 argument_list|(
 name|b
@@ -5529,7 +5797,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 if|if
 condition|(
 operator|!
@@ -5711,6 +5978,404 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Test constant-time modular exponentiation with 1024-bit inputs, which on  * x86_64 cause a different code branch to be taken.  */
+end_comment
+
+begin_function
+name|int
+name|test_mod_exp_mont5
+parameter_list|(
+name|BIO
+modifier|*
+name|bp
+parameter_list|,
+name|BN_CTX
+modifier|*
+name|ctx
+parameter_list|)
+block|{
+name|BIGNUM
+modifier|*
+name|a
+decl_stmt|,
+modifier|*
+name|p
+decl_stmt|,
+modifier|*
+name|m
+decl_stmt|,
+modifier|*
+name|d
+decl_stmt|,
+modifier|*
+name|e
+decl_stmt|;
+name|BN_MONT_CTX
+modifier|*
+name|mont
+decl_stmt|;
+name|a
+operator|=
+name|BN_new
+argument_list|()
+expr_stmt|;
+name|p
+operator|=
+name|BN_new
+argument_list|()
+expr_stmt|;
+name|m
+operator|=
+name|BN_new
+argument_list|()
+expr_stmt|;
+name|d
+operator|=
+name|BN_new
+argument_list|()
+expr_stmt|;
+name|e
+operator|=
+name|BN_new
+argument_list|()
+expr_stmt|;
+name|mont
+operator|=
+name|BN_MONT_CTX_new
+argument_list|()
+expr_stmt|;
+name|BN_bntest_rand
+argument_list|(
+name|m
+argument_list|,
+literal|1024
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* must be odd for montgomery */
+comment|/* Zero exponent */
+name|BN_bntest_rand
+argument_list|(
+name|a
+argument_list|,
+literal|1024
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|BN_zero
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|BN_mod_exp_mont_consttime
+argument_list|(
+name|d
+argument_list|,
+name|a
+argument_list|,
+name|p
+argument_list|,
+name|m
+argument_list|,
+name|ctx
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
+name|BN_is_one
+argument_list|(
+name|d
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Modular exponentiation test failed!\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+comment|/* Zero input */
+name|BN_bntest_rand
+argument_list|(
+name|p
+argument_list|,
+literal|1024
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|BN_zero
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|BN_mod_exp_mont_consttime
+argument_list|(
+name|d
+argument_list|,
+name|a
+argument_list|,
+name|p
+argument_list|,
+name|m
+argument_list|,
+name|ctx
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
+name|BN_is_zero
+argument_list|(
+name|d
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Modular exponentiation test failed!\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+comment|/*      * Craft an input whose Montgomery representation is 1, i.e., shorter      * than the modulus m, in order to test the const time precomputation      * scattering/gathering.      */
+name|BN_one
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+name|BN_MONT_CTX_set
+argument_list|(
+name|mont
+argument_list|,
+name|m
+argument_list|,
+name|ctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|BN_from_montgomery
+argument_list|(
+name|e
+argument_list|,
+name|a
+argument_list|,
+name|mont
+argument_list|,
+name|ctx
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
+name|BN_mod_exp_mont_consttime
+argument_list|(
+name|d
+argument_list|,
+name|e
+argument_list|,
+name|p
+argument_list|,
+name|m
+argument_list|,
+name|ctx
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
+name|BN_mod_exp_simple
+argument_list|(
+name|a
+argument_list|,
+name|e
+argument_list|,
+name|p
+argument_list|,
+name|m
+argument_list|,
+name|ctx
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|BN_cmp
+argument_list|(
+name|a
+argument_list|,
+name|d
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Modular exponentiation test failed!\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+comment|/* Finally, some regular test vectors. */
+name|BN_bntest_rand
+argument_list|(
+name|e
+argument_list|,
+literal|1024
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|BN_mod_exp_mont_consttime
+argument_list|(
+name|d
+argument_list|,
+name|e
+argument_list|,
+name|p
+argument_list|,
+name|m
+argument_list|,
+name|ctx
+argument_list|,
+name|NULL
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+operator|!
+name|BN_mod_exp_simple
+argument_list|(
+name|a
+argument_list|,
+name|e
+argument_list|,
+name|p
+argument_list|,
+name|m
+argument_list|,
+name|ctx
+argument_list|)
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
+name|BN_cmp
+argument_list|(
+name|a
+argument_list|,
+name|d
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Modular exponentiation test failed!\n"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+name|BN_free
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+name|BN_free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|BN_free
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+name|BN_free
+argument_list|(
+name|d
+argument_list|)
+expr_stmt|;
+name|BN_free
+argument_list|(
+name|e
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 name|int
 name|test_exp
@@ -5802,7 +6467,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 name|BN_bntest_rand
 argument_list|(
 name|b
@@ -5816,7 +6480,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 if|if
 condition|(
 name|BN_exp
@@ -6102,8 +6765,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* make test uses ouput in bc but bc can't handle GF(2^m) arithmetic */
-block|if (bp != NULL) 			{ 			if (!results) 				{ 				BN_print(bp,&a); 				BIO_puts(bp," ^ "); 				BN_print(bp,&b); 				BIO_puts(bp," = "); 				} 			BN_print(bp,&c); 			BIO_puts(bp,"\n"); 			}
+comment|/* make test uses ouput in bc but bc can't                                  * handle GF(2^m) arithmetic */
+block|if (bp != NULL) {             if (!results) {                 BN_print(bp,&a);                 BIO_puts(bp, " ^ ");                 BN_print(bp,&b);                 BIO_puts(bp, " = ");             }             BN_print(bp,&c);             BIO_puts(bp, "\n");         }
 endif|#
 directive|endif
 comment|/* Test that two added values have the correct parity. */
@@ -6397,8 +7060,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* make test uses ouput in bc but bc can't handle GF(2^m) arithmetic */
-block|if (bp != NULL) 				{ 				if (!results) 					{ 					BN_print(bp,a); 					BIO_puts(bp," % "); 					BN_print(bp,b[j]); 					BIO_puts(bp," - "); 					BN_print(bp,c); 					BIO_puts(bp,"\n"); 					} 				}
+comment|/* make test uses ouput in bc but bc can't                                  * handle GF(2^m) arithmetic */
+block|if (bp != NULL) {                 if (!results) {                     BN_print(bp, a);                     BIO_puts(bp, " % ");                     BN_print(bp, b[j]);                     BIO_puts(bp, " - ");                     BN_print(bp, c);                     BIO_puts(bp, "\n");                 }             }
 endif|#
 directive|endif
 name|BN_GF2m_add
@@ -6728,8 +7391,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* make test uses ouput in bc but bc can't handle GF(2^m) arithmetic */
-block|if (bp != NULL) 				{ 				if (!results) 					{ 					BN_print(bp,a); 					BIO_puts(bp," * "); 					BN_print(bp,c); 					BIO_puts(bp," % "); 					BN_print(bp,b[j]); 					BIO_puts(bp," - "); 					BN_print(bp,e); 					BIO_puts(bp,"\n"); 					} 				}
+comment|/* make test uses ouput in bc but bc can't                                  * handle GF(2^m) arithmetic */
+block|if (bp != NULL) {                 if (!results) {                     BN_print(bp, a);                     BIO_puts(bp, " * ");                     BN_print(bp, c);                     BIO_puts(bp, " % ");                     BN_print(bp, b[j]);                     BIO_puts(bp, " - ");                     BN_print(bp, e);                     BIO_puts(bp, "\n");                 }             }
 endif|#
 directive|endif
 name|BN_GF2m_add
@@ -7079,8 +7742,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* make test uses ouput in bc but bc can't handle GF(2^m) arithmetic */
-block|if (bp != NULL) 				{ 				if (!results) 					{ 					BN_print(bp,a); 					BIO_puts(bp," ^ 2 % "); 					BN_print(bp,b[j]); 					BIO_puts(bp, " = "); 					BN_print(bp,c); 					BIO_puts(bp,"; a * a = "); 					BN_print(bp,d); 					BIO_puts(bp,"\n"); 					} 				}
+comment|/* make test uses ouput in bc but bc can't                                  * handle GF(2^m) arithmetic */
+block|if (bp != NULL) {                 if (!results) {                     BN_print(bp, a);                     BIO_puts(bp, " ^ 2 % ");                     BN_print(bp, b[j]);                     BIO_puts(bp, " = ");                     BN_print(bp, c);                     BIO_puts(bp, "; a * a = ");                     BN_print(bp, d);                     BIO_puts(bp, "\n");                 }             }
 endif|#
 directive|endif
 name|BN_GF2m_add
@@ -7353,8 +8016,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* make test uses ouput in bc but bc can't handle GF(2^m) arithmetic */
-block|if (bp != NULL) 				{ 				if (!results) 					{ 					BN_print(bp,a); 					BIO_puts(bp, " * "); 					BN_print(bp,c); 					BIO_puts(bp," - 1 % "); 					BN_print(bp,b[j]); 					BIO_puts(bp,"\n"); 					} 				}
+comment|/* make test uses ouput in bc but bc can't                                  * handle GF(2^m) arithmetic */
+block|if (bp != NULL) {                 if (!results) {                     BN_print(bp, a);                     BIO_puts(bp, " * ");                     BN_print(bp, c);                     BIO_puts(bp, " - 1 % ");                     BN_print(bp, b[j]);                     BIO_puts(bp, "\n");                 }             }
 endif|#
 directive|endif
 comment|/* Test that ((1/a)*a) = 1. */
@@ -7663,8 +8326,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* make test uses ouput in bc but bc can't handle GF(2^m) arithmetic */
-block|if (bp != NULL) 				{ 				if (!results) 					{ 					BN_print(bp,a); 					BIO_puts(bp, " = "); 					BN_print(bp,c); 					BIO_puts(bp," * "); 					BN_print(bp,d); 					BIO_puts(bp, " % "); 					BN_print(bp,b[j]); 					BIO_puts(bp,"\n"); 					} 				}
+comment|/* make test uses ouput in bc but bc can't                                  * handle GF(2^m) arithmetic */
+block|if (bp != NULL) {                 if (!results) {                     BN_print(bp, a);                     BIO_puts(bp, " = ");                     BN_print(bp, c);                     BIO_puts(bp, " * ");                     BN_print(bp, d);                     BIO_puts(bp, " % ");                     BN_print(bp, b[j]);                     BIO_puts(bp, "\n");                 }             }
 endif|#
 directive|endif
 comment|/* Test that ((a/c)*c)/a = 1. */
@@ -8019,8 +8682,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* make test uses ouput in bc but bc can't handle GF(2^m) arithmetic */
-block|if (bp != NULL) 				{ 				if (!results) 					{ 					BN_print(bp,a); 					BIO_puts(bp, " ^ ("); 					BN_print(bp,c); 					BIO_puts(bp," + "); 					BN_print(bp,d); 					BIO_puts(bp, ") = "); 					BN_print(bp,e); 					BIO_puts(bp, "; - "); 					BN_print(bp,f); 					BIO_puts(bp, " % "); 					BN_print(bp,b[j]); 					BIO_puts(bp,"\n"); 					} 				}
+comment|/* make test uses ouput in bc but bc can't                                  * handle GF(2^m) arithmetic */
+block|if (bp != NULL) {                 if (!results) {                     BN_print(bp, a);                     BIO_puts(bp, " ^ (");                     BN_print(bp, c);                     BIO_puts(bp, " + ");                     BN_print(bp, d);                     BIO_puts(bp, ") = ");                     BN_print(bp, e);                     BIO_puts(bp, "; - ");                     BN_print(bp, f);                     BIO_puts(bp, " % ");                     BN_print(bp, b[j]);                     BIO_puts(bp, "\n");                 }             }
 endif|#
 directive|endif
 name|BN_GF2m_add
@@ -8329,8 +8992,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* make test uses ouput in bc but bc can't handle GF(2^m) arithmetic */
-block|if (bp != NULL) 				{ 				if (!results) 					{ 					BN_print(bp,d); 					BIO_puts(bp, " ^ 2 - "); 					BN_print(bp,a); 					BIO_puts(bp,"\n"); 					} 				}
+comment|/* make test uses ouput in bc but bc can't                                  * handle GF(2^m) arithmetic */
+block|if (bp != NULL) {                 if (!results) {                     BN_print(bp, d);                     BIO_puts(bp, " ^ 2 - ");                     BN_print(bp, a);                     BIO_puts(bp, "\n");                 }             }
 endif|#
 directive|endif
 name|BN_GF2m_add
@@ -8656,8 +9319,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* make test uses ouput in bc but bc can't handle GF(2^m) arithmetic */
-block|if (bp != NULL) 					{ 					if (!results) 						{ 						BN_print(bp,c); 						BIO_puts(bp, " is root of z^2 + z = "); 						BN_print(bp,a); 						BIO_puts(bp, " % "); 						BN_print(bp,b[j]); 						BIO_puts(bp, "\n"); 						} 					}
+comment|/* make test uses ouput in bc but bc can't                                  * handle GF(2^m) arithmetic */
+block|if (bp != NULL) {                     if (!results) {                         BN_print(bp, c);                         BIO_puts(bp, " is root of z^2 + z = ");                         BN_print(bp, a);                         BIO_puts(bp, " % ");                         BN_print(bp, b[j]);                         BIO_puts(bp, "\n");                     }                 }
 endif|#
 directive|endif
 name|BN_GF2m_add
@@ -8669,7 +9332,7 @@ argument_list|,
 name|d
 argument_list|)
 expr_stmt|;
-comment|/* Test that solution of quadratic c satisfies c^2 + c = a. */
+comment|/*                  * Test that solution of quadratic c satisfies c^2 + c = a.                  */
 if|if
 condition|(
 operator|!
@@ -8696,8 +9359,8 @@ block|{
 if|#
 directive|if
 literal|0
-comment|/* make test uses ouput in bc but bc can't handle GF(2^m) arithmetic */
-block|if (bp != NULL) 					{ 					if (!results) 						{ 						BIO_puts(bp, "There are no roots of z^2 + z = "); 						BN_print(bp,a); 						BIO_puts(bp, " % "); 						BN_print(bp,b[j]); 						BIO_puts(bp, "\n"); 						} 					}
+comment|/* make test uses ouput in bc but bc can't                                  * handle GF(2^m) arithmetic */
+block|if (bp != NULL) {                     if (!results) {                         BIO_puts(bp, "There are no roots of z^2 + z = ");                         BN_print(bp, a);                         BIO_puts(bp, " % ");                         BN_print(bp, b[j]);                         BIO_puts(bp, "\n");                     }                 }
 endif|#
 directive|endif
 block|}
@@ -8955,7 +9618,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* We test BN_kronecker(a, b, ctx) just for  b  odd (Jacobi symbol). 	 * In this case we know that if  b  is prime, then BN_kronecker(a, b, ctx) 	 * is congruent to $a^{(b-1)/2}$, modulo $b$ (Legendre symbol). 	 * So we generate a random prime  b  and compare these values 	 * for a number of random  a's.  (That is, we run the Solovay-Strassen 	 * primality test to confirm that  b  is prime, except that we 	 * don't want to test whether  b  is prime but whether BN_kronecker 	 * works.) */
+comment|/*      * We test BN_kronecker(a, b, ctx) just for b odd (Jacobi symbol). In      * this case we know that if b is prime, then BN_kronecker(a, b, ctx) is      * congruent to $a^{(b-1)/2}$, modulo $b$ (Legendre symbol). So we      * generate a random prime b and compare these values for a number of      * random a's.  (That is, we run the Solovay-Strassen primality test to      * confirm that b is prime, except that we don't want to test whether b      * is prime but whether BN_kronecker works.)      */
 if|if
 condition|(
 operator|!
@@ -9564,7 +10227,7 @@ name|j
 operator|++
 control|)
 block|{
-comment|/* construct 'a' such that it is a square modulo p, 			 * but in general not a proper square and not reduced modulo p */
+comment|/*              * construct 'a' such that it is a square modulo p, but in              * general not a proper square and not reduced modulo p              */
 if|if
 condition|(
 operator|!
@@ -9970,7 +10633,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 name|a
 operator|->
 name|neg
@@ -10250,7 +10912,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 name|a
 operator|->
 name|neg
@@ -10471,7 +11132,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 name|a
 operator|->
 name|neg
@@ -10694,7 +11354,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/**/
 name|a
 operator|->
 name|neg

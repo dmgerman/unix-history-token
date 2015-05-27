@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|CLANG_DRIVER_COMPILATION_H_
+name|LLVM_CLANG_DRIVER_COMPILATION_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|CLANG_DRIVER_COMPILATION_H_
+name|LLVM_CLANG_DRIVER_COMPILATION_H
 end_define
 
 begin_include
@@ -199,6 +199,10 @@ modifier|*
 modifier|*
 name|Redirects
 decl_stmt|;
+comment|/// Whether we're compiling for diagnostic purposes.
+name|bool
+name|ForDiagnostics
+decl_stmt|;
 name|public
 label|:
 name|Compilation
@@ -344,17 +348,26 @@ return|;
 block|}
 name|void
 name|addCommand
-parameter_list|(
+argument_list|(
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|Command
-modifier|*
+operator|>
 name|C
-parameter_list|)
+argument_list|)
 block|{
 name|Jobs
 operator|.
 name|addJob
 argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
 name|C
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -633,6 +646,15 @@ name|void
 name|initCompilationForDiagnostics
 parameter_list|()
 function_decl|;
+comment|/// Return true if we're compiling for diagnostics.
+name|bool
+name|isForDiagnostics
+parameter_list|()
+block|{
+return|return
+name|ForDiagnostics
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

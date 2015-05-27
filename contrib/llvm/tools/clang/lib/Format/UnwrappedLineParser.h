@@ -58,14 +58,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FORMAT_UNWRAPPED_LINE_PARSER_H
+name|LLVM_CLANG_LIB_FORMAT_UNWRAPPEDLINEPARSER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FORMAT_UNWRAPPED_LINE_PARSER_H
+name|LLVM_CLANG_LIB_FORMAT_UNWRAPPEDLINEPARSER_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"FormatToken.h"
+end_include
 
 begin_include
 include|#
@@ -82,13 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"FormatToken.h"
+file|<list>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<list>
+file|<stack>
 end_include
 
 begin_decl_stmt
@@ -181,6 +187,11 @@ specifier|const
 name|FormatStyle
 operator|&
 name|Style
+argument_list|,
+specifier|const
+name|AdditionalKeywords
+operator|&
+name|Keywords
 argument_list|,
 name|ArrayRef
 operator|<
@@ -286,15 +297,19 @@ name|false
 parameter_list|)
 function_decl|;
 name|void
-name|parseReturn
-parameter_list|()
-function_decl|;
-name|void
 name|parseParens
 parameter_list|()
 function_decl|;
 name|void
+name|parseSquare
+parameter_list|()
+function_decl|;
+name|void
 name|parseIfThenElse
+parameter_list|()
+function_decl|;
+name|void
+name|parseTryCatch
 parameter_list|()
 function_decl|;
 name|void
@@ -330,6 +345,10 @@ name|parseEnum
 parameter_list|()
 function_decl|;
 name|void
+name|parseJavaEnumBody
+parameter_list|()
+function_decl|;
+name|void
 name|parseRecord
 parameter_list|()
 function_decl|;
@@ -349,12 +368,16 @@ name|void
 name|parseObjCProtocol
 parameter_list|()
 function_decl|;
-name|void
+name|bool
 name|tryToParseLambda
 parameter_list|()
 function_decl|;
 name|bool
 name|tryToParseLambdaIntroducer
+parameter_list|()
+function_decl|;
+name|void
+name|tryToParseJSFunction
 parameter_list|()
 function_decl|;
 name|void
@@ -393,14 +416,47 @@ name|void
 name|calculateBraceTypes
 parameter_list|()
 function_decl|;
+comment|// Marks a conditional compilation edge (for example, an '#if', '#ifdef',
+comment|// '#else' or merge conflict marker). If 'Unreachable' is true, assumes
+comment|// this branch either cannot be taken (for example '#if false'), or should
+comment|// not be taken in this round.
 name|void
-name|pushPPConditional
+name|conditionalCompilationCondition
+parameter_list|(
+name|bool
+name|Unreachable
+parameter_list|)
+function_decl|;
+name|void
+name|conditionalCompilationStart
+parameter_list|(
+name|bool
+name|Unreachable
+parameter_list|)
+function_decl|;
+name|void
+name|conditionalCompilationAlternative
 parameter_list|()
+function_decl|;
+name|void
+name|conditionalCompilationEnd
+parameter_list|()
+function_decl|;
+name|bool
+name|isOnNewLine
+parameter_list|(
+specifier|const
+name|FormatToken
+modifier|&
+name|FormatTok
+parameter_list|)
 function_decl|;
 comment|// FIXME: We are constantly running into bugs where Line.Level is incorrectly
 comment|// subtracted from beyond 0. Introduce a method to subtract from Line.Level
 comment|// and use that everywhere in the Parser.
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|UnwrappedLine
 operator|>
@@ -476,6 +532,11 @@ specifier|const
 name|FormatStyle
 modifier|&
 name|Style
+decl_stmt|;
+specifier|const
+name|AdditionalKeywords
+modifier|&
+name|Keywords
 decl_stmt|;
 name|FormatTokenSource
 modifier|*
@@ -560,6 +621,10 @@ name|friend
 name|class
 name|ScopedLineState
 decl_stmt|;
+name|friend
+name|class
+name|CompoundStatementIndenter
+decl_stmt|;
 block|}
 empty_stmt|;
 struct|struct
@@ -570,7 +635,7 @@ argument_list|()
 operator|:
 name|Tok
 argument_list|(
-argument|NULL
+argument|nullptr
 argument_list|)
 block|{}
 name|UnwrappedLineNode
@@ -633,10 +698,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_FORMAT_UNWRAPPED_LINE_PARSER_H
-end_comment
 
 end_unit
 

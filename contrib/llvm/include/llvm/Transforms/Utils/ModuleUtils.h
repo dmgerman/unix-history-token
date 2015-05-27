@@ -79,12 +79,9 @@ name|template
 operator|<
 name|class
 name|PtrType
-operator|,
-name|unsigned
-name|SmallSize
 operator|>
 name|class
-name|SmallPtrSet
+name|SmallPtrSetImpl
 expr_stmt|;
 comment|/// Append F to the list of global ctors of module M with the given Priority.
 comment|/// This wraps the function in the appropriate structure and stores it along
@@ -131,12 +128,10 @@ name|Module
 operator|&
 name|M
 argument_list|,
-name|SmallPtrSet
+name|SmallPtrSetImpl
 operator|<
 name|GlobalValue
 operator|*
-argument_list|,
-literal|8
 operator|>
 operator|&
 name|Set

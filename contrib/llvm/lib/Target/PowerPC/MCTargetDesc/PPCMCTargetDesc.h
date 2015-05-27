@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|PPCMCTARGETDESC_H
+name|LLVM_LIB_TARGET_POWERPC_MCTARGETDESC_PPCMCTARGETDESC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|PPCMCTARGETDESC_H
+name|LLVM_LIB_TARGET_POWERPC_MCTARGETDESC_PPCMCTARGETDESC_H
 end_define
 
 begin_comment
@@ -177,6 +177,9 @@ name|OS
 parameter_list|,
 name|bool
 name|Is64Bit
+parameter_list|,
+name|bool
+name|IsLittleEndian
 parameter_list|,
 name|uint8_t
 name|OSABI

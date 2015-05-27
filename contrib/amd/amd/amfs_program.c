@@ -441,9 +441,8 @@ operator|=
 name|stderr
 expr_stmt|;
 comment|/* initialize before possible first use */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|dup
 argument_list|(
 name|fileno
@@ -451,7 +450,13 @@ argument_list|(
 name|logfp
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+name|errno
+return|;
 if|if
 condition|(
 name|fileno
@@ -473,9 +478,8 @@ argument_list|(
 name|stderr
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|dup
 argument_list|(
 name|fileno
@@ -483,7 +487,13 @@ argument_list|(
 name|logfp
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+name|errno
+return|;
 block|}
 comment|/*    * Try the exec    */
 if|if

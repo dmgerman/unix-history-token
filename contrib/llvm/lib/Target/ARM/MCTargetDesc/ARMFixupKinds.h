@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_ARM_ARMFIXUPKINDS_H
+name|LLVM_LIB_TARGET_ARM_MCTARGETDESC_ARMFIXUPKINDS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_ARM_ARMFIXUPKINDS_H
+name|LLVM_LIB_TARGET_ARM_MCTARGETDESC_ARMFIXUPKINDS_H
 end_define
 
 begin_include
@@ -159,22 +159,6 @@ name|fixup_t2_movt_hi16
 block|,
 comment|// :upper16:
 name|fixup_t2_movw_lo16
-block|,
-comment|// :lower16:
-comment|// It is possible to create an "immediate" that happens to be pcrel.
-comment|// movw r0, :lower16:Foo-(Bar+8) and movt  r0, :upper16:Foo-(Bar+8)
-comment|// result in different reloc tags than the above two.
-comment|// Needed to support ELF::R_ARM_MOVT_PREL and ELF::R_ARM_MOVW_PREL_NC
-name|fixup_arm_movt_hi16_pcrel
-block|,
-comment|// :upper16:
-name|fixup_arm_movw_lo16_pcrel
-block|,
-comment|// :lower16:
-name|fixup_t2_movt_hi16_pcrel
-block|,
-comment|// :upper16:
-name|fixup_t2_movw_lo16_pcrel
 block|,
 comment|// :lower16:
 comment|// Marker

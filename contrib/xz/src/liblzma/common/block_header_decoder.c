@@ -64,6 +64,7 @@ name|lzma_block
 modifier|*
 name|block
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -138,7 +139,7 @@ name|lzma_block_header_decode
 argument_list|(
 argument|lzma_block *block
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|,
 argument|const uint8_t *in
 argument_list|)
@@ -190,12 +191,31 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|// Always zero for now.
+comment|// Versions 0 and 1 are supported. If a newer version was specified,
+comment|// we need to downgrade it.
+if|if
+condition|(
+name|block
+operator|->
+name|version
+operator|>
+literal|1
+condition|)
 name|block
 operator|->
 name|version
 operator|=
-literal|0
+literal|1
+expr_stmt|;
+comment|// This isn't a Block Header option, but since the decompressor will
+comment|// read it if version>= 1, it's better to initialize it here than
+comment|// to expect the caller to do it since in almost all cases this
+comment|// should be false.
+name|block
+operator|->
+name|ignore_check
+operator|=
+name|false
 expr_stmt|;
 comment|// Validate Block Header Size and Check type. The caller must have
 comment|// already set these, so it is a programming error if this test fails.

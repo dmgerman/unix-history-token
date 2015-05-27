@@ -15,16 +15,6 @@ directive|define
 name|_UFS_UFS_UFSMOUNT_H_
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/buf.h>
-end_include
-
-begin_comment
-comment|/* XXX For struct workhead. */
-end_comment
-
 begin_comment
 comment|/*  * Arguments to mount UFS-based filesystems  */
 end_comment

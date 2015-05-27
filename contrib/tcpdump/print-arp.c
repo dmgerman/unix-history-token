@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * $FreeBSD$  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-arp.c,v 1.66 2006-03-03 22:53:21 hannes Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -52,19 +35,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"netdissect.h"
+file|"interface.h"
 end_include
 
 begin_include
@@ -94,6 +71,17 @@ end_include
 begin_comment
 comment|/* must come after interface.h */
 end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|"[|ARP]"
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Address Resolution Protocol.  *  * See RFC 826 for protocol description.  ARP packets are variable  * in size; the arphdr structure defines the fixed-length portion.  * Protocol type values are the same as those for 10 Mb/s Ethernet.  * It is followed by the variable-sized fields ar_sha, arp_spa,  * arp_tha and arp_tpa in that order, according to the lengths  * specified.  Field names used correspond to RFC 826.  */
@@ -349,6 +337,8 @@ value|(ar_tpa(ap))
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|arpop_values
@@ -407,6 +397,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|tok
 name|arphrd_values
@@ -785,6 +777,8 @@ literal|"%s"
 operator|,
 name|linkaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|ha
 argument_list|,
 name|LINKADDR_ATM
@@ -809,6 +803,8 @@ literal|",%s"
 operator|,
 name|linkaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|srca
 argument_list|,
 name|LINKADDR_ATM
@@ -916,7 +912,9 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"[|ARP]"
+literal|"%s"
+operator|,
+name|tstr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1035,10 +1033,13 @@ goto|;
 block|}
 block|}
 comment|/* print operation */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s%s "
-argument_list|,
+operator|,
 name|ndo
 operator|->
 name|ndo_vflag
@@ -1046,7 +1047,7 @@ condition|?
 literal|", "
 else|:
 literal|""
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|arpop_values
@@ -1055,6 +1056,7 @@ literal|"Unknown (%u)"
 argument_list|,
 name|op
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1074,6 +1076,8 @@ literal|"who-has %s"
 operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|ATMTPA
 argument_list|(
 name|ap
@@ -1145,6 +1149,8 @@ literal|"tell %s"
 operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|ATMSPA
 argument_list|(
 name|ap
@@ -1166,6 +1172,8 @@ literal|"%s is-at "
 operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|ATMSPA
 argument_list|(
 name|ap
@@ -1309,6 +1317,8 @@ literal|"at %s"
 operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|ATMSPA
 argument_list|(
 name|ap
@@ -1330,6 +1340,8 @@ literal|"for %s"
 operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|ATMSPA
 argument_list|(
 name|ap
@@ -1375,7 +1387,9 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"[|ARP]"
+literal|"%s"
+operator|,
+name|tstr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1454,7 +1468,7 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
-comment|/* if its ATM then call the ATM ARP printer            for Frame-relay ARP most of the fields            are similar to Ethernet so overload the Ethernet Printer            and set the linkaddr type for linkaddr_string() accordingly */
+comment|/* if its ATM then call the ATM ARP printer            for Frame-relay ARP most of the fields            are similar to Ethernet so overload the Ethernet Printer            and set the linkaddr type for linkaddr_string(ndo, ) accordingly */
 switch|switch
 condition|(
 name|hrd
@@ -1513,7 +1527,9 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"[|ARP]"
+literal|"%s"
+operator|,
+name|tstr
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1633,10 +1649,13 @@ goto|;
 block|}
 block|}
 comment|/* print operation */
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s%s "
-argument_list|,
+operator|,
 name|ndo
 operator|->
 name|ndo_vflag
@@ -1644,7 +1663,7 @@ condition|?
 literal|", "
 else|:
 literal|""
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|arpop_values
@@ -1653,6 +1672,7 @@ literal|"Unknown (%u)"
 argument_list|,
 name|op
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -1672,6 +1692,8 @@ literal|"who-has %s"
 operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|TPA
 argument_list|(
 name|ap
@@ -1718,6 +1740,8 @@ literal|" (%s)"
 operator|,
 name|linkaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|THA
 argument_list|(
 name|ap
@@ -1742,6 +1766,8 @@ literal|" tell %s"
 operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|SPA
 argument_list|(
 name|ap
@@ -1763,6 +1789,8 @@ literal|"%s is-at %s"
 operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|SPA
 argument_list|(
 name|ap
@@ -1771,6 +1799,8 @@ argument_list|)
 operator|,
 name|linkaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|SHA
 argument_list|(
 name|ap
@@ -1799,6 +1829,8 @@ literal|"who-is %s tell %s"
 operator|,
 name|linkaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|THA
 argument_list|(
 name|ap
@@ -1814,6 +1846,8 @@ argument_list|)
 operator|,
 name|linkaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|SHA
 argument_list|(
 name|ap
@@ -1842,6 +1876,8 @@ literal|"%s at %s"
 operator|,
 name|linkaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|THA
 argument_list|(
 name|ap
@@ -1857,6 +1893,8 @@ argument_list|)
 operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|TPA
 argument_list|(
 name|ap
@@ -1878,6 +1916,8 @@ literal|"who-is %s tell %s"
 operator|,
 name|linkaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|THA
 argument_list|(
 name|ap
@@ -1893,6 +1933,8 @@ argument_list|)
 operator|,
 name|linkaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|SHA
 argument_list|(
 name|ap
@@ -1921,6 +1963,8 @@ literal|"%s at %s"
 operator|,
 name|linkaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|THA
 argument_list|(
 name|ap
@@ -1936,6 +1980,8 @@ argument_list|)
 operator|,
 name|ipaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|TPA
 argument_list|(
 name|ap
@@ -1981,7 +2027,9 @@ argument_list|(
 operator|(
 name|ndo
 operator|,
-literal|"[|ARP]"
+literal|"%s"
+operator|,
+name|tstr
 operator|)
 argument_list|)
 expr_stmt|;

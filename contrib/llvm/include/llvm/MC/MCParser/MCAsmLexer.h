@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/APInt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -71,7 +77,7 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-comment|/// AsmToken - Target independent representation for an assembler token.
+comment|/// Target independent representation for an assembler token.
 name|class
 name|AsmToken
 block|{
@@ -93,6 +99,9 @@ block|,
 comment|// Integer values.
 name|Integer
 block|,
+name|BigNum
+block|,
+comment|// larger than 64 bits
 comment|// Real values.
 name|Real
 block|,
@@ -184,7 +193,7 @@ comment|/// a memory buffer owned by the source manager.
 name|StringRef
 name|Str
 decl_stmt|;
-name|int64_t
+name|APInt
 name|IntVal
 decl_stmt|;
 name|public
@@ -198,8 +207,7 @@ argument|TokenKind _Kind
 argument_list|,
 argument|StringRef _Str
 argument_list|,
-argument|int64_t _IntVal =
-literal|0
+argument|APInt _IntVal
 argument_list|)
 block|:
 name|Kind
@@ -215,6 +223,35 @@ operator|,
 name|IntVal
 argument_list|(
 argument|_IntVal
+argument_list|)
+block|{}
+name|AsmToken
+argument_list|(
+argument|TokenKind _Kind
+argument_list|,
+argument|StringRef _Str
+argument_list|,
+argument|int64_t _IntVal =
+literal|0
+argument_list|)
+operator|:
+name|Kind
+argument_list|(
+name|_Kind
+argument_list|)
+operator|,
+name|Str
+argument_list|(
+name|_Str
+argument_list|)
+operator|,
+name|IntVal
+argument_list|(
+literal|64
+argument_list|,
+argument|_IntVal
+argument_list|,
+argument|true
 argument_list|)
 block|{}
 name|TokenKind
@@ -264,7 +301,12 @@ name|getEndLoc
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getStringContents - Get the contents of a string token (without quotes).
+name|SMRange
+name|getLocRange
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Get the contents of a string token (without quotes).
 name|StringRef
 name|getStringContents
 argument_list|()
@@ -295,10 +337,10 @@ literal|1
 argument_list|)
 return|;
 block|}
-comment|/// getIdentifier - Get the identifier string for the current token, which
-comment|/// should be an identifier or a string. This gets the portion of the string
-comment|/// which should be used as the identifier, e.g., it does not include the
-comment|/// quotes on strings.
+comment|/// Get the identifier string for the current token, which should be an
+comment|/// identifier or a string. This gets the portion of the string which should
+comment|/// be used as the identifier, e.g., it does not include the quotes on
+comment|/// strings.
 name|StringRef
 name|getIdentifier
 argument_list|()
@@ -319,8 +361,8 @@ name|getStringContents
 argument_list|()
 return|;
 block|}
-comment|/// getString - Get the string for the current token, this includes all
-comment|/// characters (for example, the quotes on strings) in the token.
+comment|/// Get the string for the current token, this includes all characters (for
+comment|/// example, the quotes on strings) in the token.
 comment|///
 comment|/// The returned StringRef points into the source manager's memory buffer, and
 comment|/// is safe to store across calls to Lex().
@@ -352,6 +394,33 @@ argument_list|)
 block|;
 return|return
 name|IntVal
+operator|.
+name|getZExtValue
+argument_list|()
+return|;
+block|}
+name|APInt
+name|getAPIntVal
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+operator|(
+name|Kind
+operator|==
+name|Integer
+operator|||
+name|Kind
+operator|==
+name|BigNum
+operator|)
+operator|&&
+literal|"This token isn't an integer!"
+argument_list|)
+block|;
+return|return
+name|IntVal
 return|;
 block|}
 block|}
@@ -362,11 +431,11 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// MCAsmLexer - Generic assembler lexer interface, for use by target specific
+comment|/// Generic assembler lexer interface, for use by target specific assembly
 end_comment
 
 begin_comment
-comment|/// assembly lexers.
+comment|/// lexers.
 end_comment
 
 begin_decl_stmt
@@ -413,6 +482,9 @@ decl_stmt|;
 name|bool
 name|SkipSpace
 decl_stmt|;
+name|bool
+name|AllowAtInIdentifier
+decl_stmt|;
 name|MCAsmLexer
 argument_list|()
 expr_stmt|;
@@ -455,7 +527,7 @@ operator|~
 name|MCAsmLexer
 argument_list|()
 expr_stmt|;
-comment|/// Lex - Consume the next token from the input stream and return it.
+comment|/// Consume the next token from the input stream and return it.
 comment|///
 comment|/// The lexer will continuosly return the end-of-file token once the end of
 comment|/// the main input file has been reached.
@@ -479,24 +551,39 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-comment|/// getLoc - Get the current source location.
+comment|/// Get the current source location.
 name|SMLoc
 name|getLoc
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// getTok - Get the current (last) lexed token.
+comment|/// Get the current (last) lexed token.
 specifier|const
 name|AsmToken
-modifier|&
+operator|&
 name|getTok
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 name|CurTok
 return|;
 block|}
-comment|/// getErrLoc - Get the current error location
+comment|/// Look ahead at the next token to be lexed.
+name|virtual
+specifier|const
+name|AsmToken
+name|peekTok
+parameter_list|(
+name|bool
+name|ShouldSkipSpace
+init|=
+name|true
+parameter_list|)
+init|=
+literal|0
+function_decl|;
+comment|/// Get the current error location
 specifier|const
 name|SMLoc
 modifier|&
@@ -507,7 +594,7 @@ return|return
 name|ErrLoc
 return|;
 block|}
-comment|/// getErr - Get the current error string
+comment|/// Get the current error string
 specifier|const
 name|std
 operator|::
@@ -520,7 +607,7 @@ return|return
 name|Err
 return|;
 block|}
-comment|/// getKind - Get the kind of current token.
+comment|/// Get the kind of current token.
 name|AsmToken
 operator|::
 name|TokenKind
@@ -535,7 +622,7 @@ name|getKind
 argument_list|()
 return|;
 block|}
-comment|/// is - Check if the current token has kind \p K.
+comment|/// Check if the current token has kind \p K.
 name|bool
 name|is
 argument_list|(
@@ -555,7 +642,7 @@ name|K
 argument_list|)
 return|;
 block|}
-comment|/// isNot - Check if the current token has kind \p K.
+comment|/// Check if the current token has kind \p K.
 name|bool
 name|isNot
 argument_list|(
@@ -575,7 +662,7 @@ name|K
 argument_list|)
 return|;
 block|}
-comment|/// setSkipSpace - Set whether spaces should be ignored by the lexer
+comment|/// Set whether spaces should be ignored by the lexer
 name|void
 name|setSkipSpace
 parameter_list|(
@@ -586,6 +673,26 @@ block|{
 name|SkipSpace
 operator|=
 name|val
+expr_stmt|;
+block|}
+name|bool
+name|getAllowAtInIdentifier
+parameter_list|()
+block|{
+return|return
+name|AllowAtInIdentifier
+return|;
+block|}
+name|void
+name|setAllowAtInIdentifier
+parameter_list|(
+name|bool
+name|v
+parameter_list|)
+block|{
+name|AllowAtInIdentifier
+operator|=
+name|v
 expr_stmt|;
 block|}
 block|}

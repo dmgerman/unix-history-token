@@ -54,37 +54,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|TARGET_X86_H
+name|LLVM_LIB_TARGET_X86_X86_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TARGET_X86_H
+name|LLVM_LIB_TARGET_X86_X86_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"MCTargetDesc/X86BaseInfo.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"MCTargetDesc/X86MCTargetDesc.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/DataTypes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_decl_stmt
@@ -95,7 +77,7 @@ name|class
 name|FunctionPass
 decl_stmt|;
 name|class
-name|JITCodeEmitter
+name|ImmutablePass
 decl_stmt|;
 name|class
 name|X86TargetMachine
@@ -117,11 +99,11 @@ name|Level
 name|OptLevel
 argument_list|)
 decl_stmt|;
-comment|/// createGlobalBaseRegPass - This pass initializes a global base
+comment|/// createX86GlobalBaseRegPass - This pass initializes a global base
 comment|/// register for PIC on x86-32.
 name|FunctionPass
 modifier|*
-name|createGlobalBaseRegPass
+name|createX86GlobalBaseRegPass
 parameter_list|()
 function_decl|;
 comment|/// createCleanupLocalDynamicTLSPass() - This pass combines multiple accesses
@@ -148,21 +130,6 @@ name|FunctionPass
 modifier|*
 name|createX86IssueVZeroUpperPass
 parameter_list|()
-function_decl|;
-comment|/// createX86CodeEmitterPass - Return a pass that emits the collected X86 code
-comment|/// to the specified MCE object.
-name|FunctionPass
-modifier|*
-name|createX86JITCodeEmitterPass
-parameter_list|(
-name|X86TargetMachine
-modifier|&
-name|TM
-parameter_list|,
-name|JITCodeEmitter
-modifier|&
-name|JCE
-parameter_list|)
 function_decl|;
 comment|/// createX86EmitCodeToMemory - Returns a pass that converts a register
 comment|/// allocated function into raw machine code in a dynamically
@@ -198,6 +165,14 @@ comment|/// to eliminate execution delays in some Atom processors.
 name|FunctionPass
 modifier|*
 name|createX86FixupLEAs
+parameter_list|()
+function_decl|;
+comment|/// createX86CallFrameOptimization - Return a pass that optimizes
+comment|/// the code-size of x86 call sequences. This is done by replacing
+comment|/// esp-relative movs with pushes.
+name|FunctionPass
+modifier|*
+name|createX86CallFrameOptimization
 parameter_list|()
 function_decl|;
 block|}

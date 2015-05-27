@@ -62,13 +62,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_FORMAT_BREAKABLETOKEN_H
+name|LLVM_CLANG_LIB_FORMAT_BREAKABLETOKEN_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_FORMAT_BREAKABLETOKEN_H
+name|LLVM_CLANG_LIB_FORMAT_BREAKABLETOKEN_H
 end_define
 
 begin_include
@@ -320,13 +320,12 @@ name|BreakableToken
 block|{
 name|public
 operator|:
-name|virtual
 name|unsigned
 name|getLineCount
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getLineLengthAfterSplit
 argument_list|(
@@ -337,6 +336,7 @@ argument_list|,
 argument|StringRef::size_type Length
 argument_list|)
 specifier|const
+name|override
 block|;
 name|protected
 operator|:
@@ -407,7 +407,6 @@ argument_list|,
 argument|const FormatStyle&Style
 argument_list|)
 block|;
-name|virtual
 name|Split
 name|getSplit
 argument_list|(
@@ -418,8 +417,8 @@ argument_list|,
 argument|unsigned ColumnLimit
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|insertBreak
 argument_list|(
@@ -431,8 +430,8 @@ argument|Split Split
 argument_list|,
 argument|WhitespaceManager&Whitespaces
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|replaceWhitespace
 argument_list|(
@@ -444,6 +443,7 @@ argument|Split Split
 argument_list|,
 argument|WhitespaceManager&Whitespaces
 argument_list|)
+name|override
 block|{}
 block|}
 decl_stmt|;
@@ -474,7 +474,6 @@ argument_list|,
 argument|const FormatStyle&Style
 argument_list|)
 block|;
-name|virtual
 name|Split
 name|getSplit
 argument_list|(
@@ -485,8 +484,8 @@ argument_list|,
 argument|unsigned ColumnLimit
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|insertBreak
 argument_list|(
@@ -498,8 +497,8 @@ argument|Split Split
 argument_list|,
 argument|WhitespaceManager&Whitespaces
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|replaceWhitespace
 argument_list|(
@@ -511,8 +510,8 @@ argument|Split Split
 argument_list|,
 argument|WhitespaceManager&Whitespaces
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|replaceWhitespaceBefore
 argument_list|(
@@ -520,6 +519,7 @@ argument|unsigned LineIndex
 argument_list|,
 argument|WhitespaceManager&Whitespaces
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -561,13 +561,12 @@ argument_list|,
 argument|const FormatStyle&Style
 argument_list|)
 block|;
-name|virtual
 name|unsigned
 name|getLineCount
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getLineLengthAfterSplit
 argument_list|(
@@ -578,8 +577,8 @@ argument_list|,
 argument|StringRef::size_type Length
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|Split
 name|getSplit
 argument_list|(
@@ -590,8 +589,8 @@ argument_list|,
 argument|unsigned ColumnLimit
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|insertBreak
 argument_list|(
@@ -603,8 +602,8 @@ argument|Split Split
 argument_list|,
 argument|WhitespaceManager&Whitespaces
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|replaceWhitespace
 argument_list|(
@@ -616,8 +615,8 @@ argument|Split Split
 argument_list|,
 argument|WhitespaceManager&Whitespaces
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|replaceWhitespaceBefore
 argument_list|(
@@ -625,6 +624,7 @@ argument|unsigned LineIndex
 argument_list|,
 argument|WhitespaceManager&Whitespaces
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -685,9 +685,14 @@ block|;
 comment|// StartOfLineColumn[i] is the target column at which Line[i] should be.
 comment|// Note that this excludes a leading "* " or "*" in case all lines have
 comment|// a "*" prefix.
+comment|// The first line's target column is always positive. The remaining lines'
+comment|// target columns are relative to the first line to allow correct indentation
+comment|// of comments in \c WhitespaceManager. Thus they can be negative as well (in
+comment|// case the first line needs to be unindented more than there's actual
+comment|// whitespace in another line).
 name|SmallVector
 operator|<
-name|unsigned
+name|int
 block|,
 literal|16
 operator|>
@@ -729,10 +734,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_FORMAT_BREAKABLETOKEN_H
-end_comment
 
 end_unit
 

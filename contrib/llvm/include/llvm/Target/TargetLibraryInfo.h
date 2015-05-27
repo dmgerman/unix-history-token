@@ -80,11 +80,23 @@ block|,
 comment|/// void operator delete[](void*, nothrow);
 name|ZdaPvRKSt9nothrow_t
 block|,
+comment|/// void operator delete[](void*, unsigned int);
+name|ZdaPvj
+block|,
+comment|/// void operator delete[](void*, unsigned long);
+name|ZdaPvm
+block|,
 comment|/// void operator delete(void*);
 name|ZdlPv
 block|,
 comment|/// void operator delete(void*, nothrow);
 name|ZdlPvRKSt9nothrow_t
+block|,
+comment|/// void operator delete(void*, unsigned int);
+name|ZdlPvj
+block|,
+comment|/// void operator delete(void*, unsigned long);
+name|ZdlPvm
 block|,
 comment|/// void *new[](unsigned int);
 name|Znaj
@@ -138,11 +150,18 @@ block|,
 comment|/// void *__memcpy_chk(void *s1, const void *s2, size_t n, size_t s1size);
 name|memcpy_chk
 block|,
+comment|/// void *__memmove_chk(void *s1, const void *s2, size_t n,
+comment|///                     size_t s1size);
+name|memmove_chk
+block|,
+comment|/// void *__memset_chk(void *s, char v, size_t n, size_t s1size);
+name|memset_chk
+block|,
 comment|/// double __sincospi_stret(double x);
 name|sincospi_stret
 block|,
-comment|/// float __sincospi_stretf(float x);
-name|sincospi_stretf
+comment|/// float __sincospif_stret(float x);
+name|sincospif_stret
 block|,
 comment|/// double __sinpi(double x);
 name|sinpi
@@ -159,8 +178,22 @@ block|,
 comment|/// long double __sqrt_finite(long double x);
 name|sqrtl_finite
 block|,
+comment|/// char *__stpcpy_chk(char *s1, const char *s2, size_t s1size);
+name|stpcpy_chk
+block|,
+comment|/// char *__stpncpy_chk(char *s1, const char *s2, size_t n,
+comment|///                     size_t s1size);
+name|stpncpy_chk
+block|,
+comment|/// char *__strcpy_chk(char *s1, const char *s2, size_t s1size);
+name|strcpy_chk
+block|,
 comment|/// char * __strdup(const char *s);
 name|dunder_strdup
+block|,
+comment|/// char *__strncpy_chk(char *s1, const char *s2, size_t n,
+comment|///                     size_t s1size);
+name|strncpy_chk
 block|,
 comment|/// char *__strndup(const char *s, size_t n);
 name|dunder_strndup
@@ -417,6 +450,24 @@ block|,
 comment|/// long double floorl(long double x);
 name|floorl
 block|,
+comment|/// double fmax(double x, double y);
+name|fmax
+block|,
+comment|/// float fmaxf(float x, float y);
+name|fmaxf
+block|,
+comment|/// long double fmaxl(long double x, long double y);
+name|fmaxl
+block|,
+comment|/// double fmin(double x, double y);
+name|fmin
+block|,
+comment|/// float fminf(float x, float y);
+name|fminf
+block|,
+comment|/// long double fminl(long double x, long double y);
+name|fminl
+block|,
 comment|/// double fmod(double x, double y);
 name|fmod
 block|,
@@ -549,6 +600,15 @@ name|labs
 block|,
 comment|/// int lchown(const char *path, uid_t owner, gid_t group);
 name|lchown
+block|,
+comment|/// double ldexp(double x, int n);
+name|ldexp
+block|,
+comment|/// float ldexpf(float x, int n);
+name|ldexpf
+block|,
+comment|/// long double ldexpl(long double x, int n);
+name|ldexpl
 block|,
 comment|/// long long int llabs(long long int j);
 name|llabs
@@ -1331,6 +1391,36 @@ case|case
 name|LibFunc
 operator|::
 name|sqrtl_finite
+case|:
+case|case
+name|LibFunc
+operator|::
+name|fmax
+case|:
+case|case
+name|LibFunc
+operator|::
+name|fmaxf
+case|:
+case|case
+name|LibFunc
+operator|::
+name|fmaxl
+case|:
+case|case
+name|LibFunc
+operator|::
+name|fmin
+case|:
+case|case
+name|LibFunc
+operator|::
+name|fminf
+case|:
+case|case
+name|LibFunc
+operator|::
+name|fminl
 case|:
 case|case
 name|LibFunc

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: readline.h,v 1.31 2010/08/04 20:29:18 christos Exp $	*/
+comment|/*	$NetBSD: readline.h,v 1.34 2013/05/28 00:10:34 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -454,6 +454,17 @@ modifier|*
 name|rl_completion_entry_function
 decl_stmt|;
 specifier|extern
+name|char
+modifier|*
+function_decl|(
+modifier|*
+name|rl_completion_word_break_hook
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+specifier|extern
 name|CPPFunction
 modifier|*
 name|rl_attempted_completion_function
@@ -508,6 +519,14 @@ modifier|*
 name|rl_prompt
 decl_stmt|;
 comment|/*  * The following is not implemented  */
+specifier|extern
+name|int
+name|rl_catch_signals
+decl_stmt|;
+specifier|extern
+name|int
+name|rl_catch_sigwinch
+decl_stmt|;
 specifier|extern
 name|KEYMAP_ENTRY_ARRAY
 name|emacs_standard_keymap
@@ -644,7 +663,6 @@ parameter_list|(
 name|int
 parameter_list|)
 function_decl|;
-comment|/*###152 [lint] syntax error 'histdata_t' [249]%%%*/
 name|HIST_ENTRY
 modifier|*
 name|replace_history_entry
@@ -1037,6 +1055,18 @@ name|int
 name|_rl_abort_internal
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+name|int
+name|_rl_qsort_string_compare
+parameter_list|(
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 name|char

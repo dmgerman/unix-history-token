@@ -181,9 +181,14 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__powerpc64__
 name|register_t
 name|reg
 decl_stmt|;
+endif|#
+directive|endif
 asm|__asm __volatile("mtsprg 0, %0" :: "r"(ap_pcpu));
 name|powerpc_sync
 argument_list|()
@@ -206,6 +211,43 @@ case|case
 name|IBM970MP
 case|:
 comment|/* Restore HID4 and HID5, which are necessary for the MMU */
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+name|mtspr
+argument_list|(
+name|SPR_HID4
+argument_list|,
+name|bsp_state
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+name|powerpc_sync
+argument_list|()
+expr_stmt|;
+name|isync
+argument_list|()
+expr_stmt|;
+name|mtspr
+argument_list|(
+name|SPR_HID5
+argument_list|,
+name|bsp_state
+index|[
+literal|3
+index|]
+argument_list|)
+expr_stmt|;
+name|powerpc_sync
+argument_list|()
+expr_stmt|;
+name|isync
+argument_list|()
+expr_stmt|;
+else|#
+directive|else
 asm|__asm __volatile("ld %0, 16(%2); sync; isync;	\ 		    mtspr %1, %0; sync; isync;"
 block|:
 literal|"=r"
@@ -243,6 +285,11 @@ operator|)
 block|)
 function|;
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|powerpc_sync
@@ -1186,10 +1233,56 @@ asm|__asm __volatile("mtspr 311,%0" :: "r"(0));
 name|powerpc_sync
 argument_list|()
 expr_stmt|;
-comment|/* 		 * The 970 has strange rules about how to update HID registers. 		 * See Table 2-3, 970MP manual 		 */
+comment|/* 		 * The 970 has strange rules about how to update HID registers. 		 * See Table 2-3, 970MP manual 		 * 		 * Note: HID4 and HID5 restored already in 		 * cpudep_ap_early_bootstrap() 		 */
 asm|__asm __volatile("mtasr %0; sync" :: "r"(0));
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+asm|__asm __volatile(" \ 			sync; isync;					\ 			mtspr	%1, %0;					\ 			mfspr	%0, %1;	mfspr	%0, %1;	mfspr	%0, %1;	\ 			mfspr	%0, %1;	mfspr	%0, %1;	mfspr	%0, %1; \ 			sync; isync"
+operator|::
+literal|"r"
+operator|(
+name|bsp_state
+index|[
+literal|0
+index|]
+operator|)
+operator|,
+literal|"K"
+operator|(
+name|SPR_HID0
+operator|)
+block|)
+empty_stmt|;
+asm|__asm __volatile("sync; isync;	\ 		    mtspr %1, %0; mtspr %1, %0; sync; isync"
+operator|::
+literal|"r"
+operator|(
+name|bsp_state
+index|[
+literal|1
+index|]
+operator|)
+operator|,
+literal|"K"
+operator|(
+name|SPR_HID1
+operator|)
+block|)
+function|;
+end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_asm
 asm|__asm __volatile(" \ 			ld	%0,0(%2);				\ 			sync; isync;					\ 			mtspr	%1, %0;					\ 			mfspr	%0, %1;	mfspr	%0, %1;	mfspr	%0, %1;	\ 			mfspr	%0, %1;	mfspr	%0, %1;	mfspr	%0, %1; \ 			sync; isync"
-block|:
+end_asm
+
+begin_expr_stmt
+unit|:
 literal|"=r"
 operator|(
 name|reg
@@ -1204,10 +1297,19 @@ literal|"r"
 operator|(
 name|bsp_state
 operator|)
-block|)
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
 empty_stmt|;
+end_empty_stmt
+
+begin_asm
 asm|__asm __volatile("ld %0, 8(%2); sync; isync;	\ 		    mtspr %1, %0; mtspr %1, %0; sync; isync"
-block|:
+end_asm
+
+begin_expr_stmt
+unit|:
 literal|"=r"
 operator|(
 name|reg
@@ -1222,30 +1324,6 @@ literal|"r"
 operator|(
 name|bsp_state
 operator|)
-block|)
-function|;
-end_function
-
-begin_asm
-asm|__asm __volatile("ld %0, 16(%2); sync; isync;	\ 		    mtspr %1, %0; sync; isync;"
-end_asm
-
-begin_expr_stmt
-unit|:
-literal|"=r"
-operator|(
-name|reg
-operator|)
-operator|:
-literal|"K"
-operator|(
-name|SPR_HID4
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|bsp_state
-operator|)
 end_expr_stmt
 
 begin_empty_stmt
@@ -1253,32 +1331,10 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
-begin_asm
-asm|__asm __volatile("ld %0, 24(%2); sync; isync;	\ 		    mtspr %1, %0; sync; isync;"
-end_asm
-
-begin_expr_stmt
-unit|:
-literal|"=r"
-operator|(
-name|reg
-operator|)
-operator|:
-literal|"K"
-operator|(
-name|SPR_HID5
-operator|)
-operator|,
-literal|"r"
-operator|(
-name|bsp_state
-operator|)
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_expr_stmt
 name|powerpc_sync

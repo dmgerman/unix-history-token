@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_ANALYZEROPTIONS_H
+name|LLVM_CLANG_STATICANALYZER_CORE_ANALYZEROPTIONS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_ANALYZEROPTIONS_H
+name|LLVM_CLANG_STATICANALYZER_CORE_ANALYZEROPTIONS_H
 end_define
 
 begin_include
@@ -205,6 +205,8 @@ value|PD_##NAME,
 include|#
 directive|include
 file|"clang/StaticAnalyzer/Core/Analyses.def"
+name|PD_NONE
+block|,
 name|NUM_ANALYSIS_DIAG_CLIENTS
 block|}
 enum|;
@@ -377,6 +379,16 @@ comment|/// \brief The maximum number of times the analyzer visits a block.
 name|unsigned
 name|maxBlockVisitOnPath
 decl_stmt|;
+comment|/// \brief Disable all analyzer checks.
+comment|///
+comment|/// This flag allows one to disable analyzer checks on the code processed by
+comment|/// the given analysis consumer. Note, the code will get parsed and the
+comment|/// command-line options will get checked.
+name|unsigned
+name|DisableAllChecks
+range|:
+literal|1
+decl_stmt|;
 name|unsigned
 name|ShowCheckerHelp
 range|:
@@ -507,12 +519,19 @@ name|bool
 operator|>
 name|InlineTemplateFunctions
 expr_stmt|;
-comment|/// \sa mayInlineCXXContainerCtorsAndDtors
+comment|/// \sa mayInlineCXXAllocator
 name|Optional
 operator|<
 name|bool
 operator|>
-name|InlineCXXContainerCtorsAndDtors
+name|InlineCXXAllocator
+expr_stmt|;
+comment|/// \sa mayInlineCXXContainerMethods
+name|Optional
+operator|<
+name|bool
+operator|>
+name|InlineCXXContainerMethods
 expr_stmt|;
 comment|/// \sa mayInlineCXXSharedPtrDtor
 name|Optional
@@ -577,6 +596,13 @@ operator|<
 name|bool
 operator|>
 name|ReportIssuesInMainSourceFile
+expr_stmt|;
+comment|/// \sa StableReportFilename
+name|Optional
+operator|<
+name|bool
+operator|>
+name|StableReportFilename
 expr_stmt|;
 comment|/// \sa getGraphTrimInterval
 name|Optional
@@ -700,13 +726,21 @@ name|bool
 name|mayInlineTemplateFunctions
 parameter_list|()
 function_decl|;
-comment|/// Returns whether or not constructors and destructors of C++ container
-comment|/// objects may be considered for inlining.
+comment|/// Returns whether or not allocator call may be considered for inlining.
+comment|///
+comment|/// This is controlled by the 'c++-allocator-inlining' config option, which
+comment|/// accepts the values "true" and "false".
+name|bool
+name|mayInlineCXXAllocator
+parameter_list|()
+function_decl|;
+comment|/// Returns whether or not methods of C++ container objects may be considered
+comment|/// for inlining.
 comment|///
 comment|/// This is controlled by the 'c++-container-inlining' config option, which
 comment|/// accepts the values "true" and "false".
 name|bool
-name|mayInlineCXXContainerCtorsAndDtors
+name|mayInlineCXXContainerMethods
 parameter_list|()
 function_decl|;
 comment|/// Returns whether or not the destructor of C++ 'shared_ptr' may be
@@ -771,6 +805,14 @@ comment|/// This is controlled by the 'report-in-main-source-file' config option
 comment|/// which accepts the values "true" and "false".
 name|bool
 name|shouldReportIssuesInMainSourceFile
+parameter_list|()
+function_decl|;
+comment|/// Returns whether or not the report filename should be random or not.
+comment|///
+comment|/// This is controlled by the 'stable-report-filename' config option,
+comment|/// which accepts the values "true" and "false". Default = false
+name|bool
+name|shouldWriteStableReportFilename
 parameter_list|()
 function_decl|;
 comment|/// Returns whether irrelevant parts of a bug report path should be pruned
@@ -858,6 +900,11 @@ operator|,
 name|AnalysisPurgeOpt
 argument_list|(
 name|PurgeStmt
+argument_list|)
+operator|,
+name|DisableAllChecks
+argument_list|(
+literal|0
 argument_list|)
 operator|,
 name|ShowCheckerHelp

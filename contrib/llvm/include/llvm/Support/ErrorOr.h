@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_SUPPORT_ERROR_OR_H
+name|LLVM_SUPPORT_ERROROR_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_SUPPORT_ERROR_OR_H
+name|LLVM_SUPPORT_ERROROR_H
 end_define
 
 begin_include
@@ -82,26 +82,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/system_error.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/type_traits.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_CXX11_TYPETRAITS
-end_if
+begin_include
+include|#
+directive|include
+file|<system_error>
+end_include
 
 begin_include
 include|#
@@ -109,20 +97,10 @@ directive|include
 file|<type_traits>
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-if|#
-directive|if
-name|LLVM_HAS_CXX11_TYPETRAITS
-operator|&&
-name|LLVM_HAS_RVALUE_REFERENCES
 name|template
 operator|<
 name|class
@@ -221,29 +199,6 @@ return|return
 name|Val
 return|;
 block|}
-else|#
-directive|else
-name|template
-operator|<
-name|class
-name|T
-operator|,
-name|class
-name|V
-operator|>
-name|V
-operator|&
-name|moveIfMoveConstructible
-argument_list|(
-argument|V&Val
-argument_list|)
-block|{
-return|return
-name|Val
-return|;
-block|}
-endif|#
-directive|endif
 comment|/// \brief Stores a reference that can be changed.
 name|template
 operator|<
@@ -307,18 +262,17 @@ comment|///
 comment|/// It is used like the following.
 comment|/// \code
 comment|///   ErrorOr<Buffer> getBuffer();
-comment|///   void handleError(error_code ec);
 comment|///
 comment|///   auto buffer = getBuffer();
-comment|///   if (!buffer)
-comment|///     handleError(buffer);
+comment|///   if (error_code ec = buffer.getError())
+comment|///     return ec;
 comment|///   buffer->write("adena");
 comment|/// \endcode
 comment|///
 comment|///
-comment|/// An implicit conversion to bool provides a way to check if there was an
-comment|/// error. The unary * and -> operators provide pointer like access to the
-comment|/// value. Accessing the value when there is an error has undefined behavior.
+comment|/// Implicit conversion to bool returns true if there is a usable value. The
+comment|/// unary * and -> operators provide pointer like access to the value. Accessing
+comment|/// the value when there is an error has undefined behavior.
 comment|///
 comment|/// When T is a reference type the behaivor is slightly different. The reference
 comment|/// is held in a std::reference_wrapper<std::remove_reference<T>::type>, and
@@ -348,6 +302,8 @@ specifier|const
 name|bool
 name|isRef
 operator|=
+name|std
+operator|::
 name|is_reference
 operator|<
 name|T
@@ -359,6 +315,8 @@ typedef|typedef
 name|ReferenceStorage
 operator|<
 name|typename
+name|std
+operator|::
 name|remove_reference
 operator|<
 name|T
@@ -372,6 +330,8 @@ name|public
 operator|:
 typedef|typedef
 name|typename
+name|std
+operator|::
 name|conditional
 operator|<
 name|isRef
@@ -388,6 +348,8 @@ name|private
 operator|:
 typedef|typedef
 name|typename
+name|std
+operator|::
 name|remove_reference
 operator|<
 name|T
@@ -398,7 +360,23 @@ operator|&
 name|reference
 expr_stmt|;
 typedef|typedef
+specifier|const
 name|typename
+name|std
+operator|::
+name|remove_reference
+operator|<
+name|T
+operator|>
+operator|::
+name|type
+operator|&
+name|const_reference
+expr_stmt|;
+typedef|typedef
+name|typename
+name|std
+operator|::
 name|remove_reference
 operator|<
 name|T
@@ -419,7 +397,7 @@ name|ErrorOr
 argument_list|(
 argument|E ErrorCode
 argument_list|,
-argument|typename enable_if_c<is_error_code_enum<E>::value ||                                             is_error_condition_enum<E>::value
+argument|typename std::enable_if<std::is_error_code_enum<E>::value ||                                       std::is_error_condition_enum<E>::value
 argument_list|,
 argument|void *>::type =
 literal|0
@@ -432,8 +410,10 @@ argument_list|)
 block|{
 name|new
 argument_list|(
-argument|getError()
+argument|getErrorStorage()
 argument_list|)
+name|std
+operator|::
 name|error_code
 argument_list|(
 name|make_error_code
@@ -444,7 +424,7 @@ argument_list|)
 block|;   }
 name|ErrorOr
 argument_list|(
-argument|llvm::error_code EC
+argument|std::error_code EC
 argument_list|)
 operator|:
 name|HasError
@@ -454,8 +434,10 @@ argument_list|)
 block|{
 name|new
 argument_list|(
-argument|getError()
+argument|getErrorStorage()
 argument_list|)
+name|std
+operator|::
 name|error_code
 argument_list|(
 name|EC
@@ -473,7 +455,7 @@ argument_list|)
 block|{
 name|new
 argument_list|(
-argument|get()
+argument|getStorage()
 argument_list|)
 name|storage_type
 argument_list|(
@@ -504,6 +486,10 @@ operator|>
 name|ErrorOr
 argument_list|(
 argument|const ErrorOr<OtherT>&Other
+argument_list|,
+argument|typename std::enable_if<std::is_convertible<OtherT
+argument_list|,
+argument|T>::value>::type * =           nullptr
 argument_list|)
 block|{
 name|copyConstruct
@@ -511,59 +497,26 @@ argument_list|(
 name|Other
 argument_list|)
 block|;   }
-name|ErrorOr
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|ErrorOr
-operator|&
-name|Other
-operator|)
-block|{
-name|copyAssign
-argument_list|(
-name|Other
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
 name|template
 operator|<
 name|class
 name|OtherT
 operator|>
+name|explicit
 name|ErrorOr
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|ErrorOr
-operator|<
-name|OtherT
-operator|>
-operator|&
-name|Other
-operator|)
+argument_list|(
+argument|const ErrorOr<OtherT>&Other
+argument_list|,
+argument|typename std::enable_if<           !std::is_convertible<OtherT
+argument_list|,
+argument|const T&>::value>::type * = nullptr
+argument_list|)
 block|{
-name|copyAssign
+name|copyConstruct
 argument_list|(
 name|Other
 argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
+block|;   }
 name|ErrorOr
 argument_list|(
 argument|ErrorOr&&Other
@@ -578,8 +531,7 @@ argument_list|(
 name|Other
 argument_list|)
 argument_list|)
-expr_stmt|;
-block|}
+block|;   }
 name|template
 operator|<
 name|class
@@ -588,6 +540,37 @@ operator|>
 name|ErrorOr
 argument_list|(
 argument|ErrorOr<OtherT>&&Other
+argument_list|,
+argument|typename std::enable_if<std::is_convertible<OtherT
+argument_list|,
+argument|T>::value>::type * =           nullptr
+argument_list|)
+block|{
+name|moveConstruct
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Other
+argument_list|)
+argument_list|)
+block|;   }
+comment|// This might eventually need SFINAE but it's more complex than is_convertible
+comment|//& I'm too lazy to write it right now.
+name|template
+operator|<
+name|class
+name|OtherT
+operator|>
+name|explicit
+name|ErrorOr
+argument_list|(
+argument|ErrorOr<OtherT>&&Other
+argument_list|,
+argument|typename std::enable_if<!std::is_convertible<OtherT
+argument_list|,
+argument|T>::value>::type * =           nullptr
 argument_list|)
 block|{
 name|moveConstruct
@@ -605,40 +588,28 @@ operator|&
 name|operator
 operator|=
 operator|(
-name|ErrorOr
-operator|&&
-name|Other
-operator|)
-block|{
-name|moveAssign
-argument_list|(
-name|std
-operator|::
-name|move
-argument_list|(
-name|Other
-argument_list|)
-argument_list|)
-block|;
-return|return
-operator|*
-name|this
-return|;
-block|}
-name|template
-operator|<
-name|class
-name|OtherT
-operator|>
+specifier|const
 name|ErrorOr
 operator|&
+name|Other
+operator|)
+block|{
+name|copyAssign
+argument_list|(
+name|Other
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|ErrorOr
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 name|ErrorOr
-operator|<
-name|OtherT
-operator|>
 operator|&&
 name|Other
 operator|)
@@ -658,8 +629,6 @@ operator|*
 name|this
 return|;
 block|}
-endif|#
-directive|endif
 operator|~
 name|ErrorOr
 argument_list|()
@@ -669,7 +638,7 @@ condition|(
 operator|!
 name|HasError
 condition|)
-name|get
+name|getStorage
 argument_list|()
 operator|->
 operator|~
@@ -677,37 +646,54 @@ name|storage_type
 argument_list|()
 expr_stmt|;
 block|}
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|unspecified_bool_type
-function_decl|)
-parameter_list|()
-function_decl|;
-specifier|static
-name|void
-name|unspecified_bool_true
-parameter_list|()
-block|{}
 comment|/// \brief Return false if there is an error.
+name|LLVM_EXPLICIT
 name|operator
-name|unspecified_bool_type
+name|bool
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
 name|HasError
-operator|?
-literal|0
-operator|:
-name|unspecified_bool_true
 return|;
 block|}
-name|operator
-name|llvm
+name|reference
+name|get
+parameter_list|()
+block|{
+return|return
+operator|*
+name|getStorage
+argument_list|()
+return|;
+block|}
+name|const_reference
+name|get
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|ErrorOr
+operator|<
+name|T
+operator|>
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|get
+argument_list|()
+return|;
+block|}
+name|std
 operator|::
 name|error_code
+name|getError
 argument_list|()
 specifier|const
 block|{
@@ -715,14 +701,12 @@ return|return
 name|HasError
 operator|?
 operator|*
-name|getError
+name|getErrorStorage
 argument_list|()
 operator|:
-name|llvm
+name|std
 operator|::
 name|error_code
-operator|::
-name|success
 argument_list|()
 return|;
 block|}
@@ -735,7 +719,7 @@ block|{
 return|return
 name|toPointer
 argument_list|(
-name|get
+name|getStorage
 argument_list|()
 argument_list|)
 return|;
@@ -750,7 +734,7 @@ parameter_list|()
 block|{
 return|return
 operator|*
-name|get
+name|getStorage
 argument_list|()
 return|;
 block|}
@@ -788,14 +772,14 @@ name|false
 expr_stmt|;
 name|new
 argument_list|(
-argument|get()
+argument|getStorage()
 argument_list|)
 name|storage_type
 argument_list|(
 operator|*
 name|Other
 operator|.
-name|get
+name|getStorage
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -812,11 +796,16 @@ name|true
 expr_stmt|;
 name|new
 argument_list|(
-argument|getError()
+argument|getErrorStorage()
 argument_list|)
+name|std
+operator|::
 name|error_code
 argument_list|(
 name|Other
+operator|.
+name|getError
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -917,15 +906,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-unit|}
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_expr_stmt
-unit|template
+unit|}    template
 operator|<
 name|class
 name|OtherT
@@ -951,7 +933,7 @@ name|false
 expr_stmt|;
 name|new
 argument_list|(
-argument|get()
+argument|getStorage()
 argument_list|)
 name|storage_type
 argument_list|(
@@ -962,7 +944,7 @@ argument_list|(
 operator|*
 name|Other
 operator|.
-name|get
+name|getStorage
 argument_list|()
 argument_list|)
 argument_list|)
@@ -980,11 +962,16 @@ name|true
 expr_stmt|;
 name|new
 argument_list|(
-argument|getError()
+argument|getErrorStorage()
 argument_list|)
+name|std
+operator|::
 name|error_code
 argument_list|(
 name|Other
+operator|.
+name|getError
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -1041,14 +1028,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
 begin_macro
-unit|pointer
+unit|}    pointer
 name|toPointer
 argument_list|(
 argument|pointer Val
@@ -1085,7 +1066,7 @@ end_function
 begin_function
 name|storage_type
 modifier|*
-name|get
+name|getStorage
 parameter_list|()
 block|{
 name|assert
@@ -1115,7 +1096,7 @@ begin_expr_stmt
 specifier|const
 name|storage_type
 operator|*
-name|get
+name|getStorage
 argument_list|()
 specifier|const
 block|{
@@ -1143,11 +1124,13 @@ return|;
 block|}
 end_expr_stmt
 
-begin_function
+begin_expr_stmt
+name|std
+operator|::
 name|error_code
-modifier|*
-name|getError
-parameter_list|()
+operator|*
+name|getErrorStorage
+argument_list|()
 block|{
 name|assert
 argument_list|(
@@ -1155,10 +1138,12 @@ name|HasError
 operator|&&
 literal|"Cannot get error when a value exists!"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|reinterpret_cast
 operator|<
+name|std
+operator|::
 name|error_code
 operator|*
 operator|>
@@ -1169,13 +1154,15 @@ name|buffer
 operator|)
 return|;
 block|}
-end_function
+end_expr_stmt
 
 begin_expr_stmt
 specifier|const
+name|std
+operator|::
 name|error_code
 operator|*
-name|getError
+name|getErrorStorage
 argument_list|()
 specifier|const
 block|{
@@ -1192,7 +1179,7 @@ operator|(
 name|this
 operator|)
 operator|->
-name|getError
+name|getErrorStorage
 argument_list|()
 return|;
 block|}
@@ -1209,6 +1196,8 @@ name|TStorage
 expr_stmt|;
 name|AlignedCharArrayUnion
 operator|<
+name|std
+operator|::
 name|error_code
 operator|>
 name|ErrorStorage
@@ -1236,8 +1225,12 @@ name|class
 name|E
 operator|>
 name|typename
-name|enable_if_c
+name|std
+operator|::
+name|enable_if
 operator|<
+name|std
+operator|::
 name|is_error_code_enum
 operator|<
 name|E
@@ -1245,6 +1238,8 @@ operator|>
 operator|::
 name|value
 operator|||
+name|std
+operator|::
 name|is_error_condition_enum
 operator|<
 name|E
@@ -1271,6 +1266,8 @@ name|Code
 operator|)
 block|{
 return|return
+name|std
+operator|::
 name|error_code
 argument_list|(
 name|Err

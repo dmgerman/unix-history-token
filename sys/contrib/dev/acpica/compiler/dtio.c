@@ -4,14 +4,8 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|__DTIO_C__
-end_define
 
 begin_include
 include|#
@@ -935,6 +929,12 @@ name|Column
 operator|=
 name|Column
 expr_stmt|;
+name|Field
+operator|->
+name|StringLength
+operator|=
+name|Length
+expr_stmt|;
 name|DtLinkField
 argument_list|(
 name|Field
@@ -982,6 +982,15 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+name|ACPI_MEMSET
+argument_list|(
+name|Gbl_CurrentLineBuffer
+argument_list|,
+literal|0
+argument_list|,
+name|Gbl_LineBufferSize
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -2037,7 +2046,7 @@ name|ASL_DEBUG_OUTPUT
 argument_list|,
 literal|"\nField List:\n"
 literal|"LineNo   ByteOff  NameCol  Column   TableOff "
-literal|"Flags    %32s : %s\n\n"
+literal|"Flags %32s : %s\n\n"
 argument_list|,
 literal|"Name"
 argument_list|,
@@ -2053,7 +2062,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"%.08X %.08X %.08X %.08X %.08X %.08X %32s : %s\n"
+literal|"%.08X %.08X %.08X %.08X %.08X %2.2X    %32s : %s\n"
 argument_list|,
 name|Field
 operator|->
@@ -2131,11 +2140,15 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"[%.04X] %.08X %.08X %.08X %.08X %.08X %p %p %p\n"
+literal|"[%.04X] %24s %.08X %.08X %.08X %.08X %.08X %p %p %p\n"
 argument_list|,
 name|Subtable
 operator|->
 name|Depth
+argument_list|,
+name|Subtable
+operator|->
+name|Name
 argument_list|,
 name|Subtable
 operator|->
@@ -2193,11 +2206,15 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"[%.04X] %*s%08X (%.02X) - (%.02X)\n"
+literal|"[%.04X] %24s %*s%08X (%.02X) - (%.02X)\n"
 argument_list|,
 name|Subtable
 operator|->
 name|Depth
+argument_list|,
+name|Subtable
+operator|->
+name|Name
 argument_list|,
 operator|(
 literal|4
@@ -2250,7 +2267,7 @@ argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
 literal|"Subtable Info:\n"
-literal|"Depth  Length   TotalLen LenSize  Flags    "
+literal|"Depth                      Name Length   TotalLen LenSize  Flags    "
 literal|"This     Parent   Child    Peer\n\n"
 argument_list|)
 expr_stmt|;
@@ -2269,7 +2286,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nSubtable Tree: (Depth, Subtable, Length, TotalLength)\n\n"
+literal|"\nSubtable Tree: (Depth, Name, Subtable, Length, TotalLength)\n\n"
 argument_list|)
 expr_stmt|;
 name|DtWalkTableTree

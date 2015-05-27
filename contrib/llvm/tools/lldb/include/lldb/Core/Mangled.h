@@ -97,6 +97,8 @@ block|{
 name|ePreferMangled
 block|,
 name|ePreferDemangled
+block|,
+name|ePreferDemangledWithoutArguments
 block|}
 enum|;
 comment|//----------------------------------------------------------------------
@@ -251,7 +253,7 @@ comment|/// Dump a Mangled object to stream \a s. We don't force our
 comment|/// demangled name to be computed currently (we don't use the accessor).
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|//----------------------------------------------------------------------
 name|void
 name|Dump
@@ -266,7 +268,7 @@ comment|//----------------------------------------------------------------------
 comment|/// Dump a debug description of this object to a Stream \a s.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|//----------------------------------------------------------------------
 name|void
 name|DumpDebug
@@ -357,7 +359,7 @@ comment|/// @param[in] preference
 comment|///     Which name would you prefer to get?
 comment|///
 comment|/// @return
-comment|///     A const reference to the the preferred name string object if this
+comment|///     A const reference to the preferred name string object if this
 comment|///     object has a valid name of that kind, else a const reference to the
 comment|///     other name is returned.
 comment|//----------------------------------------------------------------------

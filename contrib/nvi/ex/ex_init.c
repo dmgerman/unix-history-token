@@ -126,51 +126,45 @@ block|}
 enum|;
 end_enum
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|enum
 name|rc
 name|exrc_isok
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
-expr|struct
+modifier|*
+parameter_list|,
+name|struct
 name|stat
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|int
-operator|,
+parameter_list|,
 name|int
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|int
 name|ex_run_file
-name|__P
-argument_list|(
-operator|(
+parameter_list|(
 name|SCR
-operator|*
-operator|,
+modifier|*
+parameter_list|,
 name|char
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
-comment|/*  * ex_screen_copy --  *	Copy ex screen.  *  * PUBLIC: int ex_screen_copy __P((SCR *, SCR *));  */
+comment|/*  * ex_screen_copy --  *	Copy ex screen.  *  * PUBLIC: int ex_screen_copy(SCR *, SCR *);  */
 end_comment
 
 begin_function
@@ -327,7 +321,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_screen_end --  *	End a vi screen.  *  * PUBLIC: int ex_screen_end __P((SCR *));  */
+comment|/*  * ex_screen_end --  *	End a vi screen.  *  * PUBLIC: int ex_screen_end(SCR *);  */
 end_comment
 
 begin_function
@@ -494,7 +488,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_optchange --  *	Handle change of options for ex.  *  * PUBLIC: int ex_optchange __P((SCR *, int, char *, u_long *));  */
+comment|/*  * ex_optchange --  *	Handle change of options for ex.  *  * PUBLIC: int ex_optchange(SCR *, int, char *, u_long *);  */
 end_comment
 
 begin_function
@@ -545,7 +539,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_exrc --  *	Read the EXINIT environment variable and the startup exrc files,  *	and execute their commands.  *  * PUBLIC: int ex_exrc __P((SCR *));  */
+comment|/*  * ex_exrc --  *	Read the EXINIT environment variable and the startup exrc files,  *	and execute their commands.  *  * PUBLIC: int ex_exrc(SCR *);  */
 end_comment
 
 begin_function
@@ -1236,7 +1230,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ex_run_str --  *	Set up a string of ex commands to run.  *  * PUBLIC: int ex_run_str __P((SCR *, char *, CHAR_T *, size_t, int, int));  */
+comment|/*  * ex_run_str --  *	Set up a string of ex commands to run.  *  * PUBLIC: int ex_run_str(SCR *, char *, CHAR_T *, size_t, int, int);  */
 end_comment
 
 begin_function

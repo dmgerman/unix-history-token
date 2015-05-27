@@ -50,19 +50,19 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ARMBASEINSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_ARM_ARMBASEINSTRINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ARMBASEINSTRUCTIONINFO_H
+name|LLVM_LIB_TARGET_ARM_ARMBASEINSTRINFO_H
 end_define
 
 begin_include
 include|#
 directive|include
-file|"ARM.h"
+file|"MCTargetDesc/ARMBaseInfo.h"
 end_include
 
 begin_include
@@ -81,6 +81,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineInstrBuilder.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/CodeGen.h"
 end_include
 
 begin_include
@@ -134,6 +140,92 @@ operator|&
 name|STI
 argument_list|)
 block|;
+name|void
+name|expandLoadStackGuardBase
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|unsigned LoadImmOpc
+argument_list|,
+argument|unsigned LoadOpc
+argument_list|,
+argument|Reloc::Model RM
+argument_list|)
+specifier|const
+block|;
+comment|/// Build the equivalent inputs of a REG_SEQUENCE for the given \p MI
+comment|/// and \p DefIdx.
+comment|/// \p [out] InputRegs of the equivalent REG_SEQUENCE. Each element of
+comment|/// the list is modeled as<Reg:SubReg, SubIdx>.
+comment|/// E.g., REG_SEQUENCE vreg1:sub1, sub0, vreg2, sub1 would produce
+comment|/// two elements:
+comment|/// - vreg1:sub1, sub0
+comment|/// - vreg2<:0>, sub1
+comment|///
+comment|/// \returns true if it is possible to build such an input sequence
+comment|/// with the pair \p MI, \p DefIdx. False otherwise.
+comment|///
+comment|/// \pre MI.isRegSequenceLike().
+name|bool
+name|getRegSequenceLikeInputs
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|SmallVectorImpl<RegSubRegPairAndIdx>&InputRegs
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Build the equivalent inputs of a EXTRACT_SUBREG for the given \p MI
+comment|/// and \p DefIdx.
+comment|/// \p [out] InputReg of the equivalent EXTRACT_SUBREG.
+comment|/// E.g., EXTRACT_SUBREG vreg1:sub1, sub0, sub1 would produce:
+comment|/// - vreg1:sub1, sub0
+comment|///
+comment|/// \returns true if it is possible to build such an input sequence
+comment|/// with the pair \p MI, \p DefIdx. False otherwise.
+comment|///
+comment|/// \pre MI.isExtractSubregLike().
+name|bool
+name|getExtractSubregLikeInputs
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|RegSubRegPairAndIdx&InputReg
+argument_list|)
+specifier|const
+name|override
+block|;
+comment|/// Build the equivalent inputs of a INSERT_SUBREG for the given \p MI
+comment|/// and \p DefIdx.
+comment|/// \p [out] BaseReg and \p [out] InsertedReg contain
+comment|/// the equivalent inputs of INSERT_SUBREG.
+comment|/// E.g., INSERT_SUBREG vreg0:sub0, vreg1:sub1, sub3 would produce:
+comment|/// - BaseReg: vreg0:sub0
+comment|/// - InsertedReg: vreg1:sub1, sub3
+comment|///
+comment|/// \returns true if it is possible to build such an input sequence
+comment|/// with the pair \p MI, \p DefIdx. False otherwise.
+comment|///
+comment|/// \pre MI.isInsertSubregLike().
+name|bool
+name|getInsertSubregLikeInputs
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned DefIdx
+argument_list|,
+argument|RegSubRegPair&BaseReg
+argument_list|,
+argument|RegSubRegPairAndIdx&InsertedReg
+argument_list|)
+specifier|const
+name|override
+block|;
 name|public
 operator|:
 comment|// Return whether the target has an explicit NOP encoding.
@@ -154,7 +246,6 @@ specifier|const
 operator|=
 literal|0
 block|;
-name|virtual
 name|MachineInstr
 operator|*
 name|convertToThreeAddress
@@ -166,6 +257,7 @@ argument_list|,
 argument|LiveVariables *LV
 argument_list|)
 specifier|const
+name|override
 block|;
 name|virtual
 specifier|const
@@ -192,11 +284,12 @@ name|ScheduleHazardRecognizer
 operator|*
 name|CreateTargetHazardRecognizer
 argument_list|(
-argument|const TargetMachine *TM
+argument|const TargetSubtargetInfo *STI
 argument_list|,
 argument|const ScheduleDAG *DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 name|ScheduleHazardRecognizer
 operator|*
@@ -207,9 +300,9 @@ argument_list|,
 argument|const ScheduleDAG *DAG
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Branch analysis.
-name|virtual
 name|bool
 name|AnalyzeBranch
 argument_list|(
@@ -224,16 +317,16 @@ argument_list|,
 argument|bool AllowModify = false
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|RemoveBranch
 argument_list|(
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|InsertBranch
 argument_list|(
@@ -248,14 +341,15 @@ argument_list|,
 argument|DebugLoc DL
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|ReverseBranchCondition
 argument_list|(
 argument|SmallVectorImpl<MachineOperand>&Cond
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|// Predication support.
 name|bool
@@ -264,6 +358,7 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|ARMCC
 operator|::
@@ -308,7 +403,6 @@ operator|::
 name|AL
 return|;
 block|}
-name|virtual
 name|bool
 name|PredicateInstruction
 argument_list|(
@@ -317,8 +411,8 @@ argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Pred
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|SubsumesPredicate
 argument_list|(
@@ -327,8 +421,8 @@ argument_list|,
 argument|const SmallVectorImpl<MachineOperand>&Pred2
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|DefinesPredicate
 argument_list|(
@@ -337,14 +431,15 @@ argument_list|,
 argument|std::vector<MachineOperand>&Pred
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isPredicable
 argument_list|(
 argument|MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// GetInstSize - Returns the size of the specified MachineInstr.
 comment|///
@@ -356,7 +451,6 @@ argument|const MachineInstr* MI
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|unsigned
 name|isLoadFromStackSlot
 argument_list|(
@@ -365,8 +459,8 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|isStoreToStackSlot
 argument_list|(
@@ -375,8 +469,8 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|isLoadFromStackSlotPostFE
 argument_list|(
@@ -385,8 +479,8 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|isStoreToStackSlotPostFE
 argument_list|(
@@ -395,8 +489,38 @@ argument_list|,
 argument|int&FrameIndex
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
+name|void
+name|copyToCPSR
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|bool KillSrc
+argument_list|,
+argument|const ARMSubtarget&Subtarget
+argument_list|)
+specifier|const
+block|;
+name|void
+name|copyFromCPSR
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|bool KillSrc
+argument_list|,
+argument|const ARMSubtarget&Subtarget
+argument_list|)
+specifier|const
+block|;
 name|void
 name|copyPhysReg
 argument_list|(
@@ -413,8 +537,8 @@ argument_list|,
 argument|bool KillSrc
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|storeRegToStackSlot
 argument_list|(
@@ -433,8 +557,8 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|loadRegFromStackSlot
 argument_list|(
@@ -451,16 +575,16 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|expandPostRAPseudo
 argument_list|(
 argument|MachineBasicBlock::iterator MI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|reMaterialize
 argument_list|(
@@ -477,6 +601,7 @@ argument_list|,
 argument|const TargetRegisterInfo&TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|MachineInstr
 operator|*
@@ -487,6 +612,7 @@ argument_list|,
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|MachineInstr
 operator|*
@@ -497,6 +623,7 @@ argument_list|,
 argument|bool=false
 argument_list|)
 specifier|const
+name|override
 block|;
 specifier|const
 name|MachineInstrBuilder
@@ -515,7 +642,6 @@ argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|bool
 name|produceSameValue
 argument_list|(
@@ -526,13 +652,13 @@ argument_list|,
 argument|const MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// areLoadsFromSameBasePtr - This is used by the pre-regalloc scheduler to
 comment|/// determine if two loads are loading from the same base address. It should
 comment|/// only return true if the base pointers are the same and the only
 comment|/// differences between the two addresses is the offset. It also returns the
 comment|/// offsets by reference.
-name|virtual
 name|bool
 name|areLoadsFromSameBasePtr
 argument_list|(
@@ -545,6 +671,7 @@ argument_list|,
 argument|int64_t&Offset2
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// shouldScheduleLoadsNear - This is a used by the pre-regalloc scheduler to
 comment|/// determine (in conjunction with areLoadsFromSameBasePtr) if two loads
@@ -554,7 +681,6 @@ comment|/// together. This function takes two integers that represent the load o
 comment|/// from the common base address. It returns true if it decides it's desirable
 comment|/// to schedule the two loads together. "NumLoads" is the number of loads that
 comment|/// have already been scheduled after Load1.
-name|virtual
 name|bool
 name|shouldScheduleLoadsNear
 argument_list|(
@@ -569,8 +695,8 @@ argument_list|,
 argument|unsigned NumLoads
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isSchedulingBoundary
 argument_list|(
@@ -581,8 +707,8 @@ argument_list|,
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isProfitableToIfCvt
 argument_list|(
@@ -595,8 +721,8 @@ argument_list|,
 argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isProfitableToIfCvt
 argument_list|(
@@ -615,8 +741,8 @@ argument_list|,
 argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|isProfitableToDupForIfCvt
 argument_list|(
@@ -627,6 +753,7 @@ argument_list|,
 argument|const BranchProbability&Probability
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|NumCycles
@@ -634,7 +761,6 @@ operator|==
 literal|1
 return|;
 block|}
-name|virtual
 name|bool
 name|isProfitableToUnpredicate
 argument_list|(
@@ -643,12 +769,12 @@ argument_list|,
 argument|MachineBasicBlock&FMBB
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// analyzeCompare - For a comparison instruction, return the source registers
 comment|/// in SrcReg and SrcReg2 if having two register operands, and the value it
 comment|/// compares against in CmpValue. Return true if the comparison instruction
 comment|/// can be analyzed.
-name|virtual
 name|bool
 name|analyzeCompare
 argument_list|(
@@ -663,12 +789,12 @@ argument_list|,
 argument|int&CmpValue
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// optimizeCompareInstr - Convert the instruction to set the zero flag so
 comment|/// that we can remove a "comparison with zero"; Remove a redundant CMP
 comment|/// instruction if the flags can be updated in the same way by an earlier
 comment|/// instruction such as SUB.
-name|virtual
 name|bool
 name|optimizeCompareInstr
 argument_list|(
@@ -685,8 +811,8 @@ argument_list|,
 argument|const MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|bool
 name|analyzeSelect
 argument_list|(
@@ -701,21 +827,23 @@ argument_list|,
 argument|bool&Optimizable
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|MachineInstr
 operator|*
 name|optimizeSelect
 argument_list|(
 argument|MachineInstr *MI
 argument_list|,
+argument|SmallPtrSetImpl<MachineInstr *>&SeenMIs
+argument_list|,
 argument|bool
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// FoldImmediate - 'Reg' is known to be defined by a move immediate
 comment|/// instruction, try to fold the immediate into the use instruction.
-name|virtual
 name|bool
 name|FoldImmediate
 argument_list|(
@@ -728,8 +856,8 @@ argument_list|,
 argument|MachineRegisterInfo *MRI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getNumMicroOps
 argument_list|(
@@ -738,8 +866,8 @@ argument_list|,
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|int
 name|getOperandLatency
 argument_list|(
@@ -754,8 +882,8 @@ argument_list|,
 argument|unsigned UseIdx
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|int
 name|getOperandLatency
 argument_list|(
@@ -770,6 +898,7 @@ argument_list|,
 argument|unsigned UseIdx
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// VFP/NEON execution domains.
 name|std
@@ -785,6 +914,7 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|setExecutionDomain
@@ -794,6 +924,7 @@ argument_list|,
 argument|unsigned Domain
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getPartialRegUpdateClearance
@@ -805,6 +936,7 @@ argument_list|,
 argument|const TargetRegisterInfo*
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|breakPartialRegDependency
@@ -816,6 +948,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// Get the number of addresses by LDM or VLDM or zero for unknown.
 name|unsigned
@@ -919,6 +1052,7 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|unsigned
 name|getInstrLatency
@@ -927,10 +1061,10 @@ argument|const InstrItineraryData *ItinData
 argument_list|,
 argument|const MachineInstr *MI
 argument_list|,
-argument|unsigned *PredCost =
-literal|0
+argument|unsigned *PredCost = nullptr
 argument_list|)
 specifier|const
+name|override
 block|;
 name|int
 name|getInstrLatency
@@ -940,6 +1074,7 @@ argument_list|,
 argument|SDNode *Node
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasHighOperandLatency
@@ -957,6 +1092,7 @@ argument_list|,
 argument|unsigned UseIdx
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasLowDefLatency
@@ -968,6 +1104,7 @@ argument_list|,
 argument|unsigned DefIdx
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// verifyInstruction - Perform target specific instruction verification.
 name|bool
@@ -978,6 +1115,19 @@ argument_list|,
 argument|StringRef&ErrInfo
 argument_list|)
 specifier|const
+name|override
+block|;
+name|virtual
+name|void
+name|expandLoadStackGuard
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|,
+argument|Reloc::Model RM
+argument_list|)
+specifier|const
+operator|=
+literal|0
 block|;
 name|private
 operator|:
@@ -1594,6 +1744,11 @@ comment|/// effect in functions being optimised for size.
 name|bool
 name|tryFoldSPUpdateIntoPushPop
 parameter_list|(
+specifier|const
+name|ARMSubtarget
+modifier|&
+name|Subtarget
+parameter_list|,
 name|MachineFunction
 modifier|&
 name|MF

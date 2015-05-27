@@ -182,6 +182,9 @@ name|class
 name|EnumDecl
 decl_stmt|;
 name|class
+name|EnumConstantDecl
+decl_stmt|;
+name|class
 name|Expr
 decl_stmt|;
 name|class

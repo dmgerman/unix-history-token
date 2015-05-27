@@ -1934,7 +1934,7 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|type
@@ -1994,14 +1994,12 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-comment|/* !sun */
 name|id
 operator|=
 name|UID_NOBODY
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !sun */
 return|return
 operator|(
 name|id
@@ -3199,7 +3197,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|ksid_t
 modifier|*
 name|ksid
@@ -3222,13 +3220,12 @@ argument_list|)
 decl_stmt|;
 endif|#
 directive|endif
-comment|/* !sun */
 name|uid_t
 name|gid
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 if|if
 condition|(
 name|ksid
@@ -3389,7 +3386,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 comment|/* 	 * Not found in ksidlist, check posix groups 	 */
 name|gid
 operator|=

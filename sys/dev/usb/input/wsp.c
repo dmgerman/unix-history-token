@@ -249,7 +249,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|wsp_debug
@@ -419,7 +419,7 @@ name|OID_AUTO
 argument_list|,
 name|scale_factor
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|wsp_tuning
@@ -442,7 +442,7 @@ name|OID_AUTO
 argument_list|,
 name|z_factor
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|wsp_tuning
@@ -465,7 +465,7 @@ name|OID_AUTO
 argument_list|,
 name|pressure_touch_threshold
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|wsp_tuning
@@ -488,7 +488,7 @@ name|OID_AUTO
 argument_list|,
 name|pressure_untouch_threshold
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|wsp_tuning
@@ -511,7 +511,7 @@ name|OID_AUTO
 argument_list|,
 name|pressure_tap_threshold
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|wsp_tuning
@@ -534,7 +534,7 @@ name|OID_AUTO
 argument_list|,
 name|scr_hor_threshold
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|wsp_tuning

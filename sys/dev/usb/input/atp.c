@@ -489,7 +489,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|atp_debug
@@ -528,7 +528,7 @@ name|OID_AUTO
 argument_list|,
 name|touch_timeout
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|atp_touch_timeout
@@ -558,7 +558,7 @@ name|OID_AUTO
 argument_list|,
 name|double_tap_threshold
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|atp_double_tap_threshold
@@ -601,7 +601,7 @@ name|scale_factor
 argument_list|,
 name|CTLTYPE_UINT
 operator||
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|atp_mickeys_scale_factor
@@ -638,7 +638,7 @@ name|OID_AUTO
 argument_list|,
 name|small_movement
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|atp_small_movement_threshold
@@ -668,7 +668,7 @@ name|OID_AUTO
 argument_list|,
 name|tap_minimum
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|atp_tap_minimum
@@ -704,7 +704,7 @@ name|OID_AUTO
 argument_list|,
 name|slide_min_movement
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|atp_slide_min_movement
@@ -740,7 +740,7 @@ name|OID_AUTO
 argument_list|,
 name|stroke_maturity_threshold
 argument_list|,
-name|CTLFLAG_RW
+name|CTLFLAG_RWTUN
 argument_list|,
 operator|&
 name|atp_stroke_maturity_threshold

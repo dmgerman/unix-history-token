@@ -247,6 +247,14 @@ name|category
 parameter_list|)
 function_decl|;
 name|void
+name|EnableAllCategories
+parameter_list|()
+function_decl|;
+name|void
+name|DisableAllCategories
+parameter_list|()
+function_decl|;
+name|void
 name|Clear
 parameter_list|()
 function_decl|;
@@ -374,6 +382,16 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|lldb
+operator|::
+name|TypeValidatorImplSP
+name|GetValidator
+argument_list|(
+argument|ValueObject& valobj
+argument_list|,
+argument|lldb::DynamicValueType use_dynamic
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 name|class

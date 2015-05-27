@@ -456,6 +456,7 @@ operator|)
 argument_list|)
 block|{
 name|cxx_binding
+modifier|*
 name|base
 block|;
 comment|/* The bound name.  */

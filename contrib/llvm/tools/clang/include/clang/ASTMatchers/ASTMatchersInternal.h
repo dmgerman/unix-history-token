@@ -134,13 +134,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_MATCHERS_AST_MATCHERS_INTERNAL_H
+name|LLVM_CLANG_ASTMATCHERS_ASTMATCHERSINTERNAL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_MATCHERS_AST_MATCHERS_INTERNAL_H
+name|LLVM_CLANG_ASTMATCHERS_ASTMATCHERSINTERNAL_H
 end_define
 
 begin_include
@@ -200,7 +200,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/type_traits.h"
+file|"llvm/Support/ManagedStatic.h"
 end_include
 
 begin_include
@@ -228,25 +228,6 @@ block|{
 name|namespace
 name|ast_matchers
 block|{
-comment|/// FIXME: Move into the llvm support library.
-name|template
-operator|<
-name|bool
-operator|>
-expr|struct
-name|CompileAssert
-block|{}
-expr_stmt|;
-define|#
-directive|define
-name|TOOLING_COMPILE_ASSERT
-parameter_list|(
-name|Expr
-parameter_list|,
-name|Msg
-parameter_list|)
-define|\
-value|typedef CompileAssert<(bool(Expr))> Msg[bool(Expr) ? 1 : -1]
 name|class
 name|BoundNodes
 decl_stmt|;
@@ -262,17 +243,18 @@ label|:
 comment|/// \brief Adds \c Node to the map with key \c ID.
 comment|///
 comment|/// The node's base type should be in NodeBaseType or it will be unaccessible.
-name|template
-operator|<
-name|typename
-name|T
-operator|>
 name|void
 name|addNode
 argument_list|(
-argument|StringRef ID
+name|StringRef
+name|ID
 argument_list|,
-argument|const T* Node
+specifier|const
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|&
+name|DynNode
 argument_list|)
 block|{
 name|NodeMap
@@ -280,16 +262,9 @@ index|[
 name|ID
 index|]
 operator|=
-name|ast_type_traits
-operator|::
-name|DynTypedNode
-operator|::
-name|create
-argument_list|(
-operator|*
-name|Node
-argument_list|)
-block|;   }
+name|DynNode
+expr_stmt|;
+block|}
 comment|/// \brief Returns the AST node bound to \c ID.
 comment|///
 comment|/// Returns NULL if there was no node bound to \c ID or if there is a node but
@@ -331,7 +306,7 @@ argument_list|()
 condition|)
 block|{
 return|return
-name|NULL
+name|nullptr
 return|;
 block|}
 return|return
@@ -442,6 +417,41 @@ return|return
 name|NodeMap
 return|;
 block|}
+comment|/// \brief Returns \c true if this \c BoundNodesMap can be compared, i.e. all
+comment|/// stored nodes have memoization data.
+name|bool
+name|isComparable
+argument_list|()
+specifier|const
+block|{
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|&
+name|IDAndNode
+range|:
+name|NodeMap
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|IDAndNode
+operator|.
+name|second
+operator|.
+name|getMemoizationData
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+block|}
+return|return
+name|true
+return|;
+block|}
 name|private
 label|:
 name|IDToNodeMap
@@ -488,17 +498,22 @@ expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// \brief Add a binding from an id to a node.
-name|template
-operator|<
-name|typename
-name|T
-operator|>
 name|void
 name|setBinding
 argument_list|(
-argument|const std::string&Id
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Id
 argument_list|,
-argument|const T *Node
+specifier|const
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+operator|&
+name|DynNode
 argument_list|)
 block|{
 if|if
@@ -518,35 +533,19 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|unsigned
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
+name|BoundNodesMap
+modifier|&
+name|Binding
+range|:
 name|Bindings
-operator|.
-name|size
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
 control|)
-name|Bindings
-index|[
-name|i
-index|]
+name|Binding
 operator|.
 name|addNode
 argument_list|(
 name|Id
 argument_list|,
-name|Node
+name|DynNode
 argument_list|)
 expr_stmt|;
 block|}
@@ -637,6 +636,39 @@ operator|.
 name|Bindings
 return|;
 block|}
+comment|/// \brief Returns \c true if this \c BoundNodesTreeBuilder can be compared,
+comment|/// i.e. all stored node maps have memoization data.
+name|bool
+name|isComparable
+argument_list|()
+specifier|const
+block|{
+for|for
+control|(
+specifier|const
+name|BoundNodesMap
+modifier|&
+name|NodesMap
+range|:
+name|Bindings
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|NodesMap
+operator|.
+name|isComparable
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+block|}
+return|return
+name|true
+return|;
+block|}
 name|private
 label|:
 name|SmallVector
@@ -651,6 +683,38 @@ block|}
 empty_stmt|;
 name|class
 name|ASTMatchFinder
+decl_stmt|;
+comment|/// \brief Generic interface for all matchers.
+comment|///
+comment|/// Used by the implementation of Matcher<T> and DynTypedMatcher.
+comment|/// In general, implement MatcherInterface<T> or SingleNodeMatcherInterface<T>
+comment|/// instead.
+name|class
+name|DynMatcherInterface
+range|:
+name|public
+name|RefCountedBaseVPTR
+block|{
+name|public
+operator|:
+comment|/// \brief Returns true if \p DynNode can be matched.
+comment|///
+comment|/// May bind \p DynNode to an ID via \p Builder, or recurse into
+comment|/// the AST via \p Finder.
+name|virtual
+name|bool
+name|dynMatches
+argument_list|(
+argument|const ast_type_traits::DynTypedNode&DynNode
+argument_list|,
+argument|ASTMatchFinder *Finder
+argument_list|,
+argument|BoundNodesTreeBuilder *Builder
+argument_list|)
+specifier|const
+operator|=
+literal|0
+block|; }
 decl_stmt|;
 comment|/// \brief Generic interface for matchers on an AST node of type T.
 comment|///
@@ -668,7 +732,7 @@ name|class
 name|MatcherInterface
 operator|:
 name|public
-name|RefCountedBaseVPTR
+name|DynMatcherInterface
 block|{
 name|public
 operator|:
@@ -694,8 +758,39 @@ argument_list|)
 specifier|const
 operator|=
 literal|0
-block|; }
-expr_stmt|;
+block|;
+name|bool
+name|dynMatches
+argument_list|(
+argument|const ast_type_traits::DynTypedNode&DynNode
+argument_list|,
+argument|ASTMatchFinder *Finder
+argument_list|,
+argument|BoundNodesTreeBuilder *Builder
+argument_list|)
+specifier|const
+name|override
+block|{
+return|return
+name|matches
+argument_list|(
+name|DynNode
+operator|.
+name|getUnchecked
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
 comment|/// \brief Interface for matchers that only evaluate properties on a single
 comment|/// node.
 name|template
@@ -730,7 +825,6 @@ block|;
 name|private
 operator|:
 comment|/// Implements MatcherInterface::Matches.
-name|virtual
 name|bool
 name|matches
 argument_list|(
@@ -743,6 +837,7 @@ argument|BoundNodesTreeBuilder *
 comment|/*  Builder */
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|matchesNode
@@ -753,356 +848,13 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Wrapper of a MatcherInterface<T> *that allows copying.
-comment|///
-comment|/// A Matcher<Base> can be used anywhere a Matcher<Derived> is
-comment|/// required. This establishes an is-a relationship which is reverse
-comment|/// to the AST hierarchy. In other words, Matcher<T> is contravariant
-comment|/// with respect to T. The relationship is built via a type conversion
-comment|/// operator rather than a type hierarchy to be able to templatize the
-comment|/// type hierarchy instead of spelling it out.
 name|template
 operator|<
 name|typename
-name|T
 operator|>
 name|class
 name|Matcher
-block|{
-name|public
-operator|:
-comment|/// \brief Takes ownership of the provided implementation pointer.
-name|explicit
-name|Matcher
-argument_list|(
-name|MatcherInterface
-operator|<
-name|T
-operator|>
-operator|*
-name|Implementation
-argument_list|)
-operator|:
-name|Implementation
-argument_list|(
-argument|Implementation
-argument_list|)
-block|{}
-comment|/// \brief Implicitly converts \c Other to a Matcher<T>.
-comment|///
-comment|/// Requires \c T to be derived from \c From.
-name|template
-operator|<
-name|typename
-name|From
-operator|>
-name|Matcher
-argument_list|(
-argument|const Matcher<From>&Other
-argument_list|,
-argument|typename llvm::enable_if_c<             llvm::is_base_of<From
-argument_list|,
-argument|T>::value&&             !llvm::is_same<From
-argument_list|,
-argument|T>::value>::type* =
-literal|0
-argument_list|)
-operator|:
-name|Implementation
-argument_list|(
-argument|new ImplicitCastMatcher<From>(Other)
-argument_list|)
-block|{}
-comment|/// \brief Implicitly converts \c Matcher<Type> to \c Matcher<QualType>.
-comment|///
-comment|/// The resulting matcher is not strict, i.e. ignores qualifiers.
-name|template
-operator|<
-name|typename
-name|TypeT
-operator|>
-name|Matcher
-argument_list|(
-argument|const Matcher<TypeT>&Other
-argument_list|,
-argument|typename llvm::enable_if_c<             llvm::is_same<T
-argument_list|,
-argument|QualType>::value&&             llvm::is_same<TypeT
-argument_list|,
-argument|Type>::value>::type* =
-literal|0
-argument_list|)
-operator|:
-name|Implementation
-argument_list|(
-argument|new TypeToQualType<TypeT>(Other)
-argument_list|)
-block|{}
-comment|/// \brief Forwards the call to the underlying MatcherInterface<T> pointer.
-name|bool
-name|matches
-argument_list|(
-argument|const T&Node
-argument_list|,
-argument|ASTMatchFinder *Finder
-argument_list|,
-argument|BoundNodesTreeBuilder *Builder
-argument_list|)
-specifier|const
-block|{
-if|if
-condition|(
-name|Implementation
-operator|->
-name|matches
-argument_list|(
-name|Node
-argument_list|,
-name|Finder
-argument_list|,
-name|Builder
-argument_list|)
-condition|)
-return|return
-name|true
-return|;
-comment|// Delete all bindings when a matcher does not match.
-comment|// This prevents unexpected exposure of bound nodes in unmatches
-comment|// branches of the match tree.
-operator|*
-name|Builder
-operator|=
-name|BoundNodesTreeBuilder
-argument_list|()
 block|;
-return|return
-name|false
-return|;
-block|}
-comment|/// \brief Returns an ID that uniquely identifies the matcher.
-name|uint64_t
-name|getID
-argument_list|()
-specifier|const
-block|{
-comment|/// FIXME: Document the requirements this imposes on matcher
-comment|/// implementations (no new() implementation_ during a Matches()).
-return|return
-name|reinterpret_cast
-operator|<
-name|uint64_t
-operator|>
-operator|(
-name|Implementation
-operator|.
-name|getPtr
-argument_list|()
-operator|)
-return|;
-block|}
-comment|/// \brief Allows the conversion of a \c Matcher<Type> to a \c
-comment|/// Matcher<QualType>.
-comment|///
-comment|/// Depending on the constructor argument, the matcher is either strict, i.e.
-comment|/// does only matches in the absence of qualifiers, or not, i.e. simply
-comment|/// ignores any qualifiers.
-name|template
-operator|<
-name|typename
-name|TypeT
-operator|>
-name|class
-name|TypeToQualType
-operator|:
-name|public
-name|MatcherInterface
-operator|<
-name|QualType
-operator|>
-block|{
-name|public
-operator|:
-name|TypeToQualType
-argument_list|(
-specifier|const
-name|Matcher
-operator|<
-name|TypeT
-operator|>
-operator|&
-name|InnerMatcher
-argument_list|)
-operator|:
-name|InnerMatcher
-argument_list|(
-argument|InnerMatcher
-argument_list|)
-block|{}
-name|virtual
-name|bool
-name|matches
-argument_list|(
-argument|const QualType&Node
-argument_list|,
-argument|ASTMatchFinder *Finder
-argument_list|,
-argument|BoundNodesTreeBuilder *Builder
-argument_list|)
-specifier|const
-block|{
-if|if
-condition|(
-name|Node
-operator|.
-name|isNull
-argument_list|()
-condition|)
-return|return
-name|false
-return|;
-return|return
-name|InnerMatcher
-operator|.
-name|matches
-argument_list|(
-operator|*
-name|Node
-argument_list|,
-name|Finder
-argument_list|,
-name|Builder
-argument_list|)
-return|;
-block|}
-name|private
-operator|:
-specifier|const
-name|Matcher
-operator|<
-name|TypeT
-operator|>
-name|InnerMatcher
-block|;   }
-expr_stmt|;
-name|private
-label|:
-comment|/// \brief Allows conversion from Matcher<Base> to Matcher<T> if T
-comment|/// is derived from Base.
-name|template
-operator|<
-name|typename
-name|Base
-operator|>
-name|class
-name|ImplicitCastMatcher
-operator|:
-name|public
-name|MatcherInterface
-operator|<
-name|T
-operator|>
-block|{
-name|public
-operator|:
-name|explicit
-name|ImplicitCastMatcher
-argument_list|(
-specifier|const
-name|Matcher
-operator|<
-name|Base
-operator|>
-operator|&
-name|From
-argument_list|)
-operator|:
-name|From
-argument_list|(
-argument|From
-argument_list|)
-block|{}
-name|virtual
-name|bool
-name|matches
-argument_list|(
-argument|const T&Node
-argument_list|,
-argument|ASTMatchFinder *Finder
-argument_list|,
-argument|BoundNodesTreeBuilder *Builder
-argument_list|)
-specifier|const
-block|{
-return|return
-name|From
-operator|.
-name|matches
-argument_list|(
-name|Node
-argument_list|,
-name|Finder
-argument_list|,
-name|Builder
-argument_list|)
-return|;
-block|}
-name|private
-operator|:
-specifier|const
-name|Matcher
-operator|<
-name|Base
-operator|>
-name|From
-block|;   }
-expr_stmt|;
-name|IntrusiveRefCntPtr
-operator|<
-name|MatcherInterface
-operator|<
-name|T
-operator|>
-expr|>
-name|Implementation
-expr_stmt|;
-block|}
-empty_stmt|;
-comment|// class Matcher
-comment|/// \brief A convenient helper for creating a Matcher<T> without specifying
-comment|/// the template type argument.
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-specifier|inline
-name|Matcher
-operator|<
-name|T
-operator|>
-name|makeMatcher
-argument_list|(
-argument|MatcherInterface<T> *Implementation
-argument_list|)
-block|{
-return|return
-name|Matcher
-operator|<
-name|T
-operator|>
-operator|(
-name|Implementation
-operator|)
-return|;
-block|}
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|BindableMatcher
-expr_stmt|;
 comment|/// \brief Matcher that works on a \c DynTypedNode.
 comment|///
 comment|/// It is constructed from a \c Matcher<T> object and redirects most calls to
@@ -1114,78 +866,149 @@ name|class
 name|DynTypedMatcher
 block|{
 name|public
-label|:
-comment|/// \brief Construct from a \c Matcher<T>. Copies the matcher.
+operator|:
+comment|/// \brief Takes ownership of the provided implementation pointer.
 name|template
 operator|<
 name|typename
 name|T
 operator|>
-specifier|inline
 name|DynTypedMatcher
 argument_list|(
-specifier|const
-name|Matcher
+name|MatcherInterface
 operator|<
 name|T
 operator|>
-operator|&
-name|M
+operator|*
+name|Implementation
 argument_list|)
-expr_stmt|;
-comment|/// \brief Construct from a bindable \c Matcher<T>. Copies the matcher.
+operator|:
+name|AllowBind
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|SupportedKind
+argument_list|(
+name|ast_type_traits
+operator|::
+name|ASTNodeKind
+operator|::
+name|getFromNodeKind
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+argument_list|)
+block|,
+name|RestrictKind
+argument_list|(
+name|SupportedKind
+argument_list|)
+block|,
+name|Implementation
+argument_list|(
+argument|Implementation
+argument_list|)
+block|{}
+comment|/// \brief Construct from a variadic function.
+expr|enum
+name|VariadicOperator
+block|{
+comment|/// \brief Matches nodes for which all provided matchers match.
+name|VO_AllOf
+block|,
+comment|/// \brief Matches nodes for which at least one of the provided matchers
+comment|/// matches.
+name|VO_AnyOf
+block|,
+comment|/// \brief Matches nodes for which at least one of the provided matchers
+comment|/// matches, but doesn't stop at the first match.
+name|VO_EachOf
+block|,
+comment|/// \brief Matches nodes that do not match the provided matcher.
 comment|///
-comment|/// This version enables \c tryBind() on the \c DynTypedMatcher.
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-specifier|inline
+comment|/// Uses the variadic matcher interface, but fails if
+comment|/// InnerMatchers.size() != 1.
+name|VO_UnaryNot
+block|}
+block|;
+specifier|static
 name|DynTypedMatcher
+name|constructVariadic
 argument_list|(
-specifier|const
-name|BindableMatcher
-operator|<
-name|T
-operator|>
-operator|&
-name|M
+argument|VariadicOperator Op
+argument_list|,
+argument|std::vector<DynTypedMatcher> InnerMatchers
 argument_list|)
-expr_stmt|;
+block|;
+comment|/// \brief Get a "true" matcher for \p NodeKind.
+comment|///
+comment|/// It only checks that the node is of the right kind.
+specifier|static
+name|DynTypedMatcher
+name|trueMatcher
+argument_list|(
+argument|ast_type_traits::ASTNodeKind NodeKind
+argument_list|)
+block|;
+name|void
+name|setAllowBind
+argument_list|(
+argument|bool AB
+argument_list|)
+block|{
+name|AllowBind
+operator|=
+name|AB
+block|; }
+comment|/// \brief Check whether this matcher could ever match a node of kind \p Kind.
+comment|/// \return \c false if this matcher will never match such a node. Otherwise,
+comment|/// return \c true.
+name|bool
+name|canMatchNodesOfKind
+argument_list|(
+argument|ast_type_traits::ASTNodeKind Kind
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Return a matcher that points to the same implementation, but
+comment|///   restricts the node types for \p Kind.
+name|DynTypedMatcher
+name|dynCastTo
+argument_list|(
+argument|const ast_type_traits::ASTNodeKind Kind
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief Returns true if the matcher matches the given \c DynNode.
 name|bool
 name|matches
 argument_list|(
+argument|const ast_type_traits::DynTypedNode&DynNode
+argument_list|,
+argument|ASTMatchFinder *Finder
+argument_list|,
+argument|BoundNodesTreeBuilder *Builder
+argument_list|)
 specifier|const
-name|ast_type_traits
-operator|::
-name|DynTypedNode
-name|DynNode
-argument_list|,
-name|ASTMatchFinder
-operator|*
-name|Finder
-argument_list|,
-name|BoundNodesTreeBuilder
-operator|*
-name|Builder
-argument_list|)
-decl|const
-block|{
-return|return
-name|Storage
-operator|->
-name|matches
+block|;
+comment|/// \brief Same as matches(), but skips the kind check.
+comment|///
+comment|/// It is faster, but the caller must ensure the node is valid for the
+comment|/// kind of this matcher.
+name|bool
+name|matchesNoKindCheck
 argument_list|(
-name|DynNode
+argument|const ast_type_traits::DynTypedNode&DynNode
 argument_list|,
-name|Finder
+argument|ASTMatchFinder *Finder
 argument_list|,
-name|Builder
+argument|BoundNodesTreeBuilder *Builder
 argument_list|)
-return|;
-block|}
+specifier|const
+block|;
 comment|/// \brief Bind the specified \p ID to the matcher.
 comment|/// \return A new matcher with the \p ID bound to it if this matcher supports
 comment|///   binding. Otherwise, returns an empty \c Optional<>.
@@ -1200,27 +1023,52 @@ argument_list|(
 argument|StringRef ID
 argument_list|)
 specifier|const
-block|{
-return|return
-name|Storage
-operator|->
-name|tryBind
-argument_list|(
-name|ID
-argument_list|)
-return|;
-block|}
+block|;
 comment|/// \brief Returns a unique \p ID for the matcher.
+comment|///
+comment|/// Casting a Matcher<T> to Matcher<U> creates a matcher that has the
+comment|/// same \c Implementation pointer, but different \c RestrictKind. We need to
+comment|/// include both in the ID to make it unique.
+comment|///
+comment|/// \c MatcherIDType supports operator< and provides strict weak ordering.
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|ast_type_traits
+operator|::
+name|ASTNodeKind
+operator|,
 name|uint64_t
+operator|>
+name|MatcherIDType
+expr_stmt|;
+name|MatcherIDType
 name|getID
 argument_list|()
 specifier|const
 block|{
+comment|/// FIXME: Document the requirements this imposes on matcher
+comment|/// implementations (no new() implementation_ during a Matches()).
 return|return
-name|Storage
-operator|->
-name|getID
+name|std
+operator|::
+name|make_pair
+argument_list|(
+name|RestrictKind
+argument_list|,
+name|reinterpret_cast
+operator|<
+name|uint64_t
+operator|>
+operator|(
+name|Implementation
+operator|.
+name|get
 argument_list|()
+operator|)
+argument_list|)
 return|;
 block|}
 comment|/// \brief Returns the type this matcher works on.
@@ -1235,10 +1083,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Storage
-operator|->
-name|getSupportedKind
-argument_list|()
+name|SupportedKind
 return|;
 block|}
 comment|/// \brief Returns \c true if the passed \c DynTypedMatcher can be converted
@@ -1257,10 +1102,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getSupportedKind
-argument_list|()
-operator|.
-name|isBaseOf
+name|canConvertTo
 argument_list|(
 name|ast_type_traits
 operator|::
@@ -1275,6 +1117,13 @@ operator|)
 argument_list|)
 return|;
 block|}
+name|bool
+name|canConvertTo
+argument_list|(
+argument|ast_type_traits::ASTNodeKind To
+argument_list|)
+specifier|const
+block|;
 comment|/// \brief Construct a \c Matcher<T> interface around the dynamic matcher.
 comment|///
 comment|/// This method asserts that \c canConvertTo() is \c true. Callers
@@ -1328,169 +1177,130 @@ operator|>
 name|unconditionalConvertTo
 argument_list|()
 specifier|const
-block|{
-return|return
-name|Matcher
-operator|<
-name|T
-operator|>
-operator|(
-name|new
-name|WrappedMatcher
-operator|<
-name|T
-operator|>
-operator|(
-operator|*
-name|this
-operator|)
-operator|)
-return|;
-block|}
+block|;
 name|private
-label|:
-name|class
-name|MatcherStorage
-range|:
-name|public
-name|RefCountedBaseVPTR
-block|{
-name|public
 operator|:
-name|MatcherStorage
+name|DynTypedMatcher
 argument_list|(
 argument|ast_type_traits::ASTNodeKind SupportedKind
 argument_list|,
-argument|uint64_t ID
+argument|ast_type_traits::ASTNodeKind RestrictKind
+argument_list|,
+argument|IntrusiveRefCntPtr<DynMatcherInterface> Implementation
 argument_list|)
 operator|:
+name|AllowBind
+argument_list|(
+name|false
+argument_list|)
+block|,
 name|SupportedKind
 argument_list|(
 name|SupportedKind
 argument_list|)
 block|,
-name|ID
+name|RestrictKind
 argument_list|(
-argument|ID
+name|RestrictKind
+argument_list|)
+block|,
+name|Implementation
+argument_list|(
+argument|std::move(Implementation)
 argument_list|)
 block|{}
-name|virtual
-operator|~
-name|MatcherStorage
-argument_list|()
-block|;
-name|virtual
 name|bool
-name|matches
-argument_list|(
-argument|const ast_type_traits::DynTypedNode DynNode
-argument_list|,
-argument|ASTMatchFinder *Finder
-argument_list|,
-argument|BoundNodesTreeBuilder *Builder
-argument_list|)
-specifier|const
-operator|=
-literal|0
+name|AllowBind
 block|;
-name|virtual
-name|llvm
-operator|::
-name|Optional
-operator|<
-name|DynTypedMatcher
-operator|>
-name|tryBind
-argument_list|(
-argument|StringRef ID
-argument_list|)
-specifier|const
-operator|=
-literal|0
-block|;
-name|ast_type_traits
-operator|::
-name|ASTNodeKind
-name|getSupportedKind
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SupportedKind
-return|;
-block|}
-name|uint64_t
-name|getID
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ID
-return|;
-block|}
-name|private
-operator|:
-specifier|const
 name|ast_type_traits
 operator|::
 name|ASTNodeKind
 name|SupportedKind
 block|;
-specifier|const
-name|uint64_t
-name|ID
-block|;   }
-decl_stmt|;
-comment|/// \brief Typed implementation of \c MatcherStorage.
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|TypedMatcherStorage
-expr_stmt|;
-comment|/// \brief Simple MatcherInterface<T> wrapper around a DynTypedMatcher.
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|WrappedMatcher
-expr_stmt|;
+comment|/// \brief A potentially stricter node kind.
+comment|///
+comment|/// It allows to perform implicit and dynamic cast of matchers without
+comment|/// needing to change \c Implementation.
+name|ast_type_traits
+operator|::
+name|ASTNodeKind
+name|RestrictKind
+block|;
 name|IntrusiveRefCntPtr
 operator|<
-specifier|const
-name|MatcherStorage
+name|DynMatcherInterface
 operator|>
-name|Storage
-expr_stmt|;
-block|}
-empty_stmt|;
+name|Implementation
+block|; }
+block|;
+comment|/// \brief Wrapper of a MatcherInterface<T> *that allows copying.
+comment|///
+comment|/// A Matcher<Base> can be used anywhere a Matcher<Derived> is
+comment|/// required. This establishes an is-a relationship which is reverse
+comment|/// to the AST hierarchy. In other words, Matcher<T> is contravariant
+comment|/// with respect to T. The relationship is built via a type conversion
+comment|/// operator rather than a type hierarchy to be able to templatize the
+comment|/// type hierarchy instead of spelling it out.
 name|template
 operator|<
 name|typename
 name|T
 operator|>
 name|class
-name|DynTypedMatcher
-operator|::
-name|TypedMatcherStorage
-operator|:
-name|public
-name|MatcherStorage
+name|Matcher
 block|{
 name|public
 operator|:
-name|TypedMatcherStorage
+comment|/// \brief Takes ownership of the provided implementation pointer.
+name|explicit
+name|Matcher
 argument_list|(
-argument|const Matcher<T>&Other
-argument_list|,
-argument|bool AllowBind
+name|MatcherInterface
+operator|<
+name|T
+operator|>
+operator|*
+name|Implementation
 argument_list|)
 operator|:
-name|MatcherStorage
+name|Implementation
+argument_list|(
+argument|Implementation
+argument_list|)
+block|{}
+comment|/// \brief Implicitly converts \c Other to a Matcher<T>.
+comment|///
+comment|/// Requires \c T to be derived from \c From.
+name|template
+operator|<
+name|typename
+name|From
+operator|>
+name|Matcher
+argument_list|(
+argument|const Matcher<From>&Other
+argument_list|,
+argument|typename std::enable_if<std::is_base_of<From
+argument_list|,
+argument|T>::value&&                                   !std::is_same<From
+argument_list|,
+argument|T>::value>::type * =
+literal|0
+argument_list|)
+operator|:
+name|Implementation
+argument_list|(
+argument|restrictMatcher(Other.Implementation)
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Implementation
+operator|.
+name|getSupportedKind
+argument_list|()
+operator|.
+name|isSame
 argument_list|(
 name|ast_type_traits
 operator|::
@@ -1502,222 +1312,77 @@ name|T
 operator|>
 operator|(
 operator|)
+argument_list|)
+argument_list|)
+block|;   }
+comment|/// \brief Implicitly converts \c Matcher<Type> to \c Matcher<QualType>.
+comment|///
+comment|/// The resulting matcher is not strict, i.e. ignores qualifiers.
+name|template
+operator|<
+name|typename
+name|TypeT
+operator|>
+name|Matcher
+argument_list|(
+argument|const Matcher<TypeT>&Other
 argument_list|,
-name|Other
-operator|.
-name|getID
+argument|typename std::enable_if<             std::is_same<T
+argument_list|,
+argument|QualType>::value&&             std::is_same<TypeT
+argument_list|,
+argument|Type>::value>::type* =
+literal|0
+argument_list|)
+operator|:
+name|Implementation
+argument_list|(
+argument|new TypeToQualType<TypeT>(Other)
+argument_list|)
+block|{}
+comment|/// \brief Convert \c this into a \c Matcher<T> by applying dyn_cast<> to the
+comment|/// argument.
+comment|/// \c To must be a base class of \c T.
+name|template
+operator|<
+name|typename
+name|To
+operator|>
+name|Matcher
+operator|<
+name|To
+operator|>
+name|dynCastTo
 argument_list|()
-argument_list|)
-block|,
-name|InnerMatcher
-argument_list|(
-name|Other
-argument_list|)
-block|,
-name|AllowBind
-argument_list|(
-argument|AllowBind
-argument_list|)
-block|{}
-name|bool
-name|matches
-argument_list|(
-argument|const ast_type_traits::DynTypedNode DynNode
-argument_list|,
-argument|ASTMatchFinder *Finder
-argument_list|,
-argument|BoundNodesTreeBuilder *Builder
-argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
 block|{
-if|if
-condition|(
-specifier|const
-name|T
-modifier|*
-name|Node
-init|=
-name|DynNode
-operator|.
-name|get
-operator|<
-name|T
-operator|>
-operator|(
-operator|)
-condition|)
-block|{
-return|return
-name|InnerMatcher
-operator|.
-name|matches
+name|static_assert
 argument_list|(
-operator|*
-name|Node
-argument_list|,
-name|Finder
-argument_list|,
-name|Builder
-argument_list|)
-return|;
-block|}
-return|return
-name|false
-return|;
-block|}
-name|llvm
+name|std
 operator|::
-name|Optional
+name|is_base_of
 operator|<
-name|DynTypedMatcher
-operator|>
-name|tryBind
-argument_list|(
-argument|StringRef ID
-argument_list|)
-specifier|const
-name|LLVM_OVERRIDE
-block|{
-if|if
-condition|(
-operator|!
-name|AllowBind
-condition|)
-return|return
-name|llvm
-operator|::
-name|Optional
-operator|<
-name|DynTypedMatcher
-operator|>
-operator|(
-operator|)
-return|;
-return|return
-name|DynTypedMatcher
-argument_list|(
-name|BindableMatcher
-operator|<
+name|To
+argument_list|,
 name|T
 operator|>
-operator|(
-name|InnerMatcher
-operator|)
-operator|.
-name|bind
-argument_list|(
-name|ID
+operator|::
+name|value
+argument_list|,
+literal|"Invalid dynCast call."
 argument_list|)
-argument_list|)
-return|;
-block|}
-name|private
-label|:
-specifier|const
+block|;
+return|return
 name|Matcher
 operator|<
-name|T
+name|To
 operator|>
-name|InnerMatcher
-expr_stmt|;
-specifier|const
-name|bool
-name|AllowBind
-decl_stmt|;
+operator|(
+name|Implementation
+operator|)
+return|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-specifier|inline
-name|DynTypedMatcher
-operator|::
-name|DynTypedMatcher
-argument_list|(
-specifier|const
-name|Matcher
-operator|<
-name|T
-operator|>
-operator|&
-name|M
-argument_list|)
-operator|:
-name|Storage
-argument_list|(
-argument|new TypedMatcherStorage<T>(M, false)
-argument_list|)
-block|{}
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-specifier|inline
-name|DynTypedMatcher
-operator|::
-name|DynTypedMatcher
-argument_list|(
-specifier|const
-name|BindableMatcher
-operator|<
-name|T
-operator|>
-operator|&
-name|M
-argument_list|)
-operator|:
-name|Storage
-argument_list|(
-argument|new TypedMatcherStorage<T>(M, true)
-argument_list|)
-block|{}
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|DynTypedMatcher
-operator|::
-name|WrappedMatcher
-operator|:
-name|public
-name|MatcherInterface
-operator|<
-name|T
-operator|>
-block|{
-name|public
-operator|:
-name|explicit
-name|WrappedMatcher
-argument_list|(
-specifier|const
-name|DynTypedMatcher
-operator|&
-name|Matcher
-argument_list|)
-operator|:
-name|Inner
-argument_list|(
-argument|Matcher
-argument_list|)
-block|{}
-name|virtual
-operator|~
-name|WrappedMatcher
-argument_list|()
-block|{}
+comment|/// \brief Forwards the call to the underlying MatcherInterface<T> pointer.
 name|bool
 name|matches
 argument_list|(
@@ -1730,7 +1395,7 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|Inner
+name|Implementation
 operator|.
 name|matches
 argument_list|(
@@ -1749,76 +1414,146 @@ name|Builder
 argument_list|)
 return|;
 block|}
+comment|/// \brief Returns an ID that uniquely identifies the matcher.
+name|DynTypedMatcher
+operator|::
+name|MatcherIDType
+name|getID
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Implementation
+operator|.
+name|getID
+argument_list|()
+return|;
+block|}
+comment|/// \brief Extract the dynamic matcher.
+comment|///
+comment|/// The returned matcher keeps the same restrictions as \c this and remembers
+comment|/// that it is meant to support nodes of type \c T.
+name|operator
+name|DynTypedMatcher
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Implementation
+return|;
+block|}
+comment|/// \brief Allows the conversion of a \c Matcher<Type> to a \c
+comment|/// Matcher<QualType>.
+comment|///
+comment|/// Depending on the constructor argument, the matcher is either strict, i.e.
+comment|/// does only matches in the absence of qualifiers, or not, i.e. simply
+comment|/// ignores any qualifiers.
+name|template
+operator|<
+name|typename
+name|TypeT
+operator|>
+name|class
+name|TypeToQualType
+operator|:
+name|public
+name|MatcherInterface
+operator|<
+name|QualType
+operator|>
+block|{
+name|public
+operator|:
+name|TypeToQualType
+argument_list|(
+specifier|const
+name|Matcher
+operator|<
+name|TypeT
+operator|>
+operator|&
+name|InnerMatcher
+argument_list|)
+operator|:
+name|InnerMatcher
+argument_list|(
+argument|InnerMatcher
+argument_list|)
+block|{}
+name|bool
+name|matches
+argument_list|(
+argument|const QualType&Node
+argument_list|,
+argument|ASTMatchFinder *Finder
+argument_list|,
+argument|BoundNodesTreeBuilder *Builder
+argument_list|)
+specifier|const
+name|override
+block|{
+if|if
+condition|(
+name|Node
+operator|.
+name|isNull
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|InnerMatcher
+operator|.
+name|matches
+argument_list|(
+operator|*
+name|Node
+argument_list|,
+name|Finder
+argument_list|,
+name|Builder
+argument_list|)
+return|;
+block|}
 name|private
 operator|:
 specifier|const
-name|DynTypedMatcher
-name|Inner
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|};
-comment|/// \brief Specialization of the conversion functions for QualType.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// These specializations provide the Matcher<Type>->Matcher<QualType>
-end_comment
-
-begin_comment
-comment|/// conversion that the static API does.
-end_comment
-
-begin_expr_stmt
+name|Matcher
+operator|<
+name|TypeT
+operator|>
+name|InnerMatcher
+block|;   }
+block|;
+name|private
+operator|:
+comment|// For Matcher<T><=> Matcher<U> conversions.
 name|template
 operator|<
+name|typename
+name|U
 operator|>
-specifier|inline
-name|bool
-name|DynTypedMatcher
-operator|::
-name|canConvertTo
-operator|<
-name|QualType
-operator|>
-operator|(
-operator|)
-specifier|const
-block|{
-specifier|const
-name|ast_type_traits
-operator|::
-name|ASTNodeKind
-name|SourceKind
-operator|=
-name|getSupportedKind
-argument_list|()
+name|friend
+name|class
+name|Matcher
 block|;
-return|return
-name|SourceKind
-operator|.
-name|isSame
+comment|// For DynTypedMatcher::unconditionalConvertTo<T>.
+name|friend
+name|class
+name|DynTypedMatcher
+block|;
+specifier|static
+name|DynTypedMatcher
+name|restrictMatcher
 argument_list|(
-name|ast_type_traits
-operator|::
-name|ASTNodeKind
-operator|::
-name|getFromNodeKind
-operator|<
-name|Type
-operator|>
-operator|(
-operator|)
+argument|const DynTypedMatcher&Other
 argument_list|)
-operator|||
-name|SourceKind
+block|{
+return|return
+name|Other
 operator|.
-name|isSame
+name|dynCastTo
 argument_list|(
 name|ast_type_traits
 operator|::
@@ -1826,16 +1561,87 @@ name|ASTNodeKind
 operator|::
 name|getFromNodeKind
 operator|<
-name|QualType
+name|T
 operator|>
 operator|(
 operator|)
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
+name|explicit
+name|Matcher
+argument_list|(
+specifier|const
+name|DynTypedMatcher
+operator|&
+name|Implementation
+argument_list|)
+operator|:
+name|Implementation
+argument_list|(
+argument|restrictMatcher(Implementation)
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|this
+operator|->
+name|Implementation
+operator|.
+name|getSupportedKind
+argument_list|()
+operator|.
+name|isSame
+argument_list|(
+name|ast_type_traits
+operator|::
+name|ASTNodeKind
+operator|::
+name|getFromNodeKind
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+argument_list|)
+argument_list|)
+block|;   }
+name|DynTypedMatcher
+name|Implementation
+block|; }
+expr_stmt|;
+comment|// class Matcher
+comment|/// \brief A convenient helper for creating a Matcher<T> without specifying
+comment|/// the template type argument.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|inline
+name|Matcher
+operator|<
+name|T
+operator|>
+name|makeMatcher
+argument_list|(
+argument|MatcherInterface<T> *Implementation
+argument_list|)
+block|{
+return|return
+name|Matcher
+operator|<
+name|T
+operator|>
+operator|(
+name|Implementation
+operator|)
+return|;
+block|}
+comment|/// \brief Specialization of the conversion functions for QualType.
+comment|///
+comment|/// This specialization provides the Matcher<Type>->Matcher<QualType>
+comment|/// conversion that the static API does.
 name|template
 operator|<
 operator|>
@@ -1902,9 +1708,6 @@ operator|(
 operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_return
 return|return
 name|unconditionalConvertTo
 operator|<
@@ -1913,15 +1716,9 @@ operator|>
 operator|(
 operator|)
 return|;
-end_return
-
-begin_comment
-unit|}
+block|}
 comment|/// \brief Finds the first node in a range that matches the given matcher.
-end_comment
-
-begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|MatcherT
@@ -1984,31 +1781,25 @@ block|{
 operator|*
 name|Builder
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|Result
+argument_list|)
 expr_stmt|;
 return|return
 name|true
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|}   return
+block|}
+return|return
 name|false
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|}
+return|;
+block|}
 comment|/// \brief Finds the first node in a pointer range that matches the given
-end_comment
-
-begin_comment
 comment|/// matcher.
-end_comment
-
-begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|MatcherT
@@ -2072,27 +1863,24 @@ block|{
 operator|*
 name|Builder
 operator|=
+name|std
+operator|::
+name|move
+argument_list|(
 name|Result
+argument_list|)
 expr_stmt|;
 return|return
 name|true
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-unit|}   return
+block|}
+return|return
 name|false
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|}
+return|;
+block|}
 comment|/// \brief Metafunction to determine if type T has a member called getDecl.
-end_comment
-
-begin_expr_stmt
-unit|template
+name|template
 operator|<
 name|typename
 name|T
@@ -2176,32 +1964,17 @@ operator|<
 name|Derived
 operator|>
 operator|(
-literal|0
+name|nullptr
 operator|)
 argument_list|)
 operator|==
 literal|2
 block|; }
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Matches overloaded operators with a specific name.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// The type argument ArgT is not used by this matcher but is used by
-end_comment
-
-begin_comment
 comment|/// PolymorphicMatcherWithParam1 and should be StringRef.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2219,51 +1992,47 @@ operator|<
 name|T
 operator|>
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
-operator|(
-name|llvm
+name|std
 operator|::
 name|is_same
 operator|<
 name|T
-operator|,
+argument_list|,
 name|CXXOperatorCallExpr
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
-name|is_same
+name|is_base_of
 operator|<
+name|FunctionDecl
+argument_list|,
 name|T
-operator|,
-name|CXXMethodDecl
 operator|>
 operator|::
 name|value
-operator|)
 argument_list|,
-name|unsupported_class_for_matcher
+literal|"unsupported class for matcher"
 argument_list|)
 block|;
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
-operator|(
-name|llvm
+name|std
 operator|::
 name|is_same
 operator|<
 name|ArgT
-operator|,
+argument_list|,
 name|StringRef
 operator|>
 operator|::
 name|value
-operator|)
 argument_list|,
-name|argument_type_must_be_StringRef
+literal|"argument type must be StringRef"
 argument_list|)
 block|;
 name|public
@@ -2286,14 +2055,13 @@ argument_list|(
 argument|Name
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|matchesNode
 argument_list|(
 argument|const T&Node
 argument_list|)
 specifier|const
-name|LLVM_OVERRIDE
+name|override
 block|{
 return|return
 name|matchesSpecialized
@@ -2326,26 +2094,14 @@ operator|==
 name|Name
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Returns true only if CXXMethodDecl represents an overloaded
-end_comment
-
-begin_comment
 comment|/// operator and has the given operator name.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|matchesSpecialized
 argument_list|(
-specifier|const
-name|CXXMethodDecl
-operator|&
-name|Node
+argument|const FunctionDecl&Node
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|Node
@@ -2364,34 +2120,80 @@ operator|==
 name|Name
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 name|std
 operator|::
 name|string
 name|Name
+block|; }
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|};
-comment|/// \brief Matches declarations for QualType and CallExpr.
-end_comment
-
-begin_comment
+comment|/// \brief Matches named declarations with a specific name.
 comment|///
-end_comment
-
-begin_comment
+comment|/// See \c hasName() in ASTMatchers.h for details.
+name|class
+name|HasNameMatcher
+range|:
+name|public
+name|SingleNodeMatcherInterface
+operator|<
+name|NamedDecl
+operator|>
+block|{
+name|public
+operator|:
+name|explicit
+name|HasNameMatcher
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|;
+name|bool
+name|matchesNode
+argument_list|(
+argument|const NamedDecl&Node
+argument_list|)
+specifier|const
+name|override
+block|;
+name|private
+operator|:
+comment|/// \brief Unqualified match routine.
+comment|///
+comment|/// It is much faster than the full match, but it only works for unqualified
+comment|/// matches.
+name|bool
+name|matchesNodeUnqualified
+argument_list|(
+argument|const NamedDecl&Node
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Full match routine
+comment|///
+comment|/// It generates the fully qualified name of the declaration (which is
+comment|/// expensive) before trying to match.
+comment|/// It is slower but simple and works on all cases.
+name|bool
+name|matchesNodeFull
+argument_list|(
+argument|const NamedDecl&Node
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|bool
+name|UseUnqualifiedMatch
+block|;
+specifier|const
+name|std
+operator|::
+name|string
+name|Name
+block|; }
+decl_stmt|;
+comment|/// \brief Matches declarations for QualType and CallExpr.
+comment|///
 comment|/// Type argument DeclMatcherT is required by PolymorphicMatcherWithParam1 but
-end_comment
-
-begin_comment
 comment|/// not actually used.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2409,25 +2211,22 @@ operator|<
 name|T
 operator|>
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
-operator|(
-name|llvm
+name|std
 operator|::
 name|is_same
 operator|<
 name|DeclMatcherT
-operator|,
+argument_list|,
 name|Matcher
 operator|<
 name|Decl
-operator|>
-expr|>
+operator|>>
 operator|::
 name|value
-operator|)
 argument_list|,
-name|instantiated_with_wrong_types
+literal|"instantiated with wrong types"
 argument_list|)
 block|;
 name|public
@@ -2449,7 +2248,6 @@ argument_list|(
 argument|InnerMatcher
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|matches
 argument_list|(
@@ -2460,6 +2258,7 @@ argument_list|,
 argument|BoundNodesTreeBuilder *Builder
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|matchesSpecialized
@@ -2490,7 +2289,7 @@ argument|ASTMatchFinder *Finder
 argument_list|,
 argument|BoundNodesTreeBuilder *Builder
 argument_list|,
-argument|typename llvm::enable_if<has_getDecl<U>
+argument|typename std::enable_if<has_getDecl<U>::value
 argument_list|,
 argument|int>::type =
 literal|0
@@ -2511,34 +2310,18 @@ name|Builder
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Extracts the CXXRecordDecl or EnumDecl of a QualType and returns
-end_comment
-
-begin_comment
 comment|/// whether the inner matcher matches on it.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|matchesSpecialized
 argument_list|(
-specifier|const
-name|QualType
-operator|&
-name|Node
+argument|const QualType&Node
 argument_list|,
-name|ASTMatchFinder
-operator|*
-name|Finder
+argument|ASTMatchFinder *Finder
 argument_list|,
-name|BoundNodesTreeBuilder
-operator|*
-name|Builder
+argument|BoundNodesTreeBuilder *Builder
 argument_list|)
-decl|const
+specifier|const
 block|{
 comment|/// FIXME: Add other ways to convert...
 if|if
@@ -2596,17 +2379,8 @@ name|Builder
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Gets the TemplateDecl from a TemplateSpecializationType
-end_comment
-
-begin_comment
 comment|/// and returns whether the inner matches on it.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|matchesSpecialized
 argument_list|(
@@ -2642,17 +2416,8 @@ name|Builder
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Extracts the Decl of the callee of a CallExpr and returns whether
-end_comment
-
-begin_comment
 comment|/// the inner matcher matches on it.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|matchesSpecialized
 argument_list|(
@@ -2685,17 +2450,8 @@ name|Builder
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Extracts the Decl of the constructor call and returns whether the
-end_comment
-
-begin_comment
 comment|/// inner matcher matches on it.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|matchesSpecialized
 argument_list|(
@@ -2728,17 +2484,8 @@ name|Builder
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Extracts the \c ValueDecl a \c MemberExpr refers to and returns
-end_comment
-
-begin_comment
 comment|/// whether the inner matcher matches on it.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|matchesSpecialized
 argument_list|(
@@ -2771,17 +2518,8 @@ name|Builder
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_comment
 comment|/// \brief Returns whether the inner matcher \c Node. Returns false if \c Node
-end_comment
-
-begin_comment
 comment|/// is \c NULL.
-end_comment
-
-begin_decl_stmt
 name|bool
 name|matchesDecl
 argument_list|(
@@ -2803,7 +2541,7 @@ block|{
 return|return
 name|Node
 operator|!=
-name|NULL
+name|nullptr
 operator|&&
 name|InnerMatcher
 operator|.
@@ -2818,9 +2556,6 @@ name|Builder
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_expr_stmt
 specifier|const
 name|Matcher
 operator|<
@@ -2828,18 +2563,10 @@ name|Decl
 operator|>
 name|InnerMatcher
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|};
+block|}
+empty_stmt|;
 comment|/// \brief IsBaseType<T>::value is true if T is a "base" type in the AST
-end_comment
-
-begin_comment
 comment|/// node class hierarchies.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2853,100 +2580,95 @@ specifier|const
 name|bool
 name|value
 operator|=
-operator|(
-name|llvm
+name|std
 operator|::
 name|is_same
 operator|<
 name|T
-operator|,
+block|,
 name|Decl
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_same
 operator|<
 name|T
-operator|,
+block|,
 name|Stmt
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_same
 operator|<
 name|T
-operator|,
+block|,
 name|QualType
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_same
 operator|<
 name|T
-operator|,
+block|,
 name|Type
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_same
 operator|<
 name|T
-operator|,
+block|,
 name|TypeLoc
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_same
 operator|<
 name|T
-operator|,
+block|,
 name|NestedNameSpecifier
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_same
 operator|<
 name|T
-operator|,
+block|,
 name|NestedNameSpecifierLoc
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_same
 operator|<
 name|T
-operator|,
+block|,
 name|CXXCtorInitializer
 operator|>
 operator|::
 name|value
-operator|)
 block|; }
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -2961,81 +2683,24 @@ operator|>
 operator|::
 name|value
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Interface that allows matchers to traverse the AST.
-end_comment
-
-begin_comment
 comment|/// FIXME: Find a better name.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// This provides three entry methods for each base node type in the AST:
-end_comment
-
-begin_comment
 comment|/// - \c matchesChildOf:
-end_comment
-
-begin_comment
 comment|///   Matches a matcher on every child node of the given node. Returns true
-end_comment
-
-begin_comment
 comment|///   if at least one child node could be matched.
-end_comment
-
-begin_comment
 comment|/// - \c matchesDescendantOf:
-end_comment
-
-begin_comment
 comment|///   Matches a matcher on all descendant nodes of the given node. Returns true
-end_comment
-
-begin_comment
 comment|///   if at least one descendant matched.
-end_comment
-
-begin_comment
 comment|/// - \c matchesAncestorOf:
-end_comment
-
-begin_comment
 comment|///   Matches a matcher on all ancestors of the given node. Returns true if
-end_comment
-
-begin_comment
 comment|///   at least one ancestor matched.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// FIXME: Currently we only allow Stmt and Decl nodes to start a traversal.
-end_comment
-
-begin_comment
 comment|/// In the future, we wan to implement this for all nodes for which it makes
-end_comment
-
-begin_comment
 comment|/// sense. In the case of matchesAncestorOf, we'll want to implement it for
-end_comment
-
-begin_comment
 comment|/// all nodes, as all nodes have ancestors.
-end_comment
-
-begin_decl_stmt
 name|class
 name|ASTMatchFinder
 block|{
@@ -3127,77 +2792,75 @@ argument_list|,
 argument|BindKind Bind
 argument_list|)
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
-operator|(
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|Decl
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|Stmt
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|NestedNameSpecifier
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|NestedNameSpecifierLoc
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|TypeLoc
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|QualType
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
-operator|)
 argument_list|,
-name|unsupported_type_for_recursive_matching
+literal|"unsupported type for recursive matching"
 argument_list|)
 block|;
 return|return
@@ -3239,77 +2902,75 @@ argument_list|,
 argument|BindKind Bind
 argument_list|)
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
-operator|(
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|Decl
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|Stmt
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|NestedNameSpecifier
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|NestedNameSpecifierLoc
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|TypeLoc
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|QualType
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
-operator|)
 argument_list|,
-name|unsupported_type_for_recursive_matching
+literal|"unsupported type for recursive matching"
 argument_list|)
 block|;
 return|return
@@ -3350,33 +3011,31 @@ argument_list|,
 argument|AncestorMatchMode MatchMode
 argument_list|)
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
-operator|(
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|Decl
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|Stmt
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
-operator|)
 argument_list|,
-name|only_Decl_or_Stmt_allowed_for_recursive_matching
+literal|"only Decl or Stmt allowed for recursive matching"
 argument_list|)
 block|;
 return|return
@@ -3492,45 +3151,15 @@ init|=
 literal|0
 decl_stmt|;
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// \brief A type-list implementation.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// A list is declared as a tree of type list nodes, where the leafs are the
-end_comment
-
-begin_comment
 comment|/// types.
-end_comment
-
-begin_comment
 comment|/// However, it is used as a "linked list" of types, by using the ::head and
-end_comment
-
-begin_comment
 comment|/// ::tail typedefs.
-end_comment
-
-begin_comment
 comment|/// Each node supports up to 4 children (instead of just 2) to reduce the
-end_comment
-
-begin_comment
 comment|/// nesting required by large lists.
-end_comment
-
-begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -3571,36 +3200,15 @@ name|T4
 operator|>
 name|self
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief The first type on the list.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|T1
 name|head
 typedef|;
-end_typedef
-
-begin_comment
-comment|/// \brief A sub list with the tail. ie everything but the head.
-end_comment
-
-begin_comment
+comment|/// \brief A sublist with the tail. ie everything but the head.
 comment|///
-end_comment
-
-begin_comment
 comment|/// This type is used to do recursion. TypeList<>/EmptyTypeList indicates the
-end_comment
-
-begin_comment
 comment|/// end of the list.
-end_comment
-
-begin_typedef
 typedef|typedef
 name|typename
 name|TypeList
@@ -3615,10 +3223,14 @@ operator|::
 name|self
 name|tail
 expr_stmt|;
-end_typedef
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief Template specialization to allow nested lists.
 end_comment
 
@@ -3797,7 +3409,7 @@ specifier|const
 name|bool
 name|value
 operator|=
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
@@ -4346,20 +3958,18 @@ operator|(
 operator|)
 specifier|const
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
-operator|(
 name|TypeListContainsSuperOf
 operator|<
 name|ReturnTypes
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
-operator|)
 argument_list|,
-name|right_polymorphic_conversion
+literal|"right polymorphic conversion"
 argument_list|)
 block|;
 return|return
@@ -4453,20 +4063,18 @@ operator|(
 operator|)
 specifier|const
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
-operator|(
 name|TypeListContainsSuperOf
 operator|<
 name|ReturnTypes
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
-operator|)
 argument_list|,
-name|right_polymorphic_conversion
+literal|"right polymorphic conversion"
 argument_list|)
 block|;
 return|return
@@ -4580,20 +4188,18 @@ operator|(
 operator|)
 specifier|const
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
-operator|(
 name|TypeListContainsSuperOf
 operator|<
 name|ReturnTypes
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
-operator|)
 argument_list|,
-name|right_polymorphic_conversion
+literal|"right polymorphic conversion"
 argument_list|)
 block|;
 return|return
@@ -4651,196 +4257,64 @@ begin_comment
 comment|/// but the context doesn't care. See for example: anything().
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// FIXME: Alternatively we could also create a IsAMatcher or something
-end_comment
-
-begin_comment
-comment|/// that checks that a dyn_cast is possible. This is purely needed for the
-end_comment
-
-begin_comment
-comment|/// difference between calling for example:
-end_comment
-
-begin_comment
-comment|///   record()
-end_comment
-
-begin_comment
-comment|/// and
-end_comment
-
-begin_comment
-comment|///   record(SomeMatcher)
-end_comment
-
-begin_comment
-comment|/// In the second case we need the correct type we were dyn_cast'ed to in order
-end_comment
-
-begin_comment
-comment|/// to get the right type for the inner matcher. In the first case we don't need
-end_comment
-
-begin_comment
-comment|/// that, but we use the type conversion anyway and insert a TrueMatcher.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|T
-operator|>
+begin_decl_stmt
 name|class
 name|TrueMatcher
-operator|:
-name|public
-name|SingleNodeMatcherInterface
-operator|<
-name|T
-operator|>
 block|{
 name|public
-operator|:
-name|virtual
-name|bool
-name|matchesNode
-argument_list|(
-argument|const T&Node
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-unit|};
-comment|/// \brief Matcher<T> that wraps an inner Matcher<T> and binds the matched node
-end_comment
-
-begin_comment
-comment|/// to an ID if the inner matcher matches on the node.
-end_comment
-
-begin_expr_stmt
+label|:
+typedef|typedef
+name|AllNodeBaseTypes
+name|ReturnTypes
+typedef|;
 name|template
 operator|<
 name|typename
 name|T
 operator|>
-name|class
-name|IdMatcher
-operator|:
-name|public
-name|MatcherInterface
-operator|<
-name|T
-operator|>
-block|{
-name|public
-operator|:
-comment|/// \brief Creates an IdMatcher that binds to 'ID' if 'InnerMatcher' matches
-comment|/// the node.
-name|IdMatcher
-argument_list|(
-argument|StringRef ID
-argument_list|,
-argument|const Matcher<T>&InnerMatcher
-argument_list|)
-operator|:
-name|ID
-argument_list|(
-name|ID
-argument_list|)
-block|,
-name|InnerMatcher
-argument_list|(
-argument|InnerMatcher
-argument_list|)
-block|{}
-name|virtual
-name|bool
-name|matches
-argument_list|(
-argument|const T&Node
-argument_list|,
-argument|ASTMatchFinder *Finder
-argument_list|,
-argument|BoundNodesTreeBuilder *Builder
-argument_list|)
-specifier|const
-block|{
-name|bool
-name|Result
-operator|=
-name|InnerMatcher
-operator|.
-name|matches
-argument_list|(
-name|Node
-argument_list|,
-name|Finder
-argument_list|,
-name|Builder
-argument_list|)
-block|;
-if|if
-condition|(
-name|Result
-condition|)
-block|{
-name|Builder
-operator|->
-name|setBinding
-argument_list|(
-name|ID
-argument_list|,
-operator|&
-name|Node
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-name|Result
-return|;
-block|}
-end_expr_stmt
-
-begin_label
-name|private
-label|:
-end_label
-
-begin_expr_stmt
-specifier|const
-name|std
-operator|::
-name|string
-name|ID
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-specifier|const
+name|operator
 name|Matcher
 operator|<
 name|T
 operator|>
-name|InnerMatcher
-expr_stmt|;
-end_expr_stmt
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|DynTypedMatcher
+operator|::
+name|trueMatcher
+argument_list|(
+name|ast_type_traits
+operator|::
+name|ASTNodeKind
+operator|::
+name|getFromNodeKind
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+argument_list|)
+operator|.
+name|template
+name|unconditionalConvertTo
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief A Matcher that allows binding the node it matches to an id.
 end_comment
 
@@ -4927,23 +4401,59 @@ argument_list|)
 specifier|const
 block|{
 return|return
+name|DynTypedMatcher
+argument_list|(
+operator|*
+name|this
+argument_list|)
+operator|.
+name|tryBind
+argument_list|(
+name|ID
+argument_list|)
+operator|->
+name|template
+name|unconditionalConvertTo
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|/// \brief Same as Matcher<T>'s conversion operator, but enables binding on
+comment|/// the returned matcher.
+name|operator
+name|DynTypedMatcher
+argument_list|()
+specifier|const
+block|{
+name|DynTypedMatcher
+name|Result
+operator|=
+name|static_cast
+operator|<
+specifier|const
 name|Matcher
 operator|<
 name|T
 operator|>
-operator|(
-name|new
-name|IdMatcher
-operator|<
-name|T
+operator|&
 operator|>
 operator|(
-name|ID
-operator|,
 operator|*
 name|this
 operator|)
-operator|)
+block|;
+name|Result
+operator|.
+name|setAllowBind
+argument_list|(
+name|true
+argument_list|)
+block|;
+return|return
+name|Result
 return|;
 block|}
 end_expr_stmt
@@ -4983,7 +4493,7 @@ operator|<
 name|T
 operator|>
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
 name|IsBaseType
 operator|<
@@ -4992,7 +4502,7 @@ operator|>
 operator|::
 name|value
 argument_list|,
-name|has_only_accepts_base_type_matcher
+literal|"has only accepts base type matcher"
 argument_list|)
 block|;
 name|public
@@ -5014,7 +4524,6 @@ argument_list|(
 argument|ChildMatcher
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|matches
 argument_list|(
@@ -5025,6 +4534,7 @@ argument_list|,
 argument|BoundNodesTreeBuilder *Builder
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Finder
@@ -5097,7 +4607,7 @@ operator|<
 name|T
 operator|>
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
 name|IsBaseType
 operator|<
@@ -5106,7 +4616,7 @@ operator|>
 operator|::
 name|value
 argument_list|,
-name|for_each_only_accepts_base_type_matcher
+literal|"for each only accepts base type matcher"
 argument_list|)
 block|;
 name|public
@@ -5128,7 +4638,6 @@ argument_list|(
 argument|ChildMatcher
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|matches
 argument_list|(
@@ -5139,6 +4648,7 @@ argument_list|,
 argument|BoundNodesTreeBuilder* Builder
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Finder
@@ -5174,119 +4684,6 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|/// \brief Matches nodes of type T if the given Matcher<T> does not match.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Type argument MatcherT is required by PolymorphicMatcherWithParam1
-end_comment
-
-begin_comment
-comment|/// but not actually used. It will always be instantiated with a type
-end_comment
-
-begin_comment
-comment|/// convertible to Matcher<T>.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|T
-operator|,
-name|typename
-name|MatcherT
-operator|>
-name|class
-name|NotMatcher
-operator|:
-name|public
-name|MatcherInterface
-operator|<
-name|T
-operator|>
-block|{
-name|public
-operator|:
-name|explicit
-name|NotMatcher
-argument_list|(
-specifier|const
-name|Matcher
-operator|<
-name|T
-operator|>
-operator|&
-name|InnerMatcher
-argument_list|)
-operator|:
-name|InnerMatcher
-argument_list|(
-argument|InnerMatcher
-argument_list|)
-block|{}
-name|virtual
-name|bool
-name|matches
-argument_list|(
-argument|const T&Node
-argument_list|,
-argument|ASTMatchFinder *Finder
-argument_list|,
-argument|BoundNodesTreeBuilder *Builder
-argument_list|)
-specifier|const
-block|{
-comment|// The 'unless' matcher will always discard the result:
-comment|// If the inner matcher doesn't match, unless returns true,
-comment|// but the inner matcher cannot have bound anything.
-comment|// If the inner matcher matches, the result is false, and
-comment|// any possible binding will be discarded.
-comment|// We still need to hand in all the bound nodes up to this
-comment|// point so the inner matcher can depend on bound nodes,
-comment|// and we need to actively discard the bound nodes, otherwise
-comment|// the inner matcher will reset the bound nodes if it doesn't
-comment|// match, but this would be inversed by 'unless'.
-name|BoundNodesTreeBuilder
-name|Discard
-argument_list|(
-operator|*
-name|Builder
-argument_list|)
-block|;
-return|return
-operator|!
-name|InnerMatcher
-operator|.
-name|matches
-argument_list|(
-name|Node
-argument_list|,
-name|Finder
-argument_list|,
-operator|&
-name|Discard
-argument_list|)
-return|;
-block|}
-name|private
-operator|:
-specifier|const
-name|Matcher
-operator|<
-name|T
-operator|>
-name|InnerMatcher
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|};
 comment|/// \brief VariadicOperatorMatcher related types.
 end_comment
 
@@ -5295,170 +4692,6 @@ comment|/// @{
 end_comment
 
 begin_comment
-comment|/// \brief Function signature for any variadic operator. It takes the inner
-end_comment
-
-begin_comment
-comment|///   matchers as an array of DynTypedMatcher.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|bool
-argument_list|(
-argument|*VariadicOperatorFunction
-argument_list|)
-operator|(
-specifier|const
-name|ast_type_traits
-operator|::
-name|DynTypedNode
-name|DynNode
-operator|,
-name|ASTMatchFinder
-operator|*
-name|Finder
-operator|,
-name|BoundNodesTreeBuilder
-operator|*
-name|Builder
-operator|,
-name|ArrayRef
-operator|<
-name|DynTypedMatcher
-operator|>
-name|InnerMatchers
-operator|)
-expr_stmt|;
-end_typedef
-
-begin_comment
-comment|/// \brief \c MatcherInterface<T> implementation for an variadic operator.
-end_comment
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|VariadicOperatorMatcherInterface
-operator|:
-name|public
-name|MatcherInterface
-operator|<
-name|T
-operator|>
-block|{
-name|public
-operator|:
-name|VariadicOperatorMatcherInterface
-argument_list|(
-argument|VariadicOperatorFunction Func
-argument_list|,
-argument|ArrayRef<const Matcher<T> *> InputMatchers
-argument_list|)
-operator|:
-name|Func
-argument_list|(
-argument|Func
-argument_list|)
-block|{
-for|for
-control|(
-name|size_t
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-name|InputMatchers
-operator|.
-name|size
-argument_list|()
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-block|{
-name|InnerMatchers
-operator|.
-name|push_back
-argument_list|(
-operator|*
-name|InputMatchers
-index|[
-name|i
-index|]
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-name|virtual
-name|bool
-name|matches
-argument_list|(
-argument|const T&Node
-argument_list|,
-argument|ASTMatchFinder *Finder
-argument_list|,
-argument|BoundNodesTreeBuilder *Builder
-argument_list|)
-specifier|const
-block|{
-return|return
-name|Func
-argument_list|(
-name|ast_type_traits
-operator|::
-name|DynTypedNode
-operator|::
-name|create
-argument_list|(
-name|Node
-argument_list|)
-argument_list|,
-name|Finder
-argument_list|,
-name|Builder
-argument_list|,
-name|InnerMatchers
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_label
-name|private
-label|:
-end_label
-
-begin_decl_stmt
-specifier|const
-name|VariadicOperatorFunction
-name|Func
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|std
-operator|::
-name|vector
-operator|<
-name|DynTypedMatcher
-operator|>
-name|InnerMatchers
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-unit|};
 comment|/// \brief "No argument" placeholder to use as template paratemers.
 end_comment
 
@@ -5470,11 +4703,11 @@ struct|;
 end_struct
 
 begin_comment
-comment|/// \brief Polymorphic matcher object that uses a \c VariadicOperatorFunction
+comment|/// \brief Polymorphic matcher object that uses a \c
 end_comment
 
 begin_comment
-comment|///   operator.
+comment|/// DynTypedMatcher::VariadicOperator operator.
 end_comment
 
 begin_comment
@@ -5501,6 +4734,8 @@ name|P1
 operator|,
 name|typename
 name|P2
+operator|=
+name|VariadicOperatorNoArg
 operator|,
 name|typename
 name|P3
@@ -5516,6 +4751,26 @@ name|typename
 name|P5
 operator|=
 name|VariadicOperatorNoArg
+operator|,
+name|typename
+name|P6
+operator|=
+name|VariadicOperatorNoArg
+operator|,
+name|typename
+name|P7
+operator|=
+name|VariadicOperatorNoArg
+operator|,
+name|typename
+name|P8
+operator|=
+name|VariadicOperatorNoArg
+operator|,
+name|typename
+name|P9
+operator|=
+name|VariadicOperatorNoArg
 operator|>
 name|class
 name|VariadicOperatorMatcher
@@ -5524,22 +4779,30 @@ name|public
 operator|:
 name|VariadicOperatorMatcher
 argument_list|(
-argument|VariadicOperatorFunction Func
+argument|DynTypedMatcher::VariadicOperator Op
 argument_list|,
 argument|const P1&Param1
 argument_list|,
-argument|const P2&Param2
+argument|const P2&Param2 = VariadicOperatorNoArg()
 argument_list|,
 argument|const P3&Param3 = VariadicOperatorNoArg()
 argument_list|,
 argument|const P4&Param4 = VariadicOperatorNoArg()
 argument_list|,
 argument|const P5&Param5 = VariadicOperatorNoArg()
+argument_list|,
+argument|const P6&Param6 = VariadicOperatorNoArg()
+argument_list|,
+argument|const P7&Param7 = VariadicOperatorNoArg()
+argument_list|,
+argument|const P8&Param8 = VariadicOperatorNoArg()
+argument_list|,
+argument|const P9&Param9 = VariadicOperatorNoArg()
 argument_list|)
 operator|:
-name|Func
+name|Op
 argument_list|(
-name|Func
+name|Op
 argument_list|)
 block|,
 name|Param1
@@ -5564,7 +4827,27 @@ argument_list|)
 block|,
 name|Param5
 argument_list|(
-argument|Param5
+name|Param5
+argument_list|)
+block|,
+name|Param6
+argument_list|(
+name|Param6
+argument_list|)
+block|,
+name|Param7
+argument_list|(
+name|Param7
+argument_list|)
+block|,
+name|Param8
+argument_list|(
+name|Param8
+argument_list|)
+block|,
+name|Param9
+argument_list|(
+argument|Param9
 argument_list|)
 block|{}
 name|template
@@ -5581,20 +4864,13 @@ operator|(
 operator|)
 specifier|const
 block|{
-name|Matcher
+name|std
+operator|::
+name|vector
 operator|<
-name|T
+name|DynTypedMatcher
 operator|>
-operator|*
-name|Array
-index|[
-literal|5
-index|]
-block|;
-name|size_t
-name|Size
-operator|=
-literal|0
+name|Matchers
 block|;
 name|addMatcher
 operator|<
@@ -5603,9 +4879,7 @@ operator|>
 operator|(
 name|Param1
 operator|,
-name|Array
-operator|,
-name|Size
+name|Matchers
 operator|)
 block|;
 name|addMatcher
@@ -5615,9 +4889,7 @@ operator|>
 operator|(
 name|Param2
 operator|,
-name|Array
-operator|,
-name|Size
+name|Matchers
 operator|)
 block|;
 name|addMatcher
@@ -5627,9 +4899,7 @@ operator|>
 operator|(
 name|Param3
 operator|,
-name|Array
-operator|,
-name|Size
+name|Matchers
 operator|)
 block|;
 name|addMatcher
@@ -5639,9 +4909,7 @@ operator|>
 operator|(
 name|Param4
 operator|,
-name|Array
-operator|,
-name|Size
+name|Matchers
 operator|)
 block|;
 name|addMatcher
@@ -5651,56 +4919,75 @@ operator|>
 operator|(
 name|Param5
 operator|,
-name|Array
-operator|,
-name|Size
+name|Matchers
 operator|)
 block|;
-name|Matcher
+name|addMatcher
 operator|<
 name|T
 operator|>
-name|Result
-argument_list|(
-argument|new VariadicOperatorMatcherInterface<T>(         Func, ArrayRef<const Matcher<T> *>(Array, Size))
-argument_list|)
+operator|(
+name|Param6
+operator|,
+name|Matchers
+operator|)
 block|;
-for|for
-control|(
-name|size_t
-name|i
-init|=
-literal|0
-init|,
-name|e
-init|=
-name|Size
-init|;
-name|i
-operator|!=
-name|e
-condition|;
-operator|++
-name|i
-control|)
-name|delete
-name|Array
-index|[
-name|i
-index|]
-decl_stmt|;
+name|addMatcher
+operator|<
+name|T
+operator|>
+operator|(
+name|Param7
+operator|,
+name|Matchers
+operator|)
+block|;
+name|addMatcher
+operator|<
+name|T
+operator|>
+operator|(
+name|Param8
+operator|,
+name|Matchers
+operator|)
+block|;
+name|addMatcher
+operator|<
+name|T
+operator|>
+operator|(
+name|Param9
+operator|,
+name|Matchers
+operator|)
+block|;
 return|return
-name|Result
+name|DynTypedMatcher
+operator|::
+name|constructVariadic
+argument_list|(
+name|Op
+argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
+name|Matchers
+argument_list|)
+argument_list|)
+operator|.
+name|template
+name|unconditionalConvertTo
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
 return|;
 block|}
-end_expr_stmt
-
-begin_label
 name|private
-label|:
-end_label
-
-begin_expr_stmt
+operator|:
 name|template
 operator|<
 name|typename
@@ -5712,25 +4999,15 @@ name|addMatcher
 argument_list|(
 argument|const Matcher<T>&M
 argument_list|,
-argument|Matcher<T> **Array
-argument_list|,
-argument|size_t&Size
+argument|std::vector<DynTypedMatcher>&Matchers
 argument_list|)
 block|{
-name|Array
-index|[
-name|Size
-operator|++
-index|]
-operator|=
-name|new
-name|Matcher
-operator|<
-name|T
-operator|>
-operator|(
+name|Matchers
+operator|.
+name|push_back
+argument_list|(
 name|M
-operator|)
+argument_list|)
 block|;   }
 comment|/// \brief Overload to ignore \c VariadicOperatorNoArg arguments.
 name|template
@@ -5744,14 +5021,14 @@ name|addMatcher
 argument_list|(
 argument|VariadicOperatorNoArg
 argument_list|,
-argument|Matcher<T> **Array
-argument_list|,
-argument|size_t&Size
+argument|std::vector<DynTypedMatcher>&Matchers
 argument_list|)
 block|{}
 specifier|const
-name|VariadicOperatorFunction
-name|Func
+name|DynTypedMatcher
+operator|::
+name|VariadicOperator
+name|Op
 expr_stmt|;
 end_expr_stmt
 
@@ -5790,6 +5067,34 @@ name|Param5
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|const
+name|P6
+name|Param6
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|P7
+name|Param7
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|P8
+name|Param8
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|P9
+name|Param9
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 unit|};
 comment|/// \brief Overloaded function object to generate VariadicOperatorMatcher
@@ -5804,16 +5109,93 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// It supports 2-5 argument overloaded operator(). More can be added if needed.
+comment|/// It supports 1-9 argument overloaded operator(). More can be added if needed.
 end_comment
 
-begin_struct
-struct|struct
+begin_expr_stmt
+name|template
+operator|<
+name|unsigned
+name|MinCount
+operator|,
+name|unsigned
+name|MaxCount
+operator|>
+expr|struct
 name|VariadicOperatorMatcherFunc
 block|{
-name|VariadicOperatorFunction
-name|Func
-decl_stmt|;
+name|DynTypedMatcher
+operator|::
+name|VariadicOperator
+name|Op
+block|;
+name|template
+operator|<
+name|unsigned
+name|Count
+block|,
+name|typename
+name|T
+operator|>
+expr|struct
+name|EnableIfValidArity
+operator|:
+name|public
+name|std
+operator|::
+name|enable_if
+operator|<
+name|MinCount
+operator|<=
+name|Count
+operator|&&
+name|Count
+operator|<=
+name|MaxCount
+block|,
+name|T
+operator|>
+block|{}
+block|;
+name|template
+operator|<
+name|typename
+name|M1
+operator|>
+name|typename
+name|EnableIfValidArity
+operator|<
+literal|1
+block|,
+name|VariadicOperatorMatcher
+operator|<
+name|M1
+operator|>
+expr|>
+operator|::
+name|type
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|M1
+operator|&
+name|P1
+operator|)
+specifier|const
+block|{
+return|return
+name|VariadicOperatorMatcher
+operator|<
+name|M1
+operator|>
+operator|(
+name|Op
+operator|,
+name|P1
+operator|)
+return|;
+block|}
 name|template
 operator|<
 name|typename
@@ -5822,12 +5204,20 @@ operator|,
 name|typename
 name|M2
 operator|>
+name|typename
+name|EnableIfValidArity
+operator|<
+literal|2
+operator|,
 name|VariadicOperatorMatcher
 operator|<
 name|M1
 operator|,
 name|M2
 operator|>
+expr|>
+operator|::
+name|type
 name|operator
 argument_list|()
 operator|(
@@ -5851,7 +5241,7 @@ operator|,
 name|M2
 operator|>
 operator|(
-name|Func
+name|Op
 operator|,
 name|P1
 operator|,
@@ -5859,6 +5249,9 @@ name|P2
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -5870,6 +5263,11 @@ operator|,
 name|typename
 name|M3
 operator|>
+name|typename
+name|EnableIfValidArity
+operator|<
+literal|3
+operator|,
 name|VariadicOperatorMatcher
 operator|<
 name|M1
@@ -5878,6 +5276,9 @@ name|M2
 operator|,
 name|M3
 operator|>
+expr|>
+operator|::
+name|type
 name|operator
 argument_list|()
 operator|(
@@ -5908,7 +5309,7 @@ operator|,
 name|M3
 operator|>
 operator|(
-name|Func
+name|Op
 operator|,
 name|P1
 operator|,
@@ -5918,6 +5319,9 @@ name|P3
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -5932,6 +5336,11 @@ operator|,
 name|typename
 name|M4
 operator|>
+name|typename
+name|EnableIfValidArity
+operator|<
+literal|4
+operator|,
 name|VariadicOperatorMatcher
 operator|<
 name|M1
@@ -5942,6 +5351,9 @@ name|M3
 operator|,
 name|M4
 operator|>
+expr|>
+operator|::
+name|type
 name|operator
 argument_list|()
 operator|(
@@ -5979,7 +5391,7 @@ operator|,
 name|M4
 operator|>
 operator|(
-name|Func
+name|Op
 operator|,
 name|P1
 operator|,
@@ -5991,6 +5403,9 @@ name|P4
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -6008,6 +5423,11 @@ operator|,
 name|typename
 name|M5
 operator|>
+name|typename
+name|EnableIfValidArity
+operator|<
+literal|5
+operator|,
 name|VariadicOperatorMatcher
 operator|<
 name|M1
@@ -6020,6 +5440,9 @@ name|M4
 operator|,
 name|M5
 operator|>
+expr|>
+operator|::
+name|type
 name|operator
 argument_list|()
 operator|(
@@ -6064,7 +5487,7 @@ operator|,
 name|M5
 operator|>
 operator|(
-name|Func
+name|Op
 operator|,
 name|P1
 operator|,
@@ -6078,114 +5501,574 @@ name|P5
 operator|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|M1
+operator|,
+name|typename
+name|M2
+operator|,
+name|typename
+name|M3
+operator|,
+name|typename
+name|M4
+operator|,
+name|typename
+name|M5
+operator|,
+name|typename
+name|M6
+operator|>
+name|typename
+name|EnableIfValidArity
+operator|<
+literal|6
+operator|,
+name|VariadicOperatorMatcher
+operator|<
+name|M1
+operator|,
+name|M2
+operator|,
+name|M3
+operator|,
+name|M4
+operator|,
+name|M5
+operator|,
+name|M6
+operator|>
+expr|>
+operator|::
+name|type
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|M1
+operator|&
+name|P1
+operator|,
+specifier|const
+name|M2
+operator|&
+name|P2
+operator|,
+specifier|const
+name|M3
+operator|&
+name|P3
+operator|,
+specifier|const
+name|M4
+operator|&
+name|P4
+operator|,
+specifier|const
+name|M5
+operator|&
+name|P5
+operator|,
+specifier|const
+name|M6
+operator|&
+name|P6
+operator|)
+specifier|const
+block|{
+return|return
+name|VariadicOperatorMatcher
+operator|<
+name|M1
+operator|,
+name|M2
+operator|,
+name|M3
+operator|,
+name|M4
+operator|,
+name|M5
+operator|,
+name|M6
+operator|>
+operator|(
+name|Op
+operator|,
+name|P1
+operator|,
+name|P2
+operator|,
+name|P3
+operator|,
+name|P4
+operator|,
+name|P5
+operator|,
+name|P6
+operator|)
+return|;
 block|}
-struct|;
-end_struct
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|M1
+operator|,
+name|typename
+name|M2
+operator|,
+name|typename
+name|M3
+operator|,
+name|typename
+name|M4
+operator|,
+name|typename
+name|M5
+operator|,
+name|typename
+name|M6
+operator|,
+name|typename
+name|M7
+operator|>
+name|typename
+name|EnableIfValidArity
+operator|<
+literal|7
+operator|,
+name|VariadicOperatorMatcher
+operator|<
+name|M1
+operator|,
+name|M2
+operator|,
+name|M3
+operator|,
+name|M4
+operator|,
+name|M5
+operator|,
+name|M6
+operator|,
+name|M7
+operator|>
+expr|>
+operator|::
+name|type
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|M1
+operator|&
+name|P1
+operator|,
+specifier|const
+name|M2
+operator|&
+name|P2
+operator|,
+specifier|const
+name|M3
+operator|&
+name|P3
+operator|,
+specifier|const
+name|M4
+operator|&
+name|P4
+operator|,
+specifier|const
+name|M5
+operator|&
+name|P5
+operator|,
+specifier|const
+name|M6
+operator|&
+name|P6
+operator|,
+specifier|const
+name|M7
+operator|&
+name|P7
+operator|)
+specifier|const
+block|{
+return|return
+name|VariadicOperatorMatcher
+operator|<
+name|M1
+operator|,
+name|M2
+operator|,
+name|M3
+operator|,
+name|M4
+operator|,
+name|M5
+operator|,
+name|M6
+operator|,
+name|M7
+operator|>
+operator|(
+name|Op
+operator|,
+name|P1
+operator|,
+name|P2
+operator|,
+name|P3
+operator|,
+name|P4
+operator|,
+name|P5
+operator|,
+name|P6
+operator|,
+name|P7
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|M1
+operator|,
+name|typename
+name|M2
+operator|,
+name|typename
+name|M3
+operator|,
+name|typename
+name|M4
+operator|,
+name|typename
+name|M5
+operator|,
+name|typename
+name|M6
+operator|,
+name|typename
+name|M7
+operator|,
+name|typename
+name|M8
+operator|>
+name|typename
+name|EnableIfValidArity
+operator|<
+literal|8
+operator|,
+name|VariadicOperatorMatcher
+operator|<
+name|M1
+operator|,
+name|M2
+operator|,
+name|M3
+operator|,
+name|M4
+operator|,
+name|M5
+operator|,
+name|M6
+operator|,
+name|M7
+operator|,
+name|M8
+operator|>
+expr|>
+operator|::
+name|type
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|M1
+operator|&
+name|P1
+operator|,
+specifier|const
+name|M2
+operator|&
+name|P2
+operator|,
+specifier|const
+name|M3
+operator|&
+name|P3
+operator|,
+specifier|const
+name|M4
+operator|&
+name|P4
+operator|,
+specifier|const
+name|M5
+operator|&
+name|P5
+operator|,
+specifier|const
+name|M6
+operator|&
+name|P6
+operator|,
+specifier|const
+name|M7
+operator|&
+name|P7
+operator|,
+specifier|const
+name|M8
+operator|&
+name|P8
+operator|)
+specifier|const
+block|{
+return|return
+name|VariadicOperatorMatcher
+operator|<
+name|M1
+operator|,
+name|M2
+operator|,
+name|M3
+operator|,
+name|M4
+operator|,
+name|M5
+operator|,
+name|M6
+operator|,
+name|M7
+operator|,
+name|M8
+operator|>
+operator|(
+name|Op
+operator|,
+name|P1
+operator|,
+name|P2
+operator|,
+name|P3
+operator|,
+name|P4
+operator|,
+name|P5
+operator|,
+name|P6
+operator|,
+name|P7
+operator|,
+name|P8
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|M1
+operator|,
+name|typename
+name|M2
+operator|,
+name|typename
+name|M3
+operator|,
+name|typename
+name|M4
+operator|,
+name|typename
+name|M5
+operator|,
+name|typename
+name|M6
+operator|,
+name|typename
+name|M7
+operator|,
+name|typename
+name|M8
+operator|,
+name|typename
+name|M9
+operator|>
+name|typename
+name|EnableIfValidArity
+operator|<
+literal|9
+operator|,
+name|VariadicOperatorMatcher
+operator|<
+name|M1
+operator|,
+name|M2
+operator|,
+name|M3
+operator|,
+name|M4
+operator|,
+name|M5
+operator|,
+name|M6
+operator|,
+name|M7
+operator|,
+name|M8
+operator|,
+name|M9
+operator|>
+expr|>
+operator|::
+name|type
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|M1
+operator|&
+name|P1
+operator|,
+specifier|const
+name|M2
+operator|&
+name|P2
+operator|,
+specifier|const
+name|M3
+operator|&
+name|P3
+operator|,
+specifier|const
+name|M4
+operator|&
+name|P4
+operator|,
+specifier|const
+name|M5
+operator|&
+name|P5
+operator|,
+specifier|const
+name|M6
+operator|&
+name|P6
+operator|,
+specifier|const
+name|M7
+operator|&
+name|P7
+operator|,
+specifier|const
+name|M8
+operator|&
+name|P8
+operator|,
+specifier|const
+name|M9
+operator|&
+name|P9
+operator|)
+specifier|const
+block|{
+return|return
+name|VariadicOperatorMatcher
+operator|<
+name|M1
+operator|,
+name|M2
+operator|,
+name|M3
+operator|,
+name|M4
+operator|,
+name|M5
+operator|,
+name|M6
+operator|,
+name|M7
+operator|,
+name|M8
+operator|,
+name|M9
+operator|>
+operator|(
+name|Op
+operator|,
+name|P1
+operator|,
+name|P2
+operator|,
+name|P3
+operator|,
+name|P4
+operator|,
+name|P5
+operator|,
+name|P6
+operator|,
+name|P7
+operator|,
+name|P8
+operator|,
+name|P9
+operator|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|/// @}
 end_comment
 
-begin_comment
-comment|/// \brief Matches nodes for which all provided matchers match.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|AllOfVariadicOperator
-argument_list|(
-specifier|const
-name|ast_type_traits
-operator|::
-name|DynTypedNode
-name|DynNode
-argument_list|,
-name|ASTMatchFinder
-operator|*
-name|Finder
-argument_list|,
-name|BoundNodesTreeBuilder
-operator|*
-name|Builder
-argument_list|,
-name|ArrayRef
+begin_expr_stmt
+name|template
 operator|<
-name|DynTypedMatcher
+name|typename
+name|T
 operator|>
-name|InnerMatchers
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Matches nodes for which at least one of the provided matchers
-end_comment
-
-begin_comment
-comment|/// matches, but doesn't stop at the first match.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|EachOfVariadicOperator
-argument_list|(
-specifier|const
-name|ast_type_traits
-operator|::
-name|DynTypedNode
-name|DynNode
-argument_list|,
-name|ASTMatchFinder
-operator|*
-name|Finder
-argument_list|,
-name|BoundNodesTreeBuilder
-operator|*
-name|Builder
-argument_list|,
-name|ArrayRef
+specifier|inline
+name|Matcher
 operator|<
-name|DynTypedMatcher
+name|T
 operator|>
-name|InnerMatchers
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// \brief Matches nodes for which at least one of the provided matchers
-end_comment
-
-begin_comment
-comment|/// matches.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|AnyOfVariadicOperator
-argument_list|(
-specifier|const
-name|ast_type_traits
+name|DynTypedMatcher
 operator|::
-name|DynTypedNode
-name|DynNode
-argument_list|,
-name|ASTMatchFinder
-operator|*
-name|Finder
-argument_list|,
-name|BoundNodesTreeBuilder
-operator|*
-name|Builder
-argument_list|,
-name|ArrayRef
+name|unconditionalConvertTo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Matcher
 operator|<
-name|DynTypedMatcher
+name|T
 operator|>
-name|InnerMatchers
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+operator|(
+operator|*
+name|this
+operator|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Creates a Matcher<T> that matches if all inner matchers match.
@@ -6206,28 +6089,147 @@ argument_list|(
 argument|ArrayRef<const Matcher<T> *> InnerMatchers
 argument_list|)
 block|{
+comment|// For the size() == 0 case, we return a "true" matcher.
+if|if
+condition|(
+name|InnerMatchers
+operator|.
+name|size
+argument_list|()
+operator|==
+literal|0
+condition|)
+block|{
 return|return
 name|BindableMatcher
 operator|<
 name|T
 operator|>
 operator|(
-name|new
-name|VariadicOperatorMatcherInterface
-operator|<
-name|T
-operator|>
-operator|(
-name|AllOfVariadicOperator
-operator|,
-name|InnerMatchers
-operator|)
+name|TrueMatcher
+argument_list|()
 operator|)
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
+comment|// For the size() == 1 case, we simply return that one matcher.
+end_comment
+
+begin_comment
+comment|// No need to wrap it in a variadic operation.
+end_comment
+
+begin_if
+if|if
+condition|(
+name|InnerMatchers
+operator|.
+name|size
+argument_list|()
+operator|==
+literal|1
+condition|)
+block|{
+return|return
+name|BindableMatcher
+operator|<
+name|T
+operator|>
+operator|(
+operator|*
+name|InnerMatchers
+index|[
+literal|0
+index|]
+operator|)
+return|;
+block|}
+end_if
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
+name|DynTypedMatcher
+operator|>
+name|DynMatchers
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DynMatchers
+operator|.
+name|reserve
+argument_list|(
+name|InnerMatchers
+operator|.
+name|size
+argument_list|()
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_for
+for|for
+control|(
+specifier|const
+specifier|auto
+modifier|*
+name|InnerMatcher
+range|:
+name|InnerMatchers
+control|)
+block|{
+name|DynMatchers
+operator|.
+name|push_back
+argument_list|(
+operator|*
+name|InnerMatcher
+argument_list|)
+expr_stmt|;
+block|}
+end_for
+
+begin_return
+return|return
+name|BindableMatcher
+operator|<
+name|T
+operator|>
+operator|(
+name|DynTypedMatcher
+operator|::
+name|constructVariadic
+argument_list|(
+name|DynTypedMatcher
+operator|::
+name|VO_AllOf
+argument_list|,
+name|std
+operator|::
+name|move
+argument_list|(
+name|DynMatchers
+argument_list|)
+argument_list|)
+operator|.
+name|template
+name|unconditionalConvertTo
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+operator|)
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// \brief Creates a Matcher<T> that matches if
 end_comment
 
@@ -6252,7 +6254,7 @@ comment|/// so there is no ambiguity with what gets bound.
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|typename
 name|T
@@ -6275,15 +6277,13 @@ operator|<
 name|T
 operator|>
 operator|(
-name|DynTypedMatcher
-argument_list|(
 name|makeAllOfComposite
 argument_list|(
 name|InnerMatchers
 argument_list|)
-argument_list|)
 operator|.
-name|unconditionalConvertTo
+name|template
+name|dynCastTo
 operator|<
 name|T
 operator|>
@@ -6328,7 +6328,7 @@ operator|<
 name|T
 operator|>
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
 name|IsBaseType
 operator|<
@@ -6337,7 +6337,7 @@ operator|>
 operator|::
 name|value
 argument_list|,
-name|has_descendant_only_accepts_base_type_matcher
+literal|"has descendant only accepts base type matcher"
 argument_list|)
 block|;
 name|public
@@ -6359,7 +6359,6 @@ argument_list|(
 argument|DescendantMatcher
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|matches
 argument_list|(
@@ -6370,6 +6369,7 @@ argument_list|,
 argument|BoundNodesTreeBuilder *Builder
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Finder
@@ -6434,7 +6434,7 @@ operator|<
 name|T
 operator|>
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
 name|IsBaseType
 operator|<
@@ -6443,7 +6443,7 @@ operator|>
 operator|::
 name|value
 argument_list|,
-name|has_parent_only_accepts_base_type_matcher
+literal|"has parent only accepts base type matcher"
 argument_list|)
 block|;
 name|public
@@ -6465,7 +6465,6 @@ argument_list|(
 argument|ParentMatcher
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|matches
 argument_list|(
@@ -6476,6 +6475,7 @@ argument_list|,
 argument|BoundNodesTreeBuilder *Builder
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Finder
@@ -6540,7 +6540,7 @@ operator|<
 name|T
 operator|>
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
 name|IsBaseType
 operator|<
@@ -6549,7 +6549,7 @@ operator|>
 operator|::
 name|value
 argument_list|,
-name|has_ancestor_only_accepts_base_type_matcher
+literal|"has ancestor only accepts base type matcher"
 argument_list|)
 block|;
 name|public
@@ -6571,7 +6571,6 @@ argument_list|(
 argument|AncestorMatcher
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|matches
 argument_list|(
@@ -6582,6 +6581,7 @@ argument_list|,
 argument|BoundNodesTreeBuilder *Builder
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Finder
@@ -6654,7 +6654,7 @@ operator|<
 name|T
 operator|>
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
 name|IsBaseType
 operator|<
@@ -6663,7 +6663,7 @@ operator|>
 operator|::
 name|value
 argument_list|,
-name|for_each_descendant_only_accepts_base_type_matcher
+literal|"for each descendant only accepts base type matcher"
 argument_list|)
 block|;
 name|public
@@ -6685,7 +6685,6 @@ argument_list|(
 argument|DescendantMatcher
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|matches
 argument_list|(
@@ -6696,6 +6695,7 @@ argument_list|,
 argument|BoundNodesTreeBuilder* Builder
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Finder
@@ -6752,55 +6752,53 @@ operator|<
 name|T
 operator|>
 block|{
-name|TOOLING_COMPILE_ASSERT
+name|static_assert
 argument_list|(
-operator|(
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|CharacterLiteral
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|CXXBoolLiteralExpr
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|FloatingLiteral
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
 operator|||
-name|llvm
+name|std
 operator|::
 name|is_base_of
 operator|<
 name|IntegerLiteral
-operator|,
+argument_list|,
 name|T
 operator|>
 operator|::
 name|value
-operator|)
 argument_list|,
-name|the_node_must_have_a_getValue_method
+literal|"the node must have a getValue method"
 argument_list|)
 block|;
 name|public
@@ -6819,13 +6817,13 @@ argument_list|(
 argument|ExpectedValue
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|matchesNode
 argument_list|(
 argument|const T&Node
 argument_list|)
 specifier|const
+name|override
 block|{
 return|return
 name|Node
@@ -7061,7 +7059,6 @@ argument_list|(
 argument|InnerMatcher
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|matches
 argument_list|(
@@ -7072,6 +7069,7 @@ argument_list|,
 argument|BoundNodesTreeBuilder *Builder
 argument_list|)
 specifier|const
+name|override
 block|{
 if|if
 condition|(
@@ -7183,7 +7181,6 @@ argument_list|(
 argument|InnerMatcher
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|matches
 argument_list|(
@@ -7194,6 +7191,7 @@ argument_list|,
 argument|BoundNodesTreeBuilder *Builder
 argument_list|)
 specifier|const
+name|override
 block|{
 if|if
 condition|(
@@ -7296,7 +7294,6 @@ argument_list|(
 argument|TraverseFunction
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|matches
 argument_list|(
@@ -7307,6 +7304,7 @@ argument_list|,
 argument|BoundNodesTreeBuilder *Builder
 argument_list|)
 specifier|const
+name|override
 block|{
 name|QualType
 name|NextNode
@@ -7433,7 +7431,6 @@ argument_list|(
 argument|TraverseFunction
 argument_list|)
 block|{}
-name|virtual
 name|bool
 name|matches
 argument_list|(
@@ -7444,6 +7441,7 @@ argument_list|,
 argument|BoundNodesTreeBuilder *Builder
 argument_list|)
 specifier|const
+name|override
 block|{
 name|TypeLoc
 name|NextNode
@@ -7723,6 +7721,79 @@ end_expr_stmt
 
 begin_comment
 unit|};
+comment|/// \brief A simple memoizer of T(*)() functions.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// It will call the passed 'Func' template parameter at most once.
+end_comment
+
+begin_comment
+comment|/// Used to support AST_MATCHER_FUNCTION() macro.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Matcher
+operator|,
+name|Matcher
+argument_list|(
+operator|*
+name|Func
+argument_list|)
+argument_list|()
+operator|>
+name|class
+name|MemoizedMatcher
+block|{   struct
+name|Wrapper
+block|{
+name|Wrapper
+argument_list|()
+operator|:
+name|M
+argument_list|(
+argument|Func()
+argument_list|)
+block|{}
+name|Matcher
+name|M
+block|;   }
+block|;
+name|public
+operator|:
+specifier|static
+specifier|const
+name|Matcher
+operator|&
+name|getInstance
+argument_list|()
+block|{
+specifier|static
+name|llvm
+operator|::
+name|ManagedStatic
+operator|<
+name|Wrapper
+operator|>
+name|Instance
+block|;
+return|return
+name|Instance
+operator|->
+name|M
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};
 comment|// Define the create() method out of line to silence a GCC warning about
 end_comment
 
@@ -7795,6 +7866,109 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|// FIXME: unify ClassTemplateSpecializationDecl and TemplateSpecializationType's
+end_comment
+
+begin_comment
+comment|// APIs for accessing the template argument list.
+end_comment
+
+begin_expr_stmt
+specifier|inline
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|getTemplateSpecializationArgs
+argument_list|(
+argument|const ClassTemplateSpecializationDecl&D
+argument_list|)
+block|{
+return|return
+name|D
+operator|.
+name|getTemplateArgs
+argument_list|()
+operator|.
+name|asArray
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|inline
+name|ArrayRef
+operator|<
+name|TemplateArgument
+operator|>
+name|getTemplateSpecializationArgs
+argument_list|(
+argument|const TemplateSpecializationType&T
+argument_list|)
+block|{
+return|return
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|T
+operator|.
+name|getArgs
+argument_list|()
+argument_list|,
+name|T
+operator|.
+name|getNumArgs
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|NotEqualsBoundNodePredicate
+block|{
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|internal
+operator|::
+name|BoundNodesMap
+operator|&
+name|Nodes
+operator|)
+specifier|const
+block|{
+return|return
+name|Nodes
+operator|.
+name|getNode
+argument_list|(
+name|ID
+argument_list|)
+operator|!=
+name|Node
+return|;
+block|}
+name|std
+operator|::
+name|string
+name|ID
+expr_stmt|;
+name|ast_type_traits
+operator|::
+name|DynTypedNode
+name|Node
+expr_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 unit|}
 comment|// end namespace internal
 end_comment
@@ -7813,10 +7987,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CLANG_AST_MATCHERS_AST_MATCHERS_INTERNAL_H
-end_comment
 
 end_unit
 

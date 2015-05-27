@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2013, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -36,6 +36,48 @@ include|#
 directive|include
 file|"ixgbe_phy.h"
 end_include
+
+begin_define
+define|#
+directive|define
+name|IXGBE_X540_MAX_TX_QUEUES
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_X540_MAX_RX_QUEUES
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_X540_RAR_ENTRIES
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_X540_MC_TBL_SIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_X540_VFT_TBL_SIZE
+value|128
+end_define
+
+begin_define
+define|#
+directive|define
+name|IXGBE_X540_RX_PB_SIZE
+value|384
+end_define
 
 begin_function_decl
 specifier|static
@@ -149,7 +191,6 @@ name|ops
 operator|.
 name|init_params
 operator|=
-operator|&
 name|ixgbe_init_eeprom_params_X540
 expr_stmt|;
 name|eeprom
@@ -158,7 +199,6 @@ name|ops
 operator|.
 name|read
 operator|=
-operator|&
 name|ixgbe_read_eerd_X540
 expr_stmt|;
 name|eeprom
@@ -167,7 +207,6 @@ name|ops
 operator|.
 name|read_buffer
 operator|=
-operator|&
 name|ixgbe_read_eerd_buffer_X540
 expr_stmt|;
 name|eeprom
@@ -176,7 +215,6 @@ name|ops
 operator|.
 name|write
 operator|=
-operator|&
 name|ixgbe_write_eewr_X540
 expr_stmt|;
 name|eeprom
@@ -185,7 +223,6 @@ name|ops
 operator|.
 name|write_buffer
 operator|=
-operator|&
 name|ixgbe_write_eewr_buffer_X540
 expr_stmt|;
 name|eeprom
@@ -194,7 +231,6 @@ name|ops
 operator|.
 name|update_checksum
 operator|=
-operator|&
 name|ixgbe_update_eeprom_checksum_X540
 expr_stmt|;
 name|eeprom
@@ -203,7 +239,6 @@ name|ops
 operator|.
 name|validate_checksum
 operator|=
-operator|&
 name|ixgbe_validate_eeprom_checksum_X540
 expr_stmt|;
 name|eeprom
@@ -212,7 +247,6 @@ name|ops
 operator|.
 name|calc_checksum
 operator|=
-operator|&
 name|ixgbe_calc_eeprom_checksum_X540
 expr_stmt|;
 comment|/* PHY */
@@ -222,7 +256,6 @@ name|ops
 operator|.
 name|init
 operator|=
-operator|&
 name|ixgbe_init_phy_ops_generic
 expr_stmt|;
 name|phy
@@ -233,6 +266,22 @@ name|reset
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|ixgbe_mng_present
+argument_list|(
+name|hw
+argument_list|)
+condition|)
+name|phy
+operator|->
+name|ops
+operator|.
+name|set_phy_power
+operator|=
+name|ixgbe_set_copper_phy_power
+expr_stmt|;
 comment|/* MAC */
 name|mac
 operator|->
@@ -240,7 +289,6 @@ name|ops
 operator|.
 name|reset_hw
 operator|=
-operator|&
 name|ixgbe_reset_hw_X540
 expr_stmt|;
 name|mac
@@ -249,7 +297,6 @@ name|ops
 operator|.
 name|enable_relaxed_ordering
 operator|=
-operator|&
 name|ixgbe_enable_relaxed_ordering_gen2
 expr_stmt|;
 name|mac
@@ -258,7 +305,6 @@ name|ops
 operator|.
 name|get_media_type
 operator|=
-operator|&
 name|ixgbe_get_media_type_X540
 expr_stmt|;
 name|mac
@@ -267,7 +313,6 @@ name|ops
 operator|.
 name|get_supported_physical_layer
 operator|=
-operator|&
 name|ixgbe_get_supported_physical_layer_X540
 expr_stmt|;
 name|mac
@@ -292,7 +337,6 @@ name|ops
 operator|.
 name|start_hw
 operator|=
-operator|&
 name|ixgbe_start_hw_X540
 expr_stmt|;
 name|mac
@@ -301,7 +345,6 @@ name|ops
 operator|.
 name|get_san_mac_addr
 operator|=
-operator|&
 name|ixgbe_get_san_mac_addr_generic
 expr_stmt|;
 name|mac
@@ -310,7 +353,6 @@ name|ops
 operator|.
 name|set_san_mac_addr
 operator|=
-operator|&
 name|ixgbe_set_san_mac_addr_generic
 expr_stmt|;
 name|mac
@@ -319,7 +361,6 @@ name|ops
 operator|.
 name|get_device_caps
 operator|=
-operator|&
 name|ixgbe_get_device_caps_generic
 expr_stmt|;
 name|mac
@@ -328,7 +369,6 @@ name|ops
 operator|.
 name|get_wwn_prefix
 operator|=
-operator|&
 name|ixgbe_get_wwn_prefix_generic
 expr_stmt|;
 name|mac
@@ -337,7 +377,6 @@ name|ops
 operator|.
 name|get_fcoe_boot_status
 operator|=
-operator|&
 name|ixgbe_get_fcoe_boot_status_generic
 expr_stmt|;
 name|mac
@@ -346,7 +385,6 @@ name|ops
 operator|.
 name|acquire_swfw_sync
 operator|=
-operator|&
 name|ixgbe_acquire_swfw_sync_X540
 expr_stmt|;
 name|mac
@@ -355,7 +393,6 @@ name|ops
 operator|.
 name|release_swfw_sync
 operator|=
-operator|&
 name|ixgbe_release_swfw_sync_X540
 expr_stmt|;
 name|mac
@@ -364,7 +401,6 @@ name|ops
 operator|.
 name|disable_sec_rx_path
 operator|=
-operator|&
 name|ixgbe_disable_sec_rx_path_generic
 expr_stmt|;
 name|mac
@@ -373,7 +409,6 @@ name|ops
 operator|.
 name|enable_sec_rx_path
 operator|=
-operator|&
 name|ixgbe_enable_sec_rx_path_generic
 expr_stmt|;
 comment|/* RAR, Multicast, VLAN */
@@ -383,7 +418,6 @@ name|ops
 operator|.
 name|set_vmdq
 operator|=
-operator|&
 name|ixgbe_set_vmdq_generic
 expr_stmt|;
 name|mac
@@ -392,7 +426,6 @@ name|ops
 operator|.
 name|set_vmdq_san_mac
 operator|=
-operator|&
 name|ixgbe_set_vmdq_san_mac_generic
 expr_stmt|;
 name|mac
@@ -401,7 +434,6 @@ name|ops
 operator|.
 name|clear_vmdq
 operator|=
-operator|&
 name|ixgbe_clear_vmdq_generic
 expr_stmt|;
 name|mac
@@ -410,7 +442,6 @@ name|ops
 operator|.
 name|insert_mac_addr
 operator|=
-operator|&
 name|ixgbe_insert_mac_addr_generic
 expr_stmt|;
 name|mac
@@ -425,7 +456,6 @@ name|ops
 operator|.
 name|set_vfta
 operator|=
-operator|&
 name|ixgbe_set_vfta_generic
 expr_stmt|;
 name|mac
@@ -434,7 +464,6 @@ name|ops
 operator|.
 name|set_vlvf
 operator|=
-operator|&
 name|ixgbe_set_vlvf_generic
 expr_stmt|;
 name|mac
@@ -443,7 +472,6 @@ name|ops
 operator|.
 name|clear_vfta
 operator|=
-operator|&
 name|ixgbe_clear_vfta_generic
 expr_stmt|;
 name|mac
@@ -452,7 +480,6 @@ name|ops
 operator|.
 name|init_uta_tables
 operator|=
-operator|&
 name|ixgbe_init_uta_tables_generic
 expr_stmt|;
 name|mac
@@ -461,7 +488,6 @@ name|ops
 operator|.
 name|set_mac_anti_spoofing
 operator|=
-operator|&
 name|ixgbe_set_mac_anti_spoofing
 expr_stmt|;
 name|mac
@@ -470,7 +496,6 @@ name|ops
 operator|.
 name|set_vlan_anti_spoofing
 operator|=
-operator|&
 name|ixgbe_set_vlan_anti_spoofing
 expr_stmt|;
 comment|/* Link */
@@ -480,7 +505,6 @@ name|ops
 operator|.
 name|get_link_capabilities
 operator|=
-operator|&
 name|ixgbe_get_copper_link_capabilities_generic
 expr_stmt|;
 name|mac
@@ -489,7 +513,6 @@ name|ops
 operator|.
 name|setup_link
 operator|=
-operator|&
 name|ixgbe_setup_mac_link_X540
 expr_stmt|;
 name|mac
@@ -498,7 +521,6 @@ name|ops
 operator|.
 name|setup_rxpba
 operator|=
-operator|&
 name|ixgbe_set_rxpba_generic
 expr_stmt|;
 name|mac
@@ -507,44 +529,43 @@ name|ops
 operator|.
 name|check_link
 operator|=
-operator|&
 name|ixgbe_check_mac_link_generic
 expr_stmt|;
 name|mac
 operator|->
 name|mcft_size
 operator|=
-literal|128
+name|IXGBE_X540_MC_TBL_SIZE
 expr_stmt|;
 name|mac
 operator|->
 name|vft_size
 operator|=
-literal|128
+name|IXGBE_X540_VFT_TBL_SIZE
 expr_stmt|;
 name|mac
 operator|->
 name|num_rar_entries
 operator|=
-literal|128
+name|IXGBE_X540_RAR_ENTRIES
 expr_stmt|;
 name|mac
 operator|->
 name|rx_pb_size
 operator|=
-literal|384
-expr_stmt|;
-name|mac
-operator|->
-name|max_tx_queues
-operator|=
-literal|128
+name|IXGBE_X540_RX_PB_SIZE
 expr_stmt|;
 name|mac
 operator|->
 name|max_rx_queues
 operator|=
-literal|128
+name|IXGBE_X540_MAX_RX_QUEUES
+expr_stmt|;
+name|mac
+operator|->
+name|max_tx_queues
+operator|=
+name|IXGBE_X540_MAX_TX_QUEUES
 expr_stmt|;
 name|mac
 operator|->
@@ -609,7 +630,6 @@ name|ops
 operator|.
 name|set_fw_drv_ver
 operator|=
-operator|&
 name|ixgbe_set_fw_drv_ver_generic
 expr_stmt|;
 name|mac
@@ -618,7 +638,6 @@ name|ops
 operator|.
 name|get_rtrup2tc
 operator|=
-operator|&
 name|ixgbe_dcb_get_rtrup2tc_generic
 expr_stmt|;
 return|return
@@ -1689,11 +1708,11 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_calc_eeprom_checksum_X540 - Calculates and returns the checksum  *  *  This function does not use synchronization for EERD and EEWR. It can  *  be used internally by function which utilize ixgbe_acquire_swfw_sync_X540.  *  *  @hw: pointer to hardware structure  **/
+comment|/**  *  ixgbe_calc_eeprom_checksum_X540 - Calculates and returns the checksum  *  *  This function does not use synchronization for EERD and EEWR. It can  *  be used internally by function which utilize ixgbe_acquire_swfw_sync_X540.  *  *  @hw: pointer to hardware structure  *  *  Returns a negative error code on error, or the 16-bit checksum  **/
 end_comment
 
 begin_function
-name|u16
+name|s32
 name|ixgbe_calc_eeprom_checksum_X540
 parameter_list|(
 name|struct
@@ -1704,8 +1723,7 @@ parameter_list|)
 block|{
 name|u16
 name|i
-decl_stmt|;
-name|u16
+decl_stmt|,
 name|j
 decl_stmt|;
 name|u16
@@ -1728,7 +1746,17 @@ name|word
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * Do not use hw->eeprom.ops.read because we do not want to take 	 * the synchronization semaphores here. Instead use 	 * ixgbe_read_eerd_generic 	 */
+name|u16
+name|checksum_last_word
+init|=
+name|IXGBE_EEPROM_CHECKSUM
+decl_stmt|;
+name|u16
+name|ptr_start
+init|=
+name|IXGBE_PCIE_ANALOG_PTR
+decl_stmt|;
+comment|/* Do not use hw->eeprom.ops.read because we do not want to take 	 * the synchronization semaphores here. Instead use 	 * ixgbe_read_eerd_generic 	 */
 name|DEBUGFUNC
 argument_list|(
 literal|"ixgbe_calc_eeprom_checksum_X540"
@@ -1742,8 +1770,8 @@ operator|=
 literal|0
 init|;
 name|i
-operator|<
-name|IXGBE_EEPROM_CHECKSUM
+operator|<=
+name|checksum_last_word
 condition|;
 name|i
 operator|++
@@ -1760,8 +1788,6 @@ argument_list|,
 operator|&
 name|word
 argument_list|)
-operator|!=
-name|IXGBE_SUCCESS
 condition|)
 block|{
 name|DEBUGOUT
@@ -1769,19 +1795,27 @@ argument_list|(
 literal|"EEPROM read failed\n"
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|IXGBE_ERR_EEPROM
+return|;
 block|}
+if|if
+condition|(
+name|i
+operator|!=
+name|IXGBE_EEPROM_CHECKSUM
+condition|)
 name|checksum
 operator|+=
 name|word
 expr_stmt|;
 block|}
-comment|/* 	 * Include all data from pointers 0x3, 0x6-0xE.  This excludes the 	 * FW, PHY module, and PCIe Expansion/Option ROM pointers. 	 */
+comment|/* Include all data from pointers 0x3, 0x6-0xE.  This excludes the 	 * FW, PHY module, and PCIe Expansion/Option ROM pointers. 	 */
 for|for
 control|(
 name|i
 operator|=
-name|IXGBE_PCIE_ANALOG_PTR
+name|ptr_start
 init|;
 name|i
 operator|<
@@ -1813,8 +1847,6 @@ argument_list|,
 operator|&
 name|pointer
 argument_list|)
-operator|!=
-name|IXGBE_SUCCESS
 condition|)
 block|{
 name|DEBUGOUT
@@ -1822,7 +1854,9 @@ argument_list|(
 literal|"EEPROM read failed\n"
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|IXGBE_ERR_EEPROM
+return|;
 block|}
 comment|/* Skip pointer section if the pointer is invalid. */
 if|if
@@ -1855,8 +1889,6 @@ argument_list|,
 operator|&
 name|length
 argument_list|)
-operator|!=
-name|IXGBE_SUCCESS
 condition|)
 block|{
 name|DEBUGOUT
@@ -1864,7 +1896,9 @@ argument_list|(
 literal|"EEPROM read failed\n"
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|IXGBE_ERR_EEPROM
+return|;
 block|}
 comment|/* Skip pointer section if length is invalid. */
 if|if
@@ -1919,8 +1953,6 @@ argument_list|,
 operator|&
 name|word
 argument_list|)
-operator|!=
-name|IXGBE_SUCCESS
 condition|)
 block|{
 name|DEBUGOUT
@@ -1928,7 +1960,9 @@ argument_list|(
 literal|"EEPROM read failed\n"
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+name|IXGBE_ERR_EEPROM
+return|;
 block|}
 name|checksum
 operator|+=
@@ -1946,6 +1980,9 @@ operator|-
 name|checksum
 expr_stmt|;
 return|return
+operator|(
+name|s32
+operator|)
 name|checksum
 return|;
 block|}
@@ -1985,7 +2022,7 @@ argument_list|(
 literal|"ixgbe_validate_eeprom_checksum_X540"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read the first word from the EEPROM. If this times out or fails, do 	 * not continue or we could be in for a very long wait while every 	 * EEPROM read fails 	 */
+comment|/* Read the first word from the EEPROM. If this times out or fails, do 	 * not continue or we could be in for a very long wait while every 	 * EEPROM read fails 	 */
 name|status
 operator|=
 name|hw
@@ -2007,8 +2044,6 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|!=
-name|IXGBE_SUCCESS
 condition|)
 block|{
 name|DEBUGOUT
@@ -2016,9 +2051,9 @@ argument_list|(
 literal|"EEPROM read failed\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+name|status
+return|;
 block|}
 if|if
 condition|(
@@ -2034,11 +2069,11 @@ name|hw
 argument_list|,
 name|IXGBE_GSSR_EEP_SM
 argument_list|)
-operator|==
-name|IXGBE_SUCCESS
 condition|)
-block|{
-name|checksum
+return|return
+name|IXGBE_ERR_SWFW_SYNC
+return|;
+name|status
 operator|=
 name|hw
 operator|->
@@ -2051,7 +2086,29 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Do not use hw->eeprom.ops.read because we do not want to take 		 * the synchronization semaphores twice here. 		*/
+if|if
+condition|(
+name|status
+operator|<
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+name|checksum
+operator|=
+call|(
+name|u16
+call|)
+argument_list|(
+name|status
+operator|&
+literal|0xffff
+argument_list|)
+expr_stmt|;
+comment|/* Do not use hw->eeprom.ops.read because we do not want to take 	 * the synchronization semaphores twice here. 	 */
+name|status
+operator|=
 name|ixgbe_read_eerd_generic
 argument_list|(
 name|hw
@@ -2062,7 +2119,14 @@ operator|&
 name|read_checksum
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Verify read checksum from EEPROM is the same as 		 * calculated checksum 		 */
+if|if
+condition|(
+name|status
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/* Verify read checksum from EEPROM is the same as 	 * calculated checksum 	 */
 if|if
 condition|(
 name|read_checksum
@@ -2070,16 +2134,16 @@ operator|!=
 name|checksum
 condition|)
 block|{
-name|status
-operator|=
-name|IXGBE_ERR_EEPROM_CHECKSUM
-expr_stmt|;
 name|ERROR_REPORT1
 argument_list|(
 name|IXGBE_ERROR_INVALID_STATE
 argument_list|,
 literal|"Invalid EEPROM checksum"
 argument_list|)
+expr_stmt|;
+name|status
+operator|=
+name|IXGBE_ERR_EEPROM_CHECKSUM
 expr_stmt|;
 block|}
 comment|/* If the user cares, return the calculated checksum */
@@ -2092,6 +2156,8 @@ name|checksum_val
 operator|=
 name|checksum
 expr_stmt|;
+name|out
+label|:
 name|hw
 operator|->
 name|mac
@@ -2105,16 +2171,6 @@ argument_list|,
 name|IXGBE_GSSR_EEP_SM
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|status
-operator|=
-name|IXGBE_ERR_SWFW_SYNC
-expr_stmt|;
-block|}
-name|out
-label|:
 return|return
 name|status
 return|;
@@ -2146,7 +2202,7 @@ argument_list|(
 literal|"ixgbe_update_eeprom_checksum_X540"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Read the first word from the EEPROM. If this times out or fails, do 	 * not continue or we could be in for a very long wait while every 	 * EEPROM read fails 	 */
+comment|/* Read the first word from the EEPROM. If this times out or fails, do 	 * not continue or we could be in for a very long wait while every 	 * EEPROM read fails 	 */
 name|status
 operator|=
 name|hw
@@ -2168,14 +2224,17 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|!=
-name|IXGBE_SUCCESS
 condition|)
+block|{
 name|DEBUGOUT
 argument_list|(
 literal|"EEPROM read failed\n"
 argument_list|)
 expr_stmt|;
+return|return
+name|status
+return|;
+block|}
 if|if
 condition|(
 name|hw
@@ -2190,11 +2249,11 @@ name|hw
 argument_list|,
 name|IXGBE_GSSR_EEP_SM
 argument_list|)
-operator|==
-name|IXGBE_SUCCESS
 condition|)
-block|{
-name|checksum
+return|return
+name|IXGBE_ERR_SWFW_SYNC
+return|;
+name|status
 operator|=
 name|hw
 operator|->
@@ -2207,7 +2266,27 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Do not use hw->eeprom.ops.write because we do not want to 		 * take the synchronization semaphores twice here. 		*/
+if|if
+condition|(
+name|status
+operator|<
+literal|0
+condition|)
+goto|goto
+name|out
+goto|;
+name|checksum
+operator|=
+call|(
+name|u16
+call|)
+argument_list|(
+name|status
+operator|&
+literal|0xffff
+argument_list|)
+expr_stmt|;
+comment|/* Do not use hw->eeprom.ops.write because we do not want to 	 * take the synchronization semaphores twice here. 	 */
 name|status
 operator|=
 name|ixgbe_write_eewr_generic
@@ -2222,9 +2301,10 @@ expr_stmt|;
 if|if
 condition|(
 name|status
-operator|==
-name|IXGBE_SUCCESS
 condition|)
+goto|goto
+name|out
+goto|;
 name|status
 operator|=
 name|ixgbe_update_flash_X540
@@ -2232,6 +2312,8 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+name|out
+label|:
 name|hw
 operator|->
 name|mac
@@ -2245,14 +2327,6 @@ argument_list|,
 name|IXGBE_GSSR_EEP_SM
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|status
-operator|=
-name|IXGBE_ERR_SWFW_SYNC
-expr_stmt|;
-block|}
 return|return
 name|status
 return|;
@@ -2278,8 +2352,6 @@ name|flup
 decl_stmt|;
 name|s32
 name|status
-init|=
-name|IXGBE_ERR_EEPROM
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -2500,7 +2572,7 @@ name|IXGBE_SUCCESS
 expr_stmt|;
 break|break;
 block|}
-name|usec_delay
+name|msec_delay
 argument_list|(
 literal|5
 argument_list|)
@@ -2538,29 +2610,30 @@ name|ixgbe_hw
 modifier|*
 name|hw
 parameter_list|,
-name|u16
+name|u32
 name|mask
 parameter_list|)
 block|{
 name|u32
-name|swfw_sync
-decl_stmt|;
-name|u32
 name|swmask
 init|=
 name|mask
+operator|&
+name|IXGBE_GSSR_NVM_PHY_MASK
 decl_stmt|;
 name|u32
 name|fwmask
 init|=
-name|mask
+name|swmask
 operator|<<
 literal|5
 decl_stmt|;
 name|u32
-name|hwmask
+name|swi2c_mask
 init|=
-literal|0
+name|mask
+operator|&
+name|IXGBE_GSSR_I2C_MASK
 decl_stmt|;
 name|u32
 name|timeout
@@ -2568,12 +2641,15 @@ init|=
 literal|200
 decl_stmt|;
 name|u32
-name|i
-decl_stmt|;
-name|s32
-name|ret_val
+name|hwmask
 init|=
-name|IXGBE_SUCCESS
+literal|0
+decl_stmt|;
+name|u32
+name|swfw_sync
+decl_stmt|;
+name|u32
+name|i
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
@@ -2583,23 +2659,33 @@ expr_stmt|;
 if|if
 condition|(
 name|swmask
-operator|==
+operator|&
 name|IXGBE_GSSR_EEP_SM
 condition|)
 name|hwmask
-operator|=
+operator||=
 name|IXGBE_GSSR_FLASH_SM
 expr_stmt|;
 comment|/* SW only mask doesn't have FW bit pair */
 if|if
 condition|(
-name|swmask
-operator|==
+name|mask
+operator|&
 name|IXGBE_GSSR_SW_MNG_SM
 condition|)
+name|swmask
+operator||=
+name|IXGBE_GSSR_SW_MNG_SM
+expr_stmt|;
+name|swmask
+operator||=
+name|swi2c_mask
+expr_stmt|;
 name|fwmask
-operator|=
-literal|0
+operator||=
+name|swi2c_mask
+operator|<<
+literal|2
 expr_stmt|;
 for|for
 control|(
@@ -2615,7 +2701,7 @@ name|i
 operator|++
 control|)
 block|{
-comment|/* 		 * SW NVM semaphore bit is used for access to all 		 * SW_FW_SYNC bits (not just NVM) 		 */
+comment|/* SW NVM semaphore bit is used for access to all 		 * SW_FW_SYNC bits (not just NVM) 		 */
 if|if
 condition|(
 name|ixgbe_get_swfw_sync_semaphore
@@ -2623,15 +2709,9 @@ argument_list|(
 name|hw
 argument_list|)
 condition|)
-block|{
-name|ret_val
-operator|=
+return|return
 name|IXGBE_ERR_SWFW_SYNC
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
+return|;
 name|swfw_sync
 operator|=
 name|IXGBE_READ_REG
@@ -2675,13 +2755,16 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+name|msec_delay
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+return|return
+name|IXGBE_SUCCESS
+return|;
 block|}
-else|else
-block|{
-comment|/* 			 * Firmware currently using resource (fwmask), hardware 			 * currently using resource (hwmask), or other software 			 * thread currently using resource (swmask) 			 */
+comment|/* Firmware currently using resource (fwmask), hardware 		 * currently using resource (hwmask), or other software 		 * thread currently using resource (swmask) 		 */
 name|ixgbe_release_swfw_sync_semaphore
 argument_list|(
 name|hw
@@ -2693,7 +2776,6 @@ literal|5
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 comment|/* Failed to get SW only semaphore */
 if|if
 condition|(
@@ -2702,10 +2784,6 @@ operator|==
 name|IXGBE_GSSR_SW_MNG_SM
 condition|)
 block|{
-name|ret_val
-operator|=
-name|IXGBE_ERR_SWFW_SYNC
-expr_stmt|;
 name|ERROR_REPORT1
 argument_list|(
 name|IXGBE_ERROR_POLLING
@@ -2713,11 +2791,21 @@ argument_list|,
 literal|"Failed to get SW only semaphore"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
+return|return
+name|IXGBE_ERR_SWFW_SYNC
+return|;
 block|}
 comment|/* If the resource is not released by the FW/HW the SW can assume that 	 * the FW/HW malfunctions. In that case the SW should set the SW bit(s) 	 * of the requested resource(s) while ignoring the corresponding FW/HW 	 * bits in the SW_FW_SYNC register. 	 */
+if|if
+condition|(
+name|ixgbe_get_swfw_sync_semaphore
+argument_list|(
+name|hw
+argument_list|)
+condition|)
+return|return
+name|IXGBE_ERR_SWFW_SYNC
+return|;
 name|swfw_sync
 operator|=
 name|IXGBE_READ_REG
@@ -2738,22 +2826,6 @@ name|hwmask
 operator|)
 condition|)
 block|{
-if|if
-condition|(
-name|ixgbe_get_swfw_sync_semaphore
-argument_list|(
-name|hw
-argument_list|)
-condition|)
-block|{
-name|ret_val
-operator|=
-name|IXGBE_ERR_SWFW_SYNC
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|swfw_sync
 operator||=
 name|swmask
@@ -2777,9 +2849,11 @@ argument_list|(
 literal|5
 argument_list|)
 expr_stmt|;
+return|return
+name|IXGBE_SUCCESS
+return|;
 block|}
 comment|/* If the resource is not released by other SW the SW can assume that 	 * the other SW malfunctions. In that case the SW should clear all SW 	 * flags that it does not own and then repeat the whole process once 	 * again. 	 */
-elseif|else
 if|if
 condition|(
 name|swfw_sync
@@ -2787,10 +2861,9 @@ operator|&
 name|swmask
 condition|)
 block|{
-name|ixgbe_release_swfw_sync_X540
-argument_list|(
-name|hw
-argument_list|,
+name|u32
+name|rmask
+init|=
 name|IXGBE_GSSR_EEP_SM
 operator||
 name|IXGBE_GSSR_PHY0_SM
@@ -2798,17 +2871,38 @@ operator||
 name|IXGBE_GSSR_PHY1_SM
 operator||
 name|IXGBE_GSSR_MAC_CSR_SM
+decl_stmt|;
+if|if
+condition|(
+name|swi2c_mask
+condition|)
+name|rmask
+operator||=
+name|IXGBE_GSSR_I2C_MASK
+expr_stmt|;
+name|ixgbe_release_swfw_sync_X540
+argument_list|(
+name|hw
+argument_list|,
+name|rmask
 argument_list|)
 expr_stmt|;
-name|ret_val
-operator|=
-name|IXGBE_ERR_SWFW_SYNC
+name|ixgbe_release_swfw_sync_semaphore
+argument_list|(
+name|hw
+argument_list|)
 expr_stmt|;
-block|}
-name|out
-label|:
 return|return
-name|ret_val
+name|IXGBE_ERR_SWFW_SYNC
+return|;
+block|}
+name|ixgbe_release_swfw_sync_semaphore
+argument_list|(
+name|hw
+argument_list|)
+expr_stmt|;
+return|return
+name|IXGBE_ERR_SWFW_SYNC
 return|;
 block|}
 end_function
@@ -2826,22 +2920,40 @@ name|ixgbe_hw
 modifier|*
 name|hw
 parameter_list|,
-name|u16
+name|u32
 name|mask
 parameter_list|)
 block|{
 name|u32
-name|swfw_sync
-decl_stmt|;
-name|u32
 name|swmask
 init|=
 name|mask
+operator|&
+operator|(
+name|IXGBE_GSSR_NVM_PHY_MASK
+operator||
+name|IXGBE_GSSR_SW_MNG_SM
+operator|)
+decl_stmt|;
+name|u32
+name|swfw_sync
 decl_stmt|;
 name|DEBUGFUNC
 argument_list|(
 literal|"ixgbe_release_swfw_sync_X540"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|mask
+operator|&
+name|IXGBE_GSSR_I2C_MASK
+condition|)
+name|swmask
+operator||=
+name|mask
+operator|&
+name|IXGBE_GSSR_I2C_MASK
 expr_stmt|;
 name|ixgbe_get_swfw_sync_semaphore
 argument_list|(
@@ -2876,11 +2988,16 @@ argument_list|(
 name|hw
 argument_list|)
 expr_stmt|;
+name|msec_delay
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_get_nvm_semaphore - Get hardware semaphore  *  @hw: pointer to hardware structure  *  *  Sets the hardware semaphores so SW/FW can gain control of shared resources  **/
+comment|/**  *  ixgbe_get_swfw_sync_semaphore - Get hardware semaphore  *  @hw: pointer to hardware structure  *  *  Sets the hardware semaphores so SW/FW can gain control of shared resources  **/
 end_comment
 
 begin_function
@@ -3053,7 +3170,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  ixgbe_release_nvm_semaphore - Release hardware semaphore  *  @hw: pointer to hardware structure  *  *  This function clears hardware semaphore bits.  **/
+comment|/**  *  ixgbe_release_swfw_sync_semaphore - Release hardware semaphore  *  @hw: pointer to hardware structure  *  *  This function clears hardware semaphore bits.  **/
 end_comment
 
 begin_function
@@ -3082,29 +3199,6 @@ name|IXGBE_READ_REG
 argument_list|(
 name|hw
 argument_list|,
-name|IXGBE_SWSM
-argument_list|)
-expr_stmt|;
-name|swsm
-operator|&=
-operator|~
-name|IXGBE_SWSM_SMBI
-expr_stmt|;
-name|IXGBE_WRITE_REG
-argument_list|(
-name|hw
-argument_list|,
-name|IXGBE_SWSM
-argument_list|,
-name|swsm
-argument_list|)
-expr_stmt|;
-name|swsm
-operator|=
-name|IXGBE_READ_REG
-argument_list|(
-name|hw
-argument_list|,
 name|IXGBE_SWFW_SYNC
 argument_list|)
 expr_stmt|;
@@ -3118,6 +3212,29 @@ argument_list|(
 name|hw
 argument_list|,
 name|IXGBE_SWFW_SYNC
+argument_list|,
+name|swsm
+argument_list|)
+expr_stmt|;
+name|swsm
+operator|=
+name|IXGBE_READ_REG
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_SWSM
+argument_list|)
+expr_stmt|;
+name|swsm
+operator|&=
+operator|~
+name|IXGBE_SWSM_SMBI
+expr_stmt|;
+name|IXGBE_WRITE_REG
+argument_list|(
+name|hw
+argument_list|,
+name|IXGBE_SWSM
 argument_list|,
 name|swsm
 argument_list|)

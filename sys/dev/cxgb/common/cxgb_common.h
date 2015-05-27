@@ -1934,6 +1934,20 @@ block|}
 enum|;
 end_enum
 
+begin_enum
+enum|enum
+block|{
+name|PHY_LINK_DOWN
+init|=
+literal|0
+block|,
+name|PHY_LINK_UP
+block|,
+name|PHY_LINK_PARTIAL
+block|}
+enum|;
+end_enum
+
 begin_comment
 comment|/* PHY operations */
 end_comment
@@ -2097,7 +2111,7 @@ name|phy
 parameter_list|,
 name|int
 modifier|*
-name|link_ok
+name|link_state
 parameter_list|,
 name|int
 modifier|*
@@ -2147,6 +2161,9 @@ name|u8
 name|modtype
 decl_stmt|;
 comment|/* PHY module type */
+name|u8
+name|rst
+decl_stmt|;
 name|unsigned
 name|int
 name|priv

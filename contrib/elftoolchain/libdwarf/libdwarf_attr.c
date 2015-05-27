@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libdwarf_attr.c 2966 2013-09-21 14:40:14Z kaiwang27 $"
+literal|"$Id: libdwarf_attr.c 3064 2014-06-06 19:35:55Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -360,6 +360,13 @@ operator|.
 name|at_die
 operator|=
 name|die
+expr_stmt|;
+name|atref
+operator|.
+name|at_offset
+operator|=
+operator|*
+name|offsetp
 expr_stmt|;
 name|atref
 operator|.
@@ -831,15 +838,7 @@ operator|->
 name|cu_pointer_size
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|cu
-operator|->
-name|cu_version
-operator|==
-literal|3
-condition|)
+else|else
 name|atref
 operator|.
 name|u

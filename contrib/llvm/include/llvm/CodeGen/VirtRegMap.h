@@ -256,22 +256,20 @@ argument_list|(
 literal|0
 argument_list|)
 block|{ }
-name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
-name|MF
+argument|MachineFunction&MF
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|{
 name|AU
 operator|.
@@ -644,9 +642,10 @@ name|Module
 operator|*
 name|M
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 name|void
 name|dump

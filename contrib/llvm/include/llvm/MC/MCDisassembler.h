@@ -52,19 +52,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCSymbolizer.h"
+file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/MC/MCRelocationInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCSymbolizer.h"
 end_include
 
 begin_include
@@ -84,16 +84,13 @@ name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
-name|MemoryObject
-decl_stmt|;
-name|class
 name|raw_ostream
 decl_stmt|;
 name|class
 name|MCContext
 decl_stmt|;
-comment|/// MCDisassembler - Superclass for all disassemblers.  Consumes a memory region
-comment|///   and provides an array of assembly instructions.
+comment|/// Superclass for all disassemblers. Consumes a memory region and provides an
+comment|/// array of assembly instructions.
 name|class
 name|MCDisassembler
 block|{
@@ -137,33 +134,21 @@ init|=
 literal|3
 block|}
 enum|;
-comment|/// Constructor     - Performs initial setup for the disassembler.
 name|MCDisassembler
 argument_list|(
 specifier|const
 name|MCSubtargetInfo
 operator|&
 name|STI
+argument_list|,
+name|MCContext
+operator|&
+name|Ctx
 argument_list|)
 operator|:
-name|GetOpInfo
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|SymbolLookUp
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|DisInfo
-argument_list|(
-literal|0
-argument_list|)
-operator|,
 name|Ctx
 argument_list|(
-literal|0
+name|Ctx
 argument_list|)
 operator|,
 name|STI
@@ -172,13 +157,11 @@ name|STI
 argument_list|)
 operator|,
 name|Symbolizer
-argument_list|(
-literal|0
-argument_list|)
+argument_list|()
 operator|,
 name|CommentStream
 argument_list|(
-literal|0
+argument|nullptr
 argument_list|)
 block|{}
 name|virtual
@@ -186,18 +169,17 @@ operator|~
 name|MCDisassembler
 argument_list|()
 expr_stmt|;
-comment|/// getInstruction  - Returns the disassembly of a single instruction.
+comment|/// Returns the disassembly of a single instruction.
 comment|///
-comment|/// @param instr    - An MCInst to populate with the contents of the
+comment|/// @param Instr    - An MCInst to populate with the contents of the
 comment|///                   instruction.
-comment|/// @param size     - A value to populate with the size of the instruction, or
+comment|/// @param Size     - A value to populate with the size of the instruction, or
 comment|///                   the number of bytes consumed while attempting to decode
 comment|///                   an invalid instruction.
-comment|/// @param region   - The memory object to use as a source for machine code.
-comment|/// @param address  - The address, in the memory space of region, of the first
+comment|/// @param Address  - The address, in the memory space of region, of the first
 comment|///                   byte of the instruction.
-comment|/// @param vStream  - The stream to print warnings and diagnostic messages on.
-comment|/// @param cStream  - The stream to print comments and annotations on.
+comment|/// @param VStream  - The stream to print warnings and diagnostic messages on.
+comment|/// @param CStream  - The stream to print comments and annotations on.
 comment|/// @return         - MCDisassembler::Success if the instruction is valid,
 comment|///                   MCDisassembler::SoftFail if the instruction was
 comment|///                                            disassemblable but invalid,
@@ -208,27 +190,28 @@ name|getInstruction
 argument_list|(
 name|MCInst
 operator|&
-name|instr
+name|Instr
 argument_list|,
 name|uint64_t
 operator|&
-name|size
+name|Size
 argument_list|,
-specifier|const
-name|MemoryObject
-operator|&
-name|region
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|Bytes
 argument_list|,
 name|uint64_t
-name|address
+name|Address
 argument_list|,
 name|raw_ostream
 operator|&
-name|vStream
+name|VStream
 argument_list|,
 name|raw_ostream
 operator|&
-name|cStream
+name|CStream
 argument_list|)
 decl|const
 init|=
@@ -236,26 +219,8 @@ literal|0
 decl_stmt|;
 name|private
 label|:
-comment|//
-comment|// Hooks for symbolic disassembly via the public 'C' interface.
-comment|//
-comment|// The function to get the symbolic information for operands.
-name|LLVMOpInfoCallback
-name|GetOpInfo
-decl_stmt|;
-comment|// The function to lookup a symbol name.
-name|LLVMSymbolLookupCallback
-name|SymbolLookUp
-decl_stmt|;
-comment|// The pointer to the block of symbolic information for above call back.
-name|void
-modifier|*
-name|DisInfo
-decl_stmt|;
-comment|// The assembly context for creating symbols and MCExprs in place of
-comment|// immediate operands when there is symbolic information.
 name|MCContext
-modifier|*
+modifier|&
 name|Ctx
 decl_stmt|;
 name|protected
@@ -266,7 +231,9 @@ name|MCSubtargetInfo
 modifier|&
 name|STI
 decl_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MCSymbolizer
 operator|>
@@ -315,71 +282,18 @@ comment|/// This takes ownership of \p Symzer, and deletes the previously set on
 name|void
 name|setSymbolizer
 argument_list|(
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MCSymbolizer
 operator|>
-operator|&
 name|Symzer
 argument_list|)
 decl_stmt|;
-comment|/// Sets up an external symbolizer that uses the C API callbacks.
-name|void
-name|setupForSymbolicDisassembly
-argument_list|(
-name|LLVMOpInfoCallback
-name|GetOpInfo
-argument_list|,
-name|LLVMSymbolLookupCallback
-name|SymbolLookUp
-argument_list|,
-name|void
-operator|*
-name|DisInfo
-argument_list|,
 name|MCContext
-operator|*
-name|Ctx
-argument_list|,
-name|OwningPtr
-operator|<
-name|MCRelocationInfo
-operator|>
 operator|&
-name|RelInfo
-argument_list|)
-decl_stmt|;
-name|LLVMOpInfoCallback
-name|getLLVMOpInfoCallback
-argument_list|()
-specifier|const
-block|{
-return|return
-name|GetOpInfo
-return|;
-block|}
-name|LLVMSymbolLookupCallback
-name|getLLVMSymbolLookupCallback
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SymbolLookUp
-return|;
-block|}
-name|void
-operator|*
-name|getDisInfoBlock
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DisInfo
-return|;
-block|}
-name|MCContext
-operator|*
-name|getMCContext
+name|getContext
 argument_list|()
 specifier|const
 block|{

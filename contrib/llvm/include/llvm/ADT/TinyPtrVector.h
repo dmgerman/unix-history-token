@@ -58,19 +58,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/STLExtras.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/Compiler.h"
 end_include
 
 begin_decl_stmt
@@ -361,12 +349,6 @@ return|;
 block|}
 end_decl_stmt
 
-begin_if
-if|#
-directive|if
-name|LLVM_HAS_RVALUE_REFERENCES
-end_if
-
 begin_expr_stmt
 name|TinyPtrVector
 argument_list|(
@@ -387,7 +369,7 @@ operator|=
 operator|(
 name|EltTy
 operator|)
-literal|0
+name|nullptr
 block|;   }
 name|TinyPtrVector
 operator|&
@@ -522,7 +504,7 @@ operator|=
 operator|(
 name|EltTy
 operator|)
-literal|0
+name|nullptr
 expr_stmt|;
 end_expr_stmt
 
@@ -533,18 +515,53 @@ name|this
 return|;
 end_return
 
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
 begin_comment
-comment|// implicit conversion operator to ArrayRef.
+unit|}
+comment|/// Constructor from a single element.
 end_comment
 
-begin_expr_stmt
-unit|operator
+begin_macro
+unit|explicit
+name|TinyPtrVector
+argument_list|(
+argument|EltTy Elt
+argument_list|)
+end_macro
+
+begin_macro
+unit|:
+name|Val
+argument_list|(
+argument|Elt
+argument_list|)
+end_macro
+
+begin_block
+block|{}
+end_block
+
+begin_comment
+comment|/// Constructor from an ArrayRef.
+end_comment
+
+begin_decl_stmt
+name|explicit
+name|TinyPtrVector
+argument_list|(
+name|ArrayRef
+operator|<
+name|EltTy
+operator|>
+name|Elts
+argument_list|)
+range|:
+name|Val
+argument_list|(
+argument|new VecTy(Elts.begin(), Elts.end())
+argument_list|)
+block|{}
+comment|// implicit conversion operator to ArrayRef.
+name|operator
 name|ArrayRef
 operator|<
 name|EltTy
@@ -561,14 +578,9 @@ name|isNull
 argument_list|()
 condition|)
 return|return
-name|ArrayRef
-operator|<
-name|EltTy
-operator|>
-operator|(
-operator|)
+name|None
 return|;
-end_expr_stmt
+end_decl_stmt
 
 begin_if
 if|if
@@ -1075,8 +1087,6 @@ block|{
 name|assert
 argument_list|(
 name|NewVal
-operator|!=
-literal|0
 operator|&&
 literal|"Can't add a null value"
 argument_list|)
@@ -1179,7 +1189,7 @@ operator|=
 operator|(
 name|EltTy
 operator|)
-literal|0
+name|nullptr
 expr_stmt|;
 elseif|else
 if|if
@@ -1231,7 +1241,7 @@ operator|=
 operator|(
 name|EltTy
 operator|)
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 elseif|else
@@ -1318,7 +1328,7 @@ operator|=
 operator|(
 name|EltTy
 operator|)
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 elseif|else
@@ -1427,7 +1437,7 @@ operator|=
 operator|(
 name|EltTy
 operator|)
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 elseif|else
@@ -1518,9 +1528,9 @@ name|Elt
 argument_list|)
 expr_stmt|;
 return|return
-name|llvm
+name|std
 operator|::
-name|prior
+name|prev
 argument_list|(
 name|end
 argument_list|()
@@ -1669,7 +1679,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|llvm
+name|std
 operator|::
 name|next
 argument_list|(

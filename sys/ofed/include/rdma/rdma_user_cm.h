@@ -132,9 +132,12 @@ name|__u16
 name|ps
 decl_stmt|;
 name|__u8
+name|qp_type
+decl_stmt|;
+name|__u8
 name|reserved
 index|[
-literal|6
+literal|5
 index|]
 decl_stmt|;
 block|}
@@ -582,10 +585,22 @@ name|RDMA_OPTION_ID_TOS
 init|=
 literal|0
 block|,
+name|RDMA_OPTION_ID_REUSEADDR
+init|=
+literal|1
+block|,
+name|RDMA_OPTION_ID_AFONLY
+init|=
+literal|2
+block|,
 name|RDMA_OPTION_IB_PATH
 init|=
 literal|1
-block|}
+block|,
+name|RDMA_OPTION_IB_APM
+init|=
+literal|2
+block|, }
 enum|;
 end_enum
 

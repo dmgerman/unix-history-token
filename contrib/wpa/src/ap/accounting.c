@@ -24,7 +24,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"drivers/driver.h"
+file|"eapol_auth/eapol_auth_sm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"eapol_auth/eapol_auth_sm_i.h"
 end_include
 
 begin_include
@@ -172,9 +178,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not create net RADIUS packet\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not create new RADIUS packet"
 argument_list|)
 expr_stmt|;
 return|return
@@ -203,6 +211,36 @@ name|sta
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|hapd
+operator|->
+name|conf
+operator|->
+name|wpa
+operator|&
+literal|2
+operator|)
+operator|&&
+operator|!
+name|hapd
+operator|->
+name|conf
+operator|->
+name|disable_pmksa_caching
+operator|&&
+name|sta
+operator|->
+name|eapol_sm
+operator|&&
+name|sta
+operator|->
+name|eapol_sm
+operator|->
+name|acct_multi_session_id_hi
+condition|)
+block|{
 name|os_snprintf
 argument_list|(
 name|buf
@@ -212,15 +250,19 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%08X-%08X"
+literal|"%08X+%08X"
 argument_list|,
 name|sta
 operator|->
-name|acct_session_id_hi
+name|eapol_sm
+operator|->
+name|acct_multi_session_id_hi
 argument_list|,
 name|sta
 operator|->
-name|acct_session_id_lo
+name|eapol_sm
+operator|->
+name|acct_multi_session_id_lo
 argument_list|)
 expr_stmt|;
 if|if
@@ -230,7 +272,7 @@ name|radius_msg_add_attr
 argument_list|(
 name|msg
 argument_list|,
-name|RADIUS_ATTR_ACCT_SESSION_ID
+name|RADIUS_ATTR_ACCT_MULTI_SESSION_ID
 argument_list|,
 operator|(
 name|u8
@@ -245,14 +287,17 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Acct-Session-Id\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Acct-Multi-Session-Id"
 argument_list|)
 expr_stmt|;
 goto|goto
 name|fail
 goto|;
+block|}
 block|}
 block|}
 else|else
@@ -288,9 +333,11 @@ name|status_type
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Acct-Status-Type\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Acct-Status-Type"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -330,9 +377,11 @@ name|RADIUS_ACCT_AUTHENTIC_LOCAL
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Acct-Authentic\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Acct-Authentic"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -445,9 +494,11 @@ name|len
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add User-Name\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add User-Name"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -529,9 +580,11 @@ name|len
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Class\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Class"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -879,10 +932,6 @@ name|radius_msg
 modifier|*
 name|msg
 decl_stmt|;
-name|struct
-name|os_time
-name|t
-decl_stmt|;
 name|int
 name|interval
 decl_stmt|;
@@ -916,19 +965,13 @@ operator|->
 name|acct_session_id_lo
 argument_list|)
 expr_stmt|;
-name|os_get_time
+name|os_get_reltime
 argument_list|(
 operator|&
-name|t
-argument_list|)
-expr_stmt|;
 name|sta
 operator|->
 name|acct_session_start
-operator|=
-name|t
-operator|.
-name|sec
+argument_list|)
 expr_stmt|;
 name|sta
 operator|->
@@ -1083,6 +1126,12 @@ name|hostap_sta_driver_data
 name|data
 decl_stmt|;
 name|struct
+name|os_reltime
+name|now_r
+decl_stmt|,
+name|diff
+decl_stmt|;
+name|struct
 name|os_time
 name|now
 decl_stmt|;
@@ -1122,17 +1171,39 @@ operator|!
 name|msg
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not create RADIUS Accounting message\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not create RADIUS Accounting message"
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|os_get_reltime
+argument_list|(
+operator|&
+name|now_r
+argument_list|)
+expr_stmt|;
 name|os_get_time
 argument_list|(
 operator|&
 name|now
+argument_list|)
+expr_stmt|;
+name|os_reltime_sub
+argument_list|(
+operator|&
+name|now_r
+argument_list|,
+operator|&
+name|sta
+operator|->
+name|acct_session_start
+argument_list|,
+operator|&
+name|diff
 argument_list|)
 expr_stmt|;
 if|if
@@ -1144,19 +1215,17 @@ name|msg
 argument_list|,
 name|RADIUS_ATTR_ACCT_SESSION_TIME
 argument_list|,
-name|now
+name|diff
 operator|.
 name|sec
-operator|-
-name|sta
-operator|->
-name|acct_session_start
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Acct-Session-Time\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Acct-Session-Time"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1193,9 +1262,11 @@ name|rx_packets
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Acct-Input-Packets\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Acct-Input-Packets"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1217,9 +1288,11 @@ name|tx_packets
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Acct-Output-Packets\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Acct-Output-Packets"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1241,9 +1314,11 @@ name|rx_bytes
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Acct-Input-Octets\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Acct-Input-Octets"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1286,9 +1361,11 @@ name|gigawords
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Acct-Input-Gigawords\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Acct-Input-Gigawords"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1310,9 +1387,11 @@ name|tx_bytes
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Acct-Output-Octets\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Acct-Output-Octets"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1355,9 +1434,11 @@ name|gigawords
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Acct-Output-Gigawords\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Acct-Output-Gigawords"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1380,9 +1461,11 @@ name|sec
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Event-Timestamp\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Event-Timestamp"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1415,9 +1498,11 @@ name|cause
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Acct-Terminate-Cause\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Acct-Terminate-Cause"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1670,9 +1755,11 @@ operator|!=
 name|RADIUS_CODE_ACCOUNTING_RESPONSE
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Unknown RADIUS message code\n"
+name|MSG_INFO
+argument_list|,
+literal|"Unknown RADIUS message code"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1695,10 +1782,11 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Incoming RADIUS packet did not have correct "
-literal|"Authenticator - dropped\n"
+name|MSG_INFO
+argument_list|,
+literal|"Incoming RADIUS packet did not have correct Authenticator - dropped"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1783,9 +1871,11 @@ name|RADIUS_ACCT_TERMINATE_CAUSE_NAS_REBOOT
 argument_list|)
 condition|)
 block|{
-name|printf
+name|wpa_printf
 argument_list|(
-literal|"Could not add Acct-Terminate-Cause\n"
+name|MSG_INFO
+argument_list|,
+literal|"Could not add Acct-Terminate-Cause"
 argument_list|)
 expr_stmt|;
 name|radius_msg_free

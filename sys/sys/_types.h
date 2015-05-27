@@ -33,7 +33,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__uint32_t
+name|__int32_t
 name|__blksize_t
 typedef|;
 end_typedef

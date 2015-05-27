@@ -66,7 +66,7 @@ define|#
 directive|define
 name|MCOUNT
 define|\
-value|__asm__(".text");						\ 	__asm__(".align	0");						\ 	__asm__(".type	__mcount ,%function");				\ 	__asm__(".global	__mcount");				\ 	__asm__("__mcount:");						\
+value|__asm__(".text");						\ 	__asm__(".align	2");						\ 	__asm__(".type	__mcount ,%function");				\ 	__asm__(".global	__mcount");				\ 	__asm__("__mcount:");						\
 comment|/*								\ 	 * Preserve registers that are trashed during mcount		\ 	 */
 value|\ 	__asm__("stmfd	sp!, {r0-r3, ip, lr}");				\
 comment|/*								\ 	 * find the return address for mcount,				\ 	 * and the return address for mcount's caller.			\ 	 *								\ 	 * frompcindex = pc pushed by call into self.			\ 	 */
@@ -76,7 +76,9 @@ value|\ 	__asm__("mov	r1, lr");					\
 comment|/*								\ 	 * Call the real mcount code					\ 	 */
 value|\ 	__asm__("bl	mcount");					\
 comment|/*								\ 	 * Restore registers that were trashed during mcount		\ 	 */
-value|\ 	__asm__("ldmfd	sp!, {r0-r3, lr, pc}");
+value|\ 	__asm__("ldmfd	sp!, {r0-r3, lr}");				\
+comment|/*								\ 	 * Return to the caller. Loading lr and pc in one instruction	\ 	 * is deprecated on ARMv7 so we need this on it's own.		\ 	 */
+value|\ 	__asm__("ldmfd	sp!, {pc}");
 end_define
 
 begin_function_decl

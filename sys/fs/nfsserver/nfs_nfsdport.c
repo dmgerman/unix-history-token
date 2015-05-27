@@ -353,7 +353,7 @@ name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"New NFS server"
+literal|"NFS server"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -479,7 +479,7 @@ name|nfsd_debuglevel
 argument_list|,
 literal|0
 argument_list|,
-literal|"Debug level for new nfs server"
+literal|"Debug level for NFS server"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2692,7 +2692,7 @@ name|mp
 operator|->
 name|m_len
 operator|=
-name|NFSMSIZ
+name|M_SIZE
 argument_list|(
 name|mp
 argument_list|)
@@ -6319,7 +6319,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * RFC 1813 3.3.21: if count is 0, a flush from offset to the end of 	 * file is done.  At this time VOP_FSYNC does not accept offset and 	 * byte count parameters so call VOP_FSYNC the whole file for now. 	 * The same is true for NFSv4: RFC 3530 Sec. 14.2.3. 	 */
+comment|/* 	 * RFC 1813 3.3.21: if count is 0, a flush from offset to the end of 	 * file is done.  At this time VOP_FSYNC does not accept offset and 	 * byte count parameters so call VOP_FSYNC the whole file for now. 	 * The same is true for NFSv4: RFC 3530 Sec. 14.2.3. 	 * File systems that do not use the buffer cache (as indicated 	 * by MNTK_USES_BCACHE not being set) must use VOP_FSYNC(). 	 */
 if|if
 condition|(
 name|cnt
@@ -6329,6 +6329,18 @@ operator|||
 name|cnt
 operator|>
 name|MAX_COMMIT_COUNT
+operator|||
+operator|(
+name|vp
+operator|->
+name|v_mount
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_USES_BCACHE
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 		 * Give up and do the whole thing 		 */
@@ -14875,28 +14887,13 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Check for VI_DOOMED here, so that VOP_ADVLOCK() isn't performed. */
-if|if
-condition|(
-operator|(
+name|ASSERT_VOP_UNLOCKED
+argument_list|(
 name|vp
-operator|->
-name|v_iflag
-operator|&
-name|VI_DOOMED
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|error
-operator|=
-name|EPERM
+argument_list|,
+literal|"nfsvno_advlock: vp locked"
+argument_list|)
 expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
 name|fl
 operator|.
 name|l_whence
@@ -14980,13 +14977,6 @@ name|int
 operator|)
 name|nfsv4_sysid
 expr_stmt|;
-name|NFSVOPUNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ftype
@@ -15042,15 +15032,6 @@ name|F_POSIX
 operator||
 name|F_REMOTE
 operator|)
-argument_list|)
-expr_stmt|;
-name|NFSVOPLOCK
-argument_list|(
-name|vp
-argument_list|,
-name|LK_EXCLUSIVE
-operator||
-name|LK_RETRY
 argument_list|)
 expr_stmt|;
 name|out

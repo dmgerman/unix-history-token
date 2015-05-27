@@ -506,6 +506,12 @@ operator|||
 name|acpi_timer_dev
 operator|||
 name|acpi_timer_disabled
+operator|||
+name|AcpiGbl_FADT
+operator|.
+name|PmTimerLength
+operator|==
+literal|0
 condition|)
 name|return_VOID
 expr_stmt|;

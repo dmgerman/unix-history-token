@@ -42,9 +42,7 @@ comment|/* Payload data */
 comment|/*variable size*/
 comment|/* padding */
 comment|/*8bit*/
-comment|/* pad size */
-comment|/*8bit*/
-comment|/* next header */
+comment|/* pad length */
 comment|/*8bit*/
 comment|/* next header */
 comment|/*variable size, 32bit bound*/
@@ -70,9 +68,7 @@ comment|/* (IV and) Payload data */
 comment|/*variable size*/
 comment|/* padding */
 comment|/*8bit*/
-comment|/* pad size */
-comment|/*8bit*/
-comment|/* next header */
+comment|/* pad length */
 comment|/*8bit*/
 comment|/* next header */
 comment|/*variable size, 32bit bound*/

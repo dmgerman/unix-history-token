@@ -2279,6 +2279,20 @@ block|,
 name|NULL
 block|}
 block|,
+comment|/* 	 * umtx 	 */
+block|{
+literal|"umtx lock"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
+name|NULL
+block|,
+name|NULL
+block|}
+block|,
 comment|/* 	 * Sockets 	 */
 block|{
 literal|"accept"
@@ -2876,13 +2890,6 @@ block|}
 block|,
 block|{
 literal|"sleepq chain"
-block|,
-operator|&
-name|lock_class_mtx_spin
-block|}
-block|,
-block|{
-literal|"umtx lock"
 block|,
 operator|&
 name|lock_class_mtx_spin
@@ -11434,7 +11441,7 @@ name|db_lookup_thread
 argument_list|(
 name|addr
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 else|else

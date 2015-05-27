@@ -432,7 +432,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CI:d:gmpVx:"
+literal|"CI:d:gmpsVx:"
 argument_list|)
 operator|)
 operator|!=
@@ -555,6 +555,37 @@ literal|'p'
 case|:
 name|profiling
 operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'s'
+case|:
+if|if
+condition|(
+operator|*
+name|srcdir
+operator|==
+literal|'\0'
+condition|)
+name|strlcpy
+argument_list|(
+name|srcdir
+argument_list|,
+name|optarg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|srcdir
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"src directory already set"
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -747,6 +778,13 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|srcdir
+operator|==
+literal|'\0'
+condition|)
 name|get_srcdir
 argument_list|()
 expr_stmt|;
@@ -1223,7 +1261,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: config [-CgmpV] [-d destdir] sysname\n"
+literal|"usage: config [-CgmpV] [-d destdir] [-s srcdir] sysname\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -1367,6 +1405,25 @@ operator|++
 operator|=
 name|ch
 expr_stmt|;
+comment|/* Negation operator is a word by itself. */
+if|if
+condition|(
+name|ch
+operator|==
+literal|'!'
+condition|)
+block|{
+operator|*
+name|cp
+operator|=
+literal|0
+expr_stmt|;
+return|return
+operator|(
+name|line
+operator|)
+return|;
+block|}
 while|while
 condition|(
 operator|(
@@ -3182,8 +3239,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|len
-decl_stmt|,
 name|osz
 decl_stmt|,
 name|r
@@ -3376,8 +3431,6 @@ argument_list|(
 name|cmd
 argument_list|)
 expr_stmt|;
-name|len
-operator|=
 name|fread
 argument_list|(
 name|o

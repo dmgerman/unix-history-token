@@ -150,22 +150,22 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * The rendevous data structures and functions allow two device endpoints to  * match up, so that the proxy endpoint can be associated with a target  * endpoint.  The proxy has to know the device name of the target that it  * wants to associate with, for example through a hint.  The rendevous code  * makes no assumptions about the devices that want to meet.  */
+comment|/*  * The rendezvous data structures and functions allow two device endpoints to  * match up, so that the proxy endpoint can be associated with a target  * endpoint.  The proxy has to know the device name of the target that it  * wants to associate with, for example through a hint.  The rendezvous code  * makes no assumptions about the devices that want to meet.  */
 end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|rendevous_entry
+name|rendezvous_entry
 struct_decl|;
 end_struct_decl
 
 begin_enum
 enum|enum
-name|rendevous_op
+name|rendezvous_op
 block|{
-name|RENDEVOUS_ATTACH
+name|RENDEZVOUS_ATTACH
 block|,
-name|RENDEVOUS_DETACH
+name|RENDEZVOUS_DETACH
 block|}
 enum|;
 end_enum
@@ -175,14 +175,14 @@ typedef|typedef
 name|int
 function_decl|(
 modifier|*
-name|rendevous_callback_t
+name|rendezvous_callback_t
 function_decl|)
 parameter_list|(
 name|enum
-name|rendevous_op
+name|rendezvous_op
 parameter_list|,
 name|struct
-name|rendevous_entry
+name|rendezvous_entry
 modifier|*
 parameter_list|)
 function_decl|;
@@ -192,22 +192,22 @@ begin_expr_stmt
 specifier|static
 name|SLIST_HEAD
 argument_list|(
-argument|rendevoushead
+argument|rendezvoushead
 argument_list|,
-argument|rendevous_entry
+argument|rendezvous_entry
 argument_list|)
-name|rendevoushead
+name|rendezvoushead
 operator|=
 name|SLIST_HEAD_INITIALIZER
 argument_list|(
-name|rendevoushead
+name|rendezvoushead
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_struct
 struct|struct
-name|rendevous_endpoint
+name|rendezvous_endpoint
 block|{
 name|device_t
 name|device
@@ -217,7 +217,7 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
-name|rendevous_callback_t
+name|rendezvous_callback_t
 name|callback
 decl_stmt|;
 block|}
@@ -226,20 +226,20 @@ end_struct
 
 begin_struct
 struct|struct
-name|rendevous_entry
+name|rendezvous_entry
 block|{
 name|SLIST_ENTRY
 argument_list|(
-argument|rendevous_entry
+argument|rendezvous_entry
 argument_list|)
 name|entries
 expr_stmt|;
 name|struct
-name|rendevous_endpoint
+name|rendezvous_endpoint
 name|proxy
 decl_stmt|;
 name|struct
-name|rendevous_endpoint
+name|rendezvous_endpoint
 name|target
 decl_stmt|;
 block|}
@@ -253,15 +253,15 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|rendevous_attach
+name|rendezvous_attach
 parameter_list|(
 name|struct
-name|rendevous_entry
+name|rendezvous_entry
 modifier|*
 name|e
 parameter_list|,
 name|struct
-name|rendevous_endpoint
+name|rendezvous_endpoint
 modifier|*
 name|ep
 parameter_list|)
@@ -277,7 +277,7 @@ name|proxy
 operator|.
 name|callback
 argument_list|(
-name|RENDEVOUS_ATTACH
+name|RENDEZVOUS_ATTACH
 argument_list|,
 name|e
 argument_list|)
@@ -297,7 +297,7 @@ name|target
 operator|.
 name|callback
 argument_list|(
-name|RENDEVOUS_ATTACH
+name|RENDEZVOUS_ATTACH
 argument_list|,
 name|e
 argument_list|)
@@ -315,7 +315,7 @@ name|proxy
 operator|.
 name|callback
 argument_list|(
-name|RENDEVOUS_DETACH
+name|RENDEZVOUS_DETACH
 argument_list|,
 name|e
 argument_list|)
@@ -343,13 +343,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create an entry for the proxy in the rendevous list.  The name parameter  * indicates the name of the device that is the target endpoint for this  * rendevous.  The callback will be invoked as soon as the target is  * registered: either immediately if the target registered itself earlier,  * or once the target registers.  Returns ENXIO if the target has not yet  * registered.  */
+comment|/*  * Create an entry for the proxy in the rendezvous list.  The name parameter  * indicates the name of the device that is the target endpoint for this  * rendezvous.  The callback will be invoked as soon as the target is  * registered: either immediately if the target registered itself earlier,  * or once the target registers.  Returns ENXIO if the target has not yet  * registered.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|rendevous_register_proxy
+name|rendezvous_register_proxy
 parameter_list|(
 name|device_t
 name|dev
@@ -359,12 +359,12 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|rendevous_callback_t
+name|rendezvous_callback_t
 name|callback
 parameter_list|)
 block|{
 name|struct
-name|rendevous_entry
+name|rendezvous_entry
 modifier|*
 name|e
 decl_stmt|;
@@ -383,7 +383,7 @@ name|SLIST_FOREACH
 argument_list|(
 argument|e
 argument_list|,
-argument|&rendevoushead
+argument|&rendezvoushead
 argument_list|,
 argument|entries
 argument_list|)
@@ -434,7 +434,7 @@ name|callback
 expr_stmt|;
 return|return
 operator|(
-name|rendevous_attach
+name|rendezvous_attach
 argument_list|(
 name|e
 argument_list|,
@@ -502,7 +502,7 @@ expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|rendevoushead
+name|rendezvoushead
 argument_list|,
 name|e
 argument_list|,
@@ -518,23 +518,23 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create an entry in the rendevous list for the target.  * Returns ENXIO if the proxy has not yet registered.  */
+comment|/*  * Create an entry in the rendezvous list for the target.  * Returns ENXIO if the proxy has not yet registered.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|rendevous_register_target
+name|rendezvous_register_target
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
-name|rendevous_callback_t
+name|rendezvous_callback_t
 name|callback
 parameter_list|)
 block|{
 name|struct
-name|rendevous_entry
+name|rendezvous_entry
 modifier|*
 name|e
 decl_stmt|;
@@ -565,7 +565,7 @@ name|SLIST_FOREACH
 argument_list|(
 argument|e
 argument_list|,
-argument|&rendevoushead
+argument|&rendezvoushead
 argument_list|,
 argument|entries
 argument_list|)
@@ -604,7 +604,7 @@ name|callback
 expr_stmt|;
 return|return
 operator|(
-name|rendevous_attach
+name|rendezvous_attach
 argument_list|(
 name|e
 argument_list|,
@@ -661,7 +661,7 @@ expr_stmt|;
 name|SLIST_INSERT_HEAD
 argument_list|(
 operator|&
-name|rendevoushead
+name|rendezvoushead
 argument_list|,
 name|e
 argument_list|,
@@ -683,14 +683,14 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|rendevous_unregister_proxy
+name|rendezvous_unregister_proxy
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
 name|struct
-name|rendevous_entry
+name|rendezvous_entry
 modifier|*
 name|e
 decl_stmt|;
@@ -703,7 +703,7 @@ name|SLIST_FOREACH
 argument_list|(
 argument|e
 argument_list|,
-argument|&rendevoushead
+argument|&rendezvoushead
 argument_list|,
 argument|entries
 argument_list|)
@@ -733,11 +733,11 @@ block|{
 name|SLIST_REMOVE
 argument_list|(
 operator|&
-name|rendevoushead
+name|rendezvoushead
 argument_list|,
 name|e
 argument_list|,
-name|rendevous_entry
+name|rendezvous_entry
 argument_list|,
 name|entries
 argument_list|)
@@ -763,7 +763,7 @@ name|proxy
 operator|.
 name|callback
 argument_list|(
-name|RENDEVOUS_DETACH
+name|RENDEZVOUS_DETACH
 argument_list|,
 name|e
 argument_list|)
@@ -774,7 +774,7 @@ name|target
 operator|.
 name|callback
 argument_list|(
-name|RENDEVOUS_DETACH
+name|RENDEZVOUS_DETACH
 argument_list|,
 name|e
 argument_list|)
@@ -818,14 +818,14 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|rendevous_unregister_target
+name|rendezvous_unregister_target
 parameter_list|(
 name|device_t
 name|dev
 parameter_list|)
 block|{
 name|struct
-name|rendevous_entry
+name|rendezvous_entry
 modifier|*
 name|e
 decl_stmt|;
@@ -838,7 +838,7 @@ name|SLIST_FOREACH
 argument_list|(
 argument|e
 argument_list|,
-argument|&rendevoushead
+argument|&rendezvoushead
 argument_list|,
 argument|entries
 argument_list|)
@@ -868,11 +868,11 @@ block|{
 name|SLIST_REMOVE
 argument_list|(
 operator|&
-name|rendevoushead
+name|rendezvoushead
 argument_list|,
 name|e
 argument_list|,
-name|rendevous_entry
+name|rendezvous_entry
 argument_list|,
 name|entries
 argument_list|)
@@ -898,7 +898,7 @@ name|proxy
 operator|.
 name|callback
 argument_list|(
-name|RENDEVOUS_DETACH
+name|RENDEZVOUS_DETACH
 argument_list|,
 name|e
 argument_list|)
@@ -909,7 +909,7 @@ name|target
 operator|.
 name|callback
 argument_list|(
-name|RENDEVOUS_DETACH
+name|RENDEZVOUS_DETACH
 argument_list|,
 name|e
 argument_list|)
@@ -953,16 +953,16 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|miiproxy_rendevous_callback
+name|miiproxy_rendezvous_callback
 parameter_list|(
 name|enum
-name|rendevous_op
+name|rendezvous_op
 name|op
 parameter_list|,
 name|struct
-name|rendevous_entry
+name|rendezvous_entry
 modifier|*
-name|rendevous
+name|rendezvous
 parameter_list|)
 block|{
 name|struct
@@ -972,7 +972,7 @@ name|sc
 init|=
 name|device_get_softc
 argument_list|(
-name|rendevous
+name|rendezvous
 operator|->
 name|proxy
 operator|.
@@ -985,7 +985,7 @@ name|op
 condition|)
 block|{
 case|case
-name|RENDEVOUS_ATTACH
+name|RENDEZVOUS_ATTACH
 case|:
 name|sc
 operator|->
@@ -993,7 +993,7 @@ name|mdio
 operator|=
 name|device_get_parent
 argument_list|(
-name|rendevous
+name|rendezvous
 operator|->
 name|target
 operator|.
@@ -1002,7 +1002,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
-name|RENDEVOUS_DETACH
+name|RENDEZVOUS_DETACH
 case|:
 name|sc
 operator|->
@@ -1053,7 +1053,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-comment|/* 	 * The ethernet interface needs to call mii_attach_proxy() to pass 	 * the relevant parameters for rendevous with the MDIO target. 	 */
+comment|/* 	 * The ethernet interface needs to call mii_attach_proxy() to pass 	 * the relevant parameters for rendezvous with the MDIO target. 	 */
 return|return
 operator|(
 name|bus_generic_attach
@@ -1074,7 +1074,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|rendevous_unregister_proxy
+name|rendezvous_unregister_proxy
 argument_list|(
 name|dev
 argument_list|)
@@ -1276,16 +1276,16 @@ end_comment
 begin_function
 specifier|static
 name|int
-name|mdioproxy_rendevous_callback
+name|mdioproxy_rendezvous_callback
 parameter_list|(
 name|enum
-name|rendevous_op
+name|rendezvous_op
 name|op
 parameter_list|,
 name|struct
-name|rendevous_entry
+name|rendezvous_entry
 modifier|*
-name|rendevous
+name|rendezvous
 parameter_list|)
 block|{
 return|return
@@ -1382,11 +1382,11 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|rendevous_register_target
+name|rendezvous_register_target
 argument_list|(
 name|dev
 argument_list|,
-name|mdioproxy_rendevous_callback
+name|mdioproxy_rendezvous_callback
 argument_list|)
 expr_stmt|;
 return|return
@@ -1409,7 +1409,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-name|rendevous_unregister_target
+name|rendezvous_unregister_target
 argument_list|(
 name|dev
 argument_list|)
@@ -1561,13 +1561,13 @@ name|miiproxy
 expr_stmt|;
 if|if
 condition|(
-name|rendevous_register_proxy
+name|rendezvous_register_proxy
 argument_list|(
 name|miiproxy
 argument_list|,
 name|name
 argument_list|,
-name|miiproxy_rendevous_callback
+name|miiproxy_rendezvous_callback
 argument_list|)
 operator|!=
 literal|0

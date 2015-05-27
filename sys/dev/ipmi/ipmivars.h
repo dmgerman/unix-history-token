@@ -254,6 +254,10 @@ name|int
 name|ipmi_io_type
 decl_stmt|;
 name|struct
+name|mtx
+name|ipmi_io_lock
+decl_stmt|;
+name|struct
 name|resource
 modifier|*
 name|ipmi_io_res
@@ -294,6 +298,9 @@ argument|ipmi_request
 argument_list|)
 name|ipmi_pending_requests
 expr_stmt|;
+name|int
+name|ipmi_driver_requests_polled
+decl_stmt|;
 name|eventhandler_tag
 name|ipmi_watchdog_tag
 decl_stmt|;
@@ -306,7 +313,7 @@ name|ipmi_ich
 decl_stmt|;
 name|struct
 name|mtx
-name|ipmi_lock
+name|ipmi_requests_lock
 decl_stmt|;
 name|struct
 name|cv
@@ -345,6 +352,23 @@ parameter_list|,
 name|struct
 name|ipmi_request
 modifier|*
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|ipmi_driver_request
+function_decl|)
+parameter_list|(
+name|struct
+name|ipmi_softc
+modifier|*
+parameter_list|,
+name|struct
+name|ipmi_request
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 block|}
@@ -797,7 +821,7 @@ name|IPMI_LOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_lock(&(sc)->ipmi_lock)
+value|mtx_lock(&(sc)->ipmi_requests_lock)
 end_define
 
 begin_define
@@ -807,7 +831,7 @@ name|IPMI_UNLOCK
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_unlock(&(sc)->ipmi_lock)
+value|mtx_unlock(&(sc)->ipmi_requests_lock)
 end_define
 
 begin_define
@@ -817,24 +841,37 @@ name|IPMI_LOCK_ASSERT
 parameter_list|(
 name|sc
 parameter_list|)
-value|mtx_assert(&(sc)->ipmi_lock, MA_OWNED)
+value|mtx_assert(&(sc)->ipmi_requests_lock, MA_OWNED)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ipmi_alloc_driver_request
+name|IPMI_IO_LOCK
 parameter_list|(
-name|addr
-parameter_list|,
-name|cmd
-parameter_list|,
-name|reqlen
-parameter_list|,
-name|replylen
+name|sc
 parameter_list|)
-define|\
-value|ipmi_alloc_request(NULL, 0, (addr), (cmd), (reqlen), (replylen))
+value|mtx_lock(&(sc)->ipmi_io_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPMI_IO_UNLOCK
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_unlock(&(sc)->ipmi_io_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPMI_IO_LOCK_ASSERT
+parameter_list|(
+name|sc
+parameter_list|)
+value|mtx_assert(&(sc)->ipmi_io_lock, MA_OWNED)
 end_define
 
 begin_if

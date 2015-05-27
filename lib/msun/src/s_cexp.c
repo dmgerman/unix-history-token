@@ -120,7 +120,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|exp
 argument_list|(
@@ -157,7 +157,7 @@ literal|0
 condition|)
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|cos
 argument_list|(
@@ -196,7 +196,7 @@ block|{
 comment|/* cexp(finite|NaN +- I Inf|NaN) = NaN + I NaN */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|y
 operator|-
@@ -220,7 +220,7 @@ block|{
 comment|/* cexp(-Inf +- I Inf|NaN) = 0 + I 0 */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 literal|0.0
 argument_list|,
@@ -234,7 +234,7 @@ block|{
 comment|/* cexp(+Inf +- I Inf|NaN) = Inf + I NaN */
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|x
 argument_list|,
@@ -281,7 +281,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|exp_x
 operator|*

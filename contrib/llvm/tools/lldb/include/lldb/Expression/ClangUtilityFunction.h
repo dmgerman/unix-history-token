@@ -328,11 +328,16 @@ block|;
 comment|///< The map to use when parsing and materializing the expression.
 name|std
 operator|::
-name|unique_ptr
+name|shared_ptr
 operator|<
 name|IRExecutionUnit
 operator|>
-name|m_execution_unit_ap
+name|m_execution_unit_sp
+block|;
+name|lldb
+operator|::
+name|ModuleWP
+name|m_jit_module_wp
 block|;
 name|std
 operator|::

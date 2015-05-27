@@ -73,7 +73,7 @@ return|;
 else|else
 return|return
 operator|(
-name|cpack
+name|CMPLX
 argument_list|(
 name|INFINITY
 argument_list|,

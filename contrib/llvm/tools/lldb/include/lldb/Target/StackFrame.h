@@ -365,7 +365,7 @@ comment|/// Provide a SymbolContext for this StackFrame's current pc value.
 comment|///
 comment|/// The StackFrame maintains this SymbolContext and adds additional information
 comment|/// to it on an as-needed basis.  This helps to avoid different functions
-comment|/// looking up symbolic information for a given pc value multple times.
+comment|/// looking up symbolic information for a given pc value multiple times.
 comment|///
 comment|/// @params [in] resolve_scope
 comment|///   Flags from the SymbolContextItem enumerated type which specify what
@@ -476,7 +476,7 @@ comment|/// it were a live stack frame.
 comment|///
 comment|/// @param[in] get_file_globals
 comment|///     Whether to also retrieve compilation-unit scoped variables
-comment|///     that are visisble to the entire compilation unit (e.g. file
+comment|///     that are visible to the entire compilation unit (e.g. file
 comment|///     static in C, globals that are homed in this CU).
 comment|///
 comment|/// @return
@@ -499,7 +499,7 @@ comment|/// if it were a live stack frame.
 comment|///
 comment|/// @param[in] get_file_globals
 comment|///     Whether to also retrieve compilation-unit scoped variables
-comment|///     that are visisble to the entire compilation unit (e.g. file
+comment|///     that are visible to the entire compilation unit (e.g. file
 comment|///     static in C, globals that are homed in this CU).
 comment|///
 comment|/// @return
@@ -900,6 +900,9 @@ decl_stmt|;
 comment|// Value objects for each variable in m_variable_list_sp
 name|StreamString
 name|m_disassembly
+decl_stmt|;
+name|Mutex
+name|m_mutex
 decl_stmt|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(

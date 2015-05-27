@@ -665,6 +665,19 @@ name|mask
 argument_list|)
 operator|)
 return|;
+if|if
+condition|(
+name|size
+operator|-
+name|bit
+operator|<=
+name|BITS_PER_LONG
+condition|)
+return|return
+operator|(
+name|size
+operator|)
+return|;
 name|bit
 operator|+=
 name|BITS_PER_LONG
@@ -854,6 +867,19 @@ name|__ffsl
 argument_list|(
 name|mask
 argument_list|)
+operator|)
+return|;
+if|if
+condition|(
+name|size
+operator|-
+name|bit
+operator|<=
+name|BITS_PER_LONG
+condition|)
+return|return
+operator|(
+name|size
 operator|)
 return|;
 name|bit
@@ -1298,6 +1324,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|__set_bit
+parameter_list|(
+name|i
+parameter_list|,
+name|a
+parameter_list|)
+define|\
+value|atomic_set_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< ((i) % NBLONG))
+end_define
+
+begin_define
+define|#
+directive|define
 name|set_bit
 parameter_list|(
 name|i
@@ -1306,6 +1345,19 @@ name|a
 parameter_list|)
 define|\
 value|atomic_set_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< ((i) % NBLONG))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__clear_bit
+parameter_list|(
+name|i
+parameter_list|,
+name|a
+parameter_list|)
+define|\
+value|atomic_clear_long(&((volatile long *)(a))[(i)/NBLONG], 1UL<< ((i) % NBLONG))
 end_define
 
 begin_define

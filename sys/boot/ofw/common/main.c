@@ -114,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|HEAP_SIZE
-value|0x80000
+value|0x100000
 end_define
 
 begin_define

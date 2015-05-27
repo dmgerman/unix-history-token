@@ -92,12 +92,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cam/cam.h>
 end_include
 
@@ -158,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libxo/xo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"iscsictl.h"
 end_include
 
@@ -183,9 +183,14 @@ name|int
 name|i
 decl_stmt|;
 name|int
+name|have_path_id
+decl_stmt|,
 name|skip_bus
 decl_stmt|,
 name|skip_device
+decl_stmt|;
+name|path_id_t
+name|path_id
 decl_stmt|;
 if|if
 condition|(
@@ -204,7 +209,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"couldn't open %s"
 argument_list|,
@@ -303,7 +308,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"can't malloc memory for matches"
 argument_list|)
@@ -340,6 +345,16 @@ name|pattern_buf_len
 operator|=
 literal|0
 expr_stmt|;
+name|path_id
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+comment|/* Make GCC happy. */
+name|have_path_id
+operator|=
+literal|0
+expr_stmt|;
 name|skip_bus
 operator|=
 literal|1
@@ -347,6 +362,16 @@ expr_stmt|;
 name|skip_device
 operator|=
 literal|1
+expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"devices"
+argument_list|)
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"lun"
+argument_list|)
 expr_stmt|;
 comment|/* 	 * We do the ioctl multiple times if necessary, in case there are 	 * more than 100 nodes in the EDT. 	 */
 do|do
@@ -367,7 +392,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"error sending CAMIOCOMMAND ioctl"
 argument_list|)
@@ -409,7 +434,7 @@ operator|)
 operator|)
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"got CAM error %#x, CDM error %d\n"
 argument_list|,
@@ -593,11 +618,23 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|fprintf
+name|xo_open_instance
 argument_list|(
-name|stdout
+literal|"lun"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:lun/%d}"
 argument_list|,
-literal|"%s%d "
+name|periph_result
+operator|->
+name|target_lun
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{Vq:device/%s%d} "
 argument_list|,
 name|periph_result
 operator|->
@@ -608,6 +645,29 @@ operator|->
 name|unit_number
 argument_list|)
 expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"lun"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|have_path_id
+operator|==
+literal|0
+condition|)
+block|{
+name|path_id
+operator|=
+name|periph_result
+operator|->
+name|path_id
+expr_stmt|;
+name|have_path_id
+operator|=
+literal|1
+expr_stmt|;
+block|}
 break|break;
 block|}
 default|default:
@@ -645,6 +705,40 @@ name|CAM_DEV_MATCH_MORE
 operator|)
 condition|)
 do|;
+name|xo_close_list
+argument_list|(
+literal|"lun"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:scbus/%d}{e:bus/%d}{e:target/%d}"
+argument_list|,
+name|have_path_id
+condition|?
+operator|(
+name|int
+operator|)
+name|path_id
+else|:
+operator|-
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+name|have_path_id
+condition|?
+literal|0
+else|:
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"devices"
+argument_list|)
+expr_stmt|;
 name|close
 argument_list|(
 name|fd

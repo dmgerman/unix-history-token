@@ -573,7 +573,7 @@ return|return
 name|getCatchParamDecl
 argument_list|()
 operator|==
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|static
@@ -1100,7 +1100,7 @@ operator|!
 name|HasFinally
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|cast_or_null
@@ -1129,7 +1129,7 @@ operator|!
 name|HasFinally
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 return|return
 name|cast_or_null

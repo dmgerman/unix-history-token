@@ -58,13 +58,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_EXPRENGINE
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_EXPRENGINE_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_EXPRENGINE
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_EXPRENGINE_H
 end_define
 
 begin_include
@@ -163,9 +163,6 @@ name|AnalysisManager
 decl_stmt|;
 name|class
 name|CallEvent
-decl_stmt|;
-name|class
-name|SimpleCall
 decl_stmt|;
 name|class
 name|CXXConstructorCall
@@ -297,7 +294,7 @@ name|L
 argument_list|,
 name|Steps
 argument_list|,
-literal|0
+name|nullptr
 argument_list|)
 return|;
 block|}
@@ -346,11 +343,11 @@ name|getASTContext
 argument_list|()
 return|;
 block|}
-name|virtual
 name|AnalysisManager
 operator|&
 name|getAnalysisManager
 argument_list|()
+name|override
 block|{
 return|return
 name|AMgr
@@ -469,11 +466,9 @@ comment|///  in the ExplodedGraph.
 name|ProgramStateRef
 name|getInitialState
 argument_list|(
-specifier|const
-name|LocationContext
-operator|*
-name|InitLoc
+argument|const LocationContext *InitLoc
 argument_list|)
+name|override
 block|;
 name|ExplodedGraph
 operator|&
@@ -531,8 +526,7 @@ argument|const Stmt *ReferenceStmt
 argument_list|,
 argument|const LocationContext *LC
 argument_list|,
-argument|const Stmt *DiagnosticStmt =
-literal|0
+argument|const Stmt *DiagnosticStmt = nullptr
 argument_list|,
 argument|ProgramPoint::Kind K = ProgramPoint::PreStmtPurgeDeadSymbolsKind
 argument_list|)
@@ -550,6 +544,7 @@ argument|unsigned StmtIdx
 argument_list|,
 argument|NodeBuilderContext *Ctx
 argument_list|)
+name|override
 block|;
 name|void
 name|ProcessStmt
@@ -573,6 +568,19 @@ argument_list|(
 argument|const CFGImplicitDtor D
 argument_list|,
 argument|ExplodedNode *Pred
+argument_list|)
+block|;
+name|void
+name|ProcessNewAllocator
+argument_list|(
+specifier|const
+name|CXXNewExpr
+operator|*
+name|NE
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
 argument_list|)
 block|;
 name|void
@@ -626,128 +634,105 @@ argument|ExplodedNodeSet&Dst
 argument_list|)
 block|;
 comment|/// Called by CoreEngine when processing the entrance of a CFGBlock.
-name|virtual
 name|void
 name|processCFGBlockEntrance
 argument_list|(
-specifier|const
-name|BlockEdge
-operator|&
-name|L
+argument|const BlockEdge&L
 argument_list|,
-name|NodeBuilderWithSinks
-operator|&
-name|nodeBuilder
+argument|NodeBuilderWithSinks&nodeBuilder
 argument_list|,
-name|ExplodedNode
-operator|*
-name|Pred
+argument|ExplodedNode *Pred
 argument_list|)
+name|override
 block|;
 comment|/// ProcessBranch - Called by CoreEngine.  Used to generate successor
 comment|///  nodes by processing the 'effects' of a branch condition.
 name|void
 name|processBranch
 argument_list|(
-specifier|const
-name|Stmt
-operator|*
-name|Condition
+argument|const Stmt *Condition
 argument_list|,
-specifier|const
-name|Stmt
-operator|*
-name|Term
+argument|const Stmt *Term
 argument_list|,
-name|NodeBuilderContext
-operator|&
-name|BuilderCtx
+argument|NodeBuilderContext& BuilderCtx
 argument_list|,
-name|ExplodedNode
-operator|*
-name|Pred
+argument|ExplodedNode *Pred
 argument_list|,
-name|ExplodedNodeSet
-operator|&
-name|Dst
+argument|ExplodedNodeSet&Dst
 argument_list|,
-specifier|const
-name|CFGBlock
-operator|*
-name|DstT
+argument|const CFGBlock *DstT
 argument_list|,
-specifier|const
-name|CFGBlock
-operator|*
-name|DstF
+argument|const CFGBlock *DstF
 argument_list|)
+name|override
+block|;
+comment|/// Called by CoreEngine.
+comment|/// Used to generate successor nodes for temporary destructors depending
+comment|/// on whether the corresponding constructor was visited.
+name|void
+name|processCleanupTemporaryBranch
+argument_list|(
+argument|const CXXBindTemporaryExpr *BTE
+argument_list|,
+argument|NodeBuilderContext&BldCtx
+argument_list|,
+argument|ExplodedNode *Pred
+argument_list|,
+argument|ExplodedNodeSet&Dst
+argument_list|,
+argument|const CFGBlock *DstT
+argument_list|,
+argument|const CFGBlock *DstF
+argument_list|)
+name|override
 block|;
 comment|/// Called by CoreEngine.  Used to processing branching behavior
 comment|/// at static initalizers.
 name|void
 name|processStaticInitializer
 argument_list|(
-specifier|const
-name|DeclStmt
-operator|*
-name|DS
+argument|const DeclStmt *DS
 argument_list|,
-name|NodeBuilderContext
-operator|&
-name|BuilderCtx
+argument|NodeBuilderContext& BuilderCtx
 argument_list|,
-name|ExplodedNode
-operator|*
-name|Pred
+argument|ExplodedNode *Pred
 argument_list|,
-name|ExplodedNodeSet
-operator|&
-name|Dst
+argument|ExplodedNodeSet&Dst
 argument_list|,
-specifier|const
-name|CFGBlock
-operator|*
-name|DstT
+argument|const CFGBlock *DstT
 argument_list|,
-specifier|const
-name|CFGBlock
-operator|*
-name|DstF
+argument|const CFGBlock *DstF
 argument_list|)
+name|override
 block|;
 comment|/// processIndirectGoto - Called by CoreEngine.  Used to generate successor
 comment|///  nodes by processing the 'effects' of a computed goto jump.
 name|void
 name|processIndirectGoto
 argument_list|(
-name|IndirectGotoNodeBuilder
-operator|&
-name|builder
+argument|IndirectGotoNodeBuilder& builder
 argument_list|)
+name|override
 block|;
 comment|/// ProcessSwitch - Called by CoreEngine.  Used to generate successor
 comment|///  nodes by processing the 'effects' of a switch statement.
 name|void
 name|processSwitch
 argument_list|(
-name|SwitchNodeBuilder
-operator|&
-name|builder
+argument|SwitchNodeBuilder& builder
 argument_list|)
+name|override
 block|;
 comment|/// Called by CoreEngine.  Used to generate end-of-path
 comment|/// nodes when the control reaches the end of a function.
 name|void
 name|processEndOfFunction
 argument_list|(
-name|NodeBuilderContext
-operator|&
-name|BC
+argument|NodeBuilderContext& BC
 argument_list|,
-name|ExplodedNode
-operator|*
-name|Pred
+argument|ExplodedNode *Pred
 argument_list|)
+name|override
 block|;
 comment|/// Remove dead bindings/symbols before exiting a function.
 name|void
@@ -774,16 +759,16 @@ argument|CallEnter CE
 argument_list|,
 argument|ExplodedNode *Pred
 argument_list|)
+name|override
 block|;
 comment|/// Generate the sequence of nodes that simulate the call exit and the post
 comment|/// visit for CallExpr.
 name|void
 name|processCallExit
 argument_list|(
-name|ExplodedNode
-operator|*
-name|Pred
+argument|ExplodedNode *Pred
 argument_list|)
+name|override
 block|;
 comment|/// Called by CoreEngine when the analysis worklist has terminated.
 name|void
@@ -791,6 +776,7 @@ name|processEndWorklist
 argument_list|(
 argument|bool hasWorkRemaining
 argument_list|)
+name|override
 block|;
 comment|/// evalAssume - Callback function invoked by the ConstraintManager when
 comment|///  making assumptions about state values.
@@ -803,6 +789,7 @@ argument|SVal cond
 argument_list|,
 argument|bool assumption
 argument_list|)
+name|override
 block|;
 comment|/// wantsRegionChangeUpdate - Called by ProgramStateManager to determine if a
 comment|///  region change should trigger a processRegionChanges update.
@@ -811,6 +798,7 @@ name|wantsRegionChangeUpdate
 argument_list|(
 argument|ProgramStateRef state
 argument_list|)
+name|override
 block|;
 comment|/// processRegionChanges - Called by ProgramStateManager whenever a change is made
 comment|///  to the store. Used to update checkers that track region values.
@@ -827,6 +815,7 @@ argument|ArrayRef<const MemRegion *> Regions
 argument_list|,
 argument|const CallEvent *Call
 argument_list|)
+name|override
 block|;
 comment|/// printState - Called by ProgramStateManager to print checker-specific data.
 name|void
@@ -840,12 +829,13 @@ argument|const char *NL
 argument_list|,
 argument|const char *Sep
 argument_list|)
+name|override
 block|;
-name|virtual
 name|ProgramStateManager
 operator|&
 name|getStateManager
 argument_list|()
+name|override
 block|{
 return|return
 name|StateMgr
@@ -1416,6 +1406,23 @@ name|Dst
 argument_list|)
 block|;
 name|void
+name|VisitCXXBindTemporaryExpr
+argument_list|(
+specifier|const
+name|CXXBindTemporaryExpr
+operator|*
+name|BTE
+argument_list|,
+name|ExplodedNodeSet
+operator|&
+name|PreVisit
+argument_list|,
+name|ExplodedNodeSet
+operator|&
+name|Dst
+argument_list|)
+block|;
+name|void
 name|VisitCXXCatchStmt
 argument_list|(
 specifier|const
@@ -1480,6 +1487,23 @@ argument_list|,
 argument|ExplodedNode *Pred
 argument_list|,
 argument|ExplodedNodeSet&Dst
+argument_list|)
+block|;
+name|void
+name|VisitCXXNewAllocatorCall
+argument_list|(
+specifier|const
+name|CXXNewExpr
+operator|*
+name|CNE
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
+argument_list|,
+name|ExplodedNodeSet
+operator|&
+name|Dst
 argument_list|)
 block|;
 name|void
@@ -1755,8 +1779,7 @@ argument|SVal Val
 argument_list|,
 argument|bool atDeclInit = false
 argument_list|,
-argument|const ProgramPoint *PP =
-literal|0
+argument|const ProgramPoint *PP = nullptr
 argument_list|)
 block|;
 comment|/// Call PointerEscape callback when a value escapes as a result of bind.
@@ -1769,6 +1792,7 @@ argument|SVal Loc
 argument_list|,
 argument|SVal Val
 argument_list|)
+name|override
 block|;
 comment|/// Call PointerEscape callback when a value escapes as a result of
 comment|/// region invalidation.
@@ -1788,6 +1812,7 @@ argument|const CallEvent *Call
 argument_list|,
 argument|RegionAndSymbolInvalidationTraits&ITraits
 argument_list|)
+name|override
 block|;
 name|public
 operator|:
@@ -1813,8 +1838,7 @@ argument|ProgramStateRef St
 argument_list|,
 argument|SVal location
 argument_list|,
-argument|const ProgramPointTag *tag =
-literal|0
+argument|const ProgramPointTag *tag = nullptr
 argument_list|,
 argument|QualType LoadTy = QualType()
 argument_list|)
@@ -1838,8 +1862,7 @@ argument|SVal TargetLV
 argument_list|,
 argument|SVal Val
 argument_list|,
-argument|const ProgramPointTag *tag =
-literal|0
+argument|const ProgramPointTag *tag = nullptr
 argument_list|)
 block|;
 comment|/// \brief Create a new state in which the call return value is binded to the
@@ -2084,8 +2107,7 @@ argument|const LocationContext *LC
 argument_list|,
 argument|const Expr *E
 argument_list|,
-argument|const Expr *ResultE =
-literal|0
+argument|const Expr *ResultE = nullptr
 argument_list|)
 block|; }
 decl_stmt|;

@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<assert.h>
 end_include
 
@@ -30,7 +24,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: gelf_symshndx.c 2283 2011-12-04 04:07:24Z jkoshy $"
+literal|"$Id: gelf_symshndx.c 3174 2015-03-27 17:13:41Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -268,10 +262,20 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|ndx
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|msz
 operator|*
+operator|(
+name|size_t
+operator|)
 name|ndx
 operator|>=
 name|id
@@ -543,10 +547,20 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|ndx
+operator|>=
+literal|0
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|msz
 operator|*
+operator|(
+name|size_t
+operator|)
 name|ndx
 operator|>=
 name|id

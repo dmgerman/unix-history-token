@@ -72,7 +72,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CFG.h"
+file|"llvm/IR/CFG.h"
 end_include
 
 begin_decl_stmt
@@ -198,14 +198,14 @@ name|DominatorTree
 modifier|*
 name|DT
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 specifier|const
 name|LoopInfo
 modifier|*
 name|LI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// \brief Determine whether block 'To' is reachable from 'From', returning
@@ -232,14 +232,14 @@ name|DominatorTree
 modifier|*
 name|DT
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 specifier|const
 name|LoopInfo
 modifier|*
 name|LI
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 block|}

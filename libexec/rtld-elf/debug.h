@@ -20,23 +20,6 @@ name|DEBUG_H
 value|1
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__GNUC__
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"This file must be compiled with GCC"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include

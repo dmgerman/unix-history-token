@@ -32,7 +32,7 @@ begin_define
 define|#
 directive|define
 name|MAXTSIZ
-value|(64*1024*1024)
+value|(1*1024*1024*1024)
 end_define
 
 begin_comment

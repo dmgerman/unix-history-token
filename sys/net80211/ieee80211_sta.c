@@ -1881,13 +1881,6 @@ name|int
 name|nf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|HAS_SEQ
-parameter_list|(
-name|type
-parameter_list|)
-value|((type& 0x4) == 0)
 name|struct
 name|ieee80211vap
 modifier|*
@@ -2323,9 +2316,11 @@ name|nf
 expr_stmt|;
 if|if
 condition|(
-name|HAS_SEQ
+name|IEEE80211_HAS_SEQ
 argument_list|(
 name|type
+argument_list|,
+name|subtype
 argument_list|)
 operator|&&
 operator|!
@@ -5862,6 +5857,15 @@ name|min
 operator|-
 literal|4
 decl_stmt|;
+name|int
+name|tim_ucast
+init|=
+literal|0
+decl_stmt|,
+name|tim_mcast
+init|=
+literal|0
+decl_stmt|;
 comment|/* 				 * Only do this for unicast traffic in the TIM 				 * The multicast traffic notification for 				 * the scan notification stuff should occur 				 * differently. 				 */
 if|if
 condition|(
@@ -5885,6 +5889,35 @@ name|aid
 argument_list|)
 condition|)
 block|{
+name|tim_ucast
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/* 				 * Do a separate notification 				 * for the multicast bit being set. 				 */
+if|if
+condition|(
+name|tim
+operator|->
+name|tim_bitctl
+operator|&
+literal|1
+condition|)
+block|{
+name|tim_mcast
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/* 				 * If the TIM indicates there's traffic for 				 * us then get us out of STA mode powersave. 				 */
+if|if
+condition|(
+name|tim_ucast
+operator|==
+literal|1
+condition|)
+block|{
+comment|/* 					 * Wake us out of SLEEP state if we're 					 * in it; and if we're doing bgscan 					 * then wake us out of STA powersave. 					 */
 name|ieee80211_sta_tim_notify
 argument_list|(
 name|vap
@@ -5892,6 +5925,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 					 * This is preventing us from 					 * continuing a bgscan; because it 					 * tricks the contbgscan() 					 * routine to think there's always 					 * traffic for us. 					 * 					 * I think we need both an RX and 					 * TX ic_lastdata field. 					 */
 name|ic
 operator|->
 name|ic_lastdata
@@ -5899,13 +5933,6 @@ operator|=
 name|ticks
 expr_stmt|;
 block|}
-comment|/* 				 * XXX TODO: do a separate notification 				 * for the multicast bit being set. 				 */
-if|#
-directive|if
-literal|0
-block|if (tim->tim_bitctl& 1) { 					ieee80211_sta_tim_notify(vap, 1); 					ic->ic_lastdata = ticks; 				}
-endif|#
-directive|endif
 name|ni
 operator|->
 name|ni_dtim_count
@@ -5990,6 +6017,10 @@ block|{
 name|ieee80211_add_scan
 argument_list|(
 name|vap
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
 argument_list|,
 operator|&
 name|scan
@@ -6118,6 +6149,10 @@ block|}
 name|ieee80211_add_scan
 argument_list|(
 name|vap
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
 argument_list|,
 operator|&
 name|scan

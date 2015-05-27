@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86SELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_X86_X86SELECTIONDAGINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86SELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_X86_X86SELECTIONDAGINFO_H
 end_define
 
 begin_include
@@ -84,17 +84,16 @@ range|:
 name|public
 name|TargetSelectionDAGInfo
 block|{
-comment|/// Subtarget - Keep a pointer to the X86Subtarget around so that we can
-comment|/// make the right decision when generating code for different targets.
+comment|/// Returns true if it is possible for the base register to conflict with the
+comment|/// given set of clobbers for a memory intrinsic.
+name|bool
+name|isBaseRegConflictPossible
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|ArrayRef<unsigned> ClobberSet
+argument_list|)
 specifier|const
-name|X86Subtarget
-operator|*
-name|Subtarget
-block|;
-specifier|const
-name|X86TargetLowering
-operator|&
-name|TLI
 block|;
 name|public
 operator|:
@@ -102,16 +101,15 @@ name|explicit
 name|X86SelectionDAGInfo
 argument_list|(
 specifier|const
-name|X86TargetMachine
+name|DataLayout
 operator|&
-name|TM
+name|DL
 argument_list|)
 block|;
 operator|~
 name|X86SelectionDAGInfo
 argument_list|()
 block|;
-name|virtual
 name|SDValue
 name|EmitTargetCodeForMemset
 argument_list|(
@@ -134,8 +132,8 @@ argument_list|,
 argument|MachinePointerInfo DstPtrInfo
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|SDValue
 name|EmitTargetCodeForMemcpy
 argument_list|(
@@ -162,6 +160,7 @@ argument_list|,
 argument|MachinePointerInfo SrcPtrInfo
 argument_list|)
 specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

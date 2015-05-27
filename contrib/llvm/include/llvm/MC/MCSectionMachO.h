@@ -71,6 +71,12 @@ directive|include
 file|"llvm/MC/MCSection.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MachO.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -127,222 +133,6 @@ name|MCContext
 block|;
 name|public
 operator|:
-comment|/// These are the section type and attributes fields.  A MachO section can
-comment|/// have only one Type, but can have any of the attributes specified.
-expr|enum
-name|LLVM_ENUM_INT_TYPE
-argument_list|(
-argument|uint32_t
-argument_list|)
-block|{
-comment|// TypeAndAttributes bitmasks.
-name|SECTION_TYPE
-operator|=
-literal|0x000000FFU
-block|,
-name|SECTION_ATTRIBUTES
-operator|=
-literal|0xFFFFFF00U
-block|,
-comment|// Valid section types.
-comment|/// S_REGULAR - Regular section.
-name|S_REGULAR
-operator|=
-literal|0x00U
-block|,
-comment|/// S_ZEROFILL - Zero fill on demand section.
-name|S_ZEROFILL
-operator|=
-literal|0x01U
-block|,
-comment|/// S_CSTRING_LITERALS - Section with literal C strings.
-name|S_CSTRING_LITERALS
-operator|=
-literal|0x02U
-block|,
-comment|/// S_4BYTE_LITERALS - Section with 4 byte literals.
-name|S_4BYTE_LITERALS
-operator|=
-literal|0x03U
-block|,
-comment|/// S_8BYTE_LITERALS - Section with 8 byte literals.
-name|S_8BYTE_LITERALS
-operator|=
-literal|0x04U
-block|,
-comment|/// S_LITERAL_POINTERS - Section with pointers to literals.
-name|S_LITERAL_POINTERS
-operator|=
-literal|0x05U
-block|,
-comment|/// S_NON_LAZY_SYMBOL_POINTERS - Section with non-lazy symbol pointers.
-name|S_NON_LAZY_SYMBOL_POINTERS
-operator|=
-literal|0x06U
-block|,
-comment|/// S_LAZY_SYMBOL_POINTERS - Section with lazy symbol pointers.
-name|S_LAZY_SYMBOL_POINTERS
-operator|=
-literal|0x07U
-block|,
-comment|/// S_SYMBOL_STUBS - Section with symbol stubs, byte size of stub in
-comment|/// the Reserved2 field.
-name|S_SYMBOL_STUBS
-operator|=
-literal|0x08U
-block|,
-comment|/// S_MOD_INIT_FUNC_POINTERS - Section with only function pointers for
-comment|/// initialization.
-name|S_MOD_INIT_FUNC_POINTERS
-operator|=
-literal|0x09U
-block|,
-comment|/// S_MOD_TERM_FUNC_POINTERS - Section with only function pointers for
-comment|/// termination.
-name|S_MOD_TERM_FUNC_POINTERS
-operator|=
-literal|0x0AU
-block|,
-comment|/// S_COALESCED - Section contains symbols that are to be coalesced.
-name|S_COALESCED
-operator|=
-literal|0x0BU
-block|,
-comment|/// S_GB_ZEROFILL - Zero fill on demand section (that can be larger than 4
-comment|/// gigabytes).
-name|S_GB_ZEROFILL
-operator|=
-literal|0x0CU
-block|,
-comment|/// S_INTERPOSING - Section with only pairs of function pointers for
-comment|/// interposing.
-name|S_INTERPOSING
-operator|=
-literal|0x0DU
-block|,
-comment|/// S_16BYTE_LITERALS - Section with only 16 byte literals.
-name|S_16BYTE_LITERALS
-operator|=
-literal|0x0EU
-block|,
-comment|/// S_DTRACE_DOF - Section contains DTrace Object Format.
-name|S_DTRACE_DOF
-operator|=
-literal|0x0FU
-block|,
-comment|/// S_LAZY_DYLIB_SYMBOL_POINTERS - Section with lazy symbol pointers to
-comment|/// lazy loaded dylibs.
-name|S_LAZY_DYLIB_SYMBOL_POINTERS
-operator|=
-literal|0x10U
-block|,
-comment|/// S_THREAD_LOCAL_REGULAR - Section with ....
-name|S_THREAD_LOCAL_REGULAR
-operator|=
-literal|0x11U
-block|,
-comment|/// S_THREAD_LOCAL_ZEROFILL - Thread local zerofill section.
-name|S_THREAD_LOCAL_ZEROFILL
-operator|=
-literal|0x12U
-block|,
-comment|/// S_THREAD_LOCAL_VARIABLES - Section with thread local variable structure
-comment|/// data.
-name|S_THREAD_LOCAL_VARIABLES
-operator|=
-literal|0x13U
-block|,
-comment|/// S_THREAD_LOCAL_VARIABLE_POINTERS - Section with ....
-name|S_THREAD_LOCAL_VARIABLE_POINTERS
-operator|=
-literal|0x14U
-block|,
-comment|/// S_THREAD_LOCAL_INIT_FUNCTION_POINTERS - Section with thread local
-comment|/// variable initialization pointers to functions.
-name|S_THREAD_LOCAL_INIT_FUNCTION_POINTERS
-operator|=
-literal|0x15U
-block|,
-name|LAST_KNOWN_SECTION_TYPE
-operator|=
-name|S_THREAD_LOCAL_INIT_FUNCTION_POINTERS
-block|,
-comment|// Valid section attributes.
-comment|/// S_ATTR_PURE_INSTRUCTIONS - Section contains only true machine
-comment|/// instructions.
-name|S_ATTR_PURE_INSTRUCTIONS
-operator|=
-literal|1U
-operator|<<
-literal|31
-block|,
-comment|/// S_ATTR_NO_TOC - Section contains coalesced symbols that are not to be
-comment|/// in a ranlib table of contents.
-name|S_ATTR_NO_TOC
-operator|=
-literal|1U
-operator|<<
-literal|30
-block|,
-comment|/// S_ATTR_STRIP_STATIC_SYMS - Ok to strip static symbols in this section
-comment|/// in files with the MY_DYLDLINK flag.
-name|S_ATTR_STRIP_STATIC_SYMS
-operator|=
-literal|1U
-operator|<<
-literal|29
-block|,
-comment|/// S_ATTR_NO_DEAD_STRIP - No dead stripping.
-name|S_ATTR_NO_DEAD_STRIP
-operator|=
-literal|1U
-operator|<<
-literal|28
-block|,
-comment|/// S_ATTR_LIVE_SUPPORT - Blocks are live if they reference live blocks.
-name|S_ATTR_LIVE_SUPPORT
-operator|=
-literal|1U
-operator|<<
-literal|27
-block|,
-comment|/// S_ATTR_SELF_MODIFYING_CODE - Used with i386 code stubs written on by
-comment|/// dyld.
-name|S_ATTR_SELF_MODIFYING_CODE
-operator|=
-literal|1U
-operator|<<
-literal|26
-block|,
-comment|/// S_ATTR_DEBUG - A debug section.
-name|S_ATTR_DEBUG
-operator|=
-literal|1U
-operator|<<
-literal|25
-block|,
-comment|/// S_ATTR_SOME_INSTRUCTIONS - Section contains some machine instructions.
-name|S_ATTR_SOME_INSTRUCTIONS
-operator|=
-literal|1U
-operator|<<
-literal|10
-block|,
-comment|/// S_ATTR_EXT_RELOC - Section has external relocation entries.
-name|S_ATTR_EXT_RELOC
-operator|=
-literal|1U
-operator|<<
-literal|9
-block|,
-comment|/// S_ATTR_LOC_RELOC - Section has local relocation entries.
-name|S_ATTR_LOC_RELOC
-operator|=
-literal|1U
-operator|<<
-literal|8
-block|}
-block|;
 name|StringRef
 name|getSegmentName
 argument_list|()
@@ -402,13 +192,13 @@ block|}
 end_decl_stmt
 
 begin_expr_stmt
-name|virtual
 name|std
 operator|::
 name|string
 name|getLabelBeginName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|StringRef
@@ -432,13 +222,13 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|virtual
 name|std
 operator|::
 name|string
 name|getLabelEndName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|StringRef
@@ -486,15 +276,27 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|unsigned
+name|MachO
+operator|::
+name|SectionType
 name|getType
 argument_list|()
 specifier|const
 block|{
 return|return
+name|static_cast
+operator|<
+name|MachO
+operator|::
+name|SectionType
+operator|>
+operator|(
 name|TypeAndAttributes
 operator|&
+name|MachO
+operator|::
 name|SECTION_TYPE
+operator|)
 return|;
 block|}
 end_expr_stmt
@@ -576,7 +378,6 @@ comment|// Out.
 end_comment
 
 begin_decl_stmt
-name|virtual
 name|void
 name|PrintSwitchToSection
 argument_list|(
@@ -595,24 +396,25 @@ operator|*
 name|Subsection
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|virtual
 name|bool
 name|UseCodeAlign
 argument_list|()
 specifier|const
+name|override
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|virtual
 name|bool
 name|isVirtualSection
 argument_list|()
 specifier|const
+name|override
 expr_stmt|;
 end_expr_stmt
 

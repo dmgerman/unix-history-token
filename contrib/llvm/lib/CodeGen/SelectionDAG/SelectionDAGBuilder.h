@@ -50,14 +50,20 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SELECTIONDAGBUILDER_H
+name|LLVM_LIB_CODEGEN_SELECTIONDAG_SELECTIONDAGBUILDER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|SELECTIONDAGBUILDER_H
+name|LLVM_LIB_CODEGEN_SELECTIONDAG_SELECTIONDAGBUILDER_H
 end_define
+
+begin_include
+include|#
+directive|include
+file|"StatepointLowering.h"
+end_include
 
 begin_include
 include|#
@@ -86,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/ValueTypes.h"
+file|"llvm/IR/CallSite.h"
 end_include
 
 begin_include
@@ -98,13 +104,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/CallSite.h"
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/ErrorHandling.h"
+file|"llvm/Target/TargetLowering.h"
 end_include
 
 begin_include
@@ -209,6 +215,9 @@ name|MachineRegisterInfo
 decl_stmt|;
 name|class
 name|MDNode
+decl_stmt|;
+name|class
+name|MVT
 decl_stmt|;
 name|class
 name|PHINode
@@ -321,7 +330,7 @@ argument_list|()
 operator|:
 name|DI
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|dl
@@ -413,6 +422,11 @@ literal|8
 operator|>
 name|PendingLoads
 expr_stmt|;
+comment|/// State used while lowering a statepoint sequence (gc_statepoint,
+comment|/// gc_relocate, and gc_result).  See StatepointLowering.hpp/cpp for details.
+name|StatepointLoweringState
+name|StatepointLowering
+decl_stmt|;
 name|private
 label|:
 comment|/// PendingExports - CopyToReg nodes that copy values to virtual registers
@@ -460,17 +474,17 @@ argument_list|()
 operator|:
 name|Low
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|High
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|BB
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|ExtraWeight
@@ -833,7 +847,7 @@ return|;
 block|}
 block|}
 struct|;
-name|size_t
+name|void
 name|Clusterify
 parameter_list|(
 name|CaseVector
@@ -1169,7 +1183,7 @@ argument|MachineBasicBlock* P
 argument_list|,
 argument|MachineBasicBlock* D
 argument_list|,
-argument|const BitTestInfo& C
+argument|BitTestInfo C
 argument_list|)
 block|:
 name|First
@@ -1214,7 +1228,7 @@ argument_list|)
 operator|,
 name|Cases
 argument_list|(
-argument|C
+argument|std::move(C)
 argument_list|)
 block|{ }
 name|APInt
@@ -1280,7 +1294,7 @@ comment|///
 comment|///   1. Preserve the architecture independence of stack protector generation.
 comment|///
 comment|///   2. Preserve the normal IR level stack protector check for platforms like
-comment|///      OpenBSD for which we support platform specific stack protector
+comment|///      OpenBSD for which we support platform-specific stack protector
 comment|///      generation.
 comment|///
 comment|/// The main problem that guided the present solution is that one can not
@@ -1298,7 +1312,7 @@ comment|///      put the relevant callinst into the stack protector check succes
 comment|///      basic block (where the return inst is placed) and then move it back
 comment|///      later at SelectionDAG/MI time before the stack protector check if the
 comment|///      tail call optimization failed. The MI level option was nixed
-comment|///      immediately since it would require platform specific pattern
+comment|///      immediately since it would require platform-specific pattern
 comment|///      matching. The SelectionDAG level option was nixed because
 comment|///      SelectionDAG only processes one IR level basic block at a time
 comment|///      implying one could not create a DAG Combine to move the callinst.
@@ -1364,20 +1378,25 @@ argument_list|()
 operator|:
 name|ParentMBB
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|SuccessMBB
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|FailureMBB
 argument_list|(
-literal|0
+name|nullptr
 argument_list|)
 operator|,
 name|Guard
+argument_list|(
+name|nullptr
+argument_list|)
+operator|,
+name|GuardReg
 argument_list|(
 literal|0
 argument_list|)
@@ -1445,6 +1464,9 @@ argument_list|(
 name|BB
 argument_list|,
 name|MBB
+argument_list|,
+comment|/* IsLikely */
+name|true
 argument_list|)
 expr_stmt|;
 name|FailureMBB
@@ -1454,6 +1476,9 @@ argument_list|(
 name|BB
 argument_list|,
 name|MBB
+argument_list|,
+comment|/* IsLikely */
+name|false
 argument_list|,
 name|FailureMBB
 argument_list|)
@@ -1489,11 +1514,11 @@ parameter_list|()
 block|{
 name|ParentMBB
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|SuccessMBB
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 comment|/// Reset state that only changes when we switch functions.
@@ -1511,11 +1536,11 @@ parameter_list|()
 block|{
 name|FailureMBB
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 name|Guard
 operator|=
-literal|0
+name|nullptr
 expr_stmt|;
 block|}
 name|MachineBasicBlock
@@ -1555,6 +1580,27 @@ return|return
 name|Guard
 return|;
 block|}
+name|unsigned
+name|getGuardReg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GuardReg
+return|;
+block|}
+name|void
+name|setGuardReg
+parameter_list|(
+name|unsigned
+name|R
+parameter_list|)
+block|{
+name|GuardReg
+operator|=
+name|R
+expr_stmt|;
+block|}
 name|private
 label|:
 comment|/// The basic block for which we are generating the stack protector.
@@ -1587,9 +1633,13 @@ name|Value
 modifier|*
 name|Guard
 decl_stmt|;
+comment|/// The virtual register holding the stack guard value.
+name|unsigned
+name|GuardReg
+decl_stmt|;
 comment|/// Add a successor machine basic block to ParentMBB. If the successor mbb
 comment|/// has not been created yet (i.e. if SuccMBB = 0), then the machine basic
-comment|/// block will be created.
+comment|/// block will be created. Assign a large weight if IsLikely is true.
 name|MachineBasicBlock
 modifier|*
 name|AddSuccessorMBB
@@ -1603,11 +1653,14 @@ name|MachineBasicBlock
 modifier|*
 name|ParentMBB
 parameter_list|,
+name|bool
+name|IsLikely
+parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|SuccMBB
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 block|}
@@ -1621,6 +1674,15 @@ name|TM
 decl_stmt|;
 name|public
 label|:
+comment|/// Lowest valid SDNodeOrder. The special case 0 is reserved for scheduling
+comment|/// nodes without a corresponding SDNode.
+specifier|static
+specifier|const
+name|unsigned
+name|LowestSDNodeOrder
+init|=
+literal|1
+decl_stmt|;
 name|SelectionDAG
 modifier|&
 name|DAG
@@ -1628,7 +1690,7 @@ decl_stmt|;
 specifier|const
 name|DataLayout
 modifier|*
-name|TD
+name|DL
 decl_stmt|;
 name|AliasAnalysis
 modifier|*
@@ -1741,12 +1803,12 @@ argument_list|)
 block|:
 name|CurInst
 argument_list|(
-name|NULL
+name|nullptr
 argument_list|)
 operator|,
 name|SDNodeOrder
 argument_list|(
-literal|0
+name|LowestSDNodeOrder
 argument_list|)
 operator|,
 name|TM
@@ -1968,12 +2030,11 @@ index|]
 decl_stmt|;
 name|assert
 argument_list|(
+operator|!
 name|N
 operator|.
 name|getNode
 argument_list|()
-operator|==
-literal|0
 operator|&&
 literal|"Already set a value for this node!"
 argument_list|)
@@ -1981,6 +2042,34 @@ expr_stmt|;
 name|N
 operator|=
 name|NewN
+expr_stmt|;
+block|}
+name|void
+name|removeValue
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|V
+parameter_list|)
+block|{
+comment|// This is to support hack in lowerCallFromStatepoint
+comment|// Should be removed when hack is resolved
+if|if
+condition|(
+name|NodeMap
+operator|.
+name|count
+argument_list|(
+name|V
+argument_list|)
+condition|)
+name|NodeMap
+operator|.
+name|erase
+argument_list|(
+name|V
+argument_list|)
 expr_stmt|;
 block|}
 name|void
@@ -2006,12 +2095,11 @@ index|]
 decl_stmt|;
 name|assert
 argument_list|(
+operator|!
 name|N
 operator|.
 name|getNode
 argument_list|()
-operator|==
-literal|0
 operator|&&
 literal|"Already set a value for this node!"
 argument_list|)
@@ -2047,6 +2135,12 @@ name|SwitchBB
 parameter_list|,
 name|unsigned
 name|Opc
+parameter_list|,
+name|uint32_t
+name|TW
+parameter_list|,
+name|uint32_t
+name|FW
 parameter_list|)
 function_decl|;
 name|void
@@ -2072,6 +2166,12 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|SwitchBB
+parameter_list|,
+name|uint32_t
+name|TW
+parameter_list|,
+name|uint32_t
+name|FW
 parameter_list|)
 function_decl|;
 name|bool
@@ -2136,7 +2236,7 @@ name|MachineBasicBlock
 modifier|*
 name|LandingPad
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 function_decl|;
 name|std
@@ -2147,9 +2247,9 @@ name|SDValue
 operator|,
 name|SDValue
 operator|>
-name|LowerCallOperands
+name|lowerCallOperands
 argument_list|(
-argument|const CallInst&CI
+argument|ImmutableCallSite CS
 argument_list|,
 argument|unsigned ArgIdx
 argument_list|,
@@ -2157,11 +2257,15 @@ argument|unsigned NumArgs
 argument_list|,
 argument|SDValue Callee
 argument_list|,
-argument|bool useVoidTy = false
+argument|bool UseVoidTy = false
+argument_list|,
+argument|MachineBasicBlock *LandingPad = nullptr
+argument_list|,
+argument|bool IsPatchPoint = false
 argument_list|)
 expr_stmt|;
 comment|/// UpdateSplitBlock - When an MBB was split during scheduling, update the
-comment|/// references that ned to refer to the last resulting block.
+comment|/// references that need to refer to the last resulting block.
 name|void
 name|UpdateSplitBlock
 parameter_list|(
@@ -2176,6 +2280,27 @@ parameter_list|)
 function_decl|;
 name|private
 label|:
+name|std
+operator|::
+name|pair
+operator|<
+name|SDValue
+operator|,
+name|SDValue
+operator|>
+name|lowerInvokable
+argument_list|(
+name|TargetLowering
+operator|::
+name|CallLoweringInfo
+operator|&
+name|CLI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|LandingPad
+argument_list|)
+expr_stmt|;
 comment|// Terminator instructions.
 name|void
 name|visitRet
@@ -2221,9 +2346,7 @@ name|UnreachableInst
 modifier|&
 name|I
 parameter_list|)
-block|{
-comment|/* noop */
-block|}
+function_decl|;
 comment|// Helpers for visitSwitch
 name|bool
 name|handleSmallSwitchRange
@@ -2290,10 +2413,6 @@ specifier|const
 name|Value
 modifier|*
 name|SV
-parameter_list|,
-name|MachineBasicBlock
-modifier|*
-name|Default
 parameter_list|,
 name|MachineBasicBlock
 modifier|*
@@ -3056,6 +3175,24 @@ name|I
 parameter_list|)
 function_decl|;
 name|void
+name|visitMaskedLoad
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitMaskedStore
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
 name|visitAtomicCmpXchg
 parameter_list|(
 specifier|const
@@ -3169,6 +3306,18 @@ name|unsigned
 name|Opcode
 parameter_list|)
 function_decl|;
+name|bool
+name|visitBinaryFloatCall
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|,
+name|unsigned
+name|Opcode
+parameter_list|)
+function_decl|;
 name|void
 name|visitAtomicLoad
 parameter_list|(
@@ -3268,6 +3417,38 @@ function_decl|;
 name|void
 name|visitPatchpoint
 parameter_list|(
+name|ImmutableCallSite
+name|CS
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|LandingPad
+init|=
+name|nullptr
+parameter_list|)
+function_decl|;
+comment|// These three are implemented in StatepointLowering.cpp
+name|void
+name|visitStatepoint
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitGCRelocate
+parameter_list|(
+specifier|const
+name|CallInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitGCResult
+parameter_list|(
 specifier|const
 name|CallInst
 modifier|&
@@ -3343,8 +3524,15 @@ name|MDNode
 modifier|*
 name|Variable
 parameter_list|,
+name|MDNode
+modifier|*
+name|Expr
+parameter_list|,
 name|int64_t
 name|Offset
+parameter_list|,
+name|bool
+name|IsIndirect
 parameter_list|,
 specifier|const
 name|SDValue

@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Assembly/Writer.h"
+file|"llvm/IR/CFG.h"
 end_include
 
 begin_include
@@ -85,12 +85,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/IR/Instructions.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/CFG.h"
 end_include
 
 begin_include
@@ -192,11 +186,11 @@ argument_list|(
 name|Str
 argument_list|)
 block|;
-name|WriteAsOperand
+name|Node
+operator|->
+name|printAsOperand
 argument_list|(
 name|OS
-argument_list|,
-name|Node
 argument_list|,
 name|false
 argument_list|)
@@ -247,11 +241,11 @@ name|empty
 argument_list|()
 condition|)
 block|{
-name|WriteAsOperand
+name|Node
+operator|->
+name|printAsOperand
 argument_list|(
 name|OS
-argument_list|,
-name|Node
 argument_list|,
 name|false
 argument_list|)
@@ -426,11 +420,16 @@ name|MaxColumns
 condition|)
 block|{
 comment|// Wrap lines.
+comment|// Wrap very long names even though we can't find a space.
 if|if
 condition|(
+operator|!
 name|LastSpace
 condition|)
-block|{
+name|LastSpace
+operator|=
+name|i
+expr_stmt|;
 name|OutStr
 operator|.
 name|insert
@@ -455,8 +454,6 @@ operator|+=
 literal|3
 expr_stmt|;
 comment|// The loop will advance 'i' again.
-block|}
-comment|// Else keep trying to find a space.
 block|}
 else|else
 operator|++

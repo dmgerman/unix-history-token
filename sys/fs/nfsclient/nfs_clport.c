@@ -906,7 +906,7 @@ name|error
 operator|=
 name|getnewvnode
 argument_list|(
-literal|"newnfs"
+literal|"nfs"
 argument_list|,
 name|mntp
 argument_list|,
@@ -5817,7 +5817,7 @@ operator|=
 name|VNOVAL
 expr_stmt|;
 block|}
-comment|/* 	 * We are normally called with only a partially initialized 	 * VAP.  Since the NFSv3 spec says that server may use the 	 * file attributes to store the verifier, the spec requires 	 * us to do a SETATTR RPC. FreeBSD servers store the verifier 	 * in atime, but we can't really assume that all servers will 	 * so we ensure that our SETATTR sets both atime and mtime. 	 */
+comment|/* 	 * We are normally called with only a partially initialized 	 * VAP.  Since the NFSv3 spec says that server may use the 	 * file attributes to store the verifier, the spec requires 	 * us to do a SETATTR RPC. FreeBSD servers store the verifier 	 * in atime, but we can't really assume that all servers will 	 * so we ensure that our SETATTR sets both atime and mtime. 	 * Set the VA_UTIMES_NULL flag for this case, so that 	 * the server's time will be used.  This is needed to 	 * work around a bug in some Solaris servers, where 	 * setting the time TOCLIENT causes the Setattr RPC 	 * to return NFS_OK, but not set va_mode. 	 */
 if|if
 condition|(
 name|vap
@@ -5828,6 +5828,7 @@ name|tv_sec
 operator|==
 name|VNOVAL
 condition|)
+block|{
 name|vfs_timestamp
 argument_list|(
 operator|&
@@ -5836,6 +5837,13 @@ operator|->
 name|va_mtime
 argument_list|)
 expr_stmt|;
+name|vap
+operator|->
+name|va_vaflags
+operator||=
+name|VA_UTIMES_NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|vap

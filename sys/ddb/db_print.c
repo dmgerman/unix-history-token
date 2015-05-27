@@ -74,7 +74,7 @@ parameter_list|(
 name|db_expr_t
 name|_1
 parameter_list|,
-name|boolean_t
+name|bool
 name|_2
 parameter_list|,
 name|db_expr_t

@@ -263,6 +263,40 @@ return|return
 name|true
 return|;
 block|}
+comment|/// assignCalleeSavedSpillSlots - Allows target to override spill slot
+comment|/// assignment logic.  If implemented, assignCalleeSavedSpillSlots() should
+comment|/// assign frame slots to all CSI entries and return true.  If this method
+comment|/// returns false, spill slots will be assigned using generic implementation.
+comment|/// assignCalleeSavedSpillSlots() may add, delete or rearrange elements of
+comment|/// CSI.
+name|virtual
+name|bool
+name|assignCalleeSavedSpillSlots
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|CalleeSavedInfo
+operator|>
+operator|&
+name|CSI
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// getCalleeSavedSpillSlots - This method returns a pointer to an array of
 comment|/// pairs, that contains an entry for each callee saved register that must be
 comment|/// spilled to a particular stack location if it is spilled.
@@ -289,7 +323,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// targetHandlesStackFrameRounding - Returns true if the target is
@@ -352,6 +386,18 @@ comment|/// the assembly prologue to explicitly handle the stack.
 name|virtual
 name|void
 name|adjustForHiPEPrologue
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{ }
+comment|/// Adjust the prologue to add an allocation at a fixed offset from the frame
+comment|/// pointer.
+name|virtual
+name|void
+name|adjustForFrameAllocatePrologue
 argument_list|(
 name|MachineFunction
 operator|&
@@ -505,6 +551,20 @@ name|MF
 argument_list|)
 return|;
 block|}
+comment|// needsFrameIndexResolution - Do we need to perform FI resolution for
+comment|// this function. Normally, this is required only when the function
+comment|// has any stack objects. However, targets may want to override this.
+name|virtual
+name|bool
+name|needsFrameIndexResolution
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getFrameIndexOffset - Returns the displacement from the frame register to
 comment|/// the stack frame of the specified index.
 name|virtual
@@ -542,6 +602,37 @@ name|FrameReg
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Same as above, except that the 'base register' will always be RSP, not
+comment|/// RBP on x86.  This is used exclusively for lowering STATEPOINT nodes.
+comment|/// TODO: This should really be a parameterizable choice.
+name|virtual
+name|int
+name|getFrameIndexReferenceFromSP
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+name|int
+name|FI
+argument_list|,
+name|unsigned
+operator|&
+name|FrameReg
+argument_list|)
+decl|const
+block|{
+comment|// default to calling normal version, we override this on x86 only
+name|llvm_unreachable
+argument_list|(
+literal|"unimplemented for non-x86"
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 comment|/// processFunctionBeforeCalleeSavedScan - This method is called immediately
 comment|/// before PrologEpilogInserter scans the physical registers used to determine
 comment|/// what callee saved registers should be spilled. This method is optional.
@@ -557,7 +648,7 @@ name|RegScavenger
 operator|*
 name|RS
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 block|{    }
@@ -578,7 +669,7 @@ name|RegScavenger
 operator|*
 name|RS
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 block|{   }

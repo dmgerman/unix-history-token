@@ -1227,7 +1227,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|sigallowstop
 parameter_list|(
 name|void

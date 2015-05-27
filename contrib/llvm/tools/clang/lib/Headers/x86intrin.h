@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<ia32intrin.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<immintrin.h>
 end_include
 
@@ -226,7 +232,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// FIXME: LWP
+comment|/* FIXME: LWP */
 end_comment
 
 begin_endif

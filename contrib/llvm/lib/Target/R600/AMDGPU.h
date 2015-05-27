@@ -38,13 +38,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|AMDGPU_H
+name|LLVM_LIB_TARGET_R600_AMDGPU_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|AMDGPU_H
+name|LLVM_LIB_TARGET_R600_AMDGPU_H
 end_define
 
 begin_include
@@ -65,6 +65,9 @@ name|llvm
 block|{
 name|class
 name|AMDGPUInstrPrinter
+decl_stmt|;
+name|class
+name|AMDGPUSubtarget
 decl_stmt|;
 name|class
 name|AMDGPUTargetMachine
@@ -111,11 +114,7 @@ function_decl|;
 name|FunctionPass
 modifier|*
 name|createR600EmitClauseMarkers
-parameter_list|(
-name|TargetMachine
-modifier|&
-name|tm
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
@@ -147,11 +146,7 @@ function_decl|;
 name|FunctionPass
 modifier|*
 name|createAMDGPUCFGStructurizerPass
-parameter_list|(
-name|TargetMachine
-modifier|&
-name|tm
-parameter_list|)
+parameter_list|()
 function_decl|;
 comment|// SI Passes
 name|FunctionPass
@@ -163,6 +158,30 @@ name|FunctionPass
 modifier|*
 name|createSIAnnotateControlFlowPass
 parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createSIFoldOperandsPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createSILowerI1CopiesPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createSIShrinkInstructionsPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createSILoadStoreOptimizerPass
+parameter_list|(
+name|TargetMachine
+modifier|&
+name|tm
+parameter_list|)
 function_decl|;
 name|FunctionPass
 modifier|*
@@ -184,6 +203,11 @@ parameter_list|)
 function_decl|;
 name|FunctionPass
 modifier|*
+name|createSIFixSGPRLiveRangesPass
+parameter_list|()
+function_decl|;
+name|FunctionPass
+modifier|*
 name|createSICodeEmitterPass
 parameter_list|(
 name|formatted_raw_ostream
@@ -200,20 +224,62 @@ modifier|&
 name|tm
 parameter_list|)
 function_decl|;
+name|FunctionPass
+modifier|*
+name|createSIPrepareScratchRegs
+parameter_list|()
+function_decl|;
+name|void
+name|initializeSIFoldOperandsPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+specifier|extern
+name|char
+modifier|&
+name|SIFoldOperandsID
+decl_stmt|;
+name|void
+name|initializeSILowerI1CopiesPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+specifier|extern
+name|char
+modifier|&
+name|SILowerI1CopiesID
+decl_stmt|;
+name|void
+name|initializeSILoadStoreOptimizerPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+specifier|extern
+name|char
+modifier|&
+name|SILoadStoreOptimizerID
+decl_stmt|;
 comment|// Passes common to R600 and SI
+name|FunctionPass
+modifier|*
+name|createAMDGPUPromoteAlloca
+parameter_list|(
+specifier|const
+name|AMDGPUSubtarget
+modifier|&
+name|ST
+parameter_list|)
+function_decl|;
 name|Pass
 modifier|*
 name|createAMDGPUStructurizeCFGPass
 parameter_list|()
-function_decl|;
-name|FunctionPass
-modifier|*
-name|createAMDGPUConvertToISAPass
-parameter_list|(
-name|TargetMachine
-modifier|&
-name|tm
-parameter_list|)
 function_decl|;
 name|FunctionPass
 modifier|*
@@ -223,6 +289,11 @@ name|TargetMachine
 modifier|&
 name|tm
 parameter_list|)
+function_decl|;
+name|ModulePass
+modifier|*
+name|createAMDGPUAlwaysInlinePass
+parameter_list|()
 function_decl|;
 comment|/// \brief Creates an AMDGPU-specific Target Transformation Info pass.
 name|ImmutablePass
@@ -235,10 +306,48 @@ modifier|*
 name|TM
 parameter_list|)
 function_decl|;
+name|void
+name|initializeSIFixSGPRLiveRangesPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+specifier|extern
+name|char
+modifier|&
+name|SIFixSGPRLiveRangesID
+decl_stmt|;
 specifier|extern
 name|Target
 name|TheAMDGPUTarget
 decl_stmt|;
+specifier|extern
+name|Target
+name|TheGCNTarget
+decl_stmt|;
+name|namespace
+name|AMDGPU
+block|{
+enum|enum
+name|TargetIndex
+block|{
+name|TI_CONSTDATA_START
+block|,
+name|TI_SCRATCH_RSRC_DWORD0
+block|,
+name|TI_SCRATCH_RSRC_DWORD1
+block|,
+name|TI_SCRATCH_RSRC_DWORD2
+block|,
+name|TI_SCRATCH_RSRC_DWORD3
+block|}
+enum|;
+block|}
+define|#
+directive|define
+name|END_OF_TEXT_LABEL_NAME
+value|"EndOfTextLabel"
 block|}
 end_decl_stmt
 
@@ -290,7 +399,7 @@ comment|/// however on the GPU, each address space points to
 end_comment
 
 begin_comment
-comment|/// a seperate piece of memory that is unique from other
+comment|/// a separate piece of memory that is unique from other
 end_comment
 
 begin_comment
@@ -324,16 +433,16 @@ init|=
 literal|3
 block|,
 comment|///< Address space for local memory.
-name|REGION_ADDRESS
+name|FLAT_ADDRESS
 init|=
 literal|4
 block|,
-comment|///< Address space for region memory.
-name|ADDRESS_NONE
+comment|///< Address space for flat memory.
+name|REGION_ADDRESS
 init|=
 literal|5
 block|,
-comment|///< Address space for unknown memory.
+comment|///< Address space for region memory.
 name|PARAM_D_ADDRESS
 init|=
 literal|6
@@ -412,9 +521,14 @@ name|CONSTANT_BUFFER_15
 init|=
 literal|23
 block|,
-name|LAST_ADDRESS
+name|ADDRESS_NONE
 init|=
 literal|24
+block|,
+comment|///< Address space for unknown memory.
+name|LAST_ADDRESS
+init|=
+name|ADDRESS_NONE
 block|}
 enum|;
 block|}
@@ -428,10 +542,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// AMDGPU_H
-end_comment
 
 end_unit
 

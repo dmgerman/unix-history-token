@@ -247,7 +247,7 @@ comment|/* ditto, but no locals */
 end_comment
 
 begin_function_decl
-name|int
+name|bool
 name|db_eqname
 parameter_list|(
 specifier|const
@@ -283,7 +283,7 @@ comment|/* print closest symbol to a value */
 end_comment
 
 begin_function_decl
-name|int
+name|bool
 name|db_sym_numargs
 parameter_list|(
 name|c_db_sym_t
@@ -299,7 +299,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|boolean_t
+name|bool
 name|X_db_line_at_pc
 parameter_list|(
 name|db_symtab_t
@@ -362,7 +362,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
+name|bool
 name|X_db_sym_numargs
 parameter_list|(
 name|db_symtab_t

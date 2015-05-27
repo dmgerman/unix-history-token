@@ -91,7 +91,7 @@ operator|)
 operator|&
 operator|(
 operator|(
-literal|1u
+literal|1ull
 operator|<<
 operator|(
 name|msbit
@@ -418,6 +418,16 @@ name|uint64_t
 name|bit
 parameter_list|)
 block|{
+if|if
+condition|(
+name|bit
+operator|>=
+literal|63
+condition|)
+return|return
+operator|-
+literal|1ll
+return|;
 return|return
 operator|(
 literal|1ull

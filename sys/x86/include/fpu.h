@@ -109,14 +109,12 @@ literal|4
 index|]
 decl_stmt|;
 comment|/* saved status word (now unused) */
-comment|/* 	 * Bogus padding for emulators.  Emulators should use their own 	 * struct and arrange to store into this struct (ending here) 	 * before it is inspected for ptracing or for core dumps.  Some 	 * emulators overwrite the whole struct.  We have no good way of 	 * knowing how much padding to leave.  Leave just enough for the 	 * GPL emulator's i387_union (176 bytes total). 	 */
 name|uint8_t
 name|sv_pad
 index|[
 literal|64
 index|]
 decl_stmt|;
-comment|/* padding; used by emulators */
 block|}
 struct|;
 end_struct
@@ -657,6 +655,17 @@ define|#
 directive|define
 name|__INITIAL_MXCSR_MASK__
 value|0xFFBF
+end_define
+
+begin_comment
+comment|/*  * The current value of %xcr0 is saved in the sv_pad[] field of the FPU  * state in the NT_X86_XSTATE note in core dumps.  This offset is chosen  * to match the offset used by NT_X86_XSTATE in other systems.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|X86_XSTATE_XCR0_OFFSET
+value|464
 end_define
 
 begin_endif

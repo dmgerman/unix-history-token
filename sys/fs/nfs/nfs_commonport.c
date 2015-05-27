@@ -246,7 +246,7 @@ name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"New NFS filesystem"
+literal|"NFS filesystem"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -332,7 +332,7 @@ name|nfscl_debuglevel
 argument_list|,
 literal|0
 argument_list|,
-literal|"Debug level for new nfs client"
+literal|"Debug level for NFS client"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -528,7 +528,7 @@ name|M_NEWNFSV4NODE
 argument_list|,
 literal|"NEWNFSnode"
 argument_list|,
-literal|"New nfs vnode"
+literal|"NFS vnode"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -540,7 +540,7 @@ name|M_NEWNFSDIRECTIO
 argument_list|,
 literal|"NEWdirectio"
 argument_list|,
-literal|"New nfs Direct IO buffer"
+literal|"NFS Direct IO buffer"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -552,7 +552,7 @@ name|M_NEWNFSDIROFF
 argument_list|,
 literal|"NFSCL diroffdiroff"
 argument_list|,
-literal|"New NFS directory offset data"
+literal|"NFS directory offset data"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -564,7 +564,7 @@ name|M_NEWNFSDROLLBACK
 argument_list|,
 literal|"NFSD rollback"
 argument_list|,
-literal|"New NFS local lock rollback"
+literal|"NFS local lock rollback"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1311,13 +1311,13 @@ expr_stmt|;
 else|else
 name|pref
 operator|=
-name|NFS_MAXDATA
+name|NFS_SRVMAXIO
 expr_stmt|;
 name|sip
 operator|->
 name|fs_rtmax
 operator|=
-name|NFS_MAXDATA
+name|NFS_SRVMAXIO
 expr_stmt|;
 name|sip
 operator|->
@@ -1335,7 +1335,7 @@ name|sip
 operator|->
 name|fs_wtmax
 operator|=
-name|NFS_MAXDATA
+name|NFS_SRVMAXIO
 expr_stmt|;
 name|sip
 operator|->
@@ -2658,7 +2658,7 @@ argument_list|(
 operator|&
 name|newnfsd_callout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|newnfs_init

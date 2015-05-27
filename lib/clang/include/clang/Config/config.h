@@ -8,14 +8,25 @@ comment|/* tools/clang/include/clang/Config/config.h.  Generated from config.h.i
 end_comment
 
 begin_comment
-comment|/* include/clang/Config/config.h.in. */
+comment|/* This generated file is for internal use. Do not include it from headers. */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|CONFIG_H
-end_ifndef
+end_ifdef
+
+begin_error
+error|#
+directive|error
+error|config.h can only be included once
+end_error
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -32,6 +43,17 @@ define|#
 directive|define
 name|BUG_REPORT_URL
 value|"https://bugs.freebsd.org/submit/"
+end_define
+
+begin_comment
+comment|/* Multilib suffix for libdir. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CLANG_LIBDIR_SUFFIX
+value|""
 end_define
 
 begin_comment
@@ -57,14 +79,6 @@ value|""
 end_define
 
 begin_comment
-comment|/* Linker version detected at compile time. */
-end_comment
-
-begin_comment
-comment|/* #undef HOST_LINK_VERSION */
-end_comment
-
-begin_comment
 comment|/* Default<path> to all compiler invocations for --sysroot=<path>. */
 end_comment
 
@@ -82,6 +96,40 @@ directive|define
 name|GCC_INSTALL_PREFIX
 value|""
 end_define
+
+begin_comment
+comment|/* Define if we have libxml2 */
+end_comment
+
+begin_comment
+comment|/* #undef CLANG_HAVE_LIBXML */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_STRING
+value|"LLVM 3.6.0"
+end_define
+
+begin_comment
+comment|/* The LLVM product name and version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BACKEND_PACKAGE_STRING
+value|PACKAGE_STRING
+end_define
+
+begin_comment
+comment|/* Linker version detected at compile time. */
+end_comment
+
+begin_comment
+comment|/* #undef HOST_LINK_VERSION */
+end_comment
 
 begin_endif
 endif|#

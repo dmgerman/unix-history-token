@@ -34,12 +34,9 @@ name|_MSC_VER
 argument_list|)
 operator|)
 operator|&&
-expr|\
-name|defined
-argument_list|(
-name|__has_include_next
-argument_list|)
+name|__STDC_HOSTED__
 operator|&&
+expr|\
 name|__has_include_next
 argument_list|(
 operator|<

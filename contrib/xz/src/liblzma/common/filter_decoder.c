@@ -122,6 +122,7 @@ modifier|*
 modifier|*
 name|options
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -500,6 +501,7 @@ name|lzma_next_coder
 modifier|*
 name|next
 parameter_list|,
+specifier|const
 name|lzma_allocator
 modifier|*
 name|allocator
@@ -627,7 +629,7 @@ name|lzma_properties_decode
 argument_list|(
 argument|lzma_filter *filter
 argument_list|,
-argument|lzma_allocator *allocator
+argument|const lzma_allocator *allocator
 argument_list|,
 argument|const uint8_t *props
 argument_list|,

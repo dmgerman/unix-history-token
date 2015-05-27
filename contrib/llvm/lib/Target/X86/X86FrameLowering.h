@@ -50,26 +50,14 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86_FRAMELOWERING_H
+name|LLVM_LIB_TARGET_X86_X86FRAMELOWERING_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86_FRAMELOWERING_H
+name|LLVM_LIB_TARGET_X86_X86FRAMELOWERING_H
 end_define
-
-begin_include
-include|#
-directive|include
-file|"X86Subtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCDwarf.h"
-end_include
 
 begin_include
 include|#
@@ -88,78 +76,63 @@ name|class
 name|X86TargetMachine
 decl_stmt|;
 name|class
+name|X86Subtarget
+decl_stmt|;
+name|class
 name|X86FrameLowering
 range|:
 name|public
 name|TargetFrameLowering
 block|{
-specifier|const
-name|X86TargetMachine
-operator|&
-name|TM
-block|;
-specifier|const
-name|X86Subtarget
-operator|&
-name|STI
-block|;
 name|public
 operator|:
 name|explicit
 name|X86FrameLowering
 argument_list|(
-specifier|const
-name|X86TargetMachine
-operator|&
-name|tm
+argument|StackDirection D
 argument_list|,
-specifier|const
-name|X86Subtarget
-operator|&
-name|sti
+argument|unsigned StackAl
+argument_list|,
+argument|int LAO
 argument_list|)
 operator|:
 name|TargetFrameLowering
 argument_list|(
-name|StackGrowsDown
+argument|StackGrowsDown
 argument_list|,
-name|sti
-operator|.
-name|getStackAlignment
-argument_list|()
+argument|StackAl
 argument_list|,
-operator|(
-name|sti
-operator|.
-name|is64Bit
-argument_list|()
-condition|?
-operator|-
-literal|8
-else|:
-operator|-
-literal|4
-operator|)
+argument|LAO
 argument_list|)
-block|,
-name|TM
+block|{}
+specifier|static
+name|void
+name|getStackProbeFunction
 argument_list|(
-name|tm
-argument_list|)
-block|,
+specifier|const
+name|X86Subtarget
+operator|&
 name|STI
-argument_list|(
-argument|sti
+argument_list|,
+name|unsigned
+operator|&
+name|CallOp
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|&
+name|Symbol
 argument_list|)
-block|{   }
+block|;
 name|void
 name|emitCalleeSavedFrameMoves
 argument_list|(
-argument|MachineFunction&MF
+argument|MachineBasicBlock&MBB
 argument_list|,
-argument|MCSymbol *Label
+argument|MachineBasicBlock::iterator MBBI
 argument_list|,
-argument|unsigned FramePtr
+argument|DebugLoc DL
 argument_list|)
 specifier|const
 block|;
@@ -171,6 +144,7 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|emitEpilogue
@@ -180,6 +154,7 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|adjustForSegmentedStacks
@@ -187,6 +162,7 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|adjustForHiPEPrologue
@@ -194,15 +170,29 @@ argument_list|(
 argument|MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|processFunctionBeforeCalleeSavedScan
 argument_list|(
 argument|MachineFunction&MF
 argument_list|,
-argument|RegScavenger *RS = NULL
+argument|RegScavenger *RS = nullptr
 argument_list|)
 specifier|const
+name|override
+block|;
+name|bool
+name|assignCalleeSavedSpillSlots
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|,
+argument|std::vector<CalleeSavedInfo>&CSI
+argument_list|)
+specifier|const
+name|override
 block|;
 name|bool
 name|spillCalleeSavedRegisters
@@ -216,6 +206,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|restoreCalleeSavedRegisters
@@ -229,6 +220,7 @@ argument_list|,
 argument|const TargetRegisterInfo *TRI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasFP
@@ -236,6 +228,7 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
 block|;
 name|bool
 name|hasReservedCallFrame
@@ -243,6 +236,23 @@ argument_list|(
 argument|const MachineFunction&MF
 argument_list|)
 specifier|const
+name|override
+block|;
+name|bool
+name|canSimplifyCallFramePseudos
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
+block|;
+name|bool
+name|needsFrameIndexResolution
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+name|override
 block|;
 name|int
 name|getFrameIndexOffset
@@ -252,6 +262,7 @@ argument_list|,
 argument|int FI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|int
 name|getFrameIndexReference
@@ -263,6 +274,28 @@ argument_list|,
 argument|unsigned&FrameReg
 argument_list|)
 specifier|const
+name|override
+block|;
+name|int
+name|getFrameIndexOffsetFromSP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getFrameIndexReferenceFromSP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|,
+argument|int FI
+argument_list|,
+argument|unsigned&FrameReg
+argument_list|)
+specifier|const
+name|override
 block|;
 name|void
 name|eliminateCallFramePseudoInstr
@@ -272,6 +305,26 @@ argument_list|,
 argument|MachineBasicBlock&MBB
 argument_list|,
 argument|MachineBasicBlock::iterator MI
+argument_list|)
+specifier|const
+name|override
+block|;
+name|private
+operator|:
+comment|/// convertArgMovsToPushes - This method tries to convert a call sequence
+comment|/// that uses sub and mov instructions to put the argument onto the stack
+comment|/// into a series of pushes.
+comment|/// Returns true if the transformation succeeded, false if not.
+name|bool
+name|convertArgMovsToPushes
+argument_list|(
+argument|MachineFunction&MF
+argument_list|,
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator I
+argument_list|,
+argument|uint64_t Amount
 argument_list|)
 specifier|const
 block|; }

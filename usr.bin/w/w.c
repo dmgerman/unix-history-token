@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/socket.h>
 end_include
 
@@ -117,6 +123,12 @@ begin_include
 include|#
 directive|include
 file|<sys/tty.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -1272,6 +1284,9 @@ name|xo_close_container
 argument_list|(
 literal|"uptime-information"
 argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 operator|(
 name|void
@@ -2502,6 +2517,16 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+name|struct
+name|sbuf
+modifier|*
+name|upbuf
+decl_stmt|;
+name|upbuf
+operator|=
+name|sbuf_new_auto
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Print time of day. 	 */
 if|if
 condition|(
@@ -2603,11 +2628,9 @@ argument_list|(
 literal|" up"
 argument_list|)
 expr_stmt|;
-name|xo_attr
+name|xo_emit
 argument_list|(
-literal|"seconds"
-argument_list|,
-literal|"%lu"
+literal|"{e:uptime/%lu}"
 argument_list|,
 operator|(
 name|unsigned
@@ -2618,15 +2641,30 @@ operator|.
 name|tv_sec
 argument_list|)
 expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{e:days/%d}{e:hours/%d}{e:minutes/%d}{e:seconds/%d}"
+argument_list|,
+name|days
+argument_list|,
+name|hrs
+argument_list|,
+name|mins
+argument_list|,
+name|secs
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|days
 operator|>
 literal|0
 condition|)
-name|xo_emit
+name|sbuf_printf
 argument_list|(
-literal|" {:uptime/%d day%s},"
+name|upbuf
+argument_list|,
+literal|" %d day%s,"
 argument_list|,
 name|days
 argument_list|,
@@ -2649,9 +2687,11 @@ name|mins
 operator|>
 literal|0
 condition|)
-name|xo_emit
+name|sbuf_printf
 argument_list|(
-literal|" {:uptime/%2d:%02d},"
+name|upbuf
+argument_list|,
+literal|" %2d:%02d,"
 argument_list|,
 name|hrs
 argument_list|,
@@ -2665,9 +2705,11 @@ name|hrs
 operator|>
 literal|0
 condition|)
-name|xo_emit
+name|sbuf_printf
 argument_list|(
-literal|" {:uptime/%d hr%s},"
+name|upbuf
+argument_list|,
+literal|" %d hr%s,"
 argument_list|,
 name|hrs
 argument_list|,
@@ -2687,9 +2729,11 @@ name|mins
 operator|>
 literal|0
 condition|)
-name|xo_emit
+name|sbuf_printf
 argument_list|(
-literal|" {:uptime/%d min%s},"
+name|upbuf
+argument_list|,
+literal|" %d min%s,"
 argument_list|,
 name|mins
 argument_list|,
@@ -2703,9 +2747,11 @@ literal|""
 argument_list|)
 expr_stmt|;
 else|else
-name|xo_emit
+name|sbuf_printf
 argument_list|(
-literal|" {:uptime/%d sec%s},"
+name|upbuf
+argument_list|,
+literal|" %d sec%s,"
 argument_list|,
 name|secs
 argument_list|,
@@ -2716,6 +2762,37 @@ condition|?
 literal|"s"
 else|:
 literal|""
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sbuf_finish
+argument_list|(
+name|upbuf
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|xo_err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Could not generate output"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:uptime-human/%s}"
+argument_list|,
+name|sbuf_data
+argument_list|(
+name|upbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sbuf_delete
+argument_list|(
+name|upbuf
 argument_list|)
 expr_stmt|;
 block|}
@@ -2953,6 +3030,9 @@ name|xo_error
 argument_list|(
 literal|"usage: uptime\n"
 argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(

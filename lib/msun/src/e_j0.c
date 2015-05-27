@@ -39,6 +39,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+name|__inline
 name|double
 name|pzero
 argument_list|(
@@ -49,6 +50,21 @@ name|qzero
 argument_list|(
 name|double
 argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+specifier|volatile
+name|double
+name|vone
+init|=
+literal|1
+decl_stmt|,
+name|vzero
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -365,11 +381,11 @@ else|else
 return|return
 name|one
 operator|-
-literal|0.25
-operator|*
 name|x
 operator|*
 name|x
+operator|/
+literal|4
 return|;
 block|}
 block|}
@@ -602,7 +618,7 @@ literal|0x7fffffff
 operator|&
 name|hx
 expr_stmt|;
-comment|/* Y0(NaN) is NaN, y0(-inf) is Nan, y0(inf) is 0  */
+comment|/* 	 * y0(NaN) = NaN. 	 * y0(Inf) = 0. 	 * y0(-Inf) = NaN and raise invalid exception. 	 */
 if|if
 condition|(
 name|ix
@@ -610,7 +626,7 @@ operator|>=
 literal|0x7ff00000
 condition|)
 return|return
-name|one
+name|vone
 operator|/
 operator|(
 name|x
@@ -620,6 +636,7 @@ operator|*
 name|x
 operator|)
 return|;
+comment|/* y0(+-0) = -inf and raise divide-by-zero exception. */
 if|if
 condition|(
 operator|(
@@ -634,8 +651,9 @@ return|return
 operator|-
 name|one
 operator|/
-name|zero
+name|vzero
 return|;
+comment|/* y0(x<0) = NaN and raise invalid exception. */
 if|if
 condition|(
 name|hx
@@ -643,9 +661,9 @@ operator|<
 literal|0
 condition|)
 return|return
-name|zero
+name|vzero
 operator|/
-name|zero
+name|vzero
 return|;
 if|if
 condition|(
@@ -1176,6 +1194,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|double
 name|pzero
 parameter_list|(
@@ -1262,13 +1281,7 @@ operator|=
 name|pS3
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ix
-operator|>=
-literal|0x40000000
-condition|)
+else|else
 block|{
 name|p
 operator|=
@@ -1279,6 +1292,7 @@ operator|=
 name|pS2
 expr_stmt|;
 block|}
+comment|/* ix>=0x40000000 */
 name|z
 operator|=
 name|one
@@ -1666,6 +1680,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|__inline
 name|double
 name|qzero
 parameter_list|(
@@ -1752,13 +1767,7 @@ operator|=
 name|qS3
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|ix
-operator|>=
-literal|0x40000000
-condition|)
+else|else
 block|{
 name|p
 operator|=
@@ -1769,6 +1778,7 @@ operator|=
 name|qS2
 expr_stmt|;
 block|}
+comment|/* ix>=0x40000000 */
 name|z
 operator|=
 name|one

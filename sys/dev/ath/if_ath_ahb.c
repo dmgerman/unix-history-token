@@ -532,6 +532,7 @@ argument_list|,
 name|eepromsize
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX this assumes that the parent device is the nexus 	 * and will just pass through requests for all of memory. 	 * 	 * Later on, when this has to attach off of the actual 	 * AHB, this won't work. 	 * 	 * Ideally this would be done in machdep code in mips/atheros/ 	 * and it'd expose the EEPROM via the firmware interface, 	 * so the ath/ath_ahb drivers can be loaded as modules 	 * after boot-time. 	 */
 name|psc
 operator|->
 name|sc_eeprom
@@ -1443,6 +1444,24 @@ argument_list|(
 name|ath
 argument_list|,
 name|nexus
+argument_list|,
+name|ath_ahb_driver
+argument_list|,
+name|ath_devclass
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|ath
+argument_list|,
+name|apb
 argument_list|,
 name|ath_ahb_driver
 argument_list|,

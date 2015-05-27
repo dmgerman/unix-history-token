@@ -770,7 +770,7 @@ argument_list|,
 literal|"I"
 argument_list|,
 literal|"Backoff timeout (msec). This is to throutles peering forever when "
-literal|"not receving answer or is rejected by a neighbor"
+literal|"not receiving answer or is rejected by a neighbor"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1321,7 +1321,7 @@ name|rt
 operator|->
 name|rt_discovery
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|rt
@@ -3517,7 +3517,7 @@ name|ms
 operator|->
 name|ms_cleantimer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -3527,7 +3527,7 @@ name|ms
 operator|->
 name|ms_gatetimer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|ms
@@ -9231,6 +9231,10 @@ block|}
 name|ieee80211_add_scan
 argument_list|(
 name|vap
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
 argument_list|,
 operator|&
 name|scan
@@ -16065,7 +16069,7 @@ name|ni
 operator|->
 name|ni_mltimer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -16075,7 +16079,7 @@ name|ni
 operator|->
 name|ni_mlhtimer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

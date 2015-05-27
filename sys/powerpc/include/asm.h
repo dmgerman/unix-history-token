@@ -306,6 +306,27 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|TOC_REF
+parameter_list|(
+name|name
+parameter_list|)
+value|__CONCAT(.L,name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TOC_ENTRY
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|.section ".toc","aw"; \ 	TOC_REF(name): \         .tc name[TC],name
+end_define
+
+begin_define
+define|#
+directive|define
 name|_ENTRY
 parameter_list|(
 name|name

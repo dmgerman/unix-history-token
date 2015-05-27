@@ -57,6 +57,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<unordered_map>
+end_include
+
 begin_comment
 comment|// Other libraries and framework includes
 end_comment
@@ -417,8 +423,6 @@ name|virtual
 operator|~
 name|TypeFormatImpl
 argument_list|()
-operator|=
-expr|default
 expr_stmt|;
 name|bool
 name|Cascades
@@ -664,8 +668,6 @@ name|virtual
 operator|~
 name|TypeFormatImpl_Format
 argument_list|()
-operator|=
-expr|default
 expr_stmt|;
 end_expr_stmt
 
@@ -829,8 +831,6 @@ begin_expr_stmt
 operator|~
 name|TypeFormatImpl_EnumType
 argument_list|()
-operator|=
-expr|default
 expr_stmt|;
 end_expr_stmt
 
@@ -922,7 +922,7 @@ begin_expr_stmt
 name|mutable
 name|std
 operator|::
-name|map
+name|unordered_map
 operator|<
 name|void
 operator|*

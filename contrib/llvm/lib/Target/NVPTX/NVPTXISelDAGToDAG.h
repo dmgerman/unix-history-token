@@ -47,11 +47,16 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_LIB_TARGET_NVPTX_NVPTXISELDAGTODAG_H
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|DEBUG_TYPE
-value|"nvptx-isel"
+name|LLVM_LIB_TARGET_NVPTX_NVPTXISELDAGTODAG_H
 end_define
 
 begin_include
@@ -116,23 +121,6 @@ range|:
 name|public
 name|SelectionDAGISel
 block|{
-comment|// If true, generate corresponding FPCONTRACT. This is
-comment|// language dependent (i.e. CUDA and OpenCL works differently).
-name|bool
-name|doFMAF64
-block|;
-name|bool
-name|doFMAF32
-block|;
-name|bool
-name|doFMAF64AGG
-block|;
-name|bool
-name|doFMAF32AGG
-block|;
-name|bool
-name|allowFMA
-block|;
 comment|// If true, generate mul.wide from sext and mul
 name|bool
 name|doMulWide
@@ -152,6 +140,11 @@ name|useF32FTZ
 argument_list|()
 specifier|const
 block|;
+name|bool
+name|allowFMA
+argument_list|()
+specifier|const
+block|;
 name|public
 operator|:
 name|explicit
@@ -163,13 +156,13 @@ argument|CodeGenOpt::Level   OptLevel
 argument_list|)
 block|;
 comment|// Pass Name
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"NVPTX DAG->DAG Pattern Instruction Selection"
@@ -180,7 +173,6 @@ name|NVPTXSubtarget
 operator|&
 name|Subtarget
 block|;
-name|virtual
 name|bool
 name|SelectInlineAsmMemoryOperand
 argument_list|(
@@ -190,6 +182,7 @@ argument|char ConstraintCode
 argument_list|,
 argument|std::vector<SDValue>&OutOps
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -200,6 +193,32 @@ file|"NVPTXGenDAGISel.inc"
 name|SDNode
 operator|*
 name|Select
+argument_list|(
+argument|SDNode *N
+argument_list|)
+name|override
+block|;
+name|SDNode
+operator|*
+name|SelectIntrinsicNoChain
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
+name|SelectIntrinsicChain
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
+name|SelectTexSurfHandle
 argument_list|(
 name|SDNode
 operator|*
@@ -226,7 +245,7 @@ argument_list|)
 block|;
 name|SDNode
 operator|*
-name|SelectLDGLDUVector
+name|SelectLDGLDU
 argument_list|(
 name|SDNode
 operator|*
@@ -272,6 +291,42 @@ block|;
 name|SDNode
 operator|*
 name|SelectStoreParam
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
+name|SelectAddrSpaceCast
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
+name|SelectTextureIntrinsic
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
+name|SelectSurfaceIntrinsic
+argument_list|(
+name|SDNode
+operator|*
+name|N
+argument_list|)
+block|;
+name|SDNode
+operator|*
+name|SelectBFE
 argument_list|(
 name|SDNode
 operator|*
@@ -391,20 +446,15 @@ argument_list|,
 argument|unsigned int spN
 argument_list|)
 specifier|const
-block|;
-name|bool
-name|UndefOrImm
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SDValue N
-argument_list|,
-argument|SDValue&Retval
-argument_list|)
 block|;  }
 decl_stmt|;
 block|}
 end_block
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

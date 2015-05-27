@@ -125,7 +125,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libxo/xo.h>
 end_include
 
 begin_include
@@ -281,7 +293,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"memstat_mtl_alloc"
 argument_list|)
@@ -306,7 +318,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_sysctl_all: %s"
 argument_list|,
@@ -351,7 +363,7 @@ name|error
 operator|==
 name|MEMSTAT_ERROR_KVM
 condition|)
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_kvm_all: %s"
 argument_list|,
@@ -362,7 +374,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 else|else
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_kvm_all: %s"
 argument_list|,
@@ -395,7 +407,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_mtl_find: zone %s not found"
 argument_list|,
@@ -466,7 +478,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_mtl_find: zone %s not found"
 argument_list|,
@@ -530,7 +542,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_mtl_find: zone %s not found"
 argument_list|,
@@ -601,7 +613,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_mtl_find: malloc type %s not found"
 argument_list|,
@@ -637,7 +649,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_mtl_find: zone %s not found"
 argument_list|,
@@ -708,7 +720,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_mtl_find: zone %s not found"
 argument_list|,
@@ -779,7 +791,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"memstat_mtl_find: zone %s not found"
 argument_list|,
@@ -832,9 +844,15 @@ argument_list|(
 name|mtp
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_open_container
 argument_list|(
-literal|"%ju/%ju/%ju mbufs in use (current/cache/total)\n"
+literal|"mbuf-statistics"
+argument_list|)
+expr_stmt|;
+name|xo_emit
+argument_list|(
+literal|"{:mbuf-current/%ju}/{:mbuf-cache/%ju}/{:mbuf-total/%ju} "
+literal|"{N:mbufs in use (current\\/cache\\/total)}\n"
 argument_list|,
 name|mbuf_count
 operator|+
@@ -853,10 +871,11 @@ operator|+
 name|packet_free
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%ju/%ju/%ju/%ju mbuf clusters in use "
-literal|"(current/cache/total/max)\n"
+literal|"{:cluster-current/%ju}/{:cluster-cache/%ju}/"
+literal|"{:cluster-total/%ju}/{:cluster-max/%ju} "
+literal|"{N:mbuf clusters in use (current\\/cache\\/total\\/max)}\n"
 argument_list|,
 name|cluster_count
 operator|-
@@ -873,20 +892,22 @@ argument_list|,
 name|cluster_limit
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%ju/%ju mbuf+clusters out of packet secondary zone in use "
-literal|"(current/cache)\n"
+literal|"{:packet-count/%ju}/{:packet-free/%ju} "
+literal|"{N:mbuf+clusters out of packet secondary zone in use "
+literal|"(current\\/cache)}\n"
 argument_list|,
 name|packet_count
 argument_list|,
 name|packet_free
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%ju/%ju/%ju/%ju %juk (page size) jumbo clusters in use "
-literal|"(current/cache/total/max)\n"
+literal|"{:jumbo-count/%ju}/{:jumbo-cache/%ju}/{:jumbo-total/%ju}/"
+literal|"{:jumbo-max/%ju} {:jumbo-page-size/%ju}{U:k} {N:(page size)} "
+literal|"{N:jumbo clusters in use (current\\/cache\\/total\\/max)}\n"
 argument_list|,
 name|jumbop_count
 argument_list|,
@@ -903,10 +924,11 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%ju/%ju/%ju/%ju 9k jumbo clusters in use "
-literal|"(current/cache/total/max)\n"
+literal|"{:jumbo9-count/%ju}/{:jumbo9-cache/%ju}/"
+literal|"{:jumbo9-total/%ju}/{:jumbo9-max/%ju} "
+literal|"{N:9k jumbo clusters in use (current\\/cache\\/total\\/max)}\n"
 argument_list|,
 name|jumbo9_count
 argument_list|,
@@ -919,10 +941,11 @@ argument_list|,
 name|jumbo9_limit
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%ju/%ju/%ju/%ju 16k jumbo clusters in use "
-literal|"(current/cache/total/max)\n"
+literal|"{:jumbo16-count/%ju}/{:jumbo16-cache/%ju}/"
+literal|"{:jumbo16-total/%ju}/{:jumbo16-limit/%ju} "
+literal|"{N:16k jumbo clusters in use (current\\/cache\\/total\\/max)}\n"
 argument_list|,
 name|jumbo16_count
 argument_list|,
@@ -938,7 +961,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("%ju mbuf tags in use\n", tag_count);
+block|xo_emit("{:tag-count/%ju} {N:mbuf tags in use}\n", tag_count);
 endif|#
 directive|endif
 comment|/*- 	 * Calculate in-use bytes as: 	 * - straight mbuf memory 	 * - mbuf memory in packets 	 * - the clusters attached to packets 	 * - and the rest of the non-packet-attached clusters. 	 * - m_tag memory 	 * This avoids counting the clusters attached to packets in the cache. 	 * This currently excludes sf_buf space. 	 */
@@ -1048,10 +1071,11 @@ name|bytes_inuse
 operator|+
 name|bytes_incache
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%juK/%juK/%juK bytes allocated to network "
-literal|"(current/cache/total)\n"
+literal|"{:bytes-in-use/%ju}{U:K}/{:bytes-in-cache/%ju}{U:K}/"
+literal|"{:bytes-total/%ju}{U:K} "
+literal|"{N:bytes allocated to network (current\\/cache\\/total)}\n"
 argument_list|,
 name|bytes_inuse
 operator|/
@@ -1066,10 +1090,11 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%ju/%ju/%ju requests for mbufs denied (mbufs/clusters/"
-literal|"mbuf+clusters)\n"
+literal|"{:mbuf-failures/%ju}/{:cluster-failures/%ju}/"
+literal|"{:packet-failures/%ju} {N:requests for mbufs denied "
+literal|"(mbufs\\/clusters\\/mbuf+clusters)}\n"
 argument_list|,
 name|mbuf_failures
 argument_list|,
@@ -1078,10 +1103,11 @@ argument_list|,
 name|packet_failures
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%ju/%ju/%ju requests for mbufs delayed (mbufs/clusters/"
-literal|"mbuf+clusters)\n"
+literal|"{:mbuf-sleeps/%ju}/{:cluster-sleeps/%ju}/{:packet-sleeps/%ju} "
+literal|"{N:requests for mbufs delayed "
+literal|"(mbufs\\/clusters\\/mbuf+clusters)}\n"
 argument_list|,
 name|mbuf_sleeps
 argument_list|,
@@ -1090,10 +1116,11 @@ argument_list|,
 name|packet_sleeps
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%ju/%ju/%ju requests for jumbo clusters delayed "
-literal|"(%juk/9k/16k)\n"
+literal|"{:jumbop-sleeps/%ju}/{:jumbo9-sleeps/%ju}/"
+literal|"{:jumbo16-sleeps/%ju} {N:/requests for jumbo clusters delayed "
+literal|"(%juk\\/9k\\/16k)}\n"
 argument_list|,
 name|jumbop_sleeps
 argument_list|,
@@ -1106,10 +1133,11 @@ operator|/
 literal|1024
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%ju/%ju/%ju requests for jumbo clusters denied "
-literal|"(%juk/9k/16k)\n"
+literal|"{:jumbop-failures/%ju}/{:jumbo9-failures/%ju}/"
+literal|"{:jumbo16-failures/%ju} {N:/requests for jumbo clusters denied "
+literal|"(%juk\\/9k\\/16k)}\n"
 argument_list|,
 name|jumbop_failures
 argument_list|,
@@ -1184,9 +1212,11 @@ argument_list|,
 literal|0
 argument_list|)
 condition|)
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%d/%d/%d sfbufs in use (current/peak/max)\n"
+literal|"{:nsfbufs-current/%d}/{:nsfbufs-peak/%d}/"
+literal|"{:nsfbufs/%d} "
+literal|"{N:sfbufs in use (current\\/peak\\/max)}\n"
 argument_list|,
 name|nsfbufsused
 argument_list|,
@@ -1220,7 +1250,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"kern.ipc.sfstat"
 argument_list|)
@@ -1255,9 +1285,9 @@ goto|goto
 name|out
 goto|;
 block|}
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%ju requests for sfbufs denied\n"
+literal|"{:sfbufs-alloc-failed/%ju} {N:requests for sfbufs denied}\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1267,9 +1297,9 @@ operator|.
 name|sf_allocfail
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%ju requests for sfbufs delayed\n"
+literal|"{:sfbufs-alloc-wait/%ju} {N:requests for sfbufs delayed}\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1279,9 +1309,10 @@ operator|.
 name|sf_allocwait
 argument_list|)
 expr_stmt|;
-name|printf
+name|xo_emit
 argument_list|(
-literal|"%ju requests for I/O initiated by sendfile\n"
+literal|"{:sfbufs-io-count/%ju} "
+literal|"{N:requests for I\\/O initiated by sendfile}\n"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -1293,6 +1324,11 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
+name|xo_close_container
+argument_list|(
+literal|"mbuf-statistics"
+argument_list|)
+expr_stmt|;
 name|memstat_mtl_free
 argument_list|(
 name|mtlp

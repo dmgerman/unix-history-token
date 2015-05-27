@@ -276,9 +276,9 @@ modifier|&
 name|strm
 parameter_list|,
 specifier|const
-name|char
-modifier|*
-name|text
+name|OptionDefinition
+modifier|&
+name|option_def
 parameter_list|,
 name|uint32_t
 name|output_max_columns
@@ -508,6 +508,15 @@ modifier|&
 name|matches
 parameter_list|)
 function_decl|;
+name|CommandInterpreter
+modifier|&
+name|GetInterpreter
+parameter_list|()
+block|{
+return|return
+name|m_interpreter
+return|;
+block|}
 name|protected
 label|:
 comment|// This is a set of options expressed as indexes into the options table for this Option.

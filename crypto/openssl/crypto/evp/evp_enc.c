@@ -4,7 +4,7 @@ comment|/* crypto/evp/evp_enc.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_include
@@ -70,12 +70,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_include
-include|#
-directive|include
-file|"constant_time_locl.h"
-end_include
 
 begin_include
 include|#
@@ -324,7 +318,7 @@ block|}
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_ENGINE
-comment|/* Whether it's nice or not, "Inits" can be used on "Final"'d contexts 	 * so this context may already have an ENGINE! Try to avoid releasing 	 * the previous handle, re-querying for an ENGINE, and having a 	 * reinitialisation, when it may all be unecessary. */
+comment|/*      * Whether it's nice or not, "Inits" can be used on "Final"'d contexts so      * this context may already have an ENGINE! Try to avoid releasing the      * previous handle, re-querying for an ENGINE, and having a      * reinitialisation, when it may all be unecessary.      */
 if|if
 condition|(
 name|ctx
@@ -366,7 +360,7 @@ condition|(
 name|cipher
 condition|)
 block|{
-comment|/* Ensure a context left lying around from last time is cleared 		 * (the previous check attempted to avoid this if the same 		 * ENGINE and EVP_CIPHER could be used). */
+comment|/*          * Ensure a context left lying around from last time is cleared (the          * previous check attempted to avoid this if the same ENGINE and          * EVP_CIPHER could be used).          */
 if|if
 condition|(
 name|ctx
@@ -467,7 +461,7 @@ operator|!
 name|c
 condition|)
 block|{
-comment|/* One positive side-effect of US's export 				 * control history, is that we should at least 				 * be able to avoid using US mispellings of 				 * "initialisation"? */
+comment|/*                  * One positive side-effect of US's export control history,                  * is that we should at least be able to avoid using US                  * mispellings of "initialisation"?                  */
 name|EVPerr
 argument_list|(
 name|EVP_F_EVP_CIPHERINIT_EX
@@ -484,7 +478,7 @@ name|cipher
 operator|=
 name|c
 expr_stmt|;
-comment|/* Store the ENGINE functional reference so we know 			 * 'cipher' came from an ENGINE and we need to release 			 * it when done. */
+comment|/*              * Store the ENGINE functional reference so we know 'cipher' came              * from an ENGINE and we need to release it when done.              */
 name|ctx
 operator|->
 name|engine
@@ -2072,7 +2066,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/* if we have 'decrypted' a multiple of block size, make sure 	 * we have a copy of this last block */
+comment|/*      * if we have 'decrypted' a multiple of block size, make sure we have a      * copy of this last block      */
 if|if
 condition|(
 name|b
@@ -2191,17 +2185,14 @@ modifier|*
 name|outl
 parameter_list|)
 block|{
-name|unsigned
 name|int
 name|i
 decl_stmt|,
-name|b
+name|n
 decl_stmt|;
 name|unsigned
-name|char
-name|pad
-decl_stmt|,
-name|padding_good
+name|int
+name|b
 decl_stmt|;
 operator|*
 name|outl
@@ -2219,9 +2210,8 @@ operator|&
 name|EVP_CIPH_FLAG_CUSTOM_CIPHER
 condition|)
 block|{
-name|int
-name|ret
-init|=
+name|i
+operator|=
 name|M_do_cipher
 argument_list|(
 name|ctx
@@ -2232,10 +2222,10 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
-name|ret
+name|i
 operator|<
 literal|0
 condition|)
@@ -2246,7 +2236,7 @@ else|else
 operator|*
 name|outl
 operator|=
-name|ret
+name|i
 expr_stmt|;
 return|return
 literal|1
@@ -2254,17 +2244,11 @@ return|;
 block|}
 name|b
 operator|=
-call|(
-name|unsigned
-name|int
-call|)
-argument_list|(
 name|ctx
 operator|->
 name|cipher
 operator|->
 name|block_size
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2344,7 +2328,8 @@ operator|->
 name|final
 argument_list|)
 expr_stmt|;
-name|pad
+comment|/*          * The following assumes that the ciphertext has been authenticated.          * Otherwise it provides a padding oracle.          */
+name|n
 operator|=
 name|ctx
 operator|->
@@ -2355,87 +2340,33 @@ operator|-
 literal|1
 index|]
 expr_stmt|;
-name|padding_good
-operator|=
-call|(
-name|unsigned
-name|char
-call|)
-argument_list|(
-operator|~
-name|constant_time_is_zero_8
-argument_list|(
-name|pad
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|padding_good
-operator|&=
-name|constant_time_ge_8
-argument_list|(
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+operator|||
+name|n
+operator|>
+operator|(
+name|int
+operator|)
 name|b
-argument_list|,
-name|pad
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|1
-init|;
-name|i
-operator|<
-name|b
-condition|;
-operator|++
-name|i
-control|)
+condition|)
 block|{
-name|unsigned
-name|char
-name|is_pad_index
-init|=
-name|constant_time_lt_8
+name|EVPerr
 argument_list|(
-name|i
+name|EVP_F_EVP_DECRYPTFINAL_EX
 argument_list|,
-name|pad
-argument_list|)
-decl_stmt|;
-name|unsigned
-name|char
-name|pad_byte_good
-init|=
-name|constant_time_eq_8
-argument_list|(
-name|ctx
-operator|->
-name|final
-index|[
-name|b
-operator|-
-name|i
-operator|-
-literal|1
-index|]
-argument_list|,
-name|pad
-argument_list|)
-decl_stmt|;
-name|padding_good
-operator|&=
-name|constant_time_select_8
-argument_list|(
-name|is_pad_index
-argument_list|,
-name|pad_byte_good
-argument_list|,
-literal|0xff
+name|EVP_R_BAD_DECRYPT
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-comment|/* 		 * At least 1 byte is always padding, so we always write b - 1 		 * bytes to avoid a timing leak. The caller is required to have |b| 		 * bytes space in |out| by the API contract. 		 */
 for|for
 control|(
 name|i
@@ -2444,12 +2375,61 @@ literal|0
 init|;
 name|i
 operator|<
-name|b
-operator|-
-literal|1
+name|n
 condition|;
-operator|++
 name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|ctx
+operator|->
+name|final
+index|[
+operator|--
+name|b
+index|]
+operator|!=
+name|n
+condition|)
+block|{
+name|EVPerr
+argument_list|(
+name|EVP_F_EVP_DECRYPTFINAL_EX
+argument_list|,
+name|EVP_R_BAD_DECRYPT
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
+name|n
+operator|=
+name|ctx
+operator|->
+name|cipher
+operator|->
+name|block_size
+operator|-
+name|n
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|n
+condition|;
+name|i
+operator|++
 control|)
 name|out
 index|[
@@ -2462,44 +2442,24 @@ name|final
 index|[
 name|i
 index|]
-operator|&
-name|padding_good
 expr_stmt|;
-comment|/* Safe cast: for a good padding, EVP_MAX_IV_LENGTH>= b>= pad */
 operator|*
 name|outl
 operator|=
-name|padding_good
-operator|&
-operator|(
-call|(
-name|unsigned
-name|char
-call|)
-argument_list|(
-name|b
-operator|-
-name|pad
-argument_list|)
-operator|)
+name|n
 expr_stmt|;
-return|return
-name|padding_good
-operator|&
-literal|1
-return|;
 block|}
 else|else
-block|{
 operator|*
 name|outl
 operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
-block|}
 block|}
 end_function
 
@@ -2618,7 +2578,7 @@ name|c
 operator|->
 name|engine
 condition|)
-comment|/* The EVP_CIPHER we used belongs to an ENGINE, release the 		 * functional reference we held for this reason. */
+comment|/*          * The EVP_CIPHER we used belongs to an ENGINE, release the          * functional reference we held for this reason.          */
 name|ENGINE_finish
 argument_list|(
 name|c

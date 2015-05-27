@@ -55,6 +55,12 @@ directive|include
 file|"lldb/lldb-private.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Host/Mutex.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -83,6 +89,13 @@ operator|::
 name|DWARFCallFrameInfo
 operator|*
 name|GetEHFrameInfo
+argument_list|()
+expr_stmt|;
+name|lldb_private
+operator|::
+name|CompactUnwindInfo
+operator|*
+name|GetCompactUnwindInfo
 argument_list|()
 expr_stmt|;
 name|lldb
@@ -121,6 +134,16 @@ operator|&
 name|sc
 argument_list|)
 expr_stmt|;
+name|bool
+name|GetArchitecture
+argument_list|(
+name|lldb_private
+operator|::
+name|ArchSpec
+operator|&
+name|arch
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 name|void
@@ -173,14 +196,16 @@ name|bool
 name|m_initialized
 decl_stmt|;
 comment|// delay some initialization until ObjectFile is set up
-name|lldb
-operator|::
-name|UnwindAssemblySP
-name|m_assembly_profiler
-expr_stmt|;
+name|Mutex
+name|m_mutex
+decl_stmt|;
 name|DWARFCallFrameInfo
 modifier|*
 name|m_eh_frame
+decl_stmt|;
+name|CompactUnwindInfo
+modifier|*
+name|m_compact_unwind
 decl_stmt|;
 name|DISALLOW_COPY_AND_ASSIGN
 argument_list|(

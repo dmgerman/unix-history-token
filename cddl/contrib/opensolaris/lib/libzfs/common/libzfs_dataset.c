@@ -5213,7 +5213,7 @@ case|:
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 			 * Verify the mlslabel string and convert to 			 * internal hex label string. 			 */
 name|m_label_t
 modifier|*
@@ -5410,7 +5410,7 @@ expr_stmt|;
 comment|/* OK if null */
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 name|zfs_error_aux
 argument_list|(
 name|hdl
@@ -5437,7 +5437,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 goto|goto
 name|error
 goto|;
@@ -10737,7 +10737,7 @@ case|:
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|m_label_t
 modifier|*
 name|new_sl
@@ -10872,7 +10872,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 name|propbuf
 index|[
 literal|0
@@ -10882,7 +10882,7 @@ literal|'\0'
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 block|}
 break|break;
 case|case
@@ -11372,7 +11372,7 @@ parameter_list|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 name|idmap_get_handle_t
 modifier|*
 name|get_hdl
@@ -11489,7 +11489,7 @@ operator|)
 return|;
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 name|assert
 argument_list|(
 operator|!
@@ -11504,7 +11504,7 @@ return|;
 comment|// silence compiler warning
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 block|}
 end_function
 
@@ -11566,6 +11566,11 @@ literal|0
 index|]
 operator|=
 literal|'\0'
+expr_stmt|;
+operator|*
+name|ridp
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Figure out the property type ({user|group}{quota|space}) */
 for|for
@@ -11657,11 +11662,56 @@ condition|)
 block|{
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 comment|/* 		 * It's a SID name (eg "user@domain") that needs to be 		 * turned into S-1-domainID-RID. 		 */
-name|directory_error_t
-name|e
+name|int
+name|flag
+init|=
+literal|0
 decl_stmt|;
+name|idmap_stat
+name|stat
+decl_stmt|,
+name|map_stat
+decl_stmt|;
+name|uid_t
+name|pid
+decl_stmt|;
+name|idmap_rid_t
+name|rid
+decl_stmt|;
+name|idmap_get_handle_t
+modifier|*
+name|gh
+init|=
+name|NULL
+decl_stmt|;
+name|stat
+operator|=
+name|idmap_get_create
+argument_list|(
+operator|&
+name|gh
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+operator|!=
+name|IDMAP_SUCCESS
+condition|)
+block|{
+name|idmap_get_destroy
+argument_list|(
+name|gh
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|zoned
@@ -11681,46 +11731,137 @@ condition|(
 name|isuser
 condition|)
 block|{
-name|e
+name|stat
 operator|=
-name|directory_sid_from_user_name
+name|idmap_getuidbywinname
 argument_list|(
+name|cp
+argument_list|,
 name|NULL
 argument_list|,
-name|cp
+name|flag
+argument_list|,
+operator|&
+name|pid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+name|stat
+operator|=
+name|idmap_get_sidbyuid
+argument_list|(
+name|gh
+argument_list|,
+name|pid
+argument_list|,
+name|flag
 argument_list|,
 operator|&
 name|numericsid
+argument_list|,
+operator|&
+name|rid
+argument_list|,
+operator|&
+name|map_stat
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|e
+name|stat
 operator|=
-name|directory_sid_from_group_name
+name|idmap_getgidbywinname
 argument_list|(
+name|cp
+argument_list|,
 name|NULL
 argument_list|,
-name|cp
+name|flag
+argument_list|,
+operator|&
+name|pid
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+name|stat
+operator|=
+name|idmap_get_sidbygid
+argument_list|(
+name|gh
+argument_list|,
+name|pid
+argument_list|,
+name|flag
 argument_list|,
 operator|&
 name|numericsid
+argument_list|,
+operator|&
+name|rid
+argument_list|,
+operator|&
+name|map_stat
 argument_list|)
 expr_stmt|;
 block|}
 if|if
 condition|(
-name|e
-operator|!=
-name|NULL
+name|stat
+operator|<
+literal|0
 condition|)
 block|{
-name|directory_error_free
+name|idmap_get_destroy
 argument_list|(
-name|e
+name|gh
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|ENOENT
+operator|)
+return|;
+block|}
+name|stat
+operator|=
+name|idmap_get_mappings
+argument_list|(
+name|gh
+argument_list|)
+expr_stmt|;
+name|idmap_get_destroy
+argument_list|(
+name|gh
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|stat
+operator|<
+literal|0
+condition|)
+block|{
 return|return
 operator|(
 name|ENOENT
@@ -11742,10 +11883,15 @@ name|cp
 operator|=
 name|numericsid
 expr_stmt|;
+operator|*
+name|ridp
+operator|=
+name|rid
+expr_stmt|;
 comment|/* will be further decoded below */
 else|#
 directive|else
-comment|/* !sun */
+comment|/* !illumos */
 return|return
 operator|(
 name|ENOENT
@@ -11753,7 +11899,7 @@ operator|)
 return|;
 endif|#
 directive|endif
-comment|/* !sun */
+comment|/* illumos */
 block|}
 if|if
 condition|(
@@ -11782,6 +11928,18 @@ argument_list|,
 name|domainlen
 argument_list|)
 expr_stmt|;
+name|errno
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|ridp
+operator|==
+literal|0
+condition|)
+block|{
 name|cp
 operator|=
 name|strrchr
@@ -11799,10 +11957,6 @@ expr_stmt|;
 name|cp
 operator|++
 expr_stmt|;
-name|errno
-operator|=
-literal|0
-expr_stmt|;
 operator|*
 name|ridp
 operator|=
@@ -11816,6 +11970,14 @@ argument_list|,
 literal|10
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+name|end
+operator|=
+literal|""
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|numericsid
@@ -19090,7 +19252,7 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|sun
+name|illumos
 end_ifdef
 
 begin_function
@@ -19559,7 +19721,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* sun */
+comment|/* illumos */
 end_comment
 
 begin_function

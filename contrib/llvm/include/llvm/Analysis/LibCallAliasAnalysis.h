@@ -107,7 +107,7 @@ name|LibCallInfo
 operator|*
 name|LC
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|FunctionPass
@@ -166,16 +166,17 @@ argument_list|()
 expr_stmt|;
 name|ModRefResult
 name|getModRefInfo
-parameter_list|(
+argument_list|(
 name|ImmutableCallSite
 name|CS
-parameter_list|,
+argument_list|,
 specifier|const
 name|Location
-modifier|&
+operator|&
 name|Loc
-parameter_list|)
-function_decl|;
+argument_list|)
+name|override
+decl_stmt|;
 name|ModRefResult
 name|getModRefInfo
 parameter_list|(
@@ -185,6 +186,7 @@ parameter_list|,
 name|ImmutableCallSite
 name|CS2
 parameter_list|)
+function|override
 block|{
 comment|// TODO: Could compare two direct calls against each other if we cared to.
 return|return
@@ -198,7 +200,6 @@ name|CS2
 argument_list|)
 return|;
 block|}
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
@@ -207,8 +208,8 @@ operator|&
 name|AU
 argument_list|)
 decl|const
+name|override
 decl_stmt|;
-name|virtual
 name|bool
 name|runOnFunction
 parameter_list|(
@@ -216,6 +217,7 @@ name|Function
 modifier|&
 name|F
 parameter_list|)
+function|override
 block|{
 name|InitializeAliasAnalysis
 argument_list|(
@@ -231,7 +233,6 @@ comment|/// getAdjustedAnalysisPointer - This method is used when a pass impleme
 comment|/// an analysis interface through multiple inheritance.  If needed, it
 comment|/// should override this to adjust the this pointer as needed for the
 comment|/// specified pass info.
-name|virtual
 name|void
 modifier|*
 name|getAdjustedAnalysisPointer
@@ -241,6 +242,7 @@ name|void
 modifier|*
 name|PI
 parameter_list|)
+function|override
 block|{
 if|if
 condition|(

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -334,17 +334,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    FlCheckForAscii  *  * PARAMETERS:  Handle              - Open input file  *              Filename            - Input filename  *              DisplayErrors       - TRUE if error messages desired  *  * RETURN:      Status  *  * DESCRIPTION: Verify that the input file is entirely ASCII. Ignores characters  *              within comments. Note: does not handle nested comments and does  *              not handle comment delimiters within string literals. However,  *              on the rare chance this happens and an invalid character is  *              missed, the parser will catch the error by failing in some  *              spectactular manner.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    FlCheckForAscii  *  * PARAMETERS:  Filename            - Full input filename  *              DisplayErrors       - TRUE if error messages desired  *  * RETURN:      Status  *  * DESCRIPTION: Verify that the input file is entirely ASCII. Ignores characters  *              within comments. Note: does not handle nested comments and does  *              not handle comment delimiters within string literals. However,  *              on the rare chance this happens and an invalid character is  *              missed, the parser will catch the error by failing in some  *              spectactular manner.  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
 name|FlCheckForAscii
 parameter_list|(
-name|FILE
-modifier|*
-name|Handle
-parameter_list|,
 name|char
 modifier|*
 name|Filename
@@ -369,6 +365,20 @@ decl_stmt|;
 name|ASL_FILE_STATUS
 name|Status
 decl_stmt|;
+name|FILE
+modifier|*
+name|Handle
+decl_stmt|;
+comment|/* Open file in text mode so file offset is always accurate */
+name|Handle
+operator|=
+name|fopen
+argument_list|(
+name|Filename
+argument_list|,
+literal|"rb"
+argument_list|)
+expr_stmt|;
 name|Status
 operator|.
 name|Line
@@ -482,7 +492,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"Non-ASCII character [0x%2.2X] found in line %u, file offset 0x%.2X\n"
+literal|"Found non-ASCII character in source text: "
+literal|"0x%2.2X in line %u, file offset 0x%2.2X\n"
 argument_list|,
 name|Byte
 argument_list|,
@@ -500,8 +511,58 @@ name|BadBytes
 operator|++
 expr_stmt|;
 block|}
-comment|/* Update line counter */
+comment|/* Ensure character is either printable or a "space" char */
 elseif|else
+if|if
+condition|(
+operator|!
+name|ACPI_IS_PRINT
+argument_list|(
+name|Byte
+argument_list|)
+operator|&&
+operator|!
+name|ACPI_IS_SPACE
+argument_list|(
+name|Byte
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|BadBytes
+operator|<
+literal|10
+operator|)
+operator|&&
+operator|(
+name|DisplayErrors
+operator|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"Found invalid character in source text: "
+literal|"0x%2.2X in line %u, file offset 0x%2.2X\n"
+argument_list|,
+name|Byte
+argument_list|,
+name|Status
+operator|.
+name|Line
+argument_list|,
+name|Status
+operator|.
+name|Offset
+argument_list|)
+expr_stmt|;
+block|}
+name|BadBytes
+operator|++
+expr_stmt|;
+block|}
+comment|/* Update line counter as necessary */
 if|if
 condition|(
 name|Byte
@@ -521,14 +582,9 @@ name|Offset
 operator|++
 expr_stmt|;
 block|}
-comment|/* Seek back to the beginning of the source file */
-name|fseek
+name|fclose
 argument_list|(
 name|Handle
-argument_list|,
-literal|0
-argument_list|,
-name|SEEK_SET
 argument_list|)
 expr_stmt|;
 comment|/* Were there any non-ASCII characters in the file? */
@@ -544,7 +600,8 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"%u non-ASCII characters found in input source text, could be a binary file\n"
+literal|"Total %u invalid characters found in input source text, "
+literal|"could be a binary file\n"
 argument_list|,
 name|BadBytes
 argument_list|)
@@ -632,6 +689,11 @@ operator|==
 literal|'/'
 condition|)
 block|{
+name|Status
+operator|->
+name|Offset
+operator|++
+expr_stmt|;
 return|return;
 block|}
 if|if

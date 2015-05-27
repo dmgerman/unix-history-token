@@ -74,6 +74,17 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
+comment|/** max number of targets spawned for a query and its subqueries */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAX_TARGET_COUNT
+value|32
+end_define
+
+begin_comment
 comment|/** max number of query restarts. Determines max number of CNAME chain. */
 end_comment
 
@@ -103,7 +114,7 @@ begin_define
 define|#
 directive|define
 name|MAX_SENT_COUNT
-value|16
+value|32
 end_define
 
 begin_comment
@@ -137,17 +148,6 @@ define|#
 directive|define
 name|USEFUL_SERVER_TOP_TIMEOUT
 value|120000
-end_define
-
-begin_comment
-comment|/** Number of lost messages in a row that get a host blacklisted.  * With 16, a couple different queries have to time out and no working  * queries are happening */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|USEFUL_SERVER_MAX_LOST
-value|16
 end_define
 
 begin_comment
@@ -343,7 +343,7 @@ comment|/** state for capsfail: current server number to try */
 name|size_t
 name|caps_server
 decl_stmt|;
-comment|/** state for capsfail: stored query for comparisons */
+comment|/** state for capsfail: stored query for comparisons. Can be NULL if 	 * no response had been seen prior to starting the fallback. */
 name|struct
 name|reply_info
 modifier|*
@@ -374,6 +374,11 @@ decl_stmt|;
 comment|/** number of queries fired off */
 name|int
 name|sent_count
+decl_stmt|;
+comment|/** number of target queries spawned in [1], for this query and its 	 * subqueries, the malloced-array is shared, [0] refcount. */
+name|int
+modifier|*
+name|target_count
 decl_stmt|;
 comment|/** 	 * The query must store NS records from referrals as parentside RRs 	 * Enabled once it hits resolution problems, to throttle retries. 	 * If enabled it is the pointer to the old delegation point with 	 * the old retry counts for bad-nameserver-addresses. 	 */
 name|struct

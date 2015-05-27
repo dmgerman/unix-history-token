@@ -193,12 +193,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet6/in6_gif.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet6/in6_var.h>
 end_include
 
@@ -236,7 +230,15 @@ directive|include
 file|<net/if_gif.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|GIF_HLIM
+value|30
+end_define
+
 begin_expr_stmt
+specifier|static
 name|VNET_DEFINE
 argument_list|(
 name|int
@@ -310,6 +312,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|in6_gif_input
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -319,6 +339,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|protosw
 name|in6_gif_protosw
@@ -619,6 +640,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|in6_gif_input
 parameter_list|(
@@ -805,6 +827,9 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
+name|int
+name|ret
+decl_stmt|;
 name|GIF_RLOCK_ASSERT
 argument_list|(
 name|sc
@@ -828,7 +853,18 @@ name|ip6
 operator|->
 name|ip6_dst
 argument_list|)
-operator|||
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+name|ret
+operator|=
+literal|128
+expr_stmt|;
+if|if
+condition|(
 operator|!
 name|IN6_ARE_ADDR_EQUAL
 argument_list|(
@@ -845,11 +881,30 @@ operator|->
 name|ip6_src
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|sc
+operator|->
+name|gif_options
+operator|&
+name|GIF_IGNORE_SOURCE
+operator|)
+operator|==
+literal|0
+condition|)
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
+else|else
+name|ret
+operator|+=
+literal|128
+expr_stmt|;
 comment|/* martian filters on outer source - done in ip6_input */
 comment|/* ingress filters on outer source */
 if|if
@@ -977,9 +1032,7 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-literal|128
-operator|*
-literal|2
+name|ret
 operator|)
 return|;
 block|}

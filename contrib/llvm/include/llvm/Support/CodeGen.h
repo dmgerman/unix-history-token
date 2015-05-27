@@ -117,6 +117,26 @@ name|Large
 block|}
 enum|;
 block|}
+name|namespace
+name|PICLevel
+block|{
+enum|enum
+name|Level
+block|{
+name|Default
+init|=
+literal|0
+block|,
+name|Small
+init|=
+literal|1
+block|,
+name|Large
+init|=
+literal|2
+block|}
+enum|;
+block|}
 comment|// TLS models.
 name|namespace
 name|TLSModel

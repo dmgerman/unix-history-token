@@ -177,13 +177,6 @@ name|StopOthers
 argument_list|()
 block|;
 name|virtual
-name|void
-name|SetStopOthers
-argument_list|(
-argument|bool new_value
-argument_list|)
-block|;
-name|virtual
 name|lldb
 operator|::
 name|StateType
@@ -295,6 +288,13 @@ name|m_takedown_done
 operator|=
 name|true
 block|;     }
+name|virtual
+name|void
+name|SetStopOthers
+argument_list|(
+argument|bool new_value
+argument_list|)
+block|;
 name|protected
 operator|:
 name|void

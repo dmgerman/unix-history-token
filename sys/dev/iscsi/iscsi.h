@@ -84,6 +84,10 @@ decl_stmt|;
 name|uint32_t
 name|io_datasn
 decl_stmt|;
+name|void
+modifier|*
+name|io_icl_prv
+decl_stmt|;
 block|}
 struct|;
 end_struct

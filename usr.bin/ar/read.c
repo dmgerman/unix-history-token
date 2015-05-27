@@ -350,13 +350,20 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+operator|(
 name|name
 operator|=
 name|archive_entry_pathname
 argument_list|(
 name|entry
 argument_list|)
-expr_stmt|;
+operator|)
+operator|==
+name|NULL
+condition|)
+break|break;
 comment|/* Skip pseudo members. */
 if|if
 condition|(
@@ -820,9 +827,36 @@ argument_list|,
 name|name
 argument_list|)
 expr_stmt|;
+comment|/* Disallow absolute paths. */
+if|if
+condition|(
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+condition|)
+block|{
+name|bsdar_warnc
+argument_list|(
+name|bsdar
+argument_list|,
+literal|0
+argument_list|,
+literal|"Absolute path '%s'"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
+comment|/* Basic path security flags. */
 name|flags
 operator|=
-literal|0
+name|ARCHIVE_EXTRACT_SECURE_SYMLINKS
+operator||
+name|ARCHIVE_EXTRACT_SECURE_NODOTDOT
 expr_stmt|;
 if|if
 condition|(

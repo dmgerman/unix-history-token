@@ -1188,6 +1188,12 @@ operator|&
 name|fail_on_timeout
 argument_list|)
 expr_stmt|;
+name|controller
+operator|->
+name|fail_on_task_timeout
+operator|=
+name|fail_on_timeout
+expr_stmt|;
 comment|/* Attach to CAM using xpt_bus_register now, then immediately freeze 	 *  the simq.  It will get released later when initial domain discovery 	 *  is complete. 	 */
 name|controller
 operator|->

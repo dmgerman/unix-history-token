@@ -336,10 +336,6 @@ define|#
 directive|define
 name|PCIB_ENABLE_ARI
 value|0x8
-name|uint16_t
-name|command
-decl_stmt|;
-comment|/* command register */
 name|u_int
 name|domain
 decl_stmt|;
@@ -400,17 +396,9 @@ comment|/* topmost address of port window */
 endif|#
 directive|endif
 name|uint16_t
-name|secstat
-decl_stmt|;
-comment|/* secondary bus status register */
-name|uint16_t
 name|bridgectl
 decl_stmt|;
 comment|/* bridge control register */
-name|uint8_t
-name|seclat
-decl_stmt|;
-comment|/* secondary bus latency timer */
 block|}
 struct|;
 end_struct
@@ -627,6 +615,16 @@ end_function_decl
 begin_function_decl
 name|void
 name|pcib_attach_common
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pcib_bridge_init
 parameter_list|(
 name|device_t
 name|dev
@@ -937,6 +935,31 @@ name|pcib
 parameter_list|,
 name|device_t
 name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pcib_decode_rid
+parameter_list|(
+name|device_t
+name|pcib
+parameter_list|,
+name|uint16_t
+name|rid
+parameter_list|,
+name|int
+modifier|*
+name|bus
+parameter_list|,
+name|int
+modifier|*
+name|slot
+parameter_list|,
+name|int
+modifier|*
+name|func
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -67,6 +67,12 @@ directive|include
 file|"lldb/Host/Mutex.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"lldb/Utility/Iterable.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|lldb_private
@@ -338,7 +344,7 @@ comment|/// Clear the object's state.
 comment|///
 comment|/// Clears the list of modules and releases a reference to each
 comment|/// module object and if the reference count goes to zero, the
-comment|/// module will be deleted. Also relese all memory that might be
+comment|/// module will be deleted. Also release all memory that might be
 comment|/// held by any collection classes (like std::vector)
 comment|//------------------------------------------------------------------
 name|void
@@ -352,7 +358,7 @@ comment|/// Dump the description of each module contained in this list to
 comment|/// the supplied stream \a s.
 comment|///
 comment|/// @param[in] s
-comment|///     The stream to which to dump the object descripton.
+comment|///     The stream to which to dump the object description.
 comment|///
 comment|/// @see Module::Dump(Stream *) const
 comment|//------------------------------------------------------------------
@@ -573,6 +579,31 @@ name|sc_list
 parameter_list|)
 function_decl|;
 comment|//------------------------------------------------------------------
+comment|/// @see Module::FindFunctions ()
+comment|//------------------------------------------------------------------
+name|size_t
+name|FindFunctions
+parameter_list|(
+specifier|const
+name|RegularExpression
+modifier|&
+name|name
+parameter_list|,
+name|bool
+name|include_symbols
+parameter_list|,
+name|bool
+name|include_inlines
+parameter_list|,
+name|bool
+name|append
+parameter_list|,
+name|SymbolContextList
+modifier|&
+name|sc_list
+parameter_list|)
+function_decl|;
+comment|//------------------------------------------------------------------
 comment|/// Find global and static variables by name.
 comment|///
 comment|/// @param[in] name
@@ -616,7 +647,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|//------------------------------------------------------------------
-comment|/// Find global and static variables by regular exression.
+comment|/// Find global and static variables by regular expression.
 comment|///
 comment|/// @param[in] regex
 comment|///     A regular expression to use when matching the name.
@@ -1249,6 +1280,59 @@ name|Notifier
 modifier|*
 name|m_notifier
 decl_stmt|;
+name|public
+label|:
+typedef|typedef
+name|LockingAdaptedIterable
+operator|<
+name|collection
+operator|,
+name|lldb
+operator|::
+name|ModuleSP
+operator|,
+name|vector_adapter
+operator|>
+name|ModuleIterable
+expr_stmt|;
+name|ModuleIterable
+name|Modules
+parameter_list|()
+block|{
+return|return
+name|ModuleIterable
+argument_list|(
+name|m_modules
+argument_list|,
+name|GetMutex
+argument_list|()
+argument_list|)
+return|;
+block|}
+typedef|typedef
+name|AdaptedIterable
+operator|<
+name|collection
+operator|,
+name|lldb
+operator|::
+name|ModuleSP
+operator|,
+name|vector_adapter
+operator|>
+name|ModuleIterableNoLocking
+expr_stmt|;
+name|ModuleIterableNoLocking
+name|ModulesNoLocking
+parameter_list|()
+block|{
+return|return
+name|ModuleIterableNoLocking
+argument_list|(
+name|m_modules
+argument_list|)
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

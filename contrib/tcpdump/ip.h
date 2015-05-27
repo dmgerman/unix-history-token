@@ -1,11 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* @(#) $Header: /tcpdump/master/tcpdump/ip.h,v 1.12 2007-09-14 01:29:28 guy Exp $ (LBL) */
-end_comment
-
-begin_comment
 comment|/*  * Copyright (c) 1982, 1986, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)ip.h	8.2 (Berkeley) 6/1/94  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|TCPDUMP_IP_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|TCPDUMP_IP_H
+end_define
 
 begin_comment
 comment|/*  * Definitions for internet protocol version 4.  * Per RFC 791, September 1981.  */
@@ -26,7 +34,7 @@ begin_struct
 struct|struct
 name|ip
 block|{
-name|u_int8_t
+name|uint8_t
 name|ip_vhl
 decl_stmt|;
 comment|/* header length, version */
@@ -44,19 +52,19 @@ parameter_list|(
 name|ip
 parameter_list|)
 value|((ip)->ip_vhl& 0x0f)
-name|u_int8_t
+name|uint8_t
 name|ip_tos
 decl_stmt|;
 comment|/* type of service */
-name|u_int16_t
+name|uint16_t
 name|ip_len
 decl_stmt|;
 comment|/* total length */
-name|u_int16_t
+name|uint16_t
 name|ip_id
 decl_stmt|;
 comment|/* identification */
-name|u_int16_t
+name|uint16_t
 name|ip_off
 decl_stmt|;
 comment|/* fragment offset field */
@@ -75,15 +83,15 @@ directive|define
 name|IP_OFFMASK
 value|0x1fff
 comment|/* mask for fragmenting bits */
-name|u_int8_t
+name|uint8_t
 name|ip_ttl
 decl_stmt|;
 comment|/* time to live */
-name|u_int8_t
+name|uint8_t
 name|ip_p
 decl_stmt|;
 comment|/* protocol */
-name|u_int16_t
+name|uint16_t
 name|ip_sum
 decl_stmt|;
 comment|/* checksum */
@@ -423,19 +431,19 @@ begin_struct
 struct|struct
 name|ip_timestamp
 block|{
-name|u_int8_t
+name|uint8_t
 name|ipt_code
 decl_stmt|;
 comment|/* IPOPT_TS */
-name|u_int8_t
+name|uint8_t
 name|ipt_len
 decl_stmt|;
 comment|/* size of structure (variable) */
-name|u_int8_t
+name|uint8_t
 name|ipt_ptr
 decl_stmt|;
 comment|/* index of current entry */
-name|u_int8_t
+name|uint8_t
 name|ipt_oflwflg
 decl_stmt|;
 comment|/* flags, overflow counter */
@@ -456,7 +464,7 @@ value|((ipt)->ipt_oflwflg& 0x0f)
 union|union
 name|ipt_timestamp
 block|{
-name|u_int32_t
+name|uint32_t
 name|ipt_time
 index|[
 literal|1
@@ -469,7 +477,7 @@ name|struct
 name|in_addr
 name|ipt_addr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ipt_time
 decl_stmt|;
 block|}
@@ -635,30 +643,14 @@ begin_comment
 comment|/* default maximum segment size */
 end_comment
 
-begin_comment
-comment|/* in print-ip.c */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
-begin_function_decl
-specifier|extern
-name|int
-name|nextproto4_cksum
-parameter_list|(
-specifier|const
-name|struct
-name|ip
-modifier|*
-parameter_list|,
-specifier|const
-name|u_int8_t
-modifier|*
-parameter_list|,
-name|u_int
-parameter_list|,
-name|u_int
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* TCPDUMP_IP_H */
+end_comment
 
 end_unit
 

@@ -25,6 +25,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_define
+define|#
+directive|define
+name|L2CAP_SOCKET_CHECKED
+end_define
+
 begin_include
 include|#
 directive|include
@@ -178,6 +184,18 @@ sizeof|sizeof
 argument_list|(
 name|sa
 argument_list|)
+expr_stmt|;
+name|sa
+operator|.
+name|l2cap_bdaddr_type
+operator|=
+name|BDADDR_BREDR
+expr_stmt|;
+name|sa
+operator|.
+name|l2cap_cid
+operator|=
+literal|0
 expr_stmt|;
 name|bdaddr_copy
 argument_list|(

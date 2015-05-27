@@ -34,10 +34,20 @@ name|errno
 decl_stmt|;
 end_decl_stmt
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__error_threaded
+argument_list|,
+name|__error
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|int
 modifier|*
-name|__error
+name|__error_threaded
 parameter_list|(
 name|void
 parameter_list|)

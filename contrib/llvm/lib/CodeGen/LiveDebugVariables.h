@@ -78,13 +78,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_LIVEDEBUGVARIABLES_H
+name|LLVM_LIB_CODEGEN_LIVEDEBUGVARIABLES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_LIVEDEBUGVARIABLES_H
+name|LLVM_LIB_CODEGEN_LIVEDEBUGVARIABLES_H
 end_define
 
 begin_include
@@ -97,6 +97,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineFunctionPass.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DebugInfo.h"
 end_include
 
 begin_decl_stmt
@@ -121,6 +127,16 @@ block|{
 name|void
 operator|*
 name|pImpl
+block|;
+name|DenseMap
+operator|<
+specifier|const
+name|Function
+operator|*
+block|,
+name|DISubprogram
+operator|>
+name|FunctionDIs
 block|;
 name|public
 operator|:
@@ -182,26 +198,32 @@ argument_list|()
 block|;
 name|private
 operator|:
-name|virtual
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
+argument|MachineFunction&
 argument_list|)
+name|override
 block|;
-name|virtual
 name|void
 name|releaseMemory
 argument_list|()
+name|override
 block|;
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&
 argument_list|)
 specifier|const
+name|override
+block|;
+name|bool
+name|doInitialization
+argument_list|(
+argument|Module&
+argument_list|)
+name|override
 block|;  }
 decl_stmt|;
 block|}
@@ -215,10 +237,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|// LLVM_CODEGEN_LIVEDEBUGVARIABLES_H
-end_comment
 
 end_unit
 

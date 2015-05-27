@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|X86TARGETASMINFO_H
+name|LLVM_LIB_TARGET_X86_MCTARGETDESC_X86MCASMINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|X86TARGETASMINFO_H
+name|LLVM_LIB_TARGET_X86_MCTARGETDESC_X86MCASMINFO_H
 end_define
 
 begin_include
@@ -128,7 +128,6 @@ operator|&
 name|Triple
 argument_list|)
 block|;
-name|virtual
 specifier|const
 name|MCExpr
 operator|*
@@ -141,6 +140,7 @@ argument_list|,
 argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
+name|override
 block|;   }
 decl_stmt|;
 name|class
@@ -149,10 +149,10 @@ range|:
 name|public
 name|MCAsmInfoELF
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -164,16 +164,6 @@ name|Triple
 operator|&
 name|Triple
 argument_list|)
-block|;
-name|virtual
-specifier|const
-name|MCSection
-operator|*
-name|getNonexecutableStackSection
-argument_list|(
-argument|MCContext&Ctx
-argument_list|)
-specifier|const
 block|;   }
 decl_stmt|;
 name|class
@@ -182,10 +172,10 @@ range|:
 name|public
 name|MCAsmInfoMicrosoft
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:
@@ -205,10 +195,10 @@ range|:
 name|public
 name|MCAsmInfoGNUCOFF
 block|{
-name|virtual
 name|void
 name|anchor
 argument_list|()
+name|override
 block|;
 name|public
 operator|:

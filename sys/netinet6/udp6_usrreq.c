@@ -174,6 +174,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<net/rss_config.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -258,12 +264,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_rss.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet6/ip6protosw.h>
 end_include
 
@@ -277,6 +277,12 @@ begin_include
 include|#
 directive|include
 file|<netinet6/in6_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_rss.h>
 end_include
 
 begin_include
@@ -455,11 +461,6 @@ block|{
 name|m_freem
 argument_list|(
 name|n
-argument_list|)
-expr_stmt|;
-name|IPSEC6STAT_INC
-argument_list|(
-name|ips_in_polvio
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3687,18 +3688,10 @@ name|flowid
 operator|=
 name|rss_hash_ip6_2tuple
 argument_list|(
-operator|*
 name|faddr
 argument_list|,
-operator|*
 name|laddr
 argument_list|)
-expr_stmt|;
-name|m
-operator|->
-name|m_flags
-operator||=
-name|M_FLOWID
 expr_stmt|;
 name|M_HASHTYPE_SET
 argument_list|(

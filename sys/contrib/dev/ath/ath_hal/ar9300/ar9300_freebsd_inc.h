@@ -309,6 +309,13 @@ name|AH_PRIVATE_DIAG
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATH_SUPPORT_KEYPLUMB_WAR
+value|0
+end_define
+
 begin_comment
 comment|/* XXX need to reverify these; they came in with qcamain */
 end_comment
@@ -420,8 +427,26 @@ begin_comment
 comment|/* AH_SUPPORT_AR9340 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_QCA9550
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|AH_SUPPORT_SCORPION
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|//#define AH_SUPPORT_SCORPION             1
+comment|/* AH_SUPPORT_QCA9550 */
 end_comment
 
 begin_define

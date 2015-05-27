@@ -118,6 +118,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|dflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|gflag
 decl_stmt|;
 end_decl_stmt
@@ -626,6 +633,8 @@ block|,
 literal|"irq"
 block|,
 literal|"jail"
+block|,
+literal|"domain"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -858,7 +867,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"Ccgij:l:p:rs:t:x:"
+literal|"Ccd:gij:l:p:rs:t:x:"
 argument_list|)
 operator|)
 operator|!=
@@ -882,13 +891,6 @@ break|break;
 case|case
 literal|'c'
 case|:
-if|if
-condition|(
-name|rflag
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
 name|cflag
 operator|=
 literal|1
@@ -896,6 +898,25 @@ expr_stmt|;
 name|level
 operator|=
 name|CPU_LEVEL_CPUSET
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+name|dflag
+operator|=
+literal|1
+expr_stmt|;
+name|which
+operator|=
+name|CPU_WHICH_DOMAIN
+expr_stmt|;
+name|id
+operator|=
+name|atoi
+argument_list|(
+name|optarg
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -973,13 +994,6 @@ break|break;
 case|case
 literal|'r'
 case|:
-if|if
-condition|(
-name|cflag
-condition|)
-name|usage
-argument_list|()
-expr_stmt|;
 name|level
 operator|=
 name|CPU_LEVEL_ROOT
@@ -1083,6 +1097,8 @@ expr_stmt|;
 comment|/* Only one identity specifier. */
 if|if
 condition|(
+name|dflag
+operator|+
 name|jflag
 operator|+
 name|xflag
@@ -1117,7 +1133,11 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|dflag
+operator|||
 name|iflag
+operator|||
+name|rflag
 condition|)
 name|usage
 argument_list|()
@@ -1131,15 +1151,13 @@ block|{
 if|if
 condition|(
 name|Cflag
-operator||
+operator|||
 name|pflag
-operator||
-name|rflag
-operator||
+operator|||
 name|tflag
-operator||
+operator|||
 name|xflag
-operator||
+operator|||
 name|jflag
 condition|)
 name|usage
@@ -1258,18 +1276,16 @@ condition|(
 name|Cflag
 operator|&&
 operator|(
-name|sflag
-operator|||
-name|rflag
+name|jflag
 operator|||
 operator|!
 name|pflag
 operator|||
+name|sflag
+operator|||
 name|tflag
 operator|||
 name|xflag
-operator|||
-name|jflag
 operator|)
 condition|)
 name|usage
@@ -1280,11 +1296,7 @@ condition|(
 operator|!
 name|lflag
 operator|&&
-operator|(
 name|cflag
-operator|||
-name|rflag
-operator|)
 condition|)
 name|usage
 argument_list|()
@@ -1478,14 +1490,15 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       cpuset [-cr] [-l cpu-list] [-j jailid | -p pid | -t tid | -s setid | -x irq]\n"
+literal|"       cpuset [-c] [-l cpu-list] [-j jailid | -p pid | -t tid | -s setid | -x irq]\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"       cpuset [-cgir] [-j jailid | -p pid | -t tid | -s setid | -x irq]\n"
+literal|"       cpuset -g [-cir] [-d domain | -j jailid | -p pid | -t tid | -s setid |\n"
+literal|"              -x irq]\n"
 argument_list|)
 expr_stmt|;
 name|exit

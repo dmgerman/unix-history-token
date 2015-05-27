@@ -239,6 +239,18 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"    -D			DNSSEC enable with default root anchor\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    			from %s\n"
+argument_list|,
+name|ROOT_ANCHOR_FILE
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"    -f keyfile		read trust anchors from file, with lines as -y.\n"
 argument_list|)
 expr_stmt|;
@@ -2175,7 +2187,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/** Main routine for checkconf */
+comment|/** Main routine for unbound-host */
 end_comment
 
 begin_function
@@ -2242,6 +2254,19 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* no need to fetch additional targets, we only do few lookups */
+name|check_ub_res
+argument_list|(
+name|ub_ctx_set_option
+argument_list|(
+name|ctx
+argument_list|,
+literal|"target-fetch-policy:"
+argument_list|,
+literal|"0 0 0 0 0"
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* parse the options */
 while|while
 condition|(
@@ -2254,7 +2279,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46F:c:df:hrt:vy:C:"
+literal|"46DF:c:df:hrt:vy:C:"
 argument_list|)
 operator|)
 operator|!=
@@ -2317,6 +2342,20 @@ argument_list|(
 name|ctx
 argument_list|,
 name|optarg
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'D'
+case|:
+name|check_ub_res
+argument_list|(
+name|ub_ctx_add_ta_file
+argument_list|(
+name|ctx
+argument_list|,
+name|ROOT_ANCHOR_FILE
 argument_list|)
 argument_list|)
 expr_stmt|;

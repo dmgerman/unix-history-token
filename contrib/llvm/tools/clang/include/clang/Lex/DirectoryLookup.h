@@ -284,7 +284,7 @@ name|u
 operator|.
 name|Dir
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getFrameworkDir - Return the directory that this framework refers to.
@@ -304,7 +304,7 @@ name|u
 operator|.
 name|Dir
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// getHeaderMap - Return the directory that this entry refers to.
@@ -324,7 +324,7 @@ name|u
 operator|.
 name|Map
 operator|:
-literal|0
+name|nullptr
 return|;
 block|}
 comment|/// isNormalDir - Return true if this is a normal directory, not a header map.
@@ -459,12 +459,17 @@ comment|///
 comment|/// \param [out] InUserSpecifiedSystemFramework If the file is found,
 comment|/// set to true if the file is located in a framework that has been
 comment|/// user-specified to be treated as a system framework.
+comment|///
+comment|/// \param [out] MappedName if this is a headermap which maps the filename to
+comment|/// a framework include ("Foo.h" -> "Foo/Foo.h"), set the new name to this
+comment|/// vector and point Filename to it.
 specifier|const
 name|FileEntry
 modifier|*
 name|LookupFile
 argument_list|(
 name|StringRef
+operator|&
 name|Filename
 argument_list|,
 name|HeaderSearch
@@ -494,6 +499,17 @@ argument_list|,
 name|bool
 operator|&
 name|InUserSpecifiedSystemFramework
+argument_list|,
+name|bool
+operator|&
+name|HasBeenMapped
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|MappedName
 argument_list|)
 decl|const
 decl_stmt|;

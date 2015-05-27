@@ -343,7 +343,6 @@ name|struct
 name|thread
 modifier|*
 parameter_list|,
-specifier|const
 name|mcontext_t
 modifier|*
 parameter_list|)

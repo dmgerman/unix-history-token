@@ -192,10 +192,36 @@ modifier|*
 name|rwlock_t
 typedef|;
 typedef|typedef
-name|uintptr_t
+name|void
+modifier|*
+name|process_t
+typedef|;
+comment|// Process type is HANDLE
+typedef|typedef
+name|void
+modifier|*
 name|thread_t
 typedef|;
 comment|// Host thread type
+typedef|typedef
+name|void
+modifier|*
+name|file_t
+typedef|;
+comment|// Host file type
+typedef|typedef
+name|void
+modifier|*
+name|pipe_t
+typedef|;
+comment|// Host pipe type
+typedef|typedef
+name|unsigned
+name|int
+name|__w64
+name|socket_t
+typedef|;
+comment|// Host socket type
 typedef|typedef
 name|uint32_t
 name|thread_key_t
@@ -223,40 +249,6 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|// Host thread function type
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|LogOutputCallback
-function_decl|)
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-name|void
-modifier|*
-name|baton
-parameter_list|)
-function_decl|;
-typedef|typedef
-name|bool
-function_decl|(
-modifier|*
-name|CommandOverrideCallback
-function_decl|)
-parameter_list|(
-name|void
-modifier|*
-name|baton
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|)
-function_decl|;
 block|}
 end_decl_stmt
 
@@ -292,10 +284,30 @@ name|pthread_rwlock_t
 name|rwlock_t
 typedef|;
 typedef|typedef
+name|uint64_t
+name|process_t
+typedef|;
+comment|// Process type is just a pid.
+typedef|typedef
 name|pthread_t
 name|thread_t
 typedef|;
 comment|// Host thread type
+typedef|typedef
+name|int
+name|file_t
+typedef|;
+comment|// Host file type
+typedef|typedef
+name|int
+name|pipe_t
+typedef|;
+comment|// Host pipe type
+typedef|typedef
+name|int
+name|socket_t
+typedef|;
+comment|// Host socket type
 typedef|typedef
 name|pthread_key_t
 name|thread_key_t
@@ -325,6 +337,22 @@ modifier|*
 parameter_list|)
 function_decl|;
 comment|// Host thread function type
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// namespace lldb
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+name|namespace
+name|lldb
+block|{
 typedef|typedef
 name|void
 function_decl|(
@@ -359,17 +387,54 @@ modifier|*
 name|argv
 parameter_list|)
 function_decl|;
+typedef|typedef
+name|bool
+argument_list|(
+operator|*
+name|CommandOverrideCallbackWithResult
+argument_list|)
+argument_list|(
+name|void
+operator|*
+name|baton
+argument_list|,
+specifier|const
+name|char
+operator|*
+operator|*
+name|argv
+argument_list|,
+name|lldb_private
+operator|::
+name|CommandReturnObject
+operator|&
+name|result
+argument_list|)
+expr_stmt|;
+typedef|typedef
+name|bool
+function_decl|(
+modifier|*
+name|ExpressionCancelCallback
+function_decl|)
+parameter_list|(
+name|ExpressionEvaluationPhase
+name|phase
+parameter_list|,
+name|void
+modifier|*
+name|baton
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
-begin_comment
-comment|// namespace lldb
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|LLDB_INVALID_PROCESS
+value|((lldb::process_t)-1)
+end_define
 
 begin_define
 define|#

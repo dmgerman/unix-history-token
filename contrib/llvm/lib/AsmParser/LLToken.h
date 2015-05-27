@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LIBS_ASMPARSER_LLTOKEN_H
+name|LLVM_LIB_ASMPARSER_LLTOKEN_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LIBS_ASMPARSER_LLTOKEN_H
+name|LLVM_LIB_ASMPARSER_LLTOKEN_H
 end_define
 
 begin_decl_stmt
@@ -131,10 +131,6 @@ name|kw_constant
 block|,
 name|kw_private
 block|,
-name|kw_linker_private
-block|,
-name|kw_linker_private_weak
-block|,
 name|kw_internal
 block|,
 name|kw_linkonce
@@ -143,6 +139,7 @@ name|kw_linkonce_odr
 block|,
 name|kw_weak
 block|,
+comment|// Used as a linkage, and a modifier for "cmpxchg".
 name|kw_weak_odr
 block|,
 name|kw_appending
@@ -186,6 +183,8 @@ block|,
 name|kw_to
 block|,
 name|kw_tail
+block|,
+name|kw_musttail
 block|,
 name|kw_target
 block|,
@@ -256,6 +255,8 @@ name|kw_gc
 block|,
 name|kw_prefix
 block|,
+name|kw_prologue
+block|,
 name|kw_c
 block|,
 name|kw_cc
@@ -273,6 +274,8 @@ block|,
 name|kw_x86_fastcallcc
 block|,
 name|kw_x86_thiscallcc
+block|,
+name|kw_x86_vectorcallcc
 block|,
 name|kw_arm_apcscc
 block|,
@@ -298,6 +301,12 @@ name|kw_webkit_jscc
 block|,
 name|kw_anyregcc
 block|,
+name|kw_preserve_mostcc
+block|,
+name|kw_preserve_allcc
+block|,
+name|kw_ghccc
+block|,
 comment|// Attributes:
 name|kw_attributes
 block|,
@@ -309,11 +318,17 @@ name|kw_builtin
 block|,
 name|kw_byval
 block|,
+name|kw_inalloca
+block|,
 name|kw_cold
+block|,
+name|kw_dereferenceable
 block|,
 name|kw_inlinehint
 block|,
 name|kw_inreg
+block|,
+name|kw_jumptable
 block|,
 name|kw_minsize
 block|,
@@ -334,6 +349,8 @@ block|,
 name|kw_noinline
 block|,
 name|kw_nonlazybind
+block|,
+name|kw_nonnull
 block|,
 name|kw_noredzone
 block|,
@@ -374,6 +391,19 @@ block|,
 name|kw_type
 block|,
 name|kw_opaque
+block|,
+name|kw_comdat
+block|,
+comment|// Comdat types
+name|kw_any
+block|,
+name|kw_exactmatch
+block|,
+name|kw_largest
+block|,
+name|kw_noduplicates
+block|,
+name|kw_samesize
 block|,
 name|kw_eq
 block|,
@@ -553,6 +583,14 @@ name|kw_insertvalue
 block|,
 name|kw_blockaddress
 block|,
+comment|// Metadata types.
+name|kw_distinct
+block|,
+comment|// Use-list order directives.
+name|kw_uselistorder
+block|,
+name|kw_uselistorder_bb
+block|,
 comment|// Unsigned Valued tokens (UIntVal).
 name|GlobalID
 block|,
@@ -570,6 +608,9 @@ comment|// foo:
 name|GlobalVar
 block|,
 comment|// @foo @"foo"
+name|ComdatVar
+block|,
+comment|// $foo
 name|LocalVar
 block|,
 comment|// %foo %"foo"

@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -97,6 +97,22 @@ parameter_list|,
 name|ACPI_TABLE_HEADER
 modifier|*
 name|Table
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|ACPI_STATUS
+name|AdStoreTable
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+parameter_list|,
+name|UINT32
+modifier|*
+name|TableIndex
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -426,6 +442,11 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_STATUS
+name|GlobalStatus
+init|=
+name|AE_OK
+decl_stmt|;
 name|char
 modifier|*
 name|DisasmFilename
@@ -475,6 +496,8 @@ name|Filename
 argument_list|,
 operator|&
 name|Table
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -531,6 +554,8 @@ name|ExternalFilename
 argument_list|,
 operator|&
 name|ExternalTable
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 if|if
@@ -541,6 +566,29 @@ name|Status
 argument_list|)
 condition|)
 block|{
+if|if
+condition|(
+name|Status
+operator|==
+name|AE_TYPE
+condition|)
+block|{
+name|ExternalFileList
+operator|=
+name|ExternalFileList
+operator|->
+name|Next
+expr_stmt|;
+name|GlobalStatus
+operator|=
+name|AE_TYPE
+expr_stmt|;
+name|Status
+operator|=
+name|AE_OK
+expr_stmt|;
+continue|continue;
+block|}
 return|return
 operator|(
 name|Status
@@ -615,6 +663,20 @@ operator|->
 name|Next
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|GlobalStatus
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|GlobalStatus
+operator|)
+return|;
+block|}
 comment|/* Clear external list generated by Scope in external tables */
 if|if
 condition|(
@@ -664,7 +726,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|AcpiGbl_DbOpt_disasm
+name|AcpiGbl_DbOpt_Disasm
 condition|)
 block|{
 return|return
@@ -792,11 +854,6 @@ name|Status
 operator|=
 name|AE_ERROR
 expr_stmt|;
-name|ACPI_FREE
-argument_list|(
-name|DisasmFilename
-argument_list|)
-expr_stmt|;
 goto|goto
 name|Cleanup
 goto|;
@@ -812,8 +869,12 @@ name|OutFilename
 operator|=
 name|DisasmFilename
 expr_stmt|;
+comment|/* ForceAmlDisassembly means to assume the table contains valid AML */
 if|if
 condition|(
+operator|!
+name|AcpiGbl_ForceAmlDisassembly
+operator|&&
 operator|!
 name|AcpiUtIsAmlTable
 argument_list|(
@@ -824,6 +885,8 @@ block|{
 name|AdDisassemblerHeader
 argument_list|(
 name|Filename
+argument_list|,
+name|ACPI_IS_DATA_TABLE
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -857,6 +920,11 @@ operator|->
 name|Signature
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|File
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -871,6 +939,7 @@ name|File
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -921,6 +990,11 @@ argument_list|(
 literal|"/**** Before second load\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|File
+condition|)
+block|{
 name|NsSetupNamespaceListing
 argument_list|(
 name|File
@@ -929,6 +1003,7 @@ expr_stmt|;
 name|NsDisplayNamespace
 argument_list|()
 expr_stmt|;
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"*****/\n"
@@ -1133,6 +1208,11 @@ argument_list|(
 literal|"/**** After second load and resource conversion\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|File
+condition|)
+block|{
 name|NsSetupNamespaceListing
 argument_list|(
 name|File
@@ -1141,6 +1221,7 @@ expr_stmt|;
 name|NsDisplayNamespace
 argument_list|()
 expr_stmt|;
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"*****/\n"
@@ -1164,7 +1245,7 @@ expr_stmt|;
 comment|/* Optional displays */
 if|if
 condition|(
-name|AcpiGbl_DbOpt_disasm
+name|AcpiGbl_DbOpt_Disasm
 condition|)
 block|{
 comment|/* This is the real disassembly */
@@ -1188,6 +1269,11 @@ argument_list|,
 literal|"Disassembly completed\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|File
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|stderr
@@ -1202,6 +1288,7 @@ name|File
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|Gbl_MapfileFlag
@@ -1243,6 +1330,9 @@ condition|(
 name|Table
 operator|&&
 operator|!
+name|AcpiGbl_ForceAmlDisassembly
+operator|&&
+operator|!
 name|AcpiUtIsAmlTable
 argument_list|(
 name|Table
@@ -1257,8 +1347,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|OutToFile
-operator|&&
 name|File
 condition|)
 block|{
@@ -1306,7 +1394,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AdDisassemblerHeader  *  * PARAMETERS:  Filename            - Input file for the table  *  * RETURN:      None  *  * DESCRIPTION: Create the disassembler header, including ACPICA signon with  *              current time and date.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AdDisassemblerHeader  *  * PARAMETERS:  Filename            - Input file for the table  *              TableType           - Either AML or DataTable  *  * RETURN:      None  *  * DESCRIPTION: Create the disassembler header, including ACPICA signon with  *              current time and date.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1316,6 +1404,9 @@ parameter_list|(
 name|char
 modifier|*
 name|Filename
+parameter_list|,
+name|UINT8
+name|TableType
 parameter_list|)
 block|{
 name|time_t
@@ -1337,12 +1428,41 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_COMMON_HEADER
 argument_list|(
-literal|"AML Disassembler"
+name|AML_DISASSEMBLER_NAME
 argument_list|,
 literal|" * "
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|TableType
+operator|==
+name|ACPI_IS_AML_TABLE
+condition|)
+block|{
+if|if
+condition|(
+name|AcpiGbl_CstyleDisassembly
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" * Disassembling to symbolic ASL+ operators\n"
+literal|" *\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|" * Disassembling to non-symbolic legacy ASL operators\n"
+literal|" *\n"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|" * Disassembly of %s, %s"
@@ -1393,6 +1513,8 @@ comment|/*      * Print file header and dump original table header      */
 name|AdDisassemblerHeader
 argument_list|(
 name|Filename
+argument_list|,
+name|ACPI_IS_AML_TABLE
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -1716,7 +1838,7 @@ block|}
 if|if
 condition|(
 operator|!
-name|AcpiGbl_DbOpt_verbose
+name|AcpiGbl_DbOpt_Verbose
 condition|)
 block|{
 name|AdCreateTableHeader
@@ -1741,7 +1863,7 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
-name|AcpiGbl_DbOpt_verbose
+name|AcpiGbl_DbOpt_Verbose
 condition|)
 block|{
 name|AcpiOsPrintf
@@ -1801,6 +1923,83 @@ name|ACPI_UINT32_MAX
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AdStoreTable  *  * PARAMETERS:  Table               - Table header  *              TableIndex          - Where the table index is returned  *  * RETURN:      Status and table index.  *  * DESCRIPTION: Add an ACPI table to the global table list  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|ACPI_STATUS
+name|AdStoreTable
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|Table
+parameter_list|,
+name|UINT32
+modifier|*
+name|TableIndex
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_TABLE_DESC
+modifier|*
+name|TableDesc
+decl_stmt|;
+name|Status
+operator|=
+name|AcpiTbGetNextTableDescriptor
+argument_list|(
+name|TableIndex
+argument_list|,
+operator|&
+name|TableDesc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+comment|/* Initialize added table */
+name|AcpiTbInitTableDescriptor
+argument_list|(
+name|TableDesc
+argument_list|,
+name|ACPI_PTR_TO_PHYSADDR
+argument_list|(
+name|Table
+argument_list|)
+argument_list|,
+name|ACPI_TABLE_ORIGIN_INTERNAL_VIRTUAL
+argument_list|,
+name|Table
+argument_list|)
+expr_stmt|;
+name|AcpiTbValidateTable
+argument_list|(
+name|TableDesc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|AE_OK
@@ -1889,17 +2088,9 @@ expr_stmt|;
 comment|/* Store DSDT in the Table Manager */
 name|Status
 operator|=
-name|AcpiTbStoreTable
+name|AdStoreTable
 argument_list|(
-literal|0
-argument_list|,
 name|NewTable
-argument_list|,
-name|NewTable
-operator|->
-name|Length
-argument_list|,
-literal|0
 argument_list|,
 operator|&
 name|TableIndex
@@ -2158,20 +2349,9 @@ condition|)
 block|{
 name|Status
 operator|=
-name|AcpiTbStoreTable
+name|AdStoreTable
 argument_list|(
-operator|(
-name|ACPI_PHYSICAL_ADDRESS
-operator|)
 name|Table
-argument_list|,
-name|Table
-argument_list|,
-name|Table
-operator|->
-name|Length
-argument_list|,
-name|ACPI_TABLE_ORIGIN_INTERNAL_VIRTUAL
 argument_list|,
 operator|&
 name|TableIndex

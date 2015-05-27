@@ -112,13 +112,13 @@ file|"etherswitch_if.h"
 end_include
 
 begin_comment
-comment|/*  * XXX TODO: teach about the AR933x SoC switch  * XXX TODO: teach about the AR934x SoC switch  * XXX TODO: teach about the AR8327 external switch  */
+comment|/*  * XXX TODO: teach about the AR934x SoC switch  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|arswitch_vlan_op
+name|ar8xxx_vlan_op
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -262,9 +262,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|arswitch_flush_dot1q_vlan
+name|ar8xxx_flush_dot1q_vlan
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -281,7 +280,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|arswitch_vlan_op
+name|ar8xxx_vlan_op
 argument_list|(
 name|sc
 argument_list|,
@@ -297,9 +296,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|arswitch_purge_dot1q_vlan
+name|ar8xxx_purge_dot1q_vlan
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -319,7 +317,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|arswitch_vlan_op
+name|ar8xxx_vlan_op
 argument_list|(
 name|sc
 argument_list|,
@@ -335,9 +333,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|arswitch_get_dot1q_vlan
+name|ar8xxx_get_dot1q_vlan
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -347,6 +344,10 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|ports
+parameter_list|,
+name|uint32_t
+modifier|*
+name|untagged_ports
 parameter_list|,
 name|int
 name|vid
@@ -367,7 +368,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|arswitch_vlan_op
+name|ar8xxx_vlan_op
 argument_list|(
 name|sc
 argument_list|,
@@ -443,6 +444,11 @@ name|ports
 operator|=
 name|reg
 expr_stmt|;
+operator|*
+name|untagged_ports
+operator|=
+name|reg
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -452,9 +458,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|arswitch_set_dot1q_vlan
+name|ar8xxx_set_dot1q_vlan
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -463,6 +468,9 @@ name|sc
 parameter_list|,
 name|uint32_t
 name|ports
+parameter_list|,
+name|uint32_t
+name|untagged_ports
 parameter_list|,
 name|int
 name|vid
@@ -480,7 +488,7 @@ argument_list|)
 expr_stmt|;
 name|err
 operator|=
-name|arswitch_vlan_op
+name|ar8xxx_vlan_op
 argument_list|(
 name|sc
 argument_list|,
@@ -509,9 +517,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|arswitch_get_port_vlan
+name|ar8xxx_get_port_vlan
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -583,9 +590,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
-name|arswitch_set_port_vlan
+name|ar8xxx_set_port_vlan
 parameter_list|(
 name|struct
 name|arswitch_softc
@@ -762,6 +768,10 @@ block|}
 block|}
 if|if
 condition|(
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_flush_dot1q_vlan
 argument_list|(
 name|sc
@@ -897,11 +907,22 @@ operator|<<
 name|i
 operator|)
 expr_stmt|;
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_set_dot1q_vlan
 argument_list|(
 name|sc
 argument_list|,
 name|ports
+argument_list|,
+name|sc
+operator|->
+name|vid
+index|[
+literal|0
+index|]
 argument_list|,
 name|sc
 operator|->
@@ -1012,6 +1033,7 @@ operator|<<
 name|AR8X16_PORT_VLAN_MODE_PORT_ONLY
 argument_list|)
 expr_stmt|;
+comment|/* XXX TODO: SECURE / PORT_ONLY is wrong? */
 block|}
 block|}
 else|else
@@ -1184,6 +1206,10 @@ name|ETHERSWITCH_VLAN_DOT1Q
 case|:
 name|err
 operator|=
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_get_dot1q_vlan
 argument_list|(
 name|sc
@@ -1192,6 +1218,11 @@ operator|&
 name|vg
 operator|->
 name|es_member_ports
+argument_list|,
+operator|&
+name|vg
+operator|->
+name|es_untagged_ports
 argument_list|,
 name|vg
 operator|->
@@ -1204,6 +1235,10 @@ name|ETHERSWITCH_VLAN_PORT
 case|:
 name|err
 operator|=
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_get_port_vlan
 argument_list|(
 name|sc
@@ -1218,11 +1253,25 @@ operator|->
 name|es_vid
 argument_list|)
 expr_stmt|;
+name|vg
+operator|->
+name|es_untagged_ports
+operator|=
+name|vg
+operator|->
+name|es_member_ports
+expr_stmt|;
 break|break;
 default|default:
 name|vg
 operator|->
 name|es_member_ports
+operator|=
+literal|0
+expr_stmt|;
+name|vg
+operator|->
+name|es_untagged_ports
 operator|=
 literal|0
 expr_stmt|;
@@ -1236,14 +1285,6 @@ name|ARSWITCH_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-name|vg
-operator|->
-name|es_untagged_ports
-operator|=
-name|vg
-operator|->
-name|es_member_ports
 expr_stmt|;
 return|return
 operator|(
@@ -1343,6 +1384,10 @@ condition|)
 block|{
 name|err
 operator|=
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_purge_dot1q_vlan
 argument_list|(
 name|sc
@@ -1454,6 +1499,10 @@ name|ETHERSWITCH_VLAN_DOT1Q
 case|:
 name|err
 operator|=
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_set_dot1q_vlan
 argument_list|(
 name|sc
@@ -1461,6 +1510,10 @@ argument_list|,
 name|vg
 operator|->
 name|es_member_ports
+argument_list|,
+name|vg
+operator|->
+name|es_untagged_ports
 argument_list|,
 name|vid
 argument_list|)
@@ -1471,6 +1524,10 @@ name|ETHERSWITCH_VLAN_PORT
 case|:
 name|err
 operator|=
+name|sc
+operator|->
+name|hal
+operator|.
 name|arswitch_set_port_vlan
 argument_list|(
 name|sc

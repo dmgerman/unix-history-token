@@ -185,12 +185,6 @@ directive|include
 file|<net/if_var.h>
 end_include
 
-begin_define
-define|#
-directive|define
-name|BPF_INTERNAL
-end_define
-
 begin_include
 include|#
 directive|include
@@ -282,6 +276,74 @@ argument_list|,
 literal|"BPF"
 argument_list|,
 literal|"BPF data"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|bpf_if
+block|{
+define|#
+directive|define
+name|bif_next
+value|bif_ext.bif_next
+define|#
+directive|define
+name|bif_dlist
+value|bif_ext.bif_dlist
+name|struct
+name|bpf_if_ext
+name|bif_ext
+decl_stmt|;
+comment|/* public members */
+name|u_int
+name|bif_dlt
+decl_stmt|;
+comment|/* link layer type */
+name|u_int
+name|bif_hdrlen
+decl_stmt|;
+comment|/* length of link header */
+name|struct
+name|ifnet
+modifier|*
+name|bif_ifp
+decl_stmt|;
+comment|/* corresponding interface */
+name|struct
+name|rwlock
+name|bif_lock
+decl_stmt|;
+comment|/* interface lock */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|bpf_d
+argument_list|)
+name|bif_wlist
+expr_stmt|;
+comment|/* writer-only list */
+name|int
+name|bif_flags
+decl_stmt|;
+comment|/* Interface flags */
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|offsetof
+argument_list|(
+expr|struct
+name|bpf_if
+argument_list|,
+name|bif_ext
+argument_list|)
+operator|==
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2297,6 +2359,10 @@ comment|/* 	 * Save sysctl value to protect from sysctl change 	 * between reads
 name|op_w
 operator|=
 name|V_bpf_optimize_writers
+operator|||
+name|d
+operator|->
+name|bd_writer
 expr_stmt|;
 if|if
 condition|(
@@ -3132,6 +3198,22 @@ name|bpf_buffer_init
 argument_list|(
 name|d
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|flags
+operator|&
+name|FREAD
+operator|)
+operator|==
+literal|0
+condition|)
+name|d
+operator|->
+name|bd_writer
+operator|=
+literal|2
 expr_stmt|;
 name|d
 operator|->
@@ -4545,7 +4627,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  FIONREAD		Check for read packet available.  *  SIOCGIFADDR		Get interface address - convenient hook to driver.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set read filter.  *  BIOCSETFNR		Set read filter without resetting descriptor.  *  BIOCSETWF		Set write filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  *  BIOCVERSION		Get filter language version.  *  BIOCGHDRCMPLT	Get "header already complete" flag  *  BIOCSHDRCMPLT	Set "header already complete" flag  *  BIOCGDIRECTION	Get packet direction flag  *  BIOCSDIRECTION	Set packet direction flag  *  BIOCGTSTAMP		Get time stamp format and resolution.  *  BIOCSTSTAMP		Set time stamp format and resolution.  *  BIOCLOCK		Set "locked" flag  *  BIOCFEEDBACK	Set packet feedback mode.  *  BIOCSETZBUF		Set current zero-copy buffer locations.  *  BIOCGETZMAX		Get maximum zero-copy buffer size.  *  BIOCROTZBUF		Force rotation of zero-copy buffer  *  BIOCSETBUFMODE	Set buffer mode.  *  BIOCGETBUFMODE	Get current buffer mode.  */
+comment|/*  *  FIONREAD		Check for read packet available.  *  BIOCGBLEN		Get buffer len [for read()].  *  BIOCSETF		Set read filter.  *  BIOCSETFNR		Set read filter without resetting descriptor.  *  BIOCSETWF		Set write filter.  *  BIOCFLUSH		Flush read packet buffer.  *  BIOCPROMISC		Put interface into promiscuous mode.  *  BIOCGDLT		Get link layer type.  *  BIOCGETIF		Get interface name.  *  BIOCSETIF		Set interface.  *  BIOCSRTIMEOUT	Set read timeout.  *  BIOCGRTIMEOUT	Get read timeout.  *  BIOCGSTATS		Get packet stats.  *  BIOCIMMEDIATE	Set immediate mode.  *  BIOCVERSION		Get filter language version.  *  BIOCGHDRCMPLT	Get "header already complete" flag  *  BIOCSHDRCMPLT	Set "header already complete" flag  *  BIOCGDIRECTION	Get packet direction flag  *  BIOCSDIRECTION	Set packet direction flag  *  BIOCGTSTAMP		Get time stamp format and resolution.  *  BIOCSTSTAMP		Set time stamp format and resolution.  *  BIOCLOCK		Set "locked" flag  *  BIOCFEEDBACK	Set packet feedback mode.  *  BIOCSETZBUF		Set current zero-copy buffer locations.  *  BIOCGETZMAX		Get maximum zero-copy buffer size.  *  BIOCROTZBUF		Force rotation of zero-copy buffer  *  BIOCSETBUFMODE	Set buffer mode.  *  BIOCGETBUFMODE	Get current buffer mode.  */
 end_comment
 
 begin_comment
@@ -4903,56 +4985,6 @@ name|addr
 operator|=
 name|n
 expr_stmt|;
-break|break;
-block|}
-case|case
-name|SIOCGIFADDR
-case|:
-block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-if|if
-condition|(
-name|d
-operator|->
-name|bd_bif
-operator|==
-name|NULL
-condition|)
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-else|else
-block|{
-name|ifp
-operator|=
-name|d
-operator|->
-name|bd_bif
-operator|->
-name|bif_ifp
-expr_stmt|;
-name|error
-operator|=
-call|(
-modifier|*
-name|ifp
-operator|->
-name|if_ioctl
-call|)
-argument_list|(
-name|ifp
-argument_list|,
-name|cmd
-argument_list|,
-name|addr
-argument_list|)
-expr_stmt|;
-block|}
 break|break;
 block|}
 comment|/* 	 * Get buffer len [for read()]. 	 */
@@ -6954,7 +6986,7 @@ if|if
 condition|(
 name|bp
 operator|->
-name|flags
+name|bif_flags
 operator|&
 name|BPFIF_FLAG_DYING
 condition|)
@@ -9839,7 +9871,7 @@ argument_list|)
 expr_stmt|;
 name|bp
 operator|->
-name|flags
+name|bif_flags
 operator||=
 name|BPFIF_FLAG_DYING
 expr_stmt|;

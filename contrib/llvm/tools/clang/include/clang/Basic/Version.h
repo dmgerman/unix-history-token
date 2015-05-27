@@ -225,6 +225,15 @@ name|string
 name|getClangFullVersion
 argument_list|()
 expr_stmt|;
+comment|/// \brief Like getClangFullVersion(), but with a custom tool name.
+name|std
+operator|::
+name|string
+name|getClangToolFullVersion
+argument_list|(
+argument|llvm::StringRef ToolName
+argument_list|)
+expr_stmt|;
 comment|/// \brief Retrieves a string representing the complete clang version suitable
 comment|/// for use in the CPP __VERSION__ macro, which includes the clang version
 comment|/// number, the repository version, and the vendor tag.

@@ -74,6 +74,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -139,6 +145,72 @@ argument_list|,
 argument|unsigned Flags = NoFlags
 argument_list|)
 empty_stmt|;
+name|Regex
+argument_list|(
+argument|const Regex&
+argument_list|)
+name|LLVM_DELETED_FUNCTION
+expr_stmt|;
+name|Regex
+modifier|&
+name|operator
+init|=
+operator|(
+name|Regex
+name|regex
+operator|)
+block|{
+name|std
+operator|::
+name|swap
+argument_list|(
+name|preg
+argument_list|,
+name|regex
+operator|.
+name|preg
+argument_list|)
+block|;
+name|std
+operator|::
+name|swap
+argument_list|(
+name|error
+argument_list|,
+name|regex
+operator|.
+name|error
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|Regex
+argument_list|(
+argument|Regex&&regex
+argument_list|)
+block|{
+name|preg
+operator|=
+name|regex
+operator|.
+name|preg
+expr_stmt|;
+name|error
+operator|=
+name|regex
+operator|.
+name|error
+expr_stmt|;
+name|regex
+operator|.
+name|preg
+operator|=
+name|nullptr
+expr_stmt|;
+block|}
 operator|~
 name|Regex
 argument_list|()
@@ -183,7 +255,7 @@ operator|>
 operator|*
 name|Matches
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl_stmt|;
 comment|/// sub - Return the result of replacing the first match of the regex in
@@ -205,8 +277,7 @@ argument|StringRef Repl
 argument_list|,
 argument|StringRef String
 argument_list|,
-argument|std::string *Error =
-literal|0
+argument|std::string *Error = nullptr
 argument_list|)
 expr_stmt|;
 comment|/// \brief If this function returns true, ^Str$ is an extended regular
@@ -219,6 +290,16 @@ name|StringRef
 name|Str
 parameter_list|)
 function_decl|;
+comment|/// \brief Turn String into a regex by escaping its special characters.
+specifier|static
+name|std
+operator|::
+name|string
+name|escape
+argument_list|(
+argument|StringRef String
+argument_list|)
+expr_stmt|;
 name|private
 label|:
 name|struct

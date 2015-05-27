@@ -11700,7 +11700,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"illeagal system setting\n"
+literal|"illegal system setting\n"
 argument_list|)
 expr_stmt|;
 block|}

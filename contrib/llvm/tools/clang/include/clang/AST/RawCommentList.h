@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_AST_RAW_COMMENT_LIST_H
+name|LLVM_CLANG_AST_RAWCOMMENTLIST_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_AST_RAW_COMMENT_LIST_H
+name|LLVM_CLANG_AST_RAWCOMMENTLIST_H
 end_define
 
 begin_include
@@ -688,31 +688,16 @@ operator|>
 name|Comments
 block|;
 name|void
-name|addCommentsToFront
+name|addDeserializedComments
 argument_list|(
-argument|const std::vector<RawComment *>&C
+name|ArrayRef
+operator|<
+name|RawComment
+operator|*
+operator|>
+name|DeserializedComments
 argument_list|)
-block|{
-name|Comments
-operator|.
-name|insert
-argument_list|(
-name|Comments
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|C
-operator|.
-name|begin
-argument_list|()
-argument_list|,
-name|C
-operator|.
-name|end
-argument_list|()
-argument_list|)
-block|;   }
+block|;
 name|friend
 name|class
 name|ASTReader

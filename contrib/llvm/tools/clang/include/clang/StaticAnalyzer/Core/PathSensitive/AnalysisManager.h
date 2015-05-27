@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_GR_ANALYSISMANAGER_H
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_ANALYSISMANAGER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_ANALYSISMANAGER_H
+name|LLVM_CLANG_STATICANALYZER_CORE_PATHSENSITIVE_ANALYSISMANAGER_H
 end_define
 
 begin_include
@@ -97,6 +97,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|CodeInjector
+decl_stmt|;
 name|namespace
 name|ento
 block|{
@@ -167,6 +170,8 @@ argument_list|,
 argument|CheckerManager *checkerMgr
 argument_list|,
 argument|AnalyzerOptions&Options
+argument_list|,
+argument|CodeInjector* injector = nullptr
 argument_list|)
 block|;
 operator|~
@@ -203,6 +208,7 @@ name|AnalyzerOptions
 operator|&
 name|getAnalyzerOptions
 argument_list|()
+name|override
 block|{
 return|return
 name|options
@@ -226,21 +232,21 @@ return|return
 name|CheckerMgr
 return|;
 block|}
-name|virtual
 name|ASTContext
 operator|&
 name|getASTContext
 argument_list|()
+name|override
 block|{
 return|return
 name|Ctx
 return|;
 block|}
-name|virtual
 name|SourceManager
 operator|&
 name|getSourceManager
 argument_list|()
+name|override
 block|{
 return|return
 name|getASTContext
@@ -250,11 +256,11 @@ name|getSourceManager
 argument_list|()
 return|;
 block|}
-name|virtual
 name|DiagnosticsEngine
 operator|&
 name|getDiagnostic
 argument_list|()
+name|override
 block|{
 return|return
 name|Diags
@@ -278,6 +284,7 @@ operator|*
 operator|>
 name|getPathDiagnosticConsumers
 argument_list|()
+name|override
 block|{
 return|return
 name|PathConsumers

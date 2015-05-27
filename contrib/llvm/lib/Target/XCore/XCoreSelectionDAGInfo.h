@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|XCORESELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_XCORE_XCORESELECTIONDAGINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|XCORESELECTIONDAGINFO_H
+name|LLVM_LIB_TARGET_XCORE_XCORESELECTIONDAGINFO_H
 end_define
 
 begin_include
@@ -84,14 +84,42 @@ name|explicit
 name|XCoreSelectionDAGInfo
 argument_list|(
 specifier|const
-name|XCoreTargetMachine
+name|DataLayout
 operator|&
-name|TM
+name|DL
 argument_list|)
 block|;
 operator|~
 name|XCoreSelectionDAGInfo
 argument_list|()
+block|;
+name|SDValue
+name|EmitTargetCodeForMemcpy
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SDLoc dl
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Op1
+argument_list|,
+argument|SDValue Op2
+argument_list|,
+argument|SDValue Op3
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|bool isVolatile
+argument_list|,
+argument|bool AlwaysInline
+argument_list|,
+argument|MachinePointerInfo DstPtrInfo
+argument_list|,
+argument|MachinePointerInfo SrcPtrInfo
+argument_list|)
+specifier|const
+name|override
 block|; }
 decl_stmt|;
 block|}

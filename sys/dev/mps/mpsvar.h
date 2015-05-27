@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2009 Yahoo! Inc.  * Copyright (c) 2011, 2012 LSI Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * LSI MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2009 Yahoo! Inc.  * Copyright (c) 2011-2015 LSI Corp.  * Copyright (c) 2013-2015 Avago Technologies  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * Avago Technologies (LSI) MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|MPS_DRIVER_VERSION
-value|"19.00.00.00-fbsd"
+value|"20.00.00.00-fbsd"
 end_define
 
 begin_define
@@ -120,6 +120,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MPS_ATA_ID_TIMEOUT
+value|5
+end_define
+
+begin_comment
+comment|/* 5 second timeout for SATA ID cmd */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MPS_SCSI_RI_INVALID_FRAME
 value|(0x00000002)
 end_define
@@ -130,6 +141,17 @@ directive|define
 name|MPS_STRING_LENGTH
 value|64
 end_define
+
+begin_define
+define|#
+directive|define
+name|DEFAULT_SPINUP_WAIT
+value|3
+end_define
+
+begin_comment
+comment|/* seconds to wait for spinup */
+end_comment
 
 begin_include
 include|#
@@ -738,6 +760,10 @@ define|#
 directive|define
 name|MPS_CM_FLAGS_USE_CCB
 value|(1<< 10)
+define|#
+directive|define
+name|MPS_CM_FLAGS_SATA_ID_TIMEOUT
+value|(1<< 11)
 name|u_int
 name|cm_state
 decl_stmt|;
@@ -893,6 +919,12 @@ name|max_chains
 decl_stmt|;
 name|int
 name|chain_free_lowwater
+decl_stmt|;
+name|u_int
+name|enable_ssu
+decl_stmt|;
+name|int
+name|spinup_wait_time
 decl_stmt|;
 if|#
 directive|if
@@ -2328,6 +2360,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|MPS_SSU_DISABLE_SSD_DISABLE_HDD
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPS_SSU_ENABLE_SSD_DISABLE_HDD
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPS_SSU_DISABLE_SSD_ENABLE_HDD
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPS_SSU_ENABLE_SSD_ENABLE_HDD
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|mps_printf
 parameter_list|(
 name|sc
@@ -3613,6 +3673,26 @@ name|struct
 name|mpssas_softc
 modifier|*
 name|sassc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|mpssas_send_reset
+parameter_list|(
+name|struct
+name|mps_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|mps_command
+modifier|*
+name|tm
+parameter_list|,
+name|uint8_t
+name|type
 parameter_list|)
 function_decl|;
 end_function_decl

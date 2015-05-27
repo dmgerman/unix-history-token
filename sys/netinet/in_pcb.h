@@ -2014,23 +2014,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|INP_SW_FLOWID
+name|INP_RESERVED_0
 value|0x10000000
 end_define
 
 begin_comment
-comment|/* software generated flow id */
+comment|/* reserved field */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|INP_HW_FLOWID
+name|INP_RESERVED_1
 value|0x20000000
 end_define
 
 begin_comment
-comment|/* hardware generated flow id */
+comment|/* reserved field */
 end_comment
 
 begin_define

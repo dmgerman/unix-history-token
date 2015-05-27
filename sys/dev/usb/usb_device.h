@@ -1044,6 +1044,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|usb_destroy_dev_sync
+parameter_list|(
+name|struct
+name|usb_fs_privdata
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

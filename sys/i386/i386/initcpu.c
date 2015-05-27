@@ -565,6 +565,16 @@ begin_comment
 comment|/* Device ID of Cyrix CPU */
 end_comment
 
+begin_decl_stmt
+name|u_int
+name|cpu_maxphyaddr
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Max phys addr width in bits */
+end_comment
+
 begin_expr_stmt
 name|SYSCTL_UINT
 argument_list|(
@@ -2979,9 +2989,17 @@ argument_list|()
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PAE
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|PAE_TABLES
+argument_list|)
 if|if
 condition|(
 operator|(

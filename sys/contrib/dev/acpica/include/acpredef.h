@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -20,7 +20,7 @@ name|__ACPREDEF_H__
 end_define
 
 begin_comment
-comment|/******************************************************************************  *  * Return Package types  *  * 1) PTYPE1 packages do not contain subpackages.  *  * ACPI_PTYPE1_FIXED: Fixed-length length, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *  * ACPI_PTYPE1_VAR: Variable-length length. Zero-length package is allowed:  *      object type (Int/Buf/Ref)  *  * ACPI_PTYPE1_OPTION: Package has some required and some optional elements  *      (Used for _PRW)  *  *  * 2) PTYPE2 packages contain a Variable-length number of subpackages. Each  *    of the different types describe the contents of each of the subpackages.  *  * ACPI_PTYPE2: Each subpackage contains 1 or 2 object types. Zero-length  *      parent package is allowed:  *      object type  *      count  *      object type  *      count  *      (Used for _ALR,_MLS,_PSS,_TRT,_TSS)  *  * ACPI_PTYPE2_COUNT: Each subpackage has a count as first element.  *      Zero-length parent package is allowed:  *      object type  *      (Used for _CSD,_PSD,_TSD)  *  * ACPI_PTYPE2_PKG_COUNT: Count of subpackages at start, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *      (Used for _CST)  *  * ACPI_PTYPE2_FIXED: Each subpackage is of Fixed-length. Zero-length  *      parent package is allowed.  *      (Used for _PRT)  *  * ACPI_PTYPE2_MIN: Each subpackage has a Variable-length but minimum length.  *      Zero-length parent package is allowed:  *      (Used for _HPX)  *  * ACPI_PTYPE2_REV_FIXED: Revision at start, each subpackage is Fixed-length  *      (Used for _ART, _FPS)  *  * ACPI_PTYPE2_FIX_VAR: Each subpackage consists of some fixed-length elements  *      followed by an optional element. Zero-length parent package is allowed.  *      object type  *      count  *      object type  *      count = 0 (optional)  *      (Used for _DLM)  *  * ACPI_PTYPE2_UUID_PAIR: Each subpackage is preceded by a UUID Buffer. The UUID  *      defines the format of the package. Zero-length parent package is  *      allowed.  *      (Used for _DSD)  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Return Package types  *  * 1) PTYPE1 packages do not contain subpackages.  *  * ACPI_PTYPE1_FIXED: Fixed-length length, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *  * ACPI_PTYPE1_VAR: Variable-length length. Zero-length package is allowed:  *      object type (Int/Buf/Ref)  *  * ACPI_PTYPE1_OPTION: Package has some required and some optional elements  *      (Used for _PRW)  *  *  * 2) PTYPE2 packages contain a Variable-length number of subpackages. Each  *    of the different types describe the contents of each of the subpackages.  *  * ACPI_PTYPE2: Each subpackage contains 1 or 2 object types. Zero-length  *      parent package is allowed:  *      object type  *      count  *      object type  *      count  *      (Used for _ALR,_MLS,_PSS,_TRT,_TSS)  *  * ACPI_PTYPE2_COUNT: Each subpackage has a count as first element.  *      Zero-length parent package is allowed:  *      object type  *      (Used for _CSD,_PSD,_TSD)  *  * ACPI_PTYPE2_PKG_COUNT: Count of subpackages at start, 1 or 2 object types:  *      object type  *      count  *      object type  *      count  *      (Used for _CST)  *  * ACPI_PTYPE2_FIXED: Each subpackage is of Fixed-length. Zero-length  *      parent package is allowed.  *      (Used for _PRT)  *  * ACPI_PTYPE2_MIN: Each subpackage has a Variable-length but minimum length.  *      Zero-length parent package is allowed:  *      (Used for _HPX)  *  * ACPI_PTYPE2_REV_FIXED: Revision at start, each subpackage is Fixed-length  *      (Used for _ART, _FPS)  *  * ACPI_PTYPE2_FIX_VAR: Each subpackage consists of some fixed-length elements  *      followed by an optional element. Zero-length parent package is allowed.  *      object type  *      count  *      object type  *      count = 0 (optional)  *      (Used for _DLM)  *  * ACPI_PTYPE2_VAR_VAR: Variable number of subpackages, each of either a  *      constant or variable length. The subpackages are preceded by a  *      constant number of objects.  *      (Used for _LPI, _RDI)  *  * ACPI_PTYPE2_UUID_PAIR: Each subpackage is preceded by a UUID Buffer. The UUID  *      defines the format of the package. Zero-length parent package is  *      allowed.  *      (Used for _DSD)  *  *****************************************************************************/
 end_comment
 
 begin_enum
@@ -67,9 +67,13 @@ name|ACPI_PTYPE2_FIX_VAR
 init|=
 literal|10
 block|,
-name|ACPI_PTYPE2_UUID_PAIR
+name|ACPI_PTYPE2_VAR_VAR
 init|=
 literal|11
+block|,
+name|ACPI_PTYPE2_UUID_PAIR
+init|=
+literal|12
 block|}
 enum|;
 end_enum
@@ -314,7 +318,7 @@ name|ACPI_CREATE_PREDEFINED_TABLE
 end_ifdef
 
 begin_comment
-comment|/******************************************************************************  *  * Predefined method/object information table.  *  * These are the names that can actually be evaluated via AcpiEvaluateObject.  * Not present in this table are the following:  *  *      1) Predefined/Reserved names that are never evaluated via  *         AcpiEvaluateObject:  *              _Lxx and _Exx GPE methods  *              _Qxx EC methods  *              _T_x compiler temporary variables  *              _Wxx wake events  *  *      2) Predefined names that never actually exist within the AML code:  *              Predefined resource descriptor field names  *  *      3) Predefined names that are implemented within ACPICA:  *              _OSI  *  * The main entries in the table each contain the following items:  *  * Name                 - The ACPI reserved name  * ArgumentList         - Contains (in 16 bits), the number of required  *                        arguments to the method (3 bits), and a 3-bit type  *                        field for each argument (up to 4 arguments). The  *                        METHOD_?ARGS macros generate the correct packed data.  * ExpectedBtypes       - Allowed type(s) for the return value.  *                        0 means that no return value is expected.  *  * For methods that return packages, the next entry in the table contains  * information about the expected structure of the package. This information  * is saved here (rather than in a separate table) in order to minimize the  * overall size of the stored data.  *  * Note: The additional braces are intended to promote portability.  *  * Note2: Table is used by the kernel-resident subsystem, the iASL compiler,  * and the AcpiHelp utility.  *  * TBD: _PRT - currently ignore reversed entries. Attempt to fix in nsrepair.  * Possibly fixing package elements like _BIF, etc.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * Predefined method/object information table.  *  * These are the names that can actually be evaluated via AcpiEvaluateObject.  * Not present in this table are the following:  *  *      1) Predefined/Reserved names that are not usually evaluated via  *         AcpiEvaluateObject:  *              _Lxx and _Exx GPE methods  *              _Qxx EC methods  *              _T_x compiler temporary variables  *              _Wxx wake events  *  *      2) Predefined names that never actually exist within the AML code:  *              Predefined resource descriptor field names  *  *      3) Predefined names that are implemented within ACPICA:  *              _OSI  *  * The main entries in the table each contain the following items:  *  * Name                 - The ACPI reserved name  * ArgumentList         - Contains (in 16 bits), the number of required  *                        arguments to the method (3 bits), and a 3-bit type  *                        field for each argument (up to 4 arguments). The  *                        METHOD_?ARGS macros generate the correct packed data.  * ExpectedBtypes       - Allowed type(s) for the return value.  *                        0 means that no return value is expected.  *  * For methods that return packages, the next entry in the table contains  * information about the expected structure of the package. This information  * is saved here (rather than in a separate table) in order to minimize the  * overall size of the stored data.  *  * Note: The additional braces are intended to promote portability.  *  * Note2: Table is used by the kernel-resident subsystem, the iASL compiler,  * and the AcpiHelp utility.  *  * TBD: _PRT - currently ignore reversed entries. Attempt to fix in nsrepair.  * Possibly fixing package elements like _BIF, etc.  *  *****************************************************************************/
 end_comment
 
 begin_decl_stmt
@@ -1170,6 +1174,20 @@ argument_list|)
 block|,
 block|{
 block|{
+literal|"_BTH"
+block|,
+name|METHOD_1ARGS
+argument_list|(
+name|ACPI_TYPE_INTEGER
+argument_list|)
+block|,
+comment|/* ACPI 6.0 */
+name|METHOD_NO_RETURN_VALUE
+block|}
+block|}
+block|,
+block|{
+block|{
 literal|"_BTM"
 block|,
 name|METHOD_1ARGS
@@ -1328,6 +1346,20 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+block|,
+block|{
+block|{
+literal|"_CR3"
+block|,
+name|METHOD_0ARGS
+block|,
+comment|/* ACPI 6.0 */
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_INTEGER
+argument_list|)
+block|}
+block|}
 block|,
 block|{
 block|{
@@ -1631,6 +1663,7 @@ literal|"_DSD"
 block|,
 name|METHOD_0ARGS
 block|,
+comment|/* ACPI 6.0 */
 name|METHOD_RETURNS
 argument_list|(
 argument|ACPI_RTYPE_PACKAGE
@@ -2407,6 +2440,40 @@ argument_list|)
 block|,
 block|{
 block|{
+literal|"_LPI"
+block|,
+name|METHOD_0ARGS
+block|,
+comment|/* ACPI 6.0 */
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_PACKAGE
+argument_list|)
+block|}
+block|}
+block|,
+comment|/* Variable-length (3 Int, n Pkg (10 Int/Buf) */
+name|PACKAGE_INFO
+argument_list|(
+name|ACPI_PTYPE2_VAR_VAR
+argument_list|,
+name|ACPI_RTYPE_INTEGER
+argument_list|,
+literal|3
+argument_list|,
+name|ACPI_RTYPE_INTEGER
+operator||
+name|ACPI_RTYPE_BUFFER
+operator||
+name|ACPI_RTYPE_STRING
+argument_list|,
+literal|10
+argument_list|,
+literal|0
+argument_list|)
+block|,
+block|{
+block|{
 literal|"_MAT"
 block|,
 name|METHOD_0ARGS
@@ -2504,6 +2571,20 @@ argument_list|,
 name|ACPI_TYPE_INTEGER
 argument_list|)
 block|,
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_INTEGER
+argument_list|)
+block|}
+block|}
+block|,
+block|{
+block|{
+literal|"_MTL"
+block|,
+name|METHOD_0ARGS
+block|,
+comment|/* ACPI 6.0 */
 name|METHOD_RETURNS
 argument_list|(
 argument|ACPI_RTYPE_INTEGER
@@ -3041,6 +3122,36 @@ argument_list|)
 block|,
 block|{
 block|{
+literal|"_PRR"
+block|,
+name|METHOD_0ARGS
+block|,
+comment|/* ACPI 6.0 */
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_PACKAGE
+argument_list|)
+block|}
+block|}
+block|,
+comment|/* Fixed-length (1 Ref) */
+name|PACKAGE_INFO
+argument_list|(
+name|ACPI_PTYPE1_FIXED
+argument_list|,
+name|ACPI_RTYPE_REFERENCE
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+block|{
+block|{
 literal|"_PRS"
 block|,
 name|METHOD_0ARGS
@@ -3411,6 +3522,36 @@ block|}
 block|,
 block|{
 block|{
+literal|"_RDI"
+block|,
+name|METHOD_0ARGS
+block|,
+comment|/* ACPI 6.0 */
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_PACKAGE
+argument_list|)
+block|}
+block|}
+block|,
+comment|/* Variable-length (1 Int, n Pkg (m Ref)) */
+name|PACKAGE_INFO
+argument_list|(
+name|ACPI_PTYPE2_VAR_VAR
+argument_list|,
+name|ACPI_RTYPE_INTEGER
+argument_list|,
+literal|1
+argument_list|,
+name|ACPI_RTYPE_REFERENCE
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+block|{
+block|{
 literal|"_REG"
 block|,
 name|METHOD_2ARGS
@@ -3465,6 +3606,17 @@ name|METHOD_RETURNS
 argument_list|(
 argument|ACPI_RTYPE_BUFFER
 argument_list|)
+block|}
+block|}
+block|,
+block|{
+block|{
+literal|"_RST"
+block|,
+name|METHOD_0ARGS
+block|,
+comment|/* ACPI 6.0 */
+name|METHOD_NO_RETURN_VALUE
 block|}
 block|}
 block|,
@@ -4088,6 +4240,20 @@ block|}
 block|,
 block|{
 block|{
+literal|"_TFP"
+block|,
+name|METHOD_0ARGS
+block|,
+comment|/* ACPI 6.0 */
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_INTEGER
+argument_list|)
+block|}
+block|}
+block|,
+block|{
+block|{
 literal|"_TIP"
 block|,
 name|METHOD_1ARGS
@@ -4214,6 +4380,20 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
+block|,
+block|{
+block|{
+literal|"_TSN"
+block|,
+name|METHOD_0ARGS
+block|,
+comment|/* ACPI 6.0 */
+name|METHOD_RETURNS
+argument_list|(
+argument|ACPI_RTYPE_REFERENCE
+argument_list|)
+block|}
+block|}
 block|,
 block|{
 block|{

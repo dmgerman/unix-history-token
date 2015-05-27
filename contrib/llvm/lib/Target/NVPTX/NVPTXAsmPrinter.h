@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NVPTXASMPRINTER_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXASMPRINTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NVPTXASMPRINTER_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXASMPRINTER_H
 end_define
 
 begin_include
@@ -138,12 +138,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/Mangler.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -184,42 +178,6 @@ end_comment
 begin_comment
 comment|// (subclass of MCStreamer).
 end_comment
-
-begin_comment
-comment|// This is defined in AsmPrinter.cpp.
-end_comment
-
-begin_comment
-comment|// Used to process the constant expressions in initializers.
-end_comment
-
-begin_decl_stmt
-name|namespace
-name|nvptx
-block|{
-specifier|const
-name|llvm
-operator|::
-name|MCExpr
-operator|*
-name|LowerConstant
-argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|CV
-argument_list|,
-name|llvm
-operator|::
-name|AsmPrinter
-operator|&
-name|AP
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -341,19 +299,26 @@ comment|// it out.
 name|public
 operator|:
 name|unsigned
-name|size
-block|;
-comment|// size of the buffer in bytes
-name|unsigned
-name|char
-operator|*
-name|buffer
-block|;
-comment|// the buffer
-name|unsigned
 name|numSymbols
 block|;
 comment|// number of symbol addresses
+name|private
+operator|:
+specifier|const
+name|unsigned
+name|size
+block|;
+comment|// size of the buffer in bytes
+name|std
+operator|::
+name|vector
+operator|<
+name|unsigned
+name|char
+operator|>
+name|buffer
+block|;
+comment|// the buffer
 name|SmallVector
 operator|<
 name|unsigned
@@ -372,8 +337,6 @@ literal|4
 operator|>
 name|Symbols
 block|;
-name|private
-operator|:
 name|unsigned
 name|curpos
 block|;
@@ -384,6 +347,9 @@ block|;
 name|NVPTXAsmPrinter
 operator|&
 name|AP
+block|;
+name|bool
+name|EmitGeneric
 block|;
 name|public
 operator|:
@@ -396,6 +362,16 @@ argument_list|,
 argument|NVPTXAsmPrinter&_AP
 argument_list|)
 operator|:
+name|size
+argument_list|(
+name|_size
+argument_list|)
+block|,
+name|buffer
+argument_list|(
+name|_size
+argument_list|)
+block|,
 name|O
 argument_list|(
 name|_O
@@ -406,19 +382,6 @@ argument_list|(
 argument|_AP
 argument_list|)
 block|{
-name|buffer
-operator|=
-name|new
-name|unsigned
-name|char
-index|[
-name|_size
-index|]
-block|;
-name|size
-operator|=
-name|_size
-block|;
 name|curpos
 operator|=
 literal|0
@@ -426,15 +389,13 @@ block|;
 name|numSymbols
 operator|=
 literal|0
+block|;
+name|EmitGeneric
+operator|=
+name|AP
+operator|.
+name|EmitGeneric
 block|;     }
-operator|~
-name|AggBuffer
-argument_list|()
-block|{
-name|delete
-index|[]
-name|buffer
-block|; }
 name|unsigned
 name|addBytes
 argument_list|(
@@ -754,11 +715,82 @@ argument_list|(
 name|GVar
 argument_list|)
 decl_stmt|;
+name|PointerType
+modifier|*
+name|PTy
+init|=
+name|dyn_cast
+operator|<
+name|PointerType
+operator|>
+operator|(
+name|GVar
+operator|->
+name|getType
+argument_list|()
+operator|)
+decl_stmt|;
+name|bool
+name|IsNonGenericPointer
+init|=
+name|false
+decl_stmt|;
+if|if
+condition|(
+name|PTy
+operator|&&
+name|PTy
+operator|->
+name|getAddressSpace
+argument_list|()
+operator|!=
+literal|0
+condition|)
+block|{
+name|IsNonGenericPointer
+operator|=
+name|true
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|EmitGeneric
+operator|&&
+operator|!
+name|isa
+operator|<
+name|Function
+operator|>
+operator|(
+name|v
+operator|)
+operator|&&
+operator|!
+name|IsNonGenericPointer
+condition|)
+block|{
+name|O
+operator|<<
+literal|"generic("
+expr_stmt|;
 name|O
 operator|<<
 operator|*
 name|Name
 expr_stmt|;
+name|O
+operator|<<
+literal|")"
+expr_stmt|;
+block|}
+else|else
+block|{
+name|O
+operator|<<
+operator|*
+name|Name
+expr_stmt|;
+block|}
 block|}
 elseif|else
 if|if
@@ -780,13 +812,11 @@ block|{
 name|O
 operator|<<
 operator|*
-name|nvptx
-operator|::
-name|LowerConstant
+name|AP
+operator|.
+name|lowerConstant
 argument_list|(
 name|Cexpr
-argument_list|,
-name|AP
 argument_list|)
 expr_stmt|;
 block|}
@@ -836,9 +866,11 @@ name|int
 operator|*
 operator|)
 operator|(
+operator|&
 name|buffer
-operator|+
+index|[
 name|pos
+index|]
 operator|)
 expr_stmt|;
 else|else
@@ -852,9 +884,11 @@ name|long
 operator|*
 operator|)
 operator|(
+operator|&
 name|buffer
-operator|+
+index|[
 name|pos
+index|]
 operator|)
 expr_stmt|;
 block|}
@@ -866,7 +900,6 @@ name|friend
 name|class
 name|AggBuffer
 block|;
-name|virtual
 name|void
 name|emitSrcInText
 argument_list|(
@@ -877,13 +910,13 @@ argument_list|)
 block|;
 name|private
 operator|:
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"NVPTX Assembly Printer"
@@ -902,14 +935,17 @@ block|;
 name|void
 name|EmitFunctionEntryLabel
 argument_list|()
+name|override
 block|;
 name|void
 name|EmitFunctionBodyStart
 argument_list|()
+name|override
 block|;
 name|void
 name|EmitFunctionBodyEnd
 argument_list|()
+name|override
 block|;
 name|void
 name|emitImplicitDef
@@ -917,14 +953,14 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|EmitInstruction
 argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
+argument|const MachineInstr *
 argument_list|)
+name|override
 block|;
 name|void
 name|lowerToMCInst
@@ -956,11 +992,6 @@ name|MCOperand
 name|GetSymbolRef
 argument_list|(
 specifier|const
-name|MachineOperand
-operator|&
-name|MO
-argument_list|,
-specifier|const
 name|MCSymbol
 operator|*
 name|Symbol
@@ -977,20 +1008,10 @@ name|EmitAlignment
 argument_list|(
 argument|unsigned NumBits
 argument_list|,
-argument|const GlobalValue *GV =
-literal|0
+argument|const GlobalValue *GV = nullptr
 argument_list|)
 specifier|const
 block|{}
-name|void
-name|printGlobalVariable
-argument_list|(
-specifier|const
-name|GlobalVariable
-operator|*
-name|GVar
-argument_list|)
-block|;
 name|void
 name|printVecModifiedImmediate
 argument_list|(
@@ -1018,8 +1039,7 @@ argument|int opNum
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier =
-literal|0
+argument|const char *Modifier = nullptr
 argument_list|)
 block|;
 name|void
@@ -1030,20 +1050,6 @@ argument_list|,
 argument|raw_ostream&O
 argument_list|)
 specifier|const
-block|;
-comment|// definition autogenerated.
-name|void
-name|printInstruction
-argument_list|(
-specifier|const
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|raw_ostream
-operator|&
-name|O
-argument_list|)
 block|;
 name|void
 name|printModuleLevelGV
@@ -1221,6 +1227,7 @@ argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&
 argument_list|)
+name|override
 block|;
 name|void
 name|printOperand
@@ -1231,8 +1238,7 @@ argument|int opNum
 argument_list|,
 argument|raw_ostream&O
 argument_list|,
-argument|const char *Modifier =
-literal|0
+argument|const char *Modifier = nullptr
 argument_list|)
 block|;
 name|bool
@@ -1248,24 +1254,23 @@ argument|const char *ExtraCode
 argument_list|,
 argument|raw_ostream&
 argument_list|)
+name|override
 block|;
 name|protected
 operator|:
 name|bool
 name|doInitialization
 argument_list|(
-name|Module
-operator|&
-name|M
+argument|Module&M
 argument_list|)
+name|override
 block|;
 name|bool
 name|doFinalization
 argument_list|(
-name|Module
-operator|&
-name|M
+argument|Module&M
 argument_list|)
+name|override
 block|;
 name|private
 operator|:
@@ -1530,6 +1535,33 @@ name|raw_ostream
 modifier|&
 parameter_list|)
 function_decl|;
+name|bool
+name|lowerImageHandleOperand
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|unsigned
+name|OpNo
+parameter_list|,
+name|MCOperand
+modifier|&
+name|MCOp
+parameter_list|)
+function_decl|;
+name|void
+name|lowerImageHandleSymbol
+parameter_list|(
+name|unsigned
+name|Index
+parameter_list|,
+name|MCOperand
+modifier|&
+name|MCOp
+parameter_list|)
+function_decl|;
 name|LineReader
 modifier|*
 name|reader
@@ -1542,6 +1574,20 @@ name|std
 operator|::
 name|string
 argument_list|)
+decl_stmt|;
+comment|// Used to control the need to emit .generic() in the initializer of
+comment|// module scope variables.
+comment|// Although ptx supports the hybrid mode like the following,
+comment|//    .global .u32 a;
+comment|//    .global .u32 b;
+comment|//    .global .u32 addr[] = {a, generic(b)}
+comment|// we have difficulty representing the difference in the NVVM IR.
+comment|//
+comment|// Since the address value should always be generic in CUDA C and always
+comment|// be specific in OpenCL, we use this simple control here.
+comment|//
+name|bool
+name|EmitGeneric
 decl_stmt|;
 name|public
 label|:
@@ -1574,7 +1620,20 @@ literal|""
 block|;
 name|reader
 operator|=
-name|NULL
+name|nullptr
+block|;
+name|EmitGeneric
+operator|=
+operator|(
+name|nvptxSubtarget
+operator|.
+name|getDrvInterface
+argument_list|()
+operator|==
+name|NVPTX
+operator|::
+name|CUDA
+operator|)
 block|;   }
 operator|~
 name|NVPTXAsmPrinter

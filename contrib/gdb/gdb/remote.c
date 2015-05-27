@@ -14039,11 +14039,11 @@ name|memset
 argument_list|(
 name|regs
 argument_list|,
+literal|0
+argument_list|,
 name|rs
 operator|->
 name|sizeof_g_packet
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 for|for

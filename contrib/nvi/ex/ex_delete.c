@@ -78,7 +78,7 @@ file|"../common/common.h"
 end_include
 
 begin_comment
-comment|/*  * ex_delete: [line [,line]] d[elete] [buffer] [count] [flags]  *  *	Delete lines from the file.  *  * PUBLIC: int ex_delete __P((SCR *, EXCMD *));  */
+comment|/*  * ex_delete: [line [,line]] d[elete] [buffer] [count] [flags]  *  *	Delete lines from the file.  *  * PUBLIC: int ex_delete(SCR *, EXCMD *);  */
 end_comment
 
 begin_function

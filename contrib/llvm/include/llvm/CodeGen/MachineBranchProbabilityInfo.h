@@ -146,6 +146,7 @@ argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|{
 name|AU
 operator|.
@@ -190,9 +191,9 @@ comment|// A 'Hot' edge is an edge which probability is>= 80%.
 name|bool
 name|isEdgeHot
 argument_list|(
-argument|MachineBasicBlock *Src
+argument|const MachineBasicBlock *Src
 argument_list|,
-argument|MachineBasicBlock *Dst
+argument|const MachineBasicBlock *Dst
 argument_list|)
 specifier|const
 block|;
@@ -215,9 +216,9 @@ comment|// query pattern.
 name|BranchProbability
 name|getEdgeProbability
 argument_list|(
-argument|MachineBasicBlock *Src
+argument|const MachineBasicBlock *Src
 argument_list|,
-argument|MachineBasicBlock *Dst
+argument|const MachineBasicBlock *Dst
 argument_list|)
 specifier|const
 block|;
@@ -230,9 +231,9 @@ name|printEdgeProbability
 argument_list|(
 argument|raw_ostream&OS
 argument_list|,
-argument|MachineBasicBlock *Src
+argument|const MachineBasicBlock *Src
 argument_list|,
-argument|MachineBasicBlock *Dst
+argument|const MachineBasicBlock *Dst
 argument_list|)
 specifier|const
 block|; }

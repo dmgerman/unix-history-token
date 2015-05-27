@@ -18,7 +18,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<dev/drm2/drm_gem_names.h>
+file|<dev/drm2/drm_mode.h>
 end_include
 
 begin_include
@@ -47,7 +47,7 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
-name|i2c_adapter
+name|drm_object_properties
 struct_decl|;
 end_struct_decl
 
@@ -117,6 +117,41 @@ decl_stmt|;
 name|uint32_t
 name|type
 decl_stmt|;
+name|struct
+name|drm_object_properties
+modifier|*
+name|properties
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|DRM_OBJECT_MAX_PROPERTY
+value|24
+end_define
+
+begin_struct
+struct|struct
+name|drm_object_properties
+block|{
+name|int
+name|count
+decl_stmt|;
+name|uint32_t
+name|ids
+index|[
+name|DRM_OBJECT_MAX_PROPERTY
+index|]
+decl_stmt|;
+name|uint64_t
+name|values
+index|[
+name|DRM_OBJECT_MAX_PROPERTY
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -151,7 +186,7 @@ block|,
 comment|/* requires an unsupported linepitch */
 name|MODE_NOMODE
 block|,
-comment|/* no mode with a maching name */
+comment|/* no mode with a matching name */
 name|MODE_NO_INTERLACE
 block|,
 comment|/* interlaced mode not supported */
@@ -298,7 +333,7 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|.name = nm, .status = 0, .type = (t), .clock = (c), \ 	.hdisplay = (hd), .hsync_start = (hss), .hsync_end = (hse), \ 	.htotal = (ht), .hskew = (hsk), .vdisplay = (vd), \ 	.vsync_start = (vss), .vsync_end = (vse), .vtotal = (vt), \ 	.vscan = (vs), .flags = (f), .vrefresh = 0
+value|.name = nm, .status = 0, .type = (t), .clock = (c), \ 	.hdisplay = (hd), .hsync_start = (hss), .hsync_end = (hse), \ 	.htotal = (ht), .hskew = (hsk), .vdisplay = (vd), \ 	.vsync_start = (vss), .vsync_end = (vse), .vtotal = (vt), \ 	.vscan = (vs), .flags = (f), .vrefresh = 0, \ 	.base.type = DRM_MODE_OBJECT_MODE
 end_define
 
 begin_define
@@ -331,13 +366,11 @@ index|[
 name|DRM_DISPLAY_MODE_LEN
 index|]
 decl_stmt|;
-name|int
-name|connector_count
-decl_stmt|;
 name|enum
 name|drm_mode_status
 name|status
 decl_stmt|;
+name|unsigned
 name|int
 name|type
 decl_stmt|;
@@ -432,12 +465,6 @@ name|crtc_vsync_end
 decl_stmt|;
 name|int
 name|crtc_vtotal
-decl_stmt|;
-name|int
-name|crtc_hadjusted
-decl_stmt|;
-name|int
-name|crtc_vadjusted
 decl_stmt|;
 comment|/* Driver private mode info */
 name|int
@@ -577,11 +604,6 @@ decl_stmt|;
 name|u8
 name|cea_rev
 decl_stmt|;
-name|char
-modifier|*
-name|raw_edid
-decl_stmt|;
-comment|/* if any */
 block|}
 struct|;
 end_struct
@@ -590,6 +612,7 @@ begin_struct
 struct|struct
 name|drm_framebuffer_funcs
 block|{
+comment|/* note: use drm_framebuffer_remove() */
 name|void
 function_decl|(
 modifier|*
@@ -668,6 +691,11 @@ name|struct
 name|drm_device
 modifier|*
 name|dev
+decl_stmt|;
+comment|/* 	 * Note that the fb is refcounted for the benefit of driver internals, 	 * for example some hw, disabling a CRTC/plane is asynchronous, and 	 * scanout does not actually complete until the next vblank.  So some 	 * cleanup (like releasing the reference(s) on the backing GEM bo(s)) 	 * should be deferred.  In cases like this, the driver would like to 	 * hold a ref to the fb even though it has already been removed from 	 * userspace perspective. 	 */
+name|unsigned
+name|int
+name|refcount
 decl_stmt|;
 name|struct
 name|list_head
@@ -846,7 +874,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/**  * drm_crtc_funcs - control CRTCs for a given device  * @reset: reset CRTC after state has been invalidate (e.g. resume)  * @dpms: control display power levels  * @save: save CRTC state  * @resore: restore CRTC state  * @lock: lock the CRTC  * @unlock: unlock the CRTC  * @shadow_allocate: allocate shadow pixmap  * @shadow_create: create shadow pixmap for rotation support  * @shadow_destroy: free shadow pixmap  * @mode_fixup: fixup proposed mode  * @mode_set: set the desired mode on the CRTC  * @gamma_set: specify color ramp for CRTC  * @destroy: deinit and free object.  *  * The drm_crtc_funcs structure is the central CRTC management structure  * in the DRM.  Each CRTC controls one or more connectors (note that the name  * CRTC is simply historical, a CRTC may control LVDS, VGA, DVI, TV out, etc.  * connectors, not just CRTs).  *  * Each driver is responsible for filling out this structure at startup time,  * in addition to providing other modesetting features, like i2c and DDC  * bus accessors.  */
+comment|/**  * drm_crtc_funcs - control CRTCs for a given device  * @save: save CRTC state  * @restore: restore CRTC state  * @reset: reset CRTC after state has been invalidate (e.g. resume)  * @cursor_set: setup the cursor  * @cursor_move: move the cursor  * @gamma_set: specify color ramp for CRTC  * @destroy: deinit and free object  * @set_property: called when a property is changed  * @set_config: apply a new CRTC configuration  * @page_flip: initiate a page flip  *  * The drm_crtc_funcs structure is the central CRTC management structure  * in the DRM.  Each CRTC controls one or more connectors (note that the name  * CRTC is simply historical, a CRTC may control LVDS, VGA, DVI, TV out, etc.  * connectors, not just CRTs).  *  * Each driver is responsible for filling out this structure at startup time,  * in addition to providing other modesetting features, like i2c and DDC  * bus accessors.  */
 end_comment
 
 begin_struct
@@ -995,7 +1023,7 @@ modifier|*
 name|set
 parameter_list|)
 function_decl|;
-comment|/* 	 * Flip to the given framebuffer.  This implements the page 	 * flip ioctl descibed in drm_mode.h, specifically, the 	 * implementation must return immediately and block all 	 * rendering to the current fb until the flip has completed. 	 * If userspace set the event flag in the ioctl, the event 	 * argument will point to an event to send back when the flip 	 * completes, otherwise it will be NULL. 	 */
+comment|/* 	 * Flip to the given framebuffer.  This implements the page 	 * flip ioctl described in drm_mode.h, specifically, the 	 * implementation must return immediately and block all 	 * rendering to the current fb until the flip has completed. 	 * If userspace set the event flag in the ioctl, the event 	 * argument will point to an event to send back when the flip 	 * completes, otherwise it will be NULL. 	 */
 name|int
 function_decl|(
 modifier|*
@@ -1018,12 +1046,32 @@ modifier|*
 name|event
 parameter_list|)
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|set_property
+function_decl|)
+parameter_list|(
+name|struct
+name|drm_crtc
+modifier|*
+name|crtc
+parameter_list|,
+name|struct
+name|drm_property
+modifier|*
+name|property
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/**  * drm_crtc - central CRTC control structure  * @enabled: is this CRTC enabled?  * @x: x position on screen  * @y: y position on screen  * @funcs: CRTC control functions  *  * Each CRTC may have one or more connectors associated with it.  This structure  * allows the CRTC to be controlled.  */
+comment|/**  * drm_crtc - central CRTC control structure  * @dev: parent DRM device  * @head: list management  * @base: base KMS object for ID tracking etc.  * @enabled: is this CRTC enabled?  * @mode: current mode timings  * @hwmode: mode timings as programmed to hw regs  * @invert_dimensions: for purposes of error checking crtc vs fb sizes,  *    invert the width/height of the crtc.  This is used if the driver  *    is performing 90 or 270 degree rotated scanout  * @x: x position on screen  * @y: y position on screen  * @funcs: CRTC control functions  * @gamma_size: size of gamma ramp  * @gamma_store: gamma ramp values  * @framedur_ns: precise frame timing  * @framedur_ns: precise line timing  * @pixeldur_ns: precise pixel timing  * @helper_private: mid-layer private data  * @properties: property tracking for this CRTC  *  * Each CRTC may have one or more connectors associated with it.  This structure  * allows the CRTC to be controlled.  */
 end_comment
 
 begin_struct
@@ -1062,6 +1110,9 @@ name|struct
 name|drm_display_mode
 name|hwmode
 decl_stmt|;
+name|bool
+name|invert_dimensions
+decl_stmt|;
 name|int
 name|x
 decl_stmt|,
@@ -1082,7 +1133,7 @@ modifier|*
 name|gamma_store
 decl_stmt|;
 comment|/* Constants needed for precise vblank and swap timestamping. */
-name|int64_t
+name|s64
 name|framedur_ns
 decl_stmt|,
 name|linedur_ns
@@ -1094,12 +1145,16 @@ name|void
 modifier|*
 name|helper_private
 decl_stmt|;
+name|struct
+name|drm_object_properties
+name|properties
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/**  * drm_connector_funcs - control connectors on a given device  * @dpms: set power state (see drm_crtc_funcs above)  * @save: save connector state  * @restore: restore connector state  * @reset: reset connector after state has been invalidate (e.g. resume)  * @mode_valid: is this mode valid on the given connector?  * @mode_fixup: try to fixup proposed mode for this connector  * @mode_set: set this mode  * @detect: is this connector active?  * @get_modes: get mode list for this connector  * @set_property: property for this connector may need update  * @destroy: make object go away  * @force: notify the driver the connector is forced on  *  * Each CRTC may have one or more connectors attached to it.  The functions  * below allow the core DRM code to control connectors, enumerate available modes,  * etc.  */
+comment|/**  * drm_connector_funcs - control connectors on a given device  * @dpms: set power state (see drm_crtc_funcs above)  * @save: save connector state  * @restore: restore connector state  * @reset: reset connector after state has been invalidate (e.g. resume)  * @detect: is this connector active?  * @fill_modes: fill mode list for this connector  * @set_property: property for this connector may need update  * @destroy: make object go away  * @force: notify the driver the connector is forced on  *  * Each CRTC may have one or more connectors attached to it.  The functions  * below allow the core DRM code to control connectors, enumerate available modes,  * etc.  */
 end_comment
 
 begin_struct
@@ -1240,6 +1295,10 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/**  * drm_encoder_funcs - encoder controls  * @reset: reset state (e.g. at init or resume time)  * @destroy: cleanup and free associated data  *  * Encoders sit between CRTCs and connectors.  */
+end_comment
+
 begin_struct
 struct|struct
 name|drm_encoder_funcs
@@ -1282,13 +1341,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DRM_CONNECTOR_MAX_PROPERTY
-value|16
-end_define
-
-begin_define
-define|#
-directive|define
 name|DRM_CONNECTOR_LEN
 value|32
 end_define
@@ -1297,11 +1349,11 @@ begin_define
 define|#
 directive|define
 name|DRM_CONNECTOR_MAX_ENCODER
-value|2
+value|3
 end_define
 
 begin_comment
-comment|/**  * drm_encoder - central DRM encoder structure  */
+comment|/**  * drm_encoder - central DRM encoder structure  * @dev: parent DRM device  * @head: list management  * @base: base KMS object  * @encoder_type: one of the %DRM_MODE_ENCODER_<foo> types in drm_mode.h  * @possible_crtcs: bitmask of potential CRTC bindings  * @possible_clones: bitmask of potential sibling encoders for cloning  * @crtc: currently bound CRTC  * @funcs: control functions  * @helper_private: mid-layer private data  *  * CRTCs drive pixels to encoders, which convert them into signals  * appropriate for a given connector or set of connectors.  */
 end_comment
 
 begin_struct
@@ -1416,7 +1468,7 @@ value|128
 end_define
 
 begin_comment
-comment|/**  * drm_connector - central DRM connector control structure  * @crtc: CRTC this connector is currently connected to, NULL if none  * @interlace_allowed: can this connector handle interlaced modes?  * @doublescan_allowed: can this connector handle doublescan?  * @available_modes: modes available on this connector (from get_modes() + user)  * @initial_x: initial x position for this connector  * @initial_y: initial y position for this connector  * @status: connector connected?  * @funcs: connector control functions  *  * Each connector may be connected to one or more CRTCs, or may be clonable by  * another connector if they can share a CRTC.  Each connector also has a specific  * position in the broader display (referred to as a 'screen' though it could  * span multiple monitors).  */
+comment|/**  * drm_connector - central DRM connector control structure  * @dev: parent DRM device  * @kdev: kernel device for sysfs attributes  * @attr: sysfs attributes  * @head: list management  * @base: base KMS object  * @connector_type: one of the %DRM_MODE_CONNECTOR_<foo> types from drm_mode.h  * @connector_type_id: index into connector type enum  * @interlace_allowed: can this connector handle interlaced modes?  * @doublescan_allowed: can this connector handle doublescan?  * @modes: modes available on this connector (from fill_modes() + user)  * @status: one of the drm_connector_status enums (connected, not, or unknown)  * @probed_modes: list of modes derived directly from the display  * @display_info: information about attached display (e.g. from EDID)  * @funcs: connector control functions  * @user_modes: user added mode list  * @edid_blob_ptr: DRM property containing EDID if present  * @properties: property tracking for this connector  * @polled: a %DRM_CONNECTOR_POLL_<foo> value for core driven polling  * @dpms: current dpms state  * @helper_private: mid-layer private data  * @force: a %DRM_FORCE_<foo> state for forced mode sets  * @encoder_ids: valid encoders for this connector  * @encoder: encoder driving this connector, if any  * @eld: EDID-like data, if present  * @dvi_dual: dual link DVI, if found  * @max_tmds_clock: max clock rate, if found  * @latency_present: AV delay info from ELD, if found  * @video_latency: video latency info from ELD, if found  * @audio_latency: audio latency info from ELD, if found  * @null_edid_counter: track sinks that give us all zeros for the EDID  *  * Each connector may be connected to one or more CRTCs, or may be clonable by  * another connector if they can share a CRTC.  Each connector also has a specific  * position in the broader display (referred to as a 'screen' though it could  * span multiple monitors).  */
 end_comment
 
 begin_struct
@@ -1428,7 +1480,16 @@ name|drm_device
 modifier|*
 name|dev
 decl_stmt|;
-comment|/* struct device kdev; XXXKIB */
+ifdef|#
+directive|ifdef
+name|FREEBSD_NOTYET
+name|struct
+name|device
+name|kdev
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* FREEBSD_NOTYET */
 name|struct
 name|device_attribute
 modifier|*
@@ -1459,11 +1520,6 @@ name|list_head
 name|modes
 decl_stmt|;
 comment|/* list of modes on this connector */
-name|int
-name|initial_x
-decl_stmt|,
-name|initial_y
-decl_stmt|;
 name|enum
 name|drm_connector_status
 name|status
@@ -1492,17 +1548,9 @@ name|drm_property_blob
 modifier|*
 name|edid_blob_ptr
 decl_stmt|;
-name|u32
-name|property_ids
-index|[
-name|DRM_CONNECTOR_MAX_PROPERTY
-index|]
-decl_stmt|;
-name|uint64_t
-name|property_values
-index|[
-name|DRM_CONNECTOR_MAX_PROPERTY
-index|]
+name|struct
+name|drm_object_properties
+name|properties
 decl_stmt|;
 name|uint8_t
 name|polled
@@ -1526,9 +1574,6 @@ name|encoder_ids
 index|[
 name|DRM_CONNECTOR_MAX_ENCODER
 index|]
-decl_stmt|;
-name|uint32_t
-name|force_encoder_id
 decl_stmt|;
 name|struct
 name|drm_encoder
@@ -1573,12 +1618,15 @@ name|int
 name|null_edid_counter
 decl_stmt|;
 comment|/* needed to workaround some HW bugs where we get all 0s */
+name|unsigned
+name|bad_edid_counter
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/**  * drm_plane_funcs - driver plane control functions  * @update_plane: update the plane configuration  * @disable_plane: shut down the plane  * @destroy: clean up plane resources  */
+comment|/**  * drm_plane_funcs - driver plane control functions  * @update_plane: update the plane configuration  * @disable_plane: shut down the plane  * @destroy: clean up plane resources  * @set_property: called when a property is changed  */
 end_comment
 
 begin_struct
@@ -1657,12 +1705,32 @@ modifier|*
 name|plane
 parameter_list|)
 function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|set_property
+function_decl|)
+parameter_list|(
+name|struct
+name|drm_plane
+modifier|*
+name|plane
+parameter_list|,
+name|struct
+name|drm_property
+modifier|*
+name|property
+parameter_list|,
+name|uint64_t
+name|val
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/**  * drm_plane - central DRM plane control structure  * @dev: DRM device this plane belongs to  * @head: for list management  * @base: base mode object  * @possible_crtcs: pipes this plane can be bound to  * @format_types: array of formats supported by this plane  * @format_count: number of formats supported  * @crtc: currently bound CRTC  * @fb: currently bound fb  * @gamma_size: size of gamma table  * @gamma_store: gamma correction table  * @enabled: enabled flag  * @funcs: helper functions  * @helper_private: storage for drver layer  */
+comment|/**  * drm_plane - central DRM plane control structure  * @dev: DRM device this plane belongs to  * @head: for list management  * @base: base mode object  * @possible_crtcs: pipes this plane can be bound to  * @format_types: array of formats supported by this plane  * @format_count: number of formats supported  * @crtc: currently bound CRTC  * @fb: currently bound fb  * @gamma_size: size of gamma table  * @gamma_store: gamma correction table  * @enabled: enabled flag  * @funcs: helper functions  * @helper_private: storage for drver layer  * @properties: property tracking for this plane  */
 end_comment
 
 begin_struct
@@ -1723,22 +1791,22 @@ name|void
 modifier|*
 name|helper_private
 decl_stmt|;
+name|struct
+name|drm_object_properties
+name|properties
+decl_stmt|;
 block|}
 struct|;
 end_struct
 
 begin_comment
-comment|/**  * struct drm_mode_set  *  * Represents a single crtc the connectors that it drives with what mode  * and from which framebuffer it scans out from.  *  * This is used to set modes.  */
+comment|/**  * drm_mode_set - new values for a CRTC config change  * @head: list management  * @fb: framebuffer to use for new config  * @crtc: CRTC whose configuration we're about to change  * @mode: mode timings to use  * @x: position of this CRTC relative to @fb  * @y: position of this CRTC relative to @fb  * @connectors: array of connectors to drive with this CRTC if possible  * @num_connectors: size of @connectors array  *  * Represents a single crtc the connectors that it drives with what mode  * and from which framebuffer it scans out from.  *  * This is used to set modes.  */
 end_comment
 
 begin_struct
 struct|struct
 name|drm_mode_set
 block|{
-name|struct
-name|list_head
-name|head
-decl_stmt|;
 name|struct
 name|drm_framebuffer
 modifier|*
@@ -1774,7 +1842,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * struct drm_mode_config_funcs - configure CRTCs for a given screen layout  */
+comment|/**  * struct drm_mode_config_funcs - basic driver provided mode setting functions  * @fb_create: create a new framebuffer object  * @output_poll_changed: function to handle output configuration changes  *  * Some global (i.e. not per-CRTC, connector, etc) mode setting functions that  * involve drivers.  */
 end_comment
 
 begin_struct
@@ -1806,7 +1874,7 @@ name|struct
 name|drm_framebuffer
 modifier|*
 modifier|*
-name|res
+name|fb
 parameter_list|)
 function_decl|;
 name|void
@@ -1824,6 +1892,10 @@ function_decl|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/**  * drm_mode_group - group of mode setting resources for potential sub-grouping  * @num_crtcs: CRTC count  * @num_encoders: encoder count  * @num_connectors: connector count  * @id_list: list of KMS object IDs in this group  *  * Currently this simply tracks the global mode setting state.  But in the  * future it could allow groups of objects to be set aside into independent  * control groups for use by different user level processes (e.g. two X servers  * running simultaneously on different heads, each with their own mode  * configuration and freedom of mode setting).  */
+end_comment
 
 begin_struct
 struct|struct
@@ -1848,7 +1920,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/**  * drm_mode_config - Mode configuration control structure  *  */
+comment|/**  * drm_mode_config - Mode configuration control structure  * @mutex: mutex protecting KMS related lists and structures  * @idr_mutex: mutex for KMS ID allocation and management  * @crtc_idr: main KMS ID tracking object  * @num_fb: number of fbs available  * @fb_list: list of framebuffers available  * @num_connector: number of connectors on this device  * @connector_list: list of connector objects  * @num_encoder: number of encoders on this device  * @encoder_list: list of encoder objects  * @num_crtc: number of CRTCs on this device  * @crtc_list: list of CRTC objects  * @min_width: minimum pixel width on this device  * @min_height: minimum pixel height on this device  * @max_width: maximum pixel width on this device  * @max_height: maximum pixel height on this device  * @funcs: core driver provided mode setting functions  * @fb_base: base address of the framebuffer  * @poll_enabled: track polling status for this device  * @output_poll_work: delayed work for polling in process context  * @*_property: core property tracking  *  * Core mode resource tracking structure.  All CRTC, encoders, and connectors  * enumerated by the driver are added here, as are global properties.  Some  * global restrictions are also here, e.g. dimension restrictions.  */
 end_comment
 
 begin_struct
@@ -1864,7 +1936,7 @@ name|struct
 name|drm_gem_names
 name|crtc_names
 decl_stmt|;
-comment|/* use this idr for all IDs, fb, crtc, connector, modes */
+comment|/* use this idr for all IDs, fb, crtc, connector, modes - just makes life easier */
 comment|/* this is limited to one for now */
 name|int
 name|num_fb
@@ -1928,9 +2000,12 @@ comment|/* output poll support */
 name|bool
 name|poll_enabled
 decl_stmt|;
+name|bool
+name|poll_running
+decl_stmt|;
 name|struct
 name|timeout_task
-name|output_poll_task
+name|output_poll_work
 decl_stmt|;
 comment|/* pointers to standard properties */
 name|struct
@@ -2145,70 +2220,6 @@ block|}
 struct|;
 end_struct
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MODE_SETTING_LOCKING_IS_NOT_BROKEN
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|DRM_MODE_CONFIG_ASSERT_LOCKED
-parameter_list|(
-name|dev
-parameter_list|)
-define|\
-value|sx_assert(&dev->mode_config.mutex, SA_XLOCKED)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|DRM_MODE_CONFIG_ASSERT_LOCKED
-parameter_list|(
-name|dev
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|drm_get_dirty_info_name
-parameter_list|(
-name|int
-name|val
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|char
-modifier|*
-name|drm_get_connector_status_name
-parameter_list|(
-name|enum
-name|drm_connector_status
-name|status
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 specifier|extern
 name|int
@@ -2282,6 +2293,23 @@ name|struct
 name|drm_connector
 modifier|*
 name|connector
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* helper to unplug all connectors from sysfs for device */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|drm_connector_unplug_all
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2396,6 +2424,19 @@ begin_function_decl
 specifier|extern
 name|char
 modifier|*
+name|drm_get_connector_status_name
+parameter_list|(
+name|enum
+name|drm_connector_status
+name|status
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
 name|drm_get_dpms_name
 parameter_list|(
 name|int
@@ -2444,6 +2485,18 @@ begin_function_decl
 specifier|extern
 name|char
 modifier|*
+name|drm_get_dirty_info_name
+parameter_list|(
+name|int
+name|val
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|char
+modifier|*
 name|drm_get_tv_select_name
 parameter_list|(
 name|int
@@ -2468,6 +2521,37 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
+name|drm_mode_group_init
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|struct
+name|drm_mode_group
+modifier|*
+name|group
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|drm_mode_group_free
+parameter_list|(
+name|struct
+name|drm_mode_group
+modifier|*
+name|group
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
 name|drm_mode_group_init_legacy_group
 parameter_list|(
 name|struct
@@ -2479,6 +2563,17 @@ name|struct
 name|drm_mode_group
 modifier|*
 name|group
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|drm_probe_ddc
+parameter_list|(
+name|device_t
+name|adapter
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2557,6 +2652,25 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|void
+name|drm_mode_copy
+parameter_list|(
+name|struct
+name|drm_display_mode
+modifier|*
+name|dst
+parameter_list|,
+specifier|const
+name|struct
+name|drm_display_mode
+modifier|*
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|struct
 name|drm_display_mode
 modifier|*
@@ -2581,6 +2695,7 @@ specifier|extern
 name|void
 name|drm_mode_debug_printmodeline
 parameter_list|(
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -2646,11 +2761,13 @@ specifier|extern
 name|bool
 name|drm_mode_equal
 parameter_list|(
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
 name|mode1
 parameter_list|,
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -2664,6 +2781,7 @@ specifier|extern
 name|int
 name|drm_mode_width
 parameter_list|(
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -2677,6 +2795,7 @@ specifier|extern
 name|int
 name|drm_mode_height
 parameter_list|(
+specifier|const
 name|struct
 name|drm_display_mode
 modifier|*
@@ -2950,12 +3069,12 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|drm_connector_property_set_value
+name|drm_object_property_set_value
 parameter_list|(
 name|struct
-name|drm_connector
+name|drm_mode_object
 modifier|*
-name|connector
+name|obj
 parameter_list|,
 name|struct
 name|drm_property
@@ -2963,7 +3082,7 @@ modifier|*
 name|property
 parameter_list|,
 name|uint64_t
-name|value
+name|val
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2971,12 +3090,12 @@ end_function_decl
 begin_function_decl
 specifier|extern
 name|int
-name|drm_connector_property_get_value
+name|drm_object_property_get_value
 parameter_list|(
 name|struct
-name|drm_connector
+name|drm_mode_object
 modifier|*
-name|connector
+name|obj
 parameter_list|,
 name|struct
 name|drm_property
@@ -3042,6 +3161,45 @@ name|struct
 name|drm_framebuffer_funcs
 modifier|*
 name|funcs
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|drm_framebuffer_unreference
+parameter_list|(
+name|struct
+name|drm_framebuffer
+modifier|*
+name|fb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|drm_framebuffer_reference
+parameter_list|(
+name|struct
+name|drm_framebuffer
+modifier|*
+name|fb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|drm_framebuffer_remove
+parameter_list|(
+name|struct
+name|drm_framebuffer
+modifier|*
+name|fb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3129,13 +3287,13 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|int
-name|drm_connector_attach_property
+name|void
+name|drm_object_attach_property
 parameter_list|(
 name|struct
-name|drm_connector
+name|drm_mode_object
 modifier|*
-name|connector
+name|obj
 parameter_list|,
 name|struct
 name|drm_property
@@ -3180,6 +3338,37 @@ name|struct
 name|drm_property
 modifier|*
 name|drm_property_create_enum
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|struct
+name|drm_prop_enum_list
+modifier|*
+name|props
+parameter_list|,
+name|int
+name|num_values
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|drm_property
+modifier|*
+name|drm_property_create_bitmask
 parameter_list|(
 name|struct
 name|drm_device
@@ -4006,6 +4195,33 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|u8
+modifier|*
+name|drm_find_cea_extension
+parameter_list|(
+name|struct
+name|edid
+modifier|*
+name|edid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|u8
+name|drm_match_cea_mode
+parameter_list|(
+name|struct
+name|drm_display_mode
+modifier|*
+name|to_match
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|bool
 name|drm_detect_hdmi_monitor
 parameter_list|(
@@ -4178,6 +4394,20 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|uint8_t
+name|drm_mode_cea_vic
+parameter_list|(
+specifier|const
+name|struct
+name|drm_display_mode
+modifier|*
+name|mode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|drm_edid_header_is_valid
 parameter_list|(
@@ -4185,6 +4415,24 @@ specifier|const
 name|u8
 modifier|*
 name|raw_edid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|bool
+name|drm_edid_block_valid
+parameter_list|(
+name|u8
+modifier|*
+name|raw_edid
+parameter_list|,
+name|int
+name|block
+parameter_list|,
+name|bool
+name|print_bad_edid
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4221,6 +4469,9 @@ name|vsize
 parameter_list|,
 name|int
 name|fresh
+parameter_list|,
+name|bool
+name|rb
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4293,6 +4544,50 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|int
+name|drm_mode_obj_get_properties_ioctl
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|drm_mode_obj_set_property_ioctl
+parameter_list|(
+name|struct
+name|drm_device
+modifier|*
+name|dev
+parameter_list|,
+name|void
+modifier|*
+name|data
+parameter_list|,
+name|struct
+name|drm_file
+modifier|*
+name|file_priv
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|void
 name|drm_fb_get_bpp_depth
 parameter_list|(
@@ -4307,6 +4602,53 @@ parameter_list|,
 name|int
 modifier|*
 name|bpp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|drm_format_num_planes
+parameter_list|(
+name|uint32_t
+name|format
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|drm_format_plane_cpp
+parameter_list|(
+name|uint32_t
+name|format
+parameter_list|,
+name|int
+name|plane
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|drm_format_horz_chroma_subsampling
+parameter_list|(
+name|uint32_t
+name|format
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|int
+name|drm_format_vert_chroma_subsampling
+parameter_list|(
+name|uint32_t
+name|format
 parameter_list|)
 function_decl|;
 end_function_decl

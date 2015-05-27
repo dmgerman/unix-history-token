@@ -62,6 +62,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Sanitizers.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Regex.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<memory>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -181,6 +199,14 @@ block|{
 name|NoDebugInfo
 block|,
 comment|/// Don't generate debug info.
+name|LocTrackingOnly
+block|,
+comment|/// Emit location information but do not generate
+comment|/// debug info in the output. This is useful in
+comment|/// cases where the backend wants to track source
+comment|/// locations for instructions without actually
+comment|/// emitting debug info for them (e.g., when -Rpass
+comment|/// is used).
 name|DebugLineTablesOnly
 block|,
 comment|/// Emit only debug info necessary for generating
@@ -311,11 +337,11 @@ operator|::
 name|string
 name|RelocationModel
 block|;
-comment|/// Path to blacklist file for sanitizers.
+comment|/// The thread model to use
 name|std
 operator|::
 name|string
-name|SanitizerBlacklistFile
+name|ThreadModel
 block|;
 comment|/// If not an empty string, trap intrinsics are lowered to calls to this
 comment|/// function instead of to trap instructions.
@@ -352,6 +378,74 @@ operator|::
 name|string
 name|SampleProfileFile
 block|;
+comment|/// Name of the profile file to use as input for -fprofile-instr-use
+name|std
+operator|::
+name|string
+name|InstrProfileInput
+block|;
+comment|/// Regular expression to select optimizations for which we should enable
+comment|/// optimization remarks. Transformation passes whose name matches this
+comment|/// expression (and support this feature), will emit a diagnostic
+comment|/// whenever they perform a transformation. This is enabled by the
+comment|/// -Rpass=regexp flag.
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|llvm
+operator|::
+name|Regex
+operator|>
+name|OptimizationRemarkPattern
+block|;
+comment|/// Regular expression to select optimizations for which we should enable
+comment|/// missed optimization remarks. Transformation passes whose name matches this
+comment|/// expression (and support this feature), will emit a diagnostic
+comment|/// whenever they tried but failed to perform a transformation. This is
+comment|/// enabled by the -Rpass-missed=regexp flag.
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|llvm
+operator|::
+name|Regex
+operator|>
+name|OptimizationRemarkMissedPattern
+block|;
+comment|/// Regular expression to select optimizations for which we should enable
+comment|/// optimization analyses. Transformation passes whose name matches this
+comment|/// expression (and support this feature), will emit a diagnostic
+comment|/// whenever they want to explain why they decided to apply or not apply
+comment|/// a given transformation. This is enabled by the -Rpass-analysis=regexp
+comment|/// flag.
+name|std
+operator|::
+name|shared_ptr
+operator|<
+name|llvm
+operator|::
+name|Regex
+operator|>
+name|OptimizationRemarkAnalysisPattern
+block|;
+comment|/// Set of files definining the rules for the symbol rewriting.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|RewriteMapFiles
+block|;
+comment|/// Set of sanitizer checks that are non-fatal (i.e. execution should be
+comment|/// continued when possible).
+name|SanitizerSet
+name|SanitizeRecover
+block|;
 name|public
 operator|:
 comment|// Define accessors/mutators for code generation options of enumeration type.
@@ -384,49 +478,7 @@ directive|include
 file|"clang/Frontend/CodeGenOptions.def"
 name|CodeGenOptions
 argument_list|()
-block|{
-define|#
-directive|define
-name|CODEGENOPT
-parameter_list|(
-name|Name
-parameter_list|,
-name|Bits
-parameter_list|,
-name|Default
-parameter_list|)
-value|Name = Default;
-define|#
-directive|define
-name|ENUM_CODEGENOPT
-parameter_list|(
-name|Name
-parameter_list|,
-name|Type
-parameter_list|,
-name|Bits
-parameter_list|,
-name|Default
-parameter_list|)
-define|\
-value|set##Name(Default);
-include|#
-directive|include
-file|"clang/Frontend/CodeGenOptions.def"
-name|RelocationModel
-operator|=
-literal|"pic"
-block|;
-name|memcpy
-argument_list|(
-name|CoverageVersion
-argument_list|,
-literal|"402*"
-argument_list|,
-literal|4
-argument_list|)
-block|;   }
-block|}
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

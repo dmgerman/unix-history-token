@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<assert.h>
 end_include
 
@@ -30,7 +24,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelf_xlate.c 2225 2011-11-26 18:55:54Z jkoshy $"
+literal|"$Id: libelf_xlate.c 3174 2015-03-27 17:13:41Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -340,6 +334,9 @@ condition|)
 block|{
 name|cnt
 operator|=
+operator|(
+name|size_t
+operator|)
 name|src
 operator|->
 name|d_size
@@ -357,6 +354,9 @@ else|else
 block|{
 name|cnt
 operator|=
+operator|(
+name|size_t
+operator|)
 name|src
 operator|->
 name|d_size
@@ -405,6 +405,9 @@ name|se
 operator|=
 name|sb
 operator|+
+operator|(
+name|size_t
+operator|)
 name|src
 operator|->
 name|d_size
@@ -422,6 +425,9 @@ name|de
 operator|=
 name|db
 operator|+
+operator|(
+name|size_t
+operator|)
 name|dst
 operator|->
 name|d_size

@@ -50,7 +50,7 @@ file|<stdint.h>
 end_include
 
 begin_comment
-comment|// Get the DWARF constant defintions from llvm
+comment|// Get the DWARF constant definitions from llvm
 end_comment
 
 begin_include

@@ -50,12 +50,6 @@ if|#
 directive|if
 name|__STDC_HOSTED__
 operator|&&
-expr|\
-name|defined
-argument_list|(
-name|__has_include_next
-argument_list|)
-operator|&&
 name|__has_include_next
 argument_list|(
 operator|<
@@ -339,7 +333,7 @@ if|#
 directive|if
 name|__STDC_VERSION__
 operator|>=
-literal|199901
+literal|199901L
 operator|||
 name|__cplusplus
 operator|>=

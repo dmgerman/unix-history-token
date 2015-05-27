@@ -1,17 +1,11 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$Id: tbl_html.c,v 1.10 2012/05/27 17:54:54 schwarze Exp $ */
+comment|/*	$Id: tbl_html.c,v 1.16 2015/01/30 17:32:16 schwarze Exp $ */
 end_comment
 
 begin_comment
 comment|/*  * Copyright (c) 2011 Kristaps Dzonsons<kristaps@bsd.lv>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
@@ -19,10 +13,11 @@ directive|include
 file|"config.h"
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -111,10 +106,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|size_t
@@ -135,10 +126,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 specifier|static
@@ -183,12 +170,6 @@ modifier|*
 name|sp
 parameter_list|)
 block|{
-specifier|const
-name|struct
-name|tbl_head
-modifier|*
-name|hp
-decl_stmt|;
 name|struct
 name|htmlpair
 name|tag
@@ -202,13 +183,18 @@ name|roffcol
 modifier|*
 name|col
 decl_stmt|;
+name|int
+name|ic
+decl_stmt|;
 if|if
 condition|(
-name|TBL_SPAN_FIRST
-operator|&
-name|sp
+name|h
 operator|->
-name|flags
+name|tbl
+operator|.
+name|cols
+operator|==
+name|NULL
 condition|)
 block|{
 name|h
@@ -235,6 +221,8 @@ operator|->
 name|tbl
 argument_list|,
 name|sp
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -273,19 +261,20 @@ argument_list|)
 expr_stmt|;
 for|for
 control|(
-name|hp
+name|ic
 operator|=
+literal|0
+init|;
+name|ic
+operator|<
 name|sp
 operator|->
-name|head
-init|;
-name|hp
-condition|;
-name|hp
-operator|=
-name|hp
+name|opts
 operator|->
-name|next
+name|cols
+condition|;
+name|ic
+operator|++
 control|)
 block|{
 name|bufinit
@@ -295,17 +284,13 @@ argument_list|)
 expr_stmt|;
 name|col
 operator|=
-operator|&
 name|h
 operator|->
 name|tbl
 operator|.
 name|cols
-index|[
-name|hp
-operator|->
-name|ident
-index|]
+operator|+
+name|ic
 expr_stmt|;
 name|SCALE_HS_INIT
 argument_list|(
@@ -415,12 +400,6 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|tbl_head
-modifier|*
-name|hp
-decl_stmt|;
-specifier|const
-name|struct
 name|tbl_dat
 modifier|*
 name|dp
@@ -434,14 +413,17 @@ name|tag
 modifier|*
 name|tt
 decl_stmt|;
+name|int
+name|ic
+decl_stmt|;
 comment|/* Inhibit printing of spaces: we do padding ourselves. */
 if|if
 condition|(
-name|NULL
-operator|==
 name|h
 operator|->
 name|tblt
+operator|==
+name|NULL
 condition|)
 name|html_tblopen
 argument_list|(
@@ -490,15 +472,11 @@ name|pos
 condition|)
 block|{
 case|case
-operator|(
 name|TBL_SPAN_HORIZ
-operator|)
 case|:
 comment|/* FALLTHROUGH */
 case|case
-operator|(
 name|TBL_SPAN_DHORIZ
-operator|)
 case|:
 name|PAIR_INIT
 argument_list|(
@@ -532,19 +510,20 @@ name|first
 expr_stmt|;
 for|for
 control|(
-name|hp
+name|ic
 operator|=
+literal|0
+init|;
+name|ic
+operator|<
 name|sp
 operator|->
-name|head
-init|;
-name|hp
-condition|;
-name|hp
-operator|=
-name|hp
+name|opts
 operator|->
-name|next
+name|cols
+condition|;
+name|ic
+operator|++
 control|)
 block|{
 name|print_stagq
@@ -567,26 +546,36 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|NULL
-operator|==
 name|dp
+operator|==
+name|NULL
+operator|||
+name|dp
+operator|->
+name|layout
+operator|->
+name|col
+operator|>
+name|ic
 condition|)
-break|break;
+continue|continue;
 if|if
 condition|(
-name|TBL_CELL_DOWN
-operator|!=
 name|dp
 operator|->
 name|layout
 operator|->
 name|pos
+operator|!=
+name|TBL_CELL_DOWN
 condition|)
 if|if
 condition|(
 name|dp
 operator|->
 name|string
+operator|!=
+name|NULL
 condition|)
 name|print_text
 argument_list|(
@@ -622,11 +611,11 @@ name|HTML_NONOSPACE
 expr_stmt|;
 if|if
 condition|(
-name|TBL_SPAN_LAST
-operator|&
 name|sp
 operator|->
-name|flags
+name|next
+operator|==
+name|NULL
 condition|)
 block|{
 name|assert

@@ -576,7 +576,7 @@ return|return;
 block|}
 if|if
 condition|(
-name|os_memcmp
+name|os_memcmp_const
 argument_list|(
 name|hash
 argument_list|,

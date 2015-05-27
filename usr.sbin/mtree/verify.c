@@ -1231,6 +1231,9 @@ if|if
 condition|(
 operator|!
 name|create
+operator|&&
+operator|!
+name|uflag
 condition|)
 continue|continue;
 if|if

@@ -2048,7 +2048,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|optarg
+name|newoptarg
 init|=
 name|NULL
 decl_stmt|;
@@ -2210,7 +2210,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|optarg
+name|newoptarg
 operator|=
 name|s
 expr_stmt|;
@@ -2294,7 +2294,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|optarg
+name|newoptarg
 operator|=
 name|s
 expr_stmt|;
@@ -2335,7 +2335,7 @@ name|optnext
 operator|)
 operator|++
 expr_stmt|;
-name|optarg
+name|newoptarg
 operator|=
 name|p
 expr_stmt|;
@@ -2369,7 +2369,7 @@ name|p
 expr_stmt|;
 if|if
 condition|(
-name|optarg
+name|newoptarg
 operator|!=
 name|NULL
 condition|)
@@ -2379,7 +2379,7 @@ name|setvarsafe
 argument_list|(
 literal|"OPTARG"
 argument_list|,
-name|optarg
+name|newoptarg
 argument_list|,
 literal|0
 argument_list|)

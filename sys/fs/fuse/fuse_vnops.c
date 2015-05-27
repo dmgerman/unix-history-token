@@ -3428,7 +3428,7 @@ comment|/* 	         * No we can't use negative caching, as the fs 	         * c
 if|#
 directive|if
 literal|0
-block|if ((cnp->cn_flags& MAKEENTRY)&& nameiop != CREATE) { 			FS_DEBUG("inserting NULL into cache\n"); 			cache_enter(dvp, NULL, cnp); 		}
+block|if ((cnp->cn_flags& MAKEENTRY) != 0) { 			FS_DEBUG("inserting NULL into cache\n"); 			cache_enter(dvp, NULL, cnp); 		}
 endif|#
 directive|endif
 name|err
@@ -4623,6 +4623,23 @@ block|{
 return|return
 name|ENXIO
 return|;
+block|}
+if|if
+condition|(
+name|VTOFUD
+argument_list|(
+name|vp
+argument_list|)
+operator|->
+name|flag
+operator|&
+name|FN_DIRECTIO
+condition|)
+block|{
+name|ioflag
+operator||=
+name|IO_DIRECT
+expr_stmt|;
 block|}
 return|return
 name|fuse_io_dispatch
@@ -7002,6 +7019,23 @@ argument_list|,
 name|cred
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|VTOFUD
+argument_list|(
+name|vp
+argument_list|)
+operator|->
+name|flag
+operator|&
+name|FN_DIRECTIO
+condition|)
+block|{
+name|ioflag
+operator||=
+name|IO_DIRECT
+expr_stmt|;
+block|}
 return|return
 name|fuse_io_dispatch
 argument_list|(

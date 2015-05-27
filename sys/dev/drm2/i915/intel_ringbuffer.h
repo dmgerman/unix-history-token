@@ -19,7 +19,7 @@ begin_struct
 struct|struct
 name|intel_hw_status_page
 block|{
-name|uint32_t
+name|u32
 modifier|*
 name|page_addr
 decl_stmt|;
@@ -202,7 +202,7 @@ define|#
 directive|define
 name|I915_NUM_RINGS
 value|3
-name|uint32_t
+name|u32
 name|mmio_base
 decl_stmt|;
 name|void
@@ -219,10 +219,10 @@ name|drm_i915_gem_object
 modifier|*
 name|obj
 decl_stmt|;
-name|uint32_t
+name|u32
 name|head
 decl_stmt|;
-name|uint32_t
+name|u32
 name|tail
 decl_stmt|;
 name|int
@@ -242,27 +242,17 @@ comment|/** We track the position of the requests in the ring buffer, and 	 * wh
 name|u32
 name|last_retired_head
 decl_stmt|;
-name|struct
-name|mtx
-name|irq_lock
-decl_stmt|;
-name|uint32_t
+name|u32
 name|irq_refcount
 decl_stmt|;
-name|uint32_t
-name|irq_mask
+name|u32
+name|irq_enable_mask
 decl_stmt|;
-name|uint32_t
-name|irq_seqno
-decl_stmt|;
-comment|/* last seq seem at irq time */
-name|uint32_t
+comment|/* bitmask to enable ring interrupt */
+name|u32
 name|trace_irq_seqno
 decl_stmt|;
-name|uint32_t
-name|waiting_seqno
-decl_stmt|;
-name|uint32_t
+name|u32
 name|sync_seqno
 index|[
 name|I915_NUM_RINGS
@@ -447,7 +437,7 @@ name|list_head
 name|gpu_write_list
 decl_stmt|;
 comment|/** 	 * Do we have some not yet emitted requests outstanding? 	 */
-name|uint32_t
+name|u32
 name|outstanding_lazy_request
 decl_stmt|;
 comment|/** 	 * Do an explicit TLB flush before MI_SET_CONTEXT 	 */
@@ -581,6 +571,10 @@ name|int
 name|reg
 parameter_list|)
 block|{
+comment|/* Ensure that the compiler doesn't optimize away the load. */
+name|__compiler_membar
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|atomic_load_acq_32

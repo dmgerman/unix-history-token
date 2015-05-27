@@ -75,6 +75,8 @@ comment|/// \brief Specifies which overload candidates to display when overload
 comment|/// resolution fails.
 enum|enum
 name|OverloadsShown
+enum|:
+name|unsigned
 block|{
 name|Ovl_All
 block|,
@@ -127,6 +129,10 @@ block|,
 name|DefaultConstexprBacktraceLimit
 operator|=
 literal|10
+block|,
+name|DefaultSpellCheckingLimit
+operator|=
+literal|50
 block|}
 block|;
 comment|// Define simple diagnostic options (with no accessors).
@@ -211,6 +217,18 @@ operator|::
 name|string
 operator|>
 name|Warnings
+block|;
+comment|/// The list of -R... options used to alter the diagnostic mappings, with the
+comment|/// prefixes removed.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Remarks
 block|;
 name|public
 operator|:

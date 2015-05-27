@@ -241,7 +241,7 @@ decl_stmt|;
 name|uint32_t
 name|backs
 index|[
-name|REP_DISTANCES
+name|REPS
 index|]
 decl_stmt|;
 block|}
@@ -265,7 +265,7 @@ comment|/// The four most recent match distances
 name|uint32_t
 name|reps
 index|[
-name|REP_DISTANCES
+name|REPS
 index|]
 decl_stmt|;
 comment|/// Array of match candidates
@@ -363,26 +363,26 @@ name|POS_STATES_MAX
 index|]
 decl_stmt|;
 name|probability
-name|pos_slot
+name|dist_slot
 index|[
-name|LEN_TO_POS_STATES
+name|DIST_STATES
 index|]
 index|[
-name|POS_SLOTS
+name|DIST_SLOTS
 index|]
 decl_stmt|;
 name|probability
-name|pos_special
+name|dist_special
 index|[
 name|FULL_DISTANCES
 operator|-
-name|END_POS_MODEL_INDEX
+name|DIST_MODEL_END
 index|]
 decl_stmt|;
 name|probability
-name|pos_align
+name|dist_align
 index|[
-name|ALIGN_TABLE_SIZE
+name|ALIGN_SIZE
 index|]
 decl_stmt|;
 comment|// These are the same as in lzma_decoder.c except that the encoders
@@ -395,18 +395,18 @@ name|rep_len_encoder
 decl_stmt|;
 comment|// Price tables
 name|uint32_t
-name|pos_slot_prices
+name|dist_slot_prices
 index|[
-name|LEN_TO_POS_STATES
+name|DIST_STATES
 index|]
 index|[
-name|POS_SLOTS
+name|DIST_SLOTS
 index|]
 decl_stmt|;
 name|uint32_t
-name|distances_prices
+name|dist_prices
 index|[
-name|LEN_TO_POS_STATES
+name|DIST_STATES
 index|]
 index|[
 name|FULL_DISTANCES
@@ -421,7 +421,7 @@ decl_stmt|;
 name|uint32_t
 name|align_prices
 index|[
-name|ALIGN_TABLE_SIZE
+name|ALIGN_SIZE
 index|]
 decl_stmt|;
 name|uint32_t

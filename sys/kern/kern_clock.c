@@ -1637,6 +1637,19 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/* 	 * Arrange for ticks to wrap 10 minutes after boot to help catch 	 * sign problems sooner. 	 */
+name|ticks
+operator|=
+name|INT_MAX
+operator|-
+operator|(
+name|hz
+operator|*
+literal|10
+operator|*
+literal|60
+operator|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1705,7 +1718,7 @@ name|it_value
 argument_list|)
 condition|)
 block|{
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -1733,7 +1746,7 @@ name|TDF_ALRMPEND
 operator||
 name|TDF_ASTPENDING
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -1755,7 +1768,7 @@ name|it_value
 argument_list|)
 condition|)
 block|{
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -1783,7 +1796,7 @@ name|TDF_PROFPEND
 operator||
 name|TDF_ASTPENDING
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2100,7 +2113,7 @@ name|it_value
 argument_list|)
 condition|)
 block|{
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2130,7 +2143,7 @@ name|TDF_ALRMPEND
 operator||
 name|TDF_ASTPENDING
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2152,7 +2165,7 @@ name|it_value
 argument_list|)
 condition|)
 block|{
-name|PROC_SLOCK
+name|PROC_ITIMLOCK
 argument_list|(
 name|p
 argument_list|)
@@ -2182,7 +2195,7 @@ name|TDF_PROFPEND
 operator||
 name|TDF_ASTPENDING
 expr_stmt|;
-name|PROC_SUNLOCK
+name|PROC_ITIMUNLOCK
 argument_list|(
 name|p
 argument_list|)

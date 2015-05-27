@@ -51,6 +51,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_MC_MCINSTRANALYSIS_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_MC_MCINSTRANALYSIS_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -313,6 +325,15 @@ block|}
 empty_stmt|;
 block|}
 end_decl_stmt
+
+begin_comment
+comment|// End llvm namespace
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

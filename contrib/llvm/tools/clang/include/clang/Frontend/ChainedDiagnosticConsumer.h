@@ -52,7 +52,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
+file|<memory>
 end_include
 
 begin_decl_stmt
@@ -77,13 +77,21 @@ name|void
 name|anchor
 argument_list|()
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|DiagnosticConsumer
 operator|>
+name|OwningPrimary
+block|;
+name|DiagnosticConsumer
+operator|*
 name|Primary
 block|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|DiagnosticConsumer
 operator|>
@@ -93,26 +101,72 @@ name|public
 operator|:
 name|ChainedDiagnosticConsumer
 argument_list|(
-argument|DiagnosticConsumer *_Primary
-argument_list|,
-argument|DiagnosticConsumer *_Secondary
-argument_list|)
-block|{
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DiagnosticConsumer
+operator|>
 name|Primary
-operator|.
-name|reset
-argument_list|(
-name|_Primary
-argument_list|)
-block|;
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DiagnosticConsumer
+operator|>
 name|Secondary
-operator|.
-name|reset
-argument_list|(
-name|_Secondary
 argument_list|)
-block|;   }
-name|virtual
+operator|:
+name|OwningPrimary
+argument_list|(
+name|std
+operator|::
+name|move
+argument_list|(
+name|Primary
+argument_list|)
+argument_list|)
+block|,
+name|Primary
+argument_list|(
+name|OwningPrimary
+operator|.
+name|get
+argument_list|()
+argument_list|)
+block|,
+name|Secondary
+argument_list|(
+argument|std::move(Secondary)
+argument_list|)
+block|{}
+comment|/// \brief Construct without taking ownership of \c Primary.
+name|ChainedDiagnosticConsumer
+argument_list|(
+name|DiagnosticConsumer
+operator|*
+name|Primary
+argument_list|,
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|DiagnosticConsumer
+operator|>
+name|Secondary
+argument_list|)
+operator|:
+name|Primary
+argument_list|(
+name|Primary
+argument_list|)
+block|,
+name|Secondary
+argument_list|(
+argument|std::move(Secondary)
+argument_list|)
+block|{}
 name|void
 name|BeginSourceFile
 argument_list|(
@@ -120,6 +174,7 @@ argument|const LangOptions&LO
 argument_list|,
 argument|const Preprocessor *PP
 argument_list|)
+name|override
 block|{
 name|Primary
 operator|->
@@ -139,10 +194,10 @@ argument_list|,
 name|PP
 argument_list|)
 block|;   }
-name|virtual
 name|void
 name|EndSourceFile
 argument_list|()
+name|override
 block|{
 name|Secondary
 operator|->
@@ -154,10 +209,10 @@ operator|->
 name|EndSourceFile
 argument_list|()
 block|;   }
-name|virtual
 name|void
 name|finish
 argument_list|()
+name|override
 block|{
 name|Secondary
 operator|->
@@ -169,11 +224,11 @@ operator|->
 name|finish
 argument_list|()
 block|;   }
-name|virtual
 name|bool
 name|IncludeInDiagnosticCounts
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 name|Primary
@@ -182,7 +237,6 @@ name|IncludeInDiagnosticCounts
 argument_list|()
 return|;
 block|}
-name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
@@ -190,6 +244,7 @@ argument|DiagnosticsEngine::Level DiagLevel
 argument_list|,
 argument|const Diagnostic&Info
 argument_list|)
+name|override
 block|{
 comment|// Default implementation (Warnings/errors count).
 name|DiagnosticConsumer

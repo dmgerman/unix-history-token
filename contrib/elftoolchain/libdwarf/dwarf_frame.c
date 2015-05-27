@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: dwarf_frame.c 2073 2011-10-27 03:30:47Z jkoshy $"
+literal|"$Id: dwarf_frame.c 3106 2014-12-19 16:00:58Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2662,6 +2662,10 @@ operator|=
 name|_dwarf_frame_get_fop
 argument_list|(
 name|dbg
+argument_list|,
+name|cie
+operator|->
+name|cie_addrsize
 argument_list|,
 name|instruction
 argument_list|,

@@ -333,7 +333,12 @@ operator||
 name|CTL_FLAG_AUTO_MIRROR
 operator||
 name|CTL_FLAG_REDIR_DONE
+block|,
 comment|/* Flags we care about for 						   remote DMA */
+name|CTL_FLAG_STATUS_SENT
+init|=
+literal|0x10000000
+comment|/* Status sent by datamove */
 block|}
 name|ctl_io_flags
 typedef|;
@@ -1393,6 +1398,19 @@ name|union
 name|ctl_io
 modifier|*
 name|ctl_alloc_io
+parameter_list|(
+name|void
+modifier|*
+name|pool_ref
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|union
+name|ctl_io
+modifier|*
+name|ctl_alloc_io_nowait
 parameter_list|(
 name|void
 modifier|*

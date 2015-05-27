@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: main.c,v 1.83 2014/05/12 19:11:19 espie Exp $ */
+comment|/*	$OpenBSD: main.c,v 1.84 2014/12/21 09:33:12 espie Exp $	*/
 end_comment
 
 begin_comment
@@ -766,6 +766,21 @@ directive|define
 name|MAXKEYS
 value|(sizeof(keywrds)/sizeof(struct keyblk))
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|optind
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+name|optarg
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -1949,14 +1964,9 @@ name|sp
 expr_stmt|;
 comment|/* new frame pointer */
 comment|/* 		 * now push the string arguments: 		 */
-name|pushs1
-argument_list|(
-name|macro_getdef
+name|pushdef
 argument_list|(
 name|p
-argument_list|)
-operator|->
-name|defn
 argument_list|)
 expr_stmt|;
 comment|/* defn string */

@@ -4,14 +4,8 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|__TBDATA_C__
-end_define
 
 begin_include
 include|#
@@ -193,9 +187,12 @@ name|ACPI_CAST_PTR
 argument_list|(
 name|ACPI_TABLE_HEADER
 argument_list|,
+name|ACPI_PHYSADDR_TO_PTR
+argument_list|(
 name|TableDesc
 operator|->
 name|Address
+argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -388,7 +385,10 @@ name|ACPI_CAST_PTR
 argument_list|(
 name|ACPI_TABLE_HEADER
 argument_list|,
+name|ACPI_PHYSADDR_TO_PTR
+argument_list|(
 name|Address
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -756,8 +756,7 @@ name|AE_INFO
 operator|,
 name|AE_NO_MEMORY
 operator|,
-literal|"%4.4s "
-name|ACPI_PRINTF_UINT
+literal|"%4.4s 0x%8.8X%8.8X"
 literal|" Attempted table install failed"
 operator|,
 name|AcpiUtValidAcpiName
@@ -777,7 +776,7 @@ name|Ascii
 else|:
 literal|"????"
 operator|,
-name|ACPI_FORMAT_TO_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|TableDesc
 operator|->
@@ -1002,20 +1001,28 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetNextRootIndex  *  * PARAMETERS:  TableIndex          - Where table index is returned  *  * RETURN:      Status and table index.  *  * DESCRIPTION: Allocate a new ACPI table entry to the global table list  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbGetNextTableDescriptor  *  * PARAMETERS:  TableIndex          - Where table index is returned  *              TableDesc           - Where table descriptor is returned  *  * RETURN:      Status and table index/descriptor.  *  * DESCRIPTION: Allocate a new ACPI table entry to the global table list  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiTbGetNextRootIndex
+name|AcpiTbGetNextTableDescriptor
 parameter_list|(
 name|UINT32
 modifier|*
 name|TableIndex
+parameter_list|,
+name|ACPI_TABLE_DESC
+modifier|*
+modifier|*
+name|TableDesc
 parameter_list|)
 block|{
 name|ACPI_STATUS
 name|Status
+decl_stmt|;
+name|UINT32
+name|i
 decl_stmt|;
 comment|/* Ensure that there is room for the table in the Root Table List */
 if|if
@@ -1049,8 +1056,7 @@ operator|)
 return|;
 block|}
 block|}
-operator|*
-name|TableIndex
+name|i
 operator|=
 name|AcpiGbl_RootTableList
 operator|.
@@ -1061,6 +1067,34 @@ operator|.
 name|CurrentTableCount
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|TableIndex
+condition|)
+block|{
+operator|*
+name|TableIndex
+operator|=
+name|i
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|TableDesc
+condition|)
+block|{
+operator|*
+name|TableDesc
+operator|=
+operator|&
+name|AcpiGbl_RootTableList
+operator|.
+name|Tables
+index|[
+name|i
+index|]
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|AE_OK

@@ -275,12 +275,13 @@ operator|)
 return|;
 name|entry
 operator|=
-name|uboot_vm_translate
-argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
 name|e
 operator|->
 name|e_entry
-argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(

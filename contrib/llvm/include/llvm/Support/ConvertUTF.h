@@ -212,6 +212,35 @@ name|ConversionFlags
 name|flags
 parameter_list|)
 function_decl|;
+comment|/**  * Convert a partial UTF8 sequence to UTF32.  If the sequence ends in an  * incomplete code unit sequence, returns \c sourceExhausted.  */
+name|ConversionResult
+name|ConvertUTF8toUTF32Partial
+parameter_list|(
+specifier|const
+name|UTF8
+modifier|*
+modifier|*
+name|sourceStart
+parameter_list|,
+specifier|const
+name|UTF8
+modifier|*
+name|sourceEnd
+parameter_list|,
+name|UTF32
+modifier|*
+modifier|*
+name|targetStart
+parameter_list|,
+name|UTF32
+modifier|*
+name|targetEnd
+parameter_list|,
+name|ConversionFlags
+name|flags
+parameter_list|)
+function_decl|;
+comment|/**  * Convert a partial UTF8 sequence to UTF32.  If the sequence ends in an  * incomplete code unit sequence, returns \c sourceIllegal.  */
 name|ConversionResult
 name|ConvertUTF8toUTF32
 parameter_list|(

@@ -186,10 +186,10 @@ name|var_list
 parameter_list|)
 function_decl|;
 comment|// Returns the actual number of unique variables that were added to the
-comment|// list. "total_matches" will get updated with the actualy number of
+comment|// list. "total_matches" will get updated with the actually number of
 comment|// matches that were found regardless of whether they were unique or not
 comment|// to allow for error conditions when nothing is found, versus conditions
-comment|// where any varaibles that match "regex" were already in "var_list".
+comment|// where any variables that match "regex" were already in "var_list".
 name|size_t
 name|AppendVariablesIfUnique
 parameter_list|(

@@ -124,7 +124,6 @@ parameter_list|,
 name|int
 name|mode
 parameter_list|,
-specifier|const
 name|char
 modifier|*
 name|ident

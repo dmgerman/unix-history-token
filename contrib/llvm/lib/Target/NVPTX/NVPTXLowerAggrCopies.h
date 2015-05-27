@@ -54,19 +54,25 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|NVPTX_LOWER_AGGR_COPIES_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXLOWERAGGRCOPIES_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|NVPTX_LOWER_AGGR_COPIES_H
+name|LLVM_LIB_TARGET_NVPTX_NVPTXLOWERAGGRCOPIES_H
 end_define
 
 begin_include
 include|#
 directive|include
 file|"llvm/CodeGen/MachineFunctionAnalysis.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/CodeGen/StackProtector.h"
 end_include
 
 begin_include
@@ -110,12 +116,13 @@ argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|{
 name|AU
 operator|.
 name|addRequired
 operator|<
-name|DataLayout
+name|DataLayoutPass
 operator|>
 operator|(
 operator|)
@@ -128,15 +135,22 @@ name|MachineFunctionAnalysis
 operator|>
 operator|(
 operator|)
+block|;
+name|AU
+operator|.
+name|addPreserved
+operator|<
+name|StackProtector
+operator|>
+operator|(
+operator|)
 block|;   }
-name|virtual
 name|bool
 name|runOnFunction
 argument_list|(
-name|Function
-operator|&
-name|F
+argument|Function&F
 argument_list|)
+name|override
 block|;
 specifier|static
 specifier|const
@@ -145,13 +159,13 @@ name|MaxAggrCopySize
 operator|=
 literal|128
 block|;
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"Lower aggregate copies/intrinsics into loops"

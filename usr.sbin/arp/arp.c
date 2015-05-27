@@ -1345,6 +1345,9 @@ case|case
 name|IFT_FDDI
 case|:
 case|case
+name|IFT_INFINIBAND
+case|:
+case|case
 name|IFT_ISO88023
 case|:
 case|case
@@ -3244,6 +3247,15 @@ case|:
 name|printf
 argument_list|(
 literal|" [bridge]"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|IFT_INFINIBAND
+case|:
+name|printf
+argument_list|(
+literal|" [infiniband]"
 argument_list|)
 expr_stmt|;
 break|break;

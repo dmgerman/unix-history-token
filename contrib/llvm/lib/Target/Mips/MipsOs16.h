@@ -47,6 +47,18 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|LLVM_LIB_TARGET_MIPS_MIPSOS16_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|LLVM_LIB_TARGET_MIPS_MIPSOS16_H
+end_define
+
 begin_include
 include|#
 directive|include
@@ -70,18 +82,6 @@ include|#
 directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MIPSOS16_H
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MIPSOS16_H
-end_define
 
 begin_decl_stmt
 name|using
@@ -114,26 +114,24 @@ argument_list|(
 argument|ID
 argument_list|)
 block|{    }
-name|virtual
 specifier|const
 name|char
 operator|*
 name|getPassName
 argument_list|()
 specifier|const
+name|override
 block|{
 return|return
 literal|"MIPS Os16 Optimization"
 return|;
 block|}
-name|virtual
 name|bool
 name|runOnModule
 argument_list|(
-name|Module
-operator|&
-name|M
+argument|Module&M
 argument_list|)
+name|override
 block|;  }
 decl_stmt|;
 name|ModulePass

@@ -1152,6 +1152,27 @@ name|DEVICEID_LPT31
 value|0x8c5f
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEVICEID_WCPT2
+value|0x8cc2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_WCPT4
+value|0x8cc4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVICEID_WCPT6
+value|0x8cc6
+end_define
+
 begin_comment
 comment|/* ICH LPC Interface Bridge Registers (ICH5 and older) */
 end_comment

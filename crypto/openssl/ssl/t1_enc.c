@@ -4,11 +4,11 @@ comment|/* ssl/t1_enc.c */
 end_comment
 
 begin_comment
-comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *   * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *   * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from   *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *   * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
+comment|/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)  * All rights reserved.  *  * This package is an SSL implementation written  * by Eric Young (eay@cryptsoft.com).  * The implementation was written so as to conform with Netscapes SSL.  *  * This library is free for commercial and non-commercial use as long as  * the following conditions are aheared to.  The following conditions  * apply to all code found in this distribution, be it the RC4, RSA,  * lhash, DES, etc., code; not just the SSL code.  The SSL documentation  * included with this distribution is covered by the same copyright terms  * except that the holder is Tim Hudson (tjh@cryptsoft.com).  *  * Copyright remains Eric Young's, and as such any Copyright notices in  * the code are not to be removed.  * If this package is used in a product, Eric Young should be given attribution  * as the author of the parts of the library used.  * This can be in the form of a textual message at program startup or  * in documentation (online or textual) provided with the package.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *    "This product includes cryptographic software written by  *     Eric Young (eay@cryptsoft.com)"  *    The word 'cryptographic' can be left out if the rouines from the library  *    being used are not cryptographic related :-).  * 4. If you include any Windows specific code (or a derivative thereof) from  *    the apps directory (application code) you must include an acknowledgement:  *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"  *  * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * The licence and distribution terms for any publically available version or  * derivative of this code cannot be changed.  i.e. this code cannot simply be  * copied and put under another distribution licence  * [including the GNU Public Licence.]  */
 end_comment
 
 begin_comment
-comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
+comment|/* ====================================================================  * Copyright (c) 1998-2007 The OpenSSL Project.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the  *    distribution.  *  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"  *  * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to  *    endorse or promote products derived from this software without  *    prior written permission. For written permission, please contact  *    openssl-core@openssl.org.  *  * 5. Products derived from this software may not be called "OpenSSL"  *    nor may "OpenSSL" appear in their names without prior written  *    permission of the OpenSSL Project.  *  * 6. Redistributions of any form whatsoever must retain the following  *    acknowledgment:  *    "This product includes software developed by the OpenSSL Project  *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"  *  * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY  * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR  * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  * ====================================================================  *  * This product includes cryptographic software written by Eric Young  * (eay@cryptsoft.com).  This product includes software written by Tim  * Hudson (tjh@cryptsoft.com).  *  */
 end_comment
 
 begin_comment
@@ -618,8 +618,8 @@ name|err
 goto|;
 block|}
 else|else
-comment|/* last one */
 block|{
+comment|/* last one */
 if|if
 condition|(
 operator|!
@@ -830,6 +830,24 @@ condition|)
 name|count
 operator|++
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|count
+condition|)
+block|{
+comment|/* Should never happen */
+name|SSLerr
+argument_list|(
+name|SSL_F_TLS1_PRF
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
 block|}
 name|len
 operator|=
@@ -1082,8 +1100,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_generate_key_block() ==> %d byte master_key =\n\t"
 argument_list|,
 name|s
@@ -1115,8 +1135,10 @@ name|i
 operator|++
 control|)
 block|{
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02X"
 argument_list|,
 name|s
@@ -1130,8 +1152,10 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1345,15 +1369,19 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_change_cipher_state(which= %d) w/\n"
 argument_list|,
 name|which
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\talg= %ld/%ld, comp= %p\n"
 argument_list|,
 name|s
@@ -1379,15 +1407,19 @@ argument_list|,
 name|comp
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tevp_cipher == %p ==?&d_cbc_ede_cipher3\n"
 argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tevp_cipher: nid, blksz= %d, %d, keylen=%d, ivlen=%d\n"
 argument_list|,
 name|c
@@ -1407,8 +1439,10 @@ operator|->
 name|iv_len
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tkey_block: len= %d, data= "
 argument_list|,
 name|s
@@ -1443,8 +1477,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x"
 argument_list|,
 name|s
@@ -1459,8 +1495,10 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -1538,7 +1576,7 @@ goto|goto
 name|err
 goto|;
 else|else
-comment|/* make sure it's intialized in case we exit later with an error */
+comment|/*              * make sure it's intialized in case we exit later with an error              */
 name|EVP_CIPHER_CTX_init
 argument_list|(
 name|s
@@ -1676,7 +1714,7 @@ goto|;
 block|}
 endif|#
 directive|endif
-comment|/* this is done by dtls1_reset_seq_numbers for DTLS1_VERSION */
+comment|/*          * this is done by dtls1_reset_seq_numbers for DTLS1_VERSION          */
 if|if
 condition|(
 name|s
@@ -1909,7 +1947,7 @@ block|}
 block|}
 endif|#
 directive|endif
-comment|/* this is done by dtls1_reset_seq_numbers for DTLS1_VERSION */
+comment|/*          * this is done by dtls1_reset_seq_numbers for DTLS1_VERSION          */
 if|if
 condition|(
 name|s
@@ -2348,7 +2386,7 @@ condition|(
 name|is_export
 condition|)
 block|{
-comment|/* In here I set both the read and write key/iv to the 		 * same value since only the correct one will be used :-). 		 */
+comment|/*          * In here I set both the read and write key/iv to the same value          * since only the correct one will be used :-).          */
 if|if
 condition|(
 operator|!
@@ -2505,13 +2543,17 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"EVP_CipherInit_ex(dd,c,key=,iv=,which)\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\tkey= "
 argument_list|)
 expr_stmt|;
@@ -2530,8 +2572,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x"
 argument_list|,
 name|key
@@ -2540,13 +2584,17 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\t iv= "
 argument_list|)
 expr_stmt|;
@@ -2565,8 +2613,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02x"
 argument_list|,
 name|iv
@@ -2575,8 +2625,10 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -2594,6 +2646,9 @@ operator|==
 name|EVP_CIPH_GCM_MODE
 condition|)
 block|{
+if|if
+condition|(
+operator|!
 name|EVP_CipherInit_ex
 argument_list|(
 name|dd
@@ -2612,7 +2667,8 @@ operator|&
 name|SSL3_CC_WRITE
 operator|)
 argument_list|)
-expr_stmt|;
+operator|||
+operator|!
 name|EVP_CIPHER_CTX_ctrl
 argument_list|(
 name|dd
@@ -2623,9 +2679,25 @@ name|k
 argument_list|,
 name|iv
 argument_list|)
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_TLS1_CHANGE_CIPHER_STATE
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
 expr_stmt|;
+goto|goto
+name|err2
+goto|;
+block|}
 block|}
 else|else
+block|{
+if|if
+condition|(
+operator|!
 name|EVP_CipherInit_ex
 argument_list|(
 name|dd
@@ -2644,7 +2716,20 @@ operator|&
 name|SSL3_CC_WRITE
 operator|)
 argument_list|)
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_TLS1_CHANGE_CIPHER_STATE
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
 expr_stmt|;
+goto|goto
+name|err2
+goto|;
+block|}
+block|}
 comment|/* Needed for "composite" AEADs, such as RC4-HMAC-MD5 */
 if|if
 condition|(
@@ -2659,7 +2744,8 @@ operator|)
 operator|&&
 operator|*
 name|mac_secret_size
-condition|)
+operator|&&
+operator|!
 name|EVP_CIPHER_CTX_ctrl
 argument_list|(
 name|dd
@@ -2671,7 +2757,19 @@ name|mac_secret_size
 argument_list|,
 name|mac_secret
 argument_list|)
+condition|)
+block|{
+name|SSLerr
+argument_list|(
+name|SSL_F_TLS1_CHANGE_CIPHER_STATE
+argument_list|,
+name|ERR_R_INTERNAL_ERROR
+argument_list|)
 expr_stmt|;
+goto|goto
+name|err2
+goto|;
+block|}
 ifdef|#
 directive|ifdef
 name|TLS_DEBUG
@@ -2898,8 +2996,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_setup_key_block()\n"
 argument_list|)
 expr_stmt|;
@@ -3099,6 +3199,11 @@ argument_list|(
 name|SSL_F_TLS1_SETUP_KEY_BLOCK
 argument_list|,
 name|ERR_R_MALLOC_FAILURE
+argument_list|)
+expr_stmt|;
+name|OPENSSL_free
+argument_list|(
+name|p1
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3356,7 +3461,7 @@ operator|<=
 name|TLS1_VERSION
 condition|)
 block|{
-comment|/* enable vulnerability countermeasure for CBC ciphers with 		 * known-IV problem (http://www.openssl.org/~bodo/tls-cbc.txt) 		 */
+comment|/*          * enable vulnerability countermeasure for CBC ciphers with known-IV          * problem (http://www.openssl.org/~bodo/tls-cbc.txt)          */
 name|s
 operator|->
 name|s3
@@ -3456,7 +3561,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* tls1_enc encrypts/decrypts the record in |s->wrec| / |s->rrec|, respectively.  *  * Returns:  *   0: (in non-constant time) if the record is publically invalid (i.e. too  *       short etc).  *   1: if the record's padding is valid / the encryption was successful.  *   -1: if the record's padding/AEAD-authenticator is invalid or, if sending,  *       an internal error occured.  */
+comment|/*-  * tls1_enc encrypts/decrypts the record in |s->wrec| / |s->rrec|, respectively.  *  * Returns:  *   0: (in non-constant time) if the record is publically invalid (i.e. too  *       short etc).  *   1: if the record's padding is valid / the encryption was successful.  *   -1: if the record's padding/AEAD-authenticator is invalid or, if sending,  *       an internal error occured.  */
 end_comment
 
 begin_function
@@ -3628,7 +3733,7 @@ name|rec
 operator|->
 name|input
 condition|)
-comment|/* we can't write into the input stream: 					 * Can this ever happen?? (steve) 					 */
+comment|/*                      * we can't write into the input stream: Can this ever                      * happen?? (steve)                      */
 name|fprintf
 argument_list|(
 name|stderr
@@ -3734,8 +3839,10 @@ block|}
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_enc(%d)\n"
 argument_list|,
 name|send
@@ -3943,8 +4050,8 @@ condition|;
 name|i
 operator|--
 control|)
-comment|/* increment */
 block|{
+comment|/* increment */
 operator|++
 name|seq
 index|[
@@ -4163,8 +4270,10 @@ name|unsigned
 name|long
 name|ui
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"EVP_Cipher(ds=%p,rec->data=%p,rec->input=%p,l=%ld) ==>\n"
 argument_list|,
 name|ds
@@ -4180,9 +4289,11 @@ argument_list|,
 name|l
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
-literal|"\tEVP_CIPHER_CTX: %d buf_len, %d key_len [%d %d], %d iv_len\n"
+name|stderr
+argument_list|,
+literal|"\tEVP_CIPHER_CTX: %d buf_len, %d key_len [%lu %lu], %d iv_len\n"
 argument_list|,
 name|ds
 operator|->
@@ -4205,8 +4316,10 @@ operator|->
 name|iv_len
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\t\tIV: "
 argument_list|)
 expr_stmt|;
@@ -4227,8 +4340,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02X"
 argument_list|,
 name|ds
@@ -4239,13 +4354,17 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\trec->input="
 argument_list|)
 expr_stmt|;
@@ -4262,8 +4381,10 @@ condition|;
 name|ui
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|" %02x"
 argument_list|,
 name|rec
@@ -4274,8 +4395,10 @@ name|ui
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -4392,8 +4515,10 @@ name|unsigned
 name|long
 name|i
 decl_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\trec->data="
 argument_list|)
 expr_stmt|;
@@ -4410,8 +4535,10 @@ condition|;
 name|i
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|" %02x"
 argument_list|,
 name|rec
@@ -4422,8 +4549,10 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -4837,7 +4966,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-comment|/* internal error: 'buf' is too small for this cipersuite! */
+comment|/*                  * internal error: 'buf' is too small for this cipersuite!                  */
 name|err
 operator|=
 literal|1
@@ -4954,6 +5083,30 @@ name|EVP_MD_CTX_cleanup
 argument_list|(
 operator|&
 name|ctx
+argument_list|)
+expr_stmt|;
+name|OPENSSL_cleanse
+argument_list|(
+name|buf
+argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
+name|q
+operator|-
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|OPENSSL_cleanse
+argument_list|(
+name|buf2
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf2
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -5250,7 +5403,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-comment|/* kludge: tls1_cbc_remove_padding passes padding length in rec->type */
+comment|/*      * kludge: tls1_cbc_remove_padding passes padding length in rec->type      */
 name|orig_len
 operator|=
 name|rec
@@ -5364,7 +5517,8 @@ name|mac_ctx
 argument_list|)
 condition|)
 block|{
-comment|/* This is a CBC-encrypted record. We must avoid leaking any 		 * timing-side channel information about how many blocks of 		 * data we are hashing because that gives an attacker a 		 * timing-oracle. */
+comment|/*          * This is a CBC-encrypted record. We must avoid leaking any          * timing-side channel information about how many blocks of data we          * are hashing because that gives an attacker a timing-oracle.          */
+comment|/* Final param == not SSLv3 */
 name|ssl3_cbc_digest_record
 argument_list|(
 name|mac_ctx
@@ -5401,7 +5555,6 @@ operator|->
 name|read_mac_secret_size
 argument_list|,
 literal|0
-comment|/* not SSLv3 */
 argument_list|)
 expr_stmt|;
 block|}
@@ -5498,8 +5651,10 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|TLS_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"seq="
 argument_list|)
 expr_stmt|;
@@ -5520,8 +5675,10 @@ condition|;
 name|z
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02X "
 argument_list|,
 name|seq
@@ -5530,14 +5687,18 @@ name|z
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"rec="
 argument_list|)
 expr_stmt|;
@@ -5561,8 +5722,10 @@ condition|;
 name|z
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02X "
 argument_list|,
 name|rec
@@ -5573,8 +5736,10 @@ name|z
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -5649,8 +5814,10 @@ condition|;
 name|z
 operator|++
 control|)
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"%02X "
 argument_list|,
 name|md
@@ -5659,8 +5826,10 @@ name|z
 index|]
 argument_list|)
 expr_stmt|;
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
@@ -5728,8 +5897,10 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_generate_master_secret(%p,%p, %p, %d)\n"
 argument_list|,
 name|s
@@ -5810,6 +5981,7 @@ name|s3
 operator|->
 name|server_opaque_prf_input
 expr_stmt|;
+comment|/*          * must be same as col (see          * draft-resc-00.txts-opaque-prf-input-00.txt, section 3.1)          */
 name|sol
 operator|=
 name|s
@@ -5818,7 +5990,6 @@ name|s3
 operator|->
 name|client_opaque_prf_input_len
 expr_stmt|;
-comment|/* must be same as col (see draft-rescorla-tls-opaque-prf-input-00.txt, section 3.1) */
 block|}
 endif|#
 directive|endif
@@ -5867,6 +6038,14 @@ name|session
 operator|->
 name|master_key
 argument_list|,
+name|buff
+argument_list|,
+sizeof|sizeof
+name|buff
+argument_list|)
+expr_stmt|;
+name|OPENSSL_cleanse
+argument_list|(
 name|buff
 argument_list|,
 sizeof|sizeof
@@ -5973,8 +6152,10 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_generate_master_secret() complete\n"
 argument_list|)
 expr_stmt|;
@@ -6049,9 +6230,11 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
-literal|"tls1_export_keying_material(%p,%p,%d,%s,%d,%p,%d)\n"
+name|stderr
+argument_list|,
+literal|"tls1_export_keying_material(%p,%p,%lu,%s,%lu,%p,%lu)\n"
 argument_list|,
 name|s
 argument_list|,
@@ -6087,7 +6270,7 @@ condition|)
 goto|goto
 name|err2
 goto|;
-comment|/* construct PRF arguments 	 * we construct the PRF argument ourself rather than passing separate 	 * values into the TLS PRF to ensure that the concatenation of values 	 * does not create a prohibited label. 	 */
+comment|/*      * construct PRF arguments we construct the PRF argument ourself rather      * than passing separate values into the TLS PRF to ensure that the      * concatenation of values does not create a prohibited label.      */
 name|vallen
 operator|=
 name|llen
@@ -6247,7 +6430,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* disallow prohibited labels 	 * note that SSL3_RANDOM_SIZE> max(prohibited label len) = 	 * 15, so size of val> max(prohibited label len) = 15 and the 	 * comparisons won't have buffer overflow 	 */
+comment|/*      * disallow prohibited labels note that SSL3_RANDOM_SIZE> max(prohibited      * label len) = 15, so size of val> max(prohibited label len) = 15 and      * the comparisons won't have buffer overflow      */
 if|if
 condition|(
 name|memcmp
@@ -6360,11 +6543,27 @@ argument_list|,
 name|olen
 argument_list|)
 expr_stmt|;
+name|OPENSSL_cleanse
+argument_list|(
+name|val
+argument_list|,
+name|vallen
+argument_list|)
+expr_stmt|;
+name|OPENSSL_cleanse
+argument_list|(
+name|buff
+argument_list|,
+name|olen
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|KSSL_DEBUG
-name|printf
+name|fprintf
 argument_list|(
+name|stderr
+argument_list|,
 literal|"tls1_export_keying_material() complete\n"
 argument_list|)
 expr_stmt|;
@@ -6701,7 +6900,7 @@ if|#
 directive|if
 literal|0
 comment|/* not appropriate for TLS, not used for DTLS */
-block|case DTLS1_AD_MISSING_HANDSHAKE_MESSAGE: return  					  (DTLS1_AD_MISSING_HANDSHAKE_MESSAGE);
+block|case DTLS1_AD_MISSING_HANDSHAKE_MESSAGE:         return (DTLS1_AD_MISSING_HANDSHAKE_MESSAGE);
 endif|#
 directive|endif
 default|default:

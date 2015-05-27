@@ -92,7 +92,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCWin64EH.h"
+file|"llvm/MC/MCLinkerOptimizationHint.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCWinEH.h"
 end_include
 
 begin_include
@@ -139,6 +145,12 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
+name|MCSymbolRefExpr
+decl_stmt|;
+name|class
+name|MCSubtargetInfo
+decl_stmt|;
+name|class
 name|StringRef
 decl_stmt|;
 name|class
@@ -149,6 +161,9 @@ name|raw_ostream
 decl_stmt|;
 name|class
 name|formatted_raw_ostream
+decl_stmt|;
+name|class
+name|AssemblerConstantPools
 decl_stmt|;
 typedef|typedef
 name|std
@@ -170,14 +185,14 @@ comment|/// implement support for target specific assembly directives.
 comment|///
 comment|/// If target foo wants to use this, it should implement 3 classes:
 comment|/// * FooTargetStreamer : public MCTargetStreamer
-comment|/// * FooTargetAsmSreamer : public FooTargetStreamer
+comment|/// * FooTargetAsmStreamer : public FooTargetStreamer
 comment|/// * FooTargetELFStreamer : public FooTargetStreamer
 comment|///
 comment|/// FooTargetStreamer should have a pure virtual method for each directive. For
 comment|/// example, for a ".bar symbol_name" directive, it should have
 comment|/// virtual emitBar(const MCSymbol&Symbol) = 0;
 comment|///
-comment|/// The FooTargetAsmSreamer and FooTargetELFStreamer classes implement the
+comment|/// The FooTargetAsmStreamer and FooTargetELFStreamer classes implement the
 comment|/// method. The assembly streamer just prints ".bar symbol_name". The object
 comment|/// streamer does whatever is needed to implement .bar in the object file.
 comment|///
@@ -187,39 +202,136 @@ comment|///
 comment|/// MCTargetStreamer&TS = OutStreamer.getTargetStreamer();
 comment|/// FooTargetStreamer&ATS = static_cast<FooTargetStreamer&>(TS);
 comment|///
-comment|/// The base classes FooTargetAsmSreamer and FooTargetELFStreamer should *never*
-comment|/// be treated differently. Callers should always talk to a FooTargetStreamer.
+comment|/// The base classes FooTargetAsmStreamer and FooTargetELFStreamer should
+comment|/// *never* be treated differently. Callers should always talk to a
+comment|/// FooTargetStreamer.
 name|class
 name|MCTargetStreamer
 block|{
 name|protected
 label|:
 name|MCStreamer
-modifier|*
+modifier|&
 name|Streamer
 decl_stmt|;
 name|public
 label|:
+name|MCTargetStreamer
+argument_list|(
+name|MCStreamer
+operator|&
+name|S
+argument_list|)
+expr_stmt|;
 name|virtual
 operator|~
 name|MCTargetStreamer
 argument_list|()
 expr_stmt|;
-name|void
-name|setStreamer
-parameter_list|(
+specifier|const
 name|MCStreamer
-modifier|*
-name|S
-parameter_list|)
+modifier|&
+name|getStreamer
+parameter_list|()
 block|{
+return|return
 name|Streamer
-operator|=
-name|S
-expr_stmt|;
+return|;
 block|}
+comment|// Allow a target to add behavior to the EmitLabel of MCStreamer.
+name|virtual
+name|void
+name|emitLabel
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Symbol
+parameter_list|)
+function_decl|;
+comment|// Allow a target to add behavior to the emitAssignment of MCStreamer.
+name|virtual
+name|void
+name|emitAssignment
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Symbol
+parameter_list|,
+specifier|const
+name|MCExpr
+modifier|*
+name|Value
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|finish
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
+name|class
+name|AArch64TargetStreamer
+range|:
+name|public
+name|MCTargetStreamer
+block|{
+name|public
+operator|:
+name|AArch64TargetStreamer
+argument_list|(
+name|MCStreamer
+operator|&
+name|S
+argument_list|)
+block|;
+operator|~
+name|AArch64TargetStreamer
+argument_list|()
+block|;
+name|void
+name|finish
+argument_list|()
+name|override
+block|;
+comment|/// Callback used to implement the ldr= pseudo.
+comment|/// Add a new entry to the constant pool for the current section and return an
+comment|/// MCExpr that can be used to refer to the constant pool location.
+specifier|const
+name|MCExpr
+operator|*
+name|addConstantPoolEntry
+argument_list|(
+argument|const MCExpr *
+argument_list|,
+argument|unsigned Size
+argument_list|)
+block|;
+comment|/// Callback used to implemnt the .ltorg directive.
+comment|/// Emit contents of constant pool for the current section.
+name|void
+name|emitCurrentConstantPool
+argument_list|()
+block|;
+comment|/// Callback used to implement the .inst directive.
+name|virtual
+name|void
+name|emitInst
+argument_list|(
+argument|uint32_t Inst
+argument_list|)
+block|;
+name|private
+operator|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|AssemblerConstantPools
+operator|>
+name|ConstantPools
+block|; }
+decl_stmt|;
 comment|// FIXME: declared here because it is used from
 comment|// lib/CodeGen/AsmPrinter/ARMException.cpp.
 name|class
@@ -228,33 +340,33 @@ range|:
 name|public
 name|MCTargetStreamer
 block|{
-name|virtual
-name|void
-name|anchor
-argument_list|()
-block|;
 name|public
 operator|:
+name|ARMTargetStreamer
+argument_list|(
+name|MCStreamer
+operator|&
+name|S
+argument_list|)
+block|;
+operator|~
+name|ARMTargetStreamer
+argument_list|()
+block|;
 name|virtual
 name|void
 name|emitFnStart
 argument_list|()
-operator|=
-literal|0
 block|;
 name|virtual
 name|void
 name|emitFnEnd
 argument_list|()
-operator|=
-literal|0
 block|;
 name|virtual
 name|void
 name|emitCantUnwind
 argument_list|()
-operator|=
-literal|0
 block|;
 name|virtual
 name|void
@@ -265,15 +377,18 @@ name|MCSymbol
 operator|*
 name|Personality
 argument_list|)
-operator|=
-literal|0
+block|;
+name|virtual
+name|void
+name|emitPersonalityIndex
+argument_list|(
+argument|unsigned Index
+argument_list|)
 block|;
 name|virtual
 name|void
 name|emitHandlerData
 argument_list|()
-operator|=
-literal|0
 block|;
 name|virtual
 name|void
@@ -286,8 +401,16 @@ argument_list|,
 argument|int64_t Offset =
 literal|0
 argument_list|)
-operator|=
+block|;
+name|virtual
+name|void
+name|emitMovSP
+argument_list|(
+argument|unsigned Reg
+argument_list|,
+argument|int64_t Offset =
 literal|0
+argument_list|)
 block|;
 name|virtual
 name|void
@@ -295,8 +418,6 @@ name|emitPad
 argument_list|(
 argument|int64_t Offset
 argument_list|)
-operator|=
-literal|0
 block|;
 name|virtual
 name|void
@@ -306,8 +427,15 @@ argument|const SmallVectorImpl<unsigned>&RegList
 argument_list|,
 argument|bool isVector
 argument_list|)
-operator|=
-literal|0
+block|;
+name|virtual
+name|void
+name|emitUnwindRaw
+argument_list|(
+argument|int64_t StackOffset
+argument_list|,
+argument|const SmallVectorImpl<uint8_t>&Opcodes
+argument_list|)
 block|;
 name|virtual
 name|void
@@ -315,8 +443,6 @@ name|switchVendor
 argument_list|(
 argument|StringRef Vendor
 argument_list|)
-operator|=
-literal|0
 block|;
 name|virtual
 name|void
@@ -326,8 +452,6 @@ argument|unsigned Attribute
 argument_list|,
 argument|unsigned Value
 argument_list|)
-operator|=
-literal|0
 block|;
 name|virtual
 name|void
@@ -337,8 +461,18 @@ argument|unsigned Attribute
 argument_list|,
 argument|StringRef String
 argument_list|)
-operator|=
-literal|0
+block|;
+name|virtual
+name|void
+name|emitIntTextAttribute
+argument_list|(
+argument|unsigned Attribute
+argument_list|,
+argument|unsigned IntValue
+argument_list|,
+argument|StringRef StringValue =
+literal|""
+argument_list|)
 block|;
 name|virtual
 name|void
@@ -346,15 +480,93 @@ name|emitFPU
 argument_list|(
 argument|unsigned FPU
 argument_list|)
-operator|=
-literal|0
+block|;
+name|virtual
+name|void
+name|emitArch
+argument_list|(
+argument|unsigned Arch
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitObjectArch
+argument_list|(
+argument|unsigned Arch
+argument_list|)
 block|;
 name|virtual
 name|void
 name|finishAttributeSection
 argument_list|()
-operator|=
-literal|0
+block|;
+name|virtual
+name|void
+name|emitInst
+argument_list|(
+argument|uint32_t Inst
+argument_list|,
+argument|char Suffix =
+literal|'\0'
+argument_list|)
+block|;
+name|virtual
+name|void
+name|AnnotateTLSDescriptorSequence
+argument_list|(
+specifier|const
+name|MCSymbolRefExpr
+operator|*
+name|SRE
+argument_list|)
+block|;
+name|virtual
+name|void
+name|emitThumbSet
+argument_list|(
+name|MCSymbol
+operator|*
+name|Symbol
+argument_list|,
+specifier|const
+name|MCExpr
+operator|*
+name|Value
+argument_list|)
+block|;
+name|void
+name|finish
+argument_list|()
+name|override
+block|;
+comment|/// Callback used to implement the ldr= pseudo.
+comment|/// Add a new entry to the constant pool for the current section and return an
+comment|/// MCExpr that can be used to refer to the constant pool location.
+specifier|const
+name|MCExpr
+operator|*
+name|addConstantPoolEntry
+argument_list|(
+specifier|const
+name|MCExpr
+operator|*
+argument_list|)
+block|;
+comment|/// Callback used to implemnt the .ltorg directive.
+comment|/// Emit contents of constant pool for the current section.
+name|void
+name|emitCurrentConstantPool
+argument_list|()
+block|;
+name|private
+operator|:
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|AssemblerConstantPools
+operator|>
+name|ConstantPools
 block|; }
 decl_stmt|;
 comment|/// MCStreamer - Streaming machine code generation interface.  This interface
@@ -373,7 +585,9 @@ name|MCContext
 modifier|&
 name|Context
 decl_stmt|;
-name|OwningPtr
+name|std
+operator|::
+name|unique_ptr
 operator|<
 name|MCTargetStreamer
 operator|>
@@ -396,23 +610,21 @@ operator|&
 operator|)
 name|LLVM_DELETED_FUNCTION
 decl_stmt|;
-name|bool
-name|EmitEHFrame
-decl_stmt|;
-name|bool
-name|EmitDebugFrame
-decl_stmt|;
 name|std
 operator|::
 name|vector
 operator|<
 name|MCDwarfFrameInfo
 operator|>
-name|FrameInfos
+name|DwarfFrameInfos
 expr_stmt|;
 name|MCDwarfFrameInfo
 modifier|*
-name|getCurrentFrameInfo
+name|getCurrentDwarfFrameInfo
+parameter_list|()
+function_decl|;
+name|void
+name|EnsureValidDwarfFrame
 parameter_list|()
 function_decl|;
 name|MCSymbol
@@ -420,39 +632,27 @@ modifier|*
 name|EmitCFICommon
 parameter_list|()
 function_decl|;
-name|void
-name|EnsureValidFrame
-parameter_list|()
-function_decl|;
 name|std
 operator|::
 name|vector
 operator|<
-name|MCWin64EHUnwindInfo
+name|WinEH
+operator|::
+name|FrameInfo
 operator|*
 operator|>
-name|W64UnwindInfos
+name|WinFrameInfos
 expr_stmt|;
-name|MCWin64EHUnwindInfo
-modifier|*
-name|CurrentW64UnwindInfo
-decl_stmt|;
+name|WinEH
+operator|::
+name|FrameInfo
+operator|*
+name|CurrentWinFrameInfo
+expr_stmt|;
 name|void
-name|setCurrentW64UnwindInfo
-parameter_list|(
-name|MCWin64EHUnwindInfo
-modifier|*
-name|Frame
-parameter_list|)
-function_decl|;
-name|void
-name|EnsureValidW64UnwindInfo
+name|EnsureValidWinFrameInfo
 parameter_list|()
 function_decl|;
-name|MCSymbol
-modifier|*
-name|LastSymbol
-decl_stmt|;
 comment|// SymbolOrdering - Tracks an index to represent the order
 comment|// a symbol was emitted in. Zero means we did not emit that symbol.
 name|DenseMap
@@ -482,9 +682,6 @@ literal|4
 operator|>
 name|SectionStack
 expr_stmt|;
-name|bool
-name|AutoInitSections
-decl_stmt|;
 name|protected
 label|:
 name|MCStreamer
@@ -492,62 +689,11 @@ argument_list|(
 name|MCContext
 operator|&
 name|Ctx
-argument_list|,
-name|MCTargetStreamer
-operator|*
-name|TargetStreamer
 argument_list|)
 expr_stmt|;
-specifier|const
-name|MCExpr
-modifier|*
-name|BuildSymbolDiff
-parameter_list|(
-name|MCContext
-modifier|&
-name|Context
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|A
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|B
-parameter_list|)
-function_decl|;
-specifier|const
-name|MCExpr
-modifier|*
-name|ForceExpAbs
-parameter_list|(
-specifier|const
-name|MCExpr
-modifier|*
-name|Expr
-parameter_list|)
-function_decl|;
-name|void
-name|RecordProcStart
-parameter_list|(
-name|MCDwarfFrameInfo
-modifier|&
-name|Frame
-parameter_list|)
-function_decl|;
 name|virtual
 name|void
 name|EmitCFIStartProcImpl
-parameter_list|(
-name|MCDwarfFrameInfo
-modifier|&
-name|Frame
-parameter_list|)
-function_decl|;
-name|void
-name|RecordProcEnd
 parameter_list|(
 name|MCDwarfFrameInfo
 modifier|&
@@ -563,28 +709,20 @@ modifier|&
 name|CurFrame
 parameter_list|)
 function_decl|;
-name|void
-name|EmitFrames
-parameter_list|(
-name|MCAsmBackend
-modifier|*
-name|MAB
-parameter_list|,
-name|bool
-name|usingCFI
-parameter_list|)
-function_decl|;
-name|MCWin64EHUnwindInfo
-modifier|*
-name|getCurrentW64UnwindInfo
-parameter_list|()
+name|WinEH
+operator|::
+name|FrameInfo
+operator|*
+name|getCurrentWinFrameInfo
+argument_list|()
 block|{
 return|return
-name|CurrentW64UnwindInfo
+name|CurrentWinFrameInfo
 return|;
 block|}
+name|virtual
 name|void
-name|EmitW64Tables
+name|EmitWindowsUnwindTables
 parameter_list|()
 function_decl|;
 name|virtual
@@ -602,6 +740,41 @@ operator|~
 name|MCStreamer
 argument_list|()
 expr_stmt|;
+name|void
+name|visitUsedExpr
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|&
+name|Expr
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|visitUsedSymbol
+parameter_list|(
+specifier|const
+name|MCSymbol
+modifier|&
+name|Sym
+parameter_list|)
+function_decl|;
+name|void
+name|setTargetStreamer
+parameter_list|(
+name|MCTargetStreamer
+modifier|*
+name|TS
+parameter_list|)
+block|{
+name|TargetStreamer
+operator|.
+name|reset
+argument_list|(
+name|TS
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// State management
 comment|///
 name|virtual
@@ -620,18 +793,15 @@ name|Context
 return|;
 block|}
 name|MCTargetStreamer
-modifier|&
+modifier|*
 name|getTargetStreamer
 parameter_list|()
 block|{
-name|assert
-argument_list|(
-name|TargetStreamer
-argument_list|)
-expr_stmt|;
 return|return
-operator|*
 name|TargetStreamer
+operator|.
+name|get
+argument_list|()
 return|;
 block|}
 name|unsigned
@@ -639,65 +809,48 @@ name|getNumFrameInfos
 parameter_list|()
 block|{
 return|return
-name|FrameInfos
+name|DwarfFrameInfos
 operator|.
 name|size
 argument_list|()
-return|;
-block|}
-specifier|const
-name|MCDwarfFrameInfo
-modifier|&
-name|getFrameInfo
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|)
-block|{
-return|return
-name|FrameInfos
-index|[
-name|i
-index|]
 return|;
 block|}
 name|ArrayRef
 operator|<
 name|MCDwarfFrameInfo
 operator|>
-name|getFrameInfos
+name|getDwarfFrameInfos
 argument_list|()
 specifier|const
 block|{
 return|return
-name|FrameInfos
+name|DwarfFrameInfos
 return|;
 block|}
 name|unsigned
-name|getNumW64UnwindInfos
+name|getNumWinFrameInfos
 parameter_list|()
 block|{
 return|return
-name|W64UnwindInfos
+name|WinFrameInfos
 operator|.
 name|size
 argument_list|()
 return|;
 block|}
-name|MCWin64EHUnwindInfo
-modifier|&
-name|getW64UnwindInfo
-parameter_list|(
-name|unsigned
-name|i
-parameter_list|)
+name|ArrayRef
+operator|<
+name|WinEH
+operator|::
+name|FrameInfo
+operator|*
+operator|>
+name|getWinFrameInfos
+argument_list|()
+specifier|const
 block|{
 return|return
-operator|*
-name|W64UnwindInfos
-index|[
-name|i
-index|]
+name|WinFrameInfos
 return|;
 block|}
 name|void
@@ -734,6 +887,18 @@ return|return
 name|false
 return|;
 block|}
+comment|/// Is the integrated assembler required for this streamer to function
+comment|/// correctly?
+name|virtual
+name|bool
+name|isIntegratedAssemblerRequired
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// AddComment - Add a comment that can be emitted to the generated .s
 comment|/// file if applicable as a QoI issue to make the output of the compiler
 comment|/// more readable.  This only affects the MCAsmStreamer, and only when
@@ -759,6 +924,25 @@ name|raw_ostream
 modifier|&
 name|GetCommentOS
 parameter_list|()
+function_decl|;
+comment|/// Print T and prefix it with the comment string (normally #) and optionally
+comment|/// a tab. This prints the comment immediately, not at the end of the
+comment|/// current line. It is basically a safe version of EmitRawText: since it
+comment|/// only prints comments, the object streamer ignores it instead of asserting.
+name|virtual
+name|void
+name|emitRawComment
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|T
+parameter_list|,
+name|bool
+name|TabPrefix
+init|=
+name|true
+parameter_list|)
 function_decl|;
 comment|/// AddBlankLine - Emit a blank line to a .s file to pretty it up.
 name|virtual
@@ -886,8 +1070,6 @@ specifier|const
 name|MCExpr
 modifier|*
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -1056,6 +1238,7 @@ comment|/// This corresponds to assembler directives like .section, .text, etc.
 end_comment
 
 begin_function
+name|virtual
 name|void
 name|SwitchSection
 parameter_list|(
@@ -1069,7 +1252,7 @@ name|MCExpr
 modifier|*
 name|Subsection
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 name|assert
@@ -1161,7 +1344,7 @@ name|MCExpr
 modifier|*
 name|Subsection
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 block|{
 name|assert
@@ -1219,70 +1402,17 @@ block|}
 end_function
 
 begin_comment
-comment|/// Initialize the streamer.
+comment|/// Create the default sections and set the initial one.
 end_comment
 
-begin_function
+begin_function_decl
+name|virtual
 name|void
-name|InitStreamer
-parameter_list|()
-block|{
-if|if
-condition|(
-name|AutoInitSections
-condition|)
 name|InitSections
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/// Tell this MCStreamer to call InitSections upon initialization.
-end_comment
-
-begin_function
-name|void
-name|setAutoInitSections
 parameter_list|(
 name|bool
-name|AutoInitSections
+name|NoExecStack
 parameter_list|)
-block|{
-name|this
-operator|->
-name|AutoInitSections
-operator|=
-name|AutoInitSections
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/// InitSections - Create the default sections and set the initial one.
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|InitSections
-parameter_list|()
-init|=
-literal|0
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// InitToTextSection - Create a text section and switch the streamer to it.
-end_comment
-
-begin_function_decl
-name|virtual
-name|void
-name|InitToTextSection
-parameter_list|()
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -1350,22 +1480,18 @@ begin_comment
 comment|/// used in an assignment.
 end_comment
 
-begin_function_decl
-name|virtual
-name|void
-name|EmitLabel
-parameter_list|(
-name|MCSymbol
-modifier|*
-name|Symbol
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|// FIXME: These emission are non-const because we mutate the symbol to
+end_comment
+
+begin_comment
+comment|// add the section we're emitting it to later.
+end_comment
 
 begin_function_decl
 name|virtual
 name|void
-name|EmitDebugLabel
+name|EmitLabel
 parameter_list|(
 name|MCSymbol
 modifier|*
@@ -1403,8 +1529,6 @@ parameter_list|(
 name|MCAssemblerFlag
 name|Flag
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -1448,6 +1572,29 @@ block|{}
 end_function
 
 begin_comment
+comment|/// EmitVersionMin - Specify the MachO minimum deployment target version.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|EmitVersionMin
+parameter_list|(
+name|MCVersionMinType
+parameter_list|,
+name|unsigned
+name|Major
+parameter_list|,
+name|unsigned
+name|Minor
+parameter_list|,
+name|unsigned
+name|Update
+parameter_list|)
+block|{}
+end_function
+
+begin_comment
 comment|/// EmitThumbFunc - Note in the output that the specified @p Func is
 end_comment
 
@@ -1463,25 +1610,6 @@ parameter_list|(
 name|MCSymbol
 modifier|*
 name|Func
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// getOrCreateSymbolData - Get symbol data for given symbol.
-end_comment
-
-begin_function_decl
-name|virtual
-name|MCSymbolData
-modifier|&
-name|getOrCreateSymbolData
-parameter_list|(
-name|MCSymbol
-modifier|*
-name|Symbol
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1544,8 +1672,6 @@ name|MCExpr
 modifier|*
 name|Value
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -1591,8 +1717,6 @@ name|MCSymbol
 modifier|*
 name|Symbol
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -1645,8 +1769,6 @@ parameter_list|,
 name|unsigned
 name|DescValue
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -1672,8 +1794,6 @@ name|MCSymbol
 modifier|*
 name|Symbol
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -1697,8 +1817,6 @@ parameter_list|(
 name|int
 name|StorageClass
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -1722,8 +1840,6 @@ parameter_list|(
 name|int
 name|Type
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -1736,8 +1852,31 @@ name|virtual
 name|void
 name|EndCOFFSymbolDef
 parameter_list|()
-init|=
-literal|0
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// EmitCOFFSectionIndex - Emits a COFF section index.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param Symbol - Symbol the section number relocation should point to.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitCOFFSectionIndex
+parameter_list|(
+name|MCSymbol
+specifier|const
+modifier|*
+name|Symbol
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -1750,7 +1889,7 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// @param Symbol - Symbol the section relative realocation should point to.
+comment|/// @param Symbol - Symbol the section relative relocation should point to.
 end_comment
 
 begin_function_decl
@@ -1800,10 +1939,32 @@ name|MCExpr
 modifier|*
 name|Value
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// \brief Emit a Linker Optimization Hint (LOH) directive.
+end_comment
+
+begin_comment
+comment|/// \param Args - Arguments of the LOH.
+end_comment
+
+begin_function
+name|virtual
+name|void
+name|EmitLOHDirective
+parameter_list|(
+name|MCLOHType
+name|Kind
+parameter_list|,
+specifier|const
+name|MCLOHArgs
+modifier|&
+name|Args
+parameter_list|)
+block|{}
+end_function
 
 begin_comment
 comment|/// EmitCommonSymbol - Emit a common symbol.
@@ -1884,8 +2045,6 @@ parameter_list|,
 name|unsigned
 name|ByteAlignment
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -1931,7 +2090,7 @@ name|MCSymbol
 modifier|*
 name|Symbol
 init|=
-literal|0
+name|nullptr
 parameter_list|,
 name|uint64_t
 name|Size
@@ -1998,8 +2157,6 @@ name|ByteAlignment
 init|=
 literal|0
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -2039,8 +2196,6 @@ parameter_list|(
 name|StringRef
 name|Data
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -2080,6 +2235,10 @@ begin_comment
 comment|/// match a native machine width.
 end_comment
 
+begin_comment
+comment|/// @param Loc - The location of the expression for error reporting.
+end_comment
+
 begin_function_decl
 name|virtual
 name|void
@@ -2092,9 +2251,15 @@ name|Value
 parameter_list|,
 name|unsigned
 name|Size
-parameter_list|)
+parameter_list|,
+specifier|const
+name|SMLoc
+modifier|&
+name|Loc
 init|=
-literal|0
+name|SMLoc
+argument_list|()
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2109,6 +2274,14 @@ name|Value
 parameter_list|,
 name|unsigned
 name|Size
+parameter_list|,
+specifier|const
+name|SMLoc
+modifier|&
+name|Loc
+init|=
+name|SMLoc
+argument_list|()
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2135,37 +2308,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/// EmitAbsValue - Emit the Value, but try to avoid relocations. On MachO
-end_comment
-
-begin_comment
-comment|/// this is done by producing
-end_comment
-
-begin_comment
-comment|/// foo = value
-end_comment
-
-begin_comment
-comment|/// .long foo
-end_comment
-
-begin_function_decl
-name|void
-name|EmitAbsValue
-parameter_list|(
-specifier|const
-name|MCExpr
-modifier|*
-name|Value
-parameter_list|,
-name|unsigned
-name|Size
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function_decl
 name|virtual
 name|void
@@ -2176,8 +2318,6 @@ name|MCExpr
 modifier|*
 name|Value
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -2191,8 +2331,6 @@ name|MCExpr
 modifier|*
 name|Value
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -2256,6 +2394,11 @@ name|Sym
 parameter_list|,
 name|unsigned
 name|Size
+parameter_list|,
+name|bool
+name|IsSectionRelative
+init|=
+name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2458,8 +2601,6 @@ name|MaxBytesToEmit
 init|=
 literal|0
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -2520,8 +2661,6 @@ name|MaxBytesToEmit
 init|=
 literal|0
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -2577,8 +2716,6 @@ name|Value
 init|=
 literal|0
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -2602,8 +2739,6 @@ parameter_list|(
 name|StringRef
 name|Filename
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -2640,7 +2775,7 @@ end_comment
 
 begin_function_decl
 name|virtual
-name|bool
+name|unsigned
 name|EmitDwarfFileDirective
 parameter_list|(
 name|unsigned
@@ -2699,73 +2834,12 @@ end_function_decl
 
 begin_function_decl
 name|virtual
-name|void
-name|EmitDwarfAdvanceLineAddr
+name|MCSymbol
+modifier|*
+name|getDwarfLineTableSymbol
 parameter_list|(
-name|int64_t
-name|LineDelta
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|LastLabel
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|Label
-parameter_list|,
 name|unsigned
-name|PointerSize
-parameter_list|)
-init|=
-literal|0
-function_decl|;
-end_function_decl
-
-begin_function
-name|virtual
-name|void
-name|EmitDwarfAdvanceFrameAddr
-parameter_list|(
-specifier|const
-name|MCSymbol
-modifier|*
-name|LastLabel
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|Label
-parameter_list|)
-block|{}
-end_function
-
-begin_function_decl
-name|void
-name|EmitDwarfSetLineAddr
-parameter_list|(
-name|int64_t
-name|LineDelta
-parameter_list|,
-specifier|const
-name|MCSymbol
-modifier|*
-name|Label
-parameter_list|,
-name|int
-name|PointerSize
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitCompactUnwindEncoding
-parameter_list|(
-name|uint32_t
-name|CompactUnwindEncoding
+name|CUID
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2787,7 +2861,10 @@ end_function_decl
 begin_function_decl
 name|void
 name|EmitCFIStartProc
-parameter_list|()
+parameter_list|(
+name|bool
+name|IsSimple
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -2998,7 +3075,7 @@ end_function_decl
 begin_function_decl
 name|virtual
 name|void
-name|EmitWin64EHStartProc
+name|EmitWinCFIStartProc
 parameter_list|(
 specifier|const
 name|MCSymbol
@@ -3011,7 +3088,7 @@ end_function_decl
 begin_function_decl
 name|virtual
 name|void
-name|EmitWin64EHEndProc
+name|EmitWinCFIEndProc
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -3019,7 +3096,7 @@ end_function_decl
 begin_function_decl
 name|virtual
 name|void
-name|EmitWin64EHStartChained
+name|EmitWinCFIStartChained
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -3027,7 +3104,7 @@ end_function_decl
 begin_function_decl
 name|virtual
 name|void
-name|EmitWin64EHEndChained
+name|EmitWinCFIEndChained
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -3035,7 +3112,90 @@ end_function_decl
 begin_function_decl
 name|virtual
 name|void
-name|EmitWin64EHHandler
+name|EmitWinCFIPushReg
+parameter_list|(
+name|unsigned
+name|Register
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitWinCFISetFrame
+parameter_list|(
+name|unsigned
+name|Register
+parameter_list|,
+name|unsigned
+name|Offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitWinCFIAllocStack
+parameter_list|(
+name|unsigned
+name|Size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitWinCFISaveReg
+parameter_list|(
+name|unsigned
+name|Register
+parameter_list|,
+name|unsigned
+name|Offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitWinCFISaveXMM
+parameter_list|(
+name|unsigned
+name|Register
+parameter_list|,
+name|unsigned
+name|Offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitWinCFIPushFrame
+parameter_list|(
+name|bool
+name|Code
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitWinCFIEndProlog
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitWinEHHandler
 parameter_list|(
 specifier|const
 name|MCSymbol
@@ -3054,90 +3214,7 @@ end_function_decl
 begin_function_decl
 name|virtual
 name|void
-name|EmitWin64EHHandlerData
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitWin64EHPushReg
-parameter_list|(
-name|unsigned
-name|Register
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitWin64EHSetFrame
-parameter_list|(
-name|unsigned
-name|Register
-parameter_list|,
-name|unsigned
-name|Offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitWin64EHAllocStack
-parameter_list|(
-name|unsigned
-name|Size
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitWin64EHSaveReg
-parameter_list|(
-name|unsigned
-name|Register
-parameter_list|,
-name|unsigned
-name|Offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitWin64EHSaveXMM
-parameter_list|(
-name|unsigned
-name|Register
-parameter_list|,
-name|unsigned
-name|Offset
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitWin64EHPushFrame
-parameter_list|(
-name|bool
-name|Code
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|virtual
-name|void
-name|EmitWin64EHEndProlog
+name|EmitWinEHHandlerData
 parameter_list|()
 function_decl|;
 end_function_decl
@@ -3159,9 +3236,12 @@ specifier|const
 name|MCInst
 modifier|&
 name|Inst
+parameter_list|,
+specifier|const
+name|MCSubtargetInfo
+modifier|&
+name|STI
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -3185,8 +3265,6 @@ parameter_list|(
 name|unsigned
 name|AlignPow2
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -3214,8 +3292,6 @@ parameter_list|(
 name|bool
 name|AlignToEnd
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -3228,8 +3304,6 @@ name|virtual
 name|void
 name|EmitBundleUnlock
 parameter_list|()
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -3278,8 +3352,6 @@ name|virtual
 name|void
 name|FinishImpl
 parameter_list|()
-init|=
-literal|0
 function_decl|;
 end_function_decl
 
@@ -3293,6 +3365,19 @@ name|Finish
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|virtual
+name|bool
+name|mayHaveInstructions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 unit|};
@@ -3392,10 +3477,6 @@ name|MCContext
 modifier|&
 name|Ctx
 parameter_list|,
-name|MCTargetStreamer
-modifier|*
-name|TargetStreamer
-parameter_list|,
 name|formatted_raw_ostream
 modifier|&
 name|OS
@@ -3404,36 +3485,22 @@ name|bool
 name|isVerboseAsm
 parameter_list|,
 name|bool
-name|useLoc
-parameter_list|,
-name|bool
-name|useCFI
-parameter_list|,
-name|bool
 name|useDwarfDirectory
 parameter_list|,
 name|MCInstPrinter
 modifier|*
 name|InstPrint
-init|=
-literal|0
 parameter_list|,
 name|MCCodeEmitter
 modifier|*
 name|CE
-init|=
-literal|0
 parameter_list|,
 name|MCAsmBackend
 modifier|*
 name|TAB
-init|=
-literal|0
 parameter_list|,
 name|bool
 name|ShowInst
-init|=
-name|false
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3479,49 +3546,9 @@ name|bool
 name|RelaxAll
 init|=
 name|false
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// createWinCOFFStreamer - Create a machine code streamer which will
-end_comment
-
-begin_comment
-comment|/// generate Microsoft COFF format object files.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Takes ownership of \p TAB and \p CE.
-end_comment
-
-begin_function_decl
-name|MCStreamer
-modifier|*
-name|createWinCOFFStreamer
-parameter_list|(
-name|MCContext
-modifier|&
-name|Ctx
-parameter_list|,
-name|MCAsmBackend
-modifier|&
-name|TAB
-parameter_list|,
-name|MCCodeEmitter
-modifier|&
-name|CE
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
 parameter_list|,
 name|bool
-name|RelaxAll
+name|LabelSections
 init|=
 name|false
 parameter_list|)
@@ -3545,10 +3572,6 @@ name|MCContext
 modifier|&
 name|Ctx
 parameter_list|,
-name|MCTargetStreamer
-modifier|*
-name|TargetStreamer
-parameter_list|,
 name|MCAsmBackend
 modifier|&
 name|TAB
@@ -3563,49 +3586,6 @@ name|CE
 parameter_list|,
 name|bool
 name|RelaxAll
-parameter_list|,
-name|bool
-name|NoExecStack
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// createPureStreamer - Create a machine code streamer which will generate
-end_comment
-
-begin_comment
-comment|/// "pure" MC object files, for use with MC-JIT and testing tools.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Takes ownership of \p TAB and \p CE.
-end_comment
-
-begin_function_decl
-name|MCStreamer
-modifier|*
-name|createPureStreamer
-parameter_list|(
-name|MCContext
-modifier|&
-name|Ctx
-parameter_list|,
-name|MCAsmBackend
-modifier|&
-name|TAB
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-name|MCCodeEmitter
-modifier|*
-name|CE
 parameter_list|)
 function_decl|;
 end_function_decl

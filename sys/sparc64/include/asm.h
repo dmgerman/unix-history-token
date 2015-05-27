@@ -207,6 +207,23 @@ value|.size x, . - x
 end_define
 
 begin_comment
+comment|/*  * WEAK_REFERENCE(): create a weak reference alias from sym.  * The macro is not a general asm macro that takes arbitrary names,  * but one that takes only C names.  It does the non-null name  * translation inside the macro.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WEAK_REFERENCE
+parameter_list|(
+name|sym
+parameter_list|,
+name|alias
+parameter_list|)
+define|\
+value|.weak	CNAME(alias); \ 	.equ	CNAME(alias),CNAME(sym)
+end_define
+
+begin_comment
 comment|/*  * Kernel RCS ID tag and copyright macros  */
 end_comment
 

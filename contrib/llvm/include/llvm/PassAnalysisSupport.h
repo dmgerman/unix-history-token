@@ -431,7 +431,7 @@ name|Pass
 modifier|*
 name|ResultPass
 init|=
-literal|0
+name|nullptr
 decl_stmt|;
 for|for
 control|(
@@ -650,12 +650,11 @@ argument_list|)
 block|;
 if|if
 condition|(
+operator|!
 name|ResultPass
-operator|==
-literal|0
 condition|)
 return|return
-literal|0
+name|nullptr
 return|;
 comment|// Because the AnalysisType may not be a subclass of pass (for
 comment|// AnalysisGroups), we use getAdjustedAnalysisPointer here to potentially

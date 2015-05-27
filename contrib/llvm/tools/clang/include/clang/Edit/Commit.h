@@ -172,10 +172,6 @@ name|EditedSource
 modifier|*
 name|Editor
 decl_stmt|;
-specifier|const
-name|bool
-name|ForceCommitInSystemHeader
-decl_stmt|;
 name|bool
 name|IsCommitable
 decl_stmt|;
@@ -219,7 +215,7 @@ name|PPConditionalDirectiveRecord
 operator|*
 name|PPRec
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|SourceMgr
@@ -239,12 +235,7 @@ argument_list|)
 operator|,
 name|Editor
 argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|ForceCommitInSystemHeader
-argument_list|(
-name|true
+name|nullptr
 argument_list|)
 operator|,
 name|IsCommitable
@@ -732,7 +723,7 @@ name|SourceLocation
 operator|*
 name|MacroBegin
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -746,7 +737,7 @@ name|SourceLocation
 operator|*
 name|MacroEnd
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;

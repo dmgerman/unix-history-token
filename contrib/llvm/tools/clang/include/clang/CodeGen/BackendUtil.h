@@ -34,13 +34,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_CODEGEN_BACKEND_UTIL_H
+name|LLVM_CLANG_CODEGEN_BACKENDUTIL_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_CODEGEN_BACKEND_UTIL_H
+name|LLVM_CLANG_CODEGEN_BACKENDUTIL_H
 end_define
 
 begin_include
@@ -118,6 +118,9 @@ specifier|const
 name|LangOptions
 operator|&
 name|LOpts
+argument_list|,
+name|StringRef
+name|TDesc
 argument_list|,
 name|llvm
 operator|::

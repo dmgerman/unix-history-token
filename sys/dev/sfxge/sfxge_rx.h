@@ -15,6 +15,44 @@ directive|define
 name|_SFXGE_RX_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|SFXGE_LRO
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -97,6 +135,12 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
+end_ifdef
 
 begin_comment
 comment|/**  * struct sfxge_lro_conn - Connection state for software LRO  * @link: Link for hash table and free list.  * @active_link: Link for active_conns list  * @l2_id: Identifying information from layer 2  * @conn_hash: Hash of connection 4-tuple  * @nh: IP (v4 or v6) header of super-packet  * @source: Source TCP port number  * @dest: Destination TCP port number  * @n_in_order_pkts: Number of in-order packets with payload.  * @next_seq: Next in-order sequence number.  * @last_pkt_ticks: Time we last saw a packet on this connection.  * @mbuf: The mbuf we are currently holding.  *	If %NULL, then all following fields are undefined.  * @mbuf_tail: The tail of the frag_list of mbufs we're holding.  *	Only valid after at least one merge.  * @th_last: The TCP header of the last packet merged.  * @next_buf: The next RX buffer to process.  * @next_eh: Ethernet header of the next buffer.  * @next_nh: IP header of the next buffer.  * @delivered: True if we've delivered a payload packet up this interrupt.  */
@@ -250,6 +294,15 @@ block|}
 struct|;
 end_struct
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SFXGE_LRO */
+end_comment
+
 begin_enum
 enum|enum
 name|sfxge_flush_state
@@ -348,10 +401,15 @@ name|unsigned
 name|int
 name|loopback
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|SFXGE_LRO
 name|struct
 name|sfxge_lro_state
 name|lro
 decl_stmt|;
+endif|#
+directive|endif
 name|unsigned
 name|int
 name|refill_threshold

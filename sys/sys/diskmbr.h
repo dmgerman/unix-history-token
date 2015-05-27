@@ -165,28 +165,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DOSPTYP_386BSD
-value|0xa5
-end_define
-
-begin_comment
-comment|/* 386BSD partition type */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DOSPTYP_HFS
-value|0xaf
-end_define
-
-begin_comment
-comment|/* HFS/HFS+ partition type */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|DOSPTYP_LINSWP
 value|0x82
 end_define
@@ -220,12 +198,67 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DOSPTYP_386BSD
+value|0xa5
+end_define
+
+begin_comment
+comment|/* 386BSD partition type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_APPLE_UFS
+value|0xa8
+end_define
+
+begin_comment
+comment|/* Apple Mac OS X boot */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_APPLE_BOOT
+value|0xab
+end_define
+
+begin_comment
+comment|/* Apple Mac OS X UFS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_HFS
+value|0xaf
+end_define
+
+begin_comment
+comment|/* HFS/HFS+ partition type */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DOSPTYP_PMBR
 value|0xee
 end_define
 
 begin_comment
 comment|/* GPT Protective MBR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_EFI
+value|0xef
+end_define
+
+begin_comment
+comment|/* EFI FAT parition */
 end_comment
 
 begin_define

@@ -1126,6 +1126,28 @@ end_function
 begin_function
 specifier|static
 name|__inline
+name|uint32_t
+name|rdmsr32
+parameter_list|(
+name|u_int
+name|msr
+parameter_list|)
+block|{
+name|uint32_t
+name|low
+decl_stmt|;
+asm|__asm __volatile("rdmsr" : "=a" (low) : "c" (msr) : "rdx");
+return|return
+operator|(
+name|low
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
 name|uint64_t
 name|rdpmc
 parameter_list|(
@@ -1628,15 +1650,14 @@ name|int
 name|type
 parameter_list|)
 block|{
-comment|/* invpcid (%rdx),%rax */
-asm|__asm __volatile(".byte 0x66,0x0f,0x38,0x82,0x02"
+asm|__asm __volatile("invpcid (%0),%1"
 block|: :
-literal|"d"
+literal|"r"
 operator|(
 name|d
 operator|)
 operator|,
-literal|"a"
+literal|"r"
 operator|(
 operator|(
 name|u_long
@@ -2861,6 +2882,16 @@ end_function_decl
 begin_function_decl
 name|uint64_t
 name|rdmsr
+parameter_list|(
+name|u_int
+name|msr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|uint32_t
+name|rdmsr32
 parameter_list|(
 name|u_int
 name|msr

@@ -190,6 +190,16 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * NB: sparcv8 binaries are not supported even though this header  * defines the relevant structures.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__HAVE_REG32
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef

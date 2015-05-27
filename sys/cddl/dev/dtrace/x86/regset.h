@@ -56,12 +56,9 @@ define|#
 directive|define
 name|REG_FSBASE
 value|26
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 define|#
 directive|define
 name|REG_DS
@@ -168,6 +165,7 @@ name|REG_R15
 value|0
 else|#
 directive|else
+comment|/* !illumos */
 define|#
 directive|define
 name|REG_SS
@@ -274,13 +272,11 @@ name|REG_R15
 value|0
 endif|#
 directive|endif
+comment|/* illumos */
 comment|/*  * The names and offsets defined here are specified by i386 ABI suppl.  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|sun
-argument_list|)
+ifdef|#
+directive|ifdef
+name|illumos
 define|#
 directive|define
 name|SS
@@ -361,6 +357,7 @@ name|GS
 value|0
 else|#
 directive|else
+comment|/* !illumos */
 define|#
 directive|define
 name|GS
@@ -441,6 +438,7 @@ name|FS
 value|0
 endif|#
 directive|endif
+comment|/* illumos */
 define|#
 directive|define
 name|REG_PC

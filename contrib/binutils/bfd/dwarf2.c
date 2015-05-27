@@ -9408,6 +9408,11 @@ name|filename_ptr
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|do_line
+condition|)
 operator|*
 name|functionname_ptr
 operator|=

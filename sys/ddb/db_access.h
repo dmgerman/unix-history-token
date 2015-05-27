@@ -33,7 +33,7 @@ parameter_list|,
 name|int
 name|size
 parameter_list|,
-name|boolean_t
+name|bool
 name|is_signed
 parameter_list|)
 function_decl|;

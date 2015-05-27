@@ -402,7 +402,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Running kernel.  Use sysctl.  This gives an unwrapped 		 * buffer as a side effect. 		 */
+comment|/* 		 * Running kernel.  Use sysctl.  This gives an unwrapped buffer 		 * as a side effect.  Remove nulterm (if present) so the value 		 * returned by sysctl is formatted as the rest of the code 		 * expects (the same as the value read from a core file below). 		 */
 if|if
 condition|(
 name|sysctlbyname
@@ -429,6 +429,14 @@ argument_list|,
 literal|"sysctl kern.msgbuf"
 argument_list|)
 expr_stmt|;
+comment|/* Allocate extra room for growth between the sysctl calls. */
+name|buflen
+operator|+=
+name|buflen
+operator|/
+literal|8
+expr_stmt|;
+comment|/* Allocate more than sysctl sees, for room to append \n\0. */
 if|if
 condition|(
 operator|(
@@ -476,6 +484,24 @@ literal|1
 argument_list|,
 literal|"sysctl kern.msgbuf"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|buflen
+operator|>
+literal|0
+operator|&&
+name|bp
+index|[
+name|buflen
+operator|-
+literal|1
+index|]
+operator|==
+literal|'\0'
+condition|)
+name|buflen
+operator|--
 expr_stmt|;
 if|if
 condition|(

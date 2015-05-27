@@ -100,10 +100,7 @@ decl_stmt|;
 comment|/// \brief A concrete instance of a particular driver option.
 comment|///
 comment|/// The Arg class encodes just enough information to be able to
-comment|/// derive the argument values efficiently. In addition, Arg
-comment|/// instances have an intrusive double linked list which is used by
-comment|/// ArgList to provide efficient iteration over all instances of a
-comment|/// particular option.
+comment|/// derive the argument values efficiently.
 name|class
 name|Arg
 block|{
@@ -183,8 +180,7 @@ argument|StringRef Spelling
 argument_list|,
 argument|unsigned Index
 argument_list|,
-argument|const Arg *BaseArg =
-literal|0
+argument|const Arg *BaseArg = nullptr
 argument_list|)
 empty_stmt|;
 name|Arg
@@ -197,8 +193,7 @@ argument|unsigned Index
 argument_list|,
 argument|const char *Value0
 argument_list|,
-argument|const Arg *BaseArg =
-literal|0
+argument|const Arg *BaseArg = nullptr
 argument_list|)
 empty_stmt|;
 name|Arg
@@ -213,8 +208,7 @@ argument|const char *Value0
 argument_list|,
 argument|const char *Value1
 argument_list|,
-argument|const Arg *BaseArg =
-literal|0
+argument|const Arg *BaseArg = nullptr
 argument_list|)
 empty_stmt|;
 operator|~
@@ -223,6 +217,7 @@ argument_list|()
 expr_stmt|;
 specifier|const
 name|Option
+operator|&
 name|getOption
 argument_list|()
 specifier|const

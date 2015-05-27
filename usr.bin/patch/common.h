@@ -70,6 +70,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINENUM_MAX
+value|LONG_MAX
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCCSPREFIX
 value|"s."
 end_define

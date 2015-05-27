@@ -63,14 +63,14 @@ value|-1
 end_define
 
 begin_comment
-comment|/*  * Version history:  * V1 Beta                    0.1  * V1 RC< 2008/1/31          1.0  * V1 RC> 2008/1/31          2.0  */
+comment|/*  * Version history:  * V1 Beta                    0.1  * V1 RC< 2008/1/31          1.0  * V1 RC> 2008/1/31          2.0  * Win7: 4.2  * Win8: 5.1  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|VMSTOR_PROTOCOL_VERSION_CURRENT
-value|VMSTOR_PROTOCOL_VERSION(2, 0)
+value|VMSTOR_PROTOCOL_VERSION(5, 1)
 end_define
 
 begin_comment
@@ -121,9 +121,21 @@ name|VSTOR_OPERATION_QUERYPROPERTIES
 init|=
 literal|10
 block|,
+name|VSTOR_OPERATION_ENUMERATE_BUS
+init|=
+literal|11
+block|,
+name|VSTOR_OPERATION_FCHBA_DATA
+init|=
+literal|12
+block|,
+name|VSTOR_OPERATION_CREATE_MULTI_CHANNELS
+init|=
+literal|13
+block|,
 name|VSTOR_OPERATION_MAXIMUM
 init|=
-literal|10
+literal|13
 block|}
 enum|;
 end_enum
@@ -143,7 +155,7 @@ begin_define
 define|#
 directive|define
 name|SENSE_BUFFER_SIZE
-value|0x12
+value|0x14
 end_define
 
 begin_define
@@ -152,6 +164,48 @@ directive|define
 name|MAX_DATA_BUFFER_LENGTH_WITH_PADDING
 value|0x14
 end_define
+
+begin_define
+define|#
+directive|define
+name|POST_WIN7_STORVSC_SENSE_BUFFER_SIZE
+value|0x14
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRE_WIN8_STORVSC_SENSE_BUFFER_SIZE
+value|0x12
+end_define
+
+begin_struct
+struct|struct
+name|vmscsi_win8_extension
+block|{
+comment|/* 	 * The following were added in Windows 8 	 */
+name|uint16_t
+name|reserve
+decl_stmt|;
+name|uint8_t
+name|queue_tag
+decl_stmt|;
+name|uint8_t
+name|queue_action
+decl_stmt|;
+name|uint32_t
+name|srb_flags
+decl_stmt|;
+name|uint32_t
+name|time_out_value
+decl_stmt|;
+name|uint32_t
+name|queue_sort_ey
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -218,6 +272,11 @@ decl_stmt|;
 block|}
 name|u
 union|;
+comment|/* 	 * The following was added in win8. 	 */
+name|struct
+name|vmscsi_win8_extension
+name|win8_extension
+decl_stmt|;
 block|}
 name|__packed
 struct|;
@@ -240,8 +299,11 @@ decl_stmt|;
 name|uint8_t
 name|target_id
 decl_stmt|;
+name|uint16_t
+name|max_channel_cnt
+decl_stmt|;
 comment|/** 	 * Note: port number is only really known on the client side 	 */
-name|uint32_t
+name|uint16_t
 name|port
 decl_stmt|;
 name|uint32_t
@@ -331,6 +393,10 @@ comment|/** 	     * Used during version negotiations. 	     */
 name|struct
 name|vmstor_proto_ver
 name|version
+decl_stmt|;
+comment|/**              * Number of multichannels to create 	     */
+name|uint16_t
+name|multi_channels_cnt
 decl_stmt|;
 block|}
 name|u

@@ -569,6 +569,12 @@ argument_list|(
 argument|int signal
 argument_list|)
 expr_stmt|;
+name|lldb
+operator|::
+name|SBUnixSignals
+name|GetUnixSignals
+argument_list|()
+expr_stmt|;
 name|void
 name|SendAsyncInterrupt
 parameter_list|()
@@ -810,6 +816,17 @@ argument_list|(
 argument|uint32_t image_token
 argument_list|)
 expr_stmt|;
+name|lldb
+operator|::
+name|SBError
+name|SendEventData
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|data
+argument_list|)
+expr_stmt|;
 comment|//------------------------------------------------------------------
 comment|/// Return the number of different thread-origin extended backtraces
 comment|/// this process can support.
@@ -849,6 +866,21 @@ name|uint32_t
 name|idx
 parameter_list|)
 function_decl|;
+name|lldb
+operator|::
+name|SBThreadCollection
+name|GetHistoryThreads
+argument_list|(
+argument|addr_t addr
+argument_list|)
+expr_stmt|;
+name|bool
+name|IsInstrumentationRuntimePresent
+parameter_list|(
+name|InstrumentationRuntimeType
+name|type
+parameter_list|)
+function_decl|;
 name|protected
 label|:
 name|friend
@@ -870,6 +902,10 @@ decl_stmt|;
 name|friend
 name|class
 name|SBDebugger
+decl_stmt|;
+name|friend
+name|class
+name|SBExecutionContext
 decl_stmt|;
 name|friend
 name|class

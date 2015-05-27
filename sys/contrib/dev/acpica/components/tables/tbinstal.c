@@ -4,14 +4,8 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|__TBINSTAL_C__
-end_define
 
 begin_include
 include|#
@@ -360,12 +354,10 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not acquire table length at %p"
+literal|"Could not acquire table length at %8.8X%8.8X"
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|Address
 argument_list|)
 operator|)
@@ -494,12 +486,10 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Could not acquire table length at %p"
+literal|"Could not acquire table length at %8.8X%8.8X"
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|Address
 argument_list|)
 operator|)
@@ -535,7 +525,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Ignoring installation of %4.4s at %p"
+literal|"Ignoring installation of %4.4s at %8.8X%8.8X"
 operator|,
 name|NewTableDesc
 operator|.
@@ -543,10 +533,8 @@ name|Signature
 operator|.
 name|Ascii
 operator|,
-name|ACPI_CAST_PTR
+name|ACPI_FORMAT_UINT64
 argument_list|(
-name|void
-argument_list|,
 name|Address
 argument_list|)
 operator|)
@@ -740,14 +728,6 @@ name|TableIndex
 operator|=
 name|i
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|AcpiUtReleaseMutex
-argument_list|(
-name|ACPI_MTX_TABLES
-argument_list|)
-expr_stmt|;
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -759,10 +739,12 @@ block|}
 comment|/* Add the table to the global root table list */
 name|Status
 operator|=
-name|AcpiTbGetNextRootIndex
+name|AcpiTbGetNextTableDescriptor
 argument_list|(
 operator|&
 name|i
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -962,10 +944,8 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"%4.4s "
-name|ACPI_PRINTF_UINT
-literal|" %s table override, new table: "
-name|ACPI_PRINTF_UINT
+literal|"%4.4s 0x%8.8X%8.8X"
+literal|" %s table override, new table: 0x%8.8X%8.8X"
 operator|,
 name|OldTableDesc
 operator|->
@@ -973,7 +953,7 @@ name|Signature
 operator|.
 name|Ascii
 operator|,
-name|ACPI_FORMAT_TO_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|OldTableDesc
 operator|->
@@ -982,7 +962,7 @@ argument_list|)
 operator|,
 name|OverrideType
 operator|,
-name|ACPI_FORMAT_TO_UINT
+name|ACPI_FORMAT_UINT64
 argument_list|(
 name|NewTableDesc
 operator|.
@@ -1027,97 +1007,6 @@ operator|&
 name|NewTableDesc
 argument_list|)
 expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiTbStoreTable  *  * PARAMETERS:  Address             - Table address  *              Table               - Table header  *              Length              - Table length  *              Flags               - Install flags  *              TableIndex          - Where the table index is returned  *  * RETURN:      Status and table index.  *  * DESCRIPTION: Add an ACPI table to the global table list  *  ******************************************************************************/
-end_comment
-
-begin_function
-name|ACPI_STATUS
-name|AcpiTbStoreTable
-parameter_list|(
-name|ACPI_PHYSICAL_ADDRESS
-name|Address
-parameter_list|,
-name|ACPI_TABLE_HEADER
-modifier|*
-name|Table
-parameter_list|,
-name|UINT32
-name|Length
-parameter_list|,
-name|UINT8
-name|Flags
-parameter_list|,
-name|UINT32
-modifier|*
-name|TableIndex
-parameter_list|)
-block|{
-name|ACPI_STATUS
-name|Status
-decl_stmt|;
-name|ACPI_TABLE_DESC
-modifier|*
-name|TableDesc
-decl_stmt|;
-name|Status
-operator|=
-name|AcpiTbGetNextRootIndex
-argument_list|(
-name|TableIndex
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ACPI_FAILURE
-argument_list|(
-name|Status
-argument_list|)
-condition|)
-block|{
-return|return
-operator|(
-name|Status
-operator|)
-return|;
-block|}
-comment|/* Initialize added table */
-name|TableDesc
-operator|=
-operator|&
-name|AcpiGbl_RootTableList
-operator|.
-name|Tables
-index|[
-operator|*
-name|TableIndex
-index|]
-expr_stmt|;
-name|AcpiTbInitTableDescriptor
-argument_list|(
-name|TableDesc
-argument_list|,
-name|Address
-argument_list|,
-name|Flags
-argument_list|,
-name|Table
-argument_list|)
-expr_stmt|;
-name|TableDesc
-operator|->
-name|Pointer
-operator|=
-name|Table
-expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
 block|}
 end_function
 
@@ -1171,10 +1060,8 @@ condition|)
 block|{
 name|ACPI_FREE
 argument_list|(
-name|ACPI_CAST_PTR
+name|ACPI_PHYSADDR_TO_PTR
 argument_list|(
-name|void
-argument_list|,
 name|TableDesc
 operator|->
 name|Address

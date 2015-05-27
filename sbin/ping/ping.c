@@ -3873,11 +3873,14 @@ name|ip
 operator|->
 name|ip_off
 operator|=
+name|htons
+argument_list|(
 name|df
 condition|?
 name|IP_DF
 else|:
 literal|0
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->
@@ -3966,18 +3969,6 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"cap_enter"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|cap_sandboxed
-argument_list|()
-condition|)
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"capability mode sandbox enabled\n"
 argument_list|)
 expr_stmt|;
 name|cap_rights_init
@@ -5790,7 +5781,10 @@ name|ip
 operator|->
 name|ip_len
 operator|=
+name|htons
+argument_list|(
 name|cc
+argument_list|)
 expr_stmt|;
 name|ip
 operator|->

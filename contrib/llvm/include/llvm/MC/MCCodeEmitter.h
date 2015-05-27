@@ -60,6 +60,9 @@ name|class
 name|MCInst
 decl_stmt|;
 name|class
+name|MCSubtargetInfo
+decl_stmt|;
+name|class
 name|raw_ostream
 decl_stmt|;
 name|template
@@ -132,6 +135,11 @@ name|MCFixup
 operator|>
 operator|&
 name|Fixups
+argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
 argument_list|)
 decl|const
 init|=

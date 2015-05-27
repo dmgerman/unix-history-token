@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2014, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2015, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -1233,7 +1233,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* space */
+comment|/* space, tab, CR, LF, VT, FF */
 end_comment
 
 begin_define
@@ -2384,6 +2384,32 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|AcpiUtGetExpectedReturnTypes
+parameter_list|(
+name|char
+modifier|*
+name|Buffer
+parameter_list|,
+name|UINT32
+name|ExpectedBtypes
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+name|ACPI_ASL_COMPILER
+operator|||
+name|defined
+name|ACPI_HELP_APP
+operator|)
+end_if
+
+begin_function_decl
 specifier|const
 name|ACPI_PREDEFINED_INFO
 modifier|*
@@ -2416,20 +2442,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|AcpiUtGetExpectedReturnTypes
-parameter_list|(
-name|char
-modifier|*
-name|Buffer
-parameter_list|,
-name|UINT32
-name|ExpectedBtypes
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|UINT32
 name|AcpiUtGetResourceBitWidth
 parameter_list|(
@@ -2442,6 +2454,11 @@ name|Types
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * utstate - Generic state creation/cache routines  */
@@ -2550,29 +2567,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ACPI_STATUS
-name|AcpiUtCreatePkgStateAndPush
-parameter_list|(
-name|void
-modifier|*
-name|InternalObject
-parameter_list|,
-name|void
-modifier|*
-name|ExternalObject
-parameter_list|,
-name|UINT16
-name|Index
-parameter_list|,
-name|ACPI_GENERIC_STATE
-modifier|*
-modifier|*
-name|StateList
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|ACPI_GENERIC_STATE
 modifier|*
 name|AcpiUtCreateControlState
@@ -2666,6 +2660,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+name|ACPI_ASL_COMPILER
+operator|||
+name|defined
+name|ACPI_EXEC_APP
+operator|)
+end_if
+
 begin_function_decl
 name|BOOLEAN
 name|AcpiUtIsAmlTable
@@ -2676,6 +2682,11 @@ name|Table
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|ACPI_STATUS
@@ -2909,6 +2920,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+end_ifdef
+
 begin_function_decl
 name|void
 name|AcpiUtStrlwr
@@ -2934,6 +2951,11 @@ name|String2
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|ACPI_STATUS
@@ -2967,6 +2989,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|defined
+name|ACPI_ASL_COMPILER
+operator|||
+name|defined
+name|ACPI_EXEC_APP
+end_if
+
 begin_function_decl
 name|void
 name|UtConvertBackslashes
@@ -2977,6 +3009,11 @@ name|Pathname
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|BOOLEAN
@@ -3702,6 +3739,24 @@ begin_comment
 comment|/*  * utuuid -- UUID support functions  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+name|ACPI_ASL_COMPILER
+operator|||
+name|defined
+name|ACPI_DISASSEMBLER
+operator|||
+name|defined
+name|ACPI_EXEC_APP
+operator|||
+name|defined
+name|ACPI_HELP_APP
+operator|)
+end_if
+
 begin_function_decl
 name|void
 name|AcpiUtConvertStringToUuid
@@ -3716,6 +3771,11 @@ name|UuidBuffer
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

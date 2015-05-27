@@ -284,6 +284,12 @@ literal|0
 expr_stmt|;
 name|vq
 operator|->
+name|vq_save_used
+operator|=
+literal|0
+expr_stmt|;
+name|vq
+operator|->
 name|vq_pfn
 operator|=
 literal|0
@@ -480,6 +486,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Legacy interrupts are mandatory for virtio devices */
+name|pci_lintr_request
+argument_list|(
+name|vs
+operator|->
+name|vs_pi
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -666,6 +680,12 @@ name|vq_last_avail
 operator|=
 literal|0
 expr_stmt|;
+name|vq
+operator|->
+name|vq_save_used
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -786,6 +806,10 @@ name|vqueue_info
 modifier|*
 name|vq
 parameter_list|,
+name|uint16_t
+modifier|*
+name|pidx
+parameter_list|,
 name|struct
 name|iovec
 modifier|*
@@ -809,8 +833,6 @@ name|n_indir
 decl_stmt|;
 name|u_int
 name|idx
-decl_stmt|,
-name|head
 decl_stmt|,
 name|next
 decl_stmt|;
@@ -931,7 +953,10 @@ name|vs_pi
 operator|->
 name|pi_vmctx
 expr_stmt|;
-name|head
+operator|*
+name|pidx
+operator|=
+name|next
 operator|=
 name|vq
 operator|->
@@ -950,9 +975,10 @@ literal|1
 operator|)
 index|]
 expr_stmt|;
-name|next
-operator|=
-name|head
+name|vq
+operator|->
+name|vq_last_avail
+operator|++
 expr_stmt|;
 for|for
 control|(
@@ -1047,7 +1073,9 @@ condition|(
 operator|(
 name|vs
 operator|->
-name|vs_negotiated_caps
+name|vs_vc
+operator|->
+name|vc_hv_caps
 operator|&
 name|VIRTIO_RING_F_INDIRECT_DESC
 operator|)
@@ -1299,7 +1327,29 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the currently-first request chain to the guest, setting  * its I/O length to the provided value.  *  * (This chain is the one you handled when you called vq_getchain()  * and used its positive return value.)  */
+comment|/*  * Return the currently-first request chain back to the available queue.  *  * (This chain is the one you handled when you called vq_getchain()  * and used its positive return value.)  */
+end_comment
+
+begin_function
+name|void
+name|vq_retchain
+parameter_list|(
+name|struct
+name|vqueue_info
+modifier|*
+name|vq
+parameter_list|)
+block|{
+name|vq
+operator|->
+name|vq_last_avail
+operator|--
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return specified request chain to the guest, setting its I/O length  * to the provided value.  *  * (This chain is the one you handled when you called vq_getchain()  * and used its positive return value.)  */
 end_comment
 
 begin_function
@@ -1311,13 +1361,14 @@ name|vqueue_info
 modifier|*
 name|vq
 parameter_list|,
+name|uint16_t
+name|idx
+parameter_list|,
 name|uint32_t
 name|iolen
 parameter_list|)
 block|{
 name|uint16_t
-name|head
-decl_stmt|,
 name|uidx
 decl_stmt|,
 name|mask
@@ -1349,22 +1400,6 @@ name|vq
 operator|->
 name|vq_used
 expr_stmt|;
-name|head
-operator|=
-name|vq
-operator|->
-name|vq_avail
-operator|->
-name|va_ring
-index|[
-name|vq
-operator|->
-name|vq_last_avail
-operator|++
-operator|&
-name|mask
-index|]
-expr_stmt|;
 name|uidx
 operator|=
 name|vuh
@@ -1388,9 +1423,8 @@ name|vue
 operator|->
 name|vu_idx
 operator|=
-name|head
+name|idx
 expr_stmt|;
-comment|/* ie, vue->id = head */
 name|vue
 operator|->
 name|vu_tlen
@@ -1445,6 +1479,16 @@ name|vq
 operator|->
 name|vq_vs
 expr_stmt|;
+name|old_idx
+operator|=
+name|vq
+operator|->
+name|vq_save_used
+expr_stmt|;
+name|vq
+operator|->
+name|vq_save_used
+operator|=
 name|new_idx
 operator|=
 name|vq
@@ -1452,12 +1496,6 @@ operator|->
 name|vq_used
 operator|->
 name|vu_idx
-expr_stmt|;
-name|old_idx
-operator|=
-name|vq
-operator|->
-name|vq_save_used
 expr_stmt|;
 if|if
 condition|(

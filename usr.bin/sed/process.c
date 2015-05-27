@@ -204,7 +204,7 @@ end_define
 
 begin_function_decl
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|applies
 parameter_list|(
@@ -252,7 +252,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|__inline
 name|int
 name|regexec_e
 parameter_list|(
@@ -1347,7 +1346,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|applies
 parameter_list|(
@@ -1514,6 +1513,10 @@ block|}
 elseif|else
 if|if
 condition|(
+name|cp
+operator|->
+name|a1
+operator|&&
 name|MATCH
 argument_list|(
 name|cp
@@ -3432,7 +3435,6 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
 name|int
 name|regexec_e
 parameter_list|(

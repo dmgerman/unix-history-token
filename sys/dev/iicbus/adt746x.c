@@ -2794,7 +2794,7 @@ name|adt746x_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|uint16_t
+name|int
 name|tmp
 init|=
 literal|0
@@ -2803,8 +2803,6 @@ name|uint16_t
 name|val
 decl_stmt|;
 name|uint8_t
-name|temp
-decl_stmt|,
 name|data
 index|[
 literal|1
@@ -2814,6 +2812,9 @@ name|data1
 index|[
 literal|1
 index|]
+decl_stmt|;
+name|int8_t
+name|temp
 decl_stmt|;
 name|sc
 operator|=

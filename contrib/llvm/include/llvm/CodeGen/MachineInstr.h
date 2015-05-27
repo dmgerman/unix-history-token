@@ -106,7 +106,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/MachineOperand.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DebugInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/IR/DebugLoc.h"
 end_include
 
 begin_include
@@ -130,19 +148,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/DebugLoc.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetOpcodes.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<vector>
 end_include
 
 begin_decl_stmt
@@ -691,6 +697,88 @@ return|return
 name|debugLoc
 return|;
 block|}
+comment|/// \brief Return the debug variable referenced by
+comment|/// this DBG_VALUE instruction.
+name|DIVariable
+name|getDebugVariable
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isDebugValue
+argument_list|()
+operator|&&
+literal|"not a DBG_VALUE"
+argument_list|)
+block|;
+name|DIVariable
+name|Var
+argument_list|(
+name|getOperand
+argument_list|(
+literal|2
+argument_list|)
+operator|.
+name|getMetadata
+argument_list|()
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|Var
+operator|.
+name|Verify
+argument_list|()
+operator|&&
+literal|"not a DIVariable"
+argument_list|)
+block|;
+return|return
+name|Var
+return|;
+block|}
+comment|/// \brief Return the complex address expression referenced by
+comment|/// this DBG_VALUE instruction.
+name|DIExpression
+name|getDebugExpression
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isDebugValue
+argument_list|()
+operator|&&
+literal|"not a DBG_VALUE"
+argument_list|)
+block|;
+name|DIExpression
+name|Expr
+argument_list|(
+name|getOperand
+argument_list|(
+literal|3
+argument_list|)
+operator|.
+name|getMetadata
+argument_list|()
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|Expr
+operator|.
+name|Verify
+argument_list|()
+operator|&&
+literal|"not a DIExpression"
+argument_list|)
+block|;
+return|return
+name|Expr
+return|;
+block|}
 comment|/// emitError - Emit an error referring to the source location of this
 comment|/// instruction. This should only be used for inline assembly that is somehow
 comment|/// impossible to compile. Other errors should have been handled much
@@ -853,6 +941,257 @@ operator|+
 name|NumOperands
 return|;
 block|}
+name|iterator_range
+operator|<
+name|mop_iterator
+operator|>
+name|operands
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|mop_iterator
+operator|>
+operator|(
+name|operands_begin
+argument_list|()
+operator|,
+name|operands_end
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|const_mop_iterator
+operator|>
+name|operands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|const_mop_iterator
+operator|>
+operator|(
+name|operands_begin
+argument_list|()
+operator|,
+name|operands_end
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|mop_iterator
+operator|>
+name|explicit_operands
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|mop_iterator
+operator|>
+operator|(
+name|operands_begin
+argument_list|()
+operator|,
+name|operands_begin
+argument_list|()
+operator|+
+name|getNumExplicitOperands
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|const_mop_iterator
+operator|>
+name|explicit_operands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|const_mop_iterator
+operator|>
+operator|(
+name|operands_begin
+argument_list|()
+operator|,
+name|operands_begin
+argument_list|()
+operator|+
+name|getNumExplicitOperands
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|mop_iterator
+operator|>
+name|implicit_operands
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|mop_iterator
+operator|>
+operator|(
+name|explicit_operands
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|,
+name|operands_end
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|const_mop_iterator
+operator|>
+name|implicit_operands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|const_mop_iterator
+operator|>
+operator|(
+name|explicit_operands
+argument_list|()
+operator|.
+name|end
+argument_list|()
+operator|,
+name|operands_end
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|mop_iterator
+operator|>
+name|defs
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|mop_iterator
+operator|>
+operator|(
+name|operands_begin
+argument_list|()
+operator|,
+name|operands_begin
+argument_list|()
+operator|+
+name|getDesc
+argument_list|()
+operator|.
+name|getNumDefs
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|const_mop_iterator
+operator|>
+name|defs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|const_mop_iterator
+operator|>
+operator|(
+name|operands_begin
+argument_list|()
+operator|,
+name|operands_begin
+argument_list|()
+operator|+
+name|getDesc
+argument_list|()
+operator|.
+name|getNumDefs
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|mop_iterator
+operator|>
+name|uses
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|mop_iterator
+operator|>
+operator|(
+name|operands_begin
+argument_list|()
+operator|+
+name|getDesc
+argument_list|()
+operator|.
+name|getNumDefs
+argument_list|()
+operator|,
+name|operands_end
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|const_mop_iterator
+operator|>
+name|uses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|const_mop_iterator
+operator|>
+operator|(
+name|operands_begin
+argument_list|()
+operator|+
+name|getDesc
+argument_list|()
+operator|.
+name|getNumDefs
+argument_list|()
+operator|,
+name|operands_end
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// Access to memory operands of the instruction
 name|mmo_iterator
 name|memoperands_begin
@@ -883,6 +1222,49 @@ return|return
 name|NumMemRefs
 operator|==
 literal|0
+return|;
+block|}
+name|iterator_range
+operator|<
+name|mmo_iterator
+operator|>
+name|memoperands
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|mmo_iterator
+operator|>
+operator|(
+name|memoperands_begin
+argument_list|()
+operator|,
+name|memoperands_end
+argument_list|()
+operator|)
+return|;
+block|}
+name|iterator_range
+operator|<
+name|mmo_iterator
+operator|>
+name|memoperands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|mmo_iterator
+operator|>
+operator|(
+name|memoperands_begin
+argument_list|()
+operator|,
+name|memoperands_end
+argument_list|()
+operator|)
 return|;
 block|}
 comment|/// hasOneMemOperand - Return true if this instruction has exactly one
@@ -1442,6 +1824,100 @@ name|Type
 argument_list|)
 return|;
 block|}
+comment|/// \brief Return true if this instruction behaves
+comment|/// the same way as the generic REG_SEQUENCE instructions.
+comment|/// E.g., on ARM,
+comment|/// dX VMOVDRR rY, rZ
+comment|/// is equivalent to
+comment|/// dX = REG_SEQUENCE rY, ssub_0, rZ, ssub_1.
+comment|///
+comment|/// Note that for the optimizers to be able to take advantage of
+comment|/// this property, TargetInstrInfo::getRegSequenceLikeInputs has to be
+comment|/// override accordingly.
+name|bool
+name|isRegSequenceLike
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|RegSequence
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// \brief Return true if this instruction behaves
+comment|/// the same way as the generic EXTRACT_SUBREG instructions.
+comment|/// E.g., on ARM,
+comment|/// rX, rY VMOVRRD dZ
+comment|/// is equivalent to two EXTRACT_SUBREG:
+comment|/// rX = EXTRACT_SUBREG dZ, ssub_0
+comment|/// rY = EXTRACT_SUBREG dZ, ssub_1
+comment|///
+comment|/// Note that for the optimizers to be able to take advantage of
+comment|/// this property, TargetInstrInfo::getExtractSubregLikeInputs has to be
+comment|/// override accordingly.
+name|bool
+name|isExtractSubregLike
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|ExtractSubreg
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// \brief Return true if this instruction behaves
+comment|/// the same way as the generic INSERT_SUBREG instructions.
+comment|/// E.g., on ARM,
+comment|/// dX = VSETLNi32 dY, rZ, Imm
+comment|/// is equivalent to a INSERT_SUBREG:
+comment|/// dX = INSERT_SUBREG dY, rZ, translateImmToSubIdx(Imm)
+comment|///
+comment|/// Note that for the optimizers to be able to take advantage of
+comment|/// this property, TargetInstrInfo::getInsertSubregLikeInputs has to be
+comment|/// override accordingly.
+name|bool
+name|isInsertSubregLike
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|IgnoreBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|InsertSubreg
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Side Effect Analysis
 comment|//===--------------------------------------------------------------------===//
@@ -1723,7 +2199,6 @@ argument_list|)
 decl|const
 block|{
 comment|// Only returns true for a bundle if all bundled instructions are cheap.
-comment|// FIXME: This probably requires a target hook.
 return|return
 name|hasProperty
 argument_list|(
@@ -1851,6 +2326,14 @@ name|void
 name|eraseFromParent
 parameter_list|()
 function_decl|;
+comment|/// Unlink 'this' from the containing basic block and delete it.
+comment|///
+comment|/// For all definitions mark their uses in DBG_VALUE nodes
+comment|/// as undefined. Otherwise like eraseFromParent().
+name|void
+name|eraseFromParentAndMarkDBGValuesForRemoval
+parameter_list|()
+function_decl|;
 comment|/// Unlink 'this' form its basic block and delete it.
 comment|///
 comment|/// If the instruction is part of a bundle, the other instructions in the
@@ -1859,50 +2342,6 @@ name|void
 name|eraseFromBundle
 parameter_list|()
 function_decl|;
-comment|/// isLabel - Returns true if the MachineInstr represents a label.
-comment|///
-name|bool
-name|isLabel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOpcode
-argument_list|()
-operator|==
-name|TargetOpcode
-operator|::
-name|PROLOG_LABEL
-operator|||
-name|getOpcode
-argument_list|()
-operator|==
-name|TargetOpcode
-operator|::
-name|EH_LABEL
-operator|||
-name|getOpcode
-argument_list|()
-operator|==
-name|TargetOpcode
-operator|::
-name|GC_LABEL
-return|;
-block|}
-name|bool
-name|isPrologLabel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOpcode
-argument_list|()
-operator|==
-name|TargetOpcode
-operator|::
-name|PROLOG_LABEL
-return|;
-block|}
 name|bool
 name|isEHLabel
 argument_list|()
@@ -1929,6 +2368,49 @@ operator|==
 name|TargetOpcode
 operator|::
 name|GC_LABEL
+return|;
+block|}
+comment|/// isLabel - Returns true if the MachineInstr represents a label.
+comment|///
+name|bool
+name|isLabel
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isEHLabel
+argument_list|()
+operator|||
+name|isGCLabel
+argument_list|()
+return|;
+block|}
+name|bool
+name|isCFIInstruction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOpcode
+argument_list|()
+operator|==
+name|TargetOpcode
+operator|::
+name|CFI_INSTRUCTION
+return|;
+block|}
+comment|// True if the instruction represents a position in the function.
+name|bool
+name|isPosition
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isLabel
+argument_list|()
+operator|||
+name|isCFIInstruction
+argument_list|()
 return|;
 block|}
 name|bool
@@ -2156,6 +2638,20 @@ name|getSubReg
 argument_list|()
 return|;
 block|}
+name|bool
+name|isExtractSubreg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOpcode
+argument_list|()
+operator|==
+name|TargetOpcode
+operator|::
+name|EXTRACT_SUBREG
+return|;
+block|}
 comment|/// isCopyLike - Return true if the instruction behaves like a copy.
 comment|/// This does not include native copy instructions.
 name|bool
@@ -2273,7 +2769,7 @@ case|:
 case|case
 name|TargetOpcode
 operator|::
-name|PROLOG_LABEL
+name|CFI_INSTRUCTION
 case|:
 case|case
 name|TargetOpcode
@@ -2321,7 +2817,7 @@ name|TargetRegisterInfo
 operator|*
 name|TRI
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 block|{
@@ -2375,8 +2871,7 @@ name|readsWritesVirtualRegister
 argument_list|(
 argument|unsigned Reg
 argument_list|,
-argument|SmallVectorImpl<unsigned> *Ops =
-literal|0
+argument|SmallVectorImpl<unsigned> *Ops = nullptr
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -2394,7 +2889,7 @@ name|TargetRegisterInfo
 operator|*
 name|TRI
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 block|{
@@ -2427,7 +2922,7 @@ name|TargetRegisterInfo
 operator|*
 name|TRI
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 block|{
@@ -2493,7 +2988,7 @@ name|TargetRegisterInfo
 operator|*
 name|TRI
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 block|{
@@ -2532,7 +3027,7 @@ name|TargetRegisterInfo
 operator|*
 name|TRI
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2555,7 +3050,7 @@ name|TargetRegisterInfo
 modifier|*
 name|TRI
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 block|{
 name|int
@@ -2578,7 +3073,7 @@ operator|-
 literal|1
 operator|)
 condition|?
-name|NULL
+name|nullptr
 else|:
 operator|&
 name|getOperand
@@ -2614,7 +3109,7 @@ name|TargetRegisterInfo
 operator|*
 name|TRI
 operator|=
-name|NULL
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2637,7 +3132,7 @@ name|TargetRegisterInfo
 modifier|*
 name|TRI
 init|=
-name|NULL
+name|nullptr
 parameter_list|)
 block|{
 name|int
@@ -2662,7 +3157,7 @@ operator|-
 literal|1
 operator|)
 condition|?
-name|NULL
+name|nullptr
 else|:
 operator|&
 name|getOperand
@@ -2699,7 +3194,7 @@ name|unsigned
 operator|*
 name|GroupNo
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2717,6 +3212,82 @@ name|getRegClassConstraint
 argument_list|(
 name|unsigned
 name|OpIdx
+argument_list|,
+specifier|const
+name|TargetInstrInfo
+operator|*
+name|TII
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Applies the constraints (def/use) implied by this MI on \p Reg to
+comment|/// the given \p CurRC.
+comment|/// If \p ExploreBundle is set and MI is part of a bundle, all the
+comment|/// instructions inside the bundle will be taken into account. In other words,
+comment|/// this method accumulates all the constrains of the operand of this MI and
+comment|/// the related bundle if MI is a bundle or inside a bundle.
+comment|///
+comment|/// Returns the register class that statisfies both \p CurRC and the
+comment|/// constraints set by MI. Returns NULL if such a register class does not
+comment|/// exist.
+comment|///
+comment|/// \pre CurRC must not be NULL.
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getRegClassConstraintEffectForVReg
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|CurRC
+argument_list|,
+specifier|const
+name|TargetInstrInfo
+operator|*
+name|TII
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|,
+name|bool
+name|ExploreBundle
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Applies the constraints (def/use) implied by the \p OpIdx operand
+comment|/// to the given \p CurRC.
+comment|///
+comment|/// Returns the register class that statisfies both \p CurRC and the
+comment|/// constraints set by \p OpIdx MI. Returns NULL if such a register class
+comment|/// does not exist.
+comment|///
+comment|/// \pre CurRC must not be NULL.
+comment|/// \pre The operand at \p OpIdx must be a register.
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getRegClassConstraintEffect
+argument_list|(
+name|unsigned
+name|OpIdx
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|CurRC
 argument_list|,
 specifier|const
 name|TargetInstrInfo
@@ -2771,7 +3342,7 @@ name|unsigned
 operator|*
 name|UseOpIdx
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 block|{
@@ -2825,7 +3396,7 @@ name|true
 return|;
 block|}
 comment|/// isRegTiedToDefOperand - Return true if the use operand of the specified
-comment|/// index is tied to an def operand. It also returns the def operand index by
+comment|/// index is tied to a def operand. It also returns the def operand index by
 comment|/// reference if DefOpIdx is not null.
 name|bool
 name|isRegTiedToDefOperand
@@ -2837,7 +3408,7 @@ name|unsigned
 operator|*
 name|DefOpIdx
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 decl|const
 block|{
@@ -2985,7 +3556,7 @@ name|TargetRegisterInfo
 modifier|*
 name|RegInfo
 init|=
-literal|0
+name|nullptr
 parameter_list|)
 function_decl|;
 comment|/// setPhysRegsDeadExcept - Mark every physreg used by this instruction as
@@ -3109,7 +3680,7 @@ name|TargetMachine
 operator|*
 name|TM
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|bool
 name|SkipOpers
@@ -3194,6 +3765,16 @@ block|{
 name|debugLoc
 operator|=
 name|dl
+expr_stmt|;
+name|assert
+argument_list|(
+name|debugLoc
+operator|.
+name|hasTrivialDestructor
+argument_list|()
+operator|&&
+literal|"Expected trivial destructor"
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// RemoveOperand - Erase an operand  from an instruction, leaving it with one
@@ -3361,6 +3942,37 @@ name|Type
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Implements the logic of getRegClassConstraintEffectForVReg for the
+comment|/// this MI and the given operand index \p OpIdx.
+comment|/// If the related operand does not constrained Reg, this returns CurRC.
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getRegClassConstraintEffectForVRegImpl
+argument_list|(
+name|unsigned
+name|OpIdx
+argument_list|,
+name|unsigned
+name|Reg
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|CurRC
+argument_list|,
+specifier|const
+name|TargetInstrInfo
+operator|*
+name|TII
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -3402,7 +4014,7 @@ name|getEmptyKey
 argument_list|()
 block|{
 return|return
-literal|0
+name|nullptr
 return|;
 block|}
 specifier|static

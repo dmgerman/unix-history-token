@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2013-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2013-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -2522,6 +2522,7 @@ condition|)
 goto|goto
 name|init_adminq_free_asq
 goto|;
+comment|/* VF has no need of firmware */
 if|if
 condition|(
 name|i40e_is_vf
@@ -2529,7 +2530,6 @@ argument_list|(
 name|hw
 argument_list|)
 condition|)
-comment|/* VF has no need of firmware */
 goto|goto
 name|init_adminq_exit
 goto|;
@@ -2555,6 +2555,13 @@ operator|->
 name|aq
 operator|.
 name|fw_min_ver
+argument_list|,
+operator|&
+name|hw
+operator|->
+name|aq
+operator|.
+name|fw_build
 argument_list|,
 operator|&
 name|hw
@@ -2615,7 +2622,7 @@ name|i40e_read_nvm_word
 argument_list|(
 name|hw
 argument_list|,
-name|I40E_SR_NVM_IMAGE_VERSION
+name|I40E_SR_NVM_DEV_STARTER_VERSION
 argument_list|,
 operator|&
 name|hw
@@ -2694,9 +2701,15 @@ name|hw
 operator|->
 name|aq
 operator|.
-name|nvm_busy
+name|nvm_release_on_done
 operator|=
 name|FALSE
+expr_stmt|;
+name|hw
+operator|->
+name|nvmupd_state
+operator|=
+name|I40E_NVMUPD_STATE_INIT
 expr_stmt|;
 name|ret_code
 operator|=
@@ -3252,37 +3265,6 @@ expr_stmt|;
 name|status
 operator|=
 name|I40E_ERR_QUEUE_EMPTY
-expr_stmt|;
-goto|goto
-name|asq_send_command_exit
-goto|;
-block|}
-if|if
-condition|(
-name|i40e_is_nvm_update_op
-argument_list|(
-name|desc
-argument_list|)
-operator|&&
-name|hw
-operator|->
-name|aq
-operator|.
-name|nvm_busy
-condition|)
-block|{
-name|i40e_debug
-argument_list|(
-name|hw
-argument_list|,
-name|I40E_DEBUG_AQ_MESSAGE
-argument_list|,
-literal|"AQTX: NVM busy.\n"
-argument_list|)
-expr_stmt|;
-name|status
-operator|=
-name|I40E_ERR_NVM
 expr_stmt|;
 goto|goto
 name|asq_send_command_exit
@@ -3953,24 +3935,6 @@ operator|=
 name|I40E_ERR_ADMIN_QUEUE_TIMEOUT
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|status
-operator|&&
-name|i40e_is_nvm_update_op
-argument_list|(
-name|desc
-argument_list|)
-condition|)
-name|hw
-operator|->
-name|aq
-operator|.
-name|nvm_busy
-operator|=
-name|TRUE
-expr_stmt|;
 name|asq_send_command_error
 label|:
 name|i40e_release_spinlock
@@ -4569,14 +4533,6 @@ name|desc
 argument_list|)
 condition|)
 block|{
-name|hw
-operator|->
-name|aq
-operator|.
-name|nvm_busy
-operator|=
-name|FALSE
-expr_stmt|;
 if|if
 condition|(
 name|hw

@@ -941,6 +941,9 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
+parameter_list|,
+name|u_int
+name|type
 parameter_list|)
 block|{
 comment|/* 	 * A trap can occur while DTrace executes a probe. Before 	 * executing the probe, DTrace blocks re-scheduling and sets 	 * a flag in its per-cpu flags to indicate that it doesn't 	 * want to fault. On returning from the probe, the no-fault 	 * flag is cleared and finally re-scheduling is enabled. 	 * 	 * Check if DTrace has enabled 'no-fault' mode: 	 */
@@ -963,9 +966,7 @@ block|{
 comment|/* 		 * There are only a couple of trap types that are expected. 		 * All the rest will be handled in the usual way. 		 */
 switch|switch
 condition|(
-name|frame
-operator|->
-name|exc
+name|type
 condition|)
 block|{
 comment|/* Page fault. */
@@ -994,10 +995,6 @@ name|cpuc_dtrace_illval
 operator|=
 name|frame
 operator|->
-name|cpu
-operator|.
-name|aim
-operator|.
 name|dar
 expr_stmt|;
 comment|/* 			 * Offset the instruction pointer to the instruction 			 * following the one causing the fault. 			 */

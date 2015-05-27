@@ -82,6 +82,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/iterator_range.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/IR/Attributes.h"
 end_include
 
@@ -179,6 +185,58 @@ init|=
 literal|1
 block|}
 enum|;
+comment|/// Returns true if the ordering is at least as strong as acquire
+comment|/// (i.e. acquire, acq_rel or seq_cst)
+specifier|inline
+name|bool
+name|isAtLeastAcquire
+parameter_list|(
+name|AtomicOrdering
+name|Ord
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Ord
+operator|==
+name|Acquire
+operator|||
+name|Ord
+operator|==
+name|AcquireRelease
+operator|||
+name|Ord
+operator|==
+name|SequentiallyConsistent
+operator|)
+return|;
+block|}
+comment|/// Returns true if the ordering is at least as strong as release
+comment|/// (i.e. release, acq_rel or seq_cst)
+specifier|inline
+name|bool
+name|isAtLeastRelease
+parameter_list|(
+name|AtomicOrdering
+name|Ord
+parameter_list|)
+block|{
+return|return
+operator|(
+name|Ord
+operator|==
+name|Release
+operator|||
+name|Ord
+operator|==
+name|AcquireRelease
+operator|||
+name|Ord
+operator|==
+name|SequentiallyConsistent
+operator|)
+return|;
+block|}
 comment|//===----------------------------------------------------------------------===//
 comment|//                                AllocaInst Class
 comment|//===----------------------------------------------------------------------===//
@@ -192,12 +250,12 @@ name|UnaryInstruction
 block|{
 name|protected
 operator|:
-name|virtual
 name|AllocaInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -212,7 +270,7 @@ name|Value
 operator|*
 name|ArraySize
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 specifier|const
 name|Twine
@@ -225,7 +283,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|AllocaInst
@@ -263,7 +321,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|AllocaInst
@@ -293,8 +351,7 @@ argument_list|,
 argument|const Twine&Name =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|AllocaInst
@@ -395,8 +452,12 @@ return|return
 operator|(
 literal|1u
 operator|<<
+operator|(
 name|getSubclassDataFromInstruction
 argument_list|()
+operator|&
+literal|31
+operator|)
 operator|)
 operator|>>
 literal|1
@@ -416,6 +477,48 @@ name|isStaticAlloca
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Return true if this alloca is used as an inalloca argument to a
+comment|/// call.  Such allocas are never considered static even if they are in the
+comment|/// entry block.
+name|bool
+name|isUsedWithInAlloca
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|&
+literal|32
+return|;
+block|}
+comment|/// \brief Specify whether this alloca is used to represent the arguments to
+comment|/// a call.
+name|void
+name|setUsedWithInAlloca
+argument_list|(
+argument|bool V
+argument_list|)
+block|{
+name|setInstructionSubclassData
+argument_list|(
+operator|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|&
+operator|~
+literal|32
+operator|)
+operator||
+operator|(
+name|V
+operator|?
+literal|32
+operator|:
+literal|0
+operator|)
+argument_list|)
+block|;   }
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -504,12 +607,12 @@ argument_list|()
 block|;
 name|protected
 operator|:
-name|virtual
 name|LoadInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -553,8 +656,7 @@ argument|const Twine&NameStr
 argument_list|,
 argument|bool isVolatile = false
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|LoadInst
@@ -578,8 +680,7 @@ argument|bool isVolatile
 argument_list|,
 argument|unsigned Align
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|LoadInst
@@ -609,8 +710,7 @@ argument|AtomicOrdering Order
 argument_list|,
 argument|SynchronizationScope SynchScope = CrossThread
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|LoadInst
@@ -667,13 +767,11 @@ name|LoadInst
 argument_list|(
 argument|Value *Ptr
 argument_list|,
-argument|const char *NameStr =
-literal|0
+argument|const char *NameStr = nullptr
 argument_list|,
 argument|bool isVolatile = false
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|LoadInst
@@ -722,9 +820,9 @@ operator|)
 operator||
 operator|(
 name|V
-operator|?
+condition|?
 literal|1
-operator|:
+else|:
 literal|0
 operator|)
 argument_list|)
@@ -859,18 +957,6 @@ literal|6
 operator|)
 argument_list|)
 block|;   }
-name|bool
-name|isAtomic
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOrdering
-argument_list|()
-operator|!=
-name|NotAtomic
-return|;
-block|}
 name|void
 name|setAtomic
 argument_list|(
@@ -1068,12 +1154,12 @@ argument_list|()
 block|;
 name|protected
 operator|:
-name|virtual
 name|StoreInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -1136,8 +1222,7 @@ argument|Value *Ptr
 argument_list|,
 argument|bool isVolatile = false
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|StoreInst
@@ -1161,8 +1246,7 @@ argument|bool isVolatile
 argument_list|,
 argument|unsigned Align
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|StoreInst
@@ -1192,8 +1276,7 @@ argument|AtomicOrdering Order
 argument_list|,
 argument|SynchronizationScope SynchScope = CrossThread
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|StoreInst
@@ -1391,18 +1474,6 @@ literal|6
 operator|)
 argument_list|)
 block|;   }
-name|bool
-name|isAtomic
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getOrdering
-argument_list|()
-operator|!=
-name|NotAtomic
-return|;
-block|}
 name|void
 name|setAtomic
 argument_list|(
@@ -1654,12 +1725,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|FenceInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -1694,8 +1765,7 @@ argument|AtomicOrdering Ordering
 argument_list|,
 argument|SynchronizationScope SynchScope = CrossThread
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|FenceInst
@@ -1887,19 +1957,21 @@ argument|Value *Cmp
 argument_list|,
 argument|Value *NewVal
 argument_list|,
-argument|AtomicOrdering Ordering
+argument|AtomicOrdering SuccessOrdering
+argument_list|,
+argument|AtomicOrdering FailureOrdering
 argument_list|,
 argument|SynchronizationScope SynchScope
 argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|AtomicCmpXchgInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -1932,12 +2004,13 @@ argument|Value *Cmp
 argument_list|,
 argument|Value *NewVal
 argument_list|,
-argument|AtomicOrdering Ordering
+argument|AtomicOrdering SuccessOrdering
+argument_list|,
+argument|AtomicOrdering FailureOrdering
 argument_list|,
 argument|SynchronizationScope SynchScope
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|AtomicCmpXchgInst
@@ -1948,7 +2021,9 @@ argument|Value *Cmp
 argument_list|,
 argument|Value *NewVal
 argument_list|,
-argument|AtomicOrdering Ordering
+argument|AtomicOrdering SuccessOrdering
+argument_list|,
+argument|AtomicOrdering FailureOrdering
 argument_list|,
 argument|SynchronizationScope SynchScope
 argument_list|,
@@ -1994,6 +2069,42 @@ operator|)
 name|V
 argument_list|)
 block|;   }
+comment|/// Return true if this cmpxchg may spuriously fail.
+name|bool
+name|isWeak
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|&
+literal|0x100
+return|;
+block|}
+name|void
+name|setWeak
+argument_list|(
+argument|bool IsWeak
+argument_list|)
+block|{
+name|setInstructionSubclassData
+argument_list|(
+operator|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|&
+operator|~
+literal|0x100
+operator|)
+operator||
+operator|(
+name|IsWeak
+operator|<<
+literal|8
+operator|)
+argument_list|)
+block|;   }
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -2002,7 +2113,7 @@ argument_list|)
 block|;
 comment|/// Set the ordering constraint on this cmpxchg.
 name|void
-name|setOrdering
+name|setSuccessOrdering
 argument_list|(
 argument|AtomicOrdering Ordering
 argument_list|)
@@ -2022,13 +2133,46 @@ operator|(
 name|getSubclassDataFromInstruction
 argument_list|()
 operator|&
-literal|3
+operator|~
+literal|0x1c
 operator|)
 operator||
 operator|(
 name|Ordering
 operator|<<
 literal|2
+operator|)
+argument_list|)
+block|;   }
+name|void
+name|setFailureOrdering
+argument_list|(
+argument|AtomicOrdering Ordering
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|Ordering
+operator|!=
+name|NotAtomic
+operator|&&
+literal|"CmpXchg instructions can only be atomic."
+argument_list|)
+block|;
+name|setInstructionSubclassData
+argument_list|(
+operator|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|&
+operator|~
+literal|0xe0
+operator|)
+operator||
+operator|(
+name|Ordering
+operator|<<
+literal|5
 operator|)
 argument_list|)
 block|;   }
@@ -2060,17 +2204,41 @@ argument_list|)
 block|;   }
 comment|/// Returns the ordering constraint on this cmpxchg.
 name|AtomicOrdering
-name|getOrdering
+name|getSuccessOrdering
 argument_list|()
 specifier|const
 block|{
 return|return
 name|AtomicOrdering
 argument_list|(
+operator|(
 name|getSubclassDataFromInstruction
 argument_list|()
 operator|>>
 literal|2
+operator|)
+operator|&
+literal|7
+argument_list|)
+return|;
+block|}
+comment|/// Returns the ordering constraint on this cmpxchg.
+name|AtomicOrdering
+name|getFailureOrdering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AtomicOrdering
+argument_list|(
+operator|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|>>
+literal|5
+operator|)
+operator|&
+literal|7
 argument_list|)
 return|;
 block|}
@@ -2199,6 +2367,57 @@ name|getPointerAddressSpace
 argument_list|()
 return|;
 block|}
+comment|/// \brief Returns the strongest permitted ordering on failure, given the
+comment|/// desired ordering on success.
+comment|///
+comment|/// If the comparison in a cmpxchg operation fails, there is no atomic store
+comment|/// so release semantics cannot be provided. So this function drops explicit
+comment|/// Release requests from the AtomicOrdering. A SequentiallyConsistent
+comment|/// operation would remain SequentiallyConsistent.
+specifier|static
+name|AtomicOrdering
+name|getStrongestFailureOrdering
+argument_list|(
+argument|AtomicOrdering SuccessOrdering
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|SuccessOrdering
+condition|)
+block|{
+default|default:
+name|llvm_unreachable
+argument_list|(
+literal|"invalid cmpxchg success ordering"
+argument_list|)
+expr_stmt|;
+case|case
+name|Release
+case|:
+case|case
+name|Monotonic
+case|:
+return|return
+name|Monotonic
+return|;
+case|case
+name|AcquireRelease
+case|:
+case|case
+name|Acquire
+case|:
+return|return
+name|Acquire
+return|;
+case|case
+name|SequentiallyConsistent
+case|:
+return|return
+name|SequentiallyConsistent
+return|;
+block|}
+block|}
 comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
 specifier|static
 specifier|inline
@@ -2317,12 +2536,12 @@ name|LLVM_DELETED_FUNCTION
 block|;
 name|protected
 operator|:
-name|virtual
 name|AtomicRMWInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -2345,7 +2564,7 @@ block|,
 comment|/// *p = old& v
 name|And
 block|,
-comment|/// *p = ~old& v
+comment|/// *p = ~(old& v)
 name|Nand
 block|,
 comment|/// *p = old | v
@@ -2410,8 +2629,7 @@ argument|AtomicOrdering Ordering
 argument_list|,
 argument|SynchronizationScope SynchScope
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|AtomicRMWInst
@@ -2903,12 +3121,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|GetElementPtrInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -2924,8 +3142,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 name|unsigned
@@ -3020,8 +3237,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 name|GetElementPtrInst
@@ -3697,12 +3913,12 @@ block|;   }
 name|protected
 operator|:
 comment|/// \brief Clone an identical ICmpInst
-name|virtual
 name|ICmpInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -4077,12 +4293,12 @@ block|{
 name|protected
 operator|:
 comment|/// \brief Clone an identical FCmpInst
-name|virtual
 name|FCmpInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -4605,46 +4821,6 @@ operator|*
 name|InsertAtEnd
 argument_list|)
 block|;
-name|CallInst
-argument_list|(
-name|Value
-operator|*
-name|F
-argument_list|,
-name|Value
-operator|*
-name|Actual
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
-argument_list|,
-name|Instruction
-operator|*
-name|InsertBefore
-argument_list|)
-block|;
-name|CallInst
-argument_list|(
-name|Value
-operator|*
-name|F
-argument_list|,
-name|Value
-operator|*
-name|Actual
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|NameStr
-argument_list|,
-name|BasicBlock
-operator|*
-name|InsertAtEnd
-argument_list|)
-block|;
 name|explicit
 name|CallInst
 argument_list|(
@@ -4680,12 +4856,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|CallInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -4701,8 +4877,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -4767,8 +4942,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -4844,13 +5018,13 @@ name|Value
 operator|*
 name|ArraySize
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|Function
 operator|*
 name|MallocF
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 specifier|const
 name|Twine
@@ -4885,13 +5059,13 @@ name|Value
 operator|*
 name|ArraySize
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|Function
 operator|*
 name|MallocF
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 specifier|const
 name|Twine
@@ -4934,16 +5108,68 @@ operator|~
 name|CallInst
 argument_list|()
 block|;
+comment|// Note that 'musttail' implies 'tail'.
+block|enum
+name|TailCallKind
+block|{
+name|TCK_None
+operator|=
+literal|0
+block|,
+name|TCK_Tail
+operator|=
+literal|1
+block|,
+name|TCK_MustTail
+operator|=
+literal|2
+block|}
+block|;
+name|TailCallKind
+name|getTailCallKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TailCallKind
+argument_list|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|&
+literal|3
+argument_list|)
+return|;
+block|}
 name|bool
 name|isTailCall
 argument_list|()
 specifier|const
 block|{
 return|return
+operator|(
 name|getSubclassDataFromInstruction
 argument_list|()
 operator|&
-literal|1
+literal|3
+operator|)
+operator|!=
+name|TCK_None
+return|;
+block|}
+name|bool
+name|isMustTailCall
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|&
+literal|3
+operator|)
+operator|==
+name|TCK_MustTail
 return|;
 block|}
 name|void
@@ -4959,12 +5185,38 @@ name|getSubclassDataFromInstruction
 argument_list|()
 operator|&
 operator|~
-literal|1
+literal|3
 operator|)
 operator||
 name|unsigned
 argument_list|(
 name|isTC
+operator|?
+name|TCK_Tail
+operator|:
+name|TCK_None
+argument_list|)
+argument_list|)
+block|;   }
+name|void
+name|setTailCallKind
+argument_list|(
+argument|TailCallKind TCK
+argument_list|)
+block|{
+name|setInstructionSubclassData
+argument_list|(
+operator|(
+name|getSubclassDataFromInstruction
+argument_list|()
+operator|&
+operator|~
+literal|3
+operator|)
+operator||
+name|unsigned
+argument_list|(
+name|TCK
 argument_list|)
 argument_list|)
 block|;   }
@@ -5020,6 +5272,88 @@ argument_list|,
 name|v
 argument_list|)
 block|; }
+comment|/// arg_operands - iteration adapter for range-for loops.
+name|iterator_range
+operator|<
+name|op_iterator
+operator|>
+name|arg_operands
+argument_list|()
+block|{
+comment|// The last operand in the op list is the callee - it's not one of the args
+comment|// so we don't want to iterate over it.
+return|return
+name|iterator_range
+operator|<
+name|op_iterator
+operator|>
+operator|(
+name|op_begin
+argument_list|()
+expr|,
+name|op_end
+argument_list|()
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+comment|/// arg_operands - iteration adapter for range-for loops.
+name|iterator_range
+operator|<
+name|const_op_iterator
+operator|>
+name|arg_operands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|const_op_iterator
+operator|>
+operator|(
+name|op_begin
+argument_list|()
+expr|,
+name|op_end
+argument_list|()
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+comment|/// \brief Wrappers for getting the \c Use of a call argument.
+specifier|const
+name|Use
+operator|&
+name|getArgOperandUse
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getOperandUse
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
+name|Use
+operator|&
+name|getArgOperandUse
+argument_list|(
+argument|unsigned i
+argument_list|)
+block|{
+return|return
+name|getOperandUse
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
 comment|/// getCallingConv/setCallingConv - Get or set the calling convention of this
 comment|/// function call.
 name|CallingConv
@@ -5040,7 +5374,7 @@ operator|(
 name|getSubclassDataFromInstruction
 argument_list|()
 operator|>>
-literal|1
+literal|2
 operator|)
 return|;
 block|}
@@ -5056,7 +5390,7 @@ operator|(
 name|getSubclassDataFromInstruction
 argument_list|()
 operator|&
-literal|1
+literal|3
 operator|)
 operator||
 operator|(
@@ -5068,7 +5402,7 @@ operator|(
 name|CC
 operator|)
 operator|<<
-literal|1
+literal|2
 operator|)
 argument_list|)
 block|;   }
@@ -5163,6 +5497,24 @@ return|return
 name|AttributeList
 operator|.
 name|getParamAlignment
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
+comment|/// \brief Extract the number of dereferenceable bytes for a call or
+comment|/// parameter (0=unknown).
+name|uint64_t
+name|getDereferenceableBytes
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|AttributeList
+operator|.
+name|getDereferenceableBytes
 argument_list|(
 name|i
 argument_list|)
@@ -5914,12 +6266,12 @@ argument_list|)
 block|;   }
 name|protected
 operator|:
-name|virtual
 name|SelectInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -5937,8 +6289,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -6219,12 +6570,12 @@ name|UnaryInstruction
 block|{
 name|protected
 operator|:
-name|virtual
 name|VAArgInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -6249,7 +6600,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 operator|:
 name|UnaryInstruction
@@ -6421,7 +6772,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|ExtractElementInst
@@ -6446,12 +6797,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|ExtractElementInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -6467,8 +6818,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -6734,7 +7084,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|InsertElementInst
@@ -6763,12 +7113,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|InsertElementInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -6786,8 +7136,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -6982,12 +7331,12 @@ name|Instruction
 block|{
 name|protected
 operator|:
-name|virtual
 name|ShuffleVectorInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -7037,7 +7386,7 @@ name|Instruction
 operator|*
 name|InsertBefor
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|ShuffleVectorInst
@@ -7414,12 +7763,12 @@ return|;
 block|}
 name|protected
 operator|:
-name|virtual
 name|ExtractValueInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -7435,8 +7784,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -7873,8 +8221,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 name|InsertValueInst
@@ -7892,12 +8239,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|InsertValueInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -7936,8 +8283,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -8381,8 +8727,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 operator|:
 name|Instruction
@@ -8393,7 +8738,7 @@ name|Instruction
 operator|::
 name|PHI
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
 literal|0
 argument_list|,
@@ -8436,7 +8781,7 @@ name|Instruction
 operator|::
 name|PHI
 argument_list|,
-literal|0
+name|nullptr
 argument_list|,
 literal|0
 argument_list|,
@@ -8473,12 +8818,12 @@ argument|unsigned
 argument_list|)
 specifier|const
 block|;
-name|virtual
 name|PHINode
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -8496,8 +8841,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -8791,16 +9135,11 @@ block|}
 comment|/// getIncomingBlock - Return incoming basic block corresponding
 comment|/// to value use iterator.
 comment|///
-name|template
-operator|<
-name|typename
-name|U
-operator|>
 name|BasicBlock
 operator|*
 name|getIncomingBlock
 argument_list|(
-argument|value_use_iterator<U> I
+argument|Value::const_user_iterator I
 argument_list|)
 specifier|const
 block|{
@@ -9236,12 +9575,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|LandingPadInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -9261,8 +9600,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|;
 specifier|static
@@ -9347,18 +9685,18 @@ literal|0
 operator|)
 argument_list|)
 block|;   }
-comment|/// addClause - Add a catch or filter clause to the landing pad.
+comment|/// Add a catch or filter clause to the landing pad.
 name|void
 name|addClause
 argument_list|(
-name|Value
+name|Constant
 operator|*
 name|ClauseVal
 argument_list|)
 block|;
-comment|/// getClause - Get the value of the clause at index Idx. Use isCatch/isFilter
-comment|/// to determine what type of clause this is.
-name|Value
+comment|/// Get the value of the clause at index Idx. Use isCatch/isFilter to
+comment|/// determine what type of clause this is.
+name|Constant
 operator|*
 name|getClause
 argument_list|(
@@ -9367,12 +9705,18 @@ argument_list|)
 specifier|const
 block|{
 return|return
+name|cast
+operator|<
+name|Constant
+operator|>
+operator|(
 name|OperandList
 index|[
 name|Idx
 operator|+
 literal|1
 index|]
+operator|)
 return|;
 block|}
 comment|/// isCatch - Return 'true' if the clause and index Idx is a catch clause.
@@ -9572,13 +9916,13 @@ name|Value
 operator|*
 name|retVal
 operator|=
-literal|0
+name|nullptr
 argument_list|,
 name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|ReturnInst
@@ -9610,12 +9954,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|ReturnInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -9626,11 +9970,9 @@ name|Create
 argument_list|(
 argument|LLVMContext&C
 argument_list|,
-argument|Value *retVal =
-literal|0
+argument|Value *retVal = nullptr
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -9727,7 +10069,7 @@ argument_list|(
 literal|0
 argument_list|)
 else|:
-literal|0
+name|nullptr
 return|;
 block|}
 name|unsigned
@@ -9792,7 +10134,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|BasicBlock
 operator|*
 name|getSuccessorV
@@ -9800,14 +10141,14 @@ argument_list|(
 argument|unsigned idx
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getNumSuccessorsV
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|setSuccessorV
 argument_list|(
@@ -9815,6 +10156,7 @@ argument|unsigned idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
+name|override
 block|; }
 block|;
 name|template
@@ -9885,7 +10227,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|BranchInst
@@ -9906,7 +10248,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|BranchInst
@@ -9941,12 +10283,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|BranchInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -9957,8 +10299,7 @@ name|Create
 argument_list|(
 argument|BasicBlock *IfTrue
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -9985,8 +10326,7 @@ argument|BasicBlock *IfFalse
 argument_list|,
 argument|Value *Cond
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -10292,7 +10632,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|BasicBlock
 operator|*
 name|getSuccessorV
@@ -10300,14 +10639,14 @@ argument_list|(
 argument|unsigned idx
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getNumSuccessorsV
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|setSuccessorV
 argument_list|(
@@ -10315,6 +10654,7 @@ argument|unsigned idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
+name|override
 block|; }
 block|;
 name|template
@@ -10446,12 +10786,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|SwitchInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -10863,6 +11203,18 @@ operator|!=
 name|Index
 return|;
 block|}
+name|Self
+operator|&
+name|operator
+operator|*
+operator|(
+operator|)
+block|{
+return|return
+operator|*
+name|this
+return|;
+block|}
 expr|}
 block|;
 typedef|typedef
@@ -11001,8 +11353,7 @@ argument|BasicBlock *Default
 argument_list|,
 argument|unsigned NumCases
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -11203,6 +11554,51 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// cases - iteration adapter for range-for loops.
+name|iterator_range
+operator|<
+name|CaseIt
+operator|>
+name|cases
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|CaseIt
+operator|>
+operator|(
+name|case_begin
+argument_list|()
+expr|,
+name|case_end
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// cases - iteration adapter for range-for loops.
+name|iterator_range
+operator|<
+name|ConstCaseIt
+operator|>
+name|cases
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|ConstCaseIt
+operator|>
+operator|(
+name|case_begin
+argument_list|()
+expr|,
+name|case_end
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// Returns an iterator that points to the default case.
 comment|/// Note: this iterator allows to resolve successor only. Attempt
 comment|/// to resolve case value causes an assertion.
@@ -11343,13 +11739,13 @@ name|getDefaultDest
 argument_list|()
 condition|)
 return|return
-name|NULL
+name|nullptr
 return|;
 name|ConstantInt
 operator|*
 name|CI
 operator|=
-name|NULL
+name|nullptr
 block|;
 for|for
 control|(
@@ -11387,7 +11783,7 @@ condition|(
 name|CI
 condition|)
 return|return
-name|NULL
+name|nullptr
 return|;
 comment|// Multiple cases lead to BB.
 else|else
@@ -11563,7 +11959,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|BasicBlock
 operator|*
 name|getSuccessorV
@@ -11571,14 +11966,14 @@ argument_list|(
 argument|unsigned idx
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getNumSuccessorsV
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|setSuccessorV
 argument_list|(
@@ -11586,6 +11981,7 @@ argument|unsigned idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
+name|override
 block|; }
 block|;
 name|template
@@ -11709,12 +12105,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|IndirectBrInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -11727,8 +12123,7 @@ argument|Value *Address
 argument_list|,
 argument|unsigned NumDests
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -11987,7 +12382,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|BasicBlock
 operator|*
 name|getSuccessorV
@@ -11995,14 +12389,14 @@ argument_list|(
 argument|unsigned idx
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getNumSuccessorsV
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|setSuccessorV
 argument_list|(
@@ -12010,6 +12404,7 @@ argument|unsigned idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
+name|override
 block|; }
 block|;
 name|template
@@ -12129,12 +12524,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|InvokeInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -12154,8 +12549,7 @@ argument_list|,
 argument|const Twine&NameStr =
 literal|""
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 name|unsigned
@@ -12300,6 +12694,86 @@ argument_list|,
 name|v
 argument_list|)
 block|; }
+comment|/// arg_operands - iteration adapter for range-for loops.
+name|iterator_range
+operator|<
+name|op_iterator
+operator|>
+name|arg_operands
+argument_list|()
+block|{
+return|return
+name|iterator_range
+operator|<
+name|op_iterator
+operator|>
+operator|(
+name|op_begin
+argument_list|()
+expr|,
+name|op_end
+argument_list|()
+operator|-
+literal|3
+operator|)
+return|;
+block|}
+comment|/// arg_operands - iteration adapter for range-for loops.
+name|iterator_range
+operator|<
+name|const_op_iterator
+operator|>
+name|arg_operands
+argument_list|()
+specifier|const
+block|{
+return|return
+name|iterator_range
+operator|<
+name|const_op_iterator
+operator|>
+operator|(
+name|op_begin
+argument_list|()
+expr|,
+name|op_end
+argument_list|()
+operator|-
+literal|3
+operator|)
+return|;
+block|}
+comment|/// \brief Wrappers for getting the \c Use of a invoke argument.
+specifier|const
+name|Use
+operator|&
+name|getArgOperandUse
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getOperandUse
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
+name|Use
+operator|&
+name|getArgOperandUse
+argument_list|(
+argument|unsigned i
+argument_list|)
+block|{
+return|return
+name|getOperandUse
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
 comment|/// getCallingConv/setCallingConv - Get or set the calling convention of this
 comment|/// function call.
 name|CallingConv
@@ -12430,6 +12904,24 @@ return|return
 name|AttributeList
 operator|.
 name|getParamAlignment
+argument_list|(
+name|i
+argument_list|)
+return|;
+block|}
+comment|/// \brief Extract the number of dereferenceable bytes for a call or
+comment|/// parameter (0=unknown).
+name|uint64_t
+name|getDereferenceableBytes
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|{
+return|return
+name|AttributeList
+operator|.
+name|getDereferenceableBytes
 argument_list|(
 name|i
 argument_list|)
@@ -12612,6 +13104,36 @@ argument_list|,
 name|Attribute
 operator|::
 name|NoUnwind
+argument_list|)
+block|;   }
+comment|/// \brief Determine if the invoke cannot be duplicated.
+name|bool
+name|cannotDuplicate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|NoDuplicate
+argument_list|)
+return|;
+block|}
+name|void
+name|setCannotDuplicate
+argument_list|()
+block|{
+name|addAttribute
+argument_list|(
+name|AttributeSet
+operator|::
+name|FunctionIndex
+argument_list|,
+name|Attribute
+operator|::
+name|NoDuplicate
 argument_list|)
 block|;   }
 comment|/// \brief Determine if the call returns a structure through first
@@ -12956,7 +13478,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|BasicBlock
 operator|*
 name|getSuccessorV
@@ -12964,14 +13485,14 @@ argument_list|(
 argument|unsigned idx
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getNumSuccessorsV
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|setSuccessorV
 argument_list|(
@@ -12979,6 +13500,7 @@ argument|unsigned idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
+name|override
 block|;
 name|bool
 name|hasFnAttrImpl
@@ -13149,7 +13671,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|ResumeInst
@@ -13165,12 +13687,12 @@ argument_list|)
 block|;
 name|protected
 operator|:
-name|virtual
 name|ResumeInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -13181,8 +13703,7 @@ name|Create
 argument_list|(
 argument|Value *Exn
 argument_list|,
-argument|Instruction *InsertBefore =
-literal|0
+argument|Instruction *InsertBefore = nullptr
 argument_list|)
 block|{
 return|return
@@ -13303,7 +13824,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|BasicBlock
 operator|*
 name|getSuccessorV
@@ -13311,14 +13831,14 @@ argument_list|(
 argument|unsigned idx
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getNumSuccessorsV
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|setSuccessorV
 argument_list|(
@@ -13326,6 +13846,7 @@ argument|unsigned idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
+name|override
 block|; }
 block|;
 name|template
@@ -13379,12 +13900,12 @@ name|LLVM_DELETED_FUNCTION
 block|;
 name|protected
 operator|:
-name|virtual
 name|UnreachableInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -13420,7 +13941,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 argument_list|)
 block|;
 name|explicit
@@ -13495,7 +14016,6 @@ return|;
 block|}
 name|private
 operator|:
-name|virtual
 name|BasicBlock
 operator|*
 name|getSuccessorV
@@ -13503,14 +14023,14 @@ argument_list|(
 argument|unsigned idx
 argument_list|)
 specifier|const
+name|override
 block|;
-name|virtual
 name|unsigned
 name|getNumSuccessorsV
 argument_list|()
 specifier|const
+name|override
 block|;
-name|virtual
 name|void
 name|setSuccessorV
 argument_list|(
@@ -13518,6 +14038,7 @@ argument|unsigned idx
 argument_list|,
 argument|BasicBlock *B
 argument_list|)
+name|override
 block|; }
 block|;
 comment|//===----------------------------------------------------------------------===//
@@ -13533,12 +14054,12 @@ block|{
 name|protected
 operator|:
 comment|/// \brief Clone an identical TruncInst
-name|virtual
 name|TruncInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -13567,7 +14088,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Where to insert the new instruction
 argument_list|)
 block|;
@@ -13658,12 +14179,12 @@ block|{
 name|protected
 operator|:
 comment|/// \brief Clone an identical ZExtInst
-name|virtual
 name|ZExtInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -13692,7 +14213,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Where to insert the new instruction
 argument_list|)
 block|;
@@ -13783,12 +14304,12 @@ block|{
 name|protected
 operator|:
 comment|/// \brief Clone an identical SExtInst
-name|virtual
 name|SExtInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -13817,7 +14338,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Where to insert the new instruction
 argument_list|)
 block|;
@@ -13908,12 +14429,12 @@ block|{
 name|protected
 operator|:
 comment|/// \brief Clone an identical FPTruncInst
-name|virtual
 name|FPTruncInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -13942,7 +14463,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Where to insert the new instruction
 argument_list|)
 block|;
@@ -14033,12 +14554,12 @@ block|{
 name|protected
 operator|:
 comment|/// \brief Clone an identical FPExtInst
-name|virtual
 name|FPExtInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -14067,7 +14588,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Where to insert the new instruction
 argument_list|)
 block|;
@@ -14158,12 +14679,12 @@ block|{
 name|protected
 operator|:
 comment|/// \brief Clone an identical UIToFPInst
-name|virtual
 name|UIToFPInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -14192,7 +14713,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Where to insert the new instruction
 argument_list|)
 block|;
@@ -14283,12 +14804,12 @@ block|{
 name|protected
 operator|:
 comment|/// \brief Clone an identical SIToFPInst
-name|virtual
 name|SIToFPInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -14317,7 +14838,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Where to insert the new instruction
 argument_list|)
 block|;
@@ -14408,12 +14929,12 @@ block|{
 name|protected
 operator|:
 comment|/// \brief Clone an identical FPToUIInst
-name|virtual
 name|FPToUIInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -14442,7 +14963,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Where to insert the new instruction
 argument_list|)
 block|;
@@ -14533,12 +15054,12 @@ block|{
 name|protected
 operator|:
 comment|/// \brief Clone an identical FPToSIInst
-name|virtual
 name|FPToSIInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -14567,7 +15088,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Where to insert the new instruction
 argument_list|)
 block|;
@@ -14682,7 +15203,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Where to insert the new instruction
 argument_list|)
 block|;
@@ -14712,12 +15233,12 @@ comment|///< The block to insert the instruction into
 argument_list|)
 block|;
 comment|/// \brief Clone an identical IntToPtrInst
-name|virtual
 name|IntToPtrInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 comment|/// \brief Returns the address space of this instruction's pointer type.
 name|unsigned
@@ -14795,12 +15316,12 @@ block|{
 name|protected
 operator|:
 comment|/// \brief Clone an identical PtrToIntInst
-name|virtual
 name|PtrToIntInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -14829,7 +15350,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Where to insert the new instruction
 argument_list|)
 block|;
@@ -14975,12 +15496,12 @@ block|{
 name|protected
 operator|:
 comment|/// \brief Clone an identical BitCastInst
-name|virtual
 name|BitCastInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -15009,7 +15530,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Where to insert the new instruction
 argument_list|)
 block|;
@@ -15101,12 +15622,12 @@ block|{
 name|protected
 operator|:
 comment|/// \brief Clone an identical AddrSpaceCastInst
-name|virtual
 name|AddrSpaceCastInst
 operator|*
 name|clone_impl
 argument_list|()
 specifier|const
+name|override
 block|;
 name|public
 operator|:
@@ -15135,7 +15656,7 @@ name|Instruction
 operator|*
 name|InsertBefore
 operator|=
-literal|0
+name|nullptr
 comment|///< Where to insert the new instruction
 argument_list|)
 block|;

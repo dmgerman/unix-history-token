@@ -52,12 +52,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/OwningPtr.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/SmallString.h"
 end_include
 
@@ -71,6 +65,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/MC/MCObjectWriter.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/StringTableBuilder.h"
 end_include
 
 begin_include
@@ -296,9 +296,9 @@ specifier|const
 block|;   }
 block|;
 comment|/// The target specific Mach-O writer instance.
-name|llvm
+name|std
 operator|::
-name|OwningPtr
+name|unique_ptr
 operator|<
 name|MCMachObjectTargetWriter
 operator|>
@@ -340,10 +340,7 @@ block|;
 comment|/// @}
 comment|/// @name Symbol Table Data
 comment|/// @{
-name|SmallString
-operator|<
-literal|256
-operator|>
+name|StringTableBuilder
 name|StringTable
 block|;
 name|std
@@ -371,6 +368,16 @@ operator|>
 name|UndefinedSymbolData
 block|;
 comment|/// @}
+name|MachSymbolData
+operator|*
+name|findSymbolData
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|&
+name|Sym
+argument_list|)
+block|;
 name|public
 operator|:
 name|MachObjectWriter
@@ -396,10 +403,10 @@ argument_list|)
 block|{   }
 comment|/// @name Lifetime management Methods
 comment|/// @{
-name|virtual
 name|void
 name|reset
 argument_list|()
+name|override
 block|;
 comment|/// @}
 comment|/// @name Utility Methods
@@ -492,7 +499,7 @@ argument_list|()
 return|;
 block|}
 name|bool
-name|isARM
+name|isX86_64
 argument_list|()
 specifier|const
 block|{
@@ -503,18 +510,13 @@ name|TargetObjectWriter
 operator|->
 name|getCPUType
 argument_list|()
-operator|&
-operator|~
-name|MachO
-operator|::
-name|CPU_ARCH_MASK
 block|;
 return|return
 name|CPUType
 operator|==
 name|MachO
 operator|::
-name|CPU_TYPE_ARM
+name|CPU_TYPE_X86_64
 return|;
 block|}
 comment|/// @}
@@ -709,8 +711,11 @@ argument|const MCFixup&Fixup
 argument_list|,
 argument|MCValue Target
 argument_list|,
+argument|bool&IsPCRel
+argument_list|,
 argument|uint64_t&FixedValue
 argument_list|)
+name|override
 block|;
 name|void
 name|BindIndirectSymbols
@@ -722,20 +727,12 @@ argument_list|)
 block|;
 comment|/// ComputeSymbolTable - Compute the symbol table data
 comment|///
-comment|/// \param StringTable [out] - The string table data.
 name|void
 name|ComputeSymbolTable
 argument_list|(
 name|MCAssembler
 operator|&
 name|Asm
-argument_list|,
-name|SmallString
-operator|<
-literal|256
-operator|>
-operator|&
-name|StringTable
 argument_list|,
 name|std
 operator|::
@@ -795,17 +792,12 @@ block|;
 name|void
 name|ExecutePostLayoutBinding
 argument_list|(
-name|MCAssembler
-operator|&
-name|Asm
+argument|MCAssembler&Asm
 argument_list|,
-specifier|const
-name|MCAsmLayout
-operator|&
-name|Layout
+argument|const MCAsmLayout&Layout
 argument_list|)
+name|override
 block|;
-name|virtual
 name|bool
 name|IsSymbolRefDifferenceFullyResolvedImpl
 argument_list|(
@@ -820,19 +812,16 @@ argument_list|,
 argument|bool IsPCRel
 argument_list|)
 specifier|const
+name|override
 block|;
 name|void
 name|WriteObject
 argument_list|(
-name|MCAssembler
-operator|&
-name|Asm
+argument|MCAssembler&Asm
 argument_list|,
-specifier|const
-name|MCAsmLayout
-operator|&
-name|Layout
+argument|const MCAsmLayout&Layout
 argument_list|)
+name|override
 block|; }
 decl_stmt|;
 comment|/// \brief Construct a new Mach-O writer instance.

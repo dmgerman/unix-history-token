@@ -2088,13 +2088,14 @@ condition|)
 return|return
 name|EINVAL
 return|;
+comment|/* 	 * Earlier chips (< AR5212) have up to 8 GPIO 	 * pins exposed. 	 * 	 * AR5416 and later chips have many more GPIO 	 * pins (up to 16) so the mask is expanded to 	 * four bits. 	 */
 name|sc
 operator|->
 name|sc_rfsilentpin
 operator|=
 name|rfsilent
 operator|&
-literal|0x1c
+literal|0x3c
 expr_stmt|;
 name|sc
 operator|->

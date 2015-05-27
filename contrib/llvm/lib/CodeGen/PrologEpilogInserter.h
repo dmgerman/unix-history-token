@@ -70,13 +70,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CODEGEN_PEI_H
+name|LLVM_LIB_CODEGEN_PROLOGEPILOGINSERTER_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CODEGEN_PEI_H
+name|LLVM_LIB_CODEGEN_PROLOGEPILOGINSERTER_H
 end_define
 
 begin_include
@@ -154,13 +154,13 @@ name|getPassRegistry
 argument_list|()
 argument_list|)
 block|;     }
-name|virtual
 name|void
 name|getAnalysisUsage
 argument_list|(
 argument|AnalysisUsage&AU
 argument_list|)
 specifier|const
+name|override
 block|;
 comment|/// runOnMachineFunction - Insert prolog/epilog code and replace abstract
 comment|/// frame indexes with appropriate references.
@@ -168,10 +168,9 @@ comment|///
 name|bool
 name|runOnMachineFunction
 argument_list|(
-name|MachineFunction
-operator|&
-name|Fn
+argument|MachineFunction&Fn
 argument_list|)
+name|override
 block|;
 name|private
 operator|:

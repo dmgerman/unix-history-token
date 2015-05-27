@@ -201,6 +201,10 @@ name|t_protocol
 decl_stmt|;
 name|char
 modifier|*
+name|t_offload
+decl_stmt|;
+name|char
+modifier|*
 name|t_user
 decl_stmt|;
 name|char

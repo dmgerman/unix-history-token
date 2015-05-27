@@ -2224,7 +2224,7 @@ decl_stmt|,
 name|do_read
 decl_stmt|;
 name|size_t
-name|dummy
+name|len
 decl_stmt|;
 name|int
 name|graphdepth
@@ -2359,15 +2359,6 @@ operator|.
 name|pa_fsroot
 operator|=
 literal|""
-expr_stmt|;
-name|args
-operator|.
-name|pa_kernel
-operator|=
-name|strdup
-argument_list|(
-literal|"/boot/kernel"
-argument_list|)
 expr_stmt|;
 name|args
 operator|.
@@ -2513,8 +2504,78 @@ operator|&
 name|cpumask
 argument_list|)
 expr_stmt|;
+comment|/* Default to using the running system kernel. */
+name|len
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"kern.bootfile"
+argument_list|,
+name|NULL
+argument_list|,
+operator|&
+name|len
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: Cannot determine path of running kernel"
+argument_list|)
+expr_stmt|;
+name|args
+operator|.
+name|pa_kernel
+operator|=
+name|malloc
+argument_list|(
+name|len
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sysctlbyname
+argument_list|(
+literal|"kern.bootfile"
+argument_list|,
+name|args
+operator|.
+name|pa_kernel
+argument_list|,
+operator|&
+name|len
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"ERROR: Cannot determine path of running kernel"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * The initial CPU mask specifies all non-halted CPUS in the 	 * system. 	 */
-name|dummy
+name|len
 operator|=
 sizeof|sizeof
 argument_list|(
@@ -2531,7 +2592,7 @@ operator|&
 name|ncpu
 argument_list|,
 operator|&
-name|dummy
+name|len
 argument_list|,
 name|NULL
 argument_list|,
@@ -3995,7 +4056,7 @@ literal|"ERROR: options -T and -l are mutually "
 literal|"exclusive."
 argument_list|)
 expr_stmt|;
-comment|/* -m option is allowed with -R only. */
+comment|/* -a and -m require -R */
 if|if
 condition|(
 name|args
@@ -4553,16 +4614,7 @@ argument_list|,
 literal|"ERROR: option -O is required if counting and sampling PMCs are specified together."
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if "-k kerneldir" was specified, and if whether 	 * 'kerneldir' actually refers to a file.  If so, use 	 * `dirname path` to determine the kernel directory. 	 */
-if|if
-condition|(
-name|args
-operator|.
-name|pa_flags
-operator|&
-name|FLAG_HAS_KERNELPATH
-condition|)
-block|{
+comment|/* 	 * Check if 'kerneldir' refers to a file rather than a 	 * directory.  If so, use `dirname path` to determine the 	 * kernel directory. 	 */
 operator|(
 name|void
 operator|)
@@ -4733,7 +4785,6 @@ argument_list|,
 name|buffer
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 comment|/* 	 * If we have a callgraph be created, select the outputfile. 	 */
 if|if

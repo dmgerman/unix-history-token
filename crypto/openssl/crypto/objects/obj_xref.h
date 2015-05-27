@@ -268,7 +268,7 @@ name|NID_undef
 block|,
 name|NID_rsaEncryption
 block|}
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -282,24 +282,6 @@ name|sigoid_srt_xref
 index|[]
 init|=
 block|{
-operator|&
-name|sigoid_srt
-index|[
-literal|29
-index|]
-block|,
-operator|&
-name|sigoid_srt
-index|[
-literal|17
-index|]
-block|,
-operator|&
-name|sigoid_srt
-index|[
-literal|18
-index|]
-block|,
 operator|&
 name|sigoid_srt
 index|[
@@ -461,7 +443,7 @@ name|sigoid_srt
 index|[
 literal|28
 index|]
-block|, 	}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

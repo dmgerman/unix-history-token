@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_syscons.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -50,6 +56,12 @@ end_include
 begin_comment
 comment|/* struct vt_mode */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/endian.h>
+end_include
 
 begin_include
 include|#
@@ -122,7 +134,7 @@ file|<dev/terasic/mtl/terasic_mtl.h>
 end_include
 
 begin_comment
-comment|/*  * Device driver for the Terasic Multitouch LCD (MTL).  Three separate  * sub-drivers that support, respectively, access to device control registers,  * the pixel frame buffer, and the text frame buffer.  The last of these is  * also hooked up to syscons.  *  * Eventually, the frame buffer control registers and touch screen input FIFO  * will end up being separate sub-drivers as well.  *  * Note: sub-driver detach routines must check whether or not they have  * attached as they may be called even if the attach routine hasn't been, on  * an error.  */
+comment|/*  * Device driver for the Terasic Multitouch LCD (MTL).  Three separate  * sub-drivers that support, respectively, access to device control registers,  * the pixel frame buffer, and the text frame buffer.  The pixel frame buffer  * is hooked up to vt(4), and the text frame buffer to syscons(4).   *  * Eventually, the frame buffer control registers and touch screen input FIFO  * will end up being separate sub-drivers as well.  *  * Note: sub-driver detach routines must check whether or not they have  * attached as they may be called even if the attach routine hasn't been, on  * an error.  */
 end_comment
 
 begin_decl_stmt
@@ -186,7 +198,65 @@ condition|)
 goto|goto
 name|error
 goto|;
-comment|/* 	 * XXXRW: Once we've attached syscons, we can't detach it, so do it 	 * last. 	 */
+comment|/* 	 * XXXRW: Once we've attached syscons or vt, we can't detach it, so do 	 * it last. 	 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEV_VT
+argument_list|)
+name|terasic_mtl_reg_pixel_endian_set
+argument_list|(
+name|sc
+argument_list|,
+name|BYTE_ORDER
+operator|==
+name|BIG_ENDIAN
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|terasic_mtl_fbd_attach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|error
+goto|;
+name|terasic_mtl_blend_pixel_set
+argument_list|(
+name|sc
+argument_list|,
+name|TERASIC_MTL_ALPHA_OPAQUE
+argument_list|)
+expr_stmt|;
+name|terasic_mtl_blend_textfg_set
+argument_list|(
+name|sc
+argument_list|,
+name|TERASIC_MTL_ALPHA_TRANSPARENT
+argument_list|)
+expr_stmt|;
+name|terasic_mtl_blend_textbg_set
+argument_list|(
+name|sc
+argument_list|,
+name|TERASIC_MTL_ALPHA_TRANSPARENT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEV_SC
+argument_list|)
 name|error
 operator|=
 name|terasic_mtl_syscons_attach
@@ -201,13 +271,6 @@ condition|)
 goto|goto
 name|error
 goto|;
-name|terasic_mtl_blend_default_set
-argument_list|(
-name|sc
-argument_list|,
-name|TERASIC_MTL_COLOR_BLACK
-argument_list|)
-expr_stmt|;
 name|terasic_mtl_blend_pixel_set
 argument_list|(
 name|sc
@@ -227,6 +290,15 @@ argument_list|(
 name|sc
 argument_list|,
 name|TERASIC_MTL_ALPHA_OPAQUE
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|terasic_mtl_blend_default_set
+argument_list|(
+name|sc
+argument_list|,
+name|TERASIC_MTL_COLOR_BLACK
 argument_list|)
 expr_stmt|;
 return|return
@@ -269,12 +341,33 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* XXXRW: syscons can't detach, but we try anyway, only to panic. */
+comment|/* XXXRW: syscons and vt can't detach, but try anyway, only to panic. */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEV_SC
+argument_list|)
 name|terasic_mtl_syscons_detach
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|DEV_VT
+argument_list|)
+name|terasic_mtl_fbd_detach
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* All other aspects of the driver can detach just fine. */
 name|terasic_mtl_text_detach
 argument_list|(

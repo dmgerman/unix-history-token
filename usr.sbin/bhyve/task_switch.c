@@ -710,6 +710,10 @@ name|desc
 parameter_list|,
 name|bool
 name|doread
+parameter_list|,
+name|int
+modifier|*
+name|faultptr
 parameter_list|)
 block|{
 name|struct
@@ -815,15 +819,22 @@ name|nitems
 argument_list|(
 name|iov
 argument_list|)
+argument_list|,
+name|faultptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
-operator|==
-literal|0
+operator|||
+operator|*
+name|faultptr
 condition|)
-block|{
+return|return
+operator|(
+name|error
+operator|)
+return|;
 if|if
 condition|(
 name|doread
@@ -863,10 +874,9 @@ name|desc
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -897,6 +907,10 @@ name|struct
 name|user_segment_descriptor
 modifier|*
 name|desc
+parameter_list|,
+name|int
+modifier|*
+name|faultptr
 parameter_list|)
 block|{
 return|return
@@ -914,6 +928,8 @@ argument_list|,
 name|desc
 argument_list|,
 name|true
+argument_list|,
+name|faultptr
 argument_list|)
 operator|)
 return|;
@@ -945,6 +961,10 @@ name|struct
 name|user_segment_descriptor
 modifier|*
 name|desc
+parameter_list|,
+name|int
+modifier|*
+name|faultptr
 parameter_list|)
 block|{
 return|return
@@ -962,6 +982,8 @@ argument_list|,
 name|desc
 argument_list|,
 name|false
+argument_list|,
+name|faultptr
 argument_list|)
 operator|)
 return|;
@@ -997,6 +1019,10 @@ name|struct
 name|user_segment_descriptor
 modifier|*
 name|desc
+parameter_list|,
+name|int
+modifier|*
+name|faultptr
 parameter_list|)
 block|{
 name|struct
@@ -1110,6 +1136,8 @@ argument_list|,
 name|sel
 argument_list|,
 name|desc
+argument_list|,
+name|faultptr
 argument_list|)
 expr_stmt|;
 return|return
@@ -1220,7 +1248,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Validate the descriptor 'seg_desc' associated with 'segment'.  *  * Returns 0 on success.  * Returns 1 if an exception was injected into the guest.  * Returns -1 otherwise.  */
+comment|/*  * Validate the descriptor 'seg_desc' associated with 'segment'.  */
 end_comment
 
 begin_function
@@ -1248,6 +1276,10 @@ name|struct
 name|seg_desc
 modifier|*
 name|seg_desc
+parameter_list|,
+name|int
+modifier|*
+name|faultptr
 parameter_list|)
 block|{
 name|struct
@@ -1521,11 +1553,16 @@ name|sel
 argument_list|,
 operator|&
 name|usd
+argument_list|,
+name|faultptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+operator|*
+name|faultptr
 condition|)
 return|return
 operator|(
@@ -2207,7 +2244,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update the vcpu registers to reflect the state of the new task.  *  * Returns 0 on success.  * Returns 1 if an exception was injected into the guest.  * Returns -1 otherwise.  */
+comment|/*  * Update the vcpu registers to reflect the state of the new task.  */
 end_comment
 
 begin_function
@@ -2240,6 +2277,10 @@ name|struct
 name|iovec
 modifier|*
 name|iov
+parameter_list|,
+name|int
+modifier|*
+name|faultptr
 parameter_list|)
 block|{
 name|struct
@@ -2762,11 +2803,16 @@ name|VM_REG_GUEST_LDTR
 argument_list|,
 operator|&
 name|seg_desc
+argument_list|,
+name|faultptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+operator|*
+name|faultptr
 condition|)
 return|return
 operator|(
@@ -2800,11 +2846,16 @@ name|VM_REG_GUEST_CS
 argument_list|,
 operator|&
 name|seg_desc
+argument_list|,
+name|faultptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+operator|*
+name|faultptr
 condition|)
 return|return
 operator|(
@@ -2825,11 +2876,16 @@ name|VM_REG_GUEST_SS
 argument_list|,
 operator|&
 name|seg_desc2
+argument_list|,
+name|faultptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+operator|*
+name|faultptr
 condition|)
 return|return
 operator|(
@@ -2886,11 +2942,16 @@ name|VM_REG_GUEST_DS
 argument_list|,
 operator|&
 name|seg_desc
+argument_list|,
+name|faultptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+operator|*
+name|faultptr
 condition|)
 return|return
 operator|(
@@ -2923,11 +2984,16 @@ name|VM_REG_GUEST_ES
 argument_list|,
 operator|&
 name|seg_desc
+argument_list|,
+name|faultptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+operator|*
+name|faultptr
 condition|)
 return|return
 operator|(
@@ -2960,11 +3026,16 @@ name|VM_REG_GUEST_FS
 argument_list|,
 operator|&
 name|seg_desc
+argument_list|,
+name|faultptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+operator|*
+name|faultptr
 condition|)
 return|return
 operator|(
@@ -2997,11 +3068,16 @@ name|VM_REG_GUEST_GS
 argument_list|,
 operator|&
 name|seg_desc
+argument_list|,
+name|faultptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+operator|*
+name|faultptr
 condition|)
 return|return
 operator|(
@@ -3029,7 +3105,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Push an error code on the stack of the new task. This is needed if the  * task switch was triggered by a hardware exception that causes an error  * code to be saved (e.g. #PF).  *  * Returns 0 on success.  * Returns 1 if an exception was injected into the guest.  * Returns -1 otherwise.  */
+comment|/*  * Push an error code on the stack of the new task. This is needed if the  * task switch was triggered by a hardware exception that causes an error  * code to be saved (e.g. #PF).  */
 end_comment
 
 begin_function
@@ -3055,6 +3131,10 @@ name|task_type
 parameter_list|,
 name|uint32_t
 name|errcode
+parameter_list|,
+name|int
+modifier|*
+name|faultptr
 parameter_list|)
 block|{
 name|struct
@@ -3088,6 +3168,11 @@ decl_stmt|;
 name|uint16_t
 name|stacksel
 decl_stmt|;
+operator|*
+name|faultptr
+operator|=
+literal|0
+expr_stmt|;
 name|cr0
 operator|=
 name|GETREG
@@ -3247,9 +3332,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+operator|*
+name|faultptr
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -3280,9 +3370,14 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+operator|*
+name|faultptr
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
@@ -3308,11 +3403,16 @@ name|nitems
 argument_list|(
 name|iov
 argument_list|)
+argument_list|,
+name|faultptr
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|error
+operator|||
+operator|*
+name|faultptr
 condition|)
 return|return
 operator|(
@@ -3353,7 +3453,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Evaluate return value from helper functions and potentially return to  * the VM run loop.  *  0: success  * +1: an exception was injected into the guest vcpu  * -1: unrecoverable/programming error  */
+comment|/*  * Evaluate return value from helper functions and potentially return to  * the VM run loop.  */
 end_comment
 
 begin_define
@@ -3361,10 +3461,12 @@ define|#
 directive|define
 name|CHKERR
 parameter_list|(
-name|x
+name|error
+parameter_list|,
+name|fault
 parameter_list|)
 define|\
-value|do {								\ 		assert(((x) == 0) || ((x) == 1) || ((x) == -1));	\ 		if ((x) == -1)						\ 			return (VMEXIT_ABORT);				\ 		else if ((x) == 1)					\ 			return (VMEXIT_CONTINUE);			\ 	} while (0)
+value|do {								\ 		assert((error == 0) || (error == EFAULT));		\ 		if (error)						\ 			return (VMEXIT_ABORT);				\ 		else if (fault)						\ 			return (VMEXIT_CONTINUE);			\ 	} while (0)
 end_define
 
 begin_function
@@ -3443,6 +3545,8 @@ name|error
 decl_stmt|,
 name|ext
 decl_stmt|,
+name|fault
+decl_stmt|,
 name|minlimit
 decl_stmt|,
 name|nt_type
@@ -3520,7 +3624,7 @@ operator|==
 name|CPU_MODE_PROTECTED
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Calculate the %eip to store in the old TSS before modifying the 	 * 'inst_length'. 	 */
+comment|/* 	 * Calculate the instruction pointer to store in the old TSS. 	 */
 name|eip
 operator|=
 name|vmexit
@@ -3530,13 +3634,6 @@ operator|+
 name|vmexit
 operator|->
 name|inst_length
-expr_stmt|;
-comment|/* 	 * Set the 'inst_length' to '0'. 	 * 	 * If an exception is triggered during emulation of the task switch 	 * then the exception handler should return to the instruction that 	 * caused the task switch as opposed to the subsequent instruction. 	 */
-name|vmexit
-operator|->
-name|inst_length
-operator|=
-literal|0
 expr_stmt|;
 comment|/* 	 * Section 4.6, "Access Rights" in Intel SDM Vol 3. 	 * The following page table accesses are implicitly supervisor mode: 	 * - accesses to GDT or LDT to load segment descriptors 	 * - accesses to the task state segment during task switch 	 */
 name|sup_paging
@@ -3566,11 +3663,16 @@ name|nt_sel
 argument_list|,
 operator|&
 name|nt_desc
+argument_list|,
+operator|&
+name|fault
 argument_list|)
 expr_stmt|;
 name|CHKERR
 argument_list|(
 name|error
+argument_list|,
+name|fault
 argument_list|)
 expr_stmt|;
 name|nt
@@ -3819,11 +3921,16 @@ name|nitems
 argument_list|(
 name|nt_iov
 argument_list|)
+argument_list|,
+operator|&
+name|fault
 argument_list|)
 expr_stmt|;
 name|CHKERR
 argument_list|(
 name|error
+argument_list|,
+name|fault
 argument_list|)
 expr_stmt|;
 name|vm_copyin
@@ -3964,11 +4071,16 @@ name|ot_sel
 argument_list|,
 operator|&
 name|ot_desc
+argument_list|,
+operator|&
+name|fault
 argument_list|)
 expr_stmt|;
 name|CHKERR
 argument_list|(
 name|error
+argument_list|,
+name|fault
 argument_list|)
 expr_stmt|;
 comment|/* Get the old TSS */
@@ -3999,11 +4111,16 @@ name|nitems
 argument_list|(
 name|ot_iov
 argument_list|)
+argument_list|,
+operator|&
+name|fault
 argument_list|)
 expr_stmt|;
 name|CHKERR
 argument_list|(
 name|error
+argument_list|,
+name|fault
 argument_list|)
 expr_stmt|;
 name|vm_copyin
@@ -4056,11 +4173,16 @@ name|ot_sel
 argument_list|,
 operator|&
 name|ot_desc
+argument_list|,
+operator|&
+name|fault
 argument_list|)
 expr_stmt|;
 name|CHKERR
 argument_list|(
 name|error
+argument_list|,
+name|fault
 argument_list|)
 expr_stmt|;
 block|}
@@ -4134,11 +4256,16 @@ name|nt_sel
 argument_list|,
 operator|&
 name|nt_desc
+argument_list|,
+operator|&
+name|fault
 argument_list|)
 expr_stmt|;
 name|CHKERR
 argument_list|(
 name|error
+argument_list|,
+name|fault
 argument_list|)
 expr_stmt|;
 block|}
@@ -4201,19 +4328,24 @@ name|CR0_TS
 argument_list|)
 expr_stmt|;
 comment|/* 	 * We are now committed to the task switch. Any exceptions encountered 	 * after this point will be handled in the context of the new task and 	 * the saved instruction pointer will belong to the new task. 	 */
-name|vmexit
-operator|->
-name|rip
+name|error
 operator|=
+name|vm_set_register
+argument_list|(
+name|ctx
+argument_list|,
+name|vcpu
+argument_list|,
+name|VM_REG_GUEST_RIP
+argument_list|,
 name|newtss
 operator|.
 name|tss_eip
+argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|vmexit
-operator|->
-name|inst_length
+name|error
 operator|==
 literal|0
 argument_list|)
@@ -4235,11 +4367,16 @@ operator|&
 name|newtss
 argument_list|,
 name|nt_iov
+argument_list|,
+operator|&
+name|fault
 argument_list|)
 expr_stmt|;
 name|CHKERR
 argument_list|(
 name|error
+argument_list|,
+name|fault
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Section "Interrupt Tasks" in Intel SDM, Vol 3: if an exception 	 * caused an error code to be generated, this error code is copied 	 * to the stack of the new task. 	 */
@@ -4284,11 +4421,16 @@ argument_list|,
 name|task_switch
 operator|->
 name|errcode
+argument_list|,
+operator|&
+name|fault
 argument_list|)
 expr_stmt|;
 name|CHKERR
 argument_list|(
 name|error
+argument_list|,
+name|fault
 argument_list|)
 expr_stmt|;
 block|}

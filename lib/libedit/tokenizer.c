@@ -1,7 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	$NetBSD: tokenizer.c,v 1.15 2009/02/15 21:55:23 christos Exp $  */
+comment|/*	$NetBSD: tokenizer.c,v 1.21 2011/08/16 16:25:15 christos Exp $	*/
 end_comment
+
+begin_comment
+comment|/*-  * Copyright (c) 1992, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Christos Zoulas of Cornell University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
 
 begin_if
 if|#
@@ -19,15 +29,30 @@ name|SCCSID
 argument_list|)
 end_if
 
-begin_decl_stmt
-specifier|static
-name|char
-name|sccsid
-index|[]
-init|=
-literal|"@(#)tokenizer.c	8.1 (Berkeley) 6/4/93"
-decl_stmt|;
-end_decl_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_else
+unit|static char sccsid[] = "@(#)tokenizer.c	8.1 (Berkeley) 6/4/93";
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+name|__RCSID
+argument_list|(
+literal|"$NetBSD: tokenizer.c,v 1.21 2011/08/16 16:25:15 christos Exp $"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -53,14 +78,12 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * tokenize.c: Bourne shell like tokenizer  */
+comment|/* We build this file twice, once as NARROW, once as WIDE. */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"sys.h"
-end_include
+begin_comment
+comment|/*  * tokenize.c: Bourne shell like tokenizer  */
+end_comment
 
 begin_include
 include|#
@@ -80,6 +103,12 @@ directive|include
 file|"histedit.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"chartype.h"
+end_include
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -97,13 +126,6 @@ block|}
 name|quote_t
 typedef|;
 end_typedef
-
-begin_define
-define|#
-directive|define
-name|IFS
-value|"\t \n"
-end_define
 
 begin_define
 define|#
@@ -136,11 +158,8 @@ end_define
 begin_define
 define|#
 directive|define
-name|tok_strdup
-parameter_list|(
-name|a
-parameter_list|)
-value|strdup(a)
+name|IFS
+value|STR("\t \n")
 end_define
 
 begin_define
@@ -175,28 +194,41 @@ parameter_list|)
 value|realloc(a, b)
 end_define
 
-begin_struct
-struct|struct
+begin_define
+define|#
+directive|define
+name|tok_strdup
+parameter_list|(
+name|a
+parameter_list|)
+value|Strdup(a)
+end_define
+
+begin_function
+name|struct
+name|TYPE
+function|(
 name|tokenizer
+function|)
 block|{
-name|char
+name|Char
 modifier|*
 name|ifs
 decl_stmt|;
 comment|/* In field separator			 */
-name|int
+name|size_t
 name|argc
 decl_stmt|,
 name|amax
 decl_stmt|;
 comment|/* Current and maximum number of args	 */
-name|char
+name|Char
 modifier|*
 modifier|*
 name|argv
 decl_stmt|;
 comment|/* Argument list			 */
-name|char
+name|Char
 modifier|*
 name|wptr
 decl_stmt|,
@@ -204,12 +236,12 @@ modifier|*
 name|wmax
 decl_stmt|;
 comment|/* Space and limit on the word buffer	 */
-name|char
+name|Char
 modifier|*
 name|wstart
 decl_stmt|;
 comment|/* Beginning of next word		 */
-name|char
+name|Char
 modifier|*
 name|wspace
 decl_stmt|;
@@ -223,33 +255,52 @@ name|flags
 decl_stmt|;
 comment|/* flags;				 */
 block|}
-struct|;
-end_struct
+end_function
 
-begin_function_decl
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
 name|private
 name|void
-name|tok_finish
-parameter_list|(
+name|FUN
+argument_list|(
+name|tok
+argument_list|,
+name|finish
+argument_list|)
+argument_list|(
+name|TYPE
+argument_list|(
 name|Tokenizer
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+operator|*
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/* tok_finish():  *	Finish a word in the tokenizer.  */
+comment|/* FUN(tok,finish)():  *	Finish a word in the tokenizer.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|private
 name|void
-name|tok_finish
-parameter_list|(
-name|Tokenizer
-modifier|*
+name|FUN
+argument_list|(
 name|tok
-parameter_list|)
+argument_list|,
+name|finish
+argument_list|)
+argument_list|(
+name|TYPE
+argument_list|(
+name|Tokenizer
+argument_list|)
+operator|*
+name|tok
+argument_list|)
 block|{
 operator|*
 name|tok
@@ -320,40 +371,48 @@ operator|~
 name|TOK_KEEP
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* tok_init():  *	Initialize the tokenizer  */
+comment|/* FUN(tok,init)():  *	Initialize the tokenizer  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|public
+name|TYPE
+argument_list|(
 name|Tokenizer
+argument_list|)
 modifier|*
-name|tok_init
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|ifs
-parameter_list|)
-block|{
-name|Tokenizer
-modifier|*
+name|FUN
+argument_list|(
 name|tok
-init|=
-operator|(
-name|Tokenizer
+argument_list|,
+name|init
+argument_list|)
+argument_list|(
+specifier|const
+name|Char
 operator|*
-operator|)
+name|ifs
+argument_list|)
+block|{
+name|TYPE
+argument_list|(
+name|Tokenizer
+argument_list|)
+operator|*
+name|tok
+operator|=
 name|tok_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|Tokenizer
+operator|*
+name|tok
 argument_list|)
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|tok
@@ -387,9 +446,6 @@ condition|)
 block|{
 name|tok_free
 argument_list|(
-operator|(
-name|ptr_t
-operator|)
 name|tok
 argument_list|)
 expr_stmt|;
@@ -413,17 +469,14 @@ name|tok
 operator|->
 name|argv
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|tok_malloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
-name|char
 operator|*
+name|tok
+operator|->
+name|argv
 argument_list|)
 operator|*
 name|tok
@@ -442,9 +495,6 @@ condition|)
 block|{
 name|tok_free
 argument_list|(
-operator|(
-name|ptr_t
-operator|)
 name|tok
 operator|->
 name|ifs
@@ -452,9 +502,6 @@ argument_list|)
 expr_stmt|;
 name|tok_free
 argument_list|(
-operator|(
-name|ptr_t
-operator|)
 name|tok
 argument_list|)
 expr_stmt|;
@@ -475,13 +522,17 @@ name|tok
 operator|->
 name|wspace
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
 name|tok_malloc
 argument_list|(
 name|WINCR
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|tok
+operator|->
+name|wspace
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -495,9 +546,6 @@ condition|)
 block|{
 name|tok_free
 argument_list|(
-operator|(
-name|ptr_t
-operator|)
 name|tok
 operator|->
 name|argv
@@ -505,9 +553,6 @@ argument_list|)
 expr_stmt|;
 name|tok_free
 argument_list|(
-operator|(
-name|ptr_t
-operator|)
 name|tok
 operator|->
 name|ifs
@@ -515,9 +560,6 @@ argument_list|)
 expr_stmt|;
 name|tok_free
 argument_list|(
-operator|(
-name|ptr_t
-operator|)
 name|tok
 argument_list|)
 expr_stmt|;
@@ -564,26 +606,32 @@ operator|=
 name|Q_none
 expr_stmt|;
 return|return
-operator|(
 name|tok
-operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* tok_reset():  *	Reset the tokenizer  */
+comment|/* FUN(tok,reset)():  *	Reset the tokenizer  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|public
 name|void
-name|tok_reset
-parameter_list|(
-name|Tokenizer
-modifier|*
+name|FUN
+argument_list|(
 name|tok
-parameter_list|)
+argument_list|,
+name|reset
+argument_list|)
+argument_list|(
+name|TYPE
+argument_list|(
+name|Tokenizer
+argument_list|)
+operator|*
+name|tok
+argument_list|)
 block|{
 name|tok
 operator|->
@@ -620,27 +668,32 @@ operator|=
 name|Q_none
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* tok_end():  *	Clean up  */
+comment|/* FUN(tok,end)():  *	Clean up  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|public
 name|void
-name|tok_end
-parameter_list|(
-name|Tokenizer
-modifier|*
+name|FUN
+argument_list|(
 name|tok
-parameter_list|)
+argument_list|,
+name|end
+argument_list|)
+argument_list|(
+name|TYPE
+argument_list|(
+name|Tokenizer
+argument_list|)
+operator|*
+name|tok
+argument_list|)
 block|{
 name|tok_free
 argument_list|(
-operator|(
-name|ptr_t
-operator|)
 name|tok
 operator|->
 name|ifs
@@ -648,9 +701,6 @@ argument_list|)
 expr_stmt|;
 name|tok_free
 argument_list|(
-operator|(
-name|ptr_t
-operator|)
 name|tok
 operator|->
 name|wspace
@@ -658,9 +708,6 @@ argument_list|)
 expr_stmt|;
 name|tok_free
 argument_list|(
-operator|(
-name|ptr_t
-operator|)
 name|tok
 operator|->
 name|argv
@@ -668,55 +715,63 @@ argument_list|)
 expr_stmt|;
 name|tok_free
 argument_list|(
-operator|(
-name|ptr_t
-operator|)
 name|tok
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* tok_line():  *	Bourne shell (sh(1)) like tokenizing  *	Arguments:  *		tok	current tokenizer state (setup with tok_init())  *		line	line to parse  *	Returns:  *		-1	Internal error  *		 3	Quoted return  *		 2	Unmatched double quote  *		 1	Unmatched single quote  *		 0	Ok  *	Modifies (if return value is 0):  *		argc	number of arguments  *		argv	argument array  *		cursorc	if !NULL, argv element containing cursor  *		cursorv	if !NULL, offset in argv[cursorc] of cursor  */
+comment|/* FUN(tok,line)():  *	Bourne shell (sh(1)) like tokenizing  *	Arguments:  *		tok	current tokenizer state (setup with FUN(tok,init)())  *		line	line to parse  *	Returns:  *		-1	Internal error  *		 3	Quoted return  *		 2	Unmatched double quote  *		 1	Unmatched single quote  *		 0	Ok  *	Modifies (if return value is 0):  *		argc	number of arguments  *		argv	argument array  *		cursorc	if !NULL, argv element containing cursor  *		cursorv	if !NULL, offset in argv[cursorc] of cursor  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|public
 name|int
-name|tok_line
-parameter_list|(
-name|Tokenizer
-modifier|*
+name|FUN
+argument_list|(
 name|tok
-parameter_list|,
-specifier|const
-name|LineInfo
-modifier|*
+argument_list|,
 name|line
-parameter_list|,
-name|int
-modifier|*
-name|argc
-parameter_list|,
+argument_list|)
+argument_list|(
+name|TYPE
+argument_list|(
+name|Tokenizer
+argument_list|)
+operator|*
+name|tok
+argument_list|,
 specifier|const
-name|char
-modifier|*
-modifier|*
-modifier|*
+name|TYPE
+argument_list|(
+name|LineInfo
+argument_list|)
+operator|*
+name|line
+argument_list|,
+name|int
+operator|*
+name|argc
+argument_list|,
+specifier|const
+name|Char
+operator|*
+operator|*
+operator|*
 name|argv
-parameter_list|,
+argument_list|,
 name|int
-modifier|*
+operator|*
 name|cursorc
-parameter_list|,
+argument_list|,
 name|int
-modifier|*
+operator|*
 name|cursoro
-parameter_list|)
+argument_list|)
 block|{
 specifier|const
-name|char
+name|Char
 modifier|*
 name|ptr
 decl_stmt|;
@@ -761,7 +816,10 @@ name|lastchar
 condition|)
 name|ptr
 operator|=
+name|STR
+argument_list|(
 literal|""
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -774,6 +832,9 @@ condition|)
 block|{
 name|cc
 operator|=
+operator|(
+name|int
+operator|)
 name|tok
 operator|->
 name|argc
@@ -901,10 +962,8 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 break|break;
@@ -1009,10 +1068,8 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 break|break;
@@ -1117,10 +1174,8 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 break|break;
@@ -1200,9 +1255,7 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 break|break;
@@ -1237,9 +1290,7 @@ operator|~
 name|TOK_EAT
 expr_stmt|;
 return|return
-operator|(
 literal|3
-operator|)
 return|;
 block|}
 goto|goto
@@ -1249,17 +1300,13 @@ case|case
 name|Q_single
 case|:
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 case|case
 name|Q_double
 case|:
 return|return
-operator|(
 literal|2
-operator|)
 return|;
 case|case
 name|Q_doubleone
@@ -1301,10 +1348,8 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 break|break;
@@ -1328,7 +1373,7 @@ name|Q_none
 case|:
 if|if
 condition|(
-name|strchr
+name|Strchr
 argument_list|(
 name|tok
 operator|->
@@ -1340,7 +1385,12 @@ argument_list|)
 operator|!=
 name|NULL
 condition|)
-name|tok_finish
+name|FUN
+argument_list|(
+name|tok
+argument_list|,
+name|finish
+argument_list|)
 argument_list|(
 name|tok
 argument_list|)
@@ -1420,10 +1470,8 @@ expr_stmt|;
 break|break;
 default|default:
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 block|}
 break|break;
@@ -1444,6 +1492,10 @@ block|{
 name|size_t
 name|size
 init|=
+call|(
+name|size_t
+call|)
+argument_list|(
 name|tok
 operator|->
 name|wmax
@@ -1453,15 +1505,12 @@ operator|->
 name|wspace
 operator|+
 name|WINCR
+argument_list|)
 decl_stmt|;
-name|char
+name|Char
 modifier|*
 name|s
 init|=
-operator|(
-name|char
-operator|*
-operator|)
 name|tok_realloc
 argument_list|(
 name|tok
@@ -1469,6 +1518,12 @@ operator|->
 name|wspace
 argument_list|,
 name|size
+operator|*
+sizeof|sizeof
+argument_list|(
+operator|*
+name|s
+argument_list|)
 argument_list|)
 decl_stmt|;
 if|if
@@ -1478,10 +1533,8 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 if|if
 condition|(
@@ -1492,7 +1545,7 @@ operator|->
 name|wspace
 condition|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -1595,7 +1648,7 @@ operator|-
 literal|4
 condition|)
 block|{
-name|char
+name|Char
 modifier|*
 modifier|*
 name|p
@@ -1608,11 +1661,6 @@ name|AINCR
 expr_stmt|;
 name|p
 operator|=
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 name|tok_realloc
 argument_list|(
 name|tok
@@ -1625,8 +1673,8 @@ name|amax
 operator|*
 sizeof|sizeof
 argument_list|(
-name|char
 operator|*
+name|p
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1637,10 +1685,8 @@ operator|==
 name|NULL
 condition|)
 return|return
-operator|(
 operator|-
 literal|1
-operator|)
 return|;
 name|tok
 operator|->
@@ -1667,6 +1713,9 @@ condition|)
 block|{
 name|cc
 operator|=
+operator|(
+name|int
+operator|)
 name|tok
 operator|->
 name|argc
@@ -1709,7 +1758,12 @@ name|cursoro
 operator|=
 name|co
 expr_stmt|;
-name|tok_finish
+name|FUN
+argument_list|(
+name|tok
+argument_list|,
+name|finish
+argument_list|)
 argument_list|(
 name|tok
 argument_list|)
@@ -1719,7 +1773,7 @@ name|argv
 operator|=
 operator|(
 specifier|const
-name|char
+name|Char
 operator|*
 operator|*
 operator|)
@@ -1730,51 +1784,63 @@ expr_stmt|;
 operator|*
 name|argc
 operator|=
+operator|(
+name|int
+operator|)
 name|tok
 operator|->
 name|argc
 expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
-comment|/* tok_str():  *	Simpler version of tok_line, taking a NUL terminated line  *	and splitting into words, ignoring cursor state.  */
+comment|/* FUN(tok,str)():  *	Simpler version of tok_line, taking a NUL terminated line  *	and splitting into words, ignoring cursor state.  */
 end_comment
 
-begin_function
+begin_decl_stmt
 name|public
 name|int
-name|tok_str
-parameter_list|(
-name|Tokenizer
-modifier|*
+name|FUN
+argument_list|(
 name|tok
-parameter_list|,
+argument_list|,
+name|str
+argument_list|)
+argument_list|(
+name|TYPE
+argument_list|(
+name|Tokenizer
+argument_list|)
+operator|*
+name|tok
+argument_list|,
 specifier|const
-name|char
-modifier|*
+name|Char
+operator|*
 name|line
-parameter_list|,
+argument_list|,
 name|int
-modifier|*
+operator|*
 name|argc
-parameter_list|,
+argument_list|,
 specifier|const
-name|char
-modifier|*
-modifier|*
-modifier|*
+name|Char
+operator|*
+operator|*
+operator|*
 name|argv
-parameter_list|)
+argument_list|)
 block|{
-name|LineInfo
+name|TYPE
+argument_list|(
+argument|LineInfo
+argument_list|)
 name|li
-decl_stmt|;
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -1802,7 +1868,7 @@ name|li
 operator|.
 name|lastchar
 operator|=
-name|strchr
+name|Strchr
 argument_list|(
 name|line
 argument_list|,
@@ -1810,8 +1876,11 @@ literal|'\0'
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
-name|tok_line
+name|FUN
+argument_list|(
+name|tok
+argument_list|,
+name|line
 argument_list|(
 name|tok
 argument_list|,
@@ -1826,10 +1895,10 @@ name|NULL
 argument_list|,
 name|NULL
 argument_list|)
-operator|)
+argument_list|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 end_unit
 

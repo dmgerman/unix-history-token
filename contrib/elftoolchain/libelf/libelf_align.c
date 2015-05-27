@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/types.h>
 end_include
 
@@ -30,7 +24,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libelf_align.c 2225 2011-11-26 18:55:54Z jkoshy $"
+literal|"$Id: libelf_align.c 3174 2015-03-27 17:13:41Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -39,9 +33,11 @@ begin_struct
 struct|struct
 name|align
 block|{
+name|unsigned
 name|int
 name|a32
 decl_stmt|;
+name|unsigned
 name|int
 name|a64
 decl_stmt|;
@@ -340,6 +336,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|unsigned
 name|int
 name|_libelf_malign
 parameter_list|(
@@ -678,6 +675,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+name|unsigned
 name|int
 name|_libelf_falign
 parameter_list|(

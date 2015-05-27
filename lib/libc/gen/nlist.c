@@ -123,11 +123,26 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_comment
+comment|/* There is no a.out support on arm64 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__aarch64__
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|_NLIST_DO_AOUT
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -70,7 +70,13 @@ name|size_t
 name|ssid_len
 decl_stmt|;
 name|int
+name|hwmode
+decl_stmt|;
+name|int
 name|freq
+decl_stmt|;
+name|int
+name|channel
 decl_stmt|;
 name|int
 name|pairwise_suite

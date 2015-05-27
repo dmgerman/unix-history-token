@@ -54,13 +54,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|LLVM_CLANG_TEMPLATEKINDS_H
+name|LLVM_CLANG_BASIC_TEMPLATEKINDS_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_TEMPLATEKINDS_H
+name|LLVM_CLANG_BASIC_TEMPLATEKINDS_H
 end_define
 
 begin_decl_stmt
@@ -68,6 +68,7 @@ name|namespace
 name|clang
 block|{
 comment|/// \brief Specifies the kind of template name that an identifier refers to.
+comment|/// Be careful when changing this: this enumeration is used in diagnostics.
 enum|enum
 name|TemplateNameKind
 block|{

@@ -5112,15 +5112,15 @@ name|time_ms
 parameter_list|)
 block|{
 name|int
-name|error
-decl_stmt|;
-name|int
 name|timeout
 decl_stmt|;
 name|u_int
 name|saved_cnt
 decl_stmt|;
-comment|/* 	 * timeout is in ms.  0 indicates infinite wait. 	 * Convert to ticks or 500us units depending on 	 * our sleep mode. 	 */
+name|sbintime_t
+name|sbt
+decl_stmt|;
+comment|/* 	 * time_ms is in ms, 0 indicates infinite wait. 	 * Convert to sbintime_t or 500us units depending on 	 * our sleep mode. 	 */
 if|if
 condition|(
 name|sleep_ok
@@ -5128,19 +5128,25 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|sbt
+operator|=
+name|SBT_1MS
+operator|*
+name|time_ms
+expr_stmt|;
+comment|/* Set timeout as well so final timeout check works. */
 name|timeout
 operator|=
-operator|(
 name|time_ms
-operator|*
-name|hz
-operator|)
-operator|/
-literal|1000
 expr_stmt|;
 block|}
 else|else
 block|{
+name|sbt
+operator|=
+literal|0
+expr_stmt|;
+comment|/* Squelch bogus gcc warning. */
 name|timeout
 operator|=
 name|time_ms
@@ -5191,8 +5197,8 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|error
-operator|=
+if|if
+condition|(
 name|mpt_sleep
 argument_list|(
 name|mpt
@@ -5203,12 +5209,8 @@ name|PUSER
 argument_list|,
 literal|"mptreq"
 argument_list|,
-name|timeout
+name|sbt
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
 operator|==
 name|EWOULDBLOCK
 condition|)

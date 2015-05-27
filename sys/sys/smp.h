@@ -349,6 +349,20 @@ name|all_cpus
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|cpuset_t
+name|cpuset_domain
+index|[
+name|MAXMEMDOM
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* CPUs in each NUMA domain. */
+end_comment
+
 begin_comment
 comment|/*  * Macro allowing us to determine whether a CPU is absent at any given  * time, thus permitting us to configure sparse maps of cpuid-dependent  * (per-CPU) structures.  */
 end_comment

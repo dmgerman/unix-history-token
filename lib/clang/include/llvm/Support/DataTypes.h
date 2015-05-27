@@ -8,11 +8,15 @@ comment|/* include/llvm/Support/DataTypes.h.  Generated from DataTypes.h.in by c
 end_comment
 
 begin_comment
-comment|/*===-- include/System/DataTypes.h - Define fixed size types -----*- C -*-===*\ |*                                                                            *| |*                     The LLVM Compiler Infrastructure                       *| |*                                                                            *| |* This file is distributed under the University of Illinois Open Source      *| |* License. See LICENSE.TXT for details.                                      *| |*                                                                            *| |*===----------------------------------------------------------------------===*| |*                                                                            *| |* This file contains definitions to figure out the size of _HOST_ data types.*| |* This file is important because different host OS's define different macros,*| |* which makes portability tough.  This file exports the following            *| |* definitions:                                                               *| |*                                                                            *| |*   [u]int(32|64)_t : typedefs for signed and unsigned 32/64 bit system types*| |*   [U]INT(8|16|32|64)_(MIN|MAX) : Constants for the min and max values.     *| |*                                                                            *| |* No library is required when using these functions.                         *| |*                                                                            *| |*===----------------------------------------------------------------------===*/
+comment|/*===-- include/Support/DataTypes.h - Define fixed size types -----*- C -*-===*\ |*                                                                            *| |*                     The LLVM Compiler Infrastructure                       *| |*                                                                            *| |* This file is distributed under the University of Illinois Open Source      *| |* License. See LICENSE.TXT for details.                                      *| |*                                                                            *| |*===----------------------------------------------------------------------===*| |*                                                                            *| |* This file contains definitions to figure out the size of _HOST_ data types.*| |* This file is important because different host OS's define different macros,*| |* which makes portability tough.  This file exports the following            *| |* definitions:                                                               *| |*                                                                            *| |*   [u]int(32|64)_t : typedefs for signed and unsigned 32/64 bit system types*| |*   [U]INT(8|16|32|64)_(MIN|MAX) : Constants for the min and max values.     *| |*                                                                            *| |* No library is required when using these functions.                         *| |*                                                                            *| |*===----------------------------------------------------------------------===*/
 end_comment
 
 begin_comment
 comment|/* Please leave this file C-compatible. */
+end_comment
+
+begin_comment
+comment|/* Please keep this file in sync with DataTypes.h.cmake */
 end_comment
 
 begin_ifndef
@@ -25,13 +29,6 @@ begin_define
 define|#
 directive|define
 name|SUPPORT_DATATYPES_H
-end_define
-
-begin_define
-define|#
-directive|define
-name|HAVE_SYS_TYPES_H
-value|1
 end_define
 
 begin_define
@@ -87,75 +84,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* Note that this header's correct operation depends on __STDC_LIMIT_MACROS    being defined.  We would define it here, but in order to prevent Bad Things    happening when system headers or C++ STL headers include stdint.h before we    define it here, we define it on the g++ command line (in Makefile.rules). */
-end_comment
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__STDC_LIMIT_MACROS
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"Must #define __STDC_LIMIT_MACROS before #including System/DataTypes.h"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|__STDC_CONSTANT_MACROS
-argument_list|)
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"Must #define __STDC_CONSTANT_MACROS before "
-error|\
-literal|"#including System/DataTypes.h"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Note that<inttypes.h> includes<stdint.h>, if this is a C99 system. */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TYPES_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -185,10 +113,85 @@ directive|include
 file|<stdint.h>
 end_include
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+literal|"Compiler must provide an implementation of stdint.h"
+end_error
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_MSC_VER
+end_ifndef
+
+begin_comment
+comment|/* Note that this header's correct operation depends on __STDC_LIMIT_MACROS    being defined.  We would define it here, but in order to prevent Bad Things    happening when system headers or C++ STL headers include stdint.h before we    define it here, we define it on the g++ command line (in Makefile.rules). */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__STDC_LIMIT_MACROS
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Must #define __STDC_LIMIT_MACROS before #including Support/DataTypes.h"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__STDC_CONSTANT_MACROS
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+literal|"Must #define __STDC_CONSTANT_MACROS before "
+error|\
+literal|"#including Support/DataTypes.h"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* Note that<inttypes.h> includes<stdint.h>, if this is a C99 system. */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_ifdef
 ifdef|#
@@ -251,79 +254,165 @@ endif|#
 directive|endif
 end_endif
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<stdlib.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stddef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_OpenBSD_
+name|__cplusplus
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<cmath>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_include
+include|#
+directive|include
+file|<math.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN64
+argument_list|)
+end_if
+
+begin_typedef
+typedef|typedef
+name|signed
+name|__int64
+name|ssize_t
+typedef|;
+end_typedef
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_typedef
+typedef|typedef
+name|signed
+name|int
+name|ssize_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _WIN64 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_INTTYPES_H
+end_ifndef
+
 begin_define
 define|#
 directive|define
-name|INT8_MAX
-value|127
+name|PRId64
+value|"I64d"
 end_define
 
 begin_define
 define|#
 directive|define
-name|INT8_MIN
-value|-128
+name|PRIi64
+value|"I64i"
 end_define
 
 begin_define
 define|#
 directive|define
-name|UINT8_MAX
-value|255
+name|PRIo64
+value|"I64o"
 end_define
 
 begin_define
 define|#
 directive|define
-name|INT16_MAX
-value|32767
+name|PRIu64
+value|"I64u"
 end_define
 
 begin_define
 define|#
 directive|define
-name|INT16_MIN
-value|-32768
+name|PRIx64
+value|"I64x"
 end_define
 
 begin_define
 define|#
 directive|define
-name|UINT16_MAX
-value|65535
-end_define
-
-begin_define
-define|#
-directive|define
-name|INT32_MAX
-value|2147483647
-end_define
-
-begin_define
-define|#
-directive|define
-name|INT32_MIN
-value|-2147483648
-end_define
-
-begin_define
-define|#
-directive|define
-name|UINT32_MAX
-value|4294967295U
+name|PRIX64
+value|"I64X"
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* HAVE_INTTYPES_H */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _MSC_VER */
+end_comment
 
 begin_comment
 comment|/* Set defaults for constants which we cannot find. */
@@ -388,37 +477,6 @@ define|#
 directive|define
 name|UINT64_MAX
 value|0xffffffffffffffffULL
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|__GNUC__
-operator|>
-literal|3
-end_if
-
-begin_define
-define|#
-directive|define
-name|END_WITH_NULL
-value|__attribute__((sentinel))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|END_WITH_NULL
 end_define
 
 begin_endif

@@ -18,6 +18,24 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/module.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<linux/list.h>
 end_include
 
@@ -72,26 +90,6 @@ name|name
 parameter_list|)
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|MODULE_VERSION
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|MODULE_VERSION
-parameter_list|(
-name|name
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -125,7 +123,7 @@ begin_define
 define|#
 directive|define
 name|SI_SUB_OFED_PREINIT
-value|(SI_SUB_KTHREAD_INIT - 2)
+value|(SI_SUB_ROOT_CONF - 2)
 end_define
 
 begin_comment
@@ -136,7 +134,7 @@ begin_define
 define|#
 directive|define
 name|SI_SUB_OFED_MODINIT
-value|(SI_SUB_KTHREAD_INIT - 1)
+value|(SI_SUB_ROOT_CONF - 1)
 end_define
 
 begin_include

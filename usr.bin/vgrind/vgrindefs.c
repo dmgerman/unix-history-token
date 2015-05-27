@@ -79,34 +79,53 @@ comment|/* detect infinite loops in termcap, init 0 */
 end_comment
 
 begin_function_decl
+specifier|static
+name|int
+name|tnchktc
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|tnamatch
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|tskip
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+parameter_list|(
+specifier|register
 name|char
 modifier|*
-name|tgetstr
-parameter_list|()
+parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|tdecode
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
+parameter_list|(
+specifier|register
 name|char
 modifier|*
-name|getenv
-parameter_list|()
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
 function_decl|;
 end_function_decl
 
@@ -114,31 +133,22 @@ begin_comment
 comment|/*  * Get an entry for terminal name in buffer bp,  * from the termcap file.  Parse is very rudimentary;  * we just notice escaped newlines.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tgetent
-argument_list|(
-argument|bp
-argument_list|,
-argument|name
-argument_list|,
-argument|file
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|bp
-decl_stmt|,
+parameter_list|,
+name|char
 modifier|*
 name|name
-decl_stmt|,
+parameter_list|,
+name|char
 modifier|*
 name|file
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -165,10 +175,6 @@ index|[
 name|BUFSIZ
 index|]
 decl_stmt|;
-name|char
-modifier|*
-name|cp2
-decl_stmt|;
 name|int
 name|tf
 decl_stmt|;
@@ -190,7 +196,7 @@ name|open
 argument_list|(
 name|filename
 argument_list|,
-literal|0
+name|O_RDONLY
 argument_list|)
 expr_stmt|;
 if|if
@@ -355,18 +361,19 @@ return|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * tnchktc: check the last entry, see if it's tc=xxx. If so,  * recursively find xxx and append that entry (minus the names)  * to take the place of the tc=xxx entry. This allows termcap  * entries to say "like an HP2621 but doesn't turn on the labels".  * Note that this works because of the left to right scan.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|tnchktc
-argument_list|()
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -465,13 +472,15 @@ operator|(
 literal|1
 operator|)
 return|;
-name|strcpy
+name|strlcpy
 argument_list|(
 name|tcname
 argument_list|,
 name|p
 operator|+
 literal|3
+argument_list|,
+literal|16
 argument_list|)
 expr_stmt|;
 name|q
@@ -592,13 +601,21 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|strcpy
+name|strlcpy
 argument_list|(
 name|p
 argument_list|,
 name|q
 operator|+
 literal|1
+argument_list|,
+name|BUFSIZ
+operator|-
+operator|(
+name|p
+operator|-
+name|holdtbuf
+operator|)
 argument_list|)
 expr_stmt|;
 name|tbuf
@@ -611,27 +628,21 @@ literal|1
 operator|)
 return|;
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Tnamatch deals with name matching.  The first field of the termcap  * entry is a sequence of names separated by |'s, so we compare  * against each such name.  The normal : terminator after the last  * name (before the first field) stops us.  */
 end_comment
 
-begin_macro
+begin_function
+specifier|static
+name|int
 name|tnamatch
-argument_list|(
-argument|np
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|np
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -754,7 +765,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Skip to the next field.  Notice that this is very dumb, not  * knowing about \: escapes or any such.  If necessary, :'s can be put  * into the termcap file in octal.  */
@@ -766,13 +777,11 @@ name|char
 modifier|*
 name|tskip
 parameter_list|(
-name|bp
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|bp
-decl_stmt|;
+parameter_list|)
 block|{
 while|while
 condition|(
@@ -809,21 +818,14 @@ begin_comment
 comment|/*  * Return the (numeric) option id.  * Numeric options look like  *	li#80  * i.e. the option string is separated from the numeric value by  * a # character.  If the option is not found we return -1.  * Note that we handle octal numbers beginning with 0.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tgetnum
-argument_list|(
-argument|id
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|id
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|int
@@ -960,27 +962,20 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Handle a flag option.  * Flag options are given "naked", i.e. followed by a : or the end  * of the buffer.  Return 1 if we find the option, or 0 if it is  * not given.  */
 end_comment
 
-begin_macro
+begin_function
+name|int
 name|tgetflag
-argument_list|(
-argument|id
-argument_list|)
-end_macro
-
-begin_decl_stmt
+parameter_list|(
 name|char
 modifier|*
 name|id
-decl_stmt|;
-end_decl_stmt
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -1071,7 +1066,7 @@ return|;
 block|}
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Get a string valued option.  * These are given as  *	cl=^Z  * Much decoding is done on the strings, and the strings are  * placed in area, which is a ref parameter which is updated.  * No checking on area overflow.  */
@@ -1082,21 +1077,15 @@ name|char
 modifier|*
 name|tgetstr
 parameter_list|(
-name|id
-parameter_list|,
-name|area
-parameter_list|)
 name|char
 modifier|*
 name|id
-decl_stmt|,
-decl|*
+parameter_list|,
+name|char
+modifier|*
 modifier|*
 name|area
-decl_stmt|;
-end_function
-
-begin_block
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -1190,7 +1179,7 @@ operator|)
 return|;
 block|}
 block|}
-end_block
+end_function
 
 begin_comment
 comment|/*  * Tdecode does the grung work to decode the  * string capability escapes.  */
@@ -1202,20 +1191,16 @@ name|char
 modifier|*
 name|tdecode
 parameter_list|(
-name|str
-parameter_list|,
-name|area
-parameter_list|)
 specifier|register
 name|char
 modifier|*
 name|str
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 modifier|*
 name|area
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|register
 name|char
@@ -1225,9 +1210,6 @@ decl_stmt|;
 specifier|register
 name|int
 name|c
-decl_stmt|;
-name|int
-name|i
 decl_stmt|;
 name|cp
 operator|=

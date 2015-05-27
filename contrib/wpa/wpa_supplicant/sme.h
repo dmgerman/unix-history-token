@@ -169,10 +169,10 @@ name|wpa_supplicant
 modifier|*
 name|wpa_s
 parameter_list|,
-name|union
-name|wpa_event_data
+name|struct
+name|disassoc_info
 modifier|*
-name|data
+name|info
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -252,6 +252,18 @@ specifier|const
 name|u8
 modifier|*
 name|prev_pending_bssid
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sme_clear_on_disassoc
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -447,10 +459,10 @@ name|wpa_supplicant
 modifier|*
 name|wpa_s
 parameter_list|,
-name|union
-name|wpa_event_data
+name|struct
+name|disassoc_info
 modifier|*
-name|data
+name|info
 parameter_list|)
 block|{ }
 end_function
@@ -511,6 +523,20 @@ specifier|const
 name|u8
 modifier|*
 name|prev_pending_bssid
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+specifier|inline
+name|void
+name|sme_clear_on_disassoc
+parameter_list|(
+name|struct
+name|wpa_supplicant
+modifier|*
+name|wpa_s
 parameter_list|)
 block|{ }
 end_function

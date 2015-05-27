@@ -84,7 +84,7 @@ file|"vi.h"
 end_include
 
 begin_comment
-comment|/*  * v_xchar -- [buffer] [count]x  *	Deletes the character(s) on which the cursor sits.  *  * PUBLIC: int v_xchar __P((SCR *, VICMD *));  */
+comment|/*  * v_xchar -- [buffer] [count]x  *	Deletes the character(s) on which the cursor sits.  *  * PUBLIC: int v_xchar(SCR *, VICMD *);  */
 end_comment
 
 begin_function
@@ -308,7 +308,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * v_Xchar -- [buffer] [count]X  *	Deletes the character(s) immediately before the current cursor  *	position.  *  * PUBLIC: int v_Xchar __P((SCR *, VICMD *));  */
+comment|/*  * v_Xchar -- [buffer] [count]X  *	Deletes the character(s) immediately before the current cursor  *	position.  *  * PUBLIC: int v_Xchar(SCR *, VICMD *);  */
 end_comment
 
 begin_function

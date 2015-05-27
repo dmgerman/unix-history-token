@@ -250,6 +250,9 @@ name|lasttime
 operator|=
 name|now
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|TERM_EMU
 name|get_pos
 argument_list|(
 operator|&
@@ -280,6 +283,8 @@ argument_list|,
 name|cury
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|vidc_biosputchar
 argument_list|(
 operator|(

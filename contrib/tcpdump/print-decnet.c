@@ -3,28 +3,11 @@ begin_comment
 comment|/*  * Copyright (c) 1992, 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/tcpdump/print-decnet.c,v 1.39 2005-05-06 02:16:26 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|NETDISSECT_REWORKED
+end_define
 
 begin_ifdef
 ifdef|#
@@ -99,12 +82,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"decnet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"extract.h"
 end_include
 
@@ -120,6 +97,2445 @@ directive|include
 file|"addrtoname.h"
 end_include
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|tstr
+index|[]
+init|=
+literal|"[|decnet]"
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WIN32
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|uint8_t
+name|byte
+index|[
+literal|1
+index|]
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* single byte field */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/*  * the keyword 'byte' generates conflicts in Windows  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|char
+name|Byte
+index|[
+literal|1
+index|]
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* single byte field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|byte
+value|Byte
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* WIN32 */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint8_t
+name|word
+index|[
+literal|2
+index|]
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 2 byte field */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|uint8_t
+name|longword
+index|[
+literal|4
+index|]
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 4 bytes field */
+end_comment
+
+begin_comment
+comment|/*  * Definitions for DECNET Phase IV protocol headers  */
+end_comment
+
+begin_union
+union|union
+name|etheraddress
+block|{
+name|uint8_t
+name|dne_addr
+index|[
+literal|6
+index|]
+decl_stmt|;
+comment|/* full ethernet address */
+struct|struct
+block|{
+name|uint8_t
+name|dne_hiord
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* DECnet HIORD prefix */
+name|uint8_t
+name|dne_nodeaddr
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* DECnet node address */
+block|}
+name|dne_remote
+struct|;
+block|}
+union|;
+end_union
+
+begin_typedef
+typedef|typedef
+name|union
+name|etheraddress
+name|etheraddr
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Ethernet address */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HIORD
+value|0x000400aa
+end_define
+
+begin_comment
+comment|/* high 32-bits of address (swapped) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AREAMASK
+value|0176000
+end_define
+
+begin_comment
+comment|/* mask for area field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AREASHIFT
+value|10
+end_define
+
+begin_comment
+comment|/* bit-offset for area field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NODEMASK
+value|01777
+end_define
+
+begin_comment
+comment|/* mask for node address field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DN_MAXADDL
+value|20
+end_define
+
+begin_comment
+comment|/* max size of DECnet address */
+end_comment
+
+begin_struct
+struct|struct
+name|dn_naddr
+block|{
+name|uint16_t
+name|a_len
+decl_stmt|;
+comment|/* length of address */
+name|uint8_t
+name|a_addr
+index|[
+name|DN_MAXADDL
+index|]
+decl_stmt|;
+comment|/* address as bytes */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * Define long and short header formats.  */
+end_comment
+
+begin_struct
+struct|struct
+name|shorthdr
+block|{
+name|byte
+name|sh_flags
+decl_stmt|;
+comment|/* route flags */
+name|word
+name|sh_dst
+decl_stmt|;
+comment|/* destination node address */
+name|word
+name|sh_src
+decl_stmt|;
+comment|/* source node address */
+name|byte
+name|sh_visits
+decl_stmt|;
+comment|/* visit count */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|longhdr
+block|{
+name|byte
+name|lg_flags
+decl_stmt|;
+comment|/* route flags */
+name|byte
+name|lg_darea
+decl_stmt|;
+comment|/* destination area (reserved) */
+name|byte
+name|lg_dsarea
+decl_stmt|;
+comment|/* destination subarea (reserved) */
+name|etheraddr
+name|lg_dst
+decl_stmt|;
+comment|/* destination id */
+name|byte
+name|lg_sarea
+decl_stmt|;
+comment|/* source area (reserved) */
+name|byte
+name|lg_ssarea
+decl_stmt|;
+comment|/* source subarea (reserved) */
+name|etheraddr
+name|lg_src
+decl_stmt|;
+comment|/* source id */
+name|byte
+name|lg_nextl2
+decl_stmt|;
+comment|/* next level 2 router (reserved) */
+name|byte
+name|lg_visits
+decl_stmt|;
+comment|/* visit count */
+name|byte
+name|lg_service
+decl_stmt|;
+comment|/* service class (reserved) */
+name|byte
+name|lg_pt
+decl_stmt|;
+comment|/* protocol type (reserved) */
+block|}
+struct|;
+end_struct
+
+begin_union
+union|union
+name|routehdr
+block|{
+name|struct
+name|shorthdr
+name|rh_short
+decl_stmt|;
+comment|/* short route header */
+name|struct
+name|longhdr
+name|rh_long
+decl_stmt|;
+comment|/* long route header */
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/*  * Define the values of various fields in the protocol messages.  *  * 1. Data packet formats.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_MASK
+value|7
+end_define
+
+begin_comment
+comment|/* mask for message type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_SHORT
+value|2
+end_define
+
+begin_comment
+comment|/* short message format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_LONG
+value|6
+end_define
+
+begin_comment
+comment|/* long message format */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|RMF_RQR
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|RMF_RQR
+value|010
+end_define
+
+begin_comment
+comment|/* request return to sender */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_RTS
+value|020
+end_define
+
+begin_comment
+comment|/* returning to sender */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_IE
+value|040
+end_define
+
+begin_comment
+comment|/* intra-ethernet packet */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* RMR_RQR */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_FVER
+value|0100
+end_define
+
+begin_comment
+comment|/* future version flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_PAD
+value|0200
+end_define
+
+begin_comment
+comment|/* pad field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_PADMASK
+value|0177
+end_define
+
+begin_comment
+comment|/* pad field mask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VIS_MASK
+value|077
+end_define
+
+begin_comment
+comment|/* visit field mask */
+end_comment
+
+begin_comment
+comment|/*  * 2. Control packet formats.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_CTLMASK
+value|017
+end_define
+
+begin_comment
+comment|/* mask for message type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_CTLMSG
+value|01
+end_define
+
+begin_comment
+comment|/* control message indicator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_INIT
+value|01
+end_define
+
+begin_comment
+comment|/* initialization message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_VER
+value|03
+end_define
+
+begin_comment
+comment|/* verification message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_TEST
+value|05
+end_define
+
+begin_comment
+comment|/* hello and test message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_L1ROUT
+value|07
+end_define
+
+begin_comment
+comment|/* level 1 routing message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_L2ROUT
+value|011
+end_define
+
+begin_comment
+comment|/* level 2 routing message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_RHELLO
+value|013
+end_define
+
+begin_comment
+comment|/* router hello message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RMF_EHELLO
+value|015
+end_define
+
+begin_comment
+comment|/* endnode hello message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_L2ROUT
+value|01
+end_define
+
+begin_comment
+comment|/* level 2 router */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_L1ROUT
+value|02
+end_define
+
+begin_comment
+comment|/* level 1 router */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_ENDNODE
+value|03
+end_define
+
+begin_comment
+comment|/* endnode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_VERIF
+value|04
+end_define
+
+begin_comment
+comment|/* verification required */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TI_BLOCK
+value|010
+end_define
+
+begin_comment
+comment|/* blocking requested */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VE_VERS
+value|2
+end_define
+
+begin_comment
+comment|/* version number (2) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VE_ECO
+value|0
+end_define
+
+begin_comment
+comment|/* ECO number */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VE_UECO
+value|0
+end_define
+
+begin_comment
+comment|/* user ECO number (0) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P3_VERS
+value|1
+end_define
+
+begin_comment
+comment|/* phase III version number (1) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P3_ECO
+value|3
+end_define
+
+begin_comment
+comment|/* ECO number (3) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P3_UECO
+value|0
+end_define
+
+begin_comment
+comment|/* user ECO number (0) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|II_L2ROUT
+value|01
+end_define
+
+begin_comment
+comment|/* level 2 router */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|II_L1ROUT
+value|02
+end_define
+
+begin_comment
+comment|/* level 1 router */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|II_ENDNODE
+value|03
+end_define
+
+begin_comment
+comment|/* endnode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|II_VERIF
+value|04
+end_define
+
+begin_comment
+comment|/* verification required */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|II_NOMCAST
+value|040
+end_define
+
+begin_comment
+comment|/* no multicast traffic accepted */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|II_BLOCK
+value|0100
+end_define
+
+begin_comment
+comment|/* blocking requested */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|II_TYPEMASK
+value|03
+end_define
+
+begin_comment
+comment|/* mask for node type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TESTDATA
+value|0252
+end_define
+
+begin_comment
+comment|/* test data bytes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TESTLEN
+value|1
+end_define
+
+begin_comment
+comment|/* length of transmitted test data */
+end_comment
+
+begin_comment
+comment|/*  * Define control message formats.  */
+end_comment
+
+begin_struct
+struct|struct
+name|initmsgIII
+comment|/* phase III initialization message */
+block|{
+name|byte
+name|inIII_flags
+decl_stmt|;
+comment|/* route flags */
+name|word
+name|inIII_src
+decl_stmt|;
+comment|/* source node address */
+name|byte
+name|inIII_info
+decl_stmt|;
+comment|/* routing layer information */
+name|word
+name|inIII_blksize
+decl_stmt|;
+comment|/* maximum data link block size */
+name|byte
+name|inIII_vers
+decl_stmt|;
+comment|/* version number */
+name|byte
+name|inIII_eco
+decl_stmt|;
+comment|/* ECO number */
+name|byte
+name|inIII_ueco
+decl_stmt|;
+comment|/* user ECO number */
+name|byte
+name|inIII_rsvd
+decl_stmt|;
+comment|/* reserved image field */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|initmsg
+comment|/* initialization message */
+block|{
+name|byte
+name|in_flags
+decl_stmt|;
+comment|/* route flags */
+name|word
+name|in_src
+decl_stmt|;
+comment|/* source node address */
+name|byte
+name|in_info
+decl_stmt|;
+comment|/* routing layer information */
+name|word
+name|in_blksize
+decl_stmt|;
+comment|/* maximum data link block size */
+name|byte
+name|in_vers
+decl_stmt|;
+comment|/* version number */
+name|byte
+name|in_eco
+decl_stmt|;
+comment|/* ECO number */
+name|byte
+name|in_ueco
+decl_stmt|;
+comment|/* user ECO number */
+name|word
+name|in_hello
+decl_stmt|;
+comment|/* hello timer */
+name|byte
+name|in_rsvd
+decl_stmt|;
+comment|/* reserved image field */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|verifmsg
+comment|/* verification message */
+block|{
+name|byte
+name|ve_flags
+decl_stmt|;
+comment|/* route flags */
+name|word
+name|ve_src
+decl_stmt|;
+comment|/* source node address */
+name|byte
+name|ve_fcnval
+decl_stmt|;
+comment|/* function value image field */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|testmsg
+comment|/* hello and test message */
+block|{
+name|byte
+name|te_flags
+decl_stmt|;
+comment|/* route flags */
+name|word
+name|te_src
+decl_stmt|;
+comment|/* source node address */
+name|byte
+name|te_data
+decl_stmt|;
+comment|/* test data image field */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|l1rout
+comment|/* level 1 routing message */
+block|{
+name|byte
+name|r1_flags
+decl_stmt|;
+comment|/* route flags */
+name|word
+name|r1_src
+decl_stmt|;
+comment|/* source node address */
+name|byte
+name|r1_rsvd
+decl_stmt|;
+comment|/* reserved field */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|l2rout
+comment|/* level 2 routing message */
+block|{
+name|byte
+name|r2_flags
+decl_stmt|;
+comment|/* route flags */
+name|word
+name|r2_src
+decl_stmt|;
+comment|/* source node address */
+name|byte
+name|r2_rsvd
+decl_stmt|;
+comment|/* reserved field */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|rhellomsg
+comment|/* router hello message */
+block|{
+name|byte
+name|rh_flags
+decl_stmt|;
+comment|/* route flags */
+name|byte
+name|rh_vers
+decl_stmt|;
+comment|/* version number */
+name|byte
+name|rh_eco
+decl_stmt|;
+comment|/* ECO number */
+name|byte
+name|rh_ueco
+decl_stmt|;
+comment|/* user ECO number */
+name|etheraddr
+name|rh_src
+decl_stmt|;
+comment|/* source id */
+name|byte
+name|rh_info
+decl_stmt|;
+comment|/* routing layer information */
+name|word
+name|rh_blksize
+decl_stmt|;
+comment|/* maximum data link block size */
+name|byte
+name|rh_priority
+decl_stmt|;
+comment|/* router's priority */
+name|byte
+name|rh_area
+decl_stmt|;
+comment|/* reserved */
+name|word
+name|rh_hello
+decl_stmt|;
+comment|/* hello timer */
+name|byte
+name|rh_mpd
+decl_stmt|;
+comment|/* reserved */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ehellomsg
+comment|/* endnode hello message */
+block|{
+name|byte
+name|eh_flags
+decl_stmt|;
+comment|/* route flags */
+name|byte
+name|eh_vers
+decl_stmt|;
+comment|/* version number */
+name|byte
+name|eh_eco
+decl_stmt|;
+comment|/* ECO number */
+name|byte
+name|eh_ueco
+decl_stmt|;
+comment|/* user ECO number */
+name|etheraddr
+name|eh_src
+decl_stmt|;
+comment|/* source id */
+name|byte
+name|eh_info
+decl_stmt|;
+comment|/* routing layer information */
+name|word
+name|eh_blksize
+decl_stmt|;
+comment|/* maximum data link block size */
+name|byte
+name|eh_area
+decl_stmt|;
+comment|/* area (reserved) */
+name|byte
+name|eh_seed
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* verification seed */
+name|etheraddr
+name|eh_router
+decl_stmt|;
+comment|/* designated router */
+name|word
+name|eh_hello
+decl_stmt|;
+comment|/* hello timer */
+name|byte
+name|eh_mpd
+decl_stmt|;
+comment|/* (reserved) */
+name|byte
+name|eh_data
+decl_stmt|;
+comment|/* test data image field */
+block|}
+struct|;
+end_struct
+
+begin_union
+union|union
+name|controlmsg
+block|{
+name|struct
+name|initmsg
+name|cm_init
+decl_stmt|;
+comment|/* initialization message */
+name|struct
+name|verifmsg
+name|cm_ver
+decl_stmt|;
+comment|/* verification message */
+name|struct
+name|testmsg
+name|cm_test
+decl_stmt|;
+comment|/* hello and test message */
+name|struct
+name|l1rout
+name|cm_l1rou
+decl_stmt|;
+comment|/* level 1 routing message */
+name|struct
+name|l2rout
+name|cm_l2rout
+decl_stmt|;
+comment|/* level 2 routing message */
+name|struct
+name|rhellomsg
+name|cm_rhello
+decl_stmt|;
+comment|/* router hello message */
+name|struct
+name|ehellomsg
+name|cm_ehello
+decl_stmt|;
+comment|/* endnode hello message */
+block|}
+union|;
+end_union
+
+begin_comment
+comment|/* Macros for decoding routing-info fields */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RI_COST
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)&0777)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RI_HOPS
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>>10)&037)
+end_define
+
+begin_escape
+end_escape
+
+begin_comment
+comment|/*  * NSP protocol fields and values.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NSP_TYPEMASK
+value|014
+end_define
+
+begin_comment
+comment|/* mask to isolate type code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NSP_SUBMASK
+value|0160
+end_define
+
+begin_comment
+comment|/* mask to isolate subtype code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NSP_SUBSHFT
+value|4
+end_define
+
+begin_comment
+comment|/* shift to move subtype code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFT_DATA
+value|0
+end_define
+
+begin_comment
+comment|/* data message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFT_ACK
+value|04
+end_define
+
+begin_comment
+comment|/* acknowledgement message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFT_CTL
+value|010
+end_define
+
+begin_comment
+comment|/* control message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_ILS
+value|020
+end_define
+
+begin_comment
+comment|/* data or I/LS indicator */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_BOM
+value|040
+end_define
+
+begin_comment
+comment|/* beginning of message (data) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_MOM
+value|0
+end_define
+
+begin_comment
+comment|/* middle of message (data) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_EOM
+value|0100
+end_define
+
+begin_comment
+comment|/* end of message (data) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_INT
+value|040
+end_define
+
+begin_comment
+comment|/* interrupt message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_DACK
+value|0
+end_define
+
+begin_comment
+comment|/* data acknowledgement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_IACK
+value|020
+end_define
+
+begin_comment
+comment|/* I/LS acknowledgement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_CACK
+value|040
+end_define
+
+begin_comment
+comment|/* connect acknowledgement */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_NOP
+value|0
+end_define
+
+begin_comment
+comment|/* no operation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_CI
+value|020
+end_define
+
+begin_comment
+comment|/* connect initiate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_CC
+value|040
+end_define
+
+begin_comment
+comment|/* connect confirm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_DI
+value|060
+end_define
+
+begin_comment
+comment|/* disconnect initiate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_DC
+value|0100
+end_define
+
+begin_comment
+comment|/* disconnect confirm */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFS_RCI
+value|0140
+end_define
+
+begin_comment
+comment|/* retransmitted connect initiate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SGQ_ACK
+value|0100000
+end_define
+
+begin_comment
+comment|/* ack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SGQ_NAK
+value|0110000
+end_define
+
+begin_comment
+comment|/* negative ack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SGQ_OACK
+value|0120000
+end_define
+
+begin_comment
+comment|/* other channel ack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SGQ_ONAK
+value|0130000
+end_define
+
+begin_comment
+comment|/* other channel negative ack */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SGQ_MASK
+value|07777
+end_define
+
+begin_comment
+comment|/* mask to isolate seq # */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SGQ_OTHER
+value|020000
+end_define
+
+begin_comment
+comment|/* other channel qualifier */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SGQ_DELAY
+value|010000
+end_define
+
+begin_comment
+comment|/* ack delay flag */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SGQ_EOM
+value|0100000
+end_define
+
+begin_comment
+comment|/* pseudo flag for end-of-message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSM_MASK
+value|03
+end_define
+
+begin_comment
+comment|/* mask for modifier field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSM_NOCHANGE
+value|0
+end_define
+
+begin_comment
+comment|/* no change */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSM_DONOTSEND
+value|1
+end_define
+
+begin_comment
+comment|/* do not send data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSM_SEND
+value|2
+end_define
+
+begin_comment
+comment|/* send data */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSI_MASK
+value|014
+end_define
+
+begin_comment
+comment|/* mask for interpretation field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSI_DATA
+value|0
+end_define
+
+begin_comment
+comment|/* data segment or message count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSI_INTR
+value|4
+end_define
+
+begin_comment
+comment|/* interrupt request count */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LSI_INTM
+value|0377
+end_define
+
+begin_comment
+comment|/* funny marker for int. message */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COS_MASK
+value|014
+end_define
+
+begin_comment
+comment|/* mask for flow control field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COS_NONE
+value|0
+end_define
+
+begin_comment
+comment|/* no flow control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COS_SEGMENT
+value|04
+end_define
+
+begin_comment
+comment|/* segment flow control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COS_MESSAGE
+value|010
+end_define
+
+begin_comment
+comment|/* message flow control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COS_CRYPTSER
+value|020
+end_define
+
+begin_comment
+comment|/* cryptographic services requested */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COS_DEFAULT
+value|1
+end_define
+
+begin_comment
+comment|/* default value for field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COI_MASK
+value|3
+end_define
+
+begin_comment
+comment|/* mask for version field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COI_32
+value|0
+end_define
+
+begin_comment
+comment|/* version 3.2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COI_31
+value|1
+end_define
+
+begin_comment
+comment|/* version 3.1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COI_40
+value|2
+end_define
+
+begin_comment
+comment|/* version 4.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|COI_41
+value|3
+end_define
+
+begin_comment
+comment|/* version 4.1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNU_MASK
+value|140
+end_define
+
+begin_comment
+comment|/* mask for session control version */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNU_10
+value|000
+end_define
+
+begin_comment
+comment|/* session V1.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNU_20
+value|040
+end_define
+
+begin_comment
+comment|/* session V2.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNU_ACCESS
+value|1
+end_define
+
+begin_comment
+comment|/* access control present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNU_USRDATA
+value|2
+end_define
+
+begin_comment
+comment|/* user data field present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNU_INVKPROXY
+value|4
+end_define
+
+begin_comment
+comment|/* invoke proxy field present */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNU_UICPROXY
+value|8
+end_define
+
+begin_comment
+comment|/* use uic-based proxy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_NORESOURCES
+value|1
+end_define
+
+begin_comment
+comment|/* no resource reason code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_NOLINK
+value|41
+end_define
+
+begin_comment
+comment|/* no link terminate reason code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_COMPLETE
+value|42
+end_define
+
+begin_comment
+comment|/* disconnect complete reason code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_NOERROR
+value|0
+end_define
+
+begin_comment
+comment|/* user disconnect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_SHUT
+value|3
+end_define
+
+begin_comment
+comment|/* node is shutting down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_NOUSER
+value|4
+end_define
+
+begin_comment
+comment|/* destination end user does not exist */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_INVDEST
+value|5
+end_define
+
+begin_comment
+comment|/* invalid end user destination */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_REMRESRC
+value|6
+end_define
+
+begin_comment
+comment|/* insufficient remote resources */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_TPA
+value|8
+end_define
+
+begin_comment
+comment|/* third party abort */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_PROTOCOL
+value|7
+end_define
+
+begin_comment
+comment|/* protocol error discovered */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_ABORT
+value|9
+end_define
+
+begin_comment
+comment|/* user abort */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_LOCALRESRC
+value|32
+end_define
+
+begin_comment
+comment|/* insufficient local resources */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_REMUSERRESRC
+value|33
+end_define
+
+begin_comment
+comment|/* insufficient remote user resources */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_BADACCESS
+value|34
+end_define
+
+begin_comment
+comment|/* bad access control information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_BADACCNT
+value|36
+end_define
+
+begin_comment
+comment|/* bad ACCOUNT information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_CONNECTABORT
+value|38
+end_define
+
+begin_comment
+comment|/* connect request cancelled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_TIMEDOUT
+value|38
+end_define
+
+begin_comment
+comment|/* remote node or user crashed */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_UNREACHABLE
+value|39
+end_define
+
+begin_comment
+comment|/* local timers expired due to ... */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_BADIMAGE
+value|43
+end_define
+
+begin_comment
+comment|/* bad image data in connect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DI_SERVMISMATCH
+value|54
+end_define
+
+begin_comment
+comment|/* cryptographic service mismatch */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_OBJREJECT
+value|0
+end_define
+
+begin_comment
+comment|/* object rejected connect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_USERDISCONNECT
+value|0
+end_define
+
+begin_comment
+comment|/* user disconnect */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_RESOURCES
+value|1
+end_define
+
+begin_comment
+comment|/* insufficient resources (local or remote) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_NOSUCHNODE
+value|2
+end_define
+
+begin_comment
+comment|/* unrecognized node name */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_REMOTESHUT
+value|3
+end_define
+
+begin_comment
+comment|/* remote node shutting down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_NOSUCHOBJ
+value|4
+end_define
+
+begin_comment
+comment|/* unrecognized object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_INVOBJFORMAT
+value|5
+end_define
+
+begin_comment
+comment|/* invalid object name format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_OBJTOOBUSY
+value|6
+end_define
+
+begin_comment
+comment|/* object too busy */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_NETWORKABORT
+value|8
+end_define
+
+begin_comment
+comment|/* network abort */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_USERABORT
+value|9
+end_define
+
+begin_comment
+comment|/* user abort */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_INVNODEFORMAT
+value|10
+end_define
+
+begin_comment
+comment|/* invalid node name format */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_LOCALSHUT
+value|11
+end_define
+
+begin_comment
+comment|/* local node shutting down */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_ACCESSREJECT
+value|34
+end_define
+
+begin_comment
+comment|/* invalid access control information */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_NORESPONSE
+value|38
+end_define
+
+begin_comment
+comment|/* no response from object */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|UC_UNREACHABLE
+value|39
+end_define
+
+begin_comment
+comment|/* node unreachable */
+end_comment
+
+begin_comment
+comment|/*  * NSP message formats.  */
+end_comment
+
+begin_struct
+struct|struct
+name|nsphdr
+comment|/* general nsp header */
+block|{
+name|byte
+name|nh_flags
+decl_stmt|;
+comment|/* message flags */
+name|word
+name|nh_dst
+decl_stmt|;
+comment|/* destination link address */
+name|word
+name|nh_src
+decl_stmt|;
+comment|/* source link address */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|seghdr
+comment|/* data segment header */
+block|{
+name|byte
+name|sh_flags
+decl_stmt|;
+comment|/* message flags */
+name|word
+name|sh_dst
+decl_stmt|;
+comment|/* destination link address */
+name|word
+name|sh_src
+decl_stmt|;
+comment|/* source link address */
+name|word
+name|sh_seq
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* sequence numbers */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|minseghdr
+comment|/* minimum data segment header */
+block|{
+name|byte
+name|ms_flags
+decl_stmt|;
+comment|/* message flags */
+name|word
+name|ms_dst
+decl_stmt|;
+comment|/* destination link address */
+name|word
+name|ms_src
+decl_stmt|;
+comment|/* source link address */
+name|word
+name|ms_seq
+decl_stmt|;
+comment|/* sequence number */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|lsmsg
+comment|/* link service message (after hdr) */
+block|{
+name|byte
+name|ls_lsflags
+decl_stmt|;
+comment|/* link service flags */
+name|byte
+name|ls_fcval
+decl_stmt|;
+comment|/* flow control value */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ackmsg
+comment|/* acknowledgement message */
+block|{
+name|byte
+name|ak_flags
+decl_stmt|;
+comment|/* message flags */
+name|word
+name|ak_dst
+decl_stmt|;
+comment|/* destination link address */
+name|word
+name|ak_src
+decl_stmt|;
+comment|/* source link address */
+name|word
+name|ak_acknum
+index|[
+literal|2
+index|]
+decl_stmt|;
+comment|/* acknowledgement numbers */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|minackmsg
+comment|/* minimum acknowledgement message */
+block|{
+name|byte
+name|mk_flags
+decl_stmt|;
+comment|/* message flags */
+name|word
+name|mk_dst
+decl_stmt|;
+comment|/* destination link address */
+name|word
+name|mk_src
+decl_stmt|;
+comment|/* source link address */
+name|word
+name|mk_acknum
+decl_stmt|;
+comment|/* acknowledgement number */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ciackmsg
+comment|/* connect acknowledgement message */
+block|{
+name|byte
+name|ck_flags
+decl_stmt|;
+comment|/* message flags */
+name|word
+name|ck_dst
+decl_stmt|;
+comment|/* destination link address */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|cimsg
+comment|/* connect initiate message */
+block|{
+name|byte
+name|ci_flags
+decl_stmt|;
+comment|/* message flags */
+name|word
+name|ci_dst
+decl_stmt|;
+comment|/* destination link address (0) */
+name|word
+name|ci_src
+decl_stmt|;
+comment|/* source link address */
+name|byte
+name|ci_services
+decl_stmt|;
+comment|/* requested services */
+name|byte
+name|ci_info
+decl_stmt|;
+comment|/* information */
+name|word
+name|ci_segsize
+decl_stmt|;
+comment|/* maximum segment size */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|ccmsg
+comment|/* connect confirm message */
+block|{
+name|byte
+name|cc_flags
+decl_stmt|;
+comment|/* message flags */
+name|word
+name|cc_dst
+decl_stmt|;
+comment|/* destination link address */
+name|word
+name|cc_src
+decl_stmt|;
+comment|/* source link address */
+name|byte
+name|cc_services
+decl_stmt|;
+comment|/* requested services */
+name|byte
+name|cc_info
+decl_stmt|;
+comment|/* information */
+name|word
+name|cc_segsize
+decl_stmt|;
+comment|/* maximum segment size */
+name|byte
+name|cc_optlen
+decl_stmt|;
+comment|/* optional data length */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|cnmsg
+comment|/* generic connect message */
+block|{
+name|byte
+name|cn_flags
+decl_stmt|;
+comment|/* message flags */
+name|word
+name|cn_dst
+decl_stmt|;
+comment|/* destination link address */
+name|word
+name|cn_src
+decl_stmt|;
+comment|/* source link address */
+name|byte
+name|cn_services
+decl_stmt|;
+comment|/* requested services */
+name|byte
+name|cn_info
+decl_stmt|;
+comment|/* information */
+name|word
+name|cn_segsize
+decl_stmt|;
+comment|/* maximum segment size */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|dimsg
+comment|/* disconnect initiate message */
+block|{
+name|byte
+name|di_flags
+decl_stmt|;
+comment|/* message flags */
+name|word
+name|di_dst
+decl_stmt|;
+comment|/* destination link address */
+name|word
+name|di_src
+decl_stmt|;
+comment|/* source link address */
+name|word
+name|di_reason
+decl_stmt|;
+comment|/* reason code */
+name|byte
+name|di_optlen
+decl_stmt|;
+comment|/* optional data length */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|dcmsg
+comment|/* disconnect confirm message */
+block|{
+name|byte
+name|dc_flags
+decl_stmt|;
+comment|/* message flags */
+name|word
+name|dc_dst
+decl_stmt|;
+comment|/* destination link address */
+name|word
+name|dc_src
+decl_stmt|;
+comment|/* source link address */
+name|word
+name|dc_reason
+decl_stmt|;
+comment|/* reason code */
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* Forwards */
 end_comment
@@ -129,6 +2545,9 @@ specifier|static
 name|int
 name|print_decnet_ctlmsg
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|union
 name|routehdr
@@ -146,6 +2565,9 @@ specifier|static
 name|void
 name|print_t_info
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -156,6 +2578,9 @@ specifier|static
 name|int
 name|print_l1_routes
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -170,6 +2595,9 @@ specifier|static
 name|int
 name|print_l2_routes
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -184,6 +2612,9 @@ specifier|static
 name|void
 name|print_i_info
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -208,6 +2639,9 @@ specifier|static
 name|int
 name|print_nsp
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -222,6 +2656,9 @@ specifier|static
 name|void
 name|print_reason
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -238,10 +2675,13 @@ specifier|static
 name|void
 name|pdata
 parameter_list|(
+name|netdissect_options
+modifier|*
+parameter_list|,
 name|u_char
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -279,6 +2719,10 @@ begin_function
 name|void
 name|decnet_print
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|u_char
@@ -333,17 +2777,20 @@ name|shorthdr
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"[|decnet]"
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|ap
@@ -372,12 +2819,15 @@ name|shorthdr
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"[|decnet]"
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -389,12 +2839,15 @@ operator|>
 name|length
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"[|decnet]"
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -422,7 +2875,7 @@ argument_list|)
 index|]
 operator|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|rhp
 operator|->
@@ -459,16 +2912,19 @@ name|RMF_PADMASK
 decl_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"[pad:%d] "
-argument_list|,
+operator|,
 name|padlen
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -480,17 +2936,20 @@ operator|+
 literal|2
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"[|decnet]"
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 name|ap
 index|[
@@ -553,15 +3012,16 @@ operator|&
 name|RMF_FVER
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"future-version-decnet"
+operator|)
 argument_list|)
 expr_stmt|;
-name|default_print
+name|ND_DEFAULTPRINT
 argument_list|(
 name|ap
 argument_list|,
@@ -588,6 +3048,8 @@ condition|(
 operator|!
 name|print_decnet_ctlmsg
 argument_list|(
+name|ndo
+argument_list|,
 name|rhp
 argument_list|,
 name|length
@@ -621,17 +3083,20 @@ name|longhdr
 argument_list|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"[|decnet]"
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|rhp
 operator|->
@@ -712,7 +3177,7 @@ break|break;
 case|case
 name|RMF_SHORT
 case|:
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|rhp
 operator|->
@@ -789,15 +3254,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"unknown message flags under mask"
+operator|)
 argument_list|)
 expr_stmt|;
-name|default_print
+name|ND_DEFAULTPRINT
 argument_list|(
 operator|(
 name|u_char
@@ -815,29 +3281,36 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s> %s %d "
-argument_list|,
+operator|,
 name|dnaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|src
 argument_list|)
-argument_list|,
+operator|,
 name|dnaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|dst
 argument_list|)
-argument_list|,
+operator|,
 name|pktlen
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|vflag
+name|ndo
+operator|->
+name|ndo_vflag
 condition|)
 block|{
 if|if
@@ -846,12 +3319,13 @@ name|mflags
 operator|&
 name|RMF_RQR
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"RQR "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -860,12 +3334,13 @@ name|mflags
 operator|&
 name|RMF_RTS
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"RTS "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -874,22 +3349,24 @@ name|mflags
 operator|&
 name|RMF_IE
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"IE "
+operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%d hops "
-argument_list|,
+operator|,
 name|hops
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -898,6 +3375,8 @@ condition|(
 operator|!
 name|print_nsp
 argument_list|(
+name|ndo
+argument_list|,
 name|nspp
 argument_list|,
 name|nsplen
@@ -909,12 +3388,15 @@ goto|;
 return|return;
 name|trunc
 label|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
-literal|"[|decnet]"
+operator|(
+name|ndo
+operator|,
+literal|"%s"
+operator|,
+name|tstr
+operator|)
 argument_list|)
 expr_stmt|;
 return|return;
@@ -926,6 +3408,10 @@ specifier|static
 name|int
 name|print_decnet_ctlmsg
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 specifier|const
 name|union
@@ -1015,12 +3501,13 @@ block|{
 case|case
 name|RMF_INIT
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"init "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1036,7 +3523,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|cmp
 operator|->
@@ -1122,30 +3609,35 @@ argument_list|)
 expr_stmt|;
 name|print_t_info
 argument_list|(
+name|ndo
+argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"src %sblksize %d vers %d eco %d ueco %d hello %d"
-argument_list|,
+operator|,
 name|dnaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|src
 argument_list|)
-argument_list|,
+operator|,
 name|blksize
-argument_list|,
+operator|,
 name|vers
-argument_list|,
+operator|,
 name|eco
-argument_list|,
+operator|,
 name|ueco
-argument_list|,
+operator|,
 name|hello
+operator|)
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1156,12 +3648,13 @@ break|break;
 case|case
 name|RMF_VER
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"verification "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1177,7 +3670,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|cmp
 operator|->
@@ -1206,19 +3699,22 @@ operator|.
 name|ve_fcnval
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"src %s fcnval %o"
-argument_list|,
+operator|,
 name|dnaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|src
 argument_list|)
-argument_list|,
+operator|,
 name|other
+operator|)
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1229,12 +3725,13 @@ break|break;
 case|case
 name|RMF_TEST
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"test "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1250,7 +3747,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|cmp
 operator|->
@@ -1279,19 +3776,22 @@ operator|.
 name|te_data
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"src %s data %o"
-argument_list|,
+operator|,
 name|dnaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|src
 argument_list|)
-argument_list|,
+operator|,
 name|other
+operator|)
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1302,12 +3802,13 @@ break|break;
 case|case
 name|RMF_L1ROUT
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"lev-1-routing "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1323,7 +3824,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|cmp
 operator|->
@@ -1341,23 +3842,28 @@ operator|.
 name|r1_src
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"src %s "
-argument_list|,
+operator|,
 name|dnaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|src
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ret
 operator|=
 name|print_l1_routes
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 operator|(
 name|rhpx
@@ -1383,12 +3889,13 @@ break|break;
 case|case
 name|RMF_L2ROUT
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"lev-2-routing "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1404,7 +3911,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|cmp
 operator|->
@@ -1422,23 +3929,28 @@ operator|.
 name|r2_src
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"src %s "
-argument_list|,
+operator|,
 name|dnaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|src
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 name|ret
 operator|=
 name|print_l2_routes
 argument_list|(
+name|ndo
+argument_list|,
 operator|&
 operator|(
 name|rhpx
@@ -1464,12 +3976,13 @@ break|break;
 case|case
 name|RMF_RHELLO
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"router-hello "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1485,7 +3998,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|cmp
 operator|->
@@ -1610,32 +4123,37 @@ argument_list|)
 expr_stmt|;
 name|print_i_info
 argument_list|(
+name|ndo
+argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"vers %d eco %d ueco %d src %s blksize %d pri %d hello %d"
-argument_list|,
+operator|,
 name|vers
-argument_list|,
+operator|,
 name|eco
-argument_list|,
+operator|,
 name|ueco
-argument_list|,
+operator|,
 name|dnaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|src
 argument_list|)
-argument_list|,
+operator|,
 name|blksize
-argument_list|,
+operator|,
 name|priority
-argument_list|,
+operator|,
 name|hello
+operator|)
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1667,12 +4185,13 @@ break|break;
 case|case
 name|RMF_EHELLO
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"endnode-hello "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -1688,7 +4207,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|cmp
 operator|->
@@ -1853,37 +4372,44 @@ argument_list|)
 expr_stmt|;
 name|print_i_info
 argument_list|(
+name|ndo
+argument_list|,
 name|info
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"vers %d eco %d ueco %d src %s blksize %d rtr %s hello %d data %o"
-argument_list|,
+operator|,
 name|vers
-argument_list|,
+operator|,
 name|eco
-argument_list|,
+operator|,
 name|ueco
-argument_list|,
+operator|,
 name|dnaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|src
 argument_list|)
-argument_list|,
+operator|,
 name|blksize
-argument_list|,
+operator|,
 name|dnaddr_string
 argument_list|(
+name|ndo
+argument_list|,
 name|dst
 argument_list|)
-argument_list|,
+operator|,
 name|hello
-argument_list|,
+operator|,
 name|other
+operator|)
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1892,15 +4418,16 @@ literal|1
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"unknown control message"
+operator|)
 argument_list|)
 expr_stmt|;
-name|default_print
+name|ND_DEFAULTPRINT
 argument_list|(
 operator|(
 name|u_char
@@ -1942,6 +4469,10 @@ specifier|static
 name|void
 name|print_t_info
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|int
 name|info
 parameter_list|)
@@ -1961,48 +4492,52 @@ block|{
 case|case
 literal|0
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"reserved-ntype? "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|TI_L2ROUT
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"l2rout "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|TI_L1ROUT
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"l1rout "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|TI_ENDNODE
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"endnode "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2013,12 +4548,13 @@ name|info
 operator|&
 name|TI_VERIF
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"verif "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2027,12 +4563,13 @@ name|info
 operator|&
 name|TI_BLOCK
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"blo "
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2043,6 +4580,10 @@ specifier|static
 name|int
 name|print_l1_routes
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -2076,7 +4617,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|rp
@@ -2164,28 +4705,29 @@ argument_list|(
 name|short
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"{ids %d-%d cost %d hops %d} "
-argument_list|,
+operator|,
 name|id
-argument_list|,
+operator|,
 name|id
 operator|+
 name|count
-argument_list|,
+operator|,
 name|RI_COST
 argument_list|(
 name|info
 argument_list|)
-argument_list|,
+operator|,
 name|RI_HOPS
 argument_list|(
 name|info
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2209,6 +4751,10 @@ specifier|static
 name|int
 name|print_l2_routes
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|char
 modifier|*
@@ -2242,7 +4788,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|rp
@@ -2330,28 +4876,29 @@ argument_list|(
 name|short
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"{areas %d-%d cost %d hops %d} "
-argument_list|,
+operator|,
 name|area
-argument_list|,
+operator|,
 name|area
 operator|+
 name|count
-argument_list|,
+operator|,
 name|RI_COST
 argument_list|(
 name|info
 argument_list|)
-argument_list|,
+operator|,
 name|RI_HOPS
 argument_list|(
 name|info
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2375,6 +4922,10 @@ specifier|static
 name|void
 name|print_i_info
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|int
 name|info
 parameter_list|)
@@ -2394,48 +4945,52 @@ block|{
 case|case
 literal|0
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"reserved-ntype? "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|II_L2ROUT
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"l2rout "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|II_L1ROUT
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"l1rout "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|II_ENDNODE
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"endnode "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2446,12 +5001,13 @@ name|info
 operator|&
 name|II_VERIF
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"verif "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2460,12 +5016,13 @@ name|info
 operator|&
 name|II_NOMCAST
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"nomcast "
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2474,12 +5031,13 @@ name|info
 operator|&
 name|II_BLOCK
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"blo "
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2515,6 +5073,10 @@ specifier|static
 name|int
 name|print_nsp
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -2557,7 +5119,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|nsphp
@@ -2621,13 +5183,17 @@ name|MFS_BOM
 operator|+
 name|MFS_EOM
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"data %d>%d "
-argument_list|,
+operator|,
 name|src
-argument_list|,
+operator|,
 name|dst
+operator|)
 argument_list|)
 expr_stmt|;
 block|{
@@ -2673,7 +5239,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|shp
 operator|->
@@ -2713,29 +5279,31 @@ operator|)
 operator|==
 name|SGQ_NAK
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"nak %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ack %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 name|data_off
@@ -2754,7 +5322,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|shp
 operator|->
@@ -2794,29 +5362,31 @@ operator|)
 operator|==
 name|SGQ_ONAK
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"onak %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"oack %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 name|data_off
@@ -2835,7 +5405,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|shp
 operator|->
@@ -2859,16 +5429,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"seg %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -2891,7 +5462,7 @@ name|data_off
 index|]
 operator|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|dp
@@ -2903,6 +5474,8 @@ argument_list|)
 expr_stmt|;
 name|pdata
 argument_list|(
+name|ndo
+argument_list|,
 name|dp
 argument_list|,
 name|nsplen
@@ -2920,9 +5493,13 @@ name|MFS_ILS
 operator|+
 name|MFS_INT
 case|:
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"intr "
+operator|)
 argument_list|)
 expr_stmt|;
 block|{
@@ -2968,7 +5545,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|shp
 operator|->
@@ -3008,29 +5585,31 @@ operator|)
 operator|==
 name|SGQ_NAK
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"nak %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ack %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 name|data_off
@@ -3049,7 +5628,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|shp
 operator|->
@@ -3089,29 +5668,31 @@ operator|)
 operator|==
 name|SGQ_ONAK
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"nakdat %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ackdat %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 name|data_off
@@ -3130,7 +5711,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|shp
 operator|->
@@ -3154,16 +5735,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"seg %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -3186,7 +5768,7 @@ name|data_off
 index|]
 operator|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|dp
@@ -3198,6 +5780,8 @@ argument_list|)
 expr_stmt|;
 name|pdata
 argument_list|(
+name|ndo
+argument_list|,
 name|dp
 argument_list|,
 name|nsplen
@@ -3213,16 +5797,17 @@ break|break;
 case|case
 name|MFS_ILS
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"link-service %d>%d "
-argument_list|,
+operator|,
 name|src
-argument_list|,
+operator|,
 name|dst
+operator|)
 argument_list|)
 expr_stmt|;
 block|{
@@ -3287,7 +5872,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|shp
 operator|->
@@ -3327,32 +5912,34 @@ operator|)
 operator|==
 name|SGQ_NAK
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"nak %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ack %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|shp
 operator|->
@@ -3392,32 +5979,34 @@ operator|)
 operator|==
 name|SGQ_ONAK
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"nakdat %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ackdat %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|shp
 operator|->
@@ -3441,19 +6030,20 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"seg %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|lsmp
@@ -3487,14 +6077,15 @@ block|{
 case|case
 name|LSI_DATA
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"dat seg count %d "
-argument_list|,
+operator|,
 name|fcval
+operator|)
 argument_list|)
 expr_stmt|;
 switch|switch
@@ -3511,36 +6102,39 @@ break|break;
 case|case
 name|LSM_DONOTSEND
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"donotsend-data "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|LSM_SEND
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"send-data "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"reserved-fcmod? %x"
-argument_list|,
+operator|,
 name|lsflags
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3549,26 +6143,28 @@ break|break;
 case|case
 name|LSI_INTR
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"intr req count %d "
-argument_list|,
+operator|,
 name|fcval
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"reserved-fcval-int? %x"
-argument_list|,
+operator|,
 name|lsflags
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3576,18 +6172,19 @@ block|}
 block|}
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"reserved-subtype? %x %d> %d"
-argument_list|,
+operator|,
 name|flags
-argument_list|,
+operator|,
 name|src
-argument_list|,
+operator|,
 name|dst
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3606,16 +6203,17 @@ block|{
 case|case
 name|MFS_DACK
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"data-ack %d>%d "
-argument_list|,
+operator|,
 name|src
-argument_list|,
+operator|,
 name|dst
+operator|)
 argument_list|)
 expr_stmt|;
 block|{
@@ -3647,7 +6245,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|amp
@@ -3683,29 +6281,31 @@ operator|)
 operator|==
 name|SGQ_NAK
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"nak %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ack %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 name|ack
@@ -3738,29 +6338,31 @@ operator|)
 operator|==
 name|SGQ_ONAK
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"onak %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"oack %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3770,16 +6372,17 @@ break|break;
 case|case
 name|MFS_IACK
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ils-ack %d>%d "
-argument_list|,
+operator|,
 name|src
-argument_list|,
+operator|,
 name|dst
+operator|)
 argument_list|)
 expr_stmt|;
 block|{
@@ -3811,7 +6414,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|amp
@@ -3847,32 +6450,34 @@ operator|)
 operator|==
 name|SGQ_NAK
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"nak %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ack %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 name|amp
 operator|->
@@ -3912,29 +6517,31 @@ operator|)
 operator|==
 name|SGQ_ONAK
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"nakdat %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ackdat %d "
-argument_list|,
+operator|,
 name|ack
 operator|&
 name|SGQ_MASK
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3944,30 +6551,32 @@ break|break;
 case|case
 name|MFS_CACK
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"conn-ack %d"
-argument_list|,
+operator|,
 name|dst
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"reserved-acktype? %x %d> %d"
-argument_list|,
+operator|,
 name|flags
-argument_list|,
+operator|,
 name|src
-argument_list|,
+operator|,
 name|dst
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3999,33 +6608,36 @@ operator|)
 operator|==
 name|MFS_CI
 condition|)
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"conn-initiate "
+operator|)
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"retrans-conn-initiate "
+operator|)
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%d>%d "
-argument_list|,
+operator|,
 name|src
-argument_list|,
+operator|,
 name|dst
+operator|)
 argument_list|)
 expr_stmt|;
 block|{
@@ -4070,7 +6682,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|cimp
@@ -4117,36 +6729,39 @@ break|break;
 case|case
 name|COS_SEGMENT
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"seg "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|COS_MESSAGE
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"msg "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|COS_CRYPTSER
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"crypt "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4161,60 +6776,65 @@ block|{
 case|case
 name|COI_32
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ver 3.2 "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|COI_31
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ver 3.1 "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|COI_40
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ver 4.0 "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|COI_41
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ver 4.1 "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"segsize %d "
-argument_list|,
+operator|,
 name|segsize
+operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4245,7 +6865,7 @@ argument_list|)
 index|]
 operator|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|dp
@@ -4261,6 +6881,8 @@ argument_list|)
 expr_stmt|;
 name|pdata
 argument_list|(
+name|ndo
+argument_list|,
 name|dp
 argument_list|,
 name|nsplen
@@ -4280,16 +6902,17 @@ break|break;
 case|case
 name|MFS_CC
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"conn-confirm %d>%d "
-argument_list|,
+operator|,
 name|src
-argument_list|,
+operator|,
 name|dst
+operator|)
 argument_list|)
 expr_stmt|;
 block|{
@@ -4337,7 +6960,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|ccmp
@@ -4393,36 +7016,39 @@ break|break;
 case|case
 name|COS_SEGMENT
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"seg "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|COS_MESSAGE
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"msg "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|COS_CRYPTSER
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"crypt "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4437,60 +7063,65 @@ block|{
 case|case
 name|COI_32
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ver 3.2 "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|COI_31
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ver 3.1 "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|COI_40
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ver 4.0 "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|COI_41
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"ver 4.1 "
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"segsize %d "
-argument_list|,
+operator|,
 name|segsize
+operator|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -4498,14 +7129,15 @@ condition|(
 name|optlen
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"optlen %d "
-argument_list|,
+operator|,
 name|optlen
+operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4540,7 +7172,7 @@ argument_list|)
 index|]
 operator|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|dp
@@ -4550,6 +7182,8 @@ argument_list|)
 expr_stmt|;
 name|pdata
 argument_list|(
+name|ndo
+argument_list|,
 name|dp
 argument_list|,
 name|optlen
@@ -4563,16 +7197,17 @@ break|break;
 case|case
 name|MFS_DI
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"disconn-initiate %d>%d "
-argument_list|,
+operator|,
 name|src
-argument_list|,
+operator|,
 name|dst
+operator|)
 argument_list|)
 expr_stmt|;
 block|{
@@ -4616,7 +7251,7 @@ condition|)
 goto|goto
 name|trunc
 goto|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|dimp
@@ -4642,6 +7277,8 @@ argument_list|)
 expr_stmt|;
 name|print_reason
 argument_list|(
+name|ndo
+argument_list|,
 name|reason
 argument_list|)
 expr_stmt|;
@@ -4650,14 +7287,15 @@ condition|(
 name|optlen
 condition|)
 block|{
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"optlen %d "
-argument_list|,
+operator|,
 name|optlen
+operator|)
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -4692,7 +7330,7 @@ argument_list|)
 index|]
 operator|)
 expr_stmt|;
-name|TCHECK2
+name|ND_TCHECK2
 argument_list|(
 operator|*
 name|dp
@@ -4702,6 +7340,8 @@ argument_list|)
 expr_stmt|;
 name|pdata
 argument_list|(
+name|ndo
+argument_list|,
 name|dp
 argument_list|,
 name|optlen
@@ -4715,16 +7355,17 @@ break|break;
 case|case
 name|MFS_DC
 case|:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"disconn-confirm %d>%d "
-argument_list|,
+operator|,
 name|src
-argument_list|,
+operator|,
 name|dst
+operator|)
 argument_list|)
 expr_stmt|;
 block|{
@@ -4743,7 +7384,7 @@ decl_stmt|;
 name|int
 name|reason
 decl_stmt|;
-name|TCHECK
+name|ND_TCHECK
 argument_list|(
 operator|*
 name|dcmp
@@ -4760,42 +7401,46 @@ argument_list|)
 expr_stmt|;
 name|print_reason
 argument_list|(
+name|ndo
+argument_list|,
 name|reason
 argument_list|)
 expr_stmt|;
 block|}
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"reserved-ctltype? %x %d> %d"
-argument_list|,
+operator|,
 name|flags
-argument_list|,
+operator|,
 name|src
-argument_list|,
+operator|,
 name|dst
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
 block|}
 break|break;
 default|default:
-operator|(
-name|void
-operator|)
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"reserved-type? %x %d> %d"
-argument_list|,
+operator|,
 name|flags
-argument_list|,
+operator|,
 name|src
-argument_list|,
+operator|,
 name|dst
+operator|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -4817,6 +7462,7 @@ end_function
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|tok
 name|reason2str
@@ -4969,15 +7615,22 @@ specifier|static
 name|void
 name|print_reason
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 specifier|register
 name|int
 name|reason
 parameter_list|)
 block|{
-name|printf
+name|ND_PRINT
 argument_list|(
+operator|(
+name|ndo
+operator|,
 literal|"%s "
-argument_list|,
+operator|,
 name|tok2str
 argument_list|(
 name|reason2str
@@ -4986,6 +7639,7 @@ literal|"reason-%d"
 argument_list|,
 name|reason
 argument_list|)
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -5165,6 +7819,10 @@ specifier|static
 name|void
 name|pdata
 parameter_list|(
+name|netdissect_options
+modifier|*
+name|ndo
+parameter_list|,
 name|u_char
 modifier|*
 name|dp
@@ -5197,6 +7855,8 @@ operator|++
 expr_stmt|;
 name|safeputchar
 argument_list|(
+name|ndo
+argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
