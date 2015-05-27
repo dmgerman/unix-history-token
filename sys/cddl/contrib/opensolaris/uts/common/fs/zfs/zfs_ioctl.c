@@ -14878,6 +14878,11 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
+name|vfs_ref
+argument_list|(
+name|vfsp
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)

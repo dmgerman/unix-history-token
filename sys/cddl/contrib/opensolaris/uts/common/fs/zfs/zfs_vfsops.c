@@ -10608,6 +10608,13 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+name|vfs_ref
+argument_list|(
+name|zfsvfs
+operator|->
+name|z_vfs
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)

@@ -2791,6 +2791,14 @@ operator|)
 return|;
 else|#
 directive|else
+name|vfs_ref
+argument_list|(
+name|vn_mountedvfs
+argument_list|(
+name|svp
+argument_list|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|dounmount
