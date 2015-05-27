@@ -373,18 +373,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|bwi_mac_fw_alloc
-parameter_list|(
-name|struct
-name|bwi_mac
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|bwi_mac_fw_free
 parameter_list|(
@@ -1443,20 +1431,6 @@ name|BWI_MAC_STATUS_IHREN
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Load and initialize firmwares 	 */
-name|error
-operator|=
-name|bwi_mac_fw_alloc
-argument_list|(
-name|mac
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-name|error
-return|;
 name|error
 operator|=
 name|bwi_mac_fw_load
@@ -3981,7 +3955,6 @@ comment|/*  * XXX Error cleanup  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|bwi_mac_fw_alloc
 parameter_list|(
