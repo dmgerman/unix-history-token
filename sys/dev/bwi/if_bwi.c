@@ -9642,7 +9642,7 @@ comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
@@ -9708,7 +9708,7 @@ literal|1
 argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -9827,7 +9827,7 @@ literal|1
 argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -10389,7 +10389,7 @@ literal|1
 argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -10591,7 +10591,7 @@ literal|1
 argument_list|,
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -10997,7 +10997,7 @@ name|MCLBYTES
 argument_list|,
 literal|1
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|MCLBYTES
 argument_list|,
 name|BUS_DMA_ALLOCNOW
 argument_list|,
