@@ -11281,17 +11281,6 @@ begin_comment
 comment|/* allocate structure if lookup fails */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|NODELAY
-value|0x0002
-end_define
-
-begin_comment
-comment|/* cannot do background work */
-end_comment
-
 begin_comment
 comment|/*  * Structures and routines associated with pagedep caching.  */
 end_comment
@@ -22784,9 +22773,6 @@ name|inodedep
 modifier|*
 name|inodedep
 decl_stmt|;
-name|int
-name|dflags
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|ip
@@ -22801,21 +22787,6 @@ operator|(
 literal|"inodedep_lookup_ip: bad delta"
 operator|)
 argument_list|)
-expr_stmt|;
-name|dflags
-operator|=
-name|DEPALLOC
-expr_stmt|;
-if|if
-condition|(
-name|IS_SNAPSHOT
-argument_list|(
-name|ip
-argument_list|)
-condition|)
-name|dflags
-operator||=
-name|NODELAY
 expr_stmt|;
 operator|(
 name|void
@@ -22833,7 +22804,7 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
-name|dflags
+name|DEPALLOC
 argument_list|,
 operator|&
 name|inodedep
@@ -24603,8 +24574,6 @@ argument_list|,
 name|newinum
 argument_list|,
 name|DEPALLOC
-operator||
-name|NODELAY
 argument_list|,
 operator|&
 name|inodedep
@@ -25996,8 +25965,6 @@ operator|->
 name|i_number
 argument_list|,
 name|DEPALLOC
-operator||
-name|NODELAY
 argument_list|,
 operator|&
 name|inodedep
@@ -27676,8 +27643,6 @@ operator|->
 name|i_number
 argument_list|,
 name|DEPALLOC
-operator||
-name|NODELAY
 argument_list|,
 operator|&
 name|inodedep
@@ -28171,9 +28136,6 @@ name|mount
 modifier|*
 name|mp
 decl_stmt|;
-name|int
-name|dflags
-decl_stmt|;
 name|mp
 operator|=
 name|UFSTOVFS
@@ -28259,21 +28221,6 @@ argument_list|,
 name|lbn
 argument_list|)
 expr_stmt|;
-name|dflags
-operator|=
-name|DEPALLOC
-expr_stmt|;
-if|if
-condition|(
-name|IS_SNAPSHOT
-argument_list|(
-name|ip
-argument_list|)
-condition|)
-name|dflags
-operator||=
-name|NODELAY
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -28285,7 +28232,7 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
-name|dflags
+name|DEPALLOC
 argument_list|,
 operator|&
 name|inodedep
@@ -28429,9 +28376,6 @@ decl_stmt|;
 name|ufs_lbn_t
 name|lbn
 decl_stmt|;
-name|int
-name|dflags
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|MOUNTEDSOFTDEP
@@ -28497,21 +28441,6 @@ argument_list|,
 name|lbn
 argument_list|)
 expr_stmt|;
-name|dflags
-operator|=
-name|DEPALLOC
-expr_stmt|;
-if|if
-condition|(
-name|IS_SNAPSHOT
-argument_list|(
-name|ip
-argument_list|)
-condition|)
-name|dflags
-operator||=
-name|NODELAY
-expr_stmt|;
 name|inodedep_lookup
 argument_list|(
 name|UFSTOVFS
@@ -28525,7 +28454,7 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
-name|dflags
+name|DEPALLOC
 argument_list|,
 operator|&
 name|inodedep
@@ -31530,8 +31459,6 @@ name|allocblock
 decl_stmt|,
 name|needj
 decl_stmt|,
-name|dflags
-decl_stmt|,
 name|error
 decl_stmt|,
 name|i
@@ -31616,21 +31543,6 @@ name|ump
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we're truncating a removed file that will never be written 	 * we don't need to journal the block frees.  The canceled journals 	 * for the allocations will suffice. 	 */
-name|dflags
-operator|=
-name|DEPALLOC
-expr_stmt|;
-if|if
-condition|(
-name|IS_SNAPSHOT
-argument_list|(
-name|ip
-argument_list|)
-condition|)
-name|dflags
-operator||=
-name|NODELAY
-expr_stmt|;
 name|inodedep_lookup
 argument_list|(
 name|mp
@@ -31639,7 +31551,7 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
-name|dflags
+name|DEPALLOC
 argument_list|,
 operator|&
 name|inodedep
@@ -32419,7 +32331,7 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
-name|dflags
+name|DEPALLOC
 argument_list|,
 operator|&
 name|inodedep
@@ -32910,7 +32822,7 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
-name|dflags
+name|DEPALLOC
 argument_list|,
 operator|&
 name|inodedep
@@ -33258,8 +33170,6 @@ decl_stmt|,
 name|delay
 decl_stmt|,
 name|error
-decl_stmt|,
-name|dflags
 decl_stmt|;
 name|ufs_lbn_t
 name|tmpval
@@ -33753,21 +33663,6 @@ argument_list|(
 name|ump
 argument_list|)
 expr_stmt|;
-name|dflags
-operator|=
-name|DEPALLOC
-expr_stmt|;
-if|if
-condition|(
-name|IS_SNAPSHOT
-argument_list|(
-name|ip
-argument_list|)
-condition|)
-name|dflags
-operator||=
-name|NODELAY
-expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -33779,7 +33674,7 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
-name|dflags
+name|DEPALLOC
 argument_list|,
 operator|&
 name|inodedep
@@ -40758,8 +40653,6 @@ argument_list|,
 name|newinum
 argument_list|,
 name|DEPALLOC
-operator||
-name|NODELAY
 argument_list|,
 operator|&
 name|inodedep
@@ -44629,8 +44522,6 @@ argument_list|,
 name|newinum
 argument_list|,
 name|DEPALLOC
-operator||
-name|NODELAY
 argument_list|,
 operator|&
 name|inodedep
@@ -44855,9 +44746,6 @@ name|inodedep
 modifier|*
 name|inodedep
 decl_stmt|;
-name|int
-name|dflags
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|MOUNTEDSOFTDEP
@@ -44884,21 +44772,6 @@ operator|->
 name|i_ump
 argument_list|)
 expr_stmt|;
-name|dflags
-operator|=
-name|DEPALLOC
-expr_stmt|;
-if|if
-condition|(
-name|IS_SNAPSHOT
-argument_list|(
-name|ip
-argument_list|)
-condition|)
-name|dflags
-operator||=
-name|NODELAY
-expr_stmt|;
 name|inodedep_lookup
 argument_list|(
 name|UFSTOVFS
@@ -44912,7 +44785,7 @@ name|ip
 operator|->
 name|i_number
 argument_list|,
-name|dflags
+name|DEPALLOC
 argument_list|,
 operator|&
 name|inodedep
