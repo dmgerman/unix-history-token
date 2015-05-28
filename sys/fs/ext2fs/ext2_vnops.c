@@ -555,6 +555,11 @@ operator|=
 name|vnode_pager_local_getpages
 block|,
 operator|.
+name|vop_getpages_async
+operator|=
+name|vnode_pager_local_getpages_async
+block|,
+operator|.
 name|vop_getattr
 operator|=
 name|ext2_getattr
