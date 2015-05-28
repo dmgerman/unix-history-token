@@ -8263,8 +8263,6 @@ endif|#
 directive|endif
 name|int
 name|did_output
-decl_stmt|,
-name|type
 decl_stmt|;
 name|tmr
 operator|=
@@ -8429,12 +8427,6 @@ operator|->
 name|stopped_from
 operator|=
 literal|0xa003
-expr_stmt|;
-name|type
-operator|=
-name|tmr
-operator|->
-name|type
 expr_stmt|;
 if|if
 condition|(
@@ -10266,6 +10258,8 @@ name|SCTP_DEBUG_TIMER1
 argument_list|,
 literal|"Timer now complete (type %d)\n"
 argument_list|,
+name|tmr
+operator|->
 name|type
 argument_list|)
 expr_stmt|;
