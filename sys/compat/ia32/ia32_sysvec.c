@@ -977,6 +977,9 @@ modifier|*
 name|off
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__amd64__
 name|void
 modifier|*
 name|buf
@@ -1064,6 +1067,8 @@ name|off
 operator|=
 name|len
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
