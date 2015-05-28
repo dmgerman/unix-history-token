@@ -278,7 +278,7 @@ parameter_list|,
 name|vmax
 parameter_list|)
 define|\
-value|static struct mod_depend _##module##_depend_on_##mdepend = {	\ 		vmin,							\ 		vpref,							\ 		vmax							\ 	};								\ 	MODULE_METADATA(_md_##module##_on_##mdepend, MDT_DEPEND,	\&_##module##_depend_on_##mdepend, #mdepend)
+value|static struct mod_depend _##module##_depend_on_##mdepend	\ 	    __section(".data") = {					\ 		vmin,							\ 		vpref,							\ 		vmax							\ 	};								\ 	MODULE_METADATA(_md_##module##_on_##mdepend, MDT_DEPEND,	\&_##module##_depend_on_##mdepend, #mdepend)
 end_define
 
 begin_define
@@ -308,7 +308,7 @@ parameter_list|,
 name|version
 parameter_list|)
 define|\
-value|static struct mod_version _##module##_version = {		\ 		version							\ 	};								\ 	MODULE_METADATA(_##module##_version, MDT_VERSION,		\&_##module##_version, #module)
+value|static struct mod_version _##module##_version			\ 	    __section(".data") = {					\ 		version							\ 	};								\ 	MODULE_METADATA(_##module##_version, MDT_VERSION,		\&_##module##_version, #module)
 end_define
 
 begin_decl_stmt
