@@ -9720,7 +9720,7 @@ name|tx_ring_sz
 argument_list|,
 literal|1
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|tx_ring_sz
 argument_list|,
 literal|0
 argument_list|,
@@ -9839,7 +9839,7 @@ name|rx_ring_sz
 argument_list|,
 literal|1
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|rx_ring_sz
 argument_list|,
 literal|0
 argument_list|,
@@ -10401,7 +10401,7 @@ name|dma_size
 argument_list|,
 literal|1
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|dma_size
 argument_list|,
 literal|0
 argument_list|,
@@ -10603,7 +10603,7 @@ name|dma_size
 argument_list|,
 literal|1
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|dma_size
 argument_list|,
 literal|0
 argument_list|,
