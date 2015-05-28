@@ -4979,7 +4979,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_7
+name|SCTP_LOC_8
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -5119,7 +5119,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_8
+name|SCTP_LOC_9
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -5238,7 +5238,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_9
+name|SCTP_LOC_10
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -5392,7 +5392,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_10
+name|SCTP_LOC_11
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -5532,7 +5532,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_11
+name|SCTP_LOC_12
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -5658,7 +5658,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_12
+name|SCTP_LOC_13
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -5784,7 +5784,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_12
+name|SCTP_LOC_14
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -5924,7 +5924,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_13
+name|SCTP_LOC_15
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -7397,7 +7397,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_14
+name|SCTP_LOC_16
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -8554,7 +8554,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_15
+name|SCTP_LOC_17
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -8681,7 +8681,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_16
+name|SCTP_LOC_18
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -8824,7 +8824,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_17
+name|SCTP_LOC_19
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -10928,7 +10928,7 @@ name|NULL
 argument_list|,
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_18
+name|SCTP_LOC_20
 argument_list|)
 expr_stmt|;
 block|}
@@ -11984,7 +11984,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_19
+name|SCTP_LOC_21
 expr_stmt|;
 name|sctp_abort_association
 argument_list|(
@@ -12058,7 +12058,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_19
+name|SCTP_LOC_22
 expr_stmt|;
 name|sctp_abort_association
 argument_list|(
@@ -17192,7 +17192,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_25
+name|SCTP_LOC_23
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -18133,9 +18133,9 @@ name|stcb
 argument_list|,
 name|net
 argument_list|,
-name|SCTP_FROM_SCTP_INPUT
+name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_3
+name|SCTP_LOC_24
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -18600,7 +18600,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_22
+name|SCTP_LOC_25
 argument_list|)
 expr_stmt|;
 block|}
@@ -18941,7 +18941,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_24
+name|SCTP_LOC_26
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -19935,7 +19935,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_25
+name|SCTP_LOC_27
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -20093,7 +20093,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_26
+name|SCTP_LOC_28
 argument_list|)
 expr_stmt|;
 name|net
@@ -20856,7 +20856,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_27
+name|SCTP_LOC_29
 argument_list|)
 expr_stmt|;
 block|}
@@ -20891,7 +20891,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_28
+name|SCTP_LOC_30
 argument_list|)
 expr_stmt|;
 block|}
@@ -21737,9 +21737,9 @@ name|stcb
 argument_list|,
 name|net
 argument_list|,
-name|SCTP_FROM_SCTP_INPUT
+name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_3
+name|SCTP_LOC_31
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -21895,7 +21895,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_30
+name|SCTP_LOC_32
 argument_list|)
 expr_stmt|;
 name|net
@@ -22171,7 +22171,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_31
+name|SCTP_LOC_33
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -22854,7 +22854,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_22
+name|SCTP_LOC_34
 argument_list|)
 expr_stmt|;
 block|}
@@ -24114,7 +24114,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_INDATA
 operator|+
-name|SCTP_LOC_33
+name|SCTP_LOC_35
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(

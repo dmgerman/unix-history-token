@@ -2574,9 +2574,9 @@ name|stcb
 argument_list|,
 name|NULL
 argument_list|,
-name|SCTP_FROM_SCTP_TIMER
+name|SCTP_FROM_SCTP_ASCONF
 operator|+
-name|SCTP_LOC_7
+name|SCTP_LOC_1
 argument_list|)
 expr_stmt|;
 if|if
@@ -4529,9 +4529,9 @@ name|asoc
 operator|.
 name|deleted_primary
 argument_list|,
-name|SCTP_FROM_SCTP_TIMER
+name|SCTP_FROM_SCTP_ASCONF
 operator|+
-name|SCTP_LOC_8
+name|SCTP_LOC_3
 argument_list|)
 expr_stmt|;
 name|stcb
@@ -4759,9 +4759,9 @@ name|stcb
 argument_list|,
 name|net
 argument_list|,
-name|SCTP_FROM_SCTP_TIMER
+name|SCTP_FROM_SCTP_ASCONF
 operator|+
-name|SCTP_LOC_5
+name|SCTP_LOC_4
 argument_list|)
 expr_stmt|;
 name|stcb
@@ -7514,7 +7514,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_ASCONF
 operator|+
-name|SCTP_LOC_3
+name|SCTP_LOC_5
 argument_list|)
 expr_stmt|;
 block|}

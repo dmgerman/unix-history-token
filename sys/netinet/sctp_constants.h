@@ -3554,6 +3554,13 @@ name|SCTP_FROM_SCTP_SYSCTL
 value|0xc0000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_FROM_SCTP_CC_FUNCTIONS
+value|0xd0000000
+end_define
+
 begin_comment
 comment|/* Location ID's */
 end_comment
@@ -3787,6 +3794,20 @@ define|#
 directive|define
 name|SCTP_LOC_33
 value|0x00000021
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOC_34
+value|0x00000022
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOC_35
+value|0x00000023
 end_define
 
 begin_comment

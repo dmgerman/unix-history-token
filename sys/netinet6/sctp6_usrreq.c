@@ -1617,7 +1617,7 @@ name|stcb
 argument_list|,
 name|SCTP_NORMAL_PROC
 argument_list|,
-name|SCTP_FROM_SCTP_USRREQ
+name|SCTP_FROM_SCTP6_USRREQ
 operator|+
 name|SCTP_LOC_2
 argument_list|)
