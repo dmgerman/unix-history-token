@@ -1068,7 +1068,7 @@ literal|5000
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * This wait should return an empty pid.  The parent should 	 * see the child as non-exited until the debugger sees the 	 * exit. 	 */
+comment|/* 	 * This wait should return a pid of 0 to indicate no status to 	 * report.  The parent should see the child as non-exited 	 * until the debugger sees the exit. 	 */
 name|wpid
 operator|=
 name|waitpid
@@ -1766,7 +1766,7 @@ literal|5000
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * This wait should return an empty pid.  The parent should 	 * see the child as non-exited until the debugger sees the 	 * exit. 	 */
+comment|/* 	 * This wait should return a pid of 0 to indicate no status to 	 * report.  The parent should see the child as non-exited 	 * until the debugger sees the exit. 	 */
 name|wpid
 operator|=
 name|waitpid
