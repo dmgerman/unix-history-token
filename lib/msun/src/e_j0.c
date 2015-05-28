@@ -39,6 +39,7 @@ end_include
 
 begin_decl_stmt
 specifier|static
+name|__inline
 name|double
 name|pzero
 argument_list|(

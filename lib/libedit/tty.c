@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: tty.c,v 1.46 2014/06/18 18:52:49 christos Exp $	*/
+comment|/*	$NetBSD: tty.c,v 1.47 2015/05/14 10:44:15 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -44,7 +44,7 @@ end_else
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: tty.c,v 1.46 2014/06/18 18:52:49 christos Exp $"
+literal|"$NetBSD: tty.c,v 1.47 2015/05/14 10:44:15 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6234,10 +6234,15 @@ name|el
 operator|->
 name|el_errfile
 argument_list|,
-literal|"%s: Unknown switch `%c'.\n"
+literal|"%s: Unknown switch `"
+name|FCHAR
+literal|"'.\n"
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|Int
+operator|)
 name|argv
 index|[
 literal|0

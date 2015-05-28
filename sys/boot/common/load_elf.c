@@ -885,7 +885,10 @@ goto|goto
 name|oerr
 goto|;
 block|}
-comment|/*  	 * Calculate destination address based on kernel entrypoint 	 	 */
+comment|/*  	 * Calculate destination address based on kernel entrypoint. 	 * 	 * For ARM, the destination address is independent of any values in the 	 * elf header (an ARM kernel can be loaded at any 2MB boundary), so we 	 * leave dest set to the value calculated by archsw.arch_loadaddr() and 	 * passed in to this function. 	 */
+ifndef|#
+directive|ifndef
+name|__arm__
 if|if
 condition|(
 name|ehdr
@@ -905,6 +908,8 @@ operator|~
 name|PAGE_MASK
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 operator|(
@@ -1578,18 +1583,21 @@ name|defined
 argument_list|(
 name|__arm__
 argument_list|)
-comment|/* 	 * The elf headers in some kernels specify virtual addresses in all 	 * header fields.  More recently, the e_entry and p_paddr fields are the 	 * proper physical addresses.  Even when the p_paddr fields are correct, 	 * the MI code below uses the p_vaddr fields with an offset added for 	 * loading (doing so is arguably wrong).  To make loading work, we need 	 * an offset that represents the difference between physical and virtual 	 * addressing.  ARM kernels are always linked at 0xCnnnnnnn.  Depending 	 * on the headers, the offset value passed in may be physical or virtual 	 * (because it typically comes from e_entry), but we always replace 	 * whatever is passed in with the va<->pa offset.  On the other hand, we 	 * always remove the high-order part of the entry address whether it's 	 * physical or virtual, because it will be adjusted later for the actual 	 * physical entry point based on where the image gets loaded. 	 */
+comment|/* 	 * The elf headers in arm kernels specify virtual addresses in all 	 * header fields, even the ones that should be physical addresses. 	 * We assume the entry point is in the first page, and masking the page 	 * offset will leave us with the virtual address the kernel was linked 	 * at.  We subtract that from the load offset, making 'off' into the 	 * value which, when added to a virtual address in an elf header, 	 * translates it to a physical address.  We do the va->pa conversion on 	 * the entry point address in the header now, so that later we can 	 * launch the kernel by just jumping to that address. 	 */
 name|off
-operator|=
-operator|-
-literal|0xc0000000
+operator|-=
+name|ehdr
+operator|->
+name|e_entry
+operator|&
+operator|~
+name|PAGE_MASK
 expr_stmt|;
 name|ehdr
 operator|->
 name|e_entry
-operator|&=
-operator|~
-literal|0xf0000000
+operator|+=
+name|off
 expr_stmt|;
 ifdef|#
 directive|ifdef

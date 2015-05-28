@@ -6502,6 +6502,12 @@ name|object
 operator|=
 name|NULL
 expr_stmt|;
+name|m
+operator|->
+name|oflags
+operator|=
+name|VPO_UNMANAGED
+expr_stmt|;
 name|vm_page_free
 argument_list|(
 name|m
@@ -11492,7 +11498,7 @@ operator|->
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Scan the valid bits looking for invalid sections that 	 * must be zerod.  Invalid sub-DEV_BSIZE'd areas ( where the 	 * valid bit may be set ) have already been zerod by 	 * vm_page_set_validclean(). 	 */
+comment|/* 	 * Scan the valid bits looking for invalid sections that 	 * must be zeroed.  Invalid sub-DEV_BSIZE'd areas ( where the 	 * valid bit may be set ) have already been zeroed by 	 * vm_page_set_validclean(). 	 */
 for|for
 control|(
 name|b

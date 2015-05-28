@@ -241,6 +241,11 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+parameter_list|,
 name|int
 name|rssi
 parameter_list|,
@@ -285,6 +290,12 @@ modifier|*
 parameter_list|,
 name|int
 name|subtype
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
 parameter_list|,
 name|int
 name|rssi
@@ -1283,11 +1294,6 @@ operator|->
 name|iv_ifp
 decl_stmt|;
 comment|/* clear driver/net80211 flags before passing up */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1000046
 name|m
 operator|->
 name|m_flags
@@ -1304,23 +1310,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-else|#
-directive|else
-name|m
-operator|->
-name|m_flags
-operator|&=
-operator|~
-operator|(
-name|M_80211_RX
-operator||
-name|M_MCAST
-operator||
-name|M_BCAST
-operator|)
-expr_stmt|;
-endif|#
-directive|endif
 name|KASSERT
 argument_list|(
 name|vap
@@ -1741,6 +1730,12 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
+parameter_list|,
 name|int
 name|rssi
 parameter_list|,
@@ -1748,13 +1743,6 @@ name|int
 name|nf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|HAS_SEQ
-parameter_list|(
-name|type
-parameter_list|)
-value|((type& 0x4) == 0)
 name|struct
 name|ieee80211vap
 modifier|*
@@ -2223,9 +2211,11 @@ name|nf
 expr_stmt|;
 if|if
 condition|(
-name|HAS_SEQ
+name|IEEE80211_HAS_SEQ
 argument_list|(
 name|type
+argument_list|,
+name|subtype
 argument_list|)
 condition|)
 block|{
@@ -3675,6 +3665,8 @@ name|m
 argument_list|,
 name|subtype
 argument_list|,
+name|rxs
+argument_list|,
 name|rssi
 argument_list|,
 name|nf
@@ -3881,7 +3873,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ni
 operator|->
@@ -7217,6 +7209,12 @@ parameter_list|,
 name|int
 name|subtype
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
+parameter_list|,
 name|int
 name|rssi
 parameter_list|,
@@ -7371,6 +7369,7 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* NB: accept off-channel frames */
+comment|/* XXX TODO: use rxstatus to determine off-channel details */
 if|if
 condition|(
 name|ieee80211_parse_beacon
@@ -7378,6 +7377,10 @@ argument_list|(
 name|ni
 argument_list|,
 name|m0
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
 argument_list|,
 operator|&
 name|scan
@@ -7466,6 +7469,10 @@ block|}
 name|ieee80211_add_scan
 argument_list|(
 name|vap
+argument_list|,
+name|ic
+operator|->
+name|ic_curchan
 argument_list|,
 operator|&
 name|scan
@@ -8787,7 +8794,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ni
 operator|->

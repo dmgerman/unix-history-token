@@ -345,7 +345,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|SDT_PROBE3
+name|SDT_PROBE5
 argument_list|(
 name|opencrypto
 argument_list|,
@@ -360,6 +360,10 @@ argument_list|,
 literal|0
 argument_list|,
 name|__LINE__
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -474,7 +478,7 @@ operator|!=
 name|Z_OK
 condition|)
 block|{
-name|SDT_PROBE3
+name|SDT_PROBE5
 argument_list|(
 name|opencrypto
 argument_list|,
@@ -489,6 +493,10 @@ argument_list|,
 name|error
 argument_list|,
 name|__LINE__
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -720,7 +728,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|SDT_PROBE3
+name|SDT_PROBE5
 argument_list|(
 name|opencrypto
 argument_list|,
@@ -735,6 +743,10 @@ argument_list|,
 literal|0
 argument_list|,
 name|__LINE__
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -871,7 +883,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|SDT_PROBE3
+name|SDT_PROBE5
 argument_list|(
 name|opencrypto
 argument_list|,
@@ -886,6 +898,10 @@ argument_list|,
 literal|0
 argument_list|,
 name|__LINE__
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 goto|goto

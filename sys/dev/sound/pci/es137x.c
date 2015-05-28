@@ -9580,7 +9580,7 @@ name|es
 operator|->
 name|poll_timer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|es

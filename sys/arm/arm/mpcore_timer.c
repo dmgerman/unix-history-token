@@ -1735,7 +1735,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	DELAY - Delay for at least usec microseconds.  *	@usec: number of microseconds to delay by  *  *	This function is called all over the kernel and is suppose to provide a  *	consistent delay.  This function may also be called before the console   *	is setup so no printf's can be called here.  *  *	RETURNS:  *	nothing  */
+comment|/**  *	DELAY - Delay for at least usec microseconds.  *	@usec: number of microseconds to delay by  *  *	This function is called all over the kernel and is suppose to provide a  *	consistent delay.  This function may also be called before the console  *	is setup so no printf's can be called here.  *  *	RETURNS:  *	nothing  */
 end_comment
 
 begin_function

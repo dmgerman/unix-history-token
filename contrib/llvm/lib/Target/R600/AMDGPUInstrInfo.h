@@ -547,6 +547,27 @@ argument|int Opcode
 argument_list|)
 specifier|const
 block|;
+comment|/// \brief Return the descriptor of the target-specific machine instruction
+comment|/// that corresponds to the specified pseudo or native opcode.
+specifier|const
+name|MCInstrDesc
+operator|&
+name|getMCOpcodeFromPseudo
+argument_list|(
+argument|unsigned Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|(
+name|pseudoToMCOpcode
+argument_list|(
+name|Opcode
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|//===---------------------------------------------------------------------===//
 comment|// Pure virtual funtions to be implemented by sub-classes.
 comment|//===---------------------------------------------------------------------===//

@@ -831,6 +831,11 @@ name|int
 name|td_dom_rr_idx
 decl_stmt|;
 comment|/* (k) RR Numa domain selection. */
+name|void
+modifier|*
+name|td_su
+decl_stmt|;
+comment|/* (k) FFS SU private */
 define|#
 directive|define
 name|td_endzero
@@ -1015,6 +1020,11 @@ name|int
 name|td_ma_cnt
 decl_stmt|;
 comment|/* (k) size of *td_ma */
+name|void
+modifier|*
+name|td_emuldata
+decl_stmt|;
+comment|/* Emulator state data */
 block|}
 struct|;
 end_struct
@@ -3239,7 +3249,7 @@ value|0x2000000
 end_define
 
 begin_comment
-comment|/* Stopped in proc_stop_total. */
+comment|/* Stopped in stop_all_proc. */
 end_comment
 
 begin_define
@@ -3370,6 +3380,17 @@ end_define
 
 begin_comment
 comment|/* Keep P2_NOPTRACE on exec(2). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P2_AST_SU
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Handles SU ast for kthreads. */
 end_comment
 
 begin_comment
@@ -5925,23 +5946,6 @@ begin_function_decl
 name|void
 name|thread_unsuspend
 parameter_list|(
-name|struct
-name|proc
-modifier|*
-name|p
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|thread_unsuspend_one
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-name|td
-parameter_list|,
 name|struct
 name|proc
 modifier|*

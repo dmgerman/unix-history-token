@@ -108,11 +108,11 @@ file|<dev/ofw/ofw_bus_subr.h>
 end_include
 
 begin_comment
-comment|/*  * Define this if you need to disable PL310 for debugging purpose  * Spec:   * http://infocenter.arm.com/help/topic/com.arm.doc.ddi0246e/DDI0246E_l2c310_r3p1_trm.pdf  */
+comment|/*  * Define this if you need to disable PL310 for debugging purpose  * Spec:  * http://infocenter.arm.com/help/topic/com.arm.doc.ddi0246e/DDI0246E_l2c310_r3p1_trm.pdf  */
 end_comment
 
 begin_comment
-comment|/*   * Hardcode errata for now  * http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0246b/pr01s02s02.html  */
+comment|/*  * Hardcode errata for now  * http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0246b/pr01s02s02.html  */
 end_comment
 
 begin_define
@@ -832,7 +832,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *	pl310_cache_sync - performs a cache sync operation  *   *	According to the TRM:  *  *  "Before writing to any other register you must perform an explicit  *   Cache Sync operation. This is particularly important when the cache is  *   enabled and changes to how the cache allocates new lines are to be made."  *  *  */
+comment|/**  *	pl310_cache_sync - performs a cache sync operation  *  *	According to the TRM:  *  *  "Before writing to any other register you must perform an explicit  *   Cache Sync operation. This is particularly important when the cache is  *   enabled and changes to how the cache allocates new lines are to be made."  *  *  */
 end_comment
 
 begin_function
@@ -1159,7 +1159,7 @@ operator|<=
 name|CACHE_ID_RELEASE_r1p0
 condition|)
 block|{
-comment|/*  			 * Errata 588369 says that clean + inv may keep the  			 * cache line if it was clean, the recommanded 			 * workaround is to clean then invalidate the cache 			 * line, with write-back and cache linefill disabled. 			 */
+comment|/* 			 * Errata 588369 says that clean + inv may keep the 			 * cache line if it was clean, the recommanded 			 * workaround is to clean then invalidate the cache 			 * line, with write-back and cache linefill disabled. 			 */
 name|pl310_write4
 argument_list|(
 name|pl310_softc

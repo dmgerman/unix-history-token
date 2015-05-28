@@ -722,7 +722,7 @@ name|void
 name|ath_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -734,7 +734,7 @@ name|void
 name|ath_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -746,7 +746,7 @@ name|void
 name|ath_updateslot
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2723,6 +2723,23 @@ name|ifp
 operator|->
 name|if_l2com
 expr_stmt|;
+name|ic
+operator|->
+name|ic_softc
+operator|=
+name|sc
+expr_stmt|;
+name|ic
+operator|->
+name|ic_name
+operator|=
+name|device_get_nameunit
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|)
+expr_stmt|;
 comment|/* set these up early for if_printf use */
 name|if_initname
 argument_list|(
@@ -3786,7 +3803,7 @@ name|sc
 operator|->
 name|sc_ledtimer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Don't setup hardware-based blinking. 	 * 	 * Although some NICs may have this configured in the 	 * default reset register values, the user may wish 	 * to alter which pins have which function. 	 * 	 * The reference driver attaches the MAC network LED to GPIO1 and 	 * the MAC power LED to GPIO2.  However, the DWA-552 cardbus 	 * NIC has these reversed. 	 */
@@ -13295,9 +13312,9 @@ name|void
 name|ath_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -13305,9 +13322,9 @@ name|ath_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|u_int32_t
 name|rfilt
@@ -13623,9 +13640,9 @@ name|void
 name|ath_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -13633,9 +13650,9 @@ name|ath_softc
 modifier|*
 name|sc
 init|=
-name|ifp
+name|ic
 operator|->
-name|if_softc
+name|ic_softc
 decl_stmt|;
 name|ATH_LOCK
 argument_list|(
@@ -13962,9 +13979,9 @@ name|void
 name|ath_updateslot
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|struct
@@ -13972,18 +13989,9 @@ name|ath_softc
 modifier|*
 name|sc
 init|=
-name|ifp
-operator|->
-name|if_softc
-decl_stmt|;
-name|struct
-name|ieee80211com
-modifier|*
 name|ic
-init|=
-name|ifp
 operator|->
-name|if_l2com
+name|ic_softc
 decl_stmt|;
 comment|/* 	 * When not coordinating the BSS, change the hardware 	 * immediately.  For other operation we defer the change 	 * until beacon updates have propagated to the stations. 	 * 	 * XXX sc_updateslot isn't changed behind a lock? 	 */
 if|if

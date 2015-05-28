@@ -270,6 +270,39 @@ define|\
 value|bus_space_write_4((_sc)->aintc_bst, (_sc)->aintc_bsh, (reg), (val))
 end_define
 
+begin_comment
+comment|/* List of compatible strings for FDT tree */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|ofw_compat_data
+name|compat_data
+index|[]
+init|=
+block|{
+block|{
+literal|"ti,am33xx-intc"
+block|,
+literal|1
+block|}
+block|,
+block|{
+literal|"ti,omap2-intc"
+block|,
+literal|1
+block|}
+block|,
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|, }
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -322,13 +355,16 @@ operator|)
 return|;
 if|if
 condition|(
-operator|!
-name|ofw_bus_is_compatible
+name|ofw_bus_search_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"ti,aintc"
+name|compat_data
 argument_list|)
+operator|->
+name|ocd_data
+operator|==
+literal|0
 condition|)
 return|return
 operator|(

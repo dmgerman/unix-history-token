@@ -252,7 +252,7 @@ operator|(
 name|uint8_t
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|vap
 operator|->
@@ -260,9 +260,9 @@ name|iv_tim_len
 argument_list|,
 name|M_80211_POWER
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -312,7 +312,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|vap
 operator|->

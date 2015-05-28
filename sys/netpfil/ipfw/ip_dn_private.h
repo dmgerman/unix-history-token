@@ -335,10 +335,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_comment
 comment|/*  * configuration and global data for a dummynet instance  *  * When a configuration is modified from userland, 'id' is incremented  * so we can use the value to check for stale pointers.  */
 end_comment

@@ -8955,6 +8955,16 @@ name|SD_MAX_HS
 expr_stmt|;
 block|}
 block|}
+comment|/* 			 * We reselect the card here. Some cards become 			 * unselected and timeout with the above two commands, 			 * although the state tables / diagrams in the standard 			 * suggest they go back to the transfer state. The only 			 * thing we use from the sd_status is the erase sector 			 * size, but it is still nice to get that right. It is 			 * normally harmless for cards not misbehaving. The 			 * Atmel bridge will complain about this command timing 			 * out. Others seem to handle it correctly, so it may 			 * be a combination of card and controller. 			 */
+name|mmc_select_card
+argument_list|(
+name|sc
+argument_list|,
+name|ivar
+operator|->
+name|rca
+argument_list|)
+expr_stmt|;
 name|mmc_app_sd_status
 argument_list|(
 name|sc
@@ -11080,6 +11090,24 @@ name|devclass_t
 name|mmc_devclass
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|DRIVER_MODULE
+argument_list|(
+name|mmc
+argument_list|,
+name|a10_mmc
+argument_list|,
+name|mmc_driver
+argument_list|,
+name|mmc_devclass
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|DRIVER_MODULE

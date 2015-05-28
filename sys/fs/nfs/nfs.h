@@ -829,7 +829,7 @@ comment|/* Callback port for testing */
 end_comment
 
 begin_comment
-comment|/*  * This macro defines the high water mark for issuing V4 delegations.  * (It is currently set at a conservative 20% of NFSRV_V4STATELIMIT. This  *  may want to increase when clients can make more effective use of  *  delegations.)  */
+comment|/*  * This macro defines the high water mark for issuing V4 delegations.  * (It is currently set at a conservative 20% of nfsrv_v4statelimit. This  *  may want to increase when clients can make more effective use of  *  delegations.)  */
 end_comment
 
 begin_define
@@ -839,7 +839,7 @@ name|NFSRV_V4DELEGLIMIT
 parameter_list|(
 name|c
 parameter_list|)
-value|(((c) * 5)> NFSRV_V4STATELIMIT)
+value|(((c) * 5)> nfsrv_v4statelimit)
 end_define
 
 begin_define

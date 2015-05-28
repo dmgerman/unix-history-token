@@ -571,10 +571,10 @@ end_function
 
 begin_decl_stmt
 specifier|static
-name|boolean_t
+name|bool
 name|db_breakpoints_inserted
 init|=
-name|TRUE
+name|true
 decl_stmt|;
 end_decl_stmt
 
@@ -594,7 +594,7 @@ parameter_list|,
 name|storage
 parameter_list|)
 define|\
-value|do {								\ 	*storage = db_get_value(addr, BKPT_SIZE, FALSE);	\ 	db_put_value(addr, BKPT_SIZE, BKPT_SET(*storage));	\ } while (0)
+value|do {								\ 	*storage = db_get_value(addr, BKPT_SIZE, false);	\ 	db_put_value(addr, BKPT_SIZE, BKPT_SET(*storage));	\ } while (0)
 end_define
 
 begin_endif
@@ -684,7 +684,7 @@ expr_stmt|;
 block|}
 name|db_breakpoints_inserted
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 block|}
@@ -747,7 +747,7 @@ expr_stmt|;
 block|}
 name|db_breakpoints_inserted
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 block|}
 block|}
@@ -994,7 +994,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t
@@ -1036,7 +1036,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t
@@ -1087,7 +1087,7 @@ parameter_list|(
 name|db_expr_t
 name|dummy1
 parameter_list|,
-name|boolean_t
+name|bool
 name|dummy2
 parameter_list|,
 name|db_expr_t
@@ -1109,7 +1109,7 @@ comment|/*  *	We want ddb to be usable before most of the kernel has been  *	ini
 end_comment
 
 begin_function
-name|boolean_t
+name|bool
 name|db_map_equal
 parameter_list|(
 name|vm_map_t
@@ -1160,7 +1160,7 @@ block|}
 end_function
 
 begin_function
-name|boolean_t
+name|bool
 name|db_map_current
 parameter_list|(
 name|vm_map_t
@@ -1175,7 +1175,7 @@ else|#
 directive|else
 return|return
 operator|(
-literal|1
+name|true
 operator|)
 return|;
 endif|#

@@ -1385,6 +1385,10 @@ value|2
 name|u_char
 name|version
 decl_stmt|;
+name|int
+name|timeout
+decl_stmt|;
+comment|/* Transfer timeout */
 name|uint32_t
 name|max_clk
 decl_stmt|;

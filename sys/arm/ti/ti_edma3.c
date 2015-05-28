@@ -465,13 +465,12 @@ block|{
 name|device_t
 name|sc_dev
 decl_stmt|;
+comment|/*  	 * We use one-element array in case if we need to add  	 * mem resources for transfer control windows 	 */
 name|struct
 name|resource
 modifier|*
 name|mem_res
 index|[
-name|TI_EDMA3_NUM_TCS
-operator|+
 literal|1
 index|]
 decl_stmt|;
@@ -517,30 +516,6 @@ block|{
 name|SYS_RES_MEMORY
 block|,
 literal|0
-block|,
-name|RF_ACTIVE
-block|}
-block|,
-block|{
-name|SYS_RES_MEMORY
-block|,
-literal|1
-block|,
-name|RF_ACTIVE
-block|}
-block|,
-block|{
-name|SYS_RES_MEMORY
-block|,
-literal|2
-block|,
-name|RF_ACTIVE
-block|}
-block|,
-block|{
-name|SYS_RES_MEMORY
-block|,
-literal|3
 block|,
 name|RF_ACTIVE
 block|}
@@ -625,32 +600,6 @@ parameter_list|,
 name|val
 parameter_list|)
 value|bus_write_4(ti_edma3_sc->mem_res[0], reg, val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ti_edma3_tc_rd_4
-parameter_list|(
-name|c
-parameter_list|,
-name|reg
-parameter_list|)
-value|bus_read_4(ti_edma3_sc->mem_res[c+1], reg)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ti_edma3_tc_wr_4
-parameter_list|(
-name|c
-parameter_list|,
-name|reg
-parameter_list|,
-name|val
-parameter_list|)
-value|bus_write_4(ti_edma3_sc->mem_res[c+1], reg, val)
 end_define
 
 begin_function_decl

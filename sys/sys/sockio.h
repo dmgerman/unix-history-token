@@ -564,7 +564,7 @@ begin_define
 define|#
 directive|define
 name|SIOCGI2C
-value|_IOWR('i', 61, struct ifstat)
+value|_IOWR('i', 61, struct ifreq)
 end_define
 
 begin_comment
@@ -687,6 +687,28 @@ end_define
 
 begin_comment
 comment|/* set IF fib */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCGTUNFIB
+value|_IOWR('i', 94, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get tunnel fib */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSTUNFIB
+value|_IOW('i', 95, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set tunnel fib */
 end_comment
 
 begin_define

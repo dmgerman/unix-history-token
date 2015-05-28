@@ -351,12 +351,19 @@ argument_list|,
 name|rx
 argument_list|)
 expr_stmt|;
+comment|//return ieee80211_input(ni, m, rx->rssi, rx->nf);
 return|return
-name|ieee80211_input
+name|ni
+operator|->
+name|ni_vap
+operator|->
+name|iv_input
 argument_list|(
 name|ni
 argument_list|,
 name|m
+argument_list|,
+name|rx
 argument_list|,
 name|rx
 operator|->
@@ -1054,18 +1061,11 @@ operator||
 name|M_BCAST
 operator|)
 expr_stmt|;
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1000046
 name|m_clrprotoflags
 argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* NB: see hostap_deliver_data, this path doesn't handle hostap */
 name|KASSERT
 argument_list|(
@@ -2154,13 +2154,13 @@ operator|(
 name|uint32_t
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|IEEE80211_CHALLENGE_LEN
 argument_list|,
 name|M_80211_NODE
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -2220,6 +2220,11 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+name|struct
+name|ieee80211_channel
+modifier|*
+name|rxchan
 parameter_list|,
 name|struct
 name|ieee80211_scanparams
@@ -2377,9 +2382,7 @@ name|ieee80211_chan2ieee
 argument_list|(
 name|ic
 argument_list|,
-name|ic
-operator|->
-name|ic_curchan
+name|rxchan
 argument_list|)
 expr_stmt|;
 name|scan
@@ -2982,11 +2985,15 @@ name|wh
 argument_list|,
 name|NULL
 argument_list|,
-literal|"for off-channel %u"
+literal|"for off-channel %u (bchan=%u)"
 argument_list|,
 name|scan
 operator|->
 name|chan
+argument_list|,
+name|scan
+operator|->
+name|bchan
 argument_list|)
 expr_stmt|;
 name|vap

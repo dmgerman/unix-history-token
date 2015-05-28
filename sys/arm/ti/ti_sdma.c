@@ -3498,7 +3498,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"ti,sdma"
+literal|"ti,omap4430-sdma"
 argument_list|)
 condition|)
 return|return

@@ -1551,9 +1551,12 @@ name|int
 name|number_of_sections
 parameter_list|)
 block|{
-name|uint32_t
-name|computed_checksum
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|uint32_t computed_checksum;
+endif|#
+directive|endif
 specifier|const
 name|struct
 name|pe_optional_header_32_plus
@@ -1654,37 +1657,9 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("checksum 0x%x at offset %zd, len %zd\n", 	    po->po_checksum, x->x_checksum_off, x->x_checksum_len);
+block|printf("checksum 0x%x at offset %zd, len %zd\n", 	    po->po_checksum, x->x_checksum_off, x->x_checksum_len);  	computed_checksum = compute_checksum(x); 	if (computed_checksum != po->po_checksum) { 		warnx("invalid PE+ checksum; is 0x%x, should be 0x%x", 		    po->po_checksum, computed_checksum); 	}
 endif|#
 directive|endif
-name|computed_checksum
-operator|=
-name|compute_checksum
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|computed_checksum
-operator|!=
-name|po
-operator|->
-name|po_checksum
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"invalid PE+ checksum; is 0x%x, should be 0x%x"
-argument_list|,
-name|po
-operator|->
-name|po_checksum
-argument_list|,
-name|computed_checksum
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|x
@@ -1757,9 +1732,12 @@ name|int
 name|number_of_sections
 parameter_list|)
 block|{
-name|uint32_t
-name|computed_checksum
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|uint32_t computed_checksum;
+endif|#
+directive|endif
 specifier|const
 name|struct
 name|pe_optional_header_32
@@ -1860,37 +1838,9 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|printf("checksum at offset %zd, len %zd\n", 	    x->x_checksum_off, x->x_checksum_len);
+block|printf("checksum at offset %zd, len %zd\n", 	    x->x_checksum_off, x->x_checksum_len);  	computed_checksum = compute_checksum(x); 	if (computed_checksum != po->po_checksum) { 		warnx("invalid PE checksum; is 0x%x, should be 0x%x", 		    po->po_checksum, computed_checksum); 	}
 endif|#
 directive|endif
-name|computed_checksum
-operator|=
-name|compute_checksum
-argument_list|(
-name|x
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|computed_checksum
-operator|!=
-name|po
-operator|->
-name|po_checksum
-condition|)
-block|{
-name|warnx
-argument_list|(
-literal|"invalid PE checksum; is 0x%x, should be 0x%x"
-argument_list|,
-name|po
-operator|->
-name|po_checksum
-argument_list|,
-name|computed_checksum
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|x

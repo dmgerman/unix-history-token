@@ -80,10 +80,15 @@ begin_decl_stmt
 specifier|extern
 name|struct
 name|nfsclienthashhead
+modifier|*
 name|nfsclienthash
-index|[
-name|NFSCLIENTHASHSIZE
-index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|nfsrv_clienthashsize
 decl_stmt|;
 end_decl_stmt
 
@@ -6735,7 +6740,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NFSCLIENTHASHSIZE
+name|nfsrv_clienthashsize
 condition|;
 name|i
 operator|++

@@ -481,20 +481,11 @@ modifier|*
 name|params
 parameter_list|)
 block|{
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
+name|ic_printf
+argument_list|(
 name|ni
 operator|->
 name|ni_ic
-operator|->
-name|ic_ifp
-decl_stmt|;
-name|if_printf
-argument_list|(
-name|ifp
 argument_list|,
 literal|"missing ic_raw_xmit callback, drop frame\n"
 argument_list|)
@@ -881,7 +872,7 @@ name|vap
 operator|->
 name|iv_mgtsend
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|TASK_INIT
@@ -1133,7 +1124,7 @@ name|FREEAPPIE
 parameter_list|(
 name|ie
 parameter_list|)
-value|do { \ 	if (ie != NULL) \ 		free(ie, M_80211_NODE_IE); \ } while (0)
+value|do { \ 	if (ie != NULL) \ 		IEEE80211_FREE(ie, M_80211_NODE_IE); \ } while (0)
 comment|/* 	 * Detach operating mode module. 	 */
 if|if
 condition|(
@@ -3086,8 +3077,6 @@ operator|->
 name|ic_updateslot
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|)
 expr_stmt|;
 block|}
@@ -6540,20 +6529,11 @@ name|ic
 init|=
 name|arg
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|parent
-init|=
-name|ic
-operator|->
-name|ic_ifp
-decl_stmt|;
 name|ic
 operator|->
 name|ic_update_mcast
 argument_list|(
-name|parent
+name|ic
 argument_list|)
 expr_stmt|;
 block|}
@@ -6579,20 +6559,11 @@ name|ic
 init|=
 name|arg
 decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|parent
-init|=
-name|ic
-operator|->
-name|ic_ifp
-decl_stmt|;
 name|ic
 operator|->
 name|ic_update_promisc
 argument_list|(
-name|parent
+name|ic
 argument_list|)
 expr_stmt|;
 block|}

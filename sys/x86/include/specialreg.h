@@ -140,6 +140,13 @@ name|CR3_PCID_SAVE
 value|0x8000000000000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|CR3_PCID_MASK
+value|0xfff
+end_define
+
 begin_comment
 comment|/*  * Bits in PPro special registers  */
 end_comment

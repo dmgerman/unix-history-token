@@ -1132,13 +1132,8 @@ operator|=
 name|am335x_clk_get_arm_disp_freq
 block|, 	}
 block|,
-comment|/* UART.  Uart0 clock cannot be controlled. */
+comment|/* UART */
 name|AM335X_NOOP_CLOCK_DEV
-argument_list|(
-name|UART0_CLK
-argument_list|)
-block|,
-name|AM335X_GENERIC_CLOCK_DEV
 argument_list|(
 name|UART1_CLK
 argument_list|)
@@ -1163,43 +1158,43 @@ argument_list|(
 name|UART5_CLK
 argument_list|)
 block|,
+name|AM335X_GENERIC_CLOCK_DEV
+argument_list|(
+name|UART6_CLK
+argument_list|)
+block|,
 comment|/* DMTimer */
 name|AM335X_GENERIC_CLOCK_DEV
 argument_list|(
-name|DMTIMER2_CLK
+name|TIMER2_CLK
 argument_list|)
 block|,
 name|AM335X_GENERIC_CLOCK_DEV
 argument_list|(
-name|DMTIMER3_CLK
+name|TIMER3_CLK
 argument_list|)
 block|,
 name|AM335X_GENERIC_CLOCK_DEV
 argument_list|(
-name|DMTIMER4_CLK
+name|TIMER4_CLK
 argument_list|)
 block|,
 name|AM335X_GENERIC_CLOCK_DEV
 argument_list|(
-name|DMTIMER5_CLK
+name|TIMER5_CLK
 argument_list|)
 block|,
 name|AM335X_GENERIC_CLOCK_DEV
 argument_list|(
-name|DMTIMER6_CLK
+name|TIMER6_CLK
 argument_list|)
 block|,
 name|AM335X_GENERIC_CLOCK_DEV
 argument_list|(
-name|DMTIMER7_CLK
+name|TIMER7_CLK
 argument_list|)
 block|,
-comment|/* GPIO */
-name|AM335X_GPIO_CLOCK_DEV
-argument_list|(
-name|GPIO0_CLK
-argument_list|)
-block|,
+comment|/* GPIO, we use hwmods as reference, not units in spec */
 name|AM335X_GPIO_CLOCK_DEV
 argument_list|(
 name|GPIO1_CLK
@@ -1215,12 +1210,12 @@ argument_list|(
 name|GPIO3_CLK
 argument_list|)
 block|,
-comment|/* I2C */
-name|AM335X_GENERIC_CLOCK_DEV
+name|AM335X_GPIO_CLOCK_DEV
 argument_list|(
-name|I2C0_CLK
+name|GPIO4_CLK
 argument_list|)
 block|,
+comment|/* I2C we use hwmods as reference, not units in spec */
 name|AM335X_GENERIC_CLOCK_DEV
 argument_list|(
 name|I2C1_CLK
@@ -1229,6 +1224,11 @@ block|,
 name|AM335X_GENERIC_CLOCK_DEV
 argument_list|(
 name|I2C2_CLK
+argument_list|)
+block|,
+name|AM335X_GENERIC_CLOCK_DEV
+argument_list|(
+name|I2C3_CLK
 argument_list|)
 block|,
 comment|/* TSC_ADC */
@@ -1261,17 +1261,17 @@ block|,
 comment|/* MMCHS */
 name|AM335X_MMCHS_CLOCK_DEV
 argument_list|(
-name|MMC0_CLK
-argument_list|)
-block|,
-name|AM335X_MMCHS_CLOCK_DEV
-argument_list|(
 name|MMC1_CLK
 argument_list|)
 block|,
 name|AM335X_MMCHS_CLOCK_DEV
 argument_list|(
 name|MMC2_CLK
+argument_list|)
+block|,
+name|AM335X_MMCHS_CLOCK_DEV
+argument_list|(
+name|MMC3_CLK
 argument_list|)
 block|,
 comment|/* PWMSS */
@@ -1399,18 +1399,9 @@ block|{
 comment|/* UART. UART0 clock not controllable. */
 name|_CLK_DETAIL
 argument_list|(
-name|UART0_CLK
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-block|,
-name|_CLK_DETAIL
-argument_list|(
 name|UART1_CLK
 argument_list|,
-name|CM_PER_UART1_CLKCTRL
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1419,7 +1410,7 @@ name|_CLK_DETAIL
 argument_list|(
 name|UART2_CLK
 argument_list|,
-name|CM_PER_UART2_CLKCTRL
+name|CM_PER_UART1_CLKCTRL
 argument_list|,
 literal|0
 argument_list|)
@@ -1428,7 +1419,7 @@ name|_CLK_DETAIL
 argument_list|(
 name|UART3_CLK
 argument_list|,
-name|CM_PER_UART3_CLKCTRL
+name|CM_PER_UART2_CLKCTRL
 argument_list|,
 literal|0
 argument_list|)
@@ -1437,7 +1428,7 @@ name|_CLK_DETAIL
 argument_list|(
 name|UART4_CLK
 argument_list|,
-name|CM_PER_UART4_CLKCTRL
+name|CM_PER_UART3_CLKCTRL
 argument_list|,
 literal|0
 argument_list|)
@@ -1445,6 +1436,15 @@ block|,
 name|_CLK_DETAIL
 argument_list|(
 name|UART5_CLK
+argument_list|,
+name|CM_PER_UART4_CLKCTRL
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|_CLK_DETAIL
+argument_list|(
+name|UART6_CLK
 argument_list|,
 name|CM_PER_UART5_CLKCTRL
 argument_list|,
@@ -1454,7 +1454,7 @@ block|,
 comment|/* DMTimer modules */
 name|_CLK_DETAIL
 argument_list|(
-name|DMTIMER2_CLK
+name|TIMER2_CLK
 argument_list|,
 name|CM_PER_TIMER2_CLKCTRL
 argument_list|,
@@ -1463,7 +1463,7 @@ argument_list|)
 block|,
 name|_CLK_DETAIL
 argument_list|(
-name|DMTIMER3_CLK
+name|TIMER3_CLK
 argument_list|,
 name|CM_PER_TIMER3_CLKCTRL
 argument_list|,
@@ -1472,7 +1472,7 @@ argument_list|)
 block|,
 name|_CLK_DETAIL
 argument_list|(
-name|DMTIMER4_CLK
+name|TIMER4_CLK
 argument_list|,
 name|CM_PER_TIMER4_CLKCTRL
 argument_list|,
@@ -1481,7 +1481,7 @@ argument_list|)
 block|,
 name|_CLK_DETAIL
 argument_list|(
-name|DMTIMER5_CLK
+name|TIMER5_CLK
 argument_list|,
 name|CM_PER_TIMER5_CLKCTRL
 argument_list|,
@@ -1490,7 +1490,7 @@ argument_list|)
 block|,
 name|_CLK_DETAIL
 argument_list|(
-name|DMTIMER6_CLK
+name|TIMER6_CLK
 argument_list|,
 name|CM_PER_TIMER6_CLKCTRL
 argument_list|,
@@ -1499,17 +1499,17 @@ argument_list|)
 block|,
 name|_CLK_DETAIL
 argument_list|(
-name|DMTIMER7_CLK
+name|TIMER7_CLK
 argument_list|,
 name|CM_PER_TIMER7_CLKCTRL
 argument_list|,
 name|CLKSEL_TIMER7_CLK
 argument_list|)
 block|,
-comment|/* GPIO modules */
+comment|/* GPIO modules, hwmods start with gpio1 */
 name|_CLK_DETAIL
 argument_list|(
-name|GPIO0_CLK
+name|GPIO1_CLK
 argument_list|,
 name|CM_WKUP_GPIO0_CLKCTRL
 argument_list|,
@@ -1518,7 +1518,7 @@ argument_list|)
 block|,
 name|_CLK_DETAIL
 argument_list|(
-name|GPIO1_CLK
+name|GPIO2_CLK
 argument_list|,
 name|CM_PER_GPIO1_CLKCTRL
 argument_list|,
@@ -1527,7 +1527,7 @@ argument_list|)
 block|,
 name|_CLK_DETAIL
 argument_list|(
-name|GPIO2_CLK
+name|GPIO3_CLK
 argument_list|,
 name|CM_PER_GPIO2_CLKCTRL
 argument_list|,
@@ -1536,17 +1536,17 @@ argument_list|)
 block|,
 name|_CLK_DETAIL
 argument_list|(
-name|GPIO3_CLK
+name|GPIO4_CLK
 argument_list|,
 name|CM_PER_GPIO3_CLKCTRL
 argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* I2C modules */
+comment|/* I2C modules, hwmods start with i2c1 */
 name|_CLK_DETAIL
 argument_list|(
-name|I2C0_CLK
+name|I2C1_CLK
 argument_list|,
 name|CM_WKUP_I2C0_CLKCTRL
 argument_list|,
@@ -1555,7 +1555,7 @@ argument_list|)
 block|,
 name|_CLK_DETAIL
 argument_list|(
-name|I2C1_CLK
+name|I2C2_CLK
 argument_list|,
 name|CM_PER_I2C1_CLKCTRL
 argument_list|,
@@ -1564,7 +1564,7 @@ argument_list|)
 block|,
 name|_CLK_DETAIL
 argument_list|(
-name|I2C2_CLK
+name|I2C3_CLK
 argument_list|,
 name|CM_PER_I2C2_CLKCTRL
 argument_list|,
@@ -1618,10 +1618,10 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* MMCHS modules*/
+comment|/* MMCHS modules, hwmods start with mmc1*/
 name|_CLK_DETAIL
 argument_list|(
-name|MMC0_CLK
+name|MMC1_CLK
 argument_list|,
 name|CM_PER_MMC0_CLKCTRL
 argument_list|,
@@ -1630,7 +1630,7 @@ argument_list|)
 block|,
 name|_CLK_DETAIL
 argument_list|(
-name|MMC1_CLK
+name|MMC2_CLK
 argument_list|,
 name|CM_PER_MMC1_CLKCTRL
 argument_list|,
@@ -1639,7 +1639,7 @@ argument_list|)
 block|,
 name|_CLK_DETAIL
 argument_list|(
-name|MMC2_CLK
+name|MMC3_CLK
 argument_list|,
 name|CM_PER_MMC1_CLKCTRL
 argument_list|,
@@ -1776,7 +1776,7 @@ name|ofw_bus_is_compatible
 argument_list|(
 name|dev
 argument_list|,
-literal|"am335x,prcm"
+literal|"ti,am3-prcm"
 argument_list|)
 condition|)
 block|{
@@ -1898,6 +1898,8 @@ name|ti_cpu_reset
 operator|=
 name|am335x_prcm_reset
 expr_stmt|;
+if|if
+condition|(
 name|am335x_clk_get_sysclk_freq
 argument_list|(
 name|NULL
@@ -1905,7 +1907,15 @@ argument_list|,
 operator|&
 name|sysclk
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|sysclk
+operator|=
+literal|0
 expr_stmt|;
+if|if
+condition|(
 name|am335x_clk_get_arm_fclk_freq
 argument_list|(
 name|NULL
@@ -1913,7 +1923,19 @@ argument_list|,
 operator|&
 name|fclk
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fclk
+operator|=
+literal|0
 expr_stmt|;
+if|if
+condition|(
+name|sysclk
+operator|&&
+name|fclk
+condition|)
 name|device_printf
 argument_list|(
 name|dev
@@ -1935,6 +1957,14 @@ argument_list|,
 name|fclk
 operator|/
 literal|1000000
+argument_list|)
+expr_stmt|;
+else|else
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"can't read frequencies yet (SCM device not ready?)\n"
 argument_list|)
 expr_stmt|;
 return|return

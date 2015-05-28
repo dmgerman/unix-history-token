@@ -263,6 +263,11 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+parameter_list|,
 name|int
 parameter_list|,
 name|int
@@ -285,6 +290,11 @@ modifier|*
 parameter_list|,
 name|int
 name|subtype
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
 parameter_list|,
 name|int
 name|rssi
@@ -1874,6 +1884,12 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
+parameter_list|,
 name|int
 name|rssi
 parameter_list|,
@@ -1881,13 +1897,6 @@ name|int
 name|nf
 parameter_list|)
 block|{
-define|#
-directive|define
-name|HAS_SEQ
-parameter_list|(
-name|type
-parameter_list|)
-value|((type& 0x4) == 0)
 name|struct
 name|ieee80211vap
 modifier|*
@@ -2323,9 +2332,11 @@ name|nf
 expr_stmt|;
 if|if
 condition|(
-name|HAS_SEQ
+name|IEEE80211_HAS_SEQ
 argument_list|(
 name|type
+argument_list|,
+name|subtype
 argument_list|)
 operator|&&
 operator|!
@@ -3651,6 +3662,8 @@ name|m
 argument_list|,
 name|subtype
 argument_list|,
+name|rxs
+argument_list|,
 name|rssi
 argument_list|,
 name|nf
@@ -4282,7 +4295,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ni
 operator|->
@@ -5237,6 +5250,12 @@ parameter_list|,
 name|int
 name|subtype
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
+parameter_list|,
 name|int
 name|rssi
 parameter_list|,
@@ -5275,6 +5294,15 @@ init|=
 name|ni
 operator|->
 name|ni_ic
+decl_stmt|;
+name|struct
+name|ieee80211_channel
+modifier|*
+name|rxchan
+init|=
+name|ic
+operator|->
+name|ic_curchan
 decl_stmt|;
 name|struct
 name|ieee80211_frame
@@ -5365,6 +5393,11 @@ name|struct
 name|ieee80211_scanparams
 name|scan
 decl_stmt|;
+name|struct
+name|ieee80211_channel
+modifier|*
+name|c
+decl_stmt|;
 comment|/* 		 * We process beacon/probe response frames: 		 *    o when scanning, or 		 *    o station mode when associated (to collect state 		 *      updates such as 802.11g slot time) 		 * Frames otherwise received are discarded. 		 */
 if|if
 condition|(
@@ -5393,6 +5426,34 @@ operator|++
 expr_stmt|;
 return|return;
 block|}
+comment|/* Override RX channel as appropriate */
+if|if
+condition|(
+name|rxs
+operator|!=
+name|NULL
+condition|)
+block|{
+name|c
+operator|=
+name|ieee80211_lookup_channel_rxstatus
+argument_list|(
+name|vap
+argument_list|,
+name|rxs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|c
+operator|!=
+name|NULL
+condition|)
+name|rxchan
+operator|=
+name|c
+expr_stmt|;
+block|}
 comment|/* XXX probe response in sta mode when !scanning? */
 if|if
 condition|(
@@ -5401,6 +5462,8 @@ argument_list|(
 name|ni
 argument_list|,
 name|m0
+argument_list|,
+name|rxchan
 argument_list|,
 operator|&
 name|scan
@@ -6023,6 +6086,8 @@ name|ieee80211_add_scan
 argument_list|(
 name|vap
 argument_list|,
+name|rxchan
+argument_list|,
 operator|&
 name|scan
 argument_list|,
@@ -6150,6 +6215,8 @@ block|}
 name|ieee80211_add_scan
 argument_list|(
 name|vap
+argument_list|,
+name|rxchan
 argument_list|,
 operator|&
 name|scan

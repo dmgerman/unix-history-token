@@ -426,7 +426,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -659,7 +659,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -865,6 +865,30 @@ name|pmc_value_t
 name|v
 parameter_list|)
 block|{
+comment|/* If the PMC has overflowed, return a reload count of zero. */
+if|if
+condition|(
+operator|(
+name|v
+operator|&
+operator|(
+literal|1ULL
+operator|<<
+operator|(
+name|core_iaf_width
+operator|-
+literal|1
+operator|)
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|v
 operator|&=
 operator|(
@@ -962,7 +986,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -1202,7 +1226,7 @@ literal|4
 operator|)
 operator|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -1288,7 +1312,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -1716,7 +1740,7 @@ name|v
 operator|=
 name|tmp
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -1764,7 +1788,7 @@ modifier|*
 name|pmc
 parameter_list|)
 block|{
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -1919,7 +1943,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -2048,7 +2072,7 @@ operator|!=
 literal|0
 condition|)
 do|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -2113,7 +2137,7 @@ name|msr
 init|=
 literal|0
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -2208,7 +2232,7 @@ operator|&=
 operator|~
 name|fc
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -2306,7 +2330,7 @@ operator|!=
 literal|0
 condition|)
 do|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -2528,7 +2552,7 @@ name|IAF_CTRL_MASK
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG6
 argument_list|(
 name|MDP
 argument_list|,
@@ -2616,15 +2640,13 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MDP
 argument_list|,
 name|INI
 argument_list|,
 literal|1
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"iaf-initialize"
 argument_list|)
@@ -15961,6 +15983,30 @@ name|pmc_value_t
 name|v
 parameter_list|)
 block|{
+comment|/* If the PMC has overflowed, return a reload count of zero. */
+if|if
+condition|(
+operator|(
+name|v
+operator|&
+operator|(
+literal|1ULL
+operator|<<
+operator|(
+name|core_iap_width
+operator|-
+literal|1
+operator|)
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|v
 operator|&=
 operator|(
@@ -17641,7 +17687,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -18061,7 +18107,7 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -18111,7 +18157,7 @@ name|void
 operator|)
 name|pm
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -18295,7 +18341,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -18320,7 +18366,7 @@ name|pm_iap
 operator|.
 name|pm_iap_evsel
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -18550,7 +18596,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -18755,7 +18801,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -18862,15 +18908,13 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MDP
 argument_list|,
 name|INI
 argument_list|,
 literal|1
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"iap-initialize"
 argument_list|)
@@ -19041,7 +19085,7 @@ decl_stmt|;
 name|uint64_t
 name|msr
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -19167,7 +19211,7 @@ name|pm_reloadcount
 expr_stmt|;
 name|v
 operator|=
-name|iaf_reload_count_to_perfctr_value
+name|iap_reload_count_to_perfctr_value
 argument_list|(
 name|v
 argument_list|)
@@ -19305,7 +19349,7 @@ decl_stmt|;
 name|pmc_value_t
 name|v
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -19343,7 +19387,7 @@ name|intrstatus
 operator|&
 name|core_pmcmask
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -19553,7 +19597,7 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -19694,7 +19738,7 @@ operator|.
 name|pm_reloadcount
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -19726,7 +19770,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Reenable all non-stalled PMCs. 	 */
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -19761,7 +19805,7 @@ operator|&
 name|IA_GLOBAL_CTRL_MASK
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG5
 argument_list|(
 name|MDP
 argument_list|,
@@ -19898,7 +19942,7 @@ name|md
 operator|->
 name|pmd_cputype
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -20096,7 +20140,7 @@ operator|<<
 name|IAF_OFFSET
 expr_stmt|;
 block|}
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -20180,15 +20224,13 @@ modifier|*
 name|md
 parameter_list|)
 block|{
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MDP
 argument_list|,
 name|INI
 argument_list|,
 literal|1
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"core-finalize"
 argument_list|)

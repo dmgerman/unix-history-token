@@ -707,7 +707,7 @@ argument_list|(
 name|l_int
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_LINUX
 argument_list|,
 name|M_WAITOK
 argument_list|)
@@ -766,7 +766,7 @@ name|free
 argument_list|(
 name|mib
 argument_list|,
-name|M_TEMP
+name|M_LINUX
 argument_list|)
 expr_stmt|;
 return|return
@@ -820,7 +820,7 @@ name|free
 argument_list|(
 name|mib
 argument_list|,
-name|M_TEMP
+name|M_LINUX
 argument_list|)
 expr_stmt|;
 name|LIN_SDT_PROBE1
@@ -987,7 +987,7 @@ name|free
 argument_list|(
 name|mib
 argument_list|,
-name|M_TEMP
+name|M_LINUX
 argument_list|)
 expr_stmt|;
 name|LIN_SDT_PROBE1

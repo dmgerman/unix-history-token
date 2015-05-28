@@ -415,6 +415,11 @@ operator|>=
 name|AML_PIC_NIRQS
 condition|)
 return|return;
+name|arm_irq_memory_barrier
+argument_list|(
+name|nb
+argument_list|)
+expr_stmt|;
 name|CSR_WRITE_4
 argument_list|(
 name|aml8726_pic_sc
@@ -620,7 +625,7 @@ expr_stmt|;
 block|}
 ifndef|#
 directive|ifndef
-name|SMP
+name|DEV_GIC
 name|arm_post_filter
 operator|=
 name|aml8726_pic_eoi
@@ -748,7 +753,7 @@ end_expr_stmt
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|SMP
+name|DEV_GIC
 end_ifndef
 
 begin_function
@@ -953,6 +958,11 @@ operator|>=
 name|AML_PIC_NIRQS
 condition|)
 return|return;
+name|arm_irq_memory_barrier
+argument_list|(
+name|nb
+argument_list|)
+expr_stmt|;
 name|mask
 operator|=
 name|CSR_READ_4
@@ -982,6 +992,16 @@ name|nb
 argument_list|)
 argument_list|,
 name|mask
+argument_list|)
+expr_stmt|;
+name|CSR_BARRIER
+argument_list|(
+name|aml8726_pic_sc
+argument_list|,
+name|AML_PIC_MASK_REG
+argument_list|(
+name|nb
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

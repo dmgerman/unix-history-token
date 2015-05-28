@@ -12975,7 +12975,7 @@ parameter_list|(
 name|db_addr_t
 name|loc
 parameter_list|,
-name|boolean_t
+name|bool
 name|altfmt
 parameter_list|)
 block|{

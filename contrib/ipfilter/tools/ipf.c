@@ -1383,7 +1383,7 @@ argument_list|,
 literal|"block"
 argument_list|)
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|opt
 argument_list|,

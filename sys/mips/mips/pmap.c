@@ -4450,14 +4450,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|__mips_n64
-name|vm_pageout_grow_cache
-argument_list|(
-literal|3
-argument_list|,
-literal|0
-argument_list|,
-name|MIPS_XKPHYS_LARGEST_PHYS
-argument_list|)
+name|VM_WAIT
 expr_stmt|;
 else|#
 directive|else
@@ -14282,7 +14275,7 @@ name|db_lookup_thread
 argument_list|(
 name|addr
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 if|if

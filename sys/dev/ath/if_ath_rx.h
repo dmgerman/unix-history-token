@@ -46,6 +46,12 @@ parameter_list|,
 name|int
 name|subtype
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
+parameter_list|,
 name|int
 name|rssi
 parameter_list|,

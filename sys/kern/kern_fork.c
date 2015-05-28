@@ -4320,6 +4320,21 @@ name|p_pptr
 operator|->
 name|p_pid
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|KTR_PTRACE
+argument_list|,
+literal|"fork_return: attaching to new child pid %d: oppid %d"
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|p
+operator|->
+name|p_oppid
+argument_list|)
+expr_stmt|;
 name|proc_reparent
 argument_list|(
 name|p

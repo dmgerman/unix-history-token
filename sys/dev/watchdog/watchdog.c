@@ -1543,7 +1543,7 @@ argument_list|(
 operator|&
 name|wd_pretimeo_handle
 argument_list|,
-name|true
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -1551,7 +1551,7 @@ argument_list|(
 operator|&
 name|wd_softtimeo_handle
 argument_list|,
-name|true
+literal|1
 argument_list|)
 expr_stmt|;
 name|wd_dev

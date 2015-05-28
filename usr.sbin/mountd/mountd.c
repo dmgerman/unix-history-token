@@ -7257,6 +7257,28 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+name|fsb
+operator|.
+name|f_flags
+operator|&
+name|MNT_AUTOMOUNTED
+operator|)
+operator|!=
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"Warning: exporting of "
+literal|"automounted fs %s not supported"
+argument_list|,
+name|cp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|got_nondir
 condition|)
 block|{

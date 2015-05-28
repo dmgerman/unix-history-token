@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2007-2009 Solarflare Communications Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2007-2015 Solarflare Communications Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright notice,  *    this list of conditions and the following disclaimer in the documentation  *    and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing official  * policies, either expressed or implied, of the FreeBSD Project.  */
 end_comment
 
 begin_include
@@ -101,6 +101,23 @@ end_endif
 begin_if
 if|#
 directive|if
+name|EFSYS_OPT_MON_MCDI
+end_if
+
+begin_include
+include|#
+directive|include
+file|"mcdi_mon.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
 name|EFSYS_OPT_NAMES
 end_if
 
@@ -108,9 +125,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|__cs
 modifier|*
-name|__cs
 name|__efx_mon_name
 index|[]
 init|=
@@ -124,6 +139,8 @@ block|,
 literal|"max6647"
 block|,
 literal|"sfx90x0"
+block|,
+literal|"sfx91x0"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -131,7 +148,6 @@ end_decl_stmt
 begin_function
 specifier|const
 name|char
-name|__cs
 modifier|*
 name|efx_mon_name
 parameter_list|(
@@ -214,7 +230,6 @@ end_if
 begin_decl_stmt
 specifier|static
 name|efx_mon_ops_t
-name|__cs
 name|__efx_mon_null_ops
 init|=
 block|{
@@ -228,7 +243,7 @@ if|#
 directive|if
 name|EFSYS_OPT_MON_STATS
 name|nullmon_stats_update
-comment|/* emo_stat_update */
+comment|/* emo_stats_update */
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_MON_STATS */
@@ -250,7 +265,6 @@ end_if
 begin_decl_stmt
 specifier|static
 name|efx_mon_ops_t
-name|__cs
 name|__efx_mon_lm87_ops
 init|=
 block|{
@@ -264,7 +278,7 @@ if|#
 directive|if
 name|EFSYS_OPT_MON_STATS
 name|lm87_stats_update
-comment|/* emo_stat_update */
+comment|/* emo_stats_update */
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_MON_STATS */
@@ -286,7 +300,6 @@ end_if
 begin_decl_stmt
 specifier|static
 name|efx_mon_ops_t
-name|__cs
 name|__efx_mon_max6647_ops
 init|=
 block|{
@@ -300,7 +313,7 @@ if|#
 directive|if
 name|EFSYS_OPT_MON_STATS
 name|max6647_stats_update
-comment|/* emo_stat_update */
+comment|/* emo_stats_update */
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_MON_STATS */
@@ -316,27 +329,26 @@ end_endif
 begin_if
 if|#
 directive|if
-name|EFSYS_OPT_MON_SIENA
+name|EFSYS_OPT_MON_MCDI
 end_if
 
 begin_decl_stmt
 specifier|static
 name|efx_mon_ops_t
-name|__cs
-name|__efx_mon_siena_ops
+name|__efx_mon_mcdi_ops
 init|=
 block|{
-name|siena_mon_reset
+name|NULL
 block|,
 comment|/* emo_reset */
-name|siena_mon_reconfigure
+name|NULL
 block|,
 comment|/* emo_reconfigure */
 if|#
 directive|if
 name|EFSYS_OPT_MON_STATS
-name|siena_mon_stats_update
-comment|/* emo_stat_update */
+name|mcdi_mon_stats_update
+comment|/* emo_stats_update */
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_MON_STATS */
@@ -352,9 +364,7 @@ end_endif
 begin_decl_stmt
 specifier|static
 name|efx_mon_ops_t
-name|__cs
 modifier|*
-name|__cs
 name|__efx_mon_ops
 index|[]
 init|=
@@ -399,9 +409,21 @@ endif|#
 directive|endif
 if|#
 directive|if
-name|EFSYS_OPT_MON_SIENA
+name|EFSYS_OPT_MON_MCDI
 operator|&
-name|__efx_mon_siena_ops
+name|__efx_mon_mcdi_ops
+block|,
+else|#
+directive|else
+name|NULL
+block|,
+endif|#
+directive|endif
+if|#
+directive|if
+name|EFSYS_OPT_MON_MCDI
+operator|&
+name|__efx_mon_mcdi_ops
 else|#
 directive|else
 name|NULL
@@ -554,6 +576,15 @@ goto|;
 block|}
 if|if
 condition|(
+name|emop
+operator|->
+name|emo_reset
+operator|!=
+name|NULL
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|rc
 operator|=
@@ -570,6 +601,16 @@ condition|)
 goto|goto
 name|fail3
 goto|;
+block|}
+if|if
+condition|(
+name|emop
+operator|->
+name|emo_reconfigure
+operator|!=
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 operator|(
@@ -588,6 +629,7 @@ condition|)
 goto|goto
 name|fail4
 goto|;
+block|}
 name|emp
 operator|->
 name|em_emop
@@ -606,6 +648,14 @@ argument_list|(
 name|fail5
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|emop
+operator|->
+name|emo_reset
+operator|!=
+name|NULL
+condition|)
 operator|(
 name|void
 operator|)
@@ -675,16 +725,14 @@ name|EFSYS_OPT_NAMES
 end_if
 
 begin_comment
-comment|/* START MKCONFIG GENERATED MonitorStatNamesBlock 89ff37f1d74ad8b3 */
+comment|/* START MKCONFIG GENERATED MonitorStatNamesBlock b9328f15438c4d01 */
 end_comment
 
 begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|__cs
 modifier|*
-name|__cs
 name|__mon_stat_name
 index|[]
 init|=
@@ -748,6 +796,84 @@ block|,
 literal|"iaoe"
 block|,
 literal|"iaoe_in"
+block|,
+literal|"nic_power"
+block|,
+literal|"0_9v"
+block|,
+literal|"i0_9v"
+block|,
+literal|"i1_2v"
+block|,
+literal|"0_9v_adc"
+block|,
+literal|"controller_temperature2"
+block|,
+literal|"vreg_temperature"
+block|,
+literal|"vreg_0_9v_temperature"
+block|,
+literal|"vreg_1_2v_temperature"
+block|,
+literal|"int_vptat"
+block|,
+literal|"controller_internal_adc_temperature"
+block|,
+literal|"ext_vptat"
+block|,
+literal|"controller_external_adc_temperature"
+block|,
+literal|"ambient_temperature"
+block|,
+literal|"airflow"
+block|,
+literal|"vdd08d_vss08d_csr"
+block|,
+literal|"vdd08d_vss08d_csr_extadc"
+block|,
+literal|"hotpoint_temperature"
+block|,
+literal|"phy_power_switch_port0"
+block|,
+literal|"phy_power_switch_port1"
+block|,
+literal|"mum_vcc"
+block|,
+literal|"0v9_a"
+block|,
+literal|"i0v9_a"
+block|,
+literal|"0v9_a_temp"
+block|,
+literal|"0v9_b"
+block|,
+literal|"i0v9_b"
+block|,
+literal|"0v9_b_temp"
+block|,
+literal|"ccom_avreg_1v2_supply"
+block|,
+literal|"ccom_avreg_1v2_supply_ext_adc"
+block|,
+literal|"ccom_avreg_1v8_supply"
+block|,
+literal|"ccom_avreg_1v8_supply_ext_adc"
+block|,
+literal|"controller_master_vptat"
+block|,
+literal|"controller_master_internal_temp"
+block|,
+literal|"controller_master_vptat_ext_adc"
+block|,
+literal|"controller_master_internal_temp_ext_adc"
+block|,
+literal|"controller_slave_vptat"
+block|,
+literal|"controller_slave_internal_temp"
+block|,
+literal|"controller_slave_vptat_ext_adc"
+block|,
+literal|"controller_slave_internal_temp_ext_adc"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -760,7 +886,6 @@ begin_function
 specifier|extern
 specifier|const
 name|char
-name|__cs
 modifier|*
 name|efx_mon_stat_name
 parameter_list|(
@@ -980,6 +1105,15 @@ name|em_emop
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|emop
+operator|->
+name|emo_reset
+operator|!=
+name|NULL
+condition|)
+block|{
 name|rc
 operator|=
 name|emop
@@ -1004,6 +1138,7 @@ argument_list|,
 name|rc
 argument_list|)
 expr_stmt|;
+block|}
 name|emp
 operator|->
 name|em_type

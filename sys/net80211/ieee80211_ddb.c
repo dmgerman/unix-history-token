@@ -3377,6 +3377,15 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
+literal|"\tname %s"
+argument_list|,
+name|ic
+operator|->
+name|ic_name
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
 literal|" comlock %p"
 argument_list|,
 operator|&

@@ -4107,7 +4107,7 @@ name|vector_page
 argument_list|)
 index|]
 expr_stmt|;
-comment|/* 	 * Set referenced flag. 	 * Vectors' page is always desired 	 * to be allowed to reside in TLB.  	 */
+comment|/* 	 * Set referenced flag. 	 * Vectors' page is always desired 	 * to be allowed to reside in TLB. 	 */
 operator|*
 name|ptep
 operator||=
@@ -14748,7 +14748,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Tries to create a 1MB page mapping.  Returns TRUE if successful and  * FALSE otherwise.  Fails if (1) page is unmanageg, kernel pmap or vectors  * page, (2) a mapping already exists at the specified virtual address, or  * (3) a pv entry cannot be allocated without reclaiming another pv entry.   */
+comment|/*  * Tries to create a 1MB page mapping.  Returns TRUE if successful and  * FALSE otherwise.  Fails if (1) page is unmanageg, kernel pmap or vectors  * page, (2) a mapping already exists at the specified virtual address, or  * (3) a pv entry cannot be allocated without reclaiming another pv entry.  */
 end_comment
 
 begin_function
@@ -15670,7 +15670,7 @@ operator|&=
 operator|~
 name|VM_PROT_EXECUTE
 expr_stmt|;
-comment|/*  	 * Examine each of the other PTEs in the specified l2_bucket.  	 * Abort if this PTE maps an unexpected 4KB physical page or 	 * does not have identical characteristics to the first PTE. 	 */
+comment|/* 	 * Examine each of the other PTEs in the specified l2_bucket. 	 * Abort if this PTE maps an unexpected 4KB physical page or 	 * does not have identical characteristics to the first PTE. 	 */
 name|pa
 operator|=
 name|l2pte_pa
@@ -16118,7 +16118,7 @@ argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
-comment|/* 	 * According to assumptions described in pmap_promote_section, 	 * kernel is and always should be mapped using 1MB section mappings. 	 * What more, managed kernel pages were not to be promoted.  	 */
+comment|/* 	 * According to assumptions described in pmap_promote_section, 	 * kernel is and always should be mapped using 1MB section mappings. 	 * What more, managed kernel pages were not to be promoted. 	 */
 name|KASSERT
 argument_list|(
 name|pmap
@@ -22198,7 +22198,7 @@ name|vm_memattr_t
 name|ma
 parameter_list|)
 block|{
-comment|/*  	 * Remember the memattr in a field that gets used to set the appropriate 	 * bits in the PTEs as mappings are established. 	 */
+comment|/* 	 * Remember the memattr in a field that gets used to set the appropriate 	 * bits in the PTEs as mappings are established. 	 */
 name|m
 operator|->
 name|md

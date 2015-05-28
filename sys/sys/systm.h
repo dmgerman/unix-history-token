@@ -1711,10 +1711,6 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_function_decl
 name|void
 modifier|*
@@ -3599,6 +3595,19 @@ name|struct
 name|trapframe
 modifier|*
 name|frame
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|softdep_ast_cleanup
+function_decl|)
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

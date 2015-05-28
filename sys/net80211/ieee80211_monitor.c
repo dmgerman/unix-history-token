@@ -202,6 +202,12 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
+parameter_list|,
 name|int
 name|rssi
 parameter_list|,
@@ -427,6 +433,12 @@ name|struct
 name|mbuf
 modifier|*
 name|m
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
 parameter_list|,
 name|int
 name|rssi

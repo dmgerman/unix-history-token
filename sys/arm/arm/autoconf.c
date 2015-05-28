@@ -228,6 +228,13 @@ modifier|*
 name|dummy
 parameter_list|)
 block|{
+name|enable_interrupts
+argument_list|(
+name|PSR_I
+operator||
+name|PSR_F
+argument_list|)
+expr_stmt|;
 name|cninit_finish
 argument_list|()
 expr_stmt|;

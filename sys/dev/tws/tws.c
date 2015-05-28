@@ -966,7 +966,7 @@ name|sc
 operator|->
 name|stats_timer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -3968,7 +3968,7 @@ index|]
 operator|.
 name|timeout
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|sc

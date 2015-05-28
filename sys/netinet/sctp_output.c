@@ -48756,7 +48756,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_OUTPUT
 operator|+
-name|SCTP_LOC_4
+name|SCTP_LOC_2
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -51446,7 +51446,7 @@ name|NULL
 argument_list|,
 name|SCTP_FROM_SCTP_OUTPUT
 operator|+
-name|SCTP_LOC_5
+name|SCTP_LOC_3
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -51797,7 +51797,7 @@ name|NULL
 argument_list|,
 name|SCTP_FROM_SCTP_OUTPUT
 operator|+
-name|SCTP_LOC_6
+name|SCTP_LOC_4
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -60867,15 +60867,6 @@ name|int
 name|resv_upfront
 parameter_list|)
 block|{
-name|int
-name|left
-decl_stmt|;
-name|left
-operator|=
-name|sp
-operator|->
-name|length
-expr_stmt|;
 name|sp
 operator|->
 name|data
@@ -63028,7 +63019,7 @@ name|SCTP_PCBFREE_FORCE
 argument_list|,
 name|SCTP_FROM_SCTP_OUTPUT
 operator|+
-name|SCTP_LOC_7
+name|SCTP_LOC_5
 argument_list|)
 expr_stmt|;
 name|hold_tcblock

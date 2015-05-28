@@ -1491,13 +1491,13 @@ name|tq_queue
 argument_list|)
 condition|)
 return|return;
-comment|/* 	 * Enqueue our barrier with the lowest possible priority 	 * so we are inserted after all current tasks. 	 */
+comment|/* 	 * Enqueue our barrier after all current tasks, but with 	 * the highest priority so that newly queued tasks cannot 	 * pass it.  Because of the high priority, we can not use 	 * taskqueue_enqueue_locked directly (which drops the lock 	 * anyway) so just insert it at tail while we have the 	 * queue lock. 	 */
 name|TASK_INIT
 argument_list|(
 operator|&
 name|t_barrier
 argument_list|,
-literal|0
+name|USHRT_MAX
 argument_list|,
 name|taskqueue_task_nop_fn
 argument_list|,
@@ -1505,20 +1505,24 @@ operator|&
 name|t_barrier
 argument_list|)
 expr_stmt|;
-name|taskqueue_enqueue_locked
+name|STAILQ_INSERT_TAIL
 argument_list|(
+operator|&
 name|queue
+operator|->
+name|tq_queue
 argument_list|,
 operator|&
 name|t_barrier
+argument_list|,
+name|ta_link
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Raise the barrier's priority so newly queued tasks cannot  	 * pass it.  	 */
 name|t_barrier
 operator|.
-name|ta_priority
+name|ta_pending
 operator|=
-name|USHRT_MAX
+literal|1
 expr_stmt|;
 comment|/* 	 * Once the barrier has executed, all previously queued tasks 	 * have completed or are currently executing. 	 */
 while|while

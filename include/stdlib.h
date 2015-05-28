@@ -856,6 +856,10 @@ argument_list|,
 name|size_t
 argument_list|)
 name|__malloc_like
+name|__alloc_align
+argument_list|(
+literal|1
+argument_list|)
 name|__alloc_size
 argument_list|(
 literal|2
@@ -985,8 +989,15 @@ parameter_list|(
 function_decl|1
 end_function_decl
 
-begin_expr_stmt
+begin_macro
 unit|)
+name|__alloc_align
+argument_list|(
+literal|2
+argument_list|)
+end_macro
+
+begin_expr_stmt
 name|__alloc_size
 argument_list|(
 literal|3

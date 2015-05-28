@@ -7280,6 +7280,12 @@ name|VM_EXITCODE_INST_EMUL
 expr_stmt|;
 name|vmexit
 operator|->
+name|inst_length
+operator|=
+literal|0
+expr_stmt|;
+name|vmexit
+operator|->
 name|u
 operator|.
 name|inst_emul

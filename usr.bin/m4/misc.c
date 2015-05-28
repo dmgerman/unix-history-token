@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: misc.c,v 1.44 2014/05/12 19:11:19 espie Exp $	*/
+comment|/*	$OpenBSD: misc.c,v 1.45 2014/12/21 09:33:12 espie Exp $	*/
 end_comment
 
 begin_comment
@@ -718,6 +718,8 @@ name|sstack
 index|[
 name|i
 index|]
+operator|==
+name|STORAGE_STRSPACE
 condition|)
 name|mstack
 index|[
@@ -1074,7 +1076,7 @@ name|void
 name|m4errx
 parameter_list|(
 name|int
-name|exitstatus
+name|eval
 parameter_list|,
 specifier|const
 name|char
@@ -1145,7 +1147,7 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
-name|exitstatus
+name|eval
 argument_list|)
 expr_stmt|;
 block|}

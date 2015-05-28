@@ -20,7 +20,25 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ctype.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
 end_include
 
 begin_define
@@ -38,19 +56,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdbool.h>
 end_include
 
 begin_include
@@ -68,13 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<ctype.h>
+file|<unistd.h>
 end_include
 
 begin_define
@@ -134,7 +134,7 @@ decl_stmt|;
 name|char
 name|path
 index|[
-name|MAXPATHLEN
+name|PATH_MAX
 index|]
 decl_stmt|;
 name|size_t

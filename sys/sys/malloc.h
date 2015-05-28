@@ -542,6 +542,10 @@ name|__alloc_size
 argument_list|(
 literal|1
 argument_list|)
+name|__alloc_align
+argument_list|(
+literal|6
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 

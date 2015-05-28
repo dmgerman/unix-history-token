@@ -623,7 +623,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"superblock location\t%jd\tid\t[ %x %x ]\n"
+literal|"superblock location\t%jd\tid\t[ %08x %08x ]\n"
 argument_list|,
 operator|(
 name|intmax_t

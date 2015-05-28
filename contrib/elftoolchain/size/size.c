@@ -78,7 +78,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: size.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: size.c 3183 2015-04-10 16:18:42Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2896,7 +2896,7 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* Core dumps are handled seperately */
+comment|/* Core dumps are handled separately */
 if|if
 condition|(
 name|elfhdr

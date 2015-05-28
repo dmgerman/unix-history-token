@@ -580,7 +580,7 @@ modifier|*
 name|leftp
 parameter_list|,
 name|size_t
-name|nvlist
+name|nfds
 parameter_list|,
 name|nvlist_t
 modifier|*

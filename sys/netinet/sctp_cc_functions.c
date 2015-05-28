@@ -1110,9 +1110,9 @@ name|stcb
 argument_list|,
 name|net
 argument_list|,
-name|SCTP_FROM_SCTP_INDATA
+name|SCTP_FROM_SCTP_CC_FUNCTIONS
 operator|+
-name|SCTP_LOC_32
+name|SCTP_LOC_1
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -9806,9 +9806,9 @@ name|stcb
 argument_list|,
 name|net
 argument_list|,
-name|SCTP_FROM_SCTP_INDATA
+name|SCTP_FROM_SCTP_CC_FUNCTIONS
 operator|+
-name|SCTP_LOC_32
+name|SCTP_LOC_2
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -12515,9 +12515,9 @@ name|stcb
 argument_list|,
 name|net
 argument_list|,
-name|SCTP_FROM_SCTP_INDATA
+name|SCTP_FROM_SCTP_CC_FUNCTIONS
 operator|+
-name|SCTP_LOC_32
+name|SCTP_LOC_3
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start

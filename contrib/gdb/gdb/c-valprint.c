@@ -2209,6 +2209,21 @@ block|}
 block|}
 if|if
 condition|(
+operator|!
+name|value_initialized
+argument_list|(
+name|val
+argument_list|)
+condition|)
+name|fprintf_filtered
+argument_list|(
+name|stream
+argument_list|,
+literal|" [uninitialized] "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|objectprint
 operator|&&
 operator|(

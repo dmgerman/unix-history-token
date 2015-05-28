@@ -108,7 +108,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|int
+name|uint64_t
 name|ktr_mask
 decl_stmt|;
 end_decl_stmt
@@ -154,7 +154,7 @@ begin_function_decl
 name|void
 name|ktr_tracepoint
 parameter_list|(
-name|u_int
+name|uint64_t
 name|mask
 parameter_list|,
 specifier|const

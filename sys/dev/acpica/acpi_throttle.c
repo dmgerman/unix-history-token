@@ -336,7 +336,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|acpi_throttle_quirks
 parameter_list|(
 name|struct
@@ -1363,7 +1363,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|acpi_throttle_quirks
 parameter_list|(
 name|struct
@@ -1372,6 +1372,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__i386__
 name|device_t
 name|acpi_dev
 decl_stmt|;
@@ -1414,11 +1417,8 @@ default|default:
 break|break;
 block|}
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+endif|#
+directive|endif
 block|}
 end_function
 

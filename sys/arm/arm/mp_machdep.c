@@ -708,9 +708,22 @@ comment|/* Spin until the BSP releases the APs */
 while|while
 condition|(
 operator|!
+name|atomic_load_acq_int
+argument_list|(
+operator|&
 name|aps_ready
+argument_list|)
 condition|)
-empty_stmt|;
+block|{
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|7
+asm|__asm __volatile("wfe");
+endif|#
+directive|endif
+block|}
 comment|/* Initialize curthread */
 name|KASSERT
 argument_list|(
@@ -1110,27 +1123,6 @@ name|cf_tlb_flushID
 argument_list|()
 expr_stmt|;
 break|break;
-ifdef|#
-directive|ifdef
-name|ARM_NEW_PMAP
-case|case
-name|IPI_LAZYPMAP
-case|:
-name|CTR1
-argument_list|(
-name|KTR_SMP
-argument_list|,
-literal|"%s: IPI_LAZYPMAP"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-name|pmap_lazyfix_action
-argument_list|()
-expr_stmt|;
-break|break;
-endif|#
-directive|endif
 default|default:
 name|panic
 argument_list|(
@@ -1234,7 +1226,7 @@ operator|++
 control|)
 block|{
 comment|/* 		 * IPI handler 		 */
-comment|/*  		 * Use 0xdeadbeef as the argument value for irq 0, 		 * if we used 0, the intr code will give the trap frame 		 * pointer instead. 		 */
+comment|/* 		 * Use 0xdeadbeef as the argument value for irq 0, 		 * if we used 0, the intr code will give the trap frame 		 * pointer instead. 		 */
 name|arm_setup_irqhandler
 argument_list|(
 literal|"ipi"
@@ -1273,6 +1265,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* Wake the other threads up */
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|7
+name|armv7_sev
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|printf
 argument_list|(
 literal|"Release APs\n"

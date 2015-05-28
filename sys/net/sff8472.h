@@ -598,7 +598,7 @@ value|(1<< 0)
 end_define
 
 begin_comment
-comment|/*  * Table 3.2 Identifier values.  * Identifier constants has taken from SFF-8024 rev 2.2 table 4.1  * (as referenced by table 3.2 footer)  * */
+comment|/*  * Table 3.2 Identifier values.  * Identifier constants has taken from SFF-8024 rev 2.9 table 4.1  * (as referenced by table 3.2 footer)  * */
 end_comment
 
 begin_enum
@@ -699,9 +699,29 @@ init|=
 literal|0x12
 block|,
 comment|/* CXP2 (aka CXP28) */
+name|SFF_8024_ID_CDFP
+init|=
+literal|0x13
+block|,
+comment|/* CDFP (Style 1/Style 2) */
+name|SFF_8024_ID_SMM4
+init|=
+literal|0x14
+block|,
+comment|/* Shielded Mini Multilate HD 4X Fanout */
+name|SFF_8024_ID_SMM8
+init|=
+literal|0x15
+block|,
+comment|/* Shielded Mini Multilate HD 8X Fanout */
+name|SFF_8024_ID_CDFP3
+init|=
+literal|0x16
+block|,
+comment|/* CDFP (Style3) */
 name|SFF_8024_ID_LAST
 init|=
-name|SFF_8024_ID_CXP2
+name|SFF_8024_ID_CDFP3
 block|}
 enum|;
 end_enum
@@ -725,7 +745,7 @@ literal|"GBIC"
 block|,
 literal|"SFF"
 block|,
-literal|"SFP/SFP+"
+literal|"SFP/SFP+/SFP28"
 block|,
 literal|"XBI"
 block|,
@@ -737,11 +757,11 @@ literal|"XFF"
 block|,
 literal|"XFP-E"
 block|,
-literal|"XPAk"
+literal|"XPAK"
 block|,
 literal|"X2"
 block|,
-literal|"DWDM-SFP"
+literal|"DWDM-SFP/SFP+"
 block|,
 literal|"QSFP"
 block|,
@@ -756,6 +776,14 @@ block|,
 literal|"QSFP28"
 block|,
 literal|"CXP2"
+block|,
+literal|"CDFP"
+block|,
+literal|"SMM4"
+block|,
+literal|"SMM8"
+block|,
+literal|"CDFP3"
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -1217,7 +1217,7 @@ name|ntb
 operator|->
 name|heartbeat_timer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -1227,7 +1227,7 @@ name|ntb
 operator|->
 name|lr_timer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|DETACH_ON_ERROR

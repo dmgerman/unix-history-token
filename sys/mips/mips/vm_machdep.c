@@ -2418,7 +2418,7 @@ name|db_lookup_thread
 argument_list|(
 name|addr
 argument_list|,
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 else|else

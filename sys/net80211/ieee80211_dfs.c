@@ -1037,14 +1037,12 @@ name|IEEE80211_CHANSTATE_NORADAR
 condition|)
 block|{
 comment|/* 					 * NB: do this here so we get only one 					 * msg instead of one for every channel 					 * table entry. 					 */
-name|if_printf
+name|ic_printf
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
-literal|"radar on channel"
-literal|" %u (%u MHz) cleared after timeout\n"
+literal|"radar on channel %u "
+literal|"(%u MHz) cleared after timeout\n"
 argument_list|,
 name|c
 operator|->
@@ -1127,9 +1125,9 @@ name|void
 name|announce_radar
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|,
 specifier|const
 name|struct
@@ -1150,9 +1148,9 @@ name|newchan
 operator|==
 name|NULL
 condition|)
-name|if_printf
+name|ic_printf
 argument_list|(
-name|ifp
+name|ic
 argument_list|,
 literal|"radar detected on channel %u (%u MHz)\n"
 argument_list|,
@@ -1166,9 +1164,9 @@ name|ic_freq
 argument_list|)
 expr_stmt|;
 else|else
-name|if_printf
+name|ic_printf
 argument_list|(
-name|ifp
+name|ic
 argument_list|,
 literal|"radar detected on channel %u (%u MHz), "
 literal|"moving to channel %u (%u MHz)\n"
@@ -1243,8 +1241,6 @@ block|{
 name|announce_radar
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
 name|chan
 argument_list|,
@@ -1413,8 +1409,6 @@ expr_stmt|;
 name|announce_radar
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
 name|chan
 argument_list|,
@@ -1473,11 +1467,9 @@ else|else
 block|{
 comment|/* 			 * Spec says to stop all transmissions and 			 * wait on the current channel for an entry 			 * on the NOL to expire. 			 */
 comment|/*XXX*/
-name|if_printf
+name|ic_printf
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
 literal|"%s: No free channels; waiting for entry "
 literal|"on NOL to expire\n"
@@ -1514,8 +1506,6 @@ expr_stmt|;
 name|announce_radar
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
 name|chan
 argument_list|,
@@ -1545,8 +1535,6 @@ block|{
 name|announce_radar
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
 name|chan
 argument_list|,
@@ -1725,11 +1713,9 @@ return|return
 name|c
 return|;
 block|}
-name|if_printf
+name|ic_printf
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
 literal|"HELP, no channel located to switch to!\n"
 argument_list|)

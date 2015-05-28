@@ -152,7 +152,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|hasaddr
 parameter_list|,
 name|db_expr_t
@@ -1389,7 +1389,7 @@ name|lock_object
 modifier|*
 name|lock
 decl_stmt|;
-name|boolean_t
+name|bool
 name|comma
 decl_stmt|;
 comment|/* Determine which thread to examine. */
@@ -1403,7 +1403,7 @@ name|db_lookup_thread
 argument_list|(
 name|addr
 argument_list|,
-name|FALSE
+name|false
 argument_list|)
 expr_stmt|;
 else|else
@@ -1579,7 +1579,7 @@ argument_list|)
 expr_stmt|;
 name|comma
 operator|=
-name|FALSE
+name|false
 expr_stmt|;
 if|if
 condition|(
@@ -1596,7 +1596,7 @@ argument_list|)
 expr_stmt|;
 name|comma
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 if|if
@@ -1623,7 +1623,7 @@ argument_list|)
 expr_stmt|;
 name|comma
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 if|if
@@ -1650,7 +1650,7 @@ argument_list|)
 expr_stmt|;
 name|comma
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 if|if
@@ -1677,7 +1677,7 @@ argument_list|)
 expr_stmt|;
 name|comma
 operator|=
-name|TRUE
+name|true
 expr_stmt|;
 block|}
 if|if
@@ -2110,7 +2110,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t

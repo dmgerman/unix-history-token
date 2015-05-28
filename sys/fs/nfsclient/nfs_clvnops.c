@@ -11966,6 +11966,8 @@ name|a_uio
 decl_stmt|;
 name|ssize_t
 name|tresid
+decl_stmt|,
+name|left
 decl_stmt|;
 name|int
 name|error
@@ -12136,6 +12138,34 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* 	 * NFS always guarantees that directory entries don't straddle 	 * DIRBLKSIZ boundaries.  As such, we need to limit the size 	 * to an exact multiple of DIRBLKSIZ, to avoid copying a partial 	 * directory entry. 	 */
+name|left
+operator|=
+name|uio
+operator|->
+name|uio_resid
+operator|%
+name|DIRBLKSIZ
+expr_stmt|;
+if|if
+condition|(
+name|left
+operator|==
+name|uio
+operator|->
+name|uio_resid
+condition|)
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+name|uio
+operator|->
+name|uio_resid
+operator|-=
+name|left
+expr_stmt|;
 comment|/* 	 * Call ncl_bioread() to do the real work. 	 */
 name|tresid
 operator|=
@@ -12193,6 +12223,13 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* Add the partial DIRBLKSIZ (left) back in. */
+name|uio
+operator|->
+name|uio_resid
+operator|+=
+name|left
+expr_stmt|;
 return|return
 operator|(
 name|error

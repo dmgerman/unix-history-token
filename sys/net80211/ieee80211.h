@@ -44,6 +44,26 @@ parameter_list|)
 value|(*(_a)& 0x01)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|uint8_t
+name|ieee80211broadcastaddr
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|uint16_t
@@ -755,6 +775,19 @@ define|#
 directive|define
 name|IEEE80211_FC1_ORDER
 value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_HAS_SEQ
+parameter_list|(
+name|type
+parameter_list|,
+name|subtype
+parameter_list|)
+define|\
+value|((type) != IEEE80211_FC0_TYPE_CTL&& \ 	!((type) == IEEE80211_FC0_TYPE_DATA&& \ 	 ((subtype)& IEEE80211_FC0_SUBTYPE_QOS_NULL) == \ 		      IEEE80211_FC0_SUBTYPE_QOS_NULL))
 end_define
 
 begin_define
@@ -3905,7 +3938,7 @@ value|0x7f
 end_define
 
 begin_comment
-comment|/* EPR information element flags */
+comment|/* ERP information element flags */
 end_comment
 
 begin_define

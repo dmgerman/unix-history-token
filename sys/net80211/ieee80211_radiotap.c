@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<net/if_llc.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if_media.h>
 end_include
 
@@ -318,11 +312,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|if_printf
+name|ic_printf
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
 literal|"%s: no tx channel, radiotap 0x%x\n"
 argument_list|,
@@ -435,11 +427,9 @@ operator|-
 literal|1
 condition|)
 block|{
-name|if_printf
+name|ic_printf
 argument_list|(
 name|ic
-operator|->
-name|ic_ifp
 argument_list|,
 literal|"%s: no rx channel, radiotap 0x%x\n"
 argument_list|,

@@ -6647,6 +6647,15 @@ decl_stmt|;
 if|if
 condition|(
 name|request
+operator|<
+literal|0
+condition|)
+return|return
+name|ARCHIVE_FATAL
+return|;
+if|if
+condition|(
+name|request
 operator|==
 literal|0
 condition|)

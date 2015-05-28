@@ -2930,12 +2930,17 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 			 * The PCI Root Complex comes up as a Processor/PowerPC, 			 * but is a bridge. 			 */
 comment|/* Allow only proper PCI-PCI briges */
 if|if
 condition|(
 name|class
 operator|!=
 name|PCIC_BRIDGE
+operator|&&
+name|class
+operator|!=
+name|PCIC_PROCESSOR
 condition|)
 continue|continue;
 if|if
@@ -2943,6 +2948,21 @@ condition|(
 name|subclass
 operator|!=
 name|PCIS_BRIDGE_PCI
+operator|&&
+name|subclass
+operator|!=
+name|PCIS_PROCESSOR_POWERPC
+condition|)
+continue|continue;
+if|if
+condition|(
+name|subclass
+operator|==
+name|PCIS_PROCESSOR_POWERPC
+operator|&&
+name|hdrtype
+operator|!=
+name|PCIM_HDRTYPE_BRIDGE
 condition|)
 continue|continue;
 name|secbus

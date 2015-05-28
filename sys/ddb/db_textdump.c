@@ -2018,7 +2018,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|have_addr
 parameter_list|,
 name|db_expr_t
@@ -2155,7 +2155,7 @@ literal|1
 expr_stmt|;
 name|doadump
 argument_list|(
-name|TRUE
+name|true
 argument_list|)
 expr_stmt|;
 block|}

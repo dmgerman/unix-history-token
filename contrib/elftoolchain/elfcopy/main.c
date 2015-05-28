@@ -78,7 +78,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: main.c 3174 2015-03-27 17:13:41Z emaste $"
+literal|"$Id: main.c 3216 2015-05-23 21:16:36Z kaiwang27 $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2036,7 +2036,28 @@ literal|1
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Insert SHDR table into the internal section list as a "pseudo" 	 * section, so later it will get sorted and resynced just as "normal" 	 * sections. 	 */
+comment|/* 	 * Insert SHDR table into the internal section list as a "pseudo" 	 * section, so later it will get sorted and resynced just as "normal" 	 * sections. 	 * 	 * Under FreeBSD, Binutils objcopy always put the section header 	 * at the end of all the sections. We want to do the same here. 	 * 	 * However, note that the behaviour is still different with Binutils: 	 * elfcopy checks the FreeBSD OSABI tag to tell whether it needs to 	 * move the section headers, while Binutils is probably configured 	 * this way when it's compiled on FreeBSD. 	 */
+if|if
+condition|(
+name|oeh
+operator|.
+name|e_ident
+index|[
+name|EI_OSABI
+index|]
+operator|==
+name|ELFOSABI_FREEBSD
+condition|)
+name|shtab
+operator|=
+name|insert_shtab
+argument_list|(
+name|ecp
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
 name|shtab
 operator|=
 name|insert_shtab
@@ -2400,6 +2421,29 @@ name|sec
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|ecp
+operator|->
+name|secndx
+operator|!=
+name|NULL
+condition|)
+block|{
+name|free
+argument_list|(
+name|ecp
+operator|->
+name|secndx
+argument_list|)
+expr_stmt|;
+name|ecp
+operator|->
+name|secndx
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 block|}
 end_function

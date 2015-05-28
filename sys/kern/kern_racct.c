@@ -210,7 +210,7 @@ end_decl_stmt
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|RACCT_DISABLED
+name|RACCT_DEFAULT_TO_DISABLED
 end_ifdef
 
 begin_decl_stmt

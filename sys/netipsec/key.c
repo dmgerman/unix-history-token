@@ -3403,6 +3403,8 @@ parameter_list|(
 name|struct
 name|secasvar
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -10601,7 +10603,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * SADB_X_GET processing  * receive  *<base, policy(*)>  * from the user(?),  * and send,  *<base, address(SD), policy>  * to the ikmpd.  * policy(*) including direction of policy.  *  * m will always be freed.  */
+comment|/*  * SADB_X_SPDGET processing  * receive  *<base, policy(*)>  * from the user(?),  * and send,  *<base, address(SD), policy>  * to the ikmpd.  * policy(*) including direction of policy.  *  * m will always be freed.  */
 end_comment
 
 begin_function
@@ -10797,7 +10799,11 @@ name|sp
 argument_list|,
 name|SADB_X_SPDGET
 argument_list|,
-literal|0
+name|mhp
+operator|->
+name|msg
+operator|->
+name|sadb_msg_seq
 argument_list|,
 name|mhp
 operator|->
@@ -19898,9 +19904,81 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-comment|/* check SOFT lifetime */
+comment|/* 			 * RFC 2367: 			 * HARD lifetimes MUST take precedence over SOFT 			 * lifetimes, meaning if the HARD and SOFT lifetimes 			 * are the same, the HARD lifetime will appear on the 			 * EXPIRE message. 			 */
+comment|/* check HARD lifetime */
 if|if
 condition|(
+operator|(
+name|sav
+operator|->
+name|lft_h
+operator|->
+name|addtime
+operator|!=
+literal|0
+operator|&&
+name|now
+operator|-
+name|sav
+operator|->
+name|created
+operator|>
+name|sav
+operator|->
+name|lft_h
+operator|->
+name|addtime
+operator|)
+operator|||
+operator|(
+name|sav
+operator|->
+name|lft_h
+operator|->
+name|bytes
+operator|!=
+literal|0
+operator|&&
+name|sav
+operator|->
+name|lft_h
+operator|->
+name|bytes
+operator|<
+name|sav
+operator|->
+name|lft_c
+operator|->
+name|bytes
+operator|)
+condition|)
+block|{
+name|key_sa_chgstate
+argument_list|(
+name|sav
+argument_list|,
+name|SADB_SASTATE_DEAD
+argument_list|)
+expr_stmt|;
+name|key_expire
+argument_list|(
+name|sav
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|KEY_FREESAV
+argument_list|(
+operator|&
+name|sav
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* check SOFT lifetime */
+elseif|else
+if|if
+condition|(
+operator|(
 name|sav
 operator|->
 name|lft_s
@@ -19920,37 +19998,9 @@ operator|->
 name|lft_s
 operator|->
 name|addtime
-condition|)
-block|{
-name|key_sa_chgstate
-argument_list|(
-name|sav
-argument_list|,
-name|SADB_SASTATE_DYING
-argument_list|)
-expr_stmt|;
-comment|/*  				 * Actually, only send expire message if 				 * SA has been used, as it was done before, 				 * but should we always send such message, 				 * and let IKE daemon decide if it should be 				 * renegotiated or not ? 				 * XXX expire message will actually NOT be 				 * sent if SA is only used after soft 				 * lifetime has been reached, see below 				 * (DYING state) 				 */
-if|if
-condition|(
-name|sav
-operator|->
-name|lft_c
-operator|->
-name|usetime
-operator|!=
-literal|0
-condition|)
-name|key_expire
-argument_list|(
-name|sav
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* check SOFT lifetime by bytes */
-comment|/* 			 * XXX I don't know the way to delete this SA 			 * when new SA is installed.  Caution when it's 			 * installed too big lifetime by time. 			 */
-elseif|else
-if|if
-condition|(
+operator|)
+operator|||
+operator|(
 name|sav
 operator|->
 name|lft_s
@@ -19970,6 +20020,7 @@ operator|->
 name|lft_c
 operator|->
 name|bytes
+operator|)
 condition|)
 block|{
 name|key_sa_chgstate
@@ -19979,10 +20030,11 @@ argument_list|,
 name|SADB_SASTATE_DYING
 argument_list|)
 expr_stmt|;
-comment|/* 				 * XXX If we keep to send expire 				 * message in the status of 				 * DYING. Do remove below code. 				 */
 name|key_expire
 argument_list|(
 name|sav
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -20063,6 +20115,13 @@ argument_list|,
 name|SADB_SASTATE_DEAD
 argument_list|)
 expr_stmt|;
+name|key_expire
+argument_list|(
+name|sav
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 name|KEY_FREESAV
 argument_list|(
 operator|&
@@ -20077,7 +20136,7 @@ comment|/* XXX Should we keep to send expire message until HARD lifetime ? */
 if|else if (sav->lft_s != NULL&& sav->lft_s->addtime != 0&& now - sav->created> sav->lft_s->addtime) {
 comment|/* 				 * XXX: should be checked to be 				 * installed the valid SA. 				 */
 comment|/* 				 * If there is no SA then sending 				 * expire message. 				 */
-if|key_expire(sav); 			}
+if|key_expire(sav, 0); 			}
 endif|#
 directive|endif
 comment|/* check HARD lifetime by bytes */
@@ -20110,6 +20169,13 @@ argument_list|(
 name|sav
 argument_list|,
 name|SADB_SASTATE_DEAD
+argument_list|)
+expr_stmt|;
+name|key_expire
+argument_list|(
+name|sav
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|KEY_FREESAV
@@ -31599,6 +31665,9 @@ name|struct
 name|secasvar
 modifier|*
 name|sav
+parameter_list|,
+name|int
+name|hard
 parameter_list|)
 block|{
 name|int
@@ -31972,6 +32041,60 @@ name|sadb_lifetime
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hard
+condition|)
+block|{
+name|lt
+operator|->
+name|sadb_lifetime_exttype
+operator|=
+name|SADB_EXT_LIFETIME_HARD
+expr_stmt|;
+name|lt
+operator|->
+name|sadb_lifetime_allocations
+operator|=
+name|sav
+operator|->
+name|lft_h
+operator|->
+name|allocations
+expr_stmt|;
+name|lt
+operator|->
+name|sadb_lifetime_bytes
+operator|=
+name|sav
+operator|->
+name|lft_h
+operator|->
+name|bytes
+expr_stmt|;
+name|lt
+operator|->
+name|sadb_lifetime_addtime
+operator|=
+name|sav
+operator|->
+name|lft_h
+operator|->
+name|addtime
+expr_stmt|;
+name|lt
+operator|->
+name|sadb_lifetime_usetime
+operator|=
+name|sav
+operator|->
+name|lft_h
+operator|->
+name|usetime
+expr_stmt|;
+block|}
+else|else
+block|{
 name|lt
 operator|->
 name|sadb_lifetime_exttype
@@ -32018,6 +32141,7 @@ name|lft_s
 operator|->
 name|usetime
 expr_stmt|;
+block|}
 name|m_cat
 argument_list|(
 name|result
@@ -35525,7 +35649,7 @@ argument_list|(
 operator|&
 name|key_timer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_reset

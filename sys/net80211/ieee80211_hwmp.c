@@ -1410,7 +1410,7 @@ argument_list|)
 expr_stmt|;
 name|hs
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1420,9 +1420,9 @@ argument_list|)
 argument_list|,
 name|M_80211_VAP
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1454,7 +1454,7 @@ name|hs
 operator|->
 name|hs_roottimer
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|vap
@@ -1493,7 +1493,7 @@ operator|->
 name|hs_roottimer
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|vap
 operator|->
@@ -2181,7 +2181,7 @@ break|break;
 block|}
 name|preq
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2205,9 +2205,9 @@ argument_list|)
 argument_list|,
 name|M_80211_MESH_PREQ
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2435,7 +2435,7 @@ argument_list|,
 name|preq
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|preq
 argument_list|,
@@ -2484,7 +2484,7 @@ break|break;
 block|}
 name|prep
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2494,9 +2494,9 @@ argument_list|)
 argument_list|,
 name|M_80211_MESH_PREP
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2663,7 +2663,7 @@ argument_list|,
 name|prep
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|prep
 argument_list|,
@@ -2717,7 +2717,7 @@ break|break;
 block|}
 name|perr
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -2741,9 +2741,9 @@ argument_list|)
 argument_list|,
 name|M_80211_MESH_PERR
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -2918,7 +2918,7 @@ argument_list|,
 name|perr
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|perr
 argument_list|,
@@ -8134,7 +8134,7 @@ literal|1
 expr_stmt|;
 name|pperr
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -8154,7 +8154,7 @@ argument_list|)
 argument_list|,
 name|M_80211_MESH_PERR
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 argument_list|)
 expr_stmt|;
 comment|/* XXX: magic number, 32 err dests */
@@ -8533,7 +8533,7 @@ name|pperr
 operator|!=
 name|NULL
 condition|)
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|pperr
 argument_list|,

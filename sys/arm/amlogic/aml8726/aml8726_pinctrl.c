@@ -641,7 +641,6 @@ name|ENXIO
 operator|)
 return|;
 comment|/* NOTREACHED */
-break|break;
 block|}
 if|if
 condition|(

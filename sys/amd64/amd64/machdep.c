@@ -1910,37 +1910,6 @@ operator|~
 literal|0xFul
 operator|)
 expr_stmt|;
-comment|/* Translate the signal if appropriate. */
-if|if
-condition|(
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_sigtbl
-operator|&&
-name|sig
-operator|<=
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_sigsize
-condition|)
-name|sig
-operator|=
-name|p
-operator|->
-name|p_sysent
-operator|->
-name|sv_sigtbl
-index|[
-name|_SIG_IDX
-argument_list|(
-name|sig
-argument_list|)
-index|]
-expr_stmt|;
 comment|/* Build the argument list for the signal handler. */
 name|regs
 operator|->
@@ -8353,15 +8322,6 @@ name|pcb_flags
 operator|=
 literal|0
 expr_stmt|;
-name|thread0
-operator|.
-name|td_pcb
-operator|->
-name|pcb_cr3
-operator|=
-name|KPML4phys
-expr_stmt|;
-comment|/* PCID 0 is reserved for kernel */
 name|thread0
 operator|.
 name|td_frame

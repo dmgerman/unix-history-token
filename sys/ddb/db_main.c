@@ -190,7 +190,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|boolean_t
+name|bool
 name|X_db_line_at_pc
 parameter_list|(
 name|db_symtab_t
@@ -215,7 +215,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 block|}
@@ -661,7 +661,7 @@ block|}
 end_function
 
 begin_function
-name|boolean_t
+name|bool
 name|X_db_sym_numargs
 parameter_list|(
 name|db_symtab_t
@@ -683,7 +683,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|FALSE
+name|false
 operator|)
 return|;
 block|}
@@ -1035,7 +1035,7 @@ name|void
 modifier|*
 name|prev_jb
 decl_stmt|;
-name|boolean_t
+name|bool
 name|bkpt
 decl_stmt|,
 name|watchpt

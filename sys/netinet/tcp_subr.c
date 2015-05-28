@@ -3757,7 +3757,7 @@ name|t_timers
 operator|->
 name|tt_rexmt
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -3769,7 +3769,7 @@ name|t_timers
 operator|->
 name|tt_persist
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -3781,7 +3781,7 @@ name|t_timers
 operator|->
 name|tt_keep
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -3793,7 +3793,7 @@ name|t_timers
 operator|->
 name|tt_2msl
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -3805,7 +3805,7 @@ name|t_timers
 operator|->
 name|tt_delack
 argument_list|,
-name|CALLOUT_MPSAFE
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

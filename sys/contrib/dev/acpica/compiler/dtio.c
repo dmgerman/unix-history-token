@@ -2140,11 +2140,15 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"[%.04X] %.08X %.08X %.08X %.08X %.08X %p %p %p\n"
+literal|"[%.04X] %24s %.08X %.08X %.08X %.08X %.08X %p %p %p\n"
 argument_list|,
 name|Subtable
 operator|->
 name|Depth
+argument_list|,
+name|Subtable
+operator|->
+name|Name
 argument_list|,
 name|Subtable
 operator|->
@@ -2202,11 +2206,15 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"[%.04X] %*s%08X (%.02X) - (%.02X)\n"
+literal|"[%.04X] %24s %*s%08X (%.02X) - (%.02X)\n"
 argument_list|,
 name|Subtable
 operator|->
 name|Depth
+argument_list|,
+name|Subtable
+operator|->
+name|Name
 argument_list|,
 operator|(
 literal|4
@@ -2259,7 +2267,7 @@ argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
 literal|"Subtable Info:\n"
-literal|"Depth  Length   TotalLen LenSize  Flags    "
+literal|"Depth                      Name Length   TotalLen LenSize  Flags    "
 literal|"This     Parent   Child    Peer\n\n"
 argument_list|)
 expr_stmt|;
@@ -2278,7 +2286,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"\nSubtable Tree: (Depth, Subtable, Length, TotalLength)\n\n"
+literal|"\nSubtable Tree: (Depth, Name, Subtable, Length, TotalLength)\n\n"
 argument_list|)
 expr_stmt|;
 name|DtWalkTableTree

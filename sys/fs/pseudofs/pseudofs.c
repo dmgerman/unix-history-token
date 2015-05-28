@@ -138,6 +138,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PSEUDOFS_TRACE
+end_ifdef
+
 begin_decl_stmt
 name|int
 name|pfs_trace
@@ -164,6 +170,11 @@ literal|"enable tracing of pseudofs vnode operations"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_if
 if|#

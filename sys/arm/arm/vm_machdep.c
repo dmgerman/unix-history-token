@@ -182,6 +182,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -754,6 +760,32 @@ case|case
 name|ERESTART
 case|:
 comment|/* 		 * Reconstruct the pc to point at the swi. 		 */
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|7
+if|if
+condition|(
+operator|(
+name|frame
+operator|->
+name|tf_spsr
+operator|&
+name|PSR_T
+operator|)
+operator|!=
+literal|0
+condition|)
+name|frame
+operator|->
+name|tf_pc
+operator|-=
+name|THUMB_INSN_SIZE
+expr_stmt|;
+else|else
+endif|#
+directive|endif
 name|frame
 operator|->
 name|tf_pc

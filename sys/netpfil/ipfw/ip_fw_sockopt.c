@@ -12261,7 +12261,7 @@ parameter_list|,
 name|uint8_t
 name|version
 parameter_list|,
-name|void
+name|sopt_handler_f
 modifier|*
 name|handler
 parameter_list|)

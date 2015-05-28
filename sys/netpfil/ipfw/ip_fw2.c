@@ -6553,10 +6553,10 @@ endif|#
 directive|endif
 comment|/* !__FreeBSD__ */
 block|}
-else|else
 endif|#
 directive|endif
 comment|/* !USERSPACE */
+else|else
 break|break;
 block|}
 name|match

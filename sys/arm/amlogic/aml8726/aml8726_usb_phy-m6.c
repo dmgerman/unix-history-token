@@ -769,10 +769,13 @@ name|dev
 operator|==
 name|NULL
 condition|)
+block|{
 name|err
 operator|=
 literal|1
 expr_stmt|;
+break|break;
+block|}
 block|}
 name|free
 argument_list|(

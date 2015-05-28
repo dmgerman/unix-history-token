@@ -465,7 +465,9 @@ block|,
 name|ASL_MSG_UNKNOWN_PRAGMA
 block|,
 name|ASL_MSG_WARNING_DIRECTIVE
-block|,  }
+block|,
+name|ASL_MSG_INCLUDE_FILE
+block|}
 name|ASL_MESSAGE_IDS
 typedef|;
 end_typedef

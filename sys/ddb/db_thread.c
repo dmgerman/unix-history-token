@@ -120,7 +120,7 @@ parameter_list|(
 name|db_expr_t
 name|tid
 parameter_list|,
-name|boolean_t
+name|bool
 name|hastid
 parameter_list|,
 name|db_expr_t
@@ -253,7 +253,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|hasaddr
 parameter_list|,
 name|db_expr_t
@@ -376,7 +376,7 @@ parameter_list|(
 name|db_expr_t
 name|addr
 parameter_list|,
-name|boolean_t
+name|bool
 name|check_pid
 parameter_list|)
 block|{

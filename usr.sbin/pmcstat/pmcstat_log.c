@@ -2825,6 +2825,16 @@ condition|(
 operator|(
 name|ph
 operator|.
+name|p_flags
+operator|&
+name|PF_X
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|ph
+operator|.
 name|p_offset
 operator|&
 operator|(
@@ -6005,7 +6015,7 @@ name|ppm
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* associate this process  image */
+comment|/* 			 * Associate this process image. 			 */
 name|image_path
 operator|=
 name|pmcstat_string_intern

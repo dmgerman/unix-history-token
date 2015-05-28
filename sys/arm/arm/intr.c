@@ -245,9 +245,13 @@ begin_decl_stmt
 name|char
 name|intrnames
 index|[
+operator|(
 name|NIRQ
 operator|*
 name|INTRNAME_LEN
+operator|)
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
