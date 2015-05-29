@@ -11484,6 +11484,9 @@ case|case
 name|SIOCGIFMEDIA
 case|:
 case|case
+name|SIOCGIFXMEDIA
+case|:
+case|case
 name|SIOCGIFGENERIC
 case|:
 if|if
