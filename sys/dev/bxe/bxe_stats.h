@@ -539,6 +539,9 @@ name|uint32_t
 name|rx_tpa_pkts
 decl_stmt|;
 name|uint32_t
+name|rx_jumbo_sge_pkts
+decl_stmt|;
+name|uint32_t
 name|rx_soft_errors
 decl_stmt|;
 name|uint32_t
@@ -802,6 +805,9 @@ name|uint32_t
 name|rx_tpa_pkts
 decl_stmt|;
 name|uint32_t
+name|rx_jumbo_sge_pkts
+decl_stmt|;
+name|uint32_t
 name|rx_soft_errors
 decl_stmt|;
 name|uint32_t
@@ -1043,6 +1049,9 @@ name|rx_pkts_old
 decl_stmt|;
 name|uint32_t
 name|rx_tpa_pkts_old
+decl_stmt|;
+name|uint32_t
+name|rx_jumbo_sge_pkts_old
 decl_stmt|;
 name|uint32_t
 name|rx_soft_errors_old
