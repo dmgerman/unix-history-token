@@ -6207,9 +6207,11 @@ name|HAL_TXDESC_NOACK
 expr_stmt|;
 break|break;
 default|default:
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"bogus frame type 0x%x (%s)\n"
 argument_list|,
