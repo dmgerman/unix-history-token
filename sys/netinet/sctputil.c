@@ -26619,8 +26619,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|stage_right
-label|:
 if|if
 condition|(
 name|holds_lock
@@ -26725,37 +26723,6 @@ argument_list|,
 argument|next_bucket
 argument_list|)
 block|{
-if|if
-condition|(
-name|sctp_ifap
-operator|==
-name|NULL
-condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|panic
-argument_list|(
-literal|"Huh LIST_FOREACH corrupt"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|stage_right
-goto|;
-else|#
-directive|else
-name|SCTP_PRINTF
-argument_list|(
-literal|"LIST corrupt of sctp_ifap's?\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|stage_right
-goto|;
-endif|#
-directive|endif
-block|}
 if|if
 condition|(
 name|addr
