@@ -29349,6 +29349,7 @@ name|peer_supports_asconf
 operator|=
 literal|1
 expr_stmt|;
+break|break;
 case|case
 name|SCTP_ASCONF_ACK
 case|:
