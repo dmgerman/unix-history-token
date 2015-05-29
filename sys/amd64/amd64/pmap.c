@@ -17822,9 +17822,6 @@ name|PG_RW
 decl_stmt|,
 name|PG_V
 decl_stmt|;
-name|vm_offset_t
-name|oldpteva
-decl_stmt|;
 name|vm_page_t
 name|mpte
 decl_stmt|;
@@ -18113,8 +18110,13 @@ operator|&=
 operator|~
 name|PG_RW
 expr_stmt|;
-name|oldpteva
-operator|=
+name|CTR2
+argument_list|(
+name|KTR_PMAP
+argument_list|,
+literal|"pmap_promote_pde: protect for va %#lx"
+literal|" in pmap %p"
+argument_list|,
 operator|(
 name|oldpte
 operator|&
@@ -18129,15 +18131,6 @@ operator|&
 operator|~
 name|PDRMASK
 operator|)
-expr_stmt|;
-name|CTR2
-argument_list|(
-name|KTR_PMAP
-argument_list|,
-literal|"pmap_promote_pde: protect for va %#lx"
-literal|" in pmap %p"
-argument_list|,
-name|oldpteva
 argument_list|,
 name|pmap
 argument_list|)
