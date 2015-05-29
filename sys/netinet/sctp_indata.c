@@ -17131,9 +17131,6 @@ name|send_s
 argument_list|)
 condition|)
 block|{
-ifndef|#
-directive|ifndef
-name|INVARIANTS
 name|struct
 name|mbuf
 modifier|*
@@ -17145,18 +17142,6 @@ index|[
 name|SCTP_DIAG_INFO_LEN
 index|]
 decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|panic
-argument_list|(
-literal|"Impossible sack 1"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 operator|*
 name|abort_now
 operator|=
@@ -17172,7 +17157,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"Cum ack %8.8x greater or equal then TSN %8.8x"
+literal|"Cum ack %8.8x greater or equal than TSN %8.8x"
 argument_list|,
 name|cumack
 argument_list|,
@@ -17212,8 +17197,6 @@ name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 return|return;
-endif|#
-directive|endif
 block|}
 block|}
 name|asoc
@@ -19917,7 +19900,7 @@ argument_list|(
 name|msg
 argument_list|)
 argument_list|,
-literal|"Cum ack %8.8x greater or equal then TSN %8.8x"
+literal|"Cum ack %8.8x greater or equal than TSN %8.8x"
 argument_list|,
 name|cum_ack
 argument_list|,
