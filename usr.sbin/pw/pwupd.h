@@ -469,22 +469,6 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|editgroups
-parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|groups
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
 name|setgrdir
 parameter_list|(
 specifier|const
