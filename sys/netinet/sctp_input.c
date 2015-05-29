@@ -12902,14 +12902,10 @@ return|;
 block|}
 if|if
 condition|(
-operator|(
 operator|*
 name|stcb
 operator|==
 name|NULL
-operator|)
-operator|&&
-name|to
 condition|)
 block|{
 comment|/* Yep, lets check */
@@ -13018,19 +13014,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-block|}
-if|if
-condition|(
-name|to
-operator|==
-name|NULL
-condition|)
-block|{
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 block|}
 name|cookie_len
 operator|-=
