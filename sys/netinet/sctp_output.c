@@ -46518,13 +46518,6 @@ name|chk
 operator|->
 name|send_size
 operator|=
-literal|0
-expr_stmt|;
-comment|/* Get size */
-name|chk
-operator|->
-name|send_size
-operator|=
 name|ack
 operator|->
 name|len
