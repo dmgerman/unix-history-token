@@ -5308,6 +5308,14 @@ name|sctp_ep
 operator|.
 name|default_dscp
 expr_stmt|;
+name|asoc
+operator|->
+name|max_cwnd
+operator|=
+name|inp
+operator|->
+name|max_cwnd
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6

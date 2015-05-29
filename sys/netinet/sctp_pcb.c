@@ -10434,6 +10434,12 @@ name|SCTP_DEFAULT_MAXSEGMENT
 expr_stmt|;
 name|inp
 operator|->
+name|max_cwnd
+operator|=
+literal|0
+expr_stmt|;
+name|inp
+operator|->
 name|sctp_cmt_on_off
 operator|=
 name|SCTP_BASE_SYSCTL

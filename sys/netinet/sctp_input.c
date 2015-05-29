@@ -13733,6 +13733,17 @@ name|sctp_frag_point
 expr_stmt|;
 name|inp
 operator|->
+name|max_cwnd
+operator|=
+operator|(
+operator|*
+name|inp_p
+operator|)
+operator|->
+name|max_cwnd
+expr_stmt|;
+name|inp
+operator|->
 name|sctp_cmt_on_off
 operator|=
 operator|(

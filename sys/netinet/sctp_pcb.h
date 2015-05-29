@@ -1125,6 +1125,9 @@ decl_stmt|;
 name|uint32_t
 name|sctp_context
 decl_stmt|;
+name|uint32_t
+name|max_cwnd
+decl_stmt|;
 name|uint8_t
 name|local_strreset_support
 decl_stmt|;
