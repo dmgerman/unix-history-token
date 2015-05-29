@@ -32170,6 +32170,11 @@ operator|->
 name|spt_pathpfthld
 expr_stmt|;
 block|}
+name|SCTP_TCB_UNLOCK
+argument_list|(
+name|stcb
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
