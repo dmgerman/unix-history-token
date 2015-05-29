@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<machine/float.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<math.h>
 end_include
 
@@ -141,9 +147,11 @@ argument_list|(
 name|u
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__alpha__
+if|#
+directive|if
+name|LDBL_MANT_DIG
+operator|==
+literal|53
 return|return
 operator|(
 name|u
@@ -152,7 +160,7 @@ name|bits
 operator|.
 name|exp
 operator|==
-literal|32767
+literal|2047
 operator|&&
 name|u
 operator|.
@@ -181,7 +189,7 @@ name|bits
 operator|.
 name|exp
 operator|==
-literal|2047
+literal|32767
 operator|&&
 name|u
 operator|.
