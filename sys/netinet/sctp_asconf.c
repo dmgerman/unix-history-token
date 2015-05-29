@@ -14876,6 +14876,22 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+default|default:
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
+literal|"sctp_asconf_send_nat_state_update: unknown address family\n"
+argument_list|)
+expr_stmt|;
+name|SCTP_FREE
+argument_list|(
+name|aa
+argument_list|,
+name|SCTP_M_ASC_ADDR
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 name|SCTP_MALLOC
 argument_list|(
@@ -15099,6 +15115,22 @@ expr_stmt|;
 break|break;
 endif|#
 directive|endif
+default|default:
+name|SCTPDBG
+argument_list|(
+name|SCTP_DEBUG_ASCONF1
+argument_list|,
+literal|"sctp_asconf_send_nat_state_update: unknown address family\n"
+argument_list|)
+expr_stmt|;
+name|SCTP_FREE
+argument_list|(
+name|aa
+argument_list|,
+name|SCTP_M_ASC_ADDR
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
 comment|/* Now we must hunt the addresses and add all global addresses */
 if|if
