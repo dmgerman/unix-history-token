@@ -152,6 +152,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pci/pci_iov.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/pci/pci_private.h>
 end_include
 
@@ -165,12 +171,6 @@ begin_include
 include|#
 directive|include
 file|<dev/pci/schema_private.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|"pci_if.h"
 end_include
 
 begin_include
@@ -2046,7 +2046,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|pci_init_iov
+name|pci_iov_init
 parameter_list|(
 name|device_t
 name|dev
@@ -2088,7 +2088,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|PCI_INIT_IOV
+name|PCI_IOV_INIT
 argument_list|(
 name|dev
 argument_list|,
@@ -2611,7 +2611,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|PCI_ADD_VF
+name|PCI_IOV_ADD_VF
 argument_list|(
 name|dev
 argument_list|,
@@ -2880,7 +2880,7 @@ name|out
 goto|;
 name|error
 operator|=
-name|pci_init_iov
+name|pci_iov_init
 argument_list|(
 name|dev
 argument_list|,
@@ -3130,7 +3130,7 @@ if|if
 condition|(
 name|iov_inited
 condition|)
-name|PCI_UNINIT_IOV
+name|PCI_IOV_UNINIT
 argument_list|(
 name|dev
 argument_list|)
@@ -3591,7 +3591,7 @@ name|vf
 argument_list|)
 expr_stmt|;
 block|}
-name|PCI_UNINIT_IOV
+name|PCI_IOV_UNINIT
 argument_list|(
 name|dev
 argument_list|)

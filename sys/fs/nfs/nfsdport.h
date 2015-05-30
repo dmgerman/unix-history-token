@@ -316,7 +316,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|(&nfslockhash[nfsrv_hashfh(f) % NFSLOCKHASHSIZE])
+value|(&nfslockhash[nfsrv_hashfh(f) % nfsrv_lockhashsize])
 end_define
 
 begin_define

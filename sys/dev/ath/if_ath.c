@@ -2740,7 +2740,6 @@ operator|->
 name|sc_dev
 argument_list|)
 expr_stmt|;
-comment|/* set these up early for if_printf use */
 name|if_initname
 argument_list|(
 name|ifp
@@ -2817,9 +2816,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"unable to attach hardware; HAL status %u\n"
 argument_list|,
@@ -2973,9 +2974,11 @@ operator|>
 name|ATH_KEYMAX
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"Warning, using only %u of %u key cache slots\n"
 argument_list|,
@@ -3127,9 +3130,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"failed to allocate TX descriptors: %d\n"
 argument_list|,
@@ -3154,9 +3159,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"failed to allocate TX descriptors: %d\n"
 argument_list|,
@@ -3182,9 +3189,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"failed to allocate RX descriptors: %d\n"
 argument_list|,
@@ -3377,9 +3386,11 @@ operator|-
 literal|1
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"unable to setup a beacon xmit queue!\n"
 argument_list|)
@@ -3414,9 +3425,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"unable to setup CAB xmit queue!\n"
 argument_list|)
@@ -3443,9 +3456,11 @@ name|HAL_WME_AC_BK
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"unable to setup xmit queue for %s traffic!\n"
 argument_list|,
@@ -7537,9 +7552,11 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"%s: unable to restart recv logic\n"
 argument_list|,
@@ -9306,9 +9323,11 @@ name|void
 modifier|*
 name|sp
 decl_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"hardware error; resetting\n"
 argument_list|)
@@ -9352,9 +9371,11 @@ name|state
 operator|=
 name|sp
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"0x%08x 0x%08x 0x%08x, 0x%08x 0x%08x 0x%08x\n"
 argument_list|,
@@ -9798,9 +9819,11 @@ argument_list|,
 name|ATH_RESET_NOLOSS
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"bb hang detected (0x%x), resetting\n"
 argument_list|,
@@ -10099,9 +10122,11 @@ name|status
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"unable to reset hardware; hal status %u\n"
 argument_list|,
@@ -10270,9 +10295,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"unable to start recv logic\n"
 argument_list|)
@@ -11264,9 +11291,11 @@ operator|&
 name|status
 argument_list|)
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"%s: unable to reset hardware; hal status %u\n"
 argument_list|,
@@ -11376,9 +11405,11 @@ operator|!=
 literal|0
 condition|)
 comment|/* restart recv */
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"%s: unable to start recv logic\n"
 argument_list|,
@@ -14148,7 +14179,7 @@ decl_stmt|;
 if|#
 directive|if
 literal|0
-block|if_printf(ifp, "%s: resetting\n", __func__);
+block|device_printf(sc->sc_dev, "%s: resetting\n", __func__);
 endif|#
 directive|endif
 name|ath_reset
@@ -14217,9 +14248,11 @@ name|hangs
 operator|!=
 literal|0
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"bb hang detected (0x%x)\n"
 argument_list|,
@@ -14257,9 +14290,11 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"stuck beacon; resetting (bmiss count %u)\n"
 argument_list|,
@@ -14393,15 +14428,6 @@ name|_len
 parameter_list|)
 define|\
 value|((((u_int32_t)(_daddr)& 0xFFF)> (0x1000 - (_len))) ? 1 : 0)
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
-decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -14540,9 +14566,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"cannot allocate %s DMA tag\n"
 argument_list|,
@@ -14591,12 +14619,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
-literal|"unable to alloc memory for %u %s descriptors, "
-literal|"error %u\n"
+literal|"unable to alloc memory for %u %s descriptors, error %u\n"
 argument_list|,
 name|ndesc
 argument_list|,
@@ -14648,9 +14677,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"unable to map %s descriptors, error %u\n"
 argument_list|,
@@ -14819,15 +14850,6 @@ name|_len
 parameter_list|)
 define|\
 value|((((u_int32_t)(_daddr)& 0xFFF)> (0x1000 - (_len))) ? 1 : 0)
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
-decl_stmt|;
 name|uint8_t
 modifier|*
 name|ds
@@ -14919,9 +14941,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"malloc of %s buffers failed, size %u\n"
 argument_list|,
@@ -15082,12 +15106,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
-literal|"unable to create dmamap for %s "
-literal|"buffer %u, error %u\n"
+literal|"unable to create dmamap "
+literal|"for %s buffer %u, error %u\n"
 argument_list|,
 name|dd
 operator|->
@@ -15230,15 +15256,6 @@ name|rx_status_len
 parameter_list|)
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
-decl_stmt|;
-name|struct
 name|ath_buf
 modifier|*
 name|bf
@@ -15317,9 +15334,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"malloc of %s buffers failed, size %u\n"
 argument_list|,
@@ -15408,12 +15427,14 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
-literal|"unable to create dmamap for %s "
-literal|"buffer %u, error %u\n"
+literal|"unable to create dmamap "
+literal|"for %s buffer %u, error %u\n"
 argument_list|,
 name|dd
 operator|->
@@ -17205,9 +17226,11 @@ name|qi
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"unable to update hardware queue "
 literal|"parameters for %s traffic!\n"
@@ -22040,9 +22063,11 @@ name|status
 argument_list|)
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"%s: unable to reset "
 literal|"channel %u (%u MHz, flags 0x%x), hal status %u\n"
@@ -22173,9 +22198,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"%s: unable to restart recv logic\n"
 argument_list|,
@@ -25034,12 +25061,13 @@ operator|!=
 name|HAL_OK
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
-literal|"%s: unable to collect channel list from hal, "
-literal|"status %d\n"
+literal|"%s: unable to collect channel list from hal, status %d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -26070,9 +26098,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"%s hang detected (0x%x)\n"
 argument_list|,
@@ -26089,9 +26119,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"device timeout\n"
 argument_list|)
@@ -27189,15 +27221,6 @@ name|sc
 parameter_list|)
 block|{
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
-decl_stmt|;
-name|struct
 name|ath_hal
 modifier|*
 name|ah
@@ -27206,9 +27229,11 @@ name|sc
 operator|->
 name|sc_ah
 decl_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"AR%s mac %d.%d RF%s phy %d.%d\n"
 argument_list|,
@@ -27243,9 +27268,11 @@ operator|&
 literal|0xf
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"2GHz radio: 0x%.4x; 5GHz radio: 0x%.4x\n"
 argument_list|,
@@ -27292,9 +27319,11 @@ index|[
 name|i
 index|]
 decl_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"Use hw queue %u for %s traffic\n"
 argument_list|,
@@ -27309,9 +27338,11 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"Use hw queue %u for CAB traffic\n"
 argument_list|,
@@ -27322,9 +27353,11 @@ operator|->
 name|axq_qnum
 argument_list|)
 expr_stmt|;
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"Use hw queue %u for beacons\n"
 argument_list|,
@@ -27340,9 +27373,11 @@ name|ath_rxbuf
 operator|!=
 name|ATH_RXBUF
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"using %u rx buffers\n"
 argument_list|,
@@ -27355,9 +27390,11 @@ name|ath_txbuf
 operator|!=
 name|ATH_TXBUF
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"using %u tx buffers\n"
 argument_list|,
@@ -27372,9 +27409,11 @@ name|sc_mcastkey
 operator|&&
 name|bootverbose
 condition|)
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"using multicast key search\n"
 argument_list|)

@@ -759,11 +759,6 @@ name|mp
 parameter_list|)
 block|{
 name|struct
-name|fs
-modifier|*
-name|fs
-decl_stmt|;
-name|struct
 name|ufsmount
 modifier|*
 name|ump
@@ -810,12 +805,6 @@ name|VFSTOUFS
 argument_list|(
 name|mp
 argument_list|)
-expr_stmt|;
-name|fs
-operator|=
-name|ump
-operator|->
-name|um_fs
 expr_stmt|;
 comment|/* 	 * Make sure the calling thread is permitted to access the mounted 	 * device.  The permissions can change after we unlock the vnode; 	 * it's harmless. 	 */
 name|vn_lock

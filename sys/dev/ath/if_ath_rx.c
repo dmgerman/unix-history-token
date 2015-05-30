@@ -4056,9 +4056,11 @@ name|NULL
 condition|)
 block|{
 comment|/* NB: shouldn't happen */
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"%s: no buffer!\n"
 argument_list|,
@@ -4101,9 +4103,11 @@ block|{
 comment|/* NB: shouldn't happen */
 comment|/* 			 * If mbuf allocation failed previously there 			 * will be no mbuf; try again to re-populate it. 			 */
 comment|/* XXX make debug msg */
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"%s: no mbuf!\n"
 argument_list|,

@@ -9800,6 +9800,8 @@ argument_list|(
 operator|&
 name|rights
 argument_list|,
+name|CAP_FCNTL
+argument_list|,
 name|CAP_FSTAT
 argument_list|,
 name|CAP_FSYNC
@@ -9834,6 +9836,31 @@ block|{
 name|error
 argument_list|(
 literal|"can't limit lease descriptor: %m"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|cap_fcntls_limit
+argument_list|(
+name|fileno
+argument_list|(
+name|leaseFile
+argument_list|)
+argument_list|,
+name|CAP_FCNTL_GETFL
+argument_list|)
+operator|<
+literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOSYS
+condition|)
+block|{
+name|error
+argument_list|(
+literal|"can't limit lease descriptor fcntls: %m"
 argument_list|)
 expr_stmt|;
 block|}

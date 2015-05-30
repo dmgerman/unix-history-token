@@ -8208,13 +8208,6 @@ argument_list|(
 name|ln
 argument_list|)
 expr_stmt|;
-name|in6_newaddrmsg
-argument_list|(
-name|ia
-argument_list|,
-name|RTM_ADD
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -8254,13 +8247,6 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|in6_newaddrmsg
-argument_list|(
-name|ia
-argument_list|,
-name|RTM_DELETE
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|=
 name|ia

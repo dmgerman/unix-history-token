@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|ELFTC_VCSID
 argument_list|(
-literal|"$Id: libdwarf_reloc.c 3149 2015-02-15 19:00:06Z emaste $"
+literal|"$Id: libdwarf_reloc.c 3198 2015-05-14 18:36:19Z emaste $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -204,6 +204,9 @@ return|;
 break|break;
 case|case
 name|EM_386
+case|:
+case|case
+name|EM_IAMCU
 case|:
 if|if
 condition|(

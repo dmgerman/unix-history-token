@@ -4193,9 +4193,9 @@ name|void
 name|badrate
 parameter_list|(
 name|struct
-name|ifnet
+name|ath_softc
 modifier|*
-name|ifp
+name|sc
 parameter_list|,
 name|int
 name|series
@@ -4210,9 +4210,11 @@ name|int
 name|status
 parameter_list|)
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"bad series%d hwrate 0x%x, tries %u ts_status 0x%x\n"
 argument_list|,
@@ -4497,7 +4499,7 @@ argument_list|)
 expr_stmt|;
 name|badrate
 argument_list|(
-name|ifp
+name|sc
 argument_list|,
 literal|0
 argument_list|,
@@ -4828,7 +4830,7 @@ argument_list|)
 condition|)
 name|badrate
 argument_list|(
-name|ifp
+name|sc
 argument_list|,
 literal|0
 argument_list|,

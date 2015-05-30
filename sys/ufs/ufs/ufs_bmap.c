@@ -271,11 +271,6 @@ modifier|*
 name|mp
 decl_stmt|;
 name|struct
-name|vnode
-modifier|*
-name|devvp
-decl_stmt|;
-name|struct
 name|indir
 name|a
 index|[
@@ -329,12 +324,6 @@ name|VFSTOUFS
 argument_list|(
 name|mp
 argument_list|)
-expr_stmt|;
-name|devvp
-operator|=
-name|ump
-operator|->
-name|um_devvp
 expr_stmt|;
 if|if
 condition|(

@@ -1579,6 +1579,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|V_MNTREF
+value|0x0010
+end_define
+
+begin_comment
+comment|/* vn_start_write: mp is already ref-ed */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|VR_START_WRITE
 value|0x0001
 end_define

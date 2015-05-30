@@ -3683,6 +3683,20 @@ modifier|*
 name|phy_cap_mask
 parameter_list|)
 block|{
+comment|/* Get global options (duplex), type and subtype bits */
+name|int
+name|ifmedia_masked
+init|=
+name|ifmedia
+operator|&
+operator|(
+name|IFM_GMASK
+operator||
+name|IFM_NMASK
+operator||
+name|IFM_TMASK
+operator|)
+decl_stmt|;
 name|efx_phy_media_type_t
 name|medium_type
 decl_stmt|;
@@ -3767,7 +3781,7 @@ control|)
 block|{
 if|if
 condition|(
-name|ifmedia
+name|ifmedia_masked
 operator|==
 name|sfxge_link_mode
 index|[
@@ -3804,7 +3818,7 @@ name|EFX_PHY_CAP_AN
 operator|)
 operator|)
 operator|&&
-name|ifmedia
+name|ifmedia_masked
 operator|==
 operator|(
 name|IFM_ETHER
@@ -3813,7 +3827,7 @@ name|IFM_AUTO
 operator|)
 argument_list|,
 operator|(
-literal|"%s: no mode for media %d"
+literal|"%s: no mode for media %#x"
 operator|,
 name|__func__
 operator|,

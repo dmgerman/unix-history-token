@@ -2711,6 +2711,20 @@ condition|)
 goto|goto
 name|fail
 goto|;
+name|error
+operator|=
+name|bwi_mac_fw_alloc
+argument_list|(
+name|mac
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|fail
+goto|;
 name|ifp
 operator|=
 name|sc
@@ -9642,7 +9656,7 @@ comment|/* nsegments */
 name|BUS_SPACE_MAXSIZE_32BIT
 argument_list|,
 comment|/* maxsegsize */
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 comment|/* flags */
 name|NULL
@@ -9706,9 +9720,9 @@ name|tx_ring_sz
 argument_list|,
 literal|1
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|tx_ring_sz
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -9825,9 +9839,9 @@ name|rx_ring_sz
 argument_list|,
 literal|1
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|rx_ring_sz
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -10387,9 +10401,9 @@ name|dma_size
 argument_list|,
 literal|1
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|dma_size
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -10589,9 +10603,9 @@ name|dma_size
 argument_list|,
 literal|1
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|dma_size
 argument_list|,
-name|BUS_DMA_ALLOCNOW
+literal|0
 argument_list|,
 name|NULL
 argument_list|,
@@ -10997,7 +11011,7 @@ name|MCLBYTES
 argument_list|,
 literal|1
 argument_list|,
-name|BUS_SPACE_MAXSIZE_32BIT
+name|MCLBYTES
 argument_list|,
 name|BUS_DMA_ALLOCNOW
 argument_list|,

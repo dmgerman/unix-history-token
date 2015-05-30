@@ -115,7 +115,7 @@ parameter_list|(
 name|id
 parameter_list|)
 define|\
-value|(&nfsclienthash[(id).lval[1] % NFSCLIENTHASHSIZE])
+value|(&nfsclienthash[(id).lval[1] % nfsrv_clienthashsize])
 end_define
 
 begin_define
@@ -128,7 +128,7 @@ parameter_list|,
 name|id
 parameter_list|)
 define|\
-value|(&((clp)->lc_stateid[(id).other[2] % NFSSTATEHASHSIZE]))
+value|(&((clp)->lc_stateid[(id).other[2] % nfsrv_statehashsize]))
 end_define
 
 begin_define
@@ -203,7 +203,7 @@ parameter_list|(
 name|f
 parameter_list|)
 define|\
-value|(&nfssessionhash[nfsrv_hashsessionid(f) % NFSSESSIONHASHSIZE])
+value|(&nfssessionhash[nfsrv_hashsessionid(f) % nfsrv_sessionhashsize])
 end_define
 
 begin_comment
@@ -223,12 +223,10 @@ expr_stmt|;
 comment|/* Clientid hash list */
 name|struct
 name|nfsstatehead
+modifier|*
 name|lc_stateid
-index|[
-name|NFSSTATEHASHSIZE
-index|]
 decl_stmt|;
-comment|/* stateid hash */
+comment|/* Stateid hash */
 name|struct
 name|nfsstatehead
 name|lc_open
@@ -293,8 +291,13 @@ name|gid_t
 name|lc_gid
 decl_stmt|;
 name|u_int16_t
+name|lc_idlen
+decl_stmt|;
+comment|/* Client ID and len */
+name|u_int16_t
 name|lc_namelen
 decl_stmt|;
+comment|/* plus GSS principal and len */
 name|u_char
 modifier|*
 name|lc_name
@@ -304,10 +307,6 @@ name|nfssockreq
 name|lc_req
 decl_stmt|;
 comment|/* Callback info */
-name|u_short
-name|lc_idlen
-decl_stmt|;
-comment|/* Length of id string */
 name|u_int32_t
 name|lc_flags
 decl_stmt|;
