@@ -2435,19 +2435,23 @@ name|proto
 operator|->
 name|hdrlen
 operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|outdata
-argument_list|)
-operator|+
 name|optlen
 expr_stmt|;
+if|if
+condition|(
+name|minpacket
+operator|>
+literal|40
+condition|)
 name|packlen
 operator|=
 name|minpacket
 expr_stmt|;
-comment|/* minimum sized packet */
+else|else
+name|packlen
+operator|=
+literal|40
+expr_stmt|;
 comment|/* Process destination and optional packet size */
 switch|switch
 condition|(
