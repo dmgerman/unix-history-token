@@ -3789,6 +3789,19 @@ literal|"Do you want to fetch and install it now? [y/N]: "
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+name|non_interactive_message
+index|[]
+init|=
+literal|"The package management tool is not yet installed on your system.\n"
+literal|"Please set ASSUME_ALWAYS_YES=yes environment variable to be able to bootstrap "
+literal|"in non-interactive (stdin not being a tty)\n"
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|int
@@ -4380,13 +4393,6 @@ operator|!
 name|yes
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"%s"
-argument_list|,
-name|confirmation_message
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -4398,9 +4404,25 @@ name|stdin
 argument_list|)
 argument_list|)
 condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|non_interactive_message
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 name|EXIT_FAILURE
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|confirmation_message
 argument_list|)
 expr_stmt|;
 if|if
