@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<atf-c/atf-c.h>
+file|<atf-c.h>
 end_include
 
 begin_define
