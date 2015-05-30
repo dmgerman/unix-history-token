@@ -109,7 +109,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"LLVM 3.6.1"
+value|"LLVM 3.7.0svn"
 end_define
 
 begin_comment

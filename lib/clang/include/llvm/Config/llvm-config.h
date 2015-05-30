@@ -305,7 +305,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_MINOR
-value|6
+value|7
 end_define
 
 begin_comment
@@ -316,7 +316,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_PATCH
-value|1
+value|0
 end_define
 
 begin_comment
@@ -327,7 +327,18 @@ begin_define
 define|#
 directive|define
 name|LLVM_VERSION_STRING
-value|"3.6.1"
+value|"3.7.0svn"
+end_define
+
+begin_comment
+comment|/* Define to enable checks that alter the LLVM C++ ABI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_ENABLE_ABI_BREAKING_CHECKS
+value|1
 end_define
 
 begin_endif
