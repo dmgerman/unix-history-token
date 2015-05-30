@@ -21,7 +21,7 @@ begin_define
 define|#
 directive|define
 name|BXE_DRIVER_VERSION
-value|"1.78.78"
+value|"1.78.79"
 end_define
 
 begin_include
@@ -2018,6 +2018,19 @@ block|,
 block|{
 name|STATS_OFFSET32
 argument_list|(
+name|rx_jumbo_sge_pkts
+argument_list|)
+block|,
+literal|4
+block|,
+name|STATS_FLAGS_FUNC
+block|,
+literal|"rx_jumbo_sge_pkts"
+block|}
+block|,
+block|{
+name|STATS_OFFSET32
+argument_list|(
 name|rx_soft_errors
 argument_list|)
 block|,
@@ -2651,6 +2664,17 @@ block|,
 literal|4
 block|,
 literal|"rx_tpa_pkts"
+block|}
+block|,
+block|{
+name|Q_STATS_OFFSET32
+argument_list|(
+name|rx_jumbo_sge_pkts
+argument_list|)
+block|,
+literal|4
+block|,
+literal|"rx_jumbo_sge_pkts"
 block|}
 block|,
 block|{
@@ -14648,6 +14672,13 @@ condition|(
 name|rc
 condition|)
 break|break;
+name|fp
+operator|->
+name|eth_q_stats
+operator|.
+name|rx_jumbo_sge_pkts
+operator|++
+expr_stmt|;
 block|}
 comment|/* assign packet to this interface interface */
 name|m
@@ -28985,17 +29016,6 @@ name|rx_pkts
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|ifnet
-operator|->
-name|if_capenable
-operator|&
-name|IFCAP_LRO
-condition|)
-block|{
 name|max_agg_queues
 operator|=
 name|MAX_AGG_QS
@@ -29154,7 +29174,6 @@ name|rx_sge_prod
 operator|=
 name|ring_prod
 expr_stmt|;
-block|}
 block|}
 block|}
 return|return
@@ -50514,17 +50533,6 @@ name|tpa_agg_size
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|ifnet
-operator|->
-name|if_capenable
-operator|&
-name|IFCAP_LRO
-condition|)
-block|{
 name|pause
 operator|->
 name|sge_th_lo
@@ -50646,7 +50654,6 @@ argument_list|,
 literal|0xffff
 argument_list|)
 expr_stmt|;
-block|}
 comment|/* pause - not for e1 */
 if|if
 condition|(
