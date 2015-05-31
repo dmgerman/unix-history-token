@@ -5979,8 +5979,10 @@ operator|=
 literal|4
 init|;
 name|i
-operator|<
+operator|<=
 name|cc
+operator|-
+name|ICMP_MINLEN
 condition|;
 name|i
 operator|+=
@@ -5992,13 +5994,16 @@ argument_list|)
 control|)
 name|Printf
 argument_list|(
-literal|"%2d: x%8.8x\n"
+literal|"%2d: %8.8x\n"
 argument_list|,
 name|i
 argument_list|,
+name|ntohl
+argument_list|(
 operator|*
 name|lp
 operator|++
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
