@@ -809,10 +809,15 @@ argument_list|,
 literal|"r"
 argument_list|)
 operator|)
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
+return|return
+operator|(
+operator|&
+name|config
+operator|)
+return|;
 while|while
 condition|(
 operator|(
@@ -1669,7 +1674,6 @@ case|:
 break|break;
 block|}
 block|}
-block|}
 if|if
 condition|(
 name|linecap
@@ -1688,8 +1692,10 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 operator|&
 name|config
+operator|)
 return|;
 block|}
 end_function
