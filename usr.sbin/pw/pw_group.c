@@ -343,11 +343,8 @@ name|next
 return|;
 name|printf
 argument_list|(
-literal|"%ld\n"
+literal|"%u\n"
 argument_list|,
-operator|(
-name|long
-operator|)
 name|next
 argument_list|)
 expr_stmt|;
@@ -728,15 +725,12 @@ name|mode
 argument_list|,
 name|W_GROUP
 argument_list|,
-literal|"%s(%ld) removed"
+literal|"%s(%u) removed"
 argument_list|,
 name|a_name
 operator|->
 name|val
 argument_list|,
-operator|(
-name|long
-operator|)
 name|gid
 argument_list|)
 expr_stmt|;
@@ -1682,15 +1676,12 @@ name|mode
 argument_list|,
 name|W_GROUP
 argument_list|,
-literal|"%s(%ld)"
+literal|"%s(%u)"
 argument_list|,
 name|grp
 operator|->
 name|gr_name
 argument_list|,
-operator|(
-name|long
-operator|)
 name|grp
 operator|->
 name|gr_gid
@@ -2091,11 +2082,8 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"gid `%ld' has already been allocated"
+literal|"gid `%u' has already been allocated"
 argument_list|,
-operator|(
-name|long
-operator|)
 name|grp
 operator|->
 name|gr_gid
