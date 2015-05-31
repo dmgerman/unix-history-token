@@ -70,6 +70,7 @@ name|XDR
 modifier|*
 name|xdrs
 parameter_list|,
+specifier|const
 name|long
 modifier|*
 name|longp
@@ -102,6 +103,7 @@ name|XDR
 modifier|*
 name|xdrs
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|bp
