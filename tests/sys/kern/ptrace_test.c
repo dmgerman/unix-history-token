@@ -1485,7 +1485,10 @@ name|c
 argument_list|)
 argument_list|)
 operator|==
-literal|0
+sizeof|sizeof
+argument_list|(
+name|c
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|wpid
@@ -1531,6 +1534,14 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|close
+argument_list|(
+name|dpipe
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 comment|/* Parent process. */
 comment|/* Wait for the debugger parent process to exit. */
 name|wpid
@@ -1787,12 +1798,28 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Signal the debugger to wait for the child. */
-name|close
+name|ATF_REQUIRE
+argument_list|(
+name|write
 argument_list|(
 name|dpipe
 index|[
 literal|0
 index|]
+argument_list|,
+operator|&
+name|c
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|c
+argument_list|)
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|c
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Wait for the debugger. */
@@ -1802,7 +1829,7 @@ name|read
 argument_list|(
 name|dpipe
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 operator|&
@@ -1815,6 +1842,14 @@ argument_list|)
 argument_list|)
 operator|==
 literal|0
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|dpipe
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* The child process should now be ready. */
