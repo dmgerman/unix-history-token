@@ -565,19 +565,6 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-operator|+=
-sizeof|sizeof
-argument_list|(
-operator|*
-name|pmsg
-argument_list|)
-expr_stmt|;
-comment|/* XXX: is this correct? */
 name|pmsg
 operator|=
 name|mtod
