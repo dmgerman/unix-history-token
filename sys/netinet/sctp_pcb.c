@@ -16653,21 +16653,6 @@ condition|(
 name|set_scope
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|SCTP_DONT_DO_PRIVADDR_SCOPE
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|scope
-operator|.
-name|ipv4_local_scope
-operator|=
-literal|1
-expr_stmt|;
-else|#
-directive|else
 if|if
 condition|(
 name|IN4_ISPRIVATE_ADDRESS
@@ -16690,9 +16675,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-endif|#
-directive|endif
-comment|/* SCTP_DONT_DO_PRIVADDR_SCOPE */
 block|}
 else|else
 block|{

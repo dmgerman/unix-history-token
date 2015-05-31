@@ -28325,25 +28325,12 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|SCTP_DONT_DO_PRIVADDR_SCOPE
-name|stc
-operator|.
-name|ipv4_scope
-operator|=
-literal|1
-expr_stmt|;
-else|#
-directive|else
 name|stc
 operator|.
 name|ipv4_scope
 operator|=
 literal|0
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|net
@@ -28470,9 +28457,6 @@ name|scope_id
 operator|=
 literal|0
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|SCTP_DONT_DO_PRIVADDR_SCOPE
 if|if
 condition|(
 name|IN4_ISPRIVATE_ADDRESS
@@ -28491,17 +28475,6 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-else|#
-directive|else
-name|stc
-operator|.
-name|ipv4_scope
-operator|=
-literal|1
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* SCTP_DONT_DO_PRIVADDR_SCOPE */
 comment|/* Must use the address in this case */
 if|if
 condition|(
