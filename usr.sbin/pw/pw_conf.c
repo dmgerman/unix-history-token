@@ -1674,12 +1674,6 @@ case|:
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|linecap
-operator|>
-literal|0
-condition|)
 name|free
 argument_list|(
 name|buf
