@@ -800,6 +800,14 @@ comment|/// Index original Function's argument.
 name|unsigned
 name|OrigArgIndex
 decl_stmt|;
+comment|/// Sentinel value for implicit machine-level input arguments.
+specifier|static
+specifier|const
+name|unsigned
+name|NoArgIndex
+init|=
+name|UINT_MAX
+decl_stmt|;
 comment|/// Offset in bytes of current input value relative to the beginning of
 comment|/// original argument. E.g. if argument was splitted into four 32 bit
 comment|/// registers, we got 4 InputArgs with PartOffsets 0, 4, 8 and 12.
@@ -867,6 +875,35 @@ name|ArgVT
 operator|=
 name|argvt
 block|;     }
+name|bool
+name|isOrigArg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OrigArgIndex
+operator|!=
+name|NoArgIndex
+return|;
+block|}
+name|unsigned
+name|getOrigArgIndex
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|OrigArgIndex
+operator|!=
+name|NoArgIndex
+operator|&&
+literal|"Implicit machine-level argument"
+argument_list|)
+block|;
+return|return
+name|OrigArgIndex
+return|;
+block|}
 block|}
 struct|;
 comment|/// OutputArg - This struct carries flags and a value for a

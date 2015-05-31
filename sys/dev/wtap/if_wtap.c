@@ -2912,9 +2912,9 @@ name|void
 name|wtap_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|DWTAP_PRINTF
@@ -2933,9 +2933,9 @@ name|void
 name|wtap_update_promisc
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 name|DWTAP_PRINTF
@@ -3416,6 +3416,20 @@ name|ifp
 expr_stmt|;
 name|ic
 operator|->
+name|ic_softc
+operator|=
+name|sc
+expr_stmt|;
+name|ic
+operator|->
+name|ic_name
+operator|=
+name|sc
+operator|->
+name|name
+expr_stmt|;
+name|ic
+operator|->
 name|ic_phytype
 operator|=
 name|IEEE80211_T_DS
@@ -3549,12 +3563,6 @@ name|ic_newassoc
 operator|=
 name|wtap_newassoc
 expr_stmt|;
-if|#
-directive|if
-literal|0
-block|ic->ic_updateslot = myath_updateslot;
-endif|#
-directive|endif
 name|ic
 operator|->
 name|ic_wme

@@ -1126,7 +1126,7 @@ comment|/* uma_zcreate_flags */
 ifdef|#
 directive|ifdef
 name|INVARIANTS
-comment|/*  	 * Force UMA zone to allocate service structures like 	 * slabs using own allocator. uma_debug code performs 	 * atomic ops on uma_slab_t fields and safety of this 	 * operation is not guaranteed for write-back caches 	 */
+comment|/* 	 * Force UMA zone to allocate service structures like 	 * slabs using own allocator. uma_debug code performs 	 * atomic ops on uma_slab_t fields and safety of this 	 * operation is not guaranteed for write-back caches 	 */
 name|uma_flags
 operator|=
 name|UMA_ZONE_OFFPAGE
@@ -5549,7 +5549,7 @@ decl_stmt|;
 name|vm_offset_t
 name|va
 decl_stmt|;
-comment|/*  	 * each synclist entry is contained within a single page. 	 * this would be needed if BUS_DMASYNC_POSTxxxx was implemented 	 */
+comment|/* 	 * each synclist entry is contained within a single page. 	 * this would be needed if BUS_DMASYNC_POSTxxxx was implemented 	 */
 name|curaddr
 operator|=
 name|pmap_extract

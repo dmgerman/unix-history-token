@@ -81,19 +81,19 @@ operator|*
 operator|)
 name|s
 decl_stmt|;
-comment|/* we need something to compare */
+comment|/* empty "s" matches the beginning of "l" */
 if|if
 condition|(
-name|l_len
-operator|==
-literal|0
-operator|||
 name|s_len
 operator|==
 literal|0
 condition|)
 return|return
-name|NULL
+operator|(
+name|void
+operator|*
+operator|)
+name|cl
 return|;
 comment|/* "s" must be smaller or equal to "l" */
 if|if

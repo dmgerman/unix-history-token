@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -179,13 +185,14 @@ literal|0
 argument_list|)
 condition|)
 return|return;
+comment|/* 	 * The xenpv bus should be the last to attach in order 	 * to properly detect if an ISA bus has already been added. 	 */
 if|if
 condition|(
 name|BUS_ADD_CHILD
 argument_list|(
 name|parent
 argument_list|,
-literal|0
+name|UINT_MAX
 argument_list|,
 literal|"xenpv"
 argument_list|,

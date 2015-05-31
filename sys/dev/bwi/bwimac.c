@@ -373,18 +373,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|bwi_mac_fw_alloc
-parameter_list|(
-name|struct
-name|bwi_mac
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|void
 name|bwi_mac_fw_free
 parameter_list|(
@@ -1443,20 +1431,6 @@ name|BWI_MAC_STATUS_IHREN
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Load and initialize firmwares 	 */
-name|error
-operator|=
-name|bwi_mac_fw_alloc
-argument_list|(
-name|mac
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-return|return
-name|error
-return|;
 name|error
 operator|=
 name|bwi_mac_fw_load
@@ -3981,7 +3955,6 @@ comment|/*  * XXX Error cleanup  */
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|bwi_mac_fw_alloc
 parameter_list|(
@@ -3999,15 +3972,6 @@ init|=
 name|mac
 operator|->
 name|mac_sc
-decl_stmt|;
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-init|=
-name|sc
-operator|->
-name|sc_ifp
 decl_stmt|;
 name|char
 name|fwname
@@ -4061,20 +4025,9 @@ name|mac_stub
 operator|==
 name|NULL
 condition|)
-block|{
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"request firmware %s failed\n"
-argument_list|,
-name|fwname
-argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
-return|;
-block|}
+goto|goto
+name|no_firmware
+goto|;
 block|}
 if|if
 condition|(
@@ -4130,20 +4083,9 @@ name|mac_ucode
 operator|==
 name|NULL
 condition|)
-block|{
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"request firmware %s failed\n"
-argument_list|,
-name|fwname
-argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
-return|;
-block|}
+goto|goto
+name|no_firmware
+goto|;
 if|if
 condition|(
 operator|!
@@ -4214,20 +4156,9 @@ name|mac_pcm
 operator|==
 name|NULL
 condition|)
-block|{
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"request firmware %s failed\n"
-argument_list|,
-name|fwname
-argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
-return|;
-block|}
+goto|goto
+name|no_firmware
+goto|;
 if|if
 condition|(
 operator|!
@@ -4299,9 +4230,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"no suitible IV for MAC rev %d\n"
 argument_list|,
@@ -4349,20 +4282,9 @@ name|mac_iv
 operator|==
 name|NULL
 condition|)
-block|{
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"request firmware %s failed\n"
-argument_list|,
-name|fwname
-argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
-return|;
-block|}
+goto|goto
+name|no_firmware
+goto|;
 if|if
 condition|(
 operator|!
@@ -4413,9 +4335,11 @@ literal|11
 condition|)
 block|{
 comment|/* No extended IV */
-goto|goto
-name|back
-goto|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 elseif|else
 if|if
@@ -4440,9 +4364,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"no suitible ExtIV for MAC rev %d\n"
 argument_list|,
@@ -4490,20 +4416,9 @@ name|mac_iv_ext
 operator|==
 name|NULL
 condition|)
-block|{
-name|if_printf
-argument_list|(
-name|ifp
-argument_list|,
-literal|"request firmware %s failed\n"
-argument_list|,
-name|fwname
-argument_list|)
-expr_stmt|;
-return|return
-name|ENOMEM
-return|;
-block|}
+goto|goto
+name|no_firmware
+goto|;
 if|if
 condition|(
 operator|!
@@ -4522,10 +4437,28 @@ return|return
 name|EINVAL
 return|;
 block|}
-name|back
-label|:
 return|return
+operator|(
 literal|0
+operator|)
+return|;
+name|no_firmware
+label|:
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"request firmware %s failed\n"
+argument_list|,
+name|fwname
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOENT
+operator|)
 return|;
 block|}
 end_function

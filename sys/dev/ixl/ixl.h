@@ -319,6 +319,12 @@ directive|include
 file|<sys/iov_schema.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dev/pci/pci_iov.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif

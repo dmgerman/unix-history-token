@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* PCI/PCI-X/PCIe bus interface for the LSI MPT2 controllers */
+comment|/* PCI/PCI-X/PCIe bus interface for the Avago Tech (LSI) MPT3 controllers */
 end_comment
 
 begin_comment
@@ -434,7 +434,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS3004"
+literal|"Avago Technologies (LSI) SAS3004"
 block|}
 block|,
 block|{
@@ -448,7 +448,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS3008"
+literal|"Avago Technologies (LSI) SAS3008"
 block|}
 block|,
 block|{
@@ -462,7 +462,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS3108_1"
+literal|"Avago Technologies (LSI) SAS3108_1"
 block|}
 block|,
 block|{
@@ -476,7 +476,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS3108_2"
+literal|"Avago Technologies (LSI) SAS3108_2"
 block|}
 block|,
 block|{
@@ -490,7 +490,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS3108_5"
+literal|"Avago Technologies (LSI) SAS3108_5"
 block|}
 block|,
 block|{
@@ -504,7 +504,7 @@ literal|0xffff
 block|,
 literal|0
 block|,
-literal|"LSI SAS3108_6"
+literal|"Avago Technologies (LSI) SAS3108_6"
 block|}
 block|,
 block|{

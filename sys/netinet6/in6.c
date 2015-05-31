@@ -5300,6 +5300,13 @@ name|delay
 argument_list|)
 expr_stmt|;
 block|}
+name|in6_newaddrmsg
+argument_list|(
+name|ia
+argument_list|,
+name|RTM_ADD
+argument_list|)
+expr_stmt|;
 name|ifa_free
 argument_list|(
 operator|&
@@ -5548,6 +5555,13 @@ operator|~
 name|IFA_ROUTE
 expr_stmt|;
 block|}
+name|in6_newaddrmsg
+argument_list|(
+name|ia
+argument_list|,
+name|RTM_DELETE
+argument_list|)
+expr_stmt|;
 name|in6_unlink_ifa
 argument_list|(
 name|ia

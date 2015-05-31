@@ -348,8 +348,7 @@ index|[
 name|STA_HASHSIZE
 index|]
 expr_stmt|;
-name|struct
-name|mtx
+name|ieee80211_scan_iter_lock_t
 name|st_scanlock
 decl_stmt|;
 comment|/* on st_scaniter */
@@ -710,7 +709,7 @@ expr|struct
 name|sta_table
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -720,9 +719,9 @@ argument_list|)
 argument_list|,
 name|M_80211_SCAN
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -741,18 +740,11 @@ argument_list|,
 literal|"scantable"
 argument_list|)
 expr_stmt|;
-name|mtx_init
+name|IEEE80211_SCAN_ITER_LOCK_INIT
 argument_list|(
-operator|&
 name|st
-operator|->
-name|st_scanlock
 argument_list|,
 literal|"scangen"
-argument_list|,
-literal|"802.11 scangen"
-argument_list|,
-name|MTX_DEF
 argument_list|)
 expr_stmt|;
 name|TAILQ_INIT
@@ -820,15 +812,12 @@ argument_list|(
 name|st
 argument_list|)
 expr_stmt|;
-name|mtx_destroy
+name|IEEE80211_SCAN_ITER_LOCK_DESTROY
 argument_list|(
-operator|&
 name|st
-operator|->
-name|st_scanlock
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|st
 argument_list|,
@@ -971,7 +960,7 @@ operator|.
 name|se_ies
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|se
 argument_list|,
@@ -1151,7 +1140,7 @@ expr|struct
 name|sta_entry
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -1161,9 +1150,9 @@ argument_list|)
 argument_list|,
 name|M_80211_SCAN
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -6740,12 +6729,9 @@ decl_stmt|;
 name|u_int
 name|gen
 decl_stmt|;
-name|mtx_lock
+name|IEEE80211_SCAN_ITER_LOCK
 argument_list|(
-operator|&
 name|st
-operator|->
-name|st_scanlock
 argument_list|)
 expr_stmt|;
 name|gen
@@ -6827,12 +6813,9 @@ argument_list|(
 name|st
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
+name|IEEE80211_SCAN_ITER_UNLOCK
 argument_list|(
-operator|&
 name|st
-operator|->
-name|st_scanlock
 argument_list|)
 expr_stmt|;
 block|}
@@ -7983,7 +7966,7 @@ operator|.
 name|se_ies
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|se
 argument_list|,

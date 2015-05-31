@@ -529,6 +529,13 @@ begin_struct
 struct|struct
 name|wtap_softc
 block|{
+name|char
+name|name
+index|[
+literal|7
+index|]
+decl_stmt|;
+comment|/* wtapXX\0 */
 name|int32_t
 name|id
 decl_stmt|;

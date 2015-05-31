@@ -1454,8 +1454,7 @@ name|ieee80211vap
 modifier|*
 name|rt_vap
 decl_stmt|;
-name|struct
-name|mtx
+name|ieee80211_rte_lock_t
 name|rt_lock
 decl_stmt|;
 comment|/* fine grained route lock */
@@ -1884,8 +1883,7 @@ comment|/* configured as root */
 name|uint8_t
 name|ms_flags
 decl_stmt|;
-name|struct
-name|mtx
+name|ieee80211_rt_lock_t
 name|ms_rt_lock
 decl_stmt|;
 name|struct

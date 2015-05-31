@@ -161,6 +161,12 @@ init|=
 literal|1
 operator|<<
 literal|19
+block|,
+name|WQM
+init|=
+literal|1
+operator|<<
+literal|20
 block|}
 enum|;
 block|}

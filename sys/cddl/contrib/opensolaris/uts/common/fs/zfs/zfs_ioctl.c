@@ -14878,13 +14878,11 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|mtx_lock
+name|vfs_ref
 argument_list|(
-operator|&
-name|Giant
+name|vfsp
 argument_list|)
 expr_stmt|;
-comment|/* dounmount() */
 operator|(
 name|void
 operator|)
@@ -14897,13 +14895,6 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-comment|/* dounmount() */
 endif|#
 directive|endif
 return|return

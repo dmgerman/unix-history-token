@@ -210,6 +210,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|bwi_mac_fw_alloc
+parameter_list|(
+name|struct
+name|bwi_mac
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|uint16_t
 name|bwi_memobj_read_2
 parameter_list|(

@@ -538,7 +538,7 @@ name|vap
 operator|->
 name|iv_rs
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -548,9 +548,9 @@ argument_list|)
 argument_list|,
 name|M_80211_RATECTL
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -618,7 +618,7 @@ modifier|*
 name|vap
 parameter_list|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|vap
 operator|->
@@ -766,7 +766,7 @@ name|ni_rctls
 operator|=
 name|amn
 operator|=
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -776,9 +776,9 @@ argument_list|)
 argument_list|,
 name|M_80211_RATECTL
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -1076,7 +1076,7 @@ modifier|*
 name|ni
 parameter_list|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ni
 operator|->

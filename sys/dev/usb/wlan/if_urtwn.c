@@ -1969,7 +1969,7 @@ name|void
 name|urtwn_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2923,6 +2923,21 @@ operator|->
 name|ic_ifp
 operator|=
 name|ifp
+expr_stmt|;
+name|ic
+operator|->
+name|ic_softc
+operator|=
+name|sc
+expr_stmt|;
+name|ic
+operator|->
+name|ic_name
+operator|=
+name|device_get_nameunit
+argument_list|(
+name|self
+argument_list|)
 expr_stmt|;
 name|ic
 operator|->
@@ -17837,9 +17852,9 @@ name|void
 name|urtwn_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 comment|/* XXX do nothing?  */

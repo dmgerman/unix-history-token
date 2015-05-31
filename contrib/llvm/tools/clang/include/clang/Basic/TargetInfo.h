@@ -2689,6 +2689,18 @@ name|CCCR_OK
 return|;
 block|}
 block|}
+comment|/// Controls if __builtin_longjmp / __builtin_setjmp can be lowered to
+comment|/// llvm.eh.sjlj.longjmp / llvm.eh.sjlj.setjmp.
+name|virtual
+name|bool
+name|hasSjLjLowering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 name|protected
 label|:
 name|virtual

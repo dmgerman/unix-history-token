@@ -763,7 +763,7 @@ name|void
 name|rsu_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2349,6 +2349,21 @@ name|ifp
 expr_stmt|;
 name|ic
 operator|->
+name|ic_softc
+operator|=
+name|sc
+expr_stmt|;
+name|ic
+operator|->
+name|ic_name
+operator|=
+name|device_get_nameunit
+argument_list|(
+name|self
+argument_list|)
+expr_stmt|;
+name|ic
+operator|->
 name|ic_phytype
 operator|=
 name|IEEE80211_T_OFDM
@@ -3101,9 +3116,9 @@ name|void
 name|rsu_update_mcast
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
-name|ifp
+name|ic
 parameter_list|)
 block|{
 comment|/* XXX do nothing?  */

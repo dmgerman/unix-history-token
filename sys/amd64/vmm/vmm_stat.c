@@ -700,6 +700,16 @@ end_expr_stmt
 begin_expr_stmt
 name|VMM_STAT
 argument_list|(
+name|VMEXIT_REQIDLE
+argument_list|,
+literal|"number of times idle requested at exit"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VMM_STAT
+argument_list|(
 name|VMEXIT_USERSPACE
 argument_list|,
 literal|"number of vm exits handled in userspace"

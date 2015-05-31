@@ -277,11 +277,6 @@ name|defined
 argument_list|(
 name|__darwin__
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 name|expect
 argument_list|(
 name|memmem

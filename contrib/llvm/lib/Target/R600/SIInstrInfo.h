@@ -799,6 +799,26 @@ name|FLAT
 return|;
 block|}
 name|bool
+name|isWQM
+argument_list|(
+argument|uint16_t Opcode
+argument_list|)
+specifier|const
+block|{
+return|return
+name|get
+argument_list|(
+name|Opcode
+argument_list|)
+operator|.
+name|TSFlags
+operator|&
+name|SIInstrFlags
+operator|::
+name|WQM
+return|;
+block|}
+name|bool
 name|isInlineConstant
 argument_list|(
 argument|const APInt&Imm
@@ -920,7 +940,96 @@ argument_list|,
 argument|unsigned OpNo
 argument_list|)
 specifier|const
-block|;\
+block|;
+comment|/// \brief Return the size in bytes of the operand OpNo on the given
+comment|// instruction opcode.
+name|unsigned
+name|getOpSize
+argument_list|(
+argument|uint16_t Opcode
+argument_list|,
+argument|unsigned OpNo
+argument_list|)
+specifier|const
+block|{
+specifier|const
+name|MCOperandInfo
+operator|&
+name|OpInfo
+operator|=
+name|get
+argument_list|(
+name|Opcode
+argument_list|)
+operator|.
+name|OpInfo
+index|[
+name|OpNo
+index|]
+block|;
+if|if
+condition|(
+name|OpInfo
+operator|.
+name|RegClass
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+comment|// If this is an immediate operand, this must be a 32-bit literal.
+name|assert
+argument_list|(
+name|OpInfo
+operator|.
+name|OperandType
+operator|==
+name|MCOI
+operator|::
+name|OPERAND_IMMEDIATE
+argument_list|)
+expr_stmt|;
+return|return
+literal|4
+return|;
+block|}
+return|return
+name|RI
+operator|.
+name|getRegClass
+argument_list|(
+name|OpInfo
+operator|.
+name|RegClass
+argument_list|)
+operator|->
+name|getSize
+argument_list|()
+return|;
+block|}
+comment|/// \brief This form should usually be preferred since it handles operands
+comment|/// with unknown register classes.
+name|unsigned
+name|getOpSize
+argument_list|(
+argument|const MachineInstr&MI
+argument_list|,
+argument|unsigned OpNo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getOpRegClass
+argument_list|(
+name|MI
+argument_list|,
+name|OpNo
+argument_list|)
+operator|->
+name|getSize
+argument_list|()
+return|;
+block|}
 comment|/// \returns true if it is legal for the operand at index \p OpNo
 comment|/// to read a VGPR.
 name|bool

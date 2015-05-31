@@ -15,54 +15,97 @@ directive|define
 name|_LINUX_SIGNAL_H_
 end_define
 
+begin_comment
+comment|/*  * si_code values  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_USER
+value|0
+end_define
+
+begin_comment
+comment|/* sent by kill, sigsend, raise */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_KERNEL
+value|0x80
+end_define
+
+begin_comment
+comment|/* sent by the kernel from somewhere */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_QUEUE
+value|-1
+end_define
+
+begin_comment
+comment|/* sent by sigqueue */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_TIMER
+value|-2
+end_define
+
+begin_comment
+comment|/* sent by timer expiration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_MESGQ
+value|-3
+end_define
+
+begin_comment
+comment|/* sent by real time mesq state change */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_ASYNCIO
+value|-4
+end_define
+
+begin_comment
+comment|/* sent by AIO completion */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_SI_SIGIO
+value|-5
+end_define
+
+begin_comment
+comment|/* sent by queued SIGIO */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|LINUX_SI_TKILL
-value|-6;
+value|-6
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|bsd_to_linux_signal
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|linux_to_bsd_signal
-index|[]
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-name|linux_to_bsd_sigset
-parameter_list|(
-name|l_sigset_t
-modifier|*
-parameter_list|,
-name|sigset_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|bsd_to_linux_sigset
-parameter_list|(
-name|sigset_t
-modifier|*
-parameter_list|,
-name|l_sigset_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_comment
+comment|/* sent by tkill system call */
+end_comment
 
 begin_function_decl
 name|int
@@ -87,6 +130,7 @@ begin_function_decl
 name|void
 name|ksiginfo_to_lsiginfo
 parameter_list|(
+specifier|const
 name|ksiginfo_t
 modifier|*
 name|ksi
@@ -101,26 +145,43 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|LINUX_SIG_VALID
+begin_function_decl
+name|void
+name|siginfo_to_lsiginfo
 parameter_list|(
+specifier|const
+name|siginfo_t
+modifier|*
+name|si
+parameter_list|,
+name|l_siginfo_t
+modifier|*
+name|lsi
+parameter_list|,
+name|l_int
 name|sig
 parameter_list|)
-value|((sig)<= LINUX_NSIG&& (sig)> 0)
-end_define
+function_decl|;
+end_function_decl
 
-begin_define
-define|#
-directive|define
-name|BSD_TO_LINUX_SIGNAL
+begin_function_decl
+name|void
+name|lsiginfo_to_ksiginfo
 parameter_list|(
+specifier|const
+name|l_siginfo_t
+modifier|*
+name|lsi
+parameter_list|,
+name|ksiginfo_t
+modifier|*
+name|ksi
+parameter_list|,
+name|int
 name|sig
 parameter_list|)
-define|\
-value|(((sig)<= LINUX_SIGTBLSZ) ? bsd_to_linux_signal[_SIG_IDX(sig)] : sig)
-end_define
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

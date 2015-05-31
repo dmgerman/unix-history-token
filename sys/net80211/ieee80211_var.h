@@ -468,6 +468,17 @@ modifier|*
 name|ic_ifp
 decl_stmt|;
 comment|/* associated device */
+name|void
+modifier|*
+name|ic_softc
+decl_stmt|;
+comment|/* driver softc */
+specifier|const
+name|char
+modifier|*
+name|ic_name
+decl_stmt|;
+comment|/* usually device name */
 name|ieee80211_com_lock_t
 name|ic_comlock
 decl_stmt|;
@@ -544,6 +555,14 @@ name|task
 name|ic_chw_task
 decl_stmt|;
 comment|/* deferred HT CHW update */
+name|counter_u64_t
+name|ic_ierrors
+decl_stmt|;
+comment|/* input errors */
+name|counter_u64_t
+name|ic_oerrors
+decl_stmt|;
+comment|/* output errors */
 name|uint32_t
 name|ic_flags
 decl_stmt|;
@@ -996,7 +1015,7 @@ name|ic_updateslot
 function_decl|)
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1008,7 +1027,7 @@ name|ic_update_mcast
 function_decl|)
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1020,7 +1039,7 @@ name|ic_update_promisc
 function_decl|)
 parameter_list|(
 name|struct
-name|ifnet
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
@@ -2054,6 +2073,11 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+parameter_list|,
 name|int
 parameter_list|,
 name|int
@@ -2074,6 +2098,11 @@ name|mbuf
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
 parameter_list|,
 name|int
 parameter_list|,
@@ -2249,11 +2278,6 @@ name|int
 parameter_list|)
 function_decl|;
 comment|/* 802.3 output method for raw frame xmit */
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|1000031
 name|int
 function_decl|(
 modifier|*
@@ -2278,33 +2302,6 @@ name|route
 modifier|*
 parameter_list|)
 function_decl|;
-else|#
-directive|else
-name|int
-function_decl|(
-modifier|*
-name|iv_output
-function_decl|)
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-parameter_list|,
-name|struct
-name|route
-modifier|*
-parameter_list|)
-function_decl|;
-endif|#
-directive|endif
 name|uint64_t
 name|iv_spare
 index|[
@@ -3579,6 +3576,32 @@ value|"\20\1LDPC\2CHWIDTH40\5GREENFIELD\6SHORTGI20\7SHORTGI40\10TXSTBC" \ 	"\21A
 end_define
 
 begin_function_decl
+name|int
+name|ic_printf
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__printflike
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
+end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
 name|void
 name|ieee80211_ifattach
 parameter_list|(
@@ -3897,6 +3920,24 @@ name|ieee
 parameter_list|,
 name|int
 name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|ieee80211_channel
+modifier|*
+name|ieee80211_lookup_channel_rxstatus
+parameter_list|(
+name|struct
+name|ieee80211vap
+modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

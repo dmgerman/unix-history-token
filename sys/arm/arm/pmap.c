@@ -18051,7 +18051,7 @@ name|vm_memattr_t
 name|ma
 parameter_list|)
 block|{
-comment|/*  	 * Remember the memattr in a field that gets used to set the appropriate 	 * bits in the PTEs as mappings are established. 	 */
+comment|/* 	 * Remember the memattr in a field that gets used to set the appropriate 	 * bits in the PTEs as mappings are established. 	 */
 name|m
 operator|->
 name|md

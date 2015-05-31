@@ -589,9 +589,6 @@ name|proc_ldt
 modifier|*
 name|pldt
 decl_stmt|;
-name|pmap_t
-name|pmap2
-decl_stmt|;
 name|p1
 operator|=
 name|td1
@@ -843,15 +840,6 @@ operator|~
 name|PSL_T
 expr_stmt|;
 comment|/* 	 * Set registers for trampoline to user mode.  Leave space for the 	 * return address on stack.  These are the kernel mode register values. 	 */
-name|pmap2
-operator|=
-name|vmspace_pmap
-argument_list|(
-name|p2
-operator|->
-name|p_vmspace
-argument_list|)
-expr_stmt|;
 name|pcb2
 operator|->
 name|pcb_r12

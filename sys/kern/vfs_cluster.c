@@ -1347,11 +1347,6 @@ name|fbp
 parameter_list|)
 block|{
 name|struct
-name|bufobj
-modifier|*
-name|bo
-decl_stmt|;
-name|struct
 name|buf
 modifier|*
 name|bp
@@ -1699,13 +1694,6 @@ name|btodb
 argument_list|(
 name|size
 argument_list|)
-expr_stmt|;
-name|bo
-operator|=
-operator|&
-name|vp
-operator|->
-name|v_bufobj
 expr_stmt|;
 for|for
 control|(

@@ -11766,7 +11766,7 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Bring the priority of a thread up if we want it to get 	 * killed in this lifetime. 	 */
+comment|/* 	 * Bring the priority of a thread up if we want it to get 	 * killed in this lifetime.  Be careful to avoid bumping the 	 * priority of the idle thread, since we still allow to signal 	 * kernel processes. 	 */
 if|if
 condition|(
 name|action
@@ -11778,12 +11778,20 @@ name|prop
 operator|&
 name|SA_KILL
 operator|)
+operator|!=
+literal|0
 operator|&&
 name|td
 operator|->
 name|td_priority
 operator|>
 name|PUSER
+operator|&&
+operator|!
+name|TD_IS_IDLETHREAD
+argument_list|(
+name|td
+argument_list|)
 condition|)
 name|sched_prio
 argument_list|(
@@ -11891,6 +11899,12 @@ operator|->
 name|td_priority
 operator|>
 name|PUSER
+operator|&&
+operator|!
+name|TD_IS_IDLETHREAD
+argument_list|(
+name|td
+argument_list|)
 condition|)
 name|sched_prio
 argument_list|(
@@ -12205,6 +12219,27 @@ operator|->
 name|td_xsig
 operator|=
 name|sig
+expr_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_PTRACE
+argument_list|,
+literal|"ptracestop: tid %d (pid %d) flags %#x sig %d"
+argument_list|,
+name|td
+operator|->
+name|td_tid
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_dbgflags
+argument_list|,
+name|sig
+argument_list|)
 expr_stmt|;
 name|PROC_SLOCK
 argument_list|(

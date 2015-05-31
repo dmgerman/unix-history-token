@@ -1772,6 +1772,8 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Usage: lockstat [options] command [args]\n"
+literal|"\nGeneral options:\n\n"
+literal|"  -V              print the corresponding D program\n"
 literal|"\nEvent selection options:\n\n"
 literal|"  -C              watch contention events [on by default]\n"
 literal|"  -E              watch error events [off by default]\n"

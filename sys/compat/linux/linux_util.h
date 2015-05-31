@@ -69,6 +69,38 @@ directive|include
 file|<sys/uio.h>
 end_include
 
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_LINUX
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_EPOLL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_FUTEX
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_FUTEX_WP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 specifier|const
@@ -408,7 +440,7 @@ name|p5
 parameter_list|,
 name|p6
 parameter_list|)
-value|do {			\ 	if (ldebug(f))							\ 		CTR6(KTR_LINUX, LINUX_CTRFMT(f, m),			\ 		    p1, p2, p3, p4, p5, p6);				\ } while (0)
+value|do {			\ 		CTR6(KTR_LINUX, LINUX_CTRFMT(f, m),			\ 		    p1, p2, p3, p4, p5, p6);				\ } while (0)
 end_define
 
 begin_define

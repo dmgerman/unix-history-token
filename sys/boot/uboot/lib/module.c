@@ -92,11 +92,18 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"No valid device tree blob found!\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|err
 operator|)
 return|;
+block|}
 endif|#
 directive|endif
 return|return

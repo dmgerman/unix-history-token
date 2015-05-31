@@ -44,6 +44,26 @@ parameter_list|)
 value|(*(_a)& 0x01)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|uint8_t
+name|ieee80211broadcastaddr
+index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|uint16_t
@@ -3918,7 +3938,7 @@ value|0x7f
 end_define
 
 begin_comment
-comment|/* EPR information element flags */
+comment|/* ERP information element flags */
 end_comment
 
 begin_define

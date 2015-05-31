@@ -1603,7 +1603,7 @@ comment|/* Faultstatus          */
 name|cpufunc_faultaddress
 block|,
 comment|/* Faultaddress         */
-comment|/*  	 * TLB functions.  ARMv7 does all TLB ops based on a unified TLB model 	 * whether the hardware implements separate I+D or not, so we use the 	 * same 'ID' functions for all 3 variations. 	 */
+comment|/* 	 * TLB functions.  ARMv7 does all TLB ops based on a unified TLB model 	 * whether the hardware implements separate I+D or not, so we use the 	 * same 'ID' functions for all 3 variations. 	 */
 name|armv7_tlb_flushID
 block|,
 comment|/* tlb_flushID          */
@@ -1650,7 +1650,7 @@ comment|/* idcache_wbinv_all    */
 name|armv7_idcache_wbinv_range
 block|,
 comment|/* idcache_wbinv_range  */
-comment|/*  	 * Note: For CPUs using the PL310 the L2 ops are filled in when the 	 * L2 cache controller is actually enabled. 	 */
+comment|/* 	 * Note: For CPUs using the PL310 the L2 ops are filled in when the 	 * L2 cache controller is actually enabled. 	 */
 name|cpufunc_nullop
 block|,
 comment|/* l2cache_wbinv_all    */
@@ -3420,54 +3420,49 @@ comment|/* This is how you give userland access to the CCNT and PMCn  * register
 ifdef|#
 directive|ifdef
 name|_PMC_USER_READ_WRITE_
+comment|/* Set PMUSERENR[0] to allow userland access */
+name|cp15_pmuserenr_set
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined
 argument_list|(
 name|CPU_ARM1176
 argument_list|)
-comment|/* Use the Secure User and Non-secure Access Validation Control Register 	 * to allow userland access 	 */
-asm|__asm volatile ("mcr	p15, 0, %0, c15, c9, 0\n\t"
-block|: 			:
-literal|"r"
-operator|(
-literal|0x00000001
-operator|)
-block|)
-function|;
+comment|/* Set PMCR[2,0] to enable counters and reset CCNT */
+name|cp15_pmcr_set
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+comment|/* Set up the PMCCNTR register as a cyclecounter: 	 * Set PMINTENCLR to 0xFFFFFFFF to block interrupts 	 * Set PMCR[2,0] to enable counters and reset CCNT 	 * Set PMCNTENSET to 0x80000000 to enable CCNT */
+name|cp15_pminten_clr
+argument_list|(
+literal|0xFFFFFFFF
+argument_list|)
+expr_stmt|;
+name|cp15_pmcr_set
+argument_list|(
+literal|5
+argument_list|)
+expr_stmt|;
+name|cp15_pmcnten_set
+argument_list|(
+literal|0x80000000
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 end_function
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Set PMUSERENR[0] to allow userland access */
-end_comment
-
-begin_asm
-asm|__asm volatile ("mcr	p15, 0, %0, c9, c14, 0\n\t"
-end_asm
-
-begin_expr_stmt
-unit|: 			:
-literal|"r"
-operator|(
-literal|0x00000001
-operator|)
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_endif
 endif|#
 directive|endif
@@ -3482,95 +3477,12 @@ name|CPU_ARM1176
 argument_list|)
 end_if
 
-begin_comment
-comment|/* Set PMCR[2,0] to enable counters and reset CCNT */
-end_comment
-
-begin_asm
-asm|__asm volatile ("mcr	p15, 0, %0, c15, c12, 0\n\t"
-end_asm
-
-begin_expr_stmt
-unit|: 			:
-literal|"r"
-operator|(
-literal|0x00000005
-operator|)
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Set up the PMCCNTR register as a cyclecounter: 	 * Set PMINTENCLR to 0xFFFFFFFF to block interrupts 	 * Set PMCR[2,0] to enable counters and reset CCNT 	 * Set PMCNTENSET to 0x80000000 to enable CCNT */
-end_comment
-
-begin_asm
-asm|__asm volatile ("mcr	p15, 0, %0, c9, c14, 2\n\t"
-end_asm
-
-begin_expr_stmt
-literal|"mcr	p15, 0, %1, c9, c12, 0\n\t"
-literal|"mcr	p15, 0, %2, c9, c12, 1\n\t"
-operator|:
-operator|:
-literal|"r"
-operator|(
-literal|0xFFFFFFFF
-operator|)
-operator|,
-literal|"r"
-operator|(
-literal|0x00000005
-operator|)
-operator|,
-literal|"r"
-operator|(
-literal|0x80000000
-operator|)
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_ARM1176
-argument_list|)
-end_if
-
-begin_macro
-unit|void
+begin_function
+name|void
 name|arm11x6_setup
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|cpuctrl
@@ -3731,7 +3643,11 @@ expr_stmt|;
 comment|/* Now really make sure they are clean.  */
 asm|__asm volatile ("mcr\tp15, 0, %0, c7, c7, 0" : : "r"(sbz));
 comment|/* Allow detection code to find the VFP if it's fitted.  */
-asm|__asm volatile ("mcr\tp15, 0, %0, c1, c0, 2" : : "r" (0x0fffffff));
+name|cp15_cpacr_set
+argument_list|(
+literal|0x0fffffff
+argument_list|)
+expr_stmt|;
 comment|/* Set the control register */
 name|ctrl
 operator|=
@@ -3745,56 +3661,45 @@ argument_list|,
 name|cpuctrl
 argument_list|)
 expr_stmt|;
-asm|__asm volatile ("mrc	p15, 0, %0, c1, c0, 1\n\t"
-literal|"and	%1, %0, %2\n\t"
-literal|"orr	%1, %1, %3\n\t"
-literal|"teq	%0, %1\n\t"
-literal|"mcrne	p15, 0, %1, c1, c0, 1\n\t"
-operator|:
-literal|"=r"
-operator|(
 name|tmp
-operator|)
-operator|,
-literal|"=r"
-operator|(
+operator|=
+name|cp15_actlr_get
+argument_list|()
+expr_stmt|;
 name|tmp2
-operator|)
-operator|:
-literal|"r"
-operator|(
+operator|=
+name|tmp
+expr_stmt|;
+name|tmp
+operator|&=
 name|auxctrl_wax
-operator|)
-operator|,
-literal|"r"
-operator|(
+expr_stmt|;
+name|tmp
+operator||=
 name|auxctrl
-operator|)
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr_stmt|;
+if|if
+condition|(
+name|tmp
+operator|!=
+name|tmp2
+condition|)
+name|cp15_actlr_set
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
 comment|/* And again. */
-end_comment
-
-begin_expr_stmt
 name|cpu_idcache_wbinv_all
 argument_list|()
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|cpu_scc_setup_ccnt
 argument_list|()
 expr_stmt|;
-end_expr_stmt
+block|}
+end_function
 
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif
@@ -3809,15 +3714,12 @@ directive|ifdef
 name|CPU_MV_PJ4B
 end_ifdef
 
-begin_macro
-unit|void
+begin_function
+name|void
 name|pj4bv7_setup
-argument_list|(
-argument|void
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|cpuctrl
@@ -3910,7 +3812,7 @@ name|cpu_scc_setup_ccnt
 argument_list|()
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_endif
 endif|#

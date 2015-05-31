@@ -142,7 +142,7 @@ modifier|*
 name|vap
 parameter_list|)
 block|{
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|vap
 operator|->

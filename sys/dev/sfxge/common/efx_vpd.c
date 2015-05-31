@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2009 Solarflare Communications Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2009-2015 Solarflare Communications Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright notice,  *    this list of conditions and the following disclaimer in the documentation  *    and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing official  * policies, either expressed or implied, of the FreeBSD Project.  */
 end_comment
 
 begin_include
@@ -160,7 +160,6 @@ end_if
 begin_decl_stmt
 specifier|static
 name|efx_vpd_ops_t
-name|__cs
 name|__efx_vpd_falcon_ops
 init|=
 block|{
@@ -216,7 +215,6 @@ end_if
 begin_decl_stmt
 specifier|static
 name|efx_vpd_ops_t
-name|__cs
 name|__efx_vpd_siena_ops
 init|=
 block|{
@@ -261,6 +259,61 @@ end_endif
 
 begin_comment
 comment|/* EFSYS_OPT_SIENA */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|EFSYS_OPT_HUNTINGTON
+end_if
+
+begin_decl_stmt
+specifier|static
+name|efx_vpd_ops_t
+name|__efx_vpd_hunt_ops
+init|=
+block|{
+name|hunt_vpd_init
+block|,
+comment|/* evpdo_init */
+name|hunt_vpd_size
+block|,
+comment|/* evpdo_size */
+name|hunt_vpd_read
+block|,
+comment|/* evpdo_read */
+name|hunt_vpd_verify
+block|,
+comment|/* evpdo_verify */
+name|hunt_vpd_reinit
+block|,
+comment|/* evpdo_reinit */
+name|hunt_vpd_get
+block|,
+comment|/* evpdo_get */
+name|hunt_vpd_set
+block|,
+comment|/* evpdo_set */
+name|hunt_vpd_next
+block|,
+comment|/* evpdo_next */
+name|hunt_vpd_write
+block|,
+comment|/* evpdo_write */
+name|hunt_vpd_fini
+block|,
+comment|/* evpdo_fini */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* EFSYS_OPT_HUNTINGTON */
 end_comment
 
 begin_function
@@ -360,6 +413,25 @@ break|break;
 endif|#
 directive|endif
 comment|/* EFSYS_OPT_SIENA */
+if|#
+directive|if
+name|EFSYS_OPT_HUNTINGTON
+case|case
+name|EFX_FAMILY_HUNTINGTON
+case|:
+name|evpdop
+operator|=
+operator|(
+name|efx_vpd_ops_t
+operator|*
+operator|)
+operator|&
+name|__efx_vpd_hunt_ops
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
+comment|/* EFSYS_OPT_HUNTINGTON */
 default|default:
 name|EFSYS_ASSERT
 argument_list|(
@@ -2205,7 +2277,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uint8_t
-name|__cs
 name|__efx_vpd_blank_pid
 index|[]
 init|=
@@ -2226,7 +2297,6 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|uint8_t
-name|__cs
 name|__efx_vpd_blank_r
 index|[]
 init|=
@@ -2251,23 +2321,26 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
-begin_function
+begin_decl_stmt
 name|__checkReturn
 name|int
 name|efx_vpd_hunk_reinit
-parameter_list|(
-name|__in
+argument_list|(
+name|__in_bcount
+argument_list|(
+argument|size
+argument_list|)
 name|caddr_t
 name|data
-parameter_list|,
+argument_list|,
 name|__in
 name|size_t
 name|size
-parameter_list|,
+argument_list|,
 name|__in
 name|boolean_t
 name|wantpid
-parameter_list|)
+argument_list|)
 block|{
 name|unsigned
 name|int
@@ -2440,7 +2513,7 @@ name|rc
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_decl_stmt
 name|__checkReturn

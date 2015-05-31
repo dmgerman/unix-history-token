@@ -1545,6 +1545,11 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+parameter_list|,
 name|int
 parameter_list|,
 name|int

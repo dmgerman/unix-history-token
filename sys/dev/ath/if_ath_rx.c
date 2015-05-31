@@ -1034,6 +1034,12 @@ parameter_list|,
 name|int
 name|subtype
 parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_rx_stats
+modifier|*
+name|rxs
+parameter_list|,
 name|int
 name|rssi
 parameter_list|,
@@ -1163,6 +1169,8 @@ argument_list|,
 name|m
 argument_list|,
 name|subtype
+argument_list|,
+name|rxs
 argument_list|,
 name|rssi
 argument_list|,
@@ -4048,9 +4056,11 @@ name|NULL
 condition|)
 block|{
 comment|/* NB: shouldn't happen */
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"%s: no buffer!\n"
 argument_list|,
@@ -4093,9 +4103,11 @@ block|{
 comment|/* NB: shouldn't happen */
 comment|/* 			 * If mbuf allocation failed previously there 			 * will be no mbuf; try again to re-populate it. 			 */
 comment|/* XXX make debug msg */
-name|if_printf
+name|device_printf
 argument_list|(
-name|ifp
+name|sc
+operator|->
+name|sc_dev
 argument_list|,
 literal|"%s: no mbuf!\n"
 argument_list|,

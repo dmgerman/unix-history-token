@@ -40613,6 +40613,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|bool
+name|SemaBuiltinSetjmp
+parameter_list|(
+name|CallExpr
+modifier|*
+name|TheCall
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|ExprResult
 name|SemaBuiltinAtomicOverloaded
 parameter_list|(

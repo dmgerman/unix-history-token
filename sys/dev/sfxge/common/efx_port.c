@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright 2009 Solarflare Communications Inc.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2009-2015 Solarflare Communications Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * 1. Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright notice,  *    this list of conditions and the following disclaimer in the documentation  *    and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;  * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing official  * policies, either expressed or implied, of the FreeBSD Project.  */
 end_comment
 
 begin_include
@@ -180,6 +180,14 @@ argument_list|(
 name|enp
 argument_list|)
 expr_stmt|;
+comment|/* Pick up current phy capababilities */
+name|efx_port_poll
+argument_list|(
+name|enp
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Turn on the PHY if available, otherwise reset it, and 	 * reconfigure it with the current configuration. 	 */
 if|if
 condition|(
@@ -321,7 +329,7 @@ name|efx_nic_t
 modifier|*
 name|enp
 parameter_list|,
-name|__out
+name|__out_opt
 name|efx_link_mode_t
 modifier|*
 name|link_modep
@@ -540,19 +548,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-literal|1
-operator|<<
-name|loopback_type
-operator|)
-operator|&
-operator|~
+name|EFX_TEST_QWORD_BIT
+argument_list|(
 name|encp
 operator|->
 name|enc_loopback_types
 index|[
 name|link_mode
 index|]
+argument_list|,
+name|loopback_type
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|rc
@@ -645,9 +653,7 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|char
-name|__cs
 modifier|*
-name|__cs
 name|__efx_loopback_type_name
 index|[]
 init|=
@@ -687,6 +693,40 @@ block|,
 literal|"PCS"
 block|,
 literal|"PMA_PMD"
+block|,
+literal|"XPORT"
+block|,
+literal|"XGMII_WS"
+block|,
+literal|"XAUI_WS"
+block|,
+literal|"XAUI_WS_FAR"
+block|,
+literal|"XAUI_WS_NEAR"
+block|,
+literal|"GMII_WS"
+block|,
+literal|"XFI_WS"
+block|,
+literal|"XFI_WS_FAR"
+block|,
+literal|"PHYXS_WS"
+block|,
+literal|"PMA_INT"
+block|,
+literal|"SD_NEAR"
+block|,
+literal|"SD_FAR"
+block|,
+literal|"PMA_INT_WS"
+block|,
+literal|"SD_FEP2_WS"
+block|,
+literal|"SD_FEP1_5_WS"
+block|,
+literal|"SD_FEP_WS"
+block|,
+literal|"SD_FES_WS"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -695,7 +735,6 @@ begin_function
 name|__checkReturn
 specifier|const
 name|char
-name|__cs
 modifier|*
 name|efx_loopback_type_name
 parameter_list|(
@@ -709,6 +748,16 @@ name|efx_loopback_type_t
 name|type
 parameter_list|)
 block|{
+name|EFX_STATIC_ASSERT
+argument_list|(
+name|EFX_ARRAY_SIZE
+argument_list|(
+name|__efx_loopback_type_name
+argument_list|)
+operator|==
+name|EFX_LOOPBACK_NTYPES
+argument_list|)
+expr_stmt|;
 name|_NOTE
 argument_list|(
 argument|ARGUNUSED(enp)

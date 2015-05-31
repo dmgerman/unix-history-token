@@ -276,7 +276,7 @@ expr|struct
 name|aclstate
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -286,9 +286,9 @@ argument_list|)
 argument_list|,
 name|M_80211_ACL
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -394,7 +394,7 @@ argument_list|(
 name|as
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|as
 argument_list|,
@@ -503,7 +503,7 @@ argument_list|,
 name|acl_hash
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|acl
 argument_list|,
@@ -643,7 +643,7 @@ expr|struct
 name|acl
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 sizeof|sizeof
 argument_list|(
@@ -653,9 +653,9 @@ argument_list|)
 argument_list|,
 name|M_80211_ACL
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 operator||
-name|M_ZERO
+name|IEEE80211_M_ZERO
 argument_list|)
 expr_stmt|;
 if|if
@@ -722,7 +722,7 @@ argument_list|(
 name|as
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|new
 argument_list|,
@@ -1232,13 +1232,13 @@ expr|struct
 name|ieee80211req_maclist
 operator|*
 operator|)
-name|malloc
+name|IEEE80211_MALLOC
 argument_list|(
 name|space
 argument_list|,
 name|M_TEMP
 argument_list|,
-name|M_NOWAIT
+name|IEEE80211_M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1336,7 +1336,7 @@ operator|->
 name|i_len
 argument_list|)
 expr_stmt|;
-name|free
+name|IEEE80211_FREE
 argument_list|(
 name|ap
 argument_list|,
