@@ -4248,6 +4248,12 @@ expr_stmt|;
 if|if
 condition|(
 name|compl
+operator|||
+name|toep
+operator|->
+name|ulp_mode
+operator|==
+name|ULP_MODE_RDMA
 condition|)
 block|{
 name|txwr
