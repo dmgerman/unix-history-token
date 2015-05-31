@@ -6761,10 +6761,10 @@ if|if
 condition|(
 name|doipcksum
 condition|)
-block|{
-name|u_short
-name|sum
-init|=
+name|tcp
+operator|->
+name|th_sum
+operator|=
 name|p_cksum
 argument_list|(
 name|outip
@@ -6779,20 +6779,7 @@ name|protlen
 argument_list|,
 name|protlen
 argument_list|)
-decl_stmt|;
-name|tcp
-operator|->
-name|th_sum
-operator|=
-operator|(
-name|sum
-operator|)
-condition|?
-name|sum
-else|:
-literal|0xffff
 expr_stmt|;
-block|}
 block|}
 end_function
 
