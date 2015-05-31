@@ -332,7 +332,9 @@ begin_function
 specifier|static
 name|int
 name|harmless
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 comment|/* Always return FALSE/NULL, as the case may be */
 return|return
