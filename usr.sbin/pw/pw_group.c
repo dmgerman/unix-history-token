@@ -595,7 +595,7 @@ name|val
 argument_list|)
 else|:
 operator|(
-name|uid_t
+name|gid_t
 operator|)
 operator|-
 literal|1
