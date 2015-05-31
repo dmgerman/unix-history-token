@@ -1729,14 +1729,13 @@ condition|)
 return|return
 name|EXIT_SUCCESS
 return|;
-name|warn
+name|err
 argument_list|(
-literal|"config update"
+name|EX_IOERR
+argument_list|,
+literal|"config udpate"
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
 block|}
 if|if
 condition|(
@@ -2480,16 +2479,13 @@ name|rc
 operator|!=
 literal|0
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"passwd update"
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
-block|}
 if|if
 condition|(
 name|cnf
@@ -4193,9 +4189,10 @@ name|b
 operator|<
 literal|0
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"-%c file descriptor"
 argument_list|,
 name|precrypt
@@ -4205,10 +4202,6 @@ else|:
 literal|'h'
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
-block|}
 name|line
 index|[
 name|b
@@ -4391,9 +4384,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"user '%s' already exists"
 argument_list|,
 name|pwd
@@ -4401,10 +4395,6 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -4412,16 +4402,13 @@ name|rc
 operator|!=
 literal|0
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"passwd file update"
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
-block|}
 if|if
 condition|(
 name|cnf
@@ -4512,9 +4499,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"user '%s' does not exist (NIS?)"
 argument_list|,
 name|pwd
@@ -4522,10 +4510,6 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -4533,16 +4517,13 @@ name|rc
 operator|!=
 literal|0
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"passwd file update"
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
-block|}
 if|if
 condition|(
 name|cnf
