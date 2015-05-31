@@ -597,6 +597,9 @@ operator|->
 name|val
 argument_list|)
 else|:
+operator|(
+name|uid_t
+operator|)
 operator|-
 literal|1
 expr_stmt|;

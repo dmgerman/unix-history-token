@@ -2040,6 +2040,9 @@ operator|->
 name|val
 argument_list|)
 else|:
+operator|(
+name|uid_t
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -4922,6 +4925,9 @@ name|grp
 operator|->
 name|gr_gid
 else|:
+operator|(
+name|uid_t
+operator|)
 operator|-
 literal|1
 argument_list|)
