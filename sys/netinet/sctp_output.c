@@ -15215,14 +15215,6 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
-else|else
-block|{
-name|SCTP_PRINTF
-argument_list|(
-literal|"Stcb is null - no print\n"
-argument_list|)
-expr_stmt|;
-block|}
 name|atomic_add_int
 argument_list|(
 operator|&
