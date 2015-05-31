@@ -60967,15 +60967,6 @@ name|int
 name|resv_upfront
 parameter_list|)
 block|{
-name|int
-name|left
-decl_stmt|;
-name|left
-operator|=
-name|sp
-operator|->
-name|length
-expr_stmt|;
 name|sp
 operator|->
 name|data
