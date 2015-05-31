@@ -470,7 +470,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_TIMER
 operator|+
-name|SCTP_LOC_3
+name|SCTP_LOC_1
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -689,7 +689,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_TIMER
 operator|+
-name|SCTP_LOC_1
+name|SCTP_LOC_2
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(
@@ -4907,7 +4907,7 @@ name|last_abort_code
 operator|=
 name|SCTP_FROM_SCTP_TIMER
 operator|+
-name|SCTP_LOC_4
+name|SCTP_LOC_3
 expr_stmt|;
 name|sctp_abort_an_association
 argument_list|(

@@ -32639,7 +32639,7 @@ name|stcb
 argument_list|,
 name|SCTP_NORMAL_PROC
 argument_list|,
-name|SCTP_FROM_SCTP_USRREQ
+name|SCTP_FROM_SCTPUTIL
 operator|+
 name|SCTP_LOC_7
 argument_list|)
@@ -32694,9 +32694,9 @@ name|stcb
 argument_list|,
 name|SCTP_NORMAL_PROC
 argument_list|,
-name|SCTP_FROM_SCTP_USRREQ
+name|SCTP_FROM_SCTPUTIL
 operator|+
-name|SCTP_LOC_7
+name|SCTP_LOC_8
 argument_list|)
 expr_stmt|;
 operator|*
@@ -32780,9 +32780,9 @@ name|stcb
 argument_list|,
 name|SCTP_NORMAL_PROC
 argument_list|,
-name|SCTP_FROM_SCTP_USRREQ
+name|SCTP_FROM_SCTPUTIL
 operator|+
-name|SCTP_LOC_8
+name|SCTP_LOC_9
 argument_list|)
 expr_stmt|;
 operator|*
@@ -32835,9 +32835,9 @@ name|stcb
 argument_list|,
 name|SCTP_NORMAL_PROC
 argument_list|,
-name|SCTP_FROM_SCTP_USRREQ
+name|SCTP_FROM_SCTPUTIL
 operator|+
-name|SCTP_LOC_8
+name|SCTP_LOC_10
 argument_list|)
 expr_stmt|;
 operator|*

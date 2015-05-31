@@ -2551,7 +2551,7 @@ name|primary_destination
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_4
+name|SCTP_LOC_3
 argument_list|)
 expr_stmt|;
 comment|/* calculate the RTO */
@@ -3211,7 +3211,7 @@ name|r_net
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_3
+name|SCTP_LOC_4
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -3381,7 +3381,7 @@ name|r_net
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_3
+name|SCTP_LOC_5
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -3488,9 +3488,9 @@ name|stcb
 argument_list|,
 name|NULL
 argument_list|,
-name|SCTP_FROM_SCTP_TIMER
+name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_7
+name|SCTP_LOC_6
 argument_list|)
 expr_stmt|;
 if|if
@@ -4064,7 +4064,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_6
+name|SCTP_LOC_7
 argument_list|)
 expr_stmt|;
 comment|/* notify user of the abort and clean up... */
@@ -4216,7 +4216,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_6
+name|SCTP_LOC_8
 argument_list|)
 expr_stmt|;
 if|#
@@ -4765,7 +4765,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_8
+name|SCTP_LOC_9
 argument_list|)
 expr_stmt|;
 block|}
@@ -5235,7 +5235,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_9
+name|SCTP_LOC_10
 argument_list|)
 expr_stmt|;
 comment|/* send SHUTDOWN-COMPLETE */
@@ -5379,7 +5379,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_10
+name|SCTP_LOC_11
 argument_list|)
 expr_stmt|;
 if|#
@@ -6088,7 +6088,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_11
+name|SCTP_LOC_12
 argument_list|)
 expr_stmt|;
 if|#
@@ -7620,7 +7620,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_12
+name|SCTP_LOC_13
 argument_list|)
 expr_stmt|;
 name|sctp_timer_stop
@@ -7635,7 +7635,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_13
+name|SCTP_LOC_14
 argument_list|)
 expr_stmt|;
 comment|/* update current state */
@@ -8336,7 +8336,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_14
+name|SCTP_LOC_15
 argument_list|)
 expr_stmt|;
 name|sctp_stop_all_cookie_timers
@@ -9081,7 +9081,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_15
+name|SCTP_LOC_16
 argument_list|)
 expr_stmt|;
 name|sctp_timer_stop
@@ -9096,7 +9096,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_16
+name|SCTP_LOC_17
 argument_list|)
 expr_stmt|;
 comment|/* notify upper layer */
@@ -10512,7 +10512,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_16
+name|SCTP_LOC_18
 argument_list|)
 expr_stmt|;
 if|#
@@ -10743,7 +10743,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_16
+name|SCTP_LOC_19
 argument_list|)
 expr_stmt|;
 if|#
@@ -10866,7 +10866,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_17
+name|SCTP_LOC_20
 argument_list|)
 expr_stmt|;
 if|#
@@ -11047,7 +11047,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_18
+name|SCTP_LOC_21
 argument_list|)
 expr_stmt|;
 if|#
@@ -11359,7 +11359,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_19
+name|SCTP_LOC_22
 argument_list|)
 expr_stmt|;
 if|#
@@ -13628,7 +13628,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_20
+name|SCTP_LOC_23
 argument_list|)
 expr_stmt|;
 if|#
@@ -15693,7 +15693,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_22
+name|SCTP_LOC_24
 argument_list|)
 expr_stmt|;
 name|SCTP_STAT_INCR_COUNTER32
@@ -15787,7 +15787,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_23
+name|SCTP_LOC_25
 argument_list|)
 expr_stmt|;
 if|#
@@ -16298,7 +16298,7 @@ name|whoTo
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_24
+name|SCTP_LOC_26
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -16585,7 +16585,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_25
+name|SCTP_LOC_27
 argument_list|)
 expr_stmt|;
 name|sctp_send_initiate
@@ -17423,7 +17423,7 @@ name|whoTo
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_26
+name|SCTP_LOC_28
 argument_list|)
 expr_stmt|;
 name|TAILQ_REMOVE
@@ -24363,7 +24363,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_27
+name|SCTP_LOC_29
 argument_list|)
 expr_stmt|;
 if|#
@@ -26463,7 +26463,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_27
+name|SCTP_LOC_30
 argument_list|)
 expr_stmt|;
 if|#
@@ -27351,7 +27351,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_INPUT
 operator|+
-name|SCTP_LOC_29
+name|SCTP_LOC_31
 argument_list|)
 expr_stmt|;
 if|#

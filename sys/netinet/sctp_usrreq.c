@@ -7240,7 +7240,7 @@ name|SCTP_PCBFREE_FORCE
 argument_list|,
 name|SCTP_FROM_SCTP_USRREQ
 operator|+
-name|SCTP_LOC_6
+name|SCTP_LOC_7
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -24042,7 +24042,7 @@ name|primary_destination
 argument_list|,
 name|SCTP_FROM_SCTP_USRREQ
 operator|+
-name|SCTP_LOC_9
+name|SCTP_LOC_8
 argument_list|)
 expr_stmt|;
 name|sctp_send_initiate
@@ -26132,7 +26132,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_USRREQ
 operator|+
-name|SCTP_LOC_10
+name|SCTP_LOC_9
 argument_list|)
 expr_stmt|;
 block|}
@@ -26305,7 +26305,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_USRREQ
 operator|+
-name|SCTP_LOC_10
+name|SCTP_LOC_11
 argument_list|)
 expr_stmt|;
 block|}
@@ -26480,9 +26480,9 @@ name|stcb
 argument_list|,
 name|net
 argument_list|,
-name|SCTP_FROM_SCTP_TIMER
+name|SCTP_FROM_SCTP_USRREQ
 operator|+
-name|SCTP_LOC_3
+name|SCTP_LOC_12
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -26771,9 +26771,9 @@ name|stcb
 argument_list|,
 name|net
 argument_list|,
-name|SCTP_FROM_SCTP_TIMER
+name|SCTP_FROM_SCTP_USRREQ
 operator|+
-name|SCTP_LOC_3
+name|SCTP_LOC_13
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -26999,7 +26999,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_USRREQ
 operator|+
-name|SCTP_LOC_10
+name|SCTP_LOC_14
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -27084,7 +27084,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_USRREQ
 operator|+
-name|SCTP_LOC_10
+name|SCTP_LOC_15
 argument_list|)
 expr_stmt|;
 block|}
@@ -27153,7 +27153,7 @@ name|net
 argument_list|,
 name|SCTP_FROM_SCTP_USRREQ
 operator|+
-name|SCTP_LOC_10
+name|SCTP_LOC_16
 argument_list|)
 expr_stmt|;
 block|}
@@ -31825,9 +31825,9 @@ name|stcb
 argument_list|,
 name|net
 argument_list|,
-name|SCTP_FROM_SCTP_TIMER
+name|SCTP_FROM_SCTP_USRREQ
 operator|+
-name|SCTP_LOC_3
+name|SCTP_LOC_17
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -32042,9 +32042,9 @@ name|stcb
 argument_list|,
 name|net
 argument_list|,
-name|SCTP_FROM_SCTP_TIMER
+name|SCTP_FROM_SCTP_USRREQ
 operator|+
-name|SCTP_LOC_3
+name|SCTP_LOC_18
 argument_list|)
 expr_stmt|;
 name|sctp_timer_start
@@ -36712,7 +36712,7 @@ name|SCTP_NORMAL_PROC
 argument_list|,
 name|SCTP_FROM_SCTP_USRREQ
 operator|+
-name|SCTP_LOC_7
+name|SCTP_LOC_19
 argument_list|)
 expr_stmt|;
 block|}
