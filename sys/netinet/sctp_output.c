@@ -28459,6 +28459,7 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|IN4_ISPRIVATE_ADDRESS
 argument_list|(
 operator|&
@@ -28466,6 +28467,17 @@ name|src4
 operator|->
 name|sin_addr
 argument_list|)
+operator|)
+operator|||
+operator|(
+name|IN4_ISPRIVATE_ADDRESS
+argument_list|(
+operator|&
+name|dst4
+operator|->
+name|sin_addr
+argument_list|)
+operator|)
 condition|)
 block|{
 name|stc
@@ -28604,9 +28616,17 @@ name|src6
 operator|->
 name|sin6_addr
 argument_list|)
+operator|||
+name|IN6_IS_ADDR_LINKLOCAL
+argument_list|(
+operator|&
+name|dst6
+operator|->
+name|sin6_addr
+argument_list|)
 condition|)
 block|{
-comment|/* 					 * If the new destination is a 					 * LINK_LOCAL we must have common 					 * both site and local scope. Don't 					 * set local scope though since we 					 * must depend on the source to be 					 * added implicitly. We cannot 					 * assure just because we share one 					 * link that all links are common. 					 */
+comment|/* 					 * If the new destination or source 					 * is a LINK_LOCAL we must have 					 * common both site and local scope. 					 * Don't set local scope though 					 * since we must depend on the 					 * source to be added implicitly. We 					 * cannot assure just because we 					 * share one link that all links are 					 * common. 					 */
 name|stc
 operator|.
 name|local_scope
@@ -28642,9 +28662,17 @@ name|src6
 operator|->
 name|sin6_addr
 argument_list|)
+operator|||
+name|IN6_IS_ADDR_SITELOCAL
+argument_list|(
+operator|&
+name|dst6
+operator|->
+name|sin6_addr
+argument_list|)
 condition|)
 block|{
-comment|/* 					 * If the new destination is 					 * SITE_LOCAL then we must have site 					 * scope in common. 					 */
+comment|/* 					 * If the new destination or source 					 * is SITE_LOCAL then we must have 					 * site scope in common. 					 */
 name|stc
 operator|.
 name|site_scope
