@@ -1674,6 +1674,7 @@ case|:
 break|break;
 block|}
 block|}
+block|}
 name|free
 argument_list|(
 name|buf
@@ -1684,7 +1685,6 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 operator|&
