@@ -1605,7 +1605,7 @@ block|,
 block|{
 name|NULL
 block|,
-name|NULL
+literal|""
 block|,
 literal|0
 block|,
