@@ -373,7 +373,7 @@ name|pm_mips_evsel
 operator|=
 name|config
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -478,7 +478,7 @@ argument_list|(
 name|ri
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -631,7 +631,7 @@ operator|)
 operator|-
 name|v
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -683,7 +683,7 @@ name|pmc_hw
 modifier|*
 name|phw
 decl_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -1644,7 +1644,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -1857,7 +1857,7 @@ name|mips_npmcs
 operator|=
 literal|2
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,

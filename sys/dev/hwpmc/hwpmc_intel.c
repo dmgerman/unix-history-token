@@ -90,7 +90,7 @@ name|void
 operator|)
 name|pc
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -128,7 +128,7 @@ operator||
 name|CR4_PCE
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -178,7 +178,7 @@ operator|)
 name|pp
 expr_stmt|;
 comment|/* can be NULL */
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -255,7 +255,7 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,

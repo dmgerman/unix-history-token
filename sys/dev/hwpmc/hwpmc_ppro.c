@@ -1877,7 +1877,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -2061,7 +2061,7 @@ name|cpu
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -2298,7 +2298,7 @@ name|v
 operator|=
 name|tmp
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -2429,7 +2429,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -2542,7 +2542,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -2787,7 +2787,7 @@ index|[
 name|ri
 index|]
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -3152,7 +3152,7 @@ name|pm_ppro_evsel
 operator|=
 name|config
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG1
 argument_list|(
 name|MDP
 argument_list|,
@@ -3195,7 +3195,7 @@ name|void
 operator|)
 name|pm
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG3
 argument_list|(
 name|MDP
 argument_list|,
@@ -3393,7 +3393,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -3418,7 +3418,7 @@ name|pm_ppro
 operator|.
 name|pm_ppro_evsel
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG4
 argument_list|(
 name|MDP
 argument_list|,
@@ -3575,7 +3575,7 @@ name|ri
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -3614,7 +3614,7 @@ name|pc
 argument_list|)
 expr_stmt|;
 comment|/* restart CTR1 if need be */
-name|PMCDBG
+name|PMCDBG2
 argument_list|(
 name|MDP
 argument_list|,
@@ -4167,15 +4167,13 @@ name|__LINE__
 operator|)
 argument_list|)
 expr_stmt|;
-name|PMCDBG
+name|PMCDBG0
 argument_list|(
 name|MDP
 argument_list|,
 name|INI
 argument_list|,
 literal|1
-argument_list|,
-literal|"%s"
 argument_list|,
 literal|"p6-initialize"
 argument_list|)
