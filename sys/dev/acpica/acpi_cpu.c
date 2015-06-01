@@ -883,8 +883,18 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|void
 name|acpi_cpu_quirks
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|acpi_cpu_quirks_piix4
 parameter_list|(
 name|void
 parameter_list|)
@@ -5167,18 +5177,12 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|void
 name|acpi_cpu_quirks
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|device_t
-name|acpi_dev
-decl_stmt|;
-name|uint32_t
-name|val
-decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
 operator|(
@@ -5284,6 +5288,29 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Look for various quirks of the PIIX4 part. */
+name|acpi_cpu_quirks_piix4
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|acpi_cpu_quirks_piix4
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|__i386__
+name|device_t
+name|acpi_dev
+decl_stmt|;
+name|uint32_t
+name|val
+decl_stmt|;
 name|acpi_dev
 operator|=
 name|pci_find_device
@@ -5416,11 +5443,8 @@ default|default:
 break|break;
 block|}
 block|}
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+endif|#
+directive|endif
 block|}
 end_function
 
