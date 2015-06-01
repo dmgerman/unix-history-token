@@ -3977,14 +3977,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-unit|}
-ifdef|#
-directive|ifdef
-name|__ARM_EABI__
-end_ifdef
-
 begin_comment
+unit|}
 comment|/* We need to provide these functions but never call them */
 end_comment
 
@@ -4043,11 +4037,6 @@ name|void
 parameter_list|)
 block|{ }
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 
