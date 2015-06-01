@@ -1020,22 +1020,27 @@ name|NULL
 condition|)
 block|{
 comment|/* Only override config location if -C not specified */
-name|config
-operator|=
-name|malloc
+name|asprintf
 argument_list|(
-name|MAXPATHLEN
-argument_list|)
-expr_stmt|;
-name|snprintf
-argument_list|(
+operator|&
 name|config
-argument_list|,
-name|MAXPATHLEN
 argument_list|,
 literal|"%s/pw.conf"
 argument_list|,
 name|etcpath
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|config
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 block|}

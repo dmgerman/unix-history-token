@@ -521,11 +521,8 @@ name|next
 return|;
 name|printf
 argument_list|(
-literal|"%ld:"
+literal|"%u:"
 argument_list|,
-operator|(
-name|long
-operator|)
 name|next
 argument_list|)
 expr_stmt|;
@@ -1729,14 +1726,13 @@ condition|)
 return|return
 name|EXIT_SUCCESS
 return|;
-name|warn
+name|err
 argument_list|(
-literal|"config update"
+name|EX_IOERR
+argument_list|,
+literal|"config udpate"
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
 block|}
 if|if
 condition|(
@@ -2041,6 +2037,9 @@ operator|->
 name|val
 argument_list|)
 else|:
+operator|(
+name|uid_t
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -2480,16 +2479,13 @@ name|rc
 operator|!=
 literal|0
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"passwd update"
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
-block|}
 if|if
 condition|(
 name|cnf
@@ -2737,15 +2733,12 @@ name|mode
 argument_list|,
 name|W_USER
 argument_list|,
-literal|"%s(%ld) account removed"
+literal|"%s(%u) account removed"
 argument_list|,
 name|a_name
 operator|->
 name|val
 argument_list|,
-operator|(
-name|long
-operator|)
 name|uid
 argument_list|)
 expr_stmt|;
@@ -2831,15 +2824,12 @@ name|mode
 argument_list|,
 name|W_USER
 argument_list|,
-literal|"%s(%ld) home '%s' %sremoved"
+literal|"%s(%u) home '%s' %sremoved"
 argument_list|,
 name|a_name
 operator|->
 name|val
 argument_list|,
-operator|(
-name|long
-operator|)
 name|uid
 argument_list|,
 name|home
@@ -4193,9 +4183,10 @@ name|b
 operator|<
 literal|0
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"-%c file descriptor"
 argument_list|,
 name|precrypt
@@ -4205,10 +4196,6 @@ else|:
 literal|'h'
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
-block|}
 name|line
 index|[
 name|b
@@ -4391,9 +4378,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"user '%s' already exists"
 argument_list|,
 name|pwd
@@ -4401,10 +4389,6 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -4412,16 +4396,13 @@ name|rc
 operator|!=
 literal|0
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"passwd file update"
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
-block|}
 if|if
 condition|(
 name|cnf
@@ -4512,9 +4493,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|warnx
+name|errx
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"user '%s' does not exist (NIS?)"
 argument_list|,
 name|pwd
@@ -4522,10 +4504,6 @@ operator|->
 name|pw_name
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
-block|}
 elseif|else
 if|if
 condition|(
@@ -4533,16 +4511,13 @@ name|rc
 operator|!=
 literal|0
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"passwd file update"
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
-block|}
 if|if
 condition|(
 name|cnf
@@ -4910,15 +4885,12 @@ name|mode
 argument_list|,
 name|W_USER
 argument_list|,
-literal|"%s(%ld):%s(%ld):%s:%s:%s"
+literal|"%s(%u):%s(%u):%s:%s:%s"
 argument_list|,
 name|pwd
 operator|->
 name|pw_name
 argument_list|,
-operator|(
-name|long
-operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -4931,19 +4903,19 @@ name|gr_name
 else|:
 literal|"unknown"
 argument_list|,
-call|(
-name|long
-call|)
-argument_list|(
+operator|(
 name|grp
 condition|?
 name|grp
 operator|->
 name|gr_gid
 else|:
+operator|(
+name|uid_t
+operator|)
 operator|-
 literal|1
-argument_list|)
+operator|)
 argument_list|,
 name|pwd
 operator|->
@@ -5087,15 +5059,12 @@ name|mode
 argument_list|,
 name|W_USER
 argument_list|,
-literal|"%s(%ld) home %s made"
+literal|"%s(%u) home %s made"
 argument_list|,
 name|pwd
 operator|->
 name|pw_name
 argument_list|,
-operator|(
-name|long
-operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -5219,15 +5188,12 @@ name|mode
 argument_list|,
 name|W_USER
 argument_list|,
-literal|"%s(%ld) new user mail sent"
+literal|"%s(%u) new user mail sent"
 argument_list|,
 name|pwd
 operator|->
 name|pw_name
 argument_list|,
-operator|(
-name|long
-operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -5334,11 +5300,8 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"uid `%ld' has already been allocated"
+literal|"uid `%u' has already been allocated"
 argument_list|,
-operator|(
-name|long
-operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -7281,7 +7244,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Login Name: %-15s   #%-12ld Group: %-15s   #%ld\n"
+literal|"Login Name: %-15s   #%-12u Group: %-15s   #%u\n"
 literal|" Full Name: %s\n"
 literal|"      Home: %-26.26s      Class: %s\n"
 literal|"     Shell: %-26.26s     Office: %s\n"
@@ -7292,9 +7255,6 @@ name|pwd
 operator|->
 name|pw_name
 argument_list|,
-operator|(
-name|long
-operator|)
 name|pwd
 operator|->
 name|pw_uid
@@ -7307,9 +7267,6 @@ name|gr_name
 else|:
 literal|"(invalid)"
 argument_list|,
-operator|(
-name|long
-operator|)
 name|pwd
 operator|->
 name|pw_gid

@@ -343,11 +343,8 @@ name|next
 return|;
 name|printf
 argument_list|(
-literal|"%ld\n"
+literal|"%u\n"
 argument_list|,
-operator|(
-name|long
-operator|)
 name|next
 argument_list|)
 expr_stmt|;
@@ -597,6 +594,9 @@ operator|->
 name|val
 argument_list|)
 else|:
+operator|(
+name|gid_t
+operator|)
 operator|-
 literal|1
 expr_stmt|;
@@ -709,14 +709,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|warn
+name|err
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"group update"
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
 block|}
 name|pw_log
 argument_list|(
@@ -726,15 +725,12 @@ name|mode
 argument_list|,
 name|W_GROUP
 argument_list|,
-literal|"%s(%ld) removed"
+literal|"%s(%u) removed"
 argument_list|,
 name|a_name
 operator|->
 name|val
 argument_list|,
-operator|(
-name|long
-operator|)
 name|gid
 argument_list|)
 expr_stmt|;
@@ -1129,16 +1125,13 @@ name|b
 operator|<
 literal|0
 condition|)
-block|{
-name|warn
+name|err
 argument_list|(
+name|EX_OSERR
+argument_list|,
 literal|"-h file descriptor"
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_OSERR
-return|;
-block|}
 name|line
 index|[
 name|b
@@ -1572,8 +1565,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|warnx
+name|errx
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"group '%s' already exists"
 argument_list|,
 name|grp
@@ -1582,14 +1577,13 @@ name|gr_name
 argument_list|)
 expr_stmt|;
 else|else
-name|warn
+name|err
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"group update"
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
 block|}
 elseif|else
 if|if
@@ -1621,8 +1615,10 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|warnx
+name|errx
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"group '%s' not available (NIS?)"
 argument_list|,
 name|grp
@@ -1631,14 +1627,13 @@ name|gr_name
 argument_list|)
 expr_stmt|;
 else|else
-name|warn
+name|err
 argument_list|(
+name|EX_IOERR
+argument_list|,
 literal|"group update"
 argument_list|)
 expr_stmt|;
-return|return
-name|EX_IOERR
-return|;
 block|}
 name|arg
 operator|=
@@ -1681,15 +1676,12 @@ name|mode
 argument_list|,
 name|W_GROUP
 argument_list|,
-literal|"%s(%ld)"
+literal|"%s(%u)"
 argument_list|,
 name|grp
 operator|->
 name|gr_name
 argument_list|,
-operator|(
-name|long
-operator|)
 name|grp
 operator|->
 name|gr_gid
@@ -2090,11 +2082,8 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"gid `%ld' has already been allocated"
+literal|"gid `%u' has already been allocated"
 argument_list|,
-operator|(
-name|long
-operator|)
 name|grp
 operator|->
 name|gr_gid
