@@ -2825,6 +2825,16 @@ condition|(
 operator|(
 name|ph
 operator|.
+name|p_flags
+operator|&
+name|PF_X
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|ph
+operator|.
 name|p_offset
 operator|&
 operator|(
