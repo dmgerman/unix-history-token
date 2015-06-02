@@ -190,17 +190,6 @@ name|prpsinfo_t
 typedef|;
 end_typedef
 
-begin_define
-define|#
-directive|define
-name|THRMISC_VERSION
-value|1
-end_define
-
-begin_comment
-comment|/* Current version of thrmisc_t */
-end_comment
-
 begin_typedef
 typedef|typedef
 struct|struct
