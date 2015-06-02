@@ -218,6 +218,12 @@ block|}
 struct|;
 end_struct
 
+begin_define
+define|#
+directive|define
+name|__HAVE_REG32
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
