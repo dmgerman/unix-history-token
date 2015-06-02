@@ -180,27 +180,6 @@ block|}
 struct|;
 end_struct
 
-begin_union
-union|union
-name|sa_route_union
-block|{
-name|struct
-name|route
-name|sa_route
-decl_stmt|;
-name|struct
-name|route
-name|sin_route
-decl_stmt|;
-comment|/* Duplicate for consistency. */
-name|struct
-name|route_in6
-name|sin6_route
-decl_stmt|;
-block|}
-union|;
-end_union
-
 begin_comment
 comment|/* Security Association Data Base */
 end_comment
@@ -251,10 +230,6 @@ index|]
 expr_stmt|;
 comment|/* SA chain */
 comment|/* The first of this list is newer SA */
-name|union
-name|sa_route_union
-name|route_cache
-decl_stmt|;
 block|}
 struct|;
 end_struct

@@ -83,6 +83,24 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
+begin_include
+include|#
+directive|include
+file|<sys/_lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_mutex.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/_rwlock.h>
+end_include
+
 begin_define
 define|#
 directive|define
