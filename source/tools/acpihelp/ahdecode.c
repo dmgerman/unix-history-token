@@ -2090,9 +2090,10 @@ name|Info
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"ACPI-related UUIDs:\n\n"
+literal|"ACPI-related UUIDs/GUIDs:\n"
 argument_list|)
 expr_stmt|;
+comment|/* Display entire table of known ACPI-related UUIDs/GUIDs */
 for|for
 control|(
 name|Info
@@ -2106,6 +2107,27 @@ condition|;
 name|Info
 operator|++
 control|)
+block|{
+if|if
+condition|(
+operator|!
+name|Info
+operator|->
+name|String
+condition|)
+comment|/* Null UUID string means group description */
+block|{
+name|printf
+argument_list|(
+literal|"\n%36s\n"
+argument_list|,
+name|Info
+operator|->
+name|Description
+argument_list|)
+expr_stmt|;
+block|}
+else|else
 block|{
 name|printf
 argument_list|(
@@ -2121,6 +2143,32 @@ name|String
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+comment|/* Help info on how UUIDs/GUIDs strings are encoded */
+name|printf
+argument_list|(
+literal|"\n\nByte encoding of UUID/GUID strings"
+literal|" into ACPI Buffer objects (use ToUUID from ASL):\n\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%32s : %s\n"
+argument_list|,
+literal|"Input UUID/GUID String format"
+argument_list|,
+literal|"aabbccdd-eeff-gghh-iijj-kkllmmnnoopp"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%32s : %s\n"
+argument_list|,
+literal|"Expected output ACPI buffer"
+argument_list|,
+literal|"dd,cc,bb,aa, ff,ee, hh,gg, ii,jj, kk,ll,mm,nn,oo,pp"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

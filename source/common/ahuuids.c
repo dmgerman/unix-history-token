@@ -19,6 +19,12 @@ directive|include
 file|"accommon.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"acuuid.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -45,81 +51,159 @@ index|[]
 init|=
 block|{
 block|{
-literal|"PCI Host Bridge Device"
+literal|"[Controllers]"
 block|,
-literal|"33db4d5b-1ff7-401c-9657-7441c03dd766"
-block|}
-block|,
-block|{
-literal|"Platform-wide Capabilities"
-block|,
-literal|"0811b06e-4a27-44f9-8d60-3cbbc22e7b48"
-block|}
-block|,
-block|{
-literal|"Dynamic Enumeration"
-block|,
-literal|"d8c1a3a6-be9b-4c9b-91bf-c3cb81fc5daf"
+name|NULL
 block|}
 block|,
 block|{
 literal|"GPIO Controller"
 block|,
-literal|"4f248f40-d5e2-499f-834c-27758ea1cd3f"
-block|}
-block|,
-block|{
-literal|"Battery Thermal Limit"
-block|,
-literal|"4c2067e3-887d-475c-9720-4af1d3ed602e"
-block|}
-block|,
-block|{
-literal|"Thermal Extensions"
-block|,
-literal|"14d399cd-7a27-4b18-8fb4-7cb7b9f4e500"
+name|UUID_GPIO_CONTROLLER
 block|}
 block|,
 block|{
 literal|"USB Controller"
 block|,
-literal|"ce2ee385-00e6-48cb-9f05-2edb927c4899"
-block|}
-block|,
-block|{
-literal|"HID I2C Device"
-block|,
-literal|"3cdff6f7-4267-4555-ad05-b30a3d8938de"
-block|}
-block|,
-block|{
-literal|"Power Button Device"
-block|,
-literal|"dfbcf3c5-e7a5-44e6-9c1f-29c76f6e059c"
-block|}
-block|,
-block|{
-literal|"Device Labeling Interface"
-block|,
-literal|"e5c937d0-3553-4d7a-9117-ea4d19c3434d"
+name|UUID_USB_CONTROLLER
 block|}
 block|,
 block|{
 literal|"SATA Controller"
 block|,
-literal|"e4db149b-fcfe-425b-a6d8-92357d78fc7f"
+name|UUID_SATA_CONTROLLER
+block|}
+block|,
+block|{
+literal|"[Devices]"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"PCI Host Bridge Device"
+block|,
+name|UUID_PCI_HOST_BRIDGE
+block|}
+block|,
+block|{
+literal|"HID I2C Device"
+block|,
+name|UUID_I2C_DEVICE
+block|}
+block|,
+block|{
+literal|"Power Button Device"
+block|,
+name|UUID_POWER_BUTTON
+block|}
+block|,
+block|{
+literal|"[Interfaces]"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"Device Labeling Interface"
+block|,
+name|UUID_DEVICE_LABELING
 block|}
 block|,
 block|{
 literal|"Physical Presence Interface"
 block|,
-literal|"3dddfaa6-361b-4eb4-a424-8d10089d1653"
+name|UUID_PHYSICAL_PRESENCE
+block|}
+block|,
+block|{
+literal|"[Non-volatile DIMM and NFIT table]"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"Volatile Memory Region"
+block|,
+name|UUID_VOLATILE_MEMORY
+block|}
+block|,
+block|{
+literal|"Persistent Memory Region"
+block|,
+name|UUID_PERSISTENT_MEMORY
+block|}
+block|,
+block|{
+literal|"NVDIMM Control Region"
+block|,
+name|UUID_CONTROL_REGION
+block|}
+block|,
+block|{
+literal|"NVDIMM Data Region"
+block|,
+name|UUID_DATA_REGION
+block|}
+block|,
+block|{
+literal|"Volatile Virtual Disk"
+block|,
+name|UUID_VOLATILE_VIRTUAL_DISK
+block|}
+block|,
+block|{
+literal|"Volatile Virtual CD"
+block|,
+name|UUID_VOLATILE_VIRTUAL_CD
+block|}
+block|,
+block|{
+literal|"Persistent Virtual Disk"
+block|,
+name|UUID_PERSISTENT_VIRTUAL_DISK
+block|}
+block|,
+block|{
+literal|"Persistent Virtual CD"
+block|,
+name|UUID_PERSISTENT_VIRTUAL_CD
+block|}
+block|,
+block|{
+literal|"[Miscellaneous]"
+block|,
+name|NULL
+block|}
+block|,
+block|{
+literal|"Platform-wide Capabilities"
+block|,
+name|UUID_PLATFORM_CAPABILITIES
+block|}
+block|,
+block|{
+literal|"Dynamic Enumeration"
+block|,
+name|UUID_DYNAMIC_ENUMERATION
+block|}
+block|,
+block|{
+literal|"Battery Thermal Limit"
+block|,
+name|UUID_BATTERY_THERMAL_LIMIT
+block|}
+block|,
+block|{
+literal|"Thermal Extensions"
+block|,
+name|UUID_THERMAL_EXTENSIONS
 block|}
 block|,
 block|{
 literal|"Device Properties for _DSD"
 block|,
-literal|"daffd814-6eba-4d8c-8a91-bc9bbf4aa301"
+name|UUID_DEVICE_PROPERTIES
 block|}
 block|,
 block|{
@@ -172,6 +256,17 @@ name|Info
 operator|++
 control|)
 block|{
+comment|/* Null string means desciption is a UUID class */
+if|if
+condition|(
+operator|!
+name|Info
+operator|->
+name|String
+condition|)
+block|{
+continue|continue;
+block|}
 name|AcpiUtConvertStringToUuid
 argument_list|(
 name|Info
