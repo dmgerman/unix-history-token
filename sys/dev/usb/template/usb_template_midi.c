@@ -709,7 +709,7 @@ name|bInterfaceClass
 operator|=
 literal|0x01
 block|,
-comment|/* Midi */
+comment|/* MIDI */
 operator|.
 name|bInterfaceSubClass
 operator|=
