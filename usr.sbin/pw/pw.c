@@ -209,7 +209,7 @@ name|pwf
 name|PWF
 init|=
 block|{
-literal|0
+name|PWF_REGULAR
 block|,
 name|setpwent
 block|,
@@ -240,7 +240,7 @@ name|pwf
 name|VPWF
 init|=
 block|{
-literal|1
+name|PWF_ALT
 block|,
 name|vsetpwent
 block|,
@@ -349,6 +349,20 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
+name|char
+name|arg
+decl_stmt|;
+name|struct
+name|carg
+modifier|*
+name|carg
+decl_stmt|;
+name|char
+modifier|*
+name|etcpath
+init|=
+name|NULL
+decl_stmt|;
 specifier|static
 specifier|const
 name|char
@@ -364,32 +378,32 @@ init|=
 block|{
 block|{
 comment|/* user */
-literal|"V:C:qn:u:c:d:e:p:g:G:mM:k:s:oL:i:w:h:H:Db:NPy:Y"
+literal|"R:V:C:qn:u:c:d:e:p:g:G:mM:k:s:oL:i:w:h:H:Db:NPy:Y"
 block|,
-literal|"V:C:qn:u:rY"
+literal|"R:V:C:qn:u:rY"
 block|,
-literal|"V:C:qn:u:c:d:e:p:g:G:mM:l:k:s:w:L:h:H:FNPY"
+literal|"R:V:C:qn:u:c:d:e:p:g:G:mM:l:k:s:w:L:h:H:FNPY"
 block|,
-literal|"V:C:qn:u:FPa7"
+literal|"R:V:C:qn:u:FPa7"
 block|,
-literal|"V:C:q"
+literal|"R:V:C:q"
 block|,
-literal|"V:C:q"
+literal|"R:V:C:q"
 block|,
-literal|"V:C:q"
+literal|"R:V:C:q"
 block|}
 block|,
 block|{
 comment|/* grp  */
-literal|"V:C:qn:g:h:H:M:opNPY"
+literal|"R:V:C:qn:g:h:H:M:opNPY"
 block|,
-literal|"V:C:qn:g:Y"
+literal|"R:V:C:qn:g:Y"
 block|,
-literal|"V:C:qn:d:g:l:h:H:FM:m:NPY"
+literal|"R:V:C:qn:d:g:l:h:H:FM:m:NPY"
 block|,
-literal|"V:C:qn:g:FPa"
+literal|"R:V:C:qn:g:FPa"
 block|,
-literal|"V:C:q"
+literal|"R:V:C:q"
 block|}
 block|}
 decl_stmt|;
@@ -478,8 +492,8 @@ literal|'-'
 condition|)
 block|{
 comment|/* 			 * Special case, allow pw -V<dir><operation> [args] for scripts etc. 			 */
-if|if
-condition|(
+name|arg
+operator|=
 name|argv
 index|[
 literal|1
@@ -487,8 +501,16 @@ index|]
 index|[
 literal|1
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|arg
 operator|==
 literal|'V'
+operator|||
+name|arg
+operator|==
+literal|'R'
 condition|)
 block|{
 name|optarg
@@ -579,7 +601,7 @@ argument_list|(
 operator|&
 name|arglist
 argument_list|,
-literal|'V'
+name|arg
 argument_list|,
 name|optarg
 argument_list|)
@@ -981,21 +1003,59 @@ end_expr_stmt
 begin_if
 if|if
 condition|(
+operator|(
+name|carg
+operator|=
 name|getarg
 argument_list|(
 operator|&
 name|arglist
 argument_list|,
-literal|'V'
+literal|'R'
 argument_list|)
+operator|)
 operator|!=
 name|NULL
 condition|)
 block|{
-name|char
-modifier|*
+name|asprintf
+argument_list|(
+operator|&
 name|etcpath
-init|=
+argument_list|,
+literal|"%s/etc"
+argument_list|,
+name|carg
+operator|->
+name|val
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|etcpath
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"out of memory"
+argument_list|)
+expr_stmt|;
+block|}
+end_if
+
+begin_if
+if|if
+condition|(
+name|etcpath
+operator|==
+name|NULL
+operator|&&
+operator|(
+name|carg
+operator|=
 name|getarg
 argument_list|(
 operator|&
@@ -1003,11 +1063,41 @@ name|arglist
 argument_list|,
 literal|'V'
 argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|etcpath
+operator|=
+name|strdup
+argument_list|(
+name|carg
 operator|->
 name|val
-decl_stmt|;
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
+name|etcpath
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_OSERR
+argument_list|,
+literal|"out of memory"
+argument_list|)
+expr_stmt|;
+block|}
+end_if
+
+begin_if
+if|if
+condition|(
+name|etcpath
+operator|&&
 operator|*
 name|etcpath
 condition|)
@@ -1044,6 +1134,16 @@ literal|"out of memory"
 argument_list|)
 expr_stmt|;
 block|}
+name|setpwdir
+argument_list|(
+name|etcpath
+argument_list|)
+expr_stmt|;
+name|setgrdir
+argument_list|(
+name|etcpath
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
@@ -1056,19 +1156,32 @@ sizeof|sizeof
 name|PWF
 argument_list|)
 expr_stmt|;
-name|setpwdir
+if|if
+condition|(
+name|getarg
 argument_list|(
-name|etcpath
+operator|&
+name|arglist
+argument_list|,
+literal|'R'
 argument_list|)
+condition|)
+name|PWF
+operator|.
+name|_altdir
+operator|=
+name|PWF_ROOTDIR
 expr_stmt|;
-name|setgrdir
-argument_list|(
-name|etcpath
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_if
+
+begin_expr_stmt
+name|free
+argument_list|(
+name|etcpath
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* 	 * Now, let's do the common initialisation 	 */
@@ -1381,6 +1494,7 @@ block|{
 block|{
 literal|"usage: pw useradd [name] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"  Adding users:\n"
@@ -1403,6 +1517,7 @@ literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 literal|"  Setting defaults:\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-D             set user defaults\n"
 literal|"\t-b dir         default home root dir\n"
 literal|"\t-e period      default expiry period\n"
@@ -1420,6 +1535,7 @@ literal|"\t-y path        set NIS passwd file path\n"
 block|,
 literal|"usage: pw userdel [uid|name] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-n name        login name\n"
 literal|"\t-u uid         user id\n"
 literal|"\t-Y             update NIS maps\n"
@@ -1427,6 +1543,7 @@ literal|"\t-r             remove home& contents\n"
 block|,
 literal|"usage: pw usermod [uid|name] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"\t-F             force add if no user\n"
@@ -1451,6 +1568,7 @@ literal|"\t-N             no update\n"
 block|,
 literal|"usage: pw usershow [uid|name] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-n name        login name\n"
 literal|"\t-u uid         user id\n"
 literal|"\t-F             force print\n"
@@ -1460,6 +1578,7 @@ literal|"\t-7             print in v7 format\n"
 block|,
 literal|"usage: pw usernext [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 block|,
@@ -1477,6 +1596,7 @@ block|,
 block|{
 literal|"usage: pw groupadd [group|gid] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"\t-n group       group name\n"
@@ -1488,12 +1608,14 @@ literal|"\t-N             no update\n"
 block|,
 literal|"usage: pw groupdel [group|gid] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-n name        group name\n"
 literal|"\t-g gid         group id\n"
 literal|"\t-Y             update NIS maps\n"
 block|,
 literal|"usage: pw groupmod [group|gid] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"\t-F             force add if not exists\n"
@@ -1508,6 +1630,7 @@ literal|"\t-N             no update\n"
 block|,
 literal|"usage: pw groupshow [group|gid] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-n name        group name\n"
 literal|"\t-g gid         group id\n"
 literal|"\t-F             force print\n"
@@ -1516,6 +1639,7 @@ literal|"\t-a             print all accounting groups\n"
 block|,
 literal|"usage: pw groupnext [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 block|}
