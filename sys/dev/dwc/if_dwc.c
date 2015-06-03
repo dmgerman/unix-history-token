@@ -3259,7 +3259,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|fp
+name|ifp
 operator|=
 name|sc
 operator|->
