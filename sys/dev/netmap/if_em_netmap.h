@@ -242,6 +242,12 @@ name|num_queues
 condition|;
 name|i
 operator|++
+operator|,
+name|txr
+operator|++
+operator|,
+name|rxr
+operator|++
 control|)
 block|{
 name|taskqueue_unblock
