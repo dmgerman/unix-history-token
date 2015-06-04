@@ -2031,6 +2031,14 @@ name|inp
 operator|->
 name|sctp_frag_point
 expr_stmt|;
+name|xinpcb
+operator|.
+name|socket
+operator|=
+name|inp
+operator|->
+name|sctp_socket
+expr_stmt|;
 name|so
 operator|=
 name|inp
