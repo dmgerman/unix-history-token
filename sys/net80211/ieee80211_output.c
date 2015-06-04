@@ -1774,6 +1774,10 @@ operator|)
 name|ni
 expr_stmt|;
 comment|/* 	 * Attempt to add bpf transmit parameters. 	 * 	 * For now it's ok to fail; the raw_xmit api still takes 	 * them as an option. 	 * 	 * Later on when ic_raw_xmit() has params removed, 	 * they'll have to be added - so fail the transmit if 	 * they can't be. 	 */
+if|if
+condition|(
+name|params
+condition|)
 operator|(
 name|void
 operator|)
