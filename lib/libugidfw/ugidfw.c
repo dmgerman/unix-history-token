@@ -154,8 +154,6 @@ name|anymode
 decl_stmt|,
 name|unknownmode
 decl_stmt|,
-name|truncated
-decl_stmt|,
 name|numfs
 decl_stmt|,
 name|i
@@ -169,10 +167,6 @@ expr_stmt|;
 name|left
 operator|=
 name|buflen
-expr_stmt|;
-name|truncated
-operator|=
-literal|0
 expr_stmt|;
 name|len
 operator|=
@@ -6522,8 +6516,6 @@ index|]
 decl_stmt|;
 name|size_t
 name|len
-decl_stmt|,
-name|size
 decl_stmt|;
 name|int
 name|error
@@ -6602,13 +6594,6 @@ name|rulenum
 expr_stmt|;
 name|len
 operator|++
-expr_stmt|;
-name|size
-operator|=
-sizeof|sizeof
-argument_list|(
-name|rule
-argument_list|)
 expr_stmt|;
 name|error
 operator|=
