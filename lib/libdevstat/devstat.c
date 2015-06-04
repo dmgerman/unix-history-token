@@ -1353,9 +1353,6 @@ decl_stmt|;
 name|size_t
 name|dssize
 decl_stmt|;
-name|int
-name|oldnumdevs
-decl_stmt|;
 name|long
 name|oldgeneration
 decl_stmt|;
@@ -1407,12 +1404,6 @@ literal|1
 operator|)
 return|;
 block|}
-name|oldnumdevs
-operator|=
-name|dinfo
-operator|->
-name|numdevs
-expr_stmt|;
 name|oldgeneration
 operator|=
 name|dinfo
