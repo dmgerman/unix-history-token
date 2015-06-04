@@ -5137,9 +5137,9 @@ name|vaddr
 argument_list|,
 name|size
 argument_list|,
-name|PROT_READ
+name|VM_PROT_READ
 operator||
-name|PROT_WRITE
+name|VM_PROT_WRITE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
@@ -5172,9 +5172,9 @@ name|vaddr
 argument_list|,
 name|size
 argument_list|,
-name|PROT_READ
+name|VM_PROT_READ
 operator||
-name|PROT_WRITE
+name|VM_PROT_WRITE
 argument_list|,
 name|VM_PROT_ALL
 argument_list|,
