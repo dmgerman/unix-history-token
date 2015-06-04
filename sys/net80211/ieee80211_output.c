@@ -1760,6 +1760,30 @@ name|vap
 operator|->
 name|iv_ic
 decl_stmt|;
+comment|/* 	 * Set node - the caller has taken a reference, so ensure 	 * that the mbuf has the same node value that 	 * it would if it were going via the normal path. 	 */
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|=
+operator|(
+name|void
+operator|*
+operator|)
+name|ni
+expr_stmt|;
+comment|/* 	 * Attempt to add bpf transmit parameters. 	 * 	 * For now it's ok to fail; the raw_xmit api still takes 	 * them as an option. 	 * 	 * Later on when ic_raw_xmit() has params removed, 	 * they'll have to be added - so fail the transmit if 	 * they can't be. 	 */
+operator|(
+name|void
+operator|)
+name|ieee80211_add_xmit_params
+argument_list|(
+name|m
+argument_list|,
+name|params
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ic
