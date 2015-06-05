@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_include
@@ -2093,6 +2093,18 @@ operator|)
 operator|!=
 literal|0
 operator|)
+expr_stmt|;
+name|spa
+operator|->
+name|spa_min_ashift
+operator|=
+name|INT_MAX
+expr_stmt|;
+name|spa
+operator|->
+name|spa_max_ashift
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * As a pool is being created, treat all features as disabled by 	 * setting SPA_FEATURE_DISABLED for all entries in the feature 	 * refcount cache. 	 */
 for|for
