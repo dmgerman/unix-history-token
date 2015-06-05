@@ -336,10 +336,6 @@ define|#
 directive|define
 name|PCIB_ENABLE_ARI
 value|0x8
-name|uint16_t
-name|command
-decl_stmt|;
-comment|/* command register */
 name|u_int
 name|domain
 decl_stmt|;
@@ -400,17 +396,9 @@ comment|/* topmost address of port window */
 endif|#
 directive|endif
 name|uint16_t
-name|secstat
-decl_stmt|;
-comment|/* secondary bus status register */
-name|uint16_t
 name|bridgectl
 decl_stmt|;
 comment|/* bridge control register */
-name|uint8_t
-name|seclat
-decl_stmt|;
-comment|/* secondary bus latency timer */
 block|}
 struct|;
 end_struct
