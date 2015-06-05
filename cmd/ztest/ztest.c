@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2014 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011, 2015 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2013 Steven Hartland. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -4354,73 +4354,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * Find the largest ashift used  */
-end_comment
-
-begin_function
-specifier|static
-name|uint64_t
-name|ztest_spa_get_ashift
-parameter_list|()
-block|{
-name|uint64_t
-name|i
-decl_stmt|;
-name|uint64_t
-name|ashift
-init|=
-name|SPA_MINBLOCKSHIFT
-decl_stmt|;
-name|vdev_t
-modifier|*
-name|rvd
-init|=
-name|ztest_spa
-operator|->
-name|spa_root_vdev
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|rvd
-operator|->
-name|vdev_children
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|ashift
-operator|=
-name|MAX
-argument_list|(
-name|ashift
-argument_list|,
-name|rvd
-operator|->
-name|vdev_child
-index|[
-name|i
-index|]
-operator|->
-name|vdev_ashift
-argument_list|)
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|ashift
-operator|)
-return|;
-block|}
-end_function
-
 begin_function
 specifier|static
 name|int
@@ -4457,8 +4390,9 @@ name|ztest_random
 argument_list|(
 name|maxbs
 operator|-
-name|ztest_spa_get_ashift
-argument_list|()
+name|ztest_spa
+operator|->
+name|spa_max_ashift
 operator|+
 literal|1
 argument_list|)
