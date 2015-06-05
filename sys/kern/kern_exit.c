@@ -3693,11 +3693,6 @@ name|siginfo
 parameter_list|)
 block|{
 name|struct
-name|proc
-modifier|*
-name|q
-decl_stmt|;
-name|struct
 name|rusage
 modifier|*
 name|rup
@@ -3709,12 +3704,6 @@ name|proctree_lock
 argument_list|,
 name|SA_XLOCKED
 argument_list|)
-expr_stmt|;
-name|q
-operator|=
-name|td
-operator|->
-name|td_proc
 expr_stmt|;
 name|PROC_LOCK
 argument_list|(

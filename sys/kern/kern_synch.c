@@ -1723,11 +1723,6 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
-name|struct
-name|proc
-modifier|*
-name|p
-decl_stmt|;
 name|td
 operator|=
 name|curthread
@@ -1742,13 +1737,6 @@ operator||
 name|MA_NOTRECURSED
 argument_list|)
 expr_stmt|;
-name|p
-operator|=
-name|td
-operator|->
-name|td_proc
-expr_stmt|;
-comment|/* XXX */
 name|KASSERT
 argument_list|(
 operator|!
@@ -1960,7 +1948,9 @@ name|td
 operator|->
 name|td_sched
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,
@@ -2101,7 +2091,9 @@ name|td
 operator|->
 name|td_sched
 argument_list|,
-name|p
+name|td
+operator|->
+name|td_proc
 operator|->
 name|p_pid
 argument_list|,

@@ -23034,11 +23034,6 @@ name|vnode
 modifier|*
 name|dvp
 decl_stmt|;
-name|struct
-name|vnode
-modifier|*
-name|vp
-decl_stmt|;
 name|KASSERT
 argument_list|(
 name|MOUNTEDSOFTDEP
@@ -23063,13 +23058,6 @@ operator|=
 name|ITOV
 argument_list|(
 name|dp
-argument_list|)
-expr_stmt|;
-name|vp
-operator|=
-name|ITOV
-argument_list|(
-name|ip
 argument_list|)
 expr_stmt|;
 name|jaddref
@@ -34461,21 +34449,10 @@ name|buf
 modifier|*
 name|bp
 decl_stmt|;
-name|struct
-name|fs
-modifier|*
-name|fs
-decl_stmt|;
 name|int
 name|blkoff
 decl_stmt|;
 comment|/* 	 * We must wait for any I/O in progress to finish so that 	 * all potential buffers on the dirty list will be visible. 	 * Once they are all there, walk the list and get rid of 	 * any dependencies. 	 */
-name|fs
-operator|=
-name|ip
-operator|->
-name|i_fs
-expr_stmt|;
 name|vp
 operator|=
 name|ITOV
@@ -45339,11 +45316,6 @@ modifier|*
 name|inodedep
 decl_stmt|;
 name|struct
-name|mount
-modifier|*
-name|mp
-decl_stmt|;
-name|struct
 name|fs
 modifier|*
 name|fs
@@ -45360,15 +45332,6 @@ operator|=
 name|sbdep
 operator|->
 name|sb_fs
-expr_stmt|;
-name|mp
-operator|=
-name|UFSTOVFS
-argument_list|(
-name|sbdep
-operator|->
-name|sb_ump
-argument_list|)
 expr_stmt|;
 comment|/* 	 * If the superblock doesn't match the in-memory list start over. 	 */
 name|inodedep

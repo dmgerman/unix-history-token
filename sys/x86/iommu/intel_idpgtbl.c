@@ -352,8 +352,6 @@ name|addr
 parameter_list|)
 block|{
 name|vm_page_t
-name|m
-decl_stmt|,
 name|m1
 decl_stmt|;
 name|dmar_pte_t
@@ -392,8 +390,9 @@ operator|->
 name|maxaddr
 condition|)
 return|return;
-name|m
-operator|=
+operator|(
+name|void
+operator|)
 name|dmar_pgalloc
 argument_list|(
 name|tbl
@@ -2956,10 +2955,6 @@ name|idx
 decl_stmt|;
 name|dmar_gaddr_t
 name|pg_sz
-decl_stmt|,
-name|base1
-decl_stmt|,
-name|size1
 decl_stmt|;
 name|int
 name|lvl
@@ -3169,14 +3164,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* silence gcc */
-name|base1
-operator|=
-name|base
-expr_stmt|;
-name|size1
-operator|=
-name|size
-expr_stmt|;
 name|flags
 operator||=
 name|DMAR_PGF_OBJL
