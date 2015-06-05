@@ -1749,6 +1749,11 @@ name|ics
 argument_list|)
 expr_stmt|;
 block|}
+name|dmar_enable_qi_intr
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
 name|DMAR_UNLOCK
 argument_list|(
 name|unit
@@ -1843,6 +1848,11 @@ name|gseq
 argument_list|)
 expr_stmt|;
 comment|/* only after the quisce, disable queue */
+name|dmar_disable_qi_intr
+argument_list|(
+name|unit
+argument_list|)
+expr_stmt|;
 name|dmar_disable_qi
 argument_list|(
 name|unit
