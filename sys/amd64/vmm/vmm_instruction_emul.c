@@ -10085,7 +10085,7 @@ name|base
 operator|+=
 name|vie
 operator|->
-name|num_valid
+name|num_processed
 expr_stmt|;
 block|}
 name|idx
