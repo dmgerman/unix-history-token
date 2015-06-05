@@ -5811,6 +5811,7 @@ if|if
 condition|(
 name|BP_IS_HOLE
 argument_list|(
+operator|&
 name|bp
 argument_list|)
 condition|)
