@@ -23843,8 +23843,10 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"ctl_alloc_lun: FETD %s port %d returned error "
+literal|"%s: FETD %s port %d returned error "
 literal|"%d for lun_disable on target %ju lun %jd\n"
+argument_list|,
+name|__func__
 argument_list|,
 name|port
 operator|->
