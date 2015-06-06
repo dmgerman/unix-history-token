@@ -78,6 +78,20 @@ name|RK_FUNC_2
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|RK_FUNC_3
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|RK_FUNC_4
+value|4
+end_define
+
 begin_endif
 endif|#
 directive|endif
