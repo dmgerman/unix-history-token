@@ -4638,7 +4638,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|BUS_PROBE_GENERIC
+operator|-
+literal|10000
 operator|)
 return|;
 block|}
