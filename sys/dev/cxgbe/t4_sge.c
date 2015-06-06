@@ -14693,7 +14693,7 @@ name|htobe16
 argument_list|(
 name|V_FW_IQ_CMD_FL0FBMIN
 argument_list|(
-name|X_FETCHBURSTMIN_64B
+name|X_FETCHBURSTMIN_128B
 argument_list|)
 operator||
 name|V_FW_IQ_CMD_FL0FBMAX
