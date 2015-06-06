@@ -5535,7 +5535,15 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"PCIe x%d, %d ports, %d %s interrupt%s, %d eq, %d iq\n"
+literal|"PCIe gen%d x%d, %d ports, %d %s interrupt%s, %d eq, %d iq\n"
+argument_list|,
+name|sc
+operator|->
+name|params
+operator|.
+name|pci
+operator|.
+name|speed
 argument_list|,
 name|sc
 operator|->
