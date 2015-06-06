@@ -555,6 +555,35 @@ directive|define
 name|DT_DM_PRIMARY
 value|0x4
 comment|/* module is a krtld primary kernel object */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+comment|/*  * A representation of a FreeBSD kernel module, used when checking module  * dependencies.  This differs from dt_module_t, which refers to a KLD in the  * case of kernel probes.  Since modules can be identified regardless of whether  * they've been compiled into the kernel, we use them to identify DTrace  * modules.  */
+typedef|typedef
+struct|struct
+name|dt_kmodule
+block|{
+name|struct
+name|dt_kmodule
+modifier|*
+name|dkm_next
+decl_stmt|;
+comment|/* hash table entry */
+name|char
+modifier|*
+name|dkm_name
+decl_stmt|;
+comment|/* string name of module */
+name|dt_module_t
+modifier|*
+name|dkm_module
+decl_stmt|;
+comment|/* corresponding KLD module */
+block|}
+name|dt_kmodule_t
+typedef|;
+endif|#
+directive|endif
 typedef|typedef
 struct|struct
 name|dt_provmod
@@ -883,6 +912,17 @@ modifier|*
 name|dt_mods
 decl_stmt|;
 comment|/* hash table of dt_module_t's */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|dt_kmodule_t
+modifier|*
+modifier|*
+name|dt_kmods
+decl_stmt|;
+comment|/* hash table of dt_kmodule_t's */
+endif|#
+directive|endif
 name|uint_t
 name|dt_modbuckets
 decl_stmt|;
