@@ -751,6 +751,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCGTUNFIB
+value|_IOWR('i', 94, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get tunnel fib */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSTUNFIB
+value|_IOW('i', 95, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set tunnel fib */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCSDRVSPEC
 value|_IOW('i', 123, struct ifdrv)
 end_define
