@@ -3055,7 +3055,7 @@ return|;
 if|#
 directive|if
 literal|0
-block|ADAPTER_LOCK(sc); 	if (IS_BUSY(sc)) { 		log(LOG_ERR, "%s: listen request ignored, %s is busy", 		    __func__, device_get_nameunit(sc->dev)); 		goto done; 	}  	KASSERT(sc->flags& TOM_INIT_DONE, 	    ("%s: TOM not initialized", __func__));
+block|ADAPTER_LOCK(sc); 	if (IS_BUSY(sc)) { 		log(LOG_ERR, "%s: listen request ignored, %s is busy", 		    __func__, device_get_nameunit(sc->dev)); 		goto done; 	}  	KASSERT(uld_active(sc, ULD_TOM), 	    ("%s: TOM not initialized", __func__));
 endif|#
 directive|endif
 if|if
