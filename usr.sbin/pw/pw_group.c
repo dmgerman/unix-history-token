@@ -168,11 +168,6 @@ begin_function
 name|int
 name|pw_group
 parameter_list|(
-name|struct
-name|userconf
-modifier|*
-name|cnf
-parameter_list|,
 name|int
 name|mode
 parameter_list|,
@@ -244,6 +239,15 @@ modifier|*
 name|members
 init|=
 name|NULL
+decl_stmt|;
+name|struct
+name|userconf
+modifier|*
+name|cnf
+init|=
+name|conf
+operator|.
+name|userconf
 decl_stmt|;
 specifier|static
 name|struct
