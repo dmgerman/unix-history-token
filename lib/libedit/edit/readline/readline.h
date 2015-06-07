@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: readline.h,v 1.34 2013/05/28 00:10:34 christos Exp $	*/
+comment|/*	$NetBSD: readline.h,v 1.37 2015/06/02 15:36:45 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -66,7 +66,7 @@ end_typedef
 begin_typedef
 typedef|typedef
 name|void
-name|VCPFunction
+name|rl_vcpfunc_t
 parameter_list|(
 name|char
 modifier|*
@@ -78,23 +78,8 @@ begin_typedef
 typedef|typedef
 name|char
 modifier|*
-name|CPFunction
-parameter_list|(
-specifier|const
-name|char
 modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|char
-modifier|*
-modifier|*
-name|CPPFunction
+name|rl_completion_func_t
 parameter_list|(
 specifier|const
 name|char
@@ -449,7 +434,7 @@ modifier|*
 name|rl_completer_quote_characters
 decl_stmt|;
 specifier|extern
-name|Function
+name|rl_compentry_func_t
 modifier|*
 name|rl_completion_entry_function
 decl_stmt|;
@@ -465,7 +450,7 @@ name|void
 parameter_list|)
 function_decl|;
 specifier|extern
-name|CPPFunction
+name|rl_completion_func_t
 modifier|*
 name|rl_attempted_completion_function
 decl_stmt|;
@@ -862,7 +847,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|CPFunction
+name|rl_compentry_func_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -932,7 +917,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|VCPFunction
+name|rl_vcpfunc_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -1009,7 +994,7 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|Function
+name|rl_command_func_t
 modifier|*
 parameter_list|,
 name|int
