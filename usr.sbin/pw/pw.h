@@ -265,6 +265,13 @@ parameter_list|(
 name|int
 name|mode
 parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|long
+name|id
+parameter_list|,
 name|struct
 name|cargs
 modifier|*
@@ -279,6 +286,13 @@ name|pw_group
 parameter_list|(
 name|int
 name|mode
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|long
+name|id
 parameter_list|,
 name|struct
 name|cargs
