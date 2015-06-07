@@ -6975,10 +6975,7 @@ name|uid
 argument_list|)
 operator|==
 name|NULL
-condition|)
-block|{
-if|if
-condition|(
+operator|&&
 name|stat
 argument_list|(
 name|home
@@ -7032,7 +7029,6 @@ else|:
 literal|"not completely "
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 return|return
