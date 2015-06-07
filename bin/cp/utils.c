@@ -444,6 +444,7 @@ condition|(
 operator|!
 name|lflag
 condition|)
+block|{
 name|to_fd
 operator|=
 name|open
@@ -471,13 +472,14 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
+block|}
+elseif|else
 if|if
 condition|(
 operator|!
 name|lflag
 condition|)
+block|{
 comment|/* overwrite existing destination file name */
 name|to_fd
 operator|=
@@ -496,13 +498,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
-block|{
+elseif|else
 if|if
 condition|(
 operator|!
 name|lflag
 condition|)
+block|{
 name|to_fd
 operator|=
 name|open
