@@ -402,7 +402,7 @@ literal|"R:V:C:qn:u:c:d:e:p:g:G:mM:l:k:s:w:L:h:H:FNPY"
 block|,
 literal|"R:V:C:qn:u:FPa7"
 block|,
-literal|"R:V:C"
+literal|"R:V:C:"
 block|,
 literal|"R:V:C:q"
 block|,
@@ -419,7 +419,7 @@ literal|"R:V:C:qn:d:g:l:h:H:FM:m:NPY"
 block|,
 literal|"R:V:C:qn:g:FPa"
 block|,
-literal|"R:V:C"
+literal|"R:V:C:"
 block|}
 block|}
 decl_stmt|;
