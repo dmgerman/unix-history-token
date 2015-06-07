@@ -471,6 +471,15 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|conf
+operator|.
+name|pretty
+operator|=
+name|false
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|strlcpy
 argument_list|(
 name|conf
@@ -1023,6 +1032,16 @@ case|:
 name|conf
 operator|.
 name|dryrun
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|conf
+operator|.
+name|pretty
 operator|=
 name|true
 expr_stmt|;
