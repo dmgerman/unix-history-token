@@ -6853,6 +6853,8 @@ name|a_name
 operator|->
 name|val
 argument_list|)
+operator|!=
+literal|0
 condition|)
 continue|continue;
 for|for
