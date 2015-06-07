@@ -6933,6 +6933,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
 name|PWALTDIR
 argument_list|()
 condition|)
