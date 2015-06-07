@@ -89,6 +89,12 @@ directive|include
 file|"ficl.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"../i386/libi386/libi386.h"
+end_include
+
 begin_comment
 comment|/*		FreeBSD's loader interaction words and extras  *  * 		setenv      ( value n name n' -- )  * 		setenv?     ( value n name n' flag -- )  * 		getenv      ( addr n -- addr' n' | -1 )  * 		unsetenv    ( addr n -- )  * 		copyin      ( addr addr' len -- )  * 		copyout     ( addr addr' len -- )  * 		findfile    ( name len type len' -- addr )  * 		pnpdevices  ( -- addr )  * 		pnphandlers ( -- addr )  * 		ccall       ( [[...[p10] p9] ... p1] n addr -- result )  * 		.#	    ( value -- )  */
 end_comment
