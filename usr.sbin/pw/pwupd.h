@@ -339,6 +339,9 @@ decl_stmt|;
 name|bool
 name|v7
 decl_stmt|;
+name|bool
+name|checkduplicate
+decl_stmt|;
 name|struct
 name|userconf
 modifier|*

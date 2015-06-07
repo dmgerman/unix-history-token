@@ -1305,6 +1305,17 @@ argument_list|,
 name|errstr
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|conf
+operator|.
+name|checkduplicate
+operator|=
+name|true
+expr_stmt|;
+break|break;
 default|default:
 name|addarg
 argument_list|(
