@@ -1005,6 +1005,16 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'7'
+case|:
+name|conf
+operator|.
+name|v7
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
 literal|'C'
 case|:
 name|config

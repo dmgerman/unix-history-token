@@ -332,6 +332,9 @@ decl_stmt|;
 name|bool
 name|pretty
 decl_stmt|;
+name|bool
+name|v7
+decl_stmt|;
 name|struct
 name|userconf
 modifier|*

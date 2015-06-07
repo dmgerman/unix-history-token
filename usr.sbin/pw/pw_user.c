@@ -180,9 +180,6 @@ name|struct
 name|passwd
 modifier|*
 name|pwd
-parameter_list|,
-name|int
-name|v7
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1926,18 +1923,6 @@ literal|'a'
 argument_list|)
 condition|)
 block|{
-name|int
-name|v7
-init|=
-name|getarg
-argument_list|(
-name|args
-argument_list|,
-literal|'7'
-argument_list|)
-operator|!=
-name|NULL
-decl_stmt|;
 name|SETPWENT
 argument_list|()
 expr_stmt|;
@@ -1955,8 +1940,6 @@ condition|)
 name|print_user
 argument_list|(
 name|pwd
-argument_list|,
-name|v7
 argument_list|)
 expr_stmt|;
 name|ENDPWENT
@@ -6967,9 +6950,6 @@ name|struct
 name|passwd
 modifier|*
 name|pwd
-parameter_list|,
-name|int
-name|v7
 parameter_list|)
 block|{
 if|if
@@ -6987,6 +6967,8 @@ decl_stmt|;
 if|if
 condition|(
 operator|!
+name|conf
+operator|.
 name|v7
 condition|)
 name|pwd
@@ -7007,6 +6989,8 @@ literal|"*"
 expr_stmt|;
 name|buf
 operator|=
+name|conf
+operator|.
 name|v7
 condition|?
 name|pw_make_v7
