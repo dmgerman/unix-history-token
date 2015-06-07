@@ -2191,15 +2191,6 @@ name|print_user
 argument_list|(
 operator|&
 name|fakeuser
-argument_list|,
-name|getarg
-argument_list|(
-name|args
-argument_list|,
-literal|'7'
-argument_list|)
-operator|!=
-name|NULL
 argument_list|)
 return|;
 block|}
@@ -2429,15 +2420,6 @@ return|return
 name|print_user
 argument_list|(
 name|pwd
-argument_list|,
-name|getarg
-argument_list|(
-name|args
-argument_list|,
-literal|'7'
-argument_list|)
-operator|!=
-name|NULL
 argument_list|)
 return|;
 comment|/* 		 * The rest is edit code 		 */
@@ -3869,15 +3851,6 @@ return|return
 name|print_user
 argument_list|(
 name|pwd
-argument_list|,
-name|getarg
-argument_list|(
-name|args
-argument_list|,
-literal|'7'
-argument_list|)
-operator|!=
-name|NULL
 argument_list|)
 return|;
 if|if
