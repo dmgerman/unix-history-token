@@ -402,7 +402,7 @@ literal|"R:V:C:qn:u:c:d:e:p:g:G:mM:l:k:s:w:L:h:H:FNPY"
 block|,
 literal|"R:V:C:qn:u:FPa7"
 block|,
-literal|"R:V:C:q"
+literal|"R:V:C"
 block|,
 literal|"R:V:C:q"
 block|,
@@ -419,7 +419,7 @@ literal|"R:V:C:qn:d:g:l:h:H:FM:m:NPY"
 block|,
 literal|"R:V:C:qn:g:FPa"
 block|,
-literal|"R:V:C:q"
+literal|"R:V:C"
 block|}
 block|}
 decl_stmt|;
@@ -1935,7 +1935,6 @@ literal|"usage: pw usernext [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
-literal|"\t-q             quiet operation\n"
 block|,
 literal|"usage pw: lock [switches]\n"
 literal|"\t-V etcdir      alternate /etc locations\n"
@@ -1996,7 +1995,6 @@ literal|"usage: pw groupnext [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
 literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
-literal|"\t-q             quiet operation\n"
 block|}
 block|}
 decl_stmt|;
