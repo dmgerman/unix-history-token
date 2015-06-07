@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/cpu-v6.h>
 end_include
 
@@ -635,9 +641,11 @@ name|register_t
 operator|)
 name|args
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ARM_TP_ADDRESS
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
 name|set_tls
 argument_list|(
 name|args
@@ -682,9 +690,11 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|ARM_TP_ADDRESS
+if|#
+directive|if
+name|__ARM_ARCH
+operator|>=
+literal|6
 name|td
 operator|->
 name|td_retval

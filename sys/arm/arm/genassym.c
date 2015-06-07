@@ -86,6 +86,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/acle-compat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/vmparam.h>
 end_include
 
@@ -1104,11 +1110,13 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|ARM_TP_ADDRESS
-end_ifdef
+begin_if
+if|#
+directive|if
+name|__ARM_ARCH
+operator|<
+literal|6
+end_if
 
 begin_expr_stmt
 name|ASSYM
