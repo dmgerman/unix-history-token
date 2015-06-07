@@ -1101,9 +1101,17 @@ break|break;
 case|case
 literal|'C'
 case|:
+name|conf
+operator|.
 name|config
 operator|=
 name|optarg
+expr_stmt|;
+name|config
+operator|=
+name|conf
+operator|.
+name|config
 expr_stmt|;
 break|break;
 case|case

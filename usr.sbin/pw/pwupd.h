@@ -330,6 +330,10 @@ name|char
 modifier|*
 name|newname
 decl_stmt|;
+name|char
+modifier|*
+name|config
+decl_stmt|;
 name|bool
 name|dryrun
 decl_stmt|;
