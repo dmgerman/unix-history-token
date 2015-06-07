@@ -4436,18 +4436,6 @@ operator|&
 name|thread0
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|VFP
-name|PCPU_SET
-argument_list|(
-name|cpu
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

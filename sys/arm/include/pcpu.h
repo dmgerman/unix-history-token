@@ -60,7 +60,7 @@ define|#
 directive|define
 name|PCPU_MD_FIELDS
 define|\
-value|unsigned int pc_cpu;						\ 	unsigned int pc_vfpsid;						\ 	unsigned int pc_vfpmvfr0;					\ 	unsigned int pc_vfpmvfr1;					\ 	struct pmap *pc_curpmap;					\ 	char __pad[137]
+value|unsigned int pc_vfpsid;						\ 	unsigned int pc_vfpmvfr0;					\ 	unsigned int pc_vfpmvfr1;					\ 	struct pmap *pc_curpmap;					\ 	char __pad[141]
 end_define
 
 begin_else
