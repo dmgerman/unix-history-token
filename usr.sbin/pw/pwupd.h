@@ -45,6 +45,12 @@ directive|include
 file|<grp.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<stdbool.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -319,6 +325,9 @@ name|etcpath
 index|[
 name|MAXPATHLEN
 index|]
+decl_stmt|;
+name|bool
+name|dryrun
 decl_stmt|;
 name|struct
 name|userconf

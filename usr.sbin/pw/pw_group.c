@@ -1512,14 +1512,9 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|getarg
-argument_list|(
-name|args
-argument_list|,
-literal|'N'
-argument_list|)
-operator|!=
-name|NULL
+name|conf
+operator|.
+name|dryrun
 condition|)
 return|return
 name|print_group
