@@ -6815,10 +6815,10 @@ condition|(
 name|grp
 operator|->
 name|gr_mem
-operator|!=
+operator|==
 name|NULL
 condition|)
-block|{
+continue|continue;
 for|for
 control|(
 name|i
@@ -6840,7 +6840,6 @@ control|)
 block|{
 if|if
 condition|(
-operator|!
 name|strcmp
 argument_list|(
 name|grp
@@ -6855,7 +6854,7 @@ operator|->
 name|val
 argument_list|)
 condition|)
-block|{
+continue|continue;
 for|for
 control|(
 name|j
@@ -6908,8 +6907,6 @@ argument_list|,
 name|grp
 argument_list|)
 expr_stmt|;
-block|}
-block|}
 block|}
 block|}
 name|ENDGRENT
