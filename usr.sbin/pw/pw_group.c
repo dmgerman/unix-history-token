@@ -790,10 +790,6 @@ name|gr_name
 operator|=
 name|pw_checkname
 argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|a_newname
 operator|->
 name|val
@@ -866,10 +862,6 @@ name|gr_name
 operator|=
 name|pw_checkname
 argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|a_name
 operator|->
 name|val

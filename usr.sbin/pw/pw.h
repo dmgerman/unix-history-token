@@ -408,7 +408,7 @@ name|char
 modifier|*
 name|pw_checkname
 parameter_list|(
-name|u_char
+name|char
 modifier|*
 name|name
 parameter_list|,

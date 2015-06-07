@@ -1362,10 +1362,6 @@ name|default_class
 operator|=
 name|pw_checkname
 argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|arg
 operator|->
 name|val
@@ -1988,10 +1984,6 @@ name|GETPWNAM
 argument_list|(
 name|pw_checkname
 argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|a_name
 operator|->
 name|val
@@ -3095,10 +3087,6 @@ name|pw_name
 operator|=
 name|pw_checkname
 argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|arg
 operator|->
 name|val
@@ -4064,10 +4052,6 @@ name|gecos
 init|=
 name|pw_checkname
 argument_list|(
-operator|(
-name|u_char
-operator|*
-operator|)
 name|arg
 operator|->
 name|val
@@ -7556,7 +7540,7 @@ name|char
 modifier|*
 name|pw_checkname
 parameter_list|(
-name|u_char
+name|char
 modifier|*
 name|name
 parameter_list|,
@@ -7570,8 +7554,8 @@ index|[
 literal|8
 index|]
 decl_stmt|;
-name|u_char
 specifier|const
+name|char
 modifier|*
 name|badchars
 decl_stmt|,
@@ -7810,10 +7794,8 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|char
-operator|*
-operator|)
 name|name
+operator|)
 return|;
 block|}
 end_function
