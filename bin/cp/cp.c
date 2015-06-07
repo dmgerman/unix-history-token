@@ -184,6 +184,8 @@ name|nflag
 decl_stmt|,
 name|pflag
 decl_stmt|,
+name|sflag
+decl_stmt|,
 name|vflag
 decl_stmt|;
 end_decl_stmt
@@ -308,7 +310,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HLPRafilnprvx"
+literal|"HLPRafilnprsvx"
 argument_list|)
 operator|)
 operator|!=
@@ -453,6 +455,14 @@ literal|0
 expr_stmt|;
 break|break;
 case|case
+literal|'s'
+case|:
+name|sflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'v'
 case|:
 name|vflag
@@ -502,6 +512,19 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"the -R and -r options may not be specified together"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|lflag
+operator|&&
+name|sflag
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"the -l and -s options may not be specified together"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1737,6 +1760,9 @@ case|:
 if|if
 condition|(
 name|Rflag
+operator|&&
+operator|!
+name|sflag
 condition|)
 block|{
 if|if
@@ -1796,6 +1822,9 @@ case|:
 if|if
 condition|(
 name|Rflag
+operator|&&
+operator|!
+name|sflag
 condition|)
 block|{
 if|if
