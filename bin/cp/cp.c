@@ -143,7 +143,7 @@ name|STRIP_TRAILING_SLASH
 parameter_list|(
 name|p
 parameter_list|)
-value|{					\         while ((p).p_end> (p).p_path + 1&& (p).p_end[-1] == '/')	\                 *--(p).p_end = 0;					\ }
+value|{					\ 	while ((p).p_end> (p).p_path + 1&& (p).p_end[-1] == '/')	\ 	*--(p).p_end = 0;						\ }
 end_define
 
 begin_decl_stmt
@@ -861,6 +861,7 @@ operator|==
 operator|-
 literal|1
 condition|)
+block|{
 name|errx
 argument_list|(
 literal|1
@@ -872,6 +873,7 @@ operator|.
 name|p_path
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 name|errx
 argument_list|(
@@ -1088,7 +1090,7 @@ continue|continue;
 default|default:
 empty_stmt|;
 block|}
-comment|/* 		 * If we are in case (2) or (3) above, we need to append the                  * source name to the target name.                  */
+comment|/* 		 * If we are in case (2) or (3) above, we need to append the 		 * source name to the target name. 		 */
 if|if
 condition|(
 name|type
@@ -1428,7 +1430,7 @@ block|}
 block|}
 continue|continue;
 block|}
-comment|/* Not an error but need to remember it happened */
+comment|/* Not an error but need to remember it happened. */
 if|if
 condition|(
 name|stat
@@ -1578,7 +1580,7 @@ block|{
 case|case
 name|S_IFLNK
 case|:
-comment|/* Catch special case of a non-dangling symlink */
+comment|/* Catch special case of a non-dangling symlink. */
 if|if
 condition|(
 operator|(
@@ -1676,7 +1678,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* 			 * If the directory doesn't exist, create the new 			 * one with the from file mode plus owner RWX bits, 			 * modified by the umask.  Trade-off between being 			 * able to write the directory (if from directory is 			 * 555) and not causing a permissions race.  If the 			 * umask blocks owner writes, we fail.. 			 */
+comment|/* 			 * If the directory doesn't exist, create the new 			 * one with the from file mode plus owner RWX bits, 			 * modified by the umask.  Trade-off between being 			 * able to write the directory (if from directory is 			 * 555) and not causing a permissions race.  If the 			 * umask blocks owner writes, we fail. 			 */
 if|if
 condition|(
 name|dne

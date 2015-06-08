@@ -158,7 +158,7 @@ value|((y == 0) ? 0 : (int)(100.0 * (x) / (y)))
 end_define
 
 begin_comment
-comment|/* Memory strategy threshold, in pages: if physmem is larger then this, use a   * large buffer */
+comment|/*  * Memory strategy threshold, in pages: if physmem is larger then this, use a   * large buffer.  */
 end_comment
 
 begin_define
@@ -169,7 +169,7 @@ value|(32*1024)
 end_define
 
 begin_comment
-comment|/* Maximum buffer size in bytes - do not allow it to grow larger than this */
+comment|/* Maximum buffer size in bytes - do not allow it to grow larger than this. */
 end_comment
 
 begin_define
@@ -180,7 +180,7 @@ value|(2*1024*1024)
 end_define
 
 begin_comment
-comment|/* Small (default) buffer size in bytes. It's inefficient for this to be  * smaller than MAXPHYS */
+comment|/*  * Small (default) buffer size in bytes. It's inefficient for this to be  * smaller than MAXPHYS.  */
 end_comment
 
 begin_define
@@ -425,7 +425,7 @@ condition|(
 name|fflag
 condition|)
 block|{
-comment|/* remove existing destination file name,  		     * create a new file  */
+comment|/* 			 * Remove existing destination file name create a new 			 * file. 			 */
 operator|(
 name|void
 operator|)
@@ -483,7 +483,7 @@ operator|!
 name|sflag
 condition|)
 block|{
-comment|/* overwrite existing destination file name */
+comment|/* Overwrite existing destination file name. */
 name|to_fd
 operator|=
 name|open
@@ -582,7 +582,7 @@ operator|!
 name|sflag
 condition|)
 block|{
-comment|/* 		 * Mmap and write if less than 8M (the limit is so we don't totally 		 * trash memory on big files.  This is really a minor hack, but it 		 * wins some CPU back. 		 * Some filesystems, such as smbnetfs, don't support mmap, 		 * so this is a best-effort attempt. 		 */
+comment|/* 		 * Mmap and write if less than 8M (the limit is so we don't 		 * totally trash memory on big files.  This is really a minor 		 * hack, but it wins some CPU back. 		 * Some filesystems, such as smbnetfs, don't support mmap, 		 * so this is a best-effort attempt. 		 */
 ifdef|#
 directive|ifdef
 name|VM_AND_BUFFER_CACHE_SYNCHRONIZED
@@ -2476,7 +2476,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * If the file is a link we will not follow it 	 */
+comment|/* 	 * If the file is a link we will not follow it. 	 */
 if|if
 condition|(
 name|S_ISLNK
@@ -2730,9 +2730,11 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: cp [-R [-H | -L | -P]] [-f | -i | -n] [-alpsvx] source_file target_file"
+literal|"usage: cp [-R [-H | -L | -P]] [-f | -i | -n] [-alpsvx] "
+literal|"source_file target_file"
 argument_list|,
-literal|"       cp [-R [-H | -L | -P]] [-f | -i | -n] [-alpsvx] source_file ... "
+literal|"       cp [-R [-H | -L | -P]] [-f | -i | -n] [-alpsvx] "
+literal|"source_file ... "
 literal|"target_directory"
 argument_list|)
 expr_stmt|;
