@@ -230,8 +230,26 @@ modifier|*
 name|ic
 parameter_list|)
 block|{
-comment|/* 	 * For now, the swscan module does both the 	 * allocation (so it can pad it) and sets up the net80211 	 * bits. 	 * 	 * I'll split this stuff later. 	 */
+comment|/* 	 * If there's no scan method pointer, attach the 	 * swscan set as a default. 	 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_scan_methods
+operator|==
+name|NULL
+condition|)
 name|ieee80211_swscan_attach
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
+else|else
+name|ic
+operator|->
+name|ic_scan_methods
+operator|->
+name|sc_attach
 argument_list|(
 name|ic
 argument_list|)
@@ -249,8 +267,12 @@ modifier|*
 name|ic
 parameter_list|)
 block|{
-comment|/* 	 * Ideally we'd do the ss_ops detach call here; 	 * but then ieee80211_swscan_detach would need 	 * to be split in two. 	 * 	 * I'll do that later. 	 */
-name|ieee80211_swscan_detach
+comment|/* 	 * Ideally we'd do the ss_ops detach call here; 	 * but then sc_detach() would need to be split in two. 	 * 	 * I'll do that later. 	 */
+name|ic
+operator|->
+name|ic_scan_methods
+operator|->
+name|sc_detach
 argument_list|(
 name|ic
 argument_list|)
@@ -442,6 +464,15 @@ modifier|*
 name|vap
 parameter_list|)
 block|{
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|vap
+operator|->
+name|iv_ic
+decl_stmt|;
 name|vap
 operator|->
 name|iv_bgscanidle
@@ -490,7 +521,11 @@ name|defroam
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ieee80211_swscan_vattach
+name|ic
+operator|->
+name|ic_scan_methods
+operator|->
+name|sc_vattach
 argument_list|(
 name|vap
 argument_list|)
@@ -533,7 +568,11 @@ name|ic
 operator|->
 name|ic_scan
 expr_stmt|;
-name|ieee80211_swscan_vdetach
+name|ic
+operator|->
+name|ic_scan_methods
+operator|->
+name|sc_vdetach
 argument_list|(
 name|vap
 argument_list|)
@@ -1296,6 +1335,15 @@ name|ieee80211_scanner
 modifier|*
 name|scan
 decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|vap
+operator|->
+name|iv_ic
+decl_stmt|;
 name|scan
 operator|=
 name|ieee80211_scanner_get
@@ -1335,9 +1383,12 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* XXX ops */
 return|return
-name|ieee80211_swscan_start_scan
+name|ic
+operator|->
+name|ic_scan_methods
+operator|->
+name|sc_start_scan
 argument_list|(
 name|scan
 argument_list|,
@@ -1537,7 +1588,7 @@ operator||=
 name|IEEE80211_SCAN_FLUSH
 expr_stmt|;
 block|}
-comment|/* 	 * XXX TODO: separate things out a bit better. 	 * XXX TODO: ops 	 */
+comment|/* 	 * XXX TODO: separate things out a bit better. 	 */
 name|ieee80211_scan_update_locked
 argument_list|(
 name|vap
@@ -1547,7 +1598,11 @@ argument_list|)
 expr_stmt|;
 name|result
 operator|=
-name|ieee80211_swscan_check_scan
+name|ic
+operator|->
+name|ic_scan_methods
+operator|->
+name|sc_check_scan
 argument_list|(
 name|scan
 argument_list|,
@@ -1635,6 +1690,15 @@ name|int
 name|flags
 parameter_list|)
 block|{
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|vap
+operator|->
+name|iv_ic
+decl_stmt|;
 specifier|const
 name|struct
 name|ieee80211_scanner
@@ -1678,10 +1742,14 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* 	 * XXX TODO: pull apart the bgscan logic into whatever 	 * belongs here and whatever belongs in the software 	 * scanner. 	 * 	 * XXX TODO: ops 	 */
+comment|/* 	 * XXX TODO: pull apart the bgscan logic into whatever 	 * belongs here and whatever belongs in the software 	 * scanner. 	 */
 return|return
 operator|(
-name|ieee80211_swscan_bg_scan
+name|ic
+operator|->
+name|ic_scan_methods
+operator|->
+name|sc_bg_scan
 argument_list|(
 name|scan
 argument_list|,
@@ -1708,8 +1776,20 @@ modifier|*
 name|vap
 parameter_list|)
 block|{
-comment|/* XXX TODO: ops */
-name|ieee80211_swscan_cancel_scan
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|vap
+operator|->
+name|iv_ic
+decl_stmt|;
+name|ic
+operator|->
+name|ic_scan_methods
+operator|->
+name|sc_cancel_scan
 argument_list|(
 name|vap
 argument_list|)
@@ -1731,8 +1811,20 @@ modifier|*
 name|vap
 parameter_list|)
 block|{
-comment|/* XXX TODO: ops */
-name|ieee80211_swscan_cancel_anyscan
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|vap
+operator|->
+name|iv_ic
+decl_stmt|;
+name|ic
+operator|->
+name|ic_scan_methods
+operator|->
+name|sc_cancel_anyscan
 argument_list|(
 name|vap
 argument_list|)
@@ -1754,8 +1846,20 @@ modifier|*
 name|vap
 parameter_list|)
 block|{
-comment|/* XXX TODO: ops */
-name|ieee80211_swscan_scan_next
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|vap
+operator|->
+name|iv_ic
+decl_stmt|;
+name|ic
+operator|->
+name|ic_scan_methods
+operator|->
+name|sc_scan_next
 argument_list|(
 name|vap
 argument_list|)
@@ -1822,8 +1926,11 @@ operator|->
 name|ss_last
 expr_stmt|;
 comment|/* all channels are complete */
-comment|/* XXX TODO: ops */
-name|ieee80211_swscan_scan_done
+name|ic
+operator|->
+name|ic_scan_methods
+operator|->
+name|sc_scan_done
 argument_list|(
 name|vap
 argument_list|)
@@ -1886,8 +1993,11 @@ name|IEEE80211_FEXT_PROBECHAN
 expr_stmt|;
 return|return;
 block|}
-comment|/* XXX TODO: ops */
-name|ieee80211_swscan_probe_curchan
+name|ic
+operator|->
+name|ic_scan_methods
+operator|->
+name|sc_scan_probe_curchan
 argument_list|(
 name|vap
 argument_list|,
@@ -2274,9 +2384,22 @@ name|int
 name|noise
 parameter_list|)
 block|{
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|vap
+operator|->
+name|iv_ic
+decl_stmt|;
 return|return
 operator|(
-name|ieee80211_swscan_add_scan
+name|ic
+operator|->
+name|ic_scan_methods
+operator|->
+name|sc_add_scan
 argument_list|(
 name|vap
 argument_list|,

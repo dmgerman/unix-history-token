@@ -738,6 +738,12 @@ modifier|*
 name|ic_scan
 decl_stmt|;
 comment|/* scan state */
+name|struct
+name|ieee80211_scan_methods
+modifier|*
+name|ic_scan_methods
+decl_stmt|;
+comment|/* scan methods */
 name|int
 name|ic_lastdata
 decl_stmt|;
