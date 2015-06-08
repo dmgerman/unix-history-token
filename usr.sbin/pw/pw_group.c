@@ -262,7 +262,7 @@ literal|"%u\n"
 argument_list|,
 name|gr_gidpolicy
 argument_list|(
-name|cnd
+name|cnf
 argument_list|,
 name|id
 argument_list|)
