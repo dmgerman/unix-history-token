@@ -10078,15 +10078,6 @@ condition|)
 block|{
 endif|#
 directive|endif
-name|vm_phys_set_pool
-argument_list|(
-name|VM_FREEPOOL_CACHE
-argument_list|,
-name|m
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|vm_phys_free_pages
 argument_list|(
 name|m
