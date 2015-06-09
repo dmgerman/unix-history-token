@@ -3678,7 +3678,7 @@ name|kdh
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kdh
 operator|->
@@ -3694,7 +3694,7 @@ name|magic
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kdh
 operator|->
@@ -3755,7 +3755,7 @@ argument_list|(
 name|blksz
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kdh
 operator|->
@@ -3773,7 +3773,7 @@ name|hostname
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kdh
 operator|->
@@ -3795,7 +3795,7 @@ name|panicstr
 operator|!=
 name|NULL
 condition|)
-name|strncpy
+name|strlcpy
 argument_list|(
 name|kdh
 operator|->
