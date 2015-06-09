@@ -5180,6 +5180,9 @@ name|start_time
 decl_stmt|,
 name|end_time
 decl_stmt|;
+name|ACPI_STATUS
+name|status
+decl_stmt|;
 name|int
 name|bm_active
 decl_stmt|,
@@ -5353,6 +5356,8 @@ operator|->
 name|cpu_non_c3
 condition|)
 block|{
+name|status
+operator|=
 name|AcpiReadBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_STATUS
@@ -5363,6 +5368,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|status
+argument_list|)
+operator|&&
 name|bm_active
 operator|!=
 literal|0
@@ -5975,6 +5985,9 @@ decl_stmt|;
 name|uint32_t
 name|val
 decl_stmt|;
+name|ACPI_STATUS
+name|status
+decl_stmt|;
 name|acpi_dev
 operator|=
 name|pci_find_device
@@ -6072,6 +6085,8 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
+name|status
+operator|=
 name|AcpiReadBitRegister
 argument_list|(
 name|ACPI_BITREG_BUS_MASTER_RLD
@@ -6082,7 +6097,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|status
+argument_list|)
+operator|&&
 name|val
+operator|!=
+literal|0
 condition|)
 block|{
 name|ACPI_DEBUG_PRINT
