@@ -923,7 +923,9 @@ operator|++
 expr_stmt|;
 block|}
 name|dsb
-argument_list|()
+argument_list|(
+name|ish
+argument_list|)
 expr_stmt|;
 comment|/* Clean D-cache and invalidate I-cache */
 name|cpu_dcache_wb_range
@@ -945,12 +947,6 @@ name|vm_size_t
 operator|)
 name|size
 argument_list|)
-expr_stmt|;
-name|dsb
-argument_list|()
-expr_stmt|;
-name|isb
-argument_list|()
 expr_stmt|;
 return|return
 operator|(
