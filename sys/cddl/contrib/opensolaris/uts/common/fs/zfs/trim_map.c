@@ -666,6 +666,13 @@ name|tm
 decl_stmt|;
 name|ASSERT
 argument_list|(
+name|zfs_trim_enabled
+operator|&&
+operator|!
+name|vd
+operator|->
+name|vdev_notrim
+operator|&&
 name|vd
 operator|->
 name|vdev_ops
@@ -673,12 +680,6 @@ operator|->
 name|vdev_op_leaf
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|zfs_trim_enabled
-condition|)
-return|return;
 name|tm
 operator|=
 name|kmem_zalloc

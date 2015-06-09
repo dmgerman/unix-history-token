@@ -14,7 +14,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: pread.c,v 1.2 2013/04/02 16:23:07 christos Exp $"
+literal|"@(#)$File: pread.c,v 1.3 2014/09/15 19:11:25 christos Exp $"
 argument_list|)
 end_macro
 
@@ -57,8 +57,17 @@ name|off_t
 name|off
 parameter_list|)
 block|{
+name|off_t
+name|old
+decl_stmt|;
+name|ssize_t
+name|rv
+decl_stmt|;
 if|if
 condition|(
+operator|(
+name|old
+operator|=
 name|lseek
 argument_list|(
 name|fd
@@ -67,10 +76,8 @@ name|off
 argument_list|,
 name|SEEK_SET
 argument_list|)
-operator|==
-operator|(
-name|off_t
 operator|)
+operator|==
 operator|-
 literal|1
 condition|)
@@ -78,7 +85,11 @@ return|return
 operator|-
 literal|1
 return|;
-return|return
+if|if
+condition|(
+operator|(
+name|rv
+operator|=
 name|read
 argument_list|(
 name|fd
@@ -87,6 +98,35 @@ name|buf
 argument_list|,
 name|len
 argument_list|)
+operator|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+if|if
+condition|(
+name|lseek
+argument_list|(
+name|fd
+argument_list|,
+name|old
+argument_list|,
+name|SEEK_SET
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+return|return
+name|rv
 return|;
 block|}
 end_function

@@ -2604,6 +2604,11 @@ name|zfs_trim_enabled
 operator|&&
 name|vdev_trim_on_init
 operator|&&
+operator|!
+name|vd
+operator|->
+name|vdev_notrim
+operator|&&
 operator|(
 name|reason
 operator|==
