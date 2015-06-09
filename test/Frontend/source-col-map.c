@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: not %clang_cc1 %s -fsyntax-only -fmessage-length 75 -o /dev/null 2>&1 | FileCheck %s -strict-whitespace
+comment|// RUN: not %clang_cc1 -fsyntax-only -fmessage-length 75 -o /dev/null -x c< %s 2>&1 | FileCheck %s -strict-whitespace
 end_comment
 
 begin_comment
@@ -144,7 +144,11 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK:       format specifies type 'int' but the argument has type 'char *'
+comment|// CHECK:       format specifies type 'int' but the argument has
+end_comment
+
+begin_comment
+comment|// CHECK:       type 'char *'
 end_comment
 
 begin_comment

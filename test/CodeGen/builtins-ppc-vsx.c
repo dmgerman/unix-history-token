@@ -122,6 +122,21 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vector
+name|bool
+name|long
+name|long
+name|vbll
+init|=
+block|{
+literal|1
+block|,
+literal|0
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
 name|signed
 name|long
 name|long
@@ -186,6 +201,15 @@ name|vector
 name|unsigned
 name|int
 name|res_vui
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|bool
+name|long
+name|long
+name|res_vbll
 decl_stmt|;
 end_decl_stmt
 
@@ -529,6 +553,544 @@ name|res_vd
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.vsx.stxvd2x
+comment|/* vec_and */
+name|res_vsll
+operator|=
+name|vec_and
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+name|res_vsll
+operator|=
+name|vec_and
+argument_list|(
+name|vbll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+name|res_vsll
+operator|=
+name|vec_and
+argument_list|(
+name|vsll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+name|res_vull
+operator|=
+name|vec_and
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+name|res_vull
+operator|=
+name|vec_and
+argument_list|(
+name|vbll
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+name|res_vull
+operator|=
+name|vec_and
+argument_list|(
+name|vull
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+name|res_vbll
+operator|=
+name|vec_and
+argument_list|(
+name|vbll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+comment|/* vec_vand */
+name|res_vsll
+operator|=
+name|vec_vand
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+name|res_vsll
+operator|=
+name|vec_vand
+argument_list|(
+name|vbll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+name|res_vsll
+operator|=
+name|vec_vand
+argument_list|(
+name|vsll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+name|res_vull
+operator|=
+name|vec_vand
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+name|res_vull
+operator|=
+name|vec_vand
+argument_list|(
+name|vbll
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+name|res_vull
+operator|=
+name|vec_vand
+argument_list|(
+name|vull
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+name|res_vbll
+operator|=
+name|vec_vand
+argument_list|(
+name|vbll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: and<2 x i64>
+comment|/* vec_andc */
+name|res_vsll
+operator|=
+name|vec_andc
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+comment|// CHECK: and<2 x i64>
+name|res_vsll
+operator|=
+name|vec_andc
+argument_list|(
+name|vbll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+comment|// CHECK: and<2 x i64>
+name|res_vsll
+operator|=
+name|vec_andc
+argument_list|(
+name|vsll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+comment|// CHECK: and<2 x i64>
+name|res_vull
+operator|=
+name|vec_andc
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+comment|// CHECK: and<2 x i64>
+name|res_vull
+operator|=
+name|vec_andc
+argument_list|(
+name|vbll
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+comment|// CHECK: and<2 x i64>
+name|res_vull
+operator|=
+name|vec_andc
+argument_list|(
+name|vull
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+comment|// CHECK: and<2 x i64>
+name|res_vbll
+operator|=
+name|vec_andc
+argument_list|(
+name|vbll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+comment|// CHECK: and<2 x i64>
+comment|/* vec_nor */
+name|res_vsll
+operator|=
+name|vec_nor
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+comment|// CHECK: xor<2 x i64>
+name|res_vull
+operator|=
+name|vec_nor
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+comment|// CHECK: xor<2 x i64>
+name|res_vull
+operator|=
+name|vec_nor
+argument_list|(
+name|vbll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+comment|// CHECK: xor<2 x i64>
+comment|/* vec_or */
+name|res_vsll
+operator|=
+name|vec_or
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+name|res_vsll
+operator|=
+name|vec_or
+argument_list|(
+name|vbll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+name|res_vsll
+operator|=
+name|vec_or
+argument_list|(
+name|vsll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+name|res_vull
+operator|=
+name|vec_or
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+name|res_vull
+operator|=
+name|vec_or
+argument_list|(
+name|vbll
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+name|res_vull
+operator|=
+name|vec_or
+argument_list|(
+name|vull
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+name|res_vbll
+operator|=
+name|vec_or
+argument_list|(
+name|vbll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+comment|/* vec_vor */
+name|res_vsll
+operator|=
+name|vec_vor
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+name|res_vsll
+operator|=
+name|vec_vor
+argument_list|(
+name|vbll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+name|res_vsll
+operator|=
+name|vec_vor
+argument_list|(
+name|vsll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+name|res_vull
+operator|=
+name|vec_vor
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+name|res_vull
+operator|=
+name|vec_vor
+argument_list|(
+name|vbll
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+name|res_vull
+operator|=
+name|vec_vor
+argument_list|(
+name|vull
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+name|res_vbll
+operator|=
+name|vec_vor
+argument_list|(
+name|vbll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: or<2 x i64>
+comment|/* vec_xor */
+name|res_vsll
+operator|=
+name|vec_xor
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+name|res_vsll
+operator|=
+name|vec_xor
+argument_list|(
+name|vbll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+name|res_vsll
+operator|=
+name|vec_xor
+argument_list|(
+name|vsll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+name|res_vull
+operator|=
+name|vec_xor
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+name|res_vull
+operator|=
+name|vec_xor
+argument_list|(
+name|vbll
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+name|res_vull
+operator|=
+name|vec_xor
+argument_list|(
+name|vull
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+name|res_vbll
+operator|=
+name|vec_xor
+argument_list|(
+name|vbll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+comment|/* vec_vxor */
+name|res_vsll
+operator|=
+name|vec_vxor
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+name|res_vsll
+operator|=
+name|vec_vxor
+argument_list|(
+name|vbll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+name|res_vsll
+operator|=
+name|vec_vxor
+argument_list|(
+name|vsll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+name|res_vull
+operator|=
+name|vec_vxor
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+name|res_vull
+operator|=
+name|vec_vxor
+argument_list|(
+name|vbll
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+name|res_vull
+operator|=
+name|vec_vxor
+argument_list|(
+name|vull
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
+name|res_vbll
+operator|=
+name|vec_vxor
+argument_list|(
+name|vbll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: xor<2 x i64>
 block|}
 end_function
 

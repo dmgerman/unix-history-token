@@ -51,6 +51,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|volatile
+name|int
+name|i0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|volatile
 name|__fp16
 name|h0
 init|=
@@ -219,6 +226,16 @@ operator|*
 name|h2
 expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fmul float
+comment|// CHECK: [[F32TOF16]]
+comment|// NATIVE-HALF: fmul half
+name|h1
+operator|=
+name|h0
+operator|*
+name|i0
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: fdiv float
 comment|// CHECK: [[F32TOF16]]
@@ -272,6 +289,18 @@ operator|(
 name|f0
 operator|/
 name|h2
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fdiv float
+comment|// CHECK: [[F32TOF16]]
+comment|// NATIVE-HALF: fdiv half
+name|h1
+operator|=
+operator|(
+name|h0
+operator|/
+name|i0
 operator|)
 expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
@@ -331,6 +360,18 @@ name|h0
 operator|)
 expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fadd float
+comment|// CHECK: [[F32TOF16]]
+comment|// NATIVE-HALF: fadd half
+name|h1
+operator|=
+operator|(
+name|h0
+operator|+
+name|i0
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: fsub float
 comment|// CHECK: [[F32TOF16]]
@@ -387,6 +428,18 @@ name|h0
 operator|)
 expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fsub float
+comment|// CHECK: [[F32TOF16]]
+comment|// NATIVE-HALF: fsub half
+name|h1
+operator|=
+operator|(
+name|h0
+operator|-
+name|i0
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: fcmp olt float
 comment|// NATIVE-HALF: fcmp olt half
@@ -435,6 +488,28 @@ operator|(
 name|f2
 operator|<
 name|h0
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fcmp olt float
+comment|// NATIVE-HALF: fcmp olt half
+name|test
+operator|=
+operator|(
+name|i0
+operator|<
+name|h0
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fcmp olt float
+comment|// NATIVE-HALF: fcmp olt half
+name|test
+operator|=
+operator|(
+name|h0
+operator|<
+name|i0
 operator|)
 expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
@@ -489,6 +564,28 @@ name|h2
 operator|)
 expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fcmp ogt float
+comment|// NATIVE-HALF: fcmp ogt half
+name|test
+operator|=
+operator|(
+name|i0
+operator|>
+name|h0
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fcmp ogt float
+comment|// NATIVE-HALF: fcmp ogt half
+name|test
+operator|=
+operator|(
+name|h0
+operator|>
+name|i0
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: fcmp ole float
 comment|// NATIVE-HALF: fcmp ole half
@@ -537,6 +634,28 @@ operator|(
 name|f2
 operator|<=
 name|h0
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fcmp ole float
+comment|// NATIVE-HALF: fcmp ole half
+name|test
+operator|=
+operator|(
+name|i0
+operator|<=
+name|h0
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fcmp ole float
+comment|// NATIVE-HALF: fcmp ole half
+name|test
+operator|=
+operator|(
+name|h0
+operator|<=
+name|i0
 operator|)
 expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
@@ -592,6 +711,28 @@ name|h2
 operator|)
 expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fcmp oge float
+comment|// NATIVE-HALF: fcmp oge half
+name|test
+operator|=
+operator|(
+name|i0
+operator|>=
+name|h0
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fcmp oge float
+comment|// NATIVE-HALF: fcmp oge half
+name|test
+operator|=
+operator|(
+name|h0
+operator|>=
+name|i0
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: fcmp oeq float
 comment|// NATIVE-HALF: fcmp oeq half
@@ -643,6 +784,28 @@ name|h1
 operator|)
 expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fcmp oeq float
+comment|// NATIVE-HALF: fcmp oeq half
+name|test
+operator|=
+operator|(
+name|i0
+operator|==
+name|h0
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fcmp oeq float
+comment|// NATIVE-HALF: fcmp oeq half
+name|test
+operator|=
+operator|(
+name|h0
+operator|==
+name|i0
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: fcmp une float
 comment|// NATIVE-HALF: fcmp une half
@@ -691,6 +854,28 @@ operator|(
 name|f1
 operator|!=
 name|h1
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fcmp une float
+comment|// NATIVE-HALF: fcmp une half
+name|test
+operator|=
+operator|(
+name|i0
+operator|!=
+name|h0
+operator|)
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fcmp une float
+comment|// NATIVE-HALF: fcmp une half
+name|test
+operator|=
+operator|(
+name|h0
+operator|!=
+name|i0
 operator|)
 expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
@@ -731,6 +916,20 @@ name|h0
 operator|=
 name|f0
 expr_stmt|;
+comment|// CHECK: sitofp i32 {{.*}} to float
+comment|// CHECK: [[F32TOF16]]
+comment|// NATIVE-HALF: sitofp i32 {{.*}} to half
+name|h0
+operator|=
+name|i0
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fptosi float {{.*}} to i32
+comment|// NATIVE-HALF: fptosi half {{.*}} to i32
+name|i0
+operator|=
+name|h0
+expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: fadd float
@@ -761,6 +960,27 @@ comment|// NATIVE-HALF: fptrunc float
 name|h0
 operator|+=
 name|f2
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: sitofp i32 {{.*}} to float
+comment|// CHECK: fadd float
+comment|// CHECK: fptosi float {{.*}} to i32
+comment|// NATIVE-HALF: sitofp i32 {{.*}} to half
+comment|// NATIVE-HALF: fadd half
+comment|// NATIVE-HALF: fptosi half {{.*}} to i32
+name|i0
+operator|+=
+name|h0
+expr_stmt|;
+comment|// CHECK: sitofp i32 {{.*}} to float
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fadd float
+comment|// CHECK: [[F32TOF16]]
+comment|// NATIVE-HALF: sitofp i32 {{.*}} to half
+comment|// NATIVE-HALF: fadd half
+name|h0
+operator|+=
+name|i0
 expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: [[F16TOF32]]
@@ -794,6 +1014,27 @@ operator|-=
 name|f2
 expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: sitofp i32 {{.*}} to float
+comment|// CHECK: fsub float
+comment|// CHECK: fptosi float {{.*}} to i32
+comment|// NATIVE-HALF: sitofp i32 {{.*}} to half
+comment|// NATIVE-HALF: fsub half
+comment|// NATIVE-HALF: fptosi half {{.*}} to i32
+name|i0
+operator|-=
+name|h0
+expr_stmt|;
+comment|// CHECK: sitofp i32 {{.*}} to float
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fsub float
+comment|// CHECK: [[F32TOF16]]
+comment|// NATIVE-HALF: sitofp i32 {{.*}} to half
+comment|// NATIVE-HALF: fsub half
+name|h0
+operator|-=
+name|i0
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: fmul float
 comment|// CHECK: [[F32TOF16]]
@@ -825,6 +1066,27 @@ operator|*=
 name|f2
 expr_stmt|;
 comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: sitofp i32 {{.*}} to float
+comment|// CHECK: fmul float
+comment|// CHECK: fptosi float {{.*}} to i32
+comment|// NATIVE-HALF: sitofp i32 {{.*}} to half
+comment|// NATIVE-HALF: fmul half
+comment|// NATIVE-HALF: fptosi half {{.*}} to i32
+name|i0
+operator|*=
+name|h0
+expr_stmt|;
+comment|// CHECK: sitofp i32 {{.*}} to float
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fmul float
+comment|// CHECK: [[F32TOF16]]
+comment|// NATIVE-HALF: sitofp i32 {{.*}} to half
+comment|// NATIVE-HALF: fmul half
+name|h0
+operator|*=
+name|i0
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: [[F16TOF32]]
 comment|// CHECK: fdiv float
 comment|// CHECK: [[F32TOF16]]
@@ -854,6 +1116,27 @@ comment|// NATIVE-HALF: fptrunc float
 name|h0
 operator|/=
 name|f2
+expr_stmt|;
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: sitofp i32 {{.*}} to float
+comment|// CHECK: fdiv float
+comment|// CHECK: fptosi float {{.*}} to i32
+comment|// NATIVE-HALF: sitofp i32 {{.*}} to half
+comment|// NATIVE-HALF: fdiv half
+comment|// NATIVE-HALF: fptosi half {{.*}} to i32
+name|i0
+operator|/=
+name|h0
+expr_stmt|;
+comment|// CHECK: sitofp i32 {{.*}} to float
+comment|// CHECK: [[F16TOF32]]
+comment|// CHECK: fdiv float
+comment|// CHECK: [[F32TOF16]]
+comment|// NATIVE-HALF: sitofp i32 {{.*}} to half
+comment|// NATIVE-HALF: fdiv half
+name|h0
+operator|/=
+name|i0
 expr_stmt|;
 comment|// Check conversions to/from double
 comment|// NOHALF: call i16 @llvm.convert.to.fp16.f64(

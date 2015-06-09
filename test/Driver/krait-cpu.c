@@ -8,6 +8,18 @@ comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=krait -### -c %s 2>&1 | F
 end_comment
 
 begin_comment
+comment|// ================== Check whether -mcpu accepts mixed-case values.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=Krait -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV7A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=KRAIT -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CPUV7A %s
+end_comment
+
+begin_comment
 comment|// CHECK-CPUV7A: "-cc1"{{.*}} "-triple" "armv7-{{.*}}
 end_comment
 

@@ -716,6 +716,10 @@ comment|// Fi2: "-o" "foo.x"
 end_comment
 
 begin_comment
+comment|// To match MSVC behavior /o should be ignored for /P output.
+end_comment
+
+begin_comment
 comment|// RUN: %clang_cl /P /ofoo -### -- %s 2>&1 | FileCheck -check-prefix=Fio1 %s
 end_comment
 
@@ -724,11 +728,11 @@ comment|// Fio1: "-E"
 end_comment
 
 begin_comment
-comment|// Fio1: "-o" "foo.i"
+comment|// Fio1: "-o" "cl-outputs.i"
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cl /P /o foo -### -- %s 2>&1 | FileCheck -check-prefix=Fio2 %s
+comment|// RUN: %clang_cl /P /o foo.x -### -- %s 2>&1 | FileCheck -check-prefix=Fio2 %s
 end_comment
 
 begin_comment
@@ -736,31 +740,7 @@ comment|// Fio2: "-E"
 end_comment
 
 begin_comment
-comment|// Fio2: "-o" "foo.i"
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cl /P /ofoo.x -### -- %s 2>&1 | FileCheck -check-prefix=Fio3 %s
-end_comment
-
-begin_comment
-comment|// Fio3: "-E"
-end_comment
-
-begin_comment
-comment|// Fio3: "-o" "foo.x"
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cl /P /o foo.x -### -- %s 2>&1 | FileCheck -check-prefix=Fio4 %s
-end_comment
-
-begin_comment
-comment|// Fio4: "-E"
-end_comment
-
-begin_comment
-comment|// Fio4: "-o" "foo.x"
+comment|// Fio2: "-o" "cl-outputs.i"
 end_comment
 
 begin_comment
@@ -784,7 +764,23 @@ comment|// FioRACE2: "-E"
 end_comment
 
 begin_comment
-comment|// FioRACE2: "-o" "bar.x"
+comment|// FioRACE2: "-o" "foo.x"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /c /GL -### -- %s 2>&1 | FileCheck -check-prefix=LTO-DEFAULT %s
+end_comment
+
+begin_comment
+comment|// LTO-DEFAULT: "-emit-llvm-bc"{{.*}}"-o" "cl-outputs.obj"
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cl /c /GL /Fofoo -### -- %s 2>&1 | FileCheck -check-prefix=LTO-FO %s
+end_comment
+
+begin_comment
+comment|// LTO-FO: "-emit-llvm-bc"{{.*}}"-o" "foo.obj"
 end_comment
 
 end_unit

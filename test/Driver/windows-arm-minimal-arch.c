@@ -8,7 +8,7 @@ comment|// RUN:   | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: error: the target architecture 'thumbv5' is not supported by the target 'thumbv5--windows-msvc'
+comment|// CHECK: error: the target architecture 'thumbv5' is not supported by the target 'thumbv5--windows-msvc
 end_comment
 
 end_unit

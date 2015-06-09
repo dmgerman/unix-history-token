@@ -456,7 +456,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[AP_CUR:%.+]] = load i8*, i8** %va, align [[PTRALIGN]]
+comment|// O32:   [[TMP0:%.+]] = bitcast i8** %va to i32*
+end_comment
+
+begin_comment
+comment|// O32:   [[AP_CUR:%.+]] = load [[INTPTR_T:i32]], i32* [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
@@ -480,11 +484,7 @@ comment|// guarantee that the offset is still 8-byte aligned after earlier reads
 end_comment
 
 begin_comment
-comment|// O32:   [[PTR0:%.+]] = ptrtoint i8* [[AP_CUR]] to [[INTPTR_T:i32]]
-end_comment
-
-begin_comment
-comment|// O32:   [[PTR1:%.+]] = add i32 [[PTR0]], 7
+comment|// O32:   [[PTR1:%.+]] = add i32 [[AP_CUR]], 7
 end_comment
 
 begin_comment
@@ -814,7 +814,19 @@ comment|// ALL:   call void @llvm.va_start(i8* [[VA1]])
 end_comment
 
 begin_comment
-comment|// ALL:   [[AP_CUR:%.+]] = load i8*, i8** %va, align [[PTRALIGN]]
+comment|//
+end_comment
+
+begin_comment
+comment|// O32:   [[TMP0:%.+]] = bitcast i8** %va to i32*
+end_comment
+
+begin_comment
+comment|// N32:   [[TMP0:%.+]] = bitcast i8** %va to i32*
+end_comment
+
+begin_comment
+comment|// N64:   [[TMP0:%.+]] = bitcast i8** %va to i64*
 end_comment
 
 begin_comment
@@ -822,15 +834,15 @@ comment|//
 end_comment
 
 begin_comment
-comment|// O32:   [[PTR0:%.+]] = ptrtoint i8* [[AP_CUR]] to [[INTPTR_T:i32]]
+comment|// O32:   [[PTR0:%.+]] = load [[INTPTR_T:i32]], i32* [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
-comment|// N32:   [[PTR0:%.+]] = ptrtoint i8* [[AP_CUR]] to [[INTPTR_T:i32]]
+comment|// N32:   [[PTR0:%.+]] = load [[INTPTR_T:i32]], i32* [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment
-comment|// N64:   [[PTR0:%.+]] = ptrtoint i8* [[AP_CUR]] to [[INTPTR_T:i64]]
+comment|// N64:   [[PTR0:%.+]] = load [[INTPTR_T:i64]], i64* [[TMP0]], align [[PTRALIGN]]
 end_comment
 
 begin_comment

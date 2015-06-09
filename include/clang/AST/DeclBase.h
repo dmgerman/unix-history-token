@@ -2135,6 +2135,19 @@ expr_stmt|;
 end_expr_stmt
 
 begin_label
+name|protected
+label|:
+end_label
+
+begin_expr_stmt
+name|bool
+name|hasLocalOwningModuleStorage
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|public
 label|:
 end_label
@@ -2237,6 +2250,9 @@ name|isFromASTFile
 argument_list|()
 operator|&&
 name|Hidden
+operator|&&
+name|hasLocalOwningModuleStorage
+argument_list|()
 operator|&&
 literal|"should not have a cached owning module"
 argument_list|)

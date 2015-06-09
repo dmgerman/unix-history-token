@@ -888,6 +888,14 @@ comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE2
 end_comment
 
 begin_comment
+comment|// RUN: %clang -c %s -target sparc-unknown-openbsd -### 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck %s --check-prefix=CHECK-PIE2
+end_comment
+
+begin_comment
 comment|// RUN: %clang -c %s -target sparc64-unknown-openbsd -### 2>&1 \
 end_comment
 

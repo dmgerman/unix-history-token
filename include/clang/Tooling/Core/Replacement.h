@@ -82,6 +82,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LangOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/SourceLocation.h"
 end_include
 
@@ -302,6 +308,8 @@ argument_list|,
 argument|const CharSourceRange&Range
 argument_list|,
 argument|StringRef ReplacementText
+argument_list|,
+argument|const LangOptions&LangOpts = LangOptions()
 argument_list|)
 empty_stmt|;
 comment|/// \brief Creates a Replacement of the node with ReplacementText.
@@ -317,6 +325,8 @@ argument_list|,
 argument|const Node&NodeToReplace
 argument_list|,
 argument|StringRef ReplacementText
+argument_list|,
+argument|const LangOptions&LangOpts = LangOptions()
 argument_list|)
 expr_stmt|;
 comment|/// \brief Returns whether this replacement can be applied to a file.
@@ -425,6 +435,11 @@ name|Range
 parameter_list|,
 name|StringRef
 name|ReplacementText
+parameter_list|,
+specifier|const
+name|LangOptions
+modifier|&
+name|LangOpts
 parameter_list|)
 function_decl|;
 name|std
@@ -705,6 +720,8 @@ argument_list|,
 argument|const Node&NodeToReplace
 argument_list|,
 argument|StringRef ReplacementText
+argument_list|,
+argument|const LangOptions&LangOpts
 argument_list|)
 block|{
 specifier|const
@@ -728,6 +745,8 @@ argument_list|,
 name|Range
 argument_list|,
 name|ReplacementText
+argument_list|,
+name|LangOpts
 argument_list|)
 block|; }
 block|}

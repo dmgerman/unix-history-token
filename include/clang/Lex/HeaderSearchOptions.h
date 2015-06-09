@@ -503,9 +503,7 @@ argument_list|)
 block|{
 name|UserEntries
 operator|.
-name|push_back
-argument_list|(
-name|Entry
+name|emplace_back
 argument_list|(
 name|Path
 argument_list|,
@@ -514,7 +512,6 @@ argument_list|,
 name|IsFramework
 argument_list|,
 name|IgnoreSysRoot
-argument_list|)
 argument_list|)
 block|;   }
 comment|/// AddSystemHeaderPrefix - Override whether \#include directives naming a
@@ -530,14 +527,11 @@ argument_list|)
 block|{
 name|SystemHeaderPrefixes
 operator|.
-name|push_back
-argument_list|(
-name|SystemHeaderPrefix
+name|emplace_back
 argument_list|(
 name|Prefix
 argument_list|,
 name|IsSystemHeader
-argument_list|)
 argument_list|)
 block|;   }
 name|void

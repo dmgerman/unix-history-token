@@ -89,9 +89,10 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vector
+name|signed
 name|long
 name|long
-name|vll
+name|vsll
 init|=
 block|{
 literal|1
@@ -147,9 +148,19 @@ end_decl_stmt
 
 begin_decl_stmt
 name|vector
+name|bool
 name|long
 name|long
-name|res_vll
+name|res_vbll
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|vector
+name|signed
+name|long
+name|long
+name|res_vsll
 decl_stmt|;
 end_decl_stmt
 
@@ -159,15 +170,6 @@ name|unsigned
 name|long
 name|long
 name|res_vull
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|vector
-name|bool
-name|long
-name|long
-name|res_vbll
 decl_stmt|;
 end_decl_stmt
 
@@ -185,9 +187,9 @@ name|res_vbll
 operator|=
 name|vec_cmpeq
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequd
@@ -210,9 +212,9 @@ name|res_vbll
 operator|=
 name|vec_cmpgt
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsd
@@ -236,9 +238,9 @@ name|res_i
 operator|=
 name|vec_all_eq
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequd.p
@@ -248,7 +250,7 @@ name|res_i
 operator|=
 name|vec_all_eq
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -286,7 +288,7 @@ name|vec_all_eq
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequd.p
@@ -321,9 +323,9 @@ name|res_i
 operator|=
 name|vec_all_ne
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequd.p
@@ -333,7 +335,7 @@ name|res_i
 operator|=
 name|vec_all_ne
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -371,7 +373,7 @@ name|vec_all_ne
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequd.p
@@ -406,9 +408,9 @@ name|res_i
 operator|=
 name|vec_any_eq
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequd.p
@@ -418,7 +420,7 @@ name|res_i
 operator|=
 name|vec_any_eq
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -456,7 +458,7 @@ name|vec_any_eq
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequd.p
@@ -491,9 +493,9 @@ name|res_i
 operator|=
 name|vec_any_ne
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequd.p
@@ -503,7 +505,7 @@ name|res_i
 operator|=
 name|vec_any_ne
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -541,7 +543,7 @@ name|vec_any_ne
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpequd.p
@@ -576,9 +578,9 @@ name|res_i
 operator|=
 name|vec_all_ge
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsd.p
@@ -588,7 +590,7 @@ name|res_i
 operator|=
 name|vec_all_ge
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -626,7 +628,7 @@ name|vec_all_ge
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtud.p
@@ -661,9 +663,9 @@ name|res_i
 operator|=
 name|vec_all_gt
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsd.p
@@ -673,7 +675,7 @@ name|res_i
 operator|=
 name|vec_all_gt
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -711,7 +713,7 @@ name|vec_all_gt
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtud.p
@@ -746,9 +748,9 @@ name|res_i
 operator|=
 name|vec_all_le
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsd.p
@@ -758,7 +760,7 @@ name|res_i
 operator|=
 name|vec_all_le
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -796,7 +798,7 @@ name|vec_all_le
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtud.p
@@ -831,9 +833,9 @@ name|res_i
 operator|=
 name|vec_all_lt
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsd.p
@@ -843,7 +845,7 @@ name|res_i
 operator|=
 name|vec_all_lt
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -881,7 +883,7 @@ name|vec_all_lt
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtud.p
@@ -916,9 +918,9 @@ name|res_i
 operator|=
 name|vec_any_ge
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsd.p
@@ -928,7 +930,7 @@ name|res_i
 operator|=
 name|vec_any_ge
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -966,7 +968,7 @@ name|vec_any_ge
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtud.p
@@ -1001,9 +1003,9 @@ name|res_i
 operator|=
 name|vec_any_gt
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsd.p
@@ -1013,7 +1015,7 @@ name|res_i
 operator|=
 name|vec_any_gt
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -1051,7 +1053,7 @@ name|vec_any_gt
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtud.p
@@ -1086,9 +1088,9 @@ name|res_i
 operator|=
 name|vec_any_le
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsd.p
@@ -1098,7 +1100,7 @@ name|res_i
 operator|=
 name|vec_any_le
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -1136,7 +1138,7 @@ name|vec_any_le
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtud.p
@@ -1171,9 +1173,9 @@ name|res_i
 operator|=
 name|vec_any_lt
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtsd.p
@@ -1183,7 +1185,7 @@ name|res_i
 operator|=
 name|vec_any_lt
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -1221,7 +1223,7 @@ name|vec_any_lt
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vcmpgtud.p
@@ -1252,35 +1254,35 @@ comment|// CHECK: @llvm.ppc.altivec.vcmpgtud.p
 comment|// CHECK-LE: @llvm.ppc.altivec.vcmpgtud.p
 comment|// CHECK-PPC: error: call to 'vec_any_lt' is ambiguous
 comment|/* vec_max */
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_max
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsd
 comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsd
 comment|// CHECK-PPC: error: call to 'vec_max' is ambiguous
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_max
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vmaxsd
 comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsd
 comment|// CHECK-PPC: error: call to 'vec_max' is ambiguous
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_max
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -1325,35 +1327,35 @@ comment|// CHECK: @llvm.ppc.altivec.vmaxud
 comment|// CHECK-LE: @llvm.ppc.altivec.vmaxud
 comment|// CHECK-PPC: error: call to 'vec_max' is ambiguous
 comment|/* vec_min */
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_min
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsd
 comment|// CHECK-LE: @llvm.ppc.altivec.vminsd
 comment|// CHECK-PPC: error: call to 'vec_min' is ambiguous
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_min
 argument_list|(
 name|vbll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vminsd
 comment|// CHECK-LE: @llvm.ppc.altivec.vminsd
 comment|// CHECK-PPC: error: call to 'vec_min' is ambiguous
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_min
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vbll
 argument_list|)
@@ -1398,7 +1400,7 @@ comment|// CHECK: @llvm.ppc.altivec.vminud
 comment|// CHECK-LE: @llvm.ppc.altivec.vminud
 comment|// CHECK-PPC: error: call to 'vec_min' is ambiguous
 comment|/* vec_mule */
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_mule
 argument_list|(
@@ -1423,7 +1425,7 @@ comment|// CHECK: @llvm.ppc.altivec.vmuleuw
 comment|// CHECK-LE: @llvm.ppc.altivec.vmulouw
 comment|// CHECK-PPC: error: call to 'vec_mule' is ambiguous
 comment|/* vec_mulo */
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_mulo
 argument_list|(
@@ -1452,9 +1454,9 @@ name|res_vi
 operator|=
 name|vec_packs
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpksdss
@@ -1477,9 +1479,9 @@ name|res_vui
 operator|=
 name|vec_packsu
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: @llvm.ppc.altivec.vpksdus
@@ -1498,11 +1500,11 @@ comment|// CHECK: @llvm.ppc.altivec.vpkudus
 comment|// CHECK-LE: @llvm.ppc.altivec.vpkudus
 comment|// CHECK-PPC: error: call to 'vec_packsu' is ambiguous
 comment|/* vec_rl */
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_rl
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vull
 argument_list|)
@@ -1523,11 +1525,11 @@ comment|// CHECK: @llvm.ppc.altivec.vrld
 comment|// CHECK-LE: @llvm.ppc.altivec.vrld
 comment|// CHECK-PPC: error: call to 'vec_rl' is ambiguous
 comment|/* vec_sl */
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_sl
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vull
 argument_list|)
@@ -1548,11 +1550,11 @@ comment|// CHECK: shl<2 x i64>
 comment|// CHECK-LE: shl<2 x i64>
 comment|// CHECK-PPC: error: call to 'vec_sl' is ambiguous
 comment|/* vec_sr */
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_sr
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vull
 argument_list|)
@@ -1573,11 +1575,11 @@ comment|// CHECK: lshr<2 x i64>
 comment|// CHECK-LE: lshr<2 x i64>
 comment|// CHECK-PPC: error: call to 'vec_sr' is ambiguous
 comment|/* vec_sra */
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_sra
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
 name|vull
 argument_list|)
@@ -1598,7 +1600,7 @@ comment|// CHECK: ashr<2 x i64>
 comment|// CHECK-LE: ashr<2 x i64>
 comment|// CHECK-PPC: error: call to 'vec_sra' is ambiguous
 comment|/* vec_unpackh */
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_unpackh
 argument_list|(
@@ -1619,7 +1621,7 @@ comment|// CHECK: llvm.ppc.altivec.vupkhsw
 comment|// CHECK-LE: llvm.ppc.altivec.vupklsw
 comment|// CHECK-PPC: error: call to 'vec_unpackh' is ambiguous
 comment|/* vec_unpackl */
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_unpackl
 argument_list|(
@@ -1644,9 +1646,9 @@ name|res_vi
 operator|=
 name|vec_vpksdss
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: llvm.ppc.altivec.vpksdss
@@ -1657,9 +1659,9 @@ name|res_vui
 operator|=
 name|vec_vpksdus
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: llvm.ppc.altivec.vpksdus
@@ -1670,9 +1672,9 @@ name|res_vi
 operator|=
 name|vec_vpkudum
 argument_list|(
-name|vll
+name|vsll
 argument_list|,
-name|vll
+name|vsll
 argument_list|)
 expr_stmt|;
 comment|// CHECK: vperm
@@ -1702,7 +1704,7 @@ comment|// CHECK: llvm.ppc.altivec.vpkudus
 comment|// CHECK-LE: llvm.ppc.altivec.vpkudus
 comment|// CHECK-PPC: warning: implicit declaration of function 'vec_vpkudus'
 comment|/* vec_vupkhsw */
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_vupkhsw
 argument_list|(
@@ -1722,7 +1724,7 @@ expr_stmt|;
 comment|// CHECK: llvm.ppc.altivec.vupkhsw
 comment|// CHECK-LE: llvm.ppc.altivec.vupklsw
 comment|/* vec_vupklsw */
-name|res_vll
+name|res_vsll
 operator|=
 name|vec_vupklsw
 argument_list|(
@@ -1741,6 +1743,118 @@ argument_list|)
 expr_stmt|;
 comment|// CHECK: llvm.ppc.altivec.vupklsw
 comment|// CHECK-LE: llvm.ppc.altivec.vupkhsw
+comment|/* vec_max */
+name|res_vsll
+operator|=
+name|vec_max
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vmaxsd
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsd
+name|res_vsll
+operator|=
+name|vec_max
+argument_list|(
+name|vbll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vmaxsd
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsd
+name|res_vsll
+operator|=
+name|vec_max
+argument_list|(
+name|vsll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vmaxsd
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxsd
+name|res_vull
+operator|=
+name|vec_max
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vmaxud
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxud
+name|res_vull
+operator|=
+name|vec_max
+argument_list|(
+name|vbll
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vmaxud
+comment|// CHECK-LE: @llvm.ppc.altivec.vmaxud
+comment|/* vec_min */
+name|res_vsll
+operator|=
+name|vec_min
+argument_list|(
+name|vsll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vminsd
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsd
+name|res_vsll
+operator|=
+name|vec_min
+argument_list|(
+name|vbll
+argument_list|,
+name|vsll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vminsd
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsd
+name|res_vsll
+operator|=
+name|vec_min
+argument_list|(
+name|vsll
+argument_list|,
+name|vbll
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vminsd
+comment|// CHECK-LE: @llvm.ppc.altivec.vminsd
+name|res_vull
+operator|=
+name|vec_min
+argument_list|(
+name|vull
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vminud
+comment|// CHECK-LE: @llvm.ppc.altivec.vminud
+name|res_vull
+operator|=
+name|vec_min
+argument_list|(
+name|vbll
+argument_list|,
+name|vull
+argument_list|)
+expr_stmt|;
+comment|// CHECK: @llvm.ppc.altivec.vminud
+comment|// CHECK-LE: @llvm.ppc.altivec.vminud
 block|}
 end_function
 

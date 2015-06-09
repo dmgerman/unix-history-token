@@ -11107,6 +11107,26 @@ comment|// I386-NETBSD6-SSE:#define __FLT_EVAL_METHOD__ 1
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -E -dM -triple=i686-pc-mingw32< /dev/null | FileCheck -check-prefix I386-DECLSPEC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -fms-extensions -triple=i686-pc-mingw32< /dev/null | FileCheck -check-prefix I386-DECLSPEC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -triple=i686-unknown-cygwin< /dev/null | FileCheck -check-prefix I386-DECLSPEC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -fms-extensions -triple=i686-unknown-cygwin< /dev/null | FileCheck -check-prefix I386-DECLSPEC %s
+end_comment
+
+begin_comment
+comment|// I386-DECLSPEC: #define __declspec
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -27307,19 +27327,19 @@ comment|// SPARC:#define __INTMAX_WIDTH__ 64
 end_comment
 
 begin_comment
-comment|// SPARC:#define __INTPTR_FMTd__ "ld"
+comment|// SPARC:#define __INTPTR_FMTd__ "d"
 end_comment
 
 begin_comment
-comment|// SPARC:#define __INTPTR_FMTi__ "li"
+comment|// SPARC:#define __INTPTR_FMTi__ "i"
 end_comment
 
 begin_comment
-comment|// SPARC:#define __INTPTR_MAX__ 2147483647L
+comment|// SPARC:#define __INTPTR_MAX__ 2147483647
 end_comment
 
 begin_comment
-comment|// SPARC:#define __INTPTR_TYPE__ long int
+comment|// SPARC:#define __INTPTR_TYPE__ int
 end_comment
 
 begin_comment
@@ -27527,7 +27547,7 @@ comment|// SPARC:#define __POINTER_WIDTH__ 32
 end_comment
 
 begin_comment
-comment|// SPARC:#define __PTRDIFF_TYPE__ long int
+comment|// SPARC:#define __PTRDIFF_TYPE__ int
 end_comment
 
 begin_comment
@@ -27607,7 +27627,7 @@ comment|// SPARC:#define __SIZE_MAX__ 4294967295U
 end_comment
 
 begin_comment
-comment|// SPARC:#define __SIZE_TYPE__ long unsigned int
+comment|// SPARC:#define __SIZE_TYPE__ unsigned int
 end_comment
 
 begin_comment
@@ -27683,7 +27703,7 @@ comment|// SPARC:#define __UINTPTR_MAX__ 4294967295U
 end_comment
 
 begin_comment
-comment|// SPARC:#define __UINTPTR_TYPE__ long unsigned int
+comment|// SPARC:#define __UINTPTR_TYPE__ unsigned int
 end_comment
 
 begin_comment
@@ -27800,6 +27820,38 @@ end_comment
 
 begin_comment
 comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -ffreestanding -triple=sparc-none-netbsd< /dev/null | FileCheck -check-prefix SPARC-NETBSD %s
+end_comment
+
+begin_comment
+comment|// SPARC-NETBSD:#define __INTPTR_FMTd__ "ld"
+end_comment
+
+begin_comment
+comment|// SPARC-NETBSD:#define __INTPTR_FMTi__ "li"
+end_comment
+
+begin_comment
+comment|// SPARC-NETBSD:#define __INTPTR_MAX__ 2147483647L
+end_comment
+
+begin_comment
+comment|// SPARC-NETBSD:#define __INTPTR_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// SPARC-NETBSD:#define __PTRDIFF_TYPE__ long int
+end_comment
+
+begin_comment
+comment|// SPARC-NETBSD:#define __SIZE_TYPE__ long unsigned int
+end_comment
+
+begin_comment
+comment|// SPARC-NETBSD:#define __UINTPTR_TYPE__ long unsigned int
 end_comment
 
 begin_comment
@@ -33300,6 +33352,22 @@ end_comment
 
 begin_comment
 comment|// PS4:#define __x86_64__ 1
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -triple=x86_64-pc-mingw32< /dev/null | FileCheck -check-prefix X86-64-DECLSPEC %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -E -dM -fms-extensions -triple=x86_64-unknown-mingw32< /dev/null | FileCheck -check-prefix X86-64-DECLSPEC %s
+end_comment
+
+begin_comment
+comment|// X86-64-DECLSPEC: #define __declspec
 end_comment
 
 begin_comment

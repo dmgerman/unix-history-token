@@ -157,6 +157,8 @@ name|TT_InlineASMColon
 block|,
 name|TT_JavaAnnotation
 block|,
+name|TT_JsComputedPropertyName
+block|,
 name|TT_JsFatArrow
 block|,
 name|TT_JsTypeColon

@@ -1249,5 +1249,28 @@ literal|1e99
 argument_list|)
 end_macro
 
+begin_comment
+comment|// PR21945
+end_comment
+
+begin_function
+name|void
+name|PR21945
+parameter_list|()
+block|{
+name|int
+name|i
+init|=
+operator|(
+operator|(
+block|{}
+operator|)
+expr|,
+literal|0l
+operator|)
+decl_stmt|;
+block|}
+end_function
+
 end_unit
 

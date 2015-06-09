@@ -86,11 +86,11 @@ comment|// hard-code the line number from altivec.h here.
 end_comment
 
 begin_comment
-comment|// expected-note@altivec.h:2514 {{deprecated here}}
+comment|// expected-note@altivec.h:* {{deprecated here}}
 end_comment
 
 begin_comment
-comment|// expected-note@altivec.h:2649 {{deprecated here}}
+comment|// expected-note@altivec.h:* {{deprecated here}}
 end_comment
 
 end_unit

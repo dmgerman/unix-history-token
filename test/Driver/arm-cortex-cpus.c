@@ -660,7 +660,7 @@ comment|// RUN: %clang -target arm -march=armbogusv6 -### -c %s 2>&1 | FileCheck
 end_comment
 
 begin_comment
-comment|// CHECK-BOGUS: error: the clang compiler does not support '-march=armbogusv6'
+comment|// CHECK-BOGUS: error: {{.*}} does not support '-march=armbogusv6'
 end_comment
 
 begin_comment
@@ -668,7 +668,23 @@ comment|// RUN: %clang -target arm---eabihf -march=armbogusv7 -### -c %s 2>&1 | 
 end_comment
 
 begin_comment
-comment|// CHECK-BOGUS-HF: error: the clang compiler does not support '-march=armbogusv7'
+comment|// CHECK-BOGUS-HF: error: {{.*}} does not support '-march=armbogusv7'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -march=armv6bogus -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BOGUS2 %s
+end_comment
+
+begin_comment
+comment|// CHECK-BOGUS2: error: {{.*}} does not support '-march=armv6bogus'
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm -march=bogus -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-BOGUS3 %s
+end_comment
+
+begin_comment
+comment|// CHECK-BOGUS3: error: {{.*}} does not support '-march=bogus'
 end_comment
 
 begin_comment
@@ -680,7 +696,7 @@ comment|// RUN: %clang -target arm -mcpu=bogus -### -c %s 2>&1 | FileCheck -chec
 end_comment
 
 begin_comment
-comment|// CHECK-BOGUS-CPU: error: the clang compiler does not support '-mcpu=bogus'
+comment|// CHECK-BOGUS-CPU: error: {{.*}} does not support '-mcpu=bogus'
 end_comment
 
 begin_comment
@@ -1321,6 +1337,42 @@ end_comment
 
 begin_comment
 comment|// CHECK-BE-CPUV8A-THUMB: "-cc1"{{.*}} "-triple" "thumbebv8-{{.*}}
+end_comment
+
+begin_comment
+comment|// ================== Check whether -mcpu accepts mixed-case values.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=Cortex-a5 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CASE-INSENSITIVE-CPUV7A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=cortex-A7 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CASE-INSENSITIVE-CPUV7A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=CORTEX-a8 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CASE-INSENSITIVE-CPUV7A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=Cortex-A9 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CASE-INSENSITIVE-CPUV7A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=corteX-A12 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CASE-INSENSITIVE-CPUV7A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=CorteX-a15 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CASE-INSENSITIVE-CPUV7A %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target arm-linux-gnueabi -mcpu=CorteX-A17 -### -c %s 2>&1 | FileCheck -check-prefix=CHECK-CASE-INSENSITIVE-CPUV7A %s
+end_comment
+
+begin_comment
+comment|// CHECK-CASE-INSENSITIVE-CPUV7A: "-cc1"{{.*}} "-triple" "armv7-{{.*}}
 end_comment
 
 end_unit

@@ -28,7 +28,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_sqrt_pd
-comment|// CHECK: @llvm.x86.avx512.sqrt.pd.512
+comment|// CHECK: @llvm.x86.avx512.mask.sqrt.pd.512
 return|return
 name|_mm512_sqrt_pd
 argument_list|(
@@ -47,7 +47,7 @@ name|a
 parameter_list|)
 block|{
 comment|// CHECK-LABEL: @test_mm512_sqrt_ps
-comment|// CHECK: @llvm.x86.avx512.sqrt.ps.512
+comment|// CHECK: @llvm.x86.avx512.mask.sqrt.ps.512
 return|return
 name|_mm512_sqrt_ps
 argument_list|(

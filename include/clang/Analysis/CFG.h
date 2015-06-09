@@ -3674,6 +3674,9 @@ name|bool
 name|AddCXXNewAllocator
 decl_stmt|;
 name|bool
+name|AddCXXDefaultInitExprInCtors
+decl_stmt|;
+name|bool
 name|alwaysAdd
 argument_list|(
 specifier|const
@@ -3779,6 +3782,11 @@ name|false
 argument_list|)
 operator|,
 name|AddCXXNewAllocator
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|AddCXXDefaultInitExprInCtors
 argument_list|(
 argument|false
 argument_list|)

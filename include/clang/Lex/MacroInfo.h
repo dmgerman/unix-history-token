@@ -138,8 +138,8 @@ comment|/// \brief The list of arguments for a function-like macro.
 comment|///
 comment|/// ArgumentList points to the first of NumArguments pointers.
 comment|///
-comment|/// This can be empty, for, e.g. "#define X()".  In a C99-style variadic macro, this
-comment|/// includes the \c __VA_ARGS__ identifier on the list.
+comment|/// This can be empty, for, e.g. "#define X()".  In a C99-style variadic
+comment|/// macro, this includes the \c __VA_ARGS__ identifier on the list.
 name|IdentifierInfo
 modifier|*
 modifier|*
@@ -187,8 +187,8 @@ literal|1
 decl_stmt|;
 comment|/// \brief True if this macro is of the form "#define X(a...)".
 comment|///
-comment|/// The "a" identifier in the replacement list will be replaced with all arguments
-comment|/// of the macro starting with the specified one.
+comment|/// The "a" identifier in the replacement list will be replaced with all
+comment|/// arguments of the macro starting with the specified one.
 name|bool
 name|IsGNUVarargs
 range|:
@@ -197,8 +197,8 @@ decl_stmt|;
 comment|/// \brief True if this macro requires processing before expansion.
 comment|///
 comment|/// This is the case for builtin macros such as __LINE__, so long as they have
-comment|/// not been redefined, but not for regular predefined macros from the "<built-in>"
-comment|/// memory buffer (see Preprocessing::getPredefinesFileID).
+comment|/// not been redefined, but not for regular predefined macros from the
+comment|/// "<built-in>" memory buffer (see Preprocessing::getPredefinesFileID).
 name|bool
 name|IsBuiltinMacro
 range|:
@@ -535,11 +535,36 @@ return|return
 name|NumArguments
 return|;
 block|}
+name|ArrayRef
+operator|<
+specifier|const
+name|IdentifierInfo
+operator|*
+operator|>
+name|args
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArrayRef
+operator|<
+specifier|const
+name|IdentifierInfo
+operator|*
+operator|>
+operator|(
+name|ArgumentList
+operator|,
+name|NumArguments
+operator|)
+return|;
+block|}
 comment|/// \brief Return the argument number of the specified identifier,
 comment|/// or -1 if the identifier is not a formal argument identifier.
 name|int
 name|getArgumentNum
 argument_list|(
+specifier|const
 name|IdentifierInfo
 operator|*
 name|Arg
@@ -1231,7 +1256,7 @@ name|IsPublic
 argument_list|(
 argument|true
 argument_list|)
-block|{ }
+block|{}
 name|DefInfo
 argument_list|(
 argument|DefMacroDirective *DefDirective
@@ -1255,7 +1280,7 @@ name|IsPublic
 argument_list|(
 argument|isPublic
 argument_list|)
-block|{ }
+block|{}
 specifier|const
 name|DefMacroDirective
 operator|*
@@ -1923,7 +1948,7 @@ comment|/// The number of modules whose macros are directly overridden by this o
 name|unsigned
 name|NumOverrides
 block|;
-comment|//ModuleMacro *OverriddenMacros[NumOverrides];
+comment|// ModuleMacro *OverriddenMacros[NumOverrides];
 name|friend
 name|class
 name|Preprocessor

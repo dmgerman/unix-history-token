@@ -203,5 +203,41 @@ name|S
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+struct|struct
+name|pair_t
+block|{
+name|int
+name|a
+decl_stmt|;
+name|int
+name|b
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|// CHECK: struct pair_t p = {a: 3, .b = 4};
+end_comment
+
+begin_decl_stmt
+name|struct
+name|pair_t
+name|p
+init|=
+block|{
+name|a
+operator|:
+literal|3
+block|,
+operator|.
+name|b
+operator|=
+literal|4
+block|}
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

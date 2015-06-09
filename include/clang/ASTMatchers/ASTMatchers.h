@@ -3200,6 +3200,30 @@ name|ConditionalOperator
 operator|>
 name|conditionalOperator
 expr_stmt|;
+comment|/// \brief Matches a C++ static_assert declaration.
+comment|///
+comment|/// Example:
+comment|///   staticAssertExpr()
+comment|/// matches
+comment|///   static_assert(sizeof(S) == sizeof(int))
+comment|/// in
+comment|/// \code
+comment|///   struct S {
+comment|///     int x;
+comment|///   };
+comment|///   static_assert(sizeof(S) == sizeof(int));
+comment|/// \endcode
+specifier|const
+name|internal
+operator|::
+name|VariadicDynCastAllOfMatcher
+operator|<
+name|Decl
+operator|,
+name|StaticAssertDecl
+operator|>
+name|staticAssertDecl
+expr_stmt|;
 comment|/// \brief Matches a reinterpret_cast expression.
 comment|///
 comment|/// Either the source expression or the destination type can be matched

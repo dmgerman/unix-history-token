@@ -32,6 +32,10 @@ comment|// RUN: %clang -target armv7a-none-linux-gnu -x c -E -dM %s -o - | FileC
 end_comment
 
 begin_comment
+comment|// RUN: %clang -target x86_64-apple-macosx10.10 -arch armv7s -x c -E -dM %s -o - | FileCheck --check-prefix=CHECK-V7 %s
+end_comment
+
+begin_comment
 comment|// CHECK-V7: __ARMEL__ 1
 end_comment
 
@@ -412,11 +416,11 @@ comment|// FPUNONE-A5-NOT:#define __ARM_VFPV4__ 1
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target armv7-none-linux-gnueabi -mcpu=cortex-a5 -mfpu=vfp3-d16 -x c -E -dM %s -o - | FileCheck --check-prefix=NONEON-A5 %s
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mcpu=cortex-a5 -mfpu=vfp4-d16 -x c -E -dM %s -o - | FileCheck --check-prefix=NONEON-A5 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -target armv7-none-linux-gnueabi -mthumb -mcpu=cortex-a5 -mfpu=vfp3-d16 -x c -E -dM %s -o - | FileCheck --check-prefix=NONEON-A5 %s
+comment|// RUN: %clang -target armv7-none-linux-gnueabi -mthumb -mcpu=cortex-a5 -mfpu=vfp4-d16 -x c -E -dM %s -o - | FileCheck --check-prefix=NONEON-A5 %s
 end_comment
 
 begin_comment

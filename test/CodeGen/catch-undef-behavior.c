@@ -801,6 +801,140 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|memcpy
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|unsigned
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(nonnull
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// CHECK-COMMON-LABEL: @call_memcpy_nonnull
+end_comment
+
+begin_function
+name|void
+name|call_memcpy_nonnull
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|void
+modifier|*
+name|q
+parameter_list|,
+name|int
+name|sz
+parameter_list|)
+block|{
+comment|// CHECK-COMMON: icmp ne i8* {{.*}}, null
+comment|// CHECK-UBSAN: call void @__ubsan_handle_nonnull_arg
+comment|// CHECK-TRAP: call void @llvm.trap()
+comment|// CHECK-COMMON: icmp ne i8* {{.*}}, null
+comment|// CHECK-UBSAN: call void @__ubsan_handle_nonnull_arg
+comment|// CHECK-TRAP: call void @llvm.trap()
+name|memcpy
+argument_list|(
+name|p
+argument_list|,
+name|q
+argument_list|,
+name|sz
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function_decl
+specifier|extern
+name|void
+modifier|*
+name|memmove
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|unsigned
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(nonnull
+parameter_list|(
+function_decl|1
+operator|,
+function_decl|2
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// CHECK-COMMON-LABEL: @call_memmove_nonnull
+end_comment
+
+begin_function
+name|void
+name|call_memmove_nonnull
+parameter_list|(
+name|void
+modifier|*
+name|p
+parameter_list|,
+name|void
+modifier|*
+name|q
+parameter_list|,
+name|int
+name|sz
+parameter_list|)
+block|{
+comment|// CHECK-COMMON: icmp ne i8* {{.*}}, null
+comment|// CHECK-UBSAN: call void @__ubsan_handle_nonnull_arg
+comment|// CHECK-TRAP: call void @llvm.trap()
+comment|// CHECK-COMMON: icmp ne i8* {{.*}}, null
+comment|// CHECK-UBSAN: call void @__ubsan_handle_nonnull_arg
+comment|// CHECK-TRAP: call void @llvm.trap()
+name|memmove
+argument_list|(
+name|p
+argument_list|,
+name|q
+argument_list|,
+name|sz
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|// CHECK-COMMON-LABEL: @call_nonnull_variadic
 end_comment

@@ -390,6 +390,35 @@ block|}
 end_function
 
 begin_function
+name|int
+name|fi3f
+parameter_list|(
+name|int
+modifier|*
+name|i
+parameter_list|)
+block|{
+comment|// CHECK-LABEL: @fi3f
+comment|// CHECK-NOT: store volatile
+comment|// CHECK: atomicrmw or
+comment|// CHECK-NOT: {{ or }}
+return|return
+name|__atomic_fetch_or
+argument_list|(
+name|i
+argument_list|,
+operator|(
+name|short
+operator|)
+literal|1
+argument_list|,
+name|memory_order_seq_cst
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
 name|_Bool
 name|fi4
 parameter_list|(

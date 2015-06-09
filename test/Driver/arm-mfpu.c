@@ -60,15 +60,7 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-FPA %s
 end_comment
 
 begin_comment
-comment|// CHECK-FPA: "-target-feature" "-vfp2"
-end_comment
-
-begin_comment
-comment|// CHECK-FPA: "-target-feature" "-vfp3"
-end_comment
-
-begin_comment
-comment|// CHECK-FPA: "-target-feature" "-neon"
+comment|// CHECK-FPA: error: {{.*}} does not support '-mfpu={{fpa|fpe|fpe2|fpe3|maverick}}'
 end_comment
 
 begin_comment
@@ -81,6 +73,18 @@ end_comment
 
 begin_comment
 comment|// CHECK-VFP: "-target-feature" "+vfp2"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP: "-target-feature" "-vfp3"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP: "-target-feature" "-vfp4"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP: "-target-feature" "-fp-armv8"
 end_comment
 
 begin_comment
@@ -108,6 +112,14 @@ comment|// CHECK-VFP3: "-target-feature" "+vfp3"
 end_comment
 
 begin_comment
+comment|// CHECK-VFP3: "-target-feature" "-vfp4"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3: "-target-feature" "-fp-armv8"
+end_comment
+
+begin_comment
 comment|// CHECK-VFP3: "-target-feature" "-neon"
 end_comment
 
@@ -128,11 +140,23 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-VFP3-D16 %s
 end_comment
 
 begin_comment
+comment|// CHECK-VFP3-D16: "-target-feature" "-fp-only-sp"
+end_comment
+
+begin_comment
 comment|// CHECK-VFP3-D16: "-target-feature" "+d16"
 end_comment
 
 begin_comment
 comment|// CHECK-VFP3-D16: "-target-feature" "+vfp3"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-D16: "-target-feature" "-vfp4"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP3-D16: "-target-feature" "-fp-armv8"
 end_comment
 
 begin_comment
@@ -160,6 +184,10 @@ comment|// CHECK-VFP4: "-target-feature" "+vfp4"
 end_comment
 
 begin_comment
+comment|// CHECK-VFP4: "-target-feature" "-fp-armv8"
+end_comment
+
+begin_comment
 comment|// CHECK-VFP4: "-target-feature" "-neon"
 end_comment
 
@@ -180,11 +208,19 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-VFP4-D16 %s
 end_comment
 
 begin_comment
+comment|// CHECK-VFP4-D16: "-target-feature" "-fp-only-sp"
+end_comment
+
+begin_comment
 comment|// CHECK-VFP4-D16: "-target-feature" "+d16"
 end_comment
 
 begin_comment
 comment|// CHECK-VFP4-D16: "-target-feature" "+vfp4"
+end_comment
+
+begin_comment
+comment|// CHECK-VFP4-D16: "-target-feature" "-fp-armv8"
 end_comment
 
 begin_comment
@@ -217,6 +253,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-FP4-SP-D16: "-target-feature" "+vfp4"
+end_comment
+
+begin_comment
+comment|// CHECK-FP4-SP-D16: "-target-feature" "-fp-armv8"
 end_comment
 
 begin_comment
@@ -276,6 +316,10 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-FP5-DP-D16 %s
 end_comment
 
 begin_comment
+comment|// CHECK-FP5-DP-D16: "-target-feature" "-fp-only-sp"
+end_comment
+
+begin_comment
 comment|// CHECK-FP5-DP-D16: "-target-feature" "+d16"
 end_comment
 
@@ -324,11 +368,11 @@ comment|// RUN:   | FileCheck --check-prefix=CHECK-NEON-VFPV4 %s
 end_comment
 
 begin_comment
-comment|// CHECK-NEON-VFPV4: "-target-feature" "+neon"
+comment|// CHECK-NEON-VFPV4: "-target-feature" "+vfp4"
 end_comment
 
 begin_comment
-comment|// CHECK-NEON-VFPV4: "-target-feature" "+vfp4"
+comment|// CHECK-NEON-VFPV4: "-target-feature" "+neon"
 end_comment
 
 begin_comment
@@ -436,10 +480,6 @@ comment|// CHECK-CRYPTO-NEON-FP-ARMV8: "-target-feature" "+fp-armv8"
 end_comment
 
 begin_comment
-comment|// CHECK-CRYPTO-NEON-FP-ARMV8: "-target-feature" "+neon"
-end_comment
-
-begin_comment
 comment|// CHECK-CRYPTO-NEON-FP-ARMV8: "-target-feature" "+crypto"
 end_comment
 
@@ -449,6 +489,14 @@ end_comment
 
 begin_comment
 comment|// RUN:   | FileCheck --check-prefix=CHECK-NO-FP %s
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FP: "-target-feature" "-fp-only-sp"
+end_comment
+
+begin_comment
+comment|// CHECK-NO-FP: "-target-feature" "-d16"
 end_comment
 
 begin_comment
@@ -468,11 +516,11 @@ comment|// CHECK-NO-FP: "-target-feature" "-fp-armv8"
 end_comment
 
 begin_comment
-comment|// CHECK-NO-FP: "-target-feature" "-crypto"
+comment|// CHECK-NO-FP: "-target-feature" "-neon"
 end_comment
 
 begin_comment
-comment|// CHECK-NO-FP: "-target-feature" "-neon"
+comment|// CHECK-NO-FP: "-target-feature" "-crypto"
 end_comment
 
 begin_comment

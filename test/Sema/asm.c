@@ -594,5 +594,55 @@ comment|// expected-error {{invalid input constraint '11m' in asm}}
 block|}
 end_function
 
+begin_comment
+comment|// PR14269
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|test16_foo
+block|{
+name|unsigned
+name|int
+name|field1
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|int
+name|field2
+range|:
+literal|2
+decl_stmt|;
+name|unsigned
+name|int
+name|field3
+range|:
+literal|3
+decl_stmt|;
+block|}
+name|test16_foo
+typedef|;
+end_typedef
+
+begin_decl_stmt
+name|test16_foo
+name|x
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|test16
+parameter_list|()
+block|{
+asm|__asm__("movl $5, %0"           : "=rm" (x.field2));
+comment|// expected-error {{reference to a bit-field in asm output with a memory constraint '=rm'}}
+asm|__asm__("movl $5, %0"           :           : "m" (x.field3));
+comment|// expected-error {{reference to a bit-field in asm input with a memory constraint 'm'}}
+block|}
+end_function
+
 end_unit
 

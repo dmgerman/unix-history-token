@@ -13730,76 +13730,11 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|emitVectorWrappedScalar8Intrinsic
-argument_list|(
-argument|unsigned Int
-argument_list|,
-argument|SmallVectorImpl<llvm::Value *>&Ops
-argument_list|,
-argument|const char *Name
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
-name|emitVectorWrappedScalar16Intrinsic
-argument_list|(
-argument|unsigned Int
-argument_list|,
-argument|SmallVectorImpl<llvm::Value *>&Ops
-argument_list|,
-argument|const char *Name
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
 name|EmitAArch64BuiltinExpr
 argument_list|(
 argument|unsigned BuiltinID
 argument_list|,
 argument|const CallExpr *E
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|llvm
-operator|::
-name|Value
-operator|*
-name|EmitNeon64Call
-argument_list|(
-name|llvm
-operator|::
-name|Function
-operator|*
-name|F
-argument_list|,
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|llvm
-operator|::
-name|Value
-operator|*
-operator|>
-operator|&
-name|O
-argument_list|,
-specifier|const
-name|char
-operator|*
-name|name
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -15697,6 +15632,38 @@ name|Checked
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Create a check for a function parameter that may potentially be
+end_comment
+
+begin_comment
+comment|/// declared as non-null.
+end_comment
+
+begin_function_decl
+name|void
+name|EmitNonNullArgCheck
+parameter_list|(
+name|RValue
+name|RV
+parameter_list|,
+name|QualType
+name|ArgType
+parameter_list|,
+name|SourceLocation
+name|ArgLoc
+parameter_list|,
+specifier|const
+name|FunctionDecl
+modifier|*
+name|FD
+parameter_list|,
+name|unsigned
+name|ParmNum
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// EmitCallArg - Emit a single call argument.
