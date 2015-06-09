@@ -440,6 +440,9 @@ begin_decl_stmt
 specifier|static
 name|uint32_t
 name|svm_feature
+init|=
+operator|~
+literal|0U
 decl_stmt|;
 end_decl_stmt
 
@@ -456,7 +459,7 @@ name|OID_AUTO
 argument_list|,
 name|features
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|svm_feature
@@ -516,7 +519,7 @@ name|OID_AUTO
 argument_list|,
 name|num_asids
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RDTUN
 argument_list|,
 operator|&
 name|nasid
@@ -750,12 +753,26 @@ name|regs
 argument_list|)
 expr_stmt|;
 name|svm_feature
-operator|=
+operator|&=
 name|regs
 index|[
 literal|3
 index|]
 expr_stmt|;
+comment|/* 	 * The number of ASIDs can be configured to be less than what is 	 * supported by the hardware but not more. 	 */
+if|if
+condition|(
+name|nasid
+operator|==
+literal|0
+operator|||
+name|nasid
+operator|>
+name|regs
+index|[
+literal|1
+index|]
+condition|)
 name|nasid
 operator|=
 name|regs

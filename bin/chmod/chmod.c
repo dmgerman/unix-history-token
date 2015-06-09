@@ -588,7 +588,6 @@ block|{
 case|case
 name|FTS_D
 case|:
-comment|/* Change it at FTS_DP. */
 if|if
 condition|(
 operator|!
@@ -603,7 +602,7 @@ argument_list|,
 name|FTS_SKIP
 argument_list|)
 expr_stmt|;
-continue|continue;
+break|break;
 case|case
 name|FTS_DNR
 case|:
@@ -629,6 +628,11 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
+case|case
+name|FTS_DP
+case|:
+comment|/* Already changed at FTS_D. */
+continue|continue;
 case|case
 name|FTS_ERR
 case|:

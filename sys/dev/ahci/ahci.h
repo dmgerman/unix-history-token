@@ -3158,7 +3158,7 @@ define|#
 directive|define
 name|AHCI_Q_BIT_STRING
 define|\
-value|"\021"			\ 	"\001NOFORCE"		\ 	"\002NOPMP"		\ 	"\003NONCQ"		\ 	"\0041CH"		\ 	"\0052CH"		\ 	"\0064CH"		\ 	"\007EDGEIS"		\ 	"\010SATA2"		\ 	"\011NOBSYRES"		\ 	"\012NOAA"		\ 	"\013NOCOUNT"		\ 	"\014ALTSIG"		\ 	"\015NOMSI"		\ 	"\016ATI_PMP_BUG"	\ 	"\017MAXIO_64K"		\ 	"\020SATA1_UNIT0"	\ 	"\021ABAR0"		\ 	"\0221MSI"              \ 	"\022FORCE_PI"          \ 	"\023RESTORE_CAP"
+value|"\020"			\ 	"\001NOFORCE"		\ 	"\002NOPMP"		\ 	"\003NONCQ"		\ 	"\0041CH"		\ 	"\0052CH"		\ 	"\0064CH"		\ 	"\007EDGEIS"		\ 	"\010SATA2"		\ 	"\011NOBSYRES"		\ 	"\012NOAA"		\ 	"\013NOCOUNT"		\ 	"\014ALTSIG"		\ 	"\015NOMSI"		\ 	"\016ATI_PMP_BUG"	\ 	"\017MAXIO_64K"		\ 	"\020SATA1_UNIT0"	\ 	"\021ABAR0"		\ 	"\0221MSI"              \ 	"\022FORCE_PI"          \ 	"\023RESTORE_CAP"
 end_define
 
 begin_function_decl

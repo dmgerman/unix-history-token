@@ -767,12 +767,6 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|VFP
-name|pc
-operator|->
-name|pc_cpu
-operator|=
-name|cpu
-expr_stmt|;
 name|vfp_init
 argument_list|()
 expr_stmt|;

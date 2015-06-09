@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: readline.c,v 1.115 2015/04/01 15:23:15 christos Exp $	*/
+comment|/*	$NetBSD: readline.c,v 1.117 2015/06/02 15:35:31 christos Exp $	*/
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ end_if
 begin_expr_stmt
 name|__RCSID
 argument_list|(
-literal|"$NetBSD: readline.c,v 1.115 2015/04/01 15:23:15 christos Exp $"
+literal|"$NetBSD: readline.c,v 1.117 2015/06/02 15:35:31 christos Exp $"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -374,7 +374,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|VCPFunction
+name|rl_vcpfunc_t
 modifier|*
 name|rl_linefunc
 init|=
@@ -554,7 +554,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|Function
+name|rl_compentry_func_t
 modifier|*
 name|rl_completion_entry_function
 init|=
@@ -578,7 +578,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
-name|CPPFunction
+name|rl_completion_func_t
 modifier|*
 name|rl_attempted_completion_function
 init|=
@@ -815,7 +815,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|Function
+name|rl_command_func_t
 modifier|*
 name|map
 index|[
@@ -8777,6 +8777,9 @@ name|breakchars
 operator|=
 name|rl_basic_word_break_characters
 expr_stmt|;
+name|_rl_update_pos
+argument_list|()
+expr_stmt|;
 comment|/* Just look at how many global variables modify this operation! */
 return|return
 name|fn_complete
@@ -8784,7 +8787,7 @@ argument_list|(
 name|e
 argument_list|,
 operator|(
-name|CPFunction
+name|rl_compentry_func_t
 operator|*
 operator|)
 name|rl_completion_entry_function
@@ -9259,7 +9262,7 @@ name|c
 index|]
 call|)
 argument_list|(
-name|NULL
+literal|1
 argument_list|,
 name|c
 argument_list|)
@@ -9287,7 +9290,7 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|Function
+name|rl_command_func_t
 modifier|*
 name|fun
 parameter_list|,
@@ -9569,7 +9572,7 @@ name|char
 modifier|*
 name|prompt
 parameter_list|,
-name|VCPFunction
+name|rl_vcpfunc_t
 modifier|*
 name|linefunc
 parameter_list|)

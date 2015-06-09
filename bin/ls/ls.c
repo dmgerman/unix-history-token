@@ -1713,7 +1713,7 @@ name|fts_options
 operator||=
 name|FTS_NOSTAT
 expr_stmt|;
-comment|/* 	 * If not -F, -P, -d or -l options, follow any symbolic links listed on 	 * the command line. 	 */
+comment|/* 	 * If not -F, -P, -d or -l options, follow any symbolic links listed on 	 * the command line, unless in color mode in which case we need to 	 * distinguish file type for a symbolic link itself and its target. 	 */
 if|if
 condition|(
 operator|!
@@ -1731,6 +1731,14 @@ name|f_type
 operator|||
 name|f_slash
 operator|)
+ifdef|#
+directive|ifdef
+name|COLORLS
+operator|&&
+operator|!
+name|f_color
+endif|#
+directive|endif
 condition|)
 name|fts_options
 operator||=

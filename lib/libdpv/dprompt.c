@@ -1844,9 +1844,6 @@ name|int
 name|estext_rsize
 decl_stmt|;
 name|int
-name|estext_size
-decl_stmt|;
-name|int
 name|flabel_size
 decl_stmt|;
 name|int
@@ -2623,10 +2620,6 @@ name|estext_rsize
 operator|=
 name|fail_rsize
 expr_stmt|;
-name|estext_size
-operator|=
-name|fail_size
-expr_stmt|;
 name|estext
 operator|=
 name|fail
@@ -2647,10 +2640,6 @@ expr_stmt|;
 name|estext_rsize
 operator|=
 name|done_rsize
-expr_stmt|;
-name|estext_size
-operator|=
-name|done_size
 expr_stmt|;
 name|estext
 operator|=

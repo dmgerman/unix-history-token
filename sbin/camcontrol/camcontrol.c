@@ -12926,8 +12926,6 @@ name|action
 decl_stmt|,
 name|actions
 decl_stmt|,
-name|setpwd
-decl_stmt|,
 name|persist
 decl_stmt|;
 name|int
@@ -12943,10 +12941,6 @@ decl_stmt|,
 name|maxsize
 decl_stmt|;
 name|actions
-operator|=
-literal|0
-expr_stmt|;
-name|setpwd
 operator|=
 literal|0
 expr_stmt|;

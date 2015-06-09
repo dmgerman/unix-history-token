@@ -17755,6 +17755,9 @@ name|NBPDR
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
+name|pmap_pde_mappings
+operator|++
+expr_stmt|;
 block|}
 continue|continue;
 block|}

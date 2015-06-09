@@ -22006,6 +22006,14 @@ operator|/
 name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
+name|atomic_add_long
+argument_list|(
+operator|&
+name|pmap_pde_mappings
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|dstmpde

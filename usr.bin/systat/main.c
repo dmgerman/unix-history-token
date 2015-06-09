@@ -628,9 +628,6 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-name|double
-name|t
-decl_stmt|;
 name|struct
 name|cmdentry
 modifier|*

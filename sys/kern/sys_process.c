@@ -1351,19 +1351,10 @@ expr_stmt|;
 block|}
 name|vp
 operator|=
-operator|(
+name|vm_object_vnode
+argument_list|(
 name|lobj
-operator|->
-name|type
-operator|==
-name|OBJT_VNODE
-operator|)
-condition|?
-name|lobj
-operator|->
-name|handle
-else|:
-name|NULL
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3836,6 +3827,12 @@ name|P_WAITED
 operator||
 name|P_FOLLOWFORK
 operator|)
+expr_stmt|;
+name|p
+operator|->
+name|p_stops
+operator|=
+literal|0
 expr_stmt|;
 comment|/* should we send SIGCHLD? */
 comment|/* childproc_continued(p); */

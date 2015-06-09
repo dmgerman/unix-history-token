@@ -916,6 +916,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_MRQC_RSS_ENABLE_2Q
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
 name|E1000_MRQC_RSS_FIELD_MASK
 value|0xFFFF0000
 end_define
@@ -939,6 +946,13 @@ define|#
 directive|define
 name|E1000_MRQC_RSS_FIELD_IPV6_TCP_EX
 value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_MRQC_RSS_FIELD_IPV6_EX
+value|0x00080000
 end_define
 
 begin_define

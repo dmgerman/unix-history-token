@@ -4122,9 +4122,13 @@ comment|/* station mode supported */
 operator||
 name|IEEE80211_C_MONITOR
 comment|/* monitor mode supported */
-operator||
-name|IEEE80211_C_BGSCAN
+if|#
+directive|if
+literal|0
+expr|| IEEE80211_C_BGSCAN
 comment|/* background scanning */
+endif|#
+directive|endif
 operator||
 name|IEEE80211_C_TXPMGT
 comment|/* tx power management */

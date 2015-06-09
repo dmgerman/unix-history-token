@@ -4817,7 +4817,7 @@ condition|)
 block|{
 name|flags
 operator|=
-name|IEEE80211_CHAN_B
+name|IEEE80211_CHAN_G
 expr_stmt|;
 block|}
 else|else
