@@ -20,7 +20,7 @@ comment|/*  * TPS65217 PMIC is a companion chip for AM335x SoC sitting on I2C bu
 end_comment
 
 begin_comment
-comment|/* TPS65217 Reisters */
+comment|/* TPS65217 Registers */
 end_comment
 
 begin_define
