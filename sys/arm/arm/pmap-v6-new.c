@@ -23881,6 +23881,9 @@ name|PTE1_SIZE
 operator|/
 name|PAGE_SIZE
 expr_stmt|;
+name|pmap_pte1_mappings
+operator|++
+expr_stmt|;
 block|}
 continue|continue;
 block|}
