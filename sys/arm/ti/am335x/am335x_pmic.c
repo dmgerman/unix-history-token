@@ -596,10 +596,6 @@ argument_list|,
 name|status_reg
 operator|.
 name|acpwr
-condition|?
-literal|1
-else|:
-literal|0
 argument_list|)
 expr_stmt|;
 name|devctl_notify_f
