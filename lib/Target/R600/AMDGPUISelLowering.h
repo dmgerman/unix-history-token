@@ -936,15 +936,7 @@ name|SIN_HW
 block|,
 name|FMAX_LEGACY
 block|,
-name|SMAX
-block|,
-name|UMAX
-block|,
 name|FMIN_LEGACY
-block|,
-name|SMIN
-block|,
-name|UMIN
 block|,
 name|FMAX3
 block|,

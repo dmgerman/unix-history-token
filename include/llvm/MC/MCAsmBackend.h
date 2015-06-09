@@ -321,6 +321,34 @@ comment|/// Target specific predicate for whether a given fixup requires the
 comment|/// associated instruction to be relaxed.
 name|virtual
 name|bool
+name|fixupNeedsRelaxationAdvanced
+argument_list|(
+specifier|const
+name|MCFixup
+operator|&
+name|Fixup
+argument_list|,
+name|bool
+name|Resolved
+argument_list|,
+name|uint64_t
+name|Value
+argument_list|,
+specifier|const
+name|MCRelaxableFragment
+operator|*
+name|DF
+argument_list|,
+specifier|const
+name|MCAsmLayout
+operator|&
+name|Layout
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Simple predicate for targets where !Resolved implies requiring relaxation
+name|virtual
+name|bool
 name|fixupNeedsRelaxation
 argument_list|(
 specifier|const

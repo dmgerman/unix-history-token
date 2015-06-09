@@ -3208,6 +3208,7 @@ specifier|inline
 name|uintptr_t
 name|alignAddr
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|Addr
@@ -3288,6 +3289,7 @@ specifier|inline
 name|size_t
 name|alignmentAdjustment
 parameter_list|(
+specifier|const
 name|void
 modifier|*
 name|Ptr

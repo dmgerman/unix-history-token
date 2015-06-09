@@ -74,7 +74,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/MC/MCSymbol.h"
+file|"llvm/MC/MCSymbolELF.h"
 end_include
 
 begin_include
@@ -134,7 +134,7 @@ name|unsigned
 name|EntrySize
 block|;
 specifier|const
-name|MCSymbol
+name|MCSymbolELF
 operator|*
 name|Group
 block|;
@@ -162,7 +162,7 @@ argument|SectionKind K
 argument_list|,
 argument|unsigned entrySize
 argument_list|,
-argument|const MCSymbol *group
+argument|const MCSymbolELF *group
 argument_list|,
 argument|unsigned UniqueID
 argument_list|,
@@ -214,7 +214,17 @@ name|Associated
 argument_list|(
 argument|Associated
 argument_list|)
-block|{}
+block|{
+if|if
+condition|(
+name|Group
+condition|)
+name|Group
+operator|->
+name|setIsSignature
+argument_list|()
+expr_stmt|;
+block|}
 operator|~
 name|MCSectionELF
 argument_list|()
@@ -280,7 +290,7 @@ name|EntrySize
 return|;
 block|}
 specifier|const
-name|MCSymbol
+name|MCSymbolELF
 operator|*
 name|getGroup
 argument_list|()

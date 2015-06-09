@@ -1170,6 +1170,9 @@ argument_list|,
 name|Type
 operator|*
 name|Ty
+argument_list|,
+name|unsigned
+name|AS
 argument_list|)
 decl|const
 name|override

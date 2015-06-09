@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -79,6 +85,21 @@ name|MCSubtargetInfo
 decl_stmt|;
 name|class
 name|StringRef
+decl_stmt|;
+comment|/// Convert `Bytes' to a hex string and output to `OS'
+name|void
+name|dumpBytes
+argument_list|(
+name|ArrayRef
+operator|<
+name|uint8_t
+operator|>
+name|Bytes
+argument_list|,
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
 decl_stmt|;
 name|namespace
 name|HexStyle
@@ -338,7 +359,7 @@ block|}
 name|HexStyle
 operator|::
 name|Style
-name|getPrintHexStyleHex
+name|getPrintHexStyle
 argument_list|()
 specifier|const
 block|{
@@ -347,7 +368,7 @@ name|PrintHexStyle
 return|;
 block|}
 name|void
-name|setPrintImmHex
+name|setPrintHexStyle
 argument_list|(
 name|HexStyle
 operator|::

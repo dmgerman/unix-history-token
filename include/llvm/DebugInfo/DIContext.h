@@ -534,14 +534,13 @@ name|LoadedObjectInfo
 block|{
 name|public
 label|:
-name|LoadedObjectInfo
-argument_list|()
-block|{}
 name|virtual
 operator|~
 name|LoadedObjectInfo
 argument_list|()
-block|{}
+operator|=
+expr|default
+expr_stmt|;
 comment|/// Obtain the Load Address of a section by Name.
 comment|///
 comment|/// Calculate the address of the section identified by the passed in Name.
@@ -553,12 +552,13 @@ name|virtual
 name|uint64_t
 name|getSectionLoadAddress
 argument_list|(
-argument|StringRef Name
+name|StringRef
+name|Name
 argument_list|)
-specifier|const
-operator|=
+decl|const
+init|=
 literal|0
-expr_stmt|;
+decl_stmt|;
 comment|/// If conveniently available, return the content of the given Section.
 comment|///
 comment|/// When the section is available in the local address space, in relocated (loaded)
@@ -590,8 +590,12 @@ comment|/// Obtain a copy of this LoadedObjectInfo.
 comment|///
 comment|/// The caller is responsible for deallocation once the copy is no longer required.
 name|virtual
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|LoadedObjectInfo
-operator|*
+operator|>
 name|clone
 argument_list|()
 specifier|const

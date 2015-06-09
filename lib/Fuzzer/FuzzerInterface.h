@@ -134,7 +134,7 @@ init|=
 literal|0
 function_decl|;
 comment|/// Mutates 'Size' bytes of data in 'Data' inplace into up to 'MaxSize' bytes,
-comment|/// returns the new size of the data.
+comment|/// returns the new size of the data, which should be positive.
 name|virtual
 name|size_t
 name|Mutate
@@ -162,7 +162,7 @@ argument_list|)
 return|;
 block|}
 comment|/// Crosses 'Data1' and 'Data2', writes up to 'MaxOutSize' bytes into Out,
-comment|/// returns the number of bytes written.
+comment|/// returns the number of bytes written, which should be positive.
 name|virtual
 name|size_t
 name|CrossOver

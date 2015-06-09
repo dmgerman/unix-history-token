@@ -344,6 +344,8 @@ argument|MachineInstr *MI
 argument_list|,
 argument|ArrayRef<unsigned> Ops
 argument_list|,
+argument|MachineBasicBlock::iterator InsertPt
+argument_list|,
 argument|int FrameIndex
 argument_list|)
 specifier|const
@@ -358,6 +360,8 @@ argument_list|,
 argument|MachineInstr *MI
 argument_list|,
 argument|ArrayRef<unsigned> Ops
+argument_list|,
+argument|MachineBasicBlock::iterator InsertPt
 argument_list|,
 argument|MachineInstr *LoadMI
 argument_list|)

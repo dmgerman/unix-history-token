@@ -227,7 +227,7 @@ specifier|const
 name|override
 block|;
 name|void
-name|EmitJumpTable
+name|EmitJumpTableAddrs
 argument_list|(
 specifier|const
 name|MachineInstr
@@ -236,12 +236,20 @@ name|MI
 argument_list|)
 block|;
 name|void
-name|EmitJump2Table
+name|EmitJumpTableInsts
 argument_list|(
 specifier|const
 name|MachineInstr
 operator|*
 name|MI
+argument_list|)
+block|;
+name|void
+name|EmitJumpTableTBInst
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|unsigned OffsetWidth
 argument_list|)
 block|;
 name|void

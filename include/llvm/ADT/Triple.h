@@ -122,9 +122,12 @@ comment|// AArch64 (little endian): aarch64
 name|aarch64_be
 block|,
 comment|// AArch64 (big endian): aarch64_be
-name|bpf
+name|bpfel
 block|,
 comment|// eBPF or extended BPF or 64-bit BPF (little endian)
+name|bpfeb
+block|,
+comment|// eBPF or extended BPF or 64-bit BPF (big endian)
 name|hexagon
 block|,
 comment|// Hexagon: hexagon
@@ -659,6 +662,29 @@ return|return
 name|Environment
 return|;
 block|}
+comment|/// \brief Parse the version number from the OS name component of the
+comment|/// triple, if present.
+comment|///
+comment|/// For example, "fooos1.2.3" would return (1, 2, 3).
+comment|///
+comment|/// If an entry is not defined, it will be returned as 0.
+name|void
+name|getEnvironmentVersion
+argument_list|(
+name|unsigned
+operator|&
+name|Major
+argument_list|,
+name|unsigned
+operator|&
+name|Minor
+argument_list|,
+name|unsigned
+operator|&
+name|Micro
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// getFormat - Get the object format for this triple.
 name|ObjectFormatType
 name|getObjectFormat

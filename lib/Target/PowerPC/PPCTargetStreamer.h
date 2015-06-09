@@ -107,7 +107,7 @@ name|virtual
 name|void
 name|emitLocalEntry
 argument_list|(
-name|MCSymbol
+name|MCSymbolELF
 operator|*
 name|S
 argument_list|,

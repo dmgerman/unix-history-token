@@ -5145,6 +5145,11 @@ name|Type
 operator|*
 operator|&
 comment|/*AccessTy*/
+argument_list|,
+name|unsigned
+name|AddrSpace
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -5206,6 +5211,10 @@ comment|///
 comment|/// The type may be VoidTy, in which case only return true if the addressing
 comment|/// mode is legal for a load/store of any legal type.  TODO: Handle
 comment|/// pre/postinc as well.
+comment|///
+comment|/// If the address space cannot be determined, it will be -1.
+comment|///
+comment|/// TODO: Remove default argument
 name|virtual
 name|bool
 name|isLegalAddressingMode
@@ -5218,6 +5227,9 @@ argument_list|,
 name|Type
 operator|*
 name|Ty
+argument_list|,
+name|unsigned
+name|AddrSpace
 argument_list|)
 decl|const
 decl_stmt|;
@@ -5227,6 +5239,7 @@ comment|///
 comment|/// If the AM is supported, the return value must be>= 0.
 comment|/// If the AM is not supported, it returns a negative value.
 comment|/// TODO: Handle pre/postinc as well.
+comment|/// TODO: Remove default argument
 name|virtual
 name|int
 name|getScalingFactorCost
@@ -5239,6 +5252,11 @@ argument_list|,
 name|Type
 operator|*
 name|Ty
+argument_list|,
+name|unsigned
+name|AS
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -5250,6 +5268,8 @@ argument_list|(
 name|AM
 argument_list|,
 name|Ty
+argument_list|,
+name|AS
 argument_list|)
 condition|)
 return|return

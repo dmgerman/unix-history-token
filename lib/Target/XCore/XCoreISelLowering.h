@@ -279,6 +279,8 @@ argument_list|(
 argument|const AddrMode&AM
 argument_list|,
 argument|Type *Ty
+argument_list|,
+argument|unsigned AS
 argument_list|)
 specifier|const
 name|override

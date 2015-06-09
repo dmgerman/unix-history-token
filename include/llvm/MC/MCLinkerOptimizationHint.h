@@ -393,7 +393,7 @@ comment|/// Emit this directive in \p OutStream using the information available
 comment|/// in the given \p ObjWriter and \p Layout to get the address of the
 comment|/// arguments within the object file.
 name|void
-name|Emit_impl
+name|emit_impl
 argument_list|(
 name|raw_ostream
 operator|&
@@ -473,7 +473,7 @@ block|}
 comment|/// Emit this directive as:
 comment|///<kind, numArgs, addr1, ..., addrN>
 name|void
-name|Emit
+name|emit
 argument_list|(
 name|MachObjectWriter
 operator|&
@@ -495,7 +495,7 @@ operator|.
 name|getStream
 argument_list|()
 decl_stmt|;
-name|Emit_impl
+name|emit_impl
 argument_list|(
 name|OutStream
 argument_list|,
@@ -577,7 +577,7 @@ block|;
 name|raw_counting_ostream
 name|OutStream
 block|;
-name|Emit_impl
+name|emit_impl
 argument_list|(
 name|OutStream
 argument_list|,
@@ -719,9 +719,9 @@ name|EmitSize
 return|;
 block|}
 comment|/// Emit all Linker Optimization Hint in one big table.
-comment|/// Each line of the table is emitted by LOHDirective::Emit.
+comment|/// Each line of the table is emitted by LOHDirective::emit.
 name|void
-name|Emit
+name|emit
 argument_list|(
 name|MachObjectWriter
 operator|&
@@ -745,7 +745,7 @@ name|Directives
 control|)
 name|D
 operator|.
-name|Emit
+name|emit
 argument_list|(
 name|ObjWriter
 argument_list|,

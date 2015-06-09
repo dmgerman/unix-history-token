@@ -576,24 +576,26 @@ comment|/// Parameters that control the generic loop unrolling transformation.
 struct|struct
 name|UnrollingPreferences
 block|{
-comment|/// The cost threshold for the unrolled loop, compared to
-comment|/// CodeMetrics.NumInsts aggregated over all basic blocks in the loop body.
-comment|/// The unrolling factor is set such that the unrolled loop body does not
-comment|/// exceed this cost. Set this to UINT_MAX to disable the loop body cost
+comment|/// The cost threshold for the unrolled loop. Should be relative to the
+comment|/// getUserCost values returned by this API, and the expectation is that
+comment|/// the unrolled loop's instructions when run through that interface should
+comment|/// not exceed this cost. However, this is only an estimate. Also, specific
+comment|/// loops may be unrolled even with a cost above this threshold if deemed
+comment|/// profitable. Set this to UINT_MAX to disable the loop body cost
 comment|/// restriction.
 name|unsigned
 name|Threshold
 decl_stmt|;
-comment|/// If complete unrolling could help other optimizations (e.g. InstSimplify)
-comment|/// to remove N% of instructions, then we can go beyond unroll threshold.
-comment|/// This value set the minimal percent for allowing that.
+comment|/// If complete unrolling will reduce the cost of the loop below its
+comment|/// expected dynamic cost while rolled by this percentage, apply a discount
+comment|/// (below) to its unrolled cost.
 name|unsigned
-name|MinPercentOfOptimized
+name|PercentDynamicCostSavedThreshold
 decl_stmt|;
-comment|/// The absolute cost threshold. We won't go beyond this even if complete
-comment|/// unrolling could result in optimizing out 90% of instructions.
+comment|/// The discount applied to the unrolled cost when the *dynamic* cost
+comment|/// savings of unrolling exceed the \c PercentDynamicCostSavedThreshold.
 name|unsigned
-name|AbsoluteThreshold
+name|DynamicCostSavingsDiscount
 decl_stmt|;
 comment|/// The cost threshold for the unrolled loop when optimizing for size (set
 comment|/// to UINT_MAX to disable).
@@ -727,6 +729,11 @@ name|HasBaseReg
 argument_list|,
 name|int64_t
 name|Scale
+argument_list|,
+name|unsigned
+name|AddrSpace
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -783,6 +790,11 @@ name|HasBaseReg
 argument_list|,
 name|int64_t
 name|Scale
+argument_list|,
+name|unsigned
+name|AddrSpace
+operator|=
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1190,6 +1202,41 @@ name|AddressSpace
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \return The cost of the interleaved memory operation.
+comment|/// \p Opcode is the memory operation code
+comment|/// \p VecTy is the vector type of the interleaved access.
+comment|/// \p Factor is the interleave factor
+comment|/// \p Indices is the indices for interleaved load members (as interleaved
+comment|///    load allows gaps)
+comment|/// \p Alignment is the alignment of the memory operation
+comment|/// \p AddressSpace is address space of the pointer.
+name|unsigned
+name|getInterleavedMemoryOpCost
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|Type
+operator|*
+name|VecTy
+argument_list|,
+name|unsigned
+name|Factor
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Indices
+argument_list|,
+name|unsigned
+name|Alignment
+argument_list|,
+name|unsigned
+name|AddressSpace
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Calculate the cost of performing a vector reduction.
 comment|///
 comment|/// This is the cost of reducing the vector value of type \p Ty to a scalar
@@ -1577,6 +1624,8 @@ argument_list|,
 argument|bool HasBaseReg
 argument_list|,
 argument|int64_t Scale
+argument_list|,
+argument|unsigned AddrSpace
 argument_list|)
 operator|=
 literal|0
@@ -1616,6 +1665,8 @@ argument_list|,
 argument|bool HasBaseReg
 argument_list|,
 argument|int64_t Scale
+argument_list|,
+argument|unsigned AddrSpace
 argument_list|)
 operator|=
 literal|0
@@ -1895,6 +1946,25 @@ argument_list|(
 argument|unsigned Opcode
 argument_list|,
 argument|Type *Src
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned AddressSpace
+argument_list|)
+operator|=
+literal|0
+block|;
+name|virtual
+name|unsigned
+name|getInterleavedMemoryOpCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *VecTy
+argument_list|,
+argument|unsigned Factor
+argument_list|,
+argument|ArrayRef<unsigned> Indices
 argument_list|,
 argument|unsigned Alignment
 argument_list|,
@@ -2331,6 +2401,8 @@ argument_list|,
 argument|bool HasBaseReg
 argument_list|,
 argument|int64_t Scale
+argument_list|,
+argument|unsigned AddrSpace
 argument_list|)
 name|override
 block|{
@@ -2348,6 +2420,8 @@ argument_list|,
 name|HasBaseReg
 argument_list|,
 name|Scale
+argument_list|,
+name|AddrSpace
 argument_list|)
 return|;
 block|}
@@ -2403,6 +2477,8 @@ argument_list|,
 argument|bool HasBaseReg
 argument_list|,
 argument|int64_t Scale
+argument_list|,
+argument|unsigned AddrSpace
 argument_list|)
 name|override
 block|{
@@ -2420,6 +2496,8 @@ argument_list|,
 name|HasBaseReg
 argument_list|,
 name|Scale
+argument_list|,
+name|AddrSpace
 argument_list|)
 return|;
 block|}
@@ -2900,6 +2978,42 @@ argument_list|(
 name|Opcode
 argument_list|,
 name|Src
+argument_list|,
+name|Alignment
+argument_list|,
+name|AddressSpace
+argument_list|)
+return|;
+block|}
+name|unsigned
+name|getInterleavedMemoryOpCost
+argument_list|(
+argument|unsigned Opcode
+argument_list|,
+argument|Type *VecTy
+argument_list|,
+argument|unsigned Factor
+argument_list|,
+argument|ArrayRef<unsigned> Indices
+argument_list|,
+argument|unsigned Alignment
+argument_list|,
+argument|unsigned AddressSpace
+argument_list|)
+name|override
+block|{
+return|return
+name|Impl
+operator|.
+name|getInterleavedMemoryOpCost
+argument_list|(
+name|Opcode
+argument_list|,
+name|VecTy
+argument_list|,
+name|Factor
+argument_list|,
+name|Indices
 argument_list|,
 name|Alignment
 argument_list|,

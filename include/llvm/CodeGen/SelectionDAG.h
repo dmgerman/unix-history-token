@@ -4911,6 +4911,18 @@ modifier|*
 name|MD
 parameter_list|)
 function_decl|;
+comment|/// Return a bitcast using the SDLoc of the value operand, and casting to the
+comment|/// provided type. Use getNode to set a custom SDLoc.
+name|SDValue
+name|getBitcast
+parameter_list|(
+name|EVT
+name|VT
+parameter_list|,
+name|SDValue
+name|V
+parameter_list|)
+function_decl|;
 comment|/// Return an AddrSpaceCastSDNode.
 name|SDValue
 name|getAddrSpaceCast

@@ -209,20 +209,11 @@ name|friend
 name|class
 name|ValueAsMetadata
 decl_stmt|;
-comment|// Allow access to NameAndIsUsedByMD.
+comment|// Allow access to IsUsedByMD.
 name|friend
 name|class
 name|ValueHandleBase
 decl_stmt|;
-name|PointerIntPair
-operator|<
-name|ValueName
-operator|*
-operator|,
-literal|1
-operator|>
-name|NameAndIsUsedByMD
-expr_stmt|;
 specifier|const
 name|unsigned
 name|char
@@ -273,6 +264,18 @@ comment|/// instances of Value have operands, 32-bit hosts aren't significantly
 comment|/// affected.
 name|unsigned
 name|NumOperands
+range|:
+literal|30
+decl_stmt|;
+name|bool
+name|IsUsedByMD
+range|:
+literal|1
+decl_stmt|;
+name|bool
+name|HasName
+range|:
+literal|1
 decl_stmt|;
 name|private
 label|:
@@ -785,10 +788,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getValueName
-argument_list|()
-operator|!=
-name|nullptr
+name|HasName
 return|;
 block|}
 name|ValueName
@@ -796,14 +796,7 @@ operator|*
 name|getValueName
 argument_list|()
 specifier|const
-block|{
-return|return
-name|NameAndIsUsedByMD
-operator|.
-name|getPointer
-argument_list|()
-return|;
-block|}
+expr_stmt|;
 name|void
 name|setValueName
 parameter_list|(
@@ -811,15 +804,7 @@ name|ValueName
 modifier|*
 name|VN
 parameter_list|)
-block|{
-name|NameAndIsUsedByMD
-operator|.
-name|setPointer
-argument_list|(
-name|VN
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 name|private
 label|:
 name|void
@@ -1421,10 +1406,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NameAndIsUsedByMD
-operator|.
-name|getInt
-argument_list|()
+name|IsUsedByMD
 return|;
 block|}
 comment|/// \brief Strip off pointer casts, all-zero GEPs, and aliases.

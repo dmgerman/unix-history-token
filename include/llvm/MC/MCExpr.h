@@ -161,7 +161,7 @@ operator|=
 name|delete
 decl_stmt|;
 name|bool
-name|EvaluateAsAbsolute
+name|evaluateAsAbsolute
 argument_list|(
 name|int64_t
 operator|&
@@ -225,7 +225,7 @@ argument|Kind
 argument_list|)
 block|{}
 name|bool
-name|EvaluateAsRelocatableImpl
+name|evaluateAsRelocatableImpl
 argument_list|(
 name|MCValue
 operator|&
@@ -278,6 +278,11 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|OS
+argument_list|,
+specifier|const
+name|MCAsmInfo
+operator|*
+name|MAI
 argument_list|)
 decl|const
 decl_stmt|;
@@ -297,7 +302,7 @@ comment|/// values. If not given, then only non-symbolic expressions will be
 comment|/// evaluated.
 comment|/// \return - True on success.
 name|bool
-name|EvaluateAsAbsolute
+name|evaluateAsAbsolute
 argument_list|(
 name|int64_t
 operator|&
@@ -316,7 +321,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|bool
-name|EvaluateAsAbsolute
+name|evaluateAsAbsolute
 argument_list|(
 name|int64_t
 operator|&
@@ -325,7 +330,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|bool
-name|EvaluateAsAbsolute
+name|evaluateAsAbsolute
 argument_list|(
 name|int64_t
 operator|&
@@ -339,7 +344,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|bool
-name|EvaluateAsAbsolute
+name|evaluateAsAbsolute
 argument_list|(
 name|int64_t
 operator|&
@@ -374,7 +379,7 @@ comment|/// \param Layout - The assembler layout object to use for evaluating va
 comment|/// \param Fixup - The Fixup object if available.
 comment|/// \return - True on success.
 name|bool
-name|EvaluateAsRelocatable
+name|evaluateAsRelocatable
 argument_list|(
 name|MCValue
 operator|&
@@ -395,7 +400,7 @@ decl_stmt|;
 comment|/// \brief Try to evaluate the expression to the form (a - b + constant) where
 comment|/// neither a nor b are variables.
 comment|///
-comment|/// This is a more aggressive variant of EvaluateAsRelocatable. The intended
+comment|/// This is a more aggressive variant of evaluateAsRelocatable. The intended
 comment|/// use is for when relocations are not available, like the .size directive.
 name|bool
 name|evaluateAsValue
@@ -417,7 +422,7 @@ comment|/// otherwise the section associated with the first defined symbol in th
 comment|/// expression.
 name|MCSection
 operator|*
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -445,6 +450,8 @@ operator|.
 name|print
 argument_list|(
 name|OS
+argument_list|,
+name|nullptr
 argument_list|)
 block|;
 return|return
@@ -487,7 +494,7 @@ specifier|static
 specifier|const
 name|MCConstantExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|int64_t Value
 argument_list|,
@@ -901,7 +908,7 @@ specifier|static
 specifier|const
 name|MCSymbolRefExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|const MCSymbol *Symbol
 argument_list|,
@@ -911,7 +918,7 @@ block|{
 return|return
 name|MCSymbolRefExpr
 operator|::
-name|Create
+name|create
 argument_list|(
 name|Symbol
 argument_list|,
@@ -925,7 +932,7 @@ specifier|static
 specifier|const
 name|MCSymbolRefExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|const MCSymbol *Symbol
 argument_list|,
@@ -938,7 +945,7 @@ specifier|static
 specifier|const
 name|MCSymbolRefExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|StringRef Name
 argument_list|,
@@ -1092,7 +1099,7 @@ specifier|static
 specifier|const
 name|MCUnaryExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|Opcode Op
 argument_list|,
@@ -1105,7 +1112,7 @@ specifier|static
 specifier|const
 name|MCUnaryExpr
 operator|*
-name|CreateLNot
+name|createLNot
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -1113,7 +1120,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|LNot
 argument_list|,
@@ -1127,7 +1134,7 @@ specifier|static
 specifier|const
 name|MCUnaryExpr
 operator|*
-name|CreateMinus
+name|createMinus
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -1135,7 +1142,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Minus
 argument_list|,
@@ -1149,7 +1156,7 @@ specifier|static
 specifier|const
 name|MCUnaryExpr
 operator|*
-name|CreateNot
+name|createNot
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -1157,7 +1164,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Not
 argument_list|,
@@ -1171,7 +1178,7 @@ specifier|static
 specifier|const
 name|MCUnaryExpr
 operator|*
-name|CreatePlus
+name|createPlus
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -1179,7 +1186,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Plus
 argument_list|,
@@ -1361,7 +1368,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|Opcode Op
 argument_list|,
@@ -1376,7 +1383,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateAdd
+name|createAdd
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1386,7 +1393,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Add
 argument_list|,
@@ -1402,7 +1409,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateAnd
+name|createAnd
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1412,7 +1419,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|And
 argument_list|,
@@ -1428,7 +1435,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateDiv
+name|createDiv
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1438,7 +1445,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Div
 argument_list|,
@@ -1454,7 +1461,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateEQ
+name|createEQ
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1464,7 +1471,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|EQ
 argument_list|,
@@ -1480,7 +1487,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateGT
+name|createGT
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1490,7 +1497,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|GT
 argument_list|,
@@ -1506,7 +1513,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateGTE
+name|createGTE
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1516,7 +1523,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|GTE
 argument_list|,
@@ -1532,7 +1539,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateLAnd
+name|createLAnd
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1542,7 +1549,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|LAnd
 argument_list|,
@@ -1558,7 +1565,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateLOr
+name|createLOr
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1568,7 +1575,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|LOr
 argument_list|,
@@ -1584,7 +1591,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateLT
+name|createLT
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1594,7 +1601,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|LT
 argument_list|,
@@ -1610,7 +1617,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateLTE
+name|createLTE
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1620,7 +1627,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|LTE
 argument_list|,
@@ -1636,7 +1643,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateMod
+name|createMod
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1646,7 +1653,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Mod
 argument_list|,
@@ -1662,7 +1669,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateMul
+name|createMul
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1672,7 +1679,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Mul
 argument_list|,
@@ -1688,7 +1695,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateNE
+name|createNE
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1698,7 +1705,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|NE
 argument_list|,
@@ -1714,7 +1721,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateOr
+name|createOr
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1724,7 +1731,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Or
 argument_list|,
@@ -1740,7 +1747,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateShl
+name|createShl
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1750,7 +1757,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Shl
 argument_list|,
@@ -1766,7 +1773,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateAShr
+name|createAShr
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1776,7 +1783,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|AShr
 argument_list|,
@@ -1792,7 +1799,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateLShr
+name|createLShr
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1802,7 +1809,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|LShr
 argument_list|,
@@ -1818,7 +1825,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateSub
+name|createSub
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1828,7 +1835,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Sub
 argument_list|,
@@ -1844,7 +1851,7 @@ specifier|static
 specifier|const
 name|MCBinaryExpr
 operator|*
-name|CreateXor
+name|createXor
 argument_list|(
 argument|const MCExpr *LHS
 argument_list|,
@@ -1854,7 +1861,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|Xor
 argument_list|,
@@ -1959,9 +1966,11 @@ name|public
 operator|:
 name|virtual
 name|void
-name|PrintImpl
+name|printImpl
 argument_list|(
 argument|raw_ostream&OS
+argument_list|,
+argument|const MCAsmInfo *MAI
 argument_list|)
 specifier|const
 operator|=
@@ -1969,7 +1978,7 @@ literal|0
 block|;
 name|virtual
 name|bool
-name|EvaluateAsRelocatableImpl
+name|evaluateAsRelocatableImpl
 argument_list|(
 argument|MCValue&Res
 argument_list|,
@@ -1994,7 +2003,7 @@ block|;
 name|virtual
 name|MCSection
 operator|*
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 specifier|const
 operator|=

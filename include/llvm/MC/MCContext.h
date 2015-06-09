@@ -148,6 +148,9 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
+name|MCSymbolELF
+decl_stmt|;
+name|class
 name|MCLabel
 decl_stmt|;
 struct_decl|struct
@@ -262,7 +265,7 @@ specifier|const
 name|MCSectionELF
 operator|*
 operator|,
-name|MCSymbol
+name|MCSymbolELF
 operator|*
 operator|>
 name|SectionSymbols
@@ -684,16 +687,38 @@ name|AutoReset
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|MCSymbol
+modifier|*
+name|createSymbolImpl
+argument_list|(
+specifier|const
+name|StringMapEntry
+operator|<
+name|bool
+operator|>
+operator|*
+name|Name
+argument_list|,
+name|bool
+name|IsTemporary
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|MCSymbol
 modifier|*
-name|CreateSymbol
+name|createSymbol
 parameter_list|(
 name|StringRef
 name|Name
 parameter_list|,
 name|bool
 name|AlwaysAddSuffix
+parameter_list|,
+name|bool
+name|IsTemporary
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -998,7 +1023,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|MCSymbol
+name|MCSymbolELF
 modifier|*
 name|getOrCreateSectionSymbol
 parameter_list|(
@@ -1455,7 +1480,7 @@ name|unsigned
 name|EntrySize
 parameter_list|,
 specifier|const
-name|MCSymbol
+name|MCSymbolELF
 modifier|*
 name|Group
 parameter_list|,
@@ -1493,7 +1518,7 @@ name|unsigned
 name|EntrySize
 parameter_list|,
 specifier|const
-name|MCSymbol
+name|MCSymbolELF
 modifier|*
 name|Group
 parameter_list|,
@@ -1525,7 +1550,7 @@ modifier|*
 name|createELFGroupSection
 parameter_list|(
 specifier|const
-name|MCSymbol
+name|MCSymbolELF
 modifier|*
 name|Group
 parameter_list|)

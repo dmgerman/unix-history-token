@@ -345,6 +345,16 @@ name|void
 name|emitDirectiveSetPush
 argument_list|()
 block|;
+name|virtual
+name|void
+name|emitDirectiveSetSoftFloat
+argument_list|()
+block|;
+name|virtual
+name|void
+name|emitDirectiveSetHardFloat
+argument_list|()
+block|;
 comment|// PIC support
 name|virtual
 name|void
@@ -814,6 +824,16 @@ name|override
 block|;
 name|void
 name|emitDirectiveSetPush
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetSoftFloat
+argument_list|()
+name|override
+block|;
+name|void
+name|emitDirectiveSetHardFloat
 argument_list|()
 name|override
 block|;

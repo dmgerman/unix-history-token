@@ -2814,20 +2814,17 @@ name|override
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|std
-operator|::
-name|error_code
+begin_decl_stmt
+name|uint64_t
 name|getSymbolSize
 argument_list|(
-argument|DataRefImpl Symb
-argument_list|,
-argument|uint64_t&Res
+name|DataRefImpl
+name|Symb
 argument_list|)
-specifier|const
+decl|const
 name|override
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 name|uint32_t
@@ -3124,21 +3121,6 @@ name|std
 operator|::
 name|error_code
 name|getRelocationTypeName
-argument_list|(
-argument|DataRefImpl Rel
-argument_list|,
-argument|SmallVectorImpl<char>&Result
-argument_list|)
-specifier|const
-name|override
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|std
-operator|::
-name|error_code
-name|getRelocationValueString
 argument_list|(
 argument|DataRefImpl Rel
 argument_list|,
@@ -3529,9 +3511,10 @@ end_expr_stmt
 
 begin_return
 return|return
-name|object_error
+name|std
 operator|::
-name|success
+name|error_code
+argument_list|()
 return|;
 end_return
 
@@ -3693,9 +3676,10 @@ end_expr_stmt
 
 begin_return
 return|return
-name|object_error
+name|std
 operator|::
-name|success
+name|error_code
+argument_list|()
 return|;
 end_return
 

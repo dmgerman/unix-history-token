@@ -490,6 +490,11 @@ name|unsigned
 operator|>
 name|Ops
 argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|InsertPt
+argument_list|,
 name|int
 name|FrameIndex
 argument_list|)
@@ -513,6 +518,11 @@ operator|<
 name|unsigned
 operator|>
 name|Ops
+argument_list|,
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|InsertPt
 argument_list|,
 name|MachineInstr
 operator|*

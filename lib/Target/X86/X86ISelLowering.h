@@ -141,10 +141,6 @@ comment|///  Bitwise logical ANDNOT of floating point values. This
 comment|/// corresponds to X86::ANDNPS or X86::ANDNPD.
 name|FANDN
 block|,
-comment|/// Bitwise logical right shift of floating point values. This
-comment|/// corresponds to X86::PSRLDQ.
-name|FSRL
-block|,
 comment|/// These operations represent an abstract X86 call
 comment|/// instruction, which includes a bunch of information.  In particular the
 comment|/// operands of these node are:
@@ -276,6 +272,9 @@ block|,
 comment|/// Shuffle 16 8-bit values within a vector.
 name|PSHUFB
 block|,
+comment|/// Compute Sum of Absolute Differences.
+name|PSADBW
+block|,
 comment|/// Bitwise Logical AND NOT of Packed FP values.
 name|ANDNP
 block|,
@@ -305,6 +304,11 @@ block|,
 name|FMAX_RND
 block|,
 name|FMIN_RND
+block|,
+name|FSQRT_RND
+block|,
+comment|// FP vector get exponent
+name|FGETEXP_RND
 block|,
 comment|// Integer add/sub with unsigned saturation.
 name|ADDUS
@@ -514,6 +518,9 @@ name|PSHUFLW
 block|,
 name|SHUFP
 block|,
+comment|//Shuffle Packed Values at 128-bit granularity
+name|SHUF128
+block|,
 name|MOVDDUP
 block|,
 name|MOVSHDUP
@@ -551,6 +558,12 @@ block|,
 name|VPERMI
 block|,
 name|VPERM2X128
+block|,
+comment|//Fix Up Special Packed Float32/64 values
+name|VFIXUPIMM
+block|,
+comment|//Range Restriction Calculation For Packed Pairs of Float32/64 values
+name|VRANGE
 block|,
 comment|// Broadcast scalar to vector
 name|VBROADCAST
@@ -1361,6 +1374,9 @@ argument_list|,
 name|Type
 operator|*
 name|Ty
+argument_list|,
+name|unsigned
+name|AS
 argument_list|)
 decl|const
 name|override
@@ -1407,6 +1423,9 @@ argument_list|,
 name|Type
 operator|*
 name|Ty
+argument_list|,
+name|unsigned
+name|AS
 argument_list|)
 decl|const
 name|override

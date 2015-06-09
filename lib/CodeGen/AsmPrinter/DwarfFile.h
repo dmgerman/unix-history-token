@@ -148,6 +148,9 @@ name|AsmPrinter
 modifier|*
 name|Asm
 decl_stmt|;
+name|BumpPtrAllocator
+name|AbbrevAllocator
+decl_stmt|;
 comment|// Used to uniquely define abbreviations.
 name|FoldingSet
 operator|<
@@ -272,13 +275,17 @@ name|void
 name|computeSizeAndOffsets
 parameter_list|()
 function_decl|;
-comment|/// \brief Define a unique number for the abbreviation.
-name|void
-name|assignAbbrevNumber
-parameter_list|(
+comment|/// Define a unique number for the abbreviation.
+comment|///
+comment|/// Compute the abbreviation for \c Die, look up its unique number, and
+comment|/// return a reference to it in the uniquing table.
 name|DIEAbbrev
 modifier|&
-name|Abbrev
+name|assignAbbrevNumber
+parameter_list|(
+name|DIE
+modifier|&
+name|Die
 parameter_list|)
 function_decl|;
 comment|/// \brief Add a unit to the list of CUs.

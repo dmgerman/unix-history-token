@@ -76,6 +76,31 @@ modifier|*
 name|Overview
 parameter_list|)
 function_decl|;
+comment|/**  * This function will search through all previously loaded dynamic  * libraries for the symbol \p symbolName. If it is found, the address of  * that symbol is returned. If not, null is returned.  *  * @see sys::DynamicLibrary::SearchForAddressOfSymbol()  */
+name|void
+modifier|*
+name|LLVMSearchForAddressOfSymbol
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|symbolName
+parameter_list|)
+function_decl|;
+comment|/**  * This functions permanently adds the symbol \p symbolName with the  * value \p symbolValue.  These symbols are searched before any  * libraries.  *  * @see sys::DynamicLibrary::AddSymbol()  */
+name|void
+name|LLVMAddSymbol
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|symbolName
+parameter_list|,
+name|void
+modifier|*
+name|symbolValue
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

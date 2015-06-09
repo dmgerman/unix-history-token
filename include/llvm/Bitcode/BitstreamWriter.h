@@ -1043,14 +1043,11 @@ comment|// Push the outer block's abbrev set onto the stack, start out with an
 comment|// empty abbrev set.
 name|BlockScope
 operator|.
-name|push_back
-argument_list|(
-name|Block
+name|emplace_back
 argument_list|(
 name|OldCodeSize
 argument_list|,
 name|BlockSizeWordIndex
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|BlockScope
@@ -2521,11 +2518,8 @@ return|;
 comment|// Otherwise, add a new record.
 name|BlockInfoRecords
 operator|.
-name|push_back
-argument_list|(
-name|BlockInfo
+name|emplace_back
 argument_list|()
-argument_list|)
 expr_stmt|;
 name|BlockInfoRecords
 operator|.

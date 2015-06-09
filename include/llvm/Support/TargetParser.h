@@ -63,6 +63,20 @@ directive|define
 name|LLVM_SUPPORT_TARGETPARSER_H
 end_define
 
+begin_comment
+comment|// FIXME: vector is used because that's what clang uses for subtarget feature
+end_comment
+
+begin_comment
+comment|// lists, but SmallVector would probably be better
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -87,6 +101,8 @@ name|FK_INVALID
 init|=
 literal|0
 block|,
+name|FK_NONE
+block|,
 name|FK_VFP
 block|,
 name|FK_VFPV2
@@ -99,7 +115,11 @@ name|FK_VFPV4
 block|,
 name|FK_VFPV4_D16
 block|,
+name|FK_FPV4_SP_D16
+block|,
 name|FK_FPV5_D16
+block|,
+name|FK_FPV5_SP_D16
 block|,
 name|FK_FP_ARMV8
 block|,
@@ -114,6 +134,38 @@ block|,
 name|FK_SOFTVFP
 block|,
 name|FK_LAST
+block|}
+enum|;
+comment|// An FPU name implies one of three levels of Neon support:
+enum|enum
+name|NeonSupportLevel
+block|{
+name|NS_None
+init|=
+literal|0
+block|,
+comment|///< No Neon
+name|NS_Neon
+block|,
+comment|///< Neon
+name|NS_Crypto
+comment|///< Neon with Crypto
+block|}
+enum|;
+comment|// An FPU name restricts the FPU in one of three ways:
+enum|enum
+name|FPURestriction
+block|{
+name|FR_None
+init|=
+literal|0
+block|,
+comment|///< No restriction
+name|FR_D16
+block|,
+comment|///< Only 16 D registers
+name|FR_SP_D16
+comment|///< Only single-precision instructions, with 16 D registers
 block|}
 enum|;
 comment|// Arch names.
@@ -136,15 +188,13 @@ name|AK_ARMV4
 block|,
 name|AK_ARMV4T
 block|,
-name|AK_ARMV5
-block|,
 name|AK_ARMV5T
 block|,
 name|AK_ARMV5TE
 block|,
-name|AK_ARMV6
+name|AK_ARMV5TEJ
 block|,
-name|AK_ARMV6J
+name|AK_ARMV6
 block|,
 name|AK_ARMV6K
 block|,
@@ -156,13 +206,15 @@ name|AK_ARMV6ZK
 block|,
 name|AK_ARMV6M
 block|,
-name|AK_ARMV7
+name|AK_ARMV6SM
 block|,
 name|AK_ARMV7A
 block|,
 name|AK_ARMV7R
 block|,
 name|AK_ARMV7M
+block|,
+name|AK_ARMV7EM
 block|,
 name|AK_ARMV8A
 block|,
@@ -175,21 +227,21 @@ name|AK_IWMMXT2
 block|,
 name|AK_XSCALE
 block|,
+name|AK_ARMV5
+block|,
 name|AK_ARMV5E
 block|,
-name|AK_ARMV5TEJ
-block|,
-name|AK_ARMV6SM
+name|AK_ARMV6J
 block|,
 name|AK_ARMV6HL
+block|,
+name|AK_ARMV7
 block|,
 name|AK_ARMV7L
 block|,
 name|AK_ARMV7HL
 block|,
 name|AK_ARMV7S
-block|,
-name|AK_ARMV7EM
 block|,
 name|AK_LAST
 block|}
@@ -212,9 +264,22 @@ name|AEK_HWDIV
 block|,
 name|AEK_MP
 block|,
+name|AEK_SIMD
+block|,
 name|AEK_SEC
 block|,
 name|AEK_VIRT
+block|,
+comment|// Unsupported extensions.
+name|AEK_OS
+block|,
+name|AEK_IWMMXT
+block|,
+name|AEK_IWMMXT2
+block|,
+name|AEK_MAVERICK
+block|,
+name|AEK_XSCALE
 block|,
 name|AEK_LAST
 block|}
@@ -307,6 +372,50 @@ name|FPUKind
 parameter_list|)
 function_decl|;
 specifier|static
+name|unsigned
+name|getFPUVersion
+parameter_list|(
+name|unsigned
+name|FPUKind
+parameter_list|)
+function_decl|;
+specifier|static
+name|unsigned
+name|getFPUNeonSupportLevel
+parameter_list|(
+name|unsigned
+name|FPUKind
+parameter_list|)
+function_decl|;
+specifier|static
+name|unsigned
+name|getFPURestriction
+parameter_list|(
+name|unsigned
+name|FPUKind
+parameter_list|)
+function_decl|;
+comment|// FIXME: This should be moved to TargetTuple once it exists
+specifier|static
+name|bool
+name|getFPUFeatures
+argument_list|(
+name|unsigned
+name|FPUKind
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|char
+operator|*
+operator|>
+operator|&
+name|Features
+argument_list|)
+decl_stmt|;
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -318,7 +427,7 @@ parameter_list|)
 function_decl|;
 specifier|static
 name|unsigned
-name|getArchDefaultCPUArch
+name|getArchAttr
 parameter_list|(
 name|unsigned
 name|ArchKind
@@ -328,7 +437,17 @@ specifier|static
 specifier|const
 name|char
 modifier|*
-name|getArchDefaultCPUName
+name|getCPUAttr
+parameter_list|(
+name|unsigned
+name|ArchKind
+parameter_list|)
+function_decl|;
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|getSubArch
 parameter_list|(
 name|unsigned
 name|ArchKind

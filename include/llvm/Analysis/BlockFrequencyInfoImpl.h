@@ -906,8 +906,8 @@ block|}
 struct|;
 comment|/// \brief Data about a loop.
 comment|///
-comment|/// Contains the data necessary to represent represent a loop as a
-comment|/// pseudo-node once it's packaged.
+comment|/// Contains the data necessary to represent a loop as a pseudo-node once it's
+comment|/// packaged.
 struct|struct
 name|LoopData
 block|{
@@ -4675,7 +4675,7 @@ block|;
 name|initializeLoops
 argument_list|()
 block|;
-comment|// Visit loops in post-order to find thelocal mass distribution, and then do
+comment|// Visit loops in post-order to find the local mass distribution, and then do
 comment|// the full function.
 name|computeMassInLoops
 argument_list|()

@@ -317,6 +317,8 @@ block|,
 name|ExtractSubreg
 block|,
 name|InsertSubreg
+block|,
+name|Convergent
 block|}
 enum|;
 block|}
@@ -341,21 +343,21 @@ name|NumOperands
 decl_stmt|;
 comment|// Num of args (may be more if variable_ops)
 name|unsigned
-name|short
+name|char
 name|NumDefs
 decl_stmt|;
 comment|// Num of args that are definitions
+name|unsigned
+name|char
+name|Size
+decl_stmt|;
+comment|// Number of bytes in encoding.
 name|unsigned
 name|short
 name|SchedClass
 decl_stmt|;
 comment|// enum identifying instr sched class
-name|unsigned
-name|short
-name|Size
-decl_stmt|;
-comment|// Number of bytes in encoding.
-name|unsigned
+name|uint64_t
 name|Flags
 decl_stmt|;
 comment|// Flags identifying machine instr class
@@ -1019,6 +1021,27 @@ operator|<<
 name|MCID
 operator|::
 name|InsertSubreg
+operator|)
+return|;
+block|}
+comment|/// \brief Return true if this instruction is convergent.
+comment|///
+comment|/// Convergent instructions may only be moved to locations that are
+comment|/// control-equivalent to their original positions.
+name|bool
+name|isConvergent
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|MCID
+operator|::
+name|Convergent
 operator|)
 return|;
 block|}

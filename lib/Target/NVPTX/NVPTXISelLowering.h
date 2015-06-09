@@ -978,6 +978,8 @@ argument_list|(
 argument|const AddrMode&AM
 argument_list|,
 argument|Type *Ty
+argument_list|,
+argument|unsigned AS
 argument_list|)
 specifier|const
 name|override
@@ -1209,26 +1211,6 @@ argument_list|)
 decl|const
 name|override
 decl_stmt|;
-name|unsigned
-name|getInlineAsmMemConstraint
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|ConstraintCode
-argument_list|)
-decl|const
-name|override
-block|{
-comment|// FIXME: Map different constraints differently.
-return|return
-name|InlineAsm
-operator|::
-name|Constraint_m
-return|;
-block|}
 specifier|const
 name|NVPTXTargetMachine
 modifier|*

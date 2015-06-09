@@ -923,11 +923,7 @@ argument_list|)
 expr_stmt|;
 name|CalledFunctions
 operator|.
-name|push_back
-argument_list|(
-name|std
-operator|::
-name|make_pair
+name|emplace_back
 argument_list|(
 name|CS
 operator|.
@@ -935,7 +931,6 @@ name|getInstruction
 argument_list|()
 argument_list|,
 name|M
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|M

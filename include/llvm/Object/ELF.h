@@ -1965,7 +1965,7 @@ name|ELFFile
 argument_list|(
 argument|StringRef Object
 argument_list|,
-argument|std::error_code&ec
+argument|std::error_code&EC
 argument_list|)
 end_macro
 
@@ -2661,16 +2661,8 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-unit|};
-comment|// Use an alignment of 2 for the typedefs since that is the worst case for
-end_comment
-
-begin_comment
-comment|// ELF files in archives.
-end_comment
-
 begin_typedef
+unit|};
 typedef|typedef
 name|ELFFile
 operator|<
@@ -2680,11 +2672,8 @@ name|support
 operator|::
 name|little
 operator|,
-literal|2
-operator|,
 name|false
-operator|>
-expr|>
+operator|>>
 name|ELF32LEFile
 expr_stmt|;
 end_typedef
@@ -2699,11 +2688,8 @@ name|support
 operator|::
 name|little
 operator|,
-literal|2
-operator|,
 name|true
-operator|>
-expr|>
+operator|>>
 name|ELF64LEFile
 expr_stmt|;
 end_typedef
@@ -2718,11 +2704,8 @@ name|support
 operator|::
 name|big
 operator|,
-literal|2
-operator|,
 name|false
-operator|>
-expr|>
+operator|>>
 name|ELF32BEFile
 expr_stmt|;
 end_typedef
@@ -2737,11 +2720,8 @@ name|support
 operator|::
 name|big
 operator|,
-literal|2
-operator|,
 name|true
-operator|>
-expr|>
+operator|>>
 name|ELF64BEFile
 expr_stmt|;
 end_typedef
@@ -4054,7 +4034,7 @@ name|ELFFile
 argument_list|(
 argument|StringRef Object
 argument_list|,
-argument|std::error_code&ec
+argument|std::error_code&EC
 argument_list|)
 operator|:
 name|Buf
@@ -4125,12 +4105,16 @@ argument_list|)
 operator|>
 name|FileSize
 condition|)
-comment|// FIXME: Proper error handling.
-name|report_fatal_error
-argument_list|(
-literal|"File too short!"
-argument_list|)
+block|{
+comment|// File too short!
+name|EC
+operator|=
+name|object_error
+operator|::
+name|parse_failed
 expr_stmt|;
+return|return;
+block|}
 name|Header
 operator|=
 name|reinterpret_cast
@@ -4181,12 +4165,16 @@ argument_list|)
 operator|>
 name|FileSize
 condition|)
-comment|// FIXME: Proper error handling.
-name|report_fatal_error
-argument_list|(
-literal|"Section header table goes past end of file!"
-argument_list|)
+block|{
+comment|// Section header table goes past end of file!
+name|EC
+operator|=
+name|object_error
+operator|::
+name|parse_failed
 expr_stmt|;
+return|return;
+block|}
 end_if
 
 begin_comment
@@ -4234,12 +4222,16 @@ name|SectionTableSize
 operator|>
 name|FileSize
 condition|)
-comment|// FIXME: Proper error handling.
-name|report_fatal_error
-argument_list|(
-literal|"Section table goes past end of file!"
-argument_list|)
+block|{
+comment|// Section table goes past end of file!
+name|EC
+operator|=
+name|object_error
+operator|::
+name|parse_failed
 expr_stmt|;
+return|return;
+block|}
 end_if
 
 begin_comment
@@ -4274,12 +4266,16 @@ if|if
 condition|(
 name|SymbolTableSectionHeaderIndex
 condition|)
-comment|// FIXME: Proper error handling.
-name|report_fatal_error
-argument_list|(
-literal|"More than one .symtab_shndx!"
-argument_list|)
+block|{
+comment|// More than one .symtab_shndx!
+name|EC
+operator|=
+name|object_error
+operator|::
+name|parse_failed
 expr_stmt|;
+return|return;
+block|}
 name|SymbolTableSectionHeaderIndex
 operator|=
 operator|&
@@ -4295,12 +4291,16 @@ if|if
 condition|(
 name|dot_symtab_sec
 condition|)
-comment|// FIXME: Proper error handling.
-name|report_fatal_error
-argument_list|(
-literal|"More than one .symtab!"
-argument_list|)
+block|{
+comment|// More than one .symtab!
+name|EC
+operator|=
+name|object_error
+operator|::
+name|parse_failed
 expr_stmt|;
+return|return;
+block|}
 name|dot_symtab_sec
 operator|=
 operator|&
@@ -4328,12 +4328,16 @@ name|DynSymRegion
 operator|.
 name|Addr
 condition|)
-comment|// FIXME: Proper error handling.
-name|report_fatal_error
-argument_list|(
-literal|"More than one .dynsym!"
-argument_list|)
+block|{
+comment|// More than one .dynsym!
+name|EC
+operator|=
+name|object_error
+operator|::
+name|parse_failed
 expr_stmt|;
+return|return;
+block|}
 name|DynSymRegion
 operator|.
 name|Addr
@@ -4413,12 +4417,16 @@ name|DynamicRegion
 operator|.
 name|Addr
 condition|)
-comment|// FIXME: Proper error handling.
-name|report_fatal_error
-argument_list|(
-literal|"More than one .dynamic!"
-argument_list|)
+block|{
+comment|// More than one .dynamic!
+name|EC
+operator|=
+name|object_error
+operator|::
+name|parse_failed
 expr_stmt|;
+return|return;
+block|}
 name|DynamicRegion
 operator|.
 name|Addr
@@ -4458,12 +4466,16 @@ name|dot_gnu_version_sec
 operator|!=
 name|nullptr
 condition|)
-comment|// FIXME: Proper error handling.
-name|report_fatal_error
-argument_list|(
-literal|"More than one .gnu.version section!"
-argument_list|)
+block|{
+comment|// More than one .gnu.version section!
+name|EC
+operator|=
+name|object_error
+operator|::
+name|parse_failed
 expr_stmt|;
+return|return;
+block|}
 name|dot_gnu_version_sec
 operator|=
 operator|&
@@ -4481,12 +4493,16 @@ name|dot_gnu_version_d_sec
 operator|!=
 name|nullptr
 condition|)
-comment|// FIXME: Proper error handling.
-name|report_fatal_error
-argument_list|(
-literal|"More than one .gnu.version_d section!"
-argument_list|)
+block|{
+comment|// More than one .gnu.version_d section!
+name|EC
+operator|=
+name|object_error
+operator|::
+name|parse_failed
 expr_stmt|;
+return|return;
+block|}
 name|dot_gnu_version_d_sec
 operator|=
 operator|&
@@ -4504,12 +4520,16 @@ name|dot_gnu_version_r_sec
 operator|!=
 name|nullptr
 condition|)
-comment|// FIXME: Proper error handling.
-name|report_fatal_error
-argument_list|(
-literal|"More than one .gnu.version_r section!"
-argument_list|)
+block|{
+comment|// More than one .gnu.version_r section!
+name|EC
+operator|=
+name|object_error
+operator|::
+name|parse_failed
 expr_stmt|;
+return|return;
+block|}
 name|dot_gnu_version_r_sec
 operator|=
 operator|&
@@ -4698,7 +4718,7 @@ block|}
 end_for
 
 begin_expr_stmt
-name|ec
+name|EC
 operator|=
 name|std
 operator|::
@@ -5716,28 +5736,12 @@ name|st_name
 operator|==
 literal|0
 condition|)
-block|{
-specifier|const
-name|Elf_Shdr
-modifier|*
-name|ContainingSec
-init|=
-name|getSection
-argument_list|(
-name|Symb
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|ContainingSec
-condition|)
 return|return
-name|getSectionName
+name|StringRef
 argument_list|(
-name|ContainingSec
+literal|""
 argument_list|)
 return|;
-block|}
 specifier|const
 name|Elf_Shdr
 operator|*

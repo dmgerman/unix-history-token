@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Target/TargetRecip.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCTargetOptions.h"
 end_include
 
@@ -276,6 +282,12 @@ argument_list|(
 name|FPOpFusion
 operator|::
 name|Standard
+argument_list|)
+operator|,
+name|Reciprocals
+argument_list|(
+name|TargetRecip
+argument_list|()
 argument_list|)
 operator|,
 name|JTType
@@ -505,6 +517,10 @@ operator|::
 name|FPOpFusionMode
 name|AllowFPOpFusion
 expr_stmt|;
+comment|/// This class encapsulates options for reciprocal-estimate code generation.
+name|TargetRecip
+name|Reciprocals
+decl_stmt|;
 comment|/// JTType - This flag specifies the type of jump-instruction table to
 comment|/// create for functions that have the jumptable attribute.
 name|JumpTable
@@ -623,6 +639,11 @@ operator|&&
 name|ARE_EQUAL
 argument_list|(
 name|AllowFPOpFusion
+argument_list|)
+operator|&&
+name|ARE_EQUAL
+argument_list|(
+name|Reciprocals
 argument_list|)
 operator|&&
 name|ARE_EQUAL

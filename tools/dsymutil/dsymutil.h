@@ -144,10 +144,11 @@ name|parseDebugMap
 argument_list|(
 argument|StringRef InputFile
 argument_list|,
-argument|StringRef PrependPath =
-literal|""
+argument|StringRef PrependPath
 argument_list|,
-argument|bool Verbose = false
+argument|bool Verbose
+argument_list|,
+argument|bool InputIsYAML
 argument_list|)
 expr_stmt|;
 comment|/// \brief Link the Dwarf debuginfo as directed by the passed DebugMap

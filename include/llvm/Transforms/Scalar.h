@@ -69,12 +69,21 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|<functional>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|BasicBlockPass
+decl_stmt|;
+name|class
+name|Function
 decl_stmt|;
 name|class
 name|FunctionPass
@@ -301,6 +310,12 @@ modifier|*
 name|createLoopStrengthReducePass
 parameter_list|()
 function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// GlobalMerge - This pass merges internal (by default) globals into structs
+comment|// to enable reuse of a base pointer by indexed addressing modes.
+comment|// It can also be configured to focus on size optimizations only.
+comment|//
 name|Pass
 modifier|*
 name|createGlobalMergePass
@@ -312,6 +327,11 @@ name|TM
 parameter_list|,
 name|unsigned
 name|MaximalOffset
+parameter_list|,
+name|bool
+name|OnlyOptimizeForSize
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -479,14 +499,29 @@ comment|//
 name|FunctionPass
 modifier|*
 name|createCFGSimplificationPass
-parameter_list|(
+argument_list|(
 name|int
 name|Threshold
-init|=
+operator|=
 operator|-
 literal|1
-parameter_list|)
-function_decl|;
+argument_list|,
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+specifier|const
+name|Function
+operator|&
+argument_list|)
+operator|>
+name|Ftor
+operator|=
+name|nullptr
+argument_list|)
+decl_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
 comment|// FlattenCFG - flatten CFG, reduce number of conditional branches by using
@@ -840,7 +875,7 @@ comment|//
 comment|// RewriteStatepointsForGC - Rewrite any gc.statepoints which do not yet have
 comment|// explicit relocations to include explicit relocations.
 comment|//
-name|FunctionPass
+name|ModulePass
 modifier|*
 name|createRewriteStatepointsForGCPass
 parameter_list|()

@@ -1476,6 +1476,8 @@ operator|:
 comment|/// Target-dependent implementation for foldMemoryOperand.
 comment|/// Target-independent code in foldMemoryOperand will
 comment|/// take care of adding a MachineMemOperand to the newly created instruction.
+comment|/// The instruction and any auxiliary instructions necessary will be inserted
+comment|/// at InsertPt.
 name|virtual
 name|MachineInstr
 operator|*
@@ -1486,6 +1488,8 @@ argument_list|,
 argument|MachineInstr *MI
 argument_list|,
 argument|ArrayRef<unsigned> Ops
+argument_list|,
+argument|MachineBasicBlock::iterator InsertPt
 argument_list|,
 argument|int FrameIndex
 argument_list|)
@@ -1498,6 +1502,8 @@ block|}
 comment|/// Target-dependent implementation for foldMemoryOperand.
 comment|/// Target-independent code in foldMemoryOperand will
 comment|/// take care of adding a MachineMemOperand to the newly created instruction.
+comment|/// The instruction and any auxiliary instructions necessary will be inserted
+comment|/// at InsertPt.
 name|virtual
 name|MachineInstr
 operator|*
@@ -1508,6 +1514,8 @@ argument_list|,
 argument|MachineInstr *MI
 argument_list|,
 argument|ArrayRef<unsigned> Ops
+argument_list|,
+argument|MachineBasicBlock::iterator InsertPt
 argument_list|,
 argument|MachineInstr *LoadMI
 argument_list|)

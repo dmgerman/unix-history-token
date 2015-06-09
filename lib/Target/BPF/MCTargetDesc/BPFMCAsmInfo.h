@@ -71,12 +71,21 @@ directive|include
 file|"llvm/MC/MCAsmInfo.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|Target
+decl_stmt|;
+name|class
+name|Triple
 decl_stmt|;
 name|class
 name|BPFMCAsmInfo
@@ -89,9 +98,24 @@ operator|:
 name|explicit
 name|BPFMCAsmInfo
 argument_list|(
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|)
 block|{
+if|if
+condition|(
+name|TT
+operator|.
+name|getArch
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|bpfeb
+condition|)
+name|IsLittleEndian
+operator|=
+name|false
+expr_stmt|;
 name|PrivateGlobalPrefix
 operator|=
 literal|".L"
@@ -113,11 +137,14 @@ operator|=
 name|false
 block|;   }
 block|}
-decl_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

@@ -524,11 +524,8 @@ return|;
 comment|// Otherwise, add a new record.
 name|BlockInfoRecords
 operator|.
-name|push_back
-argument_list|(
-name|BlockInfo
+name|emplace_back
 argument_list|()
-argument_list|)
 expr_stmt|;
 name|BlockInfoRecords
 operator|.

@@ -353,6 +353,17 @@ argument_list|,
 argument|ArrayRef<SubtargetFeatureKV> FeatureTable
 argument_list|)
 block|;
+comment|/// Apply the feature flag and return the newly updated feature bits.
+name|FeatureBitset
+name|ApplyFeatureFlag
+argument_list|(
+argument|FeatureBitset Bits
+argument_list|,
+argument|StringRef Feature
+argument_list|,
+argument|ArrayRef<SubtargetFeatureKV> FeatureTable
+argument_list|)
+block|;
 comment|/// Get feature bits of a CPU.
 name|FeatureBitset
 name|getFeatureBits

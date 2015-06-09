@@ -265,8 +265,8 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|/// PHITranslateValue - PHI translate the current address up the CFG from
-comment|/// CurBB to Pred, updating our state to reflect any needed changes.  If the
-comment|/// dominator tree DT is non-null, the translated value must dominate
+comment|/// CurBB to Pred, updating our state to reflect any needed changes.  If
+comment|/// 'MustDominate' is true, the translated value must dominate
 comment|/// PredBB.  This returns true on failure and sets Addr to null.
 name|bool
 name|PHITranslateValue
@@ -283,6 +283,9 @@ specifier|const
 name|DominatorTree
 modifier|*
 name|DT
+parameter_list|,
+name|bool
+name|MustDominate
 parameter_list|)
 function_decl|;
 comment|/// PHITranslateWithInsertion - PHI translate this value into the specified

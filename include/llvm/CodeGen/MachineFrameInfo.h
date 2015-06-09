@@ -514,23 +514,6 @@ name|MachineBasicBlock
 modifier|*
 name|Restore
 decl_stmt|;
-comment|/// Check if it exists a path from \p MBB leading to the basic
-comment|/// block with a SavePoint (a.k.a. prologue).
-name|bool
-name|isBeforeSavePoint
-argument_list|(
-specifier|const
-name|MachineFunction
-operator|&
-name|MF
-argument_list|,
-specifier|const
-name|MachineBasicBlock
-operator|&
-name|MBB
-argument_list|)
-decl|const
-decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -2041,12 +2024,11 @@ operator|=
 name|NewRestore
 expr_stmt|;
 block|}
-comment|/// getPristineRegs - Return a set of physical registers that are pristine on
-comment|/// entry to the MBB.
+comment|/// Return a set of physical registers that are pristine.
 comment|///
 comment|/// Pristine registers hold a value that is useless to the current function,
-comment|/// but that must be preserved - they are callee saved registers that have not
-comment|/// been saved yet.
+comment|/// but that must be preserved - they are callee saved registers that are not
+comment|/// saved.
 comment|///
 comment|/// Before the PrologueEpilogueInserter has placed the CSR spill code, this
 comment|/// method always returns an empty set.
@@ -2054,9 +2036,9 @@ name|BitVector
 name|getPristineRegs
 argument_list|(
 specifier|const
-name|MachineBasicBlock
-operator|*
-name|MBB
+name|MachineFunction
+operator|&
+name|MF
 argument_list|)
 decl|const
 decl_stmt|;

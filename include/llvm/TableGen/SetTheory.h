@@ -194,6 +194,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SetVector.h"
 end_include
 
@@ -206,7 +212,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/SourceMgr.h"
+file|"llvm/Support/SMLoc.h"
 end_include
 
 begin_include
@@ -233,9 +239,6 @@ name|Init
 decl_stmt|;
 name|class
 name|Record
-decl_stmt|;
-name|class
-name|RecordKeeper
 decl_stmt|;
 name|class
 name|SetTheory

@@ -71,9 +71,6 @@ decl_stmt|;
 name|class
 name|MCSymbol
 decl_stmt|;
-name|class
-name|MCSymbolData
-decl_stmt|;
 comment|/// Encapsulates the layout of an assembly file at a particular point in time.
 comment|///
 comment|/// Assembly may require computing multiple layouts for a particular assembly

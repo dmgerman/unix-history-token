@@ -950,7 +950,7 @@ specifier|const
 name|override
 block|{
 return|return
-name|false
+name|true
 return|;
 block|}
 end_expr_stmt

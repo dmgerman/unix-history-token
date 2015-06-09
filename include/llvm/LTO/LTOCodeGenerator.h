@@ -357,9 +357,7 @@ block|}
 name|void
 name|addMustPreserveSymbol
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|sym
 parameter_list|)
 block|{
@@ -445,31 +443,23 @@ comment|// single object file. Instead of returning the object-file-path to the 
 comment|// (linker), it brings the object to a buffer, and return the buffer to the
 comment|// caller. This function should delete intermediate object file once its content
 comment|// is brought to memory. Return NULL if the compilation was not successful.
-specifier|const
-name|void
-modifier|*
-name|compile
-argument_list|(
-name|size_t
-operator|*
-name|length
-argument_list|,
-name|bool
-name|disableInline
-argument_list|,
-name|bool
-name|disableGVNLoadPRE
-argument_list|,
-name|bool
-name|disableVectorization
-argument_list|,
 name|std
 operator|::
-name|string
-operator|&
-name|errMsg
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>
+name|compile
+argument_list|(
+argument|bool disableInline
+argument_list|,
+argument|bool disableGVNLoadPRE
+argument_list|,
+argument|bool disableVectorization
+argument_list|,
+argument|std::string&errMsg
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|// Optimizes the merged module. Returns true on success.
 name|bool
 name|optimize
@@ -493,22 +483,21 @@ decl_stmt|;
 comment|// Compiles the merged optimized module into a single object file. It brings
 comment|// the object to a buffer, and returns the buffer to the caller. Return NULL
 comment|// if the compilation was not successful.
-specifier|const
-name|void
-modifier|*
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MemoryBuffer
+operator|>
 name|compileOptimized
 argument_list|(
-name|size_t
-operator|*
-name|length
-argument_list|,
 name|std
 operator|::
 name|string
 operator|&
 name|errMsg
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|void
 name|setDiagnosticHandler
 parameter_list|(
@@ -690,14 +679,6 @@ decl_stmt|;
 name|StringSet
 name|AsmUndefinedRefs
 decl_stmt|;
-name|std
-operator|::
-name|unique_ptr
-operator|<
-name|MemoryBuffer
-operator|>
-name|NativeObjectFile
-expr_stmt|;
 name|std
 operator|::
 name|vector

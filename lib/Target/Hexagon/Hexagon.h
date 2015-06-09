@@ -301,6 +301,39 @@ name|HEXAGON_PACKET_SIZE
 value|4
 end_define
 
+begin_comment
+comment|// Minimum number of instructions in an end-loop packet.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HEXAGON_PACKET_INNER_SIZE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|HEXAGON_PACKET_OUTER_SIZE
+value|3
+end_define
+
+begin_comment
+comment|// Maximum number of instructions in a packet before shuffling,
+end_comment
+
+begin_comment
+comment|// including a compound one or a duplex or an extender.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HEXAGON_PRESHUFFLE_PACKET_SIZE
+value|(HEXAGON_PACKET_SIZE + 3)
+end_define
+
 begin_endif
 endif|#
 directive|endif
