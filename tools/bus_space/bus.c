@@ -62,7 +62,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bus_space.h"
+file|"bus.h"
 end_include
 
 begin_include

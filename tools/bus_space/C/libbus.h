@@ -17,7 +17,7 @@ end_define
 
 begin_function_decl
 name|int
-name|bus_space_map
+name|bus_map
 parameter_list|(
 specifier|const
 name|char
@@ -29,7 +29,7 @@ end_function_decl
 
 begin_function_decl
 name|int16_t
-name|bus_space_read_1
+name|bus_read_1
 parameter_list|(
 name|int
 name|rid
@@ -42,7 +42,7 @@ end_function_decl
 
 begin_function_decl
 name|int32_t
-name|bus_space_read_2
+name|bus_read_2
 parameter_list|(
 name|int
 name|rid
@@ -55,7 +55,7 @@ end_function_decl
 
 begin_function_decl
 name|int64_t
-name|bus_space_read_4
+name|bus_read_4
 parameter_list|(
 name|int
 name|rid
@@ -68,7 +68,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|bus_space_subregion
+name|bus_subregion
 parameter_list|(
 name|int
 name|rid
@@ -84,7 +84,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|bus_space_unmap
+name|bus_unmap
 parameter_list|(
 name|int
 name|rid
@@ -94,7 +94,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|bus_space_write_1
+name|bus_write_1
 parameter_list|(
 name|int
 name|rid
@@ -110,7 +110,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|bus_space_write_2
+name|bus_write_2
 parameter_list|(
 name|int
 name|rid
@@ -126,7 +126,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|bus_space_write_4
+name|bus_write_4
 parameter_list|(
 name|int
 name|rid

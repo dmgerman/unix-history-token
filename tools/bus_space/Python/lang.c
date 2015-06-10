@@ -26,7 +26,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"bus_space.h"
+file|"bus.h"
 end_include
 
 begin_include
@@ -1342,7 +1342,7 @@ end_function
 begin_decl_stmt
 specifier|static
 name|PyMethodDef
-name|bus_space_methods
+name|bus_methods
 index|[]
 init|=
 block|{
@@ -1521,16 +1521,16 @@ end_decl_stmt
 
 begin_function
 name|PyMODINIT_FUNC
-name|initbus_space
+name|initbus
 parameter_list|(
 name|void
 parameter_list|)
 block|{
 name|Py_InitModule
 argument_list|(
-literal|"bus_space"
+literal|"bus"
 argument_list|,
-name|bus_space_methods
+name|bus_methods
 argument_list|)
 expr_stmt|;
 name|Py_InitModule
