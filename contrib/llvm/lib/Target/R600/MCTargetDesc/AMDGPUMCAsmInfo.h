@@ -70,7 +70,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|StringRef
+name|Triple
 decl_stmt|;
 comment|// If you need to create another MCAsmInfo class, which inherits from MCAsmInfo,
 comment|// you will need to make sure your new class sets PrivateGlobalPrefix to
@@ -88,7 +88,8 @@ operator|:
 name|explicit
 name|AMDGPUMCAsmInfo
 argument_list|(
-name|StringRef
+specifier|const
+name|Triple
 operator|&
 name|TT
 argument_list|)

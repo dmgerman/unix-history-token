@@ -69,6 +69,12 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+struct_decl|struct
+name|InstrItinerary
+struct_decl|;
+struct_decl|struct
+name|InstrStage
+struct_decl|;
 name|class
 name|MCAsmBackend
 decl_stmt|;
@@ -105,6 +111,12 @@ decl_stmt|;
 specifier|extern
 name|Target
 name|TheHexagonTarget
+decl_stmt|;
+specifier|extern
+specifier|const
+name|InstrStage
+name|HexagonStages
+index|[]
 decl_stmt|;
 name|MCInstrInfo
 modifier|*

@@ -3098,6 +3098,18 @@ argument|std::string&path
 argument_list|)
 specifier|const
 block|;
+name|std
+operator|::
+name|string
+name|ComputeEffectiveClangTriple
+argument_list|(
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|types::ID InputType
+argument_list|)
+specifier|const
+name|override
+block|;
 name|protected
 operator|:
 name|void

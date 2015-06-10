@@ -354,17 +354,13 @@ comment|///
 name|virtual
 name|void
 name|Ident
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
 name|str
-argument_list|)
+parameter_list|)
 block|{   }
 comment|/// \brief Callback invoked when start reading any pragma directive.
 name|virtual
@@ -382,46 +378,34 @@ comment|/// \brief Callback invoked when a \#pragma comment directive is read.
 name|virtual
 name|void
 name|PragmaComment
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
+parameter_list|,
 specifier|const
 name|IdentifierInfo
-operator|*
+modifier|*
 name|Kind
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
 name|Str
-argument_list|)
+parameter_list|)
 block|{   }
 comment|/// \brief Callback invoked when a \#pragma detect_mismatch directive is
 comment|/// read.
 name|virtual
 name|void
 name|PragmaDetectMismatch
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
 name|Name
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|,
+name|StringRef
 name|Value
-argument_list|)
+parameter_list|)
 block|{   }
 comment|/// \brief Callback invoked when a \#pragma clang __debug directive is read.
 comment|/// \param Loc The location of the debug directive.
@@ -1077,7 +1061,7 @@ name|Ident
 argument_list|(
 argument|SourceLocation Loc
 argument_list|,
-argument|const std::string&str
+argument|StringRef str
 argument_list|)
 name|override
 block|{
@@ -1106,7 +1090,7 @@ argument|SourceLocation Loc
 argument_list|,
 argument|const IdentifierInfo *Kind
 argument_list|,
-argument|const std::string&Str
+argument|StringRef Str
 argument_list|)
 name|override
 block|{
@@ -1137,9 +1121,9 @@ name|PragmaDetectMismatch
 argument_list|(
 argument|SourceLocation Loc
 argument_list|,
-argument|const std::string&Name
+argument|StringRef Name
 argument_list|,
-argument|const std::string&Value
+argument|StringRef Value
 argument_list|)
 name|override
 block|{

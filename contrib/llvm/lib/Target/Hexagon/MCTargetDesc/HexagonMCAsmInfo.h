@@ -76,6 +76,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Triple
+decl_stmt|;
+name|class
 name|HexagonMCAsmInfo
 range|:
 name|public
@@ -91,7 +94,10 @@ operator|:
 name|explicit
 name|HexagonMCAsmInfo
 argument_list|(
-argument|StringRef TT
+specifier|const
+name|Triple
+operator|&
+name|TT
 argument_list|)
 block|;   }
 decl_stmt|;

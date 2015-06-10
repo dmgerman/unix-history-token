@@ -342,6 +342,11 @@ argument_list|()
 specifier|const
 expr_stmt|;
 name|unsigned
+name|GetBasePtr
+argument_list|()
+specifier|const
+expr_stmt|;
+name|unsigned
 name|GetNullPtr
 argument_list|()
 specifier|const

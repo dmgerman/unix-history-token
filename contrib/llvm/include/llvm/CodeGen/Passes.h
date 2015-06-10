@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<functional>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -85,9 +91,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|FunctionPass
-decl_stmt|;
 name|class
 name|MachineFunctionPass
 decl_stmt|;
@@ -938,6 +941,17 @@ operator|=
 literal|""
 argument_list|)
 decl_stmt|;
+comment|/// MIRPrinting pass - this pass prints out the LLVM IR into the given stream
+comment|/// using the MIR serialization format.
+name|MachineFunctionPass
+modifier|*
+name|createPrintMIRPass
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|)
+function_decl|;
 comment|/// createCodeGenPreparePass - Transform the code to expose more pattern
 comment|/// matching during instruction selection.
 name|FunctionPass
@@ -1146,6 +1160,13 @@ name|char
 modifier|&
 name|MachineFunctionPrinterPassID
 decl_stmt|;
+comment|/// MIRPrintingPass - this pass prints out the LLVM IR using the MIR
+comment|/// serialization format.
+specifier|extern
+name|char
+modifier|&
+name|MIRPrintingPassID
+decl_stmt|;
 comment|/// TailDuplicate - Duplicate blocks with unconditional branches
 comment|/// into tails of their predecessors.
 specifier|extern
@@ -1186,6 +1207,24 @@ specifier|extern
 name|char
 modifier|&
 name|IfConverterID
+decl_stmt|;
+name|FunctionPass
+modifier|*
+name|createIfConverter
+argument_list|(
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+specifier|const
+name|Function
+operator|&
+argument_list|)
+operator|>
+name|Ftor
+argument_list|)
 decl_stmt|;
 comment|/// MachineBlockPlacement - This pass places basic blocks based on branch
 comment|/// probabilities.
@@ -1382,6 +1421,24 @@ specifier|extern
 name|char
 modifier|&
 name|UnpackMachineBundlesID
+decl_stmt|;
+name|FunctionPass
+modifier|*
+name|createUnpackMachineBundles
+argument_list|(
+name|std
+operator|::
+name|function
+operator|<
+name|bool
+argument_list|(
+specifier|const
+name|Function
+operator|&
+argument_list|)
+operator|>
+name|Ftor
+argument_list|)
 decl_stmt|;
 comment|/// FinalizeMachineBundles - This pass finalize machine instruction
 comment|/// bundles (created earlier, e.g. during pre-RA scheduling).

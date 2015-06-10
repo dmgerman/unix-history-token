@@ -335,6 +335,11 @@ comment|/// Defaults to false.
 name|bool
 name|AllowAtInName
 decl_stmt|;
+comment|/// If this is true, symbol names with invalid characters will be printed in
+comment|/// quotes.
+name|bool
+name|SupportsQuotedNames
+decl_stmt|;
 comment|/// This is true if data region markers should be printed as
 comment|/// ".data_region/.end_data_region" directives. If false, use "$d/$a" labels
 comment|/// instead.
@@ -810,6 +815,17 @@ name|Streamer
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// Return true if the identifier \p Name does not need quotes to be
+comment|/// syntactically correct.
+name|virtual
+name|bool
+name|isValidUnquotedName
+argument_list|(
+name|StringRef
+name|Name
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|usesSunStyleELFSectionSwitchSyntax
 argument_list|()
@@ -1081,6 +1097,15 @@ specifier|const
 block|{
 return|return
 name|AllowAtInName
+return|;
+block|}
+name|bool
+name|supportsNameQuoting
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SupportsQuotedNames
 return|;
 block|}
 name|bool

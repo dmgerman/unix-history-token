@@ -209,6 +209,13 @@ argument_list|()
 name|override
 block|;
 name|void
+name|EmitCOFFSafeSEH
+argument_list|(
+argument|MCSymbol const *Symbol
+argument_list|)
+name|override
+block|;
+name|void
 name|EmitCOFFSectionIndex
 argument_list|(
 argument|MCSymbol const *Symbol
@@ -219,15 +226,6 @@ name|void
 name|EmitCOFFSecRel32
 argument_list|(
 argument|MCSymbol const *Symbol
-argument_list|)
-name|override
-block|;
-name|void
-name|EmitELFSize
-argument_list|(
-argument|MCSymbol *Symbol
-argument_list|,
-argument|const MCExpr *Value
 argument_list|)
 name|override
 block|;

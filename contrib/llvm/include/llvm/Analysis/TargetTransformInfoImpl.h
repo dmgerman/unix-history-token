@@ -951,6 +951,9 @@ name|HasBaseReg
 parameter_list|,
 name|int64_t
 name|Scale
+parameter_list|,
+name|unsigned
+name|AddrSpace
 parameter_list|)
 block|{
 comment|// Guess that only reg and reg+reg addressing is allowed. This heuristic is
@@ -1023,6 +1026,9 @@ name|HasBaseReg
 parameter_list|,
 name|int64_t
 name|Scale
+parameter_list|,
+name|unsigned
+name|AddrSpace
 parameter_list|)
 block|{
 comment|// Guess that all legal addressing mode are free.
@@ -1039,6 +1045,8 @@ argument_list|,
 name|HasBaseReg
 argument_list|,
 name|Scale
+argument_list|,
+name|AddrSpace
 argument_list|)
 condition|)
 return|return
@@ -1431,6 +1439,36 @@ parameter_list|,
 name|unsigned
 name|AddressSpace
 parameter_list|)
+block|{
+return|return
+literal|1
+return|;
+block|}
+name|unsigned
+name|getInterleavedMemoryOpCost
+argument_list|(
+name|unsigned
+name|Opcode
+argument_list|,
+name|Type
+operator|*
+name|VecTy
+argument_list|,
+name|unsigned
+name|Factor
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Indices
+argument_list|,
+name|unsigned
+name|Alignment
+argument_list|,
+name|unsigned
+name|AddressSpace
+argument_list|)
 block|{
 return|return
 literal|1

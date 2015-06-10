@@ -756,6 +756,23 @@ argument|const MCSubtargetInfo&STI
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
+block|;
+name|template
+operator|<
+name|unsigned
+name|size
+operator|>
+name|void
+name|printGPRSeqPairsClassOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
 block|; }
 decl_stmt|;
 name|class

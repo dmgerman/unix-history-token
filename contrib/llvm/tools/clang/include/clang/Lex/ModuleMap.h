@@ -769,10 +769,6 @@ comment|/// \param RequestingModule Specifies the module the header is intended 
 comment|/// used from.  Used to disambiguate if a header is present in multiple
 comment|/// modules.
 comment|///
-comment|/// \param IncludeTextualHeaders If \c true, also find textual headers. By
-comment|/// default, these are treated like excluded headers and result in no known
-comment|/// header being found.
-comment|///
 comment|/// \returns The module KnownHeader, which provides the module that owns the
 comment|/// given header file.  The KnownHeader is default constructed to indicate
 comment|/// that no module owns this header file.
@@ -789,11 +785,6 @@ modifier|*
 name|RequestingModule
 init|=
 name|nullptr
-parameter_list|,
-name|bool
-name|IncludeTextualHeaders
-init|=
-name|false
 parameter_list|)
 function_decl|;
 comment|/// \brief Reports errors if a module must not include a specific file.

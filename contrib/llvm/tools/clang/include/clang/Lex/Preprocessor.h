@@ -4091,24 +4091,20 @@ expr_stmt|;
 block|}
 end_function
 
-begin_decl_stmt
+begin_function
 name|void
 name|setPredefines
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
+parameter_list|(
+name|StringRef
 name|P
-argument_list|)
+parameter_list|)
 block|{
 name|Predefines
 operator|=
 name|P
 expr_stmt|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/// Return information about the specified preprocessor
@@ -7592,9 +7588,7 @@ argument_list|)
 expr_stmt|;
 name|IncludeMacroStack
 operator|.
-name|push_back
-argument_list|(
-name|IncludeStackInfo
+name|emplace_back
 argument_list|(
 name|CurLexerKind
 argument_list|,
@@ -7624,7 +7618,6 @@ name|CurTokenLexer
 argument_list|)
 argument_list|,
 name|CurDirLookup
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|CurPPLexer

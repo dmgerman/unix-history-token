@@ -467,16 +467,13 @@ argument_list|)
 block|{
 name|SafePoints
 operator|.
-name|push_back
-argument_list|(
-name|GCPoint
+name|emplace_back
 argument_list|(
 name|Kind
 argument_list|,
 name|Label
 argument_list|,
 name|DL
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

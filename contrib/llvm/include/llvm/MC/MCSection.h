@@ -246,14 +246,19 @@ literal|0
 decl_stmt|;
 comment|/// \brief We've seen a bundle_lock directive but not its first instruction
 comment|/// yet.
-name|bool
+name|unsigned
 name|BundleGroupBeforeFirstInst
-init|=
-name|false
+range|:
+literal|1
 decl_stmt|;
 comment|/// Whether this section has had instructions emitted into it.
 name|unsigned
 name|HasInstructions
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|IsRegistered
 range|:
 literal|1
 decl_stmt|;
@@ -511,6 +516,27 @@ name|Value
 parameter_list|)
 block|{
 name|HasInstructions
+operator|=
+name|Value
+expr_stmt|;
+block|}
+name|bool
+name|isRegistered
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsRegistered
+return|;
+block|}
+name|void
+name|setIsRegistered
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|IsRegistered
 operator|=
 name|Value
 expr_stmt|;

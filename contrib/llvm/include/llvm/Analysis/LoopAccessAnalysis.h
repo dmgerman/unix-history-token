@@ -1027,6 +1027,21 @@ name|PtrPartition
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Returns the number of run-time checks required according to
+comment|/// needsChecking.
+name|unsigned
+name|getNumberOfChecks
+argument_list|(
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|*
+name|PtrPartition
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Print the list run-time memory checks necessary.
 comment|///
 comment|/// If \p PtrPartition is set, it contains the partition number for
@@ -1189,11 +1204,26 @@ comment|/// \brief Number of memchecks required to prove independence of otherwi
 comment|/// may-alias pointers.
 name|unsigned
 name|getNumRuntimePointerChecks
-argument_list|()
+argument_list|(
 specifier|const
+name|SmallVectorImpl
+operator|<
+name|int
+operator|>
+operator|*
+name|PtrPartition
+operator|=
+name|nullptr
+argument_list|)
+decl|const
 block|{
 return|return
-name|NumComparisons
+name|PtrRtCheck
+operator|.
+name|getNumberOfChecks
+argument_list|(
+name|PtrPartition
+argument_list|)
 return|;
 block|}
 comment|/// Return true if the block BB needs to be predicated in order for the loop
@@ -1405,11 +1435,6 @@ comment|/// loop-independent and loop-carried dependences between memory accesse
 name|MemoryDepChecker
 name|DepChecker
 decl_stmt|;
-comment|/// \brief Number of memchecks required to prove independence of otherwise
-comment|/// may-alias pointers
-name|unsigned
-name|NumComparisons
-decl_stmt|;
 name|Loop
 modifier|*
 name|TheLoop
@@ -1506,6 +1531,30 @@ modifier|*
 name|OrigPtr
 init|=
 name|nullptr
+parameter_list|)
+function_decl|;
+comment|/// \brief Check the stride of the pointer and ensure that it does not wrap in
+comment|/// the address space.
+name|int
+name|isStridedPtr
+parameter_list|(
+name|ScalarEvolution
+modifier|*
+name|SE
+parameter_list|,
+name|Value
+modifier|*
+name|Ptr
+parameter_list|,
+specifier|const
+name|Loop
+modifier|*
+name|Lp
+parameter_list|,
+specifier|const
+name|ValueToValueMap
+modifier|&
+name|StridesMap
 parameter_list|)
 function_decl|;
 comment|/// \brief This analysis provides dependence information for the memory accesses

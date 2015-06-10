@@ -487,6 +487,11 @@ name|AccessType
 parameter_list|,
 name|uint64_t
 name|Offset
+parameter_list|,
+name|bool
+name|IsConstant
+init|=
+name|false
 parameter_list|)
 function_decl|;
 block|}

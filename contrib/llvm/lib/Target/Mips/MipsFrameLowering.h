@@ -138,6 +138,13 @@ specifier|const
 name|override
 block|;
 name|bool
+name|hasBP
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|bool
 name|isFPCloseToIncomingSP
 argument_list|()
 specifier|const

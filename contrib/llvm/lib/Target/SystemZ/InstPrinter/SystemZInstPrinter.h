@@ -160,6 +160,11 @@ name|MCOperand
 operator|&
 name|MO
 argument_list|,
+specifier|const
+name|MCAsmInfo
+operator|*
+name|MAI
+argument_list|,
 name|raw_ostream
 operator|&
 name|O

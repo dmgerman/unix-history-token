@@ -6163,6 +6163,17 @@ operator|*
 operator|>
 name|MetadataAsValues
 expr_stmt|;
+name|DenseMap
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+name|ValueName
+operator|*
+operator|>
+name|ValueNames
+expr_stmt|;
 define|#
 directive|define
 name|HANDLE_MDNODE_LEAF

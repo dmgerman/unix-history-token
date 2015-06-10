@@ -385,18 +385,6 @@ comment|/// True if INC and DEC instructions are slow when writing to flags
 name|bool
 name|SlowIncDec
 block|;
-comment|/// Use the RSQRT* instructions to optimize square root calculations.
-comment|/// For this to be profitable, the cost of FSQRT and FDIV must be
-comment|/// substantially higher than normal FP ops like FADD and FMUL.
-name|bool
-name|UseSqrtEst
-block|;
-comment|/// Use the RCP* instructions to optimize FP division calculations.
-comment|/// For this to be profitable, the cost of FDIV must be
-comment|/// substantially higher than normal FP ops like FADD and FMUL.
-name|bool
-name|UseReciprocalEst
-block|;
 comment|/// Processor has AVX-512 PreFetch Instructions
 name|bool
 name|HasPFI
@@ -420,6 +408,10 @@ block|;
 comment|/// Processor has AVX-512 Vector Length eXtenstions
 name|bool
 name|HasVLX
+block|;
+comment|/// Processot supports MPX - Memory Protection Extensions
+name|bool
+name|HasMPX
 block|;
 comment|/// Use software floating point for code generation.
 name|bool
@@ -1205,24 +1197,6 @@ name|SlowIncDec
 return|;
 block|}
 name|bool
-name|useSqrtEst
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UseSqrtEst
-return|;
-block|}
-name|bool
-name|useReciprocalEst
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UseReciprocalEst
-return|;
-block|}
-name|bool
 name|hasCDI
 argument_list|()
 specifier|const
@@ -1274,6 +1248,15 @@ specifier|const
 block|{
 return|return
 name|HasVLX
+return|;
+block|}
+name|bool
+name|hasMPX
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMPX
 return|;
 block|}
 name|bool

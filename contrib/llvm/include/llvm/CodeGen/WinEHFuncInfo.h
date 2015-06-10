@@ -94,6 +94,9 @@ name|class
 name|GlobalVariable
 decl_stmt|;
 name|class
+name|InvokeInst
+decl_stmt|;
+name|class
 name|IntrinsicInst
 decl_stmt|;
 name|class
@@ -694,6 +697,22 @@ literal|0
 argument_list|)
 block|{}
 block|}
+block|;
+comment|/// Analyze the IR in ParentFn and it's handlers to build WinEHFuncInfo, which
+comment|/// describes the state numbers and tables used by __CxxFrameHandler3. This
+comment|/// analysis assumes that WinEHPrepare has already been run.
+name|void
+name|calculateWinCXXEHStateNumbers
+argument_list|(
+specifier|const
+name|Function
+operator|*
+name|ParentFn
+argument_list|,
+name|WinEHFuncInfo
+operator|&
+name|FuncInfo
+argument_list|)
 block|;  }
 end_decl_stmt
 

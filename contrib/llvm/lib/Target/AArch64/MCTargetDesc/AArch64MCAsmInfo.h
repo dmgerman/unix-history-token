@@ -76,13 +76,13 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCStreamer
+decl_stmt|;
+name|class
 name|Target
 decl_stmt|;
 name|class
-name|StringRef
-decl_stmt|;
-name|class
-name|MCStreamer
+name|Triple
 decl_stmt|;
 name|struct
 name|AArch64MCAsmInfoDarwin
@@ -118,7 +118,10 @@ block|{
 name|explicit
 name|AArch64MCAsmInfoELF
 argument_list|(
-argument|StringRef TT
+specifier|const
+name|Triple
+operator|&
+name|T
 argument_list|)
 block|; }
 decl_stmt|;

@@ -116,10 +116,6 @@ operator|*
 name|Assembler
 block|;
 name|MCSection
-operator|*
-name|CurSectionData
-block|;
-name|MCSection
 operator|::
 name|iterator
 name|CurInsertionPoint
@@ -132,7 +128,7 @@ name|EmitDebugFrame
 block|;
 name|SmallVector
 operator|<
-name|MCSymbolData
+name|MCSymbol
 operator|*
 block|,
 literal|2
@@ -214,24 +210,6 @@ return|return
 name|true
 return|;
 block|}
-name|MCSymbolData
-operator|&
-name|getOrCreateSymbolData
-argument_list|(
-argument|const MCSymbol *Symbol
-argument_list|)
-block|{
-return|return
-name|getAssembler
-argument_list|()
-operator|.
-name|getOrCreateSymbolData
-argument_list|(
-operator|*
-name|Symbol
-argument_list|)
-return|;
-block|}
 name|void
 name|EmitFrames
 argument_list|(
@@ -251,16 +229,6 @@ name|override
 block|;
 name|protected
 operator|:
-name|MCSection
-operator|*
-name|getCurrentSectionData
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CurSectionData
-return|;
-block|}
 name|MCFragment
 operator|*
 name|getCurrentFragment
@@ -278,7 +246,14 @@ argument_list|(
 name|F
 argument_list|)
 block|;
-name|CurSectionData
+name|MCSection
+operator|*
+name|CurSection
+operator|=
+name|getCurrentSectionOnly
+argument_list|()
+block|;
+name|CurSection
 operator|->
 name|getFragmentList
 argument_list|()
@@ -294,7 +269,7 @@ name|F
 operator|->
 name|setParent
 argument_list|(
-name|CurSectionData
+name|CurSection
 argument_list|)
 block|;   }
 comment|/// Get a data fragment to write into, creating a new one if the current

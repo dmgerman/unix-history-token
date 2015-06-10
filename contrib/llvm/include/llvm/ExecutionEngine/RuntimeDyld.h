@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/STLExtras.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -269,13 +275,6 @@ argument|EndIdx
 argument_list|)
 block|{ }
 name|virtual
-operator|~
-name|LoadedObjectInfo
-argument_list|()
-operator|=
-expr|default
-block|;
-name|virtual
 name|object
 operator|::
 name|OwningBinary
@@ -344,19 +343,27 @@ argument_list|,
 argument|EndIdx
 argument_list|)
 block|{}
+name|std
+operator|::
+name|unique_ptr
+operator|<
 name|llvm
 operator|::
 name|LoadedObjectInfo
-operator|*
+operator|>
 name|clone
 argument_list|()
 specifier|const
 name|override
 block|{
 return|return
-name|new
+name|llvm
+operator|::
+name|make_unique
+operator|<
 name|Derived
-argument_list|(
+operator|>
+operator|(
 name|static_cast
 operator|<
 specifier|const
@@ -367,7 +374,7 @@ operator|(
 operator|*
 name|this
 operator|)
-argument_list|)
+operator|)
 return|;
 block|}
 expr|}

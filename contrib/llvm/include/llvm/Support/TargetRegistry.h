@@ -386,7 +386,9 @@ name|MCRegisterInfo
 modifier|&
 name|MRI
 parameter_list|,
-name|StringRef
+specifier|const
+name|Triple
+modifier|&
 name|TT
 parameter_list|)
 function_decl|;
@@ -1109,7 +1111,7 @@ comment|/// @{
 comment|/// createMCAsmInfo - Create a MCAsmInfo implementation for the specified
 comment|/// target triple.
 comment|///
-comment|/// \param Triple This argument is used to determine the target machine
+comment|/// \param TheTriple This argument is used to determine the target machine
 comment|/// feature set; it should always be provided. Generally this should be
 comment|/// either the target triple from the module, or the target triple of the
 comment|/// host if that does not exist.
@@ -1123,7 +1125,7 @@ operator|&
 name|MRI
 argument_list|,
 name|StringRef
-name|Triple
+name|TheTriple
 argument_list|)
 decl|const
 block|{
@@ -1141,6 +1143,9 @@ argument_list|(
 name|MRI
 argument_list|,
 name|Triple
+argument_list|(
+name|TheTriple
+argument_list|)
 argument_list|)
 return|;
 block|}
@@ -3798,7 +3803,7 @@ argument_list|(
 argument|const MCRegisterInfo&
 comment|/*MRI*/
 argument_list|,
-argument|StringRef TT
+argument|const Triple&TT
 argument_list|)
 block|{
 return|return

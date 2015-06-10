@@ -286,8 +286,13 @@ parameter_list|()
 function_decl|;
 name|FunctionPass
 modifier|*
-name|createNVPTXLowerStructArgsPass
-parameter_list|()
+name|createNVPTXLowerKernelArgsPass
+parameter_list|(
+specifier|const
+name|NVPTXTargetMachine
+modifier|*
+name|TM
+parameter_list|)
 function_decl|;
 name|bool
 name|isImageOrSamplerVal

@@ -153,7 +153,7 @@ argument_list|()
 expr_stmt|;
 comment|// The size in bytes of the statement information for this compilation unit
 comment|// (not including the total_length field itself).
-name|uint32_t
+name|uint64_t
 name|TotalLength
 decl_stmt|;
 comment|// Version identifier for the statement information format.
@@ -162,7 +162,7 @@ name|Version
 decl_stmt|;
 comment|// The number of bytes following the prologue_length field to the beginning
 comment|// of the first byte of the statement program itself.
-name|uint32_t
+name|uint64_t
 name|PrologueLength
 decl_stmt|;
 comment|// The size in bytes of the smallest target machine instruction. Statement
@@ -218,6 +218,35 @@ name|FileNameEntry
 operator|>
 name|FileNames
 expr_stmt|;
+name|bool
+name|IsDWARF64
+decl_stmt|;
+name|uint32_t
+name|sizeofTotalLength
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsDWARF64
+operator|?
+literal|12
+operator|:
+literal|4
+return|;
+block|}
+name|uint32_t
+name|sizeofPrologueLength
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsDWARF64
+operator|?
+literal|8
+operator|:
+literal|4
+return|;
+block|}
 comment|// Length of the prologue in bytes.
 name|uint32_t
 name|getLength
@@ -227,20 +256,16 @@ block|{
 return|return
 name|PrologueLength
 operator|+
-sizeof|sizeof
-argument_list|(
-name|TotalLength
-argument_list|)
+name|sizeofTotalLength
+argument_list|()
 operator|+
 sizeof|sizeof
 argument_list|(
 name|Version
 argument_list|)
 operator|+
-sizeof|sizeof
-argument_list|(
-name|PrologueLength
-argument_list|)
+name|sizeofPrologueLength
+argument_list|()
 return|;
 block|}
 comment|// Length of the line table data in bytes (not including the prologue).
@@ -252,10 +277,8 @@ block|{
 return|return
 name|TotalLength
 operator|+
-sizeof|sizeof
-argument_list|(
-name|TotalLength
-argument_list|)
+name|sizeofTotalLength
+argument_list|()
 operator|-
 name|getLength
 argument_list|()
@@ -535,6 +558,13 @@ block|{
 name|LineTable
 argument_list|()
 expr_stmt|;
+comment|// Represents an invalid row
+specifier|const
+name|uint32_t
+name|UnknownRowIndex
+init|=
+name|UINT32_MAX
+decl_stmt|;
 name|void
 name|appendRow
 argument_list|(
@@ -574,7 +604,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|// Returns the index of the row with file/line info for a given address,
-comment|// or -1 if there is no such row.
+comment|// or UnknownRowIndex if there is no such row.
 name|uint32_t
 name|lookupAddress
 argument_list|(
@@ -722,6 +752,23 @@ name|Rows
 decl_stmt|;
 name|SequenceVector
 name|Sequences
+decl_stmt|;
+name|private
+label|:
+name|uint32_t
+name|findRowInSeq
+argument_list|(
+specifier|const
+name|DWARFDebugLine
+operator|::
+name|Sequence
+operator|&
+name|seq
+argument_list|,
+name|uint64_t
+name|address
+argument_list|)
+decl|const
 decl_stmt|;
 block|}
 struct|;

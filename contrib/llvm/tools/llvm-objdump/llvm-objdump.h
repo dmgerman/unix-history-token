@@ -107,6 +107,7 @@ extern|extern cl::opt<bool> SectionHeaders;
 extern|extern cl::opt<bool> SectionContents;
 extern|extern cl::opt<bool> SymbolTable;
 extern|extern cl::opt<bool> UnwindInfo;
+extern|extern cl::opt<bool> PrintImmHex;
 comment|// Various helper functions.
 name|bool
 name|error
@@ -129,16 +130,6 @@ name|object
 operator|::
 name|RelocationRef
 name|b
-argument_list|)
-decl_stmt|;
-name|void
-name|DumpBytes
-argument_list|(
-name|ArrayRef
-operator|<
-name|uint8_t
-operator|>
-name|bytes
 argument_list|)
 decl_stmt|;
 name|void

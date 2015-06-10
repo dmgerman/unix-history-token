@@ -467,7 +467,7 @@ specifier|static
 specifier|const
 name|AArch64MCExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -564,9 +564,11 @@ argument_list|()
 specifier|const
 block|;
 name|void
-name|PrintImpl
+name|printImpl
 argument_list|(
 argument|raw_ostream&OS
+argument_list|,
+argument|const MCAsmInfo *MAI
 argument_list|)
 specifier|const
 name|override
@@ -581,13 +583,13 @@ name|override
 block|;
 name|MCSection
 operator|*
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 specifier|const
 name|override
 block|;
 name|bool
-name|EvaluateAsRelocatableImpl
+name|evaluateAsRelocatableImpl
 argument_list|(
 argument|MCValue&Res
 argument_list|,

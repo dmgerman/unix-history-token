@@ -4178,6 +4178,13 @@ name|getDestructor
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Returns true if the class destructor, or any implicitly invoked
+comment|/// destructors are marked noreturn.
+name|bool
+name|isAnyDestructorNoReturn
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief If the class is a local class [class.local], returns
 comment|/// the enclosing function declaration.
 specifier|const

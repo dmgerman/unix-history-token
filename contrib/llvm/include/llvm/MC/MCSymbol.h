@@ -62,13 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerIntPair.h"
+file|"llvm/ADT/PointerUnion.h"
 end_include
 
 begin_include
 include|#
 directive|include
 file|"llvm/ADT/StringMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCAssembler.h"
 end_include
 
 begin_include
@@ -88,6 +94,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCAsmInfo
+decl_stmt|;
+name|class
 name|MCExpr
 decl_stmt|;
 name|class
@@ -105,384 +114,6 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|// TODO: Merge completely with MCSymbol.
-name|class
-name|MCSymbolData
-block|{
-comment|/// Fragment - The fragment this symbol's value is relative to, if any. Also
-comment|/// stores if this symbol is visible outside this translation unit (bit 0) or
-comment|/// if it is private extern (bit 1).
-name|PointerIntPair
-operator|<
-name|MCFragment
-operator|*
-operator|,
-literal|2
-operator|>
-name|Fragment
-expr_stmt|;
-union|union
-block|{
-comment|/// Offset - The offset to apply to the fragment address to form this
-comment|/// symbol's value.
-name|uint64_t
-name|Offset
-decl_stmt|;
-comment|/// CommonSize - The size of the symbol, if it is 'common'.
-name|uint64_t
-name|CommonSize
-decl_stmt|;
-block|}
-union|;
-comment|/// SymbolSize - An expression describing how to calculate the size of
-comment|/// a symbol. If a symbol has no size this field will be NULL.
-specifier|const
-name|MCExpr
-modifier|*
-name|SymbolSize
-init|=
-name|nullptr
-decl_stmt|;
-comment|/// CommonAlign - The alignment of the symbol, if it is 'common', or -1.
-comment|//
-comment|// FIXME: Pack this in with other fields?
-name|unsigned
-name|CommonAlign
-init|=
-operator|-
-literal|1U
-decl_stmt|;
-comment|/// Flags - The Flags field is used by object file implementations to store
-comment|/// additional per symbol information which is not easily classified.
-name|uint32_t
-name|Flags
-init|=
-literal|0
-decl_stmt|;
-name|public
-label|:
-name|MCSymbolData
-argument_list|()
-block|{
-name|Offset
-operator|=
-literal|0
-expr_stmt|;
-block|}
-name|MCFragment
-operator|*
-name|getFragment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Fragment
-operator|.
-name|getPointer
-argument_list|()
-return|;
-block|}
-name|void
-name|setFragment
-parameter_list|(
-name|MCFragment
-modifier|*
-name|Value
-parameter_list|)
-block|{
-name|Fragment
-operator|.
-name|setPointer
-argument_list|(
-name|Value
-argument_list|)
-expr_stmt|;
-block|}
-name|uint64_t
-name|getOffset
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-operator|!
-name|isCommon
-argument_list|()
-argument_list|)
-block|;
-return|return
-name|Offset
-return|;
-block|}
-name|void
-name|setOffset
-parameter_list|(
-name|uint64_t
-name|Value
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-operator|!
-name|isCommon
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|Offset
-operator|=
-name|Value
-expr_stmt|;
-block|}
-comment|/// @}
-comment|/// \name Symbol Attributes
-comment|/// @{
-name|bool
-name|isExternal
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Fragment
-operator|.
-name|getInt
-argument_list|()
-operator|&
-literal|1
-return|;
-block|}
-name|void
-name|setExternal
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|Fragment
-operator|.
-name|setInt
-argument_list|(
-operator|(
-name|Fragment
-operator|.
-name|getInt
-argument_list|()
-operator|&
-operator|~
-literal|1
-operator|)
-operator||
-name|unsigned
-argument_list|(
-name|Value
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
-name|bool
-name|isPrivateExtern
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Fragment
-operator|.
-name|getInt
-argument_list|()
-operator|&
-literal|2
-return|;
-block|}
-name|void
-name|setPrivateExtern
-parameter_list|(
-name|bool
-name|Value
-parameter_list|)
-block|{
-name|Fragment
-operator|.
-name|setInt
-argument_list|(
-operator|(
-name|Fragment
-operator|.
-name|getInt
-argument_list|()
-operator|&
-operator|~
-literal|2
-operator|)
-operator||
-operator|(
-name|unsigned
-argument_list|(
-name|Value
-argument_list|)
-operator|<<
-literal|1
-operator|)
-argument_list|)
-expr_stmt|;
-block|}
-comment|/// isCommon - Is this a 'common' symbol.
-name|bool
-name|isCommon
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CommonAlign
-operator|!=
-operator|-
-literal|1U
-return|;
-block|}
-comment|/// setCommon - Mark this symbol as being 'common'.
-comment|///
-comment|/// \param Size - The size of the symbol.
-comment|/// \param Align - The alignment of the symbol.
-name|void
-name|setCommon
-parameter_list|(
-name|uint64_t
-name|Size
-parameter_list|,
-name|unsigned
-name|Align
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|getOffset
-argument_list|()
-operator|==
-literal|0
-argument_list|)
-expr_stmt|;
-name|CommonSize
-operator|=
-name|Size
-expr_stmt|;
-name|CommonAlign
-operator|=
-name|Align
-expr_stmt|;
-block|}
-comment|/// getCommonSize - Return the size of a 'common' symbol.
-name|uint64_t
-name|getCommonSize
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isCommon
-argument_list|()
-operator|&&
-literal|"Not a 'common' symbol!"
-argument_list|)
-block|;
-return|return
-name|CommonSize
-return|;
-block|}
-name|void
-name|setSize
-parameter_list|(
-specifier|const
-name|MCExpr
-modifier|*
-name|SS
-parameter_list|)
-block|{
-name|SymbolSize
-operator|=
-name|SS
-expr_stmt|;
-block|}
-specifier|const
-name|MCExpr
-operator|*
-name|getSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SymbolSize
-return|;
-block|}
-comment|/// getCommonAlignment - Return the alignment of a 'common' symbol.
-name|unsigned
-name|getCommonAlignment
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|isCommon
-argument_list|()
-operator|&&
-literal|"Not a 'common' symbol!"
-argument_list|)
-block|;
-return|return
-name|CommonAlign
-return|;
-block|}
-comment|/// getFlags - Get the (implementation defined) symbol flags.
-name|uint32_t
-name|getFlags
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Flags
-return|;
-block|}
-comment|/// setFlags - Set the (implementation defined) symbol flags.
-name|void
-name|setFlags
-parameter_list|(
-name|uint32_t
-name|Value
-parameter_list|)
-block|{
-name|Flags
-operator|=
-name|Value
-expr_stmt|;
-block|}
-comment|/// modifyFlags - Modify the flags via a mask
-name|void
-name|modifyFlags
-parameter_list|(
-name|uint32_t
-name|Value
-parameter_list|,
-name|uint32_t
-name|Mask
-parameter_list|)
-block|{
-name|Flags
-operator|=
-operator|(
-name|Flags
-operator|&
-operator|~
-name|Mask
-operator|)
-operator||
-name|Value
-expr_stmt|;
-block|}
-comment|/// @}
-name|void
-name|dump
-argument_list|()
-specifier|const
-expr_stmt|;
-block|}
-empty_stmt|;
 comment|/// MCSymbol - Instances of this class represent a symbol name in the MC file,
 comment|/// and MCSymbols are created and uniqued by the MCContext class.  MCSymbols
 comment|/// should only be constructed with valid names for the object file.
@@ -493,6 +124,22 @@ comment|/// it is a reference to an external entity, it has a null section.
 name|class
 name|MCSymbol
 block|{
+name|protected
+label|:
+comment|/// The kind of the symbol.  If it is any value other than unset then this
+comment|/// class is actually one of the appropriate subclasses of MCSymbol.
+enum|enum
+name|SymbolKind
+block|{
+name|SymbolKindUnset
+block|,
+name|SymbolKindCOFF
+block|,
+name|SymbolKindELF
+block|,
+name|SymbolKindMachO
+block|,   }
+enum|;
 comment|// Special sentinal value for the absolute pseudo section.
 comment|//
 comment|// FIXME: Use a PointerInt wrapper for this?
@@ -511,14 +158,28 @@ operator|>
 operator|*
 name|Name
 expr_stmt|;
-comment|/// The section the symbol is defined in. This is null for undefined symbols,
-comment|/// and the special AbsolutePseudoSection value for absolute symbols. If this
-comment|/// is a variable symbol, this caches the variable value's section.
+comment|/// If a symbol has a Fragment, the section is implied, so we only need
+comment|/// one pointer.
+comment|/// FIXME: We might be able to simplify this by having the asm streamer create
+comment|/// dummy fragments.
+comment|/// If this is a section, then it gives the symbol is defined in. This is null
+comment|/// for undefined symbols, and the special AbsolutePseudoSection value for
+comment|/// absolute symbols. If this is a variable symbol, this caches the variable
+comment|/// value's section.
+comment|///
+comment|/// If this is a fragment, then it gives the fragment this symbol's value is
+comment|/// relative to, if any.
 name|mutable
+name|PointerUnion
+operator|<
 name|MCSection
-modifier|*
-name|Section
-decl_stmt|;
+operator|*
+operator|,
+name|MCFragment
+operator|*
+operator|>
+name|SectionOrFragment
+expr_stmt|;
 comment|/// Value - If non-null, the value for a variable symbol.
 specifier|const
 name|MCExpr
@@ -548,22 +209,68 @@ literal|1
 decl_stmt|;
 name|mutable
 name|bool
-name|HasData
+name|IsRegistered
 range|:
 literal|1
 decl_stmt|;
+comment|/// This symbol is visible outside this translation unit.
+name|mutable
+name|unsigned
+name|IsExternal
+range|:
+literal|1
+decl_stmt|;
+comment|/// This symbol is private extern.
+name|mutable
+name|unsigned
+name|IsPrivateExtern
+range|:
+literal|1
+decl_stmt|;
+comment|/// LLVM RTTI discriminator. This is actually a SymbolKind enumerator, but is
+comment|/// unsigned to avoid sign extension and achieve better bitpacking with MSVC.
+name|unsigned
+name|Kind
+range|:
+literal|2
+decl_stmt|;
 comment|/// Index field, for use by the object file implementation.
 name|mutable
-name|uint64_t
+name|uint32_t
 name|Index
-range|:
-literal|60
+init|=
+literal|0
 decl_stmt|;
+union|union
+block|{
+comment|/// The offset to apply to the fragment address to form this symbol's value.
+name|uint64_t
+name|Offset
+decl_stmt|;
+comment|/// The size of the symbol, if it is 'common'.
+name|uint64_t
+name|CommonSize
+decl_stmt|;
+block|}
+union|;
+comment|/// The alignment of the symbol, if it is 'common', or -1.
+comment|//
+comment|// FIXME: Pack this in with other fields?
+name|unsigned
+name|CommonAlign
+init|=
+operator|-
+literal|1U
+decl_stmt|;
+comment|/// The Flags field is used by object file implementations to store
+comment|/// additional per symbol information which is not easily classified.
 name|mutable
-name|MCSymbolData
-name|Data
+name|uint32_t
+name|Flags
+init|=
+literal|0
 decl_stmt|;
-name|private
+name|protected
 label|:
 comment|// MCContext creates and uniques these.
 name|friend
@@ -576,6 +283,8 @@ name|MCContext
 decl_stmt|;
 name|MCSymbol
 argument_list|(
+argument|SymbolKind Kind
+argument_list|,
 argument|const StringMapEntry<bool> *Name
 argument_list|,
 argument|bool isTemporary
@@ -584,11 +293,6 @@ block|:
 name|Name
 argument_list|(
 name|Name
-argument_list|)
-operator|,
-name|Section
-argument_list|(
-name|nullptr
 argument_list|)
 operator|,
 name|Value
@@ -611,16 +315,32 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
-name|HasData
+name|IsRegistered
 argument_list|(
 name|false
 argument_list|)
 operator|,
-name|Index
+name|IsExternal
 argument_list|(
-literal|0
+name|false
 argument_list|)
-block|{}
+operator|,
+name|IsPrivateExtern
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Kind
+argument_list|(
+argument|Kind
+argument_list|)
+block|{
+name|Offset
+operator|=
+literal|0
+block|;   }
+name|private
+operator|:
 name|MCSymbol
 argument_list|(
 specifier|const
@@ -649,6 +369,51 @@ specifier|const
 block|{
 if|if
 condition|(
+name|MCFragment
+modifier|*
+name|F
+init|=
+name|getFragment
+argument_list|()
+condition|)
+return|return
+name|F
+operator|->
+name|getParent
+argument_list|()
+return|;
+name|assert
+argument_list|(
+operator|!
+name|SectionOrFragment
+operator|.
+name|is
+operator|<
+name|MCFragment
+operator|*
+operator|>
+operator|(
+operator|)
+operator|&&
+literal|"Section or null expected"
+argument_list|)
+expr_stmt|;
+name|MCSection
+modifier|*
+name|Section
+init|=
+name|SectionOrFragment
+operator|.
+name|dyn_cast
+operator|<
+name|MCSection
+operator|*
+operator|>
+operator|(
+operator|)
+decl_stmt|;
+if|if
+condition|(
 name|Section
 operator|||
 operator|!
@@ -662,7 +427,7 @@ name|Section
 operator|=
 name|Value
 operator|->
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 return|;
 block|}
@@ -686,46 +451,27 @@ literal|""
 return|;
 block|}
 name|bool
-name|hasData
+name|isRegistered
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasData
+name|IsRegistered
 return|;
 block|}
-comment|/// Get associated symbol data.
-name|MCSymbolData
-operator|&
-name|getData
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-name|HasData
-operator|&&
-literal|"Missing symbol data!"
-argument_list|)
-block|;
-return|return
-name|Data
-return|;
-block|}
-comment|/// Initialize symbol data.
-comment|///
-comment|/// Nothing really to do here, but this is enables an assertion that \a
-comment|/// MCAssembler::getOrCreateSymbolData() has actually been called before
-comment|/// anyone calls \a getData().
 name|void
-name|initializeData
-argument_list|()
-specifier|const
+name|setIsRegistered
+argument_list|(
+name|bool
+name|Value
+argument_list|)
+decl|const
 block|{
-name|HasData
+name|IsRegistered
 operator|=
-name|true
-block|; }
+name|Value
+expr_stmt|;
+block|}
 comment|/// \name Accessors
 comment|/// @{
 comment|/// isTemporary - Check if this is an assembler temporary symbol.
@@ -798,7 +544,7 @@ name|Value
 operator|=
 name|nullptr
 expr_stmt|;
-name|Section
+name|SectionOrFragment
 operator|=
 name|nullptr
 expr_stmt|;
@@ -906,21 +652,70 @@ operator|&&
 literal|"Cannot set section of variable"
 argument_list|)
 expr_stmt|;
-name|Section
+name|assert
+argument_list|(
+operator|!
+name|SectionOrFragment
+operator|.
+name|is
+operator|<
+name|MCFragment
+operator|*
+operator|>
+operator|(
+operator|)
+operator|&&
+literal|"Section or null expected"
+argument_list|)
+expr_stmt|;
+name|SectionOrFragment
 operator|=
 operator|&
 name|S
 expr_stmt|;
 block|}
-comment|/// setUndefined - Mark the symbol as undefined.
+comment|/// Mark the symbol as undefined.
 name|void
 name|setUndefined
 parameter_list|()
 block|{
-name|Section
+name|SectionOrFragment
 operator|=
 name|nullptr
 expr_stmt|;
+block|}
+name|bool
+name|isELF
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|SymbolKindELF
+return|;
+block|}
+name|bool
+name|isCOFF
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|SymbolKindCOFF
+return|;
+block|}
+name|bool
+name|isMachO
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|SymbolKindMachO
+return|;
 block|}
 comment|/// @}
 comment|/// \name Variable Symbols
@@ -972,18 +767,11 @@ parameter_list|)
 function_decl|;
 comment|/// @}
 comment|/// Get the (implementation defined) index.
-name|uint64_t
+name|uint32_t
 name|getIndex
 argument_list|()
 specifier|const
 block|{
-name|assert
-argument_list|(
-name|HasData
-operator|&&
-literal|"Uninitialized symbol data"
-argument_list|)
-block|;
 return|return
 name|Index
 return|;
@@ -992,31 +780,260 @@ comment|/// Set the (implementation defined) index.
 name|void
 name|setIndex
 argument_list|(
-name|uint64_t
+name|uint32_t
 name|Value
 argument_list|)
 decl|const
 block|{
-name|assert
-argument_list|(
-name|HasData
-operator|&&
-literal|"Uninitialized symbol data"
-argument_list|)
+name|Index
+operator|=
+name|Value
 expr_stmt|;
+block|}
+name|uint64_t
+name|getOffset
+argument_list|()
+specifier|const
+block|{
 name|assert
 argument_list|(
 operator|!
-operator|(
+name|isCommon
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Offset
+return|;
+block|}
+name|void
+name|setOffset
+parameter_list|(
+name|uint64_t
 name|Value
-operator|>>
-literal|60
-operator|)
-operator|&&
-literal|"Not enough bits for value"
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+operator|!
+name|isCommon
+argument_list|()
 argument_list|)
 expr_stmt|;
-name|Index
+name|Offset
+operator|=
+name|Value
+expr_stmt|;
+block|}
+comment|/// Return the size of a 'common' symbol.
+name|uint64_t
+name|getCommonSize
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isCommon
+argument_list|()
+operator|&&
+literal|"Not a 'common' symbol!"
+argument_list|)
+block|;
+return|return
+name|CommonSize
+return|;
+block|}
+comment|/// Mark this symbol as being 'common'.
+comment|///
+comment|/// \param Size - The size of the symbol.
+comment|/// \param Align - The alignment of the symbol.
+name|void
+name|setCommon
+parameter_list|(
+name|uint64_t
+name|Size
+parameter_list|,
+name|unsigned
+name|Align
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|getOffset
+argument_list|()
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|CommonSize
+operator|=
+name|Size
+expr_stmt|;
+name|CommonAlign
+operator|=
+name|Align
+expr_stmt|;
+block|}
+comment|///  Return the alignment of a 'common' symbol.
+name|unsigned
+name|getCommonAlignment
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isCommon
+argument_list|()
+operator|&&
+literal|"Not a 'common' symbol!"
+argument_list|)
+block|;
+return|return
+name|CommonAlign
+return|;
+block|}
+comment|/// Declare this symbol as being 'common'.
+comment|///
+comment|/// \param Size - The size of the symbol.
+comment|/// \param Align - The alignment of the symbol.
+comment|/// \return True if symbol was already declared as a different type
+name|bool
+name|declareCommon
+parameter_list|(
+name|uint64_t
+name|Size
+parameter_list|,
+name|unsigned
+name|Align
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isCommon
+argument_list|()
+operator|||
+name|getOffset
+argument_list|()
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|isCommon
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
+name|CommonSize
+operator|!=
+name|Size
+operator|||
+name|CommonAlign
+operator|!=
+name|Align
+condition|)
+return|return
+name|true
+return|;
+block|}
+else|else
+name|setCommon
+argument_list|(
+name|Size
+argument_list|,
+name|Align
+argument_list|)
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+comment|/// Is this a 'common' symbol.
+name|bool
+name|isCommon
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CommonAlign
+operator|!=
+operator|-
+literal|1U
+return|;
+block|}
+name|MCFragment
+operator|*
+name|getFragment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SectionOrFragment
+operator|.
+name|dyn_cast
+operator|<
+name|MCFragment
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+name|void
+name|setFragment
+argument_list|(
+name|MCFragment
+operator|*
+name|Value
+argument_list|)
+decl|const
+block|{
+name|SectionOrFragment
+operator|=
+name|Value
+expr_stmt|;
+block|}
+name|bool
+name|isExternal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsExternal
+return|;
+block|}
+name|void
+name|setExternal
+argument_list|(
+name|bool
+name|Value
+argument_list|)
+decl|const
+block|{
+name|IsExternal
+operator|=
+name|Value
+expr_stmt|;
+block|}
+name|bool
+name|isPrivateExtern
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsPrivateExtern
+return|;
+block|}
+name|void
+name|setPrivateExtern
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|IsPrivateExtern
 operator|=
 name|Value
 expr_stmt|;
@@ -1028,6 +1045,11 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|OS
+argument_list|,
+specifier|const
+name|MCAsmInfo
+operator|*
+name|MAI
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1037,6 +1059,56 @@ name|dump
 argument_list|()
 specifier|const
 expr_stmt|;
+name|protected
+label|:
+comment|/// Get the (implementation defined) symbol flags.
+name|uint32_t
+name|getFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+return|;
+block|}
+comment|/// Set the (implementation defined) symbol flags.
+name|void
+name|setFlags
+argument_list|(
+name|uint32_t
+name|Value
+argument_list|)
+decl|const
+block|{
+name|Flags
+operator|=
+name|Value
+expr_stmt|;
+block|}
+comment|/// Modify the flags via a mask
+name|void
+name|modifyFlags
+argument_list|(
+name|uint32_t
+name|Value
+argument_list|,
+name|uint32_t
+name|Mask
+argument_list|)
+decl|const
+block|{
+name|Flags
+operator|=
+operator|(
+name|Flags
+operator|&
+operator|~
+name|Mask
+operator|)
+operator||
+name|Value
+expr_stmt|;
+block|}
 block|}
 end_decl_stmt
 
@@ -1066,6 +1138,8 @@ operator|.
 name|print
 argument_list|(
 name|OS
+argument_list|,
+name|nullptr
 argument_list|)
 block|;
 return|return

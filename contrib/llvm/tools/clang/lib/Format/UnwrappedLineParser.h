@@ -387,24 +387,6 @@ name|void
 name|tryToParseJSFunction
 parameter_list|()
 function_decl|;
-comment|/// \brief Parses tokens until encountering the CloseKind token, but balances
-comment|/// tokens when encountering more OpenKind tokens. Useful for e.g. parsing a
-comment|/// curly brace delimited block that can contain nested blocks.
-comment|/// The parser must be positioned on a token of OpenKind.
-name|void
-name|parseBalanced
-argument_list|(
-name|tok
-operator|::
-name|TokenKind
-name|OpenKind
-argument_list|,
-name|tok
-operator|::
-name|TokenKind
-name|CloseKind
-argument_list|)
-decl_stmt|;
 name|void
 name|addUnwrappedLine
 parameter_list|()

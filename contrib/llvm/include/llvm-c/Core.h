@@ -1739,6 +1739,17 @@ modifier|*
 name|Dest
 parameter_list|)
 function_decl|;
+comment|/**  * Get the type of the element at a given index in the structure.  *  * @see llvm::StructType::getTypeAtIndex()  */
+name|LLVMTypeRef
+name|LLVMStructGetTypeAtIndex
+parameter_list|(
+name|LLVMTypeRef
+name|StructTy
+parameter_list|,
+name|unsigned
+name|i
+parameter_list|)
+function_decl|;
 comment|/**  * Determine whether a structure is packed.  *  * @see llvm::StructType::isPacked()  */
 name|LLVMBool
 name|LLVMIsPackedStruct

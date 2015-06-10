@@ -956,6 +956,12 @@ expr_stmt|;
 name|bool
 name|IsTargetLittleEndian
 decl_stmt|;
+name|bool
+name|IsMipsO32ABI
+decl_stmt|;
+name|bool
+name|IsMipsN64ABI
+decl_stmt|;
 comment|// True if all sections should be passed to the memory manager, false if only
 comment|// sections containing relocations should be. Defaults to 'false'.
 name|bool
@@ -1315,6 +1321,25 @@ operator|=
 name|Value
 operator|&
 literal|0xFF
+expr_stmt|;
+block|}
+name|virtual
+name|void
+name|setMipsABI
+parameter_list|(
+specifier|const
+name|ObjectFile
+modifier|&
+name|Obj
+parameter_list|)
+block|{
+name|IsMipsO32ABI
+operator|=
+name|false
+expr_stmt|;
+name|IsMipsN64ABI
+operator|=
+name|false
 expr_stmt|;
 block|}
 comment|/// Endian-aware read Read the least significant Size bytes from Src.

@@ -162,6 +162,11 @@ argument_list|)
 name|override
 block|;
 name|void
+name|releaseMemory
+argument_list|()
+name|override
+block|;
+name|void
 name|print
 argument_list|(
 argument|raw_ostream&OS

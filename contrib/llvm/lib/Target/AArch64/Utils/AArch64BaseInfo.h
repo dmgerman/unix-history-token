@@ -3134,6 +3134,11 @@ init|=
 literal|0xdf02
 block|,
 comment|// 11  011  1110  0000  010
+name|ID_MMFR4_EL1
+init|=
+literal|0xc016
+block|,
+comment|// 11  000  0000  0010  110
 comment|// Trace registers
 name|TRCSTATR
 init|=

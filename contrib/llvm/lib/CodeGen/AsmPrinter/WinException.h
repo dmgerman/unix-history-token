@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Win64Exception.h - Windows Exception Handling ----------*- C++ -*--===//
+comment|//===-- WinException.h - Windows Exception Handling ----------*- C++ -*--===//
 end_comment
 
 begin_comment
@@ -70,6 +70,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Function
+decl_stmt|;
+name|class
 name|GlobalValue
 decl_stmt|;
 name|class
@@ -78,8 +81,11 @@ decl_stmt|;
 name|class
 name|MCExpr
 decl_stmt|;
+struct_decl|struct
+name|WinEHFuncInfo
+struct_decl|;
 name|class
-name|Win64Exception
+name|WinException
 range|:
 name|public
 name|EHStreamer
@@ -87,14 +93,26 @@ block|{
 comment|/// Per-function flag to indicate if personality info should be emitted.
 name|bool
 name|shouldEmitPersonality
+operator|=
+name|false
 block|;
 comment|/// Per-function flag to indicate if the LSDA should be emitted.
 name|bool
 name|shouldEmitLSDA
+operator|=
+name|false
 block|;
 comment|/// Per-function flag to indicate if frame moves info should be emitted.
 name|bool
 name|shouldEmitMoves
+operator|=
+name|false
+block|;
+comment|/// True if this is a 64-bit target and we should use image relative offsets.
+name|bool
+name|useImageRel32
+operator|=
+name|false
 block|;
 name|void
 name|emitCSpecificHandlerTable
@@ -109,10 +127,28 @@ operator|*
 name|MF
 argument_list|)
 block|;
+name|void
+name|extendIP2StateTable
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|,
+specifier|const
+name|Function
+operator|*
+name|ParentF
+argument_list|,
+name|WinEHFuncInfo
+operator|&
+name|FuncInfo
+argument_list|)
+block|;
 specifier|const
 name|MCExpr
 operator|*
-name|createImageRel32
+name|create32bitRef
 argument_list|(
 specifier|const
 name|MCSymbol
@@ -123,7 +159,7 @@ block|;
 specifier|const
 name|MCExpr
 operator|*
-name|createImageRel32
+name|create32bitRef
 argument_list|(
 specifier|const
 name|GlobalValue
@@ -136,7 +172,7 @@ operator|:
 comment|//===--------------------------------------------------------------------===//
 comment|// Main entry points.
 comment|//
-name|Win64Exception
+name|WinException
 argument_list|(
 name|AsmPrinter
 operator|*
@@ -144,7 +180,7 @@ name|A
 argument_list|)
 block|;
 operator|~
-name|Win64Exception
+name|WinException
 argument_list|()
 name|override
 block|;

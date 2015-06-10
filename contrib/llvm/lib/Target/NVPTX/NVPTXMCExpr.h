@@ -119,7 +119,7 @@ specifier|static
 specifier|const
 name|NVPTXFloatMCExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|VariantKind Kind
 argument_list|,
@@ -132,7 +132,7 @@ specifier|static
 specifier|const
 name|NVPTXFloatMCExpr
 operator|*
-name|CreateConstantFPSingle
+name|createConstantFPSingle
 argument_list|(
 argument|APFloat Flt
 argument_list|,
@@ -140,7 +140,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|VK_NVPTX_SINGLE_PREC_FLOAT
 argument_list|,
@@ -154,7 +154,7 @@ specifier|static
 specifier|const
 name|NVPTXFloatMCExpr
 operator|*
-name|CreateConstantFPDouble
+name|createConstantFPDouble
 argument_list|(
 argument|APFloat Flt
 argument_list|,
@@ -162,7 +162,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|VK_NVPTX_DOUBLE_PREC_FLOAT
 argument_list|,
@@ -197,15 +197,17 @@ return|;
 block|}
 comment|/// @}
 name|void
-name|PrintImpl
+name|printImpl
 argument_list|(
 argument|raw_ostream&OS
+argument_list|,
+argument|const MCAsmInfo *MAI
 argument_list|)
 specifier|const
 name|override
 block|;
 name|bool
-name|EvaluateAsRelocatableImpl
+name|evaluateAsRelocatableImpl
 argument_list|(
 argument|MCValue&Res
 argument_list|,
@@ -231,7 +233,7 @@ block|{}
 block|;
 name|MCSection
 operator|*
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 specifier|const
 name|override
@@ -306,7 +308,7 @@ specifier|static
 specifier|const
 name|NVPTXGenericMCSymbolRefExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 specifier|const
 name|MCSymbolRefExpr
@@ -335,15 +337,17 @@ return|;
 block|}
 comment|/// @}
 name|void
-name|PrintImpl
+name|printImpl
 argument_list|(
 argument|raw_ostream&OS
+argument_list|,
+argument|const MCAsmInfo *MAI
 argument_list|)
 specifier|const
 name|override
 block|;
 name|bool
-name|EvaluateAsRelocatableImpl
+name|evaluateAsRelocatableImpl
 argument_list|(
 argument|MCValue&Res
 argument_list|,
@@ -369,7 +373,7 @@ block|{}
 block|;
 name|MCSection
 operator|*
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 specifier|const
 name|override

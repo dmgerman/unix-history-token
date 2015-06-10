@@ -82,6 +82,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|Triple
+decl_stmt|;
+name|class
 name|ARMMCAsmInfoDarwin
 range|:
 name|public
@@ -97,7 +100,10 @@ operator|:
 name|explicit
 name|ARMMCAsmInfoDarwin
 argument_list|(
-argument|StringRef TT
+specifier|const
+name|Triple
+operator|&
+name|TheTriple
 argument_list|)
 block|;   }
 decl_stmt|;
@@ -117,7 +123,10 @@ operator|:
 name|explicit
 name|ARMELFMCAsmInfo
 argument_list|(
-argument|StringRef TT
+specifier|const
+name|Triple
+operator|&
+name|TT
 argument_list|)
 block|;
 name|void

@@ -5820,6 +5820,14 @@ name|bool
 name|nextDocument
 argument_list|()
 block|;
+comment|/// Returns the current node that's being parsed by the YAML Parser.
+specifier|const
+name|Node
+operator|*
+name|getCurrentNode
+argument_list|()
+specifier|const
+block|;
 name|private
 operator|:
 name|llvm
@@ -5910,16 +5918,12 @@ name|public
 operator|:
 name|Output
 argument_list|(
-name|llvm
-operator|::
-name|raw_ostream
-operator|&
+argument|llvm::raw_ostream&
 argument_list|,
-name|void
-operator|*
-name|Ctxt
-operator|=
-name|nullptr
+argument|void *Ctxt = nullptr
+argument_list|,
+argument|int WrapColumn =
+literal|70
 argument_list|)
 block|;
 operator|~
@@ -6184,6 +6188,9 @@ operator|::
 name|raw_ostream
 operator|&
 name|Out
+block|;
+name|int
+name|WrapColumn
 block|;
 name|SmallVector
 operator|<

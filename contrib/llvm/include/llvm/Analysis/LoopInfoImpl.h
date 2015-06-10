@@ -3180,6 +3180,7 @@ operator|:
 name|BBMap
 control|)
 block|{
+specifier|const
 name|BlockT
 modifier|*
 name|BB

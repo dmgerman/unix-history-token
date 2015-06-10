@@ -1763,6 +1763,13 @@ modifier|&
 parameter_list|)
 function_decl|;
 name|void
+name|initializeMIRPrintingPassPass
+parameter_list|(
+name|PassRegistry
+modifier|&
+parameter_list|)
+function_decl|;
+name|void
 name|initializeStackMapLivenessPass
 parameter_list|(
 name|PassRegistry

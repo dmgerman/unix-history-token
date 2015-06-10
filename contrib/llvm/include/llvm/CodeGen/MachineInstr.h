@@ -1173,6 +1173,22 @@ argument_list|()
 operator|)
 return|;
 block|}
+comment|/// Returns the number of the operand iterator \p I points to.
+name|unsigned
+name|getOperandNo
+argument_list|(
+name|const_mop_iterator
+name|I
+argument_list|)
+decl|const
+block|{
+return|return
+name|I
+operator|-
+name|operands_begin
+argument_list|()
+return|;
+block|}
 comment|/// Access to memory operands of the instruction
 name|mmo_iterator
 name|memoperands_begin
@@ -1743,6 +1759,30 @@ argument_list|(
 name|MCID
 operator|::
 name|NotDuplicable
+argument_list|,
+name|Type
+argument_list|)
+return|;
+block|}
+comment|/// Return true if this instruction is convergent.
+comment|/// Convergent instructions can only be moved to locations that are
+comment|/// control-equivalent to their initial position.
+name|bool
+name|isConvergent
+argument_list|(
+name|QueryType
+name|Type
+operator|=
+name|AnyInBundle
+argument_list|)
+decl|const
+block|{
+return|return
+name|hasProperty
+argument_list|(
+name|MCID
+operator|::
+name|Convergent
 argument_list|,
 name|Type
 argument_list|)
@@ -3199,7 +3239,7 @@ comment|/// Compute the static register class constraint for operand OpIdx.
 comment|/// For normal instructions, this is derived from the MCInstrDesc.
 comment|/// For inline assembly it is derived from the flag words.
 comment|///
-comment|/// Returns NULL if the static register classs constraint cannot be
+comment|/// Returns NULL if the static register class constraint cannot be
 comment|/// determined.
 comment|///
 specifier|const
@@ -3226,10 +3266,10 @@ comment|/// \brief Applies the constraints (def/use) implied by this MI on \p Re
 comment|/// the given \p CurRC.
 comment|/// If \p ExploreBundle is set and MI is part of a bundle, all the
 comment|/// instructions inside the bundle will be taken into account. In other words,
-comment|/// this method accumulates all the constrains of the operand of this MI and
+comment|/// this method accumulates all the constraints of the operand of this MI and
 comment|/// the related bundle if MI is a bundle or inside a bundle.
 comment|///
-comment|/// Returns the register class that statisfies both \p CurRC and the
+comment|/// Returns the register class that satisfies both \p CurRC and the
 comment|/// constraints set by MI. Returns NULL if such a register class does not
 comment|/// exist.
 comment|///
@@ -3267,7 +3307,7 @@ decl_stmt|;
 comment|/// \brief Applies the constraints (def/use) implied by the \p OpIdx operand
 comment|/// to the given \p CurRC.
 comment|///
-comment|/// Returns the register class that statisfies both \p CurRC and the
+comment|/// Returns the register class that satisfies both \p CurRC and the
 comment|/// constraints set by \p OpIdx MI. Returns NULL if such a register class
 comment|/// does not exist.
 comment|///

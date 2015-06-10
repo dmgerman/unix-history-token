@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/VersionTuple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/Tool.h"
 end_include
 
@@ -963,7 +969,9 @@ comment|// end namespace hexagon.
 name|namespace
 name|arm
 block|{
-name|StringRef
+name|std
+operator|::
+name|string
 name|getARMTargetCPU
 argument_list|(
 specifier|const
@@ -982,7 +990,7 @@ name|Triple
 operator|&
 name|Triple
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 specifier|const
 name|StringRef
 name|getARMArch
@@ -2822,6 +2830,18 @@ comment|/// Visual studio tools.
 name|namespace
 name|visualstudio
 block|{
+name|VersionTuple
+name|getMSVCVersion
+argument_list|(
+argument|const Driver *D
+argument_list|,
+argument|const llvm::Triple&Triple
+argument_list|,
+argument|const llvm::opt::ArgList&Args
+argument_list|,
+argument|bool IsWindowsMSVC
+argument_list|)
+block|;
 name|class
 name|LLVM_LIBRARY_VISIBILITY
 name|Link
@@ -3273,7 +3293,7 @@ name|override
 block|; }
 block|; }
 block|}
-comment|// end namespace toolchains
+comment|// end namespace tools
 block|}
 comment|// end namespace driver
 block|}

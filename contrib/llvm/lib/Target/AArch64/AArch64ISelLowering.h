@@ -171,6 +171,13 @@ name|SBCS
 block|,
 name|ANDS
 block|,
+comment|// Conditional compares. Operands: left,right,falsecc,cc,flags
+name|CCMP
+block|,
+name|CCMN
+block|,
+name|FCCMP
+block|,
 comment|// Floating point comparison
 name|FCMP
 block|,
@@ -982,6 +989,9 @@ argument_list|,
 name|Type
 operator|*
 name|Ty
+argument_list|,
+name|unsigned
+name|AS
 argument_list|)
 decl|const
 name|override
@@ -1020,6 +1030,9 @@ argument_list|,
 name|Type
 operator|*
 name|Ty
+argument_list|,
+name|unsigned
+name|AS
 argument_list|)
 decl|const
 name|override
@@ -2647,6 +2660,20 @@ name|CallConv
 argument_list|,
 name|bool
 name|isVarArg
+argument_list|)
+decl|const
+name|override
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|shouldNormalizeToSelectSequence
+argument_list|(
+name|LLVMContext
+operator|&
+argument_list|,
+name|EVT
 argument_list|)
 decl|const
 name|override

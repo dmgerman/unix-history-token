@@ -84,11 +84,10 @@ name|enum
 name|class
 name|object_error
 block|{
-name|success
-operator|=
-literal|0
-operator|,
+comment|// Error code 0 is absent. Use std::error_code() instead.
 name|arch_not_found
+operator|=
+literal|1
 operator|,
 name|invalid_file_type
 operator|,
@@ -97,6 +96,12 @@ operator|,
 name|unexpected_eof
 operator|,
 name|bitcode_section_not_found
+operator|,
+name|macho_small_load_command
+operator|,
+name|macho_load_segment_too_many_sections
+operator|,
+name|macho_load_segment_too_small
 operator|,
 block|}
 empty_stmt|;

@@ -906,18 +906,12 @@ argument_list|,
 name|ObjSectionToID
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
+comment|// Compute the addend 'C' from the original expression 'A - B + C'.
 name|Addend
-operator|!=
+operator|-=
 name|AddrA
 operator|-
 name|AddrB
-condition|)
-name|Error
-argument_list|(
-literal|"Unexpected SECTDIFF relocation addend."
-argument_list|)
 expr_stmt|;
 name|DEBUG
 argument_list|(
@@ -964,7 +958,7 @@ name|Offset
 argument_list|,
 name|RelocType
 argument_list|,
-literal|0
+name|Addend
 argument_list|,
 name|SectionAID
 argument_list|,
@@ -984,13 +978,6 @@ argument_list|(
 name|R
 argument_list|,
 name|SectionAID
-argument_list|)
-expr_stmt|;
-name|addRelocationForSection
-argument_list|(
-name|R
-argument_list|,
-name|SectionBID
 argument_list|)
 expr_stmt|;
 return|return

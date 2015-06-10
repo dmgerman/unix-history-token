@@ -418,6 +418,8 @@ name|AMDGPUAS
 block|{
 enum|enum
 name|AddressSpaces
+enum|:
+name|unsigned
 block|{
 name|PRIVATE_ADDRESS
 init|=
@@ -535,6 +537,12 @@ comment|///< Address space for unknown memory.
 name|LAST_ADDRESS
 init|=
 name|ADDRESS_NONE
+block|,
+comment|// Some places use this if the address space can't be determined.
+name|UNKNOWN_ADDRESS_SPACE
+init|=
+operator|~
+literal|0u
 block|}
 enum|;
 block|}

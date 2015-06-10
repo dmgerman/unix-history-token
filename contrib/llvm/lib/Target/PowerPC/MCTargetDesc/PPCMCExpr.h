@@ -108,7 +108,7 @@ name|bool
 name|IsDarwin
 block|;
 name|int64_t
-name|EvaluateAsInt64
+name|evaluateAsInt64
 argument_list|(
 argument|int64_t Value
 argument_list|)
@@ -147,7 +147,7 @@ specifier|static
 specifier|const
 name|PPCMCExpr
 operator|*
-name|Create
+name|create
 argument_list|(
 argument|VariantKind Kind
 argument_list|,
@@ -162,7 +162,7 @@ specifier|static
 specifier|const
 name|PPCMCExpr
 operator|*
-name|CreateLo
+name|createLo
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -172,7 +172,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|VK_PPC_LO
 argument_list|,
@@ -188,7 +188,7 @@ specifier|static
 specifier|const
 name|PPCMCExpr
 operator|*
-name|CreateHi
+name|createHi
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -198,7 +198,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|VK_PPC_HI
 argument_list|,
@@ -214,7 +214,7 @@ specifier|static
 specifier|const
 name|PPCMCExpr
 operator|*
-name|CreateHa
+name|createHa
 argument_list|(
 argument|const MCExpr *Expr
 argument_list|,
@@ -224,7 +224,7 @@ argument|MCContext&Ctx
 argument_list|)
 block|{
 return|return
-name|Create
+name|create
 argument_list|(
 name|VK_PPC_HA
 argument_list|,
@@ -273,15 +273,17 @@ return|;
 block|}
 comment|/// @}
 name|void
-name|PrintImpl
+name|printImpl
 argument_list|(
 argument|raw_ostream&OS
+argument_list|,
+argument|const MCAsmInfo *MAI
 argument_list|)
 specifier|const
 name|override
 block|;
 name|bool
-name|EvaluateAsRelocatableImpl
+name|evaluateAsRelocatableImpl
 argument_list|(
 argument|MCValue&Res
 argument_list|,
@@ -302,7 +304,7 @@ name|override
 block|;
 name|MCSection
 operator|*
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 specifier|const
 name|override
@@ -311,7 +313,7 @@ return|return
 name|getSubExpr
 argument_list|()
 operator|->
-name|FindAssociatedSection
+name|findAssociatedSection
 argument_list|()
 return|;
 block|}
@@ -325,7 +327,7 @@ specifier|const
 name|override
 block|{}
 name|bool
-name|EvaluateAsConstant
+name|evaluateAsConstant
 argument_list|(
 argument|int64_t&Res
 argument_list|)

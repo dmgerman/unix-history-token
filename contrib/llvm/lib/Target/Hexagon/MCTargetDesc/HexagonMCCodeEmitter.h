@@ -140,6 +140,16 @@ name|bool
 operator|>
 name|Extended
 block|;
+name|std
+operator|::
+name|unique_ptr
+operator|<
+name|MCInst
+specifier|const
+operator|*
+operator|>
+name|CurrentBundle
+block|;
 comment|// helper routine for getMachineOpValue()
 name|unsigned
 name|getExprOpValue
@@ -170,6 +180,20 @@ operator|&
 name|aMCT
 argument_list|)
 block|;
+comment|// Return parse bits for instruction `MCI' inside bundle `MCB'
+name|uint32_t
+name|parseBits
+argument_list|(
+argument|size_t Instruction
+argument_list|,
+argument|size_t Last
+argument_list|,
+argument|MCInst const&MCB
+argument_list|,
+argument|MCInst const&MCI
+argument_list|)
+specifier|const
+block|;
 name|MCSubtargetInfo
 specifier|const
 operator|&
@@ -190,6 +214,23 @@ argument|MCSubtargetInfo const&STI
 argument_list|)
 specifier|const
 name|override
+block|;
+name|void
+name|EncodeSingleInstruction
+argument_list|(
+argument|const MCInst&MI
+argument_list|,
+argument|raw_ostream&OS
+argument_list|,
+argument|SmallVectorImpl<MCFixup>&Fixups
+argument_list|,
+argument|const MCSubtargetInfo&STI
+argument_list|,
+argument|uint32_t Parse
+argument_list|,
+argument|size_t Index
+argument_list|)
+specifier|const
 block|;
 comment|// \brief TableGen'erated function for getting the
 comment|// binary encoding for an instruction.

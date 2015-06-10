@@ -263,6 +263,7 @@ comment|///
 name|void
 name|setFeatureBits
 parameter_list|(
+specifier|const
 name|FeatureBitset
 modifier|&
 name|FeatureBits_
@@ -317,6 +318,15 @@ comment|/// ToggleFeature - Toggle a set of features and returns the re-computed
 comment|/// feature bits. This version will also change all implied bits.
 name|FeatureBitset
 name|ToggleFeature
+parameter_list|(
+name|StringRef
+name|FS
+parameter_list|)
+function_decl|;
+comment|/// Apply a feature flag and return the re-computed feature bits, including
+comment|/// all feature bits implied by the flag.
+name|FeatureBitset
+name|ApplyFeatureFlag
 parameter_list|(
 name|StringRef
 name|FS

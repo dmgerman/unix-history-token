@@ -367,19 +367,6 @@ operator|*
 operator|>
 name|MDNodeToDieMap
 expr_stmt|;
-comment|/// Tracks the mapping of unit level debug information descriptors to debug
-comment|/// information entries using a DIEEntry proxy.
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
-operator|*
-operator|,
-name|DIEEntry
-operator|*
-operator|>
-name|MDNodeToDIEEntryMap
-expr_stmt|;
 comment|/// A list of all the DIEBlocks in use.
 name|std
 operator|::
@@ -417,11 +404,6 @@ expr_stmt|;
 comment|// All DIEValues are allocated through this allocator.
 name|BumpPtrAllocator
 name|DIEValueAllocator
-decl_stmt|;
-comment|// A preallocated DIEValue because 1 is used frequently.
-name|DIEInteger
-modifier|*
-name|DIEIntegerOne
 decl_stmt|;
 comment|/// The section this unit will be emitted in.
 name|MCSection
@@ -601,13 +583,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|!
 name|UnitDie
 operator|.
-name|getChildren
-argument_list|()
-operator|.
-name|empty
+name|hasChildren
 argument_list|()
 return|;
 block|}
@@ -707,7 +685,6 @@ argument_list|(
 argument|DIEValueAllocator
 argument_list|)
 name|DIELoc
-argument_list|()
 return|;
 block|}
 comment|/// \brief Insert DIE into the map.
@@ -979,7 +956,6 @@ name|Attribute
 name|Attribute
 argument_list|,
 name|DIEEntry
-operator|*
 name|Entry
 argument_list|)
 decl_stmt|;
@@ -1714,56 +1690,6 @@ name|getDefaultLowerBound
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// \brief Returns the DIE entry for the specified debug variable.
-name|DIEEntry
-modifier|*
-name|getDIEEntry
-argument_list|(
-specifier|const
-name|MDNode
-operator|*
-name|N
-argument_list|)
-decl|const
-block|{
-return|return
-name|MDNodeToDIEEntryMap
-operator|.
-name|lookup
-argument_list|(
-name|N
-argument_list|)
-return|;
-block|}
-comment|/// \brief Insert debug information entry into the map.
-name|void
-name|insertDIEEntry
-parameter_list|(
-specifier|const
-name|MDNode
-modifier|*
-name|N
-parameter_list|,
-name|DIEEntry
-modifier|*
-name|E
-parameter_list|)
-block|{
-name|MDNodeToDIEEntryMap
-operator|.
-name|insert
-argument_list|(
-name|std
-operator|::
-name|make_pair
-argument_list|(
-name|N
-argument_list|,
-name|E
-argument_list|)
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// \brief Get an anonymous type for index type.
 name|DIE
 modifier|*
@@ -1784,17 +1710,6 @@ operator|=
 name|D
 expr_stmt|;
 block|}
-comment|/// \brief Creates a new DIEEntry to be a proxy for a debug information
-comment|/// entry.
-name|DIEEntry
-modifier|*
-name|createDIEEntry
-parameter_list|(
-name|DIE
-modifier|&
-name|Entry
-parameter_list|)
-function_decl|;
 comment|/// If this is a named finished type then include it in the list of types for
 comment|/// the accelerator tables.
 name|void

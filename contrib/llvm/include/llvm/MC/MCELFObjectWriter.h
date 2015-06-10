@@ -87,7 +87,7 @@ name|class
 name|MCSymbol
 decl_stmt|;
 name|class
-name|MCSymbolData
+name|MCSymbolELF
 decl_stmt|;
 name|class
 name|MCValue
@@ -103,7 +103,7 @@ name|Offset
 decl_stmt|;
 comment|// Where is the relocation.
 specifier|const
-name|MCSymbol
+name|MCSymbolELF
 modifier|*
 name|Symbol
 decl_stmt|;
@@ -120,7 +120,7 @@ name|ELFRelocationEntry
 argument_list|(
 argument|uint64_t Offset
 argument_list|,
-argument|const MCSymbol *Symbol
+argument|const MCSymbolELF *Symbol
 argument_list|,
 argument|unsigned Type
 argument_list|,
@@ -277,9 +277,9 @@ name|bool
 name|needsRelocateWithSymbol
 argument_list|(
 specifier|const
-name|MCSymbolData
+name|MCSymbol
 operator|&
-name|SD
+name|Sym
 argument_list|,
 name|unsigned
 name|Type

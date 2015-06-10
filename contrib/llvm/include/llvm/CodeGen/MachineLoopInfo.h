@@ -453,7 +453,7 @@ specifier|inline
 name|bool
 name|isLoopHeader
 argument_list|(
-argument|MachineBasicBlock *BB
+argument|const MachineBasicBlock *BB
 argument_list|)
 specifier|const
 block|{

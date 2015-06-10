@@ -909,10 +909,6 @@ name|ContainsLineBreak
 condition|)
 return|return
 name|ContainsLineBreak
-operator|<
-name|Other
-operator|.
-name|ContainsLineBreak
 return|;
 if|if
 condition|(
@@ -924,10 +920,6 @@ name|ContainsUnwrappedBuilder
 condition|)
 return|return
 name|ContainsUnwrappedBuilder
-operator|<
-name|Other
-operator|.
-name|ContainsUnwrappedBuilder
 return|;
 if|if
 condition|(
@@ -938,10 +930,6 @@ operator|.
 name|NestedBlockInlined
 condition|)
 return|return
-name|NestedBlockInlined
-operator|<
-name|Other
-operator|.
 name|NestedBlockInlined
 return|;
 return|return

@@ -99,12 +99,6 @@ name|class
 name|MCInst
 decl_stmt|;
 name|class
-name|MCSymbol
-decl_stmt|;
-name|class
-name|MCSymbolData
-decl_stmt|;
-name|class
 name|raw_ostream
 decl_stmt|;
 name|class
@@ -166,11 +160,6 @@ operator|=
 name|false
 block|;
 name|LocalCommons
-operator|.
-name|clear
-argument_list|()
-block|;
-name|BindingExplicitlySet
 operator|.
 name|clear
 argument_list|()
@@ -289,9 +278,9 @@ argument_list|()
 name|override
 block|;
 name|void
-name|EmitELFSize
+name|emitELFSize
 argument_list|(
-argument|MCSymbol *Symbol
+argument|MCSymbolELF *Symbol
 argument_list|,
 argument|const MCExpr *Value
 argument_list|)
@@ -473,15 +462,6 @@ operator|<
 name|LocalCommon
 operator|>
 name|LocalCommons
-block|;
-name|SmallPtrSet
-operator|<
-name|MCSymbol
-operator|*
-block|,
-literal|16
-operator|>
-name|BindingExplicitlySet
 block|;
 comment|/// BundleGroups - The stack of fragments holding the bundle-locked
 comment|/// instructions.

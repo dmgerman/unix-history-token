@@ -596,7 +596,7 @@ operator|::
 name|string
 name|Stringify
 argument_list|(
-argument|const std::string&Str
+argument|StringRef Str
 argument_list|,
 argument|bool Charify = false
 argument_list|)

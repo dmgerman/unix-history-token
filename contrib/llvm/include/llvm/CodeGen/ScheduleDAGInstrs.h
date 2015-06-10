@@ -821,9 +821,7 @@ endif|#
 directive|endif
 name|SUnits
 operator|.
-name|push_back
-argument_list|(
-name|SUnit
+name|emplace_back
 argument_list|(
 name|MI
 argument_list|,
@@ -834,7 +832,6 @@ name|SUnits
 operator|.
 name|size
 argument_list|()
-argument_list|)
 argument_list|)
 block|;
 name|assert
