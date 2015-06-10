@@ -1037,6 +1037,12 @@ name|td_endzero
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|newtd
+operator|->
+name|td_su
+operator|=
+name|NULL
+expr_stmt|;
 name|bcopy
 argument_list|(
 operator|&

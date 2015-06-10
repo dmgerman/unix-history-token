@@ -1003,6 +1003,11 @@ name|int
 name|td_ma_cnt
 decl_stmt|;
 comment|/* (k) size of *td_ma */
+name|void
+modifier|*
+name|td_su
+decl_stmt|;
+comment|/* (k) FFS SU private */
 block|}
 struct|;
 end_struct
@@ -3233,6 +3238,17 @@ end_define
 
 begin_comment
 comment|/* Keep P2_NOPTRACE on exec(2). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P2_AST_SU
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* Handles SU ast for kthreads. */
 end_comment
 
 begin_comment
