@@ -2000,7 +2000,7 @@ name|p_vmspace
 operator|->
 name|vm_daddr
 operator|+
-name|lim_max
+name|lim_max_proc
 argument_list|(
 name|p
 argument_list|,

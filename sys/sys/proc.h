@@ -693,6 +693,12 @@ modifier|*
 name|td_ucred
 decl_stmt|;
 comment|/* (k) Reference to credentials. */
+name|struct
+name|plimit
+modifier|*
+name|td_limit
+decl_stmt|;
+comment|/* (k) Resource limits. */
 name|u_int
 name|td_estcpu
 decl_stmt|;
@@ -2322,7 +2328,7 @@ name|plimit
 modifier|*
 name|p_limit
 decl_stmt|;
-comment|/* (c) Process limits. */
+comment|/* (c) Resource limits. */
 name|struct
 name|callout
 name|p_limco

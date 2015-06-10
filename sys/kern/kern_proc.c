@@ -13869,7 +13869,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|lim_rlimit
+name|lim_rlimit_proc
 argument_list|(
 name|p
 argument_list|,
