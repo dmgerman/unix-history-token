@@ -853,13 +853,13 @@ if|if
 condition|(
 name|td
 operator|->
-name|td_ucred
+name|td_cowgen
 operator|!=
 name|p
 operator|->
-name|p_ucred
+name|p_cowgen
 condition|)
-name|cred_update_thread
+name|thread_cow_update
 argument_list|(
 name|td
 argument_list|)

@@ -920,6 +920,10 @@ define|#
 directive|define
 name|td_retval
 value|td_uretoff.tdu_retval
+name|u_int
+name|td_cowgen
+decl_stmt|;
+comment|/* (k) Generation of COW pointers. */
 name|struct
 name|callout
 name|td_slpcallout
@@ -2466,6 +2470,10 @@ name|u_int
 name|p_swtick
 decl_stmt|;
 comment|/* (c) Tick when swapped in or out. */
+name|u_int
+name|p_cowgen
+decl_stmt|;
+comment|/* (c) Generation of COW pointers. */
 name|struct
 name|itimerval
 name|p_realtimer
@@ -4134,6 +4142,16 @@ parameter_list|)
 value|do {					\ 	KASSERT((p)->p_lock == 0, ("process held"));			\ } while (0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|PROC_UPDATE_COW
+parameter_list|(
+name|p
+parameter_list|)
+value|do {						\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	(p)->p_cowgen++;						\ } while (0)
+end_define
+
 begin_comment
 comment|/* Check whether a thread is safe to be swapped out. */
 end_comment
@@ -5738,6 +5756,64 @@ modifier|*
 parameter_list|,
 name|int
 name|pages
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_cow_get_proc
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|newtd
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_cow_get
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|newtd
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_cow_free
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|thread_cow_update
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
 parameter_list|)
 function_decl|;
 end_function_decl
