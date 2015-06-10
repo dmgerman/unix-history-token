@@ -15827,6 +15827,11 @@ argument_list|,
 name|mntlist
 argument_list|)
 expr_stmt|;
+name|vfs_ref
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|dounmount
@@ -15841,6 +15846,8 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|!=
+literal|0
 condition|)
 block|{
 name|TAILQ_REMOVE

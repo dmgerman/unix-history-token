@@ -10589,6 +10589,14 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+name|vfs_ref
+argument_list|(
+name|zfsvfs
+operator|->
+name|z_vfs
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -10603,6 +10611,7 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
