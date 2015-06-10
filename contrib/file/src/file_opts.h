@@ -57,6 +57,19 @@ end_macro
 begin_macro
 name|OPT
 argument_list|(
+literal|'Z'
+argument_list|,
+literal|"uncompress-noreport"
+argument_list|,
+literal|0
+argument_list|,
+literal|"  only print the contents of compressed files\n"
+argument_list|)
+end_macro
+
+begin_macro
+name|OPT
+argument_list|(
 literal|'b'
 argument_list|,
 literal|"brief"
@@ -145,6 +158,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"                output the Apple CREATOR/TYPE\n"
+argument_list|)
+end_macro
+
+begin_macro
+name|OPT_LONGONLY
+argument_list|(
+literal|"extension"
+argument_list|,
+literal|0
+argument_list|,
+literal|"            output a slash-separated list of extnsions\n"
 argument_list|)
 end_macro
 
