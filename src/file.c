@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: file.c,v 1.160 2014/12/16 23:18:40 christos Exp $"
+literal|"@(#)$File: file.c,v 1.164 2015/06/03 18:21:24 christos Exp $"
 argument_list|)
 end_macro
 
@@ -250,7 +250,7 @@ begin_define
 define|#
 directive|define
 name|FILE_FLAGS
-value|"-bcEhikLlNnprsvz0"
+value|"-bcEhikLlNnprsvzZ0"
 end_define
 
 begin_else
@@ -262,7 +262,7 @@ begin_define
 define|#
 directive|define
 name|FILE_FLAGS
-value|"-bcEiklNnprsvz0"
+value|"-bcEiklNnprsvzZ0"
 end_define
 
 begin_endif
@@ -275,7 +275,7 @@ define|#
 directive|define
 name|USAGE
 define|\
-value|"Usage: %s [" FILE_FLAGS \ 	"] [--apple] [--mime-encoding] [--mime-type]\n" \     "            [-e testname] [-F separator] [-f namefile] [-m magicfiles] " \     "file ...\n" \     "       %s -C [-m magicfiles]\n" \     "       %s [--help]\n"
+value|"Usage: %s [" FILE_FLAGS \ 	"] [--apple] [--extension] [--mime-encoding] [--mime-type]\n" \     "            [-e testname] [-F separator] [-f namefile] [-m magicfiles] " \     "file ...\n" \     "       %s -C [-m magicfiles]\n" \     "       %s [--help]\n"
 end_define
 
 begin_decl_stmt
@@ -383,7 +383,7 @@ begin_define
 define|#
 directive|define
 name|OPTSTRING
-value|"bcCde:Ef:F:hiklLm:nNpP:rsvz0"
+value|"bcCde:Ef:F:hiklLm:nNpP:rsvzZ0"
 end_define
 
 begin_expr_stmt
@@ -547,7 +547,16 @@ begin_comment
 comment|/* used throughout 		*/
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__dead
+end_ifdef
+
 begin_function_decl
+name|__dead
+endif|#
+directive|endif
 name|private
 name|void
 name|usage
@@ -569,7 +578,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__dead
+end_ifdef
+
 begin_function_decl
+name|__dead
+endif|#
+directive|endif
 name|private
 name|void
 name|help
@@ -847,11 +865,19 @@ literal|11
 case|:
 name|flags
 operator||=
-name|MAGIC_MIME_TYPE
+name|MAGIC_EXTENSION
 expr_stmt|;
 break|break;
 case|case
 literal|12
+case|:
+name|flags
+operator||=
+name|MAGIC_MIME_TYPE
+expr_stmt|;
+break|break;
+case|case
+literal|13
 case|:
 name|flags
 operator||=
@@ -1123,7 +1149,6 @@ operator||=
 name|MAGIC_RAW
 expr_stmt|;
 break|break;
-break|break;
 case|case
 literal|'s'
 case|:
@@ -1185,6 +1210,16 @@ case|:
 name|flags
 operator||=
 name|MAGIC_COMPRESS
+expr_stmt|;
+break|break;
+case|case
+literal|'Z'
+case|:
+name|flags
+operator||=
+name|MAGIC_COMPRESS
+operator||
+name|MAGIC_COMPRESS_TRANSP
 expr_stmt|;
 break|break;
 ifdef|#
