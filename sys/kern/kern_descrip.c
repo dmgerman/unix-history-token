@@ -741,18 +741,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* A mutex to protect the association between a proc and filedesc. */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|fdesc_mtx
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/*  * If low>= size, just return low. Otherwise find the first zero bit in the  * given bitmap, starting at low and not exceeding size - 1. Return size if  * not found.  */
 end_comment
 
@@ -17168,18 +17156,6 @@ operator|&
 name|sigio_lock
 argument_list|,
 literal|"sigio lock"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-argument_list|)
-expr_stmt|;
-name|mtx_init
-argument_list|(
-operator|&
-name|fdesc_mtx
-argument_list|,
-literal|"fdesc"
 argument_list|,
 name|NULL
 argument_list|,
