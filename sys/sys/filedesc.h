@@ -238,11 +238,11 @@ name|u_short
 name|fd_cmask
 decl_stmt|;
 comment|/* mask for file creation */
-name|u_short
+name|int
 name|fd_refcnt
 decl_stmt|;
 comment|/* thread reference count */
-name|u_short
+name|int
 name|fd_holdcnt
 decl_stmt|;
 comment|/* hold count on structure + mutex */
