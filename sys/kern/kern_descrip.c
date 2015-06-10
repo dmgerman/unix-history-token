@@ -1542,7 +1542,9 @@ directive|ifdef
 name|RACCT
 name|PROC_LOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 name|lim
@@ -1558,7 +1560,9 @@ argument_list|)
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
-name|p
+name|td
+operator|->
+name|td_proc
 argument_list|)
 expr_stmt|;
 if|if
