@@ -4588,6 +4588,15 @@ operator|*
 name|frag
 operator|)
 operator|->
+name|fr_af
+operator|=
+name|AF_INET
+expr_stmt|;
+operator|(
+operator|*
+name|frag
+operator|)
+operator|->
 name|fr_id
 operator|=
 name|h
