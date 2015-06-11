@@ -1790,6 +1790,8 @@ name|len
 decl_stmt|;
 name|long
 name|errline
+init|=
+literal|0
 decl_stmt|;
 name|unsigned
 name|char

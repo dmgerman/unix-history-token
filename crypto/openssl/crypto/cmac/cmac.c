@@ -378,6 +378,12 @@ modifier|*
 name|ctx
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|ctx
+condition|)
+return|return;
 name|CMAC_CTX_cleanup
 argument_list|(
 name|ctx

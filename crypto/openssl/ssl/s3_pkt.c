@@ -1049,6 +1049,21 @@ name|s
 operator|->
 name|write_hash
 condition|)
+block|{
+if|if
+condition|(
+name|rr
+operator|->
+name|type
+operator|==
+name|SSL3_RT_ALERT
+condition|)
+block|{
+comment|/*                          * The record is using an incorrect version number, but                          * what we've got appears to be an alert. We haven't                          * read the body yet to check whether its a fatal or                          * not - but chances are it is. We probably shouldn't                          * send a fatal alert back. We'll just end.                          */
+goto|goto
+name|err
+goto|;
+block|}
 comment|/*                      * Send back error using their minor version number :-)                      */
 name|s
 operator|->
@@ -1060,6 +1075,7 @@ name|short
 operator|)
 name|version
 expr_stmt|;
+block|}
 name|al
 operator|=
 name|SSL_AD_PROTOCOL_VERSION

@@ -579,6 +579,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p8
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+if|if
+condition|(
 name|isder
 condition|)
 name|ret

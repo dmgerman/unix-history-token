@@ -268,16 +268,6 @@ name|asn1_cb
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|combine
-condition|)
-operator|*
-name|pval
-operator|=
-name|NULL
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CRYPTO_MDEBUG

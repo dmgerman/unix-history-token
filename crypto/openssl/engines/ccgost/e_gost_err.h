@@ -143,6 +143,10 @@ name|GOST_F_GOST_IMIT_UPDATE
 value|115
 define|#
 directive|define
+name|GOST_F_GOST_SIGN_KEYGEN
+value|142
+define|#
+directive|define
 name|GOST_F_PARAM_COPY_GOST01
 value|116
 define|#

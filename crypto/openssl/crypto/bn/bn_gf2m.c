@@ -3306,22 +3306,25 @@ directive|else
 block|{
 name|int
 name|i
-decl_stmt|,
+decl_stmt|;
+name|int
 name|ubits
 init|=
 name|BN_num_bits
 argument_list|(
 name|u
 argument_list|)
-decl_stmt|,
+decl_stmt|;
+name|int
 name|vbits
 init|=
 name|BN_num_bits
 argument_list|(
 name|v
 argument_list|)
-decl_stmt|,
-comment|/* v is copy                                                                 * of p */
+decl_stmt|;
+comment|/* v is copy of p */
+name|int
 name|top
 init|=
 name|p
@@ -3676,7 +3679,23 @@ condition|(
 name|ubits
 operator|<=
 name|BN_BITS2
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
+name|udp
+index|[
+literal|0
+index|]
+operator|==
+literal|0
+condition|)
+comment|/* poly was reducible */
+goto|goto
+name|err
+goto|;
+if|if
+condition|(
 name|udp
 index|[
 literal|0
@@ -3685,6 +3704,7 @@ operator|==
 literal|1
 condition|)
 break|break;
+block|}
 if|if
 condition|(
 name|ubits
