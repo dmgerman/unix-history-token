@@ -333,6 +333,26 @@ operator|=
 block|{
 define|#
 directive|define
+name|OPT_HELP
+value|1
+define|#
+directive|define
+name|OPT_APPLE
+value|2
+define|#
+directive|define
+name|OPT_EXTENSIONS
+value|3
+define|#
+directive|define
+name|OPT_MIME_TYPE
+value|4
+define|#
+directive|define
+name|OPT_MIME_ENCODING
+value|5
+define|#
+directive|define
 name|OPT
 parameter_list|(
 name|shortname
@@ -354,9 +374,11 @@ parameter_list|,
 name|opt
 parameter_list|,
 name|doc
+parameter_list|,
+name|id
 parameter_list|)
 define|\
-value|{longname, opt, NULL, 0},
+value|{longname, opt, NULL, id},
 include|#
 directive|include
 file|"file_opts.h"
@@ -838,22 +860,14 @@ name|c
 condition|)
 block|{
 case|case
-literal|0
-case|:
-switch|switch
-condition|(
-name|longindex
-condition|)
-block|{
-case|case
-literal|0
+name|OPT_HELP
 case|:
 name|help
 argument_list|()
 expr_stmt|;
 break|break;
 case|case
-literal|10
+name|OPT_APPLE
 case|:
 name|flags
 operator||=
@@ -861,7 +875,7 @@ name|MAGIC_APPLE
 expr_stmt|;
 break|break;
 case|case
-literal|11
+name|OPT_EXTENSIONS
 case|:
 name|flags
 operator||=
@@ -869,7 +883,7 @@ name|MAGIC_EXTENSION
 expr_stmt|;
 break|break;
 case|case
-literal|12
+name|OPT_MIME_TYPE
 case|:
 name|flags
 operator||=
@@ -877,14 +891,12 @@ name|MAGIC_MIME_TYPE
 expr_stmt|;
 break|break;
 case|case
-literal|13
+name|OPT_MIME_ENCODING
 case|:
 name|flags
 operator||=
 name|MAGIC_MIME_ENCODING
 expr_stmt|;
-break|break;
-block|}
 break|break;
 case|case
 literal|'0'
@@ -2776,6 +2788,8 @@ parameter_list|,
 name|opt
 parameter_list|,
 name|doc
+parameter_list|,
+name|id
 parameter_list|)
 define|\
 value|fprintf(stdout, "      --" longname),	\ 	docprint(doc);
