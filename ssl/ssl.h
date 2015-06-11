@@ -4782,6 +4782,10 @@ name|SSL_ST_RENEGOTIATE
 value|(0x04|SSL_ST_INIT)
 define|#
 directive|define
+name|SSL_ST_ERR
+value|0x05
+define|#
+directive|define
 name|SSL_CB_LOOP
 value|0x01
 define|#
@@ -9224,6 +9228,10 @@ name|SSL_F_SSL3_CHECK_CLIENT_HELLO
 value|304
 define|#
 directive|define
+name|SSL_F_SSL3_CHECK_FINISHED
+value|339
+define|#
+directive|define
 name|SSL_F_SSL3_CLIENT_HELLO
 value|131
 define|#
@@ -9642,6 +9650,10 @@ define|#
 directive|define
 name|SSL_F_SSL_RSA_PUBLIC_ENCRYPT
 value|188
+define|#
+directive|define
+name|SSL_F_SSL_SESSION_DUP
+value|348
 define|#
 directive|define
 name|SSL_F_SSL_SESSION_NEW
@@ -10091,6 +10103,10 @@ define|#
 directive|define
 name|SSL_R_DECRYPTION_FAILED_OR_BAD_RECORD_MAC
 value|281
+define|#
+directive|define
+name|SSL_R_DH_KEY_TOO_SMALL
+value|372
 define|#
 directive|define
 name|SSL_R_DH_PUBLIC_VALUE_LENGTH_IS_WRONG

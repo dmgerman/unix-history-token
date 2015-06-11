@@ -1620,6 +1620,8 @@ return|;
 if|if
 condition|(
 name|off
+operator|>
+literal|0
 condition|)
 block|{
 if|if
@@ -1657,6 +1659,13 @@ condition|)
 return|return
 literal|0
 return|;
+block|}
+else|else
+block|{
+name|off
+operator|=
+literal|0
+expr_stmt|;
 block|}
 if|if
 condition|(

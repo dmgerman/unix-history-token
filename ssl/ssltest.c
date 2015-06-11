@@ -1095,7 +1095,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|" -dhe1024      - use 1024 bit key (safe prime) for DHE\n"
+literal|" -dhe512       - use 512 bit key for DHE (to test failure)\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|" -dhe1024      - use 1024 bit key (safe prime) for DHE (default, no-op)\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -2075,7 +2082,7 @@ modifier|*
 name|dh
 decl_stmt|;
 name|int
-name|dhe1024
+name|dhe512
 init|=
 literal|0
 decl_stmt|,
@@ -2515,7 +2522,7 @@ argument_list|(
 operator|*
 name|argv
 argument_list|,
-literal|"-dhe1024"
+literal|"-dhe512"
 argument_list|)
 operator|==
 literal|0
@@ -2524,7 +2531,7 @@ block|{
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_DH
-name|dhe1024
+name|dhe512
 operator|=
 literal|1
 expr_stmt|;
@@ -2534,7 +2541,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ignoring -dhe1024, since I'm compiled without DH\n"
+literal|"ignoring -dhe512, since I'm compiled without DH\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2567,7 +2574,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"ignoring -dhe1024, since I'm compiled without DH\n"
+literal|"ignoring -dhe1024dsa, since I'm compiled without DH\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4079,17 +4086,17 @@ block|}
 elseif|else
 if|if
 condition|(
-name|dhe1024
+name|dhe512
 condition|)
 name|dh
 operator|=
-name|get_dh1024
+name|get_dh512
 argument_list|()
 expr_stmt|;
 else|else
 name|dh
 operator|=
-name|get_dh512
+name|get_dh1024
 argument_list|()
 expr_stmt|;
 name|SSL_CTX_set_tmp_dh

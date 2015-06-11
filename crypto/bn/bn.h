@@ -3660,7 +3660,9 @@ parameter_list|)
 define|\
 value|do { \                 const BIGNUM *_bnum1 = (a); \                 if(_bnum1->top< _bnum1->dmax) { \                         unsigned char _tmp_char; \
 comment|/* We cast away const without the compiler knowing, any \                          * *genuinely* constant variables that aren't mutable \                          * wouldn't be constructed with top!=dmax. */
-value|\                         BN_ULONG *_not_const; \                         memcpy(&_not_const,&_bnum1->d, sizeof(BN_ULONG*)); \                         RAND_pseudo_bytes(&_tmp_char, 1); \                         memset((unsigned char *)(_not_const + _bnum1->top), _tmp_char, \                                 (_bnum1->dmax - _bnum1->top) * sizeof(BN_ULONG)); \                 } \         } while(0)
+value|\                         BN_ULONG *_not_const; \                         memcpy(&_not_const,&_bnum1->d, sizeof(BN_ULONG*)); \
+comment|/* Debug only - safe to ignore error return */
+value|\                         RAND_pseudo_bytes(&_tmp_char, 1); \                         memset((unsigned char *)(_not_const + _bnum1->top), _tmp_char, \                                 (_bnum1->dmax - _bnum1->top) * sizeof(BN_ULONG)); \                 } \         } while(0)
 ifdef|#
 directive|ifdef
 name|BN_DEBUG_TRIX
@@ -4071,6 +4073,10 @@ name|BN_F_BN_GF2M_MOD_SQRT
 value|137
 define|#
 directive|define
+name|BN_F_BN_LSHIFT
+value|145
+define|#
+directive|define
 name|BN_F_BN_MOD_EXP2_MONT
 value|118
 define|#
@@ -4131,6 +4137,10 @@ name|BN_F_BN_RAND_RANGE
 value|122
 define|#
 directive|define
+name|BN_F_BN_RSHIFT
+value|146
+define|#
+directive|define
 name|BN_F_BN_USUB
 value|115
 comment|/* Reason codes. */
@@ -4146,6 +4156,10 @@ define|#
 directive|define
 name|BN_R_BIGNUM_TOO_LONG
 value|114
+define|#
+directive|define
+name|BN_R_BITS_TOO_SMALL
+value|118
 define|#
 directive|define
 name|BN_R_CALLED_WITH_EVEN_MODULUS
@@ -4174,6 +4188,10 @@ define|#
 directive|define
 name|BN_R_INVALID_RANGE
 value|115
+define|#
+directive|define
+name|BN_R_INVALID_SHIFT
+value|119
 define|#
 directive|define
 name|BN_R_NOT_A_SQUARE

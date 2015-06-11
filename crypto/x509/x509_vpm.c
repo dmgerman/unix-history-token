@@ -199,6 +199,13 @@ modifier|*
 name|param
 parameter_list|)
 block|{
+if|if
+condition|(
+name|param
+operator|==
+name|NULL
+condition|)
+return|return;
 name|x509_verify_param_zero
 argument_list|(
 name|param

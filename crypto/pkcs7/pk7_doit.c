@@ -1953,6 +1953,7 @@ block|{
 case|case
 name|NID_pkcs7_signed
 case|:
+comment|/*          * p7->d.sign->contents is a PKCS7 structure consisting of a contentType          * field and optional content.          * data_body is NULL if that structure has no (=detached) content          * or if the contentType is wrong (i.e., not "data").          */
 name|data_body
 operator|=
 name|PKCS7_get_octet_string
@@ -2024,6 +2025,7 @@ name|signed_and_enveloped
 operator|->
 name|md_algs
 expr_stmt|;
+comment|/* data_body is NULL if the optional EncryptedContent is missing. */
 name|data_body
 operator|=
 name|p7
@@ -2101,6 +2103,7 @@ name|enc_data
 operator|->
 name|algorithm
 expr_stmt|;
+comment|/* data_body is NULL if the optional EncryptedContent is missing. */
 name|data_body
 operator|=
 name|p7
@@ -2147,6 +2150,29 @@ argument_list|(
 name|PKCS7_F_PKCS7_DATADECODE
 argument_list|,
 name|PKCS7_R_UNSUPPORTED_CONTENT_TYPE
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
+comment|/* Detached content must be supplied via in_bio instead. */
+if|if
+condition|(
+name|data_body
+operator|==
+name|NULL
+operator|&&
+name|in_bio
+operator|==
+name|NULL
+condition|)
+block|{
+name|PKCS7err
+argument_list|(
+name|PKCS7_F_PKCS7_DATADECODE
+argument_list|,
+name|PKCS7_R_NO_CONTENT
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2726,16 +2752,9 @@ directive|if
 literal|1
 if|if
 condition|(
-name|PKCS7_is_detached
-argument_list|(
-name|p7
-argument_list|)
-operator|||
-operator|(
 name|in_bio
 operator|!=
 name|NULL
-operator|)
 condition|)
 block|{
 name|bio

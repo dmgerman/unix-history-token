@@ -2198,6 +2198,8 @@ parameter_list|)
 block|{
 name|int
 name|i
+init|=
+literal|0
 decl_stmt|,
 name|j
 decl_stmt|,

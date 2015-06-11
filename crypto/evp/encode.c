@@ -519,7 +519,7 @@ expr_stmt|;
 if|if
 condition|(
 name|inl
-operator|==
+operator|<=
 literal|0
 condition|)
 return|return;

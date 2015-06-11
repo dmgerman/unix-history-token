@@ -918,6 +918,13 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|" -no_alt_chains - only ever use the first certificate chain found\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|" -reconnect    - Drop and re-make the connection with the same Session-ID\n"
 argument_list|)
 expr_stmt|;
@@ -5630,6 +5637,11 @@ goto|;
 if|if
 condition|(
 operator|(
+name|CAfile
+operator|||
+name|CApath
+operator|)
+operator|&&
 operator|!
 name|SSL_CTX_load_verify_locations
 argument_list|(
@@ -5639,24 +5651,28 @@ name|CAfile
 argument_list|,
 name|CApath
 argument_list|)
-operator|)
-operator|||
-operator|(
-operator|!
-name|SSL_CTX_set_default_verify_paths
-argument_list|(
-name|ctx
-argument_list|)
-operator|)
 condition|)
 block|{
-comment|/*          * BIO_printf(bio_err,"error setting default verify locations\n");          */
 name|ERR_print_errors
 argument_list|(
 name|bio_err
 argument_list|)
 expr_stmt|;
-comment|/* goto end; */
+block|}
+if|if
+condition|(
+operator|!
+name|SSL_CTX_set_default_verify_paths
+argument_list|(
+name|ctx
+argument_list|)
+condition|)
+block|{
+name|ERR_print_errors
+argument_list|(
+name|bio_err
+argument_list|)
+expr_stmt|;
 block|}
 ifndef|#
 directive|ifndef

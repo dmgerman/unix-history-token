@@ -1272,6 +1272,8 @@ condition|)
 block|{
 comment|/* We want multipart/signed */
 comment|/* Generate a random boundary */
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 operator|(
@@ -1283,7 +1285,12 @@ name|bound
 argument_list|,
 literal|32
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 for|for
 control|(
 name|i
