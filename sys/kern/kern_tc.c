@@ -119,12 +119,6 @@ directive|include
 file|<sys/vdso.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/atomic.h>
-end_include
-
 begin_comment
 comment|/*  * A large step happens on boot.  This constant detects such steps.  * It is relatively small so that ntp_update_second gets called enough  * in the typical 'missed a couple of seconds' case, but doesn't loop  * forever when the time step is large.  */
 end_comment
@@ -1175,6 +1169,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|u_int
 name|tc_getgen
 parameter_list|(
@@ -1224,6 +1219,7 @@ end_function
 
 begin_function
 specifier|static
+specifier|inline
 name|void
 name|tc_setgen
 parameter_list|(
