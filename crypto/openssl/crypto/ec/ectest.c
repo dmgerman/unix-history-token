@@ -805,7 +805,6 @@ name|ABORT
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|EC_POINT_is_on_curve
 argument_list|(
 name|group
@@ -814,6 +813,8 @@ name|Q
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 if|if
@@ -1545,7 +1546,6 @@ name|ABORT
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|EC_POINT_is_on_curve
 argument_list|(
 name|group
@@ -1554,6 +1554,8 @@ name|P
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 name|ABORT
 expr_stmt|;
@@ -1950,7 +1952,6 @@ name|ABORT
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|EC_POINT_is_on_curve
 argument_list|(
 name|group
@@ -1959,6 +1960,8 @@ name|P
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 name|ABORT
 expr_stmt|;
@@ -2349,7 +2352,6 @@ name|ABORT
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|EC_POINT_is_on_curve
 argument_list|(
 name|group
@@ -2358,6 +2360,8 @@ name|P
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 name|ABORT
 expr_stmt|;
@@ -2748,7 +2752,6 @@ name|ABORT
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|EC_POINT_is_on_curve
 argument_list|(
 name|group
@@ -2757,6 +2760,8 @@ name|P
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 name|ABORT
 expr_stmt|;
@@ -3152,7 +3157,6 @@ name|ABORT
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|EC_POINT_is_on_curve
 argument_list|(
 name|group
@@ -3161,6 +3165,8 @@ name|P
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 name|ABORT
 expr_stmt|;
@@ -3561,7 +3567,6 @@ name|ABORT
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|EC_POINT_is_on_curve
 argument_list|(
 name|group
@@ -3570,6 +3575,8 @@ name|P
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 name|ABORT
 expr_stmt|;
@@ -3898,7 +3905,6 @@ name|ABORT
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|EC_POINT_is_on_curve
 argument_list|(
 name|group
@@ -3907,6 +3913,8 @@ name|P
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 name|ABORT
 expr_stmt|;
@@ -4580,7 +4588,7 @@ parameter_list|,
 name|_variable
 parameter_list|)
 define|\
-value|if (!BN_hex2bn(&x, _x)) ABORT; \         if (!EC_POINT_set_compressed_coordinates_GF2m(group, P, x, _y_bit, ctx)) ABORT; \         if (!EC_POINT_is_on_curve(group, P, ctx)) ABORT; \         if (!BN_hex2bn(&z, _order)) ABORT; \         if (!BN_hex2bn(&cof, _cof)) ABORT; \         if (!EC_GROUP_set_generator(group, P, z, cof)) ABORT; \         if (!EC_POINT_get_affine_coordinates_GF2m(group, P, x, y, ctx)) ABORT; \         fprintf(stdout, "\n%s -- Generator:\n     x = 0x", _name); \         BN_print_fp(stdout, x); \         fprintf(stdout, "\n     y = 0x"); \         BN_print_fp(stdout, y); \         fprintf(stdout, "\n"); \
+value|if (!BN_hex2bn(&x, _x)) ABORT; \         if (!EC_POINT_set_compressed_coordinates_GF2m(group, P, x, _y_bit, ctx)) ABORT; \         if (EC_POINT_is_on_curve(group, P, ctx)<= 0) ABORT; \         if (!BN_hex2bn(&z, _order)) ABORT; \         if (!BN_hex2bn(&cof, _cof)) ABORT; \         if (!EC_GROUP_set_generator(group, P, z, cof)) ABORT; \         if (!EC_POINT_get_affine_coordinates_GF2m(group, P, x, y, ctx)) ABORT; \         fprintf(stdout, "\n%s -- Generator:\n     x = 0x", _name); \         BN_print_fp(stdout, x); \         fprintf(stdout, "\n     y = 0x"); \         BN_print_fp(stdout, y); \         fprintf(stdout, "\n"); \
 comment|/* G_y value taken from the standard: */
 value|\         if (!BN_hex2bn(&z, _y)) ABORT; \         if (0 != BN_cmp(y, z)) ABORT;
 end_define
@@ -4618,7 +4626,7 @@ parameter_list|,
 name|_variable
 parameter_list|)
 define|\
-value|if (!BN_hex2bn(&x, _x)) ABORT; \         if (!BN_hex2bn(&y, _y)) ABORT; \         if (!EC_POINT_set_affine_coordinates_GF2m(group, P, x, y, ctx)) ABORT; \         if (!EC_POINT_is_on_curve(group, P, ctx)) ABORT; \         if (!BN_hex2bn(&z, _order)) ABORT; \         if (!BN_hex2bn(&cof, _cof)) ABORT; \         if (!EC_GROUP_set_generator(group, P, z, cof)) ABORT; \         fprintf(stdout, "\n%s -- Generator:\n     x = 0x", _name); \         BN_print_fp(stdout, x); \         fprintf(stdout, "\n     y = 0x"); \         BN_print_fp(stdout, y); \         fprintf(stdout, "\n");
+value|if (!BN_hex2bn(&x, _x)) ABORT; \         if (!BN_hex2bn(&y, _y)) ABORT; \         if (!EC_POINT_set_affine_coordinates_GF2m(group, P, x, y, ctx)) ABORT; \         if (EC_POINT_is_on_curve(group, P, ctx)<= 0) ABORT; \         if (!BN_hex2bn(&z, _order)) ABORT; \         if (!BN_hex2bn(&cof, _cof)) ABORT; \         if (!EC_GROUP_set_generator(group, P, z, cof)) ABORT; \         fprintf(stdout, "\n%s -- Generator:\n     x = 0x", _name); \         BN_print_fp(stdout, x); \         fprintf(stdout, "\n     y = 0x"); \         BN_print_fp(stdout, y); \         fprintf(stdout, "\n");
 end_define
 
 begin_endif
@@ -5225,7 +5233,6 @@ endif|#
 directive|endif
 if|if
 condition|(
-operator|!
 name|EC_POINT_is_on_curve
 argument_list|(
 name|group
@@ -5234,6 +5241,8 @@ name|Q
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 comment|/* Change test based on whether binary point compression is enabled or not. */
@@ -6095,7 +6104,6 @@ name|ABORT
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|EC_POINT_is_on_curve
 argument_list|(
 name|group
@@ -6104,6 +6112,8 @@ name|P
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 name|ABORT
 expr_stmt|;

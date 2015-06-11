@@ -4149,6 +4149,10 @@ name|BN_F_BN_GF2M_MOD_SQRT
 value|137
 define|#
 directive|define
+name|BN_F_BN_LSHIFT
+value|145
+define|#
+directive|define
 name|BN_F_BN_MOD_EXP2_MONT
 value|118
 define|#
@@ -4209,6 +4213,10 @@ name|BN_F_BN_RAND_RANGE
 value|122
 define|#
 directive|define
+name|BN_F_BN_RSHIFT
+value|146
+define|#
+directive|define
 name|BN_F_BN_USUB
 value|115
 comment|/* Reason codes. */
@@ -4224,6 +4232,10 @@ define|#
 directive|define
 name|BN_R_BIGNUM_TOO_LONG
 value|114
+define|#
+directive|define
+name|BN_R_BITS_TOO_SMALL
+value|118
 define|#
 directive|define
 name|BN_R_CALLED_WITH_EVEN_MODULUS
@@ -4252,6 +4264,10 @@ define|#
 directive|define
 name|BN_R_INVALID_RANGE
 value|115
+define|#
+directive|define
+name|BN_R_INVALID_SHIFT
+value|119
 define|#
 directive|define
 name|BN_R_NOT_A_SQUARE

@@ -1231,7 +1231,6 @@ goto|;
 comment|/* testing whether the pub_key is on the elliptic curve */
 if|if
 condition|(
-operator|!
 name|EC_POINT_is_on_curve
 argument_list|(
 name|eckey
@@ -1244,6 +1243,8 @@ name|pub_key
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 name|ECerr

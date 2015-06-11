@@ -215,7 +215,7 @@ parameter_list|,
 name|in_mont
 parameter_list|)
 define|\
-value|do { \         int _tmp_res53; \         if((dsa)->meth->dsa_mod_exp) \                 _tmp_res53 = (dsa)->meth->dsa_mod_exp((dsa), (rr), (a1), (p1), \                                 (a2), (p2), (m), (ctx), (in_mont)); \         else \                 _tmp_res53 = BN_mod_exp2_mont((rr), (a1), (p1), (a2), (p2), \                                 (m), (ctx), (in_mont)); \         if(!_tmp_res53) err_instr; \         } while(0)
+value|do { \         int _tmp_res53; \         if ((dsa)->meth->dsa_mod_exp) \                 _tmp_res53 = (dsa)->meth->dsa_mod_exp((dsa), (rr), (a1), (p1), \                                 (a2), (p2), (m), (ctx), (in_mont)); \         else \                 _tmp_res53 = BN_mod_exp2_mont((rr), (a1), (p1), (a2), (p2), \                                 (m), (ctx), (in_mont)); \         if (!_tmp_res53) err_instr; \         } while(0)
 end_define
 
 begin_define
@@ -240,7 +240,7 @@ parameter_list|,
 name|m_ctx
 parameter_list|)
 define|\
-value|do { \         int _tmp_res53; \         if((dsa)->meth->bn_mod_exp) \                 _tmp_res53 = (dsa)->meth->bn_mod_exp((dsa), (r), (a), (p), \                                 (m), (ctx), (m_ctx)); \         else \                 _tmp_res53 = BN_mod_exp_mont((r), (a), (p), (m), (ctx), (m_ctx)); \         if(!_tmp_res53) err_instr; \         } while(0)
+value|do { \         int _tmp_res53; \         if ((dsa)->meth->bn_mod_exp) \                 _tmp_res53 = (dsa)->meth->bn_mod_exp((dsa), (r), (a), (p), \                                 (m), (ctx), (m_ctx)); \         else \                 _tmp_res53 = BN_mod_exp_mont((r), (a), (p), (m), (ctx), (m_ctx)); \         if (!_tmp_res53) err_instr; \         } while(0)
 end_define
 
 begin_function
