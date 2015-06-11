@@ -1332,11 +1332,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|xo_warn
-argument_list|(
-name|NULL
-argument_list|)
-expr_stmt|;
 name|printscol
 argument_list|(
 name|dp
