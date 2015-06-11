@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2014, LSI Corp. All rights reserved. Author: Marian Choy  * Support: freebsdraid@lsi.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer. 2. Redistributions  * in binary form must reproduce the above copyright notice, this list of  * conditions and the following disclaimer in the documentation and/or other  * materials provided with the distribution. 3. Neither the name of the  *<ORGANIZATION> nor the names of its contributors may be used to endorse or  * promote products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@lsi.com> Mail to: LSI Corporation, 1621  * Barber Lane, Milpitas, CA 95035 ATTN: MegaRaid FreeBSD  *  */
+comment|/*  * Copyright (c) 2015, AVAGO Tech. All rights reserved. Author: Marian Choy  * Copyright (c) 2014, LSI Corp. All rights reserved. Author: Marian Choy  * Support: freebsdraid@avagotech.com  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  * 1. Redistributions of source code must retain the above copyright notice,  * this list of conditions and the following disclaimer. 2. Redistributions  * in binary form must reproduce the above copyright notice, this list of  * conditions and the following disclaimer in the documentation and/or other  * materials provided with the distribution. 3. Neither the name of the  *<ORGANIZATION> nor the names of its contributors may be used to endorse or  * promote products derived from this software without specific prior written  * permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  *  * The views and conclusions contained in the software and documentation are  * those of the authors and should not be interpreted as representing  * official policies,either expressed or implied, of the FreeBSD Project.  *  * Send feedback to:<megaraidfbsd@avagotech.com> Mail to: AVAGO TECHNOLOGIES, 1621  * Barber Lane, Milpitas, CA 95035 ATTN: MegaRaid FreeBSD  *  */
 end_comment
 
 begin_include
@@ -83,19 +83,20 @@ end_function_decl
 
 begin_function_decl
 name|u_int8_t
-name|mrsas_get_best_arm
+name|mrsas_get_best_arm_pd
 parameter_list|(
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
+parameter_list|,
 name|PLD_LOAD_BALANCE_INFO
 name|lbInfo
 parameter_list|,
-name|u_int8_t
-name|arm
-parameter_list|,
-name|u_int64_t
-name|block
-parameter_list|,
-name|u_int32_t
-name|count
+name|struct
+name|IO_REQUEST_INFO
+modifier|*
+name|io_info
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -205,6 +206,11 @@ begin_function_decl
 name|u_int16_t
 name|mrsas_get_updated_dev_handle
 parameter_list|(
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
+parameter_list|,
 name|PLD_LOAD_BALANCE_INFO
 name|lbInfo
 parameter_list|,
@@ -271,6 +277,11 @@ begin_function_decl
 name|void
 name|mrsas_update_load_balance_params
 parameter_list|(
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
+parameter_list|,
 name|MR_DRV_RAID_MAP_ALL
 modifier|*
 name|map
@@ -663,6 +674,13 @@ define|#
 directive|define
 name|TRUE
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LB_PENDING_CMDS_DEFAULT
+value|4
 end_define
 
 begin_comment
@@ -1761,11 +1779,6 @@ operator|->
 name|UnevenSpanSupport
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Updating span set\n\n"
-argument_list|)
-expr_stmt|;
 name|mr_update_span_set
 argument_list|(
 name|drv_map
@@ -1776,6 +1789,8 @@ expr_stmt|;
 block|}
 name|mrsas_update_load_balance_params
 argument_list|(
+name|sc
+argument_list|,
 name|drv_map
 argument_list|,
 name|sc
@@ -2703,7 +2718,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug : Strip 0x%llx, span_set_Strip 0x%llx, span_set_Row 0x%llx "
+literal|"AVAGO Debug : Strip 0x%llx, span_set_Strip 0x%llx, span_set_Row 0x%llx "
 literal|"data width 0x%llx span offset 0x%llx\n"
 argument_list|,
 operator|(
@@ -2750,7 +2765,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug : For strip 0x%llx row is 0x%llx\n"
+literal|"AVAGO Debug : For strip 0x%llx row is 0x%llx\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -3063,7 +3078,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug - get_strip_from_row: returns invalid "
+literal|"AVAGO Debug - get_strip_from_row: returns invalid "
 literal|"strip for ld=%x, row=%lx\n"
 argument_list|,
 name|ld
@@ -3279,7 +3294,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI PRL11: get_arm_from_strip: "
+literal|"AVAGO PRL11: get_arm_from_strip: "
 literal|"for ld=0x%x strip=0x%lx arm is  0x%x\n"
 argument_list|,
 name|ld
@@ -3312,7 +3327,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug: - get_arm_from_strip: returns invalid arm"
+literal|"AVAGO Debug: - get_arm_from_strip: returns invalid arm"
 literal|" for ld=%x strip=%lx\n"
 argument_list|,
 name|ld
@@ -3439,7 +3454,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  * This routine calculates the arm, span and block for the specified stripe and  * reference in stripe using spanset  *  * Inputs :		Logical drive number  * stripRow:	Stripe number  * stripRef:	Reference in stripe  *  * Outputs :	span - Span number block - Absolute Block  * number in the physical disk  */
+comment|/*  *  * This routine calculates the arm, span and block for the specified stripe and  * reference in stripe using spanset  *  * Inputs :  * sc - HBA instance  * ld - Logical drive number  * stripRow: Stripe number  * stripRef: Reference in stripe  *  * Outputs :	span - Span number block - Absolute Block  * number in the physical disk  */
 end_comment
 
 begin_function
@@ -3828,6 +3843,14 @@ operator|)
 operator||
 name|physArm
 expr_stmt|;
+name|io_info
+operator|->
+name|span_arm
+operator|=
+name|pRAID_Context
+operator|->
+name|spanArm
+expr_stmt|;
 return|return
 name|retval
 return|;
@@ -4040,7 +4063,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug: raid->rowDataSize is 0, but has SPAN[0] rowDataSize = 0x%0x,"
+literal|"AVAGO Debug: raid->rowDataSize is 0, but has SPAN[0] rowDataSize = 0x%0x,"
 literal|" but there is _NO_ UnevenSpanSupport\n"
 argument_list|,
 name|MR_LdSpanPtrGet
@@ -4227,7 +4250,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug: return from %s %d. Send IO w/o region lock.\n"
+literal|"AVAGO Debug: return from %s %d. Send IO w/o region lock.\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -4252,7 +4275,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug: return from %s %d for row 0x%llx,"
+literal|"AVAGO Debug: return from %s %d for row 0x%llx,"
 literal|"start strip %llx endSrip %llx\n"
 argument_list|,
 name|__func__
@@ -4303,7 +4326,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug: Check Span number from %s %d for row 0x%llx, "
+literal|"AVAGO Debug: Check Span number from %s %d for row 0x%llx, "
 literal|" start strip 0x%llx endSrip 0x%llx span 0x%x\n"
 argument_list|,
 name|__func__
@@ -4340,7 +4363,7 @@ name|sc
 argument_list|,
 name|MRSAS_PRL11
 argument_list|,
-literal|"LSI Debug : 1. start_row 0x%llx endRow 0x%llx Start span 0x%x\n"
+literal|"AVAGO Debug : 1. start_row 0x%llx endRow 0x%llx Start span 0x%x\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -5198,7 +5221,7 @@ directive|if
 name|SPAN_DEBUG
 name|printf
 argument_list|(
-literal|"LSI Debug span %x rowDataSize %x\n"
+literal|"AVAGO Debug span %x rowDataSize %x\n"
 argument_list|,
 name|count
 argument_list|,
@@ -5492,16 +5515,21 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_update_load_balance_params:	Update load balance parmas  * Inputs:								map pointer  * 										Load balance info  *  * This function updates the load balance parameters for the LD config of a two  * drive optimal RAID-1.  */
+comment|/*  * mrsas_update_load_balance_params:	Update load balance parmas  * Inputs:  * sc - driver softc instance  * drv_map - driver RAID map  * lbInfo - Load balance info  *  * This function updates the load balance parameters for the LD config of a two  * drive optimal RAID-1.  */
 end_comment
 
 begin_function
 name|void
 name|mrsas_update_load_balance_params
 parameter_list|(
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
+parameter_list|,
 name|MR_DRV_RAID_MAP_ALL
 modifier|*
-name|map
+name|drv_map
 parameter_list|,
 name|PLD_LOAD_BALANCE_INFO
 name|lbInfo
@@ -5513,15 +5541,30 @@ decl_stmt|;
 name|u_int16_t
 name|ld
 decl_stmt|;
-name|u_int32_t
-name|pd
-decl_stmt|,
-name|arRef
-decl_stmt|;
 name|MR_LD_RAID
 modifier|*
 name|raid
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|lb_pending_cmds
+operator|>
+literal|128
+operator|||
+name|sc
+operator|->
+name|lb_pending_cmds
+operator|<
+literal|1
+condition|)
+name|sc
+operator|->
+name|lb_pending_cmds
+operator|=
+name|LB_PENDING_CMDS_DEFAULT
+expr_stmt|;
 for|for
 control|(
 name|ldCount
@@ -5530,7 +5573,7 @@ literal|0
 init|;
 name|ldCount
 operator|<
-name|MAX_LOGICAL_DRIVES
+name|MAX_LOGICAL_DRIVES_EXT
 condition|;
 name|ldCount
 operator|++
@@ -5542,14 +5585,14 @@ name|MR_TargetIdToLdGet
 argument_list|(
 name|ldCount
 argument_list|,
-name|map
+name|drv_map
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
 name|ld
 operator|>=
-name|MAX_LOGICAL_DRIVES
+name|MAX_LOGICAL_DRIVES_EXT
 condition|)
 block|{
 name|lbInfo
@@ -5569,41 +5612,26 @@ name|MR_LdRaidGet
 argument_list|(
 name|ld
 argument_list|,
-name|map
+name|drv_map
 argument_list|)
 expr_stmt|;
-comment|/* Two drive Optimal RAID 1 */
 if|if
 condition|(
 operator|(
 name|raid
 operator|->
 name|level
-operator|==
+operator|!=
 literal|1
 operator|)
-operator|&&
+operator|||
 operator|(
-name|raid
-operator|->
-name|rowSize
-operator|==
-literal|2
-operator|)
-operator|&&
-operator|(
-name|raid
-operator|->
-name|spanDepth
-operator|==
-literal|1
-operator|)
-operator|&&
 name|raid
 operator|->
 name|ldState
-operator|==
+operator|!=
 name|MR_LD_STATE_OPTIMAL
+operator|)
 condition|)
 block|{
 name|lbInfo
@@ -5613,80 +5641,10 @@ index|]
 operator|.
 name|loadBalanceFlag
 operator|=
-literal|1
-expr_stmt|;
-comment|/* Get the array on which this span is present */
-name|arRef
-operator|=
-name|MR_LdSpanArrayGet
-argument_list|(
-name|ld
-argument_list|,
 literal|0
-argument_list|,
-name|map
-argument_list|)
 expr_stmt|;
-comment|/* Get the PD */
-name|pd
-operator|=
-name|MR_ArPdGet
-argument_list|(
-name|arRef
-argument_list|,
-literal|0
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
-comment|/* Get dev handle from PD */
-name|lbInfo
-index|[
-name|ldCount
-index|]
-operator|.
-name|raid1DevHandle
-index|[
-literal|0
-index|]
-operator|=
-name|MR_PdDevHandleGet
-argument_list|(
-name|pd
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
-name|pd
-operator|=
-name|MR_ArPdGet
-argument_list|(
-name|arRef
-argument_list|,
-literal|1
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
-name|lbInfo
-index|[
-name|ldCount
-index|]
-operator|.
-name|raid1DevHandle
-index|[
-literal|1
-index|]
-operator|=
-name|MR_PdDevHandleGet
-argument_list|(
-name|pd
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
+continue|continue;
 block|}
-else|else
 name|lbInfo
 index|[
 name|ldCount
@@ -5694,7 +5652,7 @@ index|]
 operator|.
 name|loadBalanceFlag
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 block|}
 block|}
@@ -7096,30 +7054,41 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_get_best_arm:	Determine the best spindle arm  * Inputs:				Load balance info  *  * This function determines and returns the best arm by looking at the  * parameters of the last PD access.  */
+comment|/*  * mrsas_get_best_arm_pd:	Determine the best spindle arm  * Inputs:  *    sc - HBA instance  *    lbInfo - Load balance info  *    io_info - IO request info  *  * This function determines and returns the best arm by looking at the  * parameters of the last PD access.  */
 end_comment
 
 begin_function
 name|u_int8_t
-name|mrsas_get_best_arm
+name|mrsas_get_best_arm_pd
 parameter_list|(
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
+parameter_list|,
 name|PLD_LOAD_BALANCE_INFO
 name|lbInfo
 parameter_list|,
-name|u_int8_t
-name|arm
-parameter_list|,
-name|u_int64_t
-name|block
-parameter_list|,
-name|u_int32_t
-name|count
+name|struct
+name|IO_REQUEST_INFO
+modifier|*
+name|io_info
 parameter_list|)
 block|{
+name|MR_LD_RAID
+modifier|*
+name|raid
+decl_stmt|;
+name|MR_DRV_RAID_MAP_ALL
+modifier|*
+name|drv_map
+decl_stmt|;
 name|u_int16_t
 name|pend0
 decl_stmt|,
 name|pend1
+decl_stmt|,
+name|ld
 decl_stmt|;
 name|u_int64_t
 name|diff0
@@ -7128,7 +7097,163 @@ name|diff1
 decl_stmt|;
 name|u_int8_t
 name|bestArm
+decl_stmt|,
+name|pd0
+decl_stmt|,
+name|pd1
+decl_stmt|,
+name|span
+decl_stmt|,
+name|arm
 decl_stmt|;
+name|u_int32_t
+name|arRef
+decl_stmt|,
+name|span_row_size
+decl_stmt|;
+name|u_int64_t
+name|block
+init|=
+name|io_info
+operator|->
+name|ldStartBlock
+decl_stmt|;
+name|u_int32_t
+name|count
+init|=
+name|io_info
+operator|->
+name|numBlocks
+decl_stmt|;
+name|span
+operator|=
+operator|(
+operator|(
+name|io_info
+operator|->
+name|span_arm
+operator|&
+name|RAID_CTX_SPANARM_SPAN_MASK
+operator|)
+operator|>>
+name|RAID_CTX_SPANARM_SPAN_SHIFT
+operator|)
+expr_stmt|;
+name|arm
+operator|=
+operator|(
+name|io_info
+operator|->
+name|span_arm
+operator|&
+name|RAID_CTX_SPANARM_ARM_MASK
+operator|)
+expr_stmt|;
+name|drv_map
+operator|=
+name|sc
+operator|->
+name|ld_drv_map
+index|[
+operator|(
+name|sc
+operator|->
+name|map_id
+operator|&
+literal|1
+operator|)
+index|]
+expr_stmt|;
+name|ld
+operator|=
+name|MR_TargetIdToLdGet
+argument_list|(
+name|io_info
+operator|->
+name|ldTgtId
+argument_list|,
+name|drv_map
+argument_list|)
+expr_stmt|;
+name|raid
+operator|=
+name|MR_LdRaidGet
+argument_list|(
+name|ld
+argument_list|,
+name|drv_map
+argument_list|)
+expr_stmt|;
+name|span_row_size
+operator|=
+name|sc
+operator|->
+name|UnevenSpanSupport
+condition|?
+name|SPAN_ROW_SIZE
+argument_list|(
+name|drv_map
+argument_list|,
+name|ld
+argument_list|,
+name|span
+argument_list|)
+else|:
+name|raid
+operator|->
+name|rowSize
+expr_stmt|;
+name|arRef
+operator|=
+name|MR_LdSpanArrayGet
+argument_list|(
+name|ld
+argument_list|,
+name|span
+argument_list|,
+name|drv_map
+argument_list|)
+expr_stmt|;
+name|pd0
+operator|=
+name|MR_ArPdGet
+argument_list|(
+name|arRef
+argument_list|,
+name|arm
+argument_list|,
+name|drv_map
+argument_list|)
+expr_stmt|;
+name|pd1
+operator|=
+name|MR_ArPdGet
+argument_list|(
+name|arRef
+argument_list|,
+operator|(
+name|arm
+operator|+
+literal|1
+operator|)
+operator|>=
+name|span_row_size
+condition|?
+operator|(
+name|arm
+operator|+
+literal|1
+operator|-
+name|span_row_size
+operator|)
+else|:
+name|arm
+operator|+
+literal|1
+argument_list|,
+name|drv_map
+argument_list|)
+expr_stmt|;
 comment|/* get the pending cmds for the data and mirror arms */
 name|pend0
 operator|=
@@ -7139,7 +7264,7 @@ name|lbInfo
 operator|->
 name|scsi_pending_cmds
 index|[
-literal|0
+name|pd0
 index|]
 argument_list|)
 expr_stmt|;
@@ -7152,7 +7277,7 @@ name|lbInfo
 operator|->
 name|scsi_pending_cmds
 index|[
-literal|1
+name|pd1
 index|]
 argument_list|)
 expr_stmt|;
@@ -7167,7 +7292,7 @@ name|lbInfo
 operator|->
 name|last_accessed_block
 index|[
-literal|0
+name|pd0
 index|]
 argument_list|)
 expr_stmt|;
@@ -7181,7 +7306,7 @@ name|lbInfo
 operator|->
 name|last_accessed_block
 index|[
-literal|1
+name|pd1
 index|]
 argument_list|)
 expr_stmt|;
@@ -7192,8 +7317,10 @@ name|diff0
 operator|<=
 name|diff1
 condition|?
-literal|0
+name|arm
 else|:
+name|arm
+operator|^
 literal|1
 operator|)
 expr_stmt|;
@@ -7208,7 +7335,9 @@ name|pend0
 operator|>
 name|pend1
 operator|+
-literal|16
+name|sc
+operator|->
+name|lb_pending_cmds
 operator|)
 operator|||
 operator|(
@@ -7220,7 +7349,9 @@ name|pend1
 operator|>
 name|pend0
 operator|+
-literal|16
+name|sc
+operator|->
+name|lb_pending_cmds
 operator|)
 condition|)
 name|bestArm
@@ -7233,6 +7364,12 @@ operator|->
 name|last_accessed_block
 index|[
 name|bestArm
+operator|==
+name|arm
+condition|?
+name|pd0
+else|:
+name|pd1
 index|]
 operator|=
 name|block
@@ -7241,20 +7378,80 @@ name|count
 operator|-
 literal|1
 expr_stmt|;
-return|return
+name|io_info
+operator|->
+name|span_arm
+operator|=
+operator|(
+name|span
+operator|<<
+name|RAID_CTX_SPANARM_SPAN_SHIFT
+operator|)
+operator||
 name|bestArm
+expr_stmt|;
+name|io_info
+operator|->
+name|pd_after_lb
+operator|=
+operator|(
+name|bestArm
+operator|==
+name|arm
+operator|)
+condition|?
+name|pd0
+else|:
+name|pd1
+expr_stmt|;
+if|#
+directive|if
+name|SPAN_DEBUG
+if|if
+condition|(
+name|arm
+operator|!=
+name|bestArm
+condition|)
+name|printf
+argument_list|(
+literal|"AVAGO Debug R1 Load balance occur - span 0x%x arm 0x%x bestArm 0x%x "
+literal|"io_info->span_arm 0x%x\n"
+argument_list|,
+name|span
+argument_list|,
+name|arm
+argument_list|,
+name|bestArm
+argument_list|,
+name|io_info
+operator|->
+name|span_arm
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+name|io_info
+operator|->
+name|pd_after_lb
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * mrsas_get_updated_dev_handle:	Get the update dev handle  * Inputs:							Load balance info io_info pointer  *  * This function determines and returns the updated dev handle.  */
+comment|/*  * mrsas_get_updated_dev_handle:	Get the update dev handle  * Inputs:  *	sc - Adapter instance soft state  *	lbInfo - Load balance info  *	io_info - io_info pointer  *  * This function determines and returns the updated dev handle.  */
 end_comment
 
 begin_function
 name|u_int16_t
 name|mrsas_get_updated_dev_handle
 parameter_list|(
+name|struct
+name|mrsas_softc
+modifier|*
+name|sc
+parameter_list|,
 name|PLD_LOAD_BALANCE_INFO
 name|lbInfo
 parameter_list|,
@@ -7265,56 +7462,50 @@ name|io_info
 parameter_list|)
 block|{
 name|u_int8_t
-name|arm
-decl_stmt|,
-name|old_arm
+name|arm_pd
 decl_stmt|;
 name|u_int16_t
 name|devHandle
 decl_stmt|;
-name|old_arm
+name|MR_DRV_RAID_MAP_ALL
+modifier|*
+name|drv_map
+decl_stmt|;
+name|drv_map
 operator|=
-name|lbInfo
+name|sc
 operator|->
-name|raid1DevHandle
+name|ld_drv_map
 index|[
-literal|0
-index|]
-operator|==
-name|io_info
+operator|(
+name|sc
 operator|->
-name|devHandle
-condition|?
-literal|0
-else|:
+name|map_id
+operator|&
 literal|1
+operator|)
+index|]
 expr_stmt|;
 comment|/* get best new arm */
-name|arm
+name|arm_pd
 operator|=
-name|mrsas_get_best_arm
+name|mrsas_get_best_arm_pd
 argument_list|(
+name|sc
+argument_list|,
 name|lbInfo
 argument_list|,
-name|old_arm
-argument_list|,
 name|io_info
-operator|->
-name|ldStartBlock
-argument_list|,
-name|io_info
-operator|->
-name|numBlocks
 argument_list|)
 expr_stmt|;
 name|devHandle
 operator|=
-name|lbInfo
-operator|->
-name|raid1DevHandle
-index|[
-name|arm
-index|]
+name|MR_PdDevHandleGet
+argument_list|(
+name|arm_pd
+argument_list|,
+name|drv_map
+argument_list|)
 expr_stmt|;
 name|mrsas_atomic_inc
 argument_list|(
@@ -7323,7 +7514,7 @@ name|lbInfo
 operator|->
 name|scsi_pending_cmds
 index|[
-name|arm
+name|arm_pd
 index|]
 argument_list|)
 expr_stmt|;
@@ -7793,6 +7984,14 @@ name|RAID_CTX_SPANARM_SPAN_SHIFT
 operator|)
 operator||
 name|physArm
+expr_stmt|;
+name|io_info
+operator|->
+name|span_arm
+operator|=
+name|pRAID_Context
+operator|->
+name|spanArm
 expr_stmt|;
 return|return
 name|retval
