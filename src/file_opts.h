@@ -11,6 +11,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"                 display this help and exit\n"
+argument_list|,
+argument|OPT_HELP
 argument_list|)
 end_macro
 
@@ -158,6 +160,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"                output the Apple CREATOR/TYPE\n"
+argument_list|,
+argument|OPT_APPLE
 argument_list|)
 end_macro
 
@@ -168,7 +172,9 @@ literal|"extension"
 argument_list|,
 literal|0
 argument_list|,
-literal|"            output a slash-separated list of extnsions\n"
+literal|"            output a slash-separated list of extensions\n"
+argument_list|,
+argument|OPT_EXTENSIONS
 argument_list|)
 end_macro
 
@@ -180,6 +186,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"            output the MIME type\n"
+argument_list|,
+argument|OPT_MIME_TYPE
 argument_list|)
 end_macro
 
@@ -191,6 +199,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"        output the MIME encoding\n"
+argument_list|,
+argument|OPT_MIME_ENCODING
 argument_list|)
 end_macro
 
