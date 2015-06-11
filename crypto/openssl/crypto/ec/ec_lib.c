@@ -4828,6 +4828,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Check whether an EC_POINT is on the curve or not. Note that the return  * value for this function should NOT be treated as a boolean. Return values:  *  1: The point is on the curve  *  0: The point is not on the curve  * -1: An error occurred  */
+end_comment
+
 begin_function
 name|int
 name|EC_POINT_is_on_curve

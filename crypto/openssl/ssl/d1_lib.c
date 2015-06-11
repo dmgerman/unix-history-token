@@ -2346,6 +2346,12 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+comment|/* Ensure there is no state left over from a previous invocation */
+name|SSL_clear
+argument_list|(
+name|s
+argument_list|)
+expr_stmt|;
 name|SSL_set_options
 argument_list|(
 name|s

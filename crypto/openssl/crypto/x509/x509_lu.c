@@ -938,6 +938,12 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|!
+name|a
+condition|)
+return|return;
+if|if
+condition|(
 name|a
 operator|->
 name|type

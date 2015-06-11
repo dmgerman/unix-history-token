@@ -382,6 +382,8 @@ block|}
 do|while
 condition|(
 name|f
+operator|&&
+name|f
 operator|!=
 name|upto
 condition|)

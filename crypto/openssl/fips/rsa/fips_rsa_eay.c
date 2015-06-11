@@ -309,7 +309,7 @@ parameter_list|,
 name|err_instr
 parameter_list|)
 define|\
-value|if((pre_cond)&& ((rsa)->_method_mod_##m == NULL)&& \                         !BN_MONT_CTX_set_locked(&((rsa)->_method_mod_##m), \                                 CRYPTO_LOCK_RSA, \                                 (rsa)->m, (ctx))) \                 err_instr
+value|if ((pre_cond)&& ((rsa)->_method_mod_##m == NULL)&& \                         !BN_MONT_CTX_set_locked(&((rsa)->_method_mod_##m), \                                 CRYPTO_LOCK_RSA, \                                 (rsa)->m, (ctx))) \                 err_instr
 end_define
 
 begin_function
