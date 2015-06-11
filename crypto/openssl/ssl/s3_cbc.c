@@ -318,7 +318,7 @@ comment|/* First packet is even in size, so check */
 if|if
 condition|(
 operator|(
-name|memcmp
+name|CRYPTO_memcmp
 argument_list|(
 name|s
 operator|->
@@ -2296,14 +2296,26 @@ condition|(
 name|is_sslv3
 condition|)
 block|{
-comment|/*              * The SSLv3 header is larger than a single block. overhang is              * the number of bytes beyond a single block that the header              * consumes: either 7 bytes (SHA1) or 11 bytes (MD5).              */
 name|unsigned
 name|overhang
-init|=
+decl_stmt|;
+comment|/*              * The SSLv3 header is larger than a single block. overhang is              * the number of bytes beyond a single block that the header              * consumes: either 7 bytes (SHA1) or 11 bytes (MD5). There are no              * ciphersuites in SSLv3 that are not SHA1 or MD5 based and              * therefore we can be confident that the header_length will be              * greater than |md_block_size|. However we add a sanity check just              * in case              */
+if|if
+condition|(
+name|header_length
+operator|<=
+name|md_block_size
+condition|)
+block|{
+comment|/* Should never happen */
+return|return;
+block|}
+name|overhang
+operator|=
 name|header_length
 operator|-
 name|md_block_size
-decl_stmt|;
+expr_stmt|;
 name|md_transform
 argument_list|(
 name|md_state

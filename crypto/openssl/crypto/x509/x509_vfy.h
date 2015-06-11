@@ -1373,6 +1373,11 @@ define|#
 directive|define
 name|X509_V_FLAG_CHECK_SS_SIGNATURE
 value|0x4000
+comment|/*  * If the initial chain is not trusted, do not attempt to build an alternative  * chain. Alternate chain checking was introduced in 1.0.1n/1.0.2b. Setting  * this flag will force the behaviour to match that of previous versions.  */
+define|#
+directive|define
+name|X509_V_FLAG_NO_ALT_CHAINS
+value|0x100000
 define|#
 directive|define
 name|X509_VP_FLAG_DEFAULT

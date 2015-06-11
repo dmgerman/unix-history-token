@@ -1207,7 +1207,7 @@ operator|>
 name|inlen
 operator|+
 literal|4
-condition|)
+operator|&&
 name|RAND_pseudo_bytes
 argument_list|(
 name|out
@@ -1222,7 +1222,12 @@ literal|4
 operator|-
 name|inlen
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 comment|/* Encrypt twice */
 name|EVP_EncryptUpdate
 argument_list|(

@@ -127,7 +127,7 @@ begin_define
 define|#
 directive|define
 name|DEFBITS
-value|512
+value|2048
 end_define
 
 begin_comment
@@ -827,7 +827,7 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
-literal|" numbits       number of bits in to generate (default 512)\n"
+literal|" numbits       number of bits in to generate (default 2048)\n"
 argument_list|)
 expr_stmt|;
 ifndef|#
