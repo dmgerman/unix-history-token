@@ -912,6 +912,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
 begin_function_decl
 specifier|static
 name|void
@@ -922,6 +936,11 @@ name|sbt
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -2480,6 +2499,20 @@ expr_stmt|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
+
 begin_function
 specifier|static
 name|int
@@ -2500,6 +2533,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Disable any entry to the idle function during suspend and re-enable it  * during resume.  */
@@ -4789,10 +4827,23 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
 name|cpu_idle_hook
 operator|=
 name|acpi_cpu_idle
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -5148,6 +5199,20 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+end_if
 
 begin_comment
 comment|/*  * Idle the CPU in the lowest state possible.  This function is called with  * interrupts disabled.  Note that once it re-enables interrupts, a task  * switch can occur so do not access shared data (i.e. the softc) after  * interrupts are re-enabled.  */
@@ -5758,6 +5823,11 @@ literal|4
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Re-evaluate the _CST object when we are notified that it changed.  */
