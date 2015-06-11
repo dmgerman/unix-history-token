@@ -4597,6 +4597,17 @@ operator|*
 name|frag
 operator|)
 operator|->
+name|fr_proto
+operator|=
+name|h
+operator|->
+name|ip_p
+expr_stmt|;
+operator|(
+operator|*
+name|frag
+operator|)
+operator|->
 name|fr_id
 operator|=
 name|h
