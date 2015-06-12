@@ -4639,6 +4639,27 @@ name|EINVAL
 argument_list|)
 operator|)
 return|;
+comment|/* fromsnap, if provided, must be a snapshot */
+if|if
+condition|(
+name|fromds
+operator|!=
+name|NULL
+operator|&&
+operator|!
+name|dsl_dataset_is_snapshot
+argument_list|(
+name|fromds
+argument_list|)
+condition|)
+return|return
+operator|(
+name|SET_ERROR
+argument_list|(
+name|EINVAL
+argument_list|)
+operator|)
+return|;
 comment|/* 	 * fromsnap must be an earlier snapshot from the same fs as tosnap, 	 * or the origin's fs. 	 */
 if|if
 condition|(
