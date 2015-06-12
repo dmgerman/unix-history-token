@@ -125,6 +125,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.nfsd.statehashsize"
+argument_list|,
+operator|&
+name|nfsrv_statehashsize
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_nfsd
@@ -152,6 +163,17 @@ init|=
 name|NFSCLIENTHASHSIZE
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.nfsd.clienthashsize"
+argument_list|,
+operator|&
+name|nfsrv_clienthashsize
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -183,6 +205,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.nfsd.fhhashsize"
+argument_list|,
+operator|&
+name|nfsrv_lockhashsize
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_vfs_nfsd
@@ -210,6 +243,17 @@ init|=
 name|NFSSESSIONHASHSIZE
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.nfsd.sessionhashsize"
+argument_list|,
+operator|&
+name|nfsrv_sessionhashsize
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
@@ -240,6 +284,17 @@ init|=
 name|NFSRV_V4STATELIMIT
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.nfsd.v4statelimit"
+argument_list|,
+operator|&
+name|nfsrv_v4statelimit
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
