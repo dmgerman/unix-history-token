@@ -104,9 +104,6 @@ block|,
 operator|&
 name|cd9660_fsops
 block|,
-operator|&
-name|gzipfs_fsops
-block|,
 if|#
 directive|if
 name|defined
@@ -118,6 +115,12 @@ name|zfs_fsops
 block|,
 endif|#
 directive|endif
+operator|&
+name|gzipfs_fsops
+block|,
+operator|&
+name|bzipfs_fsops
+block|,
 name|NULL
 block|}
 decl_stmt|;
