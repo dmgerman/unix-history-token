@@ -73,6 +73,9 @@ block|,
 operator|&
 name|gzipfs_fsops
 block|,
+operator|&
+name|bzipfs_fsops
+block|,
 name|NULL
 block|}
 decl_stmt|;
