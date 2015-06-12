@@ -7719,6 +7719,10 @@ name|SSL_F_SSL_RSA_PUBLIC_ENCRYPT
 value|188
 define|#
 directive|define
+name|SSL_F_SSL_SESSION_DUP
+value|348
+define|#
+directive|define
 name|SSL_F_SSL_SESSION_NEW
 value|189
 define|#
