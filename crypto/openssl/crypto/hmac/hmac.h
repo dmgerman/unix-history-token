@@ -100,9 +100,6 @@ index|[
 name|HMAC_MAX_MD_CBLOCK
 index|]
 decl_stmt|;
-name|int
-name|key_init
-decl_stmt|;
 block|}
 name|HMAC_CTX
 typedef|;

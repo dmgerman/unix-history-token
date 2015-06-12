@@ -27,20 +27,20 @@ comment|/*-  * Numeric release version identifier:  * MNNFFPPS: major minor fix 
 define|#
 directive|define
 name|OPENSSL_VERSION_NUMBER
-value|0x100010efL
+value|0x100010ffL
 ifdef|#
 directive|ifdef
 name|OPENSSL_FIPS
 define|#
 directive|define
 name|OPENSSL_VERSION_TEXT
-value|"OpenSSL 1.0.1n-fips 11 Jun 2015"
+value|"OpenSSL 1.0.1o-fips 12 Jun 2015"
 else|#
 directive|else
 define|#
 directive|define
 name|OPENSSL_VERSION_TEXT
-value|"OpenSSL 1.0.1n-freebsd 11 Jun 2015"
+value|"OpenSSL 1.0.1o-freebsd 12 Jun 2015"
 endif|#
 directive|endif
 define|#
