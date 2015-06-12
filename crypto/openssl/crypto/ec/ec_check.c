@@ -154,7 +154,6 @@ goto|;
 block|}
 if|if
 condition|(
-operator|!
 name|EC_POINT_is_on_curve
 argument_list|(
 name|group
@@ -165,6 +164,8 @@ name|generator
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 name|ECerr

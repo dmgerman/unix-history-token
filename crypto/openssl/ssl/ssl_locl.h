@@ -1937,6 +1937,21 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|SSL_SESSION
+modifier|*
+name|ssl_session_dup
+parameter_list|(
+name|SSL_SESSION
+modifier|*
+name|src
+parameter_list|,
+name|int
+name|ticket
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ssl_cipher_id_cmp
 parameter_list|(

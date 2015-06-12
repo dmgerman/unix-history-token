@@ -1536,6 +1536,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL_SESSION_DUP
+argument_list|)
+block|,
+literal|"ssl_session_dup"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL_SESSION_NEW
 argument_list|)
 block|,
