@@ -2058,6 +2058,17 @@ operator|)
 return|;
 if|if
 condition|(
+name|a
+operator|->
+name|length
+operator|==
+literal|0
+condition|)
+return|return
+name|NID_undef
+return|;
+if|if
+condition|(
 name|added
 operator|!=
 name|NULL

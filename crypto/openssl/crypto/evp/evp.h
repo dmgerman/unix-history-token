@@ -221,17 +221,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|EVP_PKT_EXP
-value|0x1000
-end_define
-
-begin_comment
-comment|/*<= 512 bit key */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|EVP_PKEY_NONE
 value|NID_undef
 end_define

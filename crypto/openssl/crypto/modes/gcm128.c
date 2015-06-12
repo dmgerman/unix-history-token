@@ -11757,7 +11757,7 @@ name|Xi
 argument_list|)
 condition|)
 return|return
-name|memcmp
+name|CRYPTO_memcmp
 argument_list|(
 name|ctx
 operator|->

@@ -1536,9 +1536,9 @@ goto|goto
 name|err
 goto|;
 block|}
+comment|/* test required by X9.62 */
 if|if
 condition|(
-operator|!
 name|EC_POINT_is_on_curve
 argument_list|(
 name|group
@@ -1547,8 +1547,9 @@ name|point
 argument_list|,
 name|ctx
 argument_list|)
+operator|<=
+literal|0
 condition|)
-comment|/* test required by X9.62 */
 block|{
 name|ECerr
 argument_list|(

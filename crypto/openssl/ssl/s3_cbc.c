@@ -318,7 +318,7 @@ comment|/* First packet is even in size, so check */
 if|if
 condition|(
 operator|(
-name|memcmp
+name|CRYPTO_memcmp
 argument_list|(
 name|s
 operator|->

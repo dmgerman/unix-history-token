@@ -1133,6 +1133,12 @@ name|md
 return|;
 name|err
 label|:
+name|HMAC_CTX_cleanup
+argument_list|(
+operator|&
+name|c
+argument_list|)
+expr_stmt|;
 return|return
 name|NULL
 return|;

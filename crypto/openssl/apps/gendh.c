@@ -120,7 +120,7 @@ begin_define
 define|#
 directive|define
 name|DEFBITS
-value|512
+value|2048
 end_define
 
 begin_undef

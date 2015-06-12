@@ -2153,6 +2153,29 @@ goto|goto
 name|err
 goto|;
 block|}
+comment|/* Detached content must be supplied via in_bio instead. */
+if|if
+condition|(
+name|data_body
+operator|==
+name|NULL
+operator|&&
+name|in_bio
+operator|==
+name|NULL
+condition|)
+block|{
+name|PKCS7err
+argument_list|(
+name|PKCS7_F_PKCS7_DATADECODE
+argument_list|,
+name|PKCS7_R_NO_CONTENT
+argument_list|)
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 comment|/* We will be checking the signature */
 if|if
 condition|(
@@ -2726,16 +2749,9 @@ directive|if
 literal|1
 if|if
 condition|(
-name|PKCS7_is_detached
-argument_list|(
-name|p7
-argument_list|)
-operator|||
-operator|(
 name|in_bio
 operator|!=
 name|NULL
-operator|)
 condition|)
 block|{
 name|bio

@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<openssl/crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/hmac.h>
 end_include
 
@@ -440,7 +446,7 @@ operator|->
 name|length
 operator|)
 operator|||
-name|memcmp
+name|CRYPTO_memcmp
 argument_list|(
 name|mac
 argument_list|,

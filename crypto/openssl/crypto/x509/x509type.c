@@ -238,22 +238,6 @@ block|}
 block|}
 if|if
 condition|(
-name|EVP_PKEY_size
-argument_list|(
-name|pk
-argument_list|)
-operator|<=
-literal|1024
-operator|/
-literal|8
-condition|)
-comment|/* /8 because it's 1024 bits we look 					   for, not bytes */
-name|ret
-operator||=
-name|EVP_PKT_EXP
-expr_stmt|;
-if|if
-condition|(
 name|pkey
 operator|==
 name|NULL

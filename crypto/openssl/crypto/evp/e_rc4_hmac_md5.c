@@ -40,6 +40,12 @@ end_if
 begin_include
 include|#
 directive|include
+file|<openssl/crypto.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<openssl/evp.h>
 end_include
 
@@ -1077,7 +1083,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|memcmp
+name|CRYPTO_memcmp
 argument_list|(
 name|out
 operator|+

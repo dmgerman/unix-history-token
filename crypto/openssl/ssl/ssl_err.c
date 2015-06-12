@@ -1644,6 +1644,15 @@ block|,
 block|{
 name|ERR_FUNC
 argument_list|(
+name|SSL_F_SSL_SESSION_DUP
+argument_list|)
+block|,
+literal|"ssl_session_dup"
+block|}
+block|,
+block|{
+name|ERR_FUNC
+argument_list|(
 name|SSL_F_SSL_SESSION_NEW
 argument_list|)
 block|,
@@ -2663,6 +2672,15 @@ name|SSL_R_DECRYPTION_FAILED_OR_BAD_RECORD_MAC
 argument_list|)
 block|,
 literal|"decryption failed or bad record mac"
+block|}
+block|,
+block|{
+name|ERR_REASON
+argument_list|(
+name|SSL_R_DH_KEY_TOO_SMALL
+argument_list|)
+block|,
+literal|"dh key too small"
 block|}
 block|,
 block|{
