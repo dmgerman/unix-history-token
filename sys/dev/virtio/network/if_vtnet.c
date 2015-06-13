@@ -2827,7 +2827,7 @@ condition|)
 block|{
 name|EVENTHANDLER_DEREGISTER
 argument_list|(
-name|vlan_unconfg
+name|vlan_unconfig
 argument_list|,
 name|sc
 operator|->
