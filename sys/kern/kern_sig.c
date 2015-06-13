@@ -12235,6 +12235,27 @@ name|td_xsig
 operator|=
 name|sig
 expr_stmt|;
+name|CTR4
+argument_list|(
+name|KTR_PTRACE
+argument_list|,
+literal|"ptracestop: tid %d (pid %d) flags %#x sig %d"
+argument_list|,
+name|td
+operator|->
+name|td_tid
+argument_list|,
+name|p
+operator|->
+name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_dbgflags
+argument_list|,
+name|sig
+argument_list|)
+expr_stmt|;
 name|PROC_SLOCK
 argument_list|(
 name|p

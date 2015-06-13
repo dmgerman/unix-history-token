@@ -367,8 +367,19 @@ end_comment
 begin_define
 define|#
 directive|define
+name|KTR_PTRACE
+value|0x80000000
+end_define
+
+begin_comment
+comment|/* Process debugging. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|KTR_ALL
-value|0x7fffffff
+value|0xffffffff
 end_define
 
 begin_comment
