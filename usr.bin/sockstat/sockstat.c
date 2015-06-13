@@ -3790,6 +3790,7 @@ name|s
 operator|->
 name|next
 control|)
+block|{
 if|if
 condition|(
 operator|(
@@ -3799,17 +3800,10 @@ operator|)
 name|s
 operator|->
 name|socket
-operator|==
+operator|!=
 name|xf
 operator|->
 name|xf_data
-condition|)
-break|break;
-if|if
-condition|(
-name|s
-operator|==
-name|NULL
 condition|)
 continue|continue;
 if|if
@@ -3957,6 +3951,7 @@ argument_list|,
 name|pos
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
