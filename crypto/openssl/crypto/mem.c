@@ -1906,6 +1906,15 @@ argument_list|,
 name|line
 argument_list|)
 decl_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 name|strcpy
 argument_list|(
 name|ret

@@ -2794,7 +2794,7 @@ operator|+
 literal|1
 argument_list|)
 operator|>
-name|lim_cur
+name|lim_cur_proc
 argument_list|(
 name|proc
 argument_list|,

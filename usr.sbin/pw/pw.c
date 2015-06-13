@@ -56,6 +56,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdbool.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/wait.h>
 end_include
 
@@ -209,7 +215,7 @@ name|pwf
 name|PWF
 init|=
 block|{
-literal|0
+name|PWF_REGULAR
 block|,
 name|setpwent
 block|,
@@ -240,7 +246,7 @@ name|pwf
 name|VPWF
 init|=
 block|{
-literal|1
+name|PWF_ALT
 block|,
 name|vsetpwent
 block|,
@@ -262,6 +268,13 @@ name|vgetgrgid
 block|,
 name|vgetgrnam
 block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|pwconf
+name|conf
 decl_stmt|;
 end_decl_stmt
 
@@ -334,6 +347,12 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|long
+name|id
+init|=
+operator|-
+literal|1
+decl_stmt|;
 name|char
 modifier|*
 name|config
@@ -341,13 +360,24 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
-name|userconf
-modifier|*
-name|cnf
-decl_stmt|;
-name|struct
 name|stat
 name|st
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|errstr
+decl_stmt|;
+name|char
+name|arg
+decl_stmt|,
+modifier|*
+name|name
+decl_stmt|;
+name|bool
+name|relocated
+decl_stmt|,
+name|nis
 decl_stmt|;
 specifier|static
 specifier|const
@@ -364,32 +394,32 @@ init|=
 block|{
 block|{
 comment|/* user */
-literal|"V:C:qn:u:c:d:e:p:g:G:mM:k:s:oL:i:w:h:H:Db:NPy:Y"
+literal|"R:V:C:qn:u:c:d:e:p:g:G:mM:k:s:oL:i:w:h:H:Db:NPy:Y"
 block|,
-literal|"V:C:qn:u:rY"
+literal|"R:V:C:qn:u:rY"
 block|,
-literal|"V:C:qn:u:c:d:e:p:g:G:mM:l:k:s:w:L:h:H:FNPY"
+literal|"R:V:C:qn:u:c:d:e:p:g:G:mM:l:k:s:w:L:h:H:FNPY"
 block|,
-literal|"V:C:qn:u:FPa7"
+literal|"R:V:C:qn:u:FPa7"
 block|,
-literal|"V:C:q"
+literal|"R:V:C:q"
 block|,
-literal|"V:C:q"
+literal|"R:V:C:q"
 block|,
-literal|"V:C:q"
+literal|"R:V:C:q"
 block|}
 block|,
 block|{
 comment|/* grp  */
-literal|"V:C:qn:g:h:H:M:opNPY"
+literal|"R:V:C:qn:g:h:H:M:opNPY"
 block|,
-literal|"V:C:qn:g:Y"
+literal|"R:V:C:qn:g:Y"
 block|,
-literal|"V:C:qn:d:g:l:h:H:FM:m:NPY"
+literal|"R:V:C:qn:d:g:l:h:H:FM:m:NPY"
 block|,
-literal|"V:C:qn:g:FPa"
+literal|"R:V:C:qn:g:FPa"
 block|,
-literal|"V:C:q"
+literal|"R:V:C:q"
 block|}
 block|}
 decl_stmt|;
@@ -403,13 +433,15 @@ name|W_NUM
 index|]
 function_decl|)
 parameter_list|(
-name|struct
-name|userconf
-modifier|*
-name|_cnf
-parameter_list|,
 name|int
 name|_mode
+parameter_list|,
+name|char
+modifier|*
+name|_name
+parameter_list|,
+name|long
+name|_id
 parameter_list|,
 name|struct
 name|cargs
@@ -428,6 +460,57 @@ end_function
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_expr_stmt
+name|name
+operator|=
+name|NULL
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|relocated
+operator|=
+name|nis
+operator|=
+name|false
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|memset
+argument_list|(
+operator|&
+name|conf
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|conf
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|strlcpy
+argument_list|(
+name|conf
+operator|.
+name|etcpath
+argument_list|,
+name|_PATH_PWD
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|conf
+operator|.
+name|etcpath
+argument_list|)
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|LIST_INIT
@@ -478,8 +561,8 @@ literal|'-'
 condition|)
 block|{
 comment|/* 			 * Special case, allow pw -V<dir><operation> [args] for scripts etc. 			 */
-if|if
-condition|(
+name|arg
+operator|=
 name|argv
 index|[
 literal|1
@@ -487,10 +570,34 @@ index|]
 index|[
 literal|1
 index|]
+expr_stmt|;
+if|if
+condition|(
+name|arg
 operator|==
 literal|'V'
+operator|||
+name|arg
+operator|==
+literal|'R'
 condition|)
 block|{
+if|if
+condition|(
+name|relocated
+condition|)
+name|errx
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"Both '-R' and '-V' "
+literal|"specified, only one accepted"
+argument_list|)
+expr_stmt|;
+name|relocated
+operator|=
+name|true
+expr_stmt|;
 name|optarg
 operator|=
 operator|&
@@ -574,14 +681,72 @@ operator|--
 name|argc
 expr_stmt|;
 block|}
-name|addarg
+name|memcpy
 argument_list|(
 operator|&
-name|arglist
+name|PWF
 argument_list|,
-literal|'V'
+operator|&
+name|VPWF
+argument_list|,
+sizeof|sizeof
+name|PWF
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|arg
+operator|==
+literal|'R'
+condition|)
+block|{
+name|strlcpy
+argument_list|(
+name|conf
+operator|.
+name|rootdir
 argument_list|,
 name|optarg
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|conf
+operator|.
+name|rootdir
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|PWF
+operator|.
+name|_altdir
+operator|=
+name|PWF_ROOTDIR
+expr_stmt|;
+block|}
+name|snprintf
+argument_list|(
+name|conf
+operator|.
+name|etcpath
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|conf
+operator|.
+name|etcpath
+argument_list|)
+argument_list|,
+literal|"%s%s"
+argument_list|,
+name|optarg
+argument_list|,
+name|arg
+operator|==
+literal|'R'
+condition|?
+literal|"/etc"
+else|:
+literal|""
 argument_list|)
 expr_stmt|;
 block|}
@@ -753,19 +918,75 @@ operator|!=
 operator|-
 literal|1
 condition|)
-name|addarg
+block|{
+if|if
+condition|(
+name|strspn
 argument_list|(
-operator|&
-name|arglist
+name|argv
+index|[
+literal|1
+index|]
 argument_list|,
-literal|'n'
-argument_list|,
+literal|"0123456789"
+argument_list|)
+operator|==
+name|strlen
+argument_list|(
 name|argv
 index|[
 literal|1
 index|]
 argument_list|)
+condition|)
+block|{
+name|id
+operator|=
+name|strtonum
+argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+literal|0
+argument_list|,
+name|LONG_MAX
+argument_list|,
+operator|&
+name|errstr
+argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|errstr
+operator|!=
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"Bad id '%s': %s"
+argument_list|,
+name|argv
+index|[
+literal|1
+index|]
+argument_list|,
+name|errstr
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|name
+operator|=
+name|argv
+index|[
+literal|1
+index|]
+expr_stmt|;
+block|}
 else|else
 name|errx
 argument_list|(
@@ -851,12 +1072,14 @@ operator|-
 literal|1
 condition|)
 block|{
-if|if
+switch|switch
 condition|(
 name|ch
-operator|==
-literal|'?'
 condition|)
+block|{
+case|case
+literal|'?'
+case|:
 name|errx
 argument_list|(
 name|EX_USAGE
@@ -864,7 +1087,312 @@ argument_list|,
 literal|"unknown switch"
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+case|case
+literal|'7'
+case|:
+name|conf
+operator|.
+name|v7
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'C'
+case|:
+name|conf
+operator|.
+name|config
+operator|=
+name|optarg
+expr_stmt|;
+name|config
+operator|=
+name|conf
+operator|.
+name|config
+expr_stmt|;
+break|break;
+case|case
+literal|'N'
+case|:
+name|conf
+operator|.
+name|dryrun
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|optarg
+argument_list|)
+operator|>=
+name|MAXLOGNAME
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"new name too long: %s"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|conf
+operator|.
+name|newname
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'P'
+case|:
+name|conf
+operator|.
+name|pretty
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'Y'
+case|:
+name|nis
+operator|=
+name|true
+expr_stmt|;
+break|break;
+case|case
+literal|'g'
+case|:
+if|if
+condition|(
+name|which
+operator|==
+literal|0
+condition|)
+block|{
+comment|/* for user* */
+name|addarg
+argument_list|(
+operator|&
+name|arglist
+argument_list|,
+literal|'g'
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|strspn
+argument_list|(
+name|optarg
+argument_list|,
+literal|"0123456789"
+argument_list|)
+operator|!=
+name|strlen
+argument_list|(
+name|optarg
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"-g expects a number"
+argument_list|)
+expr_stmt|;
+name|id
+operator|=
+name|strtonum
+argument_list|(
+name|optarg
+argument_list|,
+literal|0
+argument_list|,
+name|LONG_MAX
+argument_list|,
+operator|&
+name|errstr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errstr
+operator|!=
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"Bad id '%s': %s"
+argument_list|,
+name|optarg
+argument_list|,
+name|errstr
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+if|if
+condition|(
+name|strspn
+argument_list|(
+name|optarg
+argument_list|,
+literal|"0123456789,"
+argument_list|)
+operator|!=
+name|strlen
+argument_list|(
+name|optarg
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"-u expects a number"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|optarg
+argument_list|,
+literal|','
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+block|{
+name|addarg
+argument_list|(
+operator|&
+name|arglist
+argument_list|,
+literal|'u'
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
+name|id
+operator|=
+name|strtonum
+argument_list|(
+name|optarg
+argument_list|,
+literal|0
+argument_list|,
+name|LONG_MAX
+argument_list|,
+operator|&
+name|errstr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errstr
+operator|!=
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"Bad id '%s': %s"
+argument_list|,
+name|optarg
+argument_list|,
+name|errstr
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+if|if
+condition|(
+name|strspn
+argument_list|(
+name|optarg
+argument_list|,
+literal|"0123456789"
+argument_list|)
+operator|!=
+name|strlen
+argument_list|(
+name|optarg
+argument_list|)
+condition|)
+block|{
+name|name
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+block|}
+name|id
+operator|=
+name|strtonum
+argument_list|(
+name|optarg
+argument_list|,
+literal|0
+argument_list|,
+name|LONG_MAX
+argument_list|,
+operator|&
+name|errstr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|errstr
+operator|!=
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"Bad id '%s': %s"
+argument_list|,
+name|optarg
+argument_list|,
+name|errstr
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'o'
+case|:
+name|conf
+operator|.
+name|checkduplicate
+operator|=
+name|true
+expr_stmt|;
+break|break;
+default|default:
 name|addarg
 argument_list|(
 operator|&
@@ -875,12 +1403,39 @@ argument_list|,
 name|optarg
 argument_list|)
 expr_stmt|;
+break|break;
+block|}
 name|optarg
 operator|=
 name|NULL
 expr_stmt|;
 block|}
 end_while
+
+begin_if
+if|if
+condition|(
+name|name
+operator|!=
+name|NULL
+operator|&&
+name|strlen
+argument_list|(
+name|name
+argument_list|)
+operator|>=
+name|MAXLOGNAME
+condition|)
+name|errx
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"name too long: %s"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+end_if
 
 begin_comment
 comment|/* 	 * Must be root to attempt an update 	 */
@@ -902,15 +1457,10 @@ name|mode
 operator|!=
 name|M_NEXT
 operator|&&
-name|getarg
-argument_list|(
-operator|&
-name|arglist
-argument_list|,
-literal|'N'
-argument_list|)
-operator|==
-name|NULL
+operator|!
+name|conf
+operator|.
+name|dryrun
 condition|)
 name|errx
 argument_list|(
@@ -953,65 +1503,7 @@ begin_comment
 comment|/* 	 * Set our base working path if not overridden 	 */
 end_comment
 
-begin_expr_stmt
-name|config
-operator|=
-name|getarg
-argument_list|(
-operator|&
-name|arglist
-argument_list|,
-literal|'C'
-argument_list|)
-condition|?
-name|getarg
-argument_list|(
-operator|&
-name|arglist
-argument_list|,
-literal|'C'
-argument_list|)
-operator|->
-name|val
-else|:
-name|NULL
-expr_stmt|;
-end_expr_stmt
-
 begin_if
-if|if
-condition|(
-name|getarg
-argument_list|(
-operator|&
-name|arglist
-argument_list|,
-literal|'V'
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-name|char
-modifier|*
-name|etcpath
-init|=
-name|getarg
-argument_list|(
-operator|&
-name|arglist
-argument_list|,
-literal|'V'
-argument_list|)
-operator|->
-name|val
-decl_stmt|;
-if|if
-condition|(
-operator|*
-name|etcpath
-condition|)
-block|{
 if|if
 condition|(
 name|config
@@ -1020,48 +1512,31 @@ name|NULL
 condition|)
 block|{
 comment|/* Only override config location if -C not specified */
-name|config
-operator|=
-name|malloc
+name|asprintf
 argument_list|(
-name|MAXPATHLEN
-argument_list|)
-expr_stmt|;
-name|snprintf
-argument_list|(
+operator|&
 name|config
-argument_list|,
-name|MAXPATHLEN
 argument_list|,
 literal|"%s/pw.conf"
 argument_list|,
+name|conf
+operator|.
 name|etcpath
 argument_list|)
 expr_stmt|;
-block|}
-name|memcpy
+if|if
+condition|(
+name|config
+operator|==
+name|NULL
+condition|)
+name|errx
 argument_list|(
-operator|&
-name|PWF
+name|EX_OSERR
 argument_list|,
-operator|&
-name|VPWF
-argument_list|,
-sizeof|sizeof
-name|PWF
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
-name|setpwdir
-argument_list|(
-name|etcpath
-argument_list|)
-expr_stmt|;
-name|setgrdir
-argument_list|(
-name|etcpath
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 end_if
 
@@ -1070,7 +1545,9 @@ comment|/* 	 * Now, let's do the common initialisation 	 */
 end_comment
 
 begin_expr_stmt
-name|cnf
+name|conf
+operator|.
+name|userconf
 operator|=
 name|read_userconfig
 argument_list|(
@@ -1087,9 +1564,11 @@ index|[
 name|which
 index|]
 operator|(
-name|cnf
-operator|,
 name|mode
+operator|,
+name|name
+operator|,
+name|id
 operator|,
 operator|&
 name|arglist
@@ -1108,15 +1587,7 @@ name|ch
 operator|==
 name|EXIT_SUCCESS
 operator|&&
-name|getarg
-argument_list|(
-operator|&
-name|arglist
-argument_list|,
-literal|'Y'
-argument_list|)
-operator|!=
-name|NULL
+name|nis
 condition|)
 block|{
 name|pid_t
@@ -1230,7 +1701,9 @@ expr_stmt|;
 else|else
 name|pw_log
 argument_list|(
-name|cnf
+name|conf
+operator|.
+name|userconf
 argument_list|,
 name|mode
 argument_list|,
@@ -1376,6 +1849,7 @@ block|{
 block|{
 literal|"usage: pw useradd [name] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"  Adding users:\n"
@@ -1398,6 +1872,7 @@ literal|"\t-Y             update NIS maps\n"
 literal|"\t-N             no update\n"
 literal|"  Setting defaults:\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-D             set user defaults\n"
 literal|"\t-b dir         default home root dir\n"
 literal|"\t-e period      default expiry period\n"
@@ -1415,6 +1890,7 @@ literal|"\t-y path        set NIS passwd file path\n"
 block|,
 literal|"usage: pw userdel [uid|name] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-n name        login name\n"
 literal|"\t-u uid         user id\n"
 literal|"\t-Y             update NIS maps\n"
@@ -1422,6 +1898,7 @@ literal|"\t-r             remove home& contents\n"
 block|,
 literal|"usage: pw usermod [uid|name] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"\t-F             force add if no user\n"
@@ -1446,6 +1923,7 @@ literal|"\t-N             no update\n"
 block|,
 literal|"usage: pw usershow [uid|name] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-n name        login name\n"
 literal|"\t-u uid         user id\n"
 literal|"\t-F             force print\n"
@@ -1455,6 +1933,7 @@ literal|"\t-7             print in v7 format\n"
 block|,
 literal|"usage: pw usernext [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 block|,
@@ -1472,6 +1951,7 @@ block|,
 block|{
 literal|"usage: pw groupadd [group|gid] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"\t-n group       group name\n"
@@ -1483,12 +1963,14 @@ literal|"\t-N             no update\n"
 block|,
 literal|"usage: pw groupdel [group|gid] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-n name        group name\n"
 literal|"\t-g gid         group id\n"
 literal|"\t-Y             update NIS maps\n"
 block|,
 literal|"usage: pw groupmod [group|gid] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 literal|"\t-F             force add if not exists\n"
@@ -1503,6 +1985,7 @@ literal|"\t-N             no update\n"
 block|,
 literal|"usage: pw groupshow [group|gid] [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-n name        group name\n"
 literal|"\t-g gid         group id\n"
 literal|"\t-F             force print\n"
@@ -1511,6 +1994,7 @@ literal|"\t-a             print all accounting groups\n"
 block|,
 literal|"usage: pw groupnext [switches]\n"
 literal|"\t-V etcdir      alternate /etc location\n"
+literal|"\t-R rootir      alternate root directory\n"
 literal|"\t-C config      configuration file\n"
 literal|"\t-q             quiet operation\n"
 block|}

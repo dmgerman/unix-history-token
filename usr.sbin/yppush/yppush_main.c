@@ -509,7 +509,7 @@ if|if
 condition|(
 name|status
 operator|!=
-name|YPPUSH_SUCC
+name|YPXFR_SUCC
 operator|||
 name|verbose
 condition|)
@@ -528,7 +528,7 @@ name|server
 argument_list|,
 name|status
 operator|==
-name|YPPUSH_SUCC
+name|YPXFR_SUCC
 condition|?
 literal|"succeeded"
 else|:
@@ -541,7 +541,7 @@ literal|"status returned by ypxfr: %s"
 argument_list|,
 name|status
 operator|>
-name|YPPUSH_AGE
+name|YPXFR_AGE
 condition|?
 name|yppusherr_string
 argument_list|(
@@ -1376,6 +1376,7 @@ comment|/*  * Main driver function. Register the callback service, add the trans
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|yp_push
 parameter_list|(
@@ -1640,6 +1641,7 @@ comment|/*  * Called for each entry in the ypservers map from yp_get_map(), whic
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|yppush_foreach
 parameter_list|(

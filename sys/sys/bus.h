@@ -3574,11 +3574,11 @@ begin_define
 define|#
 directive|define
 name|BUS_PROBE_HOOVER
-value|(-500)
+value|(-1000000)
 end_define
 
 begin_comment
-comment|/* Generic dev for all devs on bus */
+comment|/* Driver for any dev on bus */
 end_comment
 
 begin_define

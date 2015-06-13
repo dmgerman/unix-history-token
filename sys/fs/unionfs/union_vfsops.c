@@ -1390,7 +1390,6 @@ argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check mnt_flag 	 */
 if|if
 condition|(
 operator|(
@@ -1423,21 +1422,8 @@ name|mnt_flag
 operator||=
 name|MNT_LOCAL
 expr_stmt|;
-comment|/* 	 * Check mnt_kern_flag 	 */
 if|if
 condition|(
-operator|(
-name|ump
-operator|->
-name|um_lowervp
-operator|->
-name|v_mount
-operator|->
-name|mnt_flag
-operator|&
-name|MNTK_SUSPENDABLE
-operator|)
-operator|||
 operator|(
 name|ump
 operator|->
@@ -1445,10 +1431,12 @@ name|um_uppervp
 operator|->
 name|v_mount
 operator|->
-name|mnt_flag
+name|mnt_kern_flag
 operator|&
 name|MNTK_SUSPENDABLE
 operator|)
+operator|!=
+literal|0
 condition|)
 name|mp
 operator|->

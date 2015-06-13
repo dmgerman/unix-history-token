@@ -6952,8 +6952,6 @@ name|vp
 decl_stmt|;
 name|int
 name|error
-decl_stmt|,
-name|found
 decl_stmt|;
 name|unsigned
 name|int
@@ -7133,10 +7131,6 @@ comment|/* 	 * Find appropriate handler. 	 */
 for|for
 control|(
 name|i
-operator|=
-literal|0
-operator|,
-name|found
 operator|=
 literal|0
 init|;

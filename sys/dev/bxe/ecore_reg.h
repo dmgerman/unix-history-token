@@ -8236,6 +8236,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HW_LOCK_RESOURCE_MDIO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|HW_LOCK_RESOURCE_GPIO
 value|1
 end_define

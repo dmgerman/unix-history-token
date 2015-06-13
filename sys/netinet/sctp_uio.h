@@ -3972,13 +3972,34 @@ decl_stmt|;
 name|uint16_t
 name|maxqlen
 decl_stmt|;
+name|void
+modifier|*
+name|socket
+decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__LP64__
+argument_list|)
 name|uint32_t
 name|extra_padding
 index|[
-literal|31
+literal|29
 index|]
 decl_stmt|;
 comment|/* future */
+else|#
+directive|else
+name|uint32_t
+name|extra_padding
+index|[
+literal|30
+index|]
+decl_stmt|;
+comment|/* future */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

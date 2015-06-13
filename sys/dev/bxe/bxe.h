@@ -5179,6 +5179,10 @@ define|#
 directive|define
 name|BXE_TX_SWITCHING
 value|0x00001000
+define|#
+directive|define
+name|BXE_NO_PULSE
+value|0x00002000
 name|unsigned
 name|long
 name|debug
@@ -5266,22 +5270,6 @@ name|sp_tq
 decl_stmt|;
 name|char
 name|sp_tq_name
-index|[
-literal|32
-index|]
-decl_stmt|;
-comment|/* set rx_mode asynchronous taskqueue */
-name|struct
-name|task
-name|rx_mode_tq_task
-decl_stmt|;
-name|struct
-name|taskqueue
-modifier|*
-name|rx_mode_tq
-decl_stmt|;
-name|char
-name|rx_mode_tq_name
 index|[
 literal|32
 index|]

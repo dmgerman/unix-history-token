@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdio.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdlib.h>
 end_include
 
@@ -76,6 +82,84 @@ include|#
 directive|include
 file|<atf-c.h>
 end_include
+
+begin_comment
+comment|/*  * A variant of ATF_REQUIRE that is suitable for use in child  * processes.  This only works if the parent process is tripped up by  * the early exit and fails some requirement itself.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHILD_REQUIRE
+parameter_list|(
+name|exp
+parameter_list|)
+value|do {						\ 		if (!(exp))						\ 			child_fail_require(__FILE__, __LINE__,		\ 			    #exp " not met");				\ 	} while (0)
+end_define
+
+begin_function
+specifier|static
+name|void
+name|__dead2
+name|child_fail_require
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|str
+parameter_list|)
+block|{
+name|char
+name|buf
+index|[
+literal|128
+index|]
+decl_stmt|;
+name|snprintf
+argument_list|(
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"%s:%d: %s\n"
+argument_list|,
+name|file
+argument_list|,
+name|line
+argument_list|,
+name|str
+argument_list|)
+expr_stmt|;
+name|write
+argument_list|(
+literal|2
+argument_list|,
+name|buf
+argument_list|,
+name|strlen
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|_exit
+argument_list|(
+literal|32
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
 comment|/*  * Verify that a parent debugger process "sees" the exit of a debugged  * process exactly once when attached via PT_TRACE_ME.  */
@@ -129,7 +213,7 @@ literal|0
 condition|)
 block|{
 comment|/* Child process. */
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|ptrace
 argument_list|(
@@ -366,7 +450,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Wait for the parent to attach. */
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|read
 argument_list|(
@@ -642,7 +726,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Wait for parent to be ready. */
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|read
 argument_list|(
@@ -719,7 +803,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|ptrace
 argument_list|(
@@ -748,14 +832,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|wpid
 operator|==
 name|child
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|WIFSTOPPED
 argument_list|(
@@ -763,7 +847,7 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|WSTOPSIG
 argument_list|(
@@ -773,7 +857,7 @@ operator|==
 name|SIGSTOP
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|ptrace
 argument_list|(
@@ -794,7 +878,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Signal parent that debugger is attached. */
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|write
 argument_list|(
@@ -819,7 +903,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Wait for parent's failed wait. */
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|read
 argument_list|(
@@ -852,14 +936,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|wpid
 operator|==
 name|child
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|WIFEXITED
 argument_list|(
@@ -867,7 +951,7 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|WEXITSTATUS
 argument_list|(
@@ -1264,7 +1348,7 @@ index|]
 argument_list|)
 expr_stmt|;
 comment|/* Wait for parent to be ready. */
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|read
 argument_list|(
@@ -1334,7 +1418,7 @@ condition|)
 block|{
 comment|/* Debugger parent. */
 comment|/* 		 * Fork again and drop the debugger parent so that the 		 * debugger is not a child of the main parent. 		 */
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 operator|(
 name|fpid
@@ -1367,7 +1451,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|ptrace
 argument_list|(
@@ -1396,14 +1480,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|wpid
 operator|==
 name|child
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|WIFSTOPPED
 argument_list|(
@@ -1411,7 +1495,7 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|WSTOPSIG
 argument_list|(
@@ -1421,7 +1505,7 @@ operator|==
 name|SIGSTOP
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|ptrace
 argument_list|(
@@ -1442,7 +1526,7 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Signal parent that debugger is attached. */
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|write
 argument_list|(
@@ -1467,7 +1551,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Wait for parent's failed wait. */
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|read
 argument_list|(
@@ -1485,7 +1569,10 @@ name|c
 argument_list|)
 argument_list|)
 operator|==
-literal|0
+sizeof|sizeof
+argument_list|(
+name|c
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|wpid
@@ -1500,14 +1587,14 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|wpid
 operator|==
 name|child
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|WIFEXITED
 argument_list|(
@@ -1515,7 +1602,7 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|ATF_REQUIRE
+name|CHILD_REQUIRE
 argument_list|(
 name|WEXITSTATUS
 argument_list|(
@@ -1531,6 +1618,14 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+name|close
+argument_list|(
+name|dpipe
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
 comment|/* Parent process. */
 comment|/* Wait for the debugger parent process to exit. */
 name|wpid
@@ -1787,12 +1882,28 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* Signal the debugger to wait for the child. */
-name|close
+name|ATF_REQUIRE
+argument_list|(
+name|write
 argument_list|(
 name|dpipe
 index|[
 literal|0
 index|]
+argument_list|,
+operator|&
+name|c
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|c
+argument_list|)
+argument_list|)
+operator|==
+sizeof|sizeof
+argument_list|(
+name|c
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Wait for the debugger. */
@@ -1802,7 +1913,7 @@ name|read
 argument_list|(
 name|dpipe
 index|[
-literal|1
+literal|0
 index|]
 argument_list|,
 operator|&
@@ -1815,6 +1926,14 @@ argument_list|)
 argument_list|)
 operator|==
 literal|0
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|dpipe
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 comment|/* The child process should now be ready. */

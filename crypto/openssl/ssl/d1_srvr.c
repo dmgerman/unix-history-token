@@ -539,6 +539,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -564,6 +570,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -588,6 +600,12 @@ name|ret
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 goto|goto
 name|end
@@ -657,6 +675,12 @@ name|ret
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 goto|goto
 name|end
@@ -1471,13 +1495,7 @@ operator|||
 operator|(
 name|alg_k
 operator|&
-operator|(
 name|SSL_kEDH
-operator||
-name|SSL_kDHr
-operator||
-name|SSL_kDHd
-operator|)
 operator|)
 operator|||
 operator|(
@@ -2294,25 +2312,6 @@ case|:
 case|case
 name|SSL3_ST_SR_CERT_VRFY_B
 case|:
-comment|/*              * This *should* be the first time we enable CCS, but be              * extra careful about surrounding code changes. We need              * to set this here because we don't know if we're              * expecting a CertificateVerify or not.              */
-if|if
-condition|(
-operator|!
-name|s
-operator|->
-name|s3
-operator|->
-name|change_cipher_spec
-condition|)
-name|s
-operator|->
-name|d1
-operator|->
-name|change_cipher_spec_ok
-operator|=
-literal|1
-expr_stmt|;
-comment|/* we should decide if we expected this one */
 name|ret
 operator|=
 name|ssl3_get_cert_verify
@@ -2374,7 +2373,7 @@ case|:
 case|case
 name|SSL3_ST_SR_FINISHED_B
 case|:
-comment|/*              * Enable CCS for resumed handshakes.              * In a full handshake, we end up here through              * SSL3_ST_SR_CERT_VRFY_B, so change_cipher_spec_ok was              * already set. Receiving a CCS clears the flag, so make              * sure not to re-enable it to ban duplicates.              * s->s3->change_cipher_spec is set when a CCS is              * processed in d1_pkt.c, and remains set until              * the client's Finished message is read.              */
+comment|/*              * Enable CCS. Receiving a CCS clears the flag, so make              * sure not to re-enable it to ban duplicates. This *should* be the              * first time we have received one - but we check anyway to be              * cautious.              * s->s3->change_cipher_spec is set when a CCS is              * processed in d1_pkt.c, and remains set until              * the client's Finished message is read.              */
 if|if
 condition|(
 operator|!
@@ -2576,6 +2575,12 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
+expr_stmt|;
 goto|goto
 name|end
 goto|;
@@ -2662,6 +2667,12 @@ name|ret
 operator|=
 operator|-
 literal|1
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 goto|goto
 name|end
@@ -2944,6 +2955,9 @@ goto|goto
 name|end
 goto|;
 comment|/* break; */
+case|case
+name|SSL_ST_ERR
+case|:
 default|default:
 name|SSLerr
 argument_list|(
@@ -3347,6 +3361,12 @@ name|SSL_F_DTLS1_SEND_HELLO_VERIFY_REQUEST
 argument_list|,
 name|ERR_R_INTERNAL_ERROR
 argument_list|)
+expr_stmt|;
+name|s
+operator|->
+name|state
+operator|=
+name|SSL_ST_ERR
 expr_stmt|;
 return|return
 literal|0

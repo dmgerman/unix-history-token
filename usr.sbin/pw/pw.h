@@ -166,111 +166,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_struct
-struct|struct
-name|userconf
-block|{
-name|int
-name|default_password
-decl_stmt|;
-comment|/* Default password for new users? */
-name|int
-name|reuse_uids
-decl_stmt|;
-comment|/* Reuse uids? */
-name|int
-name|reuse_gids
-decl_stmt|;
-comment|/* Reuse gids? */
-name|char
-modifier|*
-name|nispasswd
-decl_stmt|;
-comment|/* Path to NIS version of the passwd file */
-name|char
-modifier|*
-name|dotdir
-decl_stmt|;
-comment|/* Where to obtain skeleton files */
-name|char
-modifier|*
-name|newmail
-decl_stmt|;
-comment|/* Mail to send to new accounts */
-name|char
-modifier|*
-name|logfile
-decl_stmt|;
-comment|/* Where to log changes */
-name|char
-modifier|*
-name|home
-decl_stmt|;
-comment|/* Where to create home directory */
-name|mode_t
-name|homemode
-decl_stmt|;
-comment|/* Home directory permissions */
-name|char
-modifier|*
-name|shelldir
-decl_stmt|;
-comment|/* Where shells are located */
-name|char
-modifier|*
-modifier|*
-name|shells
-decl_stmt|;
-comment|/* List of shells */
-name|char
-modifier|*
-name|shell_default
-decl_stmt|;
-comment|/* Default shell */
-name|char
-modifier|*
-name|default_group
-decl_stmt|;
-comment|/* Default group number */
-name|char
-modifier|*
-modifier|*
-name|groups
-decl_stmt|;
-comment|/* Default (additional) groups */
-name|char
-modifier|*
-name|default_class
-decl_stmt|;
-comment|/* Default user class */
-name|uid_t
-name|min_uid
-decl_stmt|,
-name|max_uid
-decl_stmt|;
-comment|/* Allowed range of uids */
-name|gid_t
-name|min_gid
-decl_stmt|,
-name|max_gid
-decl_stmt|;
-comment|/* Allowed range of gids */
-name|int
-name|expire_days
-decl_stmt|;
-comment|/* Days to expiry */
-name|int
-name|password_days
-decl_stmt|;
-comment|/* Days to password expiry */
-name|int
-name|numgroups
-decl_stmt|;
-comment|/* (internal) size of default_group array */
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -367,13 +262,15 @@ begin_function_decl
 name|int
 name|pw_user
 parameter_list|(
-name|struct
-name|userconf
-modifier|*
-name|cnf
-parameter_list|,
 name|int
 name|mode
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|long
+name|id
 parameter_list|,
 name|struct
 name|cargs
@@ -387,13 +284,15 @@ begin_function_decl
 name|int
 name|pw_group
 parameter_list|(
-name|struct
-name|userconf
-modifier|*
-name|cnf
-parameter_list|,
 name|int
 name|mode
+parameter_list|,
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|long
+name|id
 parameter_list|,
 name|struct
 name|cargs
@@ -408,7 +307,7 @@ name|char
 modifier|*
 name|pw_checkname
 parameter_list|(
-name|u_char
+name|char
 modifier|*
 name|name
 parameter_list|,

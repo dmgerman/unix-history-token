@@ -36262,43 +36262,6 @@ block|}
 block|}
 end_function
 
-begin_function
-name|void
-name|key_sa_stir_iv
-parameter_list|(
-name|struct
-name|secasvar
-modifier|*
-name|sav
-parameter_list|)
-block|{
-name|IPSEC_ASSERT
-argument_list|(
-name|sav
-operator|->
-name|iv
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"null IV"
-operator|)
-argument_list|)
-expr_stmt|;
-name|key_randomfill
-argument_list|(
-name|sav
-operator|->
-name|iv
-argument_list|,
-name|sav
-operator|->
-name|ivlen
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Take one of the kernel's security keys and convert it into a PF_KEY  * structure within an mbuf, suitable for sending up to a waiting  * application in user land.  *   * IN:   *    src: A pointer to a kernel security key.  *    exttype: Which type of key this is. Refer to the PF_KEY data structures.  * OUT:  *    a valid mbuf or NULL indicating an error  *  */
 end_comment

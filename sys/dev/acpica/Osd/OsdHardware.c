@@ -188,6 +188,17 @@ name|UINT32
 name|Width
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__aarch64__
+comment|/* ARM64TODO: Add pci support */
+return|return
+operator|(
+name|AE_SUPPORT
+operator|)
+return|;
+else|#
+directive|else
 if|if
 condition|(
 name|Width
@@ -243,6 +254,8 @@ operator|(
 name|AE_OK
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -264,6 +277,17 @@ name|UINT32
 name|Width
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__aarch64__
+comment|/* ARM64TODO: Add pci support */
+return|return
+operator|(
+name|AE_SUPPORT
+operator|)
+return|;
+else|#
+directive|else
 if|if
 condition|(
 name|Width
@@ -314,6 +338,8 @@ operator|(
 name|AE_OK
 operator|)
 return|;
+endif|#
+directive|endif
 block|}
 end_function
 

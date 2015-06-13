@@ -36,6 +36,13 @@ name|PROTO_RES_PCICFG
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|PROTO_RES_BUSDMA
+value|11
+end_define
+
 begin_struct
 struct|struct
 name|proto_res
@@ -46,11 +53,20 @@ decl_stmt|;
 name|int
 name|r_rid
 decl_stmt|;
+union|union
+block|{
 name|struct
 name|resource
 modifier|*
-name|r_res
+name|res
 decl_stmt|;
+name|void
+modifier|*
+name|busdma
+decl_stmt|;
+block|}
+name|r_d
+union|;
 name|u_long
 name|r_size
 decl_stmt|;

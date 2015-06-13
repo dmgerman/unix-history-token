@@ -3461,6 +3461,13 @@ name|BIO_printf
 argument_list|(
 name|bio_err
 argument_list|,
+literal|"-no_alt_chains only ever use the first certificate chain found\n"
+argument_list|)
+expr_stmt|;
+name|BIO_printf
+argument_list|(
+name|bio_err
+argument_list|,
 literal|"-crl_check     check revocation status of signer's certificate using CRLs\n"
 argument_list|)
 expr_stmt|;

@@ -11605,7 +11605,7 @@ name|paddrp
 operator|->
 name|spp_flags
 operator||=
-name|SPP_PMTUD_ENABLE
+name|SPP_PMTUD_DISABLE
 expr_stmt|;
 block|}
 else|else
@@ -11614,7 +11614,7 @@ name|paddrp
 operator|->
 name|spp_flags
 operator||=
-name|SPP_PMTUD_DISABLE
+name|SPP_PMTUD_ENABLE
 expr_stmt|;
 block|}
 if|if

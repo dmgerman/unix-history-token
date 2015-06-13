@@ -595,18 +595,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|extern
-name|void
-name|key_sa_stir_iv
-parameter_list|(
-name|struct
-name|secasvar
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_ifdef
 ifdef|#
 directive|ifdef

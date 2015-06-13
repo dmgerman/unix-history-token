@@ -1268,15 +1268,11 @@ name|td_proc
 operator|=
 name|p
 expr_stmt|;
-name|newtd
-operator|->
-name|td_ucred
-operator|=
-name|crhold
+name|thread_cow_get
 argument_list|(
+name|newtd
+argument_list|,
 name|td
-operator|->
-name|td_ucred
 argument_list|)
 expr_stmt|;
 comment|/* create the emuldata */

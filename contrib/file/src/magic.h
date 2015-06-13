@@ -25,7 +25,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_NONE
-value|0x000000
+value|0x0000000
 end_define
 
 begin_comment
@@ -36,7 +36,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_DEBUG
-value|0x000001
+value|0x0000001
 end_define
 
 begin_comment
@@ -47,7 +47,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_SYMLINK
-value|0x000002
+value|0x0000002
 end_define
 
 begin_comment
@@ -58,7 +58,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_COMPRESS
-value|0x000004
+value|0x0000004
 end_define
 
 begin_comment
@@ -69,7 +69,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_DEVICES
-value|0x000008
+value|0x0000008
 end_define
 
 begin_comment
@@ -80,7 +80,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_MIME_TYPE
-value|0x000010
+value|0x0000010
 end_define
 
 begin_comment
@@ -91,7 +91,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_CONTINUE
-value|0x000020
+value|0x0000020
 end_define
 
 begin_comment
@@ -102,7 +102,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_CHECK
-value|0x000040
+value|0x0000040
 end_define
 
 begin_comment
@@ -113,7 +113,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_PRESERVE_ATIME
-value|0x000080
+value|0x0000080
 end_define
 
 begin_comment
@@ -124,18 +124,18 @@ begin_define
 define|#
 directive|define
 name|MAGIC_RAW
-value|0x000100
+value|0x0000100
 end_define
 
 begin_comment
-comment|/* Don't translate unprintable chars */
+comment|/* Don't convert unprintable chars */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MAGIC_ERROR
-value|0x000200
+value|0x0000200
 end_define
 
 begin_comment
@@ -146,7 +146,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_MIME_ENCODING
-value|0x000400
+value|0x0000400
 end_define
 
 begin_comment
@@ -164,18 +164,47 @@ begin_define
 define|#
 directive|define
 name|MAGIC_APPLE
-value|0x000800
+value|0x0000800
 end_define
 
 begin_comment
-comment|/* Return the Apple creator and type */
+comment|/* Return the Apple creator/type */
 end_comment
 
 begin_define
 define|#
 directive|define
+name|MAGIC_EXTENSION
+value|0x1000000
+end_define
+
+begin_comment
+comment|/* Return a /-separated list of 					   * extensions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_COMPRESS_TRANSP
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* Check inside compressed files 					   * but not report compression */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MAGIC_NODESC
+value|(MAGIC_EXTENSION|MAGIC_MIME|MAGIC_APPLE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MAGIC_NO_CHECK_COMPRESS
-value|0x001000
+value|0x0001000
 end_define
 
 begin_comment
@@ -186,7 +215,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_NO_CHECK_TAR
-value|0x002000
+value|0x0002000
 end_define
 
 begin_comment
@@ -197,7 +226,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_NO_CHECK_SOFT
-value|0x004000
+value|0x0004000
 end_define
 
 begin_comment
@@ -208,7 +237,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_NO_CHECK_APPTYPE
-value|0x008000
+value|0x0008000
 end_define
 
 begin_comment
@@ -219,7 +248,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_NO_CHECK_ELF
-value|0x010000
+value|0x0010000
 end_define
 
 begin_comment
@@ -230,7 +259,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_NO_CHECK_TEXT
-value|0x020000
+value|0x0020000
 end_define
 
 begin_comment
@@ -241,7 +270,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_NO_CHECK_CDF
-value|0x040000
+value|0x0040000
 end_define
 
 begin_comment
@@ -252,7 +281,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_NO_CHECK_TOKENS
-value|0x100000
+value|0x0100000
 end_define
 
 begin_comment
@@ -263,7 +292,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_NO_CHECK_ENCODING
-value|0x200000
+value|0x0200000
 end_define
 
 begin_comment
@@ -324,7 +353,7 @@ begin_define
 define|#
 directive|define
 name|MAGIC_VERSION
-value|521
+value|522
 end_define
 
 begin_comment

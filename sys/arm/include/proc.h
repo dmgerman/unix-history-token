@@ -94,35 +94,12 @@ block|}
 struct|;
 end_struct
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ARM_EABI__
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|KINFO_PROC_SIZE
 value|816
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|KINFO_PROC_SIZE
-value|792
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#

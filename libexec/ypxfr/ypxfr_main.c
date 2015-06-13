@@ -1385,7 +1385,7 @@ name|ypxfr_mapname
 argument_list|,
 name|yp_errno
 operator|==
-name|YPXFR_SUCC
+name|YP_TRUE
 condition|?
 literal|"map has order 0"
 else|:
@@ -2264,7 +2264,7 @@ name|ypxfr_mapname
 argument_list|,
 name|yp_errno
 operator|==
-name|YPXFR_SUCC
+name|YP_TRUE
 condition|?
 literal|"map has order 0"
 else|:

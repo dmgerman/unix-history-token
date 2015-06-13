@@ -163,6 +163,9 @@ comment|/* USB Phone */
 name|USB_TEMP_SERIALNET
 block|,
 comment|/* USB CDC Ethernet and Modem */
+name|USB_TEMP_MIDI
+block|,
+comment|/* USB MIDI */
 name|USB_TEMP_MAX
 block|, }
 enum|;

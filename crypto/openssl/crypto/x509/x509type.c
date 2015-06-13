@@ -236,22 +236,6 @@ default|default:
 break|break;
 block|}
 block|}
-comment|/* /8 because it's 1024 bits we look for, not bytes */
-if|if
-condition|(
-name|EVP_PKEY_size
-argument_list|(
-name|pk
-argument_list|)
-operator|<=
-literal|1024
-operator|/
-literal|8
-condition|)
-name|ret
-operator||=
-name|EVP_PKT_EXP
-expr_stmt|;
 if|if
 condition|(
 name|pkey

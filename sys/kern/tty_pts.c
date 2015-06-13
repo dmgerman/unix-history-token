@@ -3022,7 +3022,7 @@ literal|1
 argument_list|,
 name|lim_cur
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|RLIMIT_NPTS
 argument_list|)
@@ -3344,7 +3344,7 @@ literal|1
 argument_list|,
 name|lim_cur
 argument_list|(
-name|p
+name|td
 argument_list|,
 name|RLIMIT_NPTS
 argument_list|)

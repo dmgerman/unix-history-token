@@ -2348,6 +2348,9 @@ condition|;
 name|i
 operator|--
 control|)
+block|{
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 name|buf
@@ -2357,7 +2360,13 @@ operator|++
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+goto|goto
+name|problems
+goto|;
+block|}
 name|buf
 index|[
 name|l

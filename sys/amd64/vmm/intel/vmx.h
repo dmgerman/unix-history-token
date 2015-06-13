@@ -479,6 +479,24 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|vmx_set_tsc_offset
+parameter_list|(
+name|struct
+name|vmx
+modifier|*
+name|vmx
+parameter_list|,
+name|int
+name|vcpu
+parameter_list|,
+name|uint64_t
+name|offset
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_decl_stmt
 specifier|extern
 name|char

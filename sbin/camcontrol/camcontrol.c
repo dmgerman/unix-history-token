@@ -345,6 +345,10 @@ block|,
 name|CAM_CMD_AAM
 init|=
 literal|0x00000022
+block|,
+name|CAM_CMD_ATTRIB
+init|=
+literal|0x00000023
 block|}
 name|cam_cmdmask
 typedef|;
@@ -1104,6 +1108,16 @@ block|,
 name|CAM_ARG_NONE
 block|,
 literal|"ai:I:k:K:o:ps:ST:U"
+block|}
+block|,
+block|{
+literal|"attrib"
+block|,
+name|CAM_CMD_ATTRIB
+block|,
+name|CAM_ARG_NONE
+block|,
+literal|"a:ce:F:p:r:s:T:w:V:"
 block|}
 block|,
 endif|#
@@ -12926,8 +12940,6 @@ name|action
 decl_stmt|,
 name|actions
 decl_stmt|,
-name|setpwd
-decl_stmt|,
 name|persist
 decl_stmt|;
 name|int
@@ -12943,10 +12955,6 @@ decl_stmt|,
 name|maxsize
 decl_stmt|;
 name|actions
-operator|=
-literal|0
-expr_stmt|;
-name|setpwd
 operator|=
 literal|0
 expr_stmt|;
@@ -37792,6 +37800,9 @@ literal|"                              [-q] [-s max_sectors] [-U pwd] [-y]\n"
 literal|"        camcontrol persist    [dev_id][generic args]<-i action|-o action>\n"
 literal|"                              [-a][-I tid][-k key][-K sa_key][-p][-R rtp]\n"
 literal|"                              [-s scope][-S][-T type][-U]\n"
+literal|"        camcontrol attrib     [dev_id][generic args]<-r action|-w attr>\n"
+literal|"                              [-a attr_num][-c][-e elem][-F form1,form1]\n"
+literal|"                              [-p part][-s start][-T type][-V vol]\n"
 endif|#
 directive|endif
 comment|/* MINIMALISTIC */
@@ -37844,6 +37855,7 @@ literal|"sleep       send the ATA SLEEP command to the named device\n"
 literal|"fwdownload  program firmware of the named device with the given image\n"
 literal|"security    report or send ATA security commands to the named device\n"
 literal|"persist     send the SCSI PERSISTENT RESERVE IN or OUT commands\n"
+literal|"attrib      send the SCSI READ or WRITE ATTRIBUTE commands\n"
 literal|"help        this message\n"
 literal|"Device Identifiers:\n"
 literal|"bus:target        specify the bus and target, lun defaults to 0\n"
@@ -37994,6 +38006,20 @@ literal|"-S                specify Transport ID for register, requires -I\n"
 literal|"-T res_type       specify the reservation type: read_shared, wr_ex, rd_ex,\n"
 literal|"                  ex_ac, wr_ex_ro, ex_ac_ro, wr_ex_ar, ex_ac_ar\n"
 literal|"-U                unregister the current initiator for register_move\n"
+literal|"attrib arguments:\n"
+literal|"-r action         specify attr_values, attr_list, lv_list, part_list, or\n"
+literal|"                  supp_attr\n"
+literal|"-w attr           specify an attribute to write, one -w argument per attr\n"
+literal|"-a attr_num       only display this attribute number\n"
+literal|"-c                get cached attributes\n"
+literal|"-e elem_addr      request attributes for the given element in a changer\n"
+literal|"-F form1,form2    output format, comma separated list: text_esc, text_raw,\n"
+literal|"                  nonascii_esc, nonascii_trim, nonascii_raw, field_all,\n"
+literal|"                  field_none, field_desc, field_num, field_size, field_rw\n"
+literal|"-p partition      request attributes for the given partition\n"
+literal|"-s start_attr     request attributes starting at the given number\n"
+literal|"-T elem_type      specify the element type (used with -e)\n"
+literal|"-V logical_vol    specify the logical volume ID\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -39335,6 +39361,35 @@ case|:
 name|error
 operator|=
 name|scsipersist
+argument_list|(
+name|cam_dev
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|combinedopt
+argument_list|,
+name|retry_count
+argument_list|,
+name|timeout
+argument_list|,
+name|arglist
+operator|&
+name|CAM_ARG_VERBOSE
+argument_list|,
+name|arglist
+operator|&
+name|CAM_ARG_ERR_RECOVER
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CAM_CMD_ATTRIB
+case|:
+name|error
+operator|=
+name|scsiattrib
 argument_list|(
 name|cam_dev
 argument_list|,

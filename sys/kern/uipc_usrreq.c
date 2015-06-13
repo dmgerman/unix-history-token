@@ -8186,11 +8186,7 @@ condition|)
 block|{
 name|FILEDESC_XUNLOCK
 argument_list|(
-name|td
-operator|->
-name|td_proc
-operator|->
-name|p_fd
+name|fdesc
 argument_list|)
 expr_stmt|;
 name|error

@@ -833,9 +833,13 @@ literal|'C'
 block|,
 literal|"Lock"
 block|,
-literal|"Unknown event (type 8)"
+literal|"R/W writer spin on writer"
 block|,
-literal|"units"
+literal|"nsec"
+block|,
+literal|"lockstat:::rw-spin"
+block|,
+literal|"arg2 == 0&& arg3 == 1"
 block|}
 block|,
 block|{
@@ -843,9 +847,13 @@ literal|'C'
 block|,
 literal|"Lock"
 block|,
-literal|"Unknown event (type 9)"
+literal|"R/W writer spin on readers"
 block|,
-literal|"units"
+literal|"nsec"
+block|,
+literal|"lockstat:::rw-spin"
+block|,
+literal|"arg2 == 0&& arg3 == 0&& arg4"
 block|}
 block|,
 block|{
@@ -853,9 +861,13 @@ literal|'C'
 block|,
 literal|"Lock"
 block|,
-literal|"Unknown event (type 10)"
+literal|"R/W reader spin on writer"
 block|,
-literal|"units"
+literal|"nsec"
+block|,
+literal|"lockstat:::rw-spin"
+block|,
+literal|"arg2 != 0&& arg3 == 1"
 block|}
 block|,
 block|{
@@ -863,9 +875,13 @@ literal|'C'
 block|,
 literal|"Lock"
 block|,
-literal|"Unknown event (type 11)"
+literal|"R/W reader spin on write wanted"
 block|,
-literal|"units"
+literal|"nsec"
+block|,
+literal|"lockstat:::rw-spin"
+block|,
+literal|"arg2 != 0&& arg3 == 0&& arg4"
 block|}
 block|,
 block|{
@@ -873,9 +889,13 @@ literal|'C'
 block|,
 literal|"Lock"
 block|,
-literal|"Unknown event (type 12)"
+literal|"SX exclusive block"
 block|,
-literal|"units"
+literal|"nsec"
+block|,
+literal|"lockstat:::sx-block"
+block|,
+literal|"arg2 == 0"
 block|}
 block|,
 block|{
@@ -883,9 +903,13 @@ literal|'C'
 block|,
 literal|"Lock"
 block|,
-literal|"Unknown event (type 13)"
+literal|"SX shared block"
 block|,
-literal|"units"
+literal|"nsec"
+block|,
+literal|"lockstat:::sx-block"
+block|,
+literal|"arg2 != 0"
 block|}
 block|,
 block|{
@@ -893,9 +917,13 @@ literal|'C'
 block|,
 literal|"Lock"
 block|,
-literal|"Unknown event (type 14)"
+literal|"SX exclusive spin"
 block|,
-literal|"units"
+literal|"nsec"
+block|,
+literal|"lockstat:::sx-spin"
+block|,
+literal|"arg2 == 0"
 block|}
 block|,
 block|{
@@ -903,9 +931,13 @@ literal|'C'
 block|,
 literal|"Lock"
 block|,
-literal|"Unknown event (type 15)"
+literal|"SX shared spin"
 block|,
-literal|"units"
+literal|"nsec"
+block|,
+literal|"lockstat:::sx-spin"
+block|,
+literal|"arg2 != 0"
 block|}
 block|,
 block|{
@@ -1109,11 +1141,11 @@ literal|"R/W writer hold"
 block|,
 literal|"nsec"
 block|,
-literal|"lockstat:::rw-release"
+literal|"lockstat::rw_wunlock:rw-release"
 block|,
-literal|"arg1 == 0"
+name|NULL
 block|,
-literal|"lockstat:::rw-acquire"
+literal|"lockstat::rw_wlock:rw-acquire"
 block|}
 block|,
 block|{
@@ -1125,11 +1157,11 @@ literal|"R/W reader hold"
 block|,
 literal|"nsec"
 block|,
-literal|"lockstat:::rw-release"
+literal|"lockstat::rw_runlock:rw-release"
 block|,
-literal|"arg1 != 0"
+name|NULL
 block|,
-literal|"lockstat:::rw-acquire"
+literal|"lockstat::rw_rlock:rw-acquire"
 block|}
 block|,
 block|{
@@ -1137,9 +1169,15 @@ literal|'H'
 block|,
 literal|"Lock"
 block|,
-literal|"Unknown event (type 36)"
+literal|"SX shared hold"
 block|,
-literal|"units"
+literal|"nsec"
+block|,
+literal|"lockstat::sx_sunlock:sx-release"
+block|,
+name|NULL
+block|,
+literal|"lockstat::sx_slock:sx-acquire"
 block|}
 block|,
 block|{
@@ -1147,9 +1185,15 @@ literal|'H'
 block|,
 literal|"Lock"
 block|,
-literal|"Unknown event (type 37)"
+literal|"SX exclusive hold"
 block|,
-literal|"units"
+literal|"nsec"
+block|,
+literal|"lockstat::sx_xunlock:sx-release"
+block|,
+name|NULL
+block|,
+literal|"lockstat::sx_xlock:sx-acquire"
 block|}
 block|,
 block|{

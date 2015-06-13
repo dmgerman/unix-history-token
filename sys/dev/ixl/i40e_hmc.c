@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2013-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2013-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -425,7 +425,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * i40e_add_pd_table_entry - Adds page descriptor to the specified table  * @hw: pointer to our HW structure  * @hmc_info: pointer to the HMC configuration information structure  * @pd_index: which page descriptor index to manipulate  *  * This function:  *	1. Initializes the pd entry  *	2. Adds pd_entry in the pd_table  *	3. Mark the entry valid in i40e_hmc_pd_entry structure  *	4. Initializes the pd_entry's ref count to 1  * assumptions:  *	1. The memory for pd should be pinned down, physically contiguous and  *	   aligned on 4K boundary and zeroed memory.  *	2. It should be 4K in size.  **/
+comment|/**  * i40e_add_pd_table_entry - Adds page descriptor to the specified table  * @hw: pointer to our HW structure  * @hmc_info: pointer to the HMC configuration information structure  * @pd_index: which page descriptor index to manipulate  * @rsrc_pg: if not NULL, use preallocated page instead of allocating new one.  *  * This function:  *	1. Initializes the pd entry  *	2. Adds pd_entry in the pd_table  *	3. Mark the entry valid in i40e_hmc_pd_entry structure  *	4. Initializes the pd_entry's ref count to 1  * assumptions:  *	1. The memory for pd should be pinned down, physically contiguous and  *	   aligned on 4K boundary and zeroed memory.  *	2. It should be 4K in size.  **/
 end_comment
 
 begin_function
@@ -445,6 +445,11 @@ name|hmc_info
 parameter_list|,
 name|u32
 name|pd_index
+parameter_list|,
+name|struct
+name|i40e_dma_mem
+modifier|*
+name|rsrc_pg
 parameter_list|)
 block|{
 name|enum
@@ -465,6 +470,14 @@ name|pd_entry
 decl_stmt|;
 name|struct
 name|i40e_dma_mem
+name|mem
+decl_stmt|;
+name|struct
+name|i40e_dma_mem
+modifier|*
+name|page
+init|=
+operator|&
 name|mem
 decl_stmt|;
 name|u32
@@ -574,6 +587,24 @@ operator|->
 name|valid
 condition|)
 block|{
+if|if
+condition|(
+name|rsrc_pg
+condition|)
+block|{
+name|pd_entry
+operator|->
+name|rsrc_pg
+operator|=
+name|TRUE
+expr_stmt|;
+name|page
+operator|=
+name|rsrc_pg
+expr_stmt|;
+block|}
+else|else
+block|{
 comment|/* allocate a 4K backing page */
 name|ret_code
 operator|=
@@ -581,8 +612,7 @@ name|i40e_allocate_dma_mem
 argument_list|(
 name|hw
 argument_list|,
-operator|&
-name|mem
+name|page
 argument_list|,
 name|i40e_mem_bp
 argument_list|,
@@ -598,6 +628,13 @@ condition|)
 goto|goto
 name|exit
 goto|;
+name|pd_entry
+operator|->
+name|rsrc_pg
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 name|i40e_memcpy
 argument_list|(
 operator|&
@@ -607,8 +644,7 @@ name|bp
 operator|.
 name|addr
 argument_list|,
-operator|&
-name|mem
+name|page
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -638,8 +674,8 @@ expr_stmt|;
 comment|/* Set page address and valid bit */
 name|page_desc
 operator|=
-name|mem
-operator|.
+name|page
+operator|->
 name|pa
 operator||
 literal|0x1
@@ -932,6 +968,13 @@ name|idx
 argument_list|)
 expr_stmt|;
 comment|/* free memory here */
+if|if
+condition|(
+operator|!
+name|pd_entry
+operator|->
+name|rsrc_pg
+condition|)
 name|ret_code
 operator|=
 name|i40e_free_dma_mem
@@ -1107,12 +1150,14 @@ name|i40e_hmc_sd_entry
 modifier|*
 name|sd_entry
 decl_stmt|;
-name|enum
-name|i40e_status_code
-name|ret_code
-init|=
-name|I40E_SUCCESS
-decl_stmt|;
+if|if
+condition|(
+operator|!
+name|is_pf
+condition|)
+return|return
+name|I40E_NOT_SUPPORTED
+return|;
 comment|/* get the entry and decrease its ref counter */
 name|sd_entry
 operator|=
@@ -1126,11 +1171,6 @@ index|[
 name|idx
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|is_pf
-condition|)
-block|{
 name|I40E_CLEAR_PF_SD_ENTRY
 argument_list|(
 name|hw
@@ -1140,19 +1180,7 @@ argument_list|,
 name|I40E_SD_TYPE_DIRECT
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|ret_code
-operator|=
-name|I40E_NOT_SUPPORTED
-expr_stmt|;
-goto|goto
-name|exit
-goto|;
-block|}
-name|ret_code
-operator|=
+return|return
 name|i40e_free_dma_mem
 argument_list|(
 name|hw
@@ -1168,20 +1196,6 @@ operator|.
 name|addr
 operator|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|I40E_SUCCESS
-operator|!=
-name|ret_code
-condition|)
-goto|goto
-name|exit
-goto|;
-name|exit
-label|:
-return|return
-name|ret_code
 return|;
 block|}
 end_function
@@ -1295,17 +1309,19 @@ name|bool
 name|is_pf
 parameter_list|)
 block|{
-name|enum
-name|i40e_status_code
-name|ret_code
-init|=
-name|I40E_SUCCESS
-decl_stmt|;
 name|struct
 name|i40e_hmc_sd_entry
 modifier|*
 name|sd_entry
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|is_pf
+condition|)
+return|return
+name|I40E_NOT_SUPPORTED
+return|;
 name|sd_entry
 operator|=
 operator|&
@@ -1318,11 +1334,6 @@ index|[
 name|idx
 index|]
 expr_stmt|;
-if|if
-condition|(
-name|is_pf
-condition|)
-block|{
 name|I40E_CLEAR_PF_SD_ENTRY
 argument_list|(
 name|hw
@@ -1332,20 +1343,7 @@ argument_list|,
 name|I40E_SD_TYPE_PAGED
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-name|ret_code
-operator|=
-name|I40E_NOT_SUPPORTED
-expr_stmt|;
-goto|goto
-name|exit
-goto|;
-block|}
-comment|/* free memory here */
-name|ret_code
-operator|=
+return|return
 name|i40e_free_dma_mem
 argument_list|(
 name|hw
@@ -1361,20 +1359,6 @@ operator|.
 name|pd_page_addr
 operator|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|I40E_SUCCESS
-operator|!=
-name|ret_code
-condition|)
-goto|goto
-name|exit
-goto|;
-name|exit
-label|:
-return|return
-name|ret_code
 return|;
 block|}
 end_function

@@ -171,8 +171,8 @@ name|EVP_CIPHER_CTX_iv_length
 argument_list|(
 name|ctx
 argument_list|)
-condition|)
-name|RAND_pseudo_bytes
+operator|&&
+name|RAND_bytes
 argument_list|(
 name|iv
 argument_list|,
@@ -181,7 +181,12 @@ argument_list|(
 name|ctx
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|<=
+literal|0
+condition|)
+return|return
+literal|0
+return|;
 if|if
 condition|(
 operator|!

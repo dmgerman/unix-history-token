@@ -6773,7 +6773,7 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* 			 * get a limit 			 */
-name|lim_rlimit
+name|lim_rlimit_proc
 argument_list|(
 name|p
 argument_list|,

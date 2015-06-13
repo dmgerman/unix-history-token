@@ -3611,7 +3611,7 @@ literal|1
 expr_stmt|;
 name|err
 operator|=
-name|cv_wait_sig
+name|cv_timedwait_sig
 argument_list|(
 operator|&
 name|f
@@ -3621,6 +3621,11 @@ argument_list|,
 name|f
 operator|->
 name|priv_mtx
+argument_list|,
+name|USB_MS_TO_TICKS
+argument_list|(
+name|USB_DEFAULT_TIMEOUT
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

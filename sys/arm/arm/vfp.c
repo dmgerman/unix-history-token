@@ -615,7 +615,7 @@ name|cpu
 operator|=
 name|PCPU_GET
 argument_list|(
-name|cpu
+name|cpuid
 argument_list|)
 expr_stmt|;
 if|if

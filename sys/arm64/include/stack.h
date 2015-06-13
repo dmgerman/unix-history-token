@@ -26,6 +26,34 @@ define|\
 value|((va)>= VM_MIN_KERNEL_ADDRESS&& (va)<= VM_MAX_KERNEL_ADDRESS)
 end_define
 
+begin_struct
+struct|struct
+name|unwind_state
+block|{
+name|uint64_t
+name|fp
+decl_stmt|;
+name|uint64_t
+name|sp
+decl_stmt|;
+name|uint64_t
+name|pc
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function_decl
+name|int
+name|unwind_frame
+parameter_list|(
+name|struct
+name|unwind_state
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
