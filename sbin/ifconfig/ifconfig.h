@@ -274,6 +274,18 @@ parameter_list|)
 value|{ name, NEXTARG, { .c_func = func }, 1, NULL }
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEF_CLONE_CMD_ARG2
+parameter_list|(
+name|name
+parameter_list|,
+name|func
+parameter_list|)
+value|{ name, NEXTARG2, { .c_func2 = func }, 1, NULL }
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|ifaddrs
