@@ -2679,9 +2679,6 @@ specifier|static
 name|int
 name|printaddr
 parameter_list|(
-name|int
-name|af
-parameter_list|,
 name|struct
 name|sockaddr_storage
 modifier|*
@@ -2721,7 +2718,9 @@ literal|0
 decl_stmt|;
 switch|switch
 condition|(
-name|af
+name|ss
+operator|->
+name|ss_family
 condition|)
 block|{
 case|case
@@ -2897,7 +2896,9 @@ literal|'\0'
 condition|)
 name|inet_ntop
 argument_list|(
-name|af
+name|ss
+operator|->
+name|ss_family
 argument_list|,
 name|addr
 argument_list|,
@@ -3445,10 +3446,6 @@ name|pos
 operator|+=
 name|printaddr
 argument_list|(
-name|s
-operator|->
-name|family
-argument_list|,
 operator|&
 name|s
 operator|->
@@ -3491,10 +3488,6 @@ name|pos
 operator|+=
 name|printaddr
 argument_list|(
-name|s
-operator|->
-name|family
-argument_list|,
 operator|&
 name|s
 operator|->
@@ -3521,10 +3514,6 @@ name|pos
 operator|+=
 name|printaddr
 argument_list|(
-name|s
-operator|->
-name|family
-argument_list|,
 operator|&
 name|s
 operator|->
@@ -3646,10 +3635,6 @@ name|pos
 operator|+=
 name|printaddr
 argument_list|(
-name|s
-operator|->
-name|family
-argument_list|,
 operator|&
 name|s
 operator|->
