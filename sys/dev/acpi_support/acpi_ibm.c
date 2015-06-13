@@ -2289,7 +2289,7 @@ condition|(
 name|maker
 operator|==
 name|NULL
-operator|&&
+operator|||
 name|product
 operator|==
 name|NULL
