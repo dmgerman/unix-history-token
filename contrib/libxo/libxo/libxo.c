@@ -8923,7 +8923,15 @@ operator|*
 name|cp
 argument_list|)
 expr_stmt|;
-continue|continue;
+name|wc
+operator|=
+literal|L'
+expr|?'
+expr_stmt|;
+name|ilen
+operator|=
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
