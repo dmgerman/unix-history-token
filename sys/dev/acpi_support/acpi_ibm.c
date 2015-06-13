@@ -2287,11 +2287,11 @@ expr_stmt|;
 if|if
 condition|(
 name|maker
-operator|!=
+operator|==
 name|NULL
 operator|&&
 name|product
-operator|!=
+operator|==
 name|NULL
 condition|)
 goto|goto
