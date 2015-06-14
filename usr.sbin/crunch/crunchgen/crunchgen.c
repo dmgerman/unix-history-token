@@ -5761,7 +5761,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\t$(CC) -nostdlibs -dc -r -o %s.lo %s_stub.o $(%s_OBJPATHS)"
+literal|"\t$(CC) -nostdlib -dc -r -o %s.lo %s_stub.o $(%s_OBJPATHS)"
 argument_list|,
 name|p
 operator|->
