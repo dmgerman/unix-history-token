@@ -35088,11 +35088,6 @@ modifier|*
 name|pagedep
 decl_stmt|;
 name|struct
-name|allocdirect
-modifier|*
-name|adp
-decl_stmt|;
-name|struct
 name|worklist
 modifier|*
 name|wk
@@ -35272,13 +35267,6 @@ break|break;
 case|case
 name|D_ALLOCDIRECT
 case|:
-name|adp
-operator|=
-name|WK_ALLOCDIRECT
-argument_list|(
-name|wk
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|off
