@@ -4632,10 +4632,17 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 			 * Clean pages can be placed onto the cache queue. 			 * This effectively frees them. 			 */
-name|vm_page_cache
+comment|/* 			 * Clean pages can be freed. 			 */
+name|vm_page_free
 argument_list|(
 name|m
+argument_list|)
+expr_stmt|;
+name|PCPU_INC
+argument_list|(
+name|cnt
+operator|.
+name|v_dfree
 argument_list|)
 expr_stmt|;
 operator|--
