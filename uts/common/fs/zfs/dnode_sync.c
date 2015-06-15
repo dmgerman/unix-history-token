@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2014 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012, 2015 by Delphix. All rights reserved.  * Copyright (c) 2014 Spectra Logic Corporation, All rights reserved.  */
 end_comment
 
 begin_include
@@ -3941,6 +3941,14 @@ block|}
 name|dbuf_sync_list
 argument_list|(
 name|list
+argument_list|,
+name|dn
+operator|->
+name|dn_phys
+operator|->
+name|dn_nlevels
+operator|-
+literal|1
 argument_list|,
 name|tx
 argument_list|)
