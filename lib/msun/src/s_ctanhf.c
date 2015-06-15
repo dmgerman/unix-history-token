@@ -199,7 +199,7 @@ operator|>=
 literal|0x41300000
 condition|)
 block|{
-comment|/* x>= 11 */
+comment|/* |x|>= 11 */
 name|float
 name|exp_mx
 init|=
@@ -324,7 +324,6 @@ name|ctanhf
 argument_list|(
 name|CMPLXF
 argument_list|(
-operator|-
 name|cimagf
 argument_list|(
 name|z
@@ -346,7 +345,6 @@ argument_list|(
 name|z
 argument_list|)
 argument_list|,
-operator|-
 name|crealf
 argument_list|(
 name|z

@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2011 David Schultz  * All rights reserved.  *  * Re
 end_comment
 
 begin_comment
-comment|/*  * Hyperbolic tangent of a complex argument z = x + i y.  *  * The algorithm is from:  *  *   W. Kahan.  Branch Cuts for Complex Elementary Functions or Much  *   Ado About Nothing's Sign Bit.  In The State of the Art in  *   Numerical Analysis, pp. 165 ff.  Iserles and Powell, eds., 1987.  *  * Method:  *  *   Let t    = tan(x)  *       beta = 1/cos^2(y)  *       s    = sinh(x)  *       rho  = cosh(x)  *  *   We have:  *  *   tanh(z) = sinh(z) / cosh(z)  *  *             sinh(x) cos(y) + i cosh(x) sin(y)  *           = ---------------------------------  *             cosh(x) cos(y) + i sinh(x) sin(y)  *  *             cosh(x) sinh(x) / cos^2(y) + i tan(y)  *           = -------------------------------------  *                    1 + sinh^2(x) / cos^2(y)  *  *             beta rho s + i t  *           = ----------------  *               1 + beta s^2  *  * Modifications:  *  *   I omitted the original algorithm's handling of overflow in tan(x) after  *   verifying with nearpi.c that this can't happen in IEEE single or double  *   precision.  I also handle large x differently.  */
+comment|/*  * Hyperbolic tangent of a complex argument z = x + I y.  *  * The algorithm is from:  *  *   W. Kahan.  Branch Cuts for Complex Elementary Functions or Much  *   Ado About Nothing's Sign Bit.  In The State of the Art in  *   Numerical Analysis, pp. 165 ff.  Iserles and Powell, eds., 1987.  *  * Method:  *  *   Let t    = tan(x)  *       beta = 1/cos^2(y)  *       s    = sinh(x)  *       rho  = cosh(x)  *  *   We have:  *  *   tanh(z) = sinh(z) / cosh(z)  *  *             sinh(x) cos(y) + I cosh(x) sin(y)  *           = ---------------------------------  *             cosh(x) cos(y) + I sinh(x) sin(y)  *  *             cosh(x) sinh(x) / cos^2(y) + I tan(y)  *           = -------------------------------------  *                    1 + sinh^2(x) / cos^2(y)  *  *             beta rho s + I t  *           = ----------------  *               1 + beta s^2  *  * Modifications:  *  *   I omitted the original algorithm's handling of overflow in tan(x) after  *   verifying with nearpi.c that this can't happen in IEEE single or double  *   precision.  I also handle large x differently.  */
 end_comment
 
 begin_include
@@ -101,7 +101,7 @@ name|hx
 operator|&
 literal|0x7fffffff
 expr_stmt|;
-comment|/* 	 * ctanh(NaN + i 0) = NaN + i 0 	 * 	 * ctanh(NaN + i y) = NaN + i NaN		for y != 0 	 * 	 * The imaginary part has the sign of x*sin(2*y), but there's no 	 * special effort to get this right. 	 * 	 * ctanh(+-Inf +- i Inf) = +-1 +- 0 	 * 	 * ctanh(+-Inf + i y) = +-1 + 0 sin(2y)		for y finite 	 * 	 * The imaginary part of the sign is unspecified.  This special 	 * case is only needed to avoid a spurious invalid exception when 	 * y is infinite. 	 */
+comment|/* 	 * ctanh(NaN +- I 0) = d(NaN) +- I 0 	 * 	 * ctanh(NaN + I y) = d(NaN,y) + I d(NaN,y)	for y != 0 	 * 	 * The imaginary part has the sign of x*sin(2*y), but there's no 	 * special effort to get this right. 	 * 	 * ctanh(+-Inf +- I Inf) = +-1 +- I 0 	 * 	 * ctanh(+-Inf + I y) = +-1 + I 0 sin(2y)	for y finite 	 * 	 * The imaginary part of the sign is unspecified.  This special 	 * case is only needed to avoid a spurious invalid exception when 	 * y is infinite. 	 */
 if|if
 condition|(
 name|ix
@@ -124,18 +124,34 @@ return|return
 operator|(
 name|CMPLX
 argument_list|(
-name|x
-argument_list|,
 operator|(
+name|x
+operator|+
+literal|0
+operator|)
+operator|*
+operator|(
+name|y
+operator|+
+literal|0
+operator|)
+argument_list|,
 name|y
 operator|==
 literal|0
 condition|?
 name|y
 else|:
+operator|(
 name|x
+operator|+
+literal|0
+operator|)
 operator|*
+operator|(
 name|y
+operator|+
+literal|0
 operator|)
 argument_list|)
 operator|)
@@ -181,7 +197,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* 	 * ctanh(x + i NAN) = NaN + i NaN 	 * ctanh(x +- i Inf) = NaN + i NaN 	 */
+comment|/* 	 * ctanh(x + I NaN) = d(NaN) + I d(NaN) 	 * ctanh(x +- I Inf) = dNaN + I dNaN 	 */
 if|if
 condition|(
 operator|!
@@ -204,7 +220,7 @@ name|y
 argument_list|)
 operator|)
 return|;
-comment|/* 	 * ctanh(+-huge + i +-y) ~= +-1 +- i 2sin(2y)/exp(2x), using the 	 * approximation sinh^2(huge) ~= exp(2*huge) / 4. 	 * We use a modified formula to avoid spurious overflow. 	 */
+comment|/* 	 * ctanh(+-huge +- I y) ~= +-1 +- I 2sin(2y)/exp(2x), using the 	 * approximation sinh^2(huge) ~= exp(2*huge) / 4. 	 * We use a modified formula to avoid spurious overflow. 	 */
 if|if
 condition|(
 name|ix
@@ -212,7 +228,7 @@ operator|>=
 literal|0x40360000
 condition|)
 block|{
-comment|/* x>= 22 */
+comment|/* |x|>= 22 */
 name|double
 name|exp_mx
 init|=
@@ -334,14 +350,13 @@ name|complex
 name|z
 parameter_list|)
 block|{
-comment|/* ctan(z) = -I * ctanh(I * z) */
+comment|/* ctan(z) = -I * ctanh(I * z) = I * conj(ctanh(I * conj(z))) */
 name|z
 operator|=
 name|ctanh
 argument_list|(
 name|CMPLX
 argument_list|(
-operator|-
 name|cimag
 argument_list|(
 name|z
@@ -363,7 +378,6 @@ argument_list|(
 name|z
 argument_list|)
 argument_list|,
-operator|-
 name|creal
 argument_list|(
 name|z
