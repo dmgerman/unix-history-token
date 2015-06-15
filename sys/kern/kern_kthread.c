@@ -1124,15 +1124,11 @@ name|td_pflags
 operator||=
 name|TDP_KTHREAD
 expr_stmt|;
-name|newtd
-operator|->
-name|td_ucred
-operator|=
-name|crhold
+name|thread_cow_get_proc
 argument_list|(
+name|newtd
+argument_list|,
 name|p
-operator|->
-name|p_ucred
 argument_list|)
 expr_stmt|;
 comment|/* this code almost the same as create_thread() in kern_thr.c */

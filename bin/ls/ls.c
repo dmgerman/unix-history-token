@@ -198,6 +198,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<libxo/xo.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ls.h"
 end_include
 
@@ -977,6 +983,33 @@ name|f_samesort
 operator|=
 literal|1
 expr_stmt|;
+name|argc
+operator|=
+name|xo_parse_args
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|argc
+operator|<
+literal|0
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+name|xo_set_flags
+argument_list|(
+name|NULL
+argument_list|,
+name|XOF_COLUMNS
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -1628,7 +1661,7 @@ expr_stmt|;
 block|}
 else|#
 directive|else
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"color support not compiled in"
 argument_list|)
@@ -1713,7 +1746,7 @@ name|fts_options
 operator||=
 name|FTS_NOSTAT
 expr_stmt|;
-comment|/* 	 * If not -F, -P, -d or -l options, follow any symbolic links listed on 	 * the command line. 	 */
+comment|/* 	 * If not -F, -P, -d or -l options, follow any symbolic links listed on 	 * the command line, unless in color mode in which case we need to 	 * distinguish file type for a symbolic link itself and its target. 	 */
 if|if
 condition|(
 operator|!
@@ -1731,6 +1764,14 @@ name|f_type
 operator|||
 name|f_slash
 operator|)
+ifdef|#
+directive|ifdef
+name|COLORLS
+operator|&&
+operator|!
+name|f_color
+endif|#
+directive|endif
 condition|)
 name|fts_options
 operator||=
@@ -1938,6 +1979,11 @@ name|printfcn
 operator|=
 name|printcol
 expr_stmt|;
+name|xo_open_container
+argument_list|(
+literal|"file-information"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -1960,6 +2006,14 @@ name|dotav
 argument_list|,
 name|fts_options
 argument_list|)
+expr_stmt|;
+name|xo_close_container
+argument_list|(
+literal|"file-information"
+argument_list|)
+expr_stmt|;
+name|xo_finish
+argument_list|()
 expr_stmt|;
 name|exit
 argument_list|(
@@ -2015,6 +2069,11 @@ decl_stmt|;
 name|int
 name|ch_options
 decl_stmt|;
+name|int
+name|first
+init|=
+literal|1
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -2036,7 +2095,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -2113,7 +2172,7 @@ block|{
 case|case
 name|FTS_DC
 case|:
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"%s: directory causes a cycle"
 argument_list|,
@@ -2129,7 +2188,7 @@ case|:
 case|case
 name|FTS_ERR
 case|:
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"%s: %s"
 argument_list|,
@@ -2174,15 +2233,35 @@ operator|!
 name|f_listdot
 condition|)
 break|break;
+if|if
+condition|(
+name|first
+condition|)
+block|{
+name|first
+operator|=
+literal|0
+expr_stmt|;
+name|xo_open_list
+argument_list|(
+literal|"directory"
+argument_list|)
+expr_stmt|;
+block|}
+name|xo_open_instance
+argument_list|(
+literal|"directory"
+argument_list|)
+expr_stmt|;
 comment|/* 			 * If already output something, put out a newline as 			 * a separator.  If multiple arguments, precede each 			 * directory with its name. 			 */
 if|if
 condition|(
 name|output
 condition|)
 block|{
-name|putchar
+name|xo_emit
 argument_list|(
-literal|'\n'
+literal|"\n"
 argument_list|)
 expr_stmt|;
 operator|(
@@ -2190,14 +2269,16 @@ name|void
 operator|)
 name|printname
 argument_list|(
+literal|"path"
+argument_list|,
 name|p
 operator|->
 name|fts_path
 argument_list|)
 expr_stmt|;
-name|puts
+name|xo_emit
 argument_list|(
-literal|":"
+literal|":\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2214,14 +2295,16 @@ name|void
 operator|)
 name|printname
 argument_list|(
+literal|"path"
+argument_list|,
 name|p
 operator|->
 name|fts_path
 argument_list|)
 expr_stmt|;
-name|puts
+name|xo_emit
 argument_list|(
-literal|":"
+literal|":\n"
 argument_list|)
 expr_stmt|;
 name|output
@@ -2245,6 +2328,11 @@ argument_list|,
 name|chp
 argument_list|,
 name|options
+argument_list|)
+expr_stmt|;
+name|xo_close_instance
+argument_list|(
+literal|"directory"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2274,9 +2362,19 @@ break|break;
 block|}
 if|if
 condition|(
+operator|!
+name|first
+condition|)
+name|xo_close_list
+argument_list|(
+literal|"directory"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|errno
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -2503,7 +2601,7 @@ name|jinitmax
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -2846,7 +2944,7 @@ operator|==
 name|FTS_NS
 condition|)
 block|{
-name|warnx
+name|xo_warnx
 argument_list|(
 literal|"%s: %s"
 argument_list|,
@@ -3211,7 +3309,7 @@ name|flags
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,
@@ -3283,7 +3381,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"MAC label for %s/%s"
 argument_list|,
@@ -3382,7 +3480,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"MAC label for %s/%s"
 argument_list|,
@@ -3424,7 +3522,7 @@ operator|-
 literal|1
 condition|)
 block|{
-name|warn
+name|xo_warn
 argument_list|(
 literal|"MAC label for %s/%s"
 argument_list|,
@@ -3517,7 +3615,7 @@ operator|)
 operator|==
 name|NULL
 condition|)
-name|err
+name|xo_err
 argument_list|(
 literal|1
 argument_list|,

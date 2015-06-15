@@ -11,6 +11,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"                 display this help and exit\n"
+argument_list|,
+argument|OPT_HELP
 argument_list|)
 end_macro
 
@@ -51,6 +53,19 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"           try to look inside compressed files\n"
+argument_list|)
+end_macro
+
+begin_macro
+name|OPT
+argument_list|(
+literal|'Z'
+argument_list|,
+literal|"uncompress-noreport"
+argument_list|,
+literal|0
+argument_list|,
+literal|"  only print the contents of compressed files\n"
 argument_list|)
 end_macro
 
@@ -145,6 +160,21 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"                output the Apple CREATOR/TYPE\n"
+argument_list|,
+argument|OPT_APPLE
+argument_list|)
+end_macro
+
+begin_macro
+name|OPT_LONGONLY
+argument_list|(
+literal|"extension"
+argument_list|,
+literal|0
+argument_list|,
+literal|"            output a slash-separated list of extensions\n"
+argument_list|,
+argument|OPT_EXTENSIONS
 argument_list|)
 end_macro
 
@@ -156,6 +186,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"            output the MIME type\n"
+argument_list|,
+argument|OPT_MIME_TYPE
 argument_list|)
 end_macro
 
@@ -167,6 +199,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"        output the MIME encoding\n"
+argument_list|,
+argument|OPT_MIME_ENCODING
 argument_list|)
 end_macro
 

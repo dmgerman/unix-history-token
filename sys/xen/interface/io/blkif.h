@@ -127,28 +127,6 @@ value|5
 end_define
 
 begin_comment
-comment|/*  * Maximum scatter/gather segments associated with a request header block.  * This is carefully chosen so that sizeof(blkif_ring_t)<= PAGE_SIZE.  * NB. This could be 12 if the ring indexes weren't stored in the same page.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BLKIF_MAX_SEGMENTS_PER_HEADER_BLOCK
-value|11
-end_define
-
-begin_comment
-comment|/*  * Maximum scatter/gather segments associated with a segment block.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BLKIF_MAX_SEGMENTS_PER_SEGMENT_BLOCK
-value|14
-end_define
-
-begin_comment
 comment|/*  * Maximum scatter/gather segments per request (header + segment blocks).  */
 end_comment
 
@@ -156,7 +134,7 @@ begin_define
 define|#
 directive|define
 name|BLKIF_MAX_SEGMENTS_PER_REQUEST
-value|255
+value|11
 end_define
 
 begin_comment
@@ -221,7 +199,7 @@ comment|/* start sector idx on disk (r/w only)  */
 name|blkif_request_segment_t
 name|seg
 index|[
-name|BLKIF_MAX_SEGMENTS_PER_HEADER_BLOCK
+name|BLKIF_MAX_SEGMENTS_PER_REQUEST
 index|]
 decl_stmt|;
 block|}
@@ -233,32 +211,6 @@ typedef|typedef
 name|struct
 name|blkif_request
 name|blkif_request_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/*  * A segment block is a ring request structure that contains only  * segment data.  *  * sizeof(struct blkif_segment_block)<= sizeof(struct blkif_request)  */
-end_comment
-
-begin_struct
-struct|struct
-name|blkif_segment_block
-block|{
-name|blkif_request_segment_t
-name|seg
-index|[
-name|BLKIF_MAX_SEGMENTS_PER_SEGMENT_BLOCK
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_typedef
-typedef|typedef
-name|struct
-name|blkif_segment_block
-name|blkif_segment_block_t
 typedef|;
 end_typedef
 
@@ -393,40 +345,6 @@ name|blkif_response
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/*  * Index to, and treat as a segment block, an entry in the ring.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BLKRING_GET_SEG_BLOCK
-parameter_list|(
-name|_r
-parameter_list|,
-name|_idx
-parameter_list|)
-define|\
-value|(((blkif_segment_block_t *)RING_GET_REQUEST(_r, _idx))->seg)
-end_define
-
-begin_comment
-comment|/*  * The number of ring request blocks required to handle an I/O  * request containing _segs segments.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BLKIF_SEGS_TO_BLOCKS
-parameter_list|(
-name|_segs
-parameter_list|)
-define|\
-value|((((_segs - BLKIF_MAX_SEGMENTS_PER_HEADER_BLOCK)                    \      + (BLKIF_MAX_SEGMENTS_PER_SEGMENT_BLOCK - 1))                      \     / BLKIF_MAX_SEGMENTS_PER_SEGMENT_BLOCK) +
-comment|/*header_block*/
-value|1)
-end_define
 
 begin_define
 define|#

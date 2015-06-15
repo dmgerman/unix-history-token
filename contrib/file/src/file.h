@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.164 2015/01/01 17:07:34 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.168 2015/04/09 20:01:41 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -530,7 +530,7 @@ begin_define
 define|#
 directive|define
 name|HOWMANY
-value|(256 * 1024)
+value|(1024 * 1024)
 end_define
 
 begin_comment
@@ -597,14 +597,14 @@ begin_define
 define|#
 directive|define
 name|VERSIONNO
-value|12
+value|13
 end_define
 
 begin_define
 define|#
 directive|define
 name|FILE_MAGICSIZE
-value|248
+value|312
 end_define
 
 begin_define
@@ -1206,6 +1206,15 @@ index|[
 literal|8
 index|]
 decl_stmt|;
+comment|/* APPLE CREATOR/TYPE */
+comment|/* Words 55-63 */
+name|char
+name|ext
+index|[
+literal|64
+index|]
+decl_stmt|;
+comment|/* Popular extensions */
 block|}
 struct|;
 end_struct
@@ -3171,6 +3180,62 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|HAVE_GMTIME_R
+end_ifndef
+
+begin_function_decl
+name|struct
+name|tm
+modifier|*
+name|gmtime_r
+parameter_list|(
+specifier|const
+name|time_t
+modifier|*
+parameter_list|,
+name|struct
+name|tm
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_LOCALTIME_R
+end_ifndef
+
+begin_function_decl
+name|struct
+name|tm
+modifier|*
+name|localtime_r
+parameter_list|(
+specifier|const
+name|time_t
+modifier|*
+parameter_list|,
+name|struct
+name|tm
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|HAVE_FMTCHECK
 end_ifndef
 
@@ -3318,6 +3383,26 @@ directive|define
 name|FILE_RCSID
 parameter_list|(
 name|id
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__RCSID
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__RCSID
+parameter_list|(
+name|a
 parameter_list|)
 end_define
 

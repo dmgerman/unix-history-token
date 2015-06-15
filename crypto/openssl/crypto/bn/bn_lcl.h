@@ -438,12 +438,18 @@ literal|2
 if|#
 directive|if
 name|__GNUC__
+operator|>
+literal|4
+operator|||
+operator|(
+name|__GNUC__
 operator|>=
 literal|4
 operator|&&
 name|__GNUC_MINOR__
 operator|>=
 literal|4
+operator|)
 comment|/* "h" constraint is no more since 4.4 */
 define|#
 directive|define

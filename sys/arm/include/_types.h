@@ -431,12 +431,6 @@ name|__vm_size_t
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ARM_EABI__
-end_ifdef
-
 begin_typedef
 typedef|typedef
 name|unsigned
@@ -466,45 +460,6 @@ end_define
 begin_comment
 comment|/* max value for a wchar_t */
 end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|int
-name|___wchar_t
-typedef|;
-end_typedef
-
-begin_define
-define|#
-directive|define
-name|__WCHAR_MIN
-value|__INT_MIN
-end_define
-
-begin_comment
-comment|/* min value for a wchar_t */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|__WCHAR_MAX
-value|__INT_MAX
-end_define
-
-begin_comment
-comment|/* max value for a wchar_t */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Unusual type definitions.  */

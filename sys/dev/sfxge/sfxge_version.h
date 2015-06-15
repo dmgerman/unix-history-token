@@ -19,7 +19,7 @@ begin_define
 define|#
 directive|define
 name|SFXGE_VERSION_STRING
-value|"v4.5.1.1018"
+value|"v4.5.2.1000"
 end_define
 
 begin_endif

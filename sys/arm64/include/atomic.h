@@ -23,20 +23,28 @@ parameter_list|()
 value|__asm __volatile("isb" : : : "memory")
 end_define
 
+begin_comment
+comment|/*  * Options for DMB and DSB:  *	oshld	Outer Shareable, load  *	oshst	Outer Shareable, store  *	osh	Outer Shareable, all  *	nshld	Non-shareable, load  *	nshst	Non-shareable, store  *	nsh	Non-shareable, all  *	ishld	Inner Shareable, load  *	ishst	Inner Shareable, store  *	ish	Inner Shareable, all  *	ld	Full system, load  *	st	Full system, store  *	sy	Full system, all  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|dsb
-parameter_list|()
-value|__asm __volatile("dsb sy" : : : "memory")
+parameter_list|(
+name|opt
+parameter_list|)
+value|__asm __volatile("dsb " __STRING(opt) : : : "memory")
 end_define
 
 begin_define
 define|#
 directive|define
 name|dmb
-parameter_list|()
-value|__asm __volatile("dmb sy" : : : "memory")
+parameter_list|(
+name|opt
+parameter_list|)
+value|__asm __volatile("dmb " __STRING(opt) : : : "memory")
 end_define
 
 begin_define
@@ -44,24 +52,36 @@ define|#
 directive|define
 name|mb
 parameter_list|()
-value|dmb()
+value|dmb(sy)
 end_define
+
+begin_comment
+comment|/* Full system memory barrier all */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|wmb
 parameter_list|()
-value|dmb()
+value|dmb(st)
 end_define
+
+begin_comment
+comment|/* Full system memory barrier store */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|rmb
 parameter_list|()
-value|dmb()
+value|dmb(ld)
 end_define
+
+begin_comment
+comment|/* Full system memory barrier load */
+end_comment
 
 begin_function
 specifier|static

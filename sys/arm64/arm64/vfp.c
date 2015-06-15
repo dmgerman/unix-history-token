@@ -324,7 +324,9 @@ operator|=
 name|fpsr
 expr_stmt|;
 name|dsb
-argument_list|()
+argument_list|(
+name|ish
+argument_list|)
 expr_stmt|;
 name|vfp_disable
 argument_list|()

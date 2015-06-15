@@ -221,17 +221,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|EVP_PKT_EXP
-value|0x1000
-end_define
-
-begin_comment
-comment|/*<= 512 bit key */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|EVP_PKEY_NONE
 value|NID_undef
 end_define
@@ -1255,6 +1244,11 @@ define|#
 directive|define
 name|EVP_CTRL_GCM_SET_IV_INV
 value|0x18
+comment|/* RFC 5246 defines additional data to be 13 bytes in length */
+define|#
+directive|define
+name|EVP_AEAD_TLS1_AAD_LEN
+value|13
 comment|/* GCM TLS constants */
 comment|/* Length of fixed part of IV derived from PRF */
 define|#

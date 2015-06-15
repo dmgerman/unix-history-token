@@ -3437,7 +3437,6 @@ condition|)
 return|return;
 if|if
 condition|(
-operator|(
 name|node
 operator|->
 name|parent
@@ -3446,7 +3445,6 @@ name|addr_cells
 operator|==
 operator|-
 literal|1
-operator|)
 condition|)
 name|FAIL
 argument_list|(
@@ -3461,7 +3459,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|node
 operator|->
 name|parent
@@ -3470,7 +3467,6 @@ name|size_cells
 operator|==
 operator|-
 literal|1
-operator|)
 condition|)
 name|FAIL
 argument_list|(

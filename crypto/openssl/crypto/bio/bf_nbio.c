@@ -454,6 +454,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|1
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 operator|&
@@ -461,7 +463,13 @@ name|n
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|num
 operator|=
 operator|(
@@ -643,6 +651,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
+if|if
+condition|(
 name|RAND_pseudo_bytes
 argument_list|(
 operator|&
@@ -650,7 +660,13 @@ name|n
 argument_list|,
 literal|1
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|num
 operator|=
 operator|(

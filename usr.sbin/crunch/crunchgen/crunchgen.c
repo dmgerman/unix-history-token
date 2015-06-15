@@ -4939,6 +4939,13 @@ argument_list|,
 literal|"LD?= ld\n"
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|outmk
+argument_list|,
+literal|"STRIP?= strip\n"
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|subtract_strlst
@@ -5248,7 +5255,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\tstrip %s\n"
+literal|"\t$(STRIP) %s\n"
 argument_list|,
 name|execfname
 argument_list|)
@@ -5754,7 +5761,7 @@ name|fprintf
 argument_list|(
 name|outmk
 argument_list|,
-literal|"\t$(LD) -dc -r -o %s.lo %s_stub.o $(%s_OBJPATHS)"
+literal|"\t$(CC) -nostdlib -Wl,-dc -Wl,-r -o %s.lo %s_stub.o $(%s_OBJPATHS)"
 argument_list|,
 name|p
 operator|->

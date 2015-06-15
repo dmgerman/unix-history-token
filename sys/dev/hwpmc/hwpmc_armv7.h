@@ -120,6 +120,38 @@ end_comment
 begin_define
 define|#
 directive|define
+name|ARMV7_IDCODE_SHIFT
+value|16
+end_define
+
+begin_comment
+comment|/* Identification code */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARMV7_IDCODE_MASK
+value|(0xff<< ARMV7_IDCODE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARMV7_IDCODE_CORTEX_A9
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARMV7_IDCODE_CORTEX_A8
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARMV7_RELOAD_COUNT_TO_PERFCTR_VALUE
 parameter_list|(
 name|R
@@ -135,6 +167,13 @@ parameter_list|(
 name|P
 parameter_list|)
 value|(-(P))
+end_define
+
+begin_define
+define|#
+directive|define
+name|EVENT_ID_MASK
+value|0xFF
 end_define
 
 begin_ifdef

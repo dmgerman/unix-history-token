@@ -4885,7 +4885,10 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|EOPNOTSUPP
+name|g_part_gpt_recover
+argument_list|(
+name|basetable
+argument_list|)
 operator|)
 return|;
 name|entry

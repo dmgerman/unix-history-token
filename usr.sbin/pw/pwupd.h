@@ -18,6 +18,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/types.h>
 end_include
 
@@ -36,7 +48,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/cdefs.h>
+file|<stdbool.h>
 end_include
 
 begin_if
@@ -193,6 +205,156 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|userconf
+block|{
+name|int
+name|default_password
+decl_stmt|;
+comment|/* Default password for new users? */
+name|int
+name|reuse_uids
+decl_stmt|;
+comment|/* Reuse uids? */
+name|int
+name|reuse_gids
+decl_stmt|;
+comment|/* Reuse gids? */
+name|char
+modifier|*
+name|nispasswd
+decl_stmt|;
+comment|/* Path to NIS version of the passwd file */
+name|char
+modifier|*
+name|dotdir
+decl_stmt|;
+comment|/* Where to obtain skeleton files */
+name|char
+modifier|*
+name|newmail
+decl_stmt|;
+comment|/* Mail to send to new accounts */
+name|char
+modifier|*
+name|logfile
+decl_stmt|;
+comment|/* Where to log changes */
+name|char
+modifier|*
+name|home
+decl_stmt|;
+comment|/* Where to create home directory */
+name|mode_t
+name|homemode
+decl_stmt|;
+comment|/* Home directory permissions */
+name|char
+modifier|*
+name|shelldir
+decl_stmt|;
+comment|/* Where shells are located */
+name|char
+modifier|*
+modifier|*
+name|shells
+decl_stmt|;
+comment|/* List of shells */
+name|char
+modifier|*
+name|shell_default
+decl_stmt|;
+comment|/* Default shell */
+name|char
+modifier|*
+name|default_group
+decl_stmt|;
+comment|/* Default group number */
+name|char
+modifier|*
+modifier|*
+name|groups
+decl_stmt|;
+comment|/* Default (additional) groups */
+name|char
+modifier|*
+name|default_class
+decl_stmt|;
+comment|/* Default user class */
+name|uid_t
+name|min_uid
+decl_stmt|,
+name|max_uid
+decl_stmt|;
+comment|/* Allowed range of uids */
+name|gid_t
+name|min_gid
+decl_stmt|,
+name|max_gid
+decl_stmt|;
+comment|/* Allowed range of gids */
+name|int
+name|expire_days
+decl_stmt|;
+comment|/* Days to expiry */
+name|int
+name|password_days
+decl_stmt|;
+comment|/* Days to password expiry */
+name|int
+name|numgroups
+decl_stmt|;
+comment|/* (internal) size of default_group array */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pwconf
+block|{
+name|char
+name|rootdir
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|char
+name|etcpath
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|char
+modifier|*
+name|newname
+decl_stmt|;
+name|char
+modifier|*
+name|config
+decl_stmt|;
+name|bool
+name|dryrun
+decl_stmt|;
+name|bool
+name|pretty
+decl_stmt|;
+name|bool
+name|v7
+decl_stmt|;
+name|bool
+name|checkduplicate
+decl_stmt|;
+name|struct
+name|userconf
+modifier|*
+name|userconf
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|extern
 name|struct
@@ -206,6 +368,14 @@ specifier|extern
 name|struct
 name|pwf
 name|VPWF
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pwconf
+name|conf
 decl_stmt|;
 end_decl_stmt
 
@@ -295,6 +465,27 @@ parameter_list|(
 name|nam
 parameter_list|)
 value|PWF._getgrnam(nam)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PWF_REGULAR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|PWF_ALT
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|PWF_ROOTDIR
+value|2
 end_define
 
 begin_define
@@ -402,18 +593,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|setpwdir
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|dir
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|char
 modifier|*
 name|getpwpath
@@ -463,34 +642,6 @@ name|struct
 name|group
 modifier|*
 name|grp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|editgroups
-parameter_list|(
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|groups
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|setgrdir
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|dir
 parameter_list|)
 function_decl|;
 end_function_decl

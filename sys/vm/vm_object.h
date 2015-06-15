@@ -1154,6 +1154,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|vnode
+modifier|*
+name|vm_object_vnode
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

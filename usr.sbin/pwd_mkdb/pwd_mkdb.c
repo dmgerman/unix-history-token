@@ -517,6 +517,8 @@ decl_stmt|,
 name|dflag
 decl_stmt|,
 name|iflag
+decl_stmt|,
+name|lflag
 decl_stmt|;
 name|int
 name|nblock
@@ -528,6 +530,8 @@ operator|=
 name|dflag
 operator|=
 name|Cflag
+operator|=
+name|lflag
 operator|=
 literal|0
 expr_stmt|;
@@ -561,7 +565,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"BCLNd:ips:u:v"
+literal|"BCLlNd:ips:u:v"
 argument_list|)
 operator|)
 operator|!=
@@ -589,6 +593,15 @@ literal|'C'
 case|:
 comment|/* verify only */
 name|Cflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+comment|/* generate legacy entries */
+name|lflag
 operator|=
 literal|1
 expr_stmt|;
@@ -2547,6 +2560,11 @@ literal|"put"
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|lflag
+condition|)
+block|{
 comment|/* Create insecure data. (legacy version) */
 name|p
 operator|=
@@ -3270,6 +3288,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
 comment|/* Create original format password file entry */
 if|if
 condition|(
@@ -3493,6 +3512,11 @@ argument_list|(
 literal|"put"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lflag
+condition|)
+block|{
 name|tbuf
 index|[
 literal|0
@@ -3563,6 +3587,7 @@ argument_list|(
 literal|"put"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(

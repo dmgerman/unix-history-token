@@ -3663,6 +3663,11 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
+name|err_str
+init|=
+name|NULL
+decl_stmt|,
+modifier|*
 name|interp
 init|=
 name|NULL
@@ -3748,6 +3753,11 @@ name|e_phoff
 condition|)
 block|{
 comment|/* Only support headers in first page for now */
+name|uprintf
+argument_list|(
+literal|"Program headers not in the first page\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOEXEC
@@ -3781,11 +3791,18 @@ argument_list|,
 name|Elf_Addr
 argument_list|)
 condition|)
+block|{
+name|uprintf
+argument_list|(
+literal|"Unaligned program headers\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOEXEC
 operator|)
 return|;
+block|}
 name|n
 operator|=
 literal|0
@@ -3882,11 +3899,18 @@ index|]
 operator|.
 name|p_offset
 condition|)
+block|{
+name|uprintf
+argument_list|(
+literal|"Invalid PT_INTERP\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOEXEC
 operator|)
 return|;
+block|}
 name|interp
 operator|=
 name|imgp
@@ -4014,11 +4038,18 @@ operator|)
 operator|==
 literal|0
 condition|)
+block|{
+name|uprintf
+argument_list|(
+literal|"Cannot execute shared object\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOEXEC
 operator|)
 return|;
+block|}
 comment|/* 		 * Honour the base load address from the dso if it is 		 * non-zero for some reason. 		 */
 if|if
 condition|(
@@ -4420,7 +4451,7 @@ if|if
 condition|(
 name|data_size
 operator|>
-name|lim_cur
+name|lim_cur_proc
 argument_list|(
 name|imgp
 operator|->
@@ -4428,14 +4459,28 @@ name|proc
 argument_list|,
 name|RLIMIT_DATA
 argument_list|)
-operator|||
+condition|)
+name|err_str
+operator|=
+literal|"Data segment size exceeds process limit"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|text_size
 operator|>
 name|maxtsiz
-operator|||
+condition|)
+name|err_str
+operator|=
+literal|"Text segment size exceeds system limit"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|total_size
 operator|>
-name|lim_cur
+name|lim_cur_proc
 argument_list|(
 name|imgp
 operator|->
@@ -4443,7 +4488,14 @@ name|proc
 argument_list|,
 name|RLIMIT_VMEM
 argument_list|)
-operator|||
+condition|)
+name|err_str
+operator|=
+literal|"Total segment size exceeds process limit"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|racct_set
 argument_list|(
 name|imgp
@@ -4456,7 +4508,14 @@ name|data_size
 argument_list|)
 operator|!=
 literal|0
-operator|||
+condition|)
+name|err_str
+operator|=
+literal|"Data segment size exceeds resource limit"
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|racct_set
 argument_list|(
 name|imgp
@@ -4470,12 +4529,29 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+name|err_str
+operator|=
+literal|"Total segment size exceeds resource limit"
+expr_stmt|;
+if|if
+condition|(
+name|err_str
+operator|!=
+name|NULL
+condition|)
 block|{
 name|PROC_UNLOCK
 argument_list|(
 name|imgp
 operator|->
 name|proc
+argument_list|)
+expr_stmt|;
+name|uprintf
+argument_list|(
+literal|"%s\n"
+argument_list|,
+name|err_str
 argument_list|)
 expr_stmt|;
 return|return
@@ -4546,9 +4622,7 @@ name|vm_daddr
 operator|+
 name|lim_max
 argument_list|(
-name|imgp
-operator|->
-name|proc
+name|curthread
 argument_list|,
 name|RLIMIT_DATA
 argument_list|)
@@ -10700,7 +10774,7 @@ condition|;
 name|i
 operator|++
 control|)
-name|lim_rlimit
+name|lim_rlimit_proc
 argument_list|(
 name|p
 argument_list|,

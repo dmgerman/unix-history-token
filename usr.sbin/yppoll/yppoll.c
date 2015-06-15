@@ -103,13 +103,21 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+if|#
+directive|if
+literal|0
+block|fprintf(stderr, "usage: yppoll [-h host] [-d domainname] mapname\n");
+else|#
+directive|else
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: yppoll [-h host] [-d domainname] mapname\n"
+literal|"usage: yppoll [-d domainname] mapname\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|1
@@ -135,12 +143,12 @@ name|char
 modifier|*
 name|domainname
 decl_stmt|;
-name|char
-modifier|*
-name|hostname
-init|=
-literal|"localhost"
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|char *hostname = "localhost";
+endif|#
+directive|endif
 name|char
 modifier|*
 name|inmap
@@ -199,10 +207,15 @@ break|break;
 case|case
 literal|'h'
 case|:
-name|hostname
-operator|=
-name|optarg
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|hostname = optarg;
+else|#
+directive|else
+comment|/* does nothing */
+endif|#
+directive|endif
 break|break;
 case|case
 literal|'?'

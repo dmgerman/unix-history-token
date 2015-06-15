@@ -1044,16 +1044,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|i
-decl_stmt|,
 name|maxtypenum
 decl_stmt|;
-name|i
-operator|=
-name|vfc
-operator|->
-name|vfc_typenum
-expr_stmt|;
 name|vfsconf_lock
 argument_list|()
 expr_stmt|;

@@ -826,11 +826,6 @@ condition|(
 name|res
 condition|)
 block|{
-name|PROC_LOCK
-argument_list|(
-name|curproc
-argument_list|)
-expr_stmt|;
 name|UIDINFO_VMSIZE_LOCK
 argument_list|(
 name|uip
@@ -854,7 +849,7 @@ name|incr
 operator|>
 name|lim_cur
 argument_list|(
-name|curproc
+name|curthread
 argument_list|,
 name|RLIMIT_SWAP
 argument_list|)
@@ -880,11 +875,6 @@ expr_stmt|;
 name|UIDINFO_VMSIZE_UNLOCK
 argument_list|(
 name|uip
-argument_list|)
-expr_stmt|;
-name|PROC_UNLOCK
-argument_list|(
-name|curproc
 argument_list|)
 expr_stmt|;
 if|if

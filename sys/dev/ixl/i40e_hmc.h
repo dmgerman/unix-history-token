@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2013-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2013-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -162,6 +162,9 @@ name|bp
 decl_stmt|;
 name|u32
 name|sd_index
+decl_stmt|;
+name|bool
+name|rsrc_pg
 decl_stmt|;
 name|bool
 name|valid
@@ -364,7 +367,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|{									\ 	u32 val1, val2, val3;						\ 	val1 = (u32)(I40E_HI_DWORD(pa));				\ 	val2 = (u32)(pa) | (I40E_HMC_MAX_BP_COUNT<<			\ 		 I40E_PFHMC_SDDATALOW_PMSDBPCOUNT_SHIFT) |		\ 		((((type) == I40E_SD_TYPE_PAGED) ? 0 : 1)<<		\ 		I40E_PFHMC_SDDATALOW_PMSDTYPE_SHIFT) |			\ 		(1<< I40E_PFHMC_SDDATALOW_PMSDVALID_SHIFT);		\ 	val3 = (sd_index) | (1u<< I40E_PFHMC_SDCMD_PMSDWR_SHIFT);	\ 	wr32((hw), I40E_PFHMC_SDDATAHIGH, val1);			\ 	wr32((hw), I40E_PFHMC_SDDATALOW, val2);				\ 	wr32((hw), I40E_PFHMC_SDCMD, val3);				\ }
+value|{									\ 	u32 val1, val2, val3;						\ 	val1 = (u32)(I40E_HI_DWORD(pa));				\ 	val2 = (u32)(pa) | (I40E_HMC_MAX_BP_COUNT<<			\ 		 I40E_PFHMC_SDDATALOW_PMSDBPCOUNT_SHIFT) |		\ 		((((type) == I40E_SD_TYPE_PAGED) ? 0 : 1)<<		\ 		I40E_PFHMC_SDDATALOW_PMSDTYPE_SHIFT) |			\ 		BIT(I40E_PFHMC_SDDATALOW_PMSDVALID_SHIFT);		\ 	val3 = (sd_index) | BIT_ULL(I40E_PFHMC_SDCMD_PMSDWR_SHIFT);	\ 	wr32((hw), I40E_PFHMC_SDDATAHIGH, val1);			\ 	wr32((hw), I40E_PFHMC_SDDATALOW, val2);				\ 	wr32((hw), I40E_PFHMC_SDCMD, val3);				\ }
 end_define
 
 begin_comment
@@ -383,7 +386,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|{									\ 	u32 val2, val3;							\ 	val2 = (I40E_HMC_MAX_BP_COUNT<<				\ 		I40E_PFHMC_SDDATALOW_PMSDBPCOUNT_SHIFT) |		\ 		((((type) == I40E_SD_TYPE_PAGED) ? 0 : 1)<<		\ 		I40E_PFHMC_SDDATALOW_PMSDTYPE_SHIFT);			\ 	val3 = (sd_index) | (1u<< I40E_PFHMC_SDCMD_PMSDWR_SHIFT);	\ 	wr32((hw), I40E_PFHMC_SDDATAHIGH, 0);				\ 	wr32((hw), I40E_PFHMC_SDDATALOW, val2);				\ 	wr32((hw), I40E_PFHMC_SDCMD, val3);				\ }
+value|{									\ 	u32 val2, val3;							\ 	val2 = (I40E_HMC_MAX_BP_COUNT<<				\ 		I40E_PFHMC_SDDATALOW_PMSDBPCOUNT_SHIFT) |		\ 		((((type) == I40E_SD_TYPE_PAGED) ? 0 : 1)<<		\ 		I40E_PFHMC_SDDATALOW_PMSDTYPE_SHIFT);			\ 	val3 = (sd_index) | BIT_ULL(I40E_PFHMC_SDCMD_PMSDWR_SHIFT);	\ 	wr32((hw), I40E_PFHMC_SDDATAHIGH, 0);				\ 	wr32((hw), I40E_PFHMC_SDDATALOW, val2);				\ 	wr32((hw), I40E_PFHMC_SDCMD, val3);				\ }
 end_define
 
 begin_comment
@@ -504,6 +507,11 @@ name|hmc_info
 parameter_list|,
 name|u32
 name|pd_index
+parameter_list|,
+name|struct
+name|i40e_dma_mem
+modifier|*
+name|rsrc_pg
 parameter_list|)
 function_decl|;
 end_function_decl

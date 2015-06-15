@@ -183,12 +183,14 @@ comment|/*  * rsh - remote shell  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rfd2
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|family
 init|=
@@ -197,6 +199,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|rlogin
 index|[]

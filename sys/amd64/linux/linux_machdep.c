@@ -852,7 +852,7 @@ operator|*
 operator|)
 name|USRSTACK
 operator|-
-name|lim_cur
+name|lim_cur_proc
 argument_list|(
 name|p
 argument_list|,

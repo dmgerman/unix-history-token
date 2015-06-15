@@ -23,6 +23,16 @@ directive|include
 file|<stdlib.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string.h>
+end_include
+
+begin_comment
+comment|/* for memcpy() */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2356,13 +2366,14 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
 name|RAND_bytes
 argument_list|(
 name|cookie_secret
 argument_list|,
 name|COOKIE_SECRET_LENGTH
 argument_list|)
+operator|<=
+literal|0
 condition|)
 block|{
 name|BIO_printf

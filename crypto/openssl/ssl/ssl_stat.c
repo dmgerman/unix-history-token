@@ -127,6 +127,14 @@ operator|=
 literal|"ok/accept SSL initialization"
 expr_stmt|;
 break|break;
+case|case
+name|SSL_ST_ERR
+case|:
+name|str
+operator|=
+literal|"error"
+expr_stmt|;
+break|break;
 ifndef|#
 directive|ifndef
 name|OPENSSL_NO_SSL2
@@ -1125,6 +1133,14 @@ case|:
 name|str
 operator|=
 literal|"SSLOK "
+expr_stmt|;
+break|break;
+case|case
+name|SSL_ST_ERR
+case|:
+name|str
+operator|=
+literal|"SSLERR"
 expr_stmt|;
 break|break;
 ifndef|#

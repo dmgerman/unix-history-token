@@ -238,11 +238,11 @@ name|u_short
 name|fd_cmask
 decl_stmt|;
 comment|/* mask for file creation */
-name|u_short
+name|int
 name|fd_refcnt
 decl_stmt|;
 comment|/* thread reference count */
-name|u_short
+name|int
 name|fd_holdcnt
 decl_stmt|;
 comment|/* hold count on structure + mutex */
@@ -604,6 +604,34 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|_finstall
+parameter_list|(
+name|struct
+name|filedesc
+modifier|*
+name|fdp
+parameter_list|,
+name|struct
+name|file
+modifier|*
+name|fp
+parameter_list|,
+name|int
+name|fd
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|filecaps
+modifier|*
+name|fcaps
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|finstall
 parameter_list|(
@@ -619,7 +647,7 @@ name|fp
 parameter_list|,
 name|int
 modifier|*
-name|resultfp
+name|resultfd
 parameter_list|,
 name|int
 name|flags

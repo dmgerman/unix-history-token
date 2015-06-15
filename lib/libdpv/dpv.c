@@ -3102,7 +3102,7 @@ block|}
 else|else
 name|warnx
 argument_list|(
-literal|"%s: %lli lines read"
+literal|"%s: %lli overall read"
 argument_list|,
 name|__func__
 argument_list|,

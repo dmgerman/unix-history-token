@@ -384,7 +384,7 @@ name|a_data
 operator|+
 name|bss_size
 operator|>
-name|lim_cur
+name|lim_cur_proc
 argument_list|(
 name|imgp
 operator|->

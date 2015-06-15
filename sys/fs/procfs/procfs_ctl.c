@@ -846,6 +846,12 @@ literal|0
 expr_stmt|;
 name|p
 operator|->
+name|p_stops
+operator|=
+literal|0
+expr_stmt|;
+name|p
+operator|->
 name|p_flag
 operator|&=
 operator|~
