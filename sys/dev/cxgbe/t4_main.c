@@ -3645,6 +3645,17 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+name|sc
+operator|->
+name|debug_flags
+operator|=
+name|DF_DUMP_MBOX
+expr_stmt|;
+endif|#
+directive|endif
 name|pci_enable_busmaster
 argument_list|(
 name|dev
@@ -24252,6 +24263,28 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"lro inactive-flush timeout (in us)"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|children
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"debug_flags"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|debug_flags
+argument_list|,
+literal|0
+argument_list|,
+literal|"flags to enable runtime debugging"
 argument_list|)
 expr_stmt|;
 ifdef|#

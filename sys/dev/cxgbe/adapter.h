@@ -850,6 +850,15 @@ name|INTR_OFLD_RXQ
 operator||
 name|INTR_NM_RXQ
 operator|)
+block|,
+comment|/* adapter debug_flags */
+name|DF_DUMP_MBOX
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
 block|, }
 enum|;
 end_enum
@@ -2807,6 +2816,9 @@ directive|endif
 name|int
 name|flags
 decl_stmt|;
+name|int
+name|debug_flags
+decl_stmt|;
 name|char
 name|ifp_lockname
 index|[
@@ -3239,6 +3251,21 @@ parameter_list|(
 name|txq
 parameter_list|)
 value|EQ_LOCK_ASSERT_NOTOWNED(&(txq)->eq)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CH_DUMP_MBOX
+parameter_list|(
+name|sc
+parameter_list|,
+name|mbox
+parameter_list|,
+name|data_reg
+parameter_list|)
+define|\
+value|do { \ 		if (sc->debug_flags& DF_DUMP_MBOX) { \ 			log(LOG_NOTICE, \ 			    "%s mbox %u: %016llx %016llx %016llx %016llx " \ 			    "%016llx %016llx %016llx %016llx\n", \ 			    device_get_nameunit(sc->dev), mbox, \ 			    (unsigned long long)t4_read_reg64(sc, data_reg), \ 			    (unsigned long long)t4_read_reg64(sc, data_reg + 8), \ 			    (unsigned long long)t4_read_reg64(sc, data_reg + 16), \ 			    (unsigned long long)t4_read_reg64(sc, data_reg + 24), \ 			    (unsigned long long)t4_read_reg64(sc, data_reg + 32), \ 			    (unsigned long long)t4_read_reg64(sc, data_reg + 40), \ 			    (unsigned long long)t4_read_reg64(sc, data_reg + 48), \ 			    (unsigned long long)t4_read_reg64(sc, data_reg + 56)); \ 		} \ 	} while (0)
 end_define
 
 begin_define
