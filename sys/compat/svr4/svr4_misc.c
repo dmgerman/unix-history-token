@@ -2980,6 +2980,9 @@ modifier|*
 name|uap
 decl_stmt|;
 block|{
+name|cap_rights_t
+name|rights
+decl_stmt|;
 name|struct
 name|filedesc
 modifier|*
@@ -3036,7 +3039,11 @@ name|uap
 operator|->
 name|fd
 argument_list|,
-literal|0
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|,
 operator|&
 name|fp

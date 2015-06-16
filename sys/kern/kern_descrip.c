@@ -3599,7 +3599,11 @@ name|fdp
 argument_list|,
 name|fd
 argument_list|,
-name|NULL
+name|cap_rights_init
+argument_list|(
+operator|&
+name|rights
+argument_list|)
 argument_list|,
 operator|&
 name|fp
@@ -10744,13 +10748,6 @@ return|;
 ifdef|#
 directive|ifdef
 name|CAPABILITIES
-if|if
-condition|(
-name|needrightsp
-operator|!=
-name|NULL
-condition|)
-block|{
 name|error
 operator|=
 name|cap_check
@@ -10772,7 +10769,6 @@ operator|(
 name|error
 operator|)
 return|;
-block|}
 endif|#
 directive|endif
 name|retry
