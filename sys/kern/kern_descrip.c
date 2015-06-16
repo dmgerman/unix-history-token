@@ -10980,15 +10980,11 @@ expr_stmt|;
 if|if
 condition|(
 name|needrightsp
-operator|!=
+operator|==
 name|NULL
 condition|)
-name|needrights
-operator|=
-operator|*
 name|needrightsp
-expr_stmt|;
-else|else
+operator|=
 name|cap_rights_init
 argument_list|(
 operator|&
@@ -11003,8 +10999,7 @@ name|fdp
 argument_list|,
 name|fd
 argument_list|,
-operator|&
-name|needrights
+name|needrightsp
 argument_list|,
 operator|&
 name|fp
