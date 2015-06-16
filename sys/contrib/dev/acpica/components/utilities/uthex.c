@@ -112,7 +112,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtHexCharToValue  *  * PARAMETERS:  AsciiChar             - Hex character in Ascii  *  * RETURN:      The binary value of the ascii/hex character  *  * DESCRIPTION: Perform ascii-to-hex translation  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtAsciiCharToHex  *  * PARAMETERS:  HexChar                 - Hex character in Ascii  *  * RETURN:      The binary value of the ascii/hex character  *  * DESCRIPTION: Perform ascii-to-hex translation  *  ******************************************************************************/
 end_comment
 
 begin_function

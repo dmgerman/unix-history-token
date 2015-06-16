@@ -154,6 +154,23 @@ name|ArgList
 decl_stmt|;
 name|ACPI_MSG_REDIRECT_BEGIN
 expr_stmt|;
+comment|/* For AE_OK, just print the message */
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+name|ACPI_MSG_EXCEPTION
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|AcpiOsPrintf
 argument_list|(
 name|ACPI_MSG_EXCEPTION
@@ -165,6 +182,7 @@ name|Status
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 name|va_start
 argument_list|(
 name|ArgList
