@@ -1693,9 +1693,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|rc
 operator|!=
 name|ECORE_SUCCESS
+operator|)
+operator|&&
+operator|(
+name|rc
+operator|!=
+name|ECORE_PENDING
+operator|)
 condition|)
 block|{
 name|ECORE_ERR
