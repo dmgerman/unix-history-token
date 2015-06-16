@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2014, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2015, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -5200,27 +5200,29 @@ literal|0
 condition|)
 break|break;
 block|}
+comment|/* Mark the queue as having work */
 if|if
 condition|(
+operator|(
 name|enq
 operator|>
 literal|0
+operator|)
+operator|&&
+operator|(
+name|txr
+operator|->
+name|busy
+operator|==
+name|EM_TX_IDLE
+operator|)
 condition|)
-block|{
-comment|/* Set the watchdog */
 name|txr
 operator|->
-name|queue_status
+name|busy
 operator|=
-name|EM_QUEUE_WORKING
+name|EM_TX_BUSY
 expr_stmt|;
-name|txr
-operator|->
-name|watchdog_time
-operator|=
-name|ticks
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|txr
@@ -5601,6 +5603,21 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+comment|/* Mark the queue as having work */
+if|if
+condition|(
+name|txr
+operator|->
+name|busy
+operator|==
+name|EM_TX_IDLE
+condition|)
+name|txr
+operator|->
+name|busy
+operator|=
+name|EM_TX_BUSY
+expr_stmt|;
 comment|/* Send a copy of the frame to the BPF listener */
 name|ETHER_BPF_MTAP
 argument_list|(
@@ -5608,19 +5625,6 @@ name|ifp
 argument_list|,
 name|m_head
 argument_list|)
-expr_stmt|;
-comment|/* Set timeout in case hardware has problems transmitting. */
-name|txr
-operator|->
-name|watchdog_time
-operator|=
-name|ticks
-expr_stmt|;
-name|txr
-operator|->
-name|queue_status
-operator|=
-name|EM_QUEUE_WORKING
 expr_stmt|;
 block|}
 return|return;
@@ -10351,13 +10355,6 @@ name|next_eop
 operator|=
 name|last
 expr_stmt|;
-comment|/* Update the watchdog time early and often */
-name|txr
-operator|->
-name|watchdog_time
-operator|=
-name|ticks
-expr_stmt|;
 comment|/* 	 * Advance the Transmit Descriptor Tail (TDT), this tells the E1000 	 * that this frame is available to transmit. 	 */
 name|bus_dmamap_sync
 argument_list|(
@@ -11196,27 +11193,32 @@ name|txr
 operator|++
 control|)
 block|{
+comment|/* Last cycle a queue was declared hung */
 if|if
 condition|(
-operator|(
 name|txr
 operator|->
-name|queue_status
+name|busy
 operator|==
-name|EM_QUEUE_HUNG
-operator|)
-operator|&&
-operator|(
-name|adapter
-operator|->
-name|pause_frames
-operator|==
-literal|0
-operator|)
+name|EM_TX_HUNG
 condition|)
 goto|goto
 name|hung
 goto|;
+if|if
+condition|(
+name|txr
+operator|->
+name|busy
+operator|>=
+name|EM_TX_MAXTRIES
+condition|)
+name|txr
+operator|->
+name|busy
+operator|=
+name|EM_TX_HUNG
+expr_stmt|;
 comment|/* Schedule a TX tasklet if needed */
 if|if
 condition|(
@@ -11239,12 +11241,6 @@ name|tx_task
 argument_list|)
 expr_stmt|;
 block|}
-name|adapter
-operator|->
-name|pause_frames
-operator|=
-literal|0
-expr_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -11366,12 +11362,6 @@ name|adapter
 operator|->
 name|watchdog_events
 operator|++
-expr_stmt|;
-name|adapter
-operator|->
-name|pause_frames
-operator|=
-literal|0
 expr_stmt|;
 name|em_init_locked
 argument_list|(
@@ -11736,7 +11726,7 @@ name|link_active
 operator|=
 literal|0
 expr_stmt|;
-comment|/* Link down, disable watchdog */
+comment|/* Link down, disable hang detection */
 for|for
 control|(
 name|int
@@ -11758,9 +11748,9 @@ operator|++
 control|)
 name|txr
 operator|->
-name|queue_status
+name|busy
 operator|=
-name|EM_QUEUE_IDLE
+name|EM_TX_IDLE
 expr_stmt|;
 name|if_link_state_change
 argument_list|(
@@ -11849,7 +11839,7 @@ name|if_drv_flags
 operator||=
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-comment|/* Unarm watchdog timer. */
+comment|/* Disarm Hang Detection. */
 for|for
 control|(
 name|int
@@ -11877,9 +11867,9 @@ argument_list|)
 expr_stmt|;
 name|txr
 operator|->
-name|queue_status
+name|busy
 operator|=
-name|EM_QUEUE_IDLE
+name|EM_TX_IDLE
 expr_stmt|;
 name|EM_TX_UNLOCK
 argument_list|(
@@ -16552,9 +16542,9 @@ name|num_tx_desc
 expr_stmt|;
 name|txr
 operator|->
-name|queue_status
+name|busy
 operator|=
-name|EM_QUEUE_IDLE
+name|EM_TX_IDLE
 expr_stmt|;
 comment|/* Clear checksum offload context. */
 name|txr
@@ -16856,9 +16846,9 @@ argument_list|)
 expr_stmt|;
 name|txr
 operator|->
-name|queue_status
+name|busy
 operator|=
-name|EM_QUEUE_IDLE
+name|EM_TX_IDLE
 expr_stmt|;
 block|}
 comment|/* Set the default values for the Tx Inter Packet Gap timer */
@@ -18663,7 +18653,7 @@ return|return;
 endif|#
 directive|endif
 comment|/* DEV_NETMAP */
-comment|/* No work, make sure watchdog is off */
+comment|/* No work, make sure hang detection is disabled */
 if|if
 condition|(
 name|txr
@@ -18677,9 +18667,9 @@ condition|)
 block|{
 name|txr
 operator|->
-name|queue_status
+name|busy
 operator|=
-name|EM_QUEUE_IDLE
+name|EM_TX_IDLE
 expr_stmt|;
 return|return;
 block|}
@@ -18867,12 +18857,6 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|txr
-operator|->
-name|watchdog_time
-operator|=
-name|ticks
-expr_stmt|;
 if|if
 condition|(
 operator|++
@@ -18984,32 +18968,37 @@ name|next_to_clean
 operator|=
 name|first
 expr_stmt|;
-comment|/* 	** Watchdog calculation, we know there's 	** work outstanding or the first return 	** would have been taken, so none processed 	** for too long indicates a hang. local timer 	** will examine this and do a reset if needed. 	*/
+comment|/* 	** Hang detection: we know there's work outstanding 	** or the entry return would have been taken, so no 	** descriptor processed here indicates a potential hang. 	** The local timer will examine this and do a reset if needed. 	*/
 if|if
 condition|(
-operator|(
-operator|!
 name|processed
-operator|)
-operator|&&
-operator|(
-operator|(
-name|ticks
-operator|-
-name|txr
-operator|->
-name|watchdog_time
-operator|)
-operator|>
-name|EM_WATCHDOG
-operator|)
+operator|==
+literal|0
 condition|)
+block|{
+if|if
+condition|(
 name|txr
 operator|->
-name|queue_status
-operator|=
-name|EM_QUEUE_HUNG
+name|busy
+operator|!=
+name|EM_TX_HUNG
+condition|)
+operator|++
+name|txr
+operator|->
+name|busy
 expr_stmt|;
+block|}
+else|else
+comment|/* At least one descriptor was cleaned */
+name|txr
+operator|->
+name|busy
+operator|=
+name|EM_TX_BUSY
+expr_stmt|;
+comment|/* note this clears HUNG */
 comment|/*          * If we have a minimum free, clear IFF_DRV_OACTIVE          * to tell the stack that it is OK to send packets. 	 * Notice that all writes of OACTIVE happen under the 	 * TX lock which, with a single queue, guarantees  	 * sanity.          */
 if|if
 condition|(
@@ -19026,7 +19015,7 @@ operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
 expr_stmt|;
-comment|/* Disable watchdog if all clean */
+comment|/* Disable hang detection if all clean */
 if|if
 condition|(
 name|txr
@@ -19037,14 +19026,12 @@ name|adapter
 operator|->
 name|num_tx_desc
 condition|)
-block|{
 name|txr
 operator|->
-name|queue_status
+name|busy
 operator|=
-name|EM_QUEUE_IDLE
+name|EM_TX_IDLE
 expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -24750,11 +24737,12 @@ argument_list|,
 name|E1000_XONTXC
 argument_list|)
 expr_stmt|;
-comment|/* 	** For watchdog management we need to know if we have been 	** paused during the last interval, so capture that here. 	*/
 name|adapter
 operator|->
-name|pause_frames
-operator|=
+name|stats
+operator|.
+name|xoffrxc
+operator|+=
 name|E1000_READ_REG
 argument_list|(
 operator|&
@@ -24764,16 +24752,6 @@ name|hw
 argument_list|,
 name|E1000_XOFFRXC
 argument_list|)
-expr_stmt|;
-name|adapter
-operator|->
-name|stats
-operator|.
-name|xoffrxc
-operator|+=
-name|adapter
-operator|->
-name|pause_frames
 expr_stmt|;
 name|adapter
 operator|->
@@ -28648,7 +28626,7 @@ literal|"Tx Queue Status = %d\n"
 argument_list|,
 name|txr
 operator|->
-name|queue_status
+name|busy
 argument_list|)
 expr_stmt|;
 name|device_printf
