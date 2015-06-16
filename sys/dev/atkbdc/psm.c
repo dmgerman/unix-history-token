@@ -24591,9 +24591,9 @@ operator|)
 return|;
 if|if
 condition|(
-name|sc
-operator|!=
-name|NULL
+name|arg
+operator|==
+name|PROBE
 condition|)
 name|sc
 operator|->
