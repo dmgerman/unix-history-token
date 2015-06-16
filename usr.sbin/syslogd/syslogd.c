@@ -8491,6 +8491,44 @@ operator|=
 literal|""
 expr_stmt|;
 block|}
+comment|/* 	 * Load / reload timezone data (in case it changed). 	 * 	 * Just calling tzset() again does not work, the timezone code 	 * caches the result.  However, by setting the TZ variable, one 	 * can defeat the caching and have the timezone code really 	 * reload the timezone data.  Respect any initial setting of 	 * TZ, in case the system is configured specially. 	 */
+name|dprintf
+argument_list|(
+literal|"loading timezone data via tzset()\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|getenv
+argument_list|(
+literal|"TZ"
+argument_list|)
+condition|)
+block|{
+name|tzset
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+name|setenv
+argument_list|(
+literal|"TZ"
+argument_list|,
+literal|":/etc/localtime"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|tzset
+argument_list|()
+expr_stmt|;
+name|unsetenv
+argument_list|(
+literal|"TZ"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 *  Close all open log files. 	 */
 name|Initialized
 operator|=
