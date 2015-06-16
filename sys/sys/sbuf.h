@@ -128,6 +128,56 @@ block|}
 struct|;
 end_struct
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HD_COLUMN_MASK
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|HD_COLUMN_MASK
+value|0xff
+end_define
+
+begin_define
+define|#
+directive|define
+name|HD_DELIM_MASK
+value|0xff00
+end_define
+
+begin_define
+define|#
+directive|define
+name|HD_OMIT_COUNT
+value|(1<< 16)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HD_OMIT_HEX
+value|(1<< 17)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HD_OMIT_CHARS
+value|(1<< 18)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HD_COLUMN_MASK */
+end_comment
+
 begin_function_decl
 name|__BEGIN_DECLS
 comment|/*  * API functions  */
@@ -434,6 +484,29 @@ parameter_list|,
 name|ssize_t
 parameter_list|,
 name|size_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sbuf_hexdump
+parameter_list|(
+name|struct
+name|sbuf
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
 parameter_list|,
 name|int
 parameter_list|)
