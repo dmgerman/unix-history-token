@@ -40547,6 +40547,10 @@ operator|=
 name|mtu
 expr_stmt|;
 block|}
+name|error
+operator|=
+literal|0
+expr_stmt|;
 comment|/************************/
 comment|/* ASCONF transmission */
 comment|/************************/
@@ -41183,7 +41187,7 @@ name|reason_code
 operator|=
 literal|7
 expr_stmt|;
-continue|continue;
+break|break;
 block|}
 else|else
 name|asoc
@@ -41331,6 +41335,16 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+block|}
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* try next net */
+continue|continue;
 block|}
 comment|/************************/
 comment|/* Control transmission */
@@ -42293,7 +42307,7 @@ name|reason_code
 operator|=
 literal|7
 expr_stmt|;
-continue|continue;
+break|break;
 block|}
 else|else
 name|asoc
@@ -42448,6 +42462,16 @@ literal|1
 expr_stmt|;
 block|}
 block|}
+block|}
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* try next net */
+continue|continue;
 block|}
 comment|/* JRI: if dest is in PF state, do not send data to it */
 if|if
